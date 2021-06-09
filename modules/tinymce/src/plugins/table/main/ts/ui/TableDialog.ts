@@ -16,6 +16,7 @@ import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
 import * as Util from '../core/Util';
+import { getAdvancedTab } from './DialogAdvancedTab';
 import * as Helpers from './Helpers';
 import * as TableDialogGeneralTab from './TableDialogGeneralTab';
 
@@ -207,7 +208,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
         name: 'general',
         items: [ generalPanel ]
       },
-      Helpers.getAdvancedTab('table')
+      getAdvancedTab(editor, 'table')
     ]
   });
 

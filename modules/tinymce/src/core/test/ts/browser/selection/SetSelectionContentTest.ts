@@ -1,6 +1,7 @@
 import { ApproxStructure } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { SetContentEvent } from 'tinymce/core/api/EventTypes';
@@ -279,5 +280,18 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
         ]
       }))
     );
+  });
+
+  it('TINY-3254: The SetContent event should contain the cleaned content', () => {
+    const editor = hook.editor();
+
+    let lastSetContent: SetContentEvent;
+    editor.on('SetContent', (e) => {
+      lastSetContent = e;
+    });
+
+    SetSelectionContent.setContent(editor, '<img src="" onload="alert(1)">');
+
+    assert.equal(lastSetContent.content, '<img src="" />');
   });
 });

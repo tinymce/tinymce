@@ -8,10 +8,11 @@
 import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import { getCellClassList, getTableClassList, hasTableGrid } from '../api/Settings';
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableClassList, hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
-import { filterNoneItem, generateItems } from './UiUtils';
+import { verticalAlignValues } from './CellAlignValues';
+import { applyTableCellStyle, filterNoneItem, generateItems } from './UiUtils';
 
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   const cmd = (command: string) => () => editor.execCommand(command);
@@ -216,7 +217,13 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   if (tableClassList.length !== 0) {
     editor.ui.registry.addNestedMenuItem('tableclasss', {
       icon: 'table-classes',
-      getSubmenuItems: () => generateItems(editor, 'mceTableToggleClass', 'tableclass', tableClassList),
+      getSubmenuItems: () => generateItems(
+        editor,
+        tableClassList,
+        'tableclass',
+        (item) => item.title,
+        (item) => editor.execCommand('mceTableToggleClass', false, item.value)
+      ),
       onSetup: selectionTargets.onSetupTable
     });
   }
@@ -225,10 +232,54 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   if (tableCellClassList.length !== 0) {
     editor.ui.registry.addNestedMenuItem('tablecellclasss', {
       icon: 'table-cell-classes',
-      getSubmenuItems: () => generateItems(editor, 'mceTableCellToggleClass', 'tablecellclass', tableCellClassList),
+      getSubmenuItems: () => generateItems(
+        editor,
+        tableCellClassList,
+        'tablecellclass',
+        (item) => item.title,
+        (item) => editor.execCommand('mceTableCellToggleClass', false, item.value)
+      ),
       onSetup: selectionTargets.onSetupCellOrRow
     });
   }
+
+  editor.ui.registry.addNestedMenuItem('tablecellvalign', {
+    icon: 'vertical-align',
+    getSubmenuItems: () => generateItems(
+      editor,
+      verticalAlignValues,
+      'tablecellverticalalign',
+      (item) => item.text,
+      applyTableCellStyle(editor, 'vertical-align')
+    ),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  const tableCellBorderWidthsList = getTableBorderWidths(editor);
+  editor.ui.registry.addNestedMenuItem('tablecellvalign', {
+    icon: 'vertical-align',
+    getSubmenuItems: () => generateItems(
+      editor,
+      tableCellBorderWidthsList,
+      'tablecellborderwidth',
+      (item) => item.title,
+      applyTableCellStyle(editor, 'border-width')
+    ),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  const tableCellBorderStylesList = getTableBorderStyles(editor);
+  editor.ui.registry.addNestedMenuItem('tablecellvalign', {
+    icon: 'vertical-align',
+    getSubmenuItems: () => generateItems(
+      editor,
+      tableCellBorderStylesList,
+      'tablecellborderstyle',
+      (item) => item.text,
+      applyTableCellStyle(editor, 'border-style')
+    ),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
 };
 
 export {

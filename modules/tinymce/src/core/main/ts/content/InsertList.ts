@@ -5,7 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Unicode } from '@ephox/katamari';
+import { Arr, Unicode } from '@ephox/katamari';
+import DOMUtils from '../api/dom/DOMUtils';
+import AstNode from '../api/html/Node';
+import Schema from '../api/html/Schema';
+import HtmlSerializer from '../api/html/Serializer';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
@@ -18,25 +22,25 @@ import * as NodeType from '../dom/NodeType';
  * @private
  */
 
-const hasOnlyOneChild = (node) => {
+const hasOnlyOneChild = (node: AstNode): boolean => {
   return node.firstChild && node.firstChild === node.lastChild;
 };
 
-const isPaddingNode = (node) => {
+const isPaddingNode = (node: AstNode): boolean => {
   return node.name === 'br' || node.value === Unicode.nbsp;
 };
 
-const isPaddedEmptyBlock = (schema, node) => {
+const isPaddedEmptyBlock = (schema: Schema, node: AstNode): boolean => {
   const blockElements = schema.getBlockElements();
   return blockElements[node.name] && hasOnlyOneChild(node) && isPaddingNode(node.firstChild);
 };
 
-const isEmptyFragmentElement = (schema, node) => {
+const isEmptyFragmentElement = (schema: Schema, node: AstNode | undefined): boolean => {
   const nonEmptyElements = schema.getNonEmptyElements();
   return node && (node.isEmpty(nonEmptyElements) || isPaddedEmptyBlock(schema, node));
 };
 
-const isListFragment = (schema, fragment) => {
+const isListFragment = (schema: Schema, fragment: AstNode): boolean => {
   let firstChild = fragment.firstChild;
   let lastChild = fragment.lastChild;
 
@@ -62,7 +66,7 @@ const isListFragment = (schema, fragment) => {
   return firstChild.name === 'ul' || firstChild.name === 'ol';
 };
 
-const cleanupDomFragment = (domFragment) => {
+const cleanupDomFragment = (domFragment: DocumentFragment): DocumentFragment => {
   const firstChild = domFragment.firstChild;
   const lastChild = domFragment.lastChild;
 
@@ -71,52 +75,52 @@ const cleanupDomFragment = (domFragment) => {
     firstChild.parentNode.removeChild(firstChild);
   }
 
-  if (lastChild && lastChild.id === 'mce_marker') {
+  if (lastChild && (lastChild as Element).id === 'mce_marker') {
     lastChild.parentNode.removeChild(lastChild);
   }
 
   return domFragment;
 };
 
-const toDomFragment = (dom, serializer, fragment) => {
+const toDomFragment = (dom: DOMUtils, serializer: HtmlSerializer, fragment: AstNode): DocumentFragment => {
   const html = serializer.serialize(fragment);
   const domFragment = dom.createFragment(html);
 
   return cleanupDomFragment(domFragment);
 };
 
-const listItems = (elm: Element) => {
-  return Tools.grep(elm.childNodes, (child) => {
+const listItems = (elm: Node): HTMLLIElement[] => {
+  return Arr.filter(elm.childNodes, (child): child is HTMLLIElement => {
     return child.nodeName === 'LI';
   });
 };
 
-const isPadding = (node) => {
-  return node.data === Unicode.nbsp || NodeType.isBr(node);
+const isPadding = (node: Node): boolean => {
+  return (node as Text).data === Unicode.nbsp || NodeType.isBr(node);
 };
 
-const isListItemPadded = (node) => {
+const isListItemPadded = (node: Node): boolean => {
   return node && node.firstChild && node.firstChild === node.lastChild && isPadding(node.firstChild);
 };
 
-const isEmptyOrPadded = (elm) => {
+const isEmptyOrPadded = (elm: Node): boolean => {
   return !elm.firstChild || isListItemPadded(elm);
 };
 
-const trimListItems = (elms) => {
+const trimListItems = <T extends Node>(elms: T[]): T[] => {
   return elms.length > 0 && isEmptyOrPadded(elms[elms.length - 1]) ? elms.slice(0, -1) : elms;
 };
 
-const getParentLi = (dom, node) => {
+const getParentLi = (dom: DOMUtils, node: Node): HTMLLIElement | null => {
   const parentBlock = dom.getParent(node, dom.isBlock);
-  return parentBlock && parentBlock.nodeName === 'LI' ? parentBlock : null;
+  return parentBlock && parentBlock.nodeName === 'LI' ? parentBlock as HTMLLIElement : null;
 };
 
-const isParentBlockLi = (dom, node) => {
+const isParentBlockLi = (dom: DOMUtils, node: Node): boolean => {
   return !!getParentLi(dom, node);
 };
 
-const getSplit = (parentNode, rng) => {
+const getSplit = (parentNode: Node, rng: Range): DocumentFragment[] => {
   const beforeRng = rng.cloneRange();
   const afterRng = rng.cloneRange();
 
@@ -129,7 +133,7 @@ const getSplit = (parentNode, rng) => {
   ];
 };
 
-const findFirstIn = (node, rootNode) => {
+const findFirstIn = (node: Node, rootNode: Node): Range | null => {
   const caretPos = CaretPosition.before(node);
   const caretWalker = CaretWalker(rootNode);
   const newCaretPos = caretWalker.next(caretPos);
@@ -137,7 +141,7 @@ const findFirstIn = (node, rootNode) => {
   return newCaretPos ? newCaretPos.toRange() : null;
 };
 
-const findLastOf = (node, rootNode) => {
+const findLastOf = (node: Node, rootNode: Node): Range | null => {
   const caretPos = CaretPosition.after(node);
   const caretWalker = CaretWalker(rootNode);
   const newCaretPos = caretWalker.prev(caretPos);
@@ -145,7 +149,7 @@ const findLastOf = (node, rootNode) => {
   return newCaretPos ? newCaretPos.toRange() : null;
 };
 
-const insertMiddle = (target, elms, rootNode, rng) => {
+const insertMiddle = (target: Node, elms: Node[], rootNode: Node, rng: Range): Range => {
   const parts = getSplit(target, rng);
   const parentElm = target.parentNode;
 
@@ -159,7 +163,7 @@ const insertMiddle = (target, elms, rootNode, rng) => {
   return findLastOf(elms[elms.length - 1], rootNode);
 };
 
-const insertBefore = (target, elms, rootNode) => {
+const insertBefore = (target: Node, elms: Node[], rootNode: Node): Range => {
   const parentElm = target.parentNode;
 
   Tools.each(elms, (elm) => {
@@ -169,19 +173,19 @@ const insertBefore = (target, elms, rootNode) => {
   return findFirstIn(target, rootNode);
 };
 
-const insertAfter = (target, elms, rootNode, dom) => {
+const insertAfter = (target: Node, elms: Node[], rootNode: Node, dom: DOMUtils): Range => {
   dom.insertAfter(elms.reverse(), target);
   return findLastOf(elms[0], rootNode);
 };
 
-const insertAtCaret = (serializer, dom, rng, fragment): Range => {
+const insertAtCaret = (serializer: HtmlSerializer, dom: DOMUtils, rng: Range, fragment: AstNode): Range => {
   const domFragment = toDomFragment(dom, serializer, fragment);
   const liTarget = getParentLi(dom, rng.startContainer);
   const liElms = trimListItems(listItems(domFragment.firstChild));
   const BEGINNING = 1, END = 2;
   const rootNode = dom.getRoot();
 
-  const isAt = (location) => {
+  const isAt = (location: number): boolean => {
     const caretPos = CaretPosition.fromRangeStart(rng);
     const caretWalker = CaretWalker(dom.getRoot());
     const newPos = location === BEGINNING ? caretWalker.prev(caretPos) : caretWalker.next(caretPos);

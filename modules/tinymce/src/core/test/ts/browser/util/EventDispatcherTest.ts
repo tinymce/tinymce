@@ -349,4 +349,21 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     dispatcher.fire('run');
     assert.deepEqual(logs, [ 'func1' ]);
   });
+
+  it('TINY-3254: Does not mutate the original event args when firing', () => {
+    const dispatcher = new EventDispatcher();
+    const original = { type: 'custom' };
+
+    dispatcher.on('run', (e) => {
+      e.new = true;
+    });
+    const result = dispatcher.fire<'run', any>('run', original);
+
+    assert.notDeepEqual(result, original);
+    assert.equal(original.type, 'custom');
+    assert.notProperty(original, 'new');
+    assert.notProperty(original, 'preventDefault');
+    assert.equal(result.type, 'run');
+    assert.isTrue(result.new);
+  });
 });

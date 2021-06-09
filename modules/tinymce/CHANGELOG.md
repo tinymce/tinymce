@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a new `toolbar_sticky_offset` setting to allow the toolbar to be offset from the top of the page #TINY-7337
 - Added a new `mceFocus` command that focuses the editor. Equivalent to using `editor.focus()` #TINY-7373
+- Added a new `tablecellvalign` toolbar button and menu item for vertical table cell alignment #TINY-7477
+- Added a new `tablecellborderwidth` toolbar button and menu item to change table cell border width #TINY-7478
+- Added a new `tablecellborderstyle` toolbar button and menu item to change table cell border style #TINY-7478
+
+### Improved
+- Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents. #TINY-7249
@@ -16,12 +22,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `mceTableCellToggleClass` command which toggles the provided class on the currently selected table cells #TINY-7476
 
 ### Fixed
+- `editor.fire` was incorrectly mutating the original `args` provided #TINY-3254
+- The `SetContent` event contained the incorrect `content` when using the `editor.selection.setContent()` API #TINY-3254
 - The editor content could be edited after calling `setProgressState(true)` in iframe mode #TINY-7373
 - Tabbing out of the editor after calling `setProgressState(true)` was inconsistent in iframe mode #TINY-7373
 - Flash of unstyled content while loading the editor because the content css was loaded after the editor content was rendered #TINY-7249
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
+- Fixed an issue when pasting cells from tables containing `colgroup`s into tables without `colgroup`s #TINY-6675
 
 ## 5.8.1 - 2021-05-20
 

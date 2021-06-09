@@ -201,26 +201,20 @@ const Quirks = (editor: Editor): Quirks => {
   };
 
   /**
+   * It seems that Chrome doesn't place the caret if you click on the documentElement in iframe mode
+   * something that is very easy to do by accident so this problem is now more generic than the original issue.
+   *
+   * Original IME specific issue:
    * WebKit has a weird issue where it some times fails to properly convert keypresses to input method keystrokes.
    * The IME on Mac doesn't initialize when it doesn't fire a proper focus event.
    *
    * This seems to happen when the user manages to click the documentElement element then the window doesn't get proper focus until
    * you enter a character into the editor.
    *
-   * It also happens when the first focus in made to the body.
-   *
    * See: https://bugs.webkit.org/show_bug.cgi?id=83566
    */
-  const inputMethodFocus = () => {
+  const documentElementEditingFocus = () => {
     if (!editor.inline) {
-      // Case 1 IME doesn't initialize if you focus the document
-      // Disabled since it was interferring with the cE=false logic
-      // Also coultn't reproduce the issue on Safari 9
-      /* dom.bind(editor.getDoc(), 'focusin', function() {
-        selection.setRng(selection.getRng());
-      });*/
-
-      // Case 2 IME doesn't initialize if you click the documentElement it also doesn't properly fire the focusin event
       // Needs to be both down/up due to weird rendering bug on Chrome Windows
       dom.bind(editor.getDoc(), 'mousedown mouseup', (e) => {
         let rng;
@@ -772,6 +766,7 @@ const Quirks = (editor: Editor): Quirks => {
 
   const setupRtc = () => {
     if (isWebKit) {
+      documentElementEditingFocus();
       selectControlElements();
       blockFormSubmitInsideEditor();
       selectAll();
@@ -804,7 +799,7 @@ const Quirks = (editor: Editor): Quirks => {
 
     // WebKit
     if (isWebKit) {
-      inputMethodFocus();
+      documentElementEditingFocus();
       selectControlElements();
       setDefaultBlockType();
       blockFormSubmitInsideEditor();

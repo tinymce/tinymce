@@ -2,8 +2,8 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement, SugarText } from '@ephox/sugar';
+import { TypedItem } from 'ephox/phoenix/api/data/TypedItem';
 import * as Family from 'ephox/phoenix/api/general/Family';
-import { TypedItem } from 'ephox/phoenix/api/Main';
 
 UnitTest.test('FamilyGroupTest', () => {
   const universe = DomUniverse();

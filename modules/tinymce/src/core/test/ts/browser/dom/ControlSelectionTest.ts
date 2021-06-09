@@ -1,14 +1,13 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell, Obj, Strings } from '@ephox/katamari';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { Attribute, Css, Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
-import { TinyAssertions, TinySelections } from '../../../../../../../mcagar/src/main/ts/ephox/mcagar/api/Main';
 
 describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   const eventCounter = Cell<Record<string, number>>({ });
