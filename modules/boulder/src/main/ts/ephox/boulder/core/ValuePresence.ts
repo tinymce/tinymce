@@ -10,7 +10,7 @@ export interface FieldProcessorData {
   readonly tag: ValueType.Field;
   readonly key: string;
   readonly newKey: string;
-  readonly presence: FieldPresence.FieldPresenceTypes;
+  readonly presence: FieldPresence.FieldPresence;
   readonly prop: Processor;
 }
 
@@ -23,10 +23,10 @@ export interface StateProcessorData {
 export type ValueProcessor = FieldProcessorData | StateProcessorData;
 
 // These are the types for the fold callbacks
-export type FieldValueProcessor<T> = (key: string, newKey: string, presence: FieldPresence.FieldPresenceTypes, prop: Processor) => T;
+export type FieldValueProcessor<T> = (key: string, newKey: string, presence: FieldPresence.FieldPresence, prop: Processor) => T;
 export type StateValueProcessor<T> = (newKey: string, instantiator: (obj: any) => any) => T;
 
-const field = (key: string, newKey: string, presence: FieldPresence.FieldPresenceTypes, prop: Processor): FieldProcessorData => ({ tag: ValueType.Field, key, newKey, presence, prop });
+const field = (key: string, newKey: string, presence: FieldPresence.FieldPresence, prop: Processor): FieldProcessorData => ({ tag: ValueType.Field, key, newKey, presence, prop });
 const state = (newKey: string, instantiator: (obj: any) => any): StateProcessorData => ({ tag: ValueType.State, newKey, instantiator });
 
 const fold = <T>(value: ValueProcessor, ifField: FieldValueProcessor<T>, ifState: StateValueProcessor<T>): T => {

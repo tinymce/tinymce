@@ -20,7 +20,7 @@ type OptionData = FieldPresenceData<FieldType.Option, {}>;
 type DefaultedOptionThunkData = FieldPresenceData<FieldType.DefaultedOptionThunk, Callback>;
 type MergeWithThunkData = FieldPresenceData<FieldType.MergeWithThunk, Callback>;
 
-export type FieldPresenceTypes = StrictData | DefaultedThunkData | OptionData | DefaultedOptionThunkData | MergeWithThunkData;
+export type FieldPresence = StrictData | DefaultedThunkData | OptionData | DefaultedOptionThunkData | MergeWithThunkData;
 
 const strict = (): StrictData => ({ tag: FieldType.Strict, process: { }});
 const defaultedThunk = (fallbackThunk: Callback): DefaultedThunkData => ({ tag: FieldType.DefaultedThunk, process: fallbackThunk });
