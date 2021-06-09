@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Optional } from '@ephox/katamari';
+import { Optionals } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
@@ -11,21 +11,11 @@ import { assertInBounds, boundsArb } from 'ephox/alloy/test/BoundsUtils';
 describe('LayoutBoundsTest', () => {
   const dimensions = [ 'left' as const, 'right' as const, 'top' as const, 'bottom' as const ];
   const restrictionArb = boundsArb().chain<LayoutBounds.BoundsRestriction>((anchorBox) =>
-    fc.constantFrom(...dimensions).map((dim) => Arr.mapToObject(dimensions, (d): Optional<number> => {
-      if (d === dim) {
-        switch (d) {
-          case 'left':
-            return Optional.some(anchorBox.x);
-          case 'right':
-            return Optional.some(anchorBox.right);
-          case 'top':
-            return Optional.some(anchorBox.y);
-          case 'bottom':
-            return Optional.some(anchorBox.bottom);
-        }
-      } else {
-        return Optional.none();
-      }
+    fc.constantFrom(...dimensions).map((dim) => ({
+      left: Optionals.someIf(dim === 'left', anchorBox.x),
+      right: Optionals.someIf(dim === 'right', anchorBox.right),
+      top: Optionals.someIf(dim === 'top', anchorBox.y),
+      bottom: Optionals.someIf(dim === 'bottom', anchorBox.bottom)
     }))
   );
 
@@ -41,6 +31,7 @@ describe('LayoutBoundsTest', () => {
     const bounds = Boxes.bounds(0, 0, 100, 100);
     const inBoundsRestriction = LayoutBounds.boundsRestriction(Boxes.bounds(0, 0, 10, 100), { left: LayoutBounds.AnchorBoxBounds.RightEdge });
     const outBoundsRestriction = LayoutBounds.boundsRestriction(Boxes.bounds(-20, 0, 10, 100), { left: LayoutBounds.AnchorBoxBounds.RightEdge });
+    // Note: bubbleLeft needs to be at least 10 less than the bounds width to make sure it fits
     fc.assert(fc.property(fc.integer(0, 90), fc.integer(0, 100), (bubbleLeft, bubbleTop) => {
       const newInBounds = LayoutBounds.adjustBounds(bounds, inBoundsRestriction, SugarPosition(bubbleLeft, bubbleTop));
       assert.equal(newInBounds.x, 10 + bubbleLeft, 'left bounds have been changed');
@@ -60,6 +51,7 @@ describe('LayoutBoundsTest', () => {
     const bounds = Boxes.bounds(0, 0, 100, 100);
     const inBoundsRestriction = LayoutBounds.boundsRestriction(Boxes.bounds(0, 80, 100, 50), { bottom: LayoutBounds.AnchorBoxBounds.TopEdge });
     const outBoundsRestriction = LayoutBounds.boundsRestriction(Boxes.bounds(0, 150, 100, 50), { bottom: LayoutBounds.AnchorBoxBounds.TopEdge });
+    // Note: bubbleTop needs to between the bounds top (0) and the anchor top (80) coords
     fc.assert(fc.property(fc.integer(0, 100), fc.integer(0, 80), (bubbleLeft, bubbleTop) => {
       const newInBounds = LayoutBounds.adjustBounds(bounds, inBoundsRestriction, SugarPosition(bubbleLeft, -bubbleTop));
       assert.equal(newInBounds.x, bounds.x, 'left bounds are unchanged');

@@ -45,7 +45,8 @@ const adt: {
  * It will return the following details:
  *  - if the original rect was in bounds (originInBounds & sizeInBounds). This is used to determine if we fitted
  *    without having to make adjustments.
- *  - the height and width deltas in relation to how much height/width would be visible in the original location.
+ *  - the height and width that would be visible in the original location. (ie the overlap between the rect and
+ *    the bounds or the distance between the boxes if there is no overlap)
  */
 const determinePosition = (box: Boxes.Bounds, bounds: Boxes.Bounds): PositionResult => {
   const { x: boundsX, y: boundsY, right: boundsRight, bottom: boundsBottom } = bounds;

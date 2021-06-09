@@ -5,7 +5,7 @@ import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 
 describe('BounderDeterminePositionTest', () => {
-  it('inside the bounds', () => {
+  it('TINY-7545: inside the bounds', () => {
     const bounds = Boxes.bounds(0, 0, 200, 200);
     const box = Boxes.bounds(50, 50, 50, 100);
     const output = Bounder.determinePosition(box, bounds);
@@ -15,7 +15,7 @@ describe('BounderDeterminePositionTest', () => {
     assert.equal(output.visibleH, 100, 'Visible height');
   });
 
-  it('origin inside the bounds, but size is not', () => {
+  it('TINY-7545: origin inside the bounds, but size is not', () => {
     const bounds = Boxes.bounds(0, 0, 200, 200);
     const box = Boxes.bounds(150, 150, 50, 100);
     const output = Bounder.determinePosition(box, bounds);
@@ -25,7 +25,7 @@ describe('BounderDeterminePositionTest', () => {
     assert.equal(output.visibleH, 50, 'Visible height');
   });
 
-  it('size inside the bounds, but origin is not', () => {
+  it('TINY-7545: size inside the bounds, but origin is not', () => {
     const bounds = Boxes.bounds(0, 0, 200, 200);
     const box = Boxes.bounds(-25, -25, 50, 100);
     const output = Bounder.determinePosition(box, bounds);
@@ -35,7 +35,7 @@ describe('BounderDeterminePositionTest', () => {
     assert.equal(output.visibleH, 75, 'Visible height');
   });
 
-  it('out of bounds above', () => {
+  it('TINY-7545: out of bounds above', () => {
     const bounds = Boxes.bounds(0, 0, 200, 200);
     const box = Boxes.bounds(50, -150, 50, 100);
     const output = Bounder.determinePosition(box, bounds);
@@ -45,7 +45,7 @@ describe('BounderDeterminePositionTest', () => {
     assert.equal(output.visibleH, -50, 'Visible height');
   });
 
-  it('out of bounds below', () => {
+  it('TINY-7545: out of bounds below', () => {
     const bounds = Boxes.bounds(0, 0, 200, 200);
     const box = Boxes.bounds(50, 250, 50, 100);
     const output = Bounder.determinePosition(box, bounds);
