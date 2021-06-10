@@ -115,7 +115,7 @@ const isWithinSameTable = (isRoot: IsRootFn, cellRng: TableCellRng) =>
  * - 0 should be not be possible
  * - 1 tableSelection is returned if:
  *  - start and end are in the same table
- *  - start is in table but the end is not and vice versa
+ *  - start is in a table but the end is not and vice versa
  * - 2 tableSelections are returned if the start and end are in different tables
  */
 const getTableSelectionsFromCellRng = (cellRng: TableCellRng, isRoot: IsRootFn): TableSelection[] => {
@@ -166,7 +166,7 @@ export const getActionFromCells = (cells: SugarElement<Element>[]): DeleteAction
 
 export const getActionFromRange = (root: SugarElement, rng: Range): Optional<DeleteActionAdt> => {
   const isRoot = isRootFromElement(root);
-  // Will be 'some' if the selection is fully contained within the same table or if the the start is one table and the end is in another table
+  // Will be 'some' if the selection is fully contained within the same table or if the start is one table and the end is in another table
   const optCellRng = getCellRng(rng, isRoot);
 
   if (isSingleCellTableContentSelected(optCellRng, rng, isRoot)) {

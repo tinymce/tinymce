@@ -324,16 +324,16 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
   });
 
   context('Delete partially selected tables', () => {
-    it('TINY-6044: Fully select and delete from before table into table', () => {
+    it('TINY-6044: Fully select and delete from before table into table - keep paragraph', () => {
       const editor = hook.editor();
       editor.setContent('<p>a</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0, 0, 0, 0 ], 1);
       doDelete(editor);
-      TinyAssertions.assertCursor(editor, [], 0);
-      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td><td>b</td></tr></tbody></table>');
+      TinyAssertions.assertCursor(editor, [ 0 ], 0);
+      TinyAssertions.assertContent(editor, '<p>&nbsp;</p><table><tbody><tr><td>&nbsp;</td><td>b</td></tr></tbody></table>');
     });
 
-    it('TINY-6044: Fully select and delete from after table into table', () => {
+    it('TINY-6044: Fully select and delete from after table into table - remove paragraph', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>a</p>');
       TinySelections.setSelection(editor, [ 0, 0, 0, 1, 0 ], 1, [ 1, 0 ], 1);
