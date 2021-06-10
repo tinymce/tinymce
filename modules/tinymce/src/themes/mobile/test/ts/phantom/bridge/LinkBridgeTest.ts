@@ -81,7 +81,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
   };
 
   const checkApply = (rawScenario) => {
-    const toResult = (info, param) => Optional.from(info[param]).fold(() => Result.error('Missing ' + param), Result.value);
+    const toResult = (info, param) => Optional.from(info[param]).fold(() => Result.error<any, string>('Missing ' + param), Result.value);
     const scenario = {
       label: Optional.from(rawScenario.label).getOrDie('Missing label'),
       info: Optional.from(rawScenario.info).map((info) => ({

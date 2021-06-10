@@ -109,8 +109,8 @@ describe('atomic.katamari.api.arr.ResultValueTest', () => {
   });
 
   it('Given f :: s -> RE, checking value.bind(f).fold(id, die) === f(value.getOrDie()).fold(id, die)', () => {
-    fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(arbResultError(fc.integer())), (res, f) => {
-      const toErrString = (r) => r.fold(Fun.identity, Fun.die('Not a Result.error'));
+    fc.assert(fc.property(arbResultValue<number, number>(fc.integer()), fc.func(arbResultError<number, number>(fc.integer())), (res, f) => {
+      const toErrString = (r: Result<number, number>) => r.fold(Fun.identity, Fun.die('Not a Result.error'));
       assert.equal(toErrString(f(res.getOrDie())), toErrString(res.bind(f)));
     }));
   });

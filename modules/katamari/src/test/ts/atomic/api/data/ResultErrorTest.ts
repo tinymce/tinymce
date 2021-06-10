@@ -26,11 +26,12 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
       s.orThunk(() => Result.error('Should not get here.')).getOrDie();
     });
 
-    assert.equal(s.fold((e) => e + '!', (v) => v + 6), 'error!');
+    assert.equal(s.fold((e) => e + '!', Fun.die('Was not an error!')), 'error!');
 
     assert.throws(() => {
       s.map((v) => v * 2).getOrDie();
     });
+    s.each((a) => a + 1);
 
     assert.throws(() => {
       s.bind((v) => Result.value('test' + v)).getOrDie();
