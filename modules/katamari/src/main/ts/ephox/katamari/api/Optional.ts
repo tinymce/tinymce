@@ -7,7 +7,7 @@ import * as Fun from './Fun';
  */
 export interface Optional<T> {
   /** If none, run whenNone; if some(a) run whenSome(a) */
-  readonly fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
+  readonly fold: <U> (whenNone: () => U, whenSome: (v: T) => U) => U;
 
   readonly isSome: () => boolean;
   readonly isNone: () => boolean;
@@ -27,15 +27,15 @@ export interface Optional<T> {
   - if some: return self
   - if none: return opt
   */
-  readonly or: (opt: Optional<T>) => Optional<T>;
+  readonly or: <T2 = T>(opt: Optional<T2>) => Optional<T | T2>;
 
   /** Same as "or", but uses a thunk instead of a value */
-  readonly orThunk: (makeOption: () => Optional<T>) => Optional<T>;
+  readonly orThunk: <T2 = T>(makeOption: () => Optional<T2>) => Optional<T | T2>;
 
   /** Run a function over the 'some' value.
    *  "map" operation on the Optional functor.
    */
-  readonly map: <T2> (mapper: (x: T) => T2) => Optional<T2>;
+  readonly map: <U> (mapper: (x: T) => U) => Optional<U>;
 
   /** Run a side effect over the 'some' value */
   readonly each: (worker: (x: T) => void) => void;
@@ -43,7 +43,7 @@ export interface Optional<T> {
   /** "bind"/"flatMap" operation on the Optional Bind/Monad.
    *  Equivalent to >>= in Haskell/PureScript; flatMap in Scala.
    */
-  readonly bind: <T2> (f: (x: T) => Optional<T2>) => Optional<T2>;
+  readonly bind: <U> (f: (x: T) => Optional<U>) => Optional<U>;
 
   /** Does this Optional contain a value that predicate? */
   readonly exists: (f: (x: T) => boolean) => boolean;
@@ -65,13 +65,13 @@ export interface Optional<T> {
   readonly toString: () => string;
 }
 
-const none = <T>(): Optional<T> => NONE;
+const none = <T = never>(): Optional<T> => NONE;
 
-const NONE: Optional<any> = (() => {
+const NONE: Optional<never> = (() => {
   // inlined from peanut, maybe a micro-optimisation?
   const call = (thunk) => thunk();
   const id = (n) => n;
-  const me: Optional<any> = {
+  const me: Optional<never> = {
     fold: (n, _s) => n(),
     isSome: Fun.never,
     isNone: Fun.always,
@@ -89,7 +89,7 @@ const NONE: Optional<any> = (() => {
     bind: none,
     exists: Fun.never,
     forall: Fun.always,
-    filter: none,
+    filter: () => none(),
     toArray: () => [],
     toString: Fun.constant('none()')
   };
