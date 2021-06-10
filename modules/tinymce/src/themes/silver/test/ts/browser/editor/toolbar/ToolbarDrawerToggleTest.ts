@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings, ToolbarMode } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as TestUtils from '../../../module/TestUtils';
+import * as TestUtils from '../../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
   before(() => {

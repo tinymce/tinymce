@@ -6,7 +6,7 @@ import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as TestUtils from '../../module/TestUtils';
+import * as TestUtils from '../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest', () => {
   let toolbar: SugarElement<HTMLDivElement>;

@@ -9,7 +9,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { getContextToolbarBounds } from 'tinymce/themes/silver/ui/context/ContextToolbarBounds';
 
 import TestBackstage from '../../../module/TestBackstage';
-import * as TestUtils from '../../../module/TestUtils';
+import * as TestUtils from '../../../module/UiUtils';
 
 interface TestBounds {
   readonly header: Bounds;

@@ -126,7 +126,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   editor.on('init', () => {
     if (editor.hasFocus() || toolbarPersist) {
-      render();
+      delayedRender();
     }
   });
 
