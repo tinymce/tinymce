@@ -50,18 +50,18 @@ export interface ToolbarSplitButtonInstanceApi {
 }
 
 export const splitButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
   FieldSchema.optionString('text'),
   FieldSchema.optionFunction('select'),
-  FieldSchema.strictFunction('fetch'),
+  FieldSchema.requiredFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   // TODO: Validate the allowed presets
   FieldSchema.defaultedStringEnum('presets', 'normal', [ 'normal', 'color', 'listpreview' ]),
   FieldSchema.defaulted('columns', 1),
-  FieldSchema.strictFunction('onAction'),
-  FieldSchema.strictFunction('onItemAction')
+  FieldSchema.requiredFunction('onAction'),
+  FieldSchema.requiredFunction('onItemAction')
 ]);
 
 export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';

@@ -14,7 +14,7 @@ export interface ContextToolbar extends ContextBar {
 
 const contextToolbarSchema = ValueSchema.objOf([
   FieldSchema.defaulted('type', 'contexttoolbar'),
-  FieldSchema.strictString('items')
+  FieldSchema.requiredString('items')
 ].concat(contextBarFields));
 
 export const createContextToolbar = (spec: ContextToolbarSpec): Result<ContextToolbar, ValueSchema.SchemaError<any>> =>

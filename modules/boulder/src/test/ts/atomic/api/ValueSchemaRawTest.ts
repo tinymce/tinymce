@@ -6,8 +6,8 @@ import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/StructureSchema';
-import * as FieldTypes from 'ephox/boulder/core/FieldTypes';
 import { StructureProcessor } from 'ephox/boulder/core/StructureProcessor';
+import * as FieldTypes from 'ephox/boulder/core/ValueType';
 
 UnitTest.test('ValueSchemaRawTest', () => {
   const checkErr = (label: string, expectedPart: string, input: any, processor: StructureProcessor) => {

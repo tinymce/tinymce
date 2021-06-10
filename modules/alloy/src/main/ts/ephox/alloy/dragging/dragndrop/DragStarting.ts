@@ -1,4 +1,4 @@
-import { StructureProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { EventArgs, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
@@ -31,7 +31,7 @@ const dragStart = (component: AlloyComponent, target: SugarElement, config: Drag
   });
 };
 
-const schema: StructureProcessor[] = [
+const schema: FieldProcessor[] = [
   FieldSchema.defaultedString('type', 'text/plain'),
   FieldSchema.defaulted('phoneyTypes', []),
   FieldSchema.defaultedStringEnum('effectAllowed', 'all', [ 'copy', 'move', 'link', 'all', 'copyLink', 'linkMove', 'copyMove' ]),

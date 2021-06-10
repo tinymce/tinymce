@@ -1,25 +1,24 @@
-import { FieldPresence, StructureProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional, Result } from '@ephox/katamari';
-
 import * as Debugging from '../debugging/Debugging';
 import * as MenuMarkers from '../menu/util/MenuMarkers';
 
-const _initSize: StructureProcessor = FieldSchema.strictObjOf('initSize', [
-  FieldSchema.strict('numColumns'),
-  FieldSchema.strict('numRows')
+const _initSize: FieldProcessor = FieldSchema.requiredObjOf('initSize', [
+  FieldSchema.required('numColumns'),
+  FieldSchema.required('numRows')
 ]);
 
-const itemMarkers: () => StructureProcessor = () => FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
+const itemMarkers: () => FieldProcessor = () => FieldSchema.requiredOf('markers', MenuMarkers.itemSchema());
 
-const menuMarkers: () => StructureProcessor = () => FieldSchema.strictOf('markers', MenuMarkers.schema());
+const menuMarkers: () => FieldProcessor = () => FieldSchema.requiredOf('markers', MenuMarkers.schema());
 
-const tieredMenuMarkers: () => StructureProcessor = () => FieldSchema.strictObjOf('markers', [
-  FieldSchema.strict('backgroundMenu')
+const tieredMenuMarkers: () => FieldProcessor = () => FieldSchema.requiredObjOf('markers', [
+  FieldSchema.required('backgroundMenu')
 ].concat(MenuMarkers.menuFields()).concat(MenuMarkers.itemFields()));
 
-const markers = (required: string[]): StructureProcessor => FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
+const markers = (required: string[]): FieldProcessor => FieldSchema.requiredObjOf('markers', Arr.map(required, FieldSchema.required));
 
-const onPresenceHandler = (label: string, fieldName: string, presence: any): StructureProcessor => {
+const onPresenceHandler = (label: string, fieldName: string, presence: any): FieldProcessor => {
   // We care about where the handler was declared (in terms of which schema)
   const trace = Debugging.getTrace();
   return FieldSchema.field(
@@ -37,19 +36,19 @@ const onPresenceHandler = (label: string, fieldName: string, presence: any): Str
   );
 };
 
-const onHandler = (fieldName: string): StructureProcessor => onPresenceHandler('onHandler', fieldName, FieldPresence.defaulted(Fun.noop));
+const onHandler = (fieldName: string): FieldProcessor => onPresenceHandler('onHandler', fieldName, FieldPresence.defaulted(Fun.noop));
 
-const onKeyboardHandler = (fieldName: string): StructureProcessor => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.defaulted(Optional.none));
+const onKeyboardHandler = (fieldName: string): FieldProcessor => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.defaulted(Optional.none));
 
-const onStrictHandler = (fieldName: string): StructureProcessor => onPresenceHandler('onHandler', fieldName, FieldPresence.strict());
+const onStrictHandler = (fieldName: string): FieldProcessor => onPresenceHandler('onHandler', fieldName, FieldPresence.required());
 
-const onStrictKeyboardHandler = (fieldName: string): StructureProcessor => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
+const onStrictKeyboardHandler = (fieldName: string): FieldProcessor => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.required());
 
-const output = (name: string, value: any): StructureProcessor => FieldSchema.state(name, Fun.constant(value));
+const output = (name: string, value: any): FieldProcessor => FieldSchema.state(name, Fun.constant(value));
 
-const snapshot = (name: string): StructureProcessor => FieldSchema.state(name, Fun.identity);
+const snapshot = (name: string): FieldProcessor => FieldSchema.state(name, Fun.identity);
 
-const initSize: () => StructureProcessor = Fun.constant(_initSize);
+const initSize: () => FieldProcessor = Fun.constant(_initSize);
 
 export {
   initSize,

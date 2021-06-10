@@ -82,14 +82,14 @@ export interface ContextForm extends ContextBar {
 const contextButtonFields = baseToolbarButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformbutton'),
   FieldSchema.defaulted('primary', false),
-  FieldSchema.strictFunction('onAction'),
+  FieldSchema.requiredFunction('onAction'),
   FieldSchema.state('original', Fun.identity)
 ]);
 
 const contextToggleButtonFields = baseToolbarToggleButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformbutton'),
   FieldSchema.defaulted('primary', false),
-  FieldSchema.strictFunction('onAction'),
+  FieldSchema.requiredFunction('onAction'),
   FieldSchema.state('original', Fun.identity)
 ]);
 
@@ -110,7 +110,7 @@ const contextFormSchema = ValueSchema.objOf([
   FieldSchema.defaulted('type', 'contextform'),
   FieldSchema.defaultedFunction('initValue', () => ''),
   FieldSchema.optionString('label'),
-  FieldSchema.strictArrayOf('commands', toggleOrNormal),
+  FieldSchema.requiredArrayOf('commands', toggleOrNormal),
   FieldSchema.optionOf('launch', ValueSchema.choose('type', {
     contextformbutton: launchButtonFields,
     contextformtogglebutton: launchToggleButtonFields

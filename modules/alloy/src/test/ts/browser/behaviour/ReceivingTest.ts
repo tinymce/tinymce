@@ -25,7 +25,7 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
           channels: {
             'test.channel.1': {
               schema: ValueSchema.objOfOnly([
-                FieldSchema.strict('dummy')
+                FieldSchema.required('dummy')
               ]),
               onReceive: (_component, data) => {
                 store.adder('received: ' + data.dummy)();

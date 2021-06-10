@@ -1,4 +1,4 @@
-import { StructureProcessor } from '@ephox/boulder';
+import { FieldProcessor } from '@ephox/boulder';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
@@ -66,7 +66,7 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
   ];
 };
 
-const schema: StructureProcessor[] = [
+const schema: FieldProcessor[] = [
   ...DraggingSchema.schema,
   Fields.output('dragger', {
     handlers: DragUtils.handlers(events)

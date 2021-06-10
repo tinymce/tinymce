@@ -141,10 +141,10 @@ export default Sketcher.single<SilverMenubarSpec, SilverMenubarDetail, SilverMen
   factory,
   name: 'silver.Menubar',
   configFields: [
-    FieldSchema.strict('dom'),
-    FieldSchema.strict('uid'),
-    FieldSchema.strict('onEscape'),
-    FieldSchema.strict('backstage'),
+    FieldSchema.required('dom'),
+    FieldSchema.required('uid'),
+    FieldSchema.required('onEscape'),
+    FieldSchema.required('backstage'),
     FieldSchema.defaulted('onSetup', Fun.noop)
   ],
   apis: {

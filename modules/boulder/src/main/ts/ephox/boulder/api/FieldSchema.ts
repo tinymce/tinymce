@@ -1,8 +1,8 @@
 import { Arr, Result } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
 import * as FieldProcessor from '../core/FieldProcessor';
-import * as FieldTypes from '../core/FieldTypes';
 import { arrOf, arrOfObj, objOf, objOfOnly, StructureProcessor } from '../core/StructureProcessor';
+import * as FieldTypes from '../core/ValueType';
 import * as FieldPresence from './FieldPresence';
 import * as StructureSchema from './StructureSchema';
 

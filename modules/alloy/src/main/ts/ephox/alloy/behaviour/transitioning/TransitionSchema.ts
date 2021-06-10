@@ -6,10 +6,10 @@ import * as Fields from '../../data/Fields';
 export default [
   FieldSchema.defaulted('destinationAttr', 'data-transitioning-destination'),
   FieldSchema.defaulted('stateAttr', 'data-transitioning-state'),
-  FieldSchema.strict('initialState'),
+  FieldSchema.required('initialState'),
   Fields.onHandler('onTransition'),
   Fields.onHandler('onFinish'),
-  FieldSchema.strictOf(
+  FieldSchema.requiredOf(
     'routes',
     ValueSchema.setOf(
       Result.value,
@@ -17,8 +17,8 @@ export default [
         Result.value,
         ValueSchema.objOfOnly([
           FieldSchema.optionObjOfOnly('transition', [
-            FieldSchema.strict('property'),
-            FieldSchema.strict('transitionClass')
+            FieldSchema.required('property'),
+            FieldSchema.required('transitionClass')
           ])
         ])
       )

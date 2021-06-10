@@ -29,11 +29,11 @@ const sketch = (rawSpec) => {
   const formAdhocEvents = 'form-events';
 
   const schema = ValueSchema.objOf([
-    FieldSchema.strict('fields'),
+    FieldSchema.required('fields'),
     // Used for when datafields are present.
     FieldSchema.defaulted('maxFieldIndex', rawSpec.fields.length - 1),
-    FieldSchema.strict('onExecute'),
-    FieldSchema.strict('getInitialValue'),
+    FieldSchema.required('onExecute'),
+    FieldSchema.required('getInitialValue'),
     FieldSchema.state('state', () => {
       return {
         dialogSwipeState: Singleton.value(),

@@ -5,7 +5,7 @@ import * as ValueSchema from 'ephox/boulder/api/StructureSchema';
 
 UnitTest.test('Atomic Test: api.TreeTest', () => {
   const schema = ValueSchema.objOf([
-    FieldSchema.strict('value'),
+    FieldSchema.required('value'),
     FieldSchema.defaulted('text', '?'),
     FieldSchema.field(
       'branches',

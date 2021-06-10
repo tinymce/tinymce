@@ -86,13 +86,13 @@ export const dialogButtonFields = FooterButton.dialogFooterButtonFields;
 export const dialogButtonSchema = FooterButton.dialogFooterButtonSchema;
 
 export const dialogSchema = ValueSchema.objOf([
-  FieldSchema.strictString('title'),
-  FieldSchema.strictOf('body', ValueSchema.chooseProcessor('type', {
+  FieldSchema.requiredString('title'),
+  FieldSchema.requiredOf('body', ValueSchema.chooseProcessor('type', {
     panel: Panel.panelSchema,
     tabpanel: TabPanel.tabPanelSchema
   })),
   FieldSchema.defaultedString('size', 'normal'),
-  FieldSchema.strictArrayOf('buttons', dialogButtonSchema),
+  FieldSchema.requiredArrayOf('buttons', dialogButtonSchema),
   FieldSchema.defaulted('initialData', {}),
   FieldSchema.defaultedFunction('onAction', Fun.noop),
   FieldSchema.defaultedFunction('onChange', Fun.noop),

@@ -8,7 +8,7 @@ import * as PartType from 'ephox/alloy/parts/PartType';
 
 UnitTest.test('Atomic Test: parts.GenerateTest', () => {
   const schema = [
-    FieldSchema.strict('test-data'),
+    FieldSchema.required('test-data'),
     FieldSchema.state('state', () => 'state')
   ];
 

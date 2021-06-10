@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema, FieldPresence } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Id, Result } from '@ephox/katamari';
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 import { itemSchema } from './Panel';
@@ -30,15 +30,15 @@ export const tabFields = [
     'name',
     'name',
     FieldPresence.defaultedThunk(() => Id.generate('tab-name')),
-    ValueSchema.string
+    ValueType.string
   ),
-  FieldSchema.strictString('title'),
-  FieldSchema.strictArrayOf('items', itemSchema)
+  FieldSchema.requiredString('title'),
+  FieldSchema.requiredArrayOf('items', itemSchema)
 ];
 
 export const tabPanelFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictArrayOfObj('tabs', tabFields)
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredArrayOfObj('tabs', tabFields)
 ];
 
 export const tabPanelSchema = ValueSchema.objOf(tabPanelFields);

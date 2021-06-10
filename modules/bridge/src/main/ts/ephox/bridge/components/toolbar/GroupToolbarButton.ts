@@ -1,6 +1,6 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { BaseToolbarButton, BaseToolbarButtonSpec, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
+import { BaseToolbarButton, baseToolbarButtonFields, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from './ToolbarButton';
 
 interface ToolbarGroupSetting {
   name: string;
@@ -25,13 +25,13 @@ export interface GroupToolbarButton extends BaseToolbarButton<GroupToolbarButton
 }
 
 export const groupToolbarButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.strictOf('items', ValueSchema.oneOf([
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredOf('items', ValueSchema.oneOf([
     ValueSchema.arrOfObj([
-      FieldSchema.strictString('name'),
-      FieldSchema.strictArrayOf('items', ValueSchema.string)
+      FieldSchema.requiredString('name'),
+      FieldSchema.requiredArrayOf('items', ValueType.string)
     ]),
-    ValueSchema.string
+    ValueType.string
   ]))
 ].concat(baseToolbarButtonFields));
 

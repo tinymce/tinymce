@@ -22,8 +22,8 @@ const sizeInputFields = formComponentWithLabelFields.concat([
 export const sizeInputSchema = ValueSchema.objOf(sizeInputFields);
 
 export const sizeInputDataProcessor = ValueSchema.objOf([
-  FieldSchema.strictString('width'),
-  FieldSchema.strictString('height')
+  FieldSchema.requiredString('width'),
+  FieldSchema.requiredString('height')
 ]);
 
 export const createSizeInput = (spec: SizeInputSpec): Result<SizeInput, ValueSchema.SchemaError<any>> =>

@@ -1,4 +1,4 @@
-import { StructureProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -16,10 +16,10 @@ import { FloatingToolbarButtonDetail } from '../types/FloatingToolbarButtonTypes
 import { ToolbarSpec } from '../types/ToolbarTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 
-const schema: () => StructureProcessor[] = Fun.constant([
+const schema: () => FieldProcessor[] = Fun.constant([
   Fields.markers([ 'toggledClass' ]),
-  FieldSchema.strict('lazySink'),
-  FieldSchema.strictFunction('fetch'),
+  FieldSchema.required('lazySink'),
+  FieldSchema.requiredFunction('fetch'),
   FieldSchema.optionFunction('getBounds'),
   FieldSchema.optionObjOf('fireDismissalEventInstead', [
     FieldSchema.defaulted('event', SystemEvents.dismissRequested())

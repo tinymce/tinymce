@@ -47,12 +47,12 @@ export interface ForeignGuiConnection {
 }
 
 const schema = ValueSchema.objOfOnly([
-  FieldSchema.strict('root'),
-  FieldSchema.strictArrayOfObj('dispatchers', [
+  FieldSchema.required('root'),
+  FieldSchema.requiredArrayOfObj('dispatchers', [
     // Given the initial target, what is the target of this particular behaviour?
-    FieldSchema.strict('getTarget'),
+    FieldSchema.required('getTarget'),
     // The configuration for the behaviours
-    FieldSchema.strict('alloyConfig')
+    FieldSchema.required('alloyConfig')
   ]),
   FieldSchema.defaulted('insertion', (root: SugarElement, system: AlloyComponent) => {
     Insert.append(root, system.element);

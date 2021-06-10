@@ -36,8 +36,8 @@ export const baseToolbarToggleButtonFields = [
 
 export const toggleButtonSchema = ValueSchema.objOf(
   baseToolbarToggleButtonFields.concat([
-    FieldSchema.strictString('type'),
-    FieldSchema.strictFunction('onAction')
+    FieldSchema.requiredString('type'),
+    FieldSchema.requiredFunction('onAction')
   ])
 );
 

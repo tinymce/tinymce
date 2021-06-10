@@ -1,7 +1,6 @@
-import { StructureProcessor } from '@ephox/boulder';
+import { FieldProcessor } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
-
 import { DelayedFunction } from '../../alien/DelayedFunction';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -15,6 +14,7 @@ import * as DragUtils from '../common/DragUtils';
 import * as MouseBlockerEvents from './MouseBlockerEvents';
 import * as MouseData from './MouseData';
 import { MouseDraggingConfig } from './MouseDraggingTypes';
+
 
 const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void): Array<AlloyEvents.AlloyEventKeyAndHandler<EventArgs<MouseEvent>>> => [
   AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (component, simulatedEvent) => {
@@ -52,7 +52,7 @@ const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState,
   })
 ];
 
-const schema: StructureProcessor[] = [
+const schema: FieldProcessor[] = [
   ...DraggingSchema.schema,
   Fields.output('dragger', {
     handlers: DragUtils.handlers(events)

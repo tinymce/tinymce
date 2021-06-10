@@ -25,8 +25,8 @@ const placement = (component: AlloyComponent, anchorInfo: NodeAnchor, origin: Or
 };
 
 export default [
-  FieldSchema.strict('node'),
-  FieldSchema.strict('root'),
+  FieldSchema.required('node'),
+  FieldSchema.required('root'),
   FieldSchema.option('bubble'),
   AnchorLayouts.schema(),
   // chiefly MaxHeight.expandable()

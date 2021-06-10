@@ -1,4 +1,4 @@
-import { StructureProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -7,8 +7,8 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
 import { ToolbarDetail } from '../types/ToolbarTypes';
 
-const schema: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('dom'),
+const schema: () => FieldProcessor[] = Fun.constant([
+  FieldSchema.required('dom'),
   FieldSchema.defaulted('shell', true),
   SketchBehaviours.field('toolbarBehaviours', [ Replacing ])
 ]);

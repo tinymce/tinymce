@@ -1,4 +1,4 @@
-import { StructureProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
@@ -9,4 +9,4 @@ export default [
   FieldSchema.option('disableClass'),
   Fields.onHandler('onDisabled'),
   Fields.onHandler('onEnabled')
-] as StructureProcessor[];
+] as FieldProcessor[];

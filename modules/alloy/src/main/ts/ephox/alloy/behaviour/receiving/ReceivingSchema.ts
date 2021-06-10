@@ -1,15 +1,14 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-
 import * as Fields from '../../data/Fields';
 
 export default [
-  FieldSchema.strictOf('channels', ValueSchema.setOf(
+  FieldSchema.requiredOf('channels', ValueSchema.setOf(
     // Allow any keys.
     Result.value,
     ValueSchema.objOfOnly([
       Fields.onStrictHandler('onReceive'),
-      FieldSchema.defaulted('schema', ValueSchema.anyValue())
+      FieldSchema.defaulted('schema', ValueType.anyValue())
     ])
   ))
 ];

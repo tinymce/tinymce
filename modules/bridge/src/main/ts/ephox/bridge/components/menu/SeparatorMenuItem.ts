@@ -15,7 +15,7 @@ export interface SeparatorMenuItem {
 }
 
 export const separatorMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.optionString('text')
 ]);
 

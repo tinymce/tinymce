@@ -1,4 +1,4 @@
-import { StructureProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Obj } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
@@ -81,11 +81,11 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   })
 ]);
 
-const schema: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('value'),
-  FieldSchema.strict('items'),
-  FieldSchema.strict('dom'),
-  FieldSchema.strict('components'),
+const schema: () => FieldProcessor[] = Fun.constant([
+  FieldSchema.required('value'),
+  FieldSchema.required('items'),
+  FieldSchema.required('dom'),
+  FieldSchema.required('components'),
   FieldSchema.defaulted('eventOrder', { }),
   SketchBehaviourField('menuBehaviours', [ Highlighting, Representing, Composing, Keying ]),
 
@@ -101,7 +101,7 @@ const schema: () => StructureProcessor[] = Fun.constant([
       ],
       matrix: [
         Fields.output('config', configureMatrix),
-        FieldSchema.strict('rowSelector')
+        FieldSchema.required('rowSelector')
       ],
       menu: [
         FieldSchema.defaulted('moveOnTab', true),

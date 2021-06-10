@@ -38,7 +38,7 @@ export interface Panel {
 const createItemsField = (name: string) => FieldSchema.field(
   'items',
   'items',
-  FieldPresence.strict(),
+  FieldPresence.required(),
   ValueSchema.arrOf(ValueSchema.valueOf((v) => ValueSchema.asRaw(`Checking item of ${name}`, itemSchema, v).fold(
     (sErr) => Result.error(ValueSchema.formatError(sErr)),
     (passValue) => Result.value(passValue)
@@ -74,9 +74,9 @@ export const itemSchema = ValueSchema.valueThunkOf(
 );
 
 const panelFields = [
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.defaulted('classes', []),
-  FieldSchema.strictArrayOf('items', itemSchema)
+  FieldSchema.requiredArrayOf('items', itemSchema)
 ];
 
 export const panelSchema = ValueSchema.objOf(panelFields);

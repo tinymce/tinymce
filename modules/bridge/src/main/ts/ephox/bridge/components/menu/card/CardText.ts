@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 export interface CardTextSpec {
@@ -16,10 +16,10 @@ export interface CardText {
 }
 
 const cardTextFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('text'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('text'),
   FieldSchema.optionString('name'),
-  FieldSchema.defaultedArrayOf('classes', [ 'tox-collection__item-label' ], ValueSchema.string)
+  FieldSchema.defaultedArrayOf('classes', [ 'tox-collection__item-label' ], ValueType.string)
 ];
 
 export const cardTextSchema = ValueSchema.objOf(cardTextFields);

@@ -13,7 +13,7 @@ const events = (name: string, eventHandlers: Array<AlloyEventKeyAndHandler<any>>
 
   return createBehaviour({
     fields: [
-      FieldSchema.strict('enabled')
+      FieldSchema.required('enabled')
     ],
     name,
     active: {

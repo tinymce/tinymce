@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Id, Optional, Result } from '@ephox/katamari';
 import { DialogToggleMenuItem, dialogToggleMenuItemSchema, DialogToggleMenuItemSpec } from './ToggleMenuItem';
 
@@ -57,7 +57,7 @@ const baseFooterButtonFields = [
     'name',
     'name',
     FieldPresence.defaultedThunk(() => Id.generate('button-name')),
-    ValueSchema.string
+    ValueType.string
   ),
   FieldSchema.optionString('icon'),
   FieldSchema.defaultedStringEnum('align', 'end', [ 'start', 'end' ]),
@@ -67,20 +67,20 @@ const baseFooterButtonFields = [
 
 export const dialogFooterButtonFields = [
   ...baseFooterButtonFields,
-  FieldSchema.strictString('text')
+  FieldSchema.requiredString('text')
 ];
 
 const normalFooterButtonFields = [
-  FieldSchema.strictStringEnum('type', [ 'submit', 'cancel', 'custom' ]),
+  FieldSchema.requiredStringEnum('type', [ 'submit', 'cancel', 'custom' ]),
   ...dialogFooterButtonFields
 ];
 
 const menuFooterButtonFields = [
-  FieldSchema.strictStringEnum('type', [ 'menu' ]),
+  FieldSchema.requiredStringEnum('type', [ 'menu' ]),
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
-  FieldSchema.strictArrayOf('items', dialogToggleMenuItemSchema),
+  FieldSchema.requiredArrayOf('items', dialogToggleMenuItemSchema),
   ...baseFooterButtonFields
 ];
 

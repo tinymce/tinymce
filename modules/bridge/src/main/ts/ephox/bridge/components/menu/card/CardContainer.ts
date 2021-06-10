@@ -33,11 +33,11 @@ export const itemSchema = ValueSchema.valueThunkOf(
 );
 
 export const cardContainerSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.defaultedString('direction', 'horizontal'),
   FieldSchema.defaultedString('align', 'left'),
   FieldSchema.defaultedString('valign', 'middle'),
-  FieldSchema.strictArrayOf('items', itemSchema)
+  FieldSchema.requiredArrayOf('items', itemSchema)
 ]);
 
 export const createCardContainer = (spec: CardContainerSpec): Result<CardContainer, ValueSchema.SchemaError<any>> =>

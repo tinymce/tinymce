@@ -14,8 +14,8 @@ const builder = (detail: SeparatorItemDetail) => ({
 });
 
 const schema = [
-  FieldSchema.strict('dom'),
-  FieldSchema.strict('components'),
+  FieldSchema.required('dom'),
+  FieldSchema.required('components'),
   Fields.output('builder', builder)
 ];
 

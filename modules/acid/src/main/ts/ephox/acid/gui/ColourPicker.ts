@@ -154,7 +154,7 @@ const makeFactory = (
   const colourPickerSketcher = Sketcher.single({
     name: 'ColourPicker',
     configFields: [
-      FieldSchema.strict('dom'),
+      FieldSchema.required('dom'),
       FieldSchema.defaulted('onValidHex', Fun.noop),
       FieldSchema.defaulted('onInvalidHex', Fun.noop)
     ],

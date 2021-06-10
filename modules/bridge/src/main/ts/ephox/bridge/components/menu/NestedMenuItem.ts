@@ -23,8 +23,8 @@ export interface NestedMenuItem extends CommonMenuItem {
 }
 
 export const nestedMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.strictFunction('getSubmenuItems'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredFunction('getSubmenuItems'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   FieldSchema.optionString('icon')
 ].concat(commonMenuItemFields));

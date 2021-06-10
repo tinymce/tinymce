@@ -21,8 +21,8 @@ export interface FancyActionArgsMap {
 const fancyTypes: (keyof FancyActionArgsMap)[] = [ 'inserttable', 'colorswatch' ]; // These will need to match the keys of FancyActionArgsMap above
 
 export const fancyMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.strictStringEnum('fancytype', fancyTypes),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredStringEnum('fancytype', fancyTypes),
   FieldSchema.defaultedFunction('onAction', Fun.noop)
 ]);
 

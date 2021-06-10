@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 export interface CheckboxSpec {
@@ -16,15 +16,15 @@ export interface Checkbox {
 }
 
 const checkboxFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('name'),
-  FieldSchema.strictString('label'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('name'),
+  FieldSchema.requiredString('label'),
   FieldSchema.defaultedBoolean('disabled', false)
 ];
 
 export const checkboxSchema = ValueSchema.objOf(checkboxFields);
 
-export const checkboxDataProcessor = ValueSchema.boolean;
+export const checkboxDataProcessor = ValueType.boolean;
 
 export const createCheckbox = (spec: CheckboxSpec): Result<Checkbox, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw<Checkbox>('checkbox', checkboxSchema, spec);

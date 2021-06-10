@@ -4,6 +4,7 @@ import { Result } from '@ephox/katamari';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/StructureSchema';
+import * as FieldTypes from 'ephox/boulder/core/ValueType';
 
 UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
   const checkErr = (label, expectedPart, v, processor) => {
@@ -51,7 +52,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     'Not passing through a function',
     'Not a function',
     10,
-    ValueSchema.funcOrDie([ 'a', 'b' ], ValueSchema.anyValue())
+    ValueSchema.funcOrDie([ 'a', 'b' ], FieldTypes.anyValue())
   );
 
   checkRawResultIs(
@@ -61,7 +62,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
       return f('a', 'b', 'c');
     },
     getter1,
-    ValueSchema.funcOrDie([ 'a', 'b' ], ValueSchema.anyValue())
+    ValueSchema.funcOrDie([ 'a', 'b' ], FieldTypes.anyValue())
   );
 
   checkRawErrIs(
@@ -95,7 +96,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     },
     getter2,
     ValueSchema.funcOrDie([ 'a' ], ValueSchema.objOf([
-      FieldSchema.strict('A')
+      FieldSchema.required('A')
     ]))
   );
 
@@ -119,8 +120,8 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     },
     getter3,
     ValueSchema.funcOrDie([ 'one', 'two' ], ValueSchema.arrOfObj([
-      FieldSchema.strict('firstname'),
-      FieldSchema.strict('surname')
+      FieldSchema.required('firstname'),
+      FieldSchema.required('surname')
     ]))
   );
 

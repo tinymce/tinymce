@@ -1,7 +1,6 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 import { CardMenuItemSpec } from '../menu/CardMenuItem';
-
 import { SeparatorMenuItem, separatorMenuItemSchema, SeparatorMenuItemSpec } from '../menu/SeparatorMenuItem';
 
 export type ColumnTypes = number | 'auto';
@@ -62,21 +61,21 @@ const autocompleterItemSchema = ValueSchema.objOf([
   FieldSchema.defaulted('active', false),
   FieldSchema.defaulted('disabled', false),
   FieldSchema.defaulted('meta', {}),
-  FieldSchema.strictString('value'),
+  FieldSchema.requiredString('value'),
   FieldSchema.optionString('text'),
   FieldSchema.optionString('icon')
 ]);
 
 const autocompleterSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('ch'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('ch'),
   FieldSchema.defaultedNumber('minChars', 1),
   FieldSchema.defaulted('columns', 1),
   FieldSchema.defaultedNumber('maxResults', 10),
   FieldSchema.optionFunction('matches'),
-  FieldSchema.strictFunction('fetch'),
-  FieldSchema.strictFunction('onAction'),
-  FieldSchema.defaultedArrayOf('highlightOn', [], ValueSchema.string)
+  FieldSchema.requiredFunction('fetch'),
+  FieldSchema.requiredFunction('onAction'),
+  FieldSchema.defaultedArrayOf('highlightOn', [], ValueType.string)
 ]);
 
 export const createSeparatorItem = (spec: SeparatorItemSpec): Result<SeparatorItem, ValueSchema.SchemaError<any>> =>

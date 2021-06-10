@@ -45,7 +45,7 @@ The API exposed by boulder will be constantly changing, but it should always be 
 Note, there are many other APIs as well, but they tend to be convenience functions built on top of these constructors.
 
 
-### <a name="anyValue">ValueSchema.anyValue</a>
+### <a name="anyValue">ValueType.anyValue</a>
 
 - used to represent any value (array, object, number etc.).
 
@@ -83,7 +83,7 @@ Note, there are many other APIs as well, but they tend to be convenience functio
 
 ### <a name="field">FieldSchema.field(key, newKey, presence, schema)</a>
 
-- define a field for an object schema. Presence (`strict` \| `defaulted` \| `asOption` | `asDefaultedOption`) is used to determine how to handle whether the field `key` is there, and `schema` defines the schema to match for the field's value. In the output object, `newKey` will be used as the field name. Note, this method has many convenience methods defined such as `FieldSchema.strict('key')`.
+- define a field for an object schema. Presence (`strict` \| `defaulted` \| `asOption` | `asDefaultedOption`) is used to determine how to handle whether the field `key` is there, and `schema` defines the schema to match for the field's value. In the output object, `newKey` will be used as the field name. Note, this method has many convenience methods defined such as `FieldSchema.required('key')`.
 
 ### <a name="state">FieldSchema.state(newKey, instantiator)</a>
 

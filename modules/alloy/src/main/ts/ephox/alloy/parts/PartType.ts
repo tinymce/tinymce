@@ -1,6 +1,5 @@
-import { FieldPresence, StructureProcessor, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldProcessor, FieldSchema, StructureProcessor, ValueSchema, ValueType } from '@ephox/boulder';
 import { Adt, Fun, Id, Optional } from '@ephox/katamari';
-
 import { SimpleOrSketchSpec } from '../api/component/SpecTypes';
 import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
@@ -16,7 +15,7 @@ export interface BasePartDetail<D extends CompositeSketchDetail, PS> {
   name: string;
   overrides: OverrideHandler<D, PS>;
   pname: string;
-  schema: StructureProcessor[];
+  schema: FieldProcessor[];
 }
 
 export interface PartDetail<D extends CompositeSketchDetail, PS> extends BasePartDetail<D, PS> {
@@ -74,12 +73,12 @@ const adt: {
 
 const fFactory = FieldSchema.defaulted('factory', { sketch: Fun.identity });
 const fSchema = FieldSchema.defaulted('schema', [ ]);
-const fName = FieldSchema.strict('name');
+const fName = FieldSchema.required('name');
 const fPname = FieldSchema.field(
   'pname',
   'pname',
   FieldPresence.defaultedThunk((typeSpec: PartSpec<any, any>) => '<alloy.' + Id.generate(typeSpec.name) + '>'),
-  ValueSchema.anyValue()
+  ValueType.anyValue()
 );
 
 // Groups cannot choose their schema.
@@ -104,7 +103,7 @@ const optionalSpec = ValueSchema.objOf([
 
 const groupSpec = ValueSchema.objOf([
   fFactory, fGroupSchema, fName,
-  FieldSchema.strict('unit'),
+  FieldSchema.required('unit'),
   fPname, fDefaults, fOverrides
 ]);
 
@@ -121,7 +120,7 @@ const asCommon = <T>(part: PartTypeAdt<T>): T => {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 
-const convert = <D extends CompositeSketchDetail, S, PS extends PartSpec<D, S>, PD extends PartDetail<D, S>>(adtConstructor: PartType<PD>, partSchema: Processor) => (spec: PS): PartTypeAdt<PD> => {
+const convert = <D extends CompositeSketchDetail, S, PS extends PartSpec<D, S>, PD extends PartDetail<D, S>>(adtConstructor: PartType<PD>, partSchema: StructureProcessor) => (spec: PS): PartTypeAdt<PD> => {
   const data = ValueSchema.asRawOrDie('Converting part type', partSchema, spec);
   return adtConstructor(data);
 };

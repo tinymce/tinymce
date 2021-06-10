@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, Processor, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Objects, StructureProcessor, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as CommonBehaviour from '../../behaviour/common/Behaviour';
@@ -21,9 +21,9 @@ const derive = (
   capabilities: Array<NamedConfiguredBehaviour<any, any, any>>
 ): AlloyBehaviourRecord => Objects.wrapAll(capabilities);
 
-const simpleSchema: Processor = ValueSchema.objOfOnly([
-  FieldSchema.strict('fields'),
-  FieldSchema.strict('name'),
+const simpleSchema: StructureProcessor = ValueSchema.objOfOnly([
+  FieldSchema.required('fields'),
+  FieldSchema.required('name'),
   FieldSchema.defaulted('active', { }),
   FieldSchema.defaulted('apis', { }),
   FieldSchema.defaulted('state', NoState),
@@ -41,10 +41,10 @@ const create = <
   return CommonBehaviour.create<C, D, S, A, E>(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
 
-const modeSchema: Processor = ValueSchema.objOfOnly([
-  FieldSchema.strict('branchKey'),
-  FieldSchema.strict('branches'),
-  FieldSchema.strict('name'),
+const modeSchema: StructureProcessor = ValueSchema.objOfOnly([
+  FieldSchema.required('branchKey'),
+  FieldSchema.required('branches'),
+  FieldSchema.required('name'),
   FieldSchema.defaulted('active', { }),
   FieldSchema.defaulted('apis', { }),
   FieldSchema.defaulted('state', NoState),

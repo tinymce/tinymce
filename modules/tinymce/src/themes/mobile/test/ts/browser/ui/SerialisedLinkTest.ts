@@ -141,16 +141,16 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
   const sTestScenario = (rawScenario) => {
     const scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
-      FieldSchema.strict('label'),
+      FieldSchema.required('label'),
       FieldSchema.defaulted('content', ''),
       FieldSchema.defaulted('node', SugarElement.fromText('')),
-      FieldSchema.strictObjOf('fields', [
+      FieldSchema.requiredObjOf('fields', [
         FieldSchema.option('url'),
         FieldSchema.option('text'),
         FieldSchema.option('title'),
         FieldSchema.option('target')
       ]),
-      FieldSchema.strict('expected'),
+      FieldSchema.required('expected'),
       FieldSchema.defaulted('beforeExecute', Step.pass),
       FieldSchema.defaulted('mutations', Fun.constant(Step.pass))
     ]), rawScenario);
