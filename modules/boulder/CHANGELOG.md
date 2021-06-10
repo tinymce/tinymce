@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Changed
-- Replaced the FieldPresence and ValueProcessor ADTs with standard functions #TINY-7549
+- Replaced the FieldPresence and ValueProcessor ADTs with the native TypeScript equivalent #TINY-7549
 
 ### Removed
 - Removed the `FieldPresenceAdt` and `ValueProcessorAdt` types (which was aliased to `FieldProcessorAdt` externally) #TINY-7549
