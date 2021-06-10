@@ -7,6 +7,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings, ToolbarMode } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 
+import * as TestUtils from '../../../module/TestUtils';
+
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
   before(() => {
     Theme();
@@ -27,6 +29,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
       base_url: '/project/tinymce/js/tinymce'
     });
     editor.focus();
+    await TestUtils.pWaitForEditorToRender();
     assertToolbarToggleState(editor, false);
     editor.execCommand('ToggleToolbarDrawer');
     assertToolbarToggleState(editor, shouldToggle);

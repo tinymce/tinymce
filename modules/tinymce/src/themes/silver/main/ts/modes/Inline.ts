@@ -112,11 +112,15 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.nodeChanged();
   };
 
+  // In certain circumstances we need to delay the render function until the next
+  // event loop to ensure things like the current selection are correct.
+  const delayedRender = () => Delay.setEditorTimeout(editor, render, 0);
+
   editor.on('show', render);
   editor.on('hide', ui.hide);
 
   if (!toolbarPersist) {
-    editor.on('focus', render);
+    editor.on('focus', delayedRender);
     editor.on('blur', ui.hide);
   }
 

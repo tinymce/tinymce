@@ -10,6 +10,8 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
+import * as TestUtils from '../../module/TestUtils';
+
 describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
   const store = Cell([ ]);
   const hook = TinyHooks.bddSetup<Editor>({
@@ -132,8 +134,9 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
     }
   }, [ Theme ]);
 
-  beforeEach(() => {
+  beforeEach(async () => {
     hook.editor().focus();
+    await TestUtils.pWaitForEditorToRender();
   });
 
   it('Check basic container structure and actions', () => {
