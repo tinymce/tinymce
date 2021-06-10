@@ -9,7 +9,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { getContextToolbarBounds } from 'tinymce/themes/silver/ui/context/ContextToolbarBounds';
 
 import TestBackstage from '../../../module/TestBackstage';
-import * as TestUtils from '../../../module/UiUtils';
+import * as UiUtils from '../../../module/UiUtils';
 
 interface TestBounds {
   readonly header: Bounds;
@@ -97,7 +97,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
       });
       backstage.shared.header.setDockingMode(editor.settings.toolbar_location);
       editor.focus();
-      await TestUtils.pWaitForEditorToRender();
+      await UiUtils.pWaitForEditorToRender();
       scrollRelativeEditorContainer(editor, scenario.scroll.relativeTop, scenario.scroll.delta);
       assertToolbarBounds(editor, scenario);
       McEditor.remove(editor);

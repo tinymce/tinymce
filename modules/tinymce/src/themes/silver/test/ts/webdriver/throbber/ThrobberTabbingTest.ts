@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as TestUtils from '../../module/UiUtils';
+import * as UiUtils from '../../module/UiUtils';
 
 describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -60,7 +60,7 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
 
   const pFocusAndWaitForRender = async (selector: string) => {
     FocusTools.setFocus(SugarBody.body(), selector);
-    await TestUtils.pWaitForEditorToRender();
+    await UiUtils.pWaitForEditorToRender();
   };
 
   it('TINY-7373: should be able to tab into editor if throbber is disabled', async () => {

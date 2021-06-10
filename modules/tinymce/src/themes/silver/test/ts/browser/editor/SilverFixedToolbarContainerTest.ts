@@ -6,7 +6,7 @@ import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as TestUtils from '../../module/UiUtils';
+import * as UiUtils from '../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest', () => {
   let toolbar: SugarElement<HTMLDivElement>;
@@ -31,7 +31,7 @@ describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest',
     const editor = hook.editor();
     editor.setContent('fixed_toolbar_container test');
     editor.focus();
-    await TestUtils.pWaitForEditorToRender();
+    await UiUtils.pWaitForEditorToRender();
     Assertions.assertStructure(
       'Container structure',
       ApproxStructure.build((s, str, arr) => s.element('div', {

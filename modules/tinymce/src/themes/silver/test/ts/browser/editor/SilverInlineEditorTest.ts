@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as TestUtils from '../../module/UiUtils';
+import * as UiUtils from '../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
   const store = Cell([ ]);
@@ -136,7 +136,7 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
 
   beforeEach(async () => {
     hook.editor().focus();
-    await TestUtils.pWaitForEditorToRender();
+    await UiUtils.pWaitForEditorToRender();
   });
 
   it('Check basic container structure and actions', () => {
