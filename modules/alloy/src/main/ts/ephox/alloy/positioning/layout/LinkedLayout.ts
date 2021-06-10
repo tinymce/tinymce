@@ -2,7 +2,7 @@ import { nu as NuSpotInfo } from '../view/SpotInfo';
 import * as Direction from './Direction';
 import { AnchorBoxBounds, boundsRestriction } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
-import * as Placement from './Placement';
+import { Placement } from './Placement';
 
 /*
   Layout for submenus;
@@ -29,7 +29,7 @@ const southeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   southY(anchor),
   bubbles.southeast(),
   Direction.southeast(),
-  Placement.southeast,
+  Placement.Southeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.TopEdge }),
   labelPrefix
 );
@@ -39,7 +39,7 @@ const southwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   southY(anchor),
   bubbles.southwest(),
   Direction.southwest(),
-  Placement.southwest,
+  Placement.Southwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.TopEdge }),
   labelPrefix
 );
@@ -49,7 +49,7 @@ const northeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   northY(anchor, element),
   bubbles.northeast(),
   Direction.northeast(),
-  Placement.northeast,
+  Placement.Northeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.BottomEdge }),
   labelPrefix
 );
@@ -59,7 +59,7 @@ const northwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   northY(anchor, element),
   bubbles.northwest(),
   Direction.northwest(),
-  Placement.northwest,
+  Placement.Northwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.BottomEdge }),
   labelPrefix
 );

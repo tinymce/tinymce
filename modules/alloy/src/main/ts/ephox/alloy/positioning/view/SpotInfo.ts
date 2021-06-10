@@ -11,6 +11,7 @@ export interface SpotInfo {
   readonly label: string;
   readonly restriction: BoundsRestriction;
   readonly placement: Placement;
+  // This flag will pretend that this spot fits within the bounds, no matter whether it does or not
   readonly alwaysFit: boolean;
 }
 

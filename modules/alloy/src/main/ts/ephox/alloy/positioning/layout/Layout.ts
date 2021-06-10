@@ -3,7 +3,7 @@ import { Bubble } from './Bubble';
 import * as Direction from './Direction';
 import { boundsRestriction, AnchorBoxBounds } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
-import * as Placement from './Placement';
+import { Placement } from './Placement';
 
 /*
   Layout for menus and inline context dialogs;
@@ -40,7 +40,7 @@ const southeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   southY(anchor),
   bubbles.southeast(),
   Direction.southeast(),
-  Placement.southeast,
+  Placement.Southeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.BottomEdge }),
   labelPrefix
 );
@@ -50,7 +50,7 @@ const southwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   southY(anchor),
   bubbles.southwest(),
   Direction.southwest(),
-  Placement.southwest,
+  Placement.Southwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.BottomEdge }),
   labelPrefix
 );
@@ -60,7 +60,7 @@ const northeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   northY(anchor, element),
   bubbles.northeast(),
   Direction.northeast(),
-  Placement.northeast,
+  Placement.Northeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.TopEdge }),
   labelPrefix
 );
@@ -70,7 +70,7 @@ const northwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   northY(anchor, element),
   bubbles.northwest(),
   Direction.northwest(),
-  Placement.northwest,
+  Placement.Northwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.TopEdge }),
   labelPrefix
 );
@@ -80,7 +80,7 @@ const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
   northY(anchor, element),
   bubbles.north(),
   Direction.north(),
-  Placement.north,
+  Placement.North,
   boundsRestriction(anchor, { bottom: AnchorBoxBounds.TopEdge }),
   labelPrefix
 );
@@ -90,7 +90,7 @@ const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
   southY(anchor),
   bubbles.south(),
   Direction.south(),
-  Placement.south,
+  Placement.South,
   boundsRestriction(anchor, { top: AnchorBoxBounds.BottomEdge }),
   labelPrefix
 );
@@ -100,7 +100,7 @@ const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
   centreY(anchor, element),
   bubbles.east(),
   Direction.east(),
-  Placement.east,
+  Placement.East,
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge }),
   labelPrefix
 );
@@ -110,7 +110,7 @@ const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
   centreY(anchor, element),
   bubbles.west(),
   Direction.west(),
-  Placement.west,
+  Placement.West,
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge }),
   labelPrefix
 );

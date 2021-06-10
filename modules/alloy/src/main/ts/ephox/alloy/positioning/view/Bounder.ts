@@ -6,7 +6,7 @@ import { Bubble } from '../layout/Bubble';
 import * as Direction from '../layout/Direction';
 import * as LayoutBounds from '../layout/LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
-import * as Placement from '../layout/Placement';
+import { Placement } from '../layout/Placement';
 import { RepositionDecision } from './Reposition';
 import { SpotInfo } from './SpotInfo';
 
@@ -225,7 +225,7 @@ const attempts = (element: SugarElement<HTMLElement>, candidates: AnchorLayout[]
       maxHeight: elementBox.height,
       maxWidth: elementBox.width,
       direction: Direction.southeast(),
-      placement: Placement.southeast,
+      placement: Placement.Southeast,
       classes: {
         on: [],
         off: []

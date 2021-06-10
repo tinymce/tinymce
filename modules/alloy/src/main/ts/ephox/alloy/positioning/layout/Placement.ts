@@ -1,16 +1,16 @@
 import { Optional } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
-export type Placement = 'north' | 'northeast' | 'northwest' | 'south' | 'southeast' | 'southwest' | 'east' | 'west';
-
-const north = 'north' as const;
-const northeast = 'northeast' as const;
-const northwest = 'northwest' as const;
-const south = 'south' as const;
-const southeast = 'southeast' as const;
-const southwest = 'southwest' as const;
-const east = 'east' as const;
-const west = 'west' as const;
+export const enum Placement {
+  North = 'north',
+  Northeast = 'northeast',
+  Northwest = 'northwest',
+  South = 'south',
+  Southeast = 'southeast',
+  Southwest = 'southwest',
+  East = 'east',
+  West = 'west'
+}
 
 const placementAttribute = 'data-alloy-placement';
 
@@ -22,15 +22,6 @@ const getPlacement = (element: SugarElement<HTMLElement>): Optional<Placement> =
   Attribute.getOpt(element, placementAttribute) as Optional<Placement>;
 
 export {
-  north,
-  northeast,
-  northwest,
-  south,
-  southeast,
-  southwest,
-  east,
-  west,
-
   setPlacement,
   getPlacement
 };

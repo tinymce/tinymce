@@ -4,7 +4,7 @@ import { Bubble } from './Bubble';
 import * as Direction from './Direction';
 import { AnchorBoxBounds, boundsRestriction } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
-import * as Placement from './Placement';
+import { Placement, getPlacement } from './Placement';
 
 /*
   Layouts for things that overlay over the anchor element/box. These are designed to mirror
@@ -40,7 +40,7 @@ const southwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   southY(anchor, element),
   bubbles.innerSouthwest(),
   Direction.northwest(),
-  Placement.southwest,
+  Placement.Southwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.BottomEdge }),
   labelPrefix
 );
@@ -51,7 +51,7 @@ const southeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   southY(anchor, element),
   bubbles.innerSoutheast(),
   Direction.northeast(),
-  Placement.southeast,
+  Placement.Southeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.BottomEdge }),
   labelPrefix
 );
@@ -62,7 +62,7 @@ const northwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   northY(anchor),
   bubbles.innerNorthwest(),
   Direction.southwest(),
-  Placement.northwest,
+  Placement.Northwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.TopEdge }),
   labelPrefix
 );
@@ -73,7 +73,7 @@ const northeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   northY(anchor),
   bubbles.innerNortheast(),
   Direction.southeast(),
-  Placement.northeast,
+  Placement.Northeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.TopEdge }),
   labelPrefix
 );
@@ -84,7 +84,7 @@ const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
   northY(anchor),
   bubbles.innerNorth(),
   Direction.south(),
-  Placement.north,
+  Placement.North,
   boundsRestriction(anchor, { top: AnchorBoxBounds.TopEdge }),
   labelPrefix
 );
@@ -95,7 +95,7 @@ const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
   southY(anchor, element),
   bubbles.innerSouth(),
   Direction.north(),
-  Placement.south,
+  Placement.South,
   boundsRestriction(anchor, { bottom: AnchorBoxBounds.BottomEdge }),
   labelPrefix
 );
@@ -106,7 +106,7 @@ const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
   centreY(anchor, element),
   bubbles.innerEast(),
   Direction.west(),
-  Placement.east,
+  Placement.East,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge }),
   labelPrefix
 );
@@ -117,7 +117,7 @@ const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
   centreY(anchor, element),
   bubbles.innerWest(),
   Direction.east(),
-  Placement.west,
+  Placement.West,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge }),
   labelPrefix
 );
@@ -125,23 +125,23 @@ const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
 const all = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest, south, north, east, west ];
 const allRtl = (): AnchorLayout[] => [ southwest, southeast, northwest, northeast, south, north, east, west ];
 
-const lookupPreserveLayout = (lastPlacement: Placement.Placement) => {
+const lookupPreserveLayout = (lastPlacement: Placement) => {
   switch (lastPlacement) {
-    case Placement.north:
+    case Placement.North:
       return north;
-    case Placement.northeast:
+    case Placement.Northeast:
       return northeast;
-    case Placement.northwest:
+    case Placement.Northwest:
       return northwest;
-    case Placement.south:
+    case Placement.South:
       return south;
-    case Placement.southeast:
+    case Placement.Southeast:
       return southeast;
-    case Placement.southwest:
+    case Placement.Southwest:
       return southwest;
-    case Placement.east:
+    case Placement.East:
       return east;
-    case Placement.west:
+    case Placement.West:
       return west;
   }
 };
@@ -152,7 +152,7 @@ const preserve: AnchorLayout = (
   bubbles: Bubble,
   placee: SugarElement<HTMLElement>
 ) => {
-  const lastPlacement = Placement.getPlacement(placee).getOr(Placement.north);
+  const lastPlacement = getPlacement(placee).getOr(Placement.North);
   const layout = lookupPreserveLayout(lastPlacement);
   return layout(anchor, element, bubbles, placee);
 };
