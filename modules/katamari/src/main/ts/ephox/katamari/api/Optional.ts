@@ -13,10 +13,10 @@ export interface Optional<T> {
   readonly isNone: () => boolean;
 
   /** If some(x) return x, otherwise return the specified default value */
-  readonly getOr: <T2>(value: T2) => T | T2;
+  readonly getOr: <T2 = T>(value: T2) => T | T2;
 
   /** getOr with a thunked default value */
-  readonly getOrThunk: <T2>(makeValue: () => T2) => T | T2;
+  readonly getOrThunk: <T2 = T>(makeValue: () => T2) => T | T2;
 
   /** get the 'some' value; throw if none */
   readonly getOrDie: (msg?: string) => T;
@@ -118,15 +118,12 @@ const some = <T>(a: T): Optional<T> => {
     getOrUndefined: constant_a,
     or: self,
     orThunk: self,
-    map: <T2> (f: (value: T) => T2) => some(f(a)),
-    each: (f: (value: T) => void): void => {
-      f(a);
-    },
+    map: (f) => some(f(a)),
+    each: (f) => f(a),
     bind,
     exists: bind,
     forall: bind,
-    filter: <Q extends T>(f: (value: T) => value is Q): Optional<Q> =>
-      f(a) ? me as Optional<Q> : NONE,
+    filter: (f) => f(a) ? me : NONE,
     toArray: () => [ a ],
     toString: () => 'some(' + a + ')'
   };
