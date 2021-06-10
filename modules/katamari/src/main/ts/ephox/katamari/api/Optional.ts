@@ -119,7 +119,9 @@ const some = <T>(a: T): Optional<T> => {
     or: self,
     orThunk: self,
     map: (f) => some(f(a)),
-    each: (f) => f(a),
+    each: (f) => {
+      f(a);
+    },
     bind,
     exists: bind,
     forall: bind,
