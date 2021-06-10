@@ -25,3 +25,11 @@ export interface SetContentArgs {
   content?: string;
   no_events?: boolean;
 }
+
+export interface InsertContentDetails {
+  readonly paste?: boolean;
+  readonly merge?: boolean;
+  readonly data?: {
+    readonly paste: boolean;
+  };
+}

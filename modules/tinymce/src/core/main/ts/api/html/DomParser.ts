@@ -36,6 +36,7 @@ export interface ParserArgs {
   context?: string;
   isRootContent?: boolean;
   format?: string;
+  invalid?: boolean;
 
   // TODO finish typing the parser args
   [key: string]: any;

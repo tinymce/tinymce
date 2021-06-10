@@ -17,6 +17,7 @@ import { switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import { ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
+import { getAdvancedTab } from './DialogAdvancedTab';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 import * as RowDialogGeneralTab from './RowDialogGeneralTab';
@@ -103,7 +104,7 @@ const open = (editor: Editor) => {
         name: 'general',
         items: RowDialogGeneralTab.getItems(editor)
       },
-      Helpers.getAdvancedTab('row')
+      getAdvancedTab(editor, 'row')
     ]
   };
   const dialogPanel: Dialog.PanelSpec = {

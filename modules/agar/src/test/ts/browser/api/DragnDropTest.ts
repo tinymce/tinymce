@@ -2,7 +2,8 @@ import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { DomEvent, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { dragnDrop, dropFiles, isDraggable, sDragnDrop, sDropFiles, sDropItems } from 'ephox/agar/api/DragnDrop';
 import { createFile } from 'ephox/agar/api/Files';
-import { GeneralSteps, Logger } from 'ephox/agar/api/Main';
+import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
+import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 

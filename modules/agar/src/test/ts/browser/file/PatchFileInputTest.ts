@@ -1,9 +1,13 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell, Optional } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { Chain } from 'ephox/agar/api/Chain';
 import { cRunOnPatchedFileInput, sRunOnPatchedFileInput } from 'ephox/agar/api/FileInput';
 import { createFile } from 'ephox/agar/api/Files';
-import { Chain, GeneralSteps, Logger, Pipeline, Step } from 'ephox/agar/api/Main';
+import * as GeneralSteps from 'ephox/agar/api/GeneralSteps';
+import * as Logger from 'ephox/agar/api/Logger';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import { Step } from 'ephox/agar/api/Step';
 
 UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
   const files = [ createFile('a.txt', 0, new Blob([ 'x' ])) ];

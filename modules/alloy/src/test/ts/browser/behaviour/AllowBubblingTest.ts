@@ -1,8 +1,12 @@
 import { Logger, Step, StepSequence } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+
+import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
+import { AllowBubbling } from 'ephox/alloy/api/behaviour/AllowBubbling';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { AddEventsBehaviour, AllowBubbling, AlloyComponent, AlloyEvents } from 'ephox/alloy/api/Main';
+import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 

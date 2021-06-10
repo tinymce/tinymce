@@ -1,10 +1,14 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell, Optional } from '@ephox/katamari';
 import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as ChainSequence from 'ephox/agar/api/ChainSequence';
 import { cCopy, cCut, sPasteDataTransfer, sPasteFiles, sPasteItems } from 'ephox/agar/api/Clipboard';
 import { createFileFromString } from 'ephox/agar/api/Files';
-import { Chain, ChainSequence, Logger, Step, StepSequence } from 'ephox/agar/api/Main';
+import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
+import { Step } from 'ephox/agar/api/Step';
+import * as StepSequence from 'ephox/agar/api/StepSequence';
 
 if (!/phantom/i.test(navigator.userAgent)) {
   UnitTest.asynctest('ClipboardTest', (success, failure) => {

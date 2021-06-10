@@ -12,6 +12,7 @@ const isWord = (_universe: Universe<any, any>, text: string): boolean => {
 };
 
 export {
+  WordScope,
   identify,
   isWord
 };

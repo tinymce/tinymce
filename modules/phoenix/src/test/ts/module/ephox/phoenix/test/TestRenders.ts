@@ -1,6 +1,6 @@
 import { Gene } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
-import { TypedItem } from 'ephox/phoenix/api/Main';
+import { TypedItem } from 'ephox/phoenix/api/data/TypedItem';
 
 const typeditem = (a: TypedItem<Gene, undefined>): string => {
   return a.fold((item) => {

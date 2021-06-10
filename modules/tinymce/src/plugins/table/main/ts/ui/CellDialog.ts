@@ -18,6 +18,7 @@ import { switchCellType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
+import { getAdvancedTab } from './DialogAdvancedTab';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 
@@ -167,7 +168,7 @@ const open = (editor: Editor, selections: Selections) => {
         name: 'general',
         items: CellDialogGeneralTab.getItems(editor)
       },
-      Helpers.getAdvancedTab('cell')
+      getAdvancedTab(editor, 'cell')
     ]
   };
   const dialogPanel: Dialog.PanelSpec = {

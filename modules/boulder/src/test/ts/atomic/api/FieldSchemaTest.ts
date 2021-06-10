@@ -2,8 +2,8 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
-import { FieldProcessorAdt } from 'ephox/boulder/api/Main';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
+import { FieldProcessorAdt } from 'ephox/boulder/core/ValueProcessor';
 
 UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
   const assertFieldValue = (label: string, expected: any, input: any, field: FieldProcessorAdt) => {
