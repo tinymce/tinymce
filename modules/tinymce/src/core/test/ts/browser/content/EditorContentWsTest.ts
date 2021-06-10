@@ -5,7 +5,9 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.EditorContentWsTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   it('Editor initialized on pre element should retain whitespace on get/set content', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<pre>  a  </pre>', {
