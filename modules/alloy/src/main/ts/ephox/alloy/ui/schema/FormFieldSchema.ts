@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema, Objects } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, Objects } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
@@ -7,7 +7,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
 import { FormFieldDetail } from '../types/FormFieldTypes';
 
-const schema: () => ValueProcessor[] = Fun.constant([
+const schema: () => StructureProcessor[] = Fun.constant([
   FieldSchema.defaulted('prefix', 'form-field'),
   SketchBehaviours.field('fieldBehaviours', [ Composing, Representing ])
 ]);

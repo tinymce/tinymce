@@ -3,7 +3,7 @@ import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
-import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
+import * as ValueSchema from 'ephox/boulder/api/StructureSchema';
 
 UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
   const checkErr = (label, expectedPart, v, processor) => {

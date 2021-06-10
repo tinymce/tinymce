@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
 export const enum FieldType {
-  Strict = 'strict',
+  Required = 'required',
   DefaultedThunk = 'defaultedThunk',
   Option = 'option',
   DefaultedOptionThunk = 'defaultedOptionThunk',
@@ -14,15 +14,15 @@ interface FieldPresenceData<D extends FieldType, T> {
   readonly process: T;
 }
 
-type StrictData = FieldPresenceData<FieldType.Strict, {}>;
+type RequiredData = FieldPresenceData<FieldType.Required, {}>;
 type DefaultedThunkData = FieldPresenceData<FieldType.DefaultedThunk, Callback>;
 type OptionData = FieldPresenceData<FieldType.Option, {}>;
 type DefaultedOptionThunkData = FieldPresenceData<FieldType.DefaultedOptionThunk, Callback>;
 type MergeWithThunkData = FieldPresenceData<FieldType.MergeWithThunk, Callback>;
 
-export type FieldPresence = StrictData | DefaultedThunkData | OptionData | DefaultedOptionThunkData | MergeWithThunkData;
+export type FieldPresence = RequiredData | DefaultedThunkData | OptionData | DefaultedOptionThunkData | MergeWithThunkData;
 
-const strict = (): StrictData => ({ tag: FieldType.Strict, process: { }});
+const required = (): RequiredData => ({ tag: FieldType.Required, process: { }});
 const defaultedThunk = (fallbackThunk: Callback): DefaultedThunkData => ({ tag: FieldType.DefaultedThunk, process: fallbackThunk });
 const defaulted = <T>(fallback: T): DefaultedThunkData => defaultedThunk(Fun.constant(fallback));
 const asOption = (): OptionData => ({ tag: FieldType.Option, process: { }});
@@ -32,7 +32,7 @@ const mergeWithThunk = (baseThunk: Callback): MergeWithThunkData => ({ tag: Fiel
 const mergeWith = (base: {}): MergeWithThunkData => mergeWithThunk(Fun.constant(base));
 
 export {
-  strict,
+  required,
   asOption,
 
   defaulted,

@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema, Objects } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, Objects } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -14,7 +14,7 @@ import * as PartType from '../../parts/PartType';
 import * as ButtonBase from '../common/ButtonBase';
 import { FormChooserDetail } from '../types/FormChooserTypes';
 
-const schema: () => ValueProcessor[] = Fun.constant([
+const schema: () => StructureProcessor[] = Fun.constant([
   FieldSchema.strict('choices'),
   SketchBehaviours.field('chooserBehaviours', [ Keying, Highlighting, Composing, Representing ]),
   Fields.markers([ 'choiceClass', 'selectedClass' ])

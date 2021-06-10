@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import * as Boxes from '../../alien/Boxes';
 import * as Fields from '../../data/Fields';
@@ -18,4 +18,4 @@ export default [
   FieldSchema.defaultedArrayOf('modes', [ 'top', 'bottom' ], ValueSchema.string),
   Fields.onHandler('onDocked'),
   Fields.onHandler('onUndocked')
-] as ValueProcessor[];
+] as StructureProcessor[];

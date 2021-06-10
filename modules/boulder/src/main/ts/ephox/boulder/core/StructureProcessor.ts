@@ -3,22 +3,25 @@ import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 import * as FieldPresence from '../api/FieldPresence';
 import * as Objects from '../api/Objects';
 import { ResultCombine } from '../combine/ResultCombine';
+import * as FieldProcessor from './FieldProcessor';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
-import * as ValuePresence from './ValuePresence';
+import { value } from './Utils';
+
+type FieldProcessor = FieldProcessor.FieldProcessor;
 
 type SchemaError = SchemaError.SchemaError;
 
 export type ValueValidator = (a) => SimpleResult<string, any>;
 export type PropExtractor = (path: string[], val: any) => SimpleResult<SchemaError[], any>;
-export interface Processor {
-  getProp: PropExtractor;
-  toString: () => string;
+export interface StructureProcessor {
+  readonly getProp: PropExtractor;
+  readonly toString: () => string;
 }
 
-const output = (newKey: string, value: any): ValuePresence.StateProcessorData => ValuePresence.state(newKey, Fun.constant(value));
+const output = (newKey: string, value: any): FieldProcessor => FieldProcessor.customField(newKey, Fun.constant(value));
 
-const snapshot = (newKey: string): ValuePresence.StateProcessorData => ValuePresence.state(newKey, Fun.identity);
+const snapshot = (newKey: string): FieldProcessor => FieldProcessor.customField(newKey, Fun.identity);
 
 const strictAccess = <T>(path: string[], obj: Record<string, T>, key: string): SimpleResult<SchemaError[], T> => {
   // In strict mode, if it undefined, it is an error.
@@ -42,8 +45,8 @@ const optionDefaultedAccess = <T>(obj: Record<string, T | true>, key: string, fa
 type SimpleBundle = SimpleResult<SchemaError[], any>;
 type OptionBundle = SimpleResult<SchemaError[], Record<string, Optional<any>>>;
 
-const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePresence.ValueProcessor): SimpleResult<SchemaError[], T> => {
-  return ValuePresence.fold(
+const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: FieldProcessor): SimpleResult<SchemaError[], T> => {
+  return FieldProcessor.fold(
     value,
     (key, newKey, presence, prop) => {
       const bundle = (av: any): SimpleBundle => {
@@ -64,7 +67,7 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePres
       };
 
       switch (presence.tag) {
-        case FieldPresence.FieldType.Strict:
+        case FieldPresence.FieldType.Required:
           return SimpleResult.bind(
             strictAccess(path, obj, key),
             bundle
@@ -101,12 +104,12 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePres
   );
 };
 
-const cExtract = <T>(path: string[], obj: Record<string, T>, fields: ValuePresence.ValueProcessor[]): SimpleResult<SchemaError[], T> => {
+const cExtract = <T>(path: string[], obj: Record<string, T>, fields: FieldProcessor[]): SimpleResult<SchemaError[], T> => {
   const results = Arr.map(fields, (field) => cExtractOne(path, obj, field));
   return ResultCombine.consolidateObj(results, {});
 };
 
-const valueThunk = (getDelegate: () => Processor): Processor => {
+const valueThunk = (getDelegate: () => StructureProcessor): StructureProcessor => {
   const extract = (path: string[], val: any) => getDelegate().getProp(path, val);
 
   const toString = () => getDelegate().toString();
@@ -117,30 +120,14 @@ const valueThunk = (getDelegate: () => Processor): Processor => {
   };
 };
 
-const value = (validator: ValueValidator): Processor => {
-  const extract = (path, val) => {
-    return SimpleResult.bindError(
-      validator(val),
-      (err) => SchemaError.custom(path, err)
-    );
-  };
-
-  const toString = () => 'val';
-
-  return {
-    getProp: extract,
-    toString
-  };
-};
-
 // This is because Obj.keys can return things where the key is set to undefined.
 const getSetKeys = (obj) => Obj.keys(Obj.filter(obj, (value) => value !== undefined && value !== null));
 
-const objOfOnly = (fields: ValuePresence.ValueProcessor[]): Processor => {
+const objOfOnly = (fields: FieldProcessor[]): StructureProcessor => {
   const delegate = objOf(fields);
 
   const fieldNames = Arr.foldr(fields, (acc, value) => {
-    return ValuePresence.fold(
+    return FieldProcessor.fold(
       value,
       (key) => Merger.deepMerge(acc, Objects.wrap(key, true)),
       Fun.constant(acc)
@@ -160,11 +147,11 @@ const objOfOnly = (fields: ValuePresence.ValueProcessor[]): Processor => {
   };
 };
 
-const objOf = (values: ValuePresence.ValueProcessor[]): Processor => {
+const objOf = (values: FieldProcessor[]): StructureProcessor => {
   const extract = (path: string[], o: Record<string, any>) => cExtract(path, o, values);
 
   const toString = () => {
-    const fieldStrings = Arr.map(values, (value) => ValuePresence.fold(
+    const fieldStrings = Arr.map(values, (value) => FieldProcessor.fold(
       value,
       (key, _okey, _presence, prop) => key + ' -> ' + prop.toString(),
       (newKey, _instantiator) => 'state(' + newKey + ')'
@@ -178,7 +165,7 @@ const objOf = (values: ValuePresence.ValueProcessor[]): Processor => {
   };
 };
 
-const arrOf = (prop: Processor): Processor => {
+const arrOf = (prop: StructureProcessor): StructureProcessor => {
   const extract = (path, array) => {
     const results = Arr.map(array, (a, i) => prop.getProp(path.concat([ '[' + i + ']' ]), a));
     return ResultCombine.consolidateArr(results);
@@ -192,7 +179,7 @@ const arrOf = (prop: Processor): Processor => {
   };
 };
 
-const oneOf = (props: Processor[]): Processor => {
+const oneOf = (props: StructureProcessor[]): StructureProcessor => {
   const extract = (path: string[], val: any): SimpleResult<SchemaError[], any> => {
     const errors: Array<SimpleResult<SchemaError[], any>> = [];
 
@@ -217,7 +204,7 @@ const oneOf = (props: Processor[]): Processor => {
   };
 };
 
-const setOf = (validator: ValueValidator, prop: Processor): Processor => {
+const setOf = (validator: ValueValidator, prop: StructureProcessor): StructureProcessor => {
   const validateKeys = (path, keys) => arrOf(value(validator)).getProp(path, keys);
   const extract = (path, o) => {
     //
@@ -225,7 +212,7 @@ const setOf = (validator: ValueValidator, prop: Processor): Processor => {
     const validatedKeys = validateKeys(path, keys);
     return SimpleResult.bind(validatedKeys, (validKeys) => {
       const schema = Arr.map(validKeys, (vk) => {
-        return ValuePresence.field(vk, vk, FieldPresence.strict(), prop);
+        return FieldProcessor.field(vk, vk, FieldPresence.required(), prop);
       });
 
       return objOf(schema).getProp(path, o);
@@ -241,7 +228,7 @@ const setOf = (validator: ValueValidator, prop: Processor): Processor => {
 };
 
 // retriever is passed in. See funcOrDie in ValueSchema
-const func = (args: string[], _schema: Processor, retriever: (obj: any) => any): Processor => {
+const func = (args: string[], _schema: StructureProcessor, retriever: (obj: any) => any): StructureProcessor => {
   const delegate = value((f) => {
     return Type.isFunction(f) ? SimpleResult.svalue<any, () => any>((...gArgs: any[]) => {
       const allowedArgs = gArgs.slice(0, args.length);
@@ -256,7 +243,7 @@ const func = (args: string[], _schema: Processor, retriever: (obj: any) => any):
   };
 };
 
-const thunk = (_desc: string, processor: () => Processor): Processor => {
+const thunk = (_desc: string, processor: () => StructureProcessor): StructureProcessor => {
   const getP = Thunk.cached(processor);
 
   const extract = (path: string[], val: any) => getP().getProp(path, val);
@@ -269,12 +256,9 @@ const thunk = (_desc: string, processor: () => Processor): Processor => {
   };
 };
 
-const anyValue = Fun.constant(value(SimpleResult.svalue));
 const arrOfObj = Fun.compose(arrOf, objOf);
 
 export {
-  anyValue,
-  value,
   valueThunk,
 
   objOf,

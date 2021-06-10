@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, Height, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
@@ -12,8 +12,8 @@ import * as KeyRules from '../navigation/KeyRules';
 import { KeyRuleHandler, TabbingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 
-const create = (cyclicField: ValueProcessor): KeyingType.KeyingType<TabbingConfig, Stateless> => {
-  const schema: ValueProcessor[] = [
+const create = (cyclicField: StructureProcessor): KeyingType.KeyingType<TabbingConfig, Stateless> => {
+  const schema: StructureProcessor[] = [
     FieldSchema.option('onEscape'),
     FieldSchema.option('onEnter'),
     FieldSchema.defaulted('selector', '[data-alloy-tabstop="true"]:not(:disabled)'),

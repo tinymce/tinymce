@@ -1,8 +1,8 @@
-import { ValueProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 
 export default [
   FieldSchema.strictArrayOf('events', ValueSchema.objOf([
     FieldSchema.strictString('native'),
     FieldSchema.strictString('simulated')
   ]))
-] as ValueProcessor[];
+] as StructureProcessor[];

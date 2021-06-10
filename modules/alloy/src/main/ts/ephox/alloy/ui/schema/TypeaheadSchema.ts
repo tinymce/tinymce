@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 
 import { Coupling } from '../../api/behaviour/Coupling';
@@ -20,7 +20,7 @@ import { attemptSelectOver, setValueFromItem } from '../typeahead/TypeaheadModel
 import { TieredMenuSpec } from '../types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail } from '../types/TypeaheadTypes';
 
-const schema: () => ValueProcessor[] = Fun.constant([
+const schema: () => StructureProcessor[] = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.strict('fetch'),
   FieldSchema.defaulted('minChars', 5),

@@ -1,9 +1,9 @@
-import { ValueProcessor } from '../core/ValuePresence';
-import { Processor } from '../core/ValueProcessor';
+import { FieldProcessor } from '../core/FieldProcessor';
+import { StructureProcessor } from '../core/StructureProcessor';
 import * as FieldPresence from './FieldPresence';
 import * as FieldSchema from './FieldSchema';
 import * as Objects from './Objects';
-import * as ValueSchema from './ValueSchema';
+import * as ValueSchema from './StructureSchema';
 
 export {
   FieldPresence,
@@ -12,6 +12,6 @@ export {
   ValueSchema,
 
   // Types
-  Processor,
-  ValueProcessor
+  StructureProcessor,
+  FieldProcessor
 };

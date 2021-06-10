@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Height, SugarLocation, Width } from '@ephox/sugar';
 
@@ -30,7 +30,7 @@ const anchorAtCentre = (component: AlloyComponent) => {
 };
 
 // Similar to dropdown.
-const schema: () => ValueProcessor[] = Fun.constant([
+const schema: () => StructureProcessor[] = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),

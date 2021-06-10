@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema } from '@ephox/boulder';
 import { EventArgs } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -9,7 +9,7 @@ import * as DataTransfers from './DataTransfers';
 import { DroppingConfig } from './DragnDropTypes';
 import { createDropEventDetails } from './DropEvent';
 
-const schema: ValueProcessor[] = [
+const schema: StructureProcessor[] = [
   FieldSchema.defaultedString('type', 'text/plain'),
   FieldSchema.defaultedStringEnum('dropEffect', 'move', [ 'copy', 'move', 'link', 'none' ]),
   Fields.onHandler('onDrop'),

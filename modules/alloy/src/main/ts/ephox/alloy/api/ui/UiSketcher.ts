@@ -1,4 +1,4 @@
-import { ValueProcessor } from '@ephox/boulder';
+import { StructureProcessor } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -11,13 +11,13 @@ import { CompositeSketchDetail, CompositeSketchSpec, SingleSketchDetail, SingleS
 export type SingleSketchFactory<D extends SingleSketchDetail, S extends SingleSketchSpec> = (detail: D, specWithUid: S) => SketchSpec;
 export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends CompositeSketchSpec> = (detail: D, components: AlloySpec[], spec: S, externals: any) => SketchSpec;
 
-const single = <D extends SingleSketchDetail, S extends SingleSketchSpec>(owner: string, schema: ValueProcessor[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec => {
+const single = <D extends SingleSketchDetail, S extends SingleSketchSpec>(owner: string, schema: StructureProcessor[], factory: SingleSketchFactory<D, S>, spec: S): SketchSpec => {
   const specWithUid = supplyUid<S>(spec);
   const detail = SpecSchema.asRawOrDie<D, S>(owner, schema, specWithUid, [ ], [ ]);
   return factory(detail, specWithUid);
 };
 
-const composite = <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(owner: string, schema: ValueProcessor[], partTypes: PartTypeAdt[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec => {
+const composite = <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(owner: string, schema: StructureProcessor[], partTypes: PartTypeAdt[], factory: CompositeSketchFactory<D, S>, spec: S): SketchSpec => {
   const specWithUid = supplyUid(spec);
 
   // Identify any information required for external parts

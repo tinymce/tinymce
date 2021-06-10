@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
@@ -53,7 +53,7 @@ const listBoxItemSchema = ValueSchema.oneOf([
   ValueSchema.objOf(listBoxNestedItemFields)
 ]);
 
-const listBoxFields: ValueProcessor[] = formComponentWithLabelFields.concat([
+const listBoxFields: StructureProcessor[] = formComponentWithLabelFields.concat([
   FieldSchema.strictArrayOf('items', listBoxItemSchema),
   FieldSchema.defaultedBoolean('disabled', false)
 ]);

@@ -1,4 +1,4 @@
-import { ValueProcessor } from '@ephox/boulder';
+import { StructureProcessor } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -37,7 +37,7 @@ export interface AlloyBehaviour<C extends BehaviourConfigSpec, D extends Behavio
   handlers: (info: BehaviourInfo<D, S>) => {};
   name: () => string;
   revoke: () => NamedConfiguredBehaviour<C, D, S>;
-  schema: () => ValueProcessor;
+  schema: () => StructureProcessor;
 }
 
 export interface ConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
@@ -57,10 +57,10 @@ export interface BaseBehaviourConfig<D extends BehaviourConfigDetail, S extends 
 }
 
 export interface BehaviourConfig<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourApisRecord<D, S>, E extends BehaviourExtraRecord<E> = {}> extends BaseBehaviourConfig<D, S, A, E> {
-  fields: ValueProcessor[];
+  fields: StructureProcessor[];
 }
 
 export interface BehaviourModeSpec<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourApisRecord<D, S>, E extends BehaviourExtraRecord<E> = {}> extends BaseBehaviourConfig<D, S, A, E> {
   branchKey: string;
-  branches: Record<string, ValueProcessor[]>;
+  branches: Record<string, StructureProcessor[]>;
 }

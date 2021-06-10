@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import { Keying } from '../../api/behaviour/Keying';
@@ -16,7 +16,7 @@ interface SliderModelSpec {
   };
 }
 
-const SliderSchema: ValueProcessor[] = [
+const SliderSchema: StructureProcessor[] = [
   FieldSchema.defaulted('stepSize', 1),
   FieldSchema.defaulted('onChange', Fun.noop),
   FieldSchema.defaulted('onChoose', Fun.noop),

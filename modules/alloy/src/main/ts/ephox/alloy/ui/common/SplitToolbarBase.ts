@@ -1,10 +1,10 @@
-import { ValueProcessor, FieldSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 
-const schema: () => ValueProcessor[] = Fun.constant([
+const schema: () => StructureProcessor[] = Fun.constant([
   SketchBehaviours.field('splitToolbarBehaviours', [ Coupling ]),
   FieldSchema.state('builtGroups', () => Cell([ ]))
 ]);

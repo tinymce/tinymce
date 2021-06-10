@@ -1,6 +1,6 @@
-import { ValueProcessor, FieldSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema } from '@ephox/boulder';
 
-const ComposeSchema: ValueProcessor[] = [
+const ComposeSchema: StructureProcessor[] = [
   FieldSchema.strict('find')
 ];
 

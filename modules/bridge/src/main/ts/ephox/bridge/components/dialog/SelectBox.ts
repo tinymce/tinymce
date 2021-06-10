@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
@@ -26,7 +26,7 @@ export interface SelectBox extends FormComponentWithLabel {
   disabled: boolean;
 }
 
-const selectBoxFields: ValueProcessor[] = formComponentWithLabelFields.concat([
+const selectBoxFields: StructureProcessor[] = formComponentWithLabelFields.concat([
   FieldSchema.strictArrayOfObj('items', [
     FieldSchema.strictString('text'),
     FieldSchema.strictString('value')

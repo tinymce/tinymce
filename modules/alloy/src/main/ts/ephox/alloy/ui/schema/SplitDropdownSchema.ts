@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -19,7 +19,7 @@ import { ButtonSpec } from '../types/ButtonTypes';
 import { SplitDropdownDetail } from '../types/SplitDropdownTypes';
 import { TieredMenuSpec } from '../types/TieredMenuTypes';
 
-const schema: () => ValueProcessor[] = Fun.constant([
+const schema: () => StructureProcessor[] = Fun.constant([
   FieldSchema.strict('toggleClass'),
   FieldSchema.strict('fetch'),
   Fields.onStrictHandler('onExecute'),

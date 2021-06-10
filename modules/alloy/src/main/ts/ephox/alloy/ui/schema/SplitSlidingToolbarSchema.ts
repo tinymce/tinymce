@@ -1,4 +1,4 @@
-import { ValueProcessor } from '@ephox/boulder';
+import { StructureProcessor } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -16,7 +16,7 @@ import { SplitSlidingToolbarDetail } from '../types/SplitSlidingToolbarTypes';
 import { ToolbarSpec } from '../types/ToolbarTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 
-const schema: () => ValueProcessor[] = Fun.constant([
+const schema: () => StructureProcessor[] = Fun.constant([
   Fields.markers([ 'closedClass', 'openClass', 'shrinkingClass', 'growingClass', 'overflowToggledClass' ]),
   Fields.onHandler('onOpened'),
   Fields.onHandler('onClosed')

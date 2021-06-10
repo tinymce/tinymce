@@ -1,4 +1,4 @@
-import { FieldSchema, ValueProcessor } from '@ephox/boulder';
+import { FieldSchema, StructureProcessor } from '@ephox/boulder';
 import { BodyComponentSpec, BodyComponent } from './BodyComponent';
 
 export interface BarSpec {
@@ -11,7 +11,7 @@ export interface Bar {
   items: BodyComponent[];
 }
 
-export const createBarFields = (itemsField: ValueProcessor): ValueProcessor[] => [
+export const createBarFields = (itemsField: StructureProcessor): StructureProcessor[] => [
   FieldSchema.strictString('type'),
   itemsField
 ];

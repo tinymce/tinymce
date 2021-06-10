@@ -1,4 +1,4 @@
-import { ValueProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
@@ -14,7 +14,7 @@ export interface Collection extends FormComponentWithLabel {
   columns: number | 'auto';
 }
 
-const collectionFields: ValueProcessor[] = formComponentWithLabelFields.concat([
+const collectionFields: StructureProcessor[] = formComponentWithLabelFields.concat([
   FieldSchema.defaulted('columns', 'auto')
 ]);
 

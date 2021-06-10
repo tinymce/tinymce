@@ -2,11 +2,11 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
-import { ValueProcessor } from 'ephox/boulder/api/Main';
-import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
+import { StructureProcessor } from 'ephox/boulder/api/Main';
+import * as ValueSchema from 'ephox/boulder/api/StructureSchema';
 
 UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
-  const assertFieldValue = (label: string, expected: any, input: any, field: ValueProcessor) => {
+  const assertFieldValue = (label: string, expected: any, input: any, field: StructureProcessor) => {
     const schema = ValueSchema.objOf([
       field
     ]);
@@ -19,7 +19,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
     );
   };
 
-  const assertFieldError = (label: string, input: any, field: ValueProcessor) => {
+  const assertFieldError = (label: string, input: any, field: StructureProcessor) => {
     const schema = ValueSchema.objOf([
       field
     ]);
@@ -30,7 +30,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
     );
   };
 
-  const assertOptionalFieldValue = (expected: Record<string, Optional<any>>, input: any, field: ValueProcessor) => {
+  const assertOptionalFieldValue = (expected: Record<string, Optional<any>>, input: any, field: StructureProcessor) => {
     const schema = ValueSchema.objOf([
       field
     ]);
