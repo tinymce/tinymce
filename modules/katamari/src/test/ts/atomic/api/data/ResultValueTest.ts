@@ -4,13 +4,14 @@ import fc from 'fast-check';
 
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
+import * as Results from 'ephox/katamari/api/Results';
 import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
 import { assertResult } from 'ephox/katamari/test/AssertResult';
 
 describe('atomic.katamari.api.arr.ResultValueTest', () => {
   it('unit tests', () => {
     const s = Result.value(5);
-    assert.isTrue(s.is(5));
+    assert.isTrue(Results.is(s, 5));
     assert.isTrue(s.isValue());
     assert.isFalse(s.isError());
     assert.equal(s.getOr(6), 5);
@@ -35,7 +36,7 @@ describe('atomic.katamari.api.arr.ResultValueTest', () => {
 
   it('Checking value.is(value.getOrDie()) === true', () => {
     fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-      assert.isTrue(res.is(res.getOrDie()));
+      assert.isTrue(Results.is(res, res.getOrDie()));
     }));
   });
 
