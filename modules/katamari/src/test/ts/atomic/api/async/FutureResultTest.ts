@@ -25,7 +25,7 @@ describe('atomic.katamari.ap.async.FutureResultTest', () => {
   }))));
 
   it('fromFuture', () => fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
-    FutureResult.fromFuture<number, unknown>(Future.pure(i)).get((ii) => {
+    FutureResult.fromFuture(Future.pure(i)).get((ii) => {
       eqAsync('eq', Result.value(i), ii, reject, tResult());
       resolve();
     });

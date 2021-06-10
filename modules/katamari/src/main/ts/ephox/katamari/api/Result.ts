@@ -37,7 +37,7 @@ export interface Result<T, E> {
  * getOrDie :: this Result a -> a (or throws error)
 */
 
-const value = <T, E = any>(o: T): Result<T, E> => {
+const value = <T, E = never>(o: T): Result<T, E> => {
   const or = <T2 = T, E2 = E>(_opt: Result<T2, E2>) => {
     return value(o);
   };
@@ -97,7 +97,7 @@ const value = <T, E = any>(o: T): Result<T, E> => {
   };
 };
 
-const error = <T = any, E = any>(message: E): Result<T, E> => {
+const error = <T = never, E = any>(message: E): Result<T, E> => {
   const getOrThunk = <T2 = T> (f: () => T2) => {
     return f();
   };

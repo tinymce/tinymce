@@ -102,13 +102,13 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
     const cIsHighlighted = Chain.mapper((item) => Highlighting.isHighlighted(component, item));
 
-    const cGetHighlightedOrDie = Chain.binder(() => Highlighting.getHighlighted(component).fold(() => Result.error(new Error('getHighlighted did not find a selection')), Result.value));
+    const cGetHighlightedOrDie = Chain.binder(() => Highlighting.getHighlighted(component).fold(() => Result.error<AlloyComponent, Error>(new Error('getHighlighted did not find a selection')), Result.value));
 
     const cGetHighlightedIsNone = Chain.binder((v) => Highlighting.getHighlighted(component).fold(() => Result.value(v), (comp) => Result.error('Highlighted value should be nothing. Was: ' + Truncate.getHtml(comp.element))));
 
-    const cGetFirst = Chain.binder(() => Highlighting.getFirst(component).fold(() => Result.error(new Error('getFirst found nothing')), Result.value));
+    const cGetFirst = Chain.binder(() => Highlighting.getFirst(component).fold(() => Result.error<AlloyComponent, Error>(new Error('getFirst found nothing')), Result.value));
 
-    const cGetLast = Chain.binder(() => Highlighting.getLast(component).fold(() => Result.error(new Error('getLast found nothing')), Result.value));
+    const cGetLast = Chain.binder(() => Highlighting.getLast(component).fold(() => Result.error<AlloyComponent, Error>(new Error('getLast found nothing')), Result.value));
 
     const cHasClass = (clazz: string) => Chain.binder((comp: AlloyComponent) => {
       const elem = comp.element;
