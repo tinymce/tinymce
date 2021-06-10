@@ -54,39 +54,39 @@ export interface DemoMenu {
 }
 
 const demoItem = ValueSchema.objOf([
-  FieldSchema.strictObjOf('data', [
-    FieldSchema.strict('value'),
-    FieldSchema.strictObjOf('meta', [
-      FieldSchema.strict('text'),
+  FieldSchema.requiredObjOf('data', [
+    FieldSchema.required('value'),
+    FieldSchema.requiredObjOf('meta', [
+      FieldSchema.required('text'),
       FieldSchema.defaulted('html', ''),
       FieldSchema.defaulted('meta-demo-content', { })
     ])
   ]),
-  FieldSchema.strict('type'),
+  FieldSchema.required('type'),
   FieldSchema.defaulted('itemBehaviours', { })
 ]);
 
 const demoWidgetItem = ValueSchema.objOf([
-  FieldSchema.strictObjOf('data', [
-    FieldSchema.strict('value'),
-    FieldSchema.strictObjOf('meta', [
-      FieldSchema.strict('text')
+  FieldSchema.requiredObjOf('data', [
+    FieldSchema.required('value'),
+    FieldSchema.requiredObjOf('meta', [
+      FieldSchema.required('text')
     ])
   ]),
-  FieldSchema.strict('type'),
+  FieldSchema.required('type'),
   FieldSchema.defaulted('autofocus', false),
-  FieldSchema.strict('widget')
+  FieldSchema.required('widget')
 ]);
 
 const demoMenu = ValueSchema.objOf([
-  FieldSchema.strict('value'),
-  FieldSchema.strict('items')
+  FieldSchema.required('value'),
+  FieldSchema.required('items')
 ]);
 
 const demoGridMenu = ValueSchema.objOf([
-  FieldSchema.strict('columns'),
-  FieldSchema.strict('rows'),
-  FieldSchema.strict('items')
+  FieldSchema.required('columns'),
+  FieldSchema.required('rows'),
+  FieldSchema.required('items')
 ]);
 
 const demoChoice = ValueSchema.objOf([ ]);

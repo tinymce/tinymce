@@ -13,10 +13,10 @@ import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 
 const schema = ValueSchema.objOfOnly([
-  FieldSchema.strict('getInitialValue'),
-  FieldSchema.strict('onChange'),
-  FieldSchema.strict('category'),
-  FieldSchema.strict('sizes')
+  FieldSchema.required('getInitialValue'),
+  FieldSchema.required('onChange'),
+  FieldSchema.required('category'),
+  FieldSchema.required('sizes')
 ]);
 
 const sketch = (rawSpec): SketchSpec => {

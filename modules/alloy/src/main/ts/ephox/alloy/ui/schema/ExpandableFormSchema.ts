@@ -39,13 +39,13 @@ const runOnExtra = (detail: ExpandableFormDetail, operation: (comp: AlloyCompone
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required<ExpandableFormDetail>({
     // factory: Form,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'minimal'
   }),
 
   PartType.required<ExpandableFormDetail>({
     // factory: Form,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'extra',
     overrides: (detail) => {
       return {
@@ -94,7 +94,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.required<ExpandableFormDetail, ButtonSpec>({
     factory: Button,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'expander',
     overrides: (detail) => {
       return {
@@ -104,7 +104,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   }),
 
   PartType.required({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'controls'
   })
 ]);

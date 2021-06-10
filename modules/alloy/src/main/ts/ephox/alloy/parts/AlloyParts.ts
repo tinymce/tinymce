@@ -74,7 +74,7 @@ const schemas = (parts: PartType.PartTypeAdt[]): StructureProcessor[] =>
     Optional.some,
     Optional.none,
     Optional.none
-  ).map((data) => FieldSchema.strictObjOf(data.name, data.schema.concat([
+  ).map((data) => FieldSchema.requiredObjOf(data.name, data.schema.concat([
     Fields.snapshot(PartType.original())
   ]))).toArray());
 

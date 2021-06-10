@@ -47,7 +47,7 @@ const text = (textContent: string): PremadeSpec => {
 export interface ExternalElement { uid?: string; element: SugarElement }
 const external = (spec: ExternalElement): PremadeSpec => {
   const extSpec: { uid: Optional<string>; element: SugarElement } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
-    FieldSchema.strict('element'),
+    FieldSchema.required('element'),
     FieldSchema.option('uid')
   ]), spec);
 

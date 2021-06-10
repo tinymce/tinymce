@@ -82,10 +82,10 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 ]);
 
 const schema: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('value'),
-  FieldSchema.strict('items'),
-  FieldSchema.strict('dom'),
-  FieldSchema.strict('components'),
+  FieldSchema.required('value'),
+  FieldSchema.required('items'),
+  FieldSchema.required('dom'),
+  FieldSchema.required('components'),
   FieldSchema.defaulted('eventOrder', { }),
   SketchBehaviourField('menuBehaviours', [ Highlighting, Representing, Composing, Keying ]),
 
@@ -101,7 +101,7 @@ const schema: () => StructureProcessor[] = Fun.constant([
       ],
       matrix: [
         Fields.output('config', configureMatrix),
-        FieldSchema.strict('rowSelector')
+        FieldSchema.required('rowSelector')
       ],
       menu: [
         FieldSchema.defaulted('moveOnTab', true),

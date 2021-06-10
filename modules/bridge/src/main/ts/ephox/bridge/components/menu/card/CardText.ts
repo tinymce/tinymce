@@ -16,8 +16,8 @@ export interface CardText {
 }
 
 const cardTextFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('text'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('text'),
   FieldSchema.optionString('name'),
   FieldSchema.defaultedArrayOf('classes', [ 'tox-collection__item-label' ], ValueSchema.string)
 ];

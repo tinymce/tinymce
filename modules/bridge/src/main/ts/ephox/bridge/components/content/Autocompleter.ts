@@ -62,20 +62,20 @@ const autocompleterItemSchema = ValueSchema.objOf([
   FieldSchema.defaulted('active', false),
   FieldSchema.defaulted('disabled', false),
   FieldSchema.defaulted('meta', {}),
-  FieldSchema.strictString('value'),
+  FieldSchema.requiredString('value'),
   FieldSchema.optionString('text'),
   FieldSchema.optionString('icon')
 ]);
 
 const autocompleterSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('ch'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('ch'),
   FieldSchema.defaultedNumber('minChars', 1),
   FieldSchema.defaulted('columns', 1),
   FieldSchema.defaultedNumber('maxResults', 10),
   FieldSchema.optionFunction('matches'),
-  FieldSchema.strictFunction('fetch'),
-  FieldSchema.strictFunction('onAction'),
+  FieldSchema.requiredFunction('fetch'),
+  FieldSchema.requiredFunction('onAction'),
   FieldSchema.defaultedArrayOf('highlightOn', [], ValueSchema.string)
 ]);
 

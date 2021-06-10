@@ -52,9 +52,9 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
   assertFieldValue('Should be specified array', { key: [ 'a' ] }, { key: [ 'a' ] }, FieldSchema.defaultedArrayOf('key', [ 'b' ], ValueSchema.string));
   assertFieldValue('Should be default array', { key: [ 'b' ] }, { }, FieldSchema.defaultedArrayOf('key', [ 'b' ], ValueSchema.string));
 
-  assertFieldValue('Should be specified value a', { key: 'a' }, { key: 'a' }, FieldSchema.strictStringEnum('key', [ 'a', 'b' ]));
-  assertFieldValue('Should be specified value b', { key: 'b' }, { key: 'b' }, FieldSchema.strictStringEnum('key', [ 'a', 'b' ]));
-  assertFieldError('Should fail on undefined value variant', { key: 'c' }, FieldSchema.strictStringEnum('key', [ 'a', 'b' ]));
+  assertFieldValue('Should be specified value a', { key: 'a' }, { key: 'a' }, FieldSchema.requiredStringEnum('key', [ 'a', 'b' ]));
+  assertFieldValue('Should be specified value b', { key: 'b' }, { key: 'b' }, FieldSchema.requiredStringEnum('key', [ 'a', 'b' ]));
+  assertFieldError('Should fail on undefined value variant', { key: 'c' }, FieldSchema.requiredStringEnum('key', [ 'a', 'b' ]));
 
   assertOptionalFieldValue({ key: Optional.some('a') }, { key: 'a' }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
   assertOptionalFieldValue({ key: Optional.some('b') }, { key: 'b' }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));

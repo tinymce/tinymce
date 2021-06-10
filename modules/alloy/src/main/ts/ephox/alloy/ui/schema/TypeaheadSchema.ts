@@ -22,7 +22,7 @@ import { TypeaheadData, TypeaheadDetail } from '../types/TypeaheadTypes';
 
 const schema: () => StructureProcessor[] = Fun.constant([
   FieldSchema.option('lazySink'),
-  FieldSchema.strict('fetch'),
+  FieldSchema.required('fetch'),
   FieldSchema.defaulted('minChars', 5),
   FieldSchema.defaulted('responseTime', 1000),
   Fields.onHandler('onOpen'),

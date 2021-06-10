@@ -20,7 +20,7 @@ export interface MenuItem extends CommonMenuItem {
 }
 
 export const menuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   FieldSchema.defaultedFunction('onAction', Fun.noop),
   FieldSchema.optionString('icon')

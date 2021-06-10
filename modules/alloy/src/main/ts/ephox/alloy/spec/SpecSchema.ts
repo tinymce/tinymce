@@ -17,11 +17,11 @@ export interface BaseSketchDetail<T extends BaseSketchSpec> {
 
 const base = (partSchemas: StructureProcessor[], partUidsSchemas: StructureProcessor[]) => {
   const ps = partSchemas.length > 0 ? [
-    FieldSchema.strictObjOf('parts', partSchemas)
+    FieldSchema.requiredObjOf('parts', partSchemas)
   ] : [ ];
 
   return ps.concat([
-    FieldSchema.strict('uid'),
+    FieldSchema.required('uid'),
     FieldSchema.defaulted('dom', { }), // Maybe get rid of.
     FieldSchema.defaulted('components', [ ]),
     Fields.snapshot('originalSpec'),

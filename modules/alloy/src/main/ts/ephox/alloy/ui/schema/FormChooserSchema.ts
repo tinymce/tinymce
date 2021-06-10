@@ -15,7 +15,7 @@ import * as ButtonBase from '../common/ButtonBase';
 import { FormChooserDetail } from '../types/FormChooserTypes';
 
 const schema: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('choices'),
+  FieldSchema.required('choices'),
   SketchBehaviours.field('chooserBehaviours', [ Keying, Highlighting, Composing, Representing ]),
   Fields.markers([ 'choiceClass', 'selectedClass' ])
 ]);

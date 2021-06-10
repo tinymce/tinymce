@@ -16,8 +16,8 @@ export interface CardImage {
 }
 
 const cardImageFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('src'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('src'),
   FieldSchema.optionString('alt'),
   FieldSchema.defaultedArrayOf('classes', [], ValueSchema.string)
 ];

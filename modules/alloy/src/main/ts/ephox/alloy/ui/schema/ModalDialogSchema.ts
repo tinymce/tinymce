@@ -12,7 +12,7 @@ import * as PartType from '../../parts/PartType';
 import { ModalDialogDetail } from '../types/ModalDialogTypes';
 
 const schema: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('lazySink'),
+  FieldSchema.required('lazySink'),
   FieldSchema.option('dragBlockClass'),
   FieldSchema.defaultedFunction('getBounds', Boxes.win),
   FieldSchema.defaulted('useTabstopAt', Fun.always),
@@ -51,25 +51,25 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   }),
 
   PartType.required<ModalDialogDetail>({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'title'
   }),
 
   PartType.required<ModalDialogDetail>({
     factory: basic,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'close'
   }),
 
   PartType.required<ModalDialogDetail>({
     factory: basic,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'body'
   }),
 
   PartType.optional<ModalDialogDetail>({
     factory: basic,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'footer'
   }),
 

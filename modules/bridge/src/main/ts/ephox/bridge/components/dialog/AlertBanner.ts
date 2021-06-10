@@ -18,10 +18,10 @@ export interface AlertBanner {
 }
 
 const alertBannerFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('text'),
-  FieldSchema.strictStringEnum('level', [ 'info', 'warn', 'error', 'success' ]),
-  FieldSchema.strictString('icon'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('text'),
+  FieldSchema.requiredStringEnum('level', [ 'info', 'warn', 'error', 'success' ]),
+  FieldSchema.requiredString('icon'),
   FieldSchema.defaulted('url', '')
 ];
 

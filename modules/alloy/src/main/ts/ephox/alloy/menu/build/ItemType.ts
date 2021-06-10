@@ -75,9 +75,9 @@ const builder = (detail: NormalItemDetail): AlloySpec => ({
 });
 
 const schema: StructureProcessor[] = [
-  FieldSchema.strict('data'),
-  FieldSchema.strict('components'),
-  FieldSchema.strict('dom'),
+  FieldSchema.required('data'),
+  FieldSchema.required('components'),
+  FieldSchema.required('dom'),
   FieldSchema.defaulted('hasSubmenu', false),
 
   FieldSchema.option('toggling'),

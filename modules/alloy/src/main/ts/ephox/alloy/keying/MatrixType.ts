@@ -15,9 +15,9 @@ import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 
 const schema: StructureProcessor[] = [
-  FieldSchema.strictObjOf('selectors', [
-    FieldSchema.strict('row'),
-    FieldSchema.strict('cell')
+  FieldSchema.requiredObjOf('selectors', [
+    FieldSchema.required('row'),
+    FieldSchema.required('cell')
   ]),
 
   // Used to determine whether pressing right/down at the end cycles back to the start/top

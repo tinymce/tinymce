@@ -4,7 +4,7 @@ import { Result } from '@ephox/katamari';
 import * as Fields from '../../data/Fields';
 
 export default [
-  FieldSchema.strictOf('channels', ValueSchema.setOf(
+  FieldSchema.requiredOf('channels', ValueSchema.setOf(
     // Allow any keys.
     Result.value,
     ValueSchema.objOfOnly([

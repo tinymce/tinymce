@@ -28,15 +28,15 @@ const baseBehaviour = 'alloy.base.behaviour';
 const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
   FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOf([
     // Note, no children.
-    FieldSchema.strict('tag'),
+    FieldSchema.required('tag'),
     FieldSchema.defaulted('styles', {}),
     FieldSchema.defaulted('classes', []),
     FieldSchema.defaulted('attributes', {}),
     FieldSchema.option('value'),
     FieldSchema.option('innerHtml')
   ])),
-  FieldSchema.strict('components'),
-  FieldSchema.strict('uid'),
+  FieldSchema.required('components'),
+  FieldSchema.required('uid'),
 
   FieldSchema.defaulted('events', {}),
   FieldSchema.defaulted('apis', { }),

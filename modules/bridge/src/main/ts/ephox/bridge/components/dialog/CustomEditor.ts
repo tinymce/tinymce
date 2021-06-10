@@ -44,14 +44,14 @@ export type CustomEditor = CustomEditorOld | CustomEditorNew;
 
 const customEditorFields = formComponentFields.concat([
   FieldSchema.defaultedString('tag', 'textarea'),
-  FieldSchema.strictString('scriptId'),
-  FieldSchema.strictString('scriptUrl'),
+  FieldSchema.requiredString('scriptId'),
+  FieldSchema.requiredString('scriptUrl'),
   FieldSchema.defaultedPostMsg('settings', undefined)
 ]);
 
 const customEditorFieldsOld = formComponentFields.concat([
   FieldSchema.defaultedString('tag', 'textarea'),
-  FieldSchema.strictFunction('init')
+  FieldSchema.requiredFunction('init')
 ]);
 
 export const customEditorSchema = ValueSchema.valueOf(

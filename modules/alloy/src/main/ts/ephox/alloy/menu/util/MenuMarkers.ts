@@ -2,13 +2,13 @@ import { StructureProcessor, FieldSchema, Processor, ValueSchema } from '@ephox/
 import { Fun } from '@ephox/katamari';
 
 const menuFields: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('menu'),
-  FieldSchema.strict('selectedMenu')
+  FieldSchema.required('menu'),
+  FieldSchema.required('selectedMenu')
 ]);
 
 const itemFields: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('item'),
-  FieldSchema.strict('selectedItem')
+  FieldSchema.required('item'),
+  FieldSchema.required('selectedItem')
 ]);
 
 const schema: () => Processor = Fun.constant(ValueSchema.objOf(

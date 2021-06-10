@@ -12,6 +12,6 @@ export interface Bar {
 }
 
 export const createBarFields = (itemsField: StructureProcessor): StructureProcessor[] => [
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   itemsField
 ];

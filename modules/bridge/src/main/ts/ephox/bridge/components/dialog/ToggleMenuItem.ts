@@ -14,8 +14,8 @@ export interface DialogToggleMenuItem extends CommonMenuItem {
 }
 
 export const dialogToggleMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('name')
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('name')
 ].concat(commonMenuItemFields));
 
 export const dialogToggleMenuItemDataProcessor = ValueSchema.boolean;

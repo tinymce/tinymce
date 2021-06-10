@@ -7,8 +7,8 @@ import { HasLayoutAnchor } from './Anchoring';
 import { isBottomToTopDir } from './VerticalDir';
 
 const schema: () => StructureProcessor = () => FieldSchema.optionObjOf('layouts', [
-  FieldSchema.strict('onLtr'),
-  FieldSchema.strict('onRtl'),
+  FieldSchema.required('onLtr'),
+  FieldSchema.required('onRtl'),
   FieldSchema.option('onBottomLtr'),
   FieldSchema.option('onBottomRtl')
 ]);

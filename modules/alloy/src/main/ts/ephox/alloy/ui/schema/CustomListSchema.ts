@@ -9,7 +9,7 @@ import { CustomListDetail } from '../types/CustomListTypes';
 
 const schema: () => StructureProcessor[] = Fun.constant([
   FieldSchema.defaulted('shell', false),
-  FieldSchema.strict('makeItem'),
+  FieldSchema.required('makeItem'),
   FieldSchema.defaulted('setupItem', Fun.noop),
   SketchBehaviours.field('listBehaviours', [ Replacing ])
 ]);

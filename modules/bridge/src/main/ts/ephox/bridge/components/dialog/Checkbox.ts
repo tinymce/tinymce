@@ -16,9 +16,9 @@ export interface Checkbox {
 }
 
 const checkboxFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('name'),
-  FieldSchema.strictString('label'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('name'),
+  FieldSchema.requiredString('label'),
   FieldSchema.defaultedBoolean('disabled', false)
 ];
 

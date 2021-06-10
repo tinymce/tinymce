@@ -25,11 +25,11 @@ export interface GroupToolbarButton extends BaseToolbarButton<GroupToolbarButton
 }
 
 export const groupToolbarButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.strictOf('items', ValueSchema.oneOf([
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredOf('items', ValueSchema.oneOf([
     ValueSchema.arrOfObj([
-      FieldSchema.strictString('name'),
-      FieldSchema.strictArrayOf('items', ValueSchema.string)
+      FieldSchema.requiredString('name'),
+      FieldSchema.requiredArrayOf('items', ValueSchema.string)
     ]),
     ValueSchema.string
   ]))

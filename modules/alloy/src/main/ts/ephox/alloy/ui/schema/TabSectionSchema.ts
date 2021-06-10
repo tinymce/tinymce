@@ -21,10 +21,10 @@ const schema: () => StructureProcessor[] = Fun.constant([
 const barPart = PartType.required<TabSectionDetail, TabbarSpec>({
   factory: Tabbar,
   schema: [
-    FieldSchema.strict('dom'),
-    FieldSchema.strictObjOf('markers', [
-      FieldSchema.strict('tabClass'),
-      FieldSchema.strict('selectedClass')
+    FieldSchema.required('dom'),
+    FieldSchema.requiredObjOf('markers', [
+      FieldSchema.required('tabClass'),
+      FieldSchema.required('selectedClass')
     ])
   ],
   name: 'tabbar',

@@ -39,13 +39,13 @@ export interface ListBox extends FormComponentWithLabel {
 }
 
 const listBoxSingleItemFields = [
-  FieldSchema.strictString('text'),
-  FieldSchema.strictString('value')
+  FieldSchema.requiredString('text'),
+  FieldSchema.requiredString('value')
 ];
 
 const listBoxNestedItemFields = [
-  FieldSchema.strictString('text'),
-  FieldSchema.strictArrayOf('items', ValueSchema.thunkOf('items', () => listBoxItemSchema))
+  FieldSchema.requiredString('text'),
+  FieldSchema.requiredArrayOf('items', ValueSchema.thunkOf('items', () => listBoxItemSchema))
 ];
 
 const listBoxItemSchema = ValueSchema.oneOf([
@@ -54,7 +54,7 @@ const listBoxItemSchema = ValueSchema.oneOf([
 ]);
 
 const listBoxFields: StructureProcessor[] = formComponentWithLabelFields.concat([
-  FieldSchema.strictArrayOf('items', listBoxItemSchema),
+  FieldSchema.requiredArrayOf('items', listBoxItemSchema),
   FieldSchema.defaultedBoolean('disabled', false)
 ]);
 

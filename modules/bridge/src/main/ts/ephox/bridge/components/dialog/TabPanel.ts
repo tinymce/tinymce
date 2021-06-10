@@ -32,13 +32,13 @@ export const tabFields = [
     FieldPresence.defaultedThunk(() => Id.generate('tab-name')),
     ValueSchema.string
   ),
-  FieldSchema.strictString('title'),
-  FieldSchema.strictArrayOf('items', itemSchema)
+  FieldSchema.requiredString('title'),
+  FieldSchema.requiredArrayOf('items', itemSchema)
 ];
 
 export const tabPanelFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictArrayOfObj('tabs', tabFields)
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredArrayOfObj('tabs', tabFields)
 ];
 
 export const tabPanelSchema = ValueSchema.objOf(tabPanelFields);

@@ -1,7 +1,7 @@
 import { StructureProcessor, FieldSchema } from '@ephox/boulder';
 
 const ComposeSchema: StructureProcessor[] = [
-  FieldSchema.strict('find')
+  FieldSchema.required('find')
 ];
 
 export {

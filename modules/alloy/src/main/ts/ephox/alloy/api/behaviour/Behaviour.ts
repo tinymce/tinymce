@@ -22,8 +22,8 @@ const derive = (
 ): AlloyBehaviourRecord => Objects.wrapAll(capabilities);
 
 const simpleSchema: Processor = ValueSchema.objOfOnly([
-  FieldSchema.strict('fields'),
-  FieldSchema.strict('name'),
+  FieldSchema.required('fields'),
+  FieldSchema.required('name'),
   FieldSchema.defaulted('active', { }),
   FieldSchema.defaulted('apis', { }),
   FieldSchema.defaulted('state', NoState),
@@ -42,9 +42,9 @@ const create = <
 };
 
 const modeSchema: Processor = ValueSchema.objOfOnly([
-  FieldSchema.strict('branchKey'),
-  FieldSchema.strict('branches'),
-  FieldSchema.strict('name'),
+  FieldSchema.required('branchKey'),
+  FieldSchema.required('branches'),
+  FieldSchema.required('name'),
   FieldSchema.defaulted('active', { }),
   FieldSchema.defaulted('apis', { }),
   FieldSchema.defaulted('state', NoState),

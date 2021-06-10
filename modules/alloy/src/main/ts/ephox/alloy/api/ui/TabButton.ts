@@ -40,7 +40,7 @@ const TabButton: TabButtonSketcher = Sketcher.single({
   name: 'TabButton',
   configFields: [
     FieldSchema.defaulted('uid', undefined),
-    FieldSchema.strict('value'),
+    FieldSchema.required('value'),
     FieldSchema.field('dom', 'dom', FieldPresence.mergeWithThunk(() => ({
       attributes: {
         'role': 'tab',
@@ -53,7 +53,7 @@ const TabButton: TabButtonSketcher = Sketcher.single({
     FieldSchema.defaulted('domModification', { }),
     SketchBehaviours.field('tabButtonBehaviours', [ Focusing, Keying, Representing ]),
 
-    FieldSchema.strict('view')
+    FieldSchema.required('view')
   ],
   factory
 });

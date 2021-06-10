@@ -25,11 +25,11 @@ export interface ToggleMenuItem extends CommonMenuItem {
 }
 
 export const toggleMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.optionString('icon'),
   FieldSchema.defaultedBoolean('active', false),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
-  FieldSchema.strictFunction('onAction')
+  FieldSchema.requiredFunction('onAction')
 ].concat(commonMenuItemFields));
 
 export const createToggleMenuItem = (spec: ToggleMenuItemSpec): Result<ToggleMenuItem, ValueSchema.SchemaError<any>> =>

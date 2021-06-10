@@ -28,7 +28,7 @@ const schema = ValueSchema.objOfOnly([
   FieldSchema.optionObjOf('fireEventInstead', [
     FieldSchema.defaulted('event', SystemEvents.repositionRequested())
   ]),
-  FieldSchema.strictFunction('doReposition')
+  FieldSchema.requiredFunction('doReposition')
 ]);
 
 const receivingConfig = (rawSpec: RepositionReceivingSpec): NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig> => {

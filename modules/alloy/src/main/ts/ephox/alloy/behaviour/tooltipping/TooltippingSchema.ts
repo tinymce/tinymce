@@ -6,8 +6,8 @@ import * as Fields from '../../data/Fields';
 import * as Layout from '../../positioning/layout/Layout';
 
 export default [
-  FieldSchema.strict('lazySink'),
-  FieldSchema.strict('tooltipDom'),
+  FieldSchema.required('lazySink'),
+  FieldSchema.required('tooltipDom'),
   FieldSchema.defaulted('exclusive', true),
   FieldSchema.defaulted('tooltipComponents', []),
   FieldSchema.defaulted('delay', 300),

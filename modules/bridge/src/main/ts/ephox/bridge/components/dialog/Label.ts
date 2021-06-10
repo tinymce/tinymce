@@ -14,7 +14,7 @@ export interface Label {
 }
 
 export const createLabelFields = (itemsField: StructureProcessor): StructureProcessor[] => [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('label'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('label'),
   itemsField
 ];

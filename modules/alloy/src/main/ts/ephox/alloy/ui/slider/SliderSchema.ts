@@ -26,21 +26,21 @@ const SliderSchema: StructureProcessor[] = [
   FieldSchema.defaulted('snapToGrid', false),
   FieldSchema.defaulted('rounded', true),
   FieldSchema.option('snapStart'),
-  FieldSchema.strictOf('model', ValueSchema.choose(
+  FieldSchema.requiredOf('model', ValueSchema.choose(
     'mode',
     {
       x: [
         FieldSchema.defaulted('minX', 0),
         FieldSchema.defaulted('maxX', 100),
         FieldSchema.state('value', (spec: SliderModelSpec) => Cell(spec.mode.minX)),
-        FieldSchema.strict('getInitialValue'),
+        FieldSchema.required('getInitialValue'),
         Fields.output('manager', HorizontalModel)
       ],
       y: [
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
         FieldSchema.state('value', (spec: SliderModelSpec) => Cell(spec.mode.minY)),
-        FieldSchema.strict('getInitialValue'),
+        FieldSchema.required('getInitialValue'),
         Fields.output('manager', VerticalModel)
       ],
       xy: [
@@ -52,7 +52,7 @@ const SliderSchema: StructureProcessor[] = [
           x: spec.mode.minX,
           y: spec.mode.minY
         })),
-        FieldSchema.strict('getInitialValue'),
+        FieldSchema.required('getInitialValue'),
         Fields.output('manager', TwoDModel)
       ]
     }

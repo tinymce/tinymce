@@ -39,10 +39,10 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
 
   const checkGetNoLink = (rawScenario) => {
     const schema = ValueSchema.objOfOnly([
-      FieldSchema.strict('label'),
+      FieldSchema.required('label'),
       FieldSchema.defaulted('nodeText', ''),
       FieldSchema.defaulted('selection', ''),
-      FieldSchema.strict('expected')
+      FieldSchema.required('expected')
     ]);
 
     const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
@@ -63,10 +63,10 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
 
   const checkGetALink = (rawScenario) => {
     const schema = ValueSchema.objOfOnly([
-      FieldSchema.strict('label'),
+      FieldSchema.required('label'),
       FieldSchema.defaulted('linkHtml', ''),
       FieldSchema.defaulted('selection', ''),
-      FieldSchema.strict('expected')
+      FieldSchema.required('expected')
     ]);
 
     const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);

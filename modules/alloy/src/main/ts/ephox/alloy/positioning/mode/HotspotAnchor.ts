@@ -35,7 +35,7 @@ const placement = (component: AlloyComponent, anchorInfo: HotspotAnchor, origin:
 };
 
 export default [
-  FieldSchema.strict('hotspot'),
+  FieldSchema.required('hotspot'),
   FieldSchema.option('bubble'),
   FieldSchema.defaulted('overrides', { }),
   AnchorLayouts.schema(),

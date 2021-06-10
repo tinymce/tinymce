@@ -60,7 +60,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required<FormCoupledInputsDetail, ButtonSpec>({
     factory: Button,
     schema: [
-      FieldSchema.strict('dom')
+      FieldSchema.required('dom')
     ],
     name: 'lock',
     overrides: (detail) => {

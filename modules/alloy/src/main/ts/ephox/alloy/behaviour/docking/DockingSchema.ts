@@ -5,10 +5,10 @@ import * as Fields from '../../data/Fields';
 
 export default [
   FieldSchema.optionObjOf('contextual', [
-    FieldSchema.strictString('fadeInClass'),
-    FieldSchema.strictString('fadeOutClass'),
-    FieldSchema.strictString('transitionClass'),
-    FieldSchema.strictFunction('lazyContext'),
+    FieldSchema.requiredString('fadeInClass'),
+    FieldSchema.requiredString('fadeOutClass'),
+    FieldSchema.requiredString('transitionClass'),
+    FieldSchema.requiredFunction('lazyContext'),
     Fields.onHandler('onShow'),
     Fields.onHandler('onShown'),
     Fields.onHandler('onHide'),

@@ -23,7 +23,7 @@ const urlInputFields = formComponentWithLabelFields.concat([
 export const urlInputSchema = ValueSchema.objOf(urlInputFields);
 
 export const urlInputDataProcessor = ValueSchema.objOf([
-  FieldSchema.strictString('value'),
+  FieldSchema.requiredString('value'),
   FieldSchema.defaulted('meta', { })
 ]);
 

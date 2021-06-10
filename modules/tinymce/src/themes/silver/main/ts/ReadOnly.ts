@@ -18,7 +18,7 @@ export interface ReadOnlyData {
 }
 
 const ReadOnlyDataSchema = ValueSchema.objOf([
-  FieldSchema.strictBoolean('readonly')
+  FieldSchema.requiredBoolean('readonly')
 ]);
 
 const broadcastReadonly = (uiComponents: RenderUiComponents, readonly: boolean) => {

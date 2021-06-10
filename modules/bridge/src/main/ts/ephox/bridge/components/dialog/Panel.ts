@@ -74,9 +74,9 @@ export const itemSchema = ValueSchema.valueThunkOf(
 );
 
 const panelFields = [
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.defaulted('classes', []),
-  FieldSchema.strictArrayOf('items', itemSchema)
+  FieldSchema.requiredArrayOf('items', itemSchema)
 ];
 
 export const panelSchema = ValueSchema.objOf(panelFields);

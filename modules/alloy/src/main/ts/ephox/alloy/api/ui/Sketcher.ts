@@ -76,18 +76,18 @@ export const isSketchSpec = (spec: AlloySpec): spec is SketchSpec => {
 };
 
 const singleSchema = ValueSchema.objOfOnly([
-  FieldSchema.strict('name'),
-  FieldSchema.strict('factory'),
-  FieldSchema.strict('configFields'),
+  FieldSchema.required('name'),
+  FieldSchema.required('factory'),
+  FieldSchema.required('configFields'),
   FieldSchema.defaulted('apis', { }),
   FieldSchema.defaulted('extraApis', { })
 ]);
 
 const compositeSchema = ValueSchema.objOfOnly([
-  FieldSchema.strict('name'),
-  FieldSchema.strict('factory'),
-  FieldSchema.strict('configFields'),
-  FieldSchema.strict('partFields'),
+  FieldSchema.required('name'),
+  FieldSchema.required('factory'),
+  FieldSchema.required('configFields'),
+  FieldSchema.required('partFields'),
   FieldSchema.defaulted('apis', { }),
   FieldSchema.defaulted('extraApis', { })
 ]);

@@ -95,7 +95,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     },
     getter2,
     ValueSchema.funcOrDie([ 'a' ], ValueSchema.objOf([
-      FieldSchema.strict('A')
+      FieldSchema.required('A')
     ]))
   );
 
@@ -119,8 +119,8 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     },
     getter3,
     ValueSchema.funcOrDie([ 'one', 'two' ], ValueSchema.arrOfObj([
-      FieldSchema.strict('firstname'),
-      FieldSchema.strict('surname')
+      FieldSchema.required('firstname'),
+      FieldSchema.required('surname')
     ]))
   );
 

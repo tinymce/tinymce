@@ -23,7 +23,7 @@ export interface GuiEventSettings {
 
 const settingsSchema: Processor = ValueSchema.objOfOnly([
   // triggerEvent(eventName, event)
-  FieldSchema.strictFunction('triggerEvent'),
+  FieldSchema.requiredFunction('triggerEvent'),
   FieldSchema.defaulted('stopBackspace', true)
 ]);
 

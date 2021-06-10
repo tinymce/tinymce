@@ -7,7 +7,7 @@ import SnapSchema from './SnapSchema';
 const schema: StructureProcessor[] = [
   // Is this used?
   FieldSchema.defaulted('useFixed', Fun.never),
-  FieldSchema.strict('blockerClass'),
+  FieldSchema.required('blockerClass'),
   FieldSchema.defaulted('getTarget', Fun.identity),
   FieldSchema.defaulted('onDrag', Fun.noop),
   FieldSchema.defaulted('repositionTarget', true),

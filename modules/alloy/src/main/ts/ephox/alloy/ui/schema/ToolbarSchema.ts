@@ -8,7 +8,7 @@ import * as PartType from '../../parts/PartType';
 import { ToolbarDetail } from '../types/ToolbarTypes';
 
 const schema: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('dom'),
+  FieldSchema.required('dom'),
   FieldSchema.defaulted('shell', true),
   SketchBehaviours.field('toolbarBehaviours', [ Replacing ])
 ]);

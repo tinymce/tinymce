@@ -14,15 +14,15 @@ import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
 import { DropdownDetail, DropdownSpec } from '../types/DropdownTypes';
 
 const schema: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('dom'),
-  FieldSchema.strict('fetch'),
+  FieldSchema.required('dom'),
+  FieldSchema.required('fetch'),
   Fields.onHandler('onOpen'),
   Fields.onKeyboardHandler('onExecute'),
   FieldSchema.defaulted('getHotspot', Optional.some),
   FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
   AnchorLayouts.schema(),
   SketchBehaviours.field('dropdownBehaviours', [ Toggling, Coupling, Keying, Focusing ]),
-  FieldSchema.strict('toggleClass'),
+  FieldSchema.required('toggleClass'),
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.option('lazySink'),
   FieldSchema.defaulted('matchWidth', false),

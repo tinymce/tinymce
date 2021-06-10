@@ -14,9 +14,9 @@ import { TabbarDetail } from '../types/TabbarTypes';
 import { TabButtonSpec } from '../types/TabButtonTypes';
 
 const schema: () => StructureProcessor[] = Fun.constant([
-  FieldSchema.strict('tabs'),
+  FieldSchema.required('tabs'),
 
-  FieldSchema.strict('dom'),
+  FieldSchema.required('dom'),
 
   FieldSchema.defaulted('clickToDismiss', false),
   SketchBehaviours.field('tabbarBehaviours', [ Highlighting, Keying ]),

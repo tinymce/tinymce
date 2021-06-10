@@ -21,11 +21,11 @@ const setup = (streamInfo: StreamingConfig, streamState: StreamingStateType) => 
 };
 
 export default [
-  FieldSchema.strictOf('stream', ValueSchema.choose(
+  FieldSchema.requiredOf('stream', ValueSchema.choose(
     'mode',
     {
       throttle: [
-        FieldSchema.strict('delay'),
+        FieldSchema.required('delay'),
         FieldSchema.defaulted('stopEvent', true),
         Fields.output('streams', {
           setup,

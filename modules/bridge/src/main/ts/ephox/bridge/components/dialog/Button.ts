@@ -22,8 +22,8 @@ export interface Button {
 }
 
 const buttonFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('text'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('text'),
   FieldSchema.defaultedBoolean('disabled', false),
   FieldSchema.defaultedBoolean('primary', false),
   FieldSchema.field(

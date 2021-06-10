@@ -19,7 +19,7 @@ export interface ChoiceMenuItem extends CommonMenuItem {
 }
 
 export const choiceMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.defaultedBoolean('active', false),
   FieldSchema.optionString('icon')
 ].concat(commonMenuItemFields));

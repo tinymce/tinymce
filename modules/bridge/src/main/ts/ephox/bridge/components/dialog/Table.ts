@@ -14,9 +14,9 @@ export interface Table {
 }
 
 const tableFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictArrayOf('header', ValueSchema.string),
-  FieldSchema.strictArrayOf('cells', ValueSchema.arrOf(ValueSchema.string))
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredArrayOf('header', ValueSchema.string),
+  FieldSchema.requiredArrayOf('cells', ValueSchema.arrOf(ValueSchema.string))
 ];
 
 export const tableSchema = ValueSchema.objOf(tableFields);

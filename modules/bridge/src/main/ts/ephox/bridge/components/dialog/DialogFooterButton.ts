@@ -67,20 +67,20 @@ const baseFooterButtonFields = [
 
 export const dialogFooterButtonFields = [
   ...baseFooterButtonFields,
-  FieldSchema.strictString('text')
+  FieldSchema.requiredString('text')
 ];
 
 const normalFooterButtonFields = [
-  FieldSchema.strictStringEnum('type', [ 'submit', 'cancel', 'custom' ]),
+  FieldSchema.requiredStringEnum('type', [ 'submit', 'cancel', 'custom' ]),
   ...dialogFooterButtonFields
 ];
 
 const menuFooterButtonFields = [
-  FieldSchema.strictStringEnum('type', [ 'menu' ]),
+  FieldSchema.requiredStringEnum('type', [ 'menu' ]),
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
-  FieldSchema.strictArrayOf('items', dialogToggleMenuItemSchema),
+  FieldSchema.requiredArrayOf('items', dialogToggleMenuItemSchema),
   ...baseFooterButtonFields
 ];
 

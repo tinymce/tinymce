@@ -27,9 +27,9 @@ export interface SelectBox extends FormComponentWithLabel {
 }
 
 const selectBoxFields: StructureProcessor[] = formComponentWithLabelFields.concat([
-  FieldSchema.strictArrayOfObj('items', [
-    FieldSchema.strictString('text'),
-    FieldSchema.strictString('value')
+  FieldSchema.requiredArrayOfObj('items', [
+    FieldSchema.requiredString('text'),
+    FieldSchema.requiredString('value')
   ]),
   FieldSchema.defaultedNumber('size', 1),
   FieldSchema.defaultedBoolean('disabled', false)

@@ -74,7 +74,7 @@ const adt: {
 
 const fFactory = FieldSchema.defaulted('factory', { sketch: Fun.identity });
 const fSchema = FieldSchema.defaulted('schema', [ ]);
-const fName = FieldSchema.strict('name');
+const fName = FieldSchema.required('name');
 const fPname = FieldSchema.field(
   'pname',
   'pname',
@@ -104,7 +104,7 @@ const optionalSpec = ValueSchema.objOf([
 
 const groupSpec = ValueSchema.objOf([
   fFactory, fGroupSchema, fName,
-  FieldSchema.strict('unit'),
+  FieldSchema.required('unit'),
   fPname, fDefaults, fOverrides
 ]);
 

@@ -44,7 +44,7 @@ const receivingChannel = (rawSpec: DismissalReceivingSpec): Record<string, Recei
   return {
     [Channels.dismissPopups()]: {
       schema: ValueSchema.objOfOnly([
-        FieldSchema.strict('target')
+        FieldSchema.required('target')
       ]),
       onReceive: (sandbox: AlloyComponent, data: { target: SugarElement }) => {
         if (Sandboxing.isOpen(sandbox)) {

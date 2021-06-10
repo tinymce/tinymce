@@ -14,7 +14,7 @@ export interface Grid {
 }
 
 export const createGridFields = (itemsField: StructureProcessor): StructureProcessor[] => [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictNumber('columns'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredNumber('columns'),
   itemsField
 ];

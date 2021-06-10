@@ -165,7 +165,7 @@ const partMenubar = Composite.partType.optional<OuterContainerSketchDetail, Silv
   factory: SilverMenubar,
   name: 'menubar',
   schema: [
-    FieldSchema.strict('backstage')
+    FieldSchema.required('backstage')
   ]
 });
 
@@ -211,8 +211,8 @@ const partMultipleToolbar = Composite.partType.optional<OuterContainerSketchDeta
   },
   name: 'multiple-toolbar',
   schema: [
-    FieldSchema.strict('dom'),
-    FieldSchema.strict('onEscape')
+    FieldSchema.required('dom'),
+    FieldSchema.required('onEscape')
   ]
 });
 
@@ -243,9 +243,9 @@ const partToolbar = Composite.partType.optional<OuterContainerSketchDetail, Tool
   },
   name: 'toolbar',
   schema: [
-    FieldSchema.strict('dom'),
-    FieldSchema.strict('onEscape'),
-    FieldSchema.strict('getSink')
+    FieldSchema.required('dom'),
+    FieldSchema.required('onEscape'),
+    FieldSchema.required('getSink')
   ]
 });
 
@@ -255,7 +255,7 @@ const partHeader = Composite.partType.optional<OuterContainerSketchDetail, Heade
   },
   name: 'header',
   schema: [
-    FieldSchema.strict('dom')
+    FieldSchema.required('dom')
   ]
 });
 
@@ -263,7 +263,7 @@ const partSocket = Composite.partType.optional({
   // factory: Fun.identity,
   name: 'socket',
   schema: [
-    FieldSchema.strict('dom')
+    FieldSchema.required('dom')
   ]
 });
 
@@ -273,7 +273,7 @@ const partSidebar = Composite.partType.optional({
   },
   name: 'sidebar',
   schema: [
-    FieldSchema.strict('dom')
+    FieldSchema.required('dom')
   ]
 });
 
@@ -283,7 +283,7 @@ const partThrobber = Composite.partType.optional({
   },
   name: 'throbber',
   schema: [
-    FieldSchema.strict('dom')
+    FieldSchema.required('dom')
   ]
 });
 
@@ -291,8 +291,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
   name: 'OuterContainer',
   factory,
   configFields: [
-    FieldSchema.strict('dom'),
-    FieldSchema.strict('behaviours')
+    FieldSchema.required('dom'),
+    FieldSchema.required('behaviours')
   ],
   partFields: [
     partHeader,

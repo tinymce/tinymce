@@ -18,8 +18,8 @@ import * as ToolbarSchema from './ToolbarSchema';
 
 const schema: () => StructureProcessor[] = Fun.constant([
   Fields.markers([ 'toggledClass' ]),
-  FieldSchema.strict('lazySink'),
-  FieldSchema.strictFunction('fetch'),
+  FieldSchema.required('lazySink'),
+  FieldSchema.requiredFunction('fetch'),
   FieldSchema.optionFunction('getBounds'),
   FieldSchema.optionObjOf('fireDismissalEventInstead', [
     FieldSchema.defaulted('event', SystemEvents.dismissRequested())

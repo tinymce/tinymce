@@ -18,7 +18,7 @@ export interface ToolbarMenuButton extends BaseMenuButton {
 export interface ToolbarMenuButtonInstanceApi extends BaseMenuButtonInstanceApi { }
 
 export const MenuButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   ...baseMenuButtonFields
 ]);
 

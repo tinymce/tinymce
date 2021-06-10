@@ -12,7 +12,7 @@ import * as ToolbarSchema from './ToolbarSchema';
 const schema: () => StructureProcessor[] = Fun.constant([
   Fields.markers([ 'overflowToggledClass' ]),
   FieldSchema.optionFunction('getOverflowBounds'),
-  FieldSchema.strict('lazySink'),
+  FieldSchema.required('lazySink'),
   FieldSchema.state('overflowGroups', () => Cell([ ]))
 ].concat(
   SplitToolbarBase.schema()

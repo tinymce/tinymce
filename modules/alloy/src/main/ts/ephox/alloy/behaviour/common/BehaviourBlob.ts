@@ -29,7 +29,7 @@ const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBe
     // Optional here probably just due to ForeignGui listing everything it supports. Can most likely
     // change it to strict once I fix the other errors.
     FieldSchema.optionObjOf(a.name(), [
-      FieldSchema.strict('config'),
+      FieldSchema.required('config'),
       FieldSchema.defaulted('state', NoState)
     ])
   );

@@ -14,7 +14,7 @@ const schema: () => StructureProcessor[] = Fun.constant([
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.optional<FormFieldDetail>({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'label'
   }),
 
@@ -36,7 +36,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         };
       }
     },
-    schema: [ FieldSchema.strict('text') ],
+    schema: [ FieldSchema.required('text') ],
     name: 'aria-descriptor'
   }),
 
@@ -47,7 +47,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         return spec.factory.sketch(excludeFactory);
       }
     },
-    schema: [ FieldSchema.strict('factory') ],
+    schema: [ FieldSchema.required('factory') ],
     name: 'field'
   })
 ]);

@@ -4,20 +4,20 @@ import { Arr, Fun, Optional, Result } from '@ephox/katamari';
 import * as Debugging from '../debugging/Debugging';
 import * as MenuMarkers from '../menu/util/MenuMarkers';
 
-const _initSize: StructureProcessor = FieldSchema.strictObjOf('initSize', [
-  FieldSchema.strict('numColumns'),
-  FieldSchema.strict('numRows')
+const _initSize: StructureProcessor = FieldSchema.requiredObjOf('initSize', [
+  FieldSchema.required('numColumns'),
+  FieldSchema.required('numRows')
 ]);
 
-const itemMarkers: () => StructureProcessor = () => FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
+const itemMarkers: () => StructureProcessor = () => FieldSchema.requiredOf('markers', MenuMarkers.itemSchema());
 
-const menuMarkers: () => StructureProcessor = () => FieldSchema.strictOf('markers', MenuMarkers.schema());
+const menuMarkers: () => StructureProcessor = () => FieldSchema.requiredOf('markers', MenuMarkers.schema());
 
-const tieredMenuMarkers: () => StructureProcessor = () => FieldSchema.strictObjOf('markers', [
-  FieldSchema.strict('backgroundMenu')
+const tieredMenuMarkers: () => StructureProcessor = () => FieldSchema.requiredObjOf('markers', [
+  FieldSchema.required('backgroundMenu')
 ].concat(MenuMarkers.menuFields()).concat(MenuMarkers.itemFields()));
 
-const markers = (required: string[]): StructureProcessor => FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
+const markers = (required: string[]): StructureProcessor => FieldSchema.requiredObjOf('markers', Arr.map(required, FieldSchema.required));
 
 const onPresenceHandler = (label: string, fieldName: string, presence: any): StructureProcessor => {
   // We care about where the handler was declared (in terms of which schema)

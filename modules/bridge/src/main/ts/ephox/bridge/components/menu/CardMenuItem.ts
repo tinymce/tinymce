@@ -23,9 +23,9 @@ export interface CardMenuItem extends Omit<CommonMenuItem, 'text' | 'shortcut'> 
 }
 
 const cardMenuItemSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.optionString('label'),
-  FieldSchema.strictArrayOf('items', itemSchema),
+  FieldSchema.requiredArrayOf('items', itemSchema),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   FieldSchema.defaultedFunction('onAction', Fun.noop)
 ].concat(commonMenuItemFields));

@@ -46,8 +46,8 @@ export const baseToolbarButtonFields = [
 ];
 
 export const toolbarButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
-  FieldSchema.strictFunction('onAction')
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredFunction('onAction')
 ].concat(baseToolbarButtonFields));
 
 export const createToolbarButton = (spec: ToolbarButtonSpec): Result<ToolbarButton, ValueSchema.SchemaError<any>> =>
