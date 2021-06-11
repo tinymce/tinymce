@@ -11,3 +11,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - `HexColour.fromString` will now normalize the hex value to strip the leading `#` if present and uppercase the values #TINY-7480
+- Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.

@@ -13,7 +13,9 @@ import Theme from 'tinymce/themes/silver/Theme';
 // via dom elements. For now we're just loading a script to make sure it doesn't completely die when loading.
 describe('browser.tinymce.core.dom.ReferrerPolicyTest', () => {
   const platform = PlatformDetection.detect();
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const settings = {
     base_url: '/project/tinymce/js/tinymce',

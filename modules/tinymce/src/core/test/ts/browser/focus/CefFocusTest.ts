@@ -7,7 +7,9 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.focus.CefFocusTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const pCreateInlineEditor = (html: string) => McEditor.pFromHtml<Editor>(html, {
     menubar: false,

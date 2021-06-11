@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
 - Fixed an issue when pasting cells from tables containing `colgroup`s into tables without `colgroup`s #TINY-6675
+- Fixed an issue that could cause invalid toolbar button state when multiple inline editors were on a single page #TINY-6297
 
 ## 5.8.1 - 2021-05-20
 

@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
+import * as Optionals from 'ephox/katamari/api/Optionals';
 import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
 import { assertNone, assertOptional } from 'ephox/katamari/test/AssertOptional';
 
@@ -27,8 +28,8 @@ describe('atomic.katamari.api.optional.OptionalsSomeTest', () => {
     assert.deepEqual(Optional.some({ cat: 'dog' }).toArray(), [{ cat: 'dog' }]);
     assert.deepEqual(Optional.some([ 1 ]).toArray(), [[ 1 ]]);
 
-    assert.isTrue(Optional.some(6).or(Optional.some(7)).equals(Optional.some(6)));
-    assert.isTrue(Optional.some(3).or(Optional.none()).equals(Optional.some(3)));
+    assert.isTrue(Optionals.equals(Optional.some(6).or(Optional.some(7)), Optional.some(6)));
+    assert.isTrue(Optionals.equals(Optional.some(3).or(Optional.none()), Optional.some(3)));
 
     assert.deepEqual(s.fold(boom, (v) => v + 6), 11);
     assert.deepEqual(Optional.some('a').fold(Fun.die('boom'), Fun.identity), 'a');
@@ -52,7 +53,7 @@ describe('atomic.katamari.api.optional.OptionalsSomeTest', () => {
   it('Checking some(x).is(x) === true', () => {
     fc.assert(fc.property(fc.integer(), (json) => {
       const opt = Optional.some(json);
-      assert.isTrue(opt.is(json));
+      assert.isTrue(Optionals.is(opt, json));
     }));
   });
 
@@ -86,14 +87,14 @@ describe('atomic.katamari.api.optional.OptionalsSomeTest', () => {
   it('Checking some(x).or(oSomeValue) === some(x)', () => {
     fc.assert(fc.property(fc.integer(), arbOptionSome(fc.integer()), (json, other) => {
       const output = Optional.some(json).or(other);
-      assert.isTrue(output.is(json));
+      assert.isTrue(Optionals.is(output, json));
     }));
   });
 
   it('Checking some(x).orThunk(_ -> oSomeValue) === some(x)', () => {
     fc.assert(fc.property(fc.integer(), arbOptionSome(fc.integer()), (i, other) => {
       const output = Optional.some(i).orThunk(() => other);
-      assert.isTrue(output.is(i));
+      assert.isTrue(Optionals.is(output, i));
     }));
   });
 
