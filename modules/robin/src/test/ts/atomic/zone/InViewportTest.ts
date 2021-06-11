@@ -93,7 +93,7 @@ UnitTest.asyncTest('atomic.robin.zone.InViewportTest', (success, failure) => {
       if (isText && withinViewport && afterOrEqualsStart && beforeOrEqualsEnd) {
         Assertions.assertEq('Ensuring element ' + el.name + ' is reached by the walker', true, indexedZones.has(el.id));
       } else {
-        Assertions.assertEq('Ensuring element ' + JSON.stringify(el) + ' is not reached by the walker', false, indexedZones.has(el.id));
+        Assertions.assertEq('Ensuring element ' + el.name + ' is not reached by the walker', false, indexedZones.has(el.id));
       }
 
     });
