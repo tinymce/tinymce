@@ -242,9 +242,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
 
   editor.ui.registry.addToggleButton('tablecaption', {
     tooltip: 'Table caption',
-    onAction: () => {
-      editor.execCommand('mceTableToggleCaption');
-    },
+    onAction: cmd('mceTableToggleCaption'),
     icon: 'table-caption',
     onSetup: selectionTargets.onSetupTableWithCaption
   });
