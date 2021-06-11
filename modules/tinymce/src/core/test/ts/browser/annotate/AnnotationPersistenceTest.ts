@@ -8,7 +8,9 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { annotate } from '../../module/test/AnnotationAsserts';
 
 describe('browser.tinymce.core.annotate.AnnotationPersistenceTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const runTinyWithSettings = async (annotation: AnnotatorSettings, runTests: (editor: Editor) => void) => {
     const settings = {

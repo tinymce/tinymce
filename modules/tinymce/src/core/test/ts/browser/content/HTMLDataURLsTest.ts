@@ -5,7 +5,9 @@ import { assert } from 'chai';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.HTMLDataURLsTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const initialContent = '<p><a href="data:text/plain;base64,SGVsbG8sIHdvcmxkCg==">Click me</a></p>';
 

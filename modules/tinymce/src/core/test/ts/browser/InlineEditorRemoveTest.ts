@@ -7,7 +7,9 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.InlineEditorRemoveTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const settings = {
     inline: true,
