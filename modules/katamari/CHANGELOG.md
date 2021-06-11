@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Improved
 - The `Optional` type is now covariant with respect to its type argument.
   - In particular, this means that if all `Cat`s are `Animal`s, then all `Optional<Cat>`s are now `Optional<Animal>`s.
+- Made constructing `Optional`s faster by re-implementing them as a class.
 
 ## 7.2.0 - 2021-05-06
 

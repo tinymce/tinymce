@@ -9,14 +9,14 @@ import * as Type from './Type';
  Haskell roots. That said, I'm not a Haskell programmer so it might be
  imperfect.
 
- Comparison with null or undefined
+ Comparison with `null` or `undefined`
  - We don't get fancy null coalescing operators with `Optional`
- - We do get fancy helper functions with `Optional`
- - `Optional` support nesting, and allow for the type to still be nullable (or
+ - We do get fancy helper functions with `Optional` (eg: `obj?.val`)
+ - `Optional` supports nesting, and allow for the type to still be nullable (or
  another `Optional`)
  - There is no option to turn off strict-optional-checks like there is for
  strict-null-checks
- - Try to use `Optional` instead of null or undefined where you can
+ - Try to use `Optional` instead of `null` or `undefined` where you can
 */
 
 export class Optional<T> {
@@ -27,7 +27,7 @@ export class Optional<T> {
   // reuse the same object
   private static singletonNone = new Optional<never>(false);
 
-  // The internal representation has an `tag` and a `value`, but both are
+  // The internal representation has a `tag` and a `value`, but both are
   // private: able to be console.logged, but not able to be accessed by code
   private constructor(tag: boolean, value?: T) {
     this.tag = tag;
@@ -210,6 +210,8 @@ export class Optional<T> {
    code, which is bad).
 
    Prefer other methods to this, such as `.each`.
+
+   This method is okay for use in tests (tests are why we have this method).
    */
   public getOrDie(message?: string): T {
     if (!this.tag) {
