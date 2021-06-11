@@ -279,7 +279,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     '<table class="dog" style="width: 500px; height: 500px; float: left; ' +
     'background-color: #0000ff; border: 1px dotted #ff0000; ' +
     'border-spacing: 5px; border-collapse: collapse;" border="1">' +
-    '<caption>&nbsp;</caption>' +
+    '<caption>Caption</caption>' +
     '<tbody>' +
     '<tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr>' +
     '</tbody>' +
