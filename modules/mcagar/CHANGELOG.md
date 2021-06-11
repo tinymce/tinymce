@@ -8,3 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added optional `args` parameter to `TinyAssertions.assertContent` to be passed to `editor.getContent()` #TINY-3388
+
+### Changed
+- Upgraded to Katamari 8.0, which is incompatible with Katamari 7.0 if used in the same bundle.

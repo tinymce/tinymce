@@ -49,6 +49,8 @@ export interface LinkDialogUrlData {
   meta?: LinkUrlMeta;
 }
 
+export type LinkDialogKey = 'text' | 'target' | 'rel' | 'linkClass' | 'title';
+
 export interface LinkDialogData {
   url: LinkDialogUrlData;
   text: string;
