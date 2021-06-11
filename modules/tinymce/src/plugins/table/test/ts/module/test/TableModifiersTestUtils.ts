@@ -78,59 +78,73 @@ const assertStructureHasCustomStyle = (editor: Editor, rows: number, columns: nu
     '</table>');
 };
 
-const closeMenu = (editor) =>
+const closeMenu = (editor) => {
   TinyUiActions.keydown(editor, Keys.escape());
+  TinyUiActions.keydown(editor, Keys.escape());
+};
 
-const clickOnToolbarButton = (editor: Editor, title: string) =>
-  TinyUiActions.clickOnToolbar(editor, `button[title="${title}"]`);
+const clickOnButton = async (editor: Editor, title: string, toolbar: boolean) => {
+  if (toolbar) {
+    TinyUiActions.clickOnToolbar(editor, `button[title="${title}"]`);
+  } else {
+    TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
+    await TinyUiActions.pWaitForUi(editor, `div[title="${title}"]`);
+    TinyUiActions.clickOnUi(editor, `div[title="${title}"]`);
+  }
+};
 
-const pAssertMenuPresence = async (editor: Editor, label: string, menuTitle: string, expected: Record<string, number>, container: SugarElement<HTMLElement>) => {
-  clickOnToolbarButton(editor, menuTitle);
+const pAssertMenuPresence = async (editor: Editor, label: string, menuTitle: string, expected: Record<string, number>, container: SugarElement<HTMLElement>, toolbar: boolean) => {
+  await clickOnButton(editor, menuTitle, toolbar);
   await Waiter.pTryUntil('Ensure the correct values are present', () =>
     Assertions.assertPresence(label, expected, container)
   );
   closeMenu(editor);
 };
 
-const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: string, unchecked: number, sugarContainer: SugarElement<HTMLElement>) => {
+const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: string, unchecked: number, sugarContainer: SugarElement<HTMLElement>, toolbar: boolean) => {
   const expected = {
-    '.tox-menu': 1,
+    '.tox-menu': toolbar ? 1 : 2,
     [`.tox-collection__item[aria-checked="true"][title="${itemTitle}"]`]: 1,
     '.tox-collection__item[aria-checked="false"]': unchecked,
     '.tox-collection__item[aria-checked="true"]': 1,
   };
-  await pAssertMenuPresence(editor, 'There should be a checkmark', menuTitle, expected, sugarContainer);
+  await pAssertMenuPresence(editor, 'There should be a checkmark', menuTitle, expected, sugarContainer, toolbar);
 };
 
-const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: Optional<string>) => {
-  clickOnToolbarButton(editor, menuTitle);
+const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: Optional<string>, toolbar: boolean) => {
+  await clickOnButton(editor, menuTitle, toolbar);
   await TinyUiActions.pWaitForUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
   TinyUiActions.clickOnUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
   closeMenu(editor);
 };
 
-const pAssertNoCheckmarksInMenu = async (editor: Editor, menuTitle: string, expectedFalseCheckmarks: number, container: SugarElement<HTMLElement>) => {
+const pAssertNoCheckmarksInMenu = async (editor: Editor, menuTitle: string, expectedFalseCheckmarks: number, container: SugarElement<HTMLElement>, toolbar: boolean) => {
   const expected = {
-    '.tox-menu': 1,
+    '.tox-menu': toolbar ? 1 : 2,
     '.tox-collection__item[aria-checked="true"]': 0,
     '.tox-collection__item[aria-checked="false"]': expectedFalseCheckmarks,
   };
 
-  await pAssertMenuPresence(editor, 'Menu should open, but not have any checkmarks', menuTitle, expected, container);
+  await pAssertMenuPresence(editor, 'Menu should open, but not have any checkmarks', menuTitle, expected, container, toolbar);
+};
+
+const pAssertStyleCanBeToggled = async (editor: Editor, options: AssertStyleOptions, toolbar: boolean) => {
+  const sugarContainer = SugarBody.body();
+  setEditorContentTableAndSelection(editor, options.rows, options.columns);
+  await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer, toolbar);
+
+  await pClickOnSubMenu(editor, options.menuTitle, Optional.some(options.subMenuTitle), toolbar);
+  await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuTitle, options.checkMarkEntries - 1, sugarContainer, toolbar);
+  assertStructureHasCustomStyle(editor, options.rows, options.columns, options.customStyle);
+
+  await pClickOnSubMenu(editor, options.menuTitle, Optional.none(), toolbar);
+  await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer, toolbar);
+  assertStructureIsRestoredToDefault(editor, options.rows, options.columns);
 };
 
 const pAssertStyleCanBeToggledOnAndOff = async (editor: Editor, options: AssertStyleOptions) => {
-  const sugarContainer = SugarBody.body();
-  setEditorContentTableAndSelection(editor, options.rows, options.columns);
-  await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer);
-
-  await pClickOnSubMenu(editor, options.menuTitle, Optional.some(options.subMenuTitle));
-  await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuTitle, options.checkMarkEntries - 1, sugarContainer);
-  assertStructureHasCustomStyle(editor, options.rows, options.columns, options.customStyle);
-
-  await pClickOnSubMenu(editor, options.menuTitle, Optional.none());
-  await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer);
-  assertStructureIsRestoredToDefault(editor, options.rows, options.columns);
+  await pAssertStyleCanBeToggled(editor, options, true);
+  await pAssertStyleCanBeToggled(editor, options, false);
 };
 
 export {
@@ -138,6 +152,6 @@ export {
   setEditorContentTableAndSelection,
   pAssertNoCheckmarksInMenu,
   pAssertMenuPresence,
-  clickOnToolbarButton,
+  clickOnButton,
   assertStructureIsRestoredToDefault
 };

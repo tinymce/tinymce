@@ -1,14 +1,15 @@
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { assertStructureIsRestoredToDefault, clickOnToolbarButton, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
+import { assertStructureIsRestoredToDefault, clickOnButton, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
 
-describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
+describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     indent: false,
@@ -16,7 +17,14 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     setup: (editor: Editor) => {
       editor.on('tablemodified', logEvent);
-    }
+    },
+    menu: {
+      table: {
+        title: 'Table',
+        items: 'tablecaption'
+      },
+    },
+    menubar: 'table',
   }, [ Plugin, Theme ], true);
 
   let events: Array<EditorEvent<TableModifiedEvent>> = [];
@@ -42,7 +50,7 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
   const toggleCaption = (editor: Editor) => {
     editor.execCommand('mceTableToggleCaption');
 
-    assert.lengthOf(events, 1, 'Command executed successfully.');
+    assert.lengthOf(events, 1, 'Command executed successfully');
   };
 
   const assertTableContainsCaption = (editor: Editor) => {
@@ -55,43 +63,54 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
     TinySelections.setSelection(editor, [ 0, 1, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
   };
 
-  context('Test when using the command directly', () => {
+  const pAssertTableButton = async (toolbar: boolean, addCaption: boolean) => {
+    const editor = hook.editor();
+    if (addCaption) {
+      setEditorContentTableAndSelection(editor, 1, 1);
+    } else {
+      setTableCaptionStructureAndSelection(editor);
+    }
+
+    await clickOnButton(editor, 'Table caption', toolbar);
+    if (addCaption) {
+      assertTableContainsCaption(editor);
+    } else {
+      assertStructureIsRestoredToDefault(editor, 1, 1);
+    }
+  };
+
+  context('Using the command directly', () => {
     it('TINY-7476: The caption should appear', () => {
       const editor = hook.editor();
-
       setEditorContentTableAndSelection(editor, 1, 1);
-      toggleCaption(editor);
 
+      toggleCaption(editor);
       assertTableContainsCaption(editor);
     });
 
     it('TINY-7476: The caption should be removed', () => {
       const editor = hook.editor();
-
       setTableCaptionStructureAndSelection(editor);
-      toggleCaption(editor);
 
+      toggleCaption(editor);
       assertStructureIsRestoredToDefault(editor, 1, 1);
     });
   });
 
-  context('Test when using the button', () => {
-    it('TINY-7476: The caption should appear', () => {
-      const editor = hook.editor();
-
-      setEditorContentTableAndSelection(editor, 1, 1);
-      clickOnToolbarButton(editor, 'Table caption');
-
-      assertTableContainsCaption(editor);
+  context('Using the button', () => {
+    it('TINY-7476: The caption should appear', async () => {
+      await pAssertTableButton(true, true);
+    });
+    it('TINY-7476: The caption should appear with the menu', async () => {
+      await pAssertTableButton(false, true);
     });
 
-    it('TINY-7476: The caption should be removed', () => {
-      const editor = hook.editor();
+    it('TINY-7476: The caption should be removed', async () => {
+      await pAssertTableButton(true, false);
+    });
 
-      setTableCaptionStructureAndSelection(editor);
-      clickOnToolbarButton(editor, 'Table caption');
-
-      assertStructureIsRestoredToDefault(editor, 1, 1);
+    it('TINY-7476: The caption should be removed with the menu', async () => {
+      await pAssertTableButton(false, false);
     });
   });
 });

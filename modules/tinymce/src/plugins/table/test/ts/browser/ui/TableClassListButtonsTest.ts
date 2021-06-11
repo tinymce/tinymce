@@ -14,6 +14,15 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     indent: false,
+    toolbar: 'tableclass',
+    menu: {
+      table: {
+        title: 'Table',
+        items: 'tableclass'
+      },
+    },
+    menubar: 'table edit',
+    base_url: '/project/tinymce/js/tinymce',
     table_class_list: [
       {
         title: 'A',
@@ -24,8 +33,6 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
         value: 'b'
       }
     ],
-    toolbar: 'tableclass',
-    base_url: '/project/tinymce/js/tinymce',
     setup: (editor: Editor) => {
       editor.on('tablemodified', logEvent);
     }
@@ -48,36 +55,35 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
     assert.lengthOf(events, classes.length, 'Command executed successfully.');
   };
 
-  it('TINY-7476: Ensure that the checkmark appears for a single class', async () => {
+  const pPerformToggleClassSetup = async (classList: string[], trueMarked: number, falseMarked: number, toolbar: boolean) => {
     const editor = hook.editor();
     const sugarContainer = SugarBody.body();
 
     setEditorContentTableAndSelection(editor, 1, 1);
-    await pAssertNoCheckmarksInMenu(editor, 'Table styles', 2, sugarContainer);
-    toggleClasses(editor, [ 'a' ]);
+    await pAssertNoCheckmarksInMenu(editor, 'Table styles', 2, sugarContainer, toolbar);
+    toggleClasses(editor, classList);
 
     const expected = {
-      '.tox-menu': 1,
-      '.tox-collection__item[aria-checked="true"]': 1,
-      '.tox-collection__item[aria-checked="false"]': 1
+      '.tox-menu': toolbar ? 1 : 2,
+      '.tox-collection__item[aria-checked="true"]': trueMarked,
+      '.tox-collection__item[aria-checked="false"]': falseMarked
     };
-    await pAssertMenuPresence(editor, 'There should be a checkmark', 'Table styles', expected, sugarContainer);
+    await pAssertMenuPresence(editor, `There should be ${trueMarked} checkmark(s)`, 'Table styles', expected, sugarContainer, toolbar);
+  };
+
+  it('TINY-7476: Ensure that the checkmark appears for a single class', async () => {
+    await pPerformToggleClassSetup([ 'a' ], 1, 1, true);
+  });
+
+  it('TINY-7476: Ensure that the checkmark appears for a single class in menu', async () => {
+    await pPerformToggleClassSetup([ 'a' ], 1, 1, false);
   });
 
   it('TINY-7476: Ensure that the checkmark appears for two classes', async () => {
-    const editor = hook.editor();
-    const sugarContainer = SugarBody.body();
+    await pPerformToggleClassSetup([ 'a', 'b' ], 2, 0, true);
+  });
 
-    setEditorContentTableAndSelection(editor, 1, 1);
-    await pAssertNoCheckmarksInMenu(editor, 'Table styles', 2, sugarContainer);
-    toggleClasses(editor, [ 'a', 'b' ]);
-
-    const expected = {
-      '.tox-menu': 1,
-      '.tox-collection__item[aria-checked="true"]': 2,
-      '.tox-collection__item[aria-checked="false"]': 0
-    };
-
-    await pAssertMenuPresence(editor, 'There should be two checkmarks', 'Table styles', expected, sugarContainer);
+  it('TINY-7476: Ensure that the checkmark appears for two classes in menu', async () => {
+    await pPerformToggleClassSetup([ 'a', 'b' ], 2, 0, false);
   });
 });

@@ -215,8 +215,9 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
 
   const tableClassList = filterNoneItem(getTableClassList(editor));
   if (tableClassList.length !== 0) {
-    editor.ui.registry.addNestedMenuItem('tableclasss', {
+    editor.ui.registry.addNestedMenuItem('tableclass', {
       icon: 'table-classes',
+      text: 'Table styles',
       getSubmenuItems: () => generateItems(
         editor,
         tableClassList,
@@ -232,6 +233,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   if (tableCellClassList.length !== 0) {
     editor.ui.registry.addNestedMenuItem('tablecellclasss', {
       icon: 'table-cell-classes',
+      text: 'Cell styles',
       getSubmenuItems: () => generateItems(
         editor,
         tableCellClassList,
@@ -245,6 +247,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
 
   editor.ui.registry.addNestedMenuItem('tablecellvalign', {
     icon: 'vertical-align',
+    text: 'Vertical align',
     getSubmenuItems: () => generateItems(
       editor,
       verticalAlignValues,
@@ -256,8 +259,9 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   });
 
   const tableCellBorderWidthsList = getTableBorderWidths(editor);
-  editor.ui.registry.addNestedMenuItem('tablecellvalign', {
+  editor.ui.registry.addNestedMenuItem('tablecellborderwidth', {
     icon: 'vertical-align',
+    text: 'Border width',
     getSubmenuItems: () => generateItems(
       editor,
       tableCellBorderWidthsList,
@@ -269,8 +273,9 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   });
 
   const tableCellBorderStylesList = getTableBorderStyles(editor);
-  editor.ui.registry.addNestedMenuItem('tablecellvalign', {
+  editor.ui.registry.addNestedMenuItem('tablecellborderstyle', {
     icon: 'vertical-align',
+    text: 'Border style',
     getSubmenuItems: () => generateItems(
       editor,
       tableCellBorderStylesList,
@@ -281,10 +286,9 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  editor.ui.registry.addMenuItem('tablecaption', {
-    onAction: () => {
-      editor.execCommand('mceTableToggleCaption');
-    },
+  editor.ui.registry.addToggleMenuItem('tablecaption', {
+    onAction: cmd('mceTableToggleCaption'),
+    text: 'Table caption',
     icon: 'table-caption',
     onSetup: selectionTargets.onSetupTableWithCaption
   });

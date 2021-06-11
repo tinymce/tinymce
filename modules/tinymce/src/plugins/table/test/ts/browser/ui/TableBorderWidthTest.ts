@@ -11,6 +11,13 @@ describe('browser.tinymce.plugins.table.ui.TableBorderWidthTest', () => {
     indent: false,
     toolbar: 'tablecellborderwidth',
     base_url: '/project/tinymce/js/tinymce',
+    menu: {
+      table: {
+        title: 'Table',
+        items: 'tablecellborderwidth'
+      },
+    },
+    menubar: 'table',
     table_border_widths: [
       {
         title: '1PX',
