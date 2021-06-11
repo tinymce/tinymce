@@ -18,93 +18,72 @@ import * as Parents from '../dom/Parents';
 import * as TableCellSelection from '../selection/TableCellSelection';
 import * as DeleteElement from './DeleteElement';
 import * as TableDeleteAction from './TableDeleteAction';
+import * as TableDeleteUtils from './TableDeleteUtils';
 
 const freefallRtl = (root: SugarElement<Node>): Optional<SugarElement<Node>> => {
   const child = SugarNode.isComment(root) ? Traverse.prevSibling(root) : Traverse.lastChild(root);
   return child.bind(freefallRtl).orThunk(() => Optional.some(root));
 };
 
-const isRootFromElement = (root: SugarElement<any>) =>
-  (cur: SugarElement<any>): boolean => Compare.eq(root, cur);
+const shallowCopyRange = (rng: Range) => ({
+  startContainer: rng.startContainer,
+  startOffset: rng.startOffset,
+  endContainer: rng.endContainer,
+  endOffset: rng.endOffset
+});
 
-const getTableDetailsFromRange = (editor: Editor, rng: Range) => {
-  const isRoot = isRootFromElement(SugarElement.fromDom(editor.getBody()));
-  const getTable = (elm: SugarElement<Node>) => TableCellSelection.getClosestTable(elm, isRoot);
-  const startTable = getTable(SugarElement.fromDom(rng.startContainer));
-  const endTable = getTable(SugarElement.fromDom(rng.endContainer));
-  const startInTable = startTable.isSome();
-  const endInTable = endTable.isSome();
-  // Partial selection - selection is not within the same table
-  const partialSelection = Optionals.lift2(startTable, endTable, (startTable, endTable) => !Compare.eq(startTable, endTable)).getOr(true);
-  const multiTableSelection = partialSelection && startInTable && endInTable;
+const removeContentFromCells = (cells: SugarElement<HTMLTableCellElement>[]) =>
+  Arr.each(cells, PaddingBr.fillWithPaddingBr);
 
-  return {
-    startTable,
-    endTable,
-    startInTable,
-    endInTable,
-    partialSelection,
-    multiTableSelection
-  };
-};
+/*
+ * Runs when
+ * - the start and end of the selection is contained within the same table (called directly from deleteRange)
+ * - part of a table and content outside is selected
+ */
+const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], outsideRng: Optional<Range>) => {
+  const selection = editor.selection;
+  const rng = selection.getRng();
+  const { startContainer, startOffset, endContainer } = shallowCopyRange(rng);
+  const { startInTable, partialSelection } = TableDeleteUtils.getTableDetailsFromRange(rng, SugarElement.fromDom(editor.getBody()));
+  const outsideBlock = Optionals.someIf(partialSelection, SugarElement.fromDom(editor.dom.getParent(startInTable ? endContainer : startContainer, editor.dom.isBlock)));
 
-const unSelectCells = (rng: Range, startTableOpt: Optional<SugarElement<HTMLTableElement>>, endTableOpt: Optional<SugarElement<HTMLTableElement>>) => {
-  const sameTable = Optionals.lift2(startTableOpt, endTableOpt, (startTable, endTable) => Compare.eq(startTable, endTable)).getOr(false);
-  if (!sameTable) {
-    startTableOpt.each((startTable) => rng.setStartAfter(startTable.dom));
-    endTableOpt.each((endTable) => rng.setEndBefore(endTable.dom));
-  } else if (startTableOpt.isSome()) {
-    startTableOpt.each((startTable) => rng.setStartAfter(startTable.dom));
-  } else {
-    endTableOpt.each((endTable) => rng.setEndBefore(endTable.dom));
-  }
+  // Remove content from selected cells
+  removeContentFromCells(cells);
+  // Delete all content outside of the table that is in the selection
+  outsideRng.each((rng) => rng.deleteContents());
+
+  // Handle block outside the table if it is empty since rng.deleteContents leaves it
+  // Set the appropriate cursor location
+  outsideBlock
+    .filter(Empty.isEmpty)
+    .fold(() => {
+      if (startInTable) {
+        selection.setCursorLocation(cells[0].dom, 0);
+      } else {
+        selection.setCursorLocation(startContainer, startOffset);
+      }
+    }, (emptyBlock) => {
+      if (startInTable) {
+        Remove.remove(emptyBlock);
+        selection.setCursorLocation(cells[0].dom, 0);
+      } else {
+        PaddingBr.fillWithPaddingBr(emptyBlock);
+        editor.selection.setCursorLocation(emptyBlock.dom, 0);
+      }
+    });
+
+  return true;
 };
 
 /*
- * Runs whenever cells are included in a selection
- * - the start and end of the selection is contained within the same table (called directly from deleteRange)
- * - part of a table and content outside is selected
- * - the start of the selection is in a table and the end of the selection is in another table
+ * Runs when the start of the selection is in a table and the end of the selection is in another table
  */
-const emptyCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) => {
-  const selection = editor.selection;
-  const rng = selection.getRng();
-  const startContainer = rng.startContainer;
-  const startOffset = rng.startOffset;
-  const endContainer = rng.endContainer;
-  const selectionDetails = getTableDetailsFromRange(editor, rng);
-  const outsideBlock = SugarElement.fromDom(editor.dom.getParent(selectionDetails.endInTable ? startContainer : endContainer, editor.dom.isBlock));
-
-  // Remove content from selected cells
-  Arr.each(cells, PaddingBr.fillWithPaddingBr);
-
-  // Change the selection so that the cells are no longer selected and delete the rest of the selected content
-  if (selectionDetails.partialSelection) {
-    unSelectCells(rng, selectionDetails.startTable, selectionDetails.endTable);
-    rng.deleteContents();
-  }
-
-  // Check if the outside block is empty after the outside contents are deleted
-  const isEmpty = Empty.isEmpty(outsideBlock);
-
-  // Handle block outside the table if it is empty since rng.deleteContents leaves it
-  if (selectionDetails.partialSelection && !selectionDetails.multiTableSelection && isEmpty) {
-    if (selectionDetails.endInTable) {
-      PaddingBr.fillWithPaddingBr(outsideBlock);
-    } else {
-      Remove.remove(outsideBlock);
-    }
-  }
-
-  // Set the appropriate cursor location
-  if (selectionDetails.multiTableSelection || selectionDetails.startInTable) {
-    selection.setCursorLocation(cells[0].dom, 0);
-  } else if (isEmpty) {
-    editor.selection.setCursorLocation(outsideBlock.dom, 0);
-  } else {
-    selection.setCursorLocation(startContainer, startOffset);
-  }
-
+const emptyMultiTableCells = (editor: Editor, startTableCells: SugarElement<HTMLTableCellElement>[], endTableCells: SugarElement<HTMLTableCellElement>[], betweenRng: Range) => {
+  removeContentFromCells(startTableCells.concat(endTableCells));
+  // Delete all content in between the start table and end table
+  betweenRng.deleteContents();
+  // Set the cursor back to the start of the original selection
+  editor.selection.setCursorLocation(startTableCells[0].dom, 0);
   return true;
 };
 
@@ -138,9 +117,10 @@ const deleteTableElement = (editor: Editor, table: SugarElement<HTMLTableElement
 const deleteCellRange = (editor: Editor, rootElm: SugarElement<Node>, rng: Range) =>
   TableDeleteAction.getActionFromRange(rootElm, rng)
     .map((action) => action.fold(
+      Fun.curry(deleteCellContents, editor),
       Fun.curry(deleteTableElement, editor),
-      Fun.curry(emptyCells, editor),
-      Fun.curry(deleteCellContents, editor)
+      Fun.curry(emptySingleTableCells, editor),
+      Fun.curry(emptyMultiTableCells, editor)
     ));
 
 const deleteCaptionRange = (editor: Editor, caption: SugarElement<HTMLTableCaptionElement>) => emptyElement(editor, caption);
@@ -156,7 +136,7 @@ const deleteRange = (editor: Editor, startElm: SugarElement<Node>) => {
   const rng = editor.selection.getRng();
   const selectedCells = TableCellSelection.getCellsFromEditor(editor);
   return selectedCells.length !== 0 ?
-    emptyCells(editor, selectedCells) :
+    emptySingleTableCells(editor, selectedCells, Optional.none()) :
     deleteTableRange(editor, rootNode, rng, startElm);
 };
 
