@@ -94,9 +94,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const toggleCaption = () => {
     getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
-        const captionElementOpt = Selectors.one('caption', table);
-
-        captionElementOpt.fold(
+        Selectors.one('caption', table).fold(
           () => {
             const caption = SugarElement.fromTag('caption');
             Insert.append(caption, SugarElement.fromText('Caption'));
