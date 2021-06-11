@@ -6,6 +6,8 @@ import { SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
+import * as UiUtils from '../../module/UiUtils';
+
 describe('browser.tinymce.themes.silver.editor.ShowHideTest', () => {
   const base_url = '/project/tinymce/js/tinymce';
 
@@ -35,10 +37,15 @@ describe('browser.tinymce.themes.silver.editor.ShowHideTest', () => {
     ]
   });
 
+  const pActivateEditor = async (editor: Editor) => {
+    editor.focus();
+    await UiUtils.pWaitForEditorToRender();
+  };
+
   it('TINY-6048: Inline editor should hide UI on editor hide', async () => {
     const editor = await McEditor.pFromSettings<Editor>({ base_url, inline: true });
     // Bring out the UI
-    editor.focus();
+    await pActivateEditor(editor);
     await pWaitForVisible('UI should be on the screen', '.tox-toolbar');
     // Hide the editor
     editor.hide();
@@ -62,7 +69,7 @@ describe('browser.tinymce.themes.silver.editor.ShowHideTest', () => {
   it('TINY-6048: Inline editor should close dialogs on editor hide', async () => {
     const editor = await McEditor.pFromSettings<Editor>({ base_url, inline: true });
     // Bring out the UI
-    editor.focus();
+    await pActivateEditor(editor);
     openDialog(editor);
     await pWaitForVisible('Dialog should be on the screen', '.tox-dialog');
     // Hide the editor
