@@ -55,8 +55,8 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
 
       fc.assert(fc.property(fc.string(), (thing) => {
         const matches = Fun.pipe(
-          Maybes.just(() => thing),
-          Maybes.is(() => thing, thunkEq)
+          Maybes.just(Fun.constant(thing)),
+          Maybes.is(Fun.constant(thing), thunkEq)
         );
 
         assert.isTrue(matches);
@@ -64,7 +64,7 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
 
       fc.assert(fc.property(fc.string(), (thing) => {
         const matches = Fun.pipe(
-          Maybes.just(() => thing),
+          Maybes.just(Fun.constant(thing)),
           Maybes.is(() => thing + 'foo', thunkEq)
         );
 

@@ -1,7 +1,7 @@
 import { Logger } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, Objects } from '@ephox/boulder';
-import { Obj } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
@@ -9,7 +9,7 @@ import * as PartType from 'ephox/alloy/parts/PartType';
 UnitTest.test('Atomic Test: parts.GenerateTest', () => {
   const schema = [
     FieldSchema.required('test-data'),
-    FieldSchema.customField('state', () => 'state')
+    FieldSchema.customField('state', Fun.constant('state'))
   ];
 
   const internal = PartType.required({

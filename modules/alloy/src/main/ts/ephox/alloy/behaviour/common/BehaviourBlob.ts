@@ -1,5 +1,6 @@
 import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+
 import { BehaviourState, BehaviourStateInitialiser, NoState } from './BehaviourState';
 import { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec, BehaviourRecord } from './BehaviourTypes';
 
@@ -52,7 +53,7 @@ const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBe
         config: blob.config,
         state: blob.state.init(blob.config)
       }));
-      return () => output;
+      return Fun.constant(output);
     })
   };
 };

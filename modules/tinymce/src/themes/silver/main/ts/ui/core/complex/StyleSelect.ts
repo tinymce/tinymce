@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
@@ -34,8 +34,8 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
       return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [{ title: fmt.title, format: fmt.format }];
     };
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
-    const detectedFormat = findNearest(editor, () => flattenedItems);
-    const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
+    const detectedFormat = findNearest(editor, Fun.constant(flattenedItems));
+    const text = detectedFormat.fold(Fun.constant('Paragraph'), (fmt) => fmt.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });

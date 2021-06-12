@@ -15,7 +15,7 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
     assert.isFalse(s.isValue());
     assert.isTrue(s.isError());
     assert.equal(s.getOr(6), 6);
-    assert.equal(s.getOrThunk(() => 6), 6);
+    assert.equal(s.getOrThunk(Fun.constant(6)), 6);
     assert.throws(() => {
       s.getOrDie();
     });

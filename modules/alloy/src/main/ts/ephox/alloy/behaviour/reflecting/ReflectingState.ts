@@ -1,4 +1,4 @@
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 
 import { ReflectingState } from './ReflectingTypes';
 
@@ -9,7 +9,7 @@ const init = <S>(): ReflectingState<S> => {
   const clear = () => cell.set(Optional.none<S>());
   const get = () => cell.get();
 
-  const readState = (): any => cell.get().fold<any>(() => 'none', (x) => x);
+  const readState = (): any => cell.get().fold<any>(Fun.constant('none'), Fun.identity);
 
   return {
     readState,

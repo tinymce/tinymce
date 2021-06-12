@@ -11,7 +11,7 @@ import {
   Receiving, Reflecting, Replacing, SimpleSpec, SystemEvents
 } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
-import { Id, Optional } from '@ephox/katamari';
+import { Fun, Id, Optional } from '@ephox/katamari';
 import { Attribute, SugarNode } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
@@ -128,7 +128,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
 
   // TODO: Clean up the dupe between this (InlineDialog) and SilverDialog
   const instanceApi = getDialogApi<T>({
-    getRoot: () => dialog,
+    getRoot: Fun.constant(dialog),
     getFooter: () => memFooter.get(dialog),
     getBody: () => memBody.get(dialog),
     getFormWrapper: () => {

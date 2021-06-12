@@ -100,7 +100,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const updateSelectMenuText = (comp: AlloyComponent) => {
     const { matchOpt, font } = getMatchingValue();
-    const text = matchOpt.fold(() => font, (item) => item.title);
+    const text = matchOpt.fold(Fun.constant(font), (item) => item.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });

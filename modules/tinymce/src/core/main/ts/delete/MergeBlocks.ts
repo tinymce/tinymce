@@ -17,7 +17,7 @@ import * as Parents from '../dom/Parents';
 const getChildrenUntilBlockBoundary = (block: SugarElement) => {
   const children = Traverse.children(block);
   return Arr.findIndex(children, ElementType.isBlock).fold(
-    () => children,
+    Fun.constant(children),
     (index) => children.slice(0, index)
   );
 };

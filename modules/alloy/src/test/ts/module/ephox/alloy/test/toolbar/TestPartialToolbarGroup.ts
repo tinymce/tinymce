@@ -22,7 +22,7 @@ const mungeItem = (itemSpec: AlloySpec) => Merger.deepMerge(
   }
 );
 
-const itemMarkers = {
+const itemMarkers: ToolbarGroupSpec['markers'] = {
   itemSelector: 'toolbar-item'
 };
 
@@ -46,7 +46,7 @@ const setGroups = (tb: AlloyComponent, gs: Array<{ items: AlloySpec[] }>): void 
 const createGroups = (gs: Array<{ items: AlloySpec[] }>): SketchSpec[] =>
   Arr.map(gs, Fun.compose(ToolbarGroup.sketch, munge));
 
-const markers = (): ToolbarGroupSpec['markers'] => itemMarkers;
+const markers = Fun.constant(itemMarkers);
 
 export {
   markers,

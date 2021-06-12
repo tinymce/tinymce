@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
@@ -90,7 +91,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   const row: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Row',
-    getSubmenuItems: () => 'tableinsertrowbefore tableinsertrowafter tabledeleterow tablerowprops | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter'
+    getSubmenuItems: Fun.constant('tableinsertrowbefore tableinsertrowafter tabledeleterow tablerowprops | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter')
   };
 
   editor.ui.registry.addMenuItem('tableinsertcolumnbefore', {
@@ -140,7 +141,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   const column: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Column',
-    getSubmenuItems: () => 'tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter'
+    getSubmenuItems: Fun.constant('tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter')
   };
 
   editor.ui.registry.addMenuItem('tablecellprops', {
@@ -165,7 +166,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   const cell: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Cell',
-    getSubmenuItems: () => 'tablecellprops tablemergecells tablesplitcells'
+    getSubmenuItems: Fun.constant('tablecellprops tablemergecells tablesplitcells')
   };
 
   if (hasTableGrid(editor) === false) {
@@ -202,7 +203,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       // context menu fires before node change, so check the selection here first
       selectionTargets.resetTargets();
       // ignoring element since it's monitored elsewhere
-      return selectionTargets.targets().fold(() => '', (targets) => {
+      return selectionTargets.targets().fold(Fun.constant(''), (targets) => {
         // If clicking in a caption, then we shouldn't show the cell/row/column options
         if (SugarNode.name(targets.element) === 'caption') {
           return 'tableprops deletetable';

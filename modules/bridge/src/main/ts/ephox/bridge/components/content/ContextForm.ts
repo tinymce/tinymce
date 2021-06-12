@@ -108,7 +108,7 @@ const toggleOrNormal = StructureSchema.choose('type', {
 
 const contextFormSchema = StructureSchema.objOf([
   FieldSchema.defaulted('type', 'contextform'),
-  FieldSchema.defaultedFunction('initValue', () => ''),
+  FieldSchema.defaultedFunction('initValue', Fun.constant('')),
   FieldSchema.optionString('label'),
   FieldSchema.requiredArrayOf('commands', toggleOrNormal),
   FieldSchema.optionOf('launch', StructureSchema.choose('type', {

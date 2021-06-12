@@ -1,4 +1,5 @@
 import { after, afterEach, before } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 interface ViewBlock {
@@ -28,9 +29,7 @@ const ViewBlock = (): ViewBlock => {
     DOMUtils.DOM.setHTML(domElm, html);
   };
 
-  const get = (): HTMLElement => {
-    return domElm;
-  };
+  const get = Fun.constant(domElm);
 
   return {
     attach,

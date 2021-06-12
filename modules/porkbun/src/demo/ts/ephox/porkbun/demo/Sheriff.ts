@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { Saloon, Sherif, ShootingEvent } from './Types';
 
 declare const $: any;
@@ -25,9 +26,7 @@ const create = (): Sherif => {
   caption.append(actions);
   container.append(img, caption);
 
-  const getElement = () => {
-    return container;
-  };
+  const getElement = Fun.constant(container);
 
   const watch = (establishment: Saloon) => {
     establishment.events.shooting.bind(shooting);
