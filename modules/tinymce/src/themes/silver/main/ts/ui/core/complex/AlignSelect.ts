@@ -6,11 +6,11 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, FormatItem, FormatterFormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatItem, FormatterFormatItem, SelectSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import { IsSelectedForType } from './utils/FormatRegister';
 
@@ -26,11 +26,11 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const isSelectedFor: IsSelectedForType = (format: string) => () => editor.formatter.match(format);
 
-  const getPreviewFor = (_format: string) => () => Optional.none<PreviewSpec>();
+  const getPreviewFor = (_format: string) => Optional.none;
 
   const updateSelectMenuIcon = (comp: AlloyComponent) => {
     const match = getMatchingValue();
-    const alignment = match.fold(() => 'left', (item) => item.title.toLowerCase());
+    const alignment = match.fold(Fun.constant('left'), (item) => item.title.toLowerCase());
     AlloyTriggers.emitWith(comp, updateMenuIcon, {
       icon: `align-${alignment}`
     });

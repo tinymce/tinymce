@@ -1909,7 +1909,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     dumpRng
   };
 
-  const attrHooks = setupAttrHooks(styles, settings, () => self);
+  const attrHooks = setupAttrHooks(styles, settings, Fun.constant(self));
 
   return self;
 };

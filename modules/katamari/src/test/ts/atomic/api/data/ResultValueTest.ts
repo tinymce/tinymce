@@ -13,7 +13,7 @@ describe('atomic.katamari.api.arr.ResultValueTest', () => {
     assert.isTrue(s.isValue());
     assert.isFalse(s.isError());
     assert.equal(s.getOr(6), 5);
-    assert.equal(s.getOrThunk(() => 6), 5);
+    assert.equal(s.getOrThunk(Fun.constant(6)), 5);
     assert.equal(s.getOrDie(), 5);
     assert.equal(s.or(Result.value(6)).getOrDie(), 5);
     assert.equal(s.orThunk(() => Result.error('Should not get here.')).getOrDie(), 5);

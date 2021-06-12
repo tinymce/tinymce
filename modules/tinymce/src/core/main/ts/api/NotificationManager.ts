@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Focus, SugarElement } from '@ephox/sugar';
 import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
@@ -139,9 +139,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
     });
   };
 
-  const getNotifications = (): NotificationApi[] => {
-    return notifications;
-  };
+  const getNotifications = Fun.constant(notifications);
 
   const registerEvents = (editor: Editor) => {
     editor.on('SkinLoaded', () => {

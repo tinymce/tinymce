@@ -86,7 +86,7 @@ const build = (spec: ComponentDetail): AlloyComponent => {
     // INVESTIGATE: Not sure about how to handle text nodes here.
     const subs = Arr.bind(children, (child) => systemApi.get().getByDom(child).fold(
       () => [ ],
-      (c) => [ c ]
+      Arr.pure
     ));
     subcomponents.set(subs);
   };

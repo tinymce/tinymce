@@ -1,4 +1,4 @@
-import { Arr, Id, Obj, Result } from '@ephox/katamari';
+import { Arr, Fun, Id, Obj, Result } from '@ephox/katamari';
 
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Chain } from './Chain';
@@ -109,11 +109,11 @@ const pipeline = (namedChains: NamedChain[], onSuccess: NextFn<any>, onFailure: 
   Chain.pipeline([ asChain(namedChains) ], onSuccess, onFailure, initLogs);
 };
 
-const inputName = (): string => inputNameId;
+const inputName = Fun.constant(inputNameId);
 
 // tests need these values but other users should not
-export const _outputName = (): string => outputNameId;
-export const _outputUnset = (): string => outputUnset;
+export const _outputName = Fun.constant(outputNameId);
+export const _outputUnset = Fun.constant(outputUnset);
 
 export const NamedChain = {
   inputName,

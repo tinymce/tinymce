@@ -1,3 +1,5 @@
+import { Fun } from '@ephox/katamari';
+
 import { SimpleResult } from '../alien/SimpleResult';
 import * as SchemaError from './SchemaError';
 import { StructureProcessor, ValueValidator } from './StructureProcessor';
@@ -10,7 +12,7 @@ const value = (validator: ValueValidator): StructureProcessor => {
     );
   };
 
-  const toString = () => 'val';
+  const toString = Fun.constant('val');
 
   return {
     extract,

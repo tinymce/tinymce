@@ -27,18 +27,16 @@ describe('browser.tinymce.plugins.textpattern.TextSearchTest', () => {
 
   const repeatLeftUntil = (editor: Editor, content: string) => {
     const rng = editor.selection.getRng();
-    return TextSearch.repeatLeft(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody()).fold(
-      () => null,
-      (spot) => spot.container
-    );
+    return TextSearch.repeatLeft(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody())
+      .map((spot) => spot.container)
+      .getOrNull();
   };
 
   const repeatRightUntil = (editor: Editor, content: string) => {
     const rng = editor.selection.getRng();
-    return TextSearch.repeatRight(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody()).fold(
-      () => null,
-      (spot) => spot.container
-    );
+    return TextSearch.repeatRight(editor.dom, rng.startContainer, rng.startOffset, process(content), editor.getBody())
+      .map((spot) => spot.container)
+      .getOrNull();
   };
 
   const assertSpot = (label: string, spotOpt: Optional<SpotPoint<Text>>, elementText: string, offset: number) => {

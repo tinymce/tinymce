@@ -1,5 +1,5 @@
 import { Assertions, Keys, Waiter } from '@ephox/agar';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { TinyAssertions, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -51,9 +51,7 @@ const assertStructureIsRestoredToDefault = (editor: Editor, rows: number, column
         Arr.range(rows, () => {
           return (
             '<tr>' +
-                Arr.range(columns, () => {
-                  return '<td>Filler</td>';
-                }).join('') +
+                Arr.range(columns, Fun.constant('<td>Filler</td>')).join('') +
             '</tr>'
           );
         }).join('') +

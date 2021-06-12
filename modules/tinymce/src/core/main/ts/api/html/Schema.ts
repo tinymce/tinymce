@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 import Tools from '../util/Tools';
 
 export type SchemaType = 'html4' | 'html5' | 'html5-strict';
@@ -434,7 +434,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const customElementsMap = {}, specialElements = {} as SchemaRegExpMap;
 
   // Creates an lookup table map object for the specified option or the default value
-  const createLookupTable = (option: string, defaultValue?: string, extendWith?: string) => {
+  const createLookupTable = (option: string, defaultValue?: string, extendWith?: SchemaMap): SchemaMap => {
     let value = settings[option];
 
     if (!value) {
@@ -866,7 +866,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getValidStyles
    * @type Object
    */
-  const getValidStyles = (): SchemaMap => validStyles;
+  const getValidStyles = Fun.constant(validStyles);
 
   /**
    * Name/value map object with valid styles for each element.
@@ -874,7 +874,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getInvalidStyles
    * @type Object
    */
-  const getInvalidStyles = (): SchemaMap => invalidStyles;
+  const getInvalidStyles = Fun.constant(invalidStyles);
 
   /**
    * Name/value map object with valid classes for each element.
@@ -882,7 +882,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getValidClasses
    * @type Object
    */
-  const getValidClasses = (): SchemaMap => validClasses;
+  const getValidClasses = Fun.constant(validClasses);
 
   /**
    * Returns a map with boolean attributes.
@@ -890,7 +890,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getBoolAttrs
    * @return {Object} Name/value lookup map for boolean attributes.
    */
-  const getBoolAttrs = (): SchemaMap => boolAttrMap;
+  const getBoolAttrs = Fun.constant(boolAttrMap);
 
   /**
    * Returns a map with block elements.
@@ -898,7 +898,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getBlockElements
    * @return {Object} Name/value lookup map for block elements.
    */
-  const getBlockElements = (): SchemaMap => blockElementsMap;
+  const getBlockElements = Fun.constant(blockElementsMap);
 
   /**
    * Returns a map with text block elements. For example: <code>&#60;p&#62;</code>, <code>&#60;h1&#62;</code> to <code>&#60;h6&#62;</code>, <code>&#60;div&#62;</code> or <code>&#60;address&#62;</code>.
@@ -906,7 +906,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getTextBlockElements
    * @return {Object} Name/value lookup map for block elements.
    */
-  const getTextBlockElements = (): SchemaMap => textBlockElementsMap;
+  const getTextBlockElements = Fun.constant(textBlockElementsMap);
 
   /**
    * Returns a map of inline text format nodes. For example: <code>&#60;strong&#62;</code>, <code>&#60;span&#62;</code> or <code>&#60;ins&#62;</code>.
@@ -914,7 +914,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getTextInlineElements
    * @return {Object} Name/value lookup map for text format elements.
    */
-  const getTextInlineElements = (): SchemaMap => textInlineElementsMap;
+  const getTextInlineElements = Fun.constant(textInlineElementsMap);
 
   /**
    * Returns a map with short ended elements. For example: <code>&#60;br&#62;</code> or <code>&#60;img&#62;</code>.
@@ -922,7 +922,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getShortEndedElements
    * @return {Object} Name/value lookup map for short ended elements.
    */
-  const getShortEndedElements = (): SchemaMap => shortEndedElementsMap;
+  const getShortEndedElements = Fun.constant(shortEndedElementsMap);
 
   /**
    * Returns a map with self closing tags. For example: <code>&#60;li&#62;</code>.
@@ -930,7 +930,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getSelfClosingElements
    * @return {Object} Name/value lookup map for self closing tags elements.
    */
-  const getSelfClosingElements = (): SchemaMap => selfClosingElementsMap;
+  const getSelfClosingElements = Fun.constant(selfClosingElementsMap);
 
   /**
    * Returns a map with elements that should be treated as contents regardless if it has text
@@ -939,7 +939,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getNonEmptyElements
    * @return {Object} Name/value lookup map for non empty elements.
    */
-  const getNonEmptyElements = (): SchemaMap => nonEmptyElementsMap;
+  const getNonEmptyElements = Fun.constant(nonEmptyElementsMap);
 
   /**
    * Returns a map with elements that the caret should be moved in front of after enter is
@@ -948,7 +948,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getMoveCaretBeforeOnEnterElements
    * @return {Object} Name/value lookup map for elements to place the caret in front of.
    */
-  const getMoveCaretBeforeOnEnterElements = (): SchemaMap => moveCaretBeforeOnEnterElementsMap;
+  const getMoveCaretBeforeOnEnterElements = Fun.constant(moveCaretBeforeOnEnterElementsMap);
 
   /**
    * Returns a map with elements where white space is to be preserved. For example: <code>&#60;pre&#62;</code> or <code>&#60;script&#62;</code>.
@@ -956,7 +956,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getWhiteSpaceElements
    * @return {Object} Name/value lookup map for white space elements.
    */
-  const getWhiteSpaceElements = (): SchemaMap => whiteSpaceElementsMap;
+  const getWhiteSpaceElements = Fun.constant(whiteSpaceElementsMap);
 
   /**
    * Returns a map with special elements. These are elements that needs to be parsed
@@ -966,7 +966,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getSpecialElements
    * @return {Object} Name/value lookup map for special elements.
    */
-  const getSpecialElements = (): SchemaRegExpMap => specialElements;
+  const getSpecialElements = Fun.constant(specialElements);
 
   /**
    * Returns true/false if the specified element and it's child is valid or not
@@ -1037,7 +1037,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getCustomElements
    * @return {Object} Name/value map object of all custom elements.
    */
-  const getCustomElements = (): SchemaMap => customElementsMap;
+  const getCustomElements = Fun.constant(customElementsMap);
 
   /**
    * Parses a valid elements string and adds it to the schema. The valid elements

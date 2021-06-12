@@ -1,4 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
@@ -183,7 +184,7 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
     {},
     [
       Chain.asStep({}, [
-        Chain.injectThunked(() => 'cat'),
+        Chain.injectThunked(Fun.constant('cat')),
         cIsEqual('cat')
       ])
     ]

@@ -64,15 +64,12 @@ UnitTest.test('DomExtractTest', () => {
     const check = (expected: string, input: SugarElement) => {
       const rawActual = DomExtract.from(input, optimise);
       const actual = Arr.map(rawActual, (x) => {
-        return x.fold(() => {
-          return '\\w';
-        }, () => {
-          return '-';
-        }, (t) => {
-          return SugarText.get(t);
-        }, (t) => {
-          return SugarText.get(t);
-        });
+        return x.fold(
+          Fun.constant('\\w'),
+          Fun.constant('-'),
+          (t) => SugarText.get(t),
+          (t) => SugarText.get(t)
+        );
       }).join('');
       Assert.eq('eq', expected, actual);
     };

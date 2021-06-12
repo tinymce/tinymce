@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as CodeSample from '../core/CodeSample';
 import * as Languages from '../core/Languages';
@@ -14,7 +14,7 @@ type LanguageSpec = Languages.LanguageSpec;
 
 const open = (editor: Editor) => {
   const languages: LanguageSpec[] = Languages.getLanguages(editor);
-  const defaultLanguage: string = Arr.head(languages).fold(() => '', (l) => l.value);
+  const defaultLanguage: string = Arr.head(languages).fold(Fun.constant(''), (l) => l.value);
   const currentLanguage: string = Languages.getCurrentLanguage(editor, defaultLanguage);
   const currentCode: string = CodeSample.getCurrentCode(editor);
 

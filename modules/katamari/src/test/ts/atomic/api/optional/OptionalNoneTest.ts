@@ -28,7 +28,7 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
 
     assert.deepEqual(Optional.none().toArray(), []);
 
-    assert.equal(Optional.none().fold(() => 'zz', Fun.die('boom')), 'zz');
+    assert.equal(Optional.none().fold(Fun.constant('zz'), Fun.die('boom')), 'zz');
     assert.deepEqual(Optional.none().fold((...args: any[]) => {
       return args;
     }, Fun.die('boom')), []);

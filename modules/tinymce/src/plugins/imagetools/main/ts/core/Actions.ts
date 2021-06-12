@@ -215,10 +215,10 @@ const selectedImageOperation = (editor: Editor, imageUploadTimerState: Cell<numb
 const rotate = (editor: Editor, imageUploadTimerState: Cell<number>, angle: number) => {
   return () => {
     const imgOpt = getSelectedImage(editor);
-    const flippedSize = imgOpt.fold(() => null, (img) => {
+    const flippedSize = imgOpt.map((img) => {
       const size = ImageSize.getImageSize(img.dom);
       return size ? { w: size.h, h: size.w } : null;
-    });
+    }).getOrNull();
 
     return selectedImageOperation(editor, imageUploadTimerState, (imageResult) => {
       return ImageTransformations.rotate(imageResult, angle);

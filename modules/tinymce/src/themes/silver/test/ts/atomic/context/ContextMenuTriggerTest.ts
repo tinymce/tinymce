@@ -1,4 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -10,7 +11,7 @@ describe('atomic.tinymce.themes.silver.context.ContextMenuTriggerTest', () => {
     const node = 'node';
 
     const fakeEditor = {
-      getBody: () => body
+      getBody: Fun.constant(body)
     } as unknown as Editor;
 
     const createFakeEvent = (type: string, button: number, target: any, pointerType?: string) => ({

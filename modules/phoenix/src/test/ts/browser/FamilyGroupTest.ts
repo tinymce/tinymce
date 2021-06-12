@@ -8,15 +8,12 @@ import * as Family from 'ephox/phoenix/api/general/Family';
 UnitTest.test('FamilyGroupTest', () => {
   const universe = DomUniverse();
   const toStr = (subject: TypedItem<SugarElement, Document>) => {
-    return subject.fold(() => {
-      return '|';
-    }, () => {
-      return '/';
-    }, (text) => {
-      return '"' + SugarText.get(text) + '"';
-    }, (_text) => {
-      return '\\';
-    });
+    return subject.fold(
+      Fun.constant('|'),
+      Fun.constant('/'),
+      (text) => '"' + SugarText.get(text) + '"',
+      Fun.constant('\\')
+    );
   };
 
   // Family.group is used to break a list of elements in a list of list of elements, where each sublist
