@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Optional, Optionals, Strings } from '@ephox/katamari';
 
 export interface ListDetail {
   readonly start: string;
@@ -100,9 +100,9 @@ const parseStartValue = (start: string): Optional<ListDetail> => {
 const parseDetail = (detail: ListDetail): string => {
   const start = parseInt(detail.start, 10);
 
-  if (detail.listStyleType.is('upper-alpha')) {
+  if (Optionals.is(detail.listStyleType, 'upper-alpha')) {
     return composeAlphabeticBase26(start);
-  } else if (detail.listStyleType.is('lower-alpha')) {
+  } else if (Optionals.is(detail.listStyleType, 'lower-alpha')) {
     return composeAlphabeticBase26(start).toLowerCase();
   } else {
     return detail.start;

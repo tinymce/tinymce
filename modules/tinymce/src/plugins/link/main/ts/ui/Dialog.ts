@@ -15,7 +15,7 @@ import * as Utils from '../core/Utils';
 import { DialogChanges } from './DialogChanges';
 import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
-import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
+import { LinkDialogData, LinkDialogInfo, LinkDialogKey } from './DialogTypes';
 
 const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>) => {
   const data: LinkDialogData = api.getData();
@@ -29,7 +29,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
 
   // Check if a key is defined, meaning it was a field in the dialog. If it is,
   // then check if it's changed and return none if nothing has changed.
-  const getChangedValue = (key: string) => Optional.from(data[key]).filter((value) => !info.anchor[key].is(value));
+  const getChangedValue = (key: LinkDialogKey) => Optional.from(data[key]).filter((value) => !Optionals.is(info.anchor[key], value));
 
   const changedData = {
     href: data.url.value,

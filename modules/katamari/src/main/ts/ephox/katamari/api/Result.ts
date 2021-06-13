@@ -15,8 +15,8 @@ export interface Result<T, E> {
   toOptional: () => Optional<T>;
   isValue: () => boolean;
   isError: () => boolean;
-  getOr: (defaultValue: T) => T;
-  getOrThunk: (maker: () => T) => T;
+  getOr: <T2 = T>(defaultValue: T2) => T | T2;
+  getOrThunk: <T2 = T>(maker: () => T2) => T | T2;
   getOrDie: () => T;
 }
 
@@ -104,7 +104,7 @@ const value = <T, E = any>(o: T): Result<T, E> => {
 };
 
 const error = <T = any, E = any>(message: E): Result<T, E> => {
-  const getOrThunk = (f: () => T) => {
+  const getOrThunk = <T2 = T> (f: () => T2) => {
     return f();
   };
 

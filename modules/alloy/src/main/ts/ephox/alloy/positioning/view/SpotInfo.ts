@@ -8,7 +8,7 @@ export interface SpotInfo {
   readonly bubble: BubbleInstance;
   readonly direction: DirectionAdt;
   readonly label: string;
-  readonly boundsRestriction: BoundsRestriction;
+  readonly restriction: BoundsRestriction;
 }
 
 const nu = (
@@ -16,14 +16,14 @@ const nu = (
   y: number,
   bubble: BubbleInstance,
   direction: DirectionAdt,
-  boundsRestriction: BoundsRestriction,
+  restriction: BoundsRestriction,
   label: string
 ): SpotInfo => ({
   x,
   y,
   bubble,
   direction,
-  boundsRestriction,
+  restriction,
   label
 });
 

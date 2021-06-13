@@ -88,7 +88,7 @@ const init = (): LayeredState => {
       const triggers: Array<Optional<LayeredItemTrigger>> = Arr.bind(revPath, (menuValue, menuIndex) =>
         // finding menuValue, it should match the trigger
         getTriggerData(menuValue, getItemByValue, revPath.slice(0, menuIndex + 1)).fold(
-          () => primary.get().is(menuValue) ? [ ] : [ Optional.none() ],
+          () => Optionals.is(primary.get(), menuValue) ? [ ] : [ Optional.none() ],
           (data) => [ Optional.some(data) ]
         )
       );

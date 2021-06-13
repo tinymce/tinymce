@@ -1,4 +1,4 @@
-import { Adt, Arr, Obj, Optional } from '@ephox/katamari';
+import { Adt, Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Class, Css, Height, SugarBody, SugarElement, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
@@ -147,7 +147,7 @@ const morphToFixed = (elem: SugarElement<HTMLElement>, viewport: Boxes.Bounds, s
 
 const getMorph = (component: AlloyComponent, viewport: Boxes.Bounds, state: DockingState): Optional<MorphAdt> => {
   const elem = component.element;
-  const isDocked = Css.getRaw(elem, 'position').is('fixed');
+  const isDocked = Optionals.is(Css.getRaw(elem, 'position'), 'fixed');
   return isDocked ? morphToOriginal(elem, viewport, state) : morphToFixed(elem, viewport, state);
 };
 

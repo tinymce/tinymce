@@ -1,5 +1,5 @@
 import { ValueSchema } from '@ephox/boulder';
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
 import { Css, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import { Bounds, box } from '../../alien/Boxes';
@@ -81,7 +81,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
       Css.getRaw(placee.element, 'top').isNone() &&
       Css.getRaw(placee.element, 'right').isNone() &&
       Css.getRaw(placee.element, 'bottom').isNone() &&
-      Css.getRaw(placee.element, 'position').is('fixed')
+      Optionals.is(Css.getRaw(placee.element, 'position'), 'fixed')
     ) {
       Css.remove(placee.element, 'position');
     }

@@ -9,7 +9,9 @@ import * as EditorFocus from 'tinymce/core/focus/EditorFocus';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.focus.EditorFocusTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const pCreateInlineEditor = (html: string) => McEditor.pFromHtml<Editor>(html, {
     menubar: false,

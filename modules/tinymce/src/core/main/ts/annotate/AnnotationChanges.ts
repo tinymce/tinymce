@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Obj, Optional, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional, Optionals, Throttler } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import { AnnotationsRegistry } from './AnnotationsRegistry';
 import { identify } from './Identification';
@@ -78,7 +78,7 @@ const setup = (editor: Editor, _registry: AnnotationsRegistry): AnnotationChange
           },
           ({ uid, name, elements }) => {
             // Changed from a different annotation (or nothing)
-            if (!prev.is(uid)) {
+            if (!Optionals.is(prev, uid)) {
               fireCallbacks(name, uid, elements);
               data.previous.set(Optional.some(uid));
             }

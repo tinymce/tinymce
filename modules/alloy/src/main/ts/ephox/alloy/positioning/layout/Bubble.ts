@@ -80,14 +80,14 @@ const nu = (width: number, yoffset: number, classes: BubbleAlignments): Bubble =
     north: () => make(-width / 2, -yoffset, [ 'bottom', 'alignCentre' ]),
     east: () => make(width, -yoffset / 2, [ 'valignCentre', 'left' ]),
     west: () => make(-width, -yoffset / 2, [ 'valignCentre', 'right' ]),
-    innerNorthwest: () => make(-width, yoffset, [ 'top', 'alignRight' ]),
     innerNortheast: () => make(width, yoffset, [ 'top', 'alignLeft' ]),
+    innerNorthwest: () => make(-width, yoffset, [ 'top', 'alignRight' ]),
     innerNorth: () => make(-width / 2, yoffset, [ 'top', 'alignCentre' ]),
-    innerSouthwest: () => make(-width, -yoffset, [ 'bottom', 'alignRight' ]),
     innerSoutheast: () => make(width, -yoffset, [ 'bottom', 'alignLeft' ]),
+    innerSouthwest: () => make(-width, -yoffset, [ 'bottom', 'alignRight' ]),
     innerSouth: () => make(-width / 2, -yoffset, [ 'bottom', 'alignCentre' ]),
-    innerWest: () => make(width, -yoffset / 2, [ 'valignCentre', 'right' ]),
-    innerEast: () => make(-width, -yoffset / 2, [ 'valignCentre', 'left' ])
+    innerEast: () => make(-width, -yoffset / 2, [ 'valignCentre', 'right' ]),
+    innerWest: () => make(width, -yoffset / 2, [ 'valignCentre', 'left' ])
   };
 };
 

@@ -8,7 +8,9 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.InitContentBodySelectionTest', () => {
   const isIE = PlatformDetection.detect().browser.isIE();
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const initAndAssertContent = (label: string, html: string, path: number[], offset = 0, extraSettings = {}) => {
     it(label, async () => {

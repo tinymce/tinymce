@@ -15,7 +15,9 @@ import * as ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const bookmarkTest = (runTests: (editor: Editor) => void) => async () => {
     const editor = await McEditor.pFromSettings<Editor>({

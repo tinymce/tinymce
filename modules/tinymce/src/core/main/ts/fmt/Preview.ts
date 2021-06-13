@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj } from '@ephox/katamari';
+import { Obj, Optionals } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
@@ -215,7 +215,7 @@ const getCssText = (editor: Editor, format: any) => {
   // TODO: This should probably be further reduced by the previewStyles option
   if ('preview' in format) {
     const previewOpt = Obj.get(format, 'preview');
-    if (previewOpt.is(false)) {
+    if (Optionals.is(previewOpt, false)) {
       return '';
     } else {
       previewStyles = previewOpt.getOr(previewStyles);

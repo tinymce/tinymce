@@ -8,7 +8,9 @@ import AstNode from 'tinymce/core/api/html/Node';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const settings = {
     menubar: false,

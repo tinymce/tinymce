@@ -99,7 +99,7 @@ const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLT
   }
   // Clean up any additional leftover nodes. If the last block wasn't a direct child, then we also need to clean up siblings
   if (!Compare.eq(cell, lastBlock)) {
-    const additionalCleanupNodes = Traverse.parent(lastBlock).is(cell) ? [] : Traverse.siblings(lastBlock);
+    const additionalCleanupNodes = Optionals.is(Traverse.parent(lastBlock), cell) ? [] : Traverse.siblings(lastBlock);
     Arr.each(additionalCleanupNodes.concat(Traverse.children(cell)), (node) => {
       if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock)) {
         Remove.remove(node);
