@@ -33,6 +33,7 @@ const replace = <K extends keyof HTMLElementTagNameMap>(cell: SugarElement, tag:
   return replica;
 };
 
+// eslint-disable-next-line @tinymce/prefer-fun
 const pasteReplace = (cell: SugarElement) => {
   // TODO: check for empty content and don't return anything
   return cell;

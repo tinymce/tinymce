@@ -112,9 +112,7 @@ const error = <T = any, E = any>(message: E): Result<T, E> => {
     return Fun.die(String(message))();
   };
 
-  const or = (opt: Result<T, E>) => {
-    return opt;
-  };
+  const or = Fun.identity;
 
   const orThunk = (f: () => Result<T, E>) => {
     return f();

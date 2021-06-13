@@ -60,7 +60,7 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
             console.error(err);
             return { };
           },
-          (vals) => vals
+          Fun.identity
         )
       })
     ])

@@ -21,11 +21,7 @@ const findDiff = (xs: ElementNew[], comp: (a: SugarElement, b: SugarElement) => 
   const index = Arr.findIndex(xs, (x) => {
     return !comp(first.element, x.element);
   });
-  return index.fold(() => {
-    return xs.length;
-  }, (ind) => {
-    return ind;
-  });
+  return index.getOr(xs.length);
 };
 
 /*

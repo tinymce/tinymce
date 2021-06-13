@@ -82,9 +82,7 @@ export const find = <T>(obj: T, pred: (value: T[keyof T], key: string, obj: T) =
 };
 
 export const values = <T>(obj: T): Array<T[keyof T]> => {
-  return mapToArray(obj, (v) => {
-    return v;
-  });
+  return mapToArray(obj, Fun.identity);
 };
 
 export const size = (obj: {}): number => {

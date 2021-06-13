@@ -31,7 +31,7 @@ const makeState = (initialState: BlobState) => {
     blobState.set(state);
   };
 
-  const getTempState = (): BlobState => tempState.get().fold(() => blobState.get(), (temp) => temp);
+  const getTempState = (): BlobState => tempState.get().getOrThunk(blobState.get);
 
   const updateTempState = (blob: Blob): string => {
     const newTempState = createState(blob);

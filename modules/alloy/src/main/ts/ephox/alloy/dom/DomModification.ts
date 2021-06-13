@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { DomDefinitionDetail } from './DomDefinition';
 
 export interface DomModification {
@@ -22,7 +23,7 @@ const modToStr = (mod: DomModification): string => {
   return JSON.stringify(raw, null, 2);
 };
 
-const modToRaw = (mod: DomModification): any => mod;
+const modToRaw: (mod: DomModification) => any = Fun.identity;
 
 const merge = (defnA: DomDefinitionDetail, mod: DomModification): DomDefinitionDetail => ({
   ...defnA,
