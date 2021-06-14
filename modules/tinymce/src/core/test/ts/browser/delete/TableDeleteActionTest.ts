@@ -58,9 +58,10 @@ describe('browser.tinymce.core.delete.TableDeleteActionTest', () => {
         return action.fold(
           fail('unexpected action'),
           fail('unexpected action'),
-          (cells, outsideRng) => ({
+          (cells, outsideDetails) => ({
             cells: Arr.map(cells, Html.getOuter).join(''),
-            otherContent: outsideRng.map((rng) => rng.extractContents().textContent).getOr('')
+            otherContent: outsideDetails.map(({ rng }) => rng.extractContents().textContent).getOr(''),
+            details: outsideDetails
           }),
           fail('unexpected action')
         );
@@ -93,16 +94,18 @@ describe('browser.tinymce.core.delete.TableDeleteActionTest', () => {
 
   it('select two out of three cells returns the partialTable action', () => {
     const action = fromHtml('<table><tbody><tr><td>a</td><td>b</td><td>c</td></tr></tbody></table>', [ 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0 ], 1);
-    const { cells, otherContent } = extractPartialTableAction(action);
+    const { cells, otherContent, details } = extractPartialTableAction(action);
     assert.equal(cells, '<td>a</td><td>b</td>', 'Should be cells');
     assert.isEmpty(otherContent);
+    assert.isTrue(details.isNone(), 'No outside details');
   });
 
   it('select two out of three header cells returns the partialTable action', () => {
     const action = fromHtml('<table><tbody><tr><th>a</th><th>b</th><th>c</th></tr></tbody></table>', [ 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0 ], 1);
-    const { cells, otherContent } = extractPartialTableAction(action);
+    const { cells, otherContent, details } = extractPartialTableAction(action);
     assert.equal(cells, '<th>a</th><th>b</th>', 'Should be cells');
     assert.isEmpty(otherContent);
+    assert.isTrue(details.isNone(), 'No outside details');
   });
 
   it('select three out of three cells returns the fullTable action', () => {
@@ -116,9 +119,10 @@ describe('browser.tinymce.core.delete.TableDeleteActionTest', () => {
       '<table><tbody><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>d</td><td>e</td><td>f</td></tr></tbody></table>',
       [ 0, 0, 1, 0 ], 0, [ 0, 1, 0, 0 ], 1
     );
-    const { cells, otherContent } = extractPartialTableAction(action);
+    const { cells, otherContent, details } = extractPartialTableAction(action);
     assert.equal(cells, '<th>b</th><th>c</th><td>d</td>', 'should be cells');
     assert.isEmpty(otherContent);
+    assert.isTrue(details.isNone(), 'No outside details');
   });
 
   it('select between rows, all cells', () => {
@@ -165,9 +169,10 @@ describe('browser.tinymce.core.delete.TableDeleteActionTest', () => {
       '<div><table><tbody><tr><td>a</td></tr></tbody></table>b</div>',
       [ 0, 0, 0, 0, 0 ], 0, [ 1 ], 1
     );
-    const { cells, otherContent } = extractPartialTableAction(action);
+    const { cells, otherContent, details } = extractPartialTableAction(action);
     assert.equal(cells, '<td>a</td>', 'should be cells from partially selected table');
     assert.equal(otherContent, 'b');
+    assert.isTrue(details.isSome(), 'Has outside details');
   });
 
   it('select table and content before', () => {
@@ -175,9 +180,10 @@ describe('browser.tinymce.core.delete.TableDeleteActionTest', () => {
       '<div>a<table><tbody><tr><td>b</td></tr></tbody></table></div>',
       [ 0 ], 0, [ 1, 0, 0, 0, 0 ], 1
     );
-    const { cells, otherContent } = extractPartialTableAction(action);
+    const { cells, otherContent, details } = extractPartialTableAction(action);
     assert.equal(cells, '<td>b</td>', 'should be cells from partially selected table');
     assert.equal(otherContent, 'a');
+    assert.isTrue(details.isSome(), 'Has outside details');
   });
 
   it('single cell table with all content selected', () => {

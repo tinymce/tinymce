@@ -18,59 +18,58 @@ import * as Parents from '../dom/Parents';
 import * as TableCellSelection from '../selection/TableCellSelection';
 import * as DeleteElement from './DeleteElement';
 import * as TableDeleteAction from './TableDeleteAction';
-import * as TableDeleteUtils from './TableDeleteUtils';
 
 const freefallRtl = (root: SugarElement<Node>): Optional<SugarElement<Node>> => {
   const child = SugarNode.isComment(root) ? Traverse.prevSibling(root) : Traverse.lastChild(root);
   return child.bind(freefallRtl).orThunk(() => Optional.some(root));
 };
 
-const shallowCopyRange = (rng: Range) => ({
-  startContainer: rng.startContainer,
-  startOffset: rng.startOffset,
-  endContainer: rng.endContainer,
-  endOffset: rng.endOffset
-});
-
 const removeContentFromCells = (cells: SugarElement<HTMLTableCellElement>[]) =>
   Arr.each(cells, PaddingBr.fillWithPaddingBr);
+
+const getOutsideBlock = (editor: Editor, container: Node): Optional<SugarElement<HTMLElement>> =>
+  Optional.from(editor.dom.getParent(container, editor.dom.isBlock) as HTMLElement).map(SugarElement.fromDom);
+
+const handleEmptyBlock = (editor: Editor, startInTable: boolean, emptyBlock: Optional<SugarElement<HTMLElement>>) => {
+  emptyBlock.each((block) => {
+    if (startInTable) {
+      // Note that we don't need to set the selection as it'll be within the table
+      Remove.remove(block);
+    } else {
+      // Set the cursor location as it'll move when filling with padding
+      PaddingBr.fillWithPaddingBr(block);
+      editor.selection.setCursorLocation(block.dom, 0);
+    }
+  });
+};
 
 /*
  * Runs when
  * - the start and end of the selection is contained within the same table (called directly from deleteRange)
  * - part of a table and content outside is selected
  */
-const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], outsideRng: Optional<Range>) => {
-  const selection = editor.selection;
-  const rng = selection.getRng();
-  const { startContainer, startOffset, endContainer } = shallowCopyRange(rng);
-  const { startInTable, partialSelection } = TableDeleteUtils.getTableDetailsFromRange(rng, SugarElement.fromDom(editor.getBody()));
-  const outsideBlock = Optionals.someIf(partialSelection, SugarElement.fromDom(editor.dom.getParent(startInTable ? endContainer : startContainer, editor.dom.isBlock)));
-
+const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], outsideDetails: Optional<TableDeleteAction.OutsideTableDetails>) => {
   // Remove content from selected cells
   removeContentFromCells(cells);
-  // Delete all content outside of the table that is in the selection
-  outsideRng.each((rng) => rng.deleteContents());
 
-  // Handle block outside the table if it is empty since rng.deleteContents leaves it
-  // Set the appropriate cursor location
-  outsideBlock
-    .filter(Empty.isEmpty)
-    .fold(() => {
-      if (startInTable) {
-        selection.setCursorLocation(cells[0].dom, 0);
-      } else {
-        selection.setCursorLocation(startContainer, startOffset);
-      }
-    }, (emptyBlock) => {
-      if (startInTable) {
-        Remove.remove(emptyBlock);
-        selection.setCursorLocation(cells[0].dom, 0);
-      } else {
-        PaddingBr.fillWithPaddingBr(emptyBlock);
-        editor.selection.setCursorLocation(emptyBlock.dom, 0);
-      }
-    });
+  // Delete all content outside of the table that is in the selection
+  outsideDetails.map(({ rng, isStartInTable }) => {
+    // Get the outside block before deleting the contents
+    const outsideBlock = getOutsideBlock(editor, isStartInTable ? rng.endContainer : rng.startContainer);
+    rng.deleteContents();
+    // Handle block outside the table if it is empty since rng.deleteContents leaves it
+    handleEmptyBlock(editor, isStartInTable, outsideBlock.filter(Empty.isEmpty));
+  });
+
+  // Set the selection:
+  // - to the first emptied cell if the selection was previously inside a table
+  // - otherwise just collapse the previous selection that was in the outside block
+  const selection = editor.selection;
+  if (outsideDetails.forall(({ isStartInTable }) => isStartInTable)) {
+    selection.setCursorLocation(cells[0].dom, 0);
+  } else {
+    selection.collapse(true);
+  }
 
   return true;
 };

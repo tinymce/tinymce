@@ -9,42 +9,40 @@ import { Optional, Optionals } from '@ephox/katamari';
 import { Compare, SelectorFilter, SugarElement } from '@ephox/sugar';
 import * as TableCellSelection from '../selection/TableCellSelection';
 
-export type IsRootFn = (e: SugarElement<any>) => boolean;
+export type IsRootFn = (e: SugarElement<Node>) => boolean;
 
 export interface TableSelectionDetails {
   readonly startTable: Optional<SugarElement<HTMLTableElement>>;
   readonly endTable: Optional<SugarElement<HTMLTableElement>>;
-  readonly startInTable: boolean;
-  readonly endInTable: boolean;
-  readonly partialSelection: boolean;
-  readonly multiTableSelection: boolean;
+  readonly isStartInTable: boolean;
+  readonly isEndInTable: boolean;
+  readonly isSameTableSelection: boolean;
+  readonly isMultiTableSelection: boolean;
 }
 
-const isRootFromElement = (root: SugarElement<any>): IsRootFn =>
-  (cur: SugarElement<any>): boolean => Compare.eq(root, cur);
+const isRootFromElement = (root: SugarElement<Node>): IsRootFn =>
+  (cur: SugarElement<Node>): boolean => Compare.eq(root, cur);
 
 const getTableCells = (table: SugarElement<HTMLTableElement>) =>
   SelectorFilter.descendants<HTMLTableCellElement>(table, 'td,th');
 
-// const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
-const getTableDetailsFromRange = (rng: Range, root: SugarElement): TableSelectionDetails => {
-  const isRoot = isRootFromElement(root);
-  const getTable = (elm: SugarElement<Node>) => TableCellSelection.getClosestTable(elm, isRoot);
-  const startTable = getTable(SugarElement.fromDom(rng.startContainer));
-  const endTable = getTable(SugarElement.fromDom(rng.endContainer));
-  const startInTable = startTable.isSome();
-  const endInTable = endTable.isSome();
+const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionDetails => {
+  const getTable = (node: Node) => TableCellSelection.getClosestTable(SugarElement.fromDom(node), isRoot);
+  const startTable = getTable(rng.startContainer);
+  const endTable = getTable(rng.endContainer);
+  const isStartInTable = startTable.isSome();
+  const isEndInTable = endTable.isSome();
   // Partial selection - selection is not within the same table
-  const partialSelection = Optionals.lift2(startTable, endTable, (startTable, endTable) => !Compare.eq(startTable, endTable)).getOr(true);
-  const multiTableSelection = partialSelection && startInTable && endInTable;
+  const isSameTableSelection = Optionals.lift2(startTable, endTable, Compare.eq).getOr(false);
+  const isMultiTableSelection = !isSameTableSelection && isStartInTable && isEndInTable;
 
   return {
     startTable,
     endTable,
-    startInTable,
-    endInTable,
-    partialSelection,
-    multiTableSelection
+    isStartInTable,
+    isEndInTable,
+    isSameTableSelection,
+    isMultiTableSelection
   };
 };
 
