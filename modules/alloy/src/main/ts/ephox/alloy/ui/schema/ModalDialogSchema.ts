@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -11,7 +11,7 @@ import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import { ModalDialogDetail } from '../types/ModalDialogTypes';
 
-const schema: () => FieldProcessor[] = Fun.constant([
+const schema = Fun.constant([
   FieldSchema.required('lazySink'),
   FieldSchema.option('dragBlockClass'),
   FieldSchema.defaultedFunction('getBounds', Boxes.win),

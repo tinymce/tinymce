@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Obj } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
@@ -81,7 +81,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   })
 ]);
 
-const schema: () => FieldProcessor[] = Fun.constant([
+const schema = Fun.constant([
   FieldSchema.required('value'),
   FieldSchema.required('items'),
   FieldSchema.required('dom'),

@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Class, Focus } from '@ephox/sugar';
 
@@ -15,7 +15,7 @@ import * as PartType from '../../parts/PartType';
 import { ButtonSpec } from '../types/ButtonTypes';
 import { ExpandableFormDetail } from '../types/ExpandableFormTypes';
 
-const schema: () => FieldProcessor[] = Fun.constant([
+const schema = Fun.constant([
   Fields.markers([
     'closedClass',
     'openClass',

@@ -1,8 +1,8 @@
-import { FieldSchema, Objects, StructureProcessor, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as CommonBehaviour from '../../behaviour/common/Behaviour';
-import { NoState, BehaviourState } from '../../behaviour/common/BehaviourState';
+import { BehaviourState, NoState } from '../../behaviour/common/BehaviourState';
 import * as BehaviourTypes from '../../behaviour/common/BehaviourTypes';
 
 export type ConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState = BehaviourState> = BehaviourTypes.ConfiguredBehaviour<C, D, S>;
@@ -21,7 +21,7 @@ const derive = (
   capabilities: Array<NamedConfiguredBehaviour<any, any, any>>
 ): AlloyBehaviourRecord => Objects.wrapAll(capabilities);
 
-const simpleSchema: StructureProcessor = ValueSchema.objOfOnly([
+const simpleSchema = ValueSchema.objOfOnly([
   FieldSchema.required('fields'),
   FieldSchema.required('name'),
   FieldSchema.defaulted('active', { }),
@@ -41,7 +41,7 @@ const create = <
   return CommonBehaviour.create<C, D, S, A, E>(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
 
-const modeSchema: StructureProcessor = ValueSchema.objOfOnly([
+const modeSchema = ValueSchema.objOfOnly([
   FieldSchema.required('branchKey'),
   FieldSchema.required('branches'),
   FieldSchema.required('name'),

@@ -1,4 +1,4 @@
-import { FieldSchema, StructureProcessor, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, EventArgs, EventUnbinder, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
@@ -21,7 +21,7 @@ export interface GuiEventSettings {
   stopBackspace?: boolean;
 }
 
-const settingsSchema: StructureProcessor = ValueSchema.objOfOnly([
+const settingsSchema = ValueSchema.objOfOnly([
   // triggerEvent(eventName, event)
   FieldSchema.requiredFunction('triggerEvent'),
   FieldSchema.defaulted('stopBackspace', true)

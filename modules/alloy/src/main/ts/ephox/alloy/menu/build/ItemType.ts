@@ -1,4 +1,5 @@
 import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';

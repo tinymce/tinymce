@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
@@ -19,7 +19,7 @@ import { ButtonSpec } from '../types/ButtonTypes';
 import { FormCoupledInputsDetail } from '../types/FormCoupledInputsTypes';
 import { FormFieldSpec } from '../types/FormFieldTypes';
 
-const schema: () => FieldProcessor[] = Fun.constant([
+const schema = Fun.constant([
   FieldSchema.defaulted('field1Name', 'field1'),
   FieldSchema.defaulted('field2Name', 'field2'),
   Fields.onStrictHandler('onLockedChange'),

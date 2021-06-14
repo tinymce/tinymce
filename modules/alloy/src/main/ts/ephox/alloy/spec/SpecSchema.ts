@@ -1,4 +1,5 @@
 import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+
 import { AlloySpec, OptionalDomSchema } from '../api/component/SpecTypes';
 import * as Fields from '../data/Fields';
 

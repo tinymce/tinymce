@@ -26,7 +26,7 @@ const snapshot = (newKey: string): FieldProcessor => FieldProcessor.customField(
 const strictAccess = <T>(path: string[], obj: Record<string, T>, key: string): SimpleResult<SchemaError[], T> => {
   // In strict mode, if it undefined, it is an error.
   return Obj.get(obj, key).fold<SimpleResult<SchemaError[], any>>(() =>
-    SchemaError.missingStrict(path, key, obj), SimpleResult.svalue);
+    SchemaError.missingRequired(path, key, obj), SimpleResult.svalue);
 };
 
 const fallbackAccess = <T>(obj: Record<string, T>, key: string, fallbackThunk: (obj: Record<string, T>) => T): SimpleResult<SchemaError[], T> => {
@@ -110,12 +110,12 @@ const cExtract = <T>(path: string[], obj: Record<string, T>, fields: FieldProces
 };
 
 const valueThunk = (getDelegate: () => StructureProcessor): StructureProcessor => {
-  const extract = (path: string[], val: any) => getDelegate().getProp(path, val);
+  const getProp = (path: string[], val: any) => getDelegate().getProp(path, val);
 
   const toString = () => getDelegate().toString();
 
   return {
-    getProp: extract,
+    getProp,
     toString
   };
 };
@@ -134,7 +134,7 @@ const objOfOnly = (fields: FieldProcessor[]): StructureProcessor => {
     );
   }, {} as Record<string, boolean>);
 
-  const extract = (path, o) => {
+  const getProp = (path, o) => {
     const keys = Type.isBoolean(o) ? [] : getSetKeys(o);
     const extra = Arr.filter(keys, (k) => !Obj.hasNonNullableKey(fieldNames, k));
 
@@ -142,13 +142,13 @@ const objOfOnly = (fields: FieldProcessor[]): StructureProcessor => {
   };
 
   return {
-    getProp: extract,
+    getProp,
     toString: delegate.toString
   };
 };
 
 const objOf = (values: FieldProcessor[]): StructureProcessor => {
-  const extract = (path: string[], o: Record<string, any>) => cExtract(path, o, values);
+  const getProp = (path: string[], o: Record<string, any>) => cExtract(path, o, values);
 
   const toString = () => {
     const fieldStrings = Arr.map(values, (value) => FieldProcessor.fold(
@@ -160,13 +160,13 @@ const objOf = (values: FieldProcessor[]): StructureProcessor => {
   };
 
   return {
-    getProp: extract,
+    getProp,
     toString
   };
 };
 
 const arrOf = (prop: StructureProcessor): StructureProcessor => {
-  const extract = (path, array) => {
+  const getProp = (path, array) => {
     const results = Arr.map(array, (a, i) => prop.getProp(path.concat([ '[' + i + ']' ]), a));
     return ResultCombine.consolidateArr(results);
   };
@@ -174,13 +174,13 @@ const arrOf = (prop: StructureProcessor): StructureProcessor => {
   const toString = () => 'array(' + prop.toString() + ')';
 
   return {
-    getProp: extract,
+    getProp,
     toString
   };
 };
 
 const oneOf = (props: StructureProcessor[]): StructureProcessor => {
-  const extract = (path: string[], val: any): SimpleResult<SchemaError[], any> => {
+  const getProp = (path: string[], val: any): SimpleResult<SchemaError[], any> => {
     const errors: Array<SimpleResult<SchemaError[], any>> = [];
 
     // Return on first match
@@ -199,7 +199,7 @@ const oneOf = (props: StructureProcessor[]): StructureProcessor => {
   const toString = () => 'oneOf(' + Arr.map(props, (prop) => prop.toString()).join(', ') + ')';
 
   return {
-    getProp: extract,
+    getProp,
     toString
   };
 };

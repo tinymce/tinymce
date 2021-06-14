@@ -1,5 +1,6 @@
 import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
+
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import * as AlloyParts from '../../parts/AlloyParts';
 import { PartTypeAdt } from '../../parts/PartType';

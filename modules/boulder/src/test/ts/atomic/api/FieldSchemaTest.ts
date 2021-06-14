@@ -4,7 +4,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import { FieldProcessor } from 'ephox/boulder/api/Main';
 import * as ValueSchema from 'ephox/boulder/api/StructureSchema';
-import * as FieldTypes from 'ephox/boulder/core/ValueType';
+import * as ValueType from 'ephox/boulder/core/ValueType';
 
 UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
   const assertFieldValue = (label: string, expected: any, input: any, field: FieldProcessor) => {
@@ -50,8 +50,8 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
   assertFieldValue('Should be specified value b', { key: 'b' }, { key: 'b' }, FieldSchema.defaultedStringEnum('key', 'b', [ 'a', 'b' ]));
   assertFieldValue('Should be default value', { key: 'b' }, { }, FieldSchema.defaultedStringEnum('key', 'b', [ 'a', 'b' ]));
   assertFieldError('Should fail on undefined value variant', { key: 'c' }, FieldSchema.defaultedStringEnum('key', 'b', [ 'a', 'b' ]));
-  assertFieldValue('Should be specified array', { key: [ 'a' ] }, { key: [ 'a' ] }, FieldSchema.defaultedArrayOf('key', [ 'b' ], FieldTypes.string));
-  assertFieldValue('Should be default array', { key: [ 'b' ] }, { }, FieldSchema.defaultedArrayOf('key', [ 'b' ], FieldTypes.string));
+  assertFieldValue('Should be specified array', { key: [ 'a' ] }, { key: [ 'a' ] }, FieldSchema.defaultedArrayOf('key', [ 'b' ], ValueType.string));
+  assertFieldValue('Should be default array', { key: [ 'b' ] }, { }, FieldSchema.defaultedArrayOf('key', [ 'b' ], ValueType.string));
 
   assertFieldValue('Should be specified value a', { key: 'a' }, { key: 'a' }, FieldSchema.requiredStringEnum('key', [ 'a', 'b' ]));
   assertFieldValue('Should be specified value b', { key: 'b' }, { key: 'b' }, FieldSchema.requiredStringEnum('key', [ 'a', 'b' ]));
@@ -61,6 +61,6 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
   assertOptionalFieldValue({ key: Optional.some('b') }, { key: 'b' }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
   assertFieldError('Should be fail on unspecified value', { key: 'c' }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
   assertOptionalFieldValue({ key: Optional.none() }, { }, FieldSchema.optionStringEnum('key', [ 'a', 'b' ]));
-  assertOptionalFieldValue({ key: Optional.some([ 'b' ]) }, { key: [ 'b' ] }, FieldSchema.optionArrayOf('key', FieldTypes.string));
-  assertOptionalFieldValue({ key: Optional.none() }, { }, FieldSchema.optionArrayOf('key', FieldTypes.string));
+  assertOptionalFieldValue({ key: Optional.some([ 'b' ]) }, { key: [ 'b' ] }, FieldSchema.optionArrayOf('key', ValueType.string));
+  assertOptionalFieldValue({ key: Optional.none() }, { }, FieldSchema.optionArrayOf('key', ValueType.string));
 });

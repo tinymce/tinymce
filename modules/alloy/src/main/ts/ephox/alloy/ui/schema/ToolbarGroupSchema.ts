@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { Keying } from '../../api/behaviour/Keying';
@@ -7,7 +7,7 @@ import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import { ToolbarGroupDetail, ToolbarGroupSpec } from '../types/ToolbarGroupTypes';
 
-const schema: () => FieldProcessor[] = Fun.constant([
+const schema = Fun.constant([
   FieldSchema.required('items'),
   Fields.markers([ 'itemSelector' ]),
   SketchBehaviours.field('tgroupBehaviours', [ Keying ])

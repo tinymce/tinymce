@@ -1,6 +1,7 @@
 import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Optional, Result } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
+
 import * as EventRoot from '../alien/EventRoot';
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';

@@ -15,8 +15,8 @@ const nu = <T>(path: string[], getErrorInfo: () => string): SimpleResult<SchemaE
   }]);
 };
 
-const missingStrict = <T>(path: string[], key: string, obj: any): SimpleResult<SchemaError[], T> => {
-  return nu(path, () => 'Could not find valid *strict* value for "' + key + '" in ' + formatObj(obj));
+const missingRequired = <T>(path: string[], key: string, obj: any): SimpleResult<SchemaError[], T> => {
+  return nu(path, () => 'Could not find valid *required* value for "' + key + '" in ' + formatObj(obj));
 };
 
 const missingKey = <T>(path: string[], key: string): SimpleResult<SchemaError[], T> => {
@@ -40,7 +40,7 @@ const toString = (error: SchemaError): string => {
 };
 
 export {
-  missingStrict,
+  missingRequired,
   missingKey,
   missingBranch,
   unsupportedFields,
