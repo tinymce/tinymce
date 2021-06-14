@@ -16,8 +16,8 @@ export interface TableSelectionDetails {
   readonly endTable: Optional<SugarElement<HTMLTableElement>>;
   readonly isStartInTable: boolean;
   readonly isEndInTable: boolean;
-  readonly isSameTableSelection: boolean;
-  readonly isMultiTableSelection: boolean;
+  readonly isSameTable: boolean;
+  readonly isMultiTable: boolean;
 }
 
 const isRootFromElement = (root: SugarElement<Node>): IsRootFn =>
@@ -33,16 +33,16 @@ const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionD
   const isStartInTable = startTable.isSome();
   const isEndInTable = endTable.isSome();
   // Partial selection - selection is not within the same table
-  const isSameTableSelection = Optionals.lift2(startTable, endTable, Compare.eq).getOr(false);
-  const isMultiTableSelection = !isSameTableSelection && isStartInTable && isEndInTable;
+  const isSameTable = Optionals.lift2(startTable, endTable, Compare.eq).getOr(false);
+  const isMultiTable = !isSameTable && isStartInTable && isEndInTable;
 
   return {
     startTable,
     endTable,
     isStartInTable,
     isEndInTable,
-    isSameTableSelection,
-    isMultiTableSelection
+    isSameTable,
+    isMultiTable
   };
 };
 
