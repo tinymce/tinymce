@@ -83,18 +83,22 @@ const closeMenu = (editor) => {
   TinyUiActions.keydown(editor, Keys.escape());
 };
 
-const clickOnButton = async (editor: Editor, title: string, toolbar: boolean) => {
-  if (toolbar) {
-    TinyUiActions.clickOnToolbar(editor, `button[title="${title}"]`);
-  } else {
-    TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
-    await TinyUiActions.pWaitForUi(editor, `div[title="${title}"]`);
-    TinyUiActions.clickOnUi(editor, `div[title="${title}"]`);
-  }
+const clickOnButton = (editor: Editor, title: string) => {
+  TinyUiActions.clickOnToolbar(editor, `button[title="${title}"]`);
+};
+
+const clickOnMenuItem = async (editor: Editor, title: string) => {
+  TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
+  await TinyUiActions.pWaitForUi(editor, `div[title="${title}"]`);
+  TinyUiActions.clickOnUi(editor, `div[title="${title}"]`);
 };
 
 const pAssertMenuPresence = async (editor: Editor, label: string, menuTitle: string, expected: Record<string, number>, container: SugarElement<HTMLElement>, toolbar: boolean) => {
-  await clickOnButton(editor, menuTitle, toolbar);
+  if (toolbar) {
+    clickOnButton(editor, menuTitle);
+  } else {
+    await clickOnMenuItem(editor, menuTitle);
+  }
   await Waiter.pTryUntil('Ensure the correct values are present', () =>
     Assertions.assertPresence(label, expected, container)
   );
@@ -112,7 +116,11 @@ const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: 
 };
 
 const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: Optional<string>, toolbar: boolean) => {
-  await clickOnButton(editor, menuTitle, toolbar);
+  if (toolbar) {
+    clickOnButton(editor, menuTitle);
+  } else {
+    await clickOnMenuItem(editor, menuTitle);
+  }
   await TinyUiActions.pWaitForUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
   TinyUiActions.clickOnUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
   closeMenu(editor);
@@ -153,5 +161,6 @@ export {
   pAssertNoCheckmarksInMenu,
   pAssertMenuPresence,
   clickOnButton,
+  clickOnMenuItem,
   assertStructureIsRestoredToDefault
 };

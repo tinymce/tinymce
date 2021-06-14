@@ -16,10 +16,7 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
     indent: false,
     toolbar: 'tableclass',
     menu: {
-      table: {
-        title: 'Table',
-        items: 'tableclass'
-      },
+      table: { title: 'Table', items: 'tableclass' },
     },
     menubar: 'table edit',
     base_url: '/project/tinymce/js/tinymce',

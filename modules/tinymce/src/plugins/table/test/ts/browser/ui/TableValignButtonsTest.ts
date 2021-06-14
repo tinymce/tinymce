@@ -11,10 +11,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     indent: false,
     toolbar: 'tablecellvalign',
     menu: {
-      table: {
-        title: 'Table',
-        items: 'tablecellvalign'
-      },
+      table: { title: 'Table', items: 'tablecellvalign' },
     },
     menubar: 'table',
     base_url: '/project/tinymce/js/tinymce',

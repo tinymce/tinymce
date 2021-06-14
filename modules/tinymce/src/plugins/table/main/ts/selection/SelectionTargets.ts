@@ -49,6 +49,8 @@ interface ExtractedSelectionDetails {
   readonly locked: Record<LockedDisableStrs, boolean>;
 }
 
+type TargetSetupCallback = (targets: RunOperation.CombinedTargets) => boolean;
+
 export const getSelectionTargets = (editor: Editor, selections: Selections): SelectionTargets => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
   const changeHandlers = Cell([]);
@@ -105,6 +107,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     // Trigger change handlers
     Arr.each(changeHandlers.get(), (handler) => handler());
   };
+
   const setupHandler = (handler: () => void) => {
     // Execute the handler to set the initial state
     handler();
@@ -116,7 +119,8 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
       changeHandlers.set(Arr.filter(changeHandlers.get(), (h) => h !== handler));
     };
   };
-  const onSetup = (api: UiApi, isDisabled: (targets: RunOperation.CombinedTargets) => boolean) =>
+
+  const onSetup = (api: UiApi, isDisabled: TargetSetupCallback) =>
     setupHandler(() =>
       targets.get().fold(() => {
         api.setDisabled(true);
@@ -125,7 +129,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
       })
     );
 
-  const onSetupWithToggle = (api: UiToggleApi, isDisabled: (targets: RunOperation.CombinedTargets) => boolean, isActive: (targets: RunOperation.CombinedTargets) => boolean) =>
+  const onSetupWithToggle = (api: UiToggleApi, isDisabled: TargetSetupCallback, isActive: TargetSetupCallback) =>
     setupHandler(() =>
       targets.get().fold(() => {
         api.setDisabled(true);

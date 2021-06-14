@@ -7,7 +7,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { assertStructureIsRestoredToDefault, clickOnButton, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
+import { assertStructureIsRestoredToDefault, clickOnButton, clickOnMenuItem, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
 
 describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -19,10 +19,7 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
       editor.on('tablemodified', logEvent);
     },
     menu: {
-      table: {
-        title: 'Table',
-        items: 'tablecaption'
-      },
+      table: { title: 'Table', items: 'tablecaption' },
     },
     menubar: 'table',
   }, [ Plugin, Theme ], true);
@@ -63,7 +60,7 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
     TinySelections.setSelection(editor, [ 0, 1, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
   };
 
-  const pAssertTableButton = async (toolbar: boolean, addCaption: boolean) => {
+  const pAssertTableCaption = async (toolbar: boolean, addCaption: boolean) => {
     const editor = hook.editor();
     if (addCaption) {
       setEditorContentTableAndSelection(editor, 1, 1);
@@ -71,7 +68,12 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
       setTableCaptionStructureAndSelection(editor);
     }
 
-    await clickOnButton(editor, 'Table caption', toolbar);
+    if (toolbar) {
+      clickOnButton(editor, 'Table caption');
+    } else {
+      await clickOnMenuItem(editor, 'Table caption');
+    }
+
     if (addCaption) {
       assertTableContainsCaption(editor);
     } else {
@@ -97,20 +99,23 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
     });
   });
 
-  context('Using the button', () => {
+  context('Using the toolbar button', () => {
     it('TINY-7476: The caption should appear', async () => {
-      await pAssertTableButton(true, true);
-    });
-    it('TINY-7476: The caption should appear with the menu', async () => {
-      await pAssertTableButton(false, true);
+      await pAssertTableCaption(true, true);
     });
 
     it('TINY-7476: The caption should be removed', async () => {
-      await pAssertTableButton(true, false);
+      await pAssertTableCaption(true, false);
+    });
+  });
+
+  context('Using the menuitem', () => {
+    it('TINY-7476: The caption should appear with the menu', async () => {
+      await pAssertTableCaption(false, true);
     });
 
     it('TINY-7476: The caption should be removed with the menu', async () => {
-      await pAssertTableButton(false, false);
+      await pAssertTableCaption(false, false);
     });
   });
 });

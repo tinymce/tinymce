@@ -12,10 +12,7 @@ describe('browser.tinymce.plugins.table.ui.TableBorderWidthTest', () => {
     toolbar: 'tablecellborderwidth',
     base_url: '/project/tinymce/js/tinymce',
     menu: {
-      table: {
-        title: 'Table',
-        items: 'tablecellborderwidth'
-      },
+      table: { title: 'Table', items: 'tablecellborderwidth' },
     },
     menubar: 'table',
     table_border_widths: [

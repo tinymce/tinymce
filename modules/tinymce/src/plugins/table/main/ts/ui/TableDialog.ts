@@ -115,11 +115,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement, oldData: 
       // Toggle caption on/off
       captionElm = dom.select('caption', tableElm)[0];
 
-      if (captionElm && !data.caption) {
-        editor.execCommand('mceTableToggleCaption');
-      }
-
-      if (!captionElm && data.caption) {
+      if (captionElm && !data.caption || !captionElm && data.caption) {
         editor.execCommand('mceTableToggleCaption');
       }
 

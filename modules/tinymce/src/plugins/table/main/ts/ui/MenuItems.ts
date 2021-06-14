@@ -287,9 +287,9 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   });
 
   editor.ui.registry.addToggleMenuItem('tablecaption', {
-    onAction: cmd('mceTableToggleCaption'),
-    text: 'Table caption',
     icon: 'table-caption',
+    text: 'Table caption',
+    onAction: cmd('mceTableToggleCaption'),
     onSetup: selectionTargets.onSetupTableWithCaption
   });
 };
