@@ -3,8 +3,7 @@ import { SimpleResult } from '../alien/SimpleResult';
 import { choose as _choose } from '../core/ChoiceProcessor';
 import { FieldProcessor } from '../core/FieldProcessor';
 import {
-  arrOf, arrOfObj as _arrOfObj, func, objOf, objOfOnly, oneOf, setOf as doSetOf, StructureProcessor, thunk,
-  valueThunk
+  arrOf, arrOfObj as _arrOfObj, func, objOf, objOfOnly, oneOf, setOf as doSetOf, StructureProcessor, thunk, valueThunk
 } from '../core/StructureProcessor';
 import { value, anyValue as _anyValue } from '../core/Utils';
 import { formatErrors, formatObj } from '../format/PrettyPrinter';
