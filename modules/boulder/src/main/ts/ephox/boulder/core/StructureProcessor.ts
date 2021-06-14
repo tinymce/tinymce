@@ -9,7 +9,6 @@ import * as SchemaError from './SchemaError';
 import { value } from './Utils';
 
 type FieldProcessor = FieldProcessor.FieldProcessor;
-
 type SchemaError = SchemaError.SchemaError;
 
 export type ValueValidator = (a) => SimpleResult<string, any>;
@@ -18,6 +17,9 @@ export interface StructureProcessor {
   readonly extract: PropExtractor;
   readonly toString: () => string;
 }
+
+type SimpleBundle = SimpleResult<SchemaError[], any>;
+type OptionBundle = SimpleResult<SchemaError[], Record<string, Optional<any>>>;
 
 const output = (newKey: string, value: any): FieldProcessor => FieldProcessor.customField(newKey, Fun.constant(value));
 
@@ -41,9 +43,6 @@ const optionDefaultedAccess = <T>(obj: Record<string, T | true>, key: string, fa
   const opt = Obj.get(obj, key).map((val) => val === true ? fallback(obj) : val);
   return SimpleResult.svalue(opt);
 };
-
-type SimpleBundle = SimpleResult<SchemaError[], any>;
-type OptionBundle = SimpleResult<SchemaError[], Record<string, Optional<any>>>;
 
 const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: FieldProcessor): SimpleResult<SchemaError[], T> => {
   return FieldProcessor.fold(

@@ -6,12 +6,12 @@ import {
   arrOf, arrOfObj as _arrOfObj, func, objOf, objOfOnly, oneOf, setOf as doSetOf, StructureProcessor, thunk,
   valueThunk
 } from '../core/StructureProcessor';
-import { value, _anyValue } from '../core/Utils';
+import { value, anyValue as _anyValue } from '../core/Utils';
 import { formatErrors, formatObj } from '../format/PrettyPrinter';
 
 export interface SchemaError<T> {
-  input: T;
-  errors: any[];
+  readonly input: T;
+  readonly errors: any[];
 }
 
 const arrOfObj = (objFields: FieldProcessor[]): StructureProcessor => _arrOfObj(objFields);

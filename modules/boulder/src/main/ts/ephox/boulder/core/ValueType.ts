@@ -1,6 +1,6 @@
 import { Fun, Type } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
-import { value, _anyValue } from './Utils';
+import { value, anyValue as _anyValue } from './Utils';
 
 const anyValue = Fun.constant(_anyValue);
 
@@ -34,7 +34,8 @@ const isPostMessageable = (val: any): boolean => {
     case 'ImageBitmap':
     case 'ArrayBuffer':
       return true;
-    case 'Array': case 'Object':
+    case 'Array':
+    case 'Object':
       return Object.keys(val).every((prop) => isPostMessageable(val[prop]));
     default:
       return false;

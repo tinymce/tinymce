@@ -18,9 +18,9 @@ const value = (validator: ValueValidator): StructureProcessor => {
   };
 };
 
-const _anyValue: StructureProcessor = value(SimpleResult.svalue);
+const anyValue: StructureProcessor = value(SimpleResult.svalue);
 
 export {
-  _anyValue,
+  anyValue,
   value
 };
