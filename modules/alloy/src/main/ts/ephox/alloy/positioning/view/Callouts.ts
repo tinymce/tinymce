@@ -3,6 +3,7 @@ import { Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
 import { Bubble } from '../layout/Bubble';
 import { AnchorBox, AnchorElement } from '../layout/LayoutTypes';
 import * as Origins from '../layout/Origins';
+import * as Placement from '../layout/Placement';
 import { ReparteeOptions } from '../layout/SimpleLayout';
 import * as Bounder from './Bounder';
 import { applyPositionCss } from './PositionCss';
@@ -24,7 +25,7 @@ const layout = (anchorBox: AnchorBox, element: SugarElement, bubbles: Bubble, op
   Css.remove(element, 'max-width');
 
   const elementBox = elementSize(element);
-  return Bounder.attempts(options.preference, anchorBox, elementBox, bubbles, options.bounds);
+  return Bounder.attempts(element, options.preference, anchorBox, elementBox, bubbles, options.bounds);
 };
 
 const setClasses = (element: SugarElement, decision: RepositionDecision): void => {
@@ -57,10 +58,15 @@ const position = (element: SugarElement, decision: RepositionDecision, options: 
   applyPositionCss(element, Origins.reposition(options.origin, decision));
 };
 
+const setPlacement = (element: SugarElement, decision: RepositionDecision): void => {
+  Placement.setPlacement(element, decision.placement);
+};
+
 export {
   layout,
   setClasses,
   setHeight,
   setWidth,
-  position
+  position,
+  setPlacement
 };

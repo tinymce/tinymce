@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
+- When scrolling, the context toolbar will stick to where it was previously for large elements, such as tables #TINY-7545
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents. #TINY-7249

@@ -1,4 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
@@ -16,7 +17,8 @@ interface TestDecisionSpec {
 
 describe('BounderCursorTest', () => {
   const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble.Bubble, bounds: Bounds) => {
-    const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
+    const placee = SugarElement.fromTag('div');
+    const actual = Bounder.attempts(placee, preference, anchor, panel, bubbles, bounds);
     assert.equal(actual.label, expected.label, 'label');
     assert.equal(actual.rect.x, expected.x, 'X');
     assert.equal(actual.rect.y, expected.y, 'Y');
@@ -56,7 +58,7 @@ describe('BounderCursorTest', () => {
   it('southeast', () => {
     const anchor = bounds(100, 55, 2, 2);
     check({
-      label: 'layout-se',
+      label: 'layout-southeast',
       x: anchor.x,                                // 100
       y: anchor.bottom,                           // 57
     }, four, anchor, panelBox, bubb, view);
@@ -65,7 +67,7 @@ describe('BounderCursorTest', () => {
   it('southwest', () => {
     const anchor = bounds(320, 55, 2, 2);
     check({
-      label: 'layout-sw',
+      label: 'layout-southwest',
       x: anchor.right - panelBox.width,           // 222
       y: anchor.bottom,                           // 57
     }, four, anchor, panelBox, bubb, view);
@@ -74,7 +76,7 @@ describe('BounderCursorTest', () => {
   it('northeast', () => {
     const anchor = bounds(140, 235, 2, 2);
     check({
-      label: 'layout-ne',
+      label: 'layout-northeast',
       x: anchor.x,                                // 140
       y: anchor.y - panelBox.height               // 160
     }, four, anchor, panelBox, bubb, view);
@@ -83,7 +85,7 @@ describe('BounderCursorTest', () => {
   it('northwest', () => {
     const anchor = bounds(320, 235, 2, 2);
     check({
-      label: 'layout-nw',
+      label: 'layout-northwest',
       x: anchor.right - panelBox.width,           // 222
       y: anchor.y - panelBox.height,              // 160
     }, four, anchor, panelBox, bubb, view);
@@ -92,7 +94,7 @@ describe('BounderCursorTest', () => {
   it('all fit -> southeast because of order of preference', () => {
     const anchor = bounds(270, 100, 2, 2);
     check({
-      label: 'layout-se',
+      label: 'layout-southeast',
       x: anchor.x,                                // 270
       y: anchor.bottom                            // 102
     }, four, anchor, panelBox, bubb, view);
@@ -101,7 +103,7 @@ describe('BounderCursorTest', () => {
   it('none near top left -> best fit is southeast', () => {
     const anchor = bounds(55, 55, 2, 2);
     check({
-      label: 'layout-se',
+      label: 'layout-southeast',
       x: anchor.x,                                // 55
       y: anchor.bottom,                           // 57
     }, four, anchor, bigPanel, bubb, view);
@@ -110,7 +112,7 @@ describe('BounderCursorTest', () => {
   it('none near top right -> best fit is southwest', () => {
     const anchor = bounds(350, 55, 2, 2);
     check({
-      label: 'layout-sw',
+      label: 'layout-southwest',
       x: anchor.right - bigPanel.width,           // 277
       y: anchor.bottom,                           // 57
     }, four, anchor, bigPanel, bubb, view);
@@ -119,7 +121,7 @@ describe('BounderCursorTest', () => {
   it('none near bottom left -> best fit is northeast', () => {
     const anchor = bounds(55, 200, 2, 2);
     check({
-      label: 'layout-ne',
+      label: 'layout-northeast',
       x: anchor.x,                                // 55
       y: view.y,                                  // 50 - constrained within viewport
       candidateY: anchor.y - bigPanel.height,     // -300
@@ -129,7 +131,7 @@ describe('BounderCursorTest', () => {
   it('none near bottom right -> best fit is northwest', () => {
     const anchor = bounds(350, 200, 2, 2);
     check({
-      label: 'layout-nw',
+      label: 'layout-northwest',
       x: anchor.right - bigPanel.width,           // 277
       y: view.y,                                  // 50 - constrained within viewport
       candidateY: anchor.y - bigPanel.height,     // -300
@@ -140,7 +142,7 @@ describe('BounderCursorTest', () => {
     // Southwest
     const anchorSW = bounds(300, 50, 2, 2);
     check({
-      label: 'layout-sw',
+      label: 'layout-southwest',
       x: view.x,                                  // 50 - constrained within viewport
       y: anchorSW.bottom                          // 52
     }, four, anchorSW, widePanel, bubb, view);
@@ -148,7 +150,7 @@ describe('BounderCursorTest', () => {
     // northwest
     const anchorNW = bounds(300, 200, 2, 2);
     check({
-      label: 'layout-nw',
+      label: 'layout-northwest',
       x: view.x,                                  // 50 - constrained within viewport
       y: view.y,                                  // 50 - constrained within viewport
       candidateY: anchorNW.y - widePanel.height,  // -300
@@ -158,7 +160,7 @@ describe('BounderCursorTest', () => {
   it('southeast (1px short on x and y)', () => {
     const anchor = bounds(view.right - panelBox.width - 1, view.bottom - panelBox.height - 2 - 1, 2, 2);
     check({
-      label: 'layout-se',
+      label: 'layout-southeast',
       x: anchor.x,                                // 299
       y: anchor.bottom,                           // 194
     }, four, anchor, panelBox, bubb, view);
@@ -167,7 +169,7 @@ describe('BounderCursorTest', () => {
   it('southeast (exactly for x and y)', () => {
     const anchor = bounds(view.right - panelBox.width, view.bottom - panelBox.height - 2, 2, 2);
     check({
-      label: 'layout-se',
+      label: 'layout-southeast',
       x: anchor.x,                                // 300
       y: anchor.bottom,                           // 195
     }, four, anchor, panelBox, bubb, view);
@@ -176,7 +178,7 @@ describe('BounderCursorTest', () => {
   it('southeast -> southwest (1px too far on x)', () => {
     const anchor = bounds(view.right - panelBox.width + 1, view.bottom - panelBox.height - 2, 2, 2);
     check({
-      label: 'layout-sw',
+      label: 'layout-southwest',
       x: anchor.right - panelBox.width,           // 203
       y: anchor.bottom,                           // 195
     }, four, anchor, panelBox, bubb, view);
@@ -185,7 +187,7 @@ describe('BounderCursorTest', () => {
   it('southeast -> northeast (1px too far on y)', () => {
     const anchor = bounds(view.right - panelBox.width, view.bottom - panelBox.height - 2 + 1, 2, 2);
     check({
-      label: 'layout-ne',
+      label: 'layout-northeast',
       x: anchor.x,                                // 300
       y: anchor.y - panelBox.height,              // 119
     }, four, anchor, panelBox, bubb, view);
@@ -194,7 +196,7 @@ describe('BounderCursorTest', () => {
   it('southeast -> northwest (1px too far on x and y)', () => {
     const anchor = bounds(view.right - panelBox.width + 1, view.bottom - panelBox.height - 2 + 1, 2, 2);
     check({
-      label: 'layout-nw',
+      label: 'layout-northwest',
       x: anchor.right - panelBox.width,           // 203
       y: anchor.y - panelBox.height,              // 119
     }, four, anchor, panelBox, bubb, view);
@@ -203,7 +205,7 @@ describe('BounderCursorTest', () => {
   it('east', () => {
     const anchor = bounds(55, 150, 10, 10);
     check({
-      label: 'layout-e',
+      label: 'layout-east',
       x: anchor.right,                                            // 65
       y: anchor.y + (anchor.height / 2) - (panelBox.height / 2),  // 117.5
     }, two, anchor, panelBox, bubb, view);
@@ -212,7 +214,7 @@ describe('BounderCursorTest', () => {
   it('none near bottom left -> best fit is east (limited to bottom bounds)', () => {
     const anchor = bounds(55, 240, 10, 10);
     check({
-      label: 'layout-e',
+      label: 'layout-east',
       x: anchor.right,                            // 65
       y: view.bottom - panelBox.height            // 195 - constrained within viewport
     }, two, anchor, panelBox, bubb, view);
@@ -221,7 +223,7 @@ describe('BounderCursorTest', () => {
   it('none near top left -> best fit is east (limited to top bounds)', () => {
     const anchor = bounds(55, 80, 10, 10);
     check({
-      label: 'layout-e',
+      label: 'layout-east',
       x: anchor.right,                            // 65
       y: view.y,                                  // 50 - constrained within viewport
     }, two, anchor, panelBox, bubb, view);
@@ -230,7 +232,7 @@ describe('BounderCursorTest', () => {
   it('west', () => {
     const anchor = bounds(350, 150, 10, 10);
     check({
-      label: 'layout-w',
+      label: 'layout-west',
       x: anchor.x - panelBox.width,                               // 250
       y: anchor.y + (anchor.height / 2) - (panelBox.height / 2),  // 117.5
     }, two, anchor, panelBox, bubb, view);
@@ -239,7 +241,7 @@ describe('BounderCursorTest', () => {
   it('none near bottom right -> best fit is west (limited to bottom bounds)', () => {
     const anchor = bounds(350, 240, 10, 10);
     check({
-      label: 'layout-w',
+      label: 'layout-west',
       x: anchor.x - panelBox.width,               // 250
       y: view.bottom - panelBox.height            // 195 - constrained within viewport
     }, two, anchor, panelBox, bubb, view);
@@ -248,7 +250,7 @@ describe('BounderCursorTest', () => {
   it('none near top right -> best fit is west (limited to top bounds)', () => {
     const anchor = bounds(350, 80, 10, 10);
     check({
-      label: 'layout-w',
+      label: 'layout-west',
       x: anchor.x - panelBox.width,               // 250
       y: view.y,                                  // 50 - constrained within viewport
     }, two, anchor, panelBox, bubb, view);

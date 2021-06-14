@@ -1,10 +1,12 @@
 import { Adt, Arr, Fun, Num } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import { Bubble } from '../layout/Bubble';
 import * as Direction from '../layout/Direction';
 import * as LayoutBounds from '../layout/LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
+import { Placement } from '../layout/Placement';
 import { RepositionDecision } from './Reposition';
 import { SpotInfo } from './SpotInfo';
 
@@ -150,6 +152,7 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
     maxHeight,
     maxWidth,
     direction: candidate.direction,
+    placement: candidate.placement,
     classes: {
       on: bubble.classesOn,
       off: bubble.classesOff
@@ -183,7 +186,7 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
 
   // Take special note that we don't use the futz values in the nofit case; whether this position is a good fit is separate
   // to ensuring that if we choose it the popup is actually on screen properly.
-  return fits ? adt.fit(reposition) : adt.nofit(reposition, visibleW, visibleH, isPartlyVisible);
+  return fits || candidate.alwaysFit ? adt.fit(reposition) : adt.nofit(reposition, visibleW, visibleH, isPartlyVisible);
 };
 
 /**
@@ -195,11 +198,11 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
  * bubbles: the bubbles for the popup (see api.Bubble)
  * bounds: the screen
  */
-const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Boxes.Bounds): RepositionDecision => {
+const attempts = (element: SugarElement<HTMLElement>, candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: AnchorElement, bubbles: Bubble, bounds: Boxes.Bounds): RepositionDecision => {
   const panelWidth = elementBox.width;
   const panelHeight = elementBox.height;
   const attemptBestFit = (layout: AnchorLayout, reposition: RepositionDecision, visibleW: number, visibleH: number, isVisible: boolean) => {
-    const next: SpotInfo = layout(anchorBox, elementBox, bubbles);
+    const next: SpotInfo = layout(anchorBox, elementBox, bubbles, element);
     const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
 
     return attemptLayout.fold(Fun.constant(attemptLayout), (newReposition, newVisibleW, newVisibleH, newIsVisible) => {
@@ -222,6 +225,7 @@ const attempts = (candidates: AnchorLayout[], anchorBox: AnchorBox, elementBox: 
       maxHeight: elementBox.height,
       maxWidth: elementBox.width,
       direction: Direction.southeast(),
+      placement: Placement.Southeast,
       classes: {
         on: [],
         off: []
