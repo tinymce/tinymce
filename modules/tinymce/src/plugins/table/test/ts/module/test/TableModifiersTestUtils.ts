@@ -87,7 +87,7 @@ const clickOnButton = (editor: Editor, title: string) => {
   TinyUiActions.clickOnToolbar(editor, `button[title="${title}"]`);
 };
 
-const clickOnMenuItem = async (editor: Editor, title: string) => {
+const pClickOnMenuItem = async (editor: Editor, title: string) => {
   TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
   await TinyUiActions.pWaitForUi(editor, `div[title="${title}"]`);
   TinyUiActions.clickOnUi(editor, `div[title="${title}"]`);
@@ -97,7 +97,7 @@ const pAssertMenuPresence = async (editor: Editor, label: string, menuTitle: str
   if (toolbar) {
     clickOnButton(editor, menuTitle);
   } else {
-    await clickOnMenuItem(editor, menuTitle);
+    await pClickOnMenuItem(editor, menuTitle);
   }
   await Waiter.pTryUntil('Ensure the correct values are present', () =>
     Assertions.assertPresence(label, expected, container)
@@ -119,7 +119,7 @@ const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: Opt
   if (toolbar) {
     clickOnButton(editor, menuTitle);
   } else {
-    await clickOnMenuItem(editor, menuTitle);
+    await pClickOnMenuItem(editor, menuTitle);
   }
   await TinyUiActions.pWaitForUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
   TinyUiActions.clickOnUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
@@ -161,6 +161,6 @@ export {
   pAssertNoCheckmarksInMenu,
   pAssertMenuPresence,
   clickOnButton,
-  clickOnMenuItem,
+  pClickOnMenuItem as clickOnMenuItem,
   assertStructureIsRestoredToDefault
 };
