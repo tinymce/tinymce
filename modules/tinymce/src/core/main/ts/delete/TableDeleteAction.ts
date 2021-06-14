@@ -118,24 +118,22 @@ const getTableSelectionFromCellRng = (cellRng: TableCellRng, isRoot: IsRootFn) =
 const getTableSelections = (cellRng: Optional<TableCellRng>, selectionDetails: SelectionDetails, rng: Range, isRoot: IsRootFn): Optional<TableSelections> => {
   if (rng.collapsed || !cellRng.forall(isExpandedCellRng)) {
     return Optional.none();
+  } else if (selectionDetails.isSameTable) {
+    const sameTableSelection = cellRng.bind((cRng) => getTableSelectionFromCellRng(cRng, isRoot));
+    return Optional.some({
+      start: sameTableSelection,
+      end: sameTableSelection
+    });
   } else {
-    if (selectionDetails.isSameTable) {
-      const sameTableSelection = cellRng.bind((cRng) => getTableSelectionFromCellRng(cRng, isRoot));
-      return Optional.some({
-        start: sameTableSelection,
-        end: sameTableSelection
-      });
-    } else {
-      // Covers partial table selection (either start or end will have a tableSelection) and multitable selection (both start and end will have a tableSelection)
-      const startCell = getClosestCell(rng.startContainer, isRoot);
-      const endCell = getClosestCell(rng.endContainer, isRoot);
-      const startTableSelection = startCell.bind((start) => getCellRangeFromStartTable(start, isRoot)).bind((cRng) => getTableSelectionFromCellRng(cRng, isRoot));
-      const endTableSelection = endCell.bind((end) => getCellRangeFromEndTable(end, isRoot)).bind((cRng) => getTableSelectionFromCellRng(cRng, isRoot));
-      return Optional.some({
-        start: startTableSelection,
-        end: endTableSelection
-      });
-    }
+    // Covers partial table selection (either start or end will have a tableSelection) and multitable selection (both start and end will have a tableSelection)
+    const startCell = getClosestCell(rng.startContainer, isRoot);
+    const endCell = getClosestCell(rng.endContainer, isRoot);
+    const startTableSelection = startCell.bind((start) => getCellRangeFromStartTable(start, isRoot)).bind((cRng) => getTableSelectionFromCellRng(cRng, isRoot));
+    const endTableSelection = endCell.bind((end) => getCellRangeFromEndTable(end, isRoot)).bind((cRng) => getTableSelectionFromCellRng(cRng, isRoot));
+    return Optional.some({
+      start: startTableSelection,
+      end: endTableSelection
+    });
   }
 };
 
@@ -151,7 +149,7 @@ const getSelectedCells = (tableSelection: TableSelection) => Optionals.lift2(
 const isSingleCellTableContentSelected = (optCellRng: Optional<TableCellRng>, rng: Range, isRoot: IsRootFn): boolean =>
   optCellRng.exists((cellRng) => isSingleCellTable(cellRng, isRoot) && SelectionUtils.hasAllContentsSelected(cellRng.start, rng));
 
-const unselectCells = (rng: Range, selectionDetails: TableDeleteUtils.TableSelectionDetails): Range => {
+const unselectCells = (rng: Range, selectionDetails: SelectionDetails): Range => {
   const { startTable, endTable } = selectionDetails;
   const otherContentRng = rng.cloneRange();
   // If the table is some, it should be unselected (works for single table and multitable cases)
@@ -160,7 +158,7 @@ const unselectCells = (rng: Range, selectionDetails: TableDeleteUtils.TableSelec
   return otherContentRng;
 };
 
-const handleSingleTable = (cellRng: Optional<TableCellRng>, selectionDetails: TableDeleteUtils.TableSelectionDetails, rng: Range, isRoot: IsRootFn): Optional<DeleteActionAdt> =>
+const handleSingleTable = (cellRng: Optional<TableCellRng>, selectionDetails: SelectionDetails, rng: Range, isRoot: IsRootFn): Optional<DeleteActionAdt> =>
   getTableSelections(cellRng, selectionDetails, rng, isRoot)
     .bind(({ start, end }) => start.or(end))
     .bind((tableSelection) => {
@@ -183,7 +181,7 @@ const handleSingleTable = (cellRng: Optional<TableCellRng>, selectionDetails: Ta
       }
     });
 
-const handleMultiTable = (cellRng: Optional<TableCellRng>, selectionDetails: TableDeleteUtils.TableSelectionDetails, rng: Range, isRoot: IsRootFn): Optional<DeleteActionAdt> =>
+const handleMultiTable = (cellRng: Optional<TableCellRng>, selectionDetails: SelectionDetails, rng: Range, isRoot: IsRootFn): Optional<DeleteActionAdt> =>
   getTableSelections(cellRng, selectionDetails, rng, isRoot)
     .bind(({ start, end }) => {
       const startTableSelectedCells = start.bind(getSelectedCells).getOr([]);
