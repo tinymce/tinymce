@@ -331,15 +331,15 @@ UnitTest.test('ValueSchemaRawTest', () => {
         processor
       );
 
-      // checkErr(
-      //   'Checking choose(other) without everything',
-      //   'Could not find valid *required* value for "houses"',
-      //   {
-      //     type: 'other',
-      //     house: '10'
-      //   },
-      //   processor
-      // );
+      checkErr(
+        'Checking choose(other) without everything',
+        'Could not find valid *required* value for "houses"',
+        {
+          type: 'other',
+          house: '10'
+        },
+        processor
+      );
 
       checkErr(
         'Checking choose(other) without wrong schema',

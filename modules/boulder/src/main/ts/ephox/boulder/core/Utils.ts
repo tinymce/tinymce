@@ -13,7 +13,7 @@ const value = (validator: ValueValidator): StructureProcessor => {
   const toString = () => 'val';
 
   return {
-    getProp: extract,
+    extract,
     toString
   };
 };

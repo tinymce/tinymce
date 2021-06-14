@@ -15,7 +15,7 @@ type SchemaError = SchemaError.SchemaError;
 export type ValueValidator = (a) => SimpleResult<string, any>;
 export type PropExtractor = (path: string[], val: any) => SimpleResult<SchemaError[], any>;
 export interface StructureProcessor {
-  readonly getProp: PropExtractor;
+  readonly extract: PropExtractor;
   readonly toString: () => string;
 }
 
@@ -50,7 +50,7 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: FieldProc
     value,
     (key, newKey, presence, prop) => {
       const bundle = (av: any): SimpleBundle => {
-        const result = prop.getProp(path.concat([ key ]), av);
+        const result = prop.extract(path.concat([ key ]), av);
         return SimpleResult.map(result, (res) => ObjWriter.wrap(newKey, res));
       };
 
@@ -59,7 +59,7 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: FieldProc
           const outcome = ObjWriter.wrap(newKey, Optional.none());
           return SimpleResult.svalue(outcome);
         }, (ov) => {
-          const result: SimpleResult<any, any> = prop.getProp(path.concat([ key ]), ov);
+          const result: SimpleResult<any, any> = prop.extract(path.concat([ key ]), ov);
           return SimpleResult.map(result, (res) => {
             return ObjWriter.wrap(newKey, Optional.some(res));
           });
@@ -110,12 +110,12 @@ const cExtract = <T>(path: string[], obj: Record<string, T>, fields: FieldProces
 };
 
 const valueThunk = (getDelegate: () => StructureProcessor): StructureProcessor => {
-  const getProp = (path: string[], val: any) => getDelegate().getProp(path, val);
+  const extract = (path: string[], val: any) => getDelegate().extract(path, val);
 
   const toString = () => getDelegate().toString();
 
   return {
-    getProp,
+    extract,
     toString
   };
 };
@@ -134,21 +134,21 @@ const objOfOnly = (fields: FieldProcessor[]): StructureProcessor => {
     );
   }, {} as Record<string, boolean>);
 
-  const getProp = (path, o) => {
+  const extract = (path, o) => {
     const keys = Type.isBoolean(o) ? [] : getSetKeys(o);
     const extra = Arr.filter(keys, (k) => !Obj.hasNonNullableKey(fieldNames, k));
 
-    return extra.length === 0 ? delegate.getProp(path, o) : SchemaError.unsupportedFields(path, extra);
+    return extra.length === 0 ? delegate.extract(path, o) : SchemaError.unsupportedFields(path, extra);
   };
 
   return {
-    getProp,
+    extract,
     toString: delegate.toString
   };
 };
 
 const objOf = (values: FieldProcessor[]): StructureProcessor => {
-  const getProp = (path: string[], o: Record<string, any>) => cExtract(path, o, values);
+  const extract = (path: string[], o: Record<string, any>) => cExtract(path, o, values);
 
   const toString = () => {
     const fieldStrings = Arr.map(values, (value) => FieldProcessor.fold(
@@ -160,32 +160,32 @@ const objOf = (values: FieldProcessor[]): StructureProcessor => {
   };
 
   return {
-    getProp,
+    extract,
     toString
   };
 };
 
 const arrOf = (prop: StructureProcessor): StructureProcessor => {
-  const getProp = (path, array) => {
-    const results = Arr.map(array, (a, i) => prop.getProp(path.concat([ '[' + i + ']' ]), a));
+  const extract = (path, array) => {
+    const results = Arr.map(array, (a, i) => prop.extract(path.concat([ '[' + i + ']' ]), a));
     return ResultCombine.consolidateArr(results);
   };
 
   const toString = () => 'array(' + prop.toString() + ')';
 
   return {
-    getProp,
+    extract,
     toString
   };
 };
 
 const oneOf = (props: StructureProcessor[]): StructureProcessor => {
-  const getProp = (path: string[], val: any): SimpleResult<SchemaError[], any> => {
+  const extract = (path: string[], val: any): SimpleResult<SchemaError[], any> => {
     const errors: Array<SimpleResult<SchemaError[], any>> = [];
 
     // Return on first match
     for (const prop of props) {
-      const res = prop.getProp(path, val);
+      const res = prop.extract(path, val);
       if (res.stype === SimpleResultType.Value) {
         return res;
       }
@@ -199,13 +199,13 @@ const oneOf = (props: StructureProcessor[]): StructureProcessor => {
   const toString = () => 'oneOf(' + Arr.map(props, (prop) => prop.toString()).join(', ') + ')';
 
   return {
-    getProp,
+    extract,
     toString
   };
 };
 
 const setOf = (validator: ValueValidator, prop: StructureProcessor): StructureProcessor => {
-  const validateKeys = (path, keys) => arrOf(value(validator)).getProp(path, keys);
+  const validateKeys = (path, keys) => arrOf(value(validator)).extract(path, keys);
   const extract = (path, o) => {
     //
     const keys = Obj.keys(o);
@@ -215,14 +215,14 @@ const setOf = (validator: ValueValidator, prop: StructureProcessor): StructurePr
         return FieldProcessor.field(vk, vk, FieldPresence.required(), prop);
       });
 
-      return objOf(schema).getProp(path, o);
+      return objOf(schema).extract(path, o);
     });
   };
 
   const toString = () => 'setOf(' + prop.toString() + ')';
 
   return {
-    getProp: extract,
+    extract,
     toString
   };
 };
@@ -238,7 +238,7 @@ const func = (args: string[], _schema: StructureProcessor, retriever: (obj: any)
   });
 
   return {
-    getProp: delegate.getProp,
+    extract: delegate.extract,
     toString: Fun.constant('function')
   };
 };
@@ -246,12 +246,12 @@ const func = (args: string[], _schema: StructureProcessor, retriever: (obj: any)
 const thunk = (_desc: string, processor: () => StructureProcessor): StructureProcessor => {
   const getP = Thunk.cached(processor);
 
-  const extract = (path: string[], val: any) => getP().getProp(path, val);
+  const extract = (path: string[], val: any) => getP().extract(path, val);
 
   const toString = () => getP().toString();
 
   return {
-    getProp: extract,
+    extract,
     toString
   };
 };

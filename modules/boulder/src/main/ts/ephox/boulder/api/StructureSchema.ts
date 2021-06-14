@@ -26,7 +26,7 @@ const valueOf = (validator: (a: any) => Result<any, any>): StructureProcessor =>
 const setOf = (validator: (a) => Result<any, any>, prop: StructureProcessor): StructureProcessor => doSetOf((v) => SimpleResult.fromResult(validator(v)), prop);
 
 const extractValue = (label: string, prop: StructureProcessor, obj: any): SimpleResult<any, any> => {
-  const res = prop.getProp([ label ], obj);
+  const res = prop.extract([ label ], obj);
   return SimpleResult.mapError(res, (errs) => ({ input: obj, errors: errs }));
 };
 
