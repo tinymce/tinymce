@@ -164,12 +164,12 @@ const handleSingleTable = (cellRng: Optional<TableCellRng>, selectionDetails: Ta
   getTableSelections(cellRng, selectionDetails, rng, isRoot)
     .bind(({ start, end }) => start.or(end))
     .bind((tableSelection) => {
-      const { isSameTable: isSameTableSelection } = selectionDetails;
+      const { isSameTable } = selectionDetails;
       const selectedCells = getSelectedCells(tableSelection).getOr([]);
-      if (isSameTableSelection && tableSelection.cells.length === selectedCells.length) {
+      if (isSameTable && tableSelection.cells.length === selectedCells.length) {
         return Optional.some(deleteAction.fullTable(tableSelection.table));
       } else if (selectedCells.length > 0) {
-        if (isSameTableSelection) {
+        if (isSameTable) {
           return Optional.some(deleteAction.partialTable(selectedCells, Optional.none()));
         } else {
           const otherContentRng = unselectCells(rng, selectionDetails);
