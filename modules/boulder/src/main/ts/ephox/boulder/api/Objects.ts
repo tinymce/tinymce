@@ -28,7 +28,7 @@ const mergeValues = <T>(values: T[], base: T) => {
 const mergeErrors = (errors: string[][]): Result<unknown, string[]> =>
   Result.error(Arr.flatten(errors));
 
-const consolidate = <T>(objs: Array<Result<T, string[]>>, base: T): Result<T, string> => {
+const consolidate = <T>(objs: Array<Result<T, string[]>>, base: T): Result<T, string[]> => {
   const partitions = Results.partition(objs);
   return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : mergeValues(partitions.values, base);
 };
