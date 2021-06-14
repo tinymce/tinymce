@@ -85,7 +85,7 @@ Note, there are many other APIs as well, but they tend to be convenience functio
 
 ### <a name="field">FieldSchema.field(key, newKey, presence, schema)</a>
 
-- define a field for an object schema. Presence (`strict` \| `defaulted` \| `asOption` | `asDefaultedOption`) is used to determine how to handle whether the field `key` is there, and `schema` defines the schema to match for the field's value. In the output object, `newKey` will be used as the field name. Note, this method has many convenience methods defined such as `FieldSchema.required('key')`.
+- define a field for an object schema. Presence (`required` \| `defaulted` \| `asOption` | `asDefaultedOption`) is used to determine how to handle whether the field `key` is there, and `schema` defines the schema to match for the field's value. In the output object, `newKey` will be used as the field name. Note, this method has many convenience methods defined such as `FieldSchema.required('key')`.
 
 ### <a name="customField">FieldSchema.customField(newKey, instantiator)</a>
 

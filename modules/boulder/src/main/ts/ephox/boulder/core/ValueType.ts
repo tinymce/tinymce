@@ -42,7 +42,13 @@ const isPostMessageable = (val: any): boolean => {
   }
 };
 
-const postMessageable = value((a) => isPostMessageable(a) ? SimpleResult.svalue(a) : SimpleResult.serror('Expected value to be acceptable for sending via postMessage'));
+const postMessageable = value((a) => {
+  if (isPostMessageable(a)) {
+    return SimpleResult.svalue(a);
+  } else {
+    return SimpleResult.serror('Expected value to be acceptable for sending via postMessage');
+  }
+});
 
 export {
   anyValue,
