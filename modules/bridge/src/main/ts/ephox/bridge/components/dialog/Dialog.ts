@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Result } from '@ephox/katamari';
 import * as FooterButton from './DialogFooterButton';
 import * as Panel from './Panel';
@@ -85,9 +85,9 @@ export interface Dialog<T> {
 export const dialogButtonFields = FooterButton.dialogFooterButtonFields;
 export const dialogButtonSchema = FooterButton.dialogFooterButtonSchema;
 
-export const dialogSchema = ValueSchema.objOf([
+export const dialogSchema = StructureSchema.objOf([
   FieldSchema.requiredString('title'),
-  FieldSchema.requiredOf('body', ValueSchema.chooseProcessor('type', {
+  FieldSchema.requiredOf('body', StructureSchema.chooseProcessor('type', {
     panel: Panel.panelSchema,
     tabpanel: TabPanel.tabPanelSchema
   })),
@@ -102,5 +102,5 @@ export const dialogSchema = ValueSchema.objOf([
   FieldSchema.defaulted('onTabChange', Fun.noop)
 ]);
 
-export const createDialog = <T>(spec: DialogSpec<T>): Result<Dialog<T>, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw('dialog', dialogSchema, spec);
+export const createDialog = <T>(spec: DialogSpec<T>): Result<Dialog<T>, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw('dialog', dialogSchema, spec);

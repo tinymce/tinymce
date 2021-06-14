@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
@@ -51,9 +51,9 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
 
   const checkSuccess = (label: string, expected: { external?: { entirety: string } }, parts: PartType.PartTypeAdt[], input: { external?: string }) => {
     const schemas = AlloyParts.schemas(parts);
-    const output = ValueSchema.asRawOrDie(
+    const output = StructureSchema.asRawOrDie(
       label,
-      ValueSchema.objOfOnly(schemas),
+      StructureSchema.objOfOnly(schemas),
       input
     );
 

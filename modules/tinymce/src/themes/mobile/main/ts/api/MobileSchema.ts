@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
 const unbindNoop = Fun.constant({ unbind: Fun.noop });
 
-export default ValueSchema.objOf([
+export default StructureSchema.objOf([
   FieldSchema.requiredObjOf('editor', [
     // Maybe have frame as a method, but I doubt it ... I think we pretty much need a frame
     FieldSchema.required('getFrame'),

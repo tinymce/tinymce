@@ -1,4 +1,4 @@
-import { StructureProcessor, FieldSchema, ValueSchema, FieldProcessor } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, StructureSchema, FieldProcessor } from '@ephox/boulder';
 import { Fun, Obj, Optional, Thunk } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -40,7 +40,7 @@ const create = <
   A extends BehaviourApisRecord<D, S>,
   E extends BehaviourExtraRecord<E>
 >(schema: FieldProcessor[], name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
-  const configSchema = ValueSchema.objOfOnly(schema);
+  const configSchema = StructureSchema.objOfOnly(schema);
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionObjOfOnly('config', schema)
   ]);
@@ -103,14 +103,14 @@ const doCreate = <
     ...wrappedApis,
     revoke: Fun.curry(revokeBehaviour, name),
     config: (spec) => {
-      const prepared = ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
+      const prepared = StructureSchema.asRawOrDie(name + '-config', configSchema, spec);
 
       return {
         key: name,
         value: {
           config: prepared,
           me,
-          configAsRaw: Thunk.cached(() => ValueSchema.asRawOrDie(name + '-config', configSchema, spec)),
+          configAsRaw: Thunk.cached(() => StructureSchema.asRawOrDie(name + '-config', configSchema, spec)),
           initialConfig: spec,
           state
         }

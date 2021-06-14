@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers, Composing, Disabling, Focusing, Form, Reflecting, Representing, TabSection } from '@ephox/alloy';
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Cell, Obj, Optional, Type } from '@ephox/katamari';
 
@@ -32,8 +32,8 @@ const getCompByName = (access: DialogAccess, name: string): Optional<AlloyCompon
 
 const validateData = <T>(access: DialogAccess, data) => {
   const root = access.getRoot();
-  return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => ValueSchema.getOrDie(
-    ValueSchema.asRaw('data', dialogState.dataValidator, data)
+  return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => StructureSchema.getOrDie(
+    StructureSchema.asRaw('data', dialogState.dataValidator, data)
   )).getOr(data);
 };
 

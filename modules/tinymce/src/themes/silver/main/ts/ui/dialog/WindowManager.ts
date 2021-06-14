@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying,
   MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents
 } from '@ephox/alloy';
-import { StructureProcessor, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Optional, Singleton } from '@ephox/katamari';
 import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
@@ -32,7 +32,7 @@ export interface WindowManagerSetup {
 
 type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec | SelectionAnchorSpec;
 
-const validateData = <T extends Dialog.DialogData>(data: T, validator: StructureProcessor) => ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
+const validateData = <T extends Dialog.DialogData>(data: T, validator: StructureProcessor) => StructureSchema.getOrDie(StructureSchema.asRaw('data', validator, data));
 
 const isAlertOrConfirmDialog = (target: SugarElement): boolean => SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
 

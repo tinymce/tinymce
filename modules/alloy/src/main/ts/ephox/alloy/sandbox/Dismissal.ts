@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -25,7 +25,7 @@ export interface DismissalReceivingSpec {
   };
 }
 
-const schema = ValueSchema.objOfOnly([
+const schema = StructureSchema.objOfOnly([
   FieldSchema.defaulted('isExtraPart', Fun.never),
   FieldSchema.optionObjOf('fireEventInstead', [
     FieldSchema.defaulted('event', SystemEvents.dismissRequested())
@@ -40,10 +40,10 @@ const receivingConfig = (rawSpec: DismissalReceivingSpec): NamedConfiguredBehavi
 };
 
 const receivingChannel = (rawSpec: DismissalReceivingSpec): Record<string, ReceivingChannelSpec> => {
-  const detail: DismissalReceivingDetail = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
+  const detail: DismissalReceivingDetail = StructureSchema.asRawOrDie('Dismissal', schema, rawSpec);
   return {
     [Channels.dismissPopups()]: {
-      schema: ValueSchema.objOfOnly([
+      schema: StructureSchema.objOfOnly([
         FieldSchema.required('target')
       ]),
       onReceive: (sandbox: AlloyComponent, data: { target: SugarElement }) => {

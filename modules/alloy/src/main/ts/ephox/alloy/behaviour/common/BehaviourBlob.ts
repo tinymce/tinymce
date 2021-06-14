@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { BehaviourState, BehaviourStateInitialiser, NoState } from './BehaviourState';
 import { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec, BehaviourRecord } from './BehaviourTypes';
@@ -34,13 +34,13 @@ const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBe
   );
 
   type B = Record<string, Optional<BehaviourSpec<BehaviourConfigSpec, BehaviourConfigDetail, BehaviourState>>>;
-  const validated = ValueSchema.asRaw<B>(
+  const validated = StructureSchema.asRaw<B>(
     'component.behaviours',
-    ValueSchema.objOf(schema),
+    StructureSchema.objOf(schema),
     spec.behaviours
   ).fold((errInfo) => {
     throw new Error(
-      ValueSchema.formatError(errInfo) + '\nComplete spec:\n' +
+      StructureSchema.formatError(errInfo) + '\nComplete spec:\n' +
         JSON.stringify(spec, null, 2)
     );
   }, (v) => v);

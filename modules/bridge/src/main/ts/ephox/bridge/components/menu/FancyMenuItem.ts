@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result, Fun } from '@ephox/katamari';
 
 export interface FancyMenuItemSpec {
@@ -20,11 +20,11 @@ export interface FancyActionArgsMap {
 
 const fancyTypes: (keyof FancyActionArgsMap)[] = [ 'inserttable', 'colorswatch' ]; // These will need to match the keys of FancyActionArgsMap above
 
-export const fancyMenuItemSchema = ValueSchema.objOf([
+export const fancyMenuItemSchema = StructureSchema.objOf([
   FieldSchema.requiredString('type'),
   FieldSchema.requiredStringEnum('fancytype', fancyTypes),
   FieldSchema.defaultedFunction('onAction', Fun.noop)
 ]);
 
-export const createFancyMenuItem = (spec: FancyMenuItemSpec): Result<FancyMenuItem, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw('fancymenuitem', fancyMenuItemSchema, spec);
+export const createFancyMenuItem = (spec: FancyMenuItemSpec): Result<FancyMenuItem, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw('fancymenuitem', fancyMenuItemSchema, spec);

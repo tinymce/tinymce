@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Obj } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
@@ -17,7 +17,7 @@ import * as Tagger from '../../registry/Tagger';
 import { ItemSpec, WidgetItemSpec } from '../types/ItemTypes';
 import { MenuDetail, MenuGridMovement, MenuMatrixMovement, MenuNormalMovement } from '../types/MenuTypes';
 
-const itemSchema = ValueSchema.choose(
+const itemSchema = StructureSchema.choose(
   'type',
   {
     widget: WidgetType,
@@ -56,7 +56,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.group<MenuDetail, ItemSpec>({
     factory: {
       sketch: (spec) => {
-        const itemInfo = ValueSchema.asRawOrDie('menu.spec item', itemSchema, spec);
+        const itemInfo = StructureSchema.asRawOrDie('menu.spec item', itemSchema, spec);
         return itemInfo.builder(itemInfo);
       }
     },
@@ -92,7 +92,7 @@ const schema = Fun.constant([
   FieldSchema.defaultedOf('movement', {
     mode: 'menu',
     moveOnTab: true
-  }, ValueSchema.choose(
+  }, StructureSchema.choose(
     'mode',
     {
       grid: [

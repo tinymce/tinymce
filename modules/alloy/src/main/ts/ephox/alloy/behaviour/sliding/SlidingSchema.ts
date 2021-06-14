@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Height, SugarElement, Width } from '@ephox/sugar';
 
 import * as Fields from '../../data/Fields';
@@ -17,7 +17,7 @@ export default [
   Fields.onHandler('onGrown'),
   Fields.onHandler('onStartGrow'),
   FieldSchema.defaulted('expanded', false),
-  FieldSchema.requiredOf('dimension', ValueSchema.choose(
+  FieldSchema.requiredOf('dimension', StructureSchema.choose(
     'property', {
       width: [
         Fields.output('property', 'width'),

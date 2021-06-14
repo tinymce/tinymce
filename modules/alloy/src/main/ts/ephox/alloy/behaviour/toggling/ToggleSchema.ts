@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
@@ -11,7 +11,7 @@ export default [
 
   FieldSchema.defaultedOf('aria', {
     mode: 'none'
-  }, ValueSchema.choose(
+  }, StructureSchema.choose(
     'mode', {
       pressed: [
         FieldSchema.defaulted('syncWithExpanded', false),

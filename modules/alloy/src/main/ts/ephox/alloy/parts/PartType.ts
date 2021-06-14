@@ -1,4 +1,4 @@
-import { FieldPresence, FieldProcessor, FieldSchema, StructureProcessor, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldPresence, FieldProcessor, FieldSchema, StructureProcessor, StructureSchema, ValueType } from '@ephox/boulder';
 import { Adt, Fun, Id, Optional } from '@ephox/katamari';
 
 import { SimpleOrSketchSpec } from '../api/component/SpecTypes';
@@ -90,19 +90,19 @@ const fGroupSchema = FieldSchema.state('schema', () => [
 const fDefaults = FieldSchema.defaulted('defaults', Fun.constant({ }));
 const fOverrides = FieldSchema.defaulted('overrides', Fun.constant({ }));
 
-const requiredSpec = ValueSchema.objOf([
+const requiredSpec = StructureSchema.objOf([
   fFactory, fSchema, fName, fPname, fDefaults, fOverrides
 ]);
 
-const externalSpec = ValueSchema.objOf([
+const externalSpec = StructureSchema.objOf([
   fFactory, fSchema, fName, fDefaults, fOverrides
 ]);
 
-const optionalSpec = ValueSchema.objOf([
+const optionalSpec = StructureSchema.objOf([
   fFactory, fSchema, fName, fPname, fDefaults, fOverrides
 ]);
 
-const groupSpec = ValueSchema.objOf([
+const groupSpec = StructureSchema.objOf([
   fFactory, fGroupSchema, fName,
   FieldSchema.required('unit'),
   fPname, fDefaults, fOverrides
@@ -122,7 +122,7 @@ const asCommon = <T>(part: PartTypeAdt<T>): T => {
 };
 
 const convert = <D extends CompositeSketchDetail, S, PS extends PartSpec<D, S>, PD extends PartDetail<D, S>>(adtConstructor: PartType<PD>, partSchema: StructureProcessor) => (spec: PS): PartTypeAdt<PD> => {
-  const data = ValueSchema.asRawOrDie('Converting part type', partSchema, spec);
+  const data = StructureSchema.asRawOrDie('Converting part type', partSchema, spec);
   return adtConstructor(data);
 };
 

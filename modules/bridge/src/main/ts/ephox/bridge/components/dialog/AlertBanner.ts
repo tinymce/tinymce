@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 export interface AlertBannerSpec {
@@ -25,7 +25,7 @@ const alertBannerFields = [
   FieldSchema.defaulted('url', '')
 ];
 
-export const alertBannerSchema = ValueSchema.objOf(alertBannerFields);
+export const alertBannerSchema = StructureSchema.objOf(alertBannerFields);
 
-export const createAlertBanner = (spec: AlertBannerSpec): Result<AlertBanner, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<AlertBanner>('alertbanner', alertBannerSchema, spec);
+export const createAlertBanner = (spec: AlertBannerSpec): Result<AlertBanner, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<AlertBanner>('alertbanner', alertBannerSchema, spec);

@@ -1,4 +1,4 @@
-import { ValueSchema, FieldSchema } from '@ephox/boulder';
+import { StructureSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { BaseMenuButton, BaseMenuButtonSpec, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
 
@@ -17,12 +17,12 @@ export interface ToolbarMenuButton extends BaseMenuButton {
 
 export interface ToolbarMenuButtonInstanceApi extends BaseMenuButtonInstanceApi { }
 
-export const MenuButtonSchema = ValueSchema.objOf([
+export const MenuButtonSchema = StructureSchema.objOf([
   FieldSchema.requiredString('type'),
   ...baseMenuButtonFields
 ]);
 
 export const isMenuButtonButton = (spec: any): spec is ToolbarMenuButton => spec.type === 'menubutton';
 
-export const createMenuButton = (spec: ToolbarMenuButtonSpec): Result<ToolbarMenuButton, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<ToolbarMenuButton>('menubutton', MenuButtonSchema, spec);
+export const createMenuButton = (spec: ToolbarMenuButtonSpec): Result<ToolbarMenuButton, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<ToolbarMenuButton>('menubutton', MenuButtonSchema, spec);

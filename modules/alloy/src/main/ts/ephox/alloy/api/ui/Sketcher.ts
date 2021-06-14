@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
@@ -75,7 +75,7 @@ export const isSketchSpec = (spec: AlloySpec): spec is SketchSpec => {
   return (spec as SketchSpec).uid !== undefined;
 };
 
-const singleSchema = ValueSchema.objOfOnly([
+const singleSchema = StructureSchema.objOfOnly([
   FieldSchema.required('name'),
   FieldSchema.required('factory'),
   FieldSchema.required('configFields'),
@@ -83,7 +83,7 @@ const singleSchema = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extraApis', { })
 ]);
 
-const compositeSchema = ValueSchema.objOfOnly([
+const compositeSchema = StructureSchema.objOfOnly([
   FieldSchema.required('name'),
   FieldSchema.required('factory'),
   FieldSchema.required('configFields'),
@@ -98,7 +98,7 @@ const single = <
   A extends FunctionRecord<A>,
   E extends FunctionRecord<E> = {}
 >(rawConfig: SingleSketcherSpec<S, D, A, E>): SingleSketch<S> & A & E => {
-  const config: SingleSketcherRawDetail<S, D, A> = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
+  const config: SingleSketcherRawDetail<S, D, A> = StructureSchema.asRawOrDie('Sketcher for ' + rawConfig.name, singleSchema, rawConfig);
 
   const sketch = (spec: S) => UiSketcher.single(config.name, config.configFields, config.factory, spec);
 
@@ -120,7 +120,7 @@ const composite = <
   A extends FunctionRecord<A>,
   E extends FunctionRecord<E> = {}
 >(rawConfig: CompositeSketcherSpec<S, D, A, E>): CompositeSketch<S> & A & E => {
-  const config: CompositeSketcherRawDetail<S, D, A> = ValueSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
+  const config: CompositeSketcherRawDetail<S, D, A> = StructureSchema.asRawOrDie('Sketcher for ' + rawConfig.name, compositeSchema, rawConfig);
 
   const sketch = (spec: S) => UiSketcher.composite(config.name, config.configFields, config.partFields, config.factory, spec);
 

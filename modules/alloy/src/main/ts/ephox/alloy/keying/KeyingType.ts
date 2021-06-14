@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Optional, Result } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
@@ -32,7 +32,7 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
   optFocusIn: (config: C) => Optional<(comp: AlloyComponent, config: C, state: S) => void>): KeyingType<C, S> => {
   const schema = () => infoSchema.concat([
     FieldSchema.defaulted('focusManager', FocusManagers.dom()),
-    FieldSchema.defaultedOf('focusInside', 'onFocus', ValueSchema.valueOf((val) => Arr.contains([ 'onFocus', 'onEnterOrSpace', 'onApi' ], val) ? Result.value(val) : Result.error('Invalid value for focusInside'))),
+    FieldSchema.defaultedOf('focusInside', 'onFocus', StructureSchema.valueOf((val) => Arr.contains([ 'onFocus', 'onEnterOrSpace', 'onApi' ], val) ? Result.value(val) : Result.error('Invalid value for focusInside'))),
     Fields.output('handler', me),
     Fields.output('state', stateInit),
     Fields.output('sendFocusIn', optFocusIn)

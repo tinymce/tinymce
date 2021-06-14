@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Id, Optional, Result } from '@ephox/katamari';
 import { DialogToggleMenuItem, dialogToggleMenuItemSchema, DialogToggleMenuItemSpec } from './ToggleMenuItem';
 
@@ -84,7 +84,7 @@ const menuFooterButtonFields = [
   ...baseFooterButtonFields
 ];
 
-export const dialogFooterButtonSchema = ValueSchema.choose(
+export const dialogFooterButtonSchema = StructureSchema.choose(
   'type',
   {
     submit: normalFooterButtonFields,
@@ -94,5 +94,5 @@ export const dialogFooterButtonSchema = ValueSchema.choose(
   }
 );
 
-export const createDialogFooterButton = (spec: DialogFooterButtonSpec): Result<DialogFooterButton, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<DialogFooterButton>('dialogfooterbutton', dialogFooterButtonSchema, spec);
+export const createDialogFooterButton = (spec: DialogFooterButtonSpec): Result<DialogFooterButton, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<DialogFooterButton>('dialogfooterbutton', dialogFooterButtonSchema, spec);

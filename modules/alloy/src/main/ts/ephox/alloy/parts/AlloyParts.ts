@@ -1,4 +1,4 @@
-import { FieldPresence, FieldProcessor, FieldSchema, Objects, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldPresence, FieldProcessor, FieldSchema, Objects, StructureSchema, ValueType } from '@ephox/boulder';
 import { Arr, Fun, Obj, Optional, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -39,7 +39,7 @@ const generate = (owner: string, parts: PartType.PartTypeAdt[]): GeneratedParts 
     PartType.asNamedPart(part).each((np) => {
       const g: UnconfiguredPart = doGenerateOne(owner, np.pname);
       r[np.name] = (config) => {
-        const validated = ValueSchema.asRawOrDie('Part: ' + np.name + ' in ' + owner, ValueSchema.objOf(np.schema), config);
+        const validated = StructureSchema.asRawOrDie('Part: ' + np.name + ' in ' + owner, StructureSchema.objOf(np.schema), config);
         return {
           ...g,
           config,

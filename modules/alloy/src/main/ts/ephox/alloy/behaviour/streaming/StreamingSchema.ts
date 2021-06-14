@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Throttler } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -21,7 +21,7 @@ const setup = (streamInfo: StreamingConfig, streamState: StreamingStateType) => 
 };
 
 export default [
-  FieldSchema.requiredOf('stream', ValueSchema.choose(
+  FieldSchema.requiredOf('stream', StructureSchema.choose(
     'mode',
     {
       throttle: [

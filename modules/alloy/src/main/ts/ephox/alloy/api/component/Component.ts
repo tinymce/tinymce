@@ -1,4 +1,4 @@
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Arr, Cell, Optional, Type } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
@@ -59,7 +59,7 @@ const build = (spec: ComponentDetail): AlloyComponent => {
 
   const systemApi = Cell(singleton);
 
-  const info: CustomDefinition.CustomDetail<any> = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
+  const info: CustomDefinition.CustomDetail<any> = StructureSchema.getOrDie(CustomDefinition.toInfo(spec));
   const bBlob = CompBehaviours.generate(spec);
 
   const bList = BehaviourBlob.getBehaviours(bBlob);

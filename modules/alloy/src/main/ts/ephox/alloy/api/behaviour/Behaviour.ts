@@ -1,4 +1,4 @@
-import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Objects, StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as CommonBehaviour from '../../behaviour/common/Behaviour';
@@ -21,7 +21,7 @@ const derive = (
   capabilities: Array<NamedConfiguredBehaviour<any, any, any>>
 ): AlloyBehaviourRecord => Objects.wrapAll(capabilities);
 
-const simpleSchema = ValueSchema.objOfOnly([
+const simpleSchema = StructureSchema.objOfOnly([
   FieldSchema.required('fields'),
   FieldSchema.required('name'),
   FieldSchema.defaulted('active', { }),
@@ -37,11 +37,11 @@ const create = <
   A extends BehaviourTypes.BehaviourApisRecord<D, S>,
   E extends BehaviourTypes.BehaviourExtraRecord<E> = {}
 >(data: AlloyBehaviourConfig<D, S, A, E>): CommonBehaviour.AlloyBehaviourWithApis<C, D, S, A, E> => {
-  const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
+  const value = StructureSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
   return CommonBehaviour.create<C, D, S, A, E>(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
 
-const modeSchema = ValueSchema.objOfOnly([
+const modeSchema = StructureSchema.objOfOnly([
   FieldSchema.required('branchKey'),
   FieldSchema.required('branches'),
   FieldSchema.required('name'),
@@ -58,9 +58,9 @@ const createModes = <
   A extends BehaviourTypes.BehaviourApisRecord<D, S>,
   E extends BehaviourTypes.BehaviourExtraRecord<E> = {}
 >(data: BehaviourModeSpec<D, S, A, E>): CommonBehaviour.AlloyBehaviourWithApis<C, D, S, A, E> => {
-  const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
+  const value = StructureSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
   return CommonBehaviour.createModes<C, D, S, A, E>(
-    ValueSchema.choose(value.branchKey, value.branches),
+    StructureSchema.choose(value.branchKey, value.branches),
     value.name, value.active, value.apis, value.extra, value.state
   );
 };

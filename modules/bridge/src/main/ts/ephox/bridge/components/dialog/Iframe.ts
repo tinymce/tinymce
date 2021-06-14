@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
@@ -16,9 +16,9 @@ const iframeFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('sandboxed', true)
 ]);
 
-export const iframeSchema = ValueSchema.objOf(iframeFields);
+export const iframeSchema = StructureSchema.objOf(iframeFields);
 
 export const iframeDataProcessor = ValueType.string;
 
-export const createIframe = (spec: IframeSpec): Result<Iframe, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<Iframe>('iframe', iframeSchema, spec);
+export const createIframe = (spec: IframeSpec): Result<Iframe, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<Iframe>('iframe', iframeSchema, spec);

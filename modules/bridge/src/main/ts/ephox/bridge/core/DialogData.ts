@@ -1,4 +1,4 @@
-import { FieldSchema, StructureProcessor, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 import { DialogSpec } from '../components/dialog/Dialog';
 import { getDataProcessor, getNamedItems } from './DataProcessors';
@@ -10,5 +10,5 @@ export const createDataValidator = <T>(structure: DialogSpec<T>): StructureProce
     (schema) => [ FieldSchema.requiredOf(item.name, schema) ]
   ));
 
-  return ValueSchema.objOf(fields);
+  return StructureSchema.objOf(fields);
 };

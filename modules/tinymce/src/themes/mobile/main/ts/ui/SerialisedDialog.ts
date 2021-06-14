@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Button, Container, CustomEvent, Disabling, Form, Highlighting, Keying, Memento,
   NativeEvents, Representing
 } from '@ephox/alloy';
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Cell, Optional, Singleton } from '@ephox/katamari';
 import { Css, EventArgs, SelectorFilter, SelectorFind, Width } from '@ephox/sugar';
 
@@ -28,7 +28,7 @@ const sketch = (rawSpec) => {
   const wrapperAdhocEvents = 'serializer-wrapper-events';
   const formAdhocEvents = 'form-events';
 
-  const schema = ValueSchema.objOf([
+  const schema = StructureSchema.objOf([
     FieldSchema.required('fields'),
     // Used for when datafields are present.
     FieldSchema.defaulted('maxFieldIndex', rawSpec.fields.length - 1),
@@ -42,7 +42,7 @@ const sketch = (rawSpec) => {
     })
   ]);
 
-  const spec = ValueSchema.asRawOrDie('SerialisedDialog', schema, rawSpec);
+  const spec = StructureSchema.asRawOrDie('SerialisedDialog', schema, rawSpec);
 
   const navigationButton = (direction, directionName, enabled) => {
     return Button.sketch({

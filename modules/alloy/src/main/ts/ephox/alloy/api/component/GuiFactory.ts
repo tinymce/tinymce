@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Obj, Optional, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -46,7 +46,7 @@ const text = (textContent: string): PremadeSpec => {
 // Rename.
 export interface ExternalElement { uid?: string; element: SugarElement }
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec: { uid: Optional<string>; element: SugarElement } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
+  const extSpec: { uid: Optional<string>; element: SugarElement } = StructureSchema.asRawOrDie('external.component', StructureSchema.objOfOnly([
     FieldSchema.required('element'),
     FieldSchema.option('uid')
   ]), spec);

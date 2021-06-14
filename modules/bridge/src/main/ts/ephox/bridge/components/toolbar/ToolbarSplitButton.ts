@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 
 import { ChoiceMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
@@ -49,7 +49,7 @@ export interface ToolbarSplitButtonInstanceApi {
   setActive: (state: boolean) => void;
 }
 
-export const splitButtonSchema = ValueSchema.objOf([
+export const splitButtonSchema = StructureSchema.objOf([
   FieldSchema.requiredString('type'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
@@ -66,5 +66,5 @@ export const splitButtonSchema = ValueSchema.objOf([
 
 export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';
 
-export const createSplitButton = (spec: ToolbarSplitButtonSpec): Result<ToolbarSplitButton, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<ToolbarSplitButton>('SplitButton', splitButtonSchema, spec);
+export const createSplitButton = (spec: ToolbarSplitButtonSpec): Result<ToolbarSplitButton, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<ToolbarSplitButton>('SplitButton', splitButtonSchema, spec);

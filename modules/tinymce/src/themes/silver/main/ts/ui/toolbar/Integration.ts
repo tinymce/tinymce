@@ -6,7 +6,7 @@
  */
 
 import { AlloySpec, SketchSpec, VerticalDir } from '@ephox/alloy';
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Obj, Optional, Result, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
@@ -26,7 +26,7 @@ import { ToolbarGroup } from './CommonToolbar';
 
 export const handleError = (error) => {
   // eslint-disable-next-line no-console
-  console.error(ValueSchema.formatError(error));
+  console.error(StructureSchema.formatError(error));
 };
 
 export type ToolbarButton = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.ToolbarSplitButtonSpec;
@@ -59,8 +59,8 @@ const defaultToolbar = [
   }
 ];
 
-const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, ValueSchema.SchemaError<any>>, render: (o: ToolbarButton, extras: Extras, editor: Editor) => AlloySpec) => (spec, extras, editor) => {
-  const internal = bridgeBuilder(spec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
+const renderFromBridge = <BI, ToolbarButton>(bridgeBuilder: (i: BI) => Result<ToolbarButton, StructureSchema.SchemaError<any>>, render: (o: ToolbarButton, extras: Extras, editor: Editor) => AlloySpec) => (spec, extras, editor) => {
+  const internal = bridgeBuilder(spec).mapError((errInfo) => StructureSchema.formatError(errInfo)).getOrDie();
 
   return render(internal, extras, editor);
 };

@@ -1,4 +1,4 @@
-import { StructureProcessor, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 import { DialogManager } from '../../../main/ts/ephox/bridge/api/DialogManager';
 import { Dialog, DialogInstanceApi, DialogSpec } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
@@ -17,7 +17,7 @@ const createDemoApi = <T>(internalStructure: Dialog<T>, initalData: T, dataValid
     getData: () => data.get(),
     setData: (newData: Partial<T>) => {
       const mergedData = { ...data.get(), ...newData };
-      const newInternalData = ValueSchema.getOrDie(ValueSchema.asRaw('data', dataValidator, mergedData));
+      const newInternalData = StructureSchema.getOrDie(StructureSchema.asRaw('data', dataValidator, mergedData));
       data.set(newInternalData);
     },
     redial: Fun.noop,

@@ -3,16 +3,16 @@ import { Obj, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import { FieldProcessor } from 'ephox/boulder/api/Main';
-import * as ValueSchema from 'ephox/boulder/api/StructureSchema';
+import * as StructureSchema from 'ephox/boulder/api/StructureSchema';
 import * as ValueType from 'ephox/boulder/core/ValueType';
 
 UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
   const assertFieldValue = (label: string, expected: any, input: any, field: FieldProcessor) => {
-    const schema = ValueSchema.objOf([
+    const schema = StructureSchema.objOf([
       field
     ]);
 
-    ValueSchema.asRaw('spec', schema, input).fold(
+    StructureSchema.asRaw('spec', schema, input).fold(
       (err) => {
         throw err;
       },
@@ -21,22 +21,22 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
   };
 
   const assertFieldError = (label: string, input: any, field: FieldProcessor) => {
-    const schema = ValueSchema.objOf([
+    const schema = StructureSchema.objOf([
       field
     ]);
 
-    ValueSchema.asRaw('spec', schema, input).fold(
+    StructureSchema.asRaw('spec', schema, input).fold(
       (_err) => {},
       (_value) => Assert.fail('Should fail on value')
     );
   };
 
   const assertOptionalFieldValue = (expected: Record<string, Optional<any>>, input: any, field: FieldProcessor) => {
-    const schema = ValueSchema.objOf([
+    const schema = StructureSchema.objOf([
       field
     ]);
 
-    ValueSchema.asRaw('spec', schema, input).fold(
+    StructureSchema.asRaw('spec', schema, input).fold(
       (_err) => Assert.fail('Should not fail'),
       (actual: any) => {
         Obj.each(expected, (expectedValueOpt, expectedKey) => {

@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
@@ -45,12 +45,12 @@ const listBoxSingleItemFields = [
 
 const listBoxNestedItemFields = [
   FieldSchema.requiredString('text'),
-  FieldSchema.requiredArrayOf('items', ValueSchema.thunkOf('items', () => listBoxItemSchema))
+  FieldSchema.requiredArrayOf('items', StructureSchema.thunkOf('items', () => listBoxItemSchema))
 ];
 
-const listBoxItemSchema = ValueSchema.oneOf([
-  ValueSchema.objOf(listBoxSingleItemFields),
-  ValueSchema.objOf(listBoxNestedItemFields)
+const listBoxItemSchema = StructureSchema.oneOf([
+  StructureSchema.objOf(listBoxSingleItemFields),
+  StructureSchema.objOf(listBoxNestedItemFields)
 ]);
 
 const listBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
@@ -58,9 +58,9 @@ const listBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
-export const listBoxSchema = ValueSchema.objOf(listBoxFields);
+export const listBoxSchema = StructureSchema.objOf(listBoxFields);
 
 export const listBoxDataProcessor = ValueType.string;
 
-export const createListBox = (spec: ListBoxSpec): Result<ListBox, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<ListBox>('listbox', listBoxSchema, spec);
+export const createListBox = (spec: ListBoxSpec): Result<ListBox, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<ListBox>('listbox', listBoxSchema, spec);

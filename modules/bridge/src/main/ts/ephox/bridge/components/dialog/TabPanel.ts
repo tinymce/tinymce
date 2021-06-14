@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Id, Result } from '@ephox/katamari';
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 import { itemSchema } from './Panel';
@@ -41,7 +41,7 @@ export const tabPanelFields = [
   FieldSchema.requiredArrayOfObj('tabs', tabFields)
 ];
 
-export const tabPanelSchema = ValueSchema.objOf(tabPanelFields);
+export const tabPanelSchema = StructureSchema.objOf(tabPanelFields);
 
-export const createTabPanel = (spec: TabPanelSpec): Result<TabPanel, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<TabPanel>('tabpanel', tabPanelSchema, spec);
+export const createTabPanel = (spec: TabPanelSpec): Result<TabPanel, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<TabPanel>('tabpanel', tabPanelSchema, spec);

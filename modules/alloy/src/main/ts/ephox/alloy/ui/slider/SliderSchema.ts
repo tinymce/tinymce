@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import { Keying } from '../../api/behaviour/Keying';
@@ -26,7 +26,7 @@ const SliderSchema: FieldProcessor[] = [
   FieldSchema.defaulted('snapToGrid', false),
   FieldSchema.defaulted('rounded', true),
   FieldSchema.option('snapStart'),
-  FieldSchema.requiredOf('model', ValueSchema.choose(
+  FieldSchema.requiredOf('model', StructureSchema.choose(
     'mode',
     {
       x: [

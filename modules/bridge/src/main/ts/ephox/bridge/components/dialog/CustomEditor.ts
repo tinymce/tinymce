@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { FormComponent, formComponentFields, FormComponentSpec } from './FormComponent';
 
@@ -54,13 +54,13 @@ const customEditorFieldsOld = formComponentFields.concat([
   FieldSchema.requiredFunction('init')
 ]);
 
-export const customEditorSchema = ValueSchema.valueOf(
-  (v) => ValueSchema.asRaw('customeditor.old', ValueSchema.objOfOnly(customEditorFieldsOld), v).orThunk(
-    () => ValueSchema.asRaw('customeditor.new', ValueSchema.objOfOnly(customEditorFields), v)
+export const customEditorSchema = StructureSchema.valueOf(
+  (v) => StructureSchema.asRaw('customeditor.old', StructureSchema.objOfOnly(customEditorFieldsOld), v).orThunk(
+    () => StructureSchema.asRaw('customeditor.new', StructureSchema.objOfOnly(customEditorFields), v)
   )
 );
 
 export const customEditorDataProcessor = ValueType.string;
 
-export const createCustomEditor = (spec: CustomEditorSpec): Result<CustomEditor, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<CustomEditor>('CustomEditor', customEditorSchema, spec);
+export const createCustomEditor = (spec: CustomEditorSpec): Result<CustomEditor, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<CustomEditor>('CustomEditor', customEditorSchema, spec);

@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 
 export interface BaseToolbarButtonSpec<I extends BaseToolbarButtonInstanceApi> {
@@ -45,10 +45,10 @@ export const baseToolbarButtonFields = [
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ];
 
-export const toolbarButtonSchema = ValueSchema.objOf([
+export const toolbarButtonSchema = StructureSchema.objOf([
   FieldSchema.requiredString('type'),
   FieldSchema.requiredFunction('onAction')
 ].concat(baseToolbarButtonFields));
 
-export const createToolbarButton = (spec: ToolbarButtonSpec): Result<ToolbarButton, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw('toolbarbutton', toolbarButtonSchema, spec);
+export const createToolbarButton = (spec: ToolbarButtonSpec): Result<ToolbarButton, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw('toolbarbutton', toolbarButtonSchema, spec);

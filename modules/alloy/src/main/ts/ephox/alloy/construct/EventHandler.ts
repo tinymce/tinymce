@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 
 import { AlloyEventHandler, EventRunHandler } from '../api/events/AlloyEvents';
@@ -10,7 +10,7 @@ const nu = <T extends EventFormat>(parts: Partial<AlloyEventHandler<T>>): AlloyE
       'EventHandler defined by: ' + JSON.stringify(parts, null, 2) + ' does not have can, abort, or run!'
     );
   }
-  return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOfOnly([
+  return StructureSchema.asRawOrDie('Extracting event.handler', StructureSchema.objOfOnly([
     FieldSchema.defaulted('can', Fun.always),
     FieldSchema.defaulted('abort', Fun.never),
     FieldSchema.defaulted('run', Fun.noop)

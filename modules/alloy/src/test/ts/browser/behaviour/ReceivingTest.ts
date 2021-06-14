@@ -1,6 +1,6 @@
 import { Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -24,7 +24,7 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
         Receiving.config({
           channels: {
             'test.channel.1': {
-              schema: ValueSchema.objOfOnly([
+              schema: StructureSchema.objOfOnly([
                 FieldSchema.required('dummy')
               ]),
               onReceive: (_component, data) => {

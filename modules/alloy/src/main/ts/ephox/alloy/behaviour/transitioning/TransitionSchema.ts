@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
@@ -11,11 +11,11 @@ export default [
   Fields.onHandler('onFinish'),
   FieldSchema.requiredOf(
     'routes',
-    ValueSchema.setOf(
+    StructureSchema.setOf(
       Result.value,
-      ValueSchema.setOf(
+      StructureSchema.setOf(
         Result.value,
-        ValueSchema.objOfOnly([
+        StructureSchema.objOfOnly([
           FieldSchema.optionObjOfOnly('transition', [
             FieldSchema.required('property'),
             FieldSchema.required('transitionClass')

@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 import { CardMenuItemSpec } from '../menu/CardMenuItem';
 import { SeparatorMenuItem, separatorMenuItemSchema, SeparatorMenuItemSpec } from '../menu/SeparatorMenuItem';
@@ -55,7 +55,7 @@ export interface Autocompleter {
   highlightOn: string[];
 }
 
-const autocompleterItemSchema = ValueSchema.objOf([
+const autocompleterItemSchema = StructureSchema.objOf([
   // Currently, autocomplete items don't support configuring type, active, disabled, meta
   FieldSchema.defaulted('type', 'autocompleteitem'),
   FieldSchema.defaulted('active', false),
@@ -66,7 +66,7 @@ const autocompleterItemSchema = ValueSchema.objOf([
   FieldSchema.optionString('icon')
 ]);
 
-const autocompleterSchema = ValueSchema.objOf([
+const autocompleterSchema = StructureSchema.objOf([
   FieldSchema.requiredString('type'),
   FieldSchema.requiredString('ch'),
   FieldSchema.defaultedNumber('minChars', 1),
@@ -78,11 +78,11 @@ const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.defaultedArrayOf('highlightOn', [], ValueType.string)
 ]);
 
-export const createSeparatorItem = (spec: SeparatorItemSpec): Result<SeparatorItem, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw('Autocompleter.Separator', separatorMenuItemSchema, spec);
+export const createSeparatorItem = (spec: SeparatorItemSpec): Result<SeparatorItem, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw('Autocompleter.Separator', separatorMenuItemSchema, spec);
 
-export const createAutocompleterItem = (spec: AutocompleterItemSpec): Result<AutocompleterItem, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<AutocompleterItem>('Autocompleter.Item', autocompleterItemSchema, spec);
+export const createAutocompleterItem = (spec: AutocompleterItemSpec): Result<AutocompleterItem, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<AutocompleterItem>('Autocompleter.Item', autocompleterItemSchema, spec);
 
-export const createAutocompleter = (spec: AutocompleterSpec): Result<Autocompleter, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);
+export const createAutocompleter = (spec: AutocompleterSpec): Result<Autocompleter, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<Autocompleter>('Autocompleter', autocompleterSchema, spec);

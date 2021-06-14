@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
@@ -22,9 +22,9 @@ const textAreaFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
-export const textAreaSchema = ValueSchema.objOf(textAreaFields);
+export const textAreaSchema = StructureSchema.objOf(textAreaFields);
 
 export const textAreaDataProcessor = ValueType.string;
 
-export const createTextArea = (spec: TextAreaSpec): Result<TextArea, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<TextArea>('textarea', textAreaSchema, spec);
+export const createTextArea = (spec: TextAreaSpec): Result<TextArea, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<TextArea>('textarea', textAreaSchema, spec);

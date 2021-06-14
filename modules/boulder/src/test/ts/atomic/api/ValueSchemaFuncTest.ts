@@ -4,14 +4,14 @@ import { Result } from '@ephox/katamari';
 
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
-import * as ValueSchema from 'ephox/boulder/api/StructureSchema';
+import * as StructureSchema from 'ephox/boulder/api/StructureSchema';
 import * as ValueType from 'ephox/boulder/core/ValueType';
 
 UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
   const checkErr = (label, expectedPart, v, processor) => {
     // NOTE: v is not a function here.
-    ValueSchema.asRaw(label, processor, v).fold((err) => {
-      const message = ValueSchema.formatError(err);
+    StructureSchema.asRaw(label, processor, v).fold((err) => {
+      const message = StructureSchema.formatError(err);
       Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, (val) => {
       assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
@@ -20,7 +20,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
 
   const checkRawErrIs = (label, expectedPart, applicator, f, processor) => {
     Logger.sync(label, () => {
-      const newF = ValueSchema.asRaw<any>(label, processor, f).getOrDie();
+      const newF = StructureSchema.asRaw<any>(label, processor, f).getOrDie();
       let passed = null;
 
       try {
@@ -39,7 +39,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
 
   const checkRawResultIs = (label, expected, applicator, f, processor) => {
     Logger.sync(label, () => {
-      const actual = ValueSchema.asRawOrDie(label, processor, f);
+      const actual = StructureSchema.asRawOrDie(label, processor, f);
       const result = applicator(actual);
       Assert.eq(label + ', checking result', expected, result);
     });
@@ -53,7 +53,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     'Not passing through a function',
     'Not a function',
     10,
-    ValueSchema.funcOrDie([ 'a', 'b' ], ValueType.anyValue())
+    StructureSchema.funcOrDie([ 'a', 'b' ], ValueType.anyValue())
   );
 
   checkRawResultIs(
@@ -63,7 +63,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
       return f('a', 'b', 'c');
     },
     getter1,
-    ValueSchema.funcOrDie([ 'a', 'b' ], ValueType.anyValue())
+    StructureSchema.funcOrDie([ 'a', 'b' ], ValueType.anyValue())
   );
 
   checkRawErrIs(
@@ -75,7 +75,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     (_v) => {
       return 'y';
     },
-    ValueSchema.funcOrDie([ 'value' ], ValueSchema.valueOf((v) => {
+    StructureSchema.funcOrDie([ 'value' ], StructureSchema.valueOf((v) => {
       return v === 'x' ? Result.value(v) : Result.error('wrong value');
     }))
   );
@@ -96,7 +96,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
       return f('A');
     },
     getter2,
-    ValueSchema.funcOrDie([ 'a' ], ValueSchema.objOf([
+    StructureSchema.funcOrDie([ 'a' ], StructureSchema.objOf([
       FieldSchema.required('A')
     ]))
   );
@@ -120,7 +120,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
       return f('cat', 'dog', 'elephant');
     },
     getter3,
-    ValueSchema.funcOrDie([ 'one', 'two' ], ValueSchema.arrOfObj([
+    StructureSchema.funcOrDie([ 'one', 'two' ], StructureSchema.arrOfObj([
       FieldSchema.required('firstname'),
       FieldSchema.required('surname')
     ]))

@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Arr, Optional, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -25,8 +25,8 @@ export interface CustomDetail<A> {
 
 const baseBehaviour = 'alloy.base.behaviour';
 
-const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
-  FieldSchema.field('dom', 'dom', FieldPresence.required(), ValueSchema.objOf([
+const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => StructureSchema.asRaw('custom.definition', StructureSchema.objOf([
+  FieldSchema.field('dom', 'dom', FieldPresence.required(), StructureSchema.objOf([
     // Note, no children.
     FieldSchema.required('tag'),
     FieldSchema.defaulted('styles', {}),

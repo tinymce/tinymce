@@ -4,14 +4,14 @@ import * as ValueType from '../core/ValueType';
 import * as FieldPresence from './FieldPresence';
 import * as FieldSchema from './FieldSchema';
 import * as Objects from './Objects';
-import * as ValueSchema from './StructureSchema';
+import * as StructureSchema from './StructureSchema';
 
 export {
   FieldPresence,
   FieldSchema,
   ValueType,
   Objects,
-  ValueSchema,
+  StructureSchema,
 
   // Types
   StructureProcessor,

@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 
 import { AlloySpec, OptionalDomSchema } from '../api/component/SpecTypes';
 import * as Fields from '../data/Fields';
@@ -31,7 +31,7 @@ const base = (partSchemas: FieldProcessor[], partUidsSchemas: FieldProcessor[]) 
 
 const asRawOrDie = <D extends BaseSketchDetail<any>, S extends BaseSketchSpec>(label: string, schema: FieldProcessor[], spec: S, partSchemas: FieldProcessor[], partUidsSchemas: FieldProcessor[]): D => {
   const baseS = base(partSchemas, partUidsSchemas);
-  return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
+  return StructureSchema.asRawOrDie(label + ' [SpecSchema]', StructureSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
 export {

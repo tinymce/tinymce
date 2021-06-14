@@ -1,4 +1,4 @@
-import { FieldPresence, FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional, Result } from '@ephox/katamari';
 import * as Debugging from '../debugging/Debugging';
 import * as MenuMarkers from '../menu/util/MenuMarkers';
@@ -26,7 +26,7 @@ const onPresenceHandler = (label: string, fieldName: string, presence: any): Fie
     fieldName,
     presence,
     // Apply some wrapping to their supplied function
-    ValueSchema.valueOf((f) => Result.value((...args: any[]) => {
+    StructureSchema.valueOf((f) => Result.value((...args: any[]) => {
       /*
          * This line is just for debugging information
          */

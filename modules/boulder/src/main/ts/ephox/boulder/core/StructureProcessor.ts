@@ -227,7 +227,7 @@ const setOf = (validator: ValueValidator, prop: StructureProcessor): StructurePr
   };
 };
 
-// retriever is passed in. See funcOrDie in ValueSchema
+// retriever is passed in. See funcOrDie in StructureSchema
 const func = (args: string[], _schema: StructureProcessor, retriever: (obj: any) => any): StructureProcessor => {
   const delegate = value((f) => {
     return Type.isFunction(f) ? SimpleResult.svalue<any, () => any>((...gArgs: any[]) => {

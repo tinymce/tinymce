@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
@@ -35,9 +35,9 @@ const selectBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
-export const selectBoxSchema = ValueSchema.objOf(selectBoxFields);
+export const selectBoxSchema = StructureSchema.objOf(selectBoxFields);
 
 export const selectBoxDataProcessor = ValueType.string;
 
-export const createSelectBox = (spec: SelectBoxSpec): Result<SelectBox, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<SelectBox>('selectbox', selectBoxSchema, spec);
+export const createSelectBox = (spec: SelectBoxSpec): Result<SelectBox, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<SelectBox>('selectbox', selectBoxSchema, spec);

@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Id, Optional, Result } from '@ephox/katamari';
 
 export interface ButtonSpec {
@@ -36,7 +36,7 @@ const buttonFields = [
   FieldSchema.defaultedBoolean('borderless', false)
 ];
 
-export const buttonSchema = ValueSchema.objOf(buttonFields);
+export const buttonSchema = StructureSchema.objOf(buttonFields);
 
-export const createButton = (spec: ButtonSpec): Result<Button, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<Button>('button', buttonSchema, spec);
+export const createButton = (spec: ButtonSpec): Result<Button, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<Button>('button', buttonSchema, spec);
