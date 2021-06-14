@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { FormComponent, formComponentFields, FormComponentSpec } from './FormComponent';
 
@@ -60,7 +60,7 @@ export const customEditorSchema = ValueSchema.valueOf(
   )
 );
 
-export const customEditorDataProcessor = ValueSchema.string;
+export const customEditorDataProcessor = ValueType.string;
 
 export const createCustomEditor = (spec: CustomEditorSpec): Result<CustomEditor, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw<CustomEditor>('CustomEditor', customEditorSchema, spec);

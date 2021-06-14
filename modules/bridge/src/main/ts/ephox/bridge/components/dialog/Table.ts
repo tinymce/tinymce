@@ -1,4 +1,4 @@
-import { ValueSchema, FieldSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 export interface TableSpec {
@@ -15,8 +15,8 @@ export interface Table {
 
 const tableFields = [
   FieldSchema.requiredString('type'),
-  FieldSchema.requiredArrayOf('header', ValueSchema.string),
-  FieldSchema.requiredArrayOf('cells', ValueSchema.arrOf(ValueSchema.string))
+  FieldSchema.requiredArrayOf('header', ValueType.string),
+  FieldSchema.requiredArrayOf('cells', ValueSchema.arrOf(ValueType.string))
 ];
 
 export const tableSchema = ValueSchema.objOf(tableFields);

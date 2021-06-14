@@ -1,4 +1,4 @@
-import { StructureProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -7,7 +7,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
 import { CustomListDetail } from '../types/CustomListTypes';
 
-const schema: () => StructureProcessor[] = Fun.constant([
+const schema: () => FieldProcessor[] = Fun.constant([
   FieldSchema.defaulted('shell', false),
   FieldSchema.required('makeItem'),
   FieldSchema.defaulted('setupItem', Fun.noop),

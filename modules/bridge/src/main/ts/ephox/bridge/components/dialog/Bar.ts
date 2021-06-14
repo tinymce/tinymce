@@ -1,5 +1,5 @@
-import { FieldSchema, StructureProcessor } from '@ephox/boulder';
-import { BodyComponentSpec, BodyComponent } from './BodyComponent';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 
 export interface BarSpec {
   type: 'bar';
@@ -11,7 +11,7 @@ export interface Bar {
   items: BodyComponent[];
 }
 
-export const createBarFields = (itemsField: StructureProcessor): StructureProcessor[] => [
+export const createBarFields = (itemsField: FieldProcessor): FieldProcessor[] => [
   FieldSchema.requiredString('type'),
   itemsField
 ];

@@ -18,31 +18,24 @@ const functionProcessor = typedValue(Type.isFunction, 'function');
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
 // from https://stackoverflow.com/a/32673910/7377237 with adjustments for typescript
 const isPostMessageable = (val: any): boolean => {
-  const every = <T>(iter: Iterator<T>, callbackFn: (value: T) => boolean): boolean => {
-    let result = iter.next();
-    while (!result.done) {
-      if (!callbackFn(result.value)) {
-        return false;
-      }
-      result = iter.next();
-    }
-    return true;
-  };
   if (Object(val) !== val) { // Primitive value
     return true;
   }
+
   switch ({}.toString.call(val).slice(8, -1)) { // Class
-    case 'Boolean': case 'Number': case 'String': case 'Date':
-    case 'RegExp': case 'Blob': case 'FileList':
-    case 'ImageData': case 'ImageBitmap': case 'ArrayBuffer':
+    case 'Boolean':
+    case 'Number':
+    case 'String':
+    case 'Date':
+    case 'RegExp':
+    case 'Blob':
+    case 'FileList':
+    case 'ImageData':
+    case 'ImageBitmap':
+    case 'ArrayBuffer':
       return true;
     case 'Array': case 'Object':
       return Object.keys(val).every((prop) => isPostMessageable(val[prop]));
-    case 'Map':
-      return every((val as Map<any, any>).keys(), isPostMessageable) &&
-        every((val as Map<any, any>).values(), isPostMessageable);
-    case 'Set':
-      return every((val as Set<any>).keys(), isPostMessageable);
     default:
       return false;
   }

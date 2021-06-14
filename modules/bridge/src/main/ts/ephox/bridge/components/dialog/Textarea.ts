@@ -1,6 +1,6 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
-import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
+import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
 export interface TextAreaSpec extends FormComponentWithLabelSpec {
   type: 'textarea';
@@ -24,7 +24,7 @@ const textAreaFields = formComponentWithLabelFields.concat([
 
 export const textAreaSchema = ValueSchema.objOf(textAreaFields);
 
-export const textAreaDataProcessor = ValueSchema.string;
+export const textAreaDataProcessor = ValueType.string;
 
 export const createTextArea = (spec: TextAreaSpec): Result<TextArea, ValueSchema.SchemaError<any>> =>
   ValueSchema.asRaw<TextArea>('textarea', textAreaSchema, spec);

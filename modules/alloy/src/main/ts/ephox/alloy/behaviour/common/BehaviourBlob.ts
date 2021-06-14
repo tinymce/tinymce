@@ -1,6 +1,5 @@
-import { StructureProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Obj, Optional } from '@ephox/katamari';
-
 import { BehaviourState, BehaviourStateInitialiser, NoState } from './BehaviourState';
 import { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec, BehaviourRecord } from './BehaviourTypes';
 
@@ -25,7 +24,7 @@ const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBe
    * and ensures that all the behaviours were valid. Will need to document
    * this entire process. Let's see where this is used.
    */
-  const schema: StructureProcessor[] = Arr.map(all, (a) =>
+  const schema: FieldProcessor[] = Arr.map(all, (a) =>
     // Optional here probably just due to ForeignGui listing everything it supports. Can most likely
     // change it to strict once I fix the other errors.
     FieldSchema.optionObjOf(a.name(), [

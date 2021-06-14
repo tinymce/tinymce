@@ -45,7 +45,7 @@ The API exposed by boulder will be constantly changing, but it should always be 
 Note, there are many other APIs as well, but they tend to be convenience functions built on top of these constructors.
 
 
-### <a name="anyValue">ValueSchema.anyValue</a>
+### <a name="anyValue">ValueType.anyValue</a>
 
 - used to represent any value (array, object, number etc.).
 

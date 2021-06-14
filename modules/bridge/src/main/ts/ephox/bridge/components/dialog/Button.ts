@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Id, Optional, Result } from '@ephox/katamari';
 
 export interface ButtonSpec {
@@ -30,7 +30,7 @@ const buttonFields = [
     'name',
     'name',
     FieldPresence.defaultedThunk(() => Id.generate('button-name')),
-    ValueSchema.string
+    ValueType.string
   ),
   FieldSchema.optionString('icon'),
   FieldSchema.defaultedBoolean('borderless', false)

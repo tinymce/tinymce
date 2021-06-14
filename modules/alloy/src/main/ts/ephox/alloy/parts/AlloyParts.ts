@@ -1,6 +1,5 @@
-import { FieldPresence, StructureProcessor, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldProcessor, FieldSchema, Objects, ValueSchema, ValueType } from '@ephox/boulder';
 import { Arr, Fun, Obj, Optional, Result } from '@ephox/katamari';
-
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../api/component/SpecTypes';
 import { CompositeSketchDetail } from '../api/ui/Sketcher';
@@ -66,7 +65,7 @@ const generateOne = (owner: string, pname: string, config: SimpleOrSketchSpec): 
   validated: { }
 });
 
-const schemas = (parts: PartType.PartTypeAdt[]): StructureProcessor[] =>
+const schemas = (parts: PartType.PartTypeAdt[]): FieldProcessor[] =>
   // This actually has to change. It needs to return the schemas for things that will
   // not appear in the components list, which is only externals
   Arr.bind(parts, (part: PartType.PartTypeAdt) => part.fold<Optional<PartType.BasePartDetail<any, any>>>(
@@ -130,11 +129,11 @@ const defaultUids = (baseUid: string, partTypes: PartType.PartTypeAdt[]): Record
   );
 };
 
-const defaultUidsSchema = (partTypes: PartType.PartTypeAdt[]): StructureProcessor => FieldSchema.field(
+const defaultUidsSchema = (partTypes: PartType.PartTypeAdt[]): FieldProcessor => FieldSchema.field(
   'partUids',
   'partUids',
   FieldPresence.mergeWithThunk((spec: SketchSpec) => defaultUids(spec.uid, partTypes)),
-  ValueSchema.anyValue()
+  ValueType.anyValue()
 );
 
 export {

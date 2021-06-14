@@ -1,12 +1,11 @@
-import { StructureProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 import { Direction, SugarElement } from '@ephox/sugar';
-
 import { AnchorLayout } from '../layout/LayoutTypes';
 import { HasLayoutAnchor } from './Anchoring';
 import { isBottomToTopDir } from './VerticalDir';
 
-const schema: () => StructureProcessor = () => FieldSchema.optionObjOf('layouts', [
+const schema: () => FieldProcessor = () => FieldSchema.optionObjOf('layouts', [
   FieldSchema.required('onLtr'),
   FieldSchema.required('onRtl'),
   FieldSchema.option('onBottomLtr'),

@@ -1,6 +1,5 @@
-import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, ValueType } from '@ephox/boulder';
 import { Id } from '@ephox/katamari';
-
 import { events } from '../../ui/common/ButtonBase';
 import { TabButtonDetail, TabButtonSketcher, TabButtonSpec } from '../../ui/types/TabButtonTypes';
 import { Focusing } from '../behaviour/Focusing';
@@ -48,7 +47,7 @@ const TabButton: TabButtonSketcher = Sketcher.single({
         'id': Id.generate('aria'),
         'aria-selected': 'false'
       }
-    })), ValueSchema.anyValue()),
+    })), ValueType.anyValue()),
     FieldSchema.option('action'),
     FieldSchema.defaulted('domModification', { }),
     SketchBehaviours.field('tabButtonBehaviours', [ Focusing, Keying, Representing ]),

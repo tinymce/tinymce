@@ -1,10 +1,10 @@
-import { StructureProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Boxes from '../../alien/Boxes';
 import SnapSchema from './SnapSchema';
 
-const schema: StructureProcessor[] = [
+const schema: FieldProcessor[] = [
   // Is this used?
   FieldSchema.defaulted('useFixed', Fun.never),
   FieldSchema.required('blockerClass'),

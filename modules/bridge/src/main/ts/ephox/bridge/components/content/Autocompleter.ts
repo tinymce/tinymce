@@ -1,7 +1,6 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 import { CardMenuItemSpec } from '../menu/CardMenuItem';
-
 import { SeparatorMenuItem, separatorMenuItemSchema, SeparatorMenuItemSpec } from '../menu/SeparatorMenuItem';
 
 export type ColumnTypes = number | 'auto';
@@ -76,7 +75,7 @@ const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.optionFunction('matches'),
   FieldSchema.requiredFunction('fetch'),
   FieldSchema.requiredFunction('onAction'),
-  FieldSchema.defaultedArrayOf('highlightOn', [], ValueSchema.string)
+  FieldSchema.defaultedArrayOf('highlightOn', [], ValueType.string)
 ]);
 
 export const createSeparatorItem = (spec: SeparatorItemSpec): Result<SeparatorItem, ValueSchema.SchemaError<any>> =>

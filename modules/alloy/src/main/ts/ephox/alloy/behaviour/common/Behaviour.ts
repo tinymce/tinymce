@@ -1,4 +1,4 @@
-import { StructureProcessor, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, FieldSchema, ValueSchema, FieldProcessor } from '@ephox/boulder';
 import { Fun, Obj, Optional, Thunk } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -39,7 +39,7 @@ const create = <
   S extends BehaviourState,
   A extends BehaviourApisRecord<D, S>,
   E extends BehaviourExtraRecord<E>
->(schema: StructureProcessor[], name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
+>(schema: FieldProcessor[], name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
   const configSchema = ValueSchema.objOfOnly(schema);
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionObjOfOnly('config', schema)
@@ -53,7 +53,7 @@ const createModes = <
   S extends BehaviourState,
   A extends BehaviourApisRecord<D, S>,
   E extends BehaviourExtraRecord<E>
->(modes: Processor, name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
+>(modes: StructureProcessor, name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
   const configSchema = modes;
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionOf('config', modes)
@@ -91,7 +91,7 @@ const doCreate = <
   S extends BehaviourState,
   A extends BehaviourApisRecord<D, S>,
   E extends BehaviourExtraRecord<E>
->(configSchema: Processor, schemaSchema: StructureProcessor, name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
+>(configSchema: StructureProcessor, schemaSchema: FieldProcessor, name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
   const getConfig = (info: BehaviourInfo<D, S>) => Obj.hasNonNullableKey(info, name) ? info[name]() : Optional.none<BehaviourConfigAndState<D, S>>();
 
   const wrappedApis = Obj.map(apis, (apiF, apiName) => wrapApi(name, apiF, apiName)) as { [K in keyof A]: WrappedApiFunc<A[K]> };

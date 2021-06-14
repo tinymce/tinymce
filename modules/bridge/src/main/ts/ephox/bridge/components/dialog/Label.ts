@@ -1,4 +1,4 @@
-import { StructureProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 
 export interface LabelSpec {
@@ -13,7 +13,7 @@ export interface Label {
   items: BodyComponent[];
 }
 
-export const createLabelFields = (itemsField: StructureProcessor): StructureProcessor[] => [
+export const createLabelFields = (itemsField: FieldProcessor): FieldProcessor[] => [
   FieldSchema.requiredString('type'),
   FieldSchema.requiredString('label'),
   itemsField

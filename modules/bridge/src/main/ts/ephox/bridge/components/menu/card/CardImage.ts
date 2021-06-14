@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, ValueSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 export interface CardImageSpec {
@@ -19,7 +19,7 @@ const cardImageFields = [
   FieldSchema.requiredString('type'),
   FieldSchema.requiredString('src'),
   FieldSchema.optionString('alt'),
-  FieldSchema.defaultedArrayOf('classes', [], ValueSchema.string)
+  FieldSchema.defaultedArrayOf('classes', [], ValueType.string)
 ];
 
 export const cardImageSchema = ValueSchema.objOf(cardImageFields);
