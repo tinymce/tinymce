@@ -62,10 +62,10 @@ const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCell
   });
 
   // Set the selection:
-  // - to the first emptied cell if the selection was previously inside a table
-  // - otherwise just collapse the previous selection that was in the outside block
+  // - to the first emptied cell if the start of the previous selection was inside a table
+  // - otherwise just collapse the previous selection that started in the outside block
   const selection = editor.selection;
-  if (outsideDetails.forall(({ isStartInTable }) => isStartInTable)) {
+  if (outsideDetails.forall((details) => details.isStartInTable)) {
     selection.setCursorLocation(cells[0].dom, 0);
   } else {
     selection.collapse(true);

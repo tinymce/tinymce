@@ -14,10 +14,8 @@ import * as TableDeleteUtils from './TableDeleteUtils';
 type IsRootFn = TableDeleteUtils.IsRootFn;
 type SelectionDetails = TableDeleteUtils.TableSelectionDetails;
 
-export interface OutsideTableDetails {
+export interface OutsideTableDetails extends SelectionDetails {
   readonly rng: Range;
-  readonly isStartInTable: boolean;
-  readonly isEndInTable: boolean;
 }
 
 type SingleCellTableFn<T> = (rng: Range, cell: SugarElement<HTMLTableCellElement>) => T;
@@ -149,11 +147,11 @@ const getSingleTableSelection = (optCellRng: Optional<TableCellRng>, selectionDe
     .filter((cellRng) => isExpandedCellRng(cellRng) && isWithinSameTable(isRoot, cellRng))
     .orThunk(() => partialSelection(rng, isRoot))
     .map((cRng) => {
-      const { isStartInTable } = selectionDetails;
+      const { isStartInTable, isEndInTable } = selectionDetails;
       const tableSelection = getTableSelectionFromCellRng(cRng, isRoot);
       return {
         start: isStartInTable ? tableSelection : Optional.none(),
-        end: !isStartInTable ? tableSelection : Optional.none()
+        end: isEndInTable ? tableSelection : Optional.none()
       };
     });
 
@@ -228,12 +226,12 @@ const getActionFromRange = (root: SugarElement, rng: Range): Optional<DeleteActi
   if (isSingleCellTableContentSelected(optCellRng, rng, isRoot)) {
     // SingleCellTable
     return optCellRng.map((cellRng) => deleteAction.singleCellTable(rng, cellRng.start));
-  } else if (!selectionDetails.isMultiTableSelection) {
-    // FullTable, PartialTable with no rng or PartialTable with outside rng
-    return handleSingleTable(optCellRng, selectionDetails, rng, isRoot);
-  } else {
+  } else if (selectionDetails.isMultiTableSelection) {
     // MultiTable
     return handleMultiTable(optCellRng, selectionDetails, rng, isRoot);
+  } else {
+    // FullTable, PartialTable with no rng or PartialTable with outside rng
+    return handleSingleTable(optCellRng, selectionDetails, rng, isRoot);
   }
 };
 
