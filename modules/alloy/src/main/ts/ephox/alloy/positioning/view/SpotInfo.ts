@@ -1,6 +1,7 @@
 import { BubbleInstance } from '../layout/Bubble';
 import { DirectionAdt } from '../layout/Direction';
 import { BoundsRestriction } from '../layout/LayoutBounds';
+import { Placement } from '../layout/Placement';
 
 export interface SpotInfo {
   readonly x: number;
@@ -8,7 +9,10 @@ export interface SpotInfo {
   readonly bubble: BubbleInstance;
   readonly direction: DirectionAdt;
   readonly label: string;
-  readonly boundsRestriction: BoundsRestriction;
+  readonly restriction: BoundsRestriction;
+  readonly placement: Placement;
+  // This flag will pretend that this spot fits within the bounds, no matter whether it does or not
+  readonly alwaysFit: boolean;
 }
 
 const nu = (
@@ -16,15 +20,19 @@ const nu = (
   y: number,
   bubble: BubbleInstance,
   direction: DirectionAdt,
+  placement: Placement,
   boundsRestriction: BoundsRestriction,
-  label: string
+  labelPrefix: string,
+  alwaysFit: boolean = false
 ): SpotInfo => ({
   x,
   y,
   bubble,
   direction,
-  boundsRestriction,
-  label
+  placement,
+  restriction: boundsRestriction,
+  label: `${labelPrefix}-${placement}`,
+  alwaysFit
 });
 
 export {

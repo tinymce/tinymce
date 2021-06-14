@@ -1,3 +1,4 @@
+import { SugarElement } from '@ephox/sugar';
 import { SpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 
@@ -16,5 +17,6 @@ export interface AnchorElement {
 export type AnchorLayout = (
   anchor: AnchorBox,
   element: AnchorElement,
-  bubbles: Bubble
+  bubbles: Bubble,
+  placee: SugarElement<HTMLElement>
 ) => SpotInfo;

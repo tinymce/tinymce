@@ -7,19 +7,16 @@ import * as Fun from './Fun';
  */
 export interface Optional<T> {
   /** If none, run whenNone; if some(a) run whenSome(a) */
-  readonly fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
-
-  /** is this value some(t)?  */
-  readonly is: (t: T) => boolean;
+  readonly fold: <U> (whenNone: () => U, whenSome: (v: T) => U) => U;
 
   readonly isSome: () => boolean;
   readonly isNone: () => boolean;
 
   /** If some(x) return x, otherwise return the specified default value */
-  readonly getOr: <T2>(value: T2) => T | T2;
+  readonly getOr: <T2 = T>(value: T2) => T | T2;
 
   /** getOr with a thunked default value */
-  readonly getOrThunk: <T2>(makeValue: () => T2) => T | T2;
+  readonly getOrThunk: <T2 = T>(makeValue: () => T2) => T | T2;
 
   /** get the 'some' value; throw if none */
   readonly getOrDie: (msg?: string) => T;
@@ -30,15 +27,15 @@ export interface Optional<T> {
   - if some: return self
   - if none: return opt
   */
-  readonly or: (opt: Optional<T>) => Optional<T>;
+  readonly or: <T2 = T>(opt: Optional<T2>) => Optional<T | T2>;
 
   /** Same as "or", but uses a thunk instead of a value */
-  readonly orThunk: (makeOption: () => Optional<T>) => Optional<T>;
+  readonly orThunk: <T2 = T>(makeOption: () => Optional<T2>) => Optional<T | T2>;
 
   /** Run a function over the 'some' value.
    *  "map" operation on the Optional functor.
    */
-  readonly map: <T2> (mapper: (x: T) => T2) => Optional<T2>;
+  readonly map: <U> (mapper: (x: T) => U) => Optional<U>;
 
   /** Run a side effect over the 'some' value */
   readonly each: (worker: (x: T) => void) => void;
@@ -46,7 +43,7 @@ export interface Optional<T> {
   /** "bind"/"flatMap" operation on the Optional Bind/Monad.
    *  Equivalent to >>= in Haskell/PureScript; flatMap in Scala.
    */
-  readonly bind: <T2> (f: (x: T) => Optional<T2>) => Optional<T2>;
+  readonly bind: <U> (f: (x: T) => Optional<U>) => Optional<U>;
 
   /** Does this Optional contain a value that predicate? */
   readonly exists: (f: (x: T) => boolean) => boolean;
@@ -62,31 +59,20 @@ export interface Optional<T> {
     (f: (x: T) => boolean): Optional<T>;
   };
 
-  /** Compare two Options using === */
-  readonly equals: (opt: Optional<T>) => boolean;
-
-  /** Compare two Options using a specified comparator. */
-  readonly equals_: <T2> (opt: Optional<T2>, equality: (a: T, b: T2) => boolean) => boolean;
-
   /** Returns all the values in this Optional as an array */
   readonly toArray: () => T[];
 
   readonly toString: () => string;
 }
 
-const none = <T>(): Optional<T> => NONE;
+const none = <T = never>(): Optional<T> => NONE;
 
-const NONE: Optional<any> = (() => {
-  const eq = (o) => {
-    return o.isNone();
-  };
-
+const NONE: Optional<never> = (() => {
   // inlined from peanut, maybe a micro-optimisation?
   const call = (thunk) => thunk();
   const id = (n) => n;
-  const me: Optional<any> = {
+  const me: Optional<never> = {
     fold: (n, _s) => n(),
-    is: Fun.never,
     isSome: Fun.never,
     isNone: Fun.always,
     getOr: id,
@@ -103,9 +89,7 @@ const NONE: Optional<any> = (() => {
     bind: none,
     exists: Fun.never,
     forall: Fun.always,
-    filter: none,
-    equals: eq,
-    equals_: eq,
+    filter: () => none(),
     toArray: () => [],
     toString: Fun.constant('none()')
   };
@@ -125,7 +109,6 @@ const some = <T>(a: T): Optional<T> => {
 
   const me: Optional<T> = {
     fold: <T2> (n: () => T2, s: (v: T) => T2): T2 => s(a),
-    is: (v: T): boolean => a === v,
     isSome: Fun.always,
     isNone: Fun.never,
     getOr: constant_a,
@@ -135,26 +118,16 @@ const some = <T>(a: T): Optional<T> => {
     getOrUndefined: constant_a,
     or: self,
     orThunk: self,
-    map: <T2> (f: (value: T) => T2) => some(f(a)),
-    each: (f: (value: T) => void): void => {
+    map: (f) => some(f(a)),
+    each: (f) => {
       f(a);
     },
     bind,
     exists: bind,
     forall: bind,
-    filter: <Q extends T>(f: (value: T) => value is Q): Optional<Q> =>
-      f(a) ? me as Optional<Q> : NONE,
+    filter: (f) => f(a) ? me : NONE,
     toArray: () => [ a ],
-    toString: () => 'some(' + a + ')',
-    equals: (o: Optional<T>) => {
-      return o.is(a);
-    },
-    equals_: <T2>(o: Optional<T2>, elementEq: (a: T, b: T2) => boolean) => {
-      return o.fold(
-        Fun.never,
-        (b) => elementEq(a, b)
-      );
-    }
+    toString: () => 'some(' + a + ')'
   };
   return me;
 };

@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
+import * as Optionals from 'ephox/katamari/api/Optionals';
 import { assertNone } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
@@ -22,8 +23,8 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
     assertNone(Optional.from(null));
     assertNone(Optional.from(undefined));
 
-    assert.isTrue(Optional.none().or(Optional.some(7)).equals(Optional.some(7)));
-    assert.isTrue(Optional.none().or(Optional.none()).equals(Optional.none()));
+    assert.isTrue(Optionals.equals(Optional.none().or(Optional.some(7)), Optional.some(7)));
+    assert.isTrue(Optionals.equals(Optional.none().or(Optional.none()), Optional.none()));
 
     assert.deepEqual(Optional.none().toArray(), []);
 
@@ -51,7 +52,7 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
 
   it('Checking none.is === false', () => {
     fc.assert(fc.property(fc.integer(), (v) => {
-      assert.equal(Optional.none<number>().is(v), false);
+      assert.isFalse(Optionals.is(Optional.none(), v));
     }));
   });
 
@@ -79,14 +80,14 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
   it('Checking none.or(oSomeValue) === oSomeValue', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
       const output = Optional.none().or(Optional.some(i));
-      assert.isTrue(output.is(i));
+      assert.isTrue(Optionals.is(output, i));
     }));
   });
 
   it('Checking none.orThunk(_ -> v) === v', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
       const output = Optional.none().orThunk(() => Optional.some(i));
-      assert.isTrue(output.is(i));
+      assert.isTrue(Optionals.is(output, i));
     }));
   });
 });

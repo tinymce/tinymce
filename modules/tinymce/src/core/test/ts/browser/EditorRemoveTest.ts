@@ -9,7 +9,9 @@ import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.EditorRemoveTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const settings = {
     base_url: '/project/tinymce/js/tinymce'

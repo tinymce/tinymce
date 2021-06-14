@@ -9,6 +9,8 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
+import * as UiUtils from '../../module/UiUtils';
+
 describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
@@ -56,9 +58,14 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
     await pAssertFocus();
   };
 
+  const pFocusAndWaitForRender = async (selector: string) => {
+    FocusTools.setFocus(SugarBody.body(), selector);
+    await UiUtils.pWaitForEditorToRender();
+  };
+
   it('TINY-7373: should be able to tab into editor if throbber is disabled', async () => {
     const editor = hook.editor();
-    FocusTools.setFocus(SugarBody.body(), '#beforeInput');
+    await pFocusAndWaitForRender('#beforeInput');
     await pPressTab('#beforeInput');
     await pAssertEditorFocus(editor)();
     assert.isTrue(editor.hasFocus());
@@ -66,7 +73,7 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
 
   it('TINY-7373: should take focus if editor is tabbed into and throbber is enabled', async () => {
     const editor = hook.editor();
-    FocusTools.setFocus(SugarBody.body(), '#beforeInput');
+    await pFocusAndWaitForRender('#beforeInput');
     await pEnableThrobber(editor, pAssertInputFocus(true));
 
     // Make sure throbber gets focus if the editor is tabbed into
@@ -79,7 +86,7 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
 
   it('TINY-7373: should be able to Tab out of the throbber if it has focus', async () => {
     const editor = hook.editor();
-    FocusTools.setFocus(SugarBody.body(), '#beforeInput');
+    await pFocusAndWaitForRender('#beforeInput');
     await pEnableThrobber(editor, pAssertInputFocus(true));
 
     await pPressTab('#beforeInput');
@@ -99,7 +106,7 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
     }
 
     const editor = hook.editor();
-    FocusTools.setFocus(SugarBody.body(), '#afterInput');
+    await pFocusAndWaitForRender('#afterInput');
     await pEnableThrobber(editor, pAssertInputFocus(false));
 
     await pPressTab('#afterInput', true);

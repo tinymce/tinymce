@@ -5,7 +5,9 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.InitEditorOnHiddenElementTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   // Firefox specific test, errors were thrown when the editor was initialised on hidden element.
   it('editor initializes successfully', async () => {
