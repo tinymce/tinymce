@@ -6,7 +6,7 @@
  */
 
 import { Adt, Arr, Optional, Optionals } from '@ephox/katamari';
-import { Compare, SugarElement } from '@ephox/sugar';
+import { Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as TableCellSelection from '../selection/TableCellSelection';
 import * as TableDeleteUtils from './TableDeleteUtils';
@@ -78,6 +78,9 @@ const deleteAction: {
   { multiTable: [ 'startTableCells', 'endTableCells', 'betweenRng' ] },
 ]);
 
+const getClosestCell = (container: Node, isRoot: (e: SugarElement<Node>) => boolean): Optional<SugarElement<HTMLTableCellElement>> =>
+  SelectorFind.closest<HTMLTableCellElement>(SugarElement.fromDom(container), 'td,th', isRoot);
+
 const isExpandedCellRng = (cellRng: TableCellRng): boolean =>
   !Compare.eq(cellRng.start, cellRng.end);
 
@@ -94,8 +97,8 @@ const isSingleCellTable = (cellRng: TableCellRng, isRoot: IsRootFn) => !isExpand
    });
 
 const getCellRng = (rng: Range, isRoot: IsRootFn): Optional<TableCellRng> => {
-  const startCell = TableCellSelection.getClosestCell(rng.startContainer, isRoot);
-  const endCell = TableCellSelection.getClosestCell(rng.endContainer, isRoot);
+  const startCell = getClosestCell(rng.startContainer, isRoot);
+  const endCell = getClosestCell(rng.endContainer, isRoot);
   return Optionals.lift2(startCell, endCell, tableCellRng);
 };
 
@@ -113,8 +116,8 @@ const partialSelection = (rng: Range, isRoot: IsRootFn): Optional<TableCellRng> 
   if (rng.collapsed) {
     return Optional.none();
   } else {
-    const startCell = TableCellSelection.getClosestCell(rng.startContainer, isRoot);
-    const endCell = TableCellSelection.getClosestCell(rng.endContainer, isRoot);
+    const startCell = getClosestCell(rng.startContainer, isRoot);
+    const endCell = getClosestCell(rng.endContainer, isRoot);
 
     return Optionals.lift2(startCell, endCell, tableCellRng).fold(
       () => startCell.fold(

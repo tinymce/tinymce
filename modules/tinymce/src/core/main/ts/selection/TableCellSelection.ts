@@ -28,14 +28,10 @@ const getCellsFromEditor = (editor: Editor) =>
 const getClosestTable = (cell: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean): Optional<SugarElement<HTMLTableElement>> =>
   SelectorFind.ancestor<HTMLTableElement>(cell, 'table', isRoot);
 
-const getClosestCell = (container: Node, isRoot: (e: SugarElement<Node>) => boolean): Optional<SugarElement<HTMLTableCellElement>> =>
-  SelectorFind.closest<HTMLTableCellElement>(SugarElement.fromDom(container), 'td,th', isRoot);
-
 export {
   getCellsFromRanges,
   getCellsFromElement,
   getCellsFromElementOrRanges,
   getCellsFromEditor,
-  getClosestTable,
-  getClosestCell
+  getClosestTable
 };
