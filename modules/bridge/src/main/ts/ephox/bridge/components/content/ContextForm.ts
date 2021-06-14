@@ -83,14 +83,14 @@ const contextButtonFields = baseToolbarButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformbutton'),
   FieldSchema.defaulted('primary', false),
   FieldSchema.requiredFunction('onAction'),
-  FieldSchema.state('original', Fun.identity)
+  FieldSchema.customField('original', Fun.identity)
 ]);
 
 const contextToggleButtonFields = baseToolbarToggleButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformbutton'),
   FieldSchema.defaulted('primary', false),
   FieldSchema.requiredFunction('onAction'),
-  FieldSchema.state('original', Fun.identity)
+  FieldSchema.customField('original', Fun.identity)
 ]);
 
 const launchButtonFields = baseToolbarButtonFields.concat([

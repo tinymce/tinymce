@@ -9,7 +9,7 @@ import * as StructureSchema from './StructureSchema';
 type FieldProcessor = FieldProcessor.FieldProcessor;
 
 const field = FieldProcessor.field;
-const state = FieldProcessor.customField;
+const customField = FieldProcessor.customField;
 
 const validateEnum = (values) => StructureSchema.valueOf((value) => Arr.contains(values, value) ?
   Result.value(value) :
@@ -168,5 +168,5 @@ export {
   defaultedArrayOf,
 
   field,
-  state
+  customField
 };

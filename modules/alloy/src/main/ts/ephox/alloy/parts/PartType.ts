@@ -83,7 +83,7 @@ const fPname = FieldSchema.field(
 );
 
 // Groups cannot choose their schema.
-const fGroupSchema = FieldSchema.state('schema', () => [
+const fGroupSchema = FieldSchema.customField('schema', () => [
   FieldSchema.option('preprocess')
 ]);
 

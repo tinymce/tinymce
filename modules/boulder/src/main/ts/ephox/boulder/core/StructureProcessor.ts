@@ -1,6 +1,6 @@
 import { Arr, Fun, Merger, Obj, Optional, Thunk, Type } from '@ephox/katamari';
 import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
-import * as FieldPresence from '../api/FieldPresence';
+import { FieldPresenceTag, required } from '../api/FieldPresence';
 import * as Objects from '../api/Objects';
 import { ResultCombine } from '../combine/ResultCombine';
 import * as FieldProcessor from './FieldProcessor';
@@ -67,27 +67,27 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: FieldProc
       };
 
       switch (presence.tag) {
-        case FieldPresence.FieldType.Required:
+        case FieldPresenceTag.Required:
           return SimpleResult.bind(
             strictAccess(path, obj, key),
             bundle
           );
-        case FieldPresence.FieldType.DefaultedThunk:
+        case FieldPresenceTag.DefaultedThunk:
           return SimpleResult.bind(
             fallbackAccess(obj, key, presence.process),
             bundle
           );
-        case FieldPresence.FieldType.Option:
+        case FieldPresenceTag.Option:
           return SimpleResult.bind(
             optionAccess(obj, key),
             bundleAsOption
           );
-        case FieldPresence.FieldType.DefaultedOptionThunk:
+        case FieldPresenceTag.DefaultedOptionThunk:
           return SimpleResult.bind(
             optionDefaultedAccess(obj, key, presence.process),
             bundleAsOption
           );
-        case FieldPresence.FieldType.MergeWithThunk: {
+        case FieldPresenceTag.MergeWithThunk: {
           const base = presence.process(obj);
           const result = SimpleResult.map(
             fallbackAccess(obj, key, Fun.constant({})),
@@ -212,7 +212,7 @@ const setOf = (validator: ValueValidator, prop: StructureProcessor): StructurePr
     const validatedKeys = validateKeys(path, keys);
     return SimpleResult.bind(validatedKeys, (validKeys) => {
       const schema = Arr.map(validKeys, (vk) => {
-        return FieldProcessor.field(vk, vk, FieldPresence.required(), prop);
+        return FieldProcessor.field(vk, vk, required(), prop);
       });
 
       return objOf(schema).extract(path, o);

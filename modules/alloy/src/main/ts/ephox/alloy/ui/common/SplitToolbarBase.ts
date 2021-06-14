@@ -6,7 +6,7 @@ import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 
 const schema: () => FieldProcessor[] = Fun.constant([
   SketchBehaviours.field('splitToolbarBehaviours', [ Coupling ]),
-  FieldSchema.state('builtGroups', () => Cell([ ]))
+  FieldSchema.customField('builtGroups', () => Cell([ ]))
 ]);
 
 export { schema };

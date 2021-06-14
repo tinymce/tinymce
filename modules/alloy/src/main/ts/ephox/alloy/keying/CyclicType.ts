@@ -4,5 +4,5 @@ import { Fun } from '@ephox/katamari';
 import * as TabbingTypes from './TabbingTypes';
 
 export default TabbingTypes.create(
-  FieldSchema.state('cyclic', Fun.always)
+  FieldSchema.customField('cyclic', Fun.always)
 );

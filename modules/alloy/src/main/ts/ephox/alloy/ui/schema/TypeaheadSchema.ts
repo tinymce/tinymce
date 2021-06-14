@@ -53,7 +53,7 @@ const schema = Fun.constant([
     Focusing, Representing, Streaming, Keying, Toggling, Coupling
   ]),
 
-  FieldSchema.state('previewing', () => Cell(true))
+  FieldSchema.customField('previewing', () => Cell(true))
 ].concat(
   InputBase.schema()
 ).concat(

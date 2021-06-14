@@ -44,9 +44,9 @@ const onStrictHandler = (fieldName: string): FieldProcessor => onPresenceHandler
 
 const onStrictKeyboardHandler = (fieldName: string): FieldProcessor => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.required());
 
-const output = (name: string, value: any): FieldProcessor => FieldSchema.state(name, Fun.constant(value));
+const output = (name: string, value: any): FieldProcessor => FieldSchema.customField(name, Fun.constant(value));
 
-const snapshot = (name: string): FieldProcessor => FieldSchema.state(name, Fun.identity);
+const snapshot = (name: string): FieldProcessor => FieldSchema.customField(name, Fun.identity);
 
 const initSize: () => FieldProcessor = Fun.constant(_initSize);
 

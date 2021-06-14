@@ -34,7 +34,7 @@ const sketch = (rawSpec) => {
     FieldSchema.defaulted('maxFieldIndex', rawSpec.fields.length - 1),
     FieldSchema.required('onExecute'),
     FieldSchema.required('getInitialValue'),
-    FieldSchema.state('state', () => {
+    FieldSchema.customField('state', () => {
       return {
         dialogSwipeState: Singleton.value(),
         currentScreen: Cell(0)

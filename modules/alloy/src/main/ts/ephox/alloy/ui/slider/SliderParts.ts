@@ -92,7 +92,7 @@ const thumbPart = PartType.required<SliderDetail, { dom: OptionalDomSchema; even
 
 const spectrumPart = PartType.required({
   schema: [
-    FieldSchema.state('mouseIsDown', () => Cell(false))
+    FieldSchema.customField('mouseIsDown', () => Cell(false))
   ],
   name: 'spectrum',
   overrides: (detail: SliderDetail) => {

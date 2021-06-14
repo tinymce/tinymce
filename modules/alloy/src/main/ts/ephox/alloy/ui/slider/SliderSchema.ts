@@ -32,14 +32,14 @@ const SliderSchema: FieldProcessor[] = [
       x: [
         FieldSchema.defaulted('minX', 0),
         FieldSchema.defaulted('maxX', 100),
-        FieldSchema.state('value', (spec: SliderModelSpec) => Cell(spec.mode.minX)),
+        FieldSchema.customField('value', (spec: SliderModelSpec) => Cell(spec.mode.minX)),
         FieldSchema.required('getInitialValue'),
         Fields.output('manager', HorizontalModel)
       ],
       y: [
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
-        FieldSchema.state('value', (spec: SliderModelSpec) => Cell(spec.mode.minY)),
+        FieldSchema.customField('value', (spec: SliderModelSpec) => Cell(spec.mode.minY)),
         FieldSchema.required('getInitialValue'),
         Fields.output('manager', VerticalModel)
       ],
@@ -48,7 +48,7 @@ const SliderSchema: FieldProcessor[] = [
         FieldSchema.defaulted('maxX', 100),
         FieldSchema.defaulted('minY', 0),
         FieldSchema.defaulted('maxY', 100),
-        FieldSchema.state('value', (spec: SliderModelSpec) => Cell({
+        FieldSchema.customField('value', (spec: SliderModelSpec) => Cell({
           x: spec.mode.minX,
           y: spec.mode.minY
         })),
@@ -59,7 +59,7 @@ const SliderSchema: FieldProcessor[] = [
   )),
 
   SketchBehaviours.field('sliderBehaviours', [ Keying, Representing ]),
-  FieldSchema.state('mouseIsDown', () => Cell(false))
+  FieldSchema.customField('mouseIsDown', () => Cell(false))
 ];
 
 export {

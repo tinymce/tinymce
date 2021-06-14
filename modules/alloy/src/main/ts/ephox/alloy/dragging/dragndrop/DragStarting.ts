@@ -43,7 +43,7 @@ const schema: FieldProcessor[] = [
   FieldSchema.defaultedFunction('onDragstart', Fun.identity),
   FieldSchema.defaultedFunction('onDragover', Fun.identity),
   FieldSchema.defaultedFunction('onDragend', Fun.identity),
-  FieldSchema.state('instance', () => {
+  FieldSchema.customField('instance', () => {
     const exhibit = () => DomModification.nu({
       attributes: {
         draggable: 'true'

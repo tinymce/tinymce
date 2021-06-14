@@ -17,7 +17,7 @@ const schema: FieldProcessor[] = [
   Fields.onHandler('onDragover'),
   Fields.onHandler('onDragenter'),
   Fields.onHandler('onDragleave'),
-  FieldSchema.state('instance', () => {
+  FieldSchema.customField('instance', () => {
     const exhibit = () => DomModification.nu({ });
 
     // http://www.quirksmode.org/blog/archives/2009/09/the_html5_drag.html

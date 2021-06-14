@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 
-export const enum FieldType {
+export const enum FieldPresenceTag {
   Required = 'required',
   DefaultedThunk = 'defaultedThunk',
   Option = 'option',
@@ -9,26 +9,26 @@ export const enum FieldType {
 }
 
 type Callback = (...rest: any[]) => any;
-interface FieldPresenceData<D extends FieldType, T> {
+interface FieldPresenceData<D extends FieldPresenceTag, T> {
   readonly tag: D;
   readonly process: T;
 }
 
-type RequiredData = FieldPresenceData<FieldType.Required, {}>;
-type DefaultedThunkData = FieldPresenceData<FieldType.DefaultedThunk, Callback>;
-type OptionData = FieldPresenceData<FieldType.Option, {}>;
-type DefaultedOptionThunkData = FieldPresenceData<FieldType.DefaultedOptionThunk, Callback>;
-type MergeWithThunkData = FieldPresenceData<FieldType.MergeWithThunk, Callback>;
+type RequiredData = FieldPresenceData<FieldPresenceTag.Required, {}>;
+type DefaultedThunkData = FieldPresenceData<FieldPresenceTag.DefaultedThunk, Callback>;
+type OptionData = FieldPresenceData<FieldPresenceTag.Option, {}>;
+type DefaultedOptionThunkData = FieldPresenceData<FieldPresenceTag.DefaultedOptionThunk, Callback>;
+type MergeWithThunkData = FieldPresenceData<FieldPresenceTag.MergeWithThunk, Callback>;
 
 export type FieldPresence = RequiredData | DefaultedThunkData | OptionData | DefaultedOptionThunkData | MergeWithThunkData;
 
-const required = (): RequiredData => ({ tag: FieldType.Required, process: { }});
-const defaultedThunk = (fallbackThunk: Callback): DefaultedThunkData => ({ tag: FieldType.DefaultedThunk, process: fallbackThunk });
+const required = (): RequiredData => ({ tag: FieldPresenceTag.Required, process: { }});
+const defaultedThunk = (fallbackThunk: Callback): DefaultedThunkData => ({ tag: FieldPresenceTag.DefaultedThunk, process: fallbackThunk });
 const defaulted = <T>(fallback: T): DefaultedThunkData => defaultedThunk(Fun.constant(fallback));
-const asOption = (): OptionData => ({ tag: FieldType.Option, process: { }});
-const asDefaultedOptionThunk = (fallbackThunk: Callback): DefaultedOptionThunkData => ({ tag: FieldType.DefaultedOptionThunk, process: fallbackThunk });
+const asOption = (): OptionData => ({ tag: FieldPresenceTag.Option, process: { }});
+const asDefaultedOptionThunk = (fallbackThunk: Callback): DefaultedOptionThunkData => ({ tag: FieldPresenceTag.DefaultedOptionThunk, process: fallbackThunk });
 const asDefaultedOption = <T>(fallback: T): DefaultedOptionThunkData => asDefaultedOptionThunk(Fun.constant(fallback));
-const mergeWithThunk = (baseThunk: Callback): MergeWithThunkData => ({ tag: FieldType.MergeWithThunk, process: baseThunk });
+const mergeWithThunk = (baseThunk: Callback): MergeWithThunkData => ({ tag: FieldPresenceTag.MergeWithThunk, process: baseThunk });
 const mergeWith = (base: {}): MergeWithThunkData => mergeWithThunk(Fun.constant(base));
 
 export {
