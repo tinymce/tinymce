@@ -24,12 +24,69 @@ const freefallRtl = (root: SugarElement<Node>): Optional<SugarElement<Node>> => 
   return child.bind(freefallRtl).orThunk(() => Optional.some(root));
 };
 
-const emptyCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) => {
+const removeContentFromCells = (cells: SugarElement<HTMLTableCellElement>[]) =>
   Arr.each(cells, PaddingBr.fillWithPaddingBr);
-  editor.selection.setCursorLocation(cells[0].dom, 0);
+
+const getOutsideBlock = (editor: Editor, container: Node): Optional<SugarElement<HTMLElement>> =>
+  Optional.from(editor.dom.getParent(container, editor.dom.isBlock) as HTMLElement).map(SugarElement.fromDom);
+
+const handleEmptyBlock = (editor: Editor, startInTable: boolean, emptyBlock: Optional<SugarElement<HTMLElement>>) => {
+  emptyBlock.each((block) => {
+    if (startInTable) {
+      // Note that we don't need to set the selection as it'll be within the table
+      Remove.remove(block);
+    } else {
+      // Set the cursor location as it'll move when filling with padding
+      PaddingBr.fillWithPaddingBr(block);
+      editor.selection.setCursorLocation(block.dom, 0);
+    }
+  });
+};
+
+/*
+ * Runs when
+ * - the start and end of the selection is contained within the same table (called directly from deleteRange)
+ * - part of a table and content outside is selected
+ */
+const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], outsideDetails: Optional<TableDeleteAction.OutsideTableDetails>) => {
+  // Remove content from selected cells
+  removeContentFromCells(cells);
+
+  // Delete all content outside of the table that is in the selection
+  outsideDetails.map(({ rng, isStartInTable }) => {
+    // Get the outside block before deleting the contents
+    const outsideBlock = getOutsideBlock(editor, isStartInTable ? rng.endContainer : rng.startContainer);
+    rng.deleteContents();
+    // Handle block outside the table if it is empty since rng.deleteContents leaves it
+    handleEmptyBlock(editor, isStartInTable, outsideBlock.filter(Empty.isEmpty));
+  });
+
+  // Set the selection:
+  // - to the first emptied cell if the start of the previous selection was inside a table
+  // - otherwise just collapse the previous selection that started in the outside block
+  const selection = editor.selection;
+  if (outsideDetails.forall((details) => details.isStartInTable)) {
+    selection.setCursorLocation(cells[0].dom, 0);
+  } else {
+    selection.collapse(true);
+  }
+
   return true;
 };
 
+/*
+ * Runs when the start of the selection is in a table and the end of the selection is in another table
+ */
+const emptyMultiTableCells = (editor: Editor, startTableCells: SugarElement<HTMLTableCellElement>[], endTableCells: SugarElement<HTMLTableCellElement>[], betweenRng: Range) => {
+  removeContentFromCells(startTableCells.concat(endTableCells));
+  // Delete all content in between the start table and end table
+  betweenRng.deleteContents();
+  // Set the cursor back to the start of the original selection
+  editor.selection.setCursorLocation(startTableCells[0].dom, 0);
+  return true;
+};
+
+// Runs on a single cell table that has all of its content selected
 const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLTableCellElement>) => {
   rng.deleteContents();
   // Pad the last block node
@@ -59,9 +116,10 @@ const deleteTableElement = (editor: Editor, table: SugarElement<HTMLTableElement
 const deleteCellRange = (editor: Editor, rootElm: SugarElement<Node>, rng: Range) =>
   TableDeleteAction.getActionFromRange(rootElm, rng)
     .map((action) => action.fold(
+      Fun.curry(deleteCellContents, editor),
       Fun.curry(deleteTableElement, editor),
-      Fun.curry(emptyCells, editor),
-      Fun.curry(deleteCellContents, editor)
+      Fun.curry(emptySingleTableCells, editor),
+      Fun.curry(emptyMultiTableCells, editor)
     ));
 
 const deleteCaptionRange = (editor: Editor, caption: SugarElement<HTMLTableCaptionElement>) => emptyElement(editor, caption);
@@ -77,7 +135,7 @@ const deleteRange = (editor: Editor, startElm: SugarElement<Node>) => {
   const rng = editor.selection.getRng();
   const selectedCells = TableCellSelection.getCellsFromEditor(editor);
   return selectedCells.length !== 0 ?
-    emptyCells(editor, selectedCells) :
+    emptySingleTableCells(editor, selectedCells, Optional.none()) :
     deleteTableRange(editor, rootNode, rng, startElm);
 };
 
