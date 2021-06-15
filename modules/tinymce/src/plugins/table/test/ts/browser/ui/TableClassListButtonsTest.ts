@@ -68,7 +68,7 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
     await pAssertMenuPresence(editor, `There should be ${trueMarked} checkmark(s)`, 'Table styles', expected, sugarContainer, toolbar);
   };
 
-  it('TINY-7476: Ensure that the checkmark appears for a single class', async () => {
+  it('TINY-7476: Ensure that the checkmark appears for a single class in toolbar', async () => {
     await pPerformToggleClassSetup([ 'a' ], 1, 1, true);
   });
 
@@ -76,7 +76,7 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
     await pPerformToggleClassSetup([ 'a' ], 1, 1, false);
   });
 
-  it('TINY-7476: Ensure that the checkmark appears for two classes', async () => {
+  it('TINY-7476: Ensure that the checkmark appears for two classes in toolbar', async () => {
     await pPerformToggleClassSetup([ 'a', 'b' ], 2, 0, true);
   });
 

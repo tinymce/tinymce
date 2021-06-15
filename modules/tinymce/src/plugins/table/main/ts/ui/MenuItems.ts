@@ -260,7 +260,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
 
   const tableCellBorderWidthsList = getTableBorderWidths(editor);
   editor.ui.registry.addNestedMenuItem('tablecellborderwidth', {
-    icon: 'vertical-align',
+    icon: 'border-width',
     text: 'Border width',
     getSubmenuItems: () => generateItems(
       editor,
@@ -274,7 +274,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
 
   const tableCellBorderStylesList = getTableBorderStyles(editor);
   editor.ui.registry.addNestedMenuItem('tablecellborderstyle', {
-    icon: 'vertical-align',
+    icon: 'border-style',
     text: 'Border style',
     getSubmenuItems: () => generateItems(
       editor,
