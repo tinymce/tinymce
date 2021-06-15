@@ -263,6 +263,13 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     fetch: (callback) => callback(generateColorSelector(editor, tableCellBorderColors, 'border-color')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
+
+  editor.ui.registry.addToggleButton('tablerowheader', {
+    tooltip: 'Row header',
+    icon: 'table-top-header',
+    onAction: cmd('mceTableToggleRowHeader'),
+    onSetup: selectionTargets.onSetupTableHeaders()
+  });
 };
 
 const addToolbars = (editor: Editor) => {

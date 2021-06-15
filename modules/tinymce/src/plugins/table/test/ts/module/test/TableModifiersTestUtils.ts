@@ -172,6 +172,36 @@ const pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks = async (editor: Editor,
   await pAssertStyleCanBeToggledWithoutCheckmarks(editor, options, 'menuitem');
 };
 
+const makeCell = (type: string, content: string, hasScope?: boolean, isSelected?: boolean, isStart?: boolean, isEnd?: boolean) => {
+  const getSelection = () => {
+    const attributes: string[] = [ '' ];
+
+    if (isSelected) {
+      if (isStart) {
+        attributes.push('data-mce-first-selected="1"');
+      }
+
+      if (isEnd) {
+        attributes.push('data-mce-last-selected="1"');
+      }
+
+      attributes.push('data-mce-selected="1"');
+    }
+
+    return attributes.join(' ');
+  };
+
+  const getScope = () => {
+    if (hasScope) {
+      return ' scope="col"';
+    } else {
+      return '';
+    }
+  };
+
+  return `<${type}${getScope()}${getSelection()}>Cell ${content}</${type}>`;
+};
+
 export {
   pAssertStyleCanBeToggledOnAndOff,
   pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks,
@@ -180,5 +210,6 @@ export {
   pAssertMenuPresence,
   clickOnButton,
   pClickOnMenuItem,
-  assertStructureIsRestoredToDefault
+  assertStructureIsRestoredToDefault,
+  makeCell
 };

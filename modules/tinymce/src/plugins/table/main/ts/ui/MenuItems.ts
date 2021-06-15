@@ -311,6 +311,13 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     getSubmenuItems: () => generateColorSelector(editor, tableCellBorderColors, 'border-color'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
+
+  editor.ui.registry.addToggleMenuItem('tablerowheader', {
+    text: 'Row header',
+    icon: 'table-top-header',
+    onAction: cmd('mceTableToggleRowHeader'),
+    onSetup: selectionTargets.onSetupTableHeaders()
+  });
 };
 
 export {
