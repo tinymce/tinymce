@@ -10,7 +10,7 @@ import * as StructureSchema from 'ephox/boulder/api/StructureSchema';
 import { StructureProcessor } from 'ephox/boulder/core/StructureProcessor';
 import * as ValueType from 'ephox/boulder/core/ValueType';
 
-UnitTest.test('ValueSchemaRawTest', () => {
+UnitTest.test('StructureSchemaRawTest', () => {
   const checkErr = (label: string, expectedPart: string, input: any, processor: StructureProcessor) => {
     StructureSchema.asRaw(label, processor, input).fold((err) => {
       const message = StructureSchema.formatError(err);

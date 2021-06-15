@@ -1,9 +1,9 @@
 import { Fun, Obj, Result } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
-import { choose as _choose } from '../core/ChoiceProcessor';
+import { choose as chooseProcessor } from '../core/ChoiceProcessor';
 import { FieldProcessor } from '../core/FieldProcessor';
 import {
-  arrOf, arrOfObj as _arrOfObj, func, objOf, objOfOnly, oneOf, setOf as doSetOf, StructureProcessor, thunk, valueThunk
+  arrOf, arrOfObj, func, objOf, objOfOnly, oneOf, setOf as doSetOf, StructureProcessor, thunk, valueThunk as valueThunkOf
 } from '../core/StructureProcessor';
 import { value, anyValue as _anyValue } from '../core/Utils';
 import { formatErrors, formatObj } from '../format/PrettyPrinter';
@@ -13,11 +13,7 @@ export interface SchemaError<T> {
   readonly errors: any[];
 }
 
-const arrOfObj = (objFields: FieldProcessor[]): StructureProcessor => _arrOfObj(objFields);
-
 const arrOfVal = (): StructureProcessor => arrOf(_anyValue);
-
-const valueThunkOf = valueThunk;
 
 const valueOf = (validator: (a: any) => Result<any, any>): StructureProcessor =>
   value((v) => validator(v).fold<any>(SimpleResult.serror, SimpleResult.svalue));
@@ -50,11 +46,8 @@ const formatError = (errInfo: SchemaError<any>): string => {
     '\n\nInput object: ' + formatObj(errInfo.input);
 };
 
-const chooseProcessor = (key: string, branches: Record<string, StructureProcessor>): StructureProcessor =>
-  _choose(key, branches);
-
 const choose = (key: string, branches: Record<string, FieldProcessor[]>): StructureProcessor =>
-  _choose(key, Obj.map(branches, objOf));
+  chooseProcessor(key, Obj.map(branches, objOf));
 
 const thunkOf = (desc: string, schema: () => StructureProcessor): StructureProcessor =>
   thunk(desc, schema);

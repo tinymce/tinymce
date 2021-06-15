@@ -7,7 +7,7 @@ import * as Objects from 'ephox/boulder/api/Objects';
 import * as StructureSchema from 'ephox/boulder/api/StructureSchema';
 import * as ValueType from 'ephox/boulder/core/ValueType';
 
-UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
+UnitTest.test('Atomic Test: api.StructureSchemaFuncTest', () => {
   const checkErr = (label, expectedPart, v, processor) => {
     // NOTE: v is not a function here.
     StructureSchema.asRaw(label, processor, v).fold((err) => {

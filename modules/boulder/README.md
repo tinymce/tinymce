@@ -2,7 +2,7 @@
 
 `Boulder` is a project designed to provide a nice syntax for validating JavaScript objects. The purpose of it is to provide useful feedback for when a developer has not specified an object correctly. Another purpose of it is to sensibly handle defaulting of arguments and optional arguments.
 
-The API exposed by boulder will be constantly changing, but it should always be based on `value` and `field` schemas. `Value` schemas are used to represent an entire value (e.g. number, array, object etc.) `Field` schemas are used to represent a single field inside an `object` (e.g. `object.alpha`). By combining them, `boulder` should be able to specify objects of reasonable complexity.
+The API exposed by boulder will be constantly changing, but it should always be based on `structure` and `field` schemas. `Structure` schemas are used to represent an entire structure of `field`s (e.g. number, array, object etc.). `Field` schemas are used to represent a single field inside an `object` (e.g. `object.alpha`). By combining them, `boulder` should be able to specify objects of reasonable complexity.
 
 # Installation
 
