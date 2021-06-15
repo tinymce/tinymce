@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "strict": false,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/slate-sugar/test/*": ["src/test/ts/module/ephox/slate-sugar/test/*"],
+      "ephox/slate-sugar/demo/*": ["src/demo/ts/ephox/slate-sugar/demo/*"],
+      "ephox/slate-sugar/*": ["src/main/ts/ephox/slate-sugar/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../katamari" }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@ephox/slate-sugar",
+  "version": "4.0.5",
+  "description": "Slate model manipulation library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce"
+  },
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "scripts": {
+    "prepublishOnly": "tsc -b",
+    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
+  },
+  "keywords": [
+    "platform"
+  ],
+  "author": "Ephox Corporation",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@ephox/katamari": "^7.1.3",
+    "tslib": "^2.0.0"
+  },
+  "main": "./lib/main/ts/ephox/slate-sugar/api/Main.js",
+  "module": "./lib/main/ts/ephox/slate-sugar/api/Main.js",
+  "types": "./lib/main/ts/ephox/slate-sugar/api/Main.d.ts"
+}
