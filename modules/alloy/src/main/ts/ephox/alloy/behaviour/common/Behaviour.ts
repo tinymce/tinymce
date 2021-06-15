@@ -1,5 +1,5 @@
 import { StructureProcessor, FieldSchema, StructureSchema, FieldProcessor } from '@ephox/boulder';
-import { Fun, Obj, Optional, Thunk } from '@ephox/katamari';
+import { Fun, Obj, Optional, Optionals, Thunk } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -120,7 +120,9 @@ const doCreate = <
     schema: Fun.constant(schemaSchema),
 
     exhibit: (info: BehaviourInfo<D, S>, base: DomDefinitionDetail) => {
-      return getConfig(info).bind((behaviourInfo) => Obj.get(active, 'exhibit').map((exhibitor) => exhibitor(base, behaviourInfo.config, behaviourInfo.state))).getOr(DomModification.nu({ }));
+      return Optionals.lift2(getConfig(info), Obj.get(active, 'exhibit'), (behaviourInfo, exhibitor) => {
+        return exhibitor(base, behaviourInfo.config, behaviourInfo.state);
+      }).getOrThunk(() => DomModification.nu({ }));
     },
 
     name: Fun.constant(name),

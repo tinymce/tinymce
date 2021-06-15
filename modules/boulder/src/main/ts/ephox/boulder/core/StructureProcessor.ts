@@ -141,7 +141,7 @@ const objOfOnly = (fields: FieldProcessor[]): StructureProcessor => {
     );
   }, {} as Record<string, boolean>);
 
-  const extract = (path: string[], o: Record<string, any>) => {
+  const extract = (path: string[], o: Record<string, any> | boolean) => {
     const keys = Type.isBoolean(o) ? [] : getSetKeys(o);
     const extra = Arr.filter(keys, (k) => !Obj.hasNonNullableKey(fieldNames, k));
 

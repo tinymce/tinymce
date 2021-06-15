@@ -8,7 +8,7 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, ItemTypes, NativeEvents, Replacing
 } from '@ephox/alloy';
-import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ReadOnly from 'tinymce/themes/silver/ReadOnly';
 
@@ -18,8 +18,7 @@ import { menuItemEventOrder, onMenuItemExecute } from '../ItemEvents';
 import ItemResponse from '../ItemResponse';
 import { ItemStructure } from '../structure/ItemStructure';
 
-export const componentRenderPipeline = (xs: Array<Optional<AlloySpec>>) =>
-  Arr.bind(xs, (o) => o.toArray());
+export const componentRenderPipeline: (xs: Array<Optional<AlloySpec>>) => AlloySpec[] = Optionals.cat;
 
 export interface CommonMenuItemSpec<T> {
   onAction: (itemApi: T) => void;

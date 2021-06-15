@@ -20,7 +20,7 @@ import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
 import * as ReadOnly from './ReadOnly';
 import * as FormatControls from './ui/core/FormatControls';
-import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
+import OuterContainer from './ui/general/OuterContainer';
 import * as StaticHeader from './ui/header/StaticHeader';
 import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
@@ -333,7 +333,7 @@ const setup = (editor: Editor): RenderInfo => {
           selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__overflow--open, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a, .tox-statusbar__resize-handle'
         })
       ])
-    } as OuterContainerSketchSpec)
+    })
   );
 
   lazyOuterContainer = Optional.some(outerContainer);
