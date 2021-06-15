@@ -161,6 +161,6 @@ export {
   pAssertNoCheckmarksInMenu,
   pAssertMenuPresence,
   clickOnButton,
-  pClickOnMenuItem as clickOnMenuItem,
+  pClickOnMenuItem,
   assertStructureIsRestoredToDefault
 };

@@ -7,7 +7,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { assertStructureIsRestoredToDefault, clickOnButton, clickOnMenuItem, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
+import { assertStructureIsRestoredToDefault, clickOnButton, pClickOnMenuItem, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
 
 describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -33,12 +33,51 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
     events = [];
   });
 
-  const tableCaptionStructure = (
+  const tableCaptionStructureWithCaption = (
     '<table>' +
       '<caption>Caption</caption>' +
       '<tbody>' +
         '<tr>' +
           '<td>Filler</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>'
+  );
+
+  const nestedTableCaptionWithCaptionsStructure = (
+    '<table>' +
+      '<caption>Caption</caption>' +
+      '<tbody>' +
+        '<tr>' +
+          '<td>' +
+            '<table>' +
+              '<caption>Caption</caption>' +
+              '<tbody>' +
+                '<tr>' +
+                  '<td>Filler</td>' +
+                '</tr>' +
+              '</tbody>' +
+            '</table>' +
+          '</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>'
+  );
+
+  const nestedTableCaptionStructure = (
+    '<table>' +
+      '<tbody>' +
+        '<tr>' +
+          '<td>' +
+            '<table>' +
+              '<caption>Caption</caption>' +
+              '<tbody>' +
+                '<tr>' +
+                  '<td>Filler</td>' +
+                '</tr>' +
+              '</tbody>' +
+            '</table>' +
+          '</td>' +
         '</tr>' +
       '</tbody>' +
     '</table>'
@@ -50,14 +89,14 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
     assert.lengthOf(events, 1, 'Command executed successfully');
   };
 
-  const assertTableContainsCaption = (editor: Editor) => {
-    TinyAssertions.assertContent(editor, tableCaptionStructure);
+  const assertTableStructureIsCorrect = (editor: Editor, tableStructure: string) => {
+    TinyAssertions.assertContent(editor, tableStructure);
   };
 
-  const setTableCaptionStructureAndSelection = (editor: Editor) => {
-    editor.setContent(tableCaptionStructure);
+  const setTableCaptionStructureAndSelection = (editor: Editor, structure: string, indexOftbody: number) => {
+    editor.setContent(structure);
 
-    TinySelections.setSelection(editor, [ 0, 1, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
+    TinySelections.setSelection(editor, [ 0, indexOftbody, 0, 0 ], 0, [ 0, indexOftbody, 0, 0 ], 1);
   };
 
   const pAssertTableCaption = async (toolbar: boolean, addCaption: boolean) => {
@@ -65,34 +104,34 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
     if (addCaption) {
       setEditorContentTableAndSelection(editor, 1, 1);
     } else {
-      setTableCaptionStructureAndSelection(editor);
+      setTableCaptionStructureAndSelection(editor, tableCaptionStructureWithCaption, 1);
     }
 
     if (toolbar) {
       clickOnButton(editor, 'Table caption');
     } else {
-      await clickOnMenuItem(editor, 'Table caption');
+      await pClickOnMenuItem(editor, 'Table caption');
     }
 
     if (addCaption) {
-      assertTableContainsCaption(editor);
+      assertTableStructureIsCorrect(editor, tableCaptionStructureWithCaption);
     } else {
       assertStructureIsRestoredToDefault(editor, 1, 1);
     }
   };
 
   context('Using the command directly', () => {
-    it('TINY-7476: The caption should appear', () => {
+    it('TINY-7479: The caption should appear', () => {
       const editor = hook.editor();
       setEditorContentTableAndSelection(editor, 1, 1);
 
       toggleCaption(editor);
-      assertTableContainsCaption(editor);
+      assertTableStructureIsCorrect(editor, tableCaptionStructureWithCaption);
     });
 
-    it('TINY-7476: The caption should be removed', () => {
+    it('TINY-7479: The caption should be removed', () => {
       const editor = hook.editor();
-      setTableCaptionStructureAndSelection(editor);
+      setTableCaptionStructureAndSelection(editor, tableCaptionStructureWithCaption, 1);
 
       toggleCaption(editor);
       assertStructureIsRestoredToDefault(editor, 1, 1);
@@ -100,22 +139,40 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
   });
 
   context('Using the toolbar button', () => {
-    it('TINY-7476: The caption should appear', async () => {
+    it('TINY-7479: The caption should appear', async () => {
       await pAssertTableCaption(true, true);
     });
 
-    it('TINY-7476: The caption should be removed', async () => {
+    it('TINY-7479: The caption should be removed', async () => {
       await pAssertTableCaption(true, false);
     });
   });
 
   context('Using the menuitem', () => {
-    it('TINY-7476: The caption should appear with the menu', async () => {
+    it('TINY-7479: The caption should appear with the menu', async () => {
       await pAssertTableCaption(false, true);
     });
 
-    it('TINY-7476: The caption should be removed with the menu', async () => {
+    it('TINY-7479: The caption should be removed with the menu', async () => {
       await pAssertTableCaption(false, false);
+    });
+  });
+
+  context('Nested table', () => {
+    it('TINY-7479: Add caption to the table', () => {
+      const editor = hook.editor();
+      setTableCaptionStructureAndSelection(editor, nestedTableCaptionStructure, 0);
+
+      toggleCaption(editor);
+      assertTableStructureIsCorrect(editor, nestedTableCaptionWithCaptionsStructure);
+    });
+
+    it('TINY-7479: Remove caption from the table', () => {
+      const editor = hook.editor();
+      setTableCaptionStructureAndSelection(editor, nestedTableCaptionWithCaptionsStructure, 1);
+
+      toggleCaption(editor);
+      assertTableStructureIsCorrect(editor, nestedTableCaptionStructure);
     });
   });
 });

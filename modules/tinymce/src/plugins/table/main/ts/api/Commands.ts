@@ -8,7 +8,7 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
-import { Insert, Remove, Replication, Selectors, SugarElement } from '@ephox/sugar';
+import { Insert, Remove, Replication, SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -94,7 +94,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const toggleCaption = () => {
     getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
-        Selectors.one('caption', table).fold(
+        SelectorFind.child(table, 'caption').fold(
           () => {
             const caption = SugarElement.fromTag('caption');
             Insert.append(caption, SugarElement.fromText('Caption'));
