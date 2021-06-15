@@ -215,7 +215,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
 const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineViewDetail, InlineViewApis>({
   name: 'InlineView',
   configFields: [
-    FieldSchema.strict('lazySink'),
+    FieldSchema.required('lazySink'),
     Fields.onHandler('onShow'),
     Fields.onHandler('onHide'),
     FieldSchema.optionFunction('onEscape'),

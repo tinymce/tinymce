@@ -1,4 +1,4 @@
-import { Processor } from '@ephox/boulder';
+import { StructureProcessor } from '@ephox/boulder';
 import { Arr, Optional, Type } from '@ephox/katamari';
 
 import { checkboxDataProcessor } from '../components/dialog/Checkbox';
@@ -42,7 +42,7 @@ const dataProcessors = {
   togglemenuitem: dialogToggleMenuItemDataProcessor
 };
 
-const getDataProcessor = (item: { type: string }): Optional<Processor> =>
+const getDataProcessor = (item: { type: string }): Optional<StructureProcessor> =>
   Optional.from(dataProcessors[item.type]);
 
 const getNamedItems = (structure: any): NamedItem[] =>

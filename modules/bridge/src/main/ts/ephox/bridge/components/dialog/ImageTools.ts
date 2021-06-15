@@ -1,6 +1,6 @@
-import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
+import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
 export interface ImageToolsState {
   blob: Blob;
@@ -17,16 +17,16 @@ export interface ImageTools extends FormComponentWithLabel {
   currentState: ImageToolsState;
 }
 
-const imageToolsFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
-  FieldSchema.strictOf('currentState', ValueSchema.objOf([
-    FieldSchema.strict('blob'),
-    FieldSchema.strictString('url')
+const imageToolsFields: FieldProcessor[] = formComponentWithLabelFields.concat([
+  FieldSchema.requiredOf('currentState', StructureSchema.objOf([
+    FieldSchema.required('blob'),
+    FieldSchema.requiredString('url')
   ]))
 ]);
 
-export const imageToolsSchema = ValueSchema.objOf(imageToolsFields);
+export const imageToolsSchema = StructureSchema.objOf(imageToolsFields);
 
-export const imageToolsDataProcessor = ValueSchema.string;
+export const imageToolsDataProcessor = ValueType.string;
 
-export const createImageTools = (spec: ImageToolsSpec): Result<ImageTools, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<ImageTools>('imagetools', imageToolsSchema, spec);
+export const createImageTools = (spec: ImageToolsSpec): Result<ImageTools, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<ImageTools>('imagetools', imageToolsSchema, spec);

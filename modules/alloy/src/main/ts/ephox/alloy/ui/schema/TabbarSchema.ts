@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { Highlighting } from '../../api/behaviour/Highlighting';
@@ -13,10 +13,10 @@ import * as PartType from '../../parts/PartType';
 import { TabbarDetail } from '../types/TabbarTypes';
 import { TabButtonSpec } from '../types/TabButtonTypes';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  FieldSchema.strict('tabs'),
+const schema = Fun.constant([
+  FieldSchema.required('tabs'),
 
-  FieldSchema.strict('dom'),
+  FieldSchema.required('dom'),
 
   FieldSchema.defaulted('clickToDismiss', false),
   SketchBehaviours.field('tabbarBehaviours', [ Highlighting, Keying ]),

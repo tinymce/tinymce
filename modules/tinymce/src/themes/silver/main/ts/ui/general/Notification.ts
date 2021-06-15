@@ -220,12 +220,12 @@ export const Notification: NotificationSketcher = Sketcher.single({
   factory,
   configFields: [
     FieldSchema.option('level'),
-    FieldSchema.strict('progress'),
-    FieldSchema.strict('icon'),
-    FieldSchema.strict('onAction'),
-    FieldSchema.strict('text'),
-    FieldSchema.strict('iconProvider'),
-    FieldSchema.strict('translationProvider'),
+    FieldSchema.required('progress'),
+    FieldSchema.required('icon'),
+    FieldSchema.required('onAction'),
+    FieldSchema.required('text'),
+    FieldSchema.required('iconProvider'),
+    FieldSchema.required('translationProvider'),
     FieldSchema.defaultedBoolean('closeButton', true)
   ],
   apis: {

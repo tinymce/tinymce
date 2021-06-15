@@ -14,7 +14,7 @@ import * as PartType from '../../parts/PartType';
 import { EdgeActions, SliderDetail } from '../types/SliderTypes';
 
 const labelPart = PartType.optional({
-  schema: [ FieldSchema.strict('dom') ],
+  schema: [ FieldSchema.required('dom') ],
   name: 'label'
 });
 
@@ -92,7 +92,7 @@ const thumbPart = PartType.required<SliderDetail, { dom: OptionalDomSchema; even
 
 const spectrumPart = PartType.required({
   schema: [
-    FieldSchema.state('mouseIsDown', () => Cell(false))
+    FieldSchema.customField('mouseIsDown', () => Cell(false))
   ],
   name: 'spectrum',
   overrides: (detail: SliderDetail) => {

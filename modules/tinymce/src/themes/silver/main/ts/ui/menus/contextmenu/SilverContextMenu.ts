@@ -86,7 +86,7 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
       if (Type.isString(items)) {
         return addContextMenuGroup(acc, items.split(' '));
       } else if (items.length > 0) {
-        // TODO: Should we add a ValueSchema check here?
+        // TODO: Should we add a StructureSchema check here?
         const allItems = Arr.map(items, makeContextItem);
         return addContextMenuGroup(acc, allItems);
       } else {

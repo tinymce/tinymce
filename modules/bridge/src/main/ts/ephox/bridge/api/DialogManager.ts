@@ -1,4 +1,4 @@
-import { Processor, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { createDialog, Dialog, DialogData, DialogInstanceApi, DialogSpec } from '../components/dialog/Dialog';
 import { createUrlDialog, UrlDialog, UrlDialogInstanceApi, UrlDialogSpec } from '../components/dialog/UrlDialog';
 import { createDataValidator } from '../core/DialogData';
@@ -9,17 +9,17 @@ interface DialogManager {
   redial: <T extends DialogData>(structure: DialogSpec<T>) => DialogInit<T>;
 }
 
-export type DialogFactory<T extends DialogData> = (internalDialog: Dialog<T>, initialData: T, dataValidator: Processor) => DialogInstanceApi<T>;
+export type DialogFactory<T extends DialogData> = (internalDialog: Dialog<T>, initialData: T, dataValidator: StructureProcessor) => DialogInstanceApi<T>;
 export type UrlDialogFactory = (internalDialog: UrlDialog) => UrlDialogInstanceApi;
 
 export interface DialogInit<T extends DialogData> {
   internalDialog: Dialog<T>;
   initialData: T;
-  dataValidator: Processor;
+  dataValidator: StructureProcessor;
 }
 
 const extract = <T>(structure: DialogSpec<T>): DialogInit<T> => {
-  const internalDialog = ValueSchema.getOrDie(createDialog(structure));
+  const internalDialog = StructureSchema.getOrDie(createDialog(structure));
   const dataValidator = createDataValidator<T>(structure);
   // We used to validate data here, but it's done when loading the dialog in tinymce
   const initialData = structure.initialData;
@@ -37,7 +37,7 @@ const DialogManager: DialogManager = {
   },
 
   openUrl: (factory: UrlDialogFactory, structure: UrlDialogSpec): UrlDialogInstanceApi => {
-    const internalDialog = ValueSchema.getOrDie(createUrlDialog(structure));
+    const internalDialog = StructureSchema.getOrDie(createUrlDialog(structure));
     return factory(internalDialog);
   },
 

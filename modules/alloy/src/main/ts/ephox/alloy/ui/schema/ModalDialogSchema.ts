@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -11,8 +11,8 @@ import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import { ModalDialogDetail } from '../types/ModalDialogTypes';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  FieldSchema.strict('lazySink'),
+const schema = Fun.constant([
+  FieldSchema.required('lazySink'),
   FieldSchema.option('dragBlockClass'),
   FieldSchema.defaultedFunction('getBounds', Boxes.win),
   FieldSchema.defaulted('useTabstopAt', Fun.always),
@@ -51,25 +51,25 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   }),
 
   PartType.required<ModalDialogDetail>({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'title'
   }),
 
   PartType.required<ModalDialogDetail>({
     factory: basic,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'close'
   }),
 
   PartType.required<ModalDialogDetail>({
     factory: basic,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'body'
   }),
 
   PartType.optional<ModalDialogDetail>({
     factory: basic,
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'footer'
   }),
 

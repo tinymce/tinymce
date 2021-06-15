@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Arr, Optional, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
@@ -25,18 +25,18 @@ export interface CustomDetail<A> {
 
 const baseBehaviour = 'alloy.base.behaviour';
 
-const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => ValueSchema.asRaw('custom.definition', ValueSchema.objOf([
-  FieldSchema.field('dom', 'dom', FieldPresence.strict(), ValueSchema.objOf([
+const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => StructureSchema.asRaw('custom.definition', StructureSchema.objOf([
+  FieldSchema.field('dom', 'dom', FieldPresence.required(), StructureSchema.objOf([
     // Note, no children.
-    FieldSchema.strict('tag'),
+    FieldSchema.required('tag'),
     FieldSchema.defaulted('styles', {}),
     FieldSchema.defaulted('classes', []),
     FieldSchema.defaulted('attributes', {}),
     FieldSchema.option('value'),
     FieldSchema.option('innerHtml')
   ])),
-  FieldSchema.strict('components'),
-  FieldSchema.strict('uid'),
+  FieldSchema.required('components'),
+  FieldSchema.required('uid'),
 
   FieldSchema.defaulted('events', {}),
   FieldSchema.defaulted('apis', { }),
@@ -57,7 +57,7 @@ const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => Value
       [NativeEvents.mouseover()]: [ 'item-type-events', 'tooltipping' ],
       [SystemEvents.receive()]: [ 'receiving', 'reflecting', 'tooltipping' ]
     }),
-    ValueSchema.anyValue()
+    ValueType.anyValue()
   ),
 
   FieldSchema.option('domModification')

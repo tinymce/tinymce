@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
@@ -10,7 +10,7 @@ import { RawDomSchema } from '../../api/component/SpecTypes';
 import * as Fields from '../../data/Fields';
 import { InputDetail } from '../types/InputTypes';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
+const schema: () => FieldProcessor[] = Fun.constant([
   FieldSchema.option('data'),
   FieldSchema.defaulted('inputAttributes', { }),
   FieldSchema.defaulted('inputStyles', { }),

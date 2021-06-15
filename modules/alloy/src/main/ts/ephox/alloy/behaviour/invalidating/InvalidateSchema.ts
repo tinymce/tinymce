@@ -4,7 +4,7 @@ import { Optional } from '@ephox/katamari';
 import * as Fields from '../../data/Fields';
 
 export default [
-  FieldSchema.strict('invalidClass'),
+  FieldSchema.required('invalidClass'),
   FieldSchema.defaulted('getRoot', Optional.none),
 
   // TODO: Completely rework the notify API
@@ -19,7 +19,7 @@ export default [
   ]),
 
   FieldSchema.optionObjOf('validator', [
-    FieldSchema.strict('validate'),
+    FieldSchema.required('validate'),
     FieldSchema.defaulted('onEvent', 'input'),
     FieldSchema.defaulted('validateOnLoad', true)
   ])

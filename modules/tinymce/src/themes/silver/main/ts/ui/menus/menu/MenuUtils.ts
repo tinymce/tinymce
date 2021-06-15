@@ -6,7 +6,7 @@
  */
 
 import { ItemTypes, MenuTypes } from '@ephox/alloy';
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { InlineContent, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { components as menuComponents, dom as menuDom } from './MenuParts';
@@ -23,9 +23,9 @@ export interface PartialMenuSpec {
   items: MenuTypes.MenuSpec['items'];
 }
 
-export const handleError = (error: ValueSchema.SchemaError<any>): Optional<ItemTypes.ItemSpec> => {
+export const handleError = (error: StructureSchema.SchemaError<any>): Optional<ItemTypes.ItemSpec> => {
   // eslint-disable-next-line no-console
-  console.error(ValueSchema.formatError(error));
+  console.error(StructureSchema.formatError(error));
   // eslint-disable-next-line no-console
   console.log(error);
   return Optional.none();

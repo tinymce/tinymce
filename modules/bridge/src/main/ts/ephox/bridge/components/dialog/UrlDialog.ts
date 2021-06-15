@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 import { dialogButtonFields } from './Dialog';
 import { DialogFooterNormalButton, DialogFooterNormalButtonSpec } from './DialogFooterButton';
@@ -69,14 +69,14 @@ export interface UrlDialog {
   onMessage: UrlDialogMessageHandler;
 }
 
-export const urlDialogButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictStringEnum('type', [ 'cancel', 'custom' ]),
+export const urlDialogButtonSchema = StructureSchema.objOf([
+  FieldSchema.requiredStringEnum('type', [ 'cancel', 'custom' ]),
   ...dialogButtonFields
 ]);
 
-export const urlDialogSchema = ValueSchema.objOf([
-  FieldSchema.strictString('title'),
-  FieldSchema.strictString('url'),
+export const urlDialogSchema = StructureSchema.objOf([
+  FieldSchema.requiredString('title'),
+  FieldSchema.requiredString('url'),
   FieldSchema.optionNumber('height'),
   FieldSchema.optionNumber('width'),
   FieldSchema.optionArrayOf('buttons', urlDialogButtonSchema),
@@ -86,5 +86,5 @@ export const urlDialogSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onMessage', Fun.noop)
 ]);
 
-export const createUrlDialog = (spec: UrlDialogSpec): Result<UrlDialog, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw('dialog', urlDialogSchema, spec);
+export const createUrlDialog = (spec: UrlDialogSpec): Result<UrlDialog, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw('dialog', urlDialogSchema, spec);

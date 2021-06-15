@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { alertBannerSchema } from './AlertBanner';
 import { createBarFields } from './Bar';
@@ -38,24 +38,24 @@ export interface Panel {
 const createItemsField = (name: string) => FieldSchema.field(
   'items',
   'items',
-  FieldPresence.strict(),
-  ValueSchema.arrOf(ValueSchema.valueOf((v) => ValueSchema.asRaw(`Checking item of ${name}`, itemSchema, v).fold(
-    (sErr) => Result.error(ValueSchema.formatError(sErr)),
+  FieldPresence.required(),
+  StructureSchema.arrOf(StructureSchema.valueOf((v) => StructureSchema.asRaw(`Checking item of ${name}`, itemSchema, v).fold(
+    (sErr) => Result.error(StructureSchema.formatError(sErr)),
     (passValue) => Result.value(passValue)
   )))
 );
 
 // We're using a thunk here so we can refer to panel fields
-export const itemSchema = ValueSchema.valueThunkOf(
-  () => ValueSchema.chooseProcessor('type', {
+export const itemSchema = StructureSchema.valueThunkOf(
+  () => StructureSchema.chooseProcessor('type', {
     alertbanner: alertBannerSchema,
-    bar: ValueSchema.objOf(createBarFields(createItemsField('bar'))),
+    bar: StructureSchema.objOf(createBarFields(createItemsField('bar'))),
     button: buttonSchema,
     checkbox: checkboxSchema,
     colorinput: colorInputSchema,
     colorpicker: colorPickerSchema,
     dropzone: dropZoneSchema,
-    grid: ValueSchema.objOf(createGridFields(createItemsField('grid'))),
+    grid: StructureSchema.objOf(createGridFields(createItemsField('grid'))),
     iframe: iframeSchema,
     input: inputSchema,
     listbox: listBoxSchema,
@@ -67,19 +67,19 @@ export const itemSchema = ValueSchema.valueThunkOf(
     htmlpanel: htmlPanelSchema,
     imagetools: imageToolsSchema,
     collection: collectionSchema,
-    label: ValueSchema.objOf(createLabelFields(createItemsField('label'))),
+    label: StructureSchema.objOf(createLabelFields(createItemsField('label'))),
     table: tableSchema,
     panel: panelSchema
   })
 );
 
 const panelFields = [
-  FieldSchema.strictString('type'),
+  FieldSchema.requiredString('type'),
   FieldSchema.defaulted('classes', []),
-  FieldSchema.strictArrayOf('items', itemSchema)
+  FieldSchema.requiredArrayOf('items', itemSchema)
 ];
 
-export const panelSchema = ValueSchema.objOf(panelFields);
+export const panelSchema = StructureSchema.objOf(panelFields);
 
-export const createPanel = (spec: PanelSpec): Result<Panel, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<Panel>('panel', panelSchema, spec);
+export const createPanel = (spec: PanelSpec): Result<Panel, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<Panel>('panel', panelSchema, spec);

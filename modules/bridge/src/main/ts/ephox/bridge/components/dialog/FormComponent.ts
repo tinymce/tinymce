@@ -20,8 +20,8 @@ export interface FormComponentWithLabel extends FormComponent {
 }
 
 export const formComponentFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('name')
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('name')
 ];
 
 export const formComponentWithLabelFields = formComponentFields.concat([

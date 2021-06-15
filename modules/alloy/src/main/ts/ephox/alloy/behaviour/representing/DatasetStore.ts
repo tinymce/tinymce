@@ -35,9 +35,9 @@ const onUnload = (component: AlloyComponent, repConfig: DatasetRepresentingConfi
 
 export default [
   FieldSchema.option('initialValue'),
-  FieldSchema.strict('getFallbackEntry'),
-  FieldSchema.strict('getDataKey'),
-  FieldSchema.strict('setValue'),
+  FieldSchema.required('getFallbackEntry'),
+  FieldSchema.required('getDataKey'),
+  FieldSchema.required('setValue'),
   Fields.output('manager', {
     setValue,
     getValue,

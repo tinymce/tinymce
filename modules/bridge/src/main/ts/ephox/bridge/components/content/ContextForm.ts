@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 import { BaseToolbarButton, baseToolbarButtonFields, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
 import {
@@ -82,15 +82,15 @@ export interface ContextForm extends ContextBar {
 const contextButtonFields = baseToolbarButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformbutton'),
   FieldSchema.defaulted('primary', false),
-  FieldSchema.strictFunction('onAction'),
-  FieldSchema.state('original', Fun.identity)
+  FieldSchema.requiredFunction('onAction'),
+  FieldSchema.customField('original', Fun.identity)
 ]);
 
 const contextToggleButtonFields = baseToolbarToggleButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformbutton'),
   FieldSchema.defaulted('primary', false),
-  FieldSchema.strictFunction('onAction'),
-  FieldSchema.state('original', Fun.identity)
+  FieldSchema.requiredFunction('onAction'),
+  FieldSchema.customField('original', Fun.identity)
 ]);
 
 const launchButtonFields = baseToolbarButtonFields.concat([
@@ -101,21 +101,21 @@ const launchToggleButtonFields = baseToolbarToggleButtonFields.concat([
   FieldSchema.defaulted('type', 'contextformtogglebutton')
 ]);
 
-const toggleOrNormal = ValueSchema.choose('type', {
+const toggleOrNormal = StructureSchema.choose('type', {
   contextformbutton: contextButtonFields,
   contextformtogglebutton: contextToggleButtonFields
 });
 
-const contextFormSchema = ValueSchema.objOf([
+const contextFormSchema = StructureSchema.objOf([
   FieldSchema.defaulted('type', 'contextform'),
   FieldSchema.defaultedFunction('initValue', () => ''),
   FieldSchema.optionString('label'),
-  FieldSchema.strictArrayOf('commands', toggleOrNormal),
-  FieldSchema.optionOf('launch', ValueSchema.choose('type', {
+  FieldSchema.requiredArrayOf('commands', toggleOrNormal),
+  FieldSchema.optionOf('launch', StructureSchema.choose('type', {
     contextformbutton: launchButtonFields,
     contextformtogglebutton: launchToggleButtonFields
   }))
 ].concat(contextBarFields));
 
-export const createContextForm = (spec: ContextFormSpec): Result<ContextForm, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<ContextForm>('ContextForm', contextFormSchema, spec);
+export const createContextForm = (spec: ContextFormSpec): Result<ContextForm, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<ContextForm>('ContextForm', contextFormSchema, spec);

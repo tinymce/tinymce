@@ -1,11 +1,10 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyComponent, Behaviour, GuiFactory, ModalDialog, Positioning, TestHelpers } from '@ephox/alloy';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { ValueSchema } from '@ephox/boulder';
+import { ValueType } from '@ephox/boulder';
 import { DialogManager } from '@ephox/bridge';
 import { Fun, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
-
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
 import { WindowExtra } from 'tinymce/themes/silver/ui/window/SilverDialogCommon';
@@ -64,7 +63,7 @@ describe('phantom.tinymce.themes.silver.window.SilverDialogEventTest', () => {
       onCancel: store.adder('onCancel')
     },
     initialData: {},
-    dataValidator: ValueSchema.anyValue()
+    dataValidator: ValueType.anyValue()
   });
 
   let dialog: AlloyComponent;

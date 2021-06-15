@@ -53,7 +53,7 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
 
 export default [
   FieldSchema.option('getSelection'),
-  FieldSchema.strict('root'),
+  FieldSchema.required('root'),
   FieldSchema.option('bubble'),
   AnchorLayouts.schema(),
   FieldSchema.defaulted('overrides', { }),

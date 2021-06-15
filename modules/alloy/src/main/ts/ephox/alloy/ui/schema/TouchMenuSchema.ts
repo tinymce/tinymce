@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Height, SugarLocation, Width } from '@ephox/sugar';
 
@@ -30,9 +30,9 @@ const anchorAtCentre = (component: AlloyComponent) => {
 };
 
 // Similar to dropdown.
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  FieldSchema.strict('dom'),
-  FieldSchema.strict('fetch'),
+const schema = Fun.constant([
+  FieldSchema.required('dom'),
+  FieldSchema.required('fetch'),
   Fields.onHandler('onOpen'),
   Fields.onKeyboardHandler('onExecute'),
   Fields.onHandler('onTap'),
@@ -40,7 +40,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onHandler('onHoverOff'),
   Fields.onHandler('onMiss'),
   SketchBehaviours.field('touchmenuBehaviours', [ Toggling, Unselecting, Coupling ]),
-  FieldSchema.strict('toggleClass'),
+  FieldSchema.required('toggleClass'),
   FieldSchema.option('lazySink'),
   FieldSchema.option('role'),
   FieldSchema.defaulted('eventOrder', { }),
@@ -65,7 +65,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   }),
 
   PartType.external<TouchMenuDetail>({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'view'
   }),
 

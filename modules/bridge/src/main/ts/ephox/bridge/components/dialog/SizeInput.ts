@@ -1,4 +1,4 @@
-import { ValueSchema, FieldSchema } from '@ephox/boulder';
+import { StructureSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
@@ -19,12 +19,12 @@ const sizeInputFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
-export const sizeInputSchema = ValueSchema.objOf(sizeInputFields);
+export const sizeInputSchema = StructureSchema.objOf(sizeInputFields);
 
-export const sizeInputDataProcessor = ValueSchema.objOf([
-  FieldSchema.strictString('width'),
-  FieldSchema.strictString('height')
+export const sizeInputDataProcessor = StructureSchema.objOf([
+  FieldSchema.requiredString('width'),
+  FieldSchema.requiredString('height')
 ]);
 
-export const createSizeInput = (spec: SizeInputSpec): Result<SizeInput, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<SizeInput>('sizeinput', sizeInputSchema, spec);
+export const createSizeInput = (spec: SizeInputSpec): Result<SizeInput, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<SizeInput>('sizeinput', sizeInputSchema, spec);

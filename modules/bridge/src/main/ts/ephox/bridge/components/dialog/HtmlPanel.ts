@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 export interface HtmlPanelSpec {
@@ -15,12 +15,12 @@ export interface HtmlPanel {
 }
 
 const htmlPanelFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('html'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('html'),
   FieldSchema.defaultedStringEnum('presets', 'presentation', [ 'presentation', 'document' ])
 ];
 
-export const htmlPanelSchema = ValueSchema.objOf(htmlPanelFields);
+export const htmlPanelSchema = StructureSchema.objOf(htmlPanelFields);
 
-export const createHtmlPanel = (spec: HtmlPanelSpec): Result<HtmlPanel, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<HtmlPanel>('htmlpanel', htmlPanelSchema, spec);
+export const createHtmlPanel = (spec: HtmlPanelSpec): Result<HtmlPanel, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<HtmlPanel>('htmlpanel', htmlPanelSchema, spec);

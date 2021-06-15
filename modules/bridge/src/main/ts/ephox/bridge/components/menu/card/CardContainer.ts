@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { cardImageSchema } from './CardImage';
 import { CardItem, CardItemSpec } from './CardItem';
@@ -24,21 +24,21 @@ export interface CardContainer {
   valign: CardContainerValign;
 }
 
-export const itemSchema = ValueSchema.valueThunkOf(
-  () => ValueSchema.chooseProcessor('type', {
+export const itemSchema = StructureSchema.valueThunkOf(
+  () => StructureSchema.chooseProcessor('type', {
     cardimage: cardImageSchema,
     cardtext: cardTextSchema,
     cardcontainer: cardContainerSchema
   })
 );
 
-export const cardContainerSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+export const cardContainerSchema = StructureSchema.objOf([
+  FieldSchema.requiredString('type'),
   FieldSchema.defaultedString('direction', 'horizontal'),
   FieldSchema.defaultedString('align', 'left'),
   FieldSchema.defaultedString('valign', 'middle'),
-  FieldSchema.strictArrayOf('items', itemSchema)
+  FieldSchema.requiredArrayOf('items', itemSchema)
 ]);
 
-export const createCardContainer = (spec: CardContainerSpec): Result<CardContainer, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<CardContainer>('cardcontainer', cardContainerSchema, spec);
+export const createCardContainer = (spec: CardContainerSpec): Result<CardContainer, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<CardContainer>('cardcontainer', cardContainerSchema, spec);

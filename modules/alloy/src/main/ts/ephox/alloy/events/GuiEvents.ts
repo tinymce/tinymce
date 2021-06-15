@@ -1,4 +1,4 @@
-import { FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, EventArgs, EventUnbinder, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
@@ -21,9 +21,9 @@ export interface GuiEventSettings {
   stopBackspace?: boolean;
 }
 
-const settingsSchema: Processor = ValueSchema.objOfOnly([
+const settingsSchema = StructureSchema.objOfOnly([
   // triggerEvent(eventName, event)
-  FieldSchema.strictFunction('triggerEvent'),
+  FieldSchema.requiredFunction('triggerEvent'),
   FieldSchema.defaulted('stopBackspace', true)
 ]);
 
@@ -46,7 +46,7 @@ const bindBlur = (container: SugarElement, handler: (evt: EventArgs) => void): E
 };
 
 const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void } => {
-  const settings: GuiEventSettings = ValueSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
+  const settings: GuiEventSettings = StructureSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
 
   const pointerEvents = [
     'touchstart',
