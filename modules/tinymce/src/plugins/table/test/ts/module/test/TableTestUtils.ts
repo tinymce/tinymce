@@ -19,6 +19,7 @@ export interface WidthData {
 }
 
 const advSelectors = {
+  borderwidth: 'label.tox-label:contains(Border width) + input.tox-textfield',
   borderstyle: 'label.tox-label:contains(Border style) + div.tox-listboxfield > .tox-listbox',
   bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
   backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
