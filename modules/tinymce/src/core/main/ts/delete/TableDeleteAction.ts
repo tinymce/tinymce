@@ -102,24 +102,24 @@ const getCellRng = (rng: Range, isRoot: IsRootFn): Optional<TableCellRng> => {
   return Optionals.lift2(startCell, endCell, tableCellRng);
 };
 
-const getCellRangeFromStartTable = (startCell: SugarElement<HTMLTableCellElement>, isRoot: IsRootFn): Optional<TableCellRng> =>
+const getCellRangeFromStartTable = (isRoot: IsRootFn) => (startCell: SugarElement<HTMLTableCellElement>): Optional<TableCellRng> =>
   TableCellSelection.getClosestTable(startCell, isRoot).bind((table) =>
     Arr.last(TableDeleteUtils.getTableCells(table)).map((endCell) => tableCellRng(startCell, endCell))
   );
 
-const getCellRangeFromEndTable = (endCell: SugarElement<HTMLTableCellElement>, isRoot: IsRootFn): Optional<TableCellRng> =>
+const getCellRangeFromEndTable = (isRoot: IsRootFn) => (endCell: SugarElement<HTMLTableCellElement>): Optional<TableCellRng> =>
   TableCellSelection.getClosestTable(endCell, isRoot).bind((table) =>
     Arr.head(TableDeleteUtils.getTableCells(table)).map((startCell) => tableCellRng(startCell, endCell))
   );
 
-const getTableSelectionFromCellRng = (cellRng: TableCellRng, isRoot: IsRootFn) =>
+const getTableSelectionFromCellRng = (isRoot: IsRootFn) => (cellRng: TableCellRng) =>
   getTableFromCellRng(cellRng, isRoot).map((table) => tableSelection(cellRng, table, TableDeleteUtils.getTableCells(table)));
 
 const getTableSelections = (cellRng: Optional<TableCellRng>, selectionDetails: SelectionDetails, rng: Range, isRoot: IsRootFn): Optional<TableSelections> => {
   if (rng.collapsed || !cellRng.forall(isExpandedCellRng)) {
     return Optional.none();
   } else if (selectionDetails.isSameTable) {
-    const sameTableSelection = cellRng.bind((cRng) => getTableSelectionFromCellRng(cRng, isRoot));
+    const sameTableSelection = cellRng.bind(getTableSelectionFromCellRng(isRoot));
     return Optional.some({
       start: sameTableSelection,
       end: sameTableSelection
@@ -128,8 +128,12 @@ const getTableSelections = (cellRng: Optional<TableCellRng>, selectionDetails: S
     // Covers partial table selection (either start or end will have a tableSelection) and multitable selection (both start and end will have a tableSelection)
     const startCell = getClosestCell(rng.startContainer, isRoot);
     const endCell = getClosestCell(rng.endContainer, isRoot);
-    const startTableSelection = startCell.bind((start) => getCellRangeFromStartTable(start, isRoot)).bind((cRng) => getTableSelectionFromCellRng(cRng, isRoot));
-    const endTableSelection = endCell.bind((end) => getCellRangeFromEndTable(end, isRoot)).bind((cRng) => getTableSelectionFromCellRng(cRng, isRoot));
+    const startTableSelection = startCell
+      .bind(getCellRangeFromStartTable(isRoot))
+      .bind(getTableSelectionFromCellRng(isRoot));
+    const endTableSelection = endCell
+      .bind(getCellRangeFromEndTable(isRoot))
+      .bind(getTableSelectionFromCellRng(isRoot));
     return Optional.some({
       start: startTableSelection,
       end: endTableSelection
