@@ -260,12 +260,15 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     // ensures all toolbars returned by ContextToolbarLookup have the same position.
     // And everything else that gets toolbars from elsewhere only returns maximum 1 toolbar
     const anchor = getAnchor(toolbarApi[0].position, sElem);
-
     lastAnchor.set(Optional.some(anchor));
-    lastElement.set(sElem);
+
     const contextBarEle = contextbar.element;
     Css.remove(contextBarEle, 'display');
     InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), () => Optional.some(getBounds()));
+
+    // IMPORTANT: This must be stored after the initial render, otherwise the lookup of the last element in the
+    // anchor placement will be incorrect as it'll reuse the new element as the anchor point.
+    lastElement.set(sElem);
 
     // It's possible we may have launched offscreen, if so then hide
     if (shouldContextToolbarHide()) {

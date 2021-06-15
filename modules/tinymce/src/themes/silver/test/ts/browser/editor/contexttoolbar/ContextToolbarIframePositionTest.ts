@@ -247,4 +247,23 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     scrollTo(editor, 0, 0);
     await pAssertPosition('bottom', 111);
   });
+
+  it('TINY-7545: Moving from different anchor points should reset the placement', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<p style="padding-top: 200px"></p>' +
+      '<div style="height: 25px;"></div>' +
+      `<p><img src="${getGreenImageDataUrl()}" style="height: 500px; width: 100px"></p>` +
+      '<p style="padding-top: 200px"></p>'
+    );
+
+    // Select the div and make sure the toolbar shows to the right
+    TinySelections.setCursor(editor, [ 1, 0 ], 0);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear', SugarBody.body(), '.tox-pop.tox-pop--left');
+
+    // Scroll to and select the image, then make sure the toolbar appears at the top
+    scrollTo(editor, 0, 400);
+    TinySelections.select(editor, 'img', []);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), '.tox-pop.tox-pop--top');
+  });
 });
