@@ -52,35 +52,35 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
     assert.lengthOf(events, classes.length, 'Command executed successfully.');
   };
 
-  const pPerformToggleClassSetup = async (classList: string[], trueMarked: number, falseMarked: number, toolbar: boolean) => {
+  const pPerformToggleClassSetup = async (classList: string[], trueMarked: number, falseMarked: number, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
     const editor = hook.editor();
     const sugarContainer = SugarBody.body();
 
     setEditorContentTableAndSelection(editor, 1, 1);
-    await pAssertNoCheckmarksInMenu(editor, 'Table styles', 2, sugarContainer, toolbar);
+    await pAssertNoCheckmarksInMenu(editor, 'Table styles', 2, sugarContainer, useMenuOrToolbar);
     toggleClasses(editor, classList);
 
     const expected = {
-      '.tox-menu': toolbar ? 1 : 2,
+      '.tox-menu': useMenuOrToolbar === 'toolbar' ? 1 : 2,
       '.tox-collection__item[aria-checked="true"]': trueMarked,
       '.tox-collection__item[aria-checked="false"]': falseMarked
     };
-    await pAssertMenuPresence(editor, `There should be ${trueMarked} checkmark(s)`, 'Table styles', expected, sugarContainer, toolbar);
+    await pAssertMenuPresence(editor, `There should be ${trueMarked} checkmark(s)`, 'Table styles', expected, sugarContainer, useMenuOrToolbar);
   };
 
   it('TINY-7476: Ensure that the checkmark appears for a single class in toolbar', async () => {
-    await pPerformToggleClassSetup([ 'a' ], 1, 1, true);
+    await pPerformToggleClassSetup([ 'a' ], 1, 1, 'toolbar');
   });
 
   it('TINY-7476: Ensure that the checkmark appears for a single class in menu', async () => {
-    await pPerformToggleClassSetup([ 'a' ], 1, 1, false);
+    await pPerformToggleClassSetup([ 'a' ], 1, 1, 'menuitem');
   });
 
   it('TINY-7476: Ensure that the checkmark appears for two classes in toolbar', async () => {
-    await pPerformToggleClassSetup([ 'a', 'b' ], 2, 0, true);
+    await pPerformToggleClassSetup([ 'a', 'b' ], 2, 0, 'toolbar');
   });
 
   it('TINY-7476: Ensure that the checkmark appears for two classes in menu', async () => {
-    await pPerformToggleClassSetup([ 'a', 'b' ], 2, 0, false);
+    await pPerformToggleClassSetup([ 'a', 'b' ], 2, 0, 'menuitem');
   });
 });
