@@ -99,6 +99,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
             const caption = SugarElement.fromTag('caption');
             Insert.append(caption, SugarElement.fromText('Caption'));
             Insert.appendAt(table, caption, 0);
+            editor.selection.setCursorLocation(caption.dom, 0);
           },
           (caption) => {
             if (SugarNode.isTag('caption')(cellOrCaption)) {
