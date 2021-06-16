@@ -94,7 +94,7 @@ const pClickOnMenuItem = async (editor: Editor, title: string) => {
 };
 
 const pAssertMenuPresence = async (editor: Editor, label: string, menuTitle: string, expected: Record<string, number>, container: SugarElement<HTMLElement>, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
-  if (useMenuOrToolbar) {
+  if (useMenuOrToolbar === 'toolbar') {
     clickOnButton(editor, menuTitle);
   } else {
     await pClickOnMenuItem(editor, menuTitle);
@@ -116,7 +116,7 @@ const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: 
 };
 
 const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: Optional<string>, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
-  if (useMenuOrToolbar) {
+  if (useMenuOrToolbar === 'toolbar') {
     clickOnButton(editor, menuTitle);
   } else {
     await pClickOnMenuItem(editor, menuTitle);
