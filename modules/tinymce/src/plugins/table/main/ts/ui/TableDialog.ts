@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Type, Unicode } from '@ephox/katamari';
+import { Fun, Obj, Type } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as InsertTable from '../actions/InsertTable';
@@ -116,14 +115,8 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement, oldData: 
       // Toggle caption on/off
       captionElm = dom.select('caption', tableElm)[0];
 
-      if (captionElm && !data.caption) {
-        dom.remove(captionElm);
-      }
-
-      if (!captionElm && data.caption) {
-        captionElm = dom.create('caption');
-        captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : Unicode.nbsp;
-        tableElm.insertBefore(captionElm, tableElm.firstChild);
+      if (captionElm && !data.caption || !captionElm && data.caption) {
+        editor.execCommand('mceTableToggleCaption');
       }
 
       if (data.align === '') {

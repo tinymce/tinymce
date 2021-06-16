@@ -239,6 +239,13 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     ),
     onSetup: selectionTargets.onSetupCellOrRow
   });
+
+  editor.ui.registry.addToggleButton('tablecaption', {
+    tooltip: 'Table caption',
+    onAction: cmd('mceTableToggleCaption'),
+    icon: 'table-caption',
+    onSetup: selectionTargets.onSetupTableWithCaption
+  });
 };
 
 const addToolbars = (editor: Editor) => {

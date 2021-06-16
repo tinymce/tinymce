@@ -11,6 +11,10 @@ describe('browser.tinymce.plugins.table.ui.TableBorderStyleTest', () => {
     indent: false,
     toolbar: 'tablecellborderstyle',
     base_url: '/project/tinymce/js/tinymce',
+    menu: {
+      table: { title: 'Table', items: 'tablecellborderstyle' },
+    },
+    menubar: 'table',
     table_border_styles: [
       {
         text: 'Solid',
