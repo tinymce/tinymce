@@ -8,7 +8,7 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
-import { Insert, Remove, Replication, SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
+import { Insert, Remove, Replication, SelectorFind, Selectors, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -101,10 +101,12 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
             Insert.appendAt(table, caption, 0);
           },
           (caption) => {
+            if (SugarNode.isTag('caption')(cellOrCaption)) {
+              Selectors.one('td', table).each((td) =>
+                editor.selection.setCursorLocation(td.dom, 0)
+              );
+            }
             Remove.remove(caption);
-            Selectors.one('td', table).each((td) =>
-              editor.selection.setCursorLocation(td.dom, 0)
-            );
           }
         );
 
