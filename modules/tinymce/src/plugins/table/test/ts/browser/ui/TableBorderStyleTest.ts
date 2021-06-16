@@ -33,6 +33,7 @@ describe('browser.tinymce.plugins.table.ui.TableBorderStyleTest', () => {
     await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
       menuTitle: 'Border style',
       subMenuTitle: 'Solid',
+      subMenuTitleUndo: 'None',
       checkMarkEntries: 2,
       rows: 1,
       columns: 1,
@@ -44,6 +45,7 @@ describe('browser.tinymce.plugins.table.ui.TableBorderStyleTest', () => {
     await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
       menuTitle: 'Border style',
       subMenuTitle: 'Solid',
+      subMenuTitleUndo: 'None',
       checkMarkEntries: 2,
       rows: 2,
       columns: 2,

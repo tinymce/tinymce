@@ -6,12 +6,11 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-
-import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableClassList, getToolbar } from '../api/Settings';
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableCellBackgroundColors, getTableCellBorderColors, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
-import { applyTableCellStyle, filterNoneItem, generateItemsCallback } from './UiUtils';
+import { applyTableCellStyle, filterNoneItem, generateColorSelector, generateItemsCallback } from './UiUtils';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -246,6 +245,22 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     onAction: cmd('mceTableToggleCaption'),
     icon: 'table-caption',
     onSetup: selectionTargets.onSetupTableWithCaption
+  });
+
+  const tableCellBackgroundColors = getTableCellBackgroundColors(editor);
+  editor.ui.registry.addMenuButton('tablecellbackgroundcolor', {
+    icon: 'cell-background-color',
+    tooltip: 'Background color',
+    fetch: (callback) => callback(generateColorSelector(editor, tableCellBackgroundColors, 'background-color')),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  const tableCellBorderColors = getTableCellBorderColors(editor);
+  editor.ui.registry.addMenuButton('tablecellbordercolor', {
+    icon: 'cell-border-color',
+    tooltip: 'Border color',
+    fetch: (callback) => callback(generateColorSelector(editor, tableCellBorderColors, 'border-color')),
+    onSetup: selectionTargets.onSetupCellOrRow
   });
 };
 

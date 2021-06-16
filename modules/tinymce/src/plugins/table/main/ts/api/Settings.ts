@@ -1,3 +1,4 @@
+import { Transformations } from '@ephox/acid';
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -8,6 +9,7 @@
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 
 export interface StringMap {
   [key: string]: string;
@@ -115,6 +117,24 @@ const hasObjectResizing = (editor: Editor): boolean => {
   return Type.isString(objectResizing) ? objectResizing === 'table' : objectResizing;
 };
 
+const generateColorMenuItems = (editor: Editor, setting: string): Menu.ChoiceMenuItemSpec[] => {
+  const colorMap: ClassList = editor.getParam(setting, []);
+
+  return Arr.map(colorMap, (entry): Menu.ChoiceMenuItemSpec => ({
+    text: entry.title,
+    value: '#' + Transformations.anyToHex(entry.value).value,
+    type: 'choiceitem'
+  }));
+};
+
+const getTableCellBackgroundColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
+  return generateColorMenuItems(editor, 'table_cell_background_color_map');
+};
+
+const getTableCellBorderColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
+  return generateColorMenuItems(editor, 'table_cell_border_color_map');
+};
+
 export {
   getDefaultAttributes,
   getDefaultStyles,
@@ -141,5 +161,7 @@ export {
   isResizeTableColumnResizing,
   getTableBorderWidths,
   getTableBorderStyles,
+  getTableCellBackgroundColors,
+  getTableCellBorderColors,
   useColumnGroup
 };
