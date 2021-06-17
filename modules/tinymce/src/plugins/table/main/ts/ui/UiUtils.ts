@@ -66,13 +66,11 @@ const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpe
     fancytype: 'colorswatch',
     initData: {
       colors: colorList.length > 0 ? colorList : undefined,
-      ignoreCustomColors: true
+      disallowCustomColors: true
     },
     onAction: (data) => {
       fixColorValue(data.value, (value: string) => {
-        editor.execCommand('mceTableApplyCellStyle', false, {
-          [style]: value
-        });
+        editor.execCommand('mceTableApplyCellStyle', false, { [style]: value });
       });
     }
   }
