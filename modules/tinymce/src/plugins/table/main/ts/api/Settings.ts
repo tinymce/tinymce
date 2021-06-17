@@ -1,4 +1,3 @@
-import { Transformations } from '@ephox/acid';
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -6,6 +5,7 @@ import { Transformations } from '@ephox/acid';
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -118,7 +118,7 @@ const hasObjectResizing = (editor: Editor): boolean => {
 };
 
 const generateColorMenuItems = (editor: Editor, setting: string): Menu.ChoiceMenuItemSpec[] => {
-  const colorMap: ClassList = editor.getParam(setting, []);
+  const colorMap: ClassList = editor.getParam(setting, [], 'array');
 
   return Arr.map(colorMap, (entry): Menu.ChoiceMenuItemSpec => ({
     text: entry.title,
@@ -127,13 +127,11 @@ const generateColorMenuItems = (editor: Editor, setting: string): Menu.ChoiceMen
   }));
 };
 
-const getTableCellBackgroundColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
-  return generateColorMenuItems(editor, 'table_cell_background_color_map');
-};
+const getTableCellBackgroundColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] =>
+  generateColorMenuItems(editor, 'table_cell_background_color_map');
 
-const getTableCellBorderColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
-  return generateColorMenuItems(editor, 'table_cell_border_color_map');
-};
+const getTableCellBorderColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] =>
+  generateColorMenuItems(editor, 'table_cell_border_color_map');
 
 export {
   getDefaultAttributes,
