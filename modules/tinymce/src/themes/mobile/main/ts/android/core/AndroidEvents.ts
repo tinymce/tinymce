@@ -9,8 +9,8 @@ import { Toggling } from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, DomEvent, Focus, SimRange, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
-import { PlatformEditor } from '../../ios/core/PlatformEditor';
 
+import { PlatformEditor } from '../../ios/core/PlatformEditor';
 import * as TappingEvent from '../../util/TappingEvent';
 
 const isAndroid6 = PlatformDetection.detect().os.version.major >= 6;

@@ -1,4 +1,5 @@
 import { Arr, Fun, Global, Obj } from '@ephox/katamari';
+
 import { Editor } from '../alien/EditorTypes';
 
 const isSilver = (): boolean => {

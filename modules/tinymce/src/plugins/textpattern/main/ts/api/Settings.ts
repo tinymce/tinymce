@@ -6,7 +6,9 @@
  */
 
 import { Arr, Global, Results, Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { PatternSet } from '../core/PatternTypes';
 import { createPatternSet, normalizePattern } from './Pattern';
 

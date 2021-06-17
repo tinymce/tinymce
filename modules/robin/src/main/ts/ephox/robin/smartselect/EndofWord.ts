@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Optional, Unicode } from '@ephox/katamari';
+
 import { WordRange } from '../data/WordRange';
 import * as Clustering from '../words/Clustering';
 import { WordDecisionItem } from '../words/WordDecision';

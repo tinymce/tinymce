@@ -1,4 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
+
 import * as Assertion from 'ephox/imagetools/test/Assertion';
 import * as Canvas from 'ephox/imagetools/util/Canvas';
 

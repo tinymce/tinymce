@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
 type ElementConstructor = typeof SugarElement.fromDom;

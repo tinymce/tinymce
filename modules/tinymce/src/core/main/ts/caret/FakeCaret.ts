@@ -8,6 +8,7 @@
 import { Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
+
 import DomQuery from '../api/dom/DomQuery';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';

@@ -7,6 +7,7 @@
 
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import { Content, ContentFormat, GetContentArgs } from '../content/ContentTypes';

@@ -1,4 +1,5 @@
 import { Fun, Obj, Result } from '@ephox/katamari';
+
 import { SimpleResult } from '../alien/SimpleResult';
 import { choose as chooseProcessor } from '../core/ChoiceProcessor';
 import { FieldProcessor } from '../core/FieldProcessor';

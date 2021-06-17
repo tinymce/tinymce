@@ -1,5 +1,6 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
+
 import { BaseMenuButton, BaseMenuButtonSpec, baseMenuButtonFields, BaseMenuButtonInstanceApi, MenuButtonItemTypes } from '../../core/MenuButton';
 
 export type ToolbarMenuButtonItemTypes = MenuButtonItemTypes;

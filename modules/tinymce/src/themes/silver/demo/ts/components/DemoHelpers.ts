@@ -1,6 +1,7 @@
 import { Attachment, Behaviour, Channels, Debugging, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
 import { Fun, Future, Id, Optional, Result } from '@ephox/katamari';
 import { Class, SugarBody } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';

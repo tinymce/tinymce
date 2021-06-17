@@ -6,6 +6,7 @@
  */
 
 import { Arr, Type } from '@ephox/katamari';
+
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 const storageName = 'tinymce-custom-colors';

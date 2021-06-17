@@ -1,5 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { SugarElement, TextContent } from '@ephox/sugar';
+
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
 export default (): SimpleGenerators => {

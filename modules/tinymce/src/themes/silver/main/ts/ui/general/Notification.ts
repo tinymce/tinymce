@@ -11,7 +11,9 @@ import {
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Optional } from '@ephox/katamari';
+
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
+
 import { get as getIcon, getFirst, IconProvider } from '../icons/Icons';
 
 export interface NotificationSketchApis {

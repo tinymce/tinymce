@@ -2,6 +2,7 @@ import { FocusTools } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarDocument, SugarElement } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Blocking } from 'ephox/alloy/api/behaviour/Blocking';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';

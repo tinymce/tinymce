@@ -7,6 +7,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';

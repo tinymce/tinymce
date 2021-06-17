@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import * as UnicodeData from './UnicodeData';
 
 const SETS = UnicodeData.SETS;

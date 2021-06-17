@@ -6,6 +6,7 @@
  */
 
 import { Obj, Optional } from '@ephox/katamari';
+
 import { Decorator } from './Wrapping';
 
 export interface AnnotatorSettings {

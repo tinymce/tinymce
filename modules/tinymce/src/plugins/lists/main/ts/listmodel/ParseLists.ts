@@ -7,6 +7,7 @@
 
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
+
 import { createEntry, Entry } from './Entry';
 import { isList } from './Util';
 

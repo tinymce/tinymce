@@ -6,6 +6,7 @@ import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.CaretContainerTest', () => {

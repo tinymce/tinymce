@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell, Optional } from '@ephox/katamari';
 import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+
 import { Chain } from 'ephox/agar/api/Chain';
 import * as ChainSequence from 'ephox/agar/api/ChainSequence';
 import { cCopy, cCut, sPasteDataTransfer, sPasteFiles, sPasteItems } from 'ephox/agar/api/Clipboard';

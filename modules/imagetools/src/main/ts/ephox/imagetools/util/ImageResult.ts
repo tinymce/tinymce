@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import * as Canvas from './Canvas';
 import * as Conversions from './Conversions';
 import { Promise } from './Promise';

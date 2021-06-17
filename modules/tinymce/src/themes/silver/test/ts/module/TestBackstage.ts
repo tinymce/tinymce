@@ -1,8 +1,10 @@
 import { AlloyComponent, HotspotAnchorSpec } from '@ephox/alloy';
 import { Cell, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
+
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+
 import TestProviders from './TestProviders';
 
 export default (sink?: AlloyComponent): UiFactoryBackstage => {

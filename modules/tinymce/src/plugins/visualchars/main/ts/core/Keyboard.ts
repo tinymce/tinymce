@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+
 import * as Settings from '../api/Settings';
 import * as VisualChars from './VisualChars';
 

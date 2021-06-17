@@ -6,6 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Commands from './api/Commands';
 import * as Keyboard from './core/Keyboard';
 import * as Buttons from './ui/Buttons';

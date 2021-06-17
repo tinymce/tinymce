@@ -1,5 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { EventArgs, Situ, SugarElement } from '@ephox/sugar';
+
 import * as KeySelection from '../keyboard/KeySelection';
 import * as VerticalMovement from '../keyboard/VerticalMovement';
 import { MouseSelection } from '../mouse/MouseSelection';

@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+
 import * as Settings from '../api/Settings';
 
 const pageBreakClass = 'mce-pagebreak';

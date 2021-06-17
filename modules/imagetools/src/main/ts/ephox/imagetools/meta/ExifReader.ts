@@ -1,4 +1,5 @@
 import { Arr, Optional, Result, Type } from '@ephox/katamari';
+
 import { BinaryReader } from './BinaryReader';
 import { readByte, readList, readLong, readShort, readSignedLong, readString } from './BinaryReaderUtils';
 

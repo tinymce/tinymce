@@ -6,8 +6,10 @@
  */
 
 import { Arr, Optional } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TextSeeker from 'tinymce/core/api/dom/TextSeeker';
+
 import * as Spot from '../utils/Spot';
 import { isText } from '../utils/Utils';
 

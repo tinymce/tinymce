@@ -6,8 +6,10 @@
  */
 
 import { Arr, Fun, Id, Merger, Obj, Optional, Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
+
 import { FormatItem, FormatterFormatItem, PreviewSpec, SubMenuFormatItem } from '../BespokeSelect';
 
 export type IsSelectedForType = (format: string) => (currentValue: Optional<any>) => boolean;

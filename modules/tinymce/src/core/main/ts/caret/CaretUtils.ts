@@ -7,6 +7,7 @@
 
 import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';

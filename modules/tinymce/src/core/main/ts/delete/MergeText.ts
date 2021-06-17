@@ -7,6 +7,7 @@
 
 import { Arr, Strings, Unicode } from '@ephox/katamari';
 import { PredicateFind, Remove, SugarElement } from '@ephox/sugar';
+
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as Nbsps from '../keyboard/Nbsps';

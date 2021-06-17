@@ -6,8 +6,10 @@
  */
 
 import { Singleton } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
+
 import { FormatterFormatItem } from '../BespokeSelect';
 
 const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {

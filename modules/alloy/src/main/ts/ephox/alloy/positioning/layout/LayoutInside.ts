@@ -1,4 +1,5 @@
 import { SugarElement } from '@ephox/sugar';
+
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 import * as Direction from './Direction';

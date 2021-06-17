@@ -1,5 +1,6 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import * as Structs from '../api/Structs';
 import * as DetailsList from '../model/DetailsList';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';

@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Dialog from './Dialog';
 
 const register = (editor: Editor) => {

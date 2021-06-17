@@ -1,4 +1,5 @@
 import { Obj, Optional } from '@ephox/katamari';
+
 import * as Canvas from '../util/Canvas';
 import * as ImageSize from '../util/ImageSize';
 import { Promise } from '../util/Promise';

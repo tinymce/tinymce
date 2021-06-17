@@ -7,6 +7,7 @@
 
 import { Fun, Optional, Unicode } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as ElementType from '../dom/ElementType';

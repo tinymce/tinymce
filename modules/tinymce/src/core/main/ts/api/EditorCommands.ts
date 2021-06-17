@@ -6,6 +6,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
 import * as IndentOutdent from '../commands/IndentOutdent';

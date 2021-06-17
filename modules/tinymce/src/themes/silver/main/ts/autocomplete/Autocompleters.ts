@@ -8,6 +8,7 @@
 import { StructureSchema } from '@ephox/boulder';
 import { InlineContent } from '@ephox/bridge';
 import { Arr, Fun, Obj, Unique } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 export interface AutocompleterDatabase {

@@ -9,6 +9,7 @@ import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox
 import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Fun, Obj, Optional, Regex } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';

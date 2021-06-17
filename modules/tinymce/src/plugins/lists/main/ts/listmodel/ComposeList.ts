@@ -7,6 +7,7 @@
 
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Insert, InsertAll, Replication, SugarElement, SugarNode } from '@ephox/sugar';
+
 import { Entry } from './Entry';
 import { ListType } from './Util';
 

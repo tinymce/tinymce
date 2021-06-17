@@ -4,6 +4,7 @@ import {
   Attribute, Compare, Css, Insert, PredicateFilter, Remove, SelectorFilter, SugarBody, SugarNode, SugarText, Traverse, Truncate
 } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
+
 import * as Arbitraries from 'ephox/agar/api/Arbitraries';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import * as Generators from 'ephox/agar/api/Generators';

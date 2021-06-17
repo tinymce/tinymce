@@ -7,7 +7,9 @@
 
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { InsertAll, Remove, SugarElement, SugarFragment } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { fireListEvent } from '../api/Events';
 import { ListAction } from '../core/ListAction';
 import * as Selection from '../core/Selection';

@@ -9,9 +9,11 @@ import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, Ma
 import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SimSelection, WindowSelection } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
 import { UiFactoryBackstage } from '../../../../backstage/Backstage';
 import { hideContextToolbarEvent } from '../../../context/ContextEditorEvents';
 import { getContextToolbarBounds } from '../../../context/ContextToolbarBounds';

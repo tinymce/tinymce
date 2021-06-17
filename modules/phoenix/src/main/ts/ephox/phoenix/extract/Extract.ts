@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
+
 import * as Spot from '../api/data/Spot';
 import { TypedItem } from '../api/data/TypedItem';
 import { SpotPoint } from '../api/data/Types';

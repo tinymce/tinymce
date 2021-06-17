@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { alignSelectMenu } from './complex/AlignSelect';
 import { fontSelectMenu } from './complex/FontSelect';

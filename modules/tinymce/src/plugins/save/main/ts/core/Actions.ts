@@ -7,6 +7,7 @@
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 
 const displayErrorMessage = (editor, message) => {

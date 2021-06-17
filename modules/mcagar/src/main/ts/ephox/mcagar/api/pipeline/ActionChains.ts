@@ -1,6 +1,7 @@
 import { Chain, FocusTools, Keyboard, NamedChain } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { Editor } from '../../alien/EditorTypes';
 
 export interface ActionChains {

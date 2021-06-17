@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import { WordScope } from '../data/WordScope';
 
 const quoteList = [ `'`, '\u2018', '\u2019' ];

@@ -1,5 +1,6 @@
 import { StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
+
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
 export interface DropZoneSpec extends FormComponentWithLabelSpec {

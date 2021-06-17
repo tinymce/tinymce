@@ -2,6 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Html, SugarElement, SugarNode } from '@ephox/sugar';
+
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as ModificationOperations from 'ephox/snooker/operate/ModificationOperations';

@@ -7,8 +7,10 @@
 
 import { Fun } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+
 import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableClassList, hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';

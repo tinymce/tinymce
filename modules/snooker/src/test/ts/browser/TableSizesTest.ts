@@ -1,8 +1,10 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { Css, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+
 import * as Sizes from 'ephox/snooker/api/Sizes';
 import { TableSize } from 'ephox/snooker/api/TableSize';
+
 import { addStyles, readHeight, readWidth } from '../module/ephox/snooker/test/SizeUtils';
 
 UnitTest.test('Table Sizes Test (fusebox)', () => {

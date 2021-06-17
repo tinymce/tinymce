@@ -1,5 +1,6 @@
 import { assert } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as Fitment from 'ephox/snooker/model/Fitment';

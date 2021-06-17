@@ -6,6 +6,7 @@
  */
 
 import { Obj } from '@ephox/katamari';
+
 import Entities from 'tinymce/core/api/html/Entities';
 import Tools from 'tinymce/core/api/util/Tools';
 

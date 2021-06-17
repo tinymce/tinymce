@@ -5,6 +5,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {

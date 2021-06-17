@@ -6,10 +6,12 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import VK from 'tinymce/core/api/util/VK';
+
 import { PatternSet } from '../core/PatternTypes';
 import * as KeyHandler from './KeyHandler';
 

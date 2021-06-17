@@ -6,6 +6,7 @@
  */
 
 import { Arr, Cell, Obj } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import { EditorModeApi } from '../api/Mode';

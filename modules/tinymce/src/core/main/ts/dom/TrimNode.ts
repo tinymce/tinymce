@@ -7,6 +7,7 @@
 
 import { Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as ElementType from './ElementType';

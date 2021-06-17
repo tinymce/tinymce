@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
+
 import * as Namespace from 'ephox/katamari/api/Namespace';
 
 describe('atomic.katamari.api.data.NamespaceTest', () => {

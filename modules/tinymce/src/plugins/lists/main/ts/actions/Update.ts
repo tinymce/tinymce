@@ -6,7 +6,9 @@
  */
 
 import { Obj, Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { getParentList } from '../core/Selection';
 
 interface ListUpdate {

@@ -10,7 +10,9 @@ import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, ResizeBehaviour, ResizeWire, RunOperation, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Events from '../api/Events';
 import { getCloneElements, isResizeTableColumnResizing } from '../api/Settings';
 import { getRowType, switchCellsType, switchSectionType } from '../core/TableSections';

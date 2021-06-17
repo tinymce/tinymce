@@ -17,6 +17,7 @@ import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 import I18n from 'tinymce/core/api/util/I18n';
 import { ToolbarGroupSetting } from 'tinymce/themes/silver/api/Settings';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+
 import * as ReadOnly from '../../../ReadOnly';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';

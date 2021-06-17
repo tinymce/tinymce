@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
+
 import * as Settings from '../api/Settings';
 import * as Toc from '../core/Toc';
 

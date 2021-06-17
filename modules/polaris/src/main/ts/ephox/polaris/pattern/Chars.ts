@@ -1,4 +1,5 @@
 import { Fun, Unicode } from '@ephox/katamari';
+
 import { punctuationStr } from '../words/UnicodeData';
 
 // \w is a word character

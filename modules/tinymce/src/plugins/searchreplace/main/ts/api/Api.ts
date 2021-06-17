@@ -6,7 +6,9 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Actions from '../core/Actions';
 
 const get = (editor: Editor, currentState: Cell<Actions.SearchState>) => {

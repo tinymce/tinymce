@@ -1,6 +1,7 @@
 import { assert } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableMerge from 'ephox/snooker/model/TableMerge';

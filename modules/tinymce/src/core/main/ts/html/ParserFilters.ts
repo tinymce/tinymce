@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj, Optional, Unicode } from '@ephox/katamari';
+
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';

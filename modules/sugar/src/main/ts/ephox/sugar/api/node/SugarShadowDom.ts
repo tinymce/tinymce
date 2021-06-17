@@ -1,4 +1,5 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
+
 import * as Traverse from '../search/Traverse';
 import { SugarElement } from './SugarElement';
 import * as SugarHead from './SugarHead';

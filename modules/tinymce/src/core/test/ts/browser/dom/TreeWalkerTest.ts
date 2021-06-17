@@ -2,6 +2,7 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.dom.TreeWalkerTest', () => {

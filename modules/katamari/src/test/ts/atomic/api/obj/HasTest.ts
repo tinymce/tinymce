@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
+
 import * as Obj from 'ephox/katamari/api/Obj';
 
 describe('atomic.katamari.api.obj.HasTest', () => {

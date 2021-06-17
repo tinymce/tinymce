@@ -6,6 +6,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import * as NodeType from '../dom/NodeType';
 import * as Zwsp from '../text/Zwsp';
 

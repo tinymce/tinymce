@@ -1,5 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { Attribute, Class, Css, Remove, SugarElement } from '@ephox/sugar';
+
 import * as Styles from '../style/Styles';
 
 export interface BlockerOptions {

@@ -9,6 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import VK from 'tinymce/core/api/util/VK';
+
 import * as Settings from '../api/Settings';
 import * as Dialog from '../ui/Dialog';
 import * as OpenUrl from './OpenUrl';

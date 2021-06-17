@@ -1,4 +1,5 @@
 import { SugarElement } from '@ephox/sugar';
+
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
 

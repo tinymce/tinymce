@@ -8,6 +8,7 @@
 import { Behaviour, SketchSpec, Slider, Toggling } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Receivers from '../channels/Receivers';

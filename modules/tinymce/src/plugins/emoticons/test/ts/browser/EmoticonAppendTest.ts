@@ -7,6 +7,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { fakeEvent } from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.emoticons.AppendTest', () => {

@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Delete from '../core/Delete';
 
 const get = (editor: Editor) => {

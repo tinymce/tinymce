@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
 import { Compare, Css, Insert, Replication, SelectorFind, SugarElement, SugarFragment, SugarNode, Traverse } from '@ephox/sugar';
+
 import * as ElementType from '../dom/ElementType';
 import * as Parents from '../dom/Parents';
 import * as SelectionUtils from './SelectionUtils';

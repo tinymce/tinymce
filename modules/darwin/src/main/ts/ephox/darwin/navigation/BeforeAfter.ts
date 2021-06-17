@@ -1,6 +1,7 @@
 import { Adt, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { Awareness, Compare, SelectorFind, SugarElement } from '@ephox/sugar';
+
 import { WindowBridge } from '../api/WindowBridge';
 
 type NoneHandler<T> = (message: string) => T;

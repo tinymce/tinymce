@@ -1,6 +1,7 @@
 import { Assertions, Logger, Pipeline, Step, TestLogs } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { SugarShadowDom } from '@ephox/sugar';
+
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import * as TinyLoader from 'ephox/mcagar/api/pipeline/TinyLoader';
 import { TinyUi } from 'ephox/mcagar/api/pipeline/TinyUi';

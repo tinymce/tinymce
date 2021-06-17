@@ -25,6 +25,7 @@
  */
 
 import { Obj, Unicode } from '@ephox/katamari';
+
 import { URLConverter } from '../SettingsTypes';
 import Schema from './Schema';
 

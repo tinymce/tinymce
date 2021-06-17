@@ -1,4 +1,5 @@
 import { Result } from '@ephox/katamari';
+
 import { BinaryReader } from './BinaryReader';
 
 export const readList = <T> (reader: BinaryReader, idx: number, unitSize: number, count: number, read: (reader: BinaryReader, idx: number) => Result<T, string>): Result<T[], string> => {

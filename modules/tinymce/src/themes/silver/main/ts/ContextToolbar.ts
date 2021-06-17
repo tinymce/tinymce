@@ -13,8 +13,10 @@ import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Id, Merger, Obj, Optional, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, Focus, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+
 import { getToolbarMode, ToolbarMode } from './api/Settings';
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from './backstage/Backstage';
 import { hideContextToolbarEvent, showContextToolbarEvent } from './ui/context/ContextEditorEvents';

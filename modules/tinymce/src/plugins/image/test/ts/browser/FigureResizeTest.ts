@@ -7,6 +7,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { fillActiveDialog } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.FigureResizeTest', () => {

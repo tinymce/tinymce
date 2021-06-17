@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import { NodeValue } from '../../impl/NodeValue';
 import { SugarElement } from './SugarElement';
 import * as SugarNode from './SugarNode';

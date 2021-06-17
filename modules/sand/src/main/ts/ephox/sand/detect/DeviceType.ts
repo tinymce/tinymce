@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { Browser } from '../core/Browser';
 import { OperatingSystem } from '../core/OperatingSystem';
 

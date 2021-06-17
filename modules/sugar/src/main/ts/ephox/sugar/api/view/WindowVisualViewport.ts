@@ -1,4 +1,5 @@
 import { Fun, Optional } from '@ephox/katamari';
+
 import { fromRawEvent } from '../../impl/FilteredEvent';
 import { EventHandler, EventUnbinder } from '../events/Types';
 import { SugarElement } from '../node/SugarElement';

@@ -6,12 +6,14 @@
  */
 
 import { Arr, Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
+
 import * as Settings from '../api/Settings';
 import * as Templates from '../core/Templates';
 import * as Utils from '../core/Utils';

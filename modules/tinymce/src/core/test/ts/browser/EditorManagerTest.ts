@@ -9,6 +9,7 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as ViewBlock from '../module/test/ViewBlock';
 
 describe('browser.tinymce.core.EditorManagerTest', () => {

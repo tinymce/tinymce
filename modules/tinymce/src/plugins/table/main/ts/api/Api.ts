@@ -7,7 +7,9 @@
 
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement, SugarElements } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { ResizeHandler } from '../actions/ResizeHandler';
 import { Clipboard } from '../core/Clipboard';

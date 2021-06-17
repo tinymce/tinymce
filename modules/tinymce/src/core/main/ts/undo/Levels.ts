@@ -7,6 +7,7 @@
 
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Html, Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Fragments from './Fragments';

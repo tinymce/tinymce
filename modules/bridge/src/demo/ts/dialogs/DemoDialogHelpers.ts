@@ -1,5 +1,6 @@
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
+
 import { DialogManager } from '../../../main/ts/ephox/bridge/api/DialogManager';
 import { Dialog, DialogInstanceApi, DialogSpec } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
 

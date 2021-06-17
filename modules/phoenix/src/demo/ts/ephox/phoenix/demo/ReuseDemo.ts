@@ -1,5 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Css, DomEvent, Insert, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 const editor = SugarElement.fromTag('div');

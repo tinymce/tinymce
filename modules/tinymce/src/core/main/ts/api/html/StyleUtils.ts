@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj, Strings } from '@ephox/katamari';
+
 import DOMUtils from '../dom/DOMUtils';
 
 const nonInheritableStyles: Set<string> = new Set();

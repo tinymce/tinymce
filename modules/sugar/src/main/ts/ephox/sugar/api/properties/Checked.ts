@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 import * as SelectorFind from '../search/SelectorFind';
 

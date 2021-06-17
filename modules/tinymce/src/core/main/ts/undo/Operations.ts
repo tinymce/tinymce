@@ -6,6 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';

@@ -6,6 +6,7 @@
  */
 
 import { Obj } from '@ephox/katamari';
+
 import * as ArrUtils from '../../util/ArrUtils';
 import Env from '../Env';
 

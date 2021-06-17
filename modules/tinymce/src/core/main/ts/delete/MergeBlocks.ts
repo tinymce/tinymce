@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
+
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';

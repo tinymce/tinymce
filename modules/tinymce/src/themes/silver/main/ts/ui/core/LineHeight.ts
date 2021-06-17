@@ -7,8 +7,10 @@
 
 import { Arr, Optional, Singleton } from '@ephox/katamari';
 import { Dimension } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+
 import * as Settings from '../../api/Settings';
 
 const normaliseLineHeight = (input: string) => Dimension.normalise(input, [ 'fixed', 'relative', 'empty' ]).getOr(input);

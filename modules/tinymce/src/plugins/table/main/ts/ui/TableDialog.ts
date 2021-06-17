@@ -6,10 +6,12 @@
  */
 
 import { Fun, Obj, Type } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import * as InsertTable from '../actions/InsertTable';
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';

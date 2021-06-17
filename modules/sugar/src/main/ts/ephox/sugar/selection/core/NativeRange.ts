@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import { SugarElement } from '../../api/node/SugarElement';
 import { RawRect } from '../../api/selection/Rect';
 import { Situ } from '../../api/selection/Situ';

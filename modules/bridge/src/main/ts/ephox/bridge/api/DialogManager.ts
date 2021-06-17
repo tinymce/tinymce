@@ -1,4 +1,5 @@
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
+
 import { createDialog, Dialog, DialogData, DialogInstanceApi, DialogSpec } from '../components/dialog/Dialog';
 import { createUrlDialog, UrlDialog, UrlDialogInstanceApi, UrlDialogSpec } from '../components/dialog/UrlDialog';
 import { createDataValidator } from '../core/DialogData';

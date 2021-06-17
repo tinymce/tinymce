@@ -6,6 +6,7 @@
  */
 
 import { Arr, Cell, Obj, Optional, Optionals, Throttler } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import { AnnotationsRegistry } from './AnnotationsRegistry';
 import { identify } from './Identification';

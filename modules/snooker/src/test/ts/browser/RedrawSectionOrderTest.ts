@@ -2,6 +2,7 @@ import { ApproxStructure, Assertions, Logger, Pipeline, Step } from '@ephox/agar
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Unicode } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
+
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as Transitions from 'ephox/snooker/model/Transitions';

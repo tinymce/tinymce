@@ -2,6 +2,7 @@ import { Assertions, Chain, Mouse, Step, UiControls, UiFinder, Waiter } from '@e
 import { AlloyLogger, AlloyTriggers, Gui, MementoRecord, NativeEvents, Toggling } from '@ephox/alloy';
 import { Optional, Result } from '@ephox/katamari';
 import { Attribute, Focus, SugarElement, Traverse } from '@ephox/sugar';
+
 import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 
 const cGetFocused = Chain.binder(() => {

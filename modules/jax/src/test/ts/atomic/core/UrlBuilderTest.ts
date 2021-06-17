@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
+
 import { buildUrl } from 'ephox/jax/core/UrlBuilder';
 
 UnitTest.test('UrlBuilderTest', () => {

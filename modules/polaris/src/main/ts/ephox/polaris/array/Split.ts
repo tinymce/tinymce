@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import { Splitting } from '../api/Splitting';
 
 /**

@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import { WordCountApi } from '../api/Api';
 
 const open = (editor: Editor, api: WordCountApi) => {

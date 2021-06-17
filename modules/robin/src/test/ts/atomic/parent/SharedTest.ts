@@ -2,6 +2,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import { oneAll } from 'ephox/robin/parent/Shared';
 
 UnitTest.test('SharedTest', () => {

@@ -1,4 +1,5 @@
 import { Obj, Optional } from '@ephox/katamari';
+
 import { Promise } from '../util/Promise';
 
 const sendRequest = (url: string, headers: Record<string, string>, withCredentials: boolean = false): Promise<{ status: number; blob: Blob }> =>

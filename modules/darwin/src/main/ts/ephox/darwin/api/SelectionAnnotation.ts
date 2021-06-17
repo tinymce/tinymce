@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Attribute, Class, OnNode, SelectorFilter, SugarElement } from '@ephox/sugar';
+
 import { Ephemera } from './Ephemera';
 
 export interface SelectionAnnotation {

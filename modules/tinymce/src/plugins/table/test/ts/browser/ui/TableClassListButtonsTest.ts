@@ -3,11 +3,13 @@ import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { pAssertMenuPresence, pAssertNoCheckmarksInMenu, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
 
 describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {

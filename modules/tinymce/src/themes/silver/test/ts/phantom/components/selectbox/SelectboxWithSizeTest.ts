@@ -4,6 +4,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
+
 import * as DomUtils from '../../../module/DomUtils';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestProviders from '../../../module/TestProviders';

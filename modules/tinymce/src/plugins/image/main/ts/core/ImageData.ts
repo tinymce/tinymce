@@ -7,7 +7,9 @@
 
 import { Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+
 import * as Utils from './Utils';
 
 const DOM = DOMUtils.DOM;

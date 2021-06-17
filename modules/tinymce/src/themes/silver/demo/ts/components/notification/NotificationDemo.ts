@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
 import { Arr } from '@ephox/katamari';
+
 import Delay from 'tinymce/core/api/util/Delay';
 
 declare let tinymce: any;

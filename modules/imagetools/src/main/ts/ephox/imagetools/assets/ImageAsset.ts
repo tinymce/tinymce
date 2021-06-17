@@ -1,4 +1,5 @@
 import { Adt } from '@ephox/katamari';
+
 import { BlobCallback, ImageAssetAdt, ImageAssetConstructor, UrlCallback } from './ImageAssetTypes';
 
 /*

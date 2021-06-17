@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { Saloon, Sherif, ShootingEvent } from './Types';
 
 declare const $: any;

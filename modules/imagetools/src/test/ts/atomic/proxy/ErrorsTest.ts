@@ -1,4 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Errors from 'ephox/imagetools/proxy/Errors';
 
 UnitTest.test('ProxyErrorsTest', () => {

@@ -7,6 +7,7 @@
 
 import { Type } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
+
 import { Bookmark } from '../../bookmark/BookmarkTypes';
 import CaretPosition from '../../caret/CaretPosition';
 import * as NodeType from '../../dom/NodeType';

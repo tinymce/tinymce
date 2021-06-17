@@ -6,6 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as KeyUtils from '../../module/test/KeyUtils';
 
 const assertUndoManagerDataLength = (editor: Editor, expected: number) =>

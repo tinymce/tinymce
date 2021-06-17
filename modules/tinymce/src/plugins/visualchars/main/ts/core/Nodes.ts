@@ -7,6 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
+
 import * as Data from './Data';
 import * as Html from './Html';
 

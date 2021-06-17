@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
+
 import { WordRange } from '../data/WordRange';
 import * as CurrentWord from '../util/CurrentWord';
 import * as EndofWord from './EndofWord';

@@ -7,6 +7,7 @@
 
 import { Fun } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import * as CaretContainer from './CaretContainer';
 

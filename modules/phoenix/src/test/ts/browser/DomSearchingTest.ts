@@ -2,6 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Pattern } from '@ephox/polaris';
 import { SugarElement } from '@ephox/sugar';
+
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 
 UnitTest.test('DomSearchingTest', () => {

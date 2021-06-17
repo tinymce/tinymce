@@ -8,6 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as ImageUtils from '../module/test/ImageUtils';
 
 describe('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest', () => {

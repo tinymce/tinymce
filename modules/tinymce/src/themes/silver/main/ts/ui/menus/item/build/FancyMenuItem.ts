@@ -8,7 +8,9 @@
 import { ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Obj, Optional } from '@ephox/katamari';
+
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+
 import { renderColorSwatchItem } from './ColorSwatchItem';
 import { renderInsertTableMenuItem } from './InsertTableMenuItem';
 

@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { UaString } from '../detect/UaString';
 import { Version } from '../detect/Version';
 

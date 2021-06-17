@@ -7,7 +7,9 @@
 
 import { Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Settings from './api/Settings';
 import { RenderUiComponents } from './Render';
 

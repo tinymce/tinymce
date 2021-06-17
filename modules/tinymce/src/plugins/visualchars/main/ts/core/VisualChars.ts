@@ -7,7 +7,9 @@
 
 import { Arr } from '@ephox/katamari';
 import { Class, SugarElement, SugarNode } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Data from './Data';
 import * as Nodes from './Nodes';
 

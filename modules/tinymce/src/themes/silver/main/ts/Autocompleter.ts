@@ -11,6 +11,7 @@ import { Arr, Cell, Optional, Throttler, Thunk } from '@ephox/katamari';
 import { Remove, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+
 import { AutocompleteContext, getContext } from './autocomplete/AutocompleteContext';
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
 import { AutocompleteLookupData, AutocompleteLookupInfo, lookup, lookupWithContext } from './autocomplete/AutocompleteLookup';

@@ -7,6 +7,7 @@
 
 import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import * as CaretFinder from '../caret/CaretFinder';

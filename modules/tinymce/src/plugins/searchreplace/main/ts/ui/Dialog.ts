@@ -6,6 +6,7 @@
  */
 
 import { Arr, Cell, Singleton } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { Dialog } from 'tinymce/core/api/ui/Ui';

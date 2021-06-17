@@ -1,6 +1,7 @@
 import { Optional } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { SugarElement } from '@ephox/sugar';
+
 import { DragDistanceEvent, Mutation } from './Mutation';
 
 export interface DragEvent extends DragDistanceEvent {
