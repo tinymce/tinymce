@@ -70,7 +70,7 @@ const none = <T = never>(): Optional<T> => NONE;
 const NONE: Optional<never> = (() => {
   // inlined from peanut, maybe a micro-optimisation?
   const call = (thunk) => thunk();
-  const id = (n) => n;
+  const id = Fun.identity;
   const me: Optional<never> = {
     fold: (n, _s) => n(),
     isSome: Fun.never,

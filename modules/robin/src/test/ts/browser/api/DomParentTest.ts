@@ -221,7 +221,7 @@ UnitTest.test(
         const subset = DomParent.subset(parent, child);
 
         const actual = subset.map((ss) => Arr.map(ss, (x) => Attribute.get(x, 'class')));
-        const expected_ = expected.map((ss) => Arr.map<string | undefined>((ss), (x) => x));
+        const expected_ = expected.map((ss) => Arr.map<string | undefined>((ss), Fun.identity));
 
         KAssert.eqOptional('eq', expected_, actual);
       };

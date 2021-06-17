@@ -44,7 +44,7 @@ const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBe
       StructureSchema.formatError(errInfo) + '\nComplete spec:\n' +
         JSON.stringify(spec, null, 2)
     );
-  }, (v) => v);
+  }, Fun.identity);
 
   return {
     list: all,

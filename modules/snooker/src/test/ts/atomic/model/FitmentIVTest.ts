@@ -28,13 +28,11 @@ UnitTest.test('FitmentIVTest', () => {
       return r;
     };
 
-    const replace = (name: string) => name;
-
     return {
       cell,
       gap: Fun.constant('*'),
       row: Fun.constant('tr'),
-      replace
+      replace: Fun.identity
     } as any;
   };
 

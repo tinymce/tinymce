@@ -107,7 +107,7 @@ const setupDemo = () => {
         isDisabled: Fun.never,
         getSetting: (_settingName: string, defaultVal: any) => defaultVal
       },
-      interpreter: (x) => x,
+      interpreter: Fun.identity,
       getSink: () => Result.value(sink),
       anchors: {
         inlineDialog: () =>

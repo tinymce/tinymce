@@ -11,10 +11,8 @@ import * as Sizes from './Sizes';
 const isCol = SugarNode.isTag('col');
 
 const getRaw = (cell: SugarElement, property: string, getter: (e: SugarElement) => number): string => {
-  return Css.getRaw(cell, property).fold(() => {
+  return Css.getRaw(cell, property).getOrThunk(() => {
     return getter(cell) + 'px';
-  }, (raw) => {
-    return raw;
   });
 };
 

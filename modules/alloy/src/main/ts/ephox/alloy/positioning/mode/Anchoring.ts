@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SimRange, SugarElement } from '@ephox/sugar';
 
 import { Bounds } from '../../alien/Boxes';
@@ -135,7 +135,7 @@ export interface Anchoring {
   placer: Optional<AnchorPlacement>;
 }
 
-const nu: (spec: Anchoring) => Anchoring = (x) => x;
+const nu: (spec: Anchoring) => Anchoring = Fun.identity;
 
 export {
   nu

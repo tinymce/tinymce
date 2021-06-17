@@ -1,7 +1,7 @@
 import { AlloyEvents, DomFactory, GuiFactory, Input as AlloyInput, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderBodyPanel } from 'tinymce/themes/silver/ui/dialog/BodyPanel';
 import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
@@ -31,7 +31,7 @@ export default () => {
   const sharedBackstage: UiFactoryBackstageShared = {
     getSink: helpers.extras.backstage.shared.getSink,
     providers: helpers.extras.backstage.shared.providers,
-    interpreter: (x) => x
+    interpreter: Fun.identity
   };
 
   const iframeSpec = renderIFrame({

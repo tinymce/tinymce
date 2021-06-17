@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Adt } from '@ephox/katamari';
+import { Adt, Fun } from '@ephox/katamari';
 import { Gather, Split } from '@ephox/phoenix';
 
 interface EntryPoint<E> {
@@ -62,31 +62,26 @@ const analyse = <E, D>(universe: Universe<E, D>, element: E, offset: number, fal
 
 // When breaking to the left, we will want to include the 'right' section of the split.
 const toLeft = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, element: E, offset: number): E => {
-  return analyse(universe, element, offset, adt.leftEdge).fold((e) => {
+  return analyse(universe, element, offset, adt.leftEdge).fold(
     // We are at the left edge of the element, so take the whole element
-    return e;
-  }, (b, a) => {
+    Fun.identity,
     // We are splitting an element, so take the right side
-    return a;
-  }, (e) => {
-    // We are at the right edge of the starting element, so gather the next element to the
-    // right.
-    return Gather.after(universe, e, isRoot).getOr(e);
-  });
+    (b, a) => a,
+    // We are at the right edge of the starting element, so gather the next element to the right
+    (e) => Gather.after(universe, e, isRoot).getOr(e)
+  );
 };
 
 // When breaking to the right, we will want to include the 'left' section of the split.
 const toRight = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, element: E, offset: number): E => {
-  return analyse(universe, element, offset, adt.rightEdge).fold((e) => {
+  return analyse(universe, element, offset, adt.rightEdge).fold(
     // We are at the left edge of the finishing element, so gather the previous element.
-    return Gather.before(universe, e, isRoot).getOr(e);
-  }, (b, _a) => {
+    (e) => Gather.before(universe, e, isRoot).getOr(e),
     // We are splitting an element, so take the left side.
-    return b;
-  }, (e) => {
+    (b, _a) => b,
     // We are the right edge of the element, so take the whole element
-    return e;
-  });
+    Fun.identity
+  );
 };
 
 export {

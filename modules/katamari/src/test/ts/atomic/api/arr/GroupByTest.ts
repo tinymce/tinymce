@@ -2,12 +2,13 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.GroupByTest', () => {
 
   it('unit tests', () => {
     const check = (input: unknown[], expected) => {
-      const f = (b) => b;
+      const f = Fun.identity;
       assert.deepEqual(Arr.groupBy(input, f), expected);
       assert.deepEqual(Arr.groupBy(Object.freeze(input.slice()), f), expected);
     };

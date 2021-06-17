@@ -94,14 +94,14 @@ const isSimpleOrSketchSpec = (spec: AlloySpec): spec is SimpleOrSketchSpec =>
   Obj.has(spec as SimpleOrSketchSpec, 'uid');
 
 // INVESTIGATE: A better way to provide 'meta-specs'
-const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).fold(() => {
+const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).getOrThunk(() => {
   // EFFICIENCY: Consider not merging here, and passing uid through separately
   const userSpecWithUid = isSimpleOrSketchSpec(spec) ? spec : {
     uid: uids(''),
     ...spec
   } as SimpleOrSketchSpec;
   return buildFromSpec(userSpecWithUid).getOrDie();
-}, (prebuilt) => prebuilt);
+});
 
 const premade = GuiTypes.premade;
 

@@ -31,24 +31,24 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
 
   const action = (component: AlloyComponent): void => {
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+    DropdownUtils.togglePopup(detail, Fun.identity, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
   };
 
   const apis: DropdownApis = {
     expand: (comp) => {
       if (!Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightNone).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, Fun.identity, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightNone).get(Fun.noop);
       }
     },
     open: (comp) => {
       if (!Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, Fun.identity, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
     },
     isOpen: Toggling.isOn,
     close: (comp) => {
       if (Toggling.isOn(comp)) {
-        DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+        DropdownUtils.togglePopup(detail, Fun.identity, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
     },
     // If we are open, refresh the menus in the tiered menu system
