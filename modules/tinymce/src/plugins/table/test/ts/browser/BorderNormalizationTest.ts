@@ -90,6 +90,11 @@ describe('browser.tinymce.plugins.table.BorderNormalizationTest', () => {
       );
     });
 
+    it('TINY-7593: should set the border-style back to solid if the border-width is set to 2px or above', () => {
+      testNormalizeSetCellBorderWidth(`border: 1px double red`, '2px', [[ 'tablecellborderstyle', 'solid' ]]);
+      testNormalizeSetCellBorderWidth(`border: 1px double red`, '3px', [[ 'tablecellborderstyle', 'solid' ]]);
+    });
+
     it('TINY-7593: should not normalize if border-width is set to 1px on a cell with an invisible border-style', () => {
       Arr.each(
         invisibleBorderStyles,
@@ -97,9 +102,9 @@ describe('browser.tinymce.plugins.table.BorderNormalizationTest', () => {
       );
     });
 
-    it('TINY-7593: should not normalize if border-width is set to a value grater than 1px', () => {
+    it('TINY-7593: should not normalize if border-width is set to a value grater than 1px unless it is double', () => {
       Arr.each(
-        allBorderStyles,
+        Arr.filter(allBorderStyles, (style) => style !== 'double'),
         (borderStyle) => testNormalizeSetCellBorderWidth(`border-width: 1px; border-style: ${borderStyle}`, '2px', [])
       );
     });

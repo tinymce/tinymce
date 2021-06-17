@@ -34,6 +34,7 @@ const setBorderWidth = (modifier: DomModifier, width: string) => modifier.setFor
 const isVisibleBorderStyle = (value: string) => value !== 'none' && value !== 'hidden' && value !== '';
 const hasVisibleBorderStyle = (el: SugarElement<HTMLTableCellElement>) => isVisibleBorderStyle(getComputedBorderStyle(el));
 const hasBorderColor = (el: SugarElement<HTMLTableCellElement>) => Css.getRaw(el, 'border-color').isSome();
+const hasDoubleBorderStyle = (el: SugarElement<HTMLTableCellElement>) => Css.getRaw(el, 'border-style').exists((style) => style === 'double');
 const hasOnePxBorderWidth = (el: SugarElement<HTMLTableCellElement>) => getComputedBorderWidth(el) === 1;
 
 export const normalizeSetCellBorderColor = (modifier: DomModifier, cell: SugarElement<HTMLTableCellElement>, value: string) => {
@@ -52,6 +53,8 @@ export const normalizeSetCellBorderWidth = (modifier: DomModifier, cell: SugarEl
       setBorderStyle(modifier, hasBorderColor(cell) ? 'double' : '');
     } else if (width === 0) {
       setBorderStyle(modifier, '');
+    } else if (width > 1 && hasDoubleBorderStyle(cell)) {
+      setBorderStyle(modifier, 'solid');
     }
   }
 };
