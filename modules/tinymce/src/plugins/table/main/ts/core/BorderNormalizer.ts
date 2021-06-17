@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optionals } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import { DomModifier } from '../ui/DomModifier';
 
@@ -19,7 +19,7 @@ const getComputedCombinedBorderProperty = (el: SugarElement<HTMLTableCellElement
   };
 
   const values = Arr.map([ 'top', 'left', 'bottom', 'right' ], getSideValue);
-  return values[0] !== '' && Arr.forall(values.slice(1), (v) => v === values[0]) ? Optional.some(values[0]) : Optional.none();
+  return Optionals.someIf(values[0] !== '' && Arr.forall(values.slice(1), (v) => v === values[0]), values[0]);
 };
 
 // IE returns subpixel border values even if the css is set to 1px so lets normalize that to the closest pixel

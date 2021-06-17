@@ -5,7 +5,7 @@ import { assert } from 'chai';
 import * as BorderNormalizer from 'tinymce/plugins/table//core/BorderNormalizer';
 import { DomModifier } from 'tinymce/plugins/table/ui/DomModifier';
 
-type normalizer = (modifier: DomModifier, cell: SugarElement<HTMLTableCellElement>, color: string) => void;
+type Normalizer = (modifier: DomModifier, cell: SugarElement<HTMLTableCellElement>, color: string) => void;
 
 describe('browser.tinymce.plugins.table.BorderNormalizationTest', () => {
   const doubleBorderStyles = [ 'dashed', 'dotted', 'double', 'groove', 'ridge', 'inset', 'outset' ];
@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.table.BorderNormalizationTest', () => {
     return [ state, api ];
   };
 
-  const testNormalizeSetValue = (normalizer: normalizer) => (initialStyles: string, value: string, expectedFormats: Array<[string, string]>) => {
+  const testNormalizeSetValue = (normalizer: Normalizer) => (initialStyles: string, value: string, expectedFormats: Array<[string, string]>) => {
     const cell = SugarElement.fromTag('td');
     Attribute.set(cell, 'style', initialStyles);
 
