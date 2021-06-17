@@ -4,15 +4,15 @@ import { Result, Fun } from '@ephox/katamari';
 export interface FancyMenuItemSpec {
   type: 'fancymenuitem';
   fancytype: string;
-  initData?: Record<string, any>;
+  initData?: Record<string, unknown>;
   onAction: (data: any) => void;
 }
 
 export interface FancyMenuItem {
   type: 'fancymenuitem';
   fancytype: keyof FancyActionArgsMap;
+  initData: Record<string, unknown>;
   onAction: <K extends keyof FancyActionArgsMap>(data: FancyActionArgsMap[K]) => void;
-  initData: Record<string, any>;
 }
 
 export interface FancyActionArgsMap {
