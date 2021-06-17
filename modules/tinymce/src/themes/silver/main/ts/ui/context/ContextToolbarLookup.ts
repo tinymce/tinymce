@@ -7,7 +7,9 @@
 
 import { Arr, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { ContextTypes } from '../../ContextToolbar';
 import { ScopedToolbars } from './ContextToolbarScopes';
 

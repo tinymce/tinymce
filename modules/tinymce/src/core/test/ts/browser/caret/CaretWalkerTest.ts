@@ -3,6 +3,7 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import { CaretWalker } from 'tinymce/core/caret/CaretWalker';
+
 import * as CaretAsserts from '../../module/test/CaretAsserts';
 import * as ViewBlock from '../../module/test/ViewBlock';
 

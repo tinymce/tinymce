@@ -1,4 +1,5 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
+
 import { Promise } from '../util/Promise';
 import * as Utils from './Utils';
 

@@ -6,10 +6,12 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
+
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 

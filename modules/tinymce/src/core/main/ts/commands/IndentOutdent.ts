@@ -7,6 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import { Css, PredicateFind, SugarElement, SugarElements, Traverse } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';

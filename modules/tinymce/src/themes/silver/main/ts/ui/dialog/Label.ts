@@ -8,8 +8,8 @@
 import { AlloySpec, Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 

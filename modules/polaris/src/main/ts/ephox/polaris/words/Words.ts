@@ -1,4 +1,5 @@
 import { Unicode } from '@ephox/katamari';
+
 import { CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
 import { isWordBoundary } from './WordBoundary';

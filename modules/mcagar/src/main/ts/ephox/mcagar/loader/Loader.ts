@@ -1,6 +1,7 @@
 import { TestLogs } from '@ephox/agar';
 import { Arr, Fun, Global, Id, Optional } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+
 import { Editor } from '../alien/EditorTypes';
 
 export type SuccessCallback = (v?: any, logs?: TestLogs) => void;

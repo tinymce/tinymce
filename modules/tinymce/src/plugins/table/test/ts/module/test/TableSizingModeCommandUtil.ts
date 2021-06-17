@@ -4,6 +4,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
 import { assertTableStructureWithSizes } from './TableTestUtils';
 
 type SizingMode = 'relative' | 'fixed' | 'responsive';

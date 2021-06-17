@@ -4,6 +4,7 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as RangeNormalizer from 'tinymce/core/selection/RangeNormalizer';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.selection.RangeNormalizerTest', () => {

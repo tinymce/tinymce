@@ -7,6 +7,7 @@
 
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const platform = PlatformDetection.detect();

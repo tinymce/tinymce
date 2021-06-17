@@ -6,6 +6,7 @@
  */
 
 import { Arr, Cell, Singleton, Strings, Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -13,6 +14,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Promise from 'tinymce/core/api/util/Promise';
 import VK from 'tinymce/core/api/util/VK';
+
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import * as InternalHtml from './InternalHtml';

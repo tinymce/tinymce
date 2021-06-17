@@ -1,5 +1,6 @@
 import { FieldPresence, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Id, Optional, Result } from '@ephox/katamari';
+
 import { DialogToggleMenuItem, dialogToggleMenuItemSchema, DialogToggleMenuItemSpec } from './ToggleMenuItem';
 
 export type DialogFooterMenuButtonItemSpec = DialogToggleMenuItemSpec;

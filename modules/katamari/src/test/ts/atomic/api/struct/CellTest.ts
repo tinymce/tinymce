@@ -1,6 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
+
 import { Cell } from 'ephox/katamari/api/Cell';
 
 describe('atomic.katamari.api.struct.CellTest', () => {

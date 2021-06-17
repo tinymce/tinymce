@@ -6,8 +6,10 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+
 import * as Settings from '../api/Settings';
 
 export interface CssUrls {

@@ -6,6 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import { ImageDialogInfo, ListItem } from './DialogTypes';
 
 const makeItems = (info: ImageDialogInfo) => {

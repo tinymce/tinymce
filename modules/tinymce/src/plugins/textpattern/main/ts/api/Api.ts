@@ -6,6 +6,7 @@
  */
 
 import { Arr, Cell, Results } from '@ephox/katamari';
+
 import { PatternSet, RawPattern } from '../core/PatternTypes';
 import { createPatternSet, denormalizePattern, normalizePattern } from './Pattern';
 

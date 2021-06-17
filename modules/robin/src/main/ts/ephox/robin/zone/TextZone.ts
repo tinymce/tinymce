@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 import { Descent } from '@ephox/phoenix';
+
 import { ZoneViewports } from '../api/general/ZoneViewports';
 import * as Clustering from '../words/Clustering';
 import { WordDecision, WordDecisionItem } from '../words/WordDecision';

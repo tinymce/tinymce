@@ -1,4 +1,5 @@
 import Promise from '@ephox/wrap-promise-polyfill';
+
 import { LazyValue } from './LazyValue';
 
 export interface Future<T> {

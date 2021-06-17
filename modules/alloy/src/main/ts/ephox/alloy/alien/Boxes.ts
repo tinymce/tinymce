@@ -1,6 +1,6 @@
 import { Height, SugarElement, SugarLocation, Width, WindowVisualViewport } from '@ephox/sugar';
-import * as OuterPosition from '../frame/OuterPosition';
 
+import * as OuterPosition from '../frame/OuterPosition';
 import { CssPositionAdt } from './CssPosition';
 
 const pointed = (point: CssPositionAdt, width: number, height: number): BoxByPoint => ({

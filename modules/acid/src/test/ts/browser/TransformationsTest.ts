@@ -2,6 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
+
 import * as Transformations from 'ephox/acid/api/colour/Transformations';
 
 describe('TransformationsTest', () => {

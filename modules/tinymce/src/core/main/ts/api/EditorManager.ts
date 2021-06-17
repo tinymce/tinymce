@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj, Type } from '@ephox/katamari';
+
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
 import AddOnManager from './AddOnManager';

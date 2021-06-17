@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+
 import { WordCountApi } from '../api/Api';
 import * as Events from '../api/Events';
 

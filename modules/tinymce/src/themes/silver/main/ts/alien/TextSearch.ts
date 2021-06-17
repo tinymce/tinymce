@@ -6,8 +6,10 @@
  */
 
 import { Arr, Optional } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import TextSeeker from 'tinymce/core/api/dom/TextSeeker';
+
 import * as Spot from './Spot';
 
 // Note: This is duplicated with the TextPattern plugins `TextSearch` module, as there isn't really a nice way to share code across

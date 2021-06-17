@@ -3,6 +3,7 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as SelectionUtils from 'tinymce/core/selection/SelectionUtils';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.selection.SelectionUtilsTest', () => {

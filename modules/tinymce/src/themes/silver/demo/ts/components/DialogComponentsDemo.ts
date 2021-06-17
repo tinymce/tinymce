@@ -2,6 +2,7 @@ import { AlloyEvents, DomFactory, GuiFactory, Input as AlloyInput, Memento, Repr
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
+
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderBodyPanel } from 'tinymce/themes/silver/ui/dialog/BodyPanel';
 import { renderCollection } from 'tinymce/themes/silver/ui/dialog/Collection';
@@ -16,10 +17,10 @@ import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 import { renderInput, renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
-
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
+
 import { setupDemo } from './DemoHelpers';
 
 /* eslint-disable no-console */

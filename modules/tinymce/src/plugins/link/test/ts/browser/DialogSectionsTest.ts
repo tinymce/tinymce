@@ -3,6 +3,7 @@ import { describe, it, before, after, context } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';

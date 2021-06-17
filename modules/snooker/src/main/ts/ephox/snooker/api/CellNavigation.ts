@@ -1,5 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
+
 import { CellLocation } from './CellLocation';
 import * as TableLookup from './TableLookup';
 

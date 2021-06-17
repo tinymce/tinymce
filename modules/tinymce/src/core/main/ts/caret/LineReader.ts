@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
+
 import * as NodeType from '../dom/NodeType';
 import * as CaretFinder from './CaretFinder';
 import { CaretPosition } from './CaretPosition';

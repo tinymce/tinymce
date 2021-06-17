@@ -1,5 +1,6 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+
 import { SugarElement } from './SugarElement';
 
 const regularGetNodes = <T extends Node> (texas: TreeWalker): SugarElement<T>[] => {

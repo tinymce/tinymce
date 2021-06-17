@@ -8,8 +8,8 @@
 import { Behaviour, Form as AlloyForm, Keying, Memento, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
 
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as FormValues from '../general/FormValues';

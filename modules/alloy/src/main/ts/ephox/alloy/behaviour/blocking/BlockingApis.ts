@@ -1,5 +1,6 @@
 import { Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';

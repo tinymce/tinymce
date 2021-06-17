@@ -1,5 +1,6 @@
 import { Fun, Id } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
+
 import * as SeleniumAction from '../server/SeleniumAction';
 import { Chain } from './Chain';
 import { Step } from './Step';

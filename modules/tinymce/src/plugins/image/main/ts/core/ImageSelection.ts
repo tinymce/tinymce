@@ -6,8 +6,10 @@
  */
 
 import { Obj } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { SchemaMap } from 'tinymce/core/api/html/Schema';
+
 import { create, defaultData, ImageData, isFigure, read, write } from './ImageData';
 import * as Utils from './Utils';
 

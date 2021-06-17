@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import { WordCountApi } from '../api/Api';
 import * as Dialog from './Dialog';
 

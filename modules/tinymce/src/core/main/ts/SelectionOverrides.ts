@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+
 import Editor from './api/Editor';
 import Env from './api/Env';
 import VK from './api/util/VK';

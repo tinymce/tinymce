@@ -6,7 +6,9 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as DetectProPlugin from './alien/DetectProPlugin';
 import * as Api from './api/Api';
 import { Clipboard } from './api/Clipboard';

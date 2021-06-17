@@ -2,6 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import Promise from '@ephox/wrap-promise-polyfill';
 import fc from 'fast-check';
+
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Future } from 'ephox/katamari/api/Future';

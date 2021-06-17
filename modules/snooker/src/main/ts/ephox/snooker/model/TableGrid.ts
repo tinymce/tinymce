@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { ElementNew, RowCells } from '../api/Structs';
 import * as GridRow from './GridRow';
 

@@ -6,9 +6,11 @@
  */
 
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Formatter from 'tinymce/core/api/Formatter';
+
 import * as Settings from '../api/Settings';
 import { InlinePattern } from '../core/PatternTypes';
 

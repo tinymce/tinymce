@@ -1,4 +1,5 @@
 import { Universe } from '@ephox/boss';
+
 import * as Navigation from '../../wrap/Navigation';
 import { SpotPoint } from '../data/Types';
 

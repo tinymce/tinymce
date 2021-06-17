@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Utils from './Utils';
 
 const registerFormats = (editor: Editor) => {

@@ -1,5 +1,6 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Compare, Css, CursorPosition, Insert, Replication, SelectorFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+
 import { CellSpan, Generators, SimpleGenerators } from './Generators';
 
 const transferableAttributes: Record<string, string[]> = {

@@ -7,9 +7,11 @@
 
 import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import * as Styles from '../actions/Styles';
 import { getDefaultAttributes, getDefaultStyles, shouldStyleWithCss } from '../api/Settings';
 import { getRowType } from '../core/TableSections';

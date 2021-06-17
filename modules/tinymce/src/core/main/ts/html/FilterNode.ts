@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj } from '@ephox/katamari';
+
 import { ParserFilter, ParserFilterCallback } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 

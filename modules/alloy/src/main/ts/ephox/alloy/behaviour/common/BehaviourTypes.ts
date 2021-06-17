@@ -1,5 +1,6 @@
 import { FieldProcessor } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloyEventRecord } from '../../api/events/AlloyEvents';
 import { DomDefinitionDetail } from '../../dom/DomDefinition';

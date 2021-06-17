@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj } from '@ephox/katamari';
+
 import Editor from '../Editor';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';

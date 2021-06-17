@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Anchor from '../core/Anchor';
 
 const insertAnchor = (editor: Editor, newId: string) => {

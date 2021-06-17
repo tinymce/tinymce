@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Future, Futures, Obj, Result, Results } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SelectorFind, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
+
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
 

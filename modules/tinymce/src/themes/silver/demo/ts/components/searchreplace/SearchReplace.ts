@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 

@@ -6,10 +6,12 @@
  */
 
 import { Cell, Obj } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Writer from 'tinymce/core/api/html/Writer';
+
 import { MediaData } from './Types';
 
 type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };

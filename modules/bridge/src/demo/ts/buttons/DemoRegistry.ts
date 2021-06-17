@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import * as Registry from '../../../main/ts/ephox/bridge/api/Registry';
 
 const editorButtons = Registry.create();

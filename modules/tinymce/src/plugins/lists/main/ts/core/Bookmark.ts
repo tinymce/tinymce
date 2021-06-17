@@ -6,6 +6,7 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+
 import * as Range from './RangeUtils';
 
 const DOM = DOMUtils.DOM;

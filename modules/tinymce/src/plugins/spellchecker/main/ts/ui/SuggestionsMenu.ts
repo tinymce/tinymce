@@ -6,8 +6,10 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Actions from '../core/Actions';
 import { DomTextMatcher } from '../core/DomTextMatcher';
 

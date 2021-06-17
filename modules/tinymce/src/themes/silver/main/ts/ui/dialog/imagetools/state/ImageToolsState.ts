@@ -6,7 +6,9 @@
  */
 
 import { Cell, Fun, Optional } from '@ephox/katamari';
+
 import Tools from 'tinymce/core/api/util/Tools';
+
 import UndoStack from '../UndoStack';
 
 interface BlobState {

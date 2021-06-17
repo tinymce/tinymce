@@ -1,5 +1,6 @@
 import { FieldSchema, StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
+
 import { DialogSpec } from '../components/dialog/Dialog';
 import { getDataProcessor, getNamedItems } from './DataProcessors';
 

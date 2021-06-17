@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import EditorManager from 'tinymce/core/api/EditorManager';
+
 import * as ViewBlock from '../module/test/ViewBlock';
 
 const storeState = () => {

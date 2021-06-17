@@ -15,7 +15,6 @@ import * as AlloyLogger from '../log/AlloyLogger';
 import * as AlloyParts from '../parts/AlloyParts';
 import * as PartType from '../parts/PartType';
 import * as Bubble from '../positioning/layout/Bubble';
-
 import * as Layout from '../positioning/layout/Layout';
 import * as LayoutInside from '../positioning/layout/LayoutInside';
 import * as LayoutTypes from '../positioning/layout/LayoutTypes';

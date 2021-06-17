@@ -8,7 +8,9 @@
 import { AlloySpec, GuiFactory } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
+
 import I18n from 'tinymce/core/api/util/I18n';
+
 import { get as getIcon, IconProvider } from '../../../icons/Icons';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ItemClasses from '../ItemClasses';

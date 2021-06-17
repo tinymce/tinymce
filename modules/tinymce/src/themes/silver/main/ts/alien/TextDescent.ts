@@ -6,6 +6,7 @@
  */
 
 import { NodeTypes } from '@ephox/sugar';
+
 import * as Spot from './Spot';
 
 const isText = (node: Node): node is Text => node.nodeType === NodeTypes.TEXT;

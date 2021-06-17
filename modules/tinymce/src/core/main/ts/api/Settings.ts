@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
+
 import { UploadHandler } from '../file/Uploader';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';

@@ -7,6 +7,7 @@
 
 import { AlloyComponent, Behaviour, Button, RawDomSchema, SketchSpec, Toggling, Unselecting } from '@ephox/alloy';
 import { Merger, Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Receivers from '../channels/Receivers';

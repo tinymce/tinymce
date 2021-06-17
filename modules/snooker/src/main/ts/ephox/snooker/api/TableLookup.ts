@@ -1,5 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SelectorFilter, SelectorFind, Selectors, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+
 import { getAttrValue } from '../util/CellUtils';
 import * as LayerSelector from '../util/LayerSelector';
 import * as Structs from './Structs';

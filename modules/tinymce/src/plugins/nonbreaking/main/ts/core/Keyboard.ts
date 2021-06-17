@@ -6,6 +6,7 @@
  */
 
 import VK from 'tinymce/core/api/util/VK';
+
 import * as Settings from '../api/Settings';
 import * as Actions from './Actions';
 

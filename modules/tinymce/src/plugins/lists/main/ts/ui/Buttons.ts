@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Util from '../core/Util';
 
 const register = (editor: Editor) => {

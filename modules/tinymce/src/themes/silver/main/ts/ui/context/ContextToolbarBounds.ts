@@ -7,7 +7,9 @@
 
 import { Bounds, Boxes } from '@ephox/alloy';
 import { SelectorFind, SugarElement, WindowVisualViewport } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 

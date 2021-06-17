@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Redistribution from 'ephox/snooker/resize/Redistribution';
 import { Size } from 'ephox/snooker/resize/Size';
 

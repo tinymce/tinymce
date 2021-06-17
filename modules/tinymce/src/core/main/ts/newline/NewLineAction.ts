@@ -6,6 +6,7 @@
  */
 
 import { Adt, Arr, Optional } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import * as LazyEvaluator from '../util/LazyEvaluator';

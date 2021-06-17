@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { SimpleResult } from '../alien/SimpleResult';
 import { formatObj } from '../format/PrettyPrinter';
 

@@ -4,6 +4,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
+
 import TestProviders from '../../../module/TestProviders';
 
 describe('phantom.tinymce.themes.silver.components.dialogbutton.DialogButtonTest', () => {

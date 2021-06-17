@@ -6,6 +6,7 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 import Editor from 'tinymce/core/api/Editor';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as KeyUtils from '../../module/test/KeyUtils';
 
 describe('browser.tinymce.core.delete.CaretBoundaryDeleteTest', () => {

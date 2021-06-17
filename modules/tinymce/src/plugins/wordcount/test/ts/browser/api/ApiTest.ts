@@ -1,6 +1,7 @@
 import { Assertions, GeneralSteps, Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { CountGetter, WordCountApi } from 'tinymce/plugins/wordcount/api/Api';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';

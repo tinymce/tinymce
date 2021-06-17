@@ -6,6 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import DOMUtils from './api/dom/DOMUtils';
 import Editor from './api/Editor';
 import * as Events from './api/Events';

@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Type } from '@ephox/katamari';
 import { Selectors, SugarElement } from '@ephox/sugar';
+
 import * as CefUtils from '../../dom/CefUtils';
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';

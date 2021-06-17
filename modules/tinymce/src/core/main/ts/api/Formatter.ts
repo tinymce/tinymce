@@ -6,6 +6,7 @@
  */
 
 import { Cell, Fun } from '@ephox/katamari';
+
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatChanged from '../fmt/FormatChanged';
 import { FormatRegistry } from '../fmt/FormatRegistry';

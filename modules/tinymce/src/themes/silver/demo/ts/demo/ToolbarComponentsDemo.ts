@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 import { GuiFactory } from '@ephox/alloy';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
 
+import Editor from 'tinymce/core/api/Editor';
 import { identifyButtons } from 'tinymce/themes/silver/ui/toolbar/Integration';
+
 import { setupDemo } from '../components/DemoHelpers';
 
 export default () => {

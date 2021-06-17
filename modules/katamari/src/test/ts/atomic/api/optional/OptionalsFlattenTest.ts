@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import fc from 'fast-check';
+
 import { Optional } from 'ephox/katamari/api/Optional';
 import * as Optionals from 'ephox/katamari/api/Optionals';
 import { assertNone, assertOptional, assertSome } from 'ephox/katamari/test/AssertOptional';

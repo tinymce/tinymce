@@ -11,6 +11,7 @@ import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, Suga
 
 import Editor from 'tinymce/core/api/Editor';
 import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
+
 import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as EditorChannels from '../../Channels';

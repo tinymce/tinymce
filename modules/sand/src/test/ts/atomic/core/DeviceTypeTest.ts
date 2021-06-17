@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 
 UnitTest.test('DeviceTypeTest', () => {

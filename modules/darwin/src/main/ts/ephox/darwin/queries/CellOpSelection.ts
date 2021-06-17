@@ -1,6 +1,7 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { RunOperation } from '@ephox/snooker';
 import { Attribute, SugarElement } from '@ephox/sugar';
+
 import { Ephemera } from '../api/Ephemera';
 import * as TableSelection from '../api/TableSelection';
 import { Selections } from '../selection/Selections';

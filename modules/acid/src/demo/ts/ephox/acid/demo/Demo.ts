@@ -1,7 +1,9 @@
 import { Channels, Debugging, Gui, GuiFactory } from '@ephox/alloy';
 import { Fun, Optional } from '@ephox/katamari';
 import { Class, DomEvent, Insert, SugarElement } from '@ephox/sugar';
+
 import * as ColourPicker from 'ephox/acid/gui/ColourPicker';
+
 import { strings } from '../../../../i18n/en';
 
 const gui = Gui.create();

@@ -1,5 +1,6 @@
 import { Hierarchy, Html, Truncate } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
+
 import * as GenSelection from '../arbitrary/GenSelection';
 import * as TagDecorator from '../arbitrary/TagDecorator';
 

@@ -8,6 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { GetContentEvent } from 'tinymce/core/api/EventTypes';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 import * as Parser from './Parser';
 import * as Protect from './Protect';

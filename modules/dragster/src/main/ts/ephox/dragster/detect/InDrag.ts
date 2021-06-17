@@ -1,6 +1,7 @@
 import { Optional } from '@ephox/katamari';
 import { Event, Events } from '@ephox/porkbun';
 import { EventArgs, SugarPosition } from '@ephox/sugar';
+
 import { DragMode } from '../api/DragApis';
 import { DragEvents, DragState } from './DragTypes';
 

@@ -6,6 +6,7 @@
  */
 
 import { Focus } from '@ephox/sugar';
+
 import Delay from 'tinymce/core/api/util/Delay';
 
 const refreshInput = (input) => {

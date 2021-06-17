@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Time from '../core/Time';
 
 const shouldAskBeforeUnload = (editor: Editor) => editor.getParam('autosave_ask_before_unload', true);

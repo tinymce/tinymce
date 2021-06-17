@@ -7,6 +7,7 @@
 
 import { Fun } from '@ephox/katamari';
 import { Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import EditorManager from '../api/EditorManager';

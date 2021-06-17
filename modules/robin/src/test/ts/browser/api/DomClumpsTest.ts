@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Compare, Hierarchy, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+
 import * as DomClumps from 'ephox/robin/api/dom/DomClumps';
 
 UnitTest.test('DomClumpsTest', () => {

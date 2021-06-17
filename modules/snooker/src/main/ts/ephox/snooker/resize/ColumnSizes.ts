@@ -1,5 +1,6 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Css, SugarElement, SugarNode, Width } from '@ephox/sugar';
+
 import { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Blocks from '../lookup/Blocks';

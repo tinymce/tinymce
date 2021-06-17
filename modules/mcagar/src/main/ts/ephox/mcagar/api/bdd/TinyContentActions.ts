@@ -1,4 +1,5 @@
 import { Keyboard } from '@ephox/agar';
+
 import { Editor } from '../../alien/EditorTypes';
 import * as TypeText from '../../keyboard/TypeText';
 import { TinyDom } from '../TinyDom';

@@ -7,6 +7,7 @@
 
 import { Singleton } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
+
 import * as PlatformEditor from '../../ios/core/PlatformEditor';
 import * as Styles from '../../style/Styles';
 import * as MetaViewport from '../../touch/view/MetaViewport';

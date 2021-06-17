@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import { AttributeProperty } from 'ephox/sugar/api/properties/AttributeProperty';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';

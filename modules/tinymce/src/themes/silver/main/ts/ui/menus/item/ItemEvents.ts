@@ -7,6 +7,7 @@
 
 import { AlloyEvents, AlloyTriggers, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
+
 import { GetApiType, runWithApi } from '../../controls/Controls';
 import ItemResponse from './ItemResponse';
 

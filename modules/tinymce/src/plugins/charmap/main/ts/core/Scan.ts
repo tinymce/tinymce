@@ -6,6 +6,7 @@
  */
 
 import { Arr, Strings } from '@ephox/katamari';
+
 import { CharMap } from './CharMap';
 
 export interface CharItem {

@@ -6,6 +6,7 @@
  */
 
 import { Obj } from '@ephox/katamari';
+
 import * as Bookmarks from '../../bookmark/Bookmarks';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';

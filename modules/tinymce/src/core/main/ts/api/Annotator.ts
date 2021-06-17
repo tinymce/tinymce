@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Remove } from '@ephox/sugar';
+
 import * as AnnotationChanges from '../annotate/AnnotationChanges';
 import * as AnnotationFilter from '../annotate/AnnotationFilter';
 import { create } from '../annotate/AnnotationsRegistry';

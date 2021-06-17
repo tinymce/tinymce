@@ -1,4 +1,5 @@
 import { Future, Optional } from '@ephox/katamari';
+
 import { Bounds } from '../../alien/Boxes';
 import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';

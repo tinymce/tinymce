@@ -4,6 +4,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { annotate, assertHtmlContent } from '../../module/test/AnnotationAsserts';
 
 describe('browser.tinymce.core.annotate.AnnotateTest', () => {

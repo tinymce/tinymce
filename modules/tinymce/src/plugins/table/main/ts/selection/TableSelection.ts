@@ -9,6 +9,7 @@ import { CellOpSelection, Selections, TableSelection } from '@ephox/darwin';
 import { Arr, Optionals } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
+
 import { ephemera } from './Ephemera';
 
 const getSelectionStartCellFallback = (start: SugarElement<Node>) =>

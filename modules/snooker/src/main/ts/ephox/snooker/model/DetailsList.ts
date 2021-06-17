@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+
 import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
 import { getAttrValue } from '../util/CellUtils';

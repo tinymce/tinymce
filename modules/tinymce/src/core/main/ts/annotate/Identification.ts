@@ -7,8 +7,8 @@
 
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
-import Editor from '../api/Editor';
 
+import Editor from '../api/Editor';
 import * as Markings from './Markings';
 
 // Given the current editor selection, identify the uid of any current

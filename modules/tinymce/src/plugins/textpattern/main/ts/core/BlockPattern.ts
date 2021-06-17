@@ -6,9 +6,11 @@
  */
 
 import { Arr, Optional, Unicode } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 import * as TextSearch from '../text/TextSearch';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';

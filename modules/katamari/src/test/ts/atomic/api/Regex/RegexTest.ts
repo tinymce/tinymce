@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
+
 import * as Regex from 'ephox/katamari/api/Regex';
 
 describe('Regex', () => {

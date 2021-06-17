@@ -6,6 +6,7 @@
  */
 
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
+
 import * as NodeType from './NodeType';
 
 interface Point {

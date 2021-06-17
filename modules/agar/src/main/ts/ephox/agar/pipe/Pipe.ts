@@ -1,5 +1,6 @@
 import { PlatformDetection } from '@ephox/sand';
 import Promise from '@ephox/wrap-promise-polyfill';
+
 import { addStackTrace, TestLogs } from '../api/TestLogs';
 
 export type NextFn<T> = (value: T, logs: TestLogs) => void;

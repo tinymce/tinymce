@@ -7,6 +7,7 @@
 
 import { Arr, Unicode } from '@ephox/katamari';
 import { Insert, Remove, SelectorFilter, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+
 import * as ElementType from './ElementType';
 
 const getLastChildren = (elm) => {

@@ -7,6 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import { Attribute, Css, SelectorFilter, SugarElement } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 

@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 export interface StringMap {

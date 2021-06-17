@@ -6,6 +6,7 @@
  */
 
 import { Type } from '@ephox/katamari';
+
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';
 

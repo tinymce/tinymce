@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 import { PositionArray } from '@ephox/polaris';
+
 import * as Spot from '../api/data/Spot';
 import { SpotPoint } from '../api/data/Types';
 import * as Extract from './Extract';

@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import { ImageData } from '../core/ImageData';
 import { insertOrUpdateImage } from '../core/ImageSelection';
 import { Dialog } from '../ui/Dialog';

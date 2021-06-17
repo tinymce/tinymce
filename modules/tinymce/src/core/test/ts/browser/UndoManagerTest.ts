@@ -8,6 +8,7 @@ import Env from 'tinymce/core/api/Env';
 import { AddUndoEvent } from 'tinymce/core/api/EventTypes';
 import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 

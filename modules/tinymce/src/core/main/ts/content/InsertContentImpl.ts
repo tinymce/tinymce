@@ -7,6 +7,7 @@
 
 import { Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
 import Editor from '../api/Editor';

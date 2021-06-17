@@ -6,6 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as FilterContent from './core/FilterContent';
 
 export default () => {

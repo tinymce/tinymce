@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import { Fun } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import ButtonSetupDemo from './ButtonSetupDemo';
 
 declare let tinymce: any;

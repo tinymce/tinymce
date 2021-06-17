@@ -9,6 +9,7 @@ import { TinyMCE } from 'tinymce/core/api/Tinymce';
 import Delay from 'tinymce/core/api/util/Delay';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
+
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 
 declare const tinymce: TinyMCE;

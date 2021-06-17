@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
+
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';

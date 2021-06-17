@@ -3,6 +3,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import * as NodePath from 'tinymce/core/dom/NodePath';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.dom.NodePathTest', () => {

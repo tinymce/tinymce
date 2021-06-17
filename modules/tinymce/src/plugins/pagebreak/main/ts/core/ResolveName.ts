@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as FilterContent from './FilterContent';
 
 const setup = (editor: Editor) => {

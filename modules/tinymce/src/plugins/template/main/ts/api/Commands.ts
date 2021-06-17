@@ -6,6 +6,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import * as Templates from '../core/Templates';
 
 const register = (editor) => {

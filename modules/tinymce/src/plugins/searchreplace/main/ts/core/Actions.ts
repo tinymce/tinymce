@@ -7,9 +7,11 @@
 
 import { Cell } from '@ephox/katamari';
 import { Pattern as PolarisPattern } from '@ephox/polaris';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as FindMark from './FindMark';
 import { Pattern } from './Types';
 

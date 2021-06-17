@@ -6,7 +6,9 @@
  */
 
 import { Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { UserListItem } from '../ui/DialogTypes';
 import { AssumeExternalTargets } from './Types';
 

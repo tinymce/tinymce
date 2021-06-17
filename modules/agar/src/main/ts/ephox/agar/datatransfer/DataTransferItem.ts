@@ -1,4 +1,5 @@
 import { Fun, Id, Optional } from '@ephox/katamari';
+
 import { isInProtectedMode } from './Mode';
 
 const dataId = Id.generate('data');

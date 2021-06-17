@@ -6,6 +6,7 @@
  */
 
 import { Fun, Optional, Optionals } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import Env from '../api/Env';

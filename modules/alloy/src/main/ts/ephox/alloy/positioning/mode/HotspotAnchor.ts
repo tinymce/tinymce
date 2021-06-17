@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';

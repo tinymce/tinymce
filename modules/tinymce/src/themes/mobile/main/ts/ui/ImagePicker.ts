@@ -9,6 +9,7 @@ import { AlloyEvents, Button, Memento, NativeEvents, SimulatedEvent, SketchSpec 
 import { BlobConversions } from '@ephox/imagetools';
 import { Id, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Buttons from '../ui/Buttons';

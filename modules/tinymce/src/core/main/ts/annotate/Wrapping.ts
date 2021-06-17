@@ -7,6 +7,7 @@
 
 import { Arr, Cell, Id, Optional, Unicode } from '@ephox/katamari';
 import { Attribute, Class, Classes, Html, Insert, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import * as ExpandRange from '../fmt/ExpandRange';
 import * as RangeWalk from '../selection/RangeWalk';

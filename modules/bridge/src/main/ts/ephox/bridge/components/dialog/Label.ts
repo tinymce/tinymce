@@ -1,4 +1,5 @@
 import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 
 export interface LabelSpec {

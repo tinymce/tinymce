@@ -1,5 +1,6 @@
 import { Optional } from '@ephox/katamari';
 import { Direction, Gather } from '@ephox/phoenix';
+
 import * as WordUtil from '../util/WordUtil';
 
 export interface WordWalking extends Direction {

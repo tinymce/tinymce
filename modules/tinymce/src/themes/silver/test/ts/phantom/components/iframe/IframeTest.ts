@@ -5,6 +5,7 @@ import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
+
 import TestProviders from '../../../module/TestProviders';
 
 describe('phantom.tinymce.themes.silver.components.iframe.IFrameTest', () => {

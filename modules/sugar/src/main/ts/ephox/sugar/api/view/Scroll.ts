@@ -1,5 +1,6 @@
 import { Optional, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+
 import * as Insert from '../dom/Insert';
 import * as Remove from '../dom/Remove';
 import * as SugarBody from '../node/SugarBody';

@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+
 import { isOlNode } from '../core/NodeType';
 import { getParentList } from '../core/Selection';
 import * as Util from '../core/Util';

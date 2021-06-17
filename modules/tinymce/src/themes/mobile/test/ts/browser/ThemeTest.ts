@@ -2,6 +2,7 @@ import { Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
+
 import ContextMenuPlugin from 'tinymce/plugins/contextmenu/Plugin';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';

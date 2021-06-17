@@ -1,5 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
+
 import * as Fields from '../../data/Fields';
 
 export default [

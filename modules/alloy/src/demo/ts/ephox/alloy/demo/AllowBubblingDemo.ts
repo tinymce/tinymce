@@ -1,8 +1,8 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import { AllowBubbling } from 'ephox/alloy/api/behaviour/AllowBubbling';
-
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';

@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import { getTableBorderStyles } from '../api/Settings';
 
 interface ClassListValue {

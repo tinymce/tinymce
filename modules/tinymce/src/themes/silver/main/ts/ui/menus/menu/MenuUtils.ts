@@ -9,8 +9,8 @@ import { ItemTypes, MenuTypes } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { InlineContent, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
-import { components as menuComponents, dom as menuDom } from './MenuParts';
 
+import { components as menuComponents, dom as menuDom } from './MenuParts';
 import { forCollection, forHorizontalCollection, forSwatch, forToolbar } from './MenuStructures';
 import { SingleMenuItemSpec } from './SingleMenuTypes';
 

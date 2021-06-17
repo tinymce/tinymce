@@ -6,6 +6,7 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+
 import { PathRange, resolvePathRange } from './PathRange';
 import * as Utils from './Utils';
 

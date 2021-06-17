@@ -6,6 +6,7 @@
  */
 
 import { Obj } from '@ephox/katamari';
+
 import { isWhitespaceText } from '../../text/Whitespace';
 import { SchemaMap } from './Schema';
 

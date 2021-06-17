@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Optionals, Unicode } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';

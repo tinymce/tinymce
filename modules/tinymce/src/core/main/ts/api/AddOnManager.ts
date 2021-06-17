@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj } from '@ephox/katamari';
+
 import { DomQueryConstructor } from './dom/DomQuery';
 import ScriptLoader from './dom/ScriptLoader';
 import Editor from './Editor';
