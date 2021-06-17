@@ -33,7 +33,7 @@ describe('browser.tinymce.plugins.table.ui.TableBorderWidthTest', () => {
     await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
       menuTitle: 'Border width',
       subMenuTitle: '1PX',
-      subMenuTitleUndo: 'None',
+      subMenuRemoveTitle: 'None',
       checkMarkEntries: 2,
       rows: 1,
       columns: 1,
@@ -45,7 +45,7 @@ describe('browser.tinymce.plugins.table.ui.TableBorderWidthTest', () => {
     await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
       menuTitle: 'Border width',
       subMenuTitle: '1PX',
-      subMenuTitleUndo: 'None',
+      subMenuRemoveTitle: 'None',
       checkMarkEntries: 2,
       rows: 2,
       columns: 2,

@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
       await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
         menuTitle: 'Vertical align',
         subMenuTitle: 'Top',
-        subMenuTitleUndo: 'None',
+        subMenuRemoveTitle: 'None',
         checkMarkEntries: 4,
         rows: 1,
         columns: 1,
@@ -36,7 +36,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
       await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
         menuTitle: 'Vertical align',
         subMenuTitle: 'Middle',
-        subMenuTitleUndo: 'None',
+        subMenuRemoveTitle: 'None',
         checkMarkEntries: 4,
         rows: 1,
         columns: 1,
@@ -48,7 +48,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
       await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
         menuTitle: 'Vertical align',
         subMenuTitle: 'Bottom',
-        subMenuTitleUndo: 'None',
+        subMenuRemoveTitle: 'None',
         checkMarkEntries: 4,
         rows: 1,
         columns: 1,
@@ -62,7 +62,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
       await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
         menuTitle: 'Vertical align',
         subMenuTitle: 'Top',
-        subMenuTitleUndo: 'None',
+        subMenuRemoveTitle: 'None',
         checkMarkEntries: 4,
         rows: 2,
         columns: 2,
@@ -74,7 +74,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
       await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
         menuTitle: 'Vertical align',
         subMenuTitle: 'Middle',
-        subMenuTitleUndo: 'None',
+        subMenuRemoveTitle: 'None',
         checkMarkEntries: 4,
         rows: 2,
         columns: 2,
@@ -86,7 +86,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
       await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
         menuTitle: 'Vertical align',
         subMenuTitle: 'Bottom',
-        subMenuTitleUndo: 'None',
+        subMenuRemoveTitle: 'None',
         checkMarkEntries: 4,
         rows: 2,
         columns: 2,

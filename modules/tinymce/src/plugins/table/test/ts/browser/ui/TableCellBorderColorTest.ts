@@ -28,7 +28,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBorderColorTest', () => {
     await pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks(hook.editor(), {
       menuTitle: 'Border color',
       subMenuTitle: 'Color',
-      subMenuTitleUndo: 'Remove color',
+      subMenuRemoveTitle: 'Remove color',
       rows: 1,
       columns: 1,
       customStyle: 'border-color: #ffffff'
@@ -39,7 +39,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBorderColorTest', () => {
     await pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks(hook.editor(), {
       menuTitle: 'Border color',
       subMenuTitle: 'Color',
-      subMenuTitleUndo: 'Remove color',
+      subMenuRemoveTitle: 'Remove color',
       rows: 2,
       columns: 2,
       customStyle: 'border-color: #ffffff'

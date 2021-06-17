@@ -28,7 +28,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
     await pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks(hook.editor(), {
       menuTitle: 'Background color',
       subMenuTitle: 'Color',
-      subMenuTitleUndo: 'Remove color',
+      subMenuRemoveTitle: 'Remove color',
       rows: 1,
       columns: 1,
       customStyle: 'background-color: #ffffff'
@@ -39,7 +39,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
     await pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks(hook.editor(), {
       menuTitle: 'Background color',
       subMenuTitle: 'Color',
-      subMenuTitleUndo: 'Remove color',
+      subMenuRemoveTitle: 'Remove color',
       rows: 2,
       columns: 2,
       customStyle: 'background-color: #ffffff'

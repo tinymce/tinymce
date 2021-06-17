@@ -6,16 +6,16 @@ import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 interface AssertStyleOptions {
-  menuTitle: string;
-  subMenuTitle: string;
-  subMenuTitleUndo: string;
-  rows: number;
-  columns: number;
-  customStyle: string;
+  readonly menuTitle: string;
+  readonly subMenuTitle: string;
+  readonly subMenuRemoveTitle: string;
+  readonly rows: number;
+  readonly columns: number;
+  readonly customStyle: string;
 }
 
 interface AssertStyleOptionsWithCheckmarks extends AssertStyleOptions {
-  checkMarkEntries: number;
+  readonly checkMarkEntries: number;
 }
 
 const setEditorContentTableAndSelection = (editor: Editor, rows: number, columns: number) => {
@@ -144,7 +144,7 @@ const pAssertStyleCanBeToggledWithoutCheckmarks = async (editor: Editor, options
   await pClickOnSubMenu(editor, options.menuTitle, options.subMenuTitle, useMenuOrToolbar);
   assertStructureHasCustomStyle(editor, options.columns, options.rows, options.customStyle);
 
-  await pClickOnSubMenu(editor, options.menuTitle, options.subMenuTitleUndo, useMenuOrToolbar);
+  await pClickOnSubMenu(editor, options.menuTitle, options.subMenuRemoveTitle, useMenuOrToolbar);
   assertStructureIsRestoredToDefault(editor, options.columns, options.rows);
 };
 
@@ -157,7 +157,7 @@ const pAssertStyleCanBeToggled = async (editor: Editor, options: AssertStyleOpti
   await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuTitle, options.checkMarkEntries - 1, sugarContainer, useMenuOrToolbar);
   assertStructureHasCustomStyle(editor, options.rows, options.columns, options.customStyle);
 
-  await pClickOnSubMenu(editor, options.menuTitle, options.subMenuTitleUndo, useMenuOrToolbar);
+  await pClickOnSubMenu(editor, options.menuTitle, options.subMenuRemoveTitle, useMenuOrToolbar);
   await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer, useMenuOrToolbar);
   assertStructureIsRestoredToDefault(editor, options.rows, options.columns);
 };
