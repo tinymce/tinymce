@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBorderColorTest', () => {
     ],
   }, [ Plugin, Theme ], true);
 
-  it('TINY-7476: The color should be changed', async () => {
+  it('TINY-7476: The color should be changed for a single cell', async () => {
     await pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks(hook.editor(), {
       menuTitle: 'Border color',
       subMenuTitle: 'Color',
