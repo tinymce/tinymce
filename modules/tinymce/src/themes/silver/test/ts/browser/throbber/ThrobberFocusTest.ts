@@ -195,13 +195,20 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
   it('TINY-7602: should not steal focus if target element inside the editor body has "mce-pastebin" class', async () => {
     const editor = hook.editor();
     const editorBody = TinyDom.body(editor);
-    const normalDiv = SugarElement.fromHtml<HTMLElement>('<div class="not-pastebin" >&nbsp;</div>');
-    const fakePasteBin = SugarElement.fromHtml<HTMLElement>('<div class="mce-pastebin">&nbsp;</div>');
+    const normalDiv = SugarElement.fromHtml<HTMLElement>('<div class="not-pastebin" contenteditable="true" data-mce-bogus="all">&nbsp;</div>');
+    const fakePasteBin = SugarElement.fromHtml<HTMLElement>('<div class="mce-pastebin" contenteditable="true" data-mce-bogus="all">&nbsp;</div>');
 
     Insert.append(editorBody, normalDiv);
     Insert.append(editorBody, fakePasteBin);
     await pEnableThrobber(editor, pAssertThrobberFocus);
     FocusTools.setFocus(SugarBody.body(), '#tempInput');
+    await pAssertInputFocus();
+
+    // Note: Ideally we would like to actually focus the divs with Focus.focus.
+    // Unfortunately, other focus events end up firing with this and as such
+    // by the time we get to the assertion, the focus may have shifted back to
+    // the throbber. As a result, the best we can do is trigger fake events and
+    // ensure the throbber logic acts as expected
 
     // Make sure throbber doesn't take focus when the pastebin is the target
     editor.dom.fire(fakePasteBin.dom, 'focusin');

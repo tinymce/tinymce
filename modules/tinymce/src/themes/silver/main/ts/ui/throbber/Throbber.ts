@@ -106,19 +106,27 @@ const renderThrobber = (spec): AlloySpec => ({
   components: [ ]
 });
 
-const isPasteBinTarget = (target: unknown) =>
-  Optional.from(target)
-    .map(SugarElement.fromDom)
-    .filter(SugarNode.isElement)
-    .exists((targetElm) => Class.has(targetElm, 'mce-pastebin'));
+const isFocusEvent = (event: EditorEvent<ExecCommandEvent> | EventUtilsEvent<FocusEvent>): event is EventUtilsEvent<FocusEvent> =>
+  event.type === 'focusin';
+
+const isPasteBinTarget = (event: EditorEvent<ExecCommandEvent> | EventUtilsEvent<FocusEvent>) => {
+  if (isFocusEvent(event)) {
+    const node = event.composed ? Arr.head(event.composedPath()) : Optional.from(event.target);
+    return node
+      .map(SugarElement.fromDom)
+      .filter(SugarNode.isElement)
+      .exists((targetElm) => Class.has(targetElm, 'mce-pastebin'));
+  } else {
+    return false;
+  }
+};
 
 const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared) => {
   const throbberState = Cell<boolean>(false);
   const timer = Cell<Optional<number>>(Optional.none());
 
   const stealFocus = (e: EditorEvent<ExecCommandEvent> | EventUtilsEvent<FocusEvent>) => {
-    const isPasteBin = isPasteBinTarget(e.target);
-    if (throbberState.get() && !isPasteBin) {
+    if (throbberState.get() && !isPasteBinTarget(e)) {
       e.preventDefault();
       focusBusyComponent(lazyThrobber());
       editor.editorManager.setActive(editor);
