@@ -60,21 +60,19 @@ const fixColorValue = (value: string, setColor: (colorValue: string) => void) =>
   }
 };
 
-const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpec[], style: string): Menu.FancyMenuItemSpec[] => [
-  {
-    type: 'fancymenuitem',
-    fancytype: 'colorswatch',
-    initData: {
-      colors: colorList.length > 0 ? colorList : undefined,
-      disallowCustomColors: true
-    },
-    onAction: (data) => {
-      fixColorValue(data.value, (value: string) => {
-        editor.execCommand('mceTableApplyCellStyle', false, { [style]: value });
-      });
-    }
+const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpec[], style: string): Menu.FancyMenuItemSpec[] => [{
+  type: 'fancymenuitem',
+  fancytype: 'colorswatch',
+  initData: {
+    colors: colorList.length > 0 ? colorList : undefined,
+    disallowCustomColors: true
+  },
+  onAction: (data) => {
+    fixColorValue(data.value, (value) => {
+      editor.execCommand('mceTableApplyCellStyle', false, { [style]: value });
+    });
   }
-];
+}];
 
 export {
   onSetupToggle,
