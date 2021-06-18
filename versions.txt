@@ -1,4 +1,2 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
-
-snooker@8.0.4
