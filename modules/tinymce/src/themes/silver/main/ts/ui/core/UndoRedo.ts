@@ -6,52 +6,50 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
-const toggleUndoRedoState = (api: Menu.MenuItemInstanceApi, editor: Editor, type: 'hasUndo' | 'hasRedo') => {
-  const checkState = () => editor.undoManager ? editor.undoManager[type]() : false;
+import { onActionExecCommand, onSetupEvent } from './ControlUtils';
 
-  const onUndoStateChange = () => {
-    api.setDisabled(editor.mode.isReadOnly() || !checkState());
-  };
-
-  api.setDisabled(!checkState());
-
-  editor.on('Undo Redo AddUndo TypingUndo ClearUndos SwitchMode', onUndoStateChange);
-  return () => editor.off('Undo Redo AddUndo TypingUndo ClearUndos SwitchMode', onUndoStateChange);
-};
+const onSetupUndoRedoState = (editor: Editor, type: 'hasUndo' | 'hasRedo') =>
+  onSetupEvent(editor, 'Undo Redo AddUndo TypingUndo ClearUndos SwitchMode', (api: Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi) => {
+    api.setDisabled(editor.mode.isReadOnly() || !editor.undoManager[type]());
+  });
 
 const registerMenuItems = (editor: Editor) => {
   editor.ui.registry.addMenuItem('undo', {
     text: 'Undo',
     icon: 'undo',
     shortcut: 'Meta+Z',
-    onSetup: (api) => toggleUndoRedoState(api, editor, 'hasUndo'),
-    onAction: () => editor.execCommand('undo')
+    onSetup: onSetupUndoRedoState(editor, 'hasUndo'),
+    onAction: onActionExecCommand(editor, 'undo')
   });
 
   editor.ui.registry.addMenuItem('redo', {
     text: 'Redo',
     icon: 'redo',
     shortcut: 'Meta+Y',
-    onSetup: (api) => toggleUndoRedoState(api, editor, 'hasRedo'),
-    onAction: () => editor.execCommand('redo')
+    onSetup: onSetupUndoRedoState(editor, 'hasRedo'),
+    onAction: onActionExecCommand(editor, 'redo')
   });
 };
 
+// Note: The undo/redo buttons are disabled by default here, as they'll be rendered
+// on init generally and it won't haven't any undo levels at that stage.
 const registerButtons = (editor: Editor) => {
   editor.ui.registry.addButton('undo', {
     tooltip: 'Undo',
     icon: 'undo',
-    onSetup: (api) => toggleUndoRedoState(api, editor, 'hasUndo'),
-    onAction: () => editor.execCommand('undo')
+    disabled: true,
+    onSetup: onSetupUndoRedoState(editor, 'hasUndo'),
+    onAction: onActionExecCommand(editor, 'undo')
   });
 
   editor.ui.registry.addButton('redo', {
     tooltip: 'Redo',
     icon: 'redo',
-    onSetup: (api) => toggleUndoRedoState(api, editor, 'hasRedo'),
-    onAction: () => editor.execCommand('redo')
+    disabled: true,
+    onSetup: onSetupUndoRedoState(editor, 'hasRedo'),
+    onAction: onActionExecCommand(editor, 'redo')
   });
 };
 
