@@ -1,5 +1,6 @@
 import { FieldProcessor } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
+
 import * as AlloyParts from '../../parts/AlloyParts';
 import { PartTypeAdt } from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';

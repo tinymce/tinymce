@@ -8,6 +8,7 @@
 import { CustomEvent } from '@ephox/alloy';
 import { ImageResult } from '@ephox/imagetools';
 import { Fun, Id, Optional } from '@ephox/katamari';
+
 import { formActionEvent } from '../../general/FormEvents';
 
 interface WithDirection {

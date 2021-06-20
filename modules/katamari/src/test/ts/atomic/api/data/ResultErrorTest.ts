@@ -1,6 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
+
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
 import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
@@ -40,7 +41,7 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
     assertNone(Result.error(4).toOptional());
   });
 
-  const getErrorOrDie = (res) => res.fold((err) => err, Fun.die('Was not an error!'));
+  const getErrorOrDie = (res) => res.fold(Fun.identity, Fun.die('Was not an error!'));
 
   it('error.is === false', () => {
     fc.assert(fc.property(fc.integer(), fc.string(), (i, s) => {

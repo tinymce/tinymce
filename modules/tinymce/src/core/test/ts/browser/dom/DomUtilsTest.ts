@@ -5,6 +5,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.dom.DOMUtils', () => {

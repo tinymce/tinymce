@@ -7,6 +7,7 @@ import $ from 'tinymce/core/api/dom/DomQuery';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as CaretUtils from 'tinymce/core/caret/CaretUtils';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
+
 import * as CaretAsserts from '../../module/test/CaretAsserts';
 import * as ViewBlock from '../../module/test/ViewBlock';
 

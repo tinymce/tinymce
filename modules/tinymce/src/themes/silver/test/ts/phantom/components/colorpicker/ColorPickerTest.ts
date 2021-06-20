@@ -7,6 +7,7 @@ import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
+
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 
 describe('phantom.tinymce.themes.silver.components.colorpicker.ColorPickerTest', () => {

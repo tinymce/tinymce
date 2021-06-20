@@ -2,6 +2,7 @@ import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
 import { TinyDom } from '@ephox/mcagar';
 import { Scroll, SugarBody, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const countNumber = (container: SugarElement<Node>, selector: string) => {

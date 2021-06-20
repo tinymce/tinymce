@@ -9,6 +9,7 @@ import {
   PublicDialog as Dialog, PublicInlineContent as InlineContent, PublicMenu as Menu, PublicSidebar as Sidebar, PublicToolbar as Toolbar,
   Registry as BridgeRegistry
 } from '@ephox/bridge';
+
 import StyleSheetLoader from '../dom/StyleSheetLoader';
 
 type Registry = BridgeRegistry.Registry;

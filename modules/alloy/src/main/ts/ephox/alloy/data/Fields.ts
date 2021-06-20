@@ -1,5 +1,6 @@
 import { FieldPresence, FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional, Result } from '@ephox/katamari';
+
 import * as Debugging from '../debugging/Debugging';
 import * as MenuMarkers from '../menu/util/MenuMarkers';
 

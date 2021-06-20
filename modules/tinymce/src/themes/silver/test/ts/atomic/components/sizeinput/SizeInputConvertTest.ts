@@ -4,6 +4,7 @@ import { assert } from 'chai';
 import * as fc from 'fast-check';
 
 import { convertUnit, nuSize, Size, SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
+
 import { convertibleUnits, largeSensible, units } from './SizeInputShared';
 
 describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputConvertTest', () => {

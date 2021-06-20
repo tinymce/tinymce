@@ -1,4 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+
 import { Version } from 'ephox/sand/detect/Version';
 
 UnitTest.test('VersionDetectorTest', () => {

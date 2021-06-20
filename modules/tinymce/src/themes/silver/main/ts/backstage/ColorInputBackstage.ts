@@ -6,7 +6,9 @@
  */
 
 import { Menu } from '@ephox/bridge';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as ColorSwatch from '../ui/core/color/ColorSwatch';
 import * as Settings from '../ui/core/color/Settings';
 

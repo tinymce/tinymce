@@ -5,6 +5,7 @@ import { ValueType } from '@ephox/boulder';
 import { DialogManager } from '@ephox/bridge';
 import { Fun, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
+
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
 import { WindowExtra } from 'tinymce/themes/silver/ui/window/SilverDialogCommon';

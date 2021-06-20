@@ -5,6 +5,7 @@ import { Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';
+
 import TestProviders from '../../../module/TestProviders';
 
 describe('phantom.tinymce.themes.silver.components.dropzone.DropzoneTest', () => {

@@ -9,6 +9,7 @@ import { AlloyTriggers, Attachment, Swapping } from '@ephox/alloy';
 import { Cell, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { EventArgs, Focus, SugarElement, SugarNode } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';

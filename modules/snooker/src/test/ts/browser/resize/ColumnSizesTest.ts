@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as BarPositions from 'ephox/snooker/resize/BarPositions';

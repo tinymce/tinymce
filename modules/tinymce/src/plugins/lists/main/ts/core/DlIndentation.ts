@@ -7,7 +7,9 @@
 
 import { Arr } from '@ephox/katamari';
 import { Compare, Replication, SugarElement, Traverse } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { Indentation } from '../listmodel/Indentation';
 import * as SplitList from './SplitList';
 

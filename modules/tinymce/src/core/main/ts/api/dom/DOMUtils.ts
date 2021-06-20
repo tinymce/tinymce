@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { SugarElement, WindowVisualViewport } from '@ephox/sugar';
+
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';

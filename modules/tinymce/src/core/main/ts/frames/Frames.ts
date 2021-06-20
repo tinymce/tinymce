@@ -7,6 +7,7 @@
 
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { Navigation } from './Navigation';
 
 const walkUp = (navigation: Navigation, doc: SugarElement): SugarElement[] => {

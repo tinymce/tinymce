@@ -8,8 +8,10 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Events from '../api/Events';
 import { getTableHeaderType } from '../api/Settings';
 import * as Util from './Util';

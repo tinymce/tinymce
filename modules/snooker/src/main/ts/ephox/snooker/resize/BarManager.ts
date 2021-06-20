@@ -2,6 +2,7 @@ import { Dragger } from '@ephox/dragster';
 import { Fun, Optional } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { Attribute, Class, Compare, Css, DomEvent, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+
 import { findClosestContentEditable, isContentEditableTrue } from '../alien/ContentEditable';
 import { ResizeWire } from '../api/ResizeWire';
 import * as Styles from '../style/Styles';

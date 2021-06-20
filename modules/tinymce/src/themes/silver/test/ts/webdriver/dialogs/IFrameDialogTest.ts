@@ -7,6 +7,7 @@ import { Class, Focus, SugarDocument } from '@ephox/sugar';
 import Env from 'tinymce/core/api/Env';
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+
 import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {

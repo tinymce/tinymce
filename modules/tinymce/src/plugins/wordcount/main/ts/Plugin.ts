@@ -6,6 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Api from './api/Api';
 import * as Wordcounter from './core/WordCounter';
 import * as Buttons from './ui/Buttons';

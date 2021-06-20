@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
+
 import { WordScope } from 'ephox/robin/data/WordScope';
 import * as Identify from 'ephox/robin/words/Identify';
 

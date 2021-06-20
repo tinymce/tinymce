@@ -9,6 +9,7 @@ import { Fun } from '@ephox/katamari';
 import {
   Css, Height, Insert, Remove, Scroll, SugarElement, SugarLocation, SugarNode, SugarPosition, SugarText, Traverse, WindowVisualViewport
 } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import { ScrollIntoViewEvent } from '../api/EventTypes';
 import * as OuterPosition from '../frames/OuterPosition';

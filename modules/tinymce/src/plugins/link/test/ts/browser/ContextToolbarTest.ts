@@ -2,6 +2,7 @@ import { Mouse, UiFinder } from '@ephox/agar';
 import { describe, it, before, after } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';

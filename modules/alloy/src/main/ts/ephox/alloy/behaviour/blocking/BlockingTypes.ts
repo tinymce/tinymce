@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';

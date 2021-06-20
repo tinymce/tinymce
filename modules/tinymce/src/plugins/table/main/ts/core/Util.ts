@@ -8,7 +8,9 @@
 import { Arr, Optional, Strings } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 const getNodeName = (elm: Node) => elm.nodeName.toLowerCase();
 
 const getBody = (editor: Editor) => SugarElement.fromDom(editor.getBody());

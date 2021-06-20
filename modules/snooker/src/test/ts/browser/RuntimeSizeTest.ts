@@ -2,6 +2,7 @@ import { assert, TestLabel, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Html, Insert, InsertAll, Remove, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
+
 import * as RuntimeSize from 'ephox/snooker/resize/RuntimeSize';
 
 interface TableModel {

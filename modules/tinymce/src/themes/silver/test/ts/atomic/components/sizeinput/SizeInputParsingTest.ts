@@ -4,6 +4,7 @@ import { assert } from 'chai';
 import * as fc from 'fast-check';
 
 import { nuSize, parseSize, Size, SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
+
 import { largeSensible, units } from './SizeInputShared';
 
 describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputParsingTest', () => {

@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import { onSetupFormatToggle } from './complex/utils/Utils';
 
 const register = (editor: Editor) => {

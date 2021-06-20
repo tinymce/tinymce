@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import * as Structs from '../api/Structs';
 
 const addCells = (gridRow: Structs.RowCells, index: number, cells: Structs.ElementNew[]): Structs.RowCells => {

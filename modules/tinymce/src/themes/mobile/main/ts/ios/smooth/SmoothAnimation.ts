@@ -6,6 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Delay from 'tinymce/core/api/util/Delay';
 
 const adjust = (value, destination, amount) => {

@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
+
 import * as Extract from '../api/general/Extract';
 import { OrphanText } from '../wrap/OrphanText';
 import * as Parents from './Parents';

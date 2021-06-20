@@ -9,6 +9,7 @@ import { GuiFactory } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Css, Insert } from '@ephox/sugar';
+
 import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
 import * as AndroidMode from '../android/core/AndroidMode';

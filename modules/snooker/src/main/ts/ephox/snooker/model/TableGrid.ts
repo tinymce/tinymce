@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { ElementNew, RowCells } from '../api/Structs';
 import * as GridRow from './GridRow';
 
@@ -21,11 +22,7 @@ const findDiff = (xs: ElementNew[], comp: (a: SugarElement, b: SugarElement) => 
   const index = Arr.findIndex(xs, (x) => {
     return !comp(first.element, x.element);
   });
-  return index.fold(() => {
-    return xs.length;
-  }, (ind) => {
-    return ind;
-  });
+  return index.getOr(xs.length);
 };
 
 /*

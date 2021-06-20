@@ -6,6 +6,7 @@
  */
 
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 export interface TableEventData {

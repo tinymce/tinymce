@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 import * as HtmlToData from './HtmlToData';
 import * as Mime from './Mime';

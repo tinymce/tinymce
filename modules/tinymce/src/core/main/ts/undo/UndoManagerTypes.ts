@@ -6,6 +6,7 @@
  */
 
 import { Cell, Optional } from '@ephox/katamari';
+
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { Bookmark } from '../bookmark/BookmarkTypes';
 

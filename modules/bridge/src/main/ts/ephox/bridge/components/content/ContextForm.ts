@@ -1,5 +1,6 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
+
 import { BaseToolbarButton, baseToolbarButtonFields, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
 import {
   BaseToolbarToggleButton, baseToolbarToggleButtonFields, BaseToolbarToggleButtonInstanceApi, BaseToolbarToggleButtonSpec

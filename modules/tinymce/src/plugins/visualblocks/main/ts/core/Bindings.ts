@@ -6,7 +6,9 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Settings from '../api/Settings';
 import * as VisualBlocks from './VisualBlocks';
 

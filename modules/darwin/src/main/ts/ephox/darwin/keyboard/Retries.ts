@@ -2,6 +2,7 @@ import { Adt, Fun, Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { DomStructure } from '@ephox/robin';
 import { PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+
 import { WindowBridge } from '../api/WindowBridge';
 import { Situs } from '../selection/Situs';
 import * as Carets from './Carets';

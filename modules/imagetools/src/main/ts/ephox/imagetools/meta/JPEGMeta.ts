@@ -1,4 +1,5 @@
 import { Optionals } from '@ephox/katamari';
+
 import * as Conversions from '../util/Conversions';
 import { Promise } from '../util/Promise';
 import { BinaryReader } from './BinaryReader';

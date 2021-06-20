@@ -6,6 +6,7 @@
  */
 
 import { Unicode } from '@ephox/katamari';
+
 import { DomParserSettings, ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Schema, { SchemaMap } from '../api/html/Schema';

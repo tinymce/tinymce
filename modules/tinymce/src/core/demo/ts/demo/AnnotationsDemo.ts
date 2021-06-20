@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 declare let tinymce: any;

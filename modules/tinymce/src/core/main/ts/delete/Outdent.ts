@@ -6,6 +6,7 @@
  */
 
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import * as BlockBoundary from '../caret/BlockBoundary';
 import CaretPosition from '../caret/CaretPosition';

@@ -6,6 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import Entities from '../api/html/Entities';
 import * as NodeType from '../dom/NodeType';
 import * as Diff from './Diff';

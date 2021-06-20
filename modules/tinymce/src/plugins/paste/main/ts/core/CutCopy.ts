@@ -6,9 +6,11 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
+
 import * as InternalHtml from './InternalHtml';
 
 interface SelectionContentData {

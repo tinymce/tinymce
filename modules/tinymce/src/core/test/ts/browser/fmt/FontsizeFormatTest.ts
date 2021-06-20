@@ -1,8 +1,8 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { assert } from 'chai';
-import Editor from 'tinymce/core/api/Editor';
 
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.FontsizeFormatTest', () => {

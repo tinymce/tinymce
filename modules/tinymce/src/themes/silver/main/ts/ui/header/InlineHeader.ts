@@ -11,6 +11,7 @@ import { Attribute, Css, Height, SugarBody, SugarElement, SugarLocation, Travers
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+
 import {
   getMaxWidthSetting, getToolbarLocation, getToolbarMode, isStickyToolbar, ToolbarLocation, ToolbarMode, useFixedContainer
 } from '../../api/Settings';

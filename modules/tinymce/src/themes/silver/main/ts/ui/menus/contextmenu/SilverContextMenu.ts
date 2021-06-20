@@ -10,8 +10,10 @@ import { Menu } from '@ephox/bridge';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorExists, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';
 import * as Settings from './Settings';

@@ -7,6 +7,7 @@
 
 import { Fun } from '@ephox/katamari';
 import { Compare, SelectorExists, SugarElement } from '@ephox/sugar';
+
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as CaretCandidate from '../caret/CaretCandidate';
 import { isWhitespaceText } from '../text/Whitespace';

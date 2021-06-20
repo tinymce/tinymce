@@ -7,6 +7,7 @@
 
 import { Adt, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { findNextBr, findPreviousBr, isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';

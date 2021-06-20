@@ -13,6 +13,7 @@ import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Id, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 

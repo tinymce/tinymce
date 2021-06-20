@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';

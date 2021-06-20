@@ -1,5 +1,6 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
+
 import * as Fields from '../../data/Fields';
 
 export default [

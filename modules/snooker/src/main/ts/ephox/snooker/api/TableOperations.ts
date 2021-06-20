@@ -1,5 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Remove, SugarElement, SugarNode, Width } from '@ephox/sugar';
+
 import * as Blocks from '../lookup/Blocks';
 import * as DetailsList from '../model/DetailsList';
 import * as GridRow from '../model/GridRow';

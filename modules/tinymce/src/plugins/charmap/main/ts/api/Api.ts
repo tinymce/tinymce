@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Actions from '../core/Actions';
 import * as CharMap from '../core/CharMap';
 

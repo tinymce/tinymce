@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Strings, Type } from '@ephox/katamari';
+
 import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
 import Entities from './Entities';

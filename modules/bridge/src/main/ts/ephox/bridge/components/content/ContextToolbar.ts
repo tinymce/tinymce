@@ -1,5 +1,6 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
+
 import { ContextBar, contextBarFields, ContextBarSpec } from './ContextBar';
 
 export interface ContextToolbarSpec extends ContextBarSpec {

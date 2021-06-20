@@ -6,6 +6,7 @@
  */
 
 import { Fun, Obj } from '@ephox/katamari';
+
 import Tools from '../util/Tools';
 
 export type SchemaType = 'html4' | 'html5' | 'html5-strict';

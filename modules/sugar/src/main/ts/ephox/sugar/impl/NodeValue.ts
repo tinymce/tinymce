@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import { SugarElement } from '../api/node/SugarElement';
 
 export interface NodeValue {

@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Actions from './Actions';
 import * as Conversions from './Conversions';
 import * as Picker from './Picker';

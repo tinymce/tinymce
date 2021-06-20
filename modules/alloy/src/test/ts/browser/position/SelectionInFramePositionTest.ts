@@ -9,6 +9,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
+
 import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
 
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {

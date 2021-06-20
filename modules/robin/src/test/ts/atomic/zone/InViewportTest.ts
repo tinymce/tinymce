@@ -2,6 +2,7 @@ import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
+
 import { ZonePosition } from 'ephox/robin/api/general/ZonePosition';
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { WordDecision } from 'ephox/robin/words/WordDecision';

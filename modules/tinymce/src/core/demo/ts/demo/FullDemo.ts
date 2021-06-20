@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;

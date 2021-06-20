@@ -1,5 +1,6 @@
 import { describe, it, before, after, afterEach } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';

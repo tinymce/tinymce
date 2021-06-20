@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { SugarElement, TextContent } from '@ephox/sugar';
+
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 

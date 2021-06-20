@@ -7,7 +7,8 @@
 
 import { StructureSchema } from '@ephox/boulder';
 import { InlineContent } from '@ephox/bridge';
-import { Arr, Obj, Unique } from '@ephox/katamari';
+import { Arr, Fun, Obj, Unique } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 export interface AutocompleterDatabase {
@@ -22,7 +23,7 @@ const register = (editor: Editor): AutocompleterDatabase => {
     (err) => {
       throw new Error(StructureSchema.formatError(err));
     },
-    (x) => x
+    Fun.identity
   ));
 
   const triggerChars = Unique.stringArray(

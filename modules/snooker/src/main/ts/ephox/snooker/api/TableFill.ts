@@ -1,5 +1,6 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Compare, Css, CursorPosition, Insert, Replication, SelectorFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+
 import { CellSpan, Generators, SimpleGenerators } from './Generators';
 
 const transferableAttributes: Record<string, string[]> = {
@@ -33,6 +34,7 @@ const replace = <K extends keyof HTMLElementTagNameMap>(cell: SugarElement, tag:
   return replica;
 };
 
+// eslint-disable-next-line @tinymce/prefer-fun
 const pasteReplace = (cell: SugarElement) => {
   // TODO: check for empty content and don't return anything
   return cell;

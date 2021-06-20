@@ -9,8 +9,10 @@ import { AlloyComponent, AlloySpec, Behaviour, Disabling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFilter } from '@ephox/sugar';
+
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
+
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
 import { renderContainer, renderHtml, renderImage } from '../structure/ItemSlices';

@@ -6,6 +6,7 @@
  */
 
 import { Obj, Optionals } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';

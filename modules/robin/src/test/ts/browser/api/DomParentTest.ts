@@ -2,6 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { Attribute, Compare, Hierarchy, Html, SelectorFind, SugarElement } from '@ephox/sugar';
+
 import * as DomParent from 'ephox/robin/api/dom/DomParent';
 
 UnitTest.test(
@@ -221,7 +222,7 @@ UnitTest.test(
         const subset = DomParent.subset(parent, child);
 
         const actual = subset.map((ss) => Arr.map(ss, (x) => Attribute.get(x, 'class')));
-        const expected_ = expected.map((ss) => Arr.map<string | undefined>((ss), (x) => x));
+        const expected_ = expected.map((ss) => Arr.map<string | undefined>((ss), Fun.identity));
 
         KAssert.eqOptional('eq', expected_, actual);
       };

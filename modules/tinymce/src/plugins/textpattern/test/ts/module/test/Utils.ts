@@ -1,6 +1,7 @@
 import { ApproxStructure, Keys, StructAssert } from '@ephox/agar';
 import { Unicode } from '@ephox/katamari';
 import { TinyContentActions, TinySelections } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const setContentAndFireKeystroke = (key: number) => {

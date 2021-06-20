@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import { Clipboard } from '../api/Clipboard';
 import * as Events from '../api/Events';
 

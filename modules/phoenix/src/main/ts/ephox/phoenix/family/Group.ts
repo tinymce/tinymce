@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Arrays, Splitting } from '@ephox/polaris';
+
 import { TypedItem } from '../api/data/TypedItem';
 import * as Extract from '../api/general/Extract';
 

@@ -1,5 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+
 import { Event } from 'ephox/porkbun/Event';
 
 UnitTest.test('EventUnbindTest', () => {

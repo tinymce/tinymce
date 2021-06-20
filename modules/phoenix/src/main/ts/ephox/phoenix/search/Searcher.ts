@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { Pattern, PositionArray, Search } from '@ephox/polaris';
+
 import { NamedPattern } from '../api/data/NamedPattern';
 import * as Spot from '../api/data/Spot';
 import { TypedItem } from '../api/data/TypedItem';

@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Dialog from '../ui/Dialog';
 import * as Utils from '../util/Utils';
 

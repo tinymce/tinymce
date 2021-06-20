@@ -7,9 +7,11 @@
 
 import { Arr, Optional } from '@ephox/katamari';
 import { SandHTMLElement } from '@ephox/sand';
+
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as NodeType from './NodeType';
 
 const getParentList = (editor: Editor, node?: Node) => {

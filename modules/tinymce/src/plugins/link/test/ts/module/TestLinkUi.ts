@@ -3,6 +3,7 @@ import { Obj, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, Class, SugarBody, SugarDocument, SugarElement, Traverse, Value } from '@ephox/sugar';
 import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const doc = SugarDocument.getDocument();

@@ -25,7 +25,7 @@ export interface CustomDetail<A> {
 
 const baseBehaviour = 'alloy.base.behaviour';
 
-const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => StructureSchema.asRaw('custom.definition', StructureSchema.objOf([
+const schema = StructureSchema.objOf([
   FieldSchema.field('dom', 'dom', FieldPresence.required(), StructureSchema.objOf([
     // Note, no children.
     FieldSchema.required('tag'),
@@ -39,7 +39,7 @@ const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => Struc
   FieldSchema.required('uid'),
 
   FieldSchema.defaulted('events', {}),
-  FieldSchema.defaulted('apis', { }),
+  FieldSchema.defaulted('apis', {}),
 
   // Use mergeWith in the future when pre-built behaviours conflict
   FieldSchema.field(
@@ -61,7 +61,9 @@ const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => Struc
   ),
 
   FieldSchema.option('domModification')
-]), spec);
+]);
+
+const toInfo = <A>(spec: ComponentDetail): Result<CustomDetail<A>, any> => StructureSchema.asRaw('custom.definition', schema, spec);
 
 const toDefinition = (detail: CustomDetail<any>): DomDefinitionDetail =>
   // EFFICIENCY: Consider not merging here.

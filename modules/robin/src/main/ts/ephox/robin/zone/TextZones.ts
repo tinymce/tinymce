@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
+
 import * as Parent from '../api/general/Parent';
 import { ZoneViewports } from '../api/general/ZoneViewports';
 import * as Clustering from '../words/Clustering';

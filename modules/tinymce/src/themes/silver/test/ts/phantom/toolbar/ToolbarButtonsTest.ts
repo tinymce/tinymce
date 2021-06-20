@@ -8,6 +8,7 @@ import { assert } from 'chai';
 
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
+
 import * as TestExtras from '../../module/TestExtras';
 import TestProviders from '../../module/TestProviders';
 

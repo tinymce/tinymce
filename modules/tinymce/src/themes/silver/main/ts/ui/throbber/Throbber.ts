@@ -8,11 +8,13 @@
 import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Replacing } from '@ephox/alloy';
 import { Arr, Cell, Optional, Type } from '@ephox/katamari';
 import { Attribute, Class, Css, Focus, SugarElement, SugarNode } from '@ephox/sugar';
+
 import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: AlloyComponent, _behaviours: Behaviour.AlloyBehaviourRecord): AlloySpec => ({

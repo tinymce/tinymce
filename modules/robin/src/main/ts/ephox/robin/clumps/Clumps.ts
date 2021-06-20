@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Adt, Arr, Optional } from '@ephox/katamari';
 import { Descent, Gather, Spot, SpotPoint, Transition } from '@ephox/phoenix';
+
 import * as Structure from '../api/general/Structure';
 
 export interface Clump<E> {

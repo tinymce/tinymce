@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj, Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const patchPipeConfig = (config: string[] | string) => typeof config === 'string' ? config.split(/[ ,]/) : config;

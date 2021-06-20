@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Class, Html, Insert, InsertAll, Remove, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
 UnitTest.test('DomWrappingTest', () => {

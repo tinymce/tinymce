@@ -6,6 +6,7 @@
  */
 
 import { Obj } from '@ephox/katamari';
+
 import Tools from './Tools';
 
 type WithSubItems<T, K extends keyof T> = T[K] extends Array<any> ? (T & T[K][number]): T;

@@ -1,5 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { Generators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';

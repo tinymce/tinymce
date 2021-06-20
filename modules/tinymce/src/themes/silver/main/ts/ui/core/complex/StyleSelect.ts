@@ -7,8 +7,10 @@
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
 import { Arr, Fun, Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
+
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';

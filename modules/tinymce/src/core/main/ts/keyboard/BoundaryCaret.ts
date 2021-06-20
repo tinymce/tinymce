@@ -6,6 +6,7 @@
  */
 
 import { Cell, Optional } from '@ephox/katamari';
+
 import * as CaretContainer from '../caret/CaretContainer';
 import * as CaretContainerInline from '../caret/CaretContainerInline';
 import * as CaretContainerRemove from '../caret/CaretContainerRemove';

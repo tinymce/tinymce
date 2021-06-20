@@ -7,6 +7,7 @@
 
 import { Optional, Optionals } from '@ephox/katamari';
 import { Compare, SelectorFilter, SugarElement } from '@ephox/sugar';
+
 import * as TableCellSelection from '../selection/TableCellSelection';
 
 export type IsRootFn = (e: SugarElement<Node>) => boolean;

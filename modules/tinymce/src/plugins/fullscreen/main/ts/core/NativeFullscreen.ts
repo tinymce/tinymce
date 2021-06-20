@@ -6,6 +6,7 @@
  */
 
 import { SugarBody, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 export const getFullscreenRoot = (editor: Editor): SugarElement<Element> => {

@@ -6,7 +6,9 @@
  */
 
 import { Arr, Strings, Unicode } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Settings from '../api/Settings';
 
 // Don't compare other unicode spaces here, as we're only concerned about whitespace the browser would collapse

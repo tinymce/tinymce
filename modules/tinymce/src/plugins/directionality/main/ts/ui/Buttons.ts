@@ -6,6 +6,7 @@
  */
 
 import { Direction, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => (api) => {

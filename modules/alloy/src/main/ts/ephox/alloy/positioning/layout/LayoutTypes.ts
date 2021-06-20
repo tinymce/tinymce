@@ -1,4 +1,5 @@
 import { SugarElement } from '@ephox/sugar';
+
 import { SpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 

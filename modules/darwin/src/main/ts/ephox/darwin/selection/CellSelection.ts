@@ -2,6 +2,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { TablePositions } from '@ephox/snooker';
 import { Compare, SelectorFilter, SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
+
 import { Identified, IdentifiedExt } from './Identified';
 
 interface Edges {

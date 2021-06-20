@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { getDemoRegistry } from './DemoRegistry';
 
 /* eslint-disable no-console */

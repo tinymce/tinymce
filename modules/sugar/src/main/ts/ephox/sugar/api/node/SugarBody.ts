@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { SugarElement } from './SugarElement';
 import * as SugarNode from './SugarNode';
 import { getShadowHost, getShadowRoot } from './SugarShadowDom';

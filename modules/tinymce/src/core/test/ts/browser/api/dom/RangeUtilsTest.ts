@@ -3,6 +3,7 @@ import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
+
 import * as ViewBlock from '../../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.api.dom.RangeUtilsTest', () => {

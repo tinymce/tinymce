@@ -6,7 +6,9 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as NodeType from './NodeType';
 
 export const isCustomList = (list: HTMLElement) => /\btox\-/.test(list.className);

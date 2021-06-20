@@ -1,5 +1,6 @@
 import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Replication, Selectors, SugarElement } from '@ephox/sugar';
+
 import * as DetailsList from '../model/DetailsList';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as LayerSelector from '../util/LayerSelector';

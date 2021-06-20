@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Fun, Optional } from '@ephox/katamari';
+
 import { WordDecision } from 'ephox/robin/words/WordDecision';
 import { WordWalking } from 'ephox/robin/words/WordWalking';
 

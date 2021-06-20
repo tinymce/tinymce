@@ -6,6 +6,7 @@
  */
 
 import { Arr, Optional } from '@ephox/katamari';
+
 import { ListItem } from '../DialogTypes';
 
 // NOTE: you currently need anchors in the content for this field to appear

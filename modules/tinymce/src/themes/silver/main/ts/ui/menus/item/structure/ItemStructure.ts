@@ -8,8 +8,10 @@
 import { AlloySpec, RawDomSchema } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
 import { renderHtml, renderIcon, renderShortcut, renderStyledText, renderText } from './ItemSlices';

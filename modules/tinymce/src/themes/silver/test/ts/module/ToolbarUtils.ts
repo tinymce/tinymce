@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
+
 import { pCloseMore, pOpenMore } from './MenuUtils';
 
 const pAssertFloatingToolbarPosition = async (editor: Editor, getTop: () => number, expectedLeft: number, expectedRight: number) => {

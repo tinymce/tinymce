@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { Html, Insert, SugarElement } from '@ephox/sugar';
+
 import { CellSpan } from 'ephox/snooker/api/Generators';
 import * as TableFill from 'ephox/snooker/api/TableFill';
 

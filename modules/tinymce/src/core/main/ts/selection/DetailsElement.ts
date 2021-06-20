@@ -6,6 +6,7 @@
  */
 
 import { Arr, Type } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 
 const preventSummaryToggle = (editor: Editor) => {

@@ -6,6 +6,7 @@
  */
 
 import VK from 'tinymce/core/api/util/VK';
+
 import { indentListSelection, outdentListSelection } from '../actions/Indendation';
 import * as Settings from '../api/Settings';
 import * as Delete from './Delete';

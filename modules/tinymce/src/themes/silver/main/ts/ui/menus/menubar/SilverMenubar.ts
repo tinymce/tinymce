@@ -13,10 +13,11 @@ import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, EventArgs, SelectorFind } from '@ephox/sugar';
+
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import { TranslatedString } from 'tinymce/core/api/util/I18n';
-
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+
 import { renderMenuButton } from '../../button/MenuButton';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
 

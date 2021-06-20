@@ -6,6 +6,7 @@ import { Html, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as ImageUtils from '../module/test/ImageUtils';
 
 describe('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', () => {

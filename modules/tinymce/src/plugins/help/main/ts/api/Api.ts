@@ -6,6 +6,7 @@
  */
 
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import { CustomTabSpecs } from '../Plugin';
 
 const get = (customTabs: CustomTabSpecs) => {

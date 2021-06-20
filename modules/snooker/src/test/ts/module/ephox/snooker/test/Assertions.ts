@@ -3,6 +3,7 @@ import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import { TargetElement, TargetPaste, TargetPasteRows, TargetSelection, OperationCallback } from 'ephox/snooker/model/RunOperation';

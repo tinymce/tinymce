@@ -7,6 +7,7 @@
 
 import { Obj } from '@ephox/katamari';
 import { PredicateExists, SugarElement } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';

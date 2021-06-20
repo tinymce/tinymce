@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import { isFigure, isImage } from '../core/ImageData';
 import * as Utils from '../core/Utils';
 import { Dialog } from './Dialog';

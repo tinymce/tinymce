@@ -1,9 +1,9 @@
 import { Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { getText } from 'tinymce/plugins/wordcount/core/GetText';
-
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 

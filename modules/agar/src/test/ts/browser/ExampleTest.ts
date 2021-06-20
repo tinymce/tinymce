@@ -1,5 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Class, Css, DomEvent, Html, Insert, InsertAll, Remove, SugarElement } from '@ephox/sugar';
+
 import { Chain } from 'ephox/agar/api/Chain';
 import * as ChainSequence from 'ephox/agar/api/ChainSequence';
 import * as Guard from 'ephox/agar/api/Guard';

@@ -1,5 +1,6 @@
 import { Arr, Num, Obj, Optional } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
+
 import * as Boxes from '../../alien/Boxes';
 import { AnchorBox } from './LayoutTypes';
 

@@ -6,6 +6,7 @@
  */
 
 import { Tooltipping } from '@ephox/alloy';
+
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 // TODO: Consider using this once we fix the delayed attempt to appear after it's gone problem.

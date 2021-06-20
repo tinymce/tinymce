@@ -1,6 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
+
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
 import * as Unique from 'ephox/katamari/api/Unique';

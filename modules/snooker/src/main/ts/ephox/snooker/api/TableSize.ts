@@ -1,5 +1,6 @@
 import { Cell, Fun } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
+
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';

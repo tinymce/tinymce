@@ -1,5 +1,6 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
+
 import { CommonMenuItem, CommonMenuItemSpec, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
 
 export interface ChoiceMenuItemSpec extends CommonMenuItemSpec {

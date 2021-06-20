@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj } from '@ephox/katamari';
+
 import Env from 'tinymce/core/api/Env';
 
 // Converts shortcut format to Mac/PC variants

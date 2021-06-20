@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Settings from '../api/Settings';
 
 const stateToggle = (editor: Editor) => {

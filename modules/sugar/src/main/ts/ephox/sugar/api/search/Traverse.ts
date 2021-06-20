@@ -1,4 +1,5 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
+
 import * as Recurse from '../../alien/Recurse';
 import * as Compare from '../dom/Compare';
 import { SugarElement } from '../node/SugarElement';

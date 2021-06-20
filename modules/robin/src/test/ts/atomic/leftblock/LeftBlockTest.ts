@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
+
 import * as LeftBlock from 'ephox/robin/api/general/LeftBlock';
 
 UnitTest.test('LeftBlockTest', () => {

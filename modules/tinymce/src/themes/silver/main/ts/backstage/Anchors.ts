@@ -8,7 +8,9 @@
 import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { useFixedContainer } from '../api/Settings';
 
 const bubbleAlignments = {

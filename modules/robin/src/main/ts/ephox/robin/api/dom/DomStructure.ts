@@ -1,5 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { SugarElement } from '@ephox/sugar';
+
 import * as Structure from '../general/Structure';
 
 const universe = DomUniverse();

@@ -2,6 +2,7 @@ import { ApproxStructure } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';

@@ -8,6 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
 import * as ListUtils from '../core/ListUtils';

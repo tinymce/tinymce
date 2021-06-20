@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import * as NativeRange from '../../selection/core/NativeRange';
 import * as SelectionDirection from '../../selection/core/SelectionDirection';
 import * as CaretRange from '../../selection/query/CaretRange';

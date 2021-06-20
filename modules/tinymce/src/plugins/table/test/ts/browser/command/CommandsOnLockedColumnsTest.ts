@@ -10,6 +10,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 interface CommandTest {

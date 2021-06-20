@@ -6,6 +6,7 @@
  */
 
 import { Arr, Result, Type } from '@ephox/katamari';
+
 import { BlockPattern, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawPattern } from '../core/PatternTypes';
 
 const isInlinePattern = (pattern: Pattern): pattern is InlinePattern => pattern.type === 'inline-command' || pattern.type === 'inline-format';

@@ -6,6 +6,7 @@
  */
 
 import { Cell, Optional } from '@ephox/katamari';
+
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as Rtc from '../Rtc';
 import { addKeyboardShortcuts, registerEvents } from '../undo/Setup';

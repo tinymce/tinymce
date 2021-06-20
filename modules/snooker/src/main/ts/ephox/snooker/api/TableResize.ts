@@ -1,5 +1,6 @@
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { SugarElement } from '@ephox/sugar';
+
 import * as Adjustments from '../resize/Adjustments';
 import { BarManager } from '../resize/BarManager';
 import * as BarPositions from '../resize/BarPositions';

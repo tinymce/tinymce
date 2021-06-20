@@ -6,6 +6,7 @@
  */
 
 import { Arr, Singleton, Strings } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 

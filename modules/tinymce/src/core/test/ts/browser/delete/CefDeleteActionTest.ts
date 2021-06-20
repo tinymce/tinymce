@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 type DeleteActionAdt = CefDeleteAction.DeleteActionAdt;

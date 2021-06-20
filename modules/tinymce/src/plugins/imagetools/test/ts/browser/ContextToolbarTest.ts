@@ -7,6 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { ImageOps } from '../module/test/ImageOps';
 import * as ImageUtils from '../module/test/ImageUtils';
 

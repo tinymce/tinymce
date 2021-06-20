@@ -6,10 +6,12 @@
  */
 
 import { Arr, Obj, Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
+
 import * as Settings from '../api/Settings';
 import * as Sanitize from './Sanitize';
 import * as VideoScript from './VideoScript';

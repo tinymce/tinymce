@@ -6,6 +6,7 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Levels from './Levels';

@@ -9,8 +9,10 @@ import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { TableLookup, Warehouse } from '@ephox/snooker';
 import { Compare, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import { hasAdvancedCellTab } from '../api/Settings';

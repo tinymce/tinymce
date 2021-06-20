@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Optional, Optionals } from '@ephox/katamari';
+
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('LanguageGetTest', () => {

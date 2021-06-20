@@ -6,6 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 export const setup = (editor: Editor) => {

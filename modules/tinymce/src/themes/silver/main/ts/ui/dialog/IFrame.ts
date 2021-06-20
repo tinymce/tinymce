@@ -10,9 +10,9 @@ import { Dialog } from '@ephox/bridge';
 import { Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute } from '@ephox/sugar';
+
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
-
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as NavigableObject from '../general/NavigableObject';
 

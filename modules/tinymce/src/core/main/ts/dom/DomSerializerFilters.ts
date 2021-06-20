@@ -6,6 +6,7 @@
  */
 
 import { Arr, Optional } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import DomParser from '../api/html/DomParser';
 import Entities from '../api/html/Entities';

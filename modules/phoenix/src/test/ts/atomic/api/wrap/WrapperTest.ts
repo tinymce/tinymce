@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, Logger, TestUniverse, TextGene } from '@ephox/boss';
+
 import * as Wrapping from 'ephox/phoenix/api/general/Wrapping';
 import * as Finder from 'ephox/phoenix/test/Finder';
 

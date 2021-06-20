@@ -5,6 +5,7 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/anchor/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { pAddAnchor } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.anchor.AnchorInlineTest', () => {

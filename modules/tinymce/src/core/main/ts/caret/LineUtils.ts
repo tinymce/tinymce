@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
+
 import { getClientRects, NodeClientRect } from '../dom/Dimensions';
 import * as NodeType from '../dom/NodeType';
 import * as GeomClientRect from '../geom/ClientRect';

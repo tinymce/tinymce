@@ -7,6 +7,7 @@
 
 import { ResizeWire } from '@ephox/snooker';
 import { Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Util from '../core/Util';

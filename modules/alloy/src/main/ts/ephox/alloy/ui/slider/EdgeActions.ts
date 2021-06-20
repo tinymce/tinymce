@@ -1,7 +1,6 @@
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { SliderValue, SliderValueX, SliderValueXY, SliderValueY, TwoDSliderDetail } from '../types/SliderTypes';
-
 import * as ModelCommon from './ModelCommon';
 import { halfX, halfY, max1X, max1Y, min1X, min1Y } from './SliderValues';
 

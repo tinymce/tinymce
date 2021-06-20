@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
+
 import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';

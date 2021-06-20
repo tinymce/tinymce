@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Storage from '../core/Storage';
 
 const makeSetupHandler = (editor: Editor) => (api) => {

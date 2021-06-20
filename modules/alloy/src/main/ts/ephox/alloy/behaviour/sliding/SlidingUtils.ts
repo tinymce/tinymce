@@ -1,4 +1,5 @@
 import { SugarElement } from '@ephox/sugar';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SlidingConfig } from './SlidingTypes';
 

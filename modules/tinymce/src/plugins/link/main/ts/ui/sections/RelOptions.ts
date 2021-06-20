@@ -6,6 +6,7 @@
  */
 
 import { Optional, Optionals } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Settings from '../../api/Settings';

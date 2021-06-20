@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import { FormatVars, SelectorFormat } from './FormatTypes';

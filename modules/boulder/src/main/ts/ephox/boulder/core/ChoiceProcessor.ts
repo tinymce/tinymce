@@ -1,4 +1,5 @@
 import { Obj } from '@ephox/katamari';
+
 import { missingBranch, missingKey } from './SchemaError';
 import { StructureProcessor } from './StructureProcessor';
 

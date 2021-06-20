@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import { SugarElement } from '../../api/node/SugarElement';
 import * as SugarText from '../../api/node/SugarText';
 import * as Geometry from '../alien/Geometry';

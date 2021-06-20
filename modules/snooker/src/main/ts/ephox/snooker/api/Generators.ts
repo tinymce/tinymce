@@ -1,5 +1,6 @@
 import { Arr, Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, SugarElement, SugarNode } from '@ephox/sugar';
+
 import { getAttrValue } from '../util/CellUtils';
 
 export interface CellSpan {

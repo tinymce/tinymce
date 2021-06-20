@@ -1,4 +1,5 @@
 import { Adt, Fun } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 
 export interface Situ {

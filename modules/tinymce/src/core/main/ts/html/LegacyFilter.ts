@@ -6,6 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Styles from '../api/html/Styles';

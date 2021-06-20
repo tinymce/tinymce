@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as MergeBlocks from 'tinymce/core/delete/MergeBlocks';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.delete.MergeBlocksTest', () => {

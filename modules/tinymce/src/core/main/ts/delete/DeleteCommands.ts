@@ -6,6 +6,7 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as BlockBoundaryDelete from './BlockBoundaryDelete';
 import * as BlockRangeDelete from './BlockRangeDelete';

@@ -1,8 +1,13 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 
 import { AlloyEventHandler, EventRunHandler } from '../api/events/AlloyEvents';
 import { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
+
+const defaultEventHandler = {
+  can: Fun.always,
+  abort: Fun.never,
+  run: Fun.noop
+};
 
 const nu = <T extends EventFormat>(parts: Partial<AlloyEventHandler<T>>): AlloyEventHandler<T> => {
   if (!Obj.hasNonNullableKey(parts, 'can') && !Obj.hasNonNullableKey(parts, 'abort') && !Obj.hasNonNullableKey(parts, 'run')) {
@@ -10,11 +15,10 @@ const nu = <T extends EventFormat>(parts: Partial<AlloyEventHandler<T>>): AlloyE
       'EventHandler defined by: ' + JSON.stringify(parts, null, 2) + ' does not have can, abort, or run!'
     );
   }
-  return StructureSchema.asRawOrDie('Extracting event.handler', StructureSchema.objOfOnly([
-    FieldSchema.defaulted('can', Fun.always),
-    FieldSchema.defaulted('abort', Fun.never),
-    FieldSchema.defaulted('run', Fun.noop)
-  ]), parts);
+  return {
+    ...defaultEventHandler,
+    ...parts
+  };
 };
 
 const all = <T extends EventFormat>(handlers: Array<AlloyEventHandler<T>>, f: (handler: AlloyEventHandler<T>) => any) => (...args: any[]) =>
@@ -42,11 +46,11 @@ const fuse = <T extends EventFormat>(handlers: Array<AlloyEventHandler<T>>): All
     });
   };
 
-  return nu<T>({
+  return {
     can,
     abort,
     run
-  });
+  };
 };
 
 export {

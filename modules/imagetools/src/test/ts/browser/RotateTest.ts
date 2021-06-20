@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
+
 import * as ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
 import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
 

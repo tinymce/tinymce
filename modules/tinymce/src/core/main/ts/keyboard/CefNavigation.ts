@@ -6,6 +6,7 @@
  */
 
 import { Fun, Optional } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Settings from '../api/Settings';

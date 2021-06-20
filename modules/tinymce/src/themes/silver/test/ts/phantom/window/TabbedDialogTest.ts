@@ -5,6 +5,7 @@ import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+
 import * as TestExtras from '../../module/TestExtras';
 
 describe('phantom.tinymce.themes.silver.window.TabbedDialogTest', () => {

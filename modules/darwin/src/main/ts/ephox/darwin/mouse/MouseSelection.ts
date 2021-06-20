@@ -1,5 +1,6 @@
 import { Singleton } from '@ephox/katamari';
 import { Compare, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
+
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
 import * as CellSelection from '../selection/CellSelection';

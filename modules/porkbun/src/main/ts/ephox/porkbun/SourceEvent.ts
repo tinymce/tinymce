@@ -1,4 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
+
 import { Bindable, Event, EventHandler } from './Event';
 
 export default (fields: string[], source: Bindable<any>): Event => {

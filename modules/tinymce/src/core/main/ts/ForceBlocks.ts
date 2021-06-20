@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from './api/Editor';
 import { SchemaMap } from './api/html/Schema';
 import * as Settings from './api/Settings';

@@ -1,5 +1,6 @@
 import { Fun, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Css, Dimension, Height, SugarBody, SugarElement, SugarNode, Traverse, Width } from '@ephox/sugar';
+
 import * as TableLookup from '../api/TableLookup';
 import { TableSize } from '../api/TableSize';
 import { getSpan } from '../util/CellUtils';

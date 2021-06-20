@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
 import * as Traverse from './Traverse';

@@ -6,6 +6,7 @@
  */
 
 import { Id } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const createTableHtml = (cols: number, rows: number) => {

@@ -9,6 +9,7 @@ import { GuiFactory } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
+
 import * as IosMode from '../ios/core/IosMode';
 import * as TapToEditMask from '../touch/view/TapToEditMask';
 import MobileSchema from './MobileSchema';

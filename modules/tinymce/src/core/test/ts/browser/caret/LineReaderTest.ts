@@ -7,6 +7,7 @@ import { assert } from 'chai';
 
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import * as LineReader from 'tinymce/core/caret/LineReader';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 const BreakType = LineReader.BreakType;

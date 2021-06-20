@@ -9,9 +9,10 @@ import { AlloySpec, SketchSpec, VerticalDir } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Obj, Optional, Result, Type } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
-import { getToolbarMode, ToolbarGroupSetting, ToolbarMode } from '../../api/Settings';
 
+import Editor from 'tinymce/core/api/Editor';
+
+import { getToolbarMode, ToolbarGroupSetting, ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RenderToolbarConfig } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';

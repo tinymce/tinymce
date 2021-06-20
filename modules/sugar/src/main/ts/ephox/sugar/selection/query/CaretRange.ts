@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import { SugarElement } from '../../api/node/SugarElement';
 import * as Traverse from '../../api/search/Traverse';
 import { SimRange } from '../../api/selection/SimRange';
