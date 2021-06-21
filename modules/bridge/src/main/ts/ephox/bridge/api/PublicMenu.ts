@@ -5,7 +5,7 @@ import { CardTextSpec } from '../components/menu/card/CardText';
 import { CardMenuItemInstanceApi, CardMenuItemSpec } from '../components/menu/CardMenuItem';
 import { ChoiceMenuItemInstanceApi, ChoiceMenuItemSpec } from '../components/menu/ChoiceMenuItem';
 import { ContextMenuApi, ContextMenuContents, ContextMenuItem, ContextSubMenu } from '../components/menu/ContextMenu';
-import { FancyMenuItemSpec } from '../components/menu/FancyMenuItem';
+import { ColorSwatchMenuItemSpec, FancyMenuItemSpec, InsertTableMenuItemSpec } from '../components/menu/FancyMenuItem';
 import { MenuItemInstanceApi, MenuItemSpec } from '../components/menu/MenuItem';
 import { NestedMenuItemContents, NestedMenuItemInstanceApi, NestedMenuItemSpec } from '../components/menu/NestedMenuItem';
 import { SeparatorMenuItemSpec } from '../components/menu/SeparatorMenuItem';
@@ -22,6 +22,8 @@ export {
   NestedMenuItemInstanceApi,
 
   FancyMenuItemSpec,
+  ColorSwatchMenuItemSpec,
+  InsertTableMenuItemSpec,
 
   ToggleMenuItemSpec,
   ToggleMenuItemInstanceApi,
