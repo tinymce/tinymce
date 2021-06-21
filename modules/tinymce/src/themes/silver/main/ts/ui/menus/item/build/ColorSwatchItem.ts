@@ -56,7 +56,7 @@ export const renderColorSwatchItem = (spec: Menu.FancyMenuItem, backstage: UiFac
 };
 
 const getColorItems = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Menu.ChoiceMenuItemSpec[] => {
-  const useCustomColors = spec.initData.disallowCustomColors !== true && backstage.colorinput.hasCustomColors();
+  const useCustomColors = spec.initData.allowCustomColors !== false && backstage.colorinput.hasCustomColors();
   if (Type.isArray(spec.initData.colors)) {
     return spec.initData.colors.concat(ColorSwatch.getAdditionalColors(useCustomColors));
   } else {

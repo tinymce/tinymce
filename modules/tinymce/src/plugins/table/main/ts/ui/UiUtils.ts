@@ -65,7 +65,7 @@ const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpe
   fancytype: 'colorswatch',
   initData: {
     colors: colorList.length > 0 ? colorList : undefined,
-    disallowCustomColors: true
+    allowCustomColors: false
   },
   onAction: (data) => {
     fixColorValue(data.value, (value) => {
