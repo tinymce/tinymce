@@ -148,7 +148,7 @@ const getSharedValues = <T>(data: Array<T>) => {
 // because some of these are crazy complicated
 
 const getAlignment = (formats: string[], formatName: string, editor: Editor, elm: Node) =>
-  Arr.find(formats, (name) => editor.formatter.matchNode(elm, formatName + name)).getOr('');
+  Arr.find(formats, (name) => !!editor.formatter.matchNode(elm, formatName + name)).getOr('');
 const getHAlignment = Fun.curry(getAlignment, [ 'left', 'center', 'right' ], 'align');
 const getVAlignment = Fun.curry(getAlignment, [ 'top', 'middle', 'bottom' ], 'valign');
 

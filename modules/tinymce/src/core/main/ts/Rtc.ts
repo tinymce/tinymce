@@ -15,6 +15,7 @@ import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
+import { Format } from './fmt/FormatTypes';
 import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
@@ -226,7 +227,7 @@ const makeNoopAdaptor = (): RtcAdaptor => {
     formatter: {
       match: Fun.never,
       matchAll: Fun.constant([]),
-      matchNode: Fun.never,
+      matchNode: Fun.constant(undefined),
       canApply: Fun.never,
       closest: empty,
       apply: Fun.noop,
@@ -360,7 +361,7 @@ export const matchNodeFormat = (
   node: Node,
   name: string,
   vars?: Record<string, string>,
-  similar?: boolean): boolean => getRtcInstanceWithError(editor).formatter.matchNode(node, name, vars, similar);
+  similar?: boolean): Format | undefined => getRtcInstanceWithError(editor).formatter.matchNode(node, name, vars, similar);
 
 export const canApplyFormat = (
   editor: Editor,
