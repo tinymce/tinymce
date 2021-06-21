@@ -34,7 +34,7 @@ const registerMenuItems = (editor: Editor) => {
 };
 
 // Note: The undo/redo buttons are disabled by default here, as they'll be rendered
-// on init generally and it won't haven't any undo levels at that stage.
+// on init generally and it won't have any undo levels at that stage.
 const registerButtons = (editor: Editor) => {
   editor.ui.registry.addButton('undo', {
     tooltip: 'Undo',
