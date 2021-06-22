@@ -20,7 +20,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
     table_cell_background_color_map: [
       {
         title: 'Color',
-        value: '#ffffff',
+        value: '#51a951',
       }
     ],
   }, [ Plugin, Theme ], true);
@@ -32,7 +32,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
       subMenuRemoveTitle: 'Remove color',
       rows: 1,
       columns: 1,
-      customStyle: 'background-color: #ffffff'
+      customStyle: 'background-color: #51a951'
     });
   });
 
@@ -43,7 +43,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
       subMenuRemoveTitle: 'Remove color',
       rows: 2,
       columns: 2,
-      customStyle: 'background-color: #ffffff'
+      customStyle: 'background-color: #51a951'
     });
   });
 });

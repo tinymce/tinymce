@@ -20,7 +20,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBorderColorTest', () => {
     table_cell_border_color_map: [
       {
         title: 'Color',
-        value: '#ffffff',
+        value: '#159a15',
       }
     ],
   }, [ Plugin, Theme ], true);
@@ -32,7 +32,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBorderColorTest', () => {
       subMenuRemoveTitle: 'Remove color',
       rows: 1,
       columns: 1,
-      customStyle: 'border-color: #ffffff'
+      customStyle: 'border-color: #159a15'
     });
   });
 
@@ -43,7 +43,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBorderColorTest', () => {
       subMenuRemoveTitle: 'Remove color',
       rows: 2,
       columns: 2,
-      customStyle: 'border-color: #ffffff'
+      customStyle: 'border-color: #159a15'
     });
   });
 });
