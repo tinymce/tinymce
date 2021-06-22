@@ -7,9 +7,11 @@
 
 import { Arr, Fun, Obj, Optional, Singleton, Type } from '@ephox/katamari';
 import { Attribute, Dimension, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { ContentLanguage } from 'tinymce/core/api/SettingsTypes';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+
 import * as Settings from '../../api/Settings';
 
 interface ControlSpec<T> {

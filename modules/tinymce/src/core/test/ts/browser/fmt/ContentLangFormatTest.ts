@@ -1,5 +1,6 @@
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.fmt.ContentLangFormatTest', () => {
