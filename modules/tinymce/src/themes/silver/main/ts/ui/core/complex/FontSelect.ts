@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
@@ -57,6 +57,8 @@ const isSystemFontStack = (fontFamily: string): boolean => {
 };
 
 const getSpec = (editor: Editor): SelectSpec => {
+  const systemFont = 'System Font';
+
   const getMatchingValue = () => {
     const getFirstFont = (fontFamily) => fontFamily ? splitFonts(fontFamily)[0] : '';
 
@@ -68,14 +70,10 @@ const getSpec = (editor: Editor): SelectSpec => {
       const format = item.format;
       return (format.toLowerCase() === font) || (getFirstFont(format).toLowerCase() === getFirstFont(font).toLowerCase());
     }).orThunk(() => {
-      if (isSystemFontStack(font)) {
-        return Optional.from({
-          title: 'System Font',
-          format: font
-        });
-      } else {
-        return Optional.none();
-      }
+      return Optionals.someIf(isSystemFontStack(font), {
+        title: systemFont,
+        format: font
+      });
     });
 
     return { matchOpt, font: fontFamily };
@@ -112,6 +110,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   return {
     tooltip: 'Fonts',
+    text: Optional.some(systemFont),
     icon: Optional.none(),
     isSelectedFor,
     getCurrentValue,

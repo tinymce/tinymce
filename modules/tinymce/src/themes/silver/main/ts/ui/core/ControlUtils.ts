@@ -10,7 +10,7 @@ import { Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import { FormatterFormatItem } from '../BespokeSelect';
+import { FormatterFormatItem } from './complex/BespokeSelect';
 
 const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
   const boundCallback = Singleton.unbindable();
@@ -22,9 +22,29 @@ const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.Tool
   };
 
   // The editor may or may not have been setup yet, so check for that
-  editor.initialized ? init() : editor.on('init', init);
+  editor.initialized ? init() : editor.once('init', init);
 
-  return boundCallback.clear;
+  return () => {
+    editor.off('init', init);
+    boundCallback.clear();
+  };
+};
+
+const onSetupEvent = <T>(editor: Editor, event: string, f: (api: T) => void) => (api: T) => {
+  const handleEvent = () => f(api);
+
+  const init = () => {
+    f(api);
+    editor.on(event, handleEvent);
+  };
+
+  // The editor may or may not have been setup yet, so check for that
+  editor.initialized ? init() : editor.once('init', init);
+
+  return () => {
+    editor.off('init', init);
+    editor.off(event, handleEvent);
+  };
 };
 
 const onActionToggleFormat = (editor: Editor) => (rawItem: FormatterFormatItem) => () => {
@@ -34,7 +54,12 @@ const onActionToggleFormat = (editor: Editor) => (rawItem: FormatterFormatItem) 
   });
 };
 
+const onActionExecCommand = (editor: Editor, command: string) =>
+  () => editor.execCommand(command);
+
 export {
+  onSetupEvent,
   onSetupFormatToggle,
-  onActionToggleFormat
+  onActionToggleFormat,
+  onActionExecCommand
 };
