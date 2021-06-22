@@ -51,21 +51,14 @@ const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_
 const getLineHeightFormats = (editor: Editor): string[] =>
   editor.getParam('lineheight_formats', '1 1.1 1.2 1.3 1.4 1.5 2', 'string').split(' ');
 
-const getContentLangugaes = (editor: Editor): ContentLanguage[] => {
+const getContentLanguages = (editor: Editor): ContentLanguage[] => {
   const defaultSettings = [
-    { code: 'en', title: 'English (US)' },
-    { code: 'en_GB', title: 'English (UK)' },
-    { code: 'es', title: 'Spanish' },
-    { code: 'fi', title: 'Finnish' },
-    { code: 'fr', title: 'French' },
-    { code: 'da', title: 'Danish' },
-    { code: 'de', title: 'German' },
-    { code: 'nl', title: 'Dutch' },
-    { code: 'it', title: 'Italian' },
-    { code: 'nb', title: 'Norwegian' },
-    { code: 'pt', title: 'Portuguese (Brazil)' },
-    { code: 'sv', title: 'Swedish' },
-    { code: 'zh', title: 'Chinese' }
+    { title: 'English', code: 'en' },
+    { title: 'Spanish', code: 'es' },
+    { title: 'French', code: 'fr' },
+    { title: 'German', code: 'de' },
+    { title: 'Portuguese (Brazil)', code: 'pt' },
+    { title: 'Chinese', code: 'zh' }
   ];
   return editor.getParam('content_langs', defaultSettings, 'array');
 };
@@ -217,7 +210,7 @@ export {
   getUserStyleFormats,
   isMergeStyleFormats,
   getLineHeightFormats,
-  getContentLangugaes,
+  getContentLanguages,
   getRemovedMenuItems,
   isMenubarEnabled,
   isMultipleToolbars,

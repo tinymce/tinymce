@@ -181,7 +181,7 @@ const get = (dom: DOMUtils) => {
       remove_similar: true,
       attributes: {
         'lang': '%value',
-        'data-mce-lang': (vars) => vars?.customValue || null
+        'data-mce-lang': (vars) => vars?.customValue ?? null
       }
     },
 

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -72,8 +72,8 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
 
   // Custom match
   if (format.onmatch) {
-    const onMatch: (node: Node, format: Format, name: string) => boolean = format.onmatch;
-    return onMatch(node, format, itemName);
+    // onmatch is generic in a way that we can't really express without casting
+    return format.onmatch(node, format as never, itemName);
   }
 
   // Check all items
@@ -85,16 +85,16 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
           const value = itemName === 'attributes' ? dom.getAttrib(node, key) : FormatUtils.getStyle(dom, node, key);
           const expectedValue = FormatUtils.replaceVars(items[key], vars);
 
-          if (!value && !expectedValue) {
+          if (Type.isNullable(value) && Type.isNullable(expectedValue)) {
             continue;
           }
 
           if (similar && !value && !format.exact) {
-            return undefined;
+            return false;
           }
 
           if ((!similar || format.exact) && !isEq(value, FormatUtils.normalizeStyleValue(dom, expectedValue, key))) {
-            return undefined;
+            return false;
           }
         }
       }

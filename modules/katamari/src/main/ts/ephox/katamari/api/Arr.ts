@@ -182,7 +182,7 @@ export const findUntil: {
 
 export const find: {
   <T, U extends T>(xs: ArrayLike<T>, pred: ArrayGuardPredicate<T, U>): Optional<U>;
-  <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<T>;
+  <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<T>;
 } = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<T> => {
   return findUntil(xs, pred, Fun.never);
 };

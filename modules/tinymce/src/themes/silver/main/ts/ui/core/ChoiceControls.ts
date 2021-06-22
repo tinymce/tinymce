@@ -20,7 +20,8 @@ interface ControlSpec<T> {
   readonly icon: string;
 
   readonly getOptions: (editor: Editor) => Array<T>;
-  readonly normalise: (item: T) => string;
+  // Turn it into a normalised lookup key
+  readonly hash: (item: T) => string;
   readonly display: (item: T) => string;
 
   readonly getCurrent: (editor: Editor) => Optional<T>;
@@ -38,7 +39,7 @@ const registerController = <T>(editor: Editor, spec: ControlSpec<T>) => {
 
     const callback = () => {
       const current = spec.getCurrent(editor);
-      const apiOpt = current.map(spec.normalise).bind((key) => Obj.get(apis, key));
+      const apiOpt = current.map(spec.hash).bind((key) => Obj.get(apis, key));
       apiOpt.fold(
         // If we don't have a menu item for the current state, make sure we're not highlighting anything
         lastApi.clear,
@@ -60,7 +61,7 @@ const registerController = <T>(editor: Editor, spec: ControlSpec<T>) => {
         type: 'togglemenuitem',
         text: spec.display(value),
         onSetup: (api) => {
-          apis[spec.normalise(value)] = api;
+          apis[spec.hash(value)] = api;
 
           if (i + 1 === options.length) {
             // run the callback once on startup (on the last option so that we know the apis map has been set up)
@@ -99,7 +100,7 @@ const lineHeightSpec: ControlSpec<string> = {
   icon: 'line-height',
 
   getOptions: Settings.getLineHeightFormats,
-  normalise: (input) => Dimension.normalise(input, [ 'fixed', 'relative', 'empty' ]).getOr(input),
+  hash: (input) => Dimension.normalise(input, [ 'fixed', 'relative', 'empty' ]).getOr(input),
   display: Fun.identity,
 
   getCurrent: (editor) => Optional.some(editor.queryCommandValue('LineHeight')),
@@ -111,8 +112,8 @@ const languageSpec: ControlSpec<ContentLanguage> = {
   text: 'Language',
   icon: 'translate',
 
-  getOptions: Settings.getContentLangugaes,
-  normalise: (input) => Type.isUndefined(input.customCode) ? input.code : `${input.code}/${input.customCode}`,
+  getOptions: Settings.getContentLanguages,
+  hash: (input) => Type.isUndefined(input.customCode) ? input.code : `${input.code}/${input.customCode}`,
   display: (input) => input.title,
 
   getCurrent: (editor) => {
@@ -132,11 +133,13 @@ const languageSpec: ControlSpec<ContentLanguage> = {
     });
   },
   setCurrent: (editor, lang) => {
-    editor.formatter.toggle('lang', {
-      value: lang.code,
-      customValue: lang.customCode
+    editor.undoManager.transact(() => {
+      editor.formatter.toggle('lang', {
+        value: lang.code,
+        customValue: lang.customCode
+      });
+      editor.nodeChanged();
     });
-    editor.nodeChanged();
   }
 };
 
