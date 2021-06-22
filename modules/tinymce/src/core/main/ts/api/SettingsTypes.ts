@@ -14,6 +14,12 @@ import { EditorUiApi } from './ui/Ui';
 
 export type EntityEncoding = 'named' | 'numeric' | 'raw' | 'named,numeric' | 'named+numeric' | 'numeric,named' | 'numeric+named';
 
+export interface ContentLanguage {
+  readonly title: string;
+  readonly code: string;
+  readonly customCode?: string;
+}
+
 export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
   editorContainer: HTMLElement;
   iframeContainer: HTMLElement;
@@ -68,6 +74,7 @@ interface BaseEditorSettings {
   content_security_policy?: string;
   content_style?: string;
   font_css?: string | string[];
+  content_langs?: ContentLanguage[];
   contextmenu?: string | false;
   contextmenu_never_use_native?: boolean;
   convert_fonts_to_spans?: boolean;

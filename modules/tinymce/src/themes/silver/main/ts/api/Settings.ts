@@ -12,6 +12,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
+import { ContentLanguage } from 'tinymce/core/api/SettingsTypes';
 
 export interface ToolbarGroupSetting {
   name?: string;
@@ -49,6 +50,25 @@ const getUserStyleFormats = (editor: Editor): Optional<AllowedFormat[]> => Optio
 const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
 const getLineHeightFormats = (editor: Editor): string[] =>
   editor.getParam('lineheight_formats', '1 1.1 1.2 1.3 1.4 1.5 2', 'string').split(' ');
+
+const getContentLangugaes = (editor: Editor): ContentLanguage[] => {
+  const defaultSettings = [
+    { code: 'en', title: 'English (US)' },
+    { code: 'en_GB', title: 'English (UK)' },
+    { code: 'es', title: 'Spanish' },
+    { code: 'fi', title: 'Finnish' },
+    { code: 'fr', title: 'French' },
+    { code: 'da', title: 'Danish' },
+    { code: 'de', title: 'German' },
+    { code: 'nl', title: 'Dutch' },
+    { code: 'it', title: 'Italian' },
+    { code: 'nb', title: 'Norwegian' },
+    { code: 'pt', title: 'Portuguese (Brazil)' },
+    { code: 'sv', title: 'Swedish' },
+    { code: 'zh', title: 'Chinese' }
+  ];
+  return editor.getParam('content_langs', defaultSettings, 'array');
+};
 
 const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
 const isMenubarEnabled = (editor: Editor): boolean => editor.getParam('menubar', true, 'boolean') !== false;
@@ -197,6 +217,7 @@ export {
   getUserStyleFormats,
   isMergeStyleFormats,
   getLineHeightFormats,
+  getContentLangugaes,
   getRemovedMenuItems,
   isMenubarEnabled,
   isMultipleToolbars,
