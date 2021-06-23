@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { clickOnButton, pClickOnMenuItem } from '../../module/test/TableModifiersTestUtils';
+import { clickOnButton, makeCell, pClickOnMenuItem } from '../../module/test/TableModifiersTestUtils';
 
 describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -19,36 +19,6 @@ describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
     toolbar: 'tablerowheader',
     indent: false,
   }, [ Plugin, Theme ], true);
-
-  const makeCell = (type: string, content: string, hasScope?: boolean, isSelected?: boolean, isStart?: boolean, isEnd?: boolean) => {
-    const getSelection = () => {
-      const attributes: string[] = [ '' ];
-
-      if (isSelected) {
-        if (isStart) {
-          attributes.push('data-mce-first-selected="1"');
-        }
-
-        if (isEnd) {
-          attributes.push('data-mce-last-selected="1"');
-        }
-
-        attributes.push('data-mce-selected="1"');
-      }
-
-      return attributes.join(' ');
-    };
-
-    const getScope = () => {
-      if (hasScope) {
-        return ' scope="col"';
-      } else {
-        return '';
-      }
-    };
-
-    return `<${type}${getScope()}${getSelection()}>Cell ${content}</${type}>`;
-  };
 
   const setEditorContentTableAndSelection = (editor: Editor, level: number, row: number, column: number, content: string) => {
     editor.setContent(content);
