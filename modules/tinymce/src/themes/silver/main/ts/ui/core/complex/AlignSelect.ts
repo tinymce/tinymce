@@ -46,6 +46,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   return {
     tooltip: 'Align',
+    text: Optional.none(),
     icon: Optional.some('align-left'),
     isSelectedFor,
     getCurrentValue: Optional.none,

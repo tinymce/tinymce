@@ -7,10 +7,13 @@
 
 import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Replacing } from '@ephox/alloy';
 import { Arr, Cell, Optional, Type } from '@ephox/katamari';
-import { Attribute, Css, Focus, SugarElement } from '@ephox/sugar';
+import { Attribute, Class, Css, Focus, SugarElement, SugarNode } from '@ephox/sugar';
 
+import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 import Editor from 'tinymce/core/api/Editor';
+import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 
@@ -105,12 +108,27 @@ const renderThrobber = (spec): AlloySpec => ({
   components: [ ]
 });
 
+const isFocusEvent = (event: EditorEvent<ExecCommandEvent> | EventUtilsEvent<FocusEvent>): event is EventUtilsEvent<FocusEvent> =>
+  event.type === 'focusin';
+
+const isPasteBinTarget = (event: EditorEvent<ExecCommandEvent> | EventUtilsEvent<FocusEvent>) => {
+  if (isFocusEvent(event)) {
+    const node = event.composed ? Arr.head(event.composedPath()) : Optional.from(event.target);
+    return node
+      .map(SugarElement.fromDom)
+      .filter(SugarNode.isElement)
+      .exists((targetElm) => Class.has(targetElm, 'mce-pastebin'));
+  } else {
+    return false;
+  }
+};
+
 const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared) => {
   const throbberState = Cell<boolean>(false);
   const timer = Cell<Optional<number>>(Optional.none());
 
-  const stealFocus = (e) => {
-    if (throbberState.get()) {
+  const stealFocus = (e: EditorEvent<ExecCommandEvent> | EventUtilsEvent<FocusEvent>) => {
+    if (throbberState.get() && !isPasteBinTarget(e)) {
       e.preventDefault();
       focusBusyComponent(lazyThrobber());
       editor.editorManager.setActive(editor);
@@ -120,7 +138,7 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
   // TODO: TINY-7500 Only worrying about iframe mode at this stage since inline mode has a number of other issues
   if (!editor.inline) {
     editor.on('PreInit', () => {
-      // Cover focus when when the editor is focused natively
+      // Cover focus when the editor is focused natively
       editor.dom.bind(editor.getWin(), 'focusin', stealFocus);
       // Cover stealing focus when editor.focus() is called
       editor.on('BeforeExecCommand', (e) => {
