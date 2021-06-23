@@ -1,17 +1,21 @@
 import { Assertions, Keys, Waiter } from '@ephox/agar';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TinyAssertions, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 interface AssertStyleOptions {
-  menuTitle: string;
-  subMenuTitle: string;
-  checkMarkEntries: number;
-  rows: number;
-  columns: number;
-  customStyle: string;
+  readonly menuTitle: string;
+  readonly subMenuTitle: string;
+  readonly subMenuRemoveTitle: string;
+  readonly rows: number;
+  readonly columns: number;
+  readonly customStyle: string;
+}
+
+interface AssertStyleOptionsWithCheckmarks extends AssertStyleOptions {
+  readonly checkMarkEntries: number;
 }
 
 const setEditorContentTableAndSelection = (editor: Editor, rows: number, columns: number) => {
@@ -113,14 +117,14 @@ const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: 
   await pAssertMenuPresence(editor, 'There should be a checkmark', menuTitle, expected, sugarContainer, useMenuOrToolbar);
 };
 
-const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: Optional<string>, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
+const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: string, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
   if (useMenuOrToolbar === 'toolbar') {
     clickOnButton(editor, menuTitle);
   } else {
     await pClickOnMenuItem(editor, menuTitle);
   }
-  await TinyUiActions.pWaitForUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
-  TinyUiActions.clickOnUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
+  await TinyUiActions.pWaitForUi(editor, `div[title="${itemTitle}"]`);
+  TinyUiActions.clickOnUi(editor, `div[title="${itemTitle}"]`);
   closeMenu(editor);
 };
 
@@ -134,27 +138,43 @@ const pAssertNoCheckmarksInMenu = async (editor: Editor, menuTitle: string, expe
   await pAssertMenuPresence(editor, 'Menu should open, but not have any checkmarks', menuTitle, expected, container, useMenuOrToolbar);
 };
 
-const pAssertStyleCanBeToggled = async (editor: Editor, options: AssertStyleOptions, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
+const pAssertStyleCanBeToggledWithoutCheckmarks = async (editor: Editor, options: AssertStyleOptions, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
+  setEditorContentTableAndSelection(editor, options.columns, options.rows);
+
+  await pClickOnSubMenu(editor, options.menuTitle, options.subMenuTitle, useMenuOrToolbar);
+  assertStructureHasCustomStyle(editor, options.columns, options.rows, options.customStyle);
+
+  await pClickOnSubMenu(editor, options.menuTitle, options.subMenuRemoveTitle, useMenuOrToolbar);
+  assertStructureIsRestoredToDefault(editor, options.columns, options.rows);
+};
+
+const pAssertStyleCanBeToggled = async (editor: Editor, options: AssertStyleOptionsWithCheckmarks, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
   const sugarContainer = SugarBody.body();
   setEditorContentTableAndSelection(editor, options.rows, options.columns);
   await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer, useMenuOrToolbar);
 
-  await pClickOnSubMenu(editor, options.menuTitle, Optional.some(options.subMenuTitle), useMenuOrToolbar);
+  await pClickOnSubMenu(editor, options.menuTitle, options.subMenuTitle, useMenuOrToolbar);
   await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuTitle, options.checkMarkEntries - 1, sugarContainer, useMenuOrToolbar);
   assertStructureHasCustomStyle(editor, options.rows, options.columns, options.customStyle);
 
-  await pClickOnSubMenu(editor, options.menuTitle, Optional.none(), useMenuOrToolbar);
+  await pClickOnSubMenu(editor, options.menuTitle, options.subMenuRemoveTitle, useMenuOrToolbar);
   await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer, useMenuOrToolbar);
   assertStructureIsRestoredToDefault(editor, options.rows, options.columns);
 };
 
-const pAssertStyleCanBeToggledOnAndOff = async (editor: Editor, options: AssertStyleOptions) => {
+const pAssertStyleCanBeToggledOnAndOff = async (editor: Editor, options: AssertStyleOptionsWithCheckmarks) => {
   await pAssertStyleCanBeToggled(editor, options, 'toolbar');
   await pAssertStyleCanBeToggled(editor, options, 'menuitem');
 };
 
+const pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks = async (editor: Editor, options: AssertStyleOptions) => {
+  await pAssertStyleCanBeToggledWithoutCheckmarks(editor, options, 'toolbar');
+  await pAssertStyleCanBeToggledWithoutCheckmarks(editor, options, 'menuitem');
+};
+
 export {
   pAssertStyleCanBeToggledOnAndOff,
+  pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks,
   setEditorContentTableAndSelection,
   pAssertNoCheckmarksInMenu,
   pAssertMenuPresence,
