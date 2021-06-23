@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "8.0.3",
+  "version": "8.0.4",
   "files": [
     "lib/main",
     "lib/demo",
