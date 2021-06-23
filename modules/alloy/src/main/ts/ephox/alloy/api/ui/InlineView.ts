@@ -140,9 +140,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       Representing.getValue(sandbox).each((state: InlineViewState) => {
         switch (state.mode) {
           case 'menu':
-            Sandboxing.getState(sandbox).each((tmenu) => {
-              TieredMenu.repositionMenus(tmenu);
-            });
+            Sandboxing.getState(sandbox).each(TieredMenu.repositionMenus);
             break;
           case 'position':
             const sink = detail.lazySink(sandbox).getOrDie();
