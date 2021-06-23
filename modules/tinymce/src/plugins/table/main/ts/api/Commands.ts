@@ -16,6 +16,7 @@ import { enforceNone, enforcePercentage, enforcePixels } from '../actions/Enforc
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActionResult, TableActions } from '../actions/TableActions';
 import * as Events from '../api/Events';
+import * as BorderNormalizer from '../core/BorderNormalizer';
 import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
@@ -229,6 +230,21 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     }
   });
 
+  const normalizeBorderFormat = (cell: SugarElement<HTMLTableCellElement>, appliedFormat: string, appliedValue: string) => {
+    const modifier = DomModifier.normal(editor, cell.dom);
+    switch (appliedFormat) {
+      case 'tablecellbordercolor':
+        BorderNormalizer.normalizeSetCellBorderColor(modifier, cell, appliedValue);
+        break;
+      case 'tablecellborderstyle':
+        BorderNormalizer.normalizeSetCellBorderStyle(modifier, cell, appliedValue);
+        break;
+      case 'tablecellborderwidth':
+        BorderNormalizer.normalizeSetCellBorderWidth(modifier, cell, appliedValue);
+        break;
+    }
+  };
+
   // Apply cell style using command (background color, border color, border style and border width)
   // tinyMCE.activeEditor.execCommand('mceTableApplyCellStyle', false, { backgroundColor: 'red', borderColor: 'blue' })
   // Remove cell style using command (an empty string indicates to remove the style)
@@ -253,7 +269,9 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
     Obj.each(validArgs, (value, style) => {
       Arr.each(cells, (cell) => {
-        DomModifier.normal(editor, cell.dom).setFormat(getFormatName(style), value);
+        const formatName = getFormatName(style);
+        DomModifier.normal(editor, cell.dom).setFormat(formatName, value);
+        normalizeBorderFormat(cell, formatName, value);
       });
     });
 

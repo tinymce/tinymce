@@ -1,8 +1,8 @@
 import { ApproxStructure } from '@ephox/agar';
-import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { Attribute, SelectorFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -209,5 +209,70 @@ describe('browser.tinymce.plugins.table.command.ApplyCellStyleCommandTest', () =
     ]);
   });
 
+  context('border normalization', () => {
+    context('border normalization single cell', () => {
+      const testSingleCellNormalization = (initialStyles: string, styles: Record<string, string>, expectedStyles: string) => {
+        const editor = hook.editor();
+        const html = `<table><tbody><tr><td style="${initialStyles}">x</td></tr></tbody></table>`;
+
+        editor.setContent(html);
+        TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+        applyCellStyle(editor, styles);
+
+        const actualStyles = editor.dom.getAttrib(editor.selection.getNode(), 'style');
+
+        assert.equal(actualStyles, expectedStyles);
+      };
+
+      it('TINY-7593: should switch border-style to double when setting a border-color on a 1px border-width cell', () =>
+        testSingleCellNormalization('border: 1px solid red', { borderColor: 'blue' }, 'border: 1px double blue;')
+      );
+
+      it('TINY-7593: should switch border-style to double when setting a border-width to 1px when the cell has border-color', () =>
+        testSingleCellNormalization('border: 2px solid red', { borderWidth: '1px' }, 'border: 1px double red;')
+      );
+
+      it('TINY-7593: should increase the border-width to 2px if border-style is set to dashed on 1px border-width cell', () =>
+        testSingleCellNormalization('border: 1px solid red', { borderStyle: 'dashed' }, 'border: 2px dashed red;')
+      );
+    });
+
+    context('border normalization multiple cells', () => {
+      const testMultipleCellNormalization = (initialStyles: string[], styles: Record<string, string>, expectedStyles: string[]) => {
+        const editor = hook.editor();
+        const cellsHtml = Arr.foldl(initialStyles, (acc, style) => acc + `<td style="${style}">x</td>`, '');
+        const html = `<table><tbody><tr>${cellsHtml}</tr></tbody></table>`;
+
+        editor.setContent(html);
+
+        const cells = SelectorFilter.descendants(TinyDom.body(editor), 'td');
+
+        Arr.each(cells, (cell) => Attribute.set(cell, 'data-mce-selected', '1'));
+        TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, cells.length - 1, 0 ], 0);
+
+        applyCellStyle(editor, styles);
+
+        const actualStyles = Arr.map(cells, (cell) => editor.dom.getAttrib(cell.dom, 'style'));
+
+        assert.deepEqual(actualStyles, expectedStyles);
+      };
+
+      it('TINY-7593: should normalize the first and last cells since they have a 1px border-width and we are applying border-color: blue', () =>
+        testMultipleCellNormalization(
+          [ 'border: 1px solid red', 'border: 2px solid red', 'border: 1px solid red' ],
+          { borderColor: 'blue' },
+          [ 'border: 1px double blue;', 'border: 2px solid blue;', 'border: 1px double blue;' ]
+        )
+      );
+
+      it('TINY-7593: should normalize the first and last cells since they have a 1px border-width and we are applying border-style: dashed', () =>
+        testMultipleCellNormalization(
+          [ 'border: 1px solid red', 'border: 2px solid red', 'border: 1px solid red' ],
+          { borderStyle: 'dashed' },
+          [ 'border: 2px dashed red;', 'border: 2px dashed red;', 'border: 2px dashed red;' ]
+        )
+      );
+    });
+  });
 });
 

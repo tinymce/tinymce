@@ -1,9 +1,17 @@
 declare let tinymce: any;
 
+const toolbar = [
+  'table', 'tableprops', 'tablecellprops', 'tablerowprops', '|',
+  'tabledelete', '|', 'tableinsertrowbefore', 'tableinsertrowafter',
+  'tabledeleterow', '|', 'tableinsertcolbefore', 'tableinsertcolafter',
+  'tabledeletecol', '|', 'tablecutrow', 'tablecopyrow', 'tablepasterowbefore',
+  'tablepasterowafter', '|', 'tablecellborderwidth', 'tablecellborderstyle'
+].join(' ');
+
 tinymce.init({
   selector: 'div.tinymce',
   plugins: 'table',
-  toolbar: 'table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter',
+  toolbar,
   media_dimensions: false,
   table_class_list: [
     { title: 'None', value: '' },

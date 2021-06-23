@@ -1,4 +1,4 @@
-import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -405,5 +405,32 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
     TinyAssertions.assertContent(editor, expectedhtml);
     assertEventsOrder([ 'tablemodified' ]);
     assertTableModifiedEvent({ structure: false, style: false });
+  });
+
+  context('normalization', () => {
+    const testCellStyleProperties = async (name: string, value: string, expectedStyles: string) => {
+      const html = '<table><tbody><tr><td>X</th></tr></tbody></table>';
+      const expectedhtml = `<table><tbody><tr><td style="${expectedStyles}">X</td></tr></tbody></table>`;
+
+      const editor = hook.editor();
+      editor.settings.table_cell_advtab = true;
+      editor.setContent(html);
+      TinySelections.select(editor, 'td', [ 0 ]);
+      await TableTestUtils.pOpenTableDialog(editor);
+
+      TableTestUtils.setDialogValues({
+        [name]: value
+      }, true, generalSelectors);
+
+      await TableTestUtils.pClickDialogButton(editor, true);
+
+      TinyAssertions.assertContent(editor, expectedhtml);
+    };
+
+    it('TINY-7593: adding border-width in the cell dialog advanced tab should not normalize', () => testCellStyleProperties('borderwidth', '1px', 'border-width: 1px;'));
+
+    it('TINY-7593: adding border-style in the cell dialog advanced tab should not normalize', () => testCellStyleProperties('borderstyle', 'dashed', 'border-style: dashed;'));
+
+    it('TINY-7593: adding border-color in the cell dialog advanced tab should not normalize', () => testCellStyleProperties('bordercolor', 'red', 'border-color: red;'));
   });
 });
