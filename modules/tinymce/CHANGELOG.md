@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `tablecellborderstyle` toolbar button and menu item to change table cell border style #TINY-7478
 - Added a new `tablecaption` toolbar button and menu item to toggle captions on tables #TINY-7479
 - Added a new `mceTableToggleCaption` command that toggles captions on a selected table #TINY-7479
+- Added a new `tablecellbordercolor` toolbar button and menu item to select table cell border colors, with an accompanying setting `table_cell_border_color_map` to customize the available values #TINY-7480
+- Added a new `tablecellbackgroundcolor` toolbar button and menu item to select table cell background colors, with an accompanying setting `table_cell_background_color_map` to customize the available values #TINY-7480
+- Added a new `initData` property to `fancymenuitem` to allow custom initialization data #TINY-7480
 - The `lang` attribute can now be set on content using the formatter #TINY-6149
   - The `language` menu item and toolbar button are now available.
   - The `content_langs` setting can be used to specify the languages available.
@@ -39,9 +42,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
-- Fixed an issue when pasting cells from tables containing `colgroup`s into tables without `colgroup`s #TINY-6675
-- Fixed an issue that could cause invalid toolbar button state when multiple inline editors were on a single page #TINY-6297
 - The formatter's match APIs would always return false for formats that specify an attribute or style should be removed from an element #TINY-6149
+
+## 5.8.2 - 2021-06-23
+
+### Fixed
+- Fixed an issue when pasting cells from tables containing `colgroup`s into tables without `colgroup`s #TINY-6675
+- Fixed an issue that could cause an invalid toolbar button state when multiple inline editors were on a single page #TINY-6297
 
 ## 5.8.1 - 2021-05-20
 

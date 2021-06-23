@@ -263,5 +263,6 @@ export {
   colorPickerDialog,
   getCurrentColor,
   getColorCols,
+  getAdditionalColors,
   calcCols
 };

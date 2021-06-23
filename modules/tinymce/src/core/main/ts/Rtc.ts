@@ -28,6 +28,8 @@ import { addVisualInternal } from './view/VisualAidsImpl';
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
   undoManager: {
+    beforeChange: () => void;
+    add: () => UndoLevel;
     undo: () => UndoLevel;
     redo: () => UndoLevel;
     hasUndo: () => boolean;
@@ -41,6 +43,8 @@ interface RtcRuntimeApi {
   formatter: {
     canApply: (format: string) => boolean;
     match: (format: string, vars: Record<string, string>) => boolean;
+    matchAll: () => string[];
+    matchNode: () => boolean;
     closest: (formats: string) => string;
     apply: (format: string, vars: Record<string, string>) => void;
     remove: (format: string, vars: Record<string, string>) => void;
@@ -51,6 +55,7 @@ interface RtcRuntimeApi {
     getContent: (args: GetContentArgs) => Content;
     setContent: (content: Content, args: SetContentArgs) => Content;
     insertContent: (content: Content) => void;
+    addVisual: () => void;
   };
   selection: {
     getContent: (args: GetSelectionContentArgs) => Content;
@@ -67,7 +72,7 @@ interface RtcRuntimeApi {
 interface RtcAdaptor {
   undoManager: {
     beforeChange: (locks: Locks, beforeBookmark: UndoBookmark) => void;
-    addUndoLevel: (
+    add: (
       undoManager: UndoManager,
       index: Index,
       locks: Locks,
@@ -122,7 +127,7 @@ interface RtcEditor extends Editor {
 const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   undoManager: {
     beforeChange: (locks, beforeBookmark) => Operations.beforeChange(editor, locks, beforeBookmark),
-    addUndoLevel: (undoManager, index, locks, beforeBookmark, level, event) =>
+    add: (undoManager, index, locks, beforeBookmark, level, event) =>
       Operations.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event),
     undo: (undoManager, locks, index) => Operations.undo(editor, undoManager, locks, index),
     redo: (index, data) => Operations.redo(editor, index, data),
@@ -162,28 +167,26 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
 
 const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
   const defaultVars = (vars: Record<string, string>) => Type.isObject(vars) ? vars : {};
-  const unsupported = Fun.die('Unimplemented feature for rtc');
   const { undoManager, formatter, editor, selection, raw } = rtcEditor;
-  const ignore = Fun.noop;
 
   return {
     undoManager: {
-      beforeChange: ignore,
-      addUndoLevel: unsupported,
-      undo: () => undoManager.undo(),
-      redo: () => undoManager.redo(),
-      clear: () => undoManager.clear(),
-      reset: () => undoManager.reset(),
-      hasUndo: () => undoManager.hasUndo(),
-      hasRedo: () => undoManager.hasRedo(),
+      beforeChange: undoManager.beforeChange,
+      add: undoManager.add,
+      undo: undoManager.undo,
+      redo: undoManager.redo,
+      clear: undoManager.clear,
+      reset: undoManager.reset,
+      hasUndo: undoManager.hasUndo,
+      hasRedo: undoManager.hasRedo,
       transact: (_undoManager, _locks, fn) => undoManager.transact(fn),
       ignore: (_locks, callback) => undoManager.ignore(callback),
       extra: (_undoManager, _index, callback1, callback2) => undoManager.extra(callback1, callback2)
     },
     formatter: {
       match: (name, vars?, _node?) => formatter.match(name, defaultVars(vars)),
-      matchAll: unsupported,
-      matchNode: unsupported,
+      matchAll: formatter.matchAll,
+      matchNode: formatter.matchNode,
       canApply: (name) => formatter.canApply(name),
       closest: (names) => formatter.closest(names),
       apply: (name, vars, _node) => formatter.apply(name, defaultVars(vars)),
@@ -195,7 +198,7 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
       getContent: (args, _format) => editor.getContent(args),
       setContent: (content, args) => editor.setContent(content, args),
       insertContent: (content, _details) => editor.insertContent(content),
-      addVisual: ignore
+      addVisual: editor.addVisual
     },
     selection: {
       getContent: (_format, args) => selection.getContent(args)
@@ -213,7 +216,7 @@ const makeNoopAdaptor = (): RtcAdaptor => {
   return {
     undoManager: {
       beforeChange: Fun.noop,
-      addUndoLevel: nul,
+      add: nul,
       undo: nul,
       redo: nul,
       clear: Fun.noop,
@@ -306,7 +309,7 @@ export const addUndoLevel = (
   level?: UndoLevel,
   event?: Event
 ): UndoLevel =>
-  getRtcInstanceWithError(editor).undoManager.addUndoLevel(undoManager, index, locks, beforeBookmark, level, event);
+  getRtcInstanceWithError(editor).undoManager.add(undoManager, index, locks, beforeBookmark, level, event);
 
 export const undo = (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index): UndoLevel =>
   getRtcInstanceWithError(editor).undoManager.undo(undoManager, locks, index);

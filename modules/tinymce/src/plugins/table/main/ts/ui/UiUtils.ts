@@ -52,10 +52,33 @@ const generateItemsCallback = <T extends Item>(editor: Editor, items: T[], forma
   (callback: (items: Menu.ToggleMenuItemSpec[]) => void) =>
     callback(generateItems(editor, items, format, extractText, onAction));
 
+const fixColorValue = (value: string, setColor: (colorValue: string) => void) => {
+  if (value === 'remove') {
+    setColor('');
+  } else {
+    setColor(value);
+  }
+};
+
+const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpec[], style: string): Menu.FancyMenuItemSpec[] => [{
+  type: 'fancymenuitem',
+  fancytype: 'colorswatch',
+  initData: {
+    colors: colorList.length > 0 ? colorList : undefined,
+    allowCustomColors: false
+  },
+  onAction: (data) => {
+    fixColorValue(data.value, (value) => {
+      editor.execCommand('mceTableApplyCellStyle', false, { [style]: value });
+    });
+  }
+}];
+
 export {
   onSetupToggle,
   generateItems,
   generateItemsCallback,
   filterNoneItem,
+  generateColorSelector,
   applyTableCellStyle
 };

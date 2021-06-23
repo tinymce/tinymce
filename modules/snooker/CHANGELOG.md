@@ -9,5 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
 
+## 8.0.4 - 2021-06-23
+
 ### Fixed
 - Fixed a bug in `TableMerge` that caused layout issues when merging cells from tables containing `colgroup`s into tables without `colgroup`s #TINY-6675
