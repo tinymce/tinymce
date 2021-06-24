@@ -138,13 +138,13 @@ const findLightweightTag = (html: string, startIndex: number, shortEndedElements
     const endOfStart = startIndex + startMatch.index + startMatch[0].length;
 
     if (startMatch[0] === '<!--') { // it's a comment
-      const length = findCommentEndIndex(html.slice(startIndex), false);
+      const length = findCommentEndIndex(html.slice(endOfStart), false);
       return { tagDepth: 0, end: endOfStart + length };
     } else { // it's an element
-      const endMatch = endTagRegExp.exec(html.slice(startIndex));
+      const endMatch = endTagRegExp.exec(html.slice(endOfStart));
       if (Type.isNull(endMatch)) {
         // We can skip through to the end of startMatch only because there's no way a "<" could appear halfway through "<name-of-tag"
-        startIndex += startMatch.index + startMatch[0].length;
+        startIndex = endOfStart;
         continue;
       }
       const end = endOfStart + endMatch[0].length;
@@ -176,7 +176,10 @@ const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: numbe
   let count = 1, index = startIndex;
 
   while (count !== 0) {
-    const element = findLightweightTag(html, startIndex, shortEndedElements);
+    const element = findLightweightTag(html, index, shortEndedElements);
+    if (Type.isNull(element)) {
+      break;
+    }
     count += element.tagDepth;
     index = element.end;
   }
