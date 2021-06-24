@@ -1101,4 +1101,20 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
       'c'
     );
   });
+
+  it('TINY-7589: Handles unmatched apostrophes in HTML comments', () => {
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
+
+    writer.reset();
+    // const inner = '<div><!-- Quote: \' --><p>Matching quote: \'</p></div>';
+    const inner =
+      '<div>' +
+      '<!--  This is the issue: \'  -->' +
+      '<div><div><div>The matching apostophe \'</div></div></div>' +
+      '<div>Content B</div>' +
+      '</div>';
+    parser.parse(`${inner}<div data-mce-bogus="all">${inner}</div>`);
+    assert.equal(writer.getContent(), inner);
+  });
 });
