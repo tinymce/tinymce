@@ -10,7 +10,7 @@ import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
 import Entities from './Entities';
-import Schema, { SchemaMap } from './Schema';
+import Schema from './Schema';
 
 /**
  * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will
@@ -118,50 +118,6 @@ const isInvalidUri = (settings: SaxParserSettings, uri: string, tagName: string)
   }
 };
 
-interface LightweightTag {
-  readonly tagDepth: number;
-  readonly end: number;
-}
-
-// This finds a tag, but with very small amounts of detail - used only in findMatchingEndTagIndex
-// Instead of returning what type of tag it is, we just say "is it an open tag, a close tag, or a self-closing tag (like a br, or comment)"
-// And we also don't bother returning the start index of the tag, just the end
-const findLightweightTag = (html: string, startIndex: number, shortEndedElements: SchemaMap): LightweightTag | null => {
-  const startTagRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)/g;
-  const endTagRegExp = /(?:\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/g;
-
-  while (true) {
-    startTagRegExp.lastIndex = startIndex;
-    const startMatch = startTagRegExp.exec(html);
-    if (startMatch === null) {
-      return null;
-    }
-    const endOfStart = startTagRegExp.lastIndex;
-
-    if (startMatch[1] === '!') {
-      const end = findCommentEndIndex(html, startMatch[2] === '--', endOfStart);
-      return { tagDepth: 0, end };
-    } else { // it's an element
-      endTagRegExp.lastIndex = endOfStart;
-      const endMatch = endTagRegExp.exec(html);
-      if (Type.isNull(endMatch) || endMatch.index !== endOfStart) {
-        // We can skip through to the end of startMatch only because there's no way a "<" could appear halfway through "<name-of-tag"
-        startIndex = endOfStart;
-        continue;
-      }
-      const end = endOfStart + endMatch[0].length;
-
-      if (startMatch[1] === '/') {
-        return { tagDepth: -1, end };
-      } else if (Obj.has(shortEndedElements, startMatch[2])) {
-        return { tagDepth: 0, end };
-      } else {
-        return { tagDepth: 1, end };
-      }
-    }
-  }
-};
-
 /**
  * Returns the index of the matching end tag for a specific start tag. This can
  * be used to skip all children of a parent element from being processed.
@@ -174,16 +130,48 @@ const findLightweightTag = (html: string, startIndex: number, shortEndedElements
  * @return {Number} Index of the end tag.
  */
 const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: number): number => {
+  const startTagRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)/g;
+  const endTagRegExp = /(?:\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/g;
   const shortEndedElements = schema.getShortEndedElements();
   let count = 1, index = startIndex;
 
+  // keep finding HTML tags (opening, closing, or neither like comments or <br>s
   while (count !== 0) {
-    const element = findLightweightTag(html, index, shortEndedElements);
-    if (Type.isNull(element)) {
-      break;
+    startTagRegExp.lastIndex = index;
+
+    // ideally, we only want to run through this the once - but sometimes the startTagRegExp will give us false positives (things that begin
+    // like tags, but don't end like them) and so we might need to bump up its lastIndex and try again.
+    while (true) {
+      const startMatch = startTagRegExp.exec(html);
+      if (startMatch === null) {
+        // doesn't matter what count is, we've run out of HTML tags
+        return index;
+      }
+      const endOfStart = startTagRegExp.lastIndex;
+
+      if (startMatch[1] === '!') {
+        index = findCommentEndIndex(html, startMatch[2] === '--', endOfStart);
+        break;
+      } else { // it's an element
+        endTagRegExp.lastIndex = endOfStart;
+        const endMatch = endTagRegExp.exec(html);
+        // TODO: once we don't need IE, make the regex sticky (will be faster than looking at .index afterwards and throwing out bad matches)
+        if (Type.isNull(endMatch) || endMatch.index !== endOfStart) {
+          // We can skip through to the end of startMatch only because there's no way a "<" could appear halfway through "<name-of-tag"
+          startTagRegExp.lastIndex = endOfStart;
+          continue;
+        }
+
+        if (startMatch[1] === '/') {
+          count -= 1;
+        } else if (!Obj.has(shortEndedElements, startMatch[2])) {
+          count += 1;
+        }
+
+        index = endOfStart + endMatch[0].length;
+        break;
+      }
     }
-    count += element.tagDepth;
-    index = element.end;
   }
 
   return index;
