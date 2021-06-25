@@ -147,18 +147,15 @@ const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: numbe
         // doesn't matter what count is, we've run out of HTML tags
         return index;
       }
-      const endOfStart = startTagRegExp.lastIndex;
-
       if (startMatch[1] === '!') {
-        index = findCommentEndIndex(html, startMatch[2] === '--', endOfStart);
+        index = findCommentEndIndex(html, startMatch[2] === '--', startTagRegExp.lastIndex);
         break;
       } else { // it's an element
-        endTagRegExp.lastIndex = endOfStart;
+        endTagRegExp.lastIndex = startTagRegExp.lastIndex;
         const endMatch = endTagRegExp.exec(html);
         // TODO: once we don't need IE, make the regex sticky (will be faster than looking at .index afterwards and throwing out bad matches)
-        if (Type.isNull(endMatch) || endMatch.index !== endOfStart) {
+        if (Type.isNull(endMatch) || endMatch.index !== startTagRegExp.lastIndex) {
           // We can skip through to the end of startMatch only because there's no way a "<" could appear halfway through "<name-of-tag"
-          startTagRegExp.lastIndex = endOfStart;
           continue;
         }
 
@@ -168,7 +165,7 @@ const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: numbe
           count += 1;
         }
 
-        index = endOfStart + endMatch[0].length;
+        index = startTagRegExp.lastIndex + endMatch[0].length;
         break;
       }
     }
