@@ -127,22 +127,24 @@ interface LightweightTag {
 // Instead of returning what type of tag it is, we just say "is it an open tag, a close tag, or a self-closing tag (like a br, or comment)"
 // And we also don't bother returning the start index of the tag, just the end
 const findLightweightTag = (html: string, startIndex: number, shortEndedElements: SchemaMap): LightweightTag | null => {
-  const startTagRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)/;
-  const endTagRegExp = /^(?:\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/;
+  const startTagRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)/g;
+  const endTagRegExp = /(?:\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/g;
 
   while (true) {
-    const startMatch = startTagRegExp.exec(html.slice(startIndex));
+    startTagRegExp.lastIndex = startIndex;
+    const startMatch = startTagRegExp.exec(html);
     if (startMatch === null) {
       return null;
     }
-    const endOfStart = startIndex + startMatch.index + startMatch[0].length;
+    const endOfStart = startTagRegExp.lastIndex;
 
     if (startMatch[1] === '!') {
-      const length = findCommentEndIndex(html.slice(endOfStart), startMatch[2] === '--');
-      return { tagDepth: 0, end: endOfStart + length };
+      const end = findCommentEndIndex(html, startMatch[2] === '--', endOfStart);
+      return { tagDepth: 0, end };
     } else { // it's an element
-      const endMatch = endTagRegExp.exec(html.slice(endOfStart));
-      if (Type.isNull(endMatch)) {
+      endTagRegExp.lastIndex = endOfStart;
+      const endMatch = endTagRegExp.exec(html);
+      if (Type.isNull(endMatch) || endMatch.index !== endOfStart) {
         // We can skip through to the end of startMatch only because there's no way a "<" could appear halfway through "<name-of-tag"
         startIndex = endOfStart;
         continue;
