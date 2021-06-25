@@ -8,7 +8,7 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Cell, Fun, Optional, Thunk } from '@ephox/katamari';
 import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
-import { SelectorExists, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -42,7 +42,7 @@ export interface SelectionTargets {
   readonly onSetupUnmergeable: (api: UiApi) => () => void;
   readonly resetTargets: () => void;
   readonly onSetupTableWithCaption: (api: UiToggleApi) => () => void;
-  readonly onSetupTableHeaders: () => (api: Toolbar.ToolbarToggleButtonInstanceApi) => () => void;
+  readonly onSetupTableHeaders: (api: UiToggleApi) => () => void;
   readonly targets: () => Optional<RunOperation.CombinedTargets>;
 }
 
@@ -53,46 +53,6 @@ interface ExtractedSelectionDetails {
 }
 
 type TargetSetupCallback = (targets: RunOperation.CombinedTargets) => boolean;
-
-const isElementHeader = (cell: SugarElement<HTMLTableCellElement>) => {
-  if (SugarNode.name(cell) === 'th') {
-    return true;
-  } else {
-    return SelectorFind.ancestor(cell, 'thead').isSome();
-  }
-};
-
-export const isEntireRowsHeaders = (editor: Editor, selections: Selections) => {
-  const startCellOpt = TableSelection.getSelectionStartCell(Util.getSelectionStart(editor));
-
-  return startCellOpt.exists((startCell) => {
-    const tableOpt = TableLookup.table(startCell, Util.getIsRoot(editor));
-
-    return tableOpt.exists((table) => {
-      const warehouse = Warehouse.fromTable(table);
-      const targets = TableTargets.forMenu(selections, table, startCell);
-
-      const usedRows: number[] = [];
-      Arr.each(warehouse.all, (row) => {
-        Arr.each(row.cells, (cell) => {
-          const existsInSelection = Arr.exists(targets.selection, (element) =>
-            element.dom === cell.element.dom
-          );
-
-          if (existsInSelection && !Arr.contains(usedRows, cell.row)) {
-            usedRows.push(cell.row);
-          }
-        });
-      });
-
-      return Arr.forall(usedRows, (rowIndex) =>
-        Arr.forall(warehouse.all[rowIndex].cells, (cell) =>
-          isElementHeader(cell.element)
-        )
-      );
-    });
-  });
-};
 
 export const getSelectionTargets = (editor: Editor, selections: Selections): SelectionTargets => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
@@ -203,14 +163,11 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     });
   };
 
-  const onSetupTableHeaders = () => {
-    return (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
-      return onSetupWithToggle(
-        api,
-        (targets) => isCaption(targets.element),
-        () => isEntireRowsHeaders(editor, selections)
-      );
-    };
+  const onSetupTableHeaders = (api: UiToggleApi): () => void => {
+    return onSetupWithToggle(api,
+      (targets) => isCaption(targets.element),
+      () => editor.queryCommandValue('mceTableRowType') === 'header'
+    );
   };
 
   editor.on('NodeChange ExecCommand TableSelectorChange', resetTargets);

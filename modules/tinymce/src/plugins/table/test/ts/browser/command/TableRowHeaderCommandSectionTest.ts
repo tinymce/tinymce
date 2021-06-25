@@ -6,18 +6,19 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { makeCell } from '../../module/test/TableModifiersTestUtils';
+import { clickOnButton, makeCell } from '../../module/test/TableModifiersTestUtils';
 
 describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     indent: false,
+    toolbar: 'tablerowheader',
     table_header_type: 'section',
     base_url: '/project/tinymce/js/tinymce',
   }, [ Plugin, Theme ], true);
 
-  const executeCommand = (editor: Editor) =>
-    editor.execCommand('mceTableToggleRowHeader');
+  const clickButton = (editor: Editor) =>
+    clickOnButton(editor, 'Row header');
 
   const setEditorContentTableAndSelection = (editor: Editor, level: number, row: number, column: number, content: string) => {
     editor.setContent(content);
@@ -44,7 +45,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -81,7 +82,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -118,7 +119,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -155,7 +156,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -194,7 +195,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -231,7 +232,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -268,7 +269,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -307,7 +308,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -344,7 +345,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -381,7 +382,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -418,7 +419,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -457,7 +458,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +
@@ -494,7 +495,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandSectionTest
           '</table>'
         ));
 
-        executeCommand(editor);
+        clickButton(editor);
 
         TinyAssertions.assertContent(editor, (
           '<table>' +

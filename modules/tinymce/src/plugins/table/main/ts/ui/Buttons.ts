@@ -11,7 +11,7 @@ import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableC
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
-import { applyTableCellStyle, filterNoneItem, generateColorSelector, generateItemsCallback } from './UiUtils';
+import { applyTableCellStyle, changeRowHeader, filterNoneItem, generateColorSelector, generateItemsCallback } from './UiUtils';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -267,8 +267,8 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
   editor.ui.registry.addToggleButton('tablerowheader', {
     tooltip: 'Row header',
     icon: 'table-top-header',
-    onAction: cmd('mceTableToggleRowHeader'),
-    onSetup: selectionTargets.onSetupTableHeaders()
+    onAction: changeRowHeader(editor),
+    onSetup: selectionTargets.onSetupTableHeaders
   });
 };
 

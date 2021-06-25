@@ -20,7 +20,6 @@ import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
-import { isEntireRowsHeaders } from '../selection/SelectionTargets';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
@@ -119,26 +118,6 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     });
   };
 
-  const toggleRowHeader = () => {
-    getSelectionStartCell(editor).each((startCell) => {
-      TableLookup.table(startCell, isRoot).each((table) => {
-        const getNewType = () => {
-          if (isEntireRowsHeaders(editor, selections)) {
-            return 'body';
-          } else {
-            return 'header';
-          }
-        };
-
-        actions.setTableRowType(editor, {
-          type: getNewType(),
-        });
-
-        Events.fireTableModified(editor, table.dom, Events.structureModified);
-      });
-    });
-  };
-
   const postExecute = (table: SugarElement<HTMLTableElement>) => (data: TableActionResult): void => {
     editor.selection.setRng(data.rng);
     editor.focus();
@@ -205,7 +184,6 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableCellToggleClass: toggleTableCellClass,
     mceTableToggleClass: toggleTableClass,
     mceTableToggleCaption: toggleCaption,
-    mceTableToggleRowHeader: toggleRowHeader,
     mceTableSizingMode: (_ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
 
