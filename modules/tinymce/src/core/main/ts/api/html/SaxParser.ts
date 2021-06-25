@@ -137,8 +137,8 @@ const findLightweightTag = (html: string, startIndex: number, shortEndedElements
     }
     const endOfStart = startIndex + startMatch.index + startMatch[0].length;
 
-    if (startMatch[0] === '<!--') { // it's a comment
-      const length = findCommentEndIndex(html.slice(endOfStart), false);
+    if (startMatch[1] === '!') {
+      const length = findCommentEndIndex(html.slice(endOfStart), startMatch[2] === '--');
       return { tagDepth: 0, end: endOfStart + length };
     } else { // it's an element
       const endMatch = endTagRegExp.exec(html.slice(endOfStart));

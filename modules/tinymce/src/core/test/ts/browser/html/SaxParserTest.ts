@@ -953,6 +953,7 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     testFindEndTag('<b><!-- </b> --></b>', 3, 20);
     testFindEndTag('<span><b><i>a<img>b</i><b>c</b></b></span>', 9, 35);
     testFindEndTag('<!-- Mismatched " --></p><div>Closing " </div>', 0, 25);
+    testFindEndTag('<! bogus comment></p><!-- Good comment for good measure -->', 0, 21);
   });
 
   it('parse XSS PI', () => {
