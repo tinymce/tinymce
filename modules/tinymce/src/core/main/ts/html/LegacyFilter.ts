@@ -12,13 +12,13 @@ import AstNode from '../api/html/Node';
 import Styles from '../api/html/Styles';
 import Tools from '../api/util/Tools';
 
-const removeAttrs = (node: AstNode, names: string[]) => {
+const removeAttrs = (node: AstNode, names: string[]): void => {
   Arr.each(names, (name) => {
     node.attr(name, null);
   });
 };
 
-const addFontToSpansFilter = (domParser: DomParser, styles: Styles, fontSizes: string[]) => {
+const addFontToSpansFilter = (domParser: DomParser, styles: Styles, fontSizes: string[]): void => {
   domParser.addNodeFilter('font', (nodes) => {
     Arr.each(nodes, (node) => {
       const props = styles.parse(node.attr('style'));
@@ -45,7 +45,7 @@ const addFontToSpansFilter = (domParser: DomParser, styles: Styles, fontSizes: s
   });
 };
 
-const addStrikeToSpanFilter = (domParser: DomParser, styles: Styles) => {
+const addStrikeToSpanFilter = (domParser: DomParser, styles: Styles): void => {
   domParser.addNodeFilter('strike', (nodes) => {
     Arr.each(nodes, (node) => {
       const props = styles.parse(node.attr('style'));
@@ -58,7 +58,7 @@ const addStrikeToSpanFilter = (domParser: DomParser, styles: Styles) => {
   });
 };
 
-const addFilters = (domParser: DomParser, settings: DomParserSettings) => {
+const addFilters = (domParser: DomParser, settings: DomParserSettings): void => {
   const styles = Styles();
 
   if (settings.convert_fonts_to_spans) {
@@ -68,7 +68,7 @@ const addFilters = (domParser: DomParser, settings: DomParserSettings) => {
   addStrikeToSpanFilter(domParser, styles);
 };
 
-const register = (domParser: DomParser, settings: DomParserSettings) => {
+const register = (domParser: DomParser, settings: DomParserSettings): void => {
   if (settings.inline_styles) {
     addFilters(domParser, settings);
   }

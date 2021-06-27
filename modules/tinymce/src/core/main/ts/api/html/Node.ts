@@ -12,7 +12,7 @@ import { SchemaMap } from './Schema';
 
 export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
-const typeLookup = {
+const typeLookup: Record<string, number> = {
   '#text': 3,
   '#comment': 8,
   '#cdata': 4,
@@ -123,6 +123,8 @@ class AstNode {
   public lastChild?: AstNode;
   public next?: AstNode;
   public prev?: AstNode;
+  public raw?: boolean;
+  public fixed?: boolean;
 
   /**
    * Constructs a new Node instance.
@@ -178,10 +180,10 @@ class AstNode {
    * @param {String} value Optional value to set.
    * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
    */
-  public attr(name: string, value: string | null): AstNode;
-  public attr(name: Record<string, string | null>): AstNode;
-  public attr(name: string): string;
-  public attr(name: string | Record<string, string | null>, value?: string | null): string | AstNode {
+  public attr(name: string, value: string | null): AstNode | undefined;
+  public attr(name: Record<string, string | null>): AstNode | undefined;
+  public attr(name: string): string | undefined;
+  public attr(name: string | Record<string, string | null>, value?: string | null): string | AstNode | undefined {
     const self = this;
     let attrs: Attributes;
 
@@ -301,7 +303,7 @@ class AstNode {
    *
    * @method unwrap
    */
-  public unwrap() {
+  public unwrap(): void {
     const self = this;
 
     for (let node = self.firstChild; node;) {
@@ -492,7 +494,7 @@ class AstNode {
    * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  public isEmpty(elements: SchemaMap, whitespace: SchemaMap = {}, predicate?: (node: AstNode) => boolean) {
+  public isEmpty(elements: SchemaMap, whitespace: SchemaMap = {}, predicate?: (node: AstNode) => boolean): boolean {
     const self = this;
     let node = self.firstChild;
 

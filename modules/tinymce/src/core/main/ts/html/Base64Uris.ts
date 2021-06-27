@@ -56,7 +56,7 @@ export const extractBase64DataUris = (html: string): Base64Extract => {
   }
 };
 
-export const restoreDataUris = (html: string, result: Base64Extract) =>
+export const restoreDataUris = (html: string, result: Base64Extract): string =>
   html.replace(result.re, (imageId) =>
     Obj.get(result.uris, imageId).getOr(imageId)
   );

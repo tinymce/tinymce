@@ -76,17 +76,17 @@ export interface SchemaMap { [name: string]: {} }
 export interface SchemaRegExpMap { [name: string]: RegExp }
 
 interface Schema {
-  children: Record<string, {}>;
+  children: Record<string, SchemaMap>;
   elements: Record<string, SchemaElement>;
-  getValidStyles: () => SchemaMap;
-  getValidClasses: () => SchemaMap;
+  getValidStyles: () => Record<string, string[]> | undefined;
+  getValidClasses: () => Record<string, SchemaMap> | undefined;
   getBlockElements: () => SchemaMap;
-  getInvalidStyles: () => SchemaMap;
+  getInvalidStyles: () => Record<string, SchemaMap> | undefined;
   getShortEndedElements: () => SchemaMap;
   getTextBlockElements: () => SchemaMap;
   getTextInlineElements: () => SchemaMap;
   getBoolAttrs: () => SchemaMap;
-  getElementRule: (name: string) => SchemaElement;
+  getElementRule: (name: string) => SchemaElement | undefined;
   getSelfClosingElements: () => SchemaMap;
   getNonEmptyElements: () => SchemaMap;
   getMoveCaretBeforeOnEnterElements: () => SchemaMap;

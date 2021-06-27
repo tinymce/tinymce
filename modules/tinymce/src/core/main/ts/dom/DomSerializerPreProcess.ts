@@ -7,31 +7,32 @@
 
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
+import { ParserArgs } from '../api/html/DomParser';
 import Tools from '../api/util/Tools';
 
-const preProcess = (editor: Editor, node: Element, args) => {
-  let doc, oldDoc;
+const preProcess = (editor: Editor, node: Element, args: ParserArgs): Node => {
+  let oldDoc: Document;
   const dom = editor.dom;
 
-  node = node.cloneNode(true) as Element;
+  let clonedNode = node.cloneNode(true);
 
   // Nodes needs to be attached to something in WebKit/Opera
   // This fix will make DOM ranges and make Sizzle happy!
   const impl = document.implementation;
   if (impl.createHTMLDocument) {
     // Create an empty HTML document
-    doc = impl.createHTMLDocument('');
+    const doc = impl.createHTMLDocument('');
 
     // Add the element or it's children if it's a body element to the new document
-    Tools.each(node.nodeName === 'BODY' ? node.childNodes : [ node ], (node) => {
+    Tools.each(clonedNode.nodeName === 'BODY' ? clonedNode.childNodes : [ clonedNode ], (node) => {
       doc.body.appendChild(doc.importNode(node, true));
     });
 
     // Grab first child or body element for serialization
-    if (node.nodeName !== 'BODY') {
-      node = doc.body.firstChild;
+    if (clonedNode.nodeName !== 'BODY') {
+      clonedNode = doc.body.firstChild;
     } else {
-      node = doc.body;
+      clonedNode = doc.body;
     }
 
     // set the new document in DOMUtils so createElement etc works
@@ -39,20 +40,20 @@ const preProcess = (editor: Editor, node: Element, args) => {
     dom.doc = doc;
   }
 
-  Events.firePreProcess(editor, { ...args, node });
+  Events.firePreProcess(editor, { ...args, node: clonedNode });
 
   if (oldDoc) {
     dom.doc = oldDoc;
   }
 
-  return node;
+  return clonedNode;
 };
 
-const shouldFireEvent = (editor: Editor, args) => {
+const shouldFireEvent = (editor: Editor, args: ParserArgs) => {
   return editor && editor.hasEventListeners('PreProcess') && !args.no_events;
 };
 
-const process = (editor: Editor, node: Element, args) => {
+const process = (editor: Editor, node: Element, args: ParserArgs): Node => {
   return shouldFireEvent(editor, args) ? preProcess(editor, node, args) : node;
 };
 

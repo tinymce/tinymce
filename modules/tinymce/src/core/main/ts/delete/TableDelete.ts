@@ -144,7 +144,7 @@ const getParentCell = (rootElm: SugarElement<Node>, elm: SugarElement<Node>): Op
   Arr.find(Parents.parentsAndSelf(elm, rootElm), ElementType.isTableCell);
 
 const getParentCaption = (rootElm: SugarElement<Node>, elm: SugarElement<Node>): Optional<SugarElement<HTMLTableCaptionElement>> =>
-  Arr.find(Parents.parentsAndSelf(elm, rootElm), (elm) => SugarNode.name(elm) === 'caption');
+  Arr.find(Parents.parentsAndSelf(elm, rootElm), SugarNode.isTag('caption'));
 
 const deleteBetweenCells = (editor: Editor, rootElm: SugarElement<Node>, forward: boolean, fromCell: SugarElement<HTMLTableCellElement>, from: CaretPosition) =>
   CaretFinder.navigate(forward, editor.getBody(), from)

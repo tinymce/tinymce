@@ -23,10 +23,6 @@ import * as DomSerializerFilters from './DomSerializerFilters';
 import * as DomSerializerPreProcess from './DomSerializerPreProcess';
 import { isWsPreserveElement } from './ElementType';
 
-export interface DomSerializerArgs extends ParserArgs {
-  format?: string;
-}
-
 interface DomSerializerSettings extends DomParserSettings, WriterSettings, SchemaSettings, HtmlSerializerSettings {
   url_converter?: URLConverter;
   url_converter_scope?: {};
@@ -39,8 +35,8 @@ interface DomSerializerImpl {
   getNodeFilters: () => ParserFilter[];
   getAttributeFilters: () => ParserFilter[];
   serialize: {
-    (node: Element, parserArgs: { format: 'tree' } & DomSerializerArgs): AstNode;
-    (node: Element, parserArgs?: DomSerializerArgs): string;
+    (node: Element, parserArgs: { format: 'tree' } & ParserArgs): AstNode;
+    (node: Element, parserArgs?: ParserArgs): string;
   };
   addRules: (rules: string) => void;
   setRules: (rules: string) => void;
@@ -48,7 +44,7 @@ interface DomSerializerImpl {
   getTempAttrs: () => string[];
 }
 
-const addTempAttr = (htmlParser: DomParser, tempAttrs: string[], name: string) => {
+const addTempAttr = (htmlParser: DomParser, tempAttrs: string[], name: string): void => {
   if (Tools.inArray(tempAttrs, name) === -1) {
     htmlParser.addAttributeFilter(name, (nodes, name) => {
       let i = nodes.length;
@@ -62,7 +58,7 @@ const addTempAttr = (htmlParser: DomParser, tempAttrs: string[], name: string) =
   }
 };
 
-const postProcess = (editor: Editor, args: ParserArgs, content: string) => {
+const postProcess = (editor: Editor, args: ParserArgs, content: string): string => {
   if (!args.no_events && editor) {
     const outArgs = Events.firePostProcess(editor, { ...args, content });
     return outArgs.content;
@@ -71,8 +67,9 @@ const postProcess = (editor: Editor, args: ParserArgs, content: string) => {
   }
 };
 
-const getHtmlFromNode = (dom: DOMUtils, node: Element, args) => {
-  const html = Zwsp.trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node));
+const getHtmlFromNode = (dom: DOMUtils, node: Node, args: ParserArgs): string => {
+  // TODO: Investigate if using `innerHTML` is correct as DomSerializerPreProcess definitely returns a Node
+  const html = Zwsp.trim(args.getInner ? (node as Element).innerHTML : dom.getOuterHTML(node));
   return args.selection || isWsPreserveElement(SugarElement.fromDom(node)) ? html : Tools.trim(html);
 };
 
@@ -83,12 +80,12 @@ const parseHtml = (htmlParser: DomParser, html: string, args: ParserArgs) => {
   return rootNode;
 };
 
-const serializeNode = (settings: HtmlSerializerSettings, schema: Schema, node: AstNode) => {
+const serializeNode = (settings: HtmlSerializerSettings, schema: Schema, node: AstNode): string => {
   const htmlSerializer = HtmlSerializer(settings, schema);
   return htmlSerializer.serialize(node);
 };
 
-const toHtml = (editor: Editor, settings: HtmlSerializerSettings, schema: Schema, rootNode: AstNode, args: ParserArgs) => {
+const toHtml = (editor: Editor, settings: HtmlSerializerSettings, schema: Schema, rootNode: AstNode, args: ParserArgs): string => {
   const content = serializeNode(settings, schema, rootNode);
   return postProcess(editor, args, content);
 };
@@ -104,7 +101,7 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor: Editor): Dom
   const htmlParser = DomParser(settings, schema);
   DomSerializerFilters.register(htmlParser, settings, dom);
 
-  const serialize = (node: Element, parserArgs = {}) => {
+  const serialize = (node: Element, parserArgs: ParserArgs = {}): string | AstNode => {
     const args = { format: 'html', ...parserArgs };
     const targetNode = DomSerializerPreProcess.process(editor, node, args);
     const html = getHtmlFromNode(dom, targetNode, args);
@@ -116,13 +113,9 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor: Editor): Dom
     schema,
     addNodeFilter: htmlParser.addNodeFilter,
     addAttributeFilter: htmlParser.addAttributeFilter,
-    serialize,
-    addRules: (rules) => {
-      schema.addValidElements(rules);
-    },
-    setRules: (rules) => {
-      schema.setValidElements(rules);
-    },
+    serialize: serialize as DomSerializerImpl['serialize'],
+    addRules: schema.addValidElements,
+    setRules: schema.setValidElements,
     addTempAttr: Fun.curry(addTempAttr, htmlParser, tempAttrs),
     getTempAttrs: Fun.constant(tempAttrs),
     getNodeFilters: htmlParser.getNodeFilters,
