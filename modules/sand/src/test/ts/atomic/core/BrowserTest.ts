@@ -75,7 +75,7 @@ describe('BrowserTest', () => {
     check('isChrome', 'OSX', 'Chrome', 6, 0, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
   });
 
-  it('Mobile Browserss', () => {
+  it('Mobile Browsers', () => {
     check('isSafari', 'iOS', 'Safari', 3, 0, 'Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A537a Safari/419.3');
     check('isSafari', 'iOS', 'Safari', 9, 3, 'Mozilla/5.0 (iPad; CPU OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13E230');
     check('isSafari', 'iOS', 'Safari', 13, 0, 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1');
