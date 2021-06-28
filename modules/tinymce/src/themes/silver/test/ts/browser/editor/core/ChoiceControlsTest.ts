@@ -127,7 +127,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
       });
     });
 
-    context('Line height normalisation tests', () => {
+    context('normalisation tests', () => {
       const hook = TinyHooks.bddSetup<Editor>({
         ...baseSettings,
         lineheight_formats: '1.000 20px 22.0px 1.5e2%'
