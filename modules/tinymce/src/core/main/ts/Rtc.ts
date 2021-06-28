@@ -44,7 +44,7 @@ interface RtcRuntimeApi {
     canApply: (format: string) => boolean;
     match: (format: string, vars: Record<string, string>) => boolean;
     matchAll: () => string[];
-    matchNode: () => boolean;
+    matchNode: () => Format | undefined;
     closest: (formats: string) => string;
     apply: (format: string, vars: Record<string, string>) => void;
     remove: (format: string, vars: Record<string, string>) => void;

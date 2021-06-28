@@ -85,7 +85,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
           const value = itemName === 'attributes' ? dom.getAttrib(node, key) : FormatUtils.getStyle(dom, node, key);
           const expectedValue = FormatUtils.replaceVars(items[key], vars);
 
-          if (Type.isNullable(value) && Type.isNullable(expectedValue)) {
+          if ((Type.isNullable(value) || value === '') && Type.isNullable(expectedValue)) {
             continue;
           }
 

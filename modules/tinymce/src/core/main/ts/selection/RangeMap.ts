@@ -27,9 +27,12 @@ const getCaretElement = (editor: Editor): Optional<Node> =>
       return atStartOfNode ? Optional.none() : Optional.from(editor.selection.getStart(true));
     });
 
-export const mapRange = <T>(editor: Editor, mapper: (node: SugarElement<Element>) => T): Optional<T> =>
+export const bindRange = <T>(editor: Editor, binder: (node: SugarElement<Element>) => Optional<T>): Optional<T> =>
   getCaretElement(editor)
     .orThunk(Fun.curry(findFirstCaretElement, editor))
     .map(SugarElement.fromDom)
     .filter(SugarNode.isElement)
-    .map(mapper);
+    .bind(binder);
+
+export const mapRange = <T>(editor: Editor, mapper: (node: SugarElement<Element>) => T): Optional<T> =>
+  bindRange(editor, Fun.compose1(Optional.some, mapper));

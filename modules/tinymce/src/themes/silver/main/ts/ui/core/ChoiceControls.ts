@@ -6,11 +6,12 @@
  */
 
 import { Arr, Fun, Obj, Optional, Singleton, Type } from '@ephox/katamari';
-import { Attribute, Dimension, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
+import { Dimension } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ContentLanguage } from 'tinymce/core/api/SettingsTypes';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+import { getContentLanguage } from 'tinymce/core/commands/ContentLanguage';
 
 import * as Settings from '../../api/Settings';
 
@@ -103,7 +104,7 @@ const lineHeightSpec: ControlSpec<string> = {
   hash: (input) => Dimension.normalise(input, [ 'fixed', 'relative', 'empty' ]).getOr(input),
   display: Fun.identity,
 
-  getCurrent: (editor) => Optional.some(editor.queryCommandValue('LineHeight')),
+  getCurrent: (editor) => Optional.from(editor.queryCommandValue('LineHeight')),
   setCurrent: (editor, value) => editor.execCommand('LineHeight', false, value)
 };
 
@@ -116,31 +117,8 @@ const languageSpec: ControlSpec<ContentLanguage> = {
   hash: (input) => Type.isUndefined(input.customCode) ? input.code : `${input.code}/${input.customCode}`,
   display: (input) => input.title,
 
-  getCurrent: (editor) => {
-    const selection = SugarElement.fromDom(editor.selection.getRng().startContainer);
-    return TransformFind.ancestor(selection, (node) => {
-      if (!SugarNode.isElement(node)) {
-        return Optional.none();
-      }
-
-      const codeOpt = Attribute.getOpt(node, 'lang');
-      const customCode = Attribute.getOpt(node, 'data-mce-lang').getOrUndefined();
-      // The actual language title doesn't matter, because all we're going to do
-      // is pass this to normalise (which ignores the title)
-      const title = '';
-
-      return codeOpt.map((code): ContentLanguage => ({ code, customCode, title }));
-    });
-  },
-  setCurrent: (editor, lang) => {
-    editor.undoManager.transact(() => {
-      editor.formatter.toggle('lang', {
-        value: lang.code,
-        customValue: lang.customCode
-      });
-      editor.nodeChanged();
-    });
-  }
+  getCurrent: (editor) => Optional.from(getContentLanguage(editor)),
+  setCurrent: (editor, lang) => editor.execCommand('Lang', false, lang)
 };
 
 const register = (editor: Editor) => {

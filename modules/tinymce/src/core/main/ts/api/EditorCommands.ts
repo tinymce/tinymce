@@ -8,6 +8,7 @@
 import { Fun } from '@ephox/katamari';
 
 import { Bookmark } from '../bookmark/BookmarkTypes';
+import * as ContentLanguageCommands from '../commands/ContentLanguage';
 import * as FontCommands from '../commands/FontCommands';
 import * as IndentOutdent from '../commands/IndentOutdent';
 import * as LineHeightCommands from '../commands/LineHeight';
@@ -405,6 +406,10 @@ class EditorCommands {
 
       'LineHeight': (command, ui, value) => {
         LineHeightCommands.lineHeightAction(editor, value);
+      },
+
+      'Lang': (command, ui, value) => {
+        ContentLanguageCommands.contentLanguageAction(editor, value);
       },
 
       'RemoveFormat': (command) => {
