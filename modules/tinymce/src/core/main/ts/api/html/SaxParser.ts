@@ -130,6 +130,7 @@ const isInvalidUri = (settings: SaxParserSettings, uri: string, tagName: string)
  * @return {Number} Index of the end tag.
  */
 const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: number): number => {
+  // TODO: TINY-7658: this regex does not support CDATA
   const startTagRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)/g;
   const endTagRegExp = /(?:\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/g;
   const shortEndedElements = schema.getShortEndedElements();
@@ -146,9 +147,13 @@ const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: numbe
       if (startMatch === null) {
         // doesn't matter what count is, we've run out of HTML tags
         return index;
-      }
-      if (startMatch[1] === '!') {
-        index = findCommentEndIndex(html, startMatch[2] === '--', startTagRegExp.lastIndex);
+      } else if (startMatch[1] === '!') {
+        // TODO: TINY-7658 add CDATA support here
+        if (Strings.startsWith(startMatch[2], '--')) {
+          index = findCommentEndIndex(html, false, startMatch.index + '!--'.length);
+        } else {
+          index = findCommentEndIndex(html, true, startMatch.index + 1);
+        }
         break;
       } else { // it's an element
         endTagRegExp.lastIndex = startTagRegExp.lastIndex;
@@ -159,9 +164,9 @@ const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: numbe
           continue;
         }
 
-        if (startMatch[1] === '/') {
+        if (startMatch[1] === '/') { // end of element
           count -= 1;
-        } else if (!Obj.has(shortEndedElements, startMatch[2])) {
+        } else if (!Obj.has(shortEndedElements, startMatch[2])) { // start of element, specifically not a shortEndedElement like <br>
           count += 1;
         }
 
