@@ -57,7 +57,7 @@ const getContentLanguages = (editor: Editor): ContentLanguage[] => {
     { title: 'Spanish', code: 'es' },
     { title: 'French', code: 'fr' },
     { title: 'German', code: 'de' },
-    { title: 'Portuguese (Brazil)', code: 'pt' },
+    { title: 'Portuguese', code: 'pt' },
     { title: 'Chinese', code: 'zh' }
   ];
   return editor.getParam('content_langs', defaultSettings, 'array');
