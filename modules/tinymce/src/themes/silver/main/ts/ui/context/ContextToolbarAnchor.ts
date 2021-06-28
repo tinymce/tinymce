@@ -49,7 +49,7 @@ const isEntireElementSelected = (editor: Editor, elem: SugarElement<Element>) =>
 /**
  * This function is designed to attempt to intelligently detect where the contextbar should be anchored when using an inside
  * layout. It will attempt to preserve the previous outside placement when anchoring to the same element. However, when the
- * placement is re-triggered (eg not triggered by a reposition) and the current editor selection overlaps with the contextbar,
+ * placement is re-triggered (e.g. not triggered by a reposition) and the current editor selection overlaps with the contextbar,
  * then the anchoring should flip from the previous position to avoid conflicting with the selection.
  */
 const determineInsideLayout = (editor: Editor, contextbar: SugarElement<HTMLElement>, elem: SugarElement<HTMLElement>, data: PositionData) => {

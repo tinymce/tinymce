@@ -70,17 +70,21 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     return bounds;
   };
 
-  const shouldContextToolbarHide = (): boolean => {
+  const canLaunchToolbar = () => {
     // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
-    if (isTouch() && backstage.isContextMenuOpen()) {
+    return !(isTouch() && backstage.isContextMenuOpen());
+  };
+
+  const shouldContextToolbarHide = (): boolean => {
+    if (!canLaunchToolbar()) {
       return true;
+    } else {
+      const lastElementBounds = ContextToolbarBounds.getAnchorElementBounds(editor, lastElement.get());
+      const contextToolbarBounds = getBounds();
+
+      // If the element bound isn't overlapping with the context toolbar bounds, the context toolbar should hide
+      return !ContextToolbarBounds.isVerticalOverlap(lastElementBounds, contextToolbarBounds);
     }
-
-    const lastElementBounds = ContextToolbarBounds.getAnchorElementBounds(editor, lastElement.get());
-    const contextToolbarBounds = getBounds();
-
-    // If the element bound isn't overlapping with the context toolbar bounds, the context toolbar should hide
-    return !ContextToolbarBounds.isVerticalOverlap(lastElementBounds, contextToolbarBounds);
   };
 
   const close = () => {
@@ -177,8 +181,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   const launchContext = (toolbarApi: Array<ContextType>, elem: Optional<Element>) => {
     launchContextToolbar.stop();
 
-    // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
-    if (isTouch() && backstage.isContextMenuOpen()) {
+    // Don't launch if the editor has something else open that would conflict
+    if (!canLaunchToolbar()) {
       return;
     }
 
@@ -215,10 +219,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     const scopes = getScopes();
     ToolbarLookup.lookup(scopes, editor).fold(
       close,
-
-      (info) => {
-        launchContext(info.toolbars, Optional.some(info.elem.dom));
-      }
+      (info) => launchContext(info.toolbars, Optional.some(info.elem.dom))
     );
   }, 0);
 
