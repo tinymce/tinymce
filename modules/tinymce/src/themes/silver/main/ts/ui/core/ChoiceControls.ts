@@ -6,12 +6,11 @@
  */
 
 import { Arr, Fun, Obj, Optional, Singleton, Type } from '@ephox/katamari';
-import { Dimension } from '@ephox/sugar';
+import { Attribute, Dimension, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ContentLanguage } from 'tinymce/core/api/SettingsTypes';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import { getContentLanguage } from 'tinymce/core/commands/ContentLanguage';
 
 import * as Settings from '../../api/Settings';
 
@@ -117,7 +116,22 @@ const languageSpec: ControlSpec<ContentLanguage> = {
   hash: (input) => Type.isUndefined(input.customCode) ? input.code : `${input.code}/${input.customCode}`,
   display: (input) => input.title,
 
-  getCurrent: (editor) => Optional.from(getContentLanguage(editor)),
+  getCurrent: (editor) => {
+    const node = SugarElement.fromDom(editor.selection.getNode());
+    return TransformFind.closest(node, (n) =>
+      Optional.some(n)
+        .filter(SugarNode.isElement)
+        .bind((ele) => {
+          const codeOpt = Attribute.getOpt(ele, 'lang');
+          const customCode = Attribute.getOpt(ele, 'data-mce-lang').getOrUndefined();
+          return codeOpt.map((code): ContentLanguage => ({
+            code,
+            customCode,
+            title: ''
+          }));
+        })
+    );
+  },
   setCurrent: (editor, lang) => editor.execCommand('Lang', false, lang)
 };
 

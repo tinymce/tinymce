@@ -73,7 +73,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
   // Custom match
   if (format.onmatch) {
     // onmatch is generic in a way that we can't really express without casting
-    return format.onmatch(node, format as never, itemName);
+    return format.onmatch(node, format as any, itemName);
   }
 
   // Check all items

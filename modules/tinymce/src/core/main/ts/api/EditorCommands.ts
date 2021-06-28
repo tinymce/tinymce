@@ -8,7 +8,6 @@
 import { Fun } from '@ephox/katamari';
 
 import { Bookmark } from '../bookmark/BookmarkTypes';
-import * as ContentLanguageCommands from '../commands/ContentLanguage';
 import * as FontCommands from '../commands/FontCommands';
 import * as IndentOutdent from '../commands/IndentOutdent';
 import * as LineHeightCommands from '../commands/LineHeight';
@@ -20,6 +19,7 @@ import * as InsertNewLine from '../newline/InsertNewLine';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import Editor from './Editor';
 import Env from './Env';
+import { ContentLanguage } from './SettingsTypes';
 import Tools from './util/Tools';
 
 /**
@@ -408,8 +408,8 @@ class EditorCommands {
         LineHeightCommands.lineHeightAction(editor, value);
       },
 
-      'Lang': (command, ui, value) => {
-        ContentLanguageCommands.contentLanguageAction(editor, value);
+      'Lang': (command, ui, lang: ContentLanguage) => {
+        self.toggleFormat(command, { value: lang.code, otherValue: lang.customCode });
       },
 
       'RemoveFormat': (command) => {
