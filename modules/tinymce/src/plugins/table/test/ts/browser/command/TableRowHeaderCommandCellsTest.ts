@@ -439,7 +439,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandCellsTest',
     context('When there are other body rows', () => {
       it('TINY-7481: Top cell is selected', () => {
         const editor = hook.editor();
-        setEditorContentTableAndSelection(editor, 1, 0, 1, (
+        setEditorContentTableAndSelection(editor, 0, 0, 1, (
           '<table>' +
             '<thead>' +
               '<tr>' +
@@ -467,7 +467,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandCellsTest',
               '</tr>' +
               '<tr>' +
                 makeCell('td', '0-0') +
-                makeCell('td', '0-1') +
+                makeCell('th', '0-1') +
               '</tr>' +
             '</tbody>' +
           '</table>'
@@ -476,7 +476,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandCellsTest',
 
       it('TINY-7481: A whole row is selected', () => {
         const editor = hook.editor();
-        setEditorContentTableAndSelection(editor, 1, 0, 1, (
+        setEditorContentTableAndSelection(editor, 0, 0, 1, (
           '<table>' +
             '<thead>' +
               '<tr>' +
@@ -504,7 +504,7 @@ describe('browser.tinymce.plugins.table.command.TableRowHeaderCommandCellsTest',
               '</tr>' +
               '<tr>' +
                 makeCell('td', '0-0') +
-                makeCell('td', '0-1') +
+                makeCell('th', '0-1') +
               '</tr>' +
             '</tbody>' +
           '</table>'
