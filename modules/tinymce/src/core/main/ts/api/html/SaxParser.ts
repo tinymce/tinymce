@@ -136,7 +136,7 @@ const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: numbe
   const shortEndedElements = schema.getShortEndedElements();
   let count = 1, index = startIndex;
 
-  // keep finding HTML tags (opening, closing, or neither like comments or <br>s
+  // keep finding HTML tags (opening, closing, or neither like comments or <br>s)
   while (count !== 0) {
     startTagRegExp.lastIndex = index;
 
