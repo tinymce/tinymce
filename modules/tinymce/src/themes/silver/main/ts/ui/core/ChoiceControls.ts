@@ -123,12 +123,10 @@ const languageSpec: ControlSpec<ContentLanguage> = {
         .filter(SugarNode.isElement)
         .bind((ele) => {
           const codeOpt = Attribute.getOpt(ele, 'lang');
-          const customCode = Attribute.getOpt(ele, 'data-mce-lang').getOrUndefined();
-          return codeOpt.map((code): ContentLanguage => ({
-            code,
-            customCode,
-            title: ''
-          }));
+          return codeOpt.map((code): ContentLanguage => {
+            const customCode = Attribute.getOpt(ele, 'data-mce-lang').getOrUndefined();
+            return { code, customCode, title: '' };
+          });
         })
     );
   },
