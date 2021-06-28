@@ -57,7 +57,7 @@ const getPos = (body: HTMLElement, elm: HTMLElement | null, rootElm?: Node): { x
 
     let offsetParent: Element = elm;
     while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType && !hasChild(offsetParent, rootElm)) {
-      const castOffsetParent = (offsetParent as HTMLElement);
+      const castOffsetParent = offsetParent as HTMLElement;
       x += castOffsetParent.offsetLeft || 0;
       y += castOffsetParent.offsetTop || 0;
       offsetParent = castOffsetParent.offsetParent;
