@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
-- The formatter match APIs was incorrectly returning false for formats that specified an attribute or style should be removed from an element #TINY-6149
+- The formatter match APIs were incorrectly returning false for formats that specified an attribute or style should be removed from an element #TINY-6149
 - The type signature on `editor.formatter.matchNode` had the wrong return type (was `boolean` but should have been `Formatter | undefined`) #TINY-6149
 
 ## 5.8.2 - 2021-06-23
