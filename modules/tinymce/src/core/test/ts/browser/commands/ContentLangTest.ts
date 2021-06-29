@@ -16,18 +16,18 @@ describe('browser.tinymce.core.fmt.ContentLangTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'Hello world'.length);
     });
 
-    it('TINY-6149: supports setting language then setting color', () => {
-      const editor = hook.editor();
-      editor.formatter.toggle('forecolor', { value: 'red' });
-      editor.execCommand('lang', false, { code: 'fr' });
-      TinyAssertions.assertContent(editor, '<p><span lang="fr" style="color: red;">Hello world</span></p>');
-      editor.execCommand('lang', false, { code: 'fr' });
-      editor.formatter.toggle('forecolor', { value: 'red' });
-      TinyAssertions.assertContent(editor, '<p>Hello world</p>');
-    });
-
     it('TINY-6149: supports setting color then setting language', () => {
       const editor = hook.editor();
+      editor.formatter.toggle('forecolor', { value: 'red' });
+      editor.execCommand('lang', false, { code: 'fr' });
+      TinyAssertions.assertContent(editor, '<p><span lang="fr" style="color: red;">Hello world</span></p>');
+      editor.execCommand('lang', false, { code: 'fr' });
+      editor.formatter.toggle('forecolor', { value: 'red' });
+      TinyAssertions.assertContent(editor, '<p>Hello world</p>');
+    });
+
+    it('TINY-6149: supports setting language then setting color', () => {
+      const editor = hook.editor();
       editor.execCommand('lang', false, { code: 'fr' });
       editor.formatter.toggle('forecolor', { value: 'red' });
       TinyAssertions.assertContent(editor, '<p><span lang="fr" style="color: red;">Hello world</span></p>');
@@ -36,7 +36,7 @@ describe('browser.tinymce.core.fmt.ContentLangTest', () => {
       TinyAssertions.assertContent(editor, '<p>Hello world</p>');
     });
 
-    it('TINY-6149: supports setting language then setting color - with complex language', () => {
+    it('TINY-6149: supports setting color then setting language - with complex language', () => {
       const editor = hook.editor();
       editor.formatter.toggle('forecolor', { value: 'red' });
       editor.execCommand('lang', false, { code: 'en_US', customCode: 'en-us-medical' });
@@ -46,7 +46,7 @@ describe('browser.tinymce.core.fmt.ContentLangTest', () => {
       TinyAssertions.assertContent(editor, '<p>Hello world</p>');
     });
 
-    it('TINY-6149: supports setting color then setting language - with complex language', () => {
+    it('TINY-6149: supports setting language then setting color - with complex language', () => {
       const editor = hook.editor();
       editor.execCommand('lang', false, { code: 'en_US', customCode: 'en-us-medical' });
       editor.formatter.toggle('forecolor', { value: 'red' });

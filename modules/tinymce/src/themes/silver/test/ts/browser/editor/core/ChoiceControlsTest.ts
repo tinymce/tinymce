@@ -166,7 +166,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
       }
     }, [ Theme ]);
 
-    const defaultLanguages = [ 'English', 'Spanish', 'French', 'German', 'Portuguese (Brazil)', 'Chinese' ];
+    const defaultLanguages = [ 'English', 'Spanish', 'French', 'German', 'Portuguese', 'Chinese' ];
 
     context('Default settings', () => {
       Arr.each([ menuSpec, toolbarSpec ], (spec) => {
@@ -183,7 +183,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
 
           await spec.pOpen(editor, 'Language');
-          await pAssertOptions(editor, spec.menuSelector, defaultLanguages, Optional.some('English (US)'));
+          await pAssertOptions(editor, spec.menuSelector, defaultLanguages, Optional.some('English'));
           spec.close(editor, 'Language');
         });
 
@@ -203,7 +203,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
 
           await spec.pOpen(editor, 'Language');
-          await pAssertOptions(editor, spec.menuSelector, defaultLanguages, Optional.some('English (US)'));
+          await pAssertOptions(editor, spec.menuSelector, defaultLanguages, Optional.some('English'));
 
           editor.formatter.apply('lang', { value: 'zh' });
 
