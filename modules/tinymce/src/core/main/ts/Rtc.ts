@@ -15,6 +15,7 @@ import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
+import { Format } from './fmt/FormatTypes';
 import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
@@ -43,7 +44,7 @@ interface RtcRuntimeApi {
     canApply: (format: string) => boolean;
     match: (format: string, vars: Record<string, string>) => boolean;
     matchAll: () => string[];
-    matchNode: () => boolean;
+    matchNode: () => Format | undefined;
     closest: (formats: string) => string;
     apply: (format: string, vars: Record<string, string>) => void;
     remove: (format: string, vars: Record<string, string>) => void;
@@ -229,7 +230,7 @@ const makeNoopAdaptor = (): RtcAdaptor => {
     formatter: {
       match: Fun.never,
       matchAll: Fun.constant([]),
-      matchNode: Fun.never,
+      matchNode: Fun.constant(undefined),
       canApply: Fun.never,
       closest: empty,
       apply: Fun.noop,
@@ -363,7 +364,7 @@ export const matchNodeFormat = (
   node: Node,
   name: string,
   vars?: Record<string, string>,
-  similar?: boolean): boolean => getRtcInstanceWithError(editor).formatter.matchNode(node, name, vars, similar);
+  similar?: boolean): Format | undefined => getRtcInstanceWithError(editor).formatter.matchNode(node, name, vars, similar);
 
 export const canApplyFormat = (
   editor: Editor,

@@ -19,11 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `tablecellbordercolor` toolbar button and menu item to select table cell border colors, with an accompanying setting `table_cell_border_color_map` to customize the available values #TINY-7480
 - Added a new `tablecellbackgroundcolor` toolbar button and menu item to select table cell background colors, with an accompanying setting `table_cell_background_color_map` to customize the available values #TINY-7480
 - Added a new `initData` property to `fancymenuitem` to allow custom initialization data #TINY-7480
+- Added a new `language` menu item and toolbar button to add `lang` attributes to content, with an accompanying `content_langs` setting to specify the languages available #TINY-6149
+- A new `lang` format is now available that can be used with `editor.formatter`, or applied with the `Lang` editor command #TINY-6149
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
 - Improved the performance when rendering UI components #TINY-7572
 - When scrolling, the context toolbar will stick to where it was previously for large elements, such as tables #TINY-7545
+- The context toolbar will now move out of the way when it overlaps with the selection, such as in table cells #TINY-7192
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents. #TINY-7249
@@ -40,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
 - HTML comments with mismatched quotes were parsed incorrectly under certain circumstances #TINY-7589
 - Links in notification text did not show the correct mouse pointer #TINY-7661
+- The formatter match APIs were incorrectly returning false for formats that specified an attribute or style should be removed from an element #TINY-6149
+- The type signature on `editor.formatter.matchNode` had the wrong return type (was `boolean` but should have been `Formatter | undefined`) #TINY-6149
 
 ## 5.8.2 - 2021-06-23
 

@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import DomSerializer from '../api/dom/Serializer';
 import SaxParser from '../api/html/SaxParser';
 import * as Zwsp from '../text/Zwsp';
 
-const trimHtml = (tempAttrs, html) => {
+const trimHtml = (tempAttrs: string[], html: string): string => {
   const trimContentRegExp = new RegExp([
     '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
   ].join('|'), 'gi');
@@ -16,20 +17,20 @@ const trimHtml = (tempAttrs, html) => {
   return html.replace(trimContentRegExp, '');
 };
 
-const trimInternal = (serializer, html) => {
-  let content = html;
+const trimInternal = (serializer: DomSerializer, html: string): string => {
   const bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
-  let endTagIndex, index, matchLength, matches;
   const schema = serializer.schema;
 
-  content = trimHtml(serializer.getTempAttrs(), content);
+  let content = trimHtml(serializer.getTempAttrs(), html);
   const shortEndedElements = schema.getShortEndedElements();
 
   // Remove all bogus elements marked with "all"
+  let matches: RegExpExecArray;
   while ((matches = bogusAllRegExp.exec(content))) {
-    index = bogusAllRegExp.lastIndex;
-    matchLength = matches[0].length;
+    const index = bogusAllRegExp.lastIndex;
+    const matchLength = matches[0].length;
 
+    let endTagIndex: number;
     if (shortEndedElements[matches[1]]) {
       endTagIndex = index;
     } else {

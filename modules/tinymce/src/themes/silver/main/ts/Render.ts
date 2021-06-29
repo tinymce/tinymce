@@ -16,11 +16,11 @@ import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Settings from './api/Settings';
 import * as Backstage from './backstage/Backstage';
-import * as ContextToolbar from './ContextToolbar';
 import * as Events from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
 import * as ReadOnly from './ReadOnly';
+import * as ContextToolbar from './ui/context/ContextToolbar';
 import * as FormatControls from './ui/core/FormatControls';
 import OuterContainer from './ui/general/OuterContainer';
 import * as StaticHeader from './ui/header/StaticHeader';

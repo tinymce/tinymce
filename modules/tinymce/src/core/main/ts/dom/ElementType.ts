@@ -37,7 +37,7 @@ const lists = [ 'ul', 'ol', 'dl' ];
 const wsElements = [ 'pre', 'script', 'textarea', 'style' ];
 
 const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
-  let lookup;
+  let lookup: Record<string, boolean> | undefined;
   return (node: SugarElement<Node>): node is SugarElement<T> => {
     lookup = lookup ? lookup : Arr.mapToObject(items, Fun.always);
     return Obj.has(lookup, SugarNode.name(node));

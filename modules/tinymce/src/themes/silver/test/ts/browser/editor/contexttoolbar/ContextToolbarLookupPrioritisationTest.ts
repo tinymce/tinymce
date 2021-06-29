@@ -4,7 +4,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { ContextTypes } from 'tinymce/themes/silver/ContextToolbar';
+import { ContextType } from 'tinymce/themes/silver/ui/context/ContextToolbar';
 import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLookupPrioritisationTest', () => {
@@ -37,8 +37,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
     scope: 'node'
   });
 
-  const assertMatch = (nodeCandidates: ContextTypes[], editorCandidates: ContextTypes[], expectedCandidates: ContextTypes[]) => {
-    const elem = SugarElement.fromHtml('<span>test</span>');
+  const assertMatch = (nodeCandidates: ContextType[], editorCandidates: ContextType[], expectedCandidates: ContextType[]) => {
+    const elem = SugarElement.fromHtml<HTMLSpanElement>('<span>test</span>');
     matchStartNode(elem, nodeCandidates, editorCandidates).each((result) => {
       Arr.each(result.toolbars, (t, i) => {
         assert.equal(t, expectedCandidates[i], 'Assert toolbars are equal');
