@@ -1112,7 +1112,6 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     const parser = SaxParser(counter, schema);
 
     writer.reset();
-    // const inner = '<div><!-- Quote: \' --><p>Matching quote: \'</p></div>';
     const inner =
       '<div>' +
       '<!--  This is the issue: \'  -->' +
