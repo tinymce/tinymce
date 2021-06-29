@@ -23,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A new `lang` format is now available that can be used with `editor.formatter`, or applied with the `Lang` editor command #TINY-6149
 - Added new plugin commands: `mceEmoticons` (emoticons), `mceWordCount` (wordcount), and `mceTemplate` (template) #TINY-7619
 - Added a new `tablerowheader` toolbar button and menu item to toggle row cells to and from header #TINY-7478
-- Added a new `mceTableToggleRowHeader` command that toggles selected rows to and from headers #TINY-7479
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
