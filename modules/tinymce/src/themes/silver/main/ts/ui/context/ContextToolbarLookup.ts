@@ -5,26 +5,37 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { InlineContent } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
-import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
+import { Compare, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { ContextTypes } from '../../ContextToolbar';
+import { ContextType } from './ContextToolbar';
 import { ScopedToolbars } from './ContextToolbarScopes';
 
-export interface LookupResult { toolbars: ContextTypes[]; elem: SugarElement }
-interface MatchResult { contextToolbars: ContextTypes[]; contextForms: ContextTypes[] }
+export interface LookupResult {
+  readonly toolbars: ContextType[];
+  readonly elem: SugarElement<Element>;
+}
 
-const matchTargetWith = (elem: SugarElement, candidates: ContextTypes[]): MatchResult => {
+interface MatchResult {
+  readonly contextToolbars: InlineContent.ContextToolbar[];
+  readonly contextForms: InlineContent.ContextForm[];
+}
+
+const matchTargetWith = (elem: SugarElement<Element>, candidates: ContextType[]): MatchResult => {
   const ctxs = Arr.filter(candidates, (toolbarApi) => toolbarApi.predicate(elem.dom));
   // TODO: somehow type this properly (Arr.partition can't)
   // e.g. here pass is Toolbar.ContextToolbar and fail is Toolbar.ContextForm
   const { pass, fail } = Arr.partition(ctxs, (t) => t.type === 'contexttoolbar');
-  return { contextToolbars: pass, contextForms: fail };
+  return {
+    contextToolbars: pass as InlineContent.ContextToolbar[],
+    contextForms: fail as InlineContent.ContextForm[]
+  };
 };
 
-const filterByPositionForStartNode = (toolbars: ContextTypes[]) => {
+const filterByPositionForStartNode = (toolbars: ContextType[]) => {
   if (toolbars.length <= 1) {
     return toolbars;
   } else {
@@ -37,7 +48,7 @@ const filterByPositionForStartNode = (toolbars: ContextTypes[]) => {
       if (hasNodeToolbars && hasSelectionToolbars) {
         // if there's a mix, change the 'selection' toolbars to 'node' so there's no positioning confusion
         const nodeToolbars = filterToolbarsByPosition('node');
-        const selectionToolbars = Arr.map<ContextTypes>(filterToolbarsByPosition('selection'), (t) => ({ ...t, position: 'node' }));
+        const selectionToolbars = Arr.map<ContextType>(filterToolbarsByPosition('selection'), (t) => ({ ...t, position: 'node' }));
         return nodeToolbars.concat(selectionToolbars);
       } else {
         return hasSelectionToolbars ? filterToolbarsByPosition('selection') : filterToolbarsByPosition('node');
@@ -48,7 +59,7 @@ const filterByPositionForStartNode = (toolbars: ContextTypes[]) => {
   }
 };
 
-const filterByPositionForAncestorNode = (toolbars: ContextTypes[]) => {
+const filterByPositionForAncestorNode = (toolbars: ContextType[]) => {
   if (toolbars.length <= 1) {
     return toolbars;
   } else {
@@ -66,7 +77,7 @@ const filterByPositionForAncestorNode = (toolbars: ContextTypes[]) => {
   }
 };
 
-const matchStartNode = (elem: SugarElement, nodeCandidates: ContextTypes[], editorCandidates: ContextTypes[]): Optional<LookupResult> => {
+const matchStartNode = (elem: SugarElement<Element>, nodeCandidates: ContextType[], editorCandidates: ContextType[]): Optional<LookupResult> => {
   // requirements:
   // 1. prioritise context forms over context menus
   // 2. prioritise node scoped over editor scoped context forms
@@ -91,15 +102,19 @@ const matchStartNode = (elem: SugarElement, nodeCandidates: ContextTypes[], edit
   }
 };
 
-const matchAncestor = (isRoot, startNode, scopes): Optional<LookupResult> => {
+const matchAncestor = (isRoot: (elem: SugarElement<Node>) => boolean, startNode: SugarElement<Element>, scopes: ScopedToolbars): Optional<LookupResult> => {
   // Don't continue to traverse if the start node is the root node
   if (isRoot(startNode)) {
     return Optional.none();
   } else {
     return TransformFind.ancestor(startNode, (ancestorElem) => {
-      const { contextToolbars, contextForms } = matchTargetWith(ancestorElem, scopes.inNodeScope);
-      const toolbars = contextForms.length > 0 ? contextForms : filterByPositionForAncestorNode(contextToolbars);
-      return toolbars.length > 0 ? Optional.some({ elem: ancestorElem, toolbars }) : Optional.none();
+      if (SugarNode.isElement(ancestorElem)) {
+        const { contextToolbars, contextForms } = matchTargetWith(ancestorElem, scopes.inNodeScope);
+        const toolbars = contextForms.length > 0 ? contextForms : filterByPositionForAncestorNode(contextToolbars);
+        return toolbars.length > 0 ? Optional.some({ elem: ancestorElem, toolbars }) : Optional.none();
+      } else {
+        return Optional.none();
+      }
     }, isRoot);
   }
 };

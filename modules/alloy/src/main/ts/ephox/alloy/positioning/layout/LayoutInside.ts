@@ -147,14 +147,34 @@ const lookupPreserveLayout = (lastPlacement: Placement) => {
   }
 };
 
-const preserve: AnchorLayout = (
-  anchor: AnchorBox,
-  element: AnchorElement,
-  bubbles: Bubble,
-  placee: SugarElement<HTMLElement>
-) => {
-  const lastPlacement = getPlacement(placee).getOr(Placement.North);
-  const layout = lookupPreserveLayout(lastPlacement);
+const preserve: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, placee: SugarElement<HTMLElement>) => {
+  const layout = getPlacement(placee).map(lookupPreserveLayout).getOr(north);
+  return layout(anchor, element, bubbles, placee);
+};
+
+const lookupFlippedLayout = (lastPlacement: Placement) => {
+  switch (lastPlacement) {
+    case Placement.North:
+      return south;
+    case Placement.Northeast:
+      return southeast;
+    case Placement.Northwest:
+      return southwest;
+    case Placement.South:
+      return north;
+    case Placement.Southeast:
+      return northeast;
+    case Placement.Southwest:
+      return northwest;
+    case Placement.East:
+      return west;
+    case Placement.West:
+      return east;
+  }
+};
+
+const flip: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, placee: SugarElement<HTMLElement>) => {
+  const layout = getPlacement(placee).map(lookupFlippedLayout).getOr(north);
   return layout(anchor, element, bubbles, placee);
 };
 
@@ -169,5 +189,6 @@ export {
   west,
   all,
   allRtl,
-  preserve
+  preserve,
+  flip
 };

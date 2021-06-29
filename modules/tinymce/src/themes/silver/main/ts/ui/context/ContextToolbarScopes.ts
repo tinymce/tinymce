@@ -9,25 +9,25 @@ import { StructureSchema } from '@ephox/boulder';
 import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Arr, Obj } from '@ephox/katamari';
 
-import { ContextTypes } from '../../ContextToolbar';
+import { ContextSpecType, ContextType } from './ContextToolbar';
 
 // Divide the defined toolbars into forms, node scopes, and editor scopes
 export interface ScopedToolbars {
-  forms: Record<string, InlineContent.ContextForm>; // run through Bridge.
-  inNodeScope: Array<ContextTypes>;
-  inEditorScope: Array<ContextTypes>;
-  lookupTable: Record<string, ContextTypes>;
-  formNavigators: Record<string, Toolbar.ToolbarButtonSpec | Toolbar.ToolbarToggleButtonSpec>; // this stays API due to toolbar applying bridge
+  readonly forms: Record<string, InlineContent.ContextForm>; // run through Bridge.
+  readonly inNodeScope: Array<ContextType>;
+  readonly inEditorScope: Array<ContextType>;
+  readonly lookupTable: Record<string, ContextType>;
+  readonly formNavigators: Record<string, Toolbar.ToolbarButtonSpec | Toolbar.ToolbarToggleButtonSpec>; // this stays API due to toolbar applying bridge
 }
 
-const categorise = (contextToolbars: Record<string, InlineContent.ContextFormSpec | InlineContent.ContextToolbarSpec>, navigate: (destForm: InlineContent.ContextForm) => void): ScopedToolbars => {
+const categorise = (contextToolbars: Record<string, ContextSpecType>, navigate: (destForm: InlineContent.ContextForm) => void): ScopedToolbars => {
 
   // TODO: Use foldl/foldr and avoid as much mutation.
   const forms: Record<string, InlineContent.ContextForm> = { };
-  const inNodeScope: Array<ContextTypes> = [ ];
-  const inEditorScope: Array<ContextTypes> = [ ];
+  const inNodeScope: Array<ContextType> = [ ];
+  const inEditorScope: Array<ContextType> = [ ];
   const formNavigators: Record<string, Toolbar.ToolbarButtonSpec | Toolbar.ToolbarToggleButtonSpec> = { };
-  const lookupTable: Record<string, ContextTypes> = { };
+  const lookupTable: Record<string, ContextType> = { };
 
   const registerForm = (key: string, toolbarSpec: InlineContent.ContextFormSpec) => {
     const contextForm = StructureSchema.getOrDie(InlineContent.createContextForm(toolbarSpec));
