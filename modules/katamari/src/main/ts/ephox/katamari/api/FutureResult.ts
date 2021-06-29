@@ -89,7 +89,7 @@ const fromResult = <A, E>(result: Result<A, E>): FutureResult<A, E> => {
   return wrap(Future.pure(result));
 };
 
-const fromFuture = <A, E = any>(future: Future<A>): FutureResult<A, E> => {
+const fromFuture = <A>(future: Future<A>): FutureResult<A, never> => {
   return wrap(future.map(Result.value));
 };
 

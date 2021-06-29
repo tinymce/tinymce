@@ -25,7 +25,7 @@ describe('atomic.katamari.ap.async.FutureResultTest', () => {
   }))));
 
   it('fromFuture', () => fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
-    FutureResult.fromFuture<number, unknown>(Future.pure(i)).get((ii) => {
+    FutureResult.fromFuture(Future.pure(i)).get((ii) => {
       eqAsync('eq', Result.value(i), ii, reject, tResult());
       resolve();
     });
@@ -116,7 +116,7 @@ describe('atomic.katamari.ap.async.FutureResultTest', () => {
   }))));
 
   it('error bindFuture', () => fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
-    FutureResult.error(i).bindFuture(Fun.die('should not be called')).get((actual) => {
+    FutureResult.error(i).bindFuture<never>(Fun.die('should not be called')).get((actual) => {
       eqAsync('bind result', Result.error(i), actual, reject, tResult(tNumber));
       resolve();
     });
