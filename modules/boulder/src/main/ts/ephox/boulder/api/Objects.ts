@@ -26,7 +26,7 @@ const mergeValues = <T>(values: T[], base: T) => {
   );
 };
 
-const mergeErrors = (errors: string[][]): Result<unknown, string[]> =>
+const mergeErrors = (errors: string[][]): Result<never, string[]> =>
   Result.error(Arr.flatten(errors));
 
 const consolidate = <T>(objs: Array<Result<T, string[]>>, base: T): Result<T, string[]> => {

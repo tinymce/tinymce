@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
 - HTML comments with mismatched quotes were parsed incorrectly under certain circumstances #TINY-7589
+- Links in notification text did not show the correct mouse pointer #TINY-7661
 
 ## 5.8.2 - 2021-06-23
 

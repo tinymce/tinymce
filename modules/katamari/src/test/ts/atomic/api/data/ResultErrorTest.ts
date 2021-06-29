@@ -4,6 +4,7 @@ import fc from 'fast-check';
 
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
+import * as Results from 'ephox/katamari/api/Results';
 import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
 import { assertNone } from 'ephox/katamari/test/AssertOptional';
 import { assertResult } from 'ephox/katamari/test/AssertResult';
@@ -12,7 +13,7 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
 
   it('unit tests', () => {
     const s = Result.error('error');
-    assert.isFalse(s.is('error'));
+    assert.isFalse(Results.is(s, 'error'));
     assert.isFalse(s.isValue());
     assert.isTrue(s.isError());
     assert.equal(s.getOr(6), 6);
@@ -25,11 +26,12 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
       s.orThunk(() => Result.error('Should not get here.')).getOrDie();
     });
 
-    assert.equal(s.fold((e) => e + '!', (v) => v + 6), 'error!');
+    assert.equal(s.fold((e) => e + '!', Fun.die('Was not an error!')), 'error!');
 
     assert.throws(() => {
       s.map((v) => v * 2).getOrDie();
     });
+    s.each((a) => a + 1);
 
     assert.throws(() => {
       s.bind((v) => Result.value('test' + v)).getOrDie();
@@ -45,7 +47,7 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
 
   it('error.is === false', () => {
     fc.assert(fc.property(fc.integer(), fc.string(), (i, s) => {
-      assert.isFalse(Result.error<number, string>(s).is(i));
+      assert.isFalse(Results.is(Result.error(s), i));
     }));
   });
 
