@@ -134,7 +134,7 @@ interface BaseEditorSettings {
   inline_boundaries_selector?: string;
   inline_styles?: boolean;
   invalid_elements?: string;
-  invalid_styles?: string;
+  invalid_styles?: string | Record<string, string>;
   keep_styles?: boolean;
   language?: string;
   language_load?: boolean;

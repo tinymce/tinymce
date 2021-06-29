@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Unicode } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type, Unicode } from '@ephox/katamari';
 
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
@@ -16,10 +16,13 @@ import { uniqueId } from '../file/ImageScanner';
 import { parseDataUri } from './Base64Uris';
 import { isEmpty, paddEmptyNode } from './ParserUtils';
 
-const isBogusImage = (img: AstNode) => img.attr('data-mce-bogus');
-const isInternalImageSource = (img: AstNode) => img.attr('src') === Env.transparentSrc || img.attr('data-mce-placeholder');
+const isBogusImage = (img: AstNode): boolean =>
+  Type.isNonNullable(img.attr('data-mce-bogus'));
 
-const isValidDataImg = (img: AstNode, settings: DomParserSettings) => {
+const isInternalImageSource = (img: AstNode): boolean =>
+  img.attr('src') === Env.transparentSrc || Type.isNonNullable(img.attr('data-mce-placeholder'));
+
+const isValidDataImg = (img: AstNode, settings: DomParserSettings): boolean => {
   if (settings.images_dataimg_filter) {
     // Construct an image element
     const imgElem = new Image();
@@ -35,7 +38,7 @@ const isValidDataImg = (img: AstNode, settings: DomParserSettings) => {
   }
 };
 
-const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings) => {
+const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings): void => {
   const { blob_cache: blobCache } = settings;
   const processImage = (img: AstNode): void => {
     const inputSrc = img.attr('src');
@@ -219,20 +222,19 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
   if (settings.validate && schema.getValidClasses()) {
     parser.addAttributeFilter('class', (nodes) => {
-      let i = nodes.length, node, classList, ci, className, classValue;
       const validClasses = schema.getValidClasses();
-      let validClassesMap, valid;
 
+      let i = nodes.length;
       while (i--) {
-        node = nodes[i];
-        classList = node.attr('class').split(' ');
-        classValue = '';
+        const node = nodes[i];
+        const classList = node.attr('class').split(' ');
+        let classValue = '';
 
-        for (ci = 0; ci < classList.length; ci++) {
-          className = classList[ci];
-          valid = false;
+        for (let ci = 0; ci < classList.length; ci++) {
+          const className = classList[ci];
+          let valid = false;
 
-          validClassesMap = validClasses['*'];
+          let validClassesMap = validClasses['*'];
           if (validClassesMap && validClassesMap[className]) {
             valid = true;
           }
