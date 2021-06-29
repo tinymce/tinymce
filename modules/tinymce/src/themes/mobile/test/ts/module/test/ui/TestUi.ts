@@ -7,13 +7,13 @@ import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 
 const cGetFocused = Chain.binder(() => {
   return Focus.active().fold(() => {
-    return Result.error('Could not find focused element');
+    return Result.error<SugarElement<HTMLElement>, string>('Could not find focused element');
   }, Result.value);
 });
 
 const cGetParent = Chain.binder((elem: SugarElement) => {
   return Traverse.parent(elem).fold(() => {
-    return Result.error('Could not find parent of ' + AlloyLogger.element(elem));
+    return Result.error<SugarElement<Node & ParentNode>, string>('Could not find parent of ' + AlloyLogger.element(elem));
   }, Result.value);
 });
 

@@ -191,7 +191,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     return Triggers.broadcast(listeners, event);
   };
 
-  const getByUid = (uid: string) => registry.getById(uid).fold(() => Result.error(
+  const getByUid = (uid: string) => registry.getById(uid).fold(() => Result.error<AlloyComponent, Error>(
     new Error('Could not find component with uid: "' + uid + '" in system.')
   ), Result.value);
 

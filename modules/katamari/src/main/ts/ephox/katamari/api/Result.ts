@@ -2,9 +2,8 @@ import * as Fun from './Fun';
 import { Optional } from './Optional';
 
 export interface Result<T, E> {
-  is: (value: T) => boolean;
-  or: (result: Result<T, E>) => Result<T, E>;
-  orThunk: (makeResult: () => Result<T, E>) => Result<T, E>;
+  or: <T2 = T, E2 = E>(result: Result<T2, E2>) => Result<T | T2, E | E2>;
+  orThunk: <T2 = T, E2 = E>(makeResult: () => Result<T2, E2>) => Result<T | T2, E | E2>;
   map: <U> (mapper: (value: T) => U) => Result<U, E>;
   mapError: <U> (mapper: (err: E) => U) => Result<T, U>;
   each: (worker: (value: T) => void) => void;
@@ -38,16 +37,12 @@ export interface Result<T, E> {
  * getOrDie :: this Result a -> a (or throws error)
 */
 
-const value = <T, E = any>(o: T): Result<T, E> => {
-  const is = (v: T) => {
-    return o === v;
-  };
-
-  const or = (_opt: Result<T, E>) => {
+const value = <T, E = never>(o: T): Result<T, E> => {
+  const or = <T2 = T, E2 = E>(_opt: Result<T2, E2>) => {
     return value(o);
   };
 
-  const orThunk = (_f: () => Result<T, E>) => {
+  const orThunk = <T2 = T, E2 = E>(_f: () => Result<T2, E2>) => {
     return value(o);
   };
 
@@ -84,7 +79,6 @@ const value = <T, E = any>(o: T): Result<T, E> => {
   };
 
   return {
-    is,
     isValue: Fun.always,
     isError: Fun.never,
     getOr: Fun.constant(o),
@@ -103,7 +97,7 @@ const value = <T, E = any>(o: T): Result<T, E> => {
   };
 };
 
-const error = <T = any, E = any>(message: E): Result<T, E> => {
+const error = <T = never, E = any>(message: E): Result<T, E> => {
   const getOrThunk = <T2 = T> (f: () => T2) => {
     return f();
   };
@@ -114,7 +108,7 @@ const error = <T = any, E = any>(message: E): Result<T, E> => {
 
   const or = Fun.identity;
 
-  const orThunk = (f: () => Result<T, E>) => {
+  const orThunk = <T2 = T, E2 = E>(f: () => Result<T2, E2>) => {
     return f();
   };
 
@@ -135,7 +129,6 @@ const error = <T = any, E = any>(message: E): Result<T, E> => {
   };
 
   return {
-    is: Fun.never,
     isValue: Fun.never,
     isError: Fun.always,
     getOr: Fun.identity,

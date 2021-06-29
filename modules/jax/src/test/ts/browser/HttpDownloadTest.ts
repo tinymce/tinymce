@@ -3,7 +3,6 @@ import { FutureResult } from '@ephox/katamari';
 
 import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 import * as Http from 'ephox/jax/core/Http';
-import { HttpError } from 'ephox/jax/core/HttpError';
 
 UnitTest.asynctest('HttpDownloadTest', (success, failure) => {
   let progressCalls = 0;
@@ -20,7 +19,7 @@ UnitTest.asynctest('HttpDownloadTest', (success, failure) => {
         total += loaded;
       }
     }
-  ).bindFuture((blob) => FutureResult.fromFuture<string, HttpError>(readBlobAsText(blob))).get((result) => {
+  ).bindFuture((blob) => FutureResult.fromFuture(readBlobAsText(blob))).get((result) => {
     result.fold(
       (err) => failure(err.message),
       (actualText) => {

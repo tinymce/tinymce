@@ -80,7 +80,7 @@ const makeComponents = (cells: Array<Array<AlloyComponent>>): Array<AlloySpec> =
 
 const makeLabelText = (row, col) => GuiFactory.text(`${col + 1}x${row + 1}`);
 
-export const renderInsertTableMenuItem = (spec: Menu.FancyMenuItem): ItemTypes.WidgetItemSpec => {
+export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem): ItemTypes.WidgetItemSpec => {
   const numRows = 10;
   const numColumns = 10;
   const sizeLabelId = Id.generate('size-label');

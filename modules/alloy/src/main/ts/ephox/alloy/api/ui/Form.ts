@@ -45,7 +45,7 @@ const sketch = (fSpec: FormSpecBuilder): SketchSpec => {
   return UiSketcher.composite(owner, schema, fieldParts, make, spec);
 };
 
-const toResult = <T, E>(o: Optional<T>, e: E) => o.fold(() => Result.error(e), Result.value);
+const toResult = <T, E>(o: Optional<T>, e: E) => o.fold(() => Result.error<T, E>(e), Result.value);
 
 const make = (detail: FormDetail, components: AlloySpec[]) => ({
   uid: detail.uid,

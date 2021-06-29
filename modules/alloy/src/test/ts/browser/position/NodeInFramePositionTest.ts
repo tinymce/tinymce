@@ -1,7 +1,7 @@
 import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Optional, Result } from '@ephox/katamari';
-import { Css, DomEvent, SelectorFind, SugarElement, WindowSelection } from '@ephox/sugar';
+import { Css, DomEvent, SelectorFind, SimRange, SugarElement, WindowSelection } from '@ephox/sugar';
 
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -73,7 +73,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
           range.finish,
           range.foffset
         );
-        return WindowSelection.getExact(win).fold(() => Result.error('Could not retrieve the set selection'), Result.value);
+        return WindowSelection.getExact(win).fold(() => Result.error<SimRange, string>('Could not retrieve the set selection'), Result.value);
       });
     };
 
