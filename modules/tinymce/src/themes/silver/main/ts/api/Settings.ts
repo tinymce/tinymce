@@ -12,6 +12,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
+import { ContentLanguage } from 'tinymce/core/api/SettingsTypes';
 
 export interface ToolbarGroupSetting {
   name?: string;
@@ -49,6 +50,18 @@ const getUserStyleFormats = (editor: Editor): Optional<AllowedFormat[]> => Optio
 const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
 const getLineHeightFormats = (editor: Editor): string[] =>
   editor.getParam('lineheight_formats', '1 1.1 1.2 1.3 1.4 1.5 2', 'string').split(' ');
+
+const getContentLanguages = (editor: Editor): ContentLanguage[] => {
+  const defaultSettings = [
+    { title: 'English', code: 'en' },
+    { title: 'Spanish', code: 'es' },
+    { title: 'French', code: 'fr' },
+    { title: 'German', code: 'de' },
+    { title: 'Portuguese', code: 'pt' },
+    { title: 'Chinese', code: 'zh' }
+  ];
+  return editor.getParam('content_langs', defaultSettings, 'array');
+};
 
 const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
 const isMenubarEnabled = (editor: Editor): boolean => editor.getParam('menubar', true, 'boolean') !== false;
@@ -197,6 +210,7 @@ export {
   getUserStyleFormats,
   isMergeStyleFormats,
   getLineHeightFormats,
+  getContentLanguages,
   getRemovedMenuItems,
   isMenubarEnabled,
   isMultipleToolbars,

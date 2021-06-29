@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -148,7 +148,7 @@ const getSharedValues = <T>(data: Array<T>) => {
 // because some of these are crazy complicated
 
 const getAlignment = (formats: string[], formatName: string, editor: Editor, elm: Node) =>
-  Arr.find(formats, (name) => editor.formatter.matchNode(elm, formatName + name)).getOr('');
+  Arr.find(formats, (name) => !Type.isUndefined(editor.formatter.matchNode(elm, formatName + name))).getOr('');
 const getHAlignment = Fun.curry(getAlignment, [ 'left', 'center', 'right' ], 'align');
 const getVAlignment = Fun.curry(getAlignment, [ 'top', 'middle', 'bottom' ], 'valign');
 

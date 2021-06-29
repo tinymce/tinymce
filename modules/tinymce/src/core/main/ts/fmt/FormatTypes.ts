@@ -16,7 +16,7 @@ export type ApplyFormatPartial = Partial<BlockFormat> & Partial<InlineFormat> & 
 export type RemoveFormatPartial = Partial<RemoveBlockFormat> & Partial<RemoveInlineFormat> & Partial<RemoveSelectorFormat>;
 
 export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string);
-export type FormatVars = Record<string, string>;
+export type FormatVars = Record<string, string | null >;
 
 // Largely derived from the docs and src/core/main/ts/fmt/DefaultFormats.ts
 export interface CommonFormat<T> {
