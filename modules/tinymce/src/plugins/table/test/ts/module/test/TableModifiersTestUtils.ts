@@ -172,7 +172,7 @@ const pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks = async (editor: Editor,
   await pAssertStyleCanBeToggledWithoutCheckmarks(editor, options, 'menuitem');
 };
 
-const makeCell = (type: string, content: string, scope: 'col' | 'none', selectionMode?: 'selected' | 'selectionStart' | 'selectionStartEnd' | 'selectionEnd') => {
+const makeCell = (type: string, content: string, scope: 'col' | 'row' | 'none', selectionMode?: 'selected' | 'selectionStart' | 'selectionStartEnd' | 'selectionEnd') => {
   const getSelectionAttrs = () => {
     const selectionStart = [ 'selectionStart', 'selectionStartEnd' ];
     const selectionEnd = [ 'selectionEnd', 'selectionStartEnd' ];

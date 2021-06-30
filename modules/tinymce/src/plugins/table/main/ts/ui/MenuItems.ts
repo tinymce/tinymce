@@ -15,7 +15,7 @@ import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableC
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
-import { applyTableCellStyle, changeRowHeader, filterNoneItem, generateColorSelector, generateItems } from './UiUtils';
+import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, generateColorSelector, generateItems } from './UiUtils';
 
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   const cmd = (command: string) => () => editor.execCommand(command);
@@ -316,7 +316,14 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     text: 'Row header',
     icon: 'table-top-header',
     onAction: changeRowHeader(editor),
-    onSetup: selectionTargets.onSetupTableHeaders
+    onSetup: selectionTargets.onSetupTableRowHeaders
+  });
+
+  editor.ui.registry.addToggleMenuItem('tablecolheader', {
+    text: 'Column header',
+    icon: 'table-left-header',
+    onAction: changeColumnHeader(editor),
+    onSetup: selectionTargets.onSetupTableColumnHeaders
   });
 };
 
