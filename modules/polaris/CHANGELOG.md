@@ -6,6 +6,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 4.0.8 - 2021-07-02
 
-### Improved
-
-- Improved detection of custom URL schemes #TINY-5074
+### Fixed
+- Fixed incorrect `Regexes.link` URL detection for custom schemes #TINY-5074
