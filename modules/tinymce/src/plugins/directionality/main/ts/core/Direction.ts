@@ -10,7 +10,7 @@ import { Traverse, Attribute, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-type Dir = 'rtl' | 'ltl';
+type Dir = 'rtl' | 'ltr';
 
 const setDir = (editor: Editor, dir: Dir) => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
@@ -43,5 +43,5 @@ const setDirAttr = (editor: Editor, element: SugarElement, dir: Dir): void => {
 const isListItem = (element: SugarElement<Element>): boolean => element.dom.nodeName === 'LI';
 
 export {
-  setDir, Dir
+  setDir
 };
