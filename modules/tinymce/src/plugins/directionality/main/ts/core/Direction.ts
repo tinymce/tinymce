@@ -17,7 +17,7 @@ const setDir = (editor: Editor, dir: Dir) => {
   Arr.each(selectedBlocks, (block) => {
     const sugarBlock = SugarElement.fromDom(block);
     const blockParent = Traverse.parent(sugarBlock);
-    blockParent.map((blockParent: SugarElement<Element>) => {
+    blockParent.each((blockParent: SugarElement<Element>) => {
       const blockParentDirection = Attribute.get(blockParent, 'dir');
       if ((blockParentDirection === undefined) || (blockParentDirection !== dir)) {
         setDirAttr(editor, sugarBlock, dir);
@@ -32,7 +32,7 @@ const setDir = (editor: Editor, dir: Dir) => {
 const setDirAttr = (editor: Editor, element: SugarElement, dir: Dir): void => {
   if (isListItem(element)) {
     const list = Traverse.parent(element);
-    list.map((l: SugarElement<Element>) => Attribute.set(l, 'dir', dir));
+    list.each((l: SugarElement<Element>) => Attribute.set(l, 'dir', dir));
   } else {
     Attribute.set(element, 'dir', dir);
   }
