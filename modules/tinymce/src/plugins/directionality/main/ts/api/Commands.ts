@@ -9,11 +9,11 @@ import * as Direction from '../core/Direction';
 
 const register = (editor) => {
   editor.addCommand('mceDirectionLTR', () => {
-    Direction.setDir(editor, 'ltr');
+    Direction.setDir(editor, 'ltr' as Direction.Dir);
   });
 
   editor.addCommand('mceDirectionRTL', () => {
-    Direction.setDir(editor, 'rtl');
+    Direction.setDir(editor, 'rtl' as Direction.Dir);
   });
 };
 
