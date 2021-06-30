@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents. #TINY-7249
 
 ### Fixed
+- Rtl/ltl attributes sometimes gets applied to list items #TINY-4589
 - `editor.fire` was incorrectly mutating the original `args` provided #TINY-3254
 - The `SetContent` event contained the incorrect `content` when using the `editor.selection.setContent()` API #TINY-3254
 - The editor content could be edited after calling `setProgressState(true)` in iframe mode #TINY-7373
