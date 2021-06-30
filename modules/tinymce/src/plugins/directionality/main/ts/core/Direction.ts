@@ -36,7 +36,7 @@ const setDir = (editor: Editor, dir: Dir) => {
 
 const isListItem = SugarNode.isTag('li');
 
-const setDirAttr = (editor: Editor, element: SugarElement, dir: Dir): void => {
+const setDirAttr = (editor: Editor, element: SugarElement<Element>, dir: Dir): void => {
   if (isListItem(element)) {
     const list = getParentElement(element);
     list.each((l) => Attribute.set(l, 'dir', dir));
