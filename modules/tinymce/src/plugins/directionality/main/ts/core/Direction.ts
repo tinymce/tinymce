@@ -25,7 +25,7 @@ const setDir = (editor: Editor, dir: Dir) => {
         Type.isNull(blockParentDirection) ||
         blockParentDirection.trim() === '' ||
         blockParentDirection !== dir) {
-        setDirAttr(editor, sugarBlock, dir);
+        setDirAttr(editor, sugarBlock, blockParent, dir);
       } else { // if parent and child dir are going to be the same then remove it from child
         Attribute.remove(sugarBlock, 'dir');
         editor.nodeChanged();
@@ -36,17 +36,10 @@ const setDir = (editor: Editor, dir: Dir) => {
 
 const isListItem = SugarNode.isTag('li');
 
-const setDirAttr = (editor: Editor, element: SugarElement<Element>, dir: Dir): void => {
-  if (isListItem(element)) {
-    const list = getParentElement(element);
-    list.each((l) => Attribute.set(l, 'dir', dir));
-  } else {
-    Attribute.set(element, 'dir', dir);
-  }
-
+const setDirAttr = (editor: Editor, element: SugarElement<Element>, parent: SugarElement<Element>, dir: Dir): void => {
+  Attribute.set(isListItem(element) ? parent : element, 'dir', dir);
   editor.nodeChanged();
 };
-
 
 export {
   setDir
