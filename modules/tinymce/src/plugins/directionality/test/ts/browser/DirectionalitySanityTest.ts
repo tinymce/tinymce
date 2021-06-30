@@ -182,4 +182,55 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     }));
   });
 
+  it('should not remove dir attr if parent has dir empty', () => {
+    const editor = hook.editor();
+    editor.setContent(`
+    <div dir="">
+      <p>foo</p>
+      <p>bar</p>
+    </div>
+    `);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+    TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('div', {
+            attrs: {
+              dir: str.is('')
+            },
+            children: [
+              s.element('p', {
+                attrs: {
+                  dir: str.is('rtl')
+                }
+              }),
+              s.element('p', {}),
+            ]
+          }),
+        ]
+      });
+    }));
+
+    TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('div', {
+            attrs: {
+              dir: str.is('')
+            },
+            children: [
+              s.element('p', {
+                attrs: {
+                  dir: str.is('ltr')
+                }
+              }),
+              s.element('p', {}),
+            ]
+          }),
+        ]
+      });
+    }));
+  });
 });

@@ -5,21 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
-import { Traverse, Attribute, SugarElement } from '@ephox/sugar';
+import { Arr, Optional, Type } from '@ephox/katamari';
+import { Traverse, Attribute, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 type Dir = 'rtl' | 'ltr';
 
+const getParentElement = (element: SugarElement<Element>): Optional<SugarElement<Element>> => Traverse.parent(element).filter(SugarNode.isElement);
+
 const setDir = (editor: Editor, dir: Dir) => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
   Arr.each(selectedBlocks, (block) => {
     const sugarBlock = SugarElement.fromDom(block);
-    const blockParent = Traverse.parent(sugarBlock);
-    blockParent.each((blockParent: SugarElement<Element>) => {
+    const blockParent = getParentElement(sugarBlock);
+    blockParent.each((blockParent) => {
       const blockParentDirection = Attribute.get(blockParent, 'dir');
-      if ((blockParentDirection === undefined) || (blockParentDirection !== dir)) {
+      if (Type.isUndefined(blockParentDirection) ||
+        Type.isNull(blockParentDirection) ||
+        blockParentDirection.trim() === '' ||
+        blockParentDirection !== dir) {
         setDirAttr(editor, sugarBlock, dir);
       } else { // if parent and child dir are going to be the same then remove it from child
         Attribute.remove(sugarBlock, 'dir');
@@ -29,10 +34,12 @@ const setDir = (editor: Editor, dir: Dir) => {
   });
 };
 
+const isListItem = SugarNode.isTag('li');
+
 const setDirAttr = (editor: Editor, element: SugarElement, dir: Dir): void => {
   if (isListItem(element)) {
-    const list = Traverse.parent(element);
-    list.each((l: SugarElement<Element>) => Attribute.set(l, 'dir', dir));
+    const list = getParentElement(element);
+    list.each((l) => Attribute.set(l, 'dir', dir));
   } else {
     Attribute.set(element, 'dir', dir);
   }
@@ -40,7 +47,6 @@ const setDirAttr = (editor: Editor, element: SugarElement, dir: Dir): void => {
   editor.nodeChanged();
 };
 
-const isListItem = (element: SugarElement<Element>): boolean => element.dom.nodeName === 'LI';
 
 export {
   setDir
