@@ -48,7 +48,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     }));
   });
 
-  it('should set two paragraphs to rtl and ltl', () => {
+  it('TINY-4589: should set two paragraphs to rtl and ltl', () => {
     const editor = hook.editor();
     editor.setContent('<p>foo</p><p>bar</p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 1 ], 1);
@@ -90,7 +90,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     }));
   });
 
-  it('should set parent dir when element is a list item', () => {
+  it('TINY-4589: should set parent dir when element is a list item', () => {
     const editor = hook.editor();
     editor.setContent(`
     <ul>
@@ -134,7 +134,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     }));
   });
 
-  it('should remove dir attr if parent has same dir', () => {
+  it('TINY-4589: should remove dir attr if parent has same dir', () => {
     const editor = hook.editor();
     editor.setContent(`
     <div dir="ltr">
@@ -182,7 +182,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     }));
   });
 
-  it('should not remove dir attr if parent has dir empty', () => {
+  it('TINY-4589: should not remove dir attr if parent has dir empty', () => {
     const editor = hook.editor();
     editor.setContent(`
     <div dir="">
