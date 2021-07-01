@@ -5,40 +5,65 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional, Type } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Traverse, Attribute, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 type Dir = 'rtl' | 'ltr';
 
-const getParentElement = (element: SugarElement<Element>): Optional<SugarElement<Element>> => Traverse.parent(element).filter(SugarNode.isElement);
+const isListItem = SugarNode.isTag('li');
+
+const getParentElementWithDir = (element: SugarElement<Element>): Optional<SugarElement<Element>> => {
+  const parents = Traverse.parents(element).filter((e) => {
+    return SugarNode.isHTMLElement(e) &&
+      !isListItem(e) &&
+      (Attribute.get(e, 'dir') === 'ltr' || Attribute.get(e, 'dir') === 'rtl');
+  });
+
+  return parents.length > 0 ? Optional.from(parents[0] as SugarElement<Element>) : Optional.none();
+};
 
 const setDir = (editor: Editor, dir: Dir) => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
-  Arr.each(selectedBlocks, (block) => {
-    const sugarBlock = SugarElement.fromDom(block);
-    const blockParent = getParentElement(sugarBlock);
-    blockParent.each((blockParent) => {
-      const blockParentDirection = Attribute.get(blockParent, 'dir');
-      if (Type.isUndefined(blockParentDirection) ||
-        Type.isNull(blockParentDirection) ||
-        blockParentDirection.trim() === '' ||
-        blockParentDirection !== dir) {
-        setDirAttr(editor, sugarBlock, blockParent, dir);
-      } else { // if parent and child dir are going to be the same then remove it from child
-        Attribute.remove(sugarBlock, 'dir');
-        editor.nodeChanged();
+  if (selectedBlocks.length > 0) {
+    Arr.each(selectedBlocks, (block) => {
+      const sugarBlock = SugarElement.fromDom(block);
+      if (isListItem(sugarBlock)) {
+        const sugarBlockParent = Traverse.parent(sugarBlock).filter(SugarNode.isHTMLElement);
+        sugarBlockParent.each((parent) => {
+          const sugarBlockParentWithDir = getParentElementWithDir(parent);
+          sugarBlockParentWithDir.fold(
+            () => {
+              Attribute.remove(sugarBlock, 'dir'); // li should not have dir
+              Attribute.set(parent, 'dir', dir);
+            },
+            (parentWithDir) => {
+              if (Attribute.get(parentWithDir, 'dir') === dir) {
+                Attribute.remove(parent, 'dir');
+              } else {
+                Attribute.set(parent, 'dir', dir);
+              }
+            }
+          );
+        });
+      } else {
+        const sugarBlockParentWithDir = getParentElementWithDir(sugarBlock);
+        sugarBlockParentWithDir.fold(
+          () => Attribute.set(sugarBlock, 'dir', dir),
+          (parentWithDir) => {
+            if (Attribute.get(parentWithDir, 'dir') === dir) {
+              Attribute.remove(sugarBlock, 'dir');
+            } else {
+              Attribute.set(sugarBlock, 'dir', dir);
+            }
+          }
+        );
       }
     });
-  });
-};
 
-const isListItem = SugarNode.isTag('li');
-
-const setDirAttr = (editor: Editor, element: SugarElement<Element>, parent: SugarElement<Element>, dir: Dir): void => {
-  Attribute.set(isListItem(element) ? parent : element, 'dir', dir);
-  editor.nodeChanged();
+    editor.nodeChanged();
+  }
 };
 
 export {
