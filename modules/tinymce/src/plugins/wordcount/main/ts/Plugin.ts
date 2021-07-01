@@ -17,7 +17,7 @@ export default (delay: number = 300) => {
     const api = Api.get(editor);
 
     Commands.register(editor, api);
-    Buttons.register(editor, api);
+    Buttons.register(editor);
     Wordcounter.setup(editor, api, delay);
     return api;
   });

@@ -7,9 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { WordCountApi } from '../api/Api';
-
-const register = (editor: Editor, api: WordCountApi) => {
+const register = (editor: Editor) => {
   editor.ui.registry.addButton('wordcount', {
     tooltip: 'Word count',
     icon: 'character-count',
