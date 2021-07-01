@@ -42,12 +42,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
 
   it('TINY-4589: should set parent dir when element is a list item', () => {
     const editor = hook.editor();
-    editor.setContent(`
-    <ul>
-      <li>foo</li>
-      <li>bar</li>
-    </ul>
-    `);
+    editor.setContent('<ul><li>foo</li><li>bar</li></ul>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor, `<ul dir="rtl">\n<li>foo</li>\n<li>bar</li>\n</ul>`);
@@ -58,12 +53,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
 
   it('TINY-4589: should remove dir from list item', () => {
     const editor = hook.editor();
-    editor.setContent(`
-    <ul>
-      <li dir="ltr">foo</li>
-      <li>bar</li>
-    </ul>
-    `);
+    editor.setContent('<ul><li dir="ltr">foo</li><li>bar</li></ul>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor, `<ul dir="rtl">\n<li>foo</li>\n<li>bar</li>\n</ul>`);
