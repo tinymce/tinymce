@@ -952,6 +952,11 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     testFindEndTag('<tag                                               ', 0, 0);
     testFindEndTag('<b><!-- </b> --></b>', 3, 20);
     testFindEndTag('<span><b><i>a<img>b</i><b>c</b></b></span>', 9, 35);
+    testFindEndTag('<!-- Mismatched " --></p><div>Closing " </div>', 0, 25);
+    testFindEndTag('<!bogus comment ></p><!-- Good comment for good measure -->', 0, 21);
+    testFindEndTag('<!--comment--></p><!-- extra comment -->', 0, 18);
+    testFindEndTag('<!-- comments are allowed > symbols and fake </html> --></p><!-- extra comment -->', 0, 60);
+
   });
 
   it('parse XSS PI', () => {
@@ -1100,5 +1105,20 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
       '<!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->' +
       'c'
     );
+  });
+
+  it('TINY-7589: Handles unmatched apostrophes in HTML comments', () => {
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
+
+    writer.reset();
+    const inner =
+      '<div>' +
+      '<!--  This is the issue: \'  -->' +
+      '<div><div><div>The matching apostophe \'</div></div></div>' +
+      '<div>Content B</div>' +
+      '</div>';
+    parser.parse(`${inner}<div data-mce-bogus="all">${inner}</div>`);
+    assert.equal(writer.getContent(), inner);
   });
 });
