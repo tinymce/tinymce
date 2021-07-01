@@ -7,10 +7,20 @@
 
 import { Fun } from '@ephox/katamari';
 
+import Editor from 'tinymce/core/api/Editor';
+
 import * as Templates from '../core/Templates';
+import * as Dialog from '../ui/Dialog';
+
+const showDialog = (editor: Editor) => {
+  return (templates) => {
+    Dialog.open(editor, templates);
+  };
+};
 
 const register = (editor) => {
   editor.addCommand('mceInsertTemplate', Fun.curry(Templates.insertTemplate, editor));
+  editor.addCommand('mceCreateTemplateList', Templates.createTemplateList(editor, showDialog(editor)));
 };
 
 export {

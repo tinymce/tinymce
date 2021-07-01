@@ -7,26 +7,20 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Templates from '../core/Templates';
-import * as Dialog from './Dialog';
-
-const showDialog = (editor: Editor) => {
-  return (templates) => {
-    Dialog.open(editor, templates);
-  };
-};
-
 const register = (editor: Editor) => {
+
+  const onAction = () => editor.execCommand('mceCreateTemplateList');
+
   editor.ui.registry.addButton('template', {
     icon: 'template',
     tooltip: 'Insert template',
-    onAction: Templates.createTemplateList(editor, showDialog(editor))
+    onAction
   });
 
   editor.ui.registry.addMenuItem('template', {
     icon: 'template',
     text: 'Insert template...',
-    onAction: Templates.createTemplateList(editor, showDialog(editor))
+    onAction
   });
 };
 
