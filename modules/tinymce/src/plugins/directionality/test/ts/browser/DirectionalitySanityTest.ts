@@ -120,12 +120,16 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
                 },
                 children: [
                   s.anything(),
-                  s.element('ul', { // remove dir cause parent ul has rtl already
-                    children: [
-                      s.element('li', {}),
-                      s.element('li', {})
-                    ]
-                  }),
+                  s.element('ul',
+                    {
+                      attrs: {
+                        dir: str.none()
+                      },
+                      children: [
+                        s.element('li', {}),
+                        s.element('li', {})
+                      ]
+                    }),
                 ]
               })
             ]
@@ -137,12 +141,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
 
   it('TINY-4589: should remove dir attr if parent has same dir', () => {
     const editor = hook.editor();
-    editor.setContent(`
-    <div dir="ltr">
-    <p>foo</p>
-    <p>bar</p>
-    </div>
-    `);
+    editor.setContent('<div dir="ltr"><p>foo</p><p>bar</p></div>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor, `<div dir="ltr">\n<p dir="rtl">foo</p>\n<p>bar</p>\n</div>`);
@@ -153,12 +152,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
 
   it('TINY-4589: should not remove dir attr if parent has dir empty', () => {
     const editor = hook.editor();
-    editor.setContent(`
-    <div dir="">
-      <p>foo</p>
-      <p>bar</p>
-    </div>
-    `);
+    editor.setContent('<div dir=""><p>foo</p><p>bar</p></div>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor, `<div dir="">\n<p dir="rtl">foo</p>\n<p>bar</p>\n</div>`);
@@ -262,7 +256,11 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
                               dir: str.is(' ')
                             },
                             children: [
-                              s.element('p', {}), // doesn't add ltr cause parent has
+                              s.element('p', {
+                                attrs: {
+                                  dir: str.none()
+                                }
+                              }),
                               s.element('p', {})
                             ]
                           })
