@@ -6,62 +6,47 @@
  */
 
 import { Arr, Optional } from '@ephox/katamari';
-import { Traverse, Attribute, SugarElement, SugarNode } from '@ephox/sugar';
+import { Traverse, Attribute, SugarElement, SugarNode, SelectorFind, Direction, SelectorFilter } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 type Dir = 'rtl' | 'ltr';
 
-const isListItem = SugarNode.isTag('li');
-
-const getParentElementWithDir = (element: SugarElement<Element>): Optional<SugarElement<Element>> => {
-  const parents = Traverse.parents(element).filter((e) => {
-    return SugarNode.isHTMLElement(e) &&
-      !isListItem(e) &&
-      (Attribute.get(e, 'dir') === 'ltr' || Attribute.get(e, 'dir') === 'rtl');
-  });
-
-  return parents.length > 0 ? Optional.from(parents[0] as SugarElement<Element>) : Optional.none();
+const getParentElement = (element: SugarElement<Element>): Optional<SugarElement<Element>> => {
+  return Traverse.parent(element).filter(SugarNode.isElement);
 };
 
-const setDir = (editor: Editor, dir: Dir) => {
+// if the block is a list item, we need to get the parent of the list itself
+const getNormalizedBlock = (element: SugarElement<Element>, isListItem: boolean): SugarElement<Element> => {
+  const normalizedElement = isListItem ? SelectorFind.ancestor(element, 'ol,ul') : Optional.some(element);
+  return normalizedElement.getOr(element);
+};
+
+const isListItem = SugarNode.isTag('li');
+
+const setDir = (editor: Editor, dir: Dir): void => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
   if (selectedBlocks.length > 0) {
     Arr.each(selectedBlocks, (block) => {
       const sugarBlock = SugarElement.fromDom(block);
-      if (isListItem(sugarBlock)) {
-        const sugarBlockParent = Traverse.parent(sugarBlock).filter(SugarNode.isHTMLElement);
-        sugarBlockParent.each((parent) => {
-          const sugarBlockParentWithDir = getParentElementWithDir(parent);
-          sugarBlockParentWithDir.fold(
-            () => {
-              Attribute.remove(sugarBlock, 'dir'); // li should not have dir
-              Attribute.set(parent, 'dir', dir);
-            },
-            (parentWithDir) => {
-              if (Attribute.get(parentWithDir, 'dir') === dir) {
-                Attribute.remove(parent, 'dir');
-              } else {
-                Attribute.set(parent, 'dir', dir);
-              }
-            }
-          );
-        });
-      } else {
-        const sugarBlockParentWithDir = getParentElementWithDir(sugarBlock);
-        sugarBlockParentWithDir.fold(
-          () => Attribute.set(sugarBlock, 'dir', dir),
-          (parentWithDir) => {
-            if (Attribute.get(parentWithDir, 'dir') === dir) {
-              Attribute.remove(sugarBlock, 'dir');
-            } else {
-              Attribute.set(sugarBlock, 'dir', dir);
-            }
-          }
-        );
-      }
-    });
+      const isSugarBlockListItem = isListItem(sugarBlock);
+      const normalizedBlock = getNormalizedBlock(sugarBlock, isSugarBlockListItem);
+      const normalizedBlockParent = getParentElement(normalizedBlock);
+      normalizedBlockParent.each((parent) => {
+        const parentDirection = Direction.getDirection(parent);
+        if (parentDirection !== dir) {
+          Attribute.set(normalizedBlock, 'dir', dir);
+        } else if (Direction.getDirection(normalizedBlock) !== dir) {
+          Attribute.remove(normalizedBlock, 'dir');
+        }
 
+        // remove dir attr from list children
+        if (isSugarBlockListItem) {
+          const listItems = SelectorFilter.children(normalizedBlock, 'li[dir]');
+          Arr.each(listItems, (listItem) => Attribute.remove(listItem, 'dir'));
+        }
+      });
+    });
     editor.nodeChanged();
   }
 };
