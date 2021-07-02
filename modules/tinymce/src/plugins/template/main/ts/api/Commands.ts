@@ -20,7 +20,7 @@ const showDialog = (editor: Editor) => {
 
 const register = (editor) => {
   editor.addCommand('mceInsertTemplate', Fun.curry(Templates.insertTemplate, editor));
-  editor.addCommand('mceCreateTemplateList', Templates.createTemplateList(editor, showDialog(editor)));
+  editor.addCommand('mceTemplate', Templates.createTemplateList(editor, showDialog(editor)));
 };
 
 export {

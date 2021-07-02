@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `initData` property to `fancymenuitem` to allow custom initialization data #TINY-7480
 - Added a new `language` menu item and toolbar button to add `lang` attributes to content, with an accompanying `content_langs` setting to specify the languages available #TINY-6149
 - A new `lang` format is now available that can be used with `editor.formatter`, or applied with the `Lang` editor command #TINY-6149
-- Added new commands: `mceEmoticons` (emoticons plugin), `mceWordCount` (wordcount), and `mceCreateTemplateList` (template) #TINY-7619
+- Added new commands: `mceEmoticons` (emoticons plugin), `mceWordCount` (wordcount), and `mceTemplate` (template) #TINY-7619
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504

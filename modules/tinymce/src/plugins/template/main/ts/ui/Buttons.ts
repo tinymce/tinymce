@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 const register = (editor: Editor) => {
 
-  const onAction = () => editor.execCommand('mceCreateTemplateList');
+  const onAction = () => editor.execCommand('mceTemplate');
 
   editor.ui.registry.addButton('template', {
     icon: 'template',
