@@ -6,13 +6,18 @@ import { ZoneViewports } from '../api/general/ZoneViewports';
 import { WordDecisionItem } from '../words/WordDecision';
 import { LanguageZones, ZoneDetails } from './LanguageZones';
 
+// An optional function used to perform a check on Traverse.item
+// to determine whether a branch branch should be skipped when walking
+export type ShouldSkip<E> = (item: E) => boolean;
+
 // Figure out which direction to take the next step in. Returns None if the traversal should stop.
 const getNextStep = <E, D>(
   universe: Universe<E, D>,
   viewport: ZoneViewports<E>,
-  traverse: Traverse<E>
+  traverse: Traverse<E>,
+  shouldSkip: ShouldSkip<E> = Fun.never
 ): Optional<Traverse<E>> => {
-  if (universe.property().isSpecial(traverse.item) || universe.property().isNonEditable(traverse.item)) {
+  if (universe.property().isSpecial(traverse.item) || universe.property().isNonEditable(traverse.item) || shouldSkip(traverse.item)) {
     return Optional.some({ item: traverse.item, mode: Gather.sidestep });
   } else if (!universe.property().isBoundary(traverse.item)) {
     return Optional.some(traverse);
@@ -81,7 +86,8 @@ const walk = <E, D>(
   finish: E,
   defaultLang: string,
   transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
-  viewport: ZoneViewports<E>
+  viewport: ZoneViewports<E>,
+  shouldSkip?: ShouldSkip<E>
 ): ZoneDetails<E>[] => {
   const shouldContinue = (traverse: Traverse<E>) => {
     if (!universe.eq(traverse.item, finish)) {
@@ -104,7 +110,7 @@ const walk = <E, D>(
     state.each((state) => visit(universe, stack, transform, viewport, state));
 
     state = state
-      .bind((state) => getNextStep(universe, viewport, state))
+      .bind((state) => getNextStep(universe, viewport, state, shouldSkip))
       .filter(shouldContinue)
       .bind((traverse) => Gather.walk(universe, traverse.item, traverse.mode, Gather.walkers().right()))
       .filter(shouldContinue);

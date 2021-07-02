@@ -2,19 +2,20 @@ import { Universe } from '@ephox/boss';
 import { Descent } from '@ephox/phoenix';
 import * as TextZones from '../../zone/TextZones';
 import { Zones } from '../../zone/Zones';
+import { ShouldSkip } from '../../zone/ZoneWalker';
 import { ZoneViewports } from './ZoneViewports';
 
 /*
  * TextZones return an array of zones based on an area being scanned. It will use the viewport
  * to work out when it can skip/abort scanning the rest of the element.
  */
-const single = <E, D>(universe: Universe<E, D>, element: E, envLang: string, viewport: ZoneViewports<E>): Zones<E> => {
+const single = <E, D>(universe: Universe<E, D>, element: E, envLang: string, viewport: ZoneViewports<E>, shouldSkip?: ShouldSkip<E>): Zones<E> => {
   if (universe.property().isBoundary(element)) {
-    return TextZones.fromBounded(universe, element, element, envLang, viewport);
+    return TextZones.fromBounded(universe, element, element, envLang, viewport, shouldSkip);
   } else if (universe.property().isEmptyTag(element)) {
     return empty<E>();
   } else {
-    return TextZones.fromInline(universe, element, envLang, viewport);
+    return TextZones.fromInline(universe, element, envLang, viewport, shouldSkip);
   }
 };
 
@@ -28,14 +29,15 @@ const range = <E, D>(
   finish: E,
   foffset: number,
   envLang: string,
-  viewport: ZoneViewports<E>
+  viewport: ZoneViewports<E>,
+  shouldSkip?: ShouldSkip<E>
 ): Zones<E> => {
   const startPt = Descent.toLeaf(universe, start, soffset);
   const finishPt = Descent.toLeaf(universe, finish, foffset);
   if (universe.eq(startPt.element, finishPt.element)) {
-    return single(universe, startPt.element, envLang, viewport);
+    return single(universe, startPt.element, envLang, viewport, shouldSkip);
   }
-  return TextZones.fromRange(universe, startPt.element, finishPt.element, envLang, viewport);
+  return TextZones.fromRange(universe, startPt.element, finishPt.element, envLang, viewport, shouldSkip);
 };
 
 type EmptyFn = <E>() => Zones<E>;
@@ -43,6 +45,7 @@ const empty: EmptyFn = TextZones.empty;
 
 export {
   Zones,
+  ShouldSkip,
   single,
   range,
   empty
