@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyEvents, AlloyTriggers, Disabling, Memento, MementoRecord, Representing, SystemEvents } from '@ephox/alloy';
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
@@ -31,7 +31,7 @@ const runOnExecute = <T>(memInput: MementoRecord, original: { onAction: (formApi
 
 const renderContextButton = (memInput: MementoRecord, button: InlineContent.ContextFormButton, extras) => {
   const { primary, ...rest } = button.original;
-  const bridged = ValueSchema.getOrDie(
+  const bridged = StructureSchema.getOrDie(
     Toolbar.createToolbarButton({
       ...rest,
       type: 'button',
@@ -46,7 +46,7 @@ const renderContextButton = (memInput: MementoRecord, button: InlineContent.Cont
 
 const renderContextToggleButton = (memInput: MementoRecord, button: InlineContent.ContextFormToggleButton, extras) => {
   const { primary, ...rest } = button.original;
-  const bridged = ValueSchema.getOrDie(
+  const bridged = StructureSchema.getOrDie(
     Toolbar.createToggleButton({
       ...rest,
       type: 'togglebutton',

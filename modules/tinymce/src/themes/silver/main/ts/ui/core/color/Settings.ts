@@ -7,8 +7,10 @@
 
 import { Transformations } from '@ephox/acid';
 import { Arr } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+
 import ColorCache from './ColorCache';
 
 const choiceItem: 'choiceitem' = 'choiceitem';

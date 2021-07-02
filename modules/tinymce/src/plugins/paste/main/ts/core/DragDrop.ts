@@ -8,6 +8,7 @@
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+
 import { Clipboard } from '../api/Clipboard';
 import * as Settings from '../api/Settings';
 import { ClipboardContents } from './Clipboard';

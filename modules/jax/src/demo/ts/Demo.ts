@@ -1,4 +1,5 @@
 import { FutureResult } from '@ephox/katamari';
+
 import { DataType } from 'ephox/jax/core/DataType';
 import * as Http from 'ephox/jax/core/Http';
 import * as HttpData from 'ephox/jax/core/HttpData';

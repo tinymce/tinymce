@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { Compare, PredicateExists, SugarElement } from '@ephox/sugar';
-import { AlloyComponent } from '../api/component/ComponentApi';
 
+import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AriaOwner from '../aria/AriaOwner';
 import { AnchorSpec } from '../positioning/mode/Anchoring';
 

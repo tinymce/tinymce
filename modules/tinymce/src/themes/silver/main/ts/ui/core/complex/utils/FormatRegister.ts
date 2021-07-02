@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Id, Merger, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Fun, Id, Merger, Obj, Optional, Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
+
 import { FormatItem, FormatterFormatItem, PreviewSpec, SubMenuFormatItem } from '../BespokeSelect';
 
 export type IsSelectedForType = (format: string) => (currentValue: Optional<any>) => boolean;
@@ -62,7 +64,7 @@ const register = (editor: Editor, formats, isSelectedFor: IsSelectedForType, get
       return Merger.deepMerge(
         enrichMenu(item),
         {
-          getStyleItems: () => newItems
+          getStyleItems: Fun.constant(newItems)
         }
       ) as FormatItem;
     } else if (Obj.hasNonNullableKey(item, 'format')) {

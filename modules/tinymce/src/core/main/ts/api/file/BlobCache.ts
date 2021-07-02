@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Type } from '@ephox/katamari';
+
 import * as Uuid from '../../util/Uuid';
 
 export interface BlobCache {

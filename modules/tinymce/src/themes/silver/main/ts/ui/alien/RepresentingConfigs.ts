@@ -6,17 +6,17 @@
  */
 
 import { AlloyComponent, MementoRecord, Representing } from '@ephox/alloy';
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Merger, Optional } from '@ephox/katamari';
 import { Html, SugarElement, Value } from '@ephox/sugar';
 
-const processors = ValueSchema.objOf([
+const processors = StructureSchema.objOf([
   FieldSchema.defaulted('preprocess', Fun.identity),
   FieldSchema.defaulted('postprocess', Fun.identity)
 ]);
 
 const memento = (mem: MementoRecord, rawProcessors) => {
-  const ps = ValueSchema.asRawOrDie('RepresentingConfigs.memento processors', processors, rawProcessors);
+  const ps = StructureSchema.asRawOrDie('RepresentingConfigs.memento processors', processors, rawProcessors);
   return Representing.config({
     store: {
       mode: 'manual',

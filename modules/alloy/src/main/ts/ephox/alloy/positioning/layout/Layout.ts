@@ -3,12 +3,15 @@ import { Bubble } from './Bubble';
 import * as Direction from './Direction';
 import { boundsRestriction, AnchorBoxBounds } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
+import { Placement } from './Placement';
 
 /*
   Layout for menus and inline context dialogs;
   Either above or below. Never left or right.
   Aligned to the left or right of the anchor as appropriate.
  */
+
+const labelPrefix = 'layout';
 
 // display element to the right, left edge against the anchor
 const eastX = (anchor: AnchorBox): number => anchor.x;
@@ -37,16 +40,19 @@ const southeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   southY(anchor),
   bubbles.southeast(),
   Direction.southeast(),
+  Placement.Southeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.BottomEdge }),
-  'layout-se');
+  labelPrefix
+);
 
 const southwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
   westX(anchor, element),
   southY(anchor),
   bubbles.southwest(),
   Direction.southwest(),
+  Placement.Southwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.BottomEdge }),
-  'layout-sw'
+  labelPrefix
 );
 
 const northeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -54,8 +60,9 @@ const northeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   northY(anchor, element),
   bubbles.northeast(),
   Direction.northeast(),
+  Placement.Northeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.TopEdge }),
-  'layout-ne'
+  labelPrefix
 );
 
 const northwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -63,8 +70,9 @@ const northwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   northY(anchor, element),
   bubbles.northwest(),
   Direction.northwest(),
+  Placement.Northwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.TopEdge }),
-  'layout-nw'
+  labelPrefix
 );
 
 const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -72,8 +80,9 @@ const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
   northY(anchor, element),
   bubbles.north(),
   Direction.north(),
+  Placement.North,
   boundsRestriction(anchor, { bottom: AnchorBoxBounds.TopEdge }),
-  'layout-n'
+  labelPrefix
 );
 
 const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -81,8 +90,9 @@ const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
   southY(anchor),
   bubbles.south(),
   Direction.south(),
+  Placement.South,
   boundsRestriction(anchor, { top: AnchorBoxBounds.BottomEdge }),
-  'layout-s'
+  labelPrefix
 );
 
 const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -90,8 +100,9 @@ const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
   centreY(anchor, element),
   bubbles.east(),
   Direction.east(),
+  Placement.East,
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge }),
-  'layout-e'
+  labelPrefix
 );
 
 const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -99,8 +110,9 @@ const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
   centreY(anchor, element),
   bubbles.west(),
   Direction.west(),
+  Placement.West,
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge }),
-  'layout-w'
+  labelPrefix
 );
 
 const all = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest, south, north, east, west ];

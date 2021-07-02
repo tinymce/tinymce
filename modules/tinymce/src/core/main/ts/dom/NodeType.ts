@@ -19,7 +19,7 @@ const isRestrictedNode = (node: Node): boolean => !!node && !Object.getPrototype
 
 const isElement = isNodeType(1) as (node: Node | null) => node is HTMLElement;
 
-const matchNodeNames = <T extends Node>(names: string[]) => {
+const matchNodeNames = <T extends Node>(names: string[]): (node: Node | null) => node is T => {
   const lowercasedNames = names.map((s) => s.toLowerCase());
 
   return (node: Node | null): node is T => {
@@ -32,16 +32,14 @@ const matchNodeNames = <T extends Node>(names: string[]) => {
   };
 };
 
-const matchStyleValues = (name: string, values: string) => {
+const matchStyleValues = (name: string, values: string): (node: Node) => boolean => {
   const items = values.toLowerCase().split(' ');
 
   return (node: Node) => {
-    let i, cssValue;
-
     if (isElement(node)) {
-      for (i = 0; i < items.length; i++) {
+      for (let i = 0; i < items.length; i++) {
         const computed = node.ownerDocument.defaultView.getComputedStyle(node, null);
-        cssValue = computed ? computed.getPropertyValue(name) : null;
+        const cssValue = computed ? computed.getPropertyValue(name) : null;
         if (cssValue === items[i]) {
           return true;
         }
@@ -52,20 +50,20 @@ const matchStyleValues = (name: string, values: string) => {
   };
 };
 
-const hasPropValue = (propName: string, propValue: any) => {
-  return (node: Node) => {
+const hasPropValue = (propName: keyof HTMLElement, propValue: any) => {
+  return (node: Node): boolean => {
     return isElement(node) && node[propName] === propValue;
   };
 };
 
 const hasAttribute = (attrName: string) => {
-  return (node: Node) => {
+  return (node: Node): boolean => {
     return isElement(node) && node.hasAttribute(attrName);
   };
 };
 
 const hasAttributeValue = (attrName: string, attrValue: string) => {
-  return (node: Node) => {
+  return (node: Node): boolean => {
     return isElement(node) && node.getAttribute(attrName) === attrValue;
   };
 };

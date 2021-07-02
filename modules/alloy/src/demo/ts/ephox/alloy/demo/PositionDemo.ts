@@ -13,6 +13,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DemoContent from 'ephox/alloy/demo/DemoContent';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
+
 import * as Frames from './frames/Frames';
 
 export default (): void => {

@@ -6,6 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import Tools from './Tools';
 
 /**

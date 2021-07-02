@@ -6,8 +6,10 @@
  */
 
 import { Optional, Type } from '@ephox/katamari';
+
 import Promise from 'tinymce/core/api/util/Promise';
 import XHR from 'tinymce/core/api/util/XHR';
+
 import * as Settings from '../../api/Settings';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem, UserListItem } from '../DialogTypes';

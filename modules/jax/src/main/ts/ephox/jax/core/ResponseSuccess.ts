@@ -1,4 +1,5 @@
 import { FutureResult } from '@ephox/katamari';
+
 import { DataType } from './DataType';
 import { ResponseBodyDataTypes, ResponseTypeMap } from './HttpData';
 import { HttpError } from './HttpError';

@@ -6,6 +6,7 @@
  */
 
 import { Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const hasDimensions = (editor: Editor) => editor.getParam('image_dimensions', true, 'boolean');

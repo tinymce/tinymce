@@ -6,6 +6,7 @@
  */
 
 import { Arr, Optional, Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 

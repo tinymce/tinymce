@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
-import { onSetupFormatToggle } from './complex/utils/Utils';
+
+import { onActionExecCommand, onSetupFormatToggle } from './ControlUtils';
 
 const register = (editor: Editor) => {
   const alignToolbarButtons = [
@@ -17,20 +19,19 @@ const register = (editor: Editor) => {
     { name: 'alignjustify', text: 'Justify', cmd: 'JustifyFull', icon: 'align-justify' }
   ];
 
-  Tools.each(alignToolbarButtons, (item) => {
+  Arr.each(alignToolbarButtons, (item) => {
     editor.ui.registry.addToggleButton(item.name, {
       tooltip: item.text,
-      onAction: () => editor.execCommand(item.cmd),
       icon: item.icon,
+      onAction: onActionExecCommand(editor, item.cmd),
       onSetup: onSetupFormatToggle(editor, item.name)
     });
   });
 
-  const alignNoneToolbarButton = { name: 'alignnone', text: 'No alignment', cmd: 'JustifyNone', icon: 'align-none' };
-  editor.ui.registry.addButton(alignNoneToolbarButton.name, {
-    tooltip: alignNoneToolbarButton.text,
-    onAction: () => editor.execCommand(alignNoneToolbarButton.cmd),
-    icon: alignNoneToolbarButton.icon
+  editor.ui.registry.addButton('alignnone', {
+    tooltip: 'No alignment',
+    icon: 'align-none',
+    onAction: onActionExecCommand(editor, 'JustifyNone')
   });
 };
 

@@ -6,8 +6,10 @@
  */
 
 import { Selections } from '@ephox/darwin';
+
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Clipboard from './actions/Clipboard';
 import { getResizeHandler } from './actions/ResizeHandler';
 import { TableActions } from './actions/TableActions';

@@ -9,10 +9,11 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, Sliding, SlotContainer,
   SlotContainerTypes, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Id, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
@@ -53,7 +54,7 @@ const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
 const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: SidebarConfig) => {
   const specs = Arr.map(Obj.keys(panelConfigs), (name) => {
     const spec = panelConfigs[name];
-    const bridged = ValueSchema.getOrDie(BridgeSidebar.createSidebar(spec));
+    const bridged = StructureSchema.getOrDie(BridgeSidebar.createSidebar(spec));
     return {
       name,
       getApi,

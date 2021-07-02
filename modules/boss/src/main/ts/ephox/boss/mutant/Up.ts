@@ -1,4 +1,5 @@
 import { Fun, Optional } from '@ephox/katamari';
+
 import { Gene } from '../api/Gene';
 import * as Comparator from './Comparator';
 

@@ -7,9 +7,9 @@ export default [
   Fields.onHandler('onClose'),
 
   // Maybe this should be optional
-  FieldSchema.strict('isPartOf'),
+  FieldSchema.required('isPartOf'),
 
-  FieldSchema.strict('getAttachPoint'),
+  FieldSchema.required('getAttachPoint'),
 
   FieldSchema.defaulted('cloakVisibilityAttr', 'data-precloak-visibility')
 ];

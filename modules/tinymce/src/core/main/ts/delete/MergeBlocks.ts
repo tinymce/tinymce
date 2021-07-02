@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
+
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
@@ -17,7 +18,7 @@ import * as Parents from '../dom/Parents';
 const getChildrenUntilBlockBoundary = (block: SugarElement) => {
   const children = Traverse.children(block);
   return Arr.findIndex(children, ElementType.isBlock).fold(
-    () => children,
+    Fun.constant(children),
     (index) => children.slice(0, index)
   );
 };

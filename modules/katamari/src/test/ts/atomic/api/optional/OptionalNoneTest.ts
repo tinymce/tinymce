@@ -1,6 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
+
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
 import * as Optionals from 'ephox/katamari/api/Optionals';
@@ -28,7 +29,7 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
 
     assert.deepEqual(Optional.none().toArray(), []);
 
-    assert.equal(Optional.none().fold(() => 'zz', Fun.die('boom')), 'zz');
+    assert.equal(Optional.none().fold(Fun.constant('zz'), Fun.die('boom')), 'zz');
     assert.deepEqual(Optional.none().fold((...args: any[]) => {
       return args;
     }, Fun.die('boom')), []);

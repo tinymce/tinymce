@@ -8,7 +8,9 @@
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
 import { Attribute, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { fireNewCell, fireNewRow } from '../api/Events';
 import { getDefaultAttributes, getDefaultStyles, getTableHeaderType, isPercentagesForced, isPixelsForced, isResponsiveForced, useColumnGroup } from '../api/Settings';
 import * as Util from '../core/Util';

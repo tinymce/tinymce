@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
-import { SelectorFilter, SugarElement } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import * as ElementType from '../dom/ElementType';
 import * as MultiRange from './MultiRange';
@@ -25,9 +26,13 @@ const getCellsFromElementOrRanges = (ranges: Range[], element: SugarElement): Su
 const getCellsFromEditor = (editor: Editor) =>
   getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), SugarElement.fromDom(editor.getBody()));
 
+const getClosestTable = (cell: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean): Optional<SugarElement<HTMLTableElement>> =>
+  SelectorFind.ancestor<HTMLTableElement>(cell, 'table', isRoot);
+
 export {
   getCellsFromRanges,
   getCellsFromElement,
   getCellsFromElementOrRanges,
-  getCellsFromEditor
+  getCellsFromEditor,
+  getClosestTable
 };

@@ -1,6 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
+
 import * as Strings from 'ephox/katamari/api/Strings';
 
 describe('atomic.katamari.api.str.StartsWithTest', () => {

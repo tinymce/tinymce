@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { annotate, assertHtmlContent, assertMarker } from '../../module/test/AnnotationAsserts';
 
 describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {

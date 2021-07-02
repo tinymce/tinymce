@@ -1,5 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection, SandNode } from '@ephox/sand';
+
 import { SugarElement } from '../node/SugarElement';
 import * as Selectors from '../search/Selectors';
 

@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import * as Compare from '../api/dom/Compare';
 import { SugarElement } from '../api/node/SugarElement';
 

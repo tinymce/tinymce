@@ -6,6 +6,7 @@
  */
 
 import { Throttler } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 

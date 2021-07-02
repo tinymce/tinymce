@@ -6,10 +6,50 @@
  */
 
 import { Bounds, Boxes } from '@ephox/alloy';
-import { SelectorFind, SugarElement, WindowVisualViewport } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Scroll, SelectorFind, SugarBody, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+
+const isVerticalOverlap = (a: Bounds, b: Bounds): boolean =>
+  Math.max(a.y, b.y) <= Math.min(a.bottom, b.bottom);
+
+const getRangeRect = (rng: Range): DOMRect => {
+  const rect = rng.getBoundingClientRect();
+  // Some ranges (eg <td><br></td>) will return a 0x0 rect, so we'll need to calculate it from the leaf instead
+  if (rect.height <= 0 && rect.width <= 0) {
+    const leaf = Traverse.leaf(SugarElement.fromDom(rng.startContainer), rng.startOffset).element;
+    const elm = SugarNode.isText(leaf) ? Traverse.parent(leaf) : Optional.some(leaf);
+    return elm.filter(SugarNode.isElement)
+      .map((e) => e.dom.getBoundingClientRect())
+      // We have nothing valid, so just fallback to the original rect
+      .getOr(rect);
+  } else {
+    return rect;
+  }
+};
+
+const getSelectionBounds = (editor: Editor): Bounds => {
+  const rng = editor.selection.getRng();
+  const rect = getRangeRect(rng);
+  if (editor.inline) {
+    const scroll = Scroll.get();
+    return Boxes.bounds(scroll.left + rect.left, scroll.top + rect.top, rect.width, rect.height);
+  } else {
+    // Translate to the top level document, as rect is relative to the iframe viewport
+    const bodyPos = Boxes.absolute(SugarElement.fromDom(editor.getBody()));
+    return Boxes.bounds(bodyPos.x + rect.left, bodyPos.y + rect.top, rect.width, rect.height);
+  }
+};
+
+const getAnchorElementBounds = (editor: Editor, lastElement: Optional<SugarElement<Element>>): Bounds =>
+  lastElement
+    .filter(SugarBody.inBody)
+    .map(Boxes.absolute)
+    .getOrThunk(() => getSelectionBounds(editor));
 
 const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { x: number; width: number } => {
   const x = Math.max(viewportBounds.x, contentAreaBox.x);
@@ -59,7 +99,7 @@ const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBound
   };
 };
 
-const getContextToolbarBounds = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
+const getContextToolbarBounds = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): Bounds => {
   const viewportBounds = WindowVisualViewport.getBounds(window);
   const contentAreaBox = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
   const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
@@ -77,5 +117,8 @@ const getContextToolbarBounds = (editor: Editor, sharedBackstage: UiFactoryBacks
 };
 
 export {
-  getContextToolbarBounds
+  getContextToolbarBounds,
+  getAnchorElementBounds,
+  getSelectionBounds,
+  isVerticalOverlap
 };

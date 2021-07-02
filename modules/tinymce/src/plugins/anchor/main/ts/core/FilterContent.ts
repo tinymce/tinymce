@@ -7,6 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
+
 import { isEmptyString } from './Utils';
 
 // Note: node.firstChild check is for the 'allow_html_in_named_anchor' setting

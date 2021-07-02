@@ -6,8 +6,10 @@
  */
 
 import { Optional, Type } from '@ephox/katamari';
+
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import { ListItem, UserListItem } from '../ui/DialogTypes';
 
 const getValue = (item: UserListItem): string => Type.isString(item.value) ? item.value : '';

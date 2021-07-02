@@ -1,4 +1,5 @@
 import { Future, Optional } from '@ephox/katamari';
+
 import { readBlobAsText } from './BlobReader';
 import { DataType } from './DataType';
 import { ResponseBodyDataTypes } from './HttpData';

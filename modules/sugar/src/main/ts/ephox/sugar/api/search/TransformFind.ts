@@ -1,4 +1,5 @@
 import { Fun, Optional, Type } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 
 const ensureIsRoot = (isRoot?: (e: SugarElement<Node>) => boolean) => Type.isFunction(isRoot) ? isRoot : Fun.never;

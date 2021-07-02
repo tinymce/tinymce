@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Class from 'ephox/sugar/api/properties/Class';
 import * as Classes from 'ephox/sugar/api/properties/Classes';

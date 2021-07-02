@@ -2,6 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, SugarElement } from '@ephox/sugar';
+
 import * as CopySelected from 'ephox/snooker/api/CopySelected';
 import { reducePrecision } from 'ephox/snooker/test/SizeUtils';
 

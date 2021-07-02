@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 import * as PredicateFind from '../search/PredicateFind';
 import * as Traverse from '../search/Traverse';

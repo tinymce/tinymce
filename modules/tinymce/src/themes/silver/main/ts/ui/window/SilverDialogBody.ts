@@ -8,6 +8,7 @@
 import { AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
+
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { renderBodyPanel } from '../dialog/BodyPanel';

@@ -6,6 +6,7 @@
  */
 
 import { Cell, Fun } from '@ephox/katamari';
+
 import { registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBlockers } from '../mode/Readonly';
 import Editor from './Editor';

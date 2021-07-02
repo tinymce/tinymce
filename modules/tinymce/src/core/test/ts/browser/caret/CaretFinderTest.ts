@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import * as CaretFinder from 'tinymce/core/caret/CaretFinder';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.CaretFinderTest', () => {

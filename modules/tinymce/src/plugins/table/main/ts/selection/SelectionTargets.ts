@@ -6,16 +6,19 @@
  */
 
 import { Selections } from '@ephox/darwin';
-import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Thunk } from '@ephox/katamari';
 import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from './TableSelection';
 
 type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
+type UiToggleApi = Menu.ToggleMenuItemInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi;
 
 /*
 onAny - disable if any column in the selection is locked
@@ -38,6 +41,7 @@ export interface SelectionTargets {
   readonly onSetupMergeable: (api: UiApi) => () => void;
   readonly onSetupUnmergeable: (api: UiApi) => () => void;
   readonly resetTargets: () => void;
+  readonly onSetupTableWithCaption: (api: UiToggleApi) => () => void;
   readonly targets: () => Optional<RunOperation.CombinedTargets>;
 }
 
@@ -46,6 +50,8 @@ interface ExtractedSelectionDetails {
   readonly unmergeable: boolean;
   readonly locked: Record<LockedDisableStrs, boolean>;
 }
+
+type TargetSetupCallback = (targets: RunOperation.CombinedTargets) => boolean;
 
 export const getSelectionTargets = (editor: Editor, selections: Selections): SelectionTargets => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
@@ -104,13 +110,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     Arr.each(changeHandlers.get(), (handler) => handler());
   };
 
-  const onSetup = (api: UiApi, isDisabled: (targets: RunOperation.CombinedTargets) => boolean) => {
-    const handler = () => targets.get().fold(() => {
-      api.setDisabled(true);
-    }, (targets) => {
-      api.setDisabled(isDisabled(targets));
-    });
-
+  const setupHandler = (handler: () => void) => {
     // Execute the handler to set the initial state
     handler();
 
@@ -121,6 +121,26 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
       changeHandlers.set(Arr.filter(changeHandlers.get(), (h) => h !== handler));
     };
   };
+
+  const onSetup = (api: UiApi, isDisabled: TargetSetupCallback) =>
+    setupHandler(() =>
+      targets.get().fold(() => {
+        api.setDisabled(true);
+      }, (targets) => {
+        api.setDisabled(isDisabled(targets));
+      })
+    );
+
+  const onSetupWithToggle = (api: UiToggleApi, isDisabled: TargetSetupCallback, isActive: TargetSetupCallback) =>
+    setupHandler(() =>
+      targets.get().fold(() => {
+        api.setDisabled(true);
+        api.setActive(false);
+      }, (targets) => {
+        api.setDisabled(isDisabled(targets));
+        api.setActive(isActive(targets));
+      })
+    );
 
   const isDisabledFromLocked = (lockedDisable: LockedDisable) =>
     selectionDetails.exists((details) => details.locked[lockedDisable]);
@@ -135,6 +155,12 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
   const onSetupMergeable = (api: UiApi) => onSetup(api, (_targets) => isDisabledForSelection('mergeable'));
   const onSetupUnmergeable = (api: UiApi) => onSetup(api, (_targets) => isDisabledForSelection('unmergeable'));
 
+  const onSetupTableWithCaption = (api: UiToggleApi) => {
+    return onSetupWithToggle(api, Fun.never, (targets) => {
+      const tableOpt = TableLookup.table(targets.element, Util.getIsRoot(editor));
+      return tableOpt.exists((table) => SelectorExists.child(table, 'caption'));
+    });
+  };
   editor.on('NodeChange ExecCommand TableSelectorChange', resetTargets);
 
   return {
@@ -146,6 +172,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     onSetupMergeable,
     onSetupUnmergeable,
     resetTargets,
+    onSetupTableWithCaption,
     targets: () => targets.get()
   };
 };

@@ -7,7 +7,9 @@
 
 import { Fun } from '@ephox/katamari';
 import { Words } from '@ephox/polaris';
+
 import Schema from 'tinymce/core/api/html/Schema';
+
 import { getText } from './GetText';
 
 export type Counter = (node: Node, schema: Schema) => number;

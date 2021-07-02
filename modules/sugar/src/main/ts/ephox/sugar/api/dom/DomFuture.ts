@@ -1,4 +1,5 @@
 import { Future, LazyValue, Result } from '@ephox/katamari';
+
 import * as DomEvent from '../events/DomEvent';
 import { EventArgs } from '../events/Types';
 import { SugarElement } from '../node/SugarElement';

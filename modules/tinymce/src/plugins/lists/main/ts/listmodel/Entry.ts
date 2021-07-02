@@ -7,6 +7,7 @@
 
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+
 import { hasLastChildList, ListType } from './Util';
 
 /*

@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Obj } from '@ephox/katamari';
+
 import * as EventUtils from '../../events/EventUtils';
 import Tools from './Tools';
 

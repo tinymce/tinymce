@@ -1,6 +1,6 @@
 import { FocusTools, UiFinder, Waiter } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Focus, Insert, Remove, SelectorFind, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -65,6 +65,9 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
   const pAssertEditorFocus = (editor: Editor) => () =>
     pAssertFocus('Editor has focus', editor.inline ? 'div.mce-edit-focus' : 'iframe.tox-edit-area__iframe');
 
+  const pAssertInputFocus = () =>
+    pAssertFocus('Focus on input', '#tempInput');
+
   const pEnableThrobber = async (editor: Editor, pAssertFocus: () => Promise<SugarElement>) => {
     editor.setProgressState(true);
     await pAssertThrobberVisible();
@@ -111,7 +114,6 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
 
   it('TINY-7373: should not take focus if editor.focus(true) is called', async () => {
     const editor = hook.editor();
-    const pAssertInputFocus = () => pAssertFocus('Focus on input', '#tempInput');
 
     FocusTools.setFocus(SugarBody.body(), '#tempInput');
     await pEnableThrobber(editor, pAssertInputFocus);
@@ -188,5 +190,38 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
     // Focus returns to the editor when throbber is closed (this should happen since a dialog will normally focus the editor on close)
     await pDisableThrobber(editor, pAssertEditorFocus(editor));
     assert.isTrue(editor.hasFocus());
+  });
+
+  it('TINY-7602: should not steal focus if target element inside the editor body has "mce-pastebin" class', async () => {
+    const editor = hook.editor();
+    const editorBody = TinyDom.body(editor);
+    const normalDiv = SugarElement.fromHtml<HTMLElement>('<div class="not-pastebin" contenteditable="true" data-mce-bogus="all">&nbsp;</div>');
+    const fakePasteBin = SugarElement.fromHtml<HTMLElement>('<div class="mce-pastebin" contenteditable="true" data-mce-bogus="all">&nbsp;</div>');
+
+    Insert.append(editorBody, normalDiv);
+    Insert.append(editorBody, fakePasteBin);
+    await pEnableThrobber(editor, pAssertThrobberFocus);
+    FocusTools.setFocus(SugarBody.body(), '#tempInput');
+    await pAssertInputFocus();
+
+    // Note: Ideally we would like to actually focus the divs with Focus.focus.
+    // Unfortunately, other focus events end up firing with this and as such
+    // by the time we get to the assertion, the focus may have shifted back to
+    // the throbber. As a result, the best we can do is trigger fake events and
+    // ensure the throbber logic acts as expected
+
+    // Make sure throbber doesn't take focus when the pastebin is the target
+    editor.dom.fire(fakePasteBin.dom, 'focusin');
+    await pAssertInputFocus();
+    // Make sure throbber takes focus when the target is not a pastebin
+    editor.dom.fire(normalDiv.dom, 'focusin');
+    await pAssertThrobberFocus();
+
+    // Focus should return back to editor when throbber is closed
+    await pDisableThrobber(editor, pAssertEditorFocus(editor));
+    assert.isTrue(editor.hasFocus());
+    // Clean up
+    Remove.remove(fakePasteBin);
+    Remove.remove(normalDiv);
   });
 });

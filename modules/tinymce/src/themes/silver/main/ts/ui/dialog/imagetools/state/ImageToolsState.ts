@@ -6,7 +6,9 @@
  */
 
 import { Cell, Fun, Optional } from '@ephox/katamari';
+
 import Tools from 'tinymce/core/api/util/Tools';
+
 import UndoStack from '../UndoStack';
 
 interface BlobState {
@@ -31,7 +33,7 @@ const makeState = (initialState: BlobState) => {
     blobState.set(state);
   };
 
-  const getTempState = (): BlobState => tempState.get().fold(() => blobState.get(), (temp) => temp);
+  const getTempState = (): BlobState => tempState.get().getOrThunk(blobState.get);
 
   const updateTempState = (blob: Blob): string => {
     const newTempState = createState(blob);

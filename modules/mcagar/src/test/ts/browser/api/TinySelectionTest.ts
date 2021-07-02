@@ -1,5 +1,6 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+
 import { TinyApis } from 'ephox/mcagar/api/pipeline/TinyApis';
 import * as TinyLoader from 'ephox/mcagar/api/pipeline/TinyLoader';
 

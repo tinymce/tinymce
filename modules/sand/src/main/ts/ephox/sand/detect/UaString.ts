@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import { PlatformInfo } from '../info/PlatformInfo';
 import { Version } from './Version';
 

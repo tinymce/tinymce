@@ -9,13 +9,14 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying,
   MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents
 } from '@ephox/alloy';
-import { Processor, ValueSchema } from '@ephox/boulder';
+import { StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Optional, Singleton } from '@ephox/katamari';
 import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
+
 import * as Settings from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
@@ -32,7 +33,7 @@ export interface WindowManagerSetup {
 
 type InlineDialogAnchor = HotspotAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec | SelectionAnchorSpec;
 
-const validateData = <T extends Dialog.DialogData>(data: T, validator: Processor) => ValueSchema.getOrDie(ValueSchema.asRaw('data', validator, data));
+const validateData = <T extends Dialog.DialogData>(data: T, validator: StructureProcessor) => StructureSchema.getOrDie(StructureSchema.asRaw('data', validator, data));
 
 const isAlertOrConfirmDialog = (target: SugarElement): boolean => SelectorExists.closest(target, '.tox-alert-dialog') || SelectorExists.closest(target, '.tox-confirm-dialog');
 
@@ -99,7 +100,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   };
 
   const openModalDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
-    const factory = (contents: Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Dialog.DialogInstanceApi<T> => {
+    const factory = (contents: Dialog.Dialog<T>, internalInitialData: T, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
       // We used to validate data here, but it's done by the instanceApi.setData call below.
       const initialData = internalInitialData;
 
@@ -130,7 +131,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   };
 
   const openInlineDialog = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, anchor: InlineDialogAnchor, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void, ariaAttrs): Dialog.DialogInstanceApi<T> => {
-    const factory = (contents: Dialog.Dialog<T>, internalInitialData: T, dataValidator: Processor): Dialog.DialogInstanceApi<T> => {
+    const factory = (contents: Dialog.Dialog<T>, internalInitialData: T, dataValidator: StructureProcessor): Dialog.DialogInstanceApi<T> => {
       const initialData = validateData<T>(internalInitialData, dataValidator);
       const inlineDialog = Singleton.value<AlloyComponent>();
       const isToolbarLocationTop = backstage.shared.header.isPositionedAtTop();

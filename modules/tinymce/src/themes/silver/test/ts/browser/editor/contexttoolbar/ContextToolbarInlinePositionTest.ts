@@ -1,6 +1,6 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { Css, Scroll, SugarBody, SugarLocation } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -30,8 +30,13 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
         onAction: Fun.noop
       });
       ed.ui.registry.addContextToolbar('test-toolbar', {
-        predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'a',
+        predicate: (node) => node.nodeName.toLowerCase() === 'a',
         items: 'alpha'
+      });
+      ed.ui.registry.addContextToolbar('test-table-toolbar', {
+        predicate: (node) => node.nodeName.toLowerCase() === 'table',
+        items: 'alpha',
+        position: 'node'
       });
     }
   }, [ Theme ], true);
@@ -43,10 +48,10 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
     });
   });
 
-  const scrollTo = (editor: Editor, x: number, y: number) => {
+  const scrollTo = (editor: Editor, x: number, y: number, offset = 0) => {
     const editorPos = SugarLocation.absolute(TinyDom.contentAreaContainer(editor));
     // Note: Add 100px for the top para
-    Scroll.to(editorPos.left + x, editorPos.top + 100 + y);
+    Scroll.to(editorPos.left + x, editorPos.top + offset + y);
   };
 
   const pAssertPosition = (position: string, direction: string, value: number, diff = 5) => Waiter.pTryUntil('Wait for toolbar to be positioned', () => {
@@ -60,28 +65,29 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
   const testPositionWhileScrolling = (scenario: Scenario) => {
     it(scenario.label, async () => {
       const editor = hook.editor();
-      editor.setContent(`<p style="height: 100px"></p><p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p><p style="height: 100px"></p>`);
-      scrollTo(editor, 0, -250);
+      const offset = 100;
+      editor.setContent(`<p style="height: ${offset}px"></p><p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p><p style="height: 100px"></p>`);
+      scrollTo(editor, 0, -250, offset);
       TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
       await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), '.tox-pop.tox-pop--bottom' + scenario.classes);
       await pAssertPosition('absolute', 'bottom', 1637);
 
       // Position the link at the top of the viewport, just below the toolbar
-      scrollTo(editor, 0, -80);
+      scrollTo(editor, 0, -80, offset);
       await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), '.tox-pop.tox-pop--top' + scenario.classes);
       await pAssertPosition('fixed', 'top', 109);
 
       // Position the element offscreen and check the toolbar is hidden
-      scrollTo(editor, 0, 100);
+      scrollTo(editor, 0, 100, offset);
       await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
 
       // Position the element back into view
-      scrollTo(editor, 0, -250);
+      scrollTo(editor, 0, -250, offset);
       await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), '.tox-pop.tox-pop--bottom' + scenario.classes);
       await pAssertPosition('absolute', 'bottom', 1637);
 
       // Position the element behind the docked toolbar and check the toolbar is hidden
-      scrollTo(editor, 0, -10);
+      scrollTo(editor, 0, -10, offset);
       await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
     });
   };
@@ -129,5 +135,26 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
       },
       classes: '.tox-pop--align-right'
     });
+  });
+
+  it('TINY-7192: Toolbar should flip to the opposite position when the selection overlaps', async () => {
+    const editor = hook.editor();
+    const toolbarHeight = 80;
+    editor.setContent(
+      '<table style="width: 100%; border-collapse: collapse;">' +
+      '<tbody>' +
+      Arr.range(100, (i) => `<tr style="height: 22px"><td>Cell ${i + 1}</td></tr>`).join('') +
+      '</tbody>' +
+      '</table>'
+    );
+
+    // Scroll so the 5th row is at the top and select an initial position that's not at the top (15th row)
+    scrollTo(editor, 0, 4 * 22 - toolbarHeight);
+    TinySelections.setCursor(editor, [ 0, 0, 14, 0, 0 ], 0);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), '.tox-pop.tox-pop--top');
+
+    // Select the 5th row in the table, then make sure the toolbar appears at the bottom due to the overlap
+    TinySelections.setCursor(editor, [ 0, 0, 4, 0, 0 ], 0);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), '.tox-pop.tox-pop--bottom');
   });
 });

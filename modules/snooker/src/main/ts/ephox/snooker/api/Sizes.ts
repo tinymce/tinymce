@@ -1,5 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Css, Height, SugarElement, Width } from '@ephox/sugar';
+
 import * as BarPositions from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';

@@ -1,7 +1,9 @@
 import { Channels, Debugging, Gui, GuiFactory } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Class, DomEvent, Insert, SugarElement } from '@ephox/sugar';
+
 import * as ColourPicker from 'ephox/acid/gui/ColourPicker';
+
 import { strings } from '../../../../i18n/en';
 
 const gui = Gui.create();
@@ -24,9 +26,7 @@ const fakeTranslate = (key: string): string =>
     return key;
   });
 
-const fakeGetClass = (key: string): string => key;
-
-const colourPickerFactory = ColourPicker.makeFactory(fakeTranslate, fakeGetClass);
+const colourPickerFactory = ColourPicker.makeFactory(fakeTranslate, Fun.identity);
 
 const colourPicker = GuiFactory.build(colourPickerFactory.sketch({
   dom: {

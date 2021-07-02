@@ -1,5 +1,6 @@
 import { assert, Assert, UnitTest } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
+
 import { createFile } from 'ephox/agar/api/Files';
 import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
 import { getData } from 'ephox/agar/datatransfer/DataTransferItem';

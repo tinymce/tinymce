@@ -1,4 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
+
 import * as Obj from 'ephox/katamari/api/Obj';
 import { assertNone, assertSome } from 'ephox/katamari/test/AssertOptional';
 

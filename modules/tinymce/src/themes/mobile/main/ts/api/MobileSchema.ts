@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
 const unbindNoop = Fun.constant({ unbind: Fun.noop });
 
-export default ValueSchema.objOf([
-  FieldSchema.strictObjOf('editor', [
+export default StructureSchema.objOf([
+  FieldSchema.requiredObjOf('editor', [
     // Maybe have frame as a method, but I doubt it ... I think we pretty much need a frame
-    FieldSchema.strict('getFrame'),
+    FieldSchema.required('getFrame'),
     FieldSchema.option('getBody'),
     FieldSchema.option('getDoc'),
     FieldSchema.option('getWin'),
@@ -28,7 +28,7 @@ export default ValueSchema.objOf([
     FieldSchema.option('onNodeChanged'),
     FieldSchema.option('getCursorBox'),
 
-    FieldSchema.strict('onDomChanged'),
+    FieldSchema.required('onDomChanged'),
 
     FieldSchema.defaulted('onTouchContent', Fun.noop),
     FieldSchema.defaulted('onTapContent', Fun.noop),
@@ -41,16 +41,16 @@ export default ValueSchema.objOf([
     FieldSchema.defaulted('onToolbarScrollStart', Fun.identity)
   ]),
 
-  FieldSchema.strict('socket'),
-  FieldSchema.strict('toolstrip'),
-  FieldSchema.strict('dropup'),
-  FieldSchema.strict('toolbar'),
-  FieldSchema.strict('container'),
-  FieldSchema.strict('alloy'),
-  FieldSchema.state('win', (spec) => {
+  FieldSchema.required('socket'),
+  FieldSchema.required('toolstrip'),
+  FieldSchema.required('dropup'),
+  FieldSchema.required('toolbar'),
+  FieldSchema.required('container'),
+  FieldSchema.required('alloy'),
+  FieldSchema.customField('win', (spec) => {
     return Traverse.owner(spec.socket).dom.defaultView;
   }),
-  FieldSchema.state('body', (spec) => {
+  FieldSchema.customField('body', (spec) => {
     return SugarElement.fromDom(
       spec.socket.dom.ownerDocument.body
     );

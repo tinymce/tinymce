@@ -6,6 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import * as ClientRect from '../geom/ClientRect';
 import * as NodeType from './NodeType';
 
@@ -14,11 +15,10 @@ export interface NodeClientRect extends ClientRect.ClientRect {
 }
 
 const getNodeClientRects = (node: Node): NodeClientRect[] => {
-  const toArrayWithNode = (clientRects: DOMRectList) => {
+  const toArrayWithNode = (clientRects: DOMRectList): NodeClientRect[] => {
     return Arr.map(clientRects, (rect) => {
       const clientRect = ClientRect.clone(rect) as NodeClientRect;
       clientRect.node = node;
-
       return clientRect;
     });
   };

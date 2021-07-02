@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Obj, Optional, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -46,8 +46,8 @@ const text = (textContent: string): PremadeSpec => {
 // Rename.
 export interface ExternalElement { uid?: string; element: SugarElement }
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec: { uid: Optional<string>; element: SugarElement } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
-    FieldSchema.strict('element'),
+  const extSpec: { uid: Optional<string>; element: SugarElement } = StructureSchema.asRawOrDie('external.component', StructureSchema.objOfOnly([
+    FieldSchema.required('element'),
     FieldSchema.option('uid')
   ]), spec);
 
@@ -94,14 +94,14 @@ const isSimpleOrSketchSpec = (spec: AlloySpec): spec is SimpleOrSketchSpec =>
   Obj.has(spec as SimpleOrSketchSpec, 'uid');
 
 // INVESTIGATE: A better way to provide 'meta-specs'
-const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).fold(() => {
+const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).getOrThunk(() => {
   // EFFICIENCY: Consider not merging here, and passing uid through separately
   const userSpecWithUid = isSimpleOrSketchSpec(spec) ? spec : {
     uid: uids(''),
     ...spec
   } as SimpleOrSketchSpec;
   return buildFromSpec(userSpecWithUid).getOrDie();
-}, (prebuilt) => prebuilt);
+});
 
 const premade = GuiTypes.premade;
 

@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 import * as Css from '../properties/Css';
 import { Toggler } from '../properties/Toggler';

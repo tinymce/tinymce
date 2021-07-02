@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import { Toolbar } from '../../api/ui/Toolbar';
@@ -9,11 +9,11 @@ import { SplitFloatingToolbarDetail } from '../types/SplitFloatingToolbarTypes';
 import { ToolbarSpec } from '../types/ToolbarTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
+const schema = Fun.constant([
   Fields.markers([ 'overflowToggledClass' ]),
   FieldSchema.optionFunction('getOverflowBounds'),
-  FieldSchema.strict('lazySink'),
-  FieldSchema.state('overflowGroups', () => Cell([ ]))
+  FieldSchema.required('lazySink'),
+  FieldSchema.customField('overflowGroups', () => Cell([ ]))
 ].concat(
   SplitToolbarBase.schema()
 ));

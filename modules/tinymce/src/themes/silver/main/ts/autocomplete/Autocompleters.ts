@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { InlineContent } from '@ephox/bridge';
-import { Arr, Obj, Unique } from '@ephox/katamari';
+import { Arr, Fun, Obj, Unique } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 export interface AutocompleterDatabase {
@@ -20,9 +21,9 @@ const register = (editor: Editor): AutocompleterDatabase => {
   const popups = editor.ui.registry.getAll().popups;
   const dataset = Obj.map(popups, (popup) => InlineContent.createAutocompleter(popup).fold(
     (err) => {
-      throw new Error(ValueSchema.formatError(err));
+      throw new Error(StructureSchema.formatError(err));
     },
-    (x) => x
+    Fun.identity
   ));
 
   const triggerChars = Unique.stringArray(

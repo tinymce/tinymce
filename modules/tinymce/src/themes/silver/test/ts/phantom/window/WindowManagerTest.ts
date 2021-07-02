@@ -7,6 +7,7 @@ import { assert } from 'chai';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+
 import * as TestExtras from '../../module/TestExtras';
 
 describe('phantom.tinymce.themes.silver.window.WindowManagerTest', () => {
@@ -90,7 +91,7 @@ describe('phantom.tinymce.themes.silver.window.WindowManagerTest', () => {
   }, (err) => {
     const message = err.message.split('\n');
     assert.equal('Failed path: (dialog > body > branch: panel)', message[1], 'This should throw a configuration error: showing the exact failure');
-    assert.equal('Could not find valid *strict* value for "items" in {', message[2], 'This should throw a configuration error: showing the exact failure');
+    assert.equal('Could not find valid *required* value for "items" in {', message[2], 'This should throw a configuration error: showing the exact failure');
   }));
 
   it('The smallest config to get draggable dialog working, it should have this DOM structure', () => pTest({

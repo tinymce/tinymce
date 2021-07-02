@@ -6,7 +6,9 @@
  */
 
 import { Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { flattenListSelection, indentListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
 import { updateList } from '../actions/Update';

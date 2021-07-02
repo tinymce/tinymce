@@ -1,5 +1,6 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import * as MergingOperations from '../operate/MergingOperations';

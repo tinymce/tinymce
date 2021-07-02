@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Remove, SugarElement } from '@ephox/sugar';
+
 import * as TableGridSize from 'ephox/snooker/api/TableGridSize';
 
 UnitTest.test('Table grid size test', () => {

@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 

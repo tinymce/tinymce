@@ -6,8 +6,10 @@
  */
 
 import { Arr, Cell, Optional, Throttler } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import { insertEmoticon } from '../core/Actions';
 import { ALL_CATEGORY, EmojiDatabase } from '../core/EmojiDatabase';
 import { emojisFrom } from '../core/Lookup';

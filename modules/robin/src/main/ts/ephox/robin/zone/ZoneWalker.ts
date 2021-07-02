@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
 import { Gather, Traverse } from '@ephox/phoenix';
+
 import { ZonePosition } from '../api/general/ZonePosition';
 import { ZoneViewports } from '../api/general/ZoneViewports';
 import { WordDecisionItem } from '../words/WordDecision';

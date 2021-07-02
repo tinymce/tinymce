@@ -1,4 +1,5 @@
 import { Fun, Optional } from '@ephox/katamari';
+
 import * as Attribution from '../mutant/Attribution';
 import * as Comparator from '../mutant/Comparator';
 import * as Creator from '../mutant/Creator';

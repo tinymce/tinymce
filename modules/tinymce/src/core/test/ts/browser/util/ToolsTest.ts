@@ -12,7 +12,9 @@ describe('browser.tinymce.core.util.ToolsTest', () => {
 
   context('create', () => {
     it('TINY-7358: Multiple calls to create should create different objects', () => {
+      // eslint-disable-next-line @tinymce/prefer-fun
       Tools.create('tinymce.temp.class1', { init: () => 'obj1' });
+      // eslint-disable-next-line @tinymce/prefer-fun
       Tools.create('tinymce.temp.class2', { init: () => 'obj2' });
 
       const instance1 = new Global.tinymce.temp.class1();

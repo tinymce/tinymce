@@ -9,7 +9,9 @@ import { Selections } from '@ephox/darwin';
 import { Obj, Optional } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { TableActions } from '../actions/TableActions';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';

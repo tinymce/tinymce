@@ -6,6 +6,7 @@
  */
 
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import { ImageDialogInfo } from './DialogTypes';
 
 const makeTab = (_info: ImageDialogInfo) => {

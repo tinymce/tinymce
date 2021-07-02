@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
+
 import * as Contracts from 'ephox/katamari/api/Contracts';
 import * as Fun from 'ephox/katamari/api/Fun';
 

@@ -6,8 +6,10 @@
  */
 
 import { AlloyComponent, InlineView } from '@ephox/alloy';
+
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
 import { UiFactoryBackstage } from '../../../../backstage/Backstage';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';

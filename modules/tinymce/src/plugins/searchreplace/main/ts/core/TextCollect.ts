@@ -8,8 +8,10 @@
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { SandNode } from '@ephox/sand';
 import { SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
+
 import { TextSection } from './Types';
 
 interface WalkerCallbacks {

@@ -11,9 +11,11 @@ import {
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
+
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
+
 import * as ReadOnly from '../../ReadOnly';
 import { formChangeEvent } from '../general/FormEvents';
 

@@ -1,5 +1,6 @@
 import { Arr, Obj } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
+
 import { createCopyEvent, createCutEvent, createPasteEvent } from '../clipboard/ClipboardEvents';
 import { createDataTransfer } from '../datatransfer/DataTransfer';
 import { getWindowFromElement } from '../dragndrop/DndEvents';

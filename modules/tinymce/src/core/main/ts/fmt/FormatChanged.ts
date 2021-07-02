@@ -6,6 +6,7 @@
  */
 
 import { Arr, Cell, Obj } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as FormatUtils from './FormatUtils';

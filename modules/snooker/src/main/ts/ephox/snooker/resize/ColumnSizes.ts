@@ -1,5 +1,6 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Css, SugarElement, SugarNode, Width } from '@ephox/sugar';
+
 import { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Blocks from '../lookup/Blocks';
@@ -11,10 +12,8 @@ import * as Sizes from './Sizes';
 const isCol = SugarNode.isTag('col');
 
 const getRaw = (cell: SugarElement, property: string, getter: (e: SugarElement) => number): string => {
-  return Css.getRaw(cell, property).fold(() => {
+  return Css.getRaw(cell, property).getOrThunk(() => {
     return getter(cell) + 'px';
-  }, (raw) => {
-    return raw;
   });
 };
 

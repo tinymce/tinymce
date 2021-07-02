@@ -140,9 +140,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       Representing.getValue(sandbox).each((state: InlineViewState) => {
         switch (state.mode) {
           case 'menu':
-            Sandboxing.getState(sandbox).each((tmenu) => {
-              TieredMenu.repositionMenus(tmenu);
-            });
+            Sandboxing.getState(sandbox).each(TieredMenu.repositionMenus);
             break;
           case 'position':
             const sink = detail.lazySink(sandbox).getOrDie();
@@ -215,7 +213,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
 const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineViewDetail, InlineViewApis>({
   name: 'InlineView',
   configFields: [
-    FieldSchema.strict('lazySink'),
+    FieldSchema.required('lazySink'),
     Fields.onHandler('onShow'),
     Fields.onHandler('onHide'),
     FieldSchema.optionFunction('onEscape'),

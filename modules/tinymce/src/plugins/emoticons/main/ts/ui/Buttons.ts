@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import { EmojiDatabase } from '../core/EmojiDatabase';
 import * as Dialog from './Dialog';
 

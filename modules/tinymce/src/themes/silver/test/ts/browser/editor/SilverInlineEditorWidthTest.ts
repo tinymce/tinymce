@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
 import { McEditor, TinyDom } from '@ephox/mcagar';
 import { Css, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -73,7 +73,7 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () 
 
     structureTest(editor, uiContainer, expectedWidth);
     assertWidth(uiContainer, expectedWidth, expectedWidth - 100);
-    editor.setContent(Arr.range(100, () => '<p></p>').join(''));
+    editor.setContent(Arr.range(100, Fun.constant('<p></p>')).join(''));
     Scroll.to(0, 500);
     await UiFinder.pWaitForVisible('Wait to be docked', SugarBody.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header');
     assertWidth(uiContainer, expectedWidth, expectedWidth - 100);

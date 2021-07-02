@@ -7,6 +7,7 @@
 
 import { TapEvent } from '@ephox/alloy';
 import { DomEvent, EventUnbinder } from '@ephox/sugar';
+
 import { PlatformEditor } from '../ios/core/PlatformEditor';
 
 // TODO: TapEvent needs to be exposed in alloy's API somehow

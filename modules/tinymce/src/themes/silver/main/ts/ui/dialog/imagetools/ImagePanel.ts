@@ -8,8 +8,10 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Memento, Replacing } from '@ephox/alloy';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
+
 import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
+
 import { CropRect } from './CropRect';
 
 const loadImage = (image): Promise<SugarElement> => new Promise((resolve) => {

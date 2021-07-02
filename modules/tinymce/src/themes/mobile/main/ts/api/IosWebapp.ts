@@ -6,9 +6,10 @@
  */
 
 import { GuiFactory } from '@ephox/alloy';
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
+
 import * as IosMode from '../ios/core/IosMode';
 import * as TapToEditMask from '../touch/view/TapToEditMask';
 import MobileSchema from './MobileSchema';
@@ -22,7 +23,7 @@ export interface MobileWebApp {
 }
 
 const produce = (raw: {any}): MobileWebApp => {
-  const mobile = ValueSchema.asRawOrDie(
+  const mobile = StructureSchema.asRawOrDie(
     'Getting IosWebapp schema',
     MobileSchema,
     raw

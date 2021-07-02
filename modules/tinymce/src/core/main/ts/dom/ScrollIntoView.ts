@@ -9,6 +9,7 @@ import { Fun } from '@ephox/katamari';
 import {
   Css, Height, Insert, Remove, Scroll, SugarElement, SugarLocation, SugarNode, SugarPosition, SugarText, Traverse, WindowVisualViewport
 } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import { ScrollIntoViewEvent } from '../api/EventTypes';
 import * as OuterPosition from '../frames/OuterPosition';
@@ -181,14 +182,14 @@ const elementIntoWindow = (editor: Editor, element: HTMLElement, alignToTop?: bo
 const rangeIntoFrame = (editor: Editor, rng: Range, alignToTop?: boolean) => withMarker(editor, intoFrame, rng, alignToTop);
 const elementIntoFrame = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => withElement(editor, element, intoFrame, alignToTop);
 
-const scrollElementIntoView = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => {
+const scrollElementIntoView = (editor: Editor, element: HTMLElement, alignToTop?: boolean): void => {
   const scroller = editor.inline ? elementIntoWindow : elementIntoFrame;
   scroller(editor, element, alignToTop);
 };
 
 // This method is made to deal with the user pressing enter, it is not useful
 // if we want for example scroll in content after a paste event.
-const scrollRangeIntoView = (editor: Editor, rng: Range, alignToTop?: boolean) => {
+const scrollRangeIntoView = (editor: Editor, rng: Range, alignToTop?: boolean): void => {
   const scroller = editor.inline ? rangeIntoWindow : rangeIntoFrame;
   scroller(editor, rng, alignToTop);
 };

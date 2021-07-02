@@ -11,6 +11,7 @@ import Env from 'tinymce/core/api/Env';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.EditorTest', () => {

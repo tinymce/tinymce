@@ -5,6 +5,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 describe('browser.tinymce.plugins.table.TableDialogTest', () => {
@@ -279,7 +280,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     '<table class="dog" style="width: 500px; height: 500px; float: left; ' +
     'background-color: #0000ff; border: 1px dotted #ff0000; ' +
     'border-spacing: 5px; border-collapse: collapse;" border="1">' +
-    '<caption>&nbsp;</caption>' +
+    '<caption>Caption</caption>' +
     '<tbody>' +
     '<tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr>' +
     '</tbody>' +

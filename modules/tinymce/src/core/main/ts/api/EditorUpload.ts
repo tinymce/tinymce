@@ -6,6 +6,7 @@
  */
 
 import { Arr, Cell } from '@ephox/katamari';
+
 import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';

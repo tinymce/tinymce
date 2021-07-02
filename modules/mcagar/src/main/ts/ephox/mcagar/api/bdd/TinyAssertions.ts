@@ -1,6 +1,7 @@
 import { Assertions, Cursors, StructAssert } from '@ephox/agar';
 import { Optional } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
+
 import { Editor, GetContentArgs } from '../../alien/EditorTypes';
 import { Presence } from '../pipeline/TinyApis';
 import { TinyDom } from '../TinyDom';

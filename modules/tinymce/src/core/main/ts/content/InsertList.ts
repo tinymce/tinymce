@@ -6,6 +6,7 @@
  */
 
 import { Arr, Unicode } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import AstNode from '../api/html/Node';
 import Schema from '../api/html/Schema';

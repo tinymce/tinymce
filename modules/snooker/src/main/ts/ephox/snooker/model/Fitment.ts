@@ -1,4 +1,5 @@
 import { Arr, Fun, Obj, Result } from '@ephox/katamari';
+
 import { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';

@@ -7,7 +7,9 @@
 
 import { AlloyTriggers, Button, Container, SketchSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
+
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
+
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 

@@ -1,4 +1,5 @@
 import { Obj } from '@ephox/katamari';
+
 import { Bindable, Event } from './Event';
 
 interface Events<T extends Record<string, Event>> {

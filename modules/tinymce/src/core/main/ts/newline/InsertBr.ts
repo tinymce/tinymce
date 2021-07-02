@@ -7,6 +7,7 @@
 
 import { Fun } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
+
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';

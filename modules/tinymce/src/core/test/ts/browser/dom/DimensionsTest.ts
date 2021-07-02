@@ -4,6 +4,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import * as Dimensions from 'tinymce/core/dom/Dimensions';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.dom.DimensionsTest', () => {

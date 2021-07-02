@@ -8,7 +8,9 @@
 import { Arr, Optional, Strings } from '@ephox/katamari';
 import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableGridSize, TableResize } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import * as Util from '../core/Util';

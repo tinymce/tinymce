@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Fun, Optional, Unicode } from '@ephox/katamari';
+
 import * as Spot from '../api/data/Spot';
 import { SpanWrapRange, SpotPoint } from '../api/data/Types';
 import * as Injection from '../api/general/Injection';

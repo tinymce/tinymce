@@ -2,6 +2,7 @@ import { Chain } from '@ephox/agar';
 import { Global, Id, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Selectors, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import Promise from '@ephox/wrap-promise-polyfill';
+
 import 'tinymce';
 import { Editor as EditorType } from '../alien/EditorTypes';
 import { setupTinymceBaseUrl } from '../loader/Urls';

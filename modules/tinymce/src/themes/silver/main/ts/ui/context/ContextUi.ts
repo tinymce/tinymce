@@ -10,6 +10,7 @@ import {
 } from '@ephox/alloy';
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
 import { Class, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
+
 import Delay from 'tinymce/core/api/util/Delay';
 
 const forwardSlideEvent = Id.generate('forward-slide');

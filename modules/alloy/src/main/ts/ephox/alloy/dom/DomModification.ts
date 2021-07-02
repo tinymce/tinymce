@@ -1,3 +1,5 @@
+import { Fun, Type } from '@ephox/katamari';
+
 import { DomDefinitionDetail } from './DomDefinition';
 
 export interface DomModification {
@@ -12,9 +14,9 @@ export interface DomModificationSpec extends Partial<DomModification> {
 
 // Maybe we'll need to allow add/remove
 const nu = (s: DomModificationSpec): DomModification => ({
-  classes: s.classes !== undefined ? s.classes : [ ],
-  attributes: s.attributes !== undefined ? s.attributes : { },
-  styles: s.styles !== undefined ? s.styles : { }
+  classes: Type.isUndefined(s.classes) ? [ ] : s.classes,
+  attributes: Type.isUndefined(s.attributes) ? { } : s.attributes,
+  styles: Type.isUndefined(s.styles) ? { } : s.styles
 });
 
 const modToStr = (mod: DomModification): string => {
@@ -22,7 +24,7 @@ const modToStr = (mod: DomModification): string => {
   return JSON.stringify(raw, null, 2);
 };
 
-const modToRaw = (mod: DomModification): any => mod;
+const modToRaw: (mod: DomModification) => any = Fun.identity;
 
 const merge = (defnA: DomDefinitionDetail, mod: DomModification): DomDefinitionDetail => ({
   ...defnA,

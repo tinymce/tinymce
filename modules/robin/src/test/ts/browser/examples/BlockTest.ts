@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+
 import * as DomLook from 'ephox/robin/api/dom/DomLook';
 import * as DomParent from 'ephox/robin/api/dom/DomParent';
 import * as DomStructure from 'ephox/robin/api/dom/DomStructure';

@@ -6,6 +6,7 @@
  */
 
 import { Unicode } from '@ephox/katamari';
+
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';

@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import { createFile } from 'ephox/agar/api/Files';
 import * as Logger from 'ephox/agar/api/Logger';
 import { Pipeline } from 'ephox/agar/api/Pipeline';

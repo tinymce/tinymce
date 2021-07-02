@@ -6,8 +6,10 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import { getRowClassList } from '../api/Settings';
 import * as Helpers from './Helpers';
 

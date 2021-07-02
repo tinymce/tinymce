@@ -6,9 +6,9 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as InsertButtons from './insert/Buttons';
 import * as InsertToolbars from './insert/Toolbars';
-
 import * as SelectionToolbars from './selection/Toolbars';
 
 export default () => {

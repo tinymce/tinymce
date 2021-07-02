@@ -1,4 +1,5 @@
 import { SandHTMLElement } from '@ephox/sand';
+
 import * as NodeTypes from './NodeTypes';
 import { SugarElement } from './SugarElement';
 

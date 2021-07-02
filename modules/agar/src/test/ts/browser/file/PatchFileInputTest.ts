@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell, Optional } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+
 import { Chain } from 'ephox/agar/api/Chain';
 import { cRunOnPatchedFileInput, sRunOnPatchedFileInput } from 'ephox/agar/api/FileInput';
 import { createFile } from 'ephox/agar/api/Files';

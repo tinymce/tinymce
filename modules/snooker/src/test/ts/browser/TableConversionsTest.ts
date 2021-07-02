@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional, OptionalInstances } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
+
 import * as TableConversions from 'ephox/snooker/api/TableConversions';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { addStyles, assertApproxCellSizes, readWidth } from 'ephox/snooker/test/SizeUtils';

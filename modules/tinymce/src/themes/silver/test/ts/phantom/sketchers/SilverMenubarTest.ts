@@ -6,6 +6,7 @@ import { SelectorFind, Selectors, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import SilverMenubar from 'tinymce/themes/silver/ui/menus/menubar/SilverMenubar';
+
 import * as TestExtras from '../../module/TestExtras';
 
 describe('phantom.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {

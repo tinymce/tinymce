@@ -7,6 +7,7 @@
 
 import { Optional } from '@ephox/katamari';
 import { Awareness, CursorPosition, Insert, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const autocompleteSelector = '[data-mce-autocompleter]';

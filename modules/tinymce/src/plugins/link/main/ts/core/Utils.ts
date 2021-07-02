@@ -6,9 +6,11 @@
  */
 
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';

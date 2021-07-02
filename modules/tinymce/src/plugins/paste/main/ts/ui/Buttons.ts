@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import { Clipboard } from '../api/Clipboard';
 
 const makeSetupHandler = (editor: Editor, clipboard: Clipboard) => (api) => {

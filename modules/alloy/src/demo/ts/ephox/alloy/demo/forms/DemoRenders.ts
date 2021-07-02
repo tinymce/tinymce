@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import { AlloySpec, RawDomSchema, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
@@ -53,46 +53,46 @@ export interface DemoMenu {
   [key: string]: any;
 }
 
-const demoItem = ValueSchema.objOf([
-  FieldSchema.strictObjOf('data', [
-    FieldSchema.strict('value'),
-    FieldSchema.strictObjOf('meta', [
-      FieldSchema.strict('text'),
+const demoItem = StructureSchema.objOf([
+  FieldSchema.requiredObjOf('data', [
+    FieldSchema.required('value'),
+    FieldSchema.requiredObjOf('meta', [
+      FieldSchema.required('text'),
       FieldSchema.defaulted('html', ''),
       FieldSchema.defaulted('meta-demo-content', { })
     ])
   ]),
-  FieldSchema.strict('type'),
+  FieldSchema.required('type'),
   FieldSchema.defaulted('itemBehaviours', { })
 ]);
 
-const demoWidgetItem = ValueSchema.objOf([
-  FieldSchema.strictObjOf('data', [
-    FieldSchema.strict('value'),
-    FieldSchema.strictObjOf('meta', [
-      FieldSchema.strict('text')
+const demoWidgetItem = StructureSchema.objOf([
+  FieldSchema.requiredObjOf('data', [
+    FieldSchema.required('value'),
+    FieldSchema.requiredObjOf('meta', [
+      FieldSchema.required('text')
     ])
   ]),
-  FieldSchema.strict('type'),
+  FieldSchema.required('type'),
   FieldSchema.defaulted('autofocus', false),
-  FieldSchema.strict('widget')
+  FieldSchema.required('widget')
 ]);
 
-const demoMenu = ValueSchema.objOf([
-  FieldSchema.strict('value'),
-  FieldSchema.strict('items')
+const demoMenu = StructureSchema.objOf([
+  FieldSchema.required('value'),
+  FieldSchema.required('items')
 ]);
 
-const demoGridMenu = ValueSchema.objOf([
-  FieldSchema.strict('columns'),
-  FieldSchema.strict('rows'),
-  FieldSchema.strict('items')
+const demoGridMenu = StructureSchema.objOf([
+  FieldSchema.required('columns'),
+  FieldSchema.required('rows'),
+  FieldSchema.required('items')
 ]);
 
-const demoChoice = ValueSchema.objOf([ ]);
+const demoChoice = StructureSchema.objOf([ ]);
 
 const choice = (choiceSpec: { value: string; text: string }): { dom: RawDomSchema; value: string } => {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choiceSpec);
+  const spec = StructureSchema.asRawOrDie('DemoRenders.choice', demoChoice, choiceSpec);
   return {
     dom: DomFactory.fromHtml(
       '<span class="ephox-pastry-independent-button" title="' + spec.text + '" style="display: flex;"></span>'
@@ -132,7 +132,7 @@ const item = (itemSpec: DemoItems): ItemSpec => {
   } else if (itemSpec.type === 'separator') {
     return demoSeparatorRender(itemSpec);
   }
-  const spec = ValueSchema.asRawOrDie('DemoRenders.item', demoItem, itemSpec);
+  const spec = StructureSchema.asRawOrDie('DemoRenders.item', demoItem, itemSpec);
   const html = (() => {
     if (spec.data && spec.data.meta && spec.data.meta.html) {
       return spec.data.meta.html;
@@ -153,7 +153,7 @@ const item = (itemSpec: DemoItems): ItemSpec => {
 };
 
 const gridItem = (itemSpec: DemoItem): ItemSpec => {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.gridItem', demoItem, itemSpec);
+  const spec = StructureSchema.asRawOrDie('DemoRenders.gridItem', demoItem, itemSpec);
   const html = (() => {
     if (spec.data && spec.data.meta && spec.data.meta.text) {
       return spec.data.meta.text;
@@ -180,7 +180,7 @@ const gridItem = (itemSpec: DemoItem): ItemSpec => {
 };
 
 const widgetItem = (itemSpec: DemoWidgetItem): WidgetItemSpec => {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.widgetItem', demoWidgetItem, itemSpec);
+  const spec = StructureSchema.asRawOrDie('DemoRenders.widgetItem', demoWidgetItem, itemSpec);
   return {
     type: spec.type,
     data: spec.data,
@@ -196,7 +196,7 @@ const widgetItem = (itemSpec: DemoWidgetItem): WidgetItemSpec => {
 };
 
 const gridMenu = (menuSpec: DemoMenu & { columns: number; rows: number }): PartialMenuSpec => {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.gridMenu', demoGridMenu, menuSpec);
+  const spec = StructureSchema.asRawOrDie('DemoRenders.gridMenu', demoGridMenu, menuSpec);
   return {
     movement: {
       mode: 'grid',
@@ -220,7 +220,7 @@ const gridMenu = (menuSpec: DemoMenu & { columns: number; rows: number }): Parti
 };
 
 const menu = (menuSpec: DemoMenu): PartialMenuSpec => {
-  const spec = ValueSchema.asRawOrDie('DemoRenders.menu', demoMenu, menuSpec);
+  const spec = StructureSchema.asRawOrDie('DemoRenders.menu', demoMenu, menuSpec);
   return {
     dom: {
       tag: 'div',

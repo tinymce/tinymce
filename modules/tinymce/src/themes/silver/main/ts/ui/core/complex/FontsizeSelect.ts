@@ -7,10 +7,12 @@
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { createMenuItems, createSelectButton, FormatterFormatItem, PreviewSpec, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, FormatterFormatItem, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
@@ -79,7 +81,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     return matchOpt;
   };
 
-  const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(Optional.none as () => Optional<PreviewSpec>);
+  const getPreviewFor: FormatRegister.GetPreviewForType = Fun.constant(Optional.none);
 
   const onAction = (rawItem: FormatterFormatItem) => () => {
     editor.undoManager.transact(() => {
@@ -91,7 +93,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const updateSelectMenuText = (comp: AlloyComponent) => {
     const { matchOpt, size } = getMatchingValue();
 
-    const text = matchOpt.fold(() => size, (match) => match.title);
+    const text = matchOpt.fold(Fun.constant(size), (match) => match.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
@@ -101,6 +103,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   return {
     tooltip: 'Font sizes',
+    text: Optional.some('12pt'),
     icon: Optional.none(),
     isSelectedFor,
     getPreviewFor,

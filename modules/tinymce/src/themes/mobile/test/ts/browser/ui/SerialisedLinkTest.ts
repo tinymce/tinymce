@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Attachment, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Focus, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
@@ -140,17 +140,17 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
   const sClickLink = Mouse.sClickOn(realm.element, TestSelectors.link());
 
   const sTestScenario = (rawScenario) => {
-    const scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
-      FieldSchema.strict('label'),
+    const scenario = StructureSchema.asRawOrDie('Checking scenario', StructureSchema.objOf([
+      FieldSchema.required('label'),
       FieldSchema.defaulted('content', ''),
       FieldSchema.defaulted('node', SugarElement.fromText('')),
-      FieldSchema.strictObjOf('fields', [
+      FieldSchema.requiredObjOf('fields', [
         FieldSchema.option('url'),
         FieldSchema.option('text'),
         FieldSchema.option('title'),
         FieldSchema.option('target')
       ]),
-      FieldSchema.strict('expected'),
+      FieldSchema.required('expected'),
       FieldSchema.defaulted('beforeExecute', Step.pass),
       FieldSchema.defaulted('mutations', Fun.constant(Step.pass))
     ]), rawScenario);

@@ -9,6 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import Promise from 'tinymce/core/api/util/Promise';
 import XHR from 'tinymce/core/api/util/XHR';
+
 import * as Settings from '../api/Settings';
 import { ImageData } from './ImageData';
 

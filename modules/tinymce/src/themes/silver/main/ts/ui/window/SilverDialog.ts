@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Composing, ModalDialog } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderModalBody } from './SilverDialogBody';
@@ -68,7 +68,7 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
     };
 
     return {
-      getRoot: () => dialog,
+      getRoot: Fun.constant(dialog),
       getBody: () => ModalDialog.getBody(dialog),
       getFooter: () => ModalDialog.getFooter(dialog),
       getFormWrapper: getForm

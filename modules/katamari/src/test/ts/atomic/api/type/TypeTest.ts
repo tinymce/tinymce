@@ -4,6 +4,7 @@ import { Assert, context, describe, it } from '@ephox/bedrock-client';
 import { Pprint } from '@ephox/dispute';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
+
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';

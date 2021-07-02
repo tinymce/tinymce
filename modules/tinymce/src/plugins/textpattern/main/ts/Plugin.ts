@@ -6,7 +6,9 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Api from './api/Api';
 import * as Settings from './api/Settings';
 import * as Keyboard from './keyboard/Keyboard';

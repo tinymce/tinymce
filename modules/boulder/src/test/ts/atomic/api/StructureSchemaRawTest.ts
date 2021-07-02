@@ -2,42 +2,44 @@ import { Logger } from '@ephox/agar';
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
-import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
-import { Processor } from 'ephox/boulder/core/ValueProcessor';
+import * as StructureSchema from 'ephox/boulder/api/StructureSchema';
+import { StructureProcessor } from 'ephox/boulder/core/StructureProcessor';
+import * as ValueType from 'ephox/boulder/core/ValueType';
 
-UnitTest.test('ValueSchemaRawTest', () => {
-  const checkErr = (label: string, expectedPart: string, input: any, processor: Processor) => {
-    ValueSchema.asRaw(label, processor, input).fold((err) => {
-      const message = ValueSchema.formatError(err);
+UnitTest.test('StructureSchemaRawTest', () => {
+  const checkErr = (label: string, expectedPart: string, input: any, processor: StructureProcessor) => {
+    StructureSchema.asRaw(label, processor, input).fold((err) => {
+      const message = StructureSchema.formatError(err);
       Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, (val) => {
       assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
     });
   };
 
-  const check = (label: string, input: any, processor: Processor) => {
-    const actual = ValueSchema.asRawOrDie(label, processor, input);
+  const check = (label: string, input: any, processor: StructureProcessor) => {
+    const actual = StructureSchema.asRawOrDie(label, processor, input);
     Assert.eq(label, input, actual);
   };
 
-  const checkIs = (label: string, expected: any, input: any, processor: Processor) => {
-    const actual = ValueSchema.asRawOrDie(label, processor, input);
+  const checkIs = (label: string, expected: any, input: any, processor: StructureProcessor) => {
+    const actual = StructureSchema.asRawOrDie(label, processor, input);
     Assert.eq(label, expected, actual);
   };
 
-  check('test.1', 10, ValueSchema.anyValue());
+  check('test.1', 10, ValueType.anyValue());
 
-  check('test.2', [ 10, 20, 50 ], ValueSchema.arrOfVal());
+  check('test.2', [ 10, 20, 50 ], StructureSchema.arrOfVal());
 
   check('test.3', {
     a: 'a',
     b: 'b'
-  }, ValueSchema.objOf([
-    FieldSchema.strict('a'),
-    FieldSchema.strict('b')
+  }, StructureSchema.objOf([
+    FieldSchema.required('a'),
+    FieldSchema.required('b')
   ]));
 
   checkIs('test.3 (with extra)', {
@@ -47,9 +49,9 @@ UnitTest.test('ValueSchemaRawTest', () => {
     a: 'a',
     b: 'b',
     c: 'c'
-  }, ValueSchema.objOf([
-    FieldSchema.strict('a'),
-    FieldSchema.strict('b')
+  }, StructureSchema.objOf([
+    FieldSchema.required('a'),
+    FieldSchema.required('b')
   ]));
 
   checkErr(
@@ -60,9 +62,9 @@ UnitTest.test('ValueSchemaRawTest', () => {
       b: 'b',
       c: 'c'
     },
-    ValueSchema.objOfOnly([
-      FieldSchema.strict('a'),
-      FieldSchema.strict('b')
+    StructureSchema.objOfOnly([
+      FieldSchema.required('a'),
+      FieldSchema.required('b')
     ])
   );
 
@@ -72,7 +74,7 @@ UnitTest.test('ValueSchemaRawTest', () => {
     {
       aa: 'aa'
     },
-    ValueSchema.objOfOnly([
+    StructureSchema.objOfOnly([
 
     ])
   );
@@ -83,9 +85,9 @@ UnitTest.test('ValueSchemaRawTest', () => {
       a: 'a',
       b: 'b'
     },
-    ValueSchema.objOfOnly([
-      FieldSchema.strict('a'),
-      FieldSchema.strict('b')
+    StructureSchema.objOfOnly([
+      FieldSchema.required('a'),
+      FieldSchema.required('b')
     ])
   );
 
@@ -97,9 +99,9 @@ UnitTest.test('ValueSchemaRawTest', () => {
       b: 'b',
       c: 'c'
     },
-    ValueSchema.objOf([
-      FieldSchema.strict('a'),
-      FieldSchema.strict('b'),
+    StructureSchema.objOf([
+      FieldSchema.required('a'),
+      FieldSchema.required('b'),
       FieldSchema.forbid('c', 'Do not use c. Use b')
     ])
   );
@@ -109,23 +111,23 @@ UnitTest.test('ValueSchemaRawTest', () => {
       { url: 'hi', fresh: 'true' },
       { url: 'hi', fresh: 'true' }
     ]
-  }, ValueSchema.objOf([
-    FieldSchema.strictArrayOfObj('urls', [
-      FieldSchema.strict('url'),
+  }, StructureSchema.objOf([
+    FieldSchema.requiredArrayOfObj('urls', [
+      FieldSchema.required('url'),
       FieldSchema.defaulted('fresh', '10')
     ])
   ]));
 
-  check('strictArrayOf test',
+  check('requiredArrayOf test',
     { values: [ 'a', 'b' ] },
-    ValueSchema.objOf([ FieldSchema.strictArrayOf('values', ValueSchema.string) ])
+    StructureSchema.objOf([ FieldSchema.requiredArrayOf('values', ValueType.string) ])
   );
 
   checkErr(
-    'strictArrayOf should fail since types are not the same',
+    'requiredArrayOf should fail since types are not the same',
     'string but got: number',
     { values: [ 'a', 3 ] },
-    ValueSchema.objOf([ FieldSchema.strictArrayOf('values', ValueSchema.string) ])
+    StructureSchema.objOf([ FieldSchema.requiredArrayOf('values', ValueType.string) ])
   );
 
   checkErr('test.6 should fail because fields do not both start with f',
@@ -133,10 +135,10 @@ UnitTest.test('ValueSchemaRawTest', () => {
     {
       fieldA: { val: 'a' },
       cieldB: { val: 'b' }
-    }, ValueSchema.setOf((key) => {
+    }, StructureSchema.setOf((key) => {
       return key.indexOf('f') > -1 ? Result.value(key) : Result.error('start-with-f error');
-    }, ValueSchema.objOf([
-      FieldSchema.strict('val')
+    }, StructureSchema.objOf([
+      FieldSchema.required('val')
     ]))
   );
 
@@ -145,8 +147,8 @@ UnitTest.test('ValueSchemaRawTest', () => {
     {
       fieldA: { val2: 'a' },
       fieldB: { val2: 'b' }
-    }, ValueSchema.setOf(Result.value, ValueSchema.objOf([
-      FieldSchema.strict('val')
+    }, StructureSchema.setOf(Result.value, StructureSchema.objOf([
+      FieldSchema.required('val')
     ]))
   );
 
@@ -154,8 +156,8 @@ UnitTest.test('ValueSchemaRawTest', () => {
     {
       fieldA: { val: 'a' },
       fieldB: { val: 'b' }
-    }, ValueSchema.setOf(Result.value, ValueSchema.objOf([
-      FieldSchema.strict('val')
+    }, StructureSchema.setOf(Result.value, StructureSchema.objOf([
+      FieldSchema.required('val')
     ]))
   );
 
@@ -165,8 +167,8 @@ UnitTest.test('ValueSchemaRawTest', () => {
         merged: true,
         other: 'yes'
       }
-    }, ValueSchema.objOf([
-      FieldSchema.field('prop', 'prop', FieldPresence.mergeWith({ merged: true }), ValueSchema.anyValue())
+    }, StructureSchema.objOf([
+      FieldSchema.field('prop', 'prop', FieldPresence.mergeWith({ merged: true }), ValueType.anyValue())
     ])
   );
 
@@ -176,10 +178,10 @@ UnitTest.test('ValueSchemaRawTest', () => {
     },
     {
       surname: 'Jekyll'
-    }, ValueSchema.objOf([
+    }, StructureSchema.objOf([
       FieldSchema.field('name', 'name', FieldPresence.defaultedThunk((s) => {
         return 'Dr ' + s.surname;
-      }), ValueSchema.anyValue())
+      }), ValueType.anyValue())
     ])
   );
 
@@ -189,55 +191,55 @@ UnitTest.test('ValueSchemaRawTest', () => {
     },
     {
       name: 'Hyde'
-    }, ValueSchema.objOf([
+    }, StructureSchema.objOf([
       FieldSchema.field('name', 'name', FieldPresence.defaultedThunk((s) => {
         return 'Dr ' + s.surname;
-      }), ValueSchema.anyValue())
+      }), ValueType.anyValue())
     ])
   );
 
   Logger.sync('option, value not supplied', () => {
-    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+    const v = StructureSchema.asRawOrDie('test.option', StructureSchema.objOf([
       FieldSchema.option('alpha')
     ]), {});
     KAssert.eqNone('alpha should be none', v.alpha);
   });
 
   Logger.sync('option, value supplied', () => {
-    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
+    const v = StructureSchema.asRawOrDie('test.option', StructureSchema.objOf([
       FieldSchema.option('alpha')
     ]), { alpha: 'beta' });
     KAssert.eqSome('alpha should be some(beta)', 'beta', v.alpha);
   });
 
   Logger.sync('defaulted option(fallback), value supplied', () => {
-    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
-      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
+    const v = StructureSchema.asRawOrDie('test.option', StructureSchema.objOf([
+      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueType.anyValue())
     ]), { alpha: 'beta' });
     KAssert.eqSome('fallback.opt: alpha:beta should be some(beta)', 'beta', v.alpha);
   });
 
   Logger.sync('defaulted option(fallback), value supplied as true', () => {
-    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
-      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
+    const v = StructureSchema.asRawOrDie('test.option', StructureSchema.objOf([
+      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueType.anyValue())
     ]), { alpha: true });
     KAssert.eqSome('fallback.opt: alpha:true should be some(fallback)', 'fallback', v.alpha);
   });
 
   Logger.sync('defaulted option(fallback), value not supplied', () => {
-    const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
-      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
+    const v = StructureSchema.asRawOrDie('test.option', StructureSchema.objOf([
+      FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueType.anyValue())
     ]), { });
     KAssert.eqNone('fallback.opt: no alpha should be none', v.alpha);
   });
 
   Logger.sync('asDefaultedOptionThunk not supplied', () => {
-    const v = ValueSchema.asRawOrDie(
+    const v = StructureSchema.asRawOrDie(
       'test.option',
-      ValueSchema.objOf([
+      StructureSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk((s) => {
           return s.label + '.' + 'fallback';
-        }), ValueSchema.anyValue())
+        }), ValueType.anyValue())
       ]),
       { label: 'defaulted thunk' }
     );
@@ -245,12 +247,12 @@ UnitTest.test('ValueSchemaRawTest', () => {
   });
 
   Logger.sync('asDefaultedOptionThunk supplied as true', () => {
-    const v = ValueSchema.asRawOrDie(
+    const v = StructureSchema.asRawOrDie(
       'test.option',
-      ValueSchema.objOf([
+      StructureSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk((s) => {
           return s.label + '.' + 'fallback';
-        }), ValueSchema.anyValue())
+        }), ValueType.anyValue())
       ]),
       { label: 'defaulted thunk', alpha: true }
     );
@@ -258,12 +260,12 @@ UnitTest.test('ValueSchemaRawTest', () => {
   });
 
   Logger.sync('asDefaultedOptionThunk supplied', () => {
-    const v = ValueSchema.asRawOrDie(
+    const v = StructureSchema.asRawOrDie(
       'test.option',
-      ValueSchema.objOf([
+      StructureSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk((s) => {
           return s.label + '.' + 'fallback';
-        }), ValueSchema.anyValue())
+        }), ValueType.anyValue())
       ]),
       { label: 'defaulted thunk', alpha: 'alpha.value' }
     );
@@ -271,12 +273,12 @@ UnitTest.test('ValueSchemaRawTest', () => {
   });
 
   Logger.sync('mergeWithThunk({ extra: s.label }), value supplied', () => {
-    const v = ValueSchema.asRawOrDie(
+    const v = StructureSchema.asRawOrDie(
       'test.mergeWith',
-      ValueSchema.objOf([
+      StructureSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk((s) => {
           return Objects.wrap('extra', s.label);
-        }), ValueSchema.anyValue())
+        }), ValueType.anyValue())
       ]),
       {
         alpha: {
@@ -289,12 +291,12 @@ UnitTest.test('ValueSchemaRawTest', () => {
   });
 
   Logger.sync('mergeWithThunk({ extra: s.label }), no value supplied', () => {
-    const v = ValueSchema.asRawOrDie(
+    const v = StructureSchema.asRawOrDie(
       'test.mergeWith',
-      ValueSchema.objOf([
+      StructureSchema.objOf([
         FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk((s) => {
           return Objects.wrap('extra', s.label);
-        }), ValueSchema.anyValue())
+        }), ValueType.anyValue())
       ]),
       {
         label: 'dog'
@@ -307,14 +309,14 @@ UnitTest.test('ValueSchemaRawTest', () => {
     'Checking choose',
     () => {
 
-      const processor = ValueSchema.choose(
+      const processor = StructureSchema.choose(
         'type',
         {
           general: [
-            FieldSchema.strict('cards')
+            FieldSchema.required('cards')
           ],
           other: [
-            FieldSchema.strict('houses')
+            FieldSchema.required('houses')
           ]
         }
       );
@@ -331,7 +333,7 @@ UnitTest.test('ValueSchemaRawTest', () => {
 
       checkErr(
         'Checking choose(other) without everything',
-        'Could not find valid *strict* value for "houses"',
+        'Could not find valid *required* value for "houses"',
         {
           type: 'other',
           house: '10'
@@ -341,7 +343,7 @@ UnitTest.test('ValueSchemaRawTest', () => {
 
       checkErr(
         'Checking choose(other) without wrong schema',
-        'Could not find valid *strict* value for "houses"',
+        'Could not find valid *required* value for "houses"',
         {
           type: 'other',
           cards: '10'
@@ -361,7 +363,7 @@ UnitTest.test('ValueSchemaRawTest', () => {
 
       checkErr(
         'Checking choose(general) without everything',
-        'Could not find valid *strict* value for "cards"',
+        'Could not find valid *required* value for "cards"',
         {
           type: 'general',
           mech: '10'
@@ -371,7 +373,7 @@ UnitTest.test('ValueSchemaRawTest', () => {
 
       checkErr(
         'Checking choose(general) with wrong schema',
-        'Could not find valid *strict* value for "cards"',
+        'Could not find valid *required* value for "cards"',
         {
           type: 'general',
           houses: '10'
@@ -393,17 +395,17 @@ UnitTest.test('ValueSchemaRawTest', () => {
   );
 
   Logger.sync('Checking basic types', () => {
-    checkIs('Checking valid number', 42, 42, ValueSchema.number);
-    checkErr('Checking invalid number', 'Expected type: number but got: string', 'a', ValueSchema.number);
+    checkIs('Checking valid number', 42, 42, ValueType.number);
+    checkErr('Checking invalid number', 'Expected type: number but got: string', 'a', ValueType.number);
 
-    checkIs('Checking valid string', 'a', 'a', ValueSchema.string);
-    checkErr('Checking invalid string', 'Expected type: string but got: number', 42, ValueSchema.string);
+    checkIs('Checking valid string', 'a', 'a', ValueType.string);
+    checkErr('Checking invalid string', 'Expected type: string but got: number', 42, ValueType.string);
 
-    checkIs('Checking valid boolean', true, true, ValueSchema.boolean);
-    checkErr('Checking invalid boolean', 'Expected type: boolean but got: string', 'a', ValueSchema.boolean);
+    checkIs('Checking valid boolean', true, true, ValueType.boolean);
+    checkErr('Checking invalid boolean', 'Expected type: boolean but got: string', 'a', ValueType.boolean);
 
-    checkIs('Checking valid function', Fun.noop, Fun.noop, ValueSchema.func);
-    checkErr('Checking invalid function', 'Expected type: function but got: string', 'a', ValueSchema.func);
+    checkIs('Checking valid function', Fun.noop, Fun.noop, ValueType.func);
+    checkErr('Checking invalid function', 'Expected type: function but got: string', 'a', ValueType.func);
   });
 
   Logger.sync('asRaw with type', () => {
@@ -412,12 +414,12 @@ UnitTest.test('ValueSchemaRawTest', () => {
       str: string;
     }
 
-    const schema = ValueSchema.objOf([
-      FieldSchema.strictOf('num', ValueSchema.number),
-      FieldSchema.strictOf('str', ValueSchema.string)
+    const schema = StructureSchema.objOf([
+      FieldSchema.requiredOf('num', ValueType.number),
+      FieldSchema.requiredOf('str', ValueType.string)
     ]);
 
-    ValueSchema.asRaw<SomeType>('SomeType', schema, {
+    StructureSchema.asRaw<SomeType>('SomeType', schema, {
       num: 42,
       str: 'a'
     }).fold(
@@ -428,16 +430,16 @@ UnitTest.test('ValueSchemaRawTest', () => {
       }, actual)
     );
 
-    ValueSchema.asRaw<SomeType>('SomeType', schema, {}).fold(
+    StructureSchema.asRaw<SomeType>('SomeType', schema, {}).fold(
       (err) => Assert.eq('Should be two errors', 2, err.errors.length),
       () => assert.fail('Should not pass')
     );
   });
 
   Logger.sync('Checking oneOf', () => {
-    const processor = ValueSchema.oneOf([
-      ValueSchema.string,
-      ValueSchema.number
+    const processor = StructureSchema.oneOf([
+      ValueType.string,
+      ValueType.number
     ]);
 
     check('oneOf ',

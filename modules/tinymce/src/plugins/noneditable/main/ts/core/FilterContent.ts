@@ -8,6 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 
 const hasClass = (checkClassName: string) => {

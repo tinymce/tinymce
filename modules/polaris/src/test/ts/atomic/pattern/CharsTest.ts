@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+
 import * as Chars from 'ephox/polaris/pattern/Chars';
 
 UnitTest.test('CharsTest', () => {

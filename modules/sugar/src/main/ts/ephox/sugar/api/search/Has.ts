@@ -1,4 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
+
 import * as Compare from '../dom/Compare';
 import { SugarElement } from '../node/SugarElement';
 import * as PredicateExists from './PredicateExists';

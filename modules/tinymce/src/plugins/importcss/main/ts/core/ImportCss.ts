@@ -10,6 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 import { generate } from './SelectorModel';
 

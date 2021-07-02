@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { SugarElement, WindowVisualViewport } from '@ephox/sugar';
+
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
@@ -1909,7 +1910,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     dumpRng
   };
 
-  const attrHooks = setupAttrHooks(styles, settings, () => self);
+  const attrHooks = setupAttrHooks(styles, settings, Fun.constant(self));
 
   return self;
 };

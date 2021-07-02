@@ -6,18 +6,21 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
 import * as IndentOutdent from '../commands/IndentOutdent';
 import * as LineHeightCommands from '../commands/LineHeight';
 import * as InsertContent from '../content/InsertContent';
 import * as NodeType from '../dom/NodeType';
+import { FormatVars } from '../fmt/FormatTypes';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as InsertBr from '../newline/InsertBr';
 import * as InsertNewLine from '../newline/InsertNewLine';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import Editor from './Editor';
 import Env from './Env';
+import { ContentLanguage } from './SettingsTypes';
 import Tools from './util/Tools';
 
 /**
@@ -266,8 +269,8 @@ class EditorCommands {
     return this.editor.formatter.match(name);
   }
 
-  private toggleFormat(name: string, value?) {
-    this.editor.formatter.toggle(name, value ? { value } : undefined);
+  private toggleFormat(name: string, value?: FormatVars) {
+    this.editor.formatter.toggle(name, value);
     this.editor.nodeChanged();
   }
 
@@ -391,7 +394,7 @@ class EditorCommands {
 
       // Override commands to use the text formatter engine
       'ForeColor,HiliteColor': (command, ui, value) => {
-        self.toggleFormat(command, value);
+        self.toggleFormat(command, { value });
       },
 
       'FontName': (command, ui, value) => {
@@ -404,6 +407,10 @@ class EditorCommands {
 
       'LineHeight': (command, ui, value) => {
         LineHeightCommands.lineHeightAction(editor, value);
+      },
+
+      'Lang': (command, ui, lang: ContentLanguage) => {
+        self.toggleFormat(command, { value: lang.code, customValue: lang.customCode });
       },
 
       'RemoveFormat': (command) => {

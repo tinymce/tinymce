@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 
 export default [
-  FieldSchema.strict('alpha'),
-  FieldSchema.strict('omega')
+  FieldSchema.required('alpha'),
+  FieldSchema.required('omega')
 ];

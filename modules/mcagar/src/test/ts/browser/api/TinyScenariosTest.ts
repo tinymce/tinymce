@@ -2,6 +2,7 @@ import { Arbitraries, Assertions, PhantomSkipper, Pipeline, Step } from '@ephox/
 import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarNode } from '@ephox/sugar';
+
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import { TinyApis } from 'ephox/mcagar/api/pipeline/TinyApis';
 import * as TinyLoader from 'ephox/mcagar/api/pipeline/TinyLoader';

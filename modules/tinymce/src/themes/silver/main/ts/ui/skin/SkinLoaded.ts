@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Events from '../../api/Events';
 
 const fireSkinLoaded = (editor: Editor) => {

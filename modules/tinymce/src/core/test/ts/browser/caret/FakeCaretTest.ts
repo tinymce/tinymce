@@ -7,6 +7,7 @@ import $ from 'tinymce/core/api/dom/DomQuery';
 import { FakeCaret, isFakeCaretTarget } from 'tinymce/core/caret/FakeCaret';
 import { isFakeCaretTableBrowser } from 'tinymce/core/keyboard/TableNavigation';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
+
 import * as CaretAsserts from '../../module/test/CaretAsserts';
 import * as ViewBlock from '../../module/test/ViewBlock';
 
@@ -18,7 +19,7 @@ describe('browser.tinymce.core.caret.FakeCaretTest', () => {
 
   before(() => {
     const mockEditor: any = {
-      getParam: () => 'p'
+      getParam: Fun.constant('p')
     };
     fakeCaret = FakeCaret(mockEditor, getRoot(), isBlock, Fun.always);
   });

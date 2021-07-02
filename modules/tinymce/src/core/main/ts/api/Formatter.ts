@@ -6,6 +6,7 @@
  */
 
 import { Cell, Fun } from '@ephox/katamari';
+
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatChanged from '../fmt/FormatChanged';
 import { FormatRegistry } from '../fmt/FormatRegistry';
@@ -38,7 +39,7 @@ interface Formatter extends FormatRegistry {
   match: (name: string, vars?: FormatVars, node?: Node) => boolean;
   closest: (names) => string | null;
   matchAll: (names: string[], vars?: FormatVars) => string[];
-  matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => boolean;
+  matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => Format | undefined;
   canApply: (name: string) => boolean;
   formatChanged: (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean) => { unbind: () => void };
   getCssText: (format: string | Format) => string;

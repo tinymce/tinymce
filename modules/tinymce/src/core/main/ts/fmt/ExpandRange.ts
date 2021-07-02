@@ -6,6 +6,7 @@
  */
 
 import { Optional, Type } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import TextSeeker from '../api/dom/TextSeeker';
 import Editor from '../api/Editor';

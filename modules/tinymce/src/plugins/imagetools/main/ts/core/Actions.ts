@@ -8,9 +8,9 @@
 import { BlobConversions, ImageResult, ImageTransformations, Proxy, ResultConversions } from '@ephox/imagetools';
 import { Cell, Optional, Type } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
-
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -215,10 +215,10 @@ const selectedImageOperation = (editor: Editor, imageUploadTimerState: Cell<numb
 const rotate = (editor: Editor, imageUploadTimerState: Cell<number>, angle: number) => {
   return () => {
     const imgOpt = getSelectedImage(editor);
-    const flippedSize = imgOpt.fold(() => null, (img) => {
+    const flippedSize = imgOpt.map((img) => {
       const size = ImageSize.getImageSize(img.dom);
       return size ? { w: size.h, h: size.w } : null;
-    });
+    }).getOrNull();
 
     return selectedImageOperation(editor, imageUploadTimerState, (imageResult) => {
       return ImageTransformations.rotate(imageResult, angle);

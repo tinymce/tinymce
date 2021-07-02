@@ -6,6 +6,7 @@
  */
 
 import { Obj, Type } from '@ephox/katamari';
+
 import Tools from '../api/util/Tools';
 
 export interface StringPathBookmark {

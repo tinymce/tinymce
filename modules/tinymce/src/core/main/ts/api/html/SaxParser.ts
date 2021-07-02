@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
+
 import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
 import Entities from './Entities';
@@ -118,38 +119,60 @@ const isInvalidUri = (settings: SaxParserSettings, uri: string, tagName: string)
 };
 
 /**
- * Returns the index of the end tag for a specific start tag. This can be
- * used to skip all children of a parent element from being processed.
+ * Returns the index of the matching end tag for a specific start tag. This can
+ * be used to skip all children of a parent element from being processed.
  *
  * @private
- * @method findEndTagIndex
+ * @method findMatchingEndTagIndex
  * @param {tinymce.html.Schema} schema Schema instance to use to match short ended elements.
  * @param {String} html HTML string to find the end tag in.
  * @param {Number} startIndex Index to start searching at should be after the start tag.
  * @return {Number} Index of the end tag.
  */
-const findEndTagIndex = (schema: Schema, html: string, startIndex: number): number => {
-  let count = 1, index, matches;
-
+const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: number): number => {
+  // TODO: TINY-7658: this regex does not support CDATA
+  const startTagRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)/g;
+  const endTagRegExp = /(?:\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/g;
   const shortEndedElements = schema.getShortEndedElements();
-  const tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)(\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/g;
-  tokenRegExp.lastIndex = index = startIndex;
+  let count = 1, index = startIndex;
 
-  while ((matches = tokenRegExp.exec(html))) {
-    index = tokenRegExp.lastIndex;
+  // keep finding HTML tags (opening, closing, or neither like comments or <br>s)
+  while (count !== 0) {
+    startTagRegExp.lastIndex = index;
 
-    if (matches[1] === '/') { // End element
-      count--;
-    } else if (!matches[1]) { // Start element
-      if (matches[2] in shortEndedElements) {
-        continue;
+    // ideally, we only want to run through this the once - but sometimes the startTagRegExp will give us false positives (things that begin
+    // like tags, but don't end like them) and so we might need to bump up its lastIndex and try again.
+    while (true) {
+      const startMatch = startTagRegExp.exec(html);
+      if (startMatch === null) {
+        // doesn't matter what count is, we've run out of HTML tags
+        return index;
+      } else if (startMatch[1] === '!') {
+        // TODO: TINY-7658 add CDATA support here
+        if (Strings.startsWith(startMatch[2], '--')) {
+          index = findCommentEndIndex(html, false, startMatch.index + '!--'.length);
+        } else {
+          index = findCommentEndIndex(html, true, startMatch.index + 1);
+        }
+        break;
+      } else { // it's an element
+        endTagRegExp.lastIndex = startTagRegExp.lastIndex;
+        const endMatch = endTagRegExp.exec(html);
+        // TODO: once we don't need IE, make the regex sticky (will be faster than looking at .index afterwards and throwing out bad matches)
+        if (Type.isNull(endMatch) || endMatch.index !== startTagRegExp.lastIndex) {
+          // We can skip through to the end of startMatch only because there's no way a "<" could appear halfway through "<name-of-tag"
+          continue;
+        }
+
+        if (startMatch[1] === '/') { // end of element
+          count -= 1;
+        } else if (!Obj.has(shortEndedElements, startMatch[2])) { // start of element, specifically not a shortEndedElement like <br>
+          count += 1;
+        }
+
+        index = startTagRegExp.lastIndex + endMatch[0].length;
+        break;
       }
-
-      count++;
-    }
-
-    if (count === 0) {
-      break;
     }
   }
 
@@ -427,7 +450,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
         const bogusValue = checkBogusAttribute(attrRegExp, matches[MatchType.Attribute]);
         if (bogusValue !== null) {
           if (bogusValue === 'all') {
-            index = findEndTagIndex(schema, html, tokenRegExp.lastIndex);
+            index = findMatchingEndTagIndex(schema, html, tokenRegExp.lastIndex);
             tokenRegExp.lastIndex = index;
             continue;
           }
@@ -533,7 +556,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
             // Invalidate element if it's marked as bogus
             if ((attr = attrList.map['data-mce-bogus'])) {
               if (attr === 'all') {
-                index = findEndTagIndex(schema, html, tokenRegExp.lastIndex);
+                index = findMatchingEndTagIndex(schema, html, tokenRegExp.lastIndex);
                 tokenRegExp.lastIndex = index;
                 continue;
               }
@@ -593,7 +616,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
         if (isValidCdataSection) {
           cdata(value);
         } else {
-          index = processMalformedComment('', matches.index + 2 );
+          index = processMalformedComment('', matches.index + 2);
           tokenRegExp.lastIndex = index;
           continue;
         }
@@ -650,6 +673,6 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
   };
 };
 
-SaxParser.findEndTag = findEndTagIndex;
+SaxParser.findEndTag = findMatchingEndTagIndex;
 
 export default SaxParser;

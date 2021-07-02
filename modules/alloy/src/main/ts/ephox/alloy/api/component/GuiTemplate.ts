@@ -1,7 +1,7 @@
 import { Arr, Obj, Result } from '@ephox/katamari';
 import { SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
-import { getAttrs, getClasses } from './DomFactory';
 
+import { getAttrs, getClasses } from './DomFactory';
 import { SimpleOrSketchSpec } from './SpecTypes';
 
 // TODO: This looks to be incorrect and needs fixing, as { text: '' } isn't a valid spec

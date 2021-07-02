@@ -6,6 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const getToolbarItems = (editor: Editor): string => editor.getParam('imagetools_toolbar', 'rotateleft rotateright flipv fliph editimage imageoptions');

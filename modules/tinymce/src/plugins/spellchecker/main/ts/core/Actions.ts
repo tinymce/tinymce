@@ -6,10 +6,12 @@
  */
 
 import { Cell, Obj } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
 import XHR from 'tinymce/core/api/util/XHR';
+
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import { DomTextMatcher } from './DomTextMatcher';

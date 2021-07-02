@@ -6,6 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import * as Settings from '../../api/Settings';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem } from '../DialogTypes';

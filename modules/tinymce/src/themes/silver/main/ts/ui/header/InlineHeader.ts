@@ -6,11 +6,12 @@
  */
 
 import { AlloyComponent, Boxes, Channels, Docking, VerticalDir } from '@ephox/alloy';
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+
 import {
   getMaxWidthSetting, getToolbarLocation, getToolbarMode, isStickyToolbar, ToolbarLocation, ToolbarMode, useFixedContainer
 } from '../../api/Settings';
@@ -48,7 +49,7 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
 
   // Calculate the toolbar offset when using a split toolbar drawer
   const calcToolbarOffset = (toolbar: Optional<AlloyComponent>) => isSplitToolbar ?
-    toolbar.fold(() => 0, (tbar) =>
+    toolbar.fold(Fun.constant(0), (tbar) =>
       // If we have an overflow toolbar, we need to offset the positioning by the height of the overflow toolbar
       tbar.components().length > 1 ? Height.get(tbar.components()[1].element) : 0
     ) : 0;

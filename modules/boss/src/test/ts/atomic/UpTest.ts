@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import { Gene } from 'ephox/boss/api/Gene';
 import * as Locator from 'ephox/boss/mutant/Locator';
 import * as Tracks from 'ephox/boss/mutant/Tracks';

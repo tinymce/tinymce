@@ -19,7 +19,7 @@ const setValue = (component: AlloyComponent, repConfig: DatasetRepresentingConfi
 const getValue = (component: AlloyComponent, repConfig: DatasetRepresentingConfig, repState: DatasetRepresentingState) => {
   const store = repConfig.store;
   const key = store.getDataKey(component);
-  return repState.lookup(key).fold(() => store.getFallbackEntry(key), (data) => data);
+  return repState.lookup(key).getOrThunk(() => store.getFallbackEntry(key));
 };
 
 const onLoad = (component: AlloyComponent, repConfig: DatasetRepresentingConfig, repState: DatasetRepresentingState) => {
@@ -35,9 +35,9 @@ const onUnload = (component: AlloyComponent, repConfig: DatasetRepresentingConfi
 
 export default [
   FieldSchema.option('initialValue'),
-  FieldSchema.strict('getFallbackEntry'),
-  FieldSchema.strict('getDataKey'),
-  FieldSchema.strict('setValue'),
+  FieldSchema.required('getFallbackEntry'),
+  FieldSchema.required('getDataKey'),
+  FieldSchema.required('setValue'),
   Fields.output('manager', {
     setValue,
     getValue,

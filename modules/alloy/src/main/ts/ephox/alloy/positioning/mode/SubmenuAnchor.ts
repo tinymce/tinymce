@@ -35,7 +35,7 @@ const placement = (component: AlloyComponent, submenuInfo: SubmenuAnchor, origin
 };
 
 export default [
-  FieldSchema.strict('item'),
+  FieldSchema.required('item'),
   AnchorLayouts.schema(),
   FieldSchema.defaulted('overrides', { }),
   Fields.output('placement', placement)

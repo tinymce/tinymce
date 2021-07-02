@@ -1,4 +1,4 @@
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Fun, Optional, Optionals } from '@ephox/katamari';
 import { Css, SugarElement, SugarLocation } from '@ephox/sugar';
 
@@ -44,7 +44,7 @@ const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig,
 };
 
 const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, bounds: Optional<Bounds>): void => {
-  const anchorage: AnchorDetail<any> = ValueSchema.asRawOrDie('positioning anchor.info', AnchorSchema, anchor);
+  const anchorage: AnchorDetail<any> = StructureSchema.asRawOrDie('positioning anchor.info', AnchorSchema, anchor);
 
   // Preserve the focus as IE 11 loses it when setting visibility to hidden
   AriaFocus.preserve(() => {

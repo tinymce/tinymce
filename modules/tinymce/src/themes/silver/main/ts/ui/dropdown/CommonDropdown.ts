@@ -12,6 +12,7 @@ import {
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
+
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';

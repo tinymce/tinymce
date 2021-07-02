@@ -7,6 +7,7 @@
 
 import { Arr, Optional, Strings, Unicode } from '@ephox/katamari';
 import { Css, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import { isAfterBlock, isAtEndOfBlock, isAtStartOfBlock, isBeforeBlock } from '../caret/BlockBoundary';
 import { isAfterBr, isBeforeBr } from '../caret/CaretBr';

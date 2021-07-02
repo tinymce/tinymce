@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Logger } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, Objects, StructureSchema } from '@ephox/boulder';
 import { Cell, Fun, Optional, Result } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { SugarElement } from '@ephox/sugar';
@@ -38,14 +38,14 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
   };
 
   const checkGetNoLink = (rawScenario) => {
-    const schema = ValueSchema.objOfOnly([
-      FieldSchema.strict('label'),
+    const schema = StructureSchema.objOfOnly([
+      FieldSchema.required('label'),
       FieldSchema.defaulted('nodeText', ''),
       FieldSchema.defaulted('selection', ''),
-      FieldSchema.strict('expected')
+      FieldSchema.required('expected')
     ]);
 
-    const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
+    const scenario = StructureSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
     Logger.sync('getInfo ... ' + scenario.label, () => {
       editorState.start.set(SugarElement.fromText(scenario.nodeText).dom);
@@ -62,14 +62,14 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
   };
 
   const checkGetALink = (rawScenario) => {
-    const schema = ValueSchema.objOfOnly([
-      FieldSchema.strict('label'),
+    const schema = StructureSchema.objOfOnly([
+      FieldSchema.required('label'),
       FieldSchema.defaulted('linkHtml', ''),
       FieldSchema.defaulted('selection', ''),
-      FieldSchema.strict('expected')
+      FieldSchema.required('expected')
     ]);
 
-    const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
+    const scenario = StructureSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
     Logger.sync('getInfo ... ' + scenario.label + ', link: ' + scenario.linkHtml, () => {
       editorState.start.set(SugarElement.fromHtml(scenario.linkHtml).dom);
@@ -81,7 +81,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
   };
 
   const checkApply = (rawScenario) => {
-    const toResult = (info, param) => Optional.from(info[param]).fold(() => Result.error('Missing ' + param), Result.value);
+    const toResult = (info, param) => Optional.from(info[param]).fold(() => Result.error<any, string>('Missing ' + param), Result.value);
     const scenario = {
       label: Optional.from(rawScenario.label).getOrDie('Missing label'),
       info: Optional.from(rawScenario.info).map((info) => ({

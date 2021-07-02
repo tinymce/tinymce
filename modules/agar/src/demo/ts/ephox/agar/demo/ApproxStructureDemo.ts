@@ -1,4 +1,5 @@
 import { Class, Html, InsertAll, SugarElement } from '@ephox/sugar';
+
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Pipeline } from 'ephox/agar/api/Pipeline';

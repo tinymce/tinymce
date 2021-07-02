@@ -1,4 +1,5 @@
-import { Arr, Global, Obj } from '@ephox/katamari';
+import { Arr, Fun, Global, Obj } from '@ephox/katamari';
+
 import { Editor } from '../alien/EditorTypes';
 
 const isSilver = (): boolean => {
@@ -21,7 +22,7 @@ export interface ThemeSelectors {
 }
 
 const ModernThemeSelectors: ThemeSelectors = {
-  toolBarSelector: () => '.mce-toolbar-grp',
+  toolBarSelector: Fun.constant('.mce-toolbar-grp'),
   menuBarSelector: '.mce-menubar',
   dialogSelector: '.mce-window',
   dialogCancelSelector: 'div[role="button"]:contains(Cancel)',

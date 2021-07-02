@@ -8,13 +8,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added new `focus` property to the `Blocking` behaviour config.
+- Added a new `preserve` option to `LayoutInside` which will preserve the previous placement inside the component.
+- Added a new `flip` option to `LayoutInside` which will swap the previous placement to the opposite direction inside the component.
+- Added the `alwaysFit` layout property which allows for the layout to specify if it should always claim to fit, no matter what.
+
+### Improved
+- Improved the performance of constructing event handlers and components.
+- Improved the performance of split toolbars when there were no groups to render.
 
 ### Changed
 - Changed disconnected components to log a warning instead of throwing an error when triggering or broadcasting events.
+- Changed `LayoutInside` rendering behaviour, as it was inconsistent with other layouts. It will now mirror the `Layout` logic for each direction.
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
 
 ### Fixed
 - Fixed a number of positioning bugs when using an "inside" layout, especially any that renders at the bottom.
+- `LayoutInside` bubble classes were applied incorrectly, causing the bubble arrows to show on the opposite side.
 
 ## 8.2.0 - 2021-05-06
 

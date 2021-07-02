@@ -3,6 +3,7 @@ import {
   Attribute, Compare, Css, Insert, InsertAll, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, SugarElement, SugarNode,
   SugarText, Traverse
 } from '@ephox/sugar';
+
 import TagBoundaries from '../common/TagBoundaries';
 import { Universe } from './Universe';
 

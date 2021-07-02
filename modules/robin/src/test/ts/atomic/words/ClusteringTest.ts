@@ -3,6 +3,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
+
 import { ArbTextIds, arbTextIds } from 'ephox/robin/test/Arbitraries';
 import * as Clustering from 'ephox/robin/words/Clustering';
 import { WordDecisionItem } from 'ephox/robin/words/WordDecision';

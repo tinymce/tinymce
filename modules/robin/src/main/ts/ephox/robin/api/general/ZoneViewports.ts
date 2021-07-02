@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { ZonePosition } from './ZonePosition';
 
 export interface ZoneViewports<E> {

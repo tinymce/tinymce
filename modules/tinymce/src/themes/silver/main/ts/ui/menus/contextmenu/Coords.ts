@@ -8,6 +8,7 @@
 import { MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 

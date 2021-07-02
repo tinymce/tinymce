@@ -7,6 +7,7 @@
 
 import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
 import HtmlSerializer from '../api/html/Serializer';

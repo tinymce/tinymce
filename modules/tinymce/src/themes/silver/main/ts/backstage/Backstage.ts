@@ -9,9 +9,11 @@ import { AlloyComponent, AlloySpec, FormTypes, HotspotAnchorSpec, NodeAnchorSpec
 import { Menu } from '@ephox/bridge';
 import { Cell, Optional, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
+
 import { SelectData } from '../ui/core/complex/BespokeSelect';
 import { IconProvider } from '../ui/icons/Icons';
 import * as Anchors from './Anchors';

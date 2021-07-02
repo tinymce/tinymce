@@ -6,15 +6,17 @@
  */
 
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
+
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
+import { onActionToggleFormat } from '../ControlUtils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest } from './utils/FormatDetection';
-import { onActionToggleFormat } from './utils/Utils';
 
 const defaultBlocks = (
   'Paragraph=p;' +
@@ -28,6 +30,8 @@ const defaultBlocks = (
 );
 
 const getSpec = (editor: Editor): SelectSpec => {
+  const fallbackFormat = 'Paragraph';
+
   const isSelectedFor = (format: string) => () => editor.formatter.match(format);
 
   const getPreviewFor = (format: string) => () => {
@@ -40,7 +44,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   const updateSelectMenuText = (comp: AlloyComponent) => {
     const detectedFormat = findNearest(editor, () => dataset.data);
-    const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
+    const text = detectedFormat.fold(Fun.constant(fallbackFormat), (fmt) => fmt.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
@@ -50,6 +54,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   return {
     tooltip: 'Blocks',
+    text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,
     getCurrentValue: Optional.none,

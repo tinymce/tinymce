@@ -2,6 +2,7 @@ import { Assert } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import { Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import { tElement } from 'ephox/sugar/api/node/SugarElementInstances';
 import * as SugarNode from 'ephox/sugar/api/node/SugarNode';

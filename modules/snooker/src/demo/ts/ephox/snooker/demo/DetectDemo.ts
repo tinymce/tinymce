@@ -1,5 +1,6 @@
 import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';

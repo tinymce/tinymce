@@ -1,5 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
+
 import * as WindowVisualViewport from 'ephox/sugar/api/view/WindowVisualViewport';
 
 UnitTest.test('WindowVisualViewport.getBounds', () => {

@@ -1,5 +1,6 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
+
 import { BaseToolbarButton, BaseToolbarButtonSpec, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
 
 export interface BaseToolbarToggleButtonSpec<I extends BaseToolbarButtonInstanceApi> extends BaseToolbarButtonSpec<I> {
@@ -34,14 +35,14 @@ export const baseToolbarToggleButtonFields = [
   FieldSchema.defaultedBoolean('active', false)
 ].concat(baseToolbarButtonFields);
 
-export const toggleButtonSchema = ValueSchema.objOf(
+export const toggleButtonSchema = StructureSchema.objOf(
   baseToolbarToggleButtonFields.concat([
-    FieldSchema.strictString('type'),
-    FieldSchema.strictFunction('onAction')
+    FieldSchema.requiredString('type'),
+    FieldSchema.requiredFunction('onAction')
   ])
 );
 
 export const isToggleButton = (spec: any): spec is ToolbarToggleButton => spec.type === 'togglebutton';
 
-export const createToggleButton = (spec: ToolbarToggleButtonSpec): Result<ToolbarToggleButton, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<ToolbarToggleButton>('ToggleButton', toggleButtonSchema, spec);
+export const createToggleButton = (spec: ToolbarToggleButtonSpec): Result<ToolbarToggleButton, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<ToolbarToggleButton>('ToggleButton', toggleButtonSchema, spec);

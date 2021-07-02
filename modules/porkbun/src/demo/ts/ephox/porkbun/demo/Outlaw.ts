@@ -1,6 +1,8 @@
-import { Singleton } from '@ephox/katamari';
+import { Fun, Singleton } from '@ephox/katamari';
+
 import { Bindable, Event } from 'ephox/porkbun/Event';
 import * as Events from 'ephox/porkbun/Events';
+
 import { DieEvent, Outlaw, Saloon, ShootEvent } from './Types';
 
 interface OutlawEvents {
@@ -37,9 +39,7 @@ const create = (name: string): Outlaw => {
   character.append(img, caption);
   container.append(character);
 
-  const getElement = () => {
-    return container;
-  };
+  const getElement = Fun.constant(container);
 
   const addAction = (text: string, action: () => void) => {
     const button = $('<button />');

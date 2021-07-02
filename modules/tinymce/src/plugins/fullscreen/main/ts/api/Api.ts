@@ -6,6 +6,7 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import { ScrollInfo } from '../core/Actions';
 
 const get = (fullscreenState: Cell<ScrollInfo | null>) => {

@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Optional } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';

@@ -1,5 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
 import { Generators } from './Generators';

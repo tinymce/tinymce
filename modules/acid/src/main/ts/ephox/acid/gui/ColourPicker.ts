@@ -3,6 +3,7 @@ import {
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun } from '@ephox/katamari';
+
 import { Hex } from '../api/colour/ColourTypes';
 import * as HsvColour from '../api/colour/HsvColour';
 import * as RgbaColour from '../api/colour/RgbaColour';
@@ -154,7 +155,7 @@ const makeFactory = (
   const colourPickerSketcher = Sketcher.single({
     name: 'ColourPicker',
     configFields: [
-      FieldSchema.strict('dom'),
+      FieldSchema.required('dom'),
       FieldSchema.defaulted('onValidHex', Fun.noop),
       FieldSchema.defaulted('onInvalidHex', Fun.noop)
     ],

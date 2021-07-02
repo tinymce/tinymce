@@ -9,6 +9,7 @@ import { CellOpSelection, Selections } from '@ephox/darwin';
 import { Optional } from '@ephox/katamari';
 import { RunOperation, SimpleGenerators } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
+
 import { ephemera } from '../selection/Ephemera';
 
 const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({

@@ -33,6 +33,6 @@ export const baseMenuButtonFields = [
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
-  FieldSchema.strictFunction('fetch'),
+  FieldSchema.requiredFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ];

@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as Fitment from 'ephox/snooker/test/Fitment';
@@ -28,13 +29,11 @@ UnitTest.test('FitmentIVTest', () => {
       return r;
     };
 
-    const replace = (name: string) => name;
-
     return {
       cell,
       gap: Fun.constant('*'),
       row: Fun.constant('tr'),
-      replace
+      replace: Fun.identity
     } as any;
   };
 

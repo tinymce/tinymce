@@ -1,6 +1,7 @@
-import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
+
+import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
 export interface ListBoxSingleItemSpec {
   text: string;
@@ -39,28 +40,28 @@ export interface ListBox extends FormComponentWithLabel {
 }
 
 const listBoxSingleItemFields = [
-  FieldSchema.strictString('text'),
-  FieldSchema.strictString('value')
+  FieldSchema.requiredString('text'),
+  FieldSchema.requiredString('value')
 ];
 
 const listBoxNestedItemFields = [
-  FieldSchema.strictString('text'),
-  FieldSchema.strictArrayOf('items', ValueSchema.thunkOf('items', () => listBoxItemSchema))
+  FieldSchema.requiredString('text'),
+  FieldSchema.requiredArrayOf('items', StructureSchema.thunkOf('items', () => listBoxItemSchema))
 ];
 
-const listBoxItemSchema = ValueSchema.oneOf([
-  ValueSchema.objOf(listBoxSingleItemFields),
-  ValueSchema.objOf(listBoxNestedItemFields)
+const listBoxItemSchema = StructureSchema.oneOf([
+  StructureSchema.objOf(listBoxSingleItemFields),
+  StructureSchema.objOf(listBoxNestedItemFields)
 ]);
 
-const listBoxFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
-  FieldSchema.strictArrayOf('items', listBoxItemSchema),
+const listBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
+  FieldSchema.requiredArrayOf('items', listBoxItemSchema),
   FieldSchema.defaultedBoolean('disabled', false)
 ]);
 
-export const listBoxSchema = ValueSchema.objOf(listBoxFields);
+export const listBoxSchema = StructureSchema.objOf(listBoxFields);
 
-export const listBoxDataProcessor = ValueSchema.string;
+export const listBoxDataProcessor = ValueType.string;
 
-export const createListBox = (spec: ListBoxSpec): Result<ListBox, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<ListBox>('listbox', listBoxSchema, spec);
+export const createListBox = (spec: ListBoxSpec): Result<ListBox, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<ListBox>('listbox', listBoxSchema, spec);

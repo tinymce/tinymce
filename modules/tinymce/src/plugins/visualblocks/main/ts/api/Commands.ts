@@ -6,7 +6,9 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as VisualBlocks from '../core/VisualBlocks';
 
 const register = (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) => {

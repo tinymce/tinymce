@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import { Fun } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import ButtonSetupDemo from './ButtonSetupDemo';
 
 declare let tinymce: any;
@@ -100,14 +102,6 @@ export default () => {
 
     setup: (ed: Editor) => {
       ButtonSetupDemo.setup(ed);
-
-      ed.on('skinLoaded', () => {
-        // Notification fields for equality: type, text, progressBar, timeout
-        ed.notificationManager.open({
-          text: 'You will not see this because the mobile theme has no notifications',
-          type: 'info'
-        });
-      });
 
       ed.ui.registry.addButton('MagicButton', {
         text: 'yeah button text',

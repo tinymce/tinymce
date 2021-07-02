@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
@@ -36,7 +36,7 @@ UnitTest.test('DomDefinitionTest', () => {
       (v) => [ true, v ]
     ),
     (opt: Optional<string>) => opt.fold(
-      () => 'None',
+      Fun.constant('None'),
       (v) => 'Some(' + v + ')'
     )
   );

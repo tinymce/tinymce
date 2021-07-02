@@ -7,6 +7,7 @@
 
 import { Adt, Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { Insert, InsertAll, SugarElement, Traverse } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -21,7 +22,7 @@ import * as SplitRange from '../selection/SplitRange';
 import * as TableCellSelection from '../selection/TableCellSelection';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
-import { FormatAttrOrStyleValue, FormatVars, RemoveFormatPartial } from './FormatTypes';
+import { FormatAttrOrStyleValue, FormatVars, RemoveFormat, RemoveFormatPartial } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 import { mergeSiblings } from './MergeUtils';
@@ -386,7 +387,7 @@ const findFormatRoot = (editor: Editor, container: Node, name: string, vars: For
     if (!formatRoot && parent.id !== '_start' && parent.id !== '_end') {
       // Is the node matching the format we are looking for
       const format = MatchFormat.matchNode(editor, parent, name, vars, similar);
-      if (format && format.split !== false) {
+      if (format && (format as RemoveFormat).split !== false) {
         formatRoot = parent;
       }
     }

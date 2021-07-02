@@ -1,4 +1,4 @@
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Arr, Obj } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
@@ -23,7 +23,7 @@ const events = (receiveConfig: ReceivingConfig): AlloyEvents.AlloyEventRecord =>
       Arr.each(targetChannels, (ch) => {
         const channelInfo = channelMap[ch];
         const channelSchema = channelInfo.schema;
-        const data = ValueSchema.asRawOrDie(
+        const data = StructureSchema.asRawOrDie(
           'channel[' + ch + '] data\nReceiver: ' + AlloyLogger.element(component.element),
           channelSchema, receivingData.data
         );

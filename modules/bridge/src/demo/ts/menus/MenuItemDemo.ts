@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerDemoMenuItems = (): void => {

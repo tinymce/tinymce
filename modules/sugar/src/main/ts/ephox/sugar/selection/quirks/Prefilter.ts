@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import { SugarElement } from '../../api/node/SugarElement';
 import * as SugarNode from '../../api/node/SugarNode';
 import { SimSelection } from '../../api/selection/SimSelection';

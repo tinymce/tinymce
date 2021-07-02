@@ -1,5 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
+
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as Log from 'ephox/agar/api/Log';

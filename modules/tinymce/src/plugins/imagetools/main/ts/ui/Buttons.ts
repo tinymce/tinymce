@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Actions from '../core/Actions';
 
 const register = (editor: Editor) => {
@@ -64,12 +65,11 @@ const register = (editor: Editor) => {
   editor.ui.registry.addContextMenu('imagetools', {
     update: (element) =>
       // since there's no menu item available, this has to be it's own thing
-      Actions.getEditableImage(editor, element).fold(() => [], (_) => [{
+      Actions.getEditableImage(editor, element).map((_) => ({
         text: 'Edit image',
         icon: 'edit-image',
         onAction: cmd('mceEditImage')
-      }])
-
+      })).toArray()
   });
 };
 

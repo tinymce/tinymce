@@ -8,7 +8,9 @@
 import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { useFixedContainer } from '../api/Settings';
 
 const bubbleAlignments = {
@@ -23,7 +25,7 @@ const bubbleAlignments = {
 };
 
 const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
-  const bubble = Bubble.nu(-12, 12, bubbleAlignments);
+  const bubbleSize = 12;
   const overrides = {
     maxHeightFunction: MaxHeight.expandable()
   };
@@ -32,10 +34,10 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
     anchor: 'node',
     root: SugarShadowDom.getContentContainer(contentAreaElement()),
     node: Optional.from(contentAreaElement()),
-    bubble,
+    bubble: Bubble.nu(bubbleSize, bubbleSize, bubbleAlignments),
     layouts: {
-      onRtl: () => [ LayoutInside.northwest ],
-      onLtr: () => [ LayoutInside.northeast ]
+      onRtl: () => [ LayoutInside.northeast ],
+      onLtr: () => [ LayoutInside.northwest ]
     },
     overrides
   });
@@ -43,7 +45,7 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
   const standardAnchor = (): HotspotAnchorSpec => ({
     anchor: 'hotspot',
     hotspot: lazyAnchorbar(),
-    bubble,
+    bubble: Bubble.nu(-bubbleSize, bubbleSize, bubbleAlignments),
     layouts: {
       onRtl: () => [ Layout.southeast ],
       onLtr: () => [ Layout.southwest ]

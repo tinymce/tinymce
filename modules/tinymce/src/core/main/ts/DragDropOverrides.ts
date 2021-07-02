@@ -6,6 +6,7 @@
  */
 
 import { Arr, Singleton } from '@ephox/katamari';
+
 import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
 import EditorSelection from './api/dom/Selection';

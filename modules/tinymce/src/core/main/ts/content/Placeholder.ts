@@ -7,6 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Env from '../api/Env';

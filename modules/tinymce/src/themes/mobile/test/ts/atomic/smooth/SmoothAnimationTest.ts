@@ -1,5 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import * as SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';
 
 UnitTest.test('Smooth Animation AdjustTest', () => {

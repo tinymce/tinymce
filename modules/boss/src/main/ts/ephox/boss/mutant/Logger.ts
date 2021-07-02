@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import { Gene } from '../api/Gene';
 
 const basic = (item: Gene): string => {

@@ -6,6 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Convert from './core/Convert';
 
 export default () => {

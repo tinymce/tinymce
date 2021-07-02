@@ -8,6 +8,7 @@
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 import * as Utils from './Utils';
 

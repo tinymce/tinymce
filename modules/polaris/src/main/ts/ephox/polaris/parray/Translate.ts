@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import { PRange } from '../pattern/Types';
 
 /** Adjust a PositionArray positions by an offset */

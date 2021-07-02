@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
+
 import * as Extract from './Extract';
 
 const newline = '\n';

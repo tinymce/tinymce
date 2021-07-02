@@ -45,7 +45,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
 
     const behaviourB = Behaviour.create({
       fields: [
-        FieldSchema.strict('attr')
+        FieldSchema.required('attr')
       ],
       name: 'behaviourB',
       active: {

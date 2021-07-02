@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Fun, Optional, Optionals } from '@ephox/katamari';
+
 import { WordDecisionItem } from '../words/WordDecision';
 
 export interface ZoneDetails<E> {

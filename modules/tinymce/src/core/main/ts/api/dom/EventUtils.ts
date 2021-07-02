@@ -6,6 +6,7 @@
  */
 
 import { Obj, Type } from '@ephox/katamari';
+
 import * as Utils from '../../events/EventUtils';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;

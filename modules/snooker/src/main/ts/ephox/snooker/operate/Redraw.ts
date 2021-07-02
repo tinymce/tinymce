@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Attribute, Insert, InsertAll, Remove, Replication, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+
 import { Detail, DetailNew, RowDataNew, Section } from '../api/Structs';
 
 interface NewRowsAndCells {

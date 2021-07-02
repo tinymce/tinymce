@@ -7,13 +7,16 @@
 
 import { AlloyComponent, TieredData } from '@ephox/alloy';
 import { Arr, Fun, Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
+import { onSetupEvent } from '../ControlUtils';
 import { SelectDataset } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
@@ -46,6 +49,7 @@ export type FormatItem = FormatterFormatItem | SubMenuFormatItem | SeparatorForm
 
 export interface SelectSpec {
   tooltip: string;
+  text: Optional<string>;
   icon: Optional<string>;
   // This is used for determining if an item gets a tick in the menu
   isSelectedFor: FormatRegister.IsSelectedForType;
@@ -156,24 +160,15 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
 
-  const onSetup = (api: BespokeSelectApi): () => void => {
-    const updateText = () => {
-      const comp = api.getComponent();
-      spec.updateText(comp);
-    };
-
-    // Set the initial text when the component is attached and then update on node changes
-    updateText();
-    editor.on('NodeChange', updateText);
-
-    return () => {
-      editor.off('NodeChange', updateText);
-    };
-  };
+  // Set the initial text when the component is attached and then update on node changes
+  const onSetup = onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
+    const comp = api.getComponent();
+    spec.updateText(comp);
+  });
 
   return renderCommonDropdown(
     {
-      text: spec.icon.isSome() ? Optional.none() : Optional.some(''),
+      text: spec.icon.isSome() ? Optional.none() : spec.text,
       icon: spec.icon,
       tooltip: Optional.from(spec.tooltip),
       role: Optional.none(),

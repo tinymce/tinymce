@@ -1,6 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
+
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Maybes from 'ephox/katamari/api/Maybes';
 
@@ -55,8 +56,8 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
 
       fc.assert(fc.property(fc.string(), (thing) => {
         const matches = Fun.pipe(
-          Maybes.just(() => thing),
-          Maybes.is(() => thing, thunkEq)
+          Maybes.just(Fun.constant(thing)),
+          Maybes.is(Fun.constant(thing), thunkEq)
         );
 
         assert.isTrue(matches);
@@ -64,7 +65,7 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
 
       fc.assert(fc.property(fc.string(), (thing) => {
         const matches = Fun.pipe(
-          Maybes.just(() => thing),
+          Maybes.just(Fun.constant(thing)),
           Maybes.is(() => thing + 'foo', thunkEq)
         );
 

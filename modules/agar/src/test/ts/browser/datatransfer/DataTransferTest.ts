@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import { createFile } from 'ephox/agar/api/Files';
 import { createDataTransfer, getDragImage } from 'ephox/agar/datatransfer/DataTransfer';
 import { setProtectedMode, setReadOnlyMode } from 'ephox/agar/datatransfer/Mode';

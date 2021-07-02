@@ -1,4 +1,5 @@
 import { Attribute, Css, DomEvent, Html, InsertAll, SugarElement, Traverse } from '@ephox/sugar';
+
 import * as FocusTools from 'ephox/agar/api/FocusTools';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as DemoContainer from 'ephox/agar/demo/DemoContainer';

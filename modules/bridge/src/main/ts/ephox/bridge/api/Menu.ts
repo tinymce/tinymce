@@ -5,7 +5,10 @@ import { CardText, CardTextSpec } from '../components/menu/card/CardText';
 import { CardMenuItem, CardMenuItemInstanceApi, CardMenuItemSpec, createCardMenuItem } from '../components/menu/CardMenuItem';
 import { ChoiceMenuItem, ChoiceMenuItemInstanceApi, ChoiceMenuItemSpec, createChoiceMenuItem } from '../components/menu/ChoiceMenuItem';
 import { ContextMenuApi, ContextMenuContents, ContextMenuItem, ContextSubMenu } from '../components/menu/ContextMenu';
-import { createFancyMenuItem, FancyActionArgsMap, FancyMenuItem, FancyMenuItemSpec } from '../components/menu/FancyMenuItem';
+import {
+  createFancyMenuItem, ColorSwatchMenuItem, ColorSwatchMenuItemSpec, FancyActionArgsMap, FancyMenuItem, FancyMenuItemSpec, InsertTableMenuItem,
+  InsertTableMenuItemSpec
+} from '../components/menu/FancyMenuItem';
 import { createMenuItem, MenuItem, MenuItemInstanceApi, MenuItemSpec } from '../components/menu/MenuItem';
 import {
   createNestedMenuItem, NestedMenuItem, NestedMenuItemContents, NestedMenuItemInstanceApi, NestedMenuItemSpec
@@ -29,6 +32,10 @@ export {
   FancyMenuItem,
   FancyMenuItemSpec,
   FancyActionArgsMap,
+  ColorSwatchMenuItem,
+  ColorSwatchMenuItemSpec,
+  InsertTableMenuItem,
+  InsertTableMenuItemSpec,
 
   createToggleMenuItem,
   ToggleMenuItem,

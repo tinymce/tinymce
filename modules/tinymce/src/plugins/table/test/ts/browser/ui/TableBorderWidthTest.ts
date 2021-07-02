@@ -1,8 +1,10 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { pAssertStyleCanBeToggledOnAndOff } from '../../module/test/TableModifiersTestUtils';
 
 describe('browser.tinymce.plugins.table.ui.TableBorderWidthTest', () => {
@@ -11,6 +13,10 @@ describe('browser.tinymce.plugins.table.ui.TableBorderWidthTest', () => {
     indent: false,
     toolbar: 'tablecellborderwidth',
     base_url: '/project/tinymce/js/tinymce',
+    menu: {
+      table: { title: 'Table', items: 'tablecellborderwidth' },
+    },
+    menubar: 'table',
     table_border_widths: [
       {
         title: '1PX',
@@ -27,6 +33,7 @@ describe('browser.tinymce.plugins.table.ui.TableBorderWidthTest', () => {
     await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
       menuTitle: 'Border width',
       subMenuTitle: '1PX',
+      subMenuRemoveTitle: 'None',
       checkMarkEntries: 2,
       rows: 1,
       columns: 1,
@@ -38,6 +45,7 @@ describe('browser.tinymce.plugins.table.ui.TableBorderWidthTest', () => {
     await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
       menuTitle: 'Border width',
       subMenuTitle: '1PX',
+      subMenuRemoveTitle: 'None',
       checkMarkEntries: 2,
       rows: 2,
       columns: 2,

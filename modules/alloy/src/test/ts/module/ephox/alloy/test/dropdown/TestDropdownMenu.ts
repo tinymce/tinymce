@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
-import { Merger } from '@ephox/katamari';
+import { Fun, Merger } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
@@ -104,7 +104,7 @@ const assertLazySinkArgs = (expectedTag: string, expectedClass: string, comp: Al
   );
 };
 
-const itemMarkers = {
+const itemMarkers: TieredMenuSpec['markers'] = {
   item: 'item',
   selectedItem: 'selected-item',
   menu: 'menu',
@@ -112,7 +112,7 @@ const itemMarkers = {
   backgroundMenu: 'background-menu'
 };
 
-const markers = (): TieredMenuSpec['markers'] => itemMarkers;
+const markers = Fun.constant(itemMarkers);
 
 export {
   assertLazySinkArgs,

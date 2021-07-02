@@ -8,6 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
+
 import * as Settings from '../api/Settings';
 import * as DateTimeHelper from './DateTimeHelper';
 

@@ -7,8 +7,10 @@
 
 import { HexColour, RgbaColour } from '@ephox/acid';
 import { Cell, Fun, Optional, Strings } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+
 import * as Events from '../../../api/Events';
 import * as Settings from './Settings';
 
@@ -261,5 +263,6 @@ export {
   colorPickerDialog,
   getCurrentColor,
   getColorCols,
+  getAdditionalColors,
   calcCols
 };

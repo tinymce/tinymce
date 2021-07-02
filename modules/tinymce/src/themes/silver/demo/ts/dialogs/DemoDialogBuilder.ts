@@ -1,5 +1,6 @@
 import { Debugging } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
+
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../components/DemoHelpers';

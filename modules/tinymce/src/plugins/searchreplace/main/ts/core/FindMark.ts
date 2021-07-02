@@ -7,8 +7,10 @@
 
 import { Arr } from '@ephox/katamari';
 import { Attribute, Insert, SugarElement, SugarText } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import EditorSelection from 'tinymce/core/api/dom/Selection';
+
 import * as TextCollect from './TextCollect';
 import * as TextPosition from './TextPosition';
 import { Pattern, TextMatch, TextSection } from './Types';
