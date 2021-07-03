@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -228,6 +228,10 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, 'test');
     assert.equal(editor.getContent(), '<p><a href="test">test 123</a></p>');
+    // Assert selection is this:                         <---------------)
+    // The <--) refers to the content string in the line above
+    // The `<` is inclusive but the `)` is not.
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ ], 1);
   });
 
   it('mceInsertLink (link absolute)', () => {
@@ -236,6 +240,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, 'http://www.site.com');
     assert.equal(editor.getContent(), '<p><a href="http://www.site.com">test 123</a></p>');
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ ], 1);
   });
 
   it('mceInsertLink (link encoded)', () => {
@@ -268,6 +273,8 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, 'link');
     assert.equal(editor.getContent(), '<p><a href="link"><img style="float: right;" src="about:blank" /></a></p>');
+    // Assert selection is this:       <------------------------------------------------------------------------)
+    TinyAssertions.assertSelection(editor, [ ], 0, [ ], 1);
   });
 
   it('mceInsertLink (link adjacent text)', () => {
@@ -281,6 +288,8 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
 
     editor.execCommand('mceInsertLink', false, 'link');
     assert.equal(editor.getContent(), '<p><a href="#">a</a><a href="link">b</a></p>');
+    // Assert selection is this:                                          <----)
+    TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1 ], 1);
   });
 
   it('mceInsertLink (link text inside text)', () => {
@@ -290,6 +299,8 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
 
     editor.execCommand('mceInsertLink', false, 'link');
     assert.equal(editor.getContent(), '<p><a href="link"><em>abc</em></a></p>');
+    // Assert selection is this (same as before):             <)
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 2);
   });
 
   it('mceInsertLink (link around existing links)', () => {
@@ -299,6 +310,8 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
 
     editor.execCommand('mceInsertLink', false, 'link');
     assert.equal(editor.getContent(), '<p><a href="link">12</a></p>');
+    // Assert selection is this:                         <---------)
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ ], 1);
   });
 
   it('mceInsertLink (link around existing links with different attrs)', () => {
@@ -308,6 +321,8 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
 
     editor.execCommand('mceInsertLink', false, 'link');
     assert.equal(editor.getContent(), '<p><a href="link">12</a></p>');
+    // Assert selection is this:                         <---------)
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ ], 1);
   });
 
   it('mceInsertLink (link around existing complex contents with links)', () => {
@@ -324,6 +339,8 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       '<p><a href="link"><span id="s1"><strong><em>1</em>' +
         '</strong></span><span id="s2"><em><strong>2</strong></em></span></a></p>'
     );
+    // Selection goes from the 1 inside the first <em> all the way to the end.
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ ], 1);
   });
 
   it('mceInsertLink (link text inside link)', () => {
@@ -334,6 +351,8 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
 
     editor.execCommand('mceInsertLink', false, 'link');
     assert.equal(editor.getContent(), '<p><a href="link">test</a></p>');
+    // Assert selection is this:                         <-----------)
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ ], 1);
   });
 
   it('mceInsertLink bug #7331', () => {
