@@ -8,7 +8,7 @@
 import {
   AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, DraggingTypes, GuiFactory, Memento, Unselecting
 } from '@ephox/alloy';
-import { Arr, Cell, Optional } from '@ephox/katamari';
+import { Arr, Cell, Optional, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarElement, SugarPosition, Traverse } from '@ephox/sugar';
 
@@ -59,7 +59,7 @@ const calcSnap = (selectorOpt: Optional<AlloyComponent>, td: SugarElement<HTMLTa
   });
 });
 
-const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig<SnapExtra>[], cell: Cell<Optional<SugarElement<HTMLTableDataCellElement>>>, onChange: (td: SugarElement<HTMLTableDataCellElement>) => void): DraggingTypes.SnapsConfigSpec<SnapExtra> => {
+const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig<SnapExtra>[], cell: Singleton.Value<SugarElement<HTMLTableDataCellElement>>, onChange: (td: SugarElement<HTMLTableDataCellElement>) => void): DraggingTypes.SnapsConfigSpec<SnapExtra> => {
   // Can't use Optional.is() here since we need to do a dom compare, not an equality compare
   const isSameCell = (cellOpt: Optional<SugarElement<HTMLTableDataCellElement>>, td: SugarElement<HTMLTableDataCellElement>) => cellOpt.exists((currentTd) => Compare.eq(currentTd, td));
 
@@ -70,7 +70,7 @@ const getSnapsConfig = (getSnapPoints: () => DraggingTypes.SnapConfig<SnapExtra>
     onSensor: (component, extra) => {
       const td = extra.td;
       if (!isSameCell(cell.get(), td)) {
-        cell.set(Optional.some(td));
+        cell.set(td);
         onChange(td);
       }
     },
@@ -105,8 +105,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
   const tlTds = Cell<SugarElement<HTMLTableDataCellElement>[]>([]);
   const brTds = Cell<SugarElement<HTMLTableDataCellElement>[]>([]);
   const isVisible = Cell<Boolean>(false);
-  const startCell = Cell<Optional<SugarElement<HTMLTableDataCellElement>>>(Optional.none());
-  const finishCell = Cell<Optional<SugarElement<HTMLTableDataCellElement>>>(Optional.none());
+  const startCell = Singleton.value<SugarElement<HTMLTableDataCellElement>>();
+  const finishCell = Singleton.value<SugarElement<HTMLTableDataCellElement>>();
 
   const getTopLeftSnap = (td: SugarElement<HTMLTableDataCellElement>) => {
     const box = Boxes.absolute(td);
@@ -185,8 +185,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
         Attachment.attach(sink, bottomRight);
         isVisible.set(true);
       }
-      startCell.set(Optional.some(e.start));
-      finishCell.set(Optional.some(e.finish));
+      startCell.set(e.start);
+      finishCell.set(e.finish);
 
       e.otherCells.each((otherCells) => {
         tlTds.set(otherCells.upOrLeftCells);
@@ -208,8 +208,8 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
         Attachment.detach(bottomRight);
         isVisible.set(false);
       }
-      startCell.set(Optional.none());
-      finishCell.set(Optional.none());
+      startCell.clear();
+      finishCell.clear();
     });
   }
 };

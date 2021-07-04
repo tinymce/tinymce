@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Cell, Optional } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 import { Chain } from 'ephox/agar/api/Chain';
@@ -14,7 +14,7 @@ import * as StepSequence from 'ephox/agar/api/StepSequence';
 if (!/phantom/i.test(navigator.userAgent)) {
   UnitTest.asynctest('ClipboardTest', (success, failure) => {
     const pastebin = SugarElement.fromHtml('<div class="pastebin"></div>');
-    const pasteState = Cell(Optional.none<DataTransfer>());
+    const pasteState = Singleton.value<DataTransfer>();
 
     Insert.append(SugarBody.body(), pastebin);
 
@@ -32,7 +32,7 @@ if (!/phantom/i.test(navigator.userAgent)) {
 
     const pasteUnbinder = DomEvent.bind(pastebin, 'paste', (evt) => {
       const dataTransfer = evt.raw.clipboardData;
-      pasteState.set(Optional.some(dataTransfer));
+      pasteState.set(dataTransfer);
     });
 
     Pipeline.runStep({}, StepSequence.sequenceSame([

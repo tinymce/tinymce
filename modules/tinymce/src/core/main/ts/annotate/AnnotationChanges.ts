@@ -5,21 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Obj, Optional, Optionals, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional, Optionals, Singleton, Throttler } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import { AnnotationsRegistry } from './AnnotationsRegistry';
 import { identify } from './Identification';
 
 export interface AnnotationChanges {
-  addListener: (name: string, f: AnnotationListener) => void;
+  readonly addListener: (name: string, f: AnnotationListener) => void;
 }
 
 export type AnnotationListener = (state: boolean, name: string, data?: { uid: string; nodes: any[] }) => void;
 
 export interface AnnotationListenerData {
-  listeners: AnnotationListener[];
-  previous: Cell<Optional<string>>;
+  readonly listeners: AnnotationListener[];
+  readonly previous: Singleton.Value<string>;
 }
 
 export type AnnotationListenerMap = Record<string, AnnotationListenerData>;
@@ -29,7 +29,7 @@ const setup = (editor: Editor, _registry: AnnotationsRegistry): AnnotationChange
 
   const initData = (): AnnotationListenerData => ({
     listeners: [ ],
-    previous: Cell(Optional.none())
+    previous: Singleton.value()
   });
 
   const withCallbacks = (name: string, f: (listeners: AnnotationListenerData) => void) => {
@@ -74,14 +74,14 @@ const setup = (editor: Editor, _registry: AnnotationsRegistry): AnnotationChange
             if (prev.isSome()) {
               // Changed from something to nothing.
               fireNoAnnotation(name);
-              data.previous.set(Optional.none());
+              data.previous.clear();
             }
           },
           ({ uid, name, elements }) => {
             // Changed from a different annotation (or nothing)
             if (!Optionals.is(prev, uid)) {
               fireCallbacks(name, uid, elements);
-              data.previous.set(Optional.some(uid));
+              data.previous.set(uid);
             }
           }
         );

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Singleton } from '@ephox/katamari';
 
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { Bookmark } from '../bookmark/BookmarkTypes';
@@ -43,4 +43,4 @@ export type Index = Cell<number>;
 
 export type Locks = Cell<number>;
 
-export type UndoBookmark = Cell<Optional<Bookmark>>;
+export type UndoBookmark = Singleton.Value<Bookmark>;
