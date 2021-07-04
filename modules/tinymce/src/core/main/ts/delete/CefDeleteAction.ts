@@ -20,33 +20,38 @@ import * as DeleteUtils from './DeleteUtils';
 
 export interface DeleteActionAdt {
   fold: <T> (
-    remove: (element: Element) => T,
-    moveToElement: (element: Element) => T,
+    remove: (element: Node) => T,
+    moveToElement: (element: Node) => T,
     moveToPosition: (position: CaretPosition) => T,
   ) => T;
   match: <T> (branches: {
-    remove: (element: Element) => T;
-    moveToElement: (element: Element) => T;
+    remove: (element: Node) => T;
+    moveToElement: (element: Node) => T;
     moveToPosition: (position: CaretPosition) => T;
   }) => T;
   log: (label: string) => void;
 }
 
-const isCompoundElement = (node: Node) => ElementType.isTableCell(SugarElement.fromDom(node)) || ElementType.isListItem(SugarElement.fromDom(node));
+const isCompoundElement = (node: Node): boolean =>
+  ElementType.isTableCell(SugarElement.fromDom(node)) || ElementType.isListItem(SugarElement.fromDom(node));
 
-const DeleteAction = Adt.generate([
+const DeleteAction: {
+  remove: (element: Node) => DeleteActionAdt;
+  moveToElement: (element: Node) => DeleteActionAdt;
+  moveToPosition: (position: CaretPosition) => DeleteActionAdt;
+} = Adt.generate([
   { remove: [ 'element' ] },
   { moveToElement: [ 'element' ] },
   { moveToPosition: [ 'position' ] }
 ]);
 
-const isAtContentEditableBlockCaret = (forward: boolean, from: CaretPosition) => {
+const isAtContentEditableBlockCaret = (forward: boolean, from: CaretPosition): boolean => {
   const elm = from.getNode(forward === false);
   const caretLocation = forward ? 'after' : 'before';
   return NodeType.isElement(elm) && elm.getAttribute('data-mce-caret') === caretLocation;
 };
 
-const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition) => {
+const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): boolean => {
   const inSameBlock = (elm: Element) => ElementType.isInline(SugarElement.fromDom(elm)) && !CaretUtils.isInSameBlock(from, to, root);
 
   return CaretUtils.getRelativeCefElm(!forward, from).fold(
@@ -91,7 +96,7 @@ const getContentEditableBlockAction = (forward: boolean, elm: Node): Optional<De
   }
 };
 
-const skipMoveToActionFromInlineCefToContent = (root: Node, from: CaretPosition, deleteAction: DeleteActionAdt) =>
+const skipMoveToActionFromInlineCefToContent = (root: Node, from: CaretPosition, deleteAction: DeleteActionAdt): Optional<DeleteActionAdt> =>
   deleteAction.fold(
     (elm) => Optional.some(DeleteAction.remove(elm)),
     (elm) => Optional.some(DeleteAction.moveToElement(elm)),

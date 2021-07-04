@@ -16,7 +16,7 @@ import * as ElementType from '../dom/ElementType';
 import * as DeleteUtils from './DeleteUtils';
 import * as MergeBlocks from './MergeBlocks';
 
-const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorSelection) => {
+const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorSelection): boolean => {
   const rng = selection.getRng();
 
   return Optionals.lift2(
@@ -37,34 +37,34 @@ const deleteRangeMergeBlocks = (rootNode: SugarElement<Node>, selection: EditorS
     }).getOr(false);
 };
 
-const isRawNodeInTable = (root: SugarElement<Node>, rawNode: Node) => {
+const isRawNodeInTable = (root: SugarElement<Node>, rawNode: Node): boolean => {
   const node = SugarElement.fromDom(rawNode);
   const isRoot = Fun.curry(Compare.eq, root);
   return PredicateFind.ancestor(node, ElementType.isTableCell, isRoot).isSome();
 };
 
-const isSelectionInTable = (root: SugarElement<Node>, rng: Range) =>
+const isSelectionInTable = (root: SugarElement<Node>, rng: Range): boolean =>
   isRawNodeInTable(root, rng.startContainer) || isRawNodeInTable(root, rng.endContainer);
 
-const isEverythingSelected = (root: SugarElement<Node>, rng: Range) => {
+const isEverythingSelected = (root: SugarElement<Node>, rng: Range): boolean => {
   const noPrevious = CaretFinder.prevPosition(root.dom, CaretPosition.fromRangeStart(rng)).isNone();
   const noNext = CaretFinder.nextPosition(root.dom, CaretPosition.fromRangeEnd(rng)).isNone();
   return !isSelectionInTable(root, rng) && noPrevious && noNext;
 };
 
-const emptyEditor = (editor: Editor) => {
+const emptyEditor = (editor: Editor): boolean => {
   editor.setContent('');
   editor.selection.setCursorLocation();
   return true;
 };
 
-const deleteRange = (editor: Editor) => {
+const deleteRange = (editor: Editor): boolean => {
   const rootNode = SugarElement.fromDom(editor.getBody());
   const rng = editor.selection.getRng();
   return isEverythingSelected(rootNode, rng) ? emptyEditor(editor) : deleteRangeMergeBlocks(rootNode, editor.selection);
 };
 
-const backspaceDelete = (editor: Editor, _forward: boolean) =>
+const backspaceDelete = (editor: Editor, _forward: boolean): boolean =>
   editor.selection.isCollapsed() ? false : deleteRange(editor);
 
 export {

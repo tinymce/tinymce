@@ -62,7 +62,7 @@ describe('browser.tinymce.core.delete.CefDeleteActionTest', () => {
   };
 
   const actionValue = (action: DeleteActionAdt) => {
-    return action.fold<SugarElement<Element> | CaretPosition>(
+    return action.fold<SugarElement<Node> | CaretPosition>(
       SugarElement.fromDom,
       SugarElement.fromDom,
       Fun.identity

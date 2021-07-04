@@ -20,13 +20,13 @@ import * as InlineUtils from '../keyboard/InlineUtils';
 const isBeforeBoundary = (pos: CaretPosition) => isBeforeContentEditableFalse(pos) || isBeforeMedia(pos);
 const isAfterBoundary = (pos: CaretPosition) => isAfterContentEditableFalse(pos) || isAfterMedia(pos);
 
-const trimEmptyTextNode = (dom: DOMUtils, node: Node) => {
+const trimEmptyTextNode = (dom: DOMUtils, node: Node): void => {
   if (NodeType.isText(node) && node.data.length === 0) {
     dom.remove(node);
   }
 };
 
-const deleteContentAndShowCaret = (editor: Editor, range: Range, node: Node, direction: HDirection, forward: boolean, peekCaretPosition: CaretPosition) => {
+const deleteContentAndShowCaret = (editor: Editor, range: Range, node: Node, direction: HDirection, forward: boolean, peekCaretPosition: CaretPosition): boolean => {
   FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forward) as Element, forward, true).each((caretRange) => {
     // Delete the selected content
     if (range.collapsed) {
@@ -49,7 +49,7 @@ const deleteContentAndShowCaret = (editor: Editor, range: Range, node: Node, dir
 // If the caret position is next to a fake caret target element (eg cef/media) after a delete operation, then ensure a caret is added
 // eg. <span cE=false>a|b -> <span cE=false>|bc
 // Note: We also need to handle the actual deletion, as some browsers (eg IE) move the selection to the opposite side of the cef element
-const deleteBoundaryText = (editor: Editor, forward: boolean) => {
+const deleteBoundaryText = (editor: Editor, forward: boolean): boolean => {
   const range = editor.selection.getRng();
   if (!NodeType.isText(range.commonAncestorContainer)) {
     return false;
@@ -80,7 +80,8 @@ const deleteBoundaryText = (editor: Editor, forward: boolean) => {
   return false;
 };
 
-const backspaceDelete = (editor: Editor, forward: boolean): boolean => deleteBoundaryText(editor, forward);
+const backspaceDelete = (editor: Editor, forward: boolean): boolean =>
+  deleteBoundaryText(editor, forward);
 
 export {
   backspaceDelete
