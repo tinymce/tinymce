@@ -1,4 +1,3 @@
-/* eslint-disable mocha/no-exclusive-tests */
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
