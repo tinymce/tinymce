@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents #TINY-7249
-- Changed emoticons, wordcount, code, codesample, and template plugins to open dialogs using commands #TINY-7619
+- Changed `emoticons`, `wordcount`, `code`, `codesample`, and `template` plugins to open dialogs using commands #TINY-7619
 
 ### Fixed
 - `editor.fire` was incorrectly mutating the original `args` provided #TINY-3254
