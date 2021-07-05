@@ -1,6 +1,3 @@
-import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Html, SugarElement } from '@ephox/sugar';
-
 import { AutocompleterSpec } from '../components/content/Autocompleter';
 import { ContextFormSpec } from '../components/content/ContextForm';
 import { ContextToolbarSpec } from '../components/content/ContextToolbar';
@@ -45,18 +42,6 @@ export interface Registry {
   };
 }
 
-const getSvg = (svgData: string, browser): string => {
-  if (browser.isIE()) {
-    const icon: SugarElement<Element> = SugarElement.fromHtml(svgData);
-    Attribute.set(icon, 'focusable', false);
-    return Html.getOuter(icon);
-  } else {
-    return svgData;
-  }
-};
-
-const detection = PlatformDetection.detect();
-
 export const create = (): Registry => {
   const buttons: Record<string, ToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec> = {};
   const menuItems: Record<string, MenuItemSpec | ToggleMenuItemSpec> = {};
@@ -66,7 +51,7 @@ export const create = (): Registry => {
   const contextToolbars: Record<string, ContextToolbarSpec | ContextFormSpec> = {};
   const sidebars: Record<string, SidebarSpec> = {};
   const add = (collection, type: string) => (name: string, spec: any): void => collection[name.toLowerCase()] = { ...spec, type };
-  const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = getSvg(svgData, detection.browser);
+  const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
 
   return {
     addButton: add(buttons, 'button'),
