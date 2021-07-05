@@ -14,29 +14,34 @@ import CaretPosition from '../caret/CaretPosition';
 import { isListItem, isTextBlock } from '../dom/ElementType';
 import * as InlineUtils from '../keyboard/InlineUtils';
 
-const isBeforeRoot = (rootNode: SugarElement<any>) => (elm: SugarElement<any>): boolean =>
+const isBeforeRoot = (rootNode: SugarElement<Node>) => (elm: SugarElement<Node>): boolean =>
   Compare.eq(rootNode, SugarElement.fromDom(elm.dom.parentNode));
 
-const getParentBlock = (rootNode: SugarElement<Node>, elm: SugarElement<Node>): Optional<SugarElement<Node>> =>
-  (Compare.contains(rootNode, elm)
-    ? PredicateFind.closest(elm, (element) => isTextBlock(element) || isListItem(element), isBeforeRoot(rootNode))
-    : Optional.none()
-  );
+const isTextBlockOrListItem = (element: SugarElement<Node>): element is SugarElement<Element> =>
+  isTextBlock(element) || isListItem(element);
 
-const placeCaretInEmptyBody = (editor: Editor) => {
+const getParentBlock = (rootNode: SugarElement<Node>, elm: SugarElement<Node>): Optional<SugarElement<Element>> => {
+  if (Compare.contains(rootNode, elm)) {
+    return PredicateFind.closest(elm, isTextBlockOrListItem, isBeforeRoot(rootNode));
+  } else {
+    return Optional.none();
+  }
+};
+
+const placeCaretInEmptyBody = (editor: Editor): void => {
   const body = editor.getBody();
   const node = body.firstChild && editor.dom.isBlock(body.firstChild) ? body.firstChild : body;
   editor.selection.setCursorLocation(node, 0);
 };
 
-const paddEmptyBody = (editor: Editor) => {
+const paddEmptyBody = (editor: Editor): void => {
   if (editor.dom.isEmpty(editor.getBody())) {
     editor.setContent('');
     placeCaretInEmptyBody(editor);
   }
 };
 
-const willDeleteLastPositionInElement = (forward: boolean, fromPos: CaretPosition, elm: Node) =>
+const willDeleteLastPositionInElement = (forward: boolean, fromPos: CaretPosition, elm: Node): boolean =>
   Optionals.lift2(
     CaretFinder.firstPositionIn(elm),
     CaretFinder.lastPositionIn(elm),

@@ -19,8 +19,8 @@ describe('browser.tinymce.core.delete.MergeBlocksTest', () => {
   };
 
   const mergeBlocks = (forward: boolean, block1Path: number[], block2Path: number[]) => {
-    const block1 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block1Path).getOrDie();
-    const block2 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block2Path).getOrDie();
+    const block1 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block1Path).getOrDie() as SugarElement<Element>;
+    const block2 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block2Path).getOrDie() as SugarElement<Element>;
     return MergeBlocks.mergeBlocks(SugarElement.fromDom(viewBlock.get()), forward, block1, block2);
   };
 

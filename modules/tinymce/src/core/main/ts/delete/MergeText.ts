@@ -30,7 +30,7 @@ const normalizeContent = (content: string, isStartOfContent: boolean, isEndOfCon
   return result.str;
 };
 
-const normalize = (node: Text, offset: number, count: number) => {
+const normalize = (node: Text, offset: number, count: number): void => {
   if (count === 0) {
     return;
   }
@@ -48,18 +48,18 @@ const normalize = (node: Text, offset: number, count: number) => {
   node.replaceData(offset, count, normalizeContent(whitespace, isStartOfContent, isEndOfContent));
 };
 
-const normalizeWhitespaceAfter = (node: Text, offset: number) => {
+const normalizeWhitespaceAfter = (node: Text, offset: number): void => {
   const content = node.data.slice(offset);
   const whitespaceCount = content.length - Strings.lTrim(content).length;
 
-  return normalize(node, offset, whitespaceCount);
+  normalize(node, offset, whitespaceCount);
 };
 
-const normalizeWhitespaceBefore = (node: Text, offset: number) => {
+const normalizeWhitespaceBefore = (node: Text, offset: number): void => {
   const content = node.data.slice(0, offset);
   const whitespaceCount = content.length - Strings.rTrim(content).length;
 
-  return normalize(node, offset - whitespaceCount, whitespaceCount);
+  normalize(node, offset - whitespaceCount, whitespaceCount);
 };
 
 const mergeTextNodes = (prevNode: Text, nextNode: Text, normalizeWhitespace?: boolean, mergeToPrev: boolean = true): Text => {
