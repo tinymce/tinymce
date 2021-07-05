@@ -12,9 +12,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 type Dir = 'rtl' | 'ltr';
 
-const getParentElement = (element: SugarElement<Element>): Optional<SugarElement<Element>> => {
-  return Traverse.parent(element).filter(SugarNode.isElement);
-};
+const getParentElement = (element: SugarElement<Element>): Optional<SugarElement<Element>> => Traverse.parent(element).filter(SugarNode.isElement);
 
 // if the block is a list item, we need to get the parent of the list itself
 const getNormalizedBlock = (element: SugarElement<Element>, isListItem: boolean): SugarElement<Element> => {
@@ -28,9 +26,9 @@ const setDir = (editor: Editor, dir: Dir): void => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
   if (selectedBlocks.length > 0) {
     Arr.each(selectedBlocks, (block) => {
-      const sugarBlock = SugarElement.fromDom(block);
-      const isSugarBlockListItem = isListItem(sugarBlock);
-      const normalizedBlock = getNormalizedBlock(sugarBlock, isSugarBlockListItem);
+      const blockElement = SugarElement.fromDom(block);
+      const isBlockElementListItem = isListItem(blockElement);
+      const normalizedBlock = getNormalizedBlock(blockElement, isBlockElementListItem);
       const normalizedBlockParent = getParentElement(normalizedBlock);
       normalizedBlockParent.each((parent) => {
         const parentDirection = Direction.getDirection(parent);
@@ -41,7 +39,7 @@ const setDir = (editor: Editor, dir: Dir): void => {
         }
 
         // remove dir attr from list children
-        if (isSugarBlockListItem) {
+        if (isBlockElementListItem) {
           const listItems = SelectorFilter.children(normalizedBlock, 'li[dir]');
           Arr.each(listItems, (listItem) => Attribute.remove(listItem, 'dir'));
         }
