@@ -19,41 +19,41 @@ describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
     indent: false,
   }, [ Plugin, Theme ], true);
 
-  const setEditorContentAndSelection = (editor: Editor, headBody: string) => {
+  const setEditorContentAndSelection = (editor: Editor, tableSection: 'thead' | 'tbody') => {
     editor.setContent(
       '<table>' +
-        `<t${headBody}>` +
+        `<${tableSection}>` +
           '<tr>' +
             makeCell('td', '0-0') +
-            makeCell('td', '0-1', false, true, true) +
+            makeCell('td', '0-1', 'none', 'selectionStart') +
           '</tr>' +
           '<tr>' +
             makeCell('td', '1-0') +
-            makeCell('td', '1-1', false, true, false, true) +
+            makeCell('td', '1-1', 'none', 'selectionEnd') +
           '</tr>' +
-        `</t${headBody}>` +
+        `</${tableSection}>` +
       '</table>'
     );
 
     TinySelections.setCursor(editor, [ 0, 0, 0, 1 ], 0);
   };
 
-  const resultForOn = (
+  const tableWithRowHeaders = (
     '<table>' +
       '<thead>' +
         '<tr>' +
-          makeCell('td', '0-0', true) +
-          makeCell('td', '0-1', true) +
+          makeCell('td', '0-0', 'col') +
+          makeCell('td', '0-1', 'col') +
         '</tr>' +
         '<tr>' +
-          makeCell('td', '1-0', true) +
-          makeCell('td', '1-1', true) +
+          makeCell('td', '1-0', 'col') +
+          makeCell('td', '1-1', 'col') +
         '</tr>' +
       '</thead>' +
     '</table>'
   );
 
-  const resultForOff = (
+  const tableWithoutRowHeaders = (
     '<table>' +
       '<tbody>' +
         '<tr>' +
@@ -70,37 +70,37 @@ describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
 
   it('TINY-7481: Can toggle headers on with toolbar button', () => {
     const editor = hook.editor();
-    setEditorContentAndSelection(editor, 'body');
+    setEditorContentAndSelection(editor, 'tbody');
 
     clickOnButton(editor, 'Row header');
 
-    TinyAssertions.assertContent(editor, resultForOn);
+    TinyAssertions.assertContent(editor, tableWithRowHeaders);
   });
 
   it('TINY-7481: Can toggle headers on with menuitem', async () => {
     const editor = hook.editor();
-    setEditorContentAndSelection(editor, 'body');
+    setEditorContentAndSelection(editor, 'tbody');
 
     await pClickOnMenuItem(editor, 'Row header');
 
-    TinyAssertions.assertContent(editor, resultForOn);
+    TinyAssertions.assertContent(editor, tableWithRowHeaders);
   });
 
   it('TINY-7481: Can toggle headers off with toolbar button', () => {
     const editor = hook.editor();
-    setEditorContentAndSelection(editor, 'head');
+    setEditorContentAndSelection(editor, 'thead');
 
     clickOnButton(editor, 'Row header');
 
-    TinyAssertions.assertContent(editor, resultForOff);
+    TinyAssertions.assertContent(editor, tableWithoutRowHeaders);
   });
 
   it('TINY-7481: Can toggle headers off with menuitem', async () => {
     const editor = hook.editor();
-    setEditorContentAndSelection(editor, 'head');
+    setEditorContentAndSelection(editor, 'thead');
 
     await pClickOnMenuItem(editor, 'Row header');
 
-    TinyAssertions.assertContent(editor, resultForOff);
+    TinyAssertions.assertContent(editor, tableWithoutRowHeaders);
   });
 });

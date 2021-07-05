@@ -172,16 +172,18 @@ const pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks = async (editor: Editor,
   await pAssertStyleCanBeToggledWithoutCheckmarks(editor, options, 'menuitem');
 };
 
-const makeCell = (type: string, content: string, hasScope?: boolean, isSelected?: boolean, isStart?: boolean, isEnd?: boolean) => {
-  const getSelection = () => {
+const makeCell = (type: string, content: string, scope?: 'col' | 'none', selectionMode?: 'selected' | 'selectionStart' | 'selectionStartEnd' | 'selectionEnd') => {
+  const getSelectionAttrs = () => {
+    const selectionStart = [ 'selectionStart', 'selectionStartEnd' ];
+    const selectionEnd = [ 'selectionEnd', 'selectionStartEnd' ];
     const attributes: string[] = [ '' ];
 
-    if (isSelected) {
-      if (isStart) {
+    if (selectionMode) {
+      if (Arr.contains(selectionStart, selectionMode)) {
         attributes.push('data-mce-first-selected="1"');
       }
 
-      if (isEnd) {
+      if (Arr.contains(selectionEnd, selectionMode)) {
         attributes.push('data-mce-last-selected="1"');
       }
 
@@ -191,15 +193,9 @@ const makeCell = (type: string, content: string, hasScope?: boolean, isSelected?
     return attributes.join(' ');
   };
 
-  const getScope = () => {
-    if (hasScope) {
-      return ' scope="col"';
-    } else {
-      return '';
-    }
-  };
+  const scopeValue = scope === 'none' ? '' : ` scope="${scope}"`;
 
-  return `<${type}${getScope()}${getSelection()}>Cell ${content}</${type}>`;
+  return `<${type}${scopeValue}${getSelectionAttrs()}>Cell ${content}</${type}>`;
 };
 
 export {

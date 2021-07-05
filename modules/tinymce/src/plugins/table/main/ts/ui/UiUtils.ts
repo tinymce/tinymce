@@ -74,12 +74,11 @@ const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpe
   }
 }];
 
-const changeRowHeader = (editor: Editor) =>
-  () => {
-    const currentType = editor.queryCommandValue('mceTableRowType');
-    const newType = currentType === 'header' ? 'body' : 'header';
-    editor.execCommand('mceTableRowType', false, { type: newType });
-  };
+const changeRowHeader = (editor: Editor) => () => {
+  const currentType = editor.queryCommandValue('mceTableRowType');
+  const newType = currentType === 'header' ? 'body' : 'header';
+  editor.execCommand('mceTableRowType', false, { type: newType });
+};
 
 export {
   onSetupToggle,
