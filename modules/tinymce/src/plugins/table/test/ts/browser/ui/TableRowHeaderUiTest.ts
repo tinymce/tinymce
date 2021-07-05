@@ -24,11 +24,11 @@ describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
       '<table>' +
         `<${tableSection}>` +
           '<tr>' +
-            makeCell('td', '0-0') +
+            makeCell('td', '0-0', 'none') +
             makeCell('td', '0-1', 'none', 'selectionStart') +
           '</tr>' +
           '<tr>' +
-            makeCell('td', '1-0') +
+            makeCell('td', '1-0', 'none') +
             makeCell('td', '1-1', 'none', 'selectionEnd') +
           '</tr>' +
         `</${tableSection}>` +
@@ -57,12 +57,12 @@ describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
     '<table>' +
       '<tbody>' +
         '<tr>' +
-          makeCell('td', '1-0') +
-          makeCell('td', '1-1') +
+          makeCell('td', '1-0', 'none') +
+          makeCell('td', '1-1', 'none') +
         '</tr>' +
         '<tr>' +
-          makeCell('td', '0-0') +
-          makeCell('td', '0-1') +
+          makeCell('td', '0-0', 'none') +
+          makeCell('td', '0-1', 'none') +
         '</tr>' +
       '</tbody>' +
     '</table>'
