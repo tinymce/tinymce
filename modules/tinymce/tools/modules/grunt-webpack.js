@@ -127,20 +127,10 @@ let allThemeDemos = (themes) => {
   return create(buildDemoEntries(themes, 'themes', 'Demos.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'demo.js')
 };
 
-let allComponentDemos = (themes) => {
-  return create(buildComponentEntries(themes, 'themes', 'Components.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'components.js')
-};
-
-let allDialogDemos = (themes) => {
-  return create(buildDialogEntries(themes, 'themes', 'DialogDemos.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'dialogdemos.js')
-};
-
 let all = (plugins, themes) => {
   return [
     allPluginDemos(plugins),
     allThemeDemos(themes),
-    allComponentDemos(themes),
-    allDialogDemos(themes),
     create(`src/core/demo/ts/demo/Demos.ts`, 'tsconfig.json', 'scratch/demos/core/', 'demo.js'),
     create('src/core/demo/ts/demo/ContentSecurityPolicyDemo.ts', 'tsconfig.json', 'scratch/demos/core/', 'cspdemo.js'),
     create('src/core/main/ts/api/Main.ts', 'tsconfig.json', 'js/tinymce/', 'tinymce.js'),
@@ -197,6 +187,5 @@ module.exports = {
   all,
   allPluginDemos,
   allThemeDemos,
-  allComponentDemos,
   generateDemoIndex
 };
