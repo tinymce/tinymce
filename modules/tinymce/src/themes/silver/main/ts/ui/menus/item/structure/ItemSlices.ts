@@ -11,17 +11,12 @@ import { Optional } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
-import { get as getIcon, IconProvider } from '../../../icons/Icons';
+import { get as getIcon, IconProvider, render as renderIconElement } from '../../../icons/Icons';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ItemClasses from '../ItemClasses';
 
-const renderIcon = (iconHtml: string): AlloySpec => ({
-  dom: {
-    tag: 'div',
-    classes: [ ItemClasses.iconClass ],
-    innerHtml: iconHtml
-  }
-});
+const renderIcon = (iconHtml: string): AlloySpec =>
+  renderIconElement('div', iconHtml, [ ItemClasses.iconClass ]);
 
 const renderText = (text: string): AlloySpec => ({
   dom: {

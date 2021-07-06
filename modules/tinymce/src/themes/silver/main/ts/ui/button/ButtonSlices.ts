@@ -8,18 +8,11 @@
 import { Behaviour, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { get as getIcon, IconProvider } from '../icons/Icons';
+import { get as getIcon, IconProvider, render as renderIconElement } from '../icons/Icons';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-const renderIcon = (iconHtml, behaviours): SimpleOrSketchSpec =>
-  ({
-    dom: {
-      tag: 'span',
-      innerHtml: iconHtml,
-      classes: [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ]
-    },
-    ...behaviours
-  });
+const renderIcon = (iconHtml: string, behaviours: Partial<SimpleOrSketchSpec>): SimpleOrSketchSpec =>
+  renderIconElement('span', iconHtml, [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ], behaviours);
 
 const renderIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => renderIcon(getIcon(iconName, iconsProvider), { });
 
