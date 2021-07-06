@@ -81,7 +81,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     );
   });
 
-  it('TINY-4589: should consider list item dir', () => {
+  it('TINY-4589: applying the same dir makes no changes', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul dir="rtl">' +
@@ -105,7 +105,21 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
         '</li>' +
       '</ul>'
     );
+  });
 
+  it('TINY-4589: should consider list item dir', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul dir="rtl">' +
+        '<li dir="ltr">ini' +
+          '<ul>' +
+            '<li>foo</li>' +
+            '<li>bar</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+    TinySelections.setSelection(editor, [ 0, 0, 1, 0 ], 0, [ 0, 0, 1, 0 ], 1); // foo
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor,
       '<ul dir="rtl">' +
