@@ -7,19 +7,20 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Dialog from './Dialog';
-
 const register = (editor: Editor) => {
+
+  const onAction = () => editor.execCommand('mceCodeEditor');
+
   editor.ui.registry.addButton('code', {
     icon: 'sourcecode',
     tooltip: 'Source code',
-    onAction: () => Dialog.open(editor)
+    onAction
   });
 
   editor.ui.registry.addMenuItem('code', {
     icon: 'sourcecode',
     text: 'Source code',
-    onAction: () => Dialog.open(editor)
+    onAction
   });
 };
 

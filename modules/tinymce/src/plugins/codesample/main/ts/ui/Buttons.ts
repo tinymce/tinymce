@@ -7,18 +7,19 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Dialog from './Dialog';
-
 const isCodeSampleSelection = (editor: Editor) => {
   const node = editor.selection.getStart();
   return editor.dom.is(node, 'pre[class*="language-"]');
 };
 
 const register = (editor: Editor) => {
+
+  const onAction = () => editor.execCommand('codesample');
+
   editor.ui.registry.addToggleButton('codesample', {
     icon: 'code-sample',
     tooltip: 'Insert/edit code sample',
-    onAction: () => Dialog.open(editor),
+    onAction,
     onSetup: (api) => {
       const nodeChangeHandler = () => {
         api.setActive(isCodeSampleSelection(editor));
@@ -31,7 +32,7 @@ const register = (editor: Editor) => {
   editor.ui.registry.addMenuItem('codesample', {
     text: 'Code sample...',
     icon: 'code-sample',
-    onAction: () => Dialog.open(editor)
+    onAction
   });
 };
 

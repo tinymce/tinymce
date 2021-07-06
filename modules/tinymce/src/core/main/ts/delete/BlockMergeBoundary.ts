@@ -15,7 +15,7 @@ import * as NodeType from '../dom/NodeType';
 import * as DeleteUtils from './DeleteUtils';
 
 export interface BlockPosition {
-  readonly block: SugarElement<Node>;
+  readonly block: SugarElement<Element>;
   readonly position: CaretPosition;
 }
 
@@ -24,7 +24,7 @@ export interface BlockBoundary {
   readonly to: BlockPosition;
 }
 
-const blockPosition = (block: SugarElement<Node>, position: CaretPosition): BlockPosition => ({
+const blockPosition = (block: SugarElement<Element>, position: CaretPosition): BlockPosition => ({
   block,
   position
 });
