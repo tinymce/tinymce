@@ -12,7 +12,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 type Dir = 'rtl' | 'ltr';
 
-const getParentElement = (element: SugarElement<Element>): Optional<SugarElement<Element>> => Traverse.parent(element).filter(SugarNode.isElement);
+const getParentElement = (element: SugarElement<Element>): Optional<SugarElement<Element>> =>
+  Traverse.parent(element).filter(SugarNode.isElement);
 
 // if the block is a list item, we need to get the parent of the list itself
 const getNormalizedBlock = (element: SugarElement<Element>, isListItem: boolean): SugarElement<Element> => {
