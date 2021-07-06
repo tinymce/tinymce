@@ -34,8 +34,6 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     TinySelections.setSelection(editor, [ 0 ], 0, [ 1 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor, '<p dir="rtl">foo</p><p dir="rtl">bar</p>');
-
-    TinySelections.setSelection(editor, [ 0 ], 0, [ 1 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
     TinyAssertions.assertContent(editor, '<p>foo</p><p>bar</p>');
   });
@@ -46,7 +44,6 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor, '<ul dir="rtl"><li>foo</li><li>bar</li></ul>');
-
     TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
     TinyAssertions.assertContent(editor, '<ul><li>foo</li><li>bar</li></ul>');
   });
@@ -83,28 +80,19 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
 
   it('TINY-4589: applying the same dir makes no changes', () => {
     const editor = hook.editor();
-    editor.setContent(
-      '<ul dir="rtl">' +
-        '<li dir="ltr">ini' +
-          '<ul>' +
-            '<li>foo</li>' +
-            '<li>bar</li>' +
-          '</ul>' +
-        '</li>' +
-      '</ul>'
-    );
+    const editorContent =
+    '<ul dir="rtl">' +
+      '<li dir="ltr">ini' +
+        '<ul>' +
+          '<li>foo</li>' +
+          '<li>bar</li>' +
+        '</ul>' +
+      '</li>' +
+    '</ul>';
+    editor.setContent(editorContent);
     TinySelections.setSelection(editor, [ 0, 0, 1, 0 ], 0, [ 0, 0, 1, 0 ], 1); // foo
     TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
-    TinyAssertions.assertContent(editor,
-      '<ul dir="rtl">' +
-        '<li dir="ltr">ini' +
-          '<ul>' +
-            '<li>foo</li>' +
-            '<li>bar</li>' +
-          '</ul>' +
-        '</li>' +
-      '</ul>'
-    );
+    TinyAssertions.assertContent(editor, editorContent);
   });
 
   it('TINY-4589: should consider list item dir', () => {
@@ -139,7 +127,6 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor, '<div dir="ltr"><p dir="rtl">foo</p><p>bar</p></div>');
-
     TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
     TinyAssertions.assertContent(editor, '<div dir="ltr"><p>foo</p><p>bar</p></div>');
   });
@@ -149,45 +136,32 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     editor.setContent(
       '<div dir="rtl">' +
         '<div id="target" dir="ltr">' +
-          '<div dir>' +
-            '<div dir="x">' +
-              '<div dir=" ">' +
-                '<p>foo</p>' +
-                '<p>bar</p>' +
-              '</div>' +
-            '</div>' +
+          '<div dir="x">' +
+            '<p>foo</p>' +
+            '<p>bar</p>' +
           '</div>' +
         '</div>' +
       '</div>'
     );
-    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1); // foo
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1); // foo
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor,
       '<div dir="rtl">' +
         '<div id="target" dir="ltr">' +
-          '<div dir="">' +
-            '<div dir="x">' +
-              '<div dir=" ">' +
-                '<p dir="rtl">foo</p>' +
-                '<p>bar</p>' +
-              '</div>' +
-            '</div>' +
+          '<div dir="x">' +
+            '<p dir="rtl">foo</p>' +
+            '<p>bar</p>' +
           '</div>' +
         '</div>' +
       '</div>'
     );
-
     TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
     TinyAssertions.assertContent(editor,
       '<div dir="rtl">' +
         '<div id="target" dir="ltr">' +
-          '<div dir="">' +
-            '<div dir="x">' +
-              '<div dir=" ">' +
-                '<p>foo</p>' +
-                '<p>bar</p>' +
-              '</div>' +
-            '</div>' +
+          '<div dir="x">' +
+            '<p>foo</p>' +
+            '<p>bar</p>' +
           '</div>' +
         '</div>' +
       '</div>'
