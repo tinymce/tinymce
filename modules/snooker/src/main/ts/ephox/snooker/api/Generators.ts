@@ -1,4 +1,4 @@
-import { Arr, Cell, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals, Singleton } from '@ephox/katamari';
 import { Attribute, Css, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { getAttrValue } from '../util/CellUtils';
@@ -66,7 +66,7 @@ const elementToData = (element: SugarElement): CellSpan => {
 
 // note that `toData` seems to be only for testing
 const modification = (generators: Generators, toData = elementToData): GeneratorsModification => {
-  const position = Cell(Optional.none<SugarElement>());
+  const position = Singleton.value<SugarElement>();
 
   const nu = (data: CellSpan) => {
     switch (SugarNode.name(data.element)) {
@@ -84,8 +84,8 @@ const modification = (generators: Generators, toData = elementToData): Generator
 
   const add = (element: SugarElement) => {
     const replacement = nuFrom(element);
-    if (position.get().isNone()) {
-      position.set(Optional.some(replacement));
+    if (!position.isSet()) {
+      position.set(replacement);
     }
     recent = Optional.some({ item: element, replacement });
     return replacement;
@@ -108,7 +108,7 @@ const modification = (generators: Generators, toData = elementToData): Generator
 
 const transform = <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) => {
   return (generators: Generators): GeneratorsTransform => {
-    const position = Cell(Optional.none<SugarElement>());
+    const position = Singleton.value<SugarElement>();
     const list: Item[] = [];
 
     const find = (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) => {
@@ -126,8 +126,8 @@ const transform = <K extends keyof HTMLElementTagNameMap> (scope: string | null,
         item: element,
         sub: cell
       });
-      if (position.get().isNone()) {
-        position.set(Optional.some(cell));
+      if (!position.isSet()) {
+        position.set(cell);
       }
       return cell;
     };
@@ -159,11 +159,11 @@ const getScopeAttribute = (cell: SugarElement) =>
   );
 
 const merging = (generators: Generators): GeneratorsMerging => {
-  const position = Cell(Optional.none<SugarElement>());
+  const position = Singleton.value<SugarElement>();
 
   const unmerge = (cell: SugarElement) => {
-    if (position.get().isNone()) {
-      position.set(Optional.some(cell));
+    if (!position.isSet()) {
+      position.set(cell);
     }
 
     const scope = getScopeAttribute(cell);

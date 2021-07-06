@@ -1,4 +1,4 @@
-import { Cell, Optional } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 
 import { Chain } from '../api/Chain';
 import * as GeneralSteps from '../api/GeneralSteps';
@@ -10,7 +10,7 @@ interface Props {
   click: () => void;
 }
 
-const inputPrototypeState = Cell(Optional.none<Props>());
+const inputPrototypeState = Singleton.value<Props>();
 
 const createChangeEvent = (win: Window): Event => {
   const event: any = document.createEvent('CustomEvent');
@@ -36,7 +36,7 @@ const cPatchInputElement = (files: File[]) => Chain.op<any>(() => {
     click: HTMLInputElement.prototype.click
   };
 
-  inputPrototypeState.set(Optional.some(currentProps));
+  inputPrototypeState.set(currentProps);
 
   Object.defineProperty(HTMLInputElement.prototype, 'files', {
     get: () => createFileList(files)
@@ -48,7 +48,7 @@ const cPatchInputElement = (files: File[]) => Chain.op<any>(() => {
 });
 
 const cUnpatchInputElement = Chain.op<any>(() => {
-  inputPrototypeState.get().each((props) => {
+  inputPrototypeState.on((props) => {
     Object.defineProperty(HTMLInputElement.prototype, 'files', props.files);
     HTMLInputElement.prototype.click = props.click;
   });

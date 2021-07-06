@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { BlobConversions } from '@ephox/imagetools';
-import { Cell, Optional } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -14,7 +14,7 @@ import * as ImageUtils from '../module/test/ImageUtils';
 describe('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest', () => {
   const uploadHandlerState = ImageUtils.createStateContainer();
   const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.jpg';
-  const fetchState = Cell(Optional.none<string>());
+  const fetchState = Singleton.value<string>();
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'imagetools',
@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest', () => {
   it('TBA: flip image with custom fetch image', async () => {
     const editor = hook.editor();
     editor.settings.imagetools_fetch_image = (img: HTMLImageElement) => {
-      fetchState.set(Optional.some(img.src));
+      fetchState.set(img.src);
       return BlobConversions.imageToBlob(img);
     };
     await ImageUtils.pLoadImage(editor, srcUrl);

@@ -5,7 +5,7 @@ import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NuPositionCss, PositionCss } from '../../positioning/view/PositionCss';
-import { DockingContext, DockingMode, DockingState, InitialDockingPosition } from './DockingTypes';
+import { DockingContext, DockingMode, DockingState } from './DockingTypes';
 
 type StaticMorph<T> = () => T;
 type AbsoluteMorph<T> = (pos: PositionCss) => T;
@@ -73,7 +73,7 @@ const isVisibleForModes = (modes: DockingMode[], box: Boxes.Bounds, viewport: Bo
   });
 
 const getPrior = (elem: SugarElement<HTMLElement>, state: DockingState): Optional<Boxes.Bounds> =>
-  state.getInitialPosition().map(
+  state.getInitialPos().map(
     // Only supports position absolute.
     (pos) => Boxes.bounds(
       pos.bounds.x,
@@ -84,16 +84,16 @@ const getPrior = (elem: SugarElement<HTMLElement>, state: DockingState): Optiona
   );
 
 const storePrior = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): void => {
-  state.setInitialPosition(Optional.some<InitialDockingPosition>({
+  state.setInitialPos({
     style: Css.getAllRaw(elem),
     position: Css.get(elem, 'position') || 'static',
     bounds: box
-  }));
+  });
 };
 
 const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, state: DockingState): Optional<MorphAdt> =>
-  state.getInitialPosition().bind((position) => {
-    state.setInitialPosition(Optional.none());
+  state.getInitialPos().bind((position) => {
+    state.clearInitialPos();
 
     switch (position.position) {
       case 'static':
