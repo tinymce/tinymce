@@ -107,35 +107,38 @@ const lineHeightSpec: ControlSpec<string> = {
   setCurrent: (editor, value) => editor.execCommand('LineHeight', false, value)
 };
 
-const languageSpec: ControlSpec<ContentLanguage> = {
-  name: 'language',
-  text: 'Language',
-  icon: 'translate',
+const languageSpec = (editor: Editor): Optional<ControlSpec<ContentLanguage>> => {
+  const settingsOpt = Optional.from(Settings.getContentLanguages(editor));
+  return settingsOpt.map((settings) => ({
+    name: 'language',
+    text: 'Language',
+    icon: 'translate',
 
-  getOptions: Settings.getContentLanguages,
-  hash: (input) => Type.isUndefined(input.customCode) ? input.code : `${input.code}/${input.customCode}`,
-  display: (input) => input.title,
+    getOptions: Fun.constant(settings),
+    hash: (input) => Type.isUndefined(input.customCode) ? input.code : `${input.code}/${input.customCode}`,
+    display: (input) => input.title,
 
-  getCurrent: (editor) => {
-    const node = SugarElement.fromDom(editor.selection.getNode());
-    return TransformFind.closest(node, (n) =>
-      Optional.some(n)
-        .filter(SugarNode.isElement)
-        .bind((ele) => {
-          const codeOpt = Attribute.getOpt(ele, 'lang');
-          return codeOpt.map((code): ContentLanguage => {
-            const customCode = Attribute.getOpt(ele, 'data-mce-lang').getOrUndefined();
-            return { code, customCode, title: '' };
-          });
-        })
-    );
-  },
-  setCurrent: (editor, lang) => editor.execCommand('Lang', false, lang)
+    getCurrent: (editor) => {
+      const node = SugarElement.fromDom(editor.selection.getNode());
+      return TransformFind.closest(node, (n) =>
+        Optional.some(n)
+          .filter(SugarNode.isElement)
+          .bind((ele) => {
+            const codeOpt = Attribute.getOpt(ele, 'lang');
+            return codeOpt.map((code): ContentLanguage => {
+              const customCode = Attribute.getOpt(ele, 'data-mce-lang').getOrUndefined();
+              return { code, customCode, title: '' };
+            });
+          })
+      );
+    },
+    setCurrent: (editor, lang) => editor.execCommand('Lang', false, lang)
+  }));
 };
 
 const register = (editor: Editor) => {
   registerController(editor, lineHeightSpec);
-  registerController(editor, languageSpec);
+  languageSpec(editor).each((spec) => registerController(editor, spec));
 };
 
 export {
