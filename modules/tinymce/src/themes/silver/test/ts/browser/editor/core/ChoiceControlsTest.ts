@@ -1,5 +1,5 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { McEditor, TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { Attribute } from '@ephox/sugar';
@@ -241,20 +241,13 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
 
     context('Advanced settings', () => {
       // Approximate the BDD hook here, but unfortunately we need a different editor per test
-      let editor: Editor | null = null;
-
-      before(() => Theme());
-
-      afterEach(() => {
-        if (editor !== null) {
-          McEditor.remove(editor);
-          editor = null;
-        }
+      before(() => {
+        Theme();
       });
 
       Arr.each([ menuSpec, toolbarSpec ], (spec) => {
         it(`TINY-6149: ${spec.name} applies custom language attributes`, async () => {
-          editor = await McEditor.pFromSettings<Editor>({
+          const editor = await McEditor.pFromSettings<Editor>({
             ...baseSettings,
             content_langs: [{ title: 'Medical English (US)', code: 'en_US', customCode: 'en_US-medical' }]
           });
@@ -273,10 +266,11 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           await pSelectItem(editor, spec.menuSelector, 'Medical English (US)');
 
           TinyAssertions.assertContent(editor, '<p>Hello world</p>');
+	  McEditor.remove(editor);
         });
 
         it(`TINY-6149: ${spec.name} differentiates languages with the same code but different custom codes`, async () => {
-          editor = await McEditor.pFromSettings({
+          const editor = await McEditor.pFromSettings<Editor>({
             ...baseSettings,
             content_langs: [
               { title: 'English', code: 'en' },
@@ -301,6 +295,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           await pAssertOptions(editor, spec.menuSelector, variants, Optional.some('English (Other variant)'));
 
           spec.close(editor, 'Language');
+	  McEditor.remove(editor);
         });
       });
     });

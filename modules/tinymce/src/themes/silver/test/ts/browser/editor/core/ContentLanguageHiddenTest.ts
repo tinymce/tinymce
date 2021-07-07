@@ -11,16 +11,16 @@ describe('browser.tinymce.themes.silver.editor.core.ContentLanguageHiddenTest', 
     toolbar: 'language | bold italic'
   }, [ Theme ]);
 
-  it('Does not show the toolbar button if content_langs is not defined', () => {
+  it('TINY-7570: Does not show the toolbar button if content_langs is not defined', () => {
     const editor = hook.editor();
-    assert.throw(() => TinyUiActions.clickOnToolbar(editor, '[title="Language"]'));
+    assert.throws(() => TinyUiActions.clickOnToolbar(editor, '[title="Language"]'));
   });
 
-  it('Does not show menu item if content_langs is not defined', async () => {
+  it('TINY-7570: Does not show menu item if content_langs is not defined', async () => {
     const editor = hook.editor();
     TinyUiActions.clickOnMenu(editor, 'button:contains("Format")');
     await TinyUiActions.pWaitForUi(editor, '[role="menu"]');
-    assert.throw(() => TinyUiActions.clickOnUi(editor, '[role="menu"] [title="Language"]'));
+    assert.throws(() => TinyUiActions.clickOnUi(editor, '[role="menu"] [title="Language"]'));
     // close it again
     TinyUiActions.clickOnMenu(editor, 'button:contains("Format")');
   });
