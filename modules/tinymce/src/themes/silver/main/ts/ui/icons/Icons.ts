@@ -28,7 +28,7 @@ const render = (tagName: string, iconHtml: string, classes: string[], behaviours
     },
     events: AlloyEvents.derive([
       AlloyEvents.runOnAttached((comp) => {
-        // ie 11 focus on svg without focusable = false attr
+        // set focusable=false on SVGs to prevent IE 11 from focusing the toolbar when tabbing into the editor
         SelectorFind.child(comp.element, 'svg').each((svg) => Attribute.set(svg, 'focusable', 'false'));
       })
     ]),
