@@ -164,11 +164,11 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     });
   };
 
-  const onSetupTableHeaders = (command: string, header: string) =>
+  const onSetupTableHeaders = (command: string, headerType: 'header' | 'th') =>
     (api: UiToggleApi): () => void => {
       return onSetupWithToggle(api,
         (targets) => isCaption(targets.element),
-        () => editor.queryCommandValue(command) === header
+        () => editor.queryCommandValue(command) === headerType
       );
     };
 

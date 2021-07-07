@@ -1,4 +1,3 @@
-/* eslint-disable mocha/no-exclusive-tests */
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
@@ -57,39 +56,35 @@ describe('browser.tinymce.plugins.table.ui.TableColumnHeaderUiTest', () => {
     );
   };
 
-  it('TINY-7481: Can toggle headers on with toolbar button', () => {
+  it('TINY-7481: Can toggle headers on with the toolbar button', () => {
     const editor = hook.editor();
     setEditorAndSelectionForOn(editor, 'td');
 
     clickOnButton(editor, 'Column header');
-
     TinyAssertions.assertContent(editor, getStructure('th'));
   });
 
-  it('TINY-7481: Can toggle headers on with menuitem', async () => {
+  it('TINY-7481: Can toggle headers on with the menuitem', async () => {
     const editor = hook.editor();
     setEditorAndSelectionForOn(editor, 'td');
 
     await pClickOnMenuItem(editor, 'Column header');
-
     TinyAssertions.assertContent(editor, getStructure('th'));
   });
 
-  it('TINY-7481: Can toggle headers off with toolbar button', () => {
+  it('TINY-7481: Can toggle headers off with the toolbar button', () => {
     const editor = hook.editor();
     setEditorAndSelectionForOn(editor, 'th');
 
     clickOnButton(editor, 'Column header');
-
     TinyAssertions.assertContent(editor, getStructure('td'));
   });
 
-  it('TINY-7481: Can toggle headers off with menuitem', async () => {
+  it('TINY-7481: Can toggle headers off with the menuitem', async () => {
     const editor = hook.editor();
     setEditorAndSelectionForOn(editor, 'th');
 
     await pClickOnMenuItem(editor, 'Column header');
-
     TinyAssertions.assertContent(editor, getStructure('td'));
   });
 });
