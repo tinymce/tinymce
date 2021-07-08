@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, SimpleOrSketchSpec } from '@ephox/alloy';
+import { AlloyEvents, Behaviour, SimpleOrSketchSpec } from '@ephox/alloy';
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 
@@ -19,7 +19,7 @@ const getOr = (name: string, icons: IconProvider, fallback: Optional<string>): s
 
 const getFirst = (names: string[], icons: IconProvider): string => Arr.findMap(names, (name) => Optional.from(icons()[name.toLowerCase()])).getOrThunk(() => defaultIcon(icons));
 
-const render = (tagName: string, iconHtml: string, classes: string[], behaviours: Partial<SimpleOrSketchSpec> = {}): SimpleOrSketchSpec => {
+const render = (tagName: string, iconHtml: string, classes: string[], behaviours: Behaviour.AlloyBehaviourRecord = {}): SimpleOrSketchSpec => {
   return ({
     dom: {
       tag: tagName,
@@ -32,7 +32,7 @@ const render = (tagName: string, iconHtml: string, classes: string[], behaviours
         SelectorFind.child(comp.element, 'svg').each((svg) => Attribute.set(svg, 'focusable', 'false'));
       })
     ]),
-    ...behaviours
+    behaviours
   });
 };
 
