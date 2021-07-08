@@ -6,7 +6,7 @@
  */
 
 import { AlloyEvents, Behaviour, SimpleOrSketchSpec } from '@ephox/alloy';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 
 export type IconProvider = () => Record<string, string>;
@@ -19,8 +19,8 @@ const getOr = (name: string, icons: IconProvider, fallback: Optional<string>): s
 
 const getFirst = (names: string[], icons: IconProvider): string => Arr.findMap(names, (name) => Optional.from(icons()[name.toLowerCase()])).getOrThunk(() => defaultIcon(icons));
 
-const render = (tagName: string, iconHtml: string, classes: string[], behaviours: Behaviour.AlloyBehaviourRecord = {}): SimpleOrSketchSpec => {
-  return ({
+const render = (tagName: string, iconHtml: string, classes: string[], behaviours: Optional<Behaviour.AlloyBehaviourRecord>): SimpleOrSketchSpec => {
+  const defaultSpec = {
     dom: {
       tag: tagName,
       innerHtml: iconHtml,
@@ -31,9 +31,13 @@ const render = (tagName: string, iconHtml: string, classes: string[], behaviours
         // set focusable=false on SVGs to prevent IE 11 from focusing the toolbar when tabbing into the editor
         SelectorFind.child(comp.element, 'svg').each((svg) => Attribute.set(svg, 'focusable', 'false'));
       })
-    ]),
-    behaviours
-  });
+    ])
+  };
+
+  return behaviours.fold(
+    Fun.constant(defaultSpec),
+    (behaviour) => ({ ...defaultSpec, behaviour })
+  );
 };
 
 export {
