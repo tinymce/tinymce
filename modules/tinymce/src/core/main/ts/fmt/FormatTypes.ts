@@ -12,70 +12,78 @@ export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelect
 export type Format = ApplyFormat | RemoveFormat;
 export type Formats = Record<string, Format | Format[]>;
 
-export type ApplyFormatPartial = Partial<BlockFormat> & Partial<InlineFormat> & Partial<SelectorFormat>;
-export type RemoveFormatPartial = Partial<RemoveBlockFormat> & Partial<RemoveInlineFormat> & Partial<RemoveSelectorFormat>;
-
 export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string);
 export type FormatVars = Record<string, string | null >;
 
 // Largely derived from the docs and src/core/main/ts/fmt/DefaultFormats.ts
-export interface CommonFormat<T> {
+export interface BaseFormat<T> {
   ceFalseOverride?: boolean;
   classes?: string | string[];
   collapsed?: boolean;
   exact?: boolean;
   expand?: boolean;
   links?: boolean;
+  mixed?: boolean;
+  block_expand?: boolean;
   onmatch?: (node: Node, fmt: T, itemName: string) => boolean;
   onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
-  remove_similar?: boolean;
-}
 
-export interface CommonApplyFormat<T> extends CommonFormat<T> {
-  attributes?: Record<string, FormatAttrOrStyleValue>;
-  preview?: string | boolean;
-  styles?: Record<string, FormatAttrOrStyleValue>;
+  // Apply format only properties
+  preview?: string | false;
   toggle?: boolean;
-  wrapper?: boolean;
+  clear_child_styles?: boolean;
   merge_siblings?: boolean;
   merge_with_parents?: boolean;
-}
-
-export interface BlockFormat extends CommonApplyFormat<BlockFormat> {
-  block: string;
-  block_expand?: boolean;
-}
-
-export interface InlineFormat extends CommonApplyFormat<InlineFormat> {
-  inline: string;
-  clear_child_styles?: boolean;
-}
-
-export interface SelectorFormat extends CommonApplyFormat<SelectorFormat> {
-  selector: string;
   defaultBlock?: string;
-  inherit?: boolean;
-}
 
-export interface CommonRemoveFormat<T> extends CommonFormat<T> {
+  // Remove format only properties
+  remove_similar?: boolean;
   remove?: 'none' | 'empty' | 'all';
-  attributes?: string[] | Record<string, FormatAttrOrStyleValue>;
-  styles?: string[] | Record<string, FormatAttrOrStyleValue>;
   split?: boolean;
   deep?: boolean;
-  mixed?: boolean; // Legacy
-}
-
-export interface RemoveBlockFormat extends CommonRemoveFormat<RemoveBlockFormat> {
-  block: string;
-  list_block?: string; // Legacy
-}
-
-export interface RemoveInlineFormat extends CommonRemoveFormat<RemoveInlineFormat> {
-  inline: string;
   preserve_attributes?: string[];
 }
 
-export interface RemoveSelectorFormat extends CommonRemoveFormat<RemoveSelectorFormat> {
-  selector: string;
+interface Block {
+  block: string;
+  list_block?: string; // Legacy
+  wrapper?: boolean;
 }
+
+interface Inline {
+  inline: string;
+}
+
+interface Selector {
+  selector: string;
+  inherit?: boolean;
+}
+
+export interface CommonFormat<T> extends BaseFormat<T> {
+  attributes?: Record<string, FormatAttrOrStyleValue>;
+  styles?: Record<string, FormatAttrOrStyleValue>;
+}
+
+export interface BlockFormat extends Block, CommonFormat<BlockFormat> {}
+
+export interface InlineFormat extends Inline, CommonFormat<InlineFormat> {}
+
+export interface SelectorFormat extends Selector, CommonFormat<SelectorFormat> {}
+
+// Mixed format is a combination of SelectorFormat and InlineFormat
+export interface MixedFormat extends CommonFormat<MixedFormat>, Inline, Selector {
+  block_expand: true;
+  mixed: true;
+}
+
+// A remove format is one that can only be removed and never applied
+export interface BaseRemoveFormat<T> extends BaseFormat<T> {
+  attributes?: string[] | Record<string, FormatAttrOrStyleValue>;
+  styles?: string[] | Record<string, FormatAttrOrStyleValue>;
+}
+
+export interface RemoveBlockFormat extends Block, BaseRemoveFormat<RemoveBlockFormat> {}
+
+export interface RemoveInlineFormat extends Inline, BaseRemoveFormat<RemoveInlineFormat> {}
+
+export interface RemoveSelectorFormat extends Selector, BaseRemoveFormat<RemoveSelectorFormat> {}
