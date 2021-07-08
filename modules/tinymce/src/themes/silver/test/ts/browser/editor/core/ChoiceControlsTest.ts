@@ -266,7 +266,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           await pSelectItem(editor, spec.menuSelector, 'Medical English (US)');
 
           TinyAssertions.assertContent(editor, '<p>Hello world</p>');
-	  McEditor.remove(editor);
+          McEditor.remove(editor);
         });
 
         it(`TINY-6149: ${spec.name} differentiates languages with the same code but different custom codes`, async () => {
@@ -295,7 +295,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           await pAssertOptions(editor, spec.menuSelector, variants, Optional.some('English (Other variant)'));
 
           spec.close(editor, 'Language');
-	  McEditor.remove(editor);
+          McEditor.remove(editor);
         });
       });
     });
