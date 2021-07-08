@@ -1,4 +1,4 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import {
   Attribute, Compare, Css, Insert, InsertAll, PredicateFilter, PredicateFind, Remove, SelectorFilter, SelectorFind, SugarElement, SugarNode,
   SugarText, Traverse
@@ -46,6 +46,14 @@ export default (): Universe<SugarElement, Document> => {
     return Arr.contains([
       'script', 'noscript', 'iframe', 'noframes', 'noembed', 'title', 'style', 'textarea', 'xmp'
     ], tag);
+  };
+
+  const getLanguage = (element: SugarElement<Node>): Optional<string> => {
+    if (SugarNode.isElement(element)) {
+      return Attribute.getOpt(element, 'lang');
+    } else {
+      return Optional.none();
+    }
   };
 
   return {
@@ -103,6 +111,7 @@ export default (): Universe<SugarElement, Document> => {
       isComment: SugarNode.isComment,
       isElement: SugarNode.isElement,
       isSpecial,
+      getLanguage,
       getText: SugarText.get,
       setText: SugarText.set,
       isBoundary,
