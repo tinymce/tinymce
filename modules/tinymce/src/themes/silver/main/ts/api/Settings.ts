@@ -51,7 +51,8 @@ const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_
 const getLineHeightFormats = (editor: Editor): string[] =>
   editor.getParam('lineheight_formats', '1 1.1 1.2 1.3 1.4 1.5 2', 'string').split(' ');
 
-const getContentLanguages = (editor: Editor): null | ContentLanguage[] => editor.getParam('content_langs', null, 'array');
+const getContentLanguages = (editor: Editor): ContentLanguage[] | undefined =>
+  editor.getParam('content_langs', undefined, 'array');
 
 const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
 const isMenubarEnabled = (editor: Editor): boolean => editor.getParam('menubar', true, 'boolean') !== false;
