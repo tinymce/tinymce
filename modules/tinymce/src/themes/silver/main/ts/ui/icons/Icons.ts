@@ -20,7 +20,7 @@ const getOr = (name: string, icons: IconProvider, fallback: Optional<string>): s
 const getFirst = (names: string[], icons: IconProvider): string => Arr.findMap(names, (name) => Optional.from(icons()[name.toLowerCase()])).getOrThunk(() => defaultIcon(icons));
 
 const render = (tagName: string, iconHtml: string, classes: string[], behaviours: Optional<Behaviour.AlloyBehaviourRecord>): SimpleOrSketchSpec => {
-  const defaultSpec = {
+  const iconSpec = {
     dom: {
       tag: tagName,
       innerHtml: iconHtml,
@@ -35,8 +35,8 @@ const render = (tagName: string, iconHtml: string, classes: string[], behaviours
   };
 
   return behaviours.fold(
-    Fun.constant(defaultSpec),
-    (behaviour) => ({ ...defaultSpec, behaviour })
+    Fun.constant(iconSpec),
+    (behaviour) => ({ ...iconSpec, behaviour })
   );
 };
 
