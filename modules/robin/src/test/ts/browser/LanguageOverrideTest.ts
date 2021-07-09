@@ -19,7 +19,7 @@ describe('browser.robin.LanguageOverrideTest', () => {
     '</div>'
   );
 
-  const walk = (universe: Universe<SugarElement, Document>): Array<AssertableZone> => {
+  const walk = (universe: Universe<SugarElement, Document>): AssertableZone[] => {
     const start = Traverse.firstChild(top).getOrDie();
     const end = Traverse.lastChild(top).getOrDie();
     const walkResult = TextZones.range(universe, start, 0, end, 2, 'default', ZoneViewports.anything());

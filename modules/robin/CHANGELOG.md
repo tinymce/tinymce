@@ -9,4 +9,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 8.1.0 - 2021-07-09
 
 ### Changed
-- TextZones APIs now use `universe.property().getLanguage` method instead of looking at `lang` attribute directly
+- `TextZones` APIs now use `universe.property().getLanguage` function instead of looking at `lang` attribute directly #TINY-7570

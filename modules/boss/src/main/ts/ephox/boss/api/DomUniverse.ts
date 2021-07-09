@@ -48,13 +48,8 @@ export default (): Universe<SugarElement, Document> => {
     ], tag);
   };
 
-  const getLanguage = (element: SugarElement<Node>): Optional<string> => {
-    if (SugarNode.isElement(element)) {
-      return Attribute.getOpt(element, 'lang');
-    } else {
-      return Optional.none();
-    }
-  };
+  const getLanguage = (element: SugarElement<Node>): Optional<string> =>
+    SugarNode.isElement(element) ? Attribute.getOpt(element, 'lang') : Optional.none();
 
   return {
     up: Fun.constant({

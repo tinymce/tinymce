@@ -9,4 +9,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 4.2.0 - 2021-07-09
 
 ### Added
-- Added `property().getLanguage` method to Universe
+- Added `property().getLanguage` function to Universe #TINY-7570

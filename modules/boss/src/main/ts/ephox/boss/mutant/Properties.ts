@@ -41,9 +41,8 @@ const isSpecial = (item: Gene): boolean => {
   return item.name === GeneTypes.Special;
 };
 
-const getLanguage = (item: Gene): Optional<string> => {
-  return Obj.get(item.attrs, 'lang');
-};
+const getLanguage = (item: Gene): Optional<string> =>
+  Obj.get(item.attrs, 'lang');
 
 const getText = (item: Gene): string => {
   return Optional.from(item.text).getOrDie('Text not available on this node');
