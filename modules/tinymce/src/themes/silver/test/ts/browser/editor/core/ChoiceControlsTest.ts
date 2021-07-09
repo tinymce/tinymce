@@ -240,7 +240,6 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
     });
 
     context('Advanced settings', () => {
-      // Approximate the BDD hook here, but unfortunately we need a different editor per test
       before(() => {
         Theme();
       });
