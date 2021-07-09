@@ -5,10 +5,10 @@ import * as PredicateFind from '../search/PredicateFind';
 import * as Traverse from '../search/Traverse';
 import * as Awareness from './Awareness';
 
-const first = (element: SugarElement<Node>): Optional<SugarElement<ChildNode>> =>
+const first = (element: SugarElement<Node>): Optional<SugarElement<Node & ChildNode>> =>
   PredicateFind.descendant(element, Awareness.isCursorPosition);
 
-const last = (element: SugarElement<Node>): Optional<SugarElement<ChildNode>> =>
+const last = (element: SugarElement<Node>): Optional<SugarElement<Node & ChildNode>> =>
   descendantRtl(element, Awareness.isCursorPosition);
 
 // Note, sugar probably needs some RTL traversals.
