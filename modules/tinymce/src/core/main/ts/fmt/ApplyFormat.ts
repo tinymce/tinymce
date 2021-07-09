@@ -11,7 +11,6 @@ import { PredicateExists, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
-import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
@@ -29,8 +28,6 @@ import * as FormatUtils from './FormatUtils';
 import * as Hooks from './Hooks';
 import * as MatchFormat from './MatchFormat';
 import * as MergeFormats from './MergeFormats';
-
-const each = Tools.each;
 
 const isElementNode = (node: Node): node is Element => {
   return NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
@@ -72,7 +69,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       fmt.onformat(elm, fmt as any, vars, node);
     }
 
-    each(fmt.styles, (value, name) => {
+    Obj.each(fmt.styles, (value, name) => {
       dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
     });
 
@@ -86,11 +83,11 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       }
     }
 
-    each(fmt.attributes, (value, name) => {
+    Obj.each(fmt.attributes, (value, name) => {
       dom.setAttrib(elm, name, FormatUtils.replaceVars(value, vars));
     });
 
-    each(fmt.classes, (value) => {
+    Arr.each(fmt.classes, (value) => {
       value = FormatUtils.replaceVars(value, vars);
 
       if (!dom.hasClass(elm, value)) {
@@ -107,7 +104,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     }
 
     // Look for matching formats
-    each(formatList, (format) => {
+    Arr.each(formatList, (format) => {
       // Check collapsed state if it exists
       if (Type.isNonNullable(format.collapsed) && format.collapsed !== isCollapsed) {
         return;
@@ -222,7 +219,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           // Start a new wrapper for possible children
           currentWrapElm = null;
 
-          each(Tools.grep(node.childNodes), process);
+          Arr.each(Arr.from(node.childNodes), process);
 
           if (hasContentEditableState) {
             contentEditable = lastContentEditable; // Restore last contentEditable state from stack
@@ -238,13 +235,13 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
     // Apply formats to links as well to get the color of the underline to change as well
     if (format.links === true) {
-      each(newWrappers, (node) => {
+      Arr.each(newWrappers, (node) => {
         const process = (node: Node) => {
           if (node.nodeName === 'A') {
             setElementFormat(node, format);
           }
 
-          each(Tools.grep(node.childNodes), process);
+          Arr.each(Arr.from(node.childNodes), process);
         };
 
         process(node);
@@ -252,11 +249,11 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     }
 
     // Cleanup
-    each(newWrappers, (node) => {
+    Arr.each(newWrappers, (node) => {
       const getChildCount = (node: Node) => {
         let count = 0;
 
-        each(node.childNodes, (node) => {
+        Arr.each(node.childNodes, (node) => {
           if (!FormatUtils.isEmptyTextNode(node) && !Bookmarks.isBookmarkNode(node)) {
             count++;
           }

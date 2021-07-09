@@ -202,7 +202,7 @@ const canApply = (editor: Editor, name: string) => {
       const format = formatList[x];
 
       // Format is not selector based then always return TRUE
-      // Is it has a defaultBlock then it's likely it can be applied for example align on a non block element line
+      // If it has a defaultBlock then it's likely it can be applied, for example align on a non block element line
       if (!FormatUtils.isSelectorFormat(format) || Type.isNonNullable(format.defaultBlock)) {
         return true;
       }
