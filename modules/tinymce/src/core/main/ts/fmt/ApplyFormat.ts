@@ -11,6 +11,7 @@ import { PredicateExists, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
+import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
@@ -28,6 +29,8 @@ import * as FormatUtils from './FormatUtils';
 import * as Hooks from './Hooks';
 import * as MatchFormat from './MatchFormat';
 import * as MergeFormats from './MergeFormats';
+
+const each = Tools.each;
 
 const isElementNode = (node: Node): node is Element => {
   return NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
@@ -69,7 +72,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       fmt.onformat(elm, fmt as any, vars, node);
     }
 
-    Obj.each(fmt.styles, (value, name) => {
+    each(fmt.styles, (value, name) => {
       dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
     });
 
@@ -83,11 +86,11 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       }
     }
 
-    Obj.each(fmt.attributes, (value, name) => {
+    each(fmt.attributes, (value, name) => {
       dom.setAttrib(elm, name, FormatUtils.replaceVars(value, vars));
     });
 
-    Arr.each(fmt.classes, (value) => {
+    each(fmt.classes, (value) => {
       value = FormatUtils.replaceVars(value, vars);
 
       if (!dom.hasClass(elm, value)) {
@@ -104,7 +107,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     }
 
     // Look for matching formats
-    Arr.each(formatList, (format) => {
+    each(formatList, (format) => {
       // Check collapsed state if it exists
       if (Type.isNonNullable(format.collapsed) && format.collapsed !== isCollapsed) {
         return;
