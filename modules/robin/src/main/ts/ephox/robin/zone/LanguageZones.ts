@@ -122,10 +122,10 @@ const nu = <E>(defaultLang: string): LanguageZones<E> => {
 //    (regardless of 'classic'/iframe or 'inline'/div mode).
 // Note: there may be descendant elements with a different language
 const calculate = <E, D>(universe: Universe<E, D>, item: E): Optional<string> => {
-  const getLanguage = universe.property().getLanguage;
-  return getLanguage(item).orThunk(() => {
+  const props = universe.property();
+  return props.getLanguage(item).orThunk(() => {
     const ancestors = universe.up().all(item, Fun.never);
-    return Arr.findMap(ancestors, getLanguage);
+    return Arr.findMap(ancestors, props.getLanguage);
   });
 };
 
