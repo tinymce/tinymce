@@ -28,17 +28,9 @@ export interface BaseFormat<T> {
   onmatch?: (node: Node, fmt: T, itemName: string) => boolean;
   onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
 
-  // Apply format only properties
-  preview?: string | false;
-  toggle?: boolean;
-  clear_child_styles?: boolean;
-  merge_siblings?: boolean;
-  merge_with_parents?: boolean;
-  defaultBlock?: string;
-
-  // Remove format only properties
-  remove_similar?: boolean;
+  // These are only used when removing formats
   remove?: 'none' | 'empty' | 'all';
+  remove_similar?: boolean;
   split?: boolean;
   deep?: boolean;
   preserve_attributes?: string[];
@@ -59,9 +51,18 @@ interface Selector {
   inherit?: boolean;
 }
 
+// A common format is one that can be both applied and removed
 export interface CommonFormat<T> extends BaseFormat<T> {
   attributes?: Record<string, FormatAttrOrStyleValue>;
   styles?: Record<string, FormatAttrOrStyleValue>;
+
+  // These are only used when applying formats
+  preview?: string | false;
+  toggle?: boolean;
+  clear_child_styles?: boolean;
+  merge_siblings?: boolean;
+  merge_with_parents?: boolean;
+  defaultBlock?: string;
 }
 
 export interface BlockFormat extends Block, CommonFormat<BlockFormat> {}
@@ -71,19 +72,19 @@ export interface InlineFormat extends Inline, CommonFormat<InlineFormat> {}
 export interface SelectorFormat extends Selector, CommonFormat<SelectorFormat> {}
 
 // Mixed format is a combination of SelectorFormat and InlineFormat
-export interface MixedFormat extends CommonFormat<MixedFormat>, Inline, Selector {
+export interface MixedFormat extends Inline, Selector, CommonFormat<MixedFormat> {
   block_expand: true;
   mixed: true;
 }
 
 // A remove format is one that can only be removed and never applied
-export interface BaseRemoveFormat<T> extends BaseFormat<T> {
+export interface CommonRemoveFormat<T> extends BaseFormat<T> {
   attributes?: string[] | Record<string, FormatAttrOrStyleValue>;
   styles?: string[] | Record<string, FormatAttrOrStyleValue>;
 }
 
-export interface RemoveBlockFormat extends Block, BaseRemoveFormat<RemoveBlockFormat> {}
+export interface RemoveBlockFormat extends Block, CommonRemoveFormat<RemoveBlockFormat> {}
 
-export interface RemoveInlineFormat extends Inline, BaseRemoveFormat<RemoveInlineFormat> {}
+export interface RemoveInlineFormat extends Inline, CommonRemoveFormat<RemoveInlineFormat> {}
 
-export interface RemoveSelectorFormat extends Selector, BaseRemoveFormat<RemoveSelectorFormat> {}
+export interface RemoveSelectorFormat extends Selector, CommonRemoveFormat<RemoveSelectorFormat> {}
