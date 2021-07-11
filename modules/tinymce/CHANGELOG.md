@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Links in notification text did not show the correct mouse pointer #TINY-7661
 - The formatter match APIs were incorrectly returning false for formats that specified an attribute or style should be removed from an element #TINY-6149
 - The type signature on `editor.formatter.matchNode` had the wrong return type (was `boolean` but should have been `Formatter | undefined`) #TINY-6149
+- The editor selection could be placed in an incorrect location when undoing or redoing changes in a document containing `contenteditable="false"` elements #TINY-7663
 
 ## 5.8.2 - 2021-06-23
 

@@ -1,6 +1,7 @@
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -190,7 +191,7 @@ describe('browser.tinymce.core.UndoManager', () => {
     editor.dom.fire(editor.getBody(), 'keyup', evt);
 
     assert.isFalse(added);
-    assert.deepEqual(commands, [ 'mceFocus', 'mceFocus', 'Undo' ]);
+    assert.deepEqual(commands, [ 'mceFocus', 'Undo' ]);
   });
 
   it('Transact', () => {
@@ -563,5 +564,18 @@ describe('browser.tinymce.core.UndoManager', () => {
     editor.undoManager.clear();
     editor.execCommand('mceFocus');
     assert.isFalse(editor.undoManager.hasUndo());
+  });
+
+  it('TINY-7663: Undo when first element is contenteditable="false" should restore correct cursor location', () => {
+    const editor = hook.editor();
+    editor.undoManager.clear();
+    editor.setDirty(false);
+    editor.setContent('<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>', { format: 'raw' });
+    TinySelections.setCursor(editor, [ 2, 0 ], 14);
+
+    TinyContentActions.keystroke(editor, Keys.enter());
+    editor.undoManager.undo();
+    TinyAssertions.assertContent(editor, '<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>');
+    TinyAssertions.assertCursor(editor, [ 2, 0 ], 14);
   });
 });
