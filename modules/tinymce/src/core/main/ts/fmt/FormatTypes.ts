@@ -26,7 +26,6 @@ export interface BaseFormat<T> {
   mixed?: boolean;
   block_expand?: boolean;
   onmatch?: (node: Node, fmt: T, itemName: string) => boolean;
-  onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
 
   // These are only used when removing formats
   remove?: 'none' | 'empty' | 'all';
@@ -55,10 +54,11 @@ interface Selector {
 export interface CommonFormat<T> extends BaseFormat<T> {
   attributes?: Record<string, FormatAttrOrStyleValue>;
   styles?: Record<string, FormatAttrOrStyleValue>;
+  toggle?: boolean;
+  preview?: string | false;
 
   // These are only used when applying formats
-  preview?: string | false;
-  toggle?: boolean;
+  onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
   clear_child_styles?: boolean;
   merge_siblings?: boolean;
   merge_with_parents?: boolean;
