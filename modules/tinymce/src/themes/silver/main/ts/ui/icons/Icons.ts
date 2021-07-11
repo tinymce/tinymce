@@ -6,7 +6,7 @@
  */
 
 import { AlloyEvents, Behaviour, SimpleOrSketchSpec } from '@ephox/alloy';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 
 export type IconProvider = () => Record<string, string>;
@@ -19,7 +19,7 @@ const getOr = (name: string, icons: IconProvider, fallback: Optional<string>): s
 
 const getFirst = (names: string[], icons: IconProvider): string => Arr.findMap(names, (name) => Optional.from(icons()[name.toLowerCase()])).getOrThunk(() => defaultIcon(icons));
 
-const render = (tagName: string, iconHtml: string, classes: string[], behaviours: Optional<Behaviour.AlloyBehaviourRecord>): SimpleOrSketchSpec => {
+const render = (tagName: string, iconHtml: string, classes: string[], behavioursOpt: Optional<Behaviour.AlloyBehaviourRecord>): SimpleOrSketchSpec => {
   const iconSpec = {
     dom: {
       tag: tagName,
@@ -34,10 +34,12 @@ const render = (tagName: string, iconHtml: string, classes: string[], behaviours
     ])
   };
 
-  return behaviours.fold(
-    Fun.constant(iconSpec),
-    (behaviour) => ({ ...iconSpec, behaviour })
-  );
+  const behavioursSpec = behavioursOpt.map((behaviours) => ({ behaviours })).getOr({});
+
+  return {
+    ...iconSpec,
+    ...behavioursSpec
+  };
 };
 
 export {
