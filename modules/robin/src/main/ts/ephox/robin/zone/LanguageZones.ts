@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import { WordDecisionItem } from '../words/WordDecision';
 
