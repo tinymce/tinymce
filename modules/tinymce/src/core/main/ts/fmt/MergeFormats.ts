@@ -8,7 +8,7 @@
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
-import { FormatVars } from './FormatTypes';
+import { ApplyFormat, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 import { applyStyle, clearChildStyles, hasStyle, isElementNode, mergeSiblings, processChildElements } from './MergeUtils';
@@ -16,7 +16,7 @@ import * as RemoveFormat from './RemoveFormat';
 
 const each = Tools.each;
 
-const mergeTextDecorationsAndColor = (dom: DOMUtils, format, vars: FormatVars, node: Node) => {
+const mergeTextDecorationsAndColor = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars, node: Node) => {
   const processTextDecorationsAndColor = (n: Node) => {
     if (n.nodeType === 1 && n.parentNode && n.parentNode.nodeType === 1) {
       const textDecoration = FormatUtils.getTextDecoration(dom, n.parentNode);
@@ -35,7 +35,7 @@ const mergeTextDecorationsAndColor = (dom: DOMUtils, format, vars: FormatVars, n
   }
 };
 
-const mergeBackgroundColorAndFontSize = (dom: DOMUtils, format, vars: FormatVars, node: Node) => {
+const mergeBackgroundColorAndFontSize = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars, node: Node) => {
   // nodes with font-size should have their own background color as well to fit the line-height (see TINY-882)
   if (format.styles && format.styles.backgroundColor) {
     processChildElements(node,
@@ -45,9 +45,9 @@ const mergeBackgroundColorAndFontSize = (dom: DOMUtils, format, vars: FormatVars
   }
 };
 
-const mergeSubSup = (dom: DOMUtils, format, vars: FormatVars, node: Node) => {
+const mergeSubSup = (dom: DOMUtils, format: ApplyFormat, vars: FormatVars, node: Node) => {
   // Remove font size on all children of a sub/sup and remove the inverse element
-  if (format.inline === 'sub' || format.inline === 'sup') {
+  if (FormatUtils.isInlineFormat(format) && (format.inline === 'sub' || format.inline === 'sup')) {
     processChildElements(node,
       hasStyle(dom, 'fontSize'),
       applyStyle(dom, 'fontSize', '')
@@ -57,25 +57,27 @@ const mergeSubSup = (dom: DOMUtils, format, vars: FormatVars, node: Node) => {
   }
 };
 
-const mergeWithChildren = (editor: Editor, formatList, vars: FormatVars, node: Node) => {
+const mergeWithChildren = (editor: Editor, formatList: ApplyFormat[], vars: FormatVars, node: Node) => {
   // Remove/merge children
-  each(formatList, (format: any) => {
+  each(formatList, (format) => {
     // Merge all children of similar type will move styles from child to parent
     // this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
     // will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
-    each(editor.dom.select(format.inline, node), (child) => {
-      if (!isElementNode(child)) {
-        return;
-      }
+    if (FormatUtils.isInlineFormat(format)) {
+      each(editor.dom.select(format.inline, node), (child) => {
+        if (!isElementNode(child)) {
+          return;
+        }
 
-      RemoveFormat.removeFormat(editor, format, vars, child, format.exact ? child : null);
-    });
+        RemoveFormat.removeFormat(editor, format, vars, child, format.exact ? child : null);
+      });
+    }
 
     clearChildStyles(editor.dom, format, node);
   });
 };
 
-const mergeWithParents = (editor: Editor, format, name: string, vars: FormatVars, node: Node) => {
+const mergeWithParents = (editor: Editor, format: ApplyFormat, name: string, vars: FormatVars, node: Node) => {
   // Remove format if direct parent already has the same format
   if (MatchFormat.matchNode(editor, node.parentNode, name, vars)) {
     if (RemoveFormat.removeFormat(editor, format, vars, node)) {
