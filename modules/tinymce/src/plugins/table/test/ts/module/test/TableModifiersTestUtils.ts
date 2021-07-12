@@ -151,14 +151,14 @@ const pAssertStyleCanBeToggledWithoutCheckmarks = async (editor: Editor, options
 const pAssertStyleCanBeToggled = async (editor: Editor, options: AssertStyleOptionsWithCheckmarks, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
   const sugarContainer = SugarBody.body();
   setEditorContentTableAndSelection(editor, options.rows, options.columns);
-  await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer, useMenuOrToolbar);
+  await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuRemoveTitle, options.checkMarkEntries - 1, sugarContainer, useMenuOrToolbar);
 
   await pClickOnSubMenu(editor, options.menuTitle, options.subMenuTitle, useMenuOrToolbar);
   await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuTitle, options.checkMarkEntries - 1, sugarContainer, useMenuOrToolbar);
   assertStructureHasCustomStyle(editor, options.rows, options.columns, options.customStyle);
 
   await pClickOnSubMenu(editor, options.menuTitle, options.subMenuRemoveTitle, useMenuOrToolbar);
-  await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer, useMenuOrToolbar);
+  await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuRemoveTitle, options.checkMarkEntries - 1, sugarContainer, useMenuOrToolbar);
   assertStructureIsRestoredToDefault(editor, options.rows, options.columns);
 };
 

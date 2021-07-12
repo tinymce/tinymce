@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Singleton, Strings } from '@ephox/katamari';
+import { Arr, Optional, Singleton, Strings } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -14,12 +14,12 @@ interface Item {
   readonly value: string;
 }
 
-const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) => {
+const onSetupToggle = (editor: Editor, formatName: string, active: () => boolean) => {
   return (api: Toolbar.ToolbarMenuButtonInstanceApi) => {
     const boundCallback = Singleton.unbindable();
 
     const init = () => {
-      api.setActive(editor.formatter.match(formatName, { value: formatValue }));
+      api.setActive(active());
       const binding = editor.formatter.formatChanged(formatName, api.setActive);
       boundCallback.set(binding);
     };
@@ -31,6 +31,14 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
   };
 };
 
+const onSetupToggleSingle = (editor: Editor, formatName: string, formatValue: string) => {
+  return onSetupToggle(editor, formatName, () => editor.formatter.match(formatName, { value: formatValue }));
+};
+
+const onSetupToggleInverse = (editor: Editor, formatName: string, formatValues: string[]) => {
+  return onSetupToggle(editor, formatName, () => !Arr.exists(formatValues, (value) => editor.formatter.match(formatName, { value })));
+};
+
 const applyTableCellStyle = <T extends Item>(editor: Editor, style: string) =>
   (item: T) =>
     editor.execCommand('mceTableApplyCellStyle', false, { [style]: item.value });
@@ -38,15 +46,25 @@ const applyTableCellStyle = <T extends Item>(editor: Editor, style: string) =>
 const filterNoneItem = <T extends Item>(list: T[]) =>
   Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
 
-const generateItem = <T extends Item>(editor: Editor, item: T, format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec => ({
+const generateItem = <T extends Item>(editor: Editor, item: T, otherValues: Optional<string[]>, format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec => ({
   text: extractText(item),
   type: 'togglemenuitem',
   onAction: () => onAction(item),
-  onSetup: onSetupToggle(editor, format, item.value)
+  onSetup: otherValues.fold(
+    () => onSetupToggleSingle(editor, format, item.value),
+    (values) => onSetupToggleInverse(editor, format, values)
+  )
 });
 
 const generateItems = <T extends Item>(editor: Editor, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec[] =>
-  Arr.map(items, (item) => generateItem(editor, item, format, extractText, onAction));
+  Arr.map(items, (item) => {
+    if (item.value === '') {
+      const otherValues = Optional.some(Arr.map(filterNoneItem(items), (itemValue) => itemValue.value));
+      return generateItem(editor, item, otherValues, format, extractText, onAction);
+    } else {
+      return generateItem(editor, item, Optional.none(), format, extractText, onAction);
+    }
+  });
 
 const generateItemsCallback = <T extends Item>(editor: Editor, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void) =>
   (callback: (items: Menu.ToggleMenuItemSpec[]) => void) =>
