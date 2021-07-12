@@ -569,9 +569,7 @@ describe('browser.tinymce.core.UndoManager', () => {
   context('Undo when first element is contenteditable="false"', () => {
     beforeEach(() => {
       const editor = hook.editor();
-      editor.undoManager.clear();
-      editor.setDirty(false);
-      editor.setContent('<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>', { format: 'raw' });
+      editor.resetContent('<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>');
       editor.focus();
     });
 
