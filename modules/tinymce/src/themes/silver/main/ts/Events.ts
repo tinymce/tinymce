@@ -28,13 +28,21 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
 
   const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target });
 
+  const dismissPopupsOnEditor = () => {
+    Arr.each(editor.editorManager.get(), (loopEditor) => {
+      if (editor !== loopEditor) {
+        loopEditor.fire('DismissPopups', editor);
+      }
+    });
+  };
+
   // Document touch events
   const onTouchstart = DomEvent.bind(SugarElement.fromDom(document), 'touchstart', fireDismissPopups);
   const onTouchmove = DomEvent.bind(SugarElement.fromDom(document), 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
   const onTouchend = DomEvent.bind(SugarElement.fromDom(document), 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
 
   // Document mouse events
-  const onMousedown = DomEvent.bind(SugarElement.fromDom(document), 'mousedown', fireDismissPopups);
+  const onMousedown = DomEvent.bind(SugarElement.fromDom(document), 'mousedown', dismissPopupsOnEditor);
   const onMouseup = DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
     if (evt.raw.button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: evt.target });
@@ -42,10 +50,14 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   });
 
   // Editor content events
-  const onContentClick = (raw: UIEvent) => broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(raw.target as Node) });
+  const onContentClick = () => {
+    Arr.each(editor.editorManager.get(), (loopEditor) => loopEditor.fire('DismissPopups', editor));
+  };
   const onContentMouseup = (raw: MouseEvent) => {
     if (raw.button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: SugarElement.fromDom(raw.target as Node) });
+    } else {
+      dismissPopupsOnEditor();
     }
   };
 
@@ -63,6 +75,10 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     }
   };
 
+  const onDismissPopups = (eventEditor: Editor) => {
+    broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(eventEditor.getContainer()) });
+  };
+
   // Don't start listening to events until the UI has rendered
   editor.on('PostRender', () => {
     editor.on('click', onContentClick);
@@ -72,6 +88,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.on('ResizeWindow', onWindowResize);
     editor.on('ResizeEditor', onEditorResize);
     editor.on('AfterProgressState', onEditorProgress);
+    editor.on('DismissPopups', onDismissPopups);
   });
 
   editor.on('remove', () => {
@@ -83,6 +100,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.off('ResizeWindow', onWindowResize);
     editor.off('ResizeEditor', onEditorResize);
     editor.off('AfterProgressState', onEditorProgress);
+    editor.off('DismissPopups', onDismissPopups);
 
     onMousedown.unbind();
     onTouchstart.unbind();
