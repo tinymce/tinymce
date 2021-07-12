@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import { WordDecisionItem } from '../words/WordDecision';
 
@@ -123,9 +123,10 @@ const nu = <E>(defaultLang: string): LanguageZones<E> => {
 //    (regardless of 'classic'/iframe or 'inline'/div mode).
 // Note: there may be descendant elements with a different language
 const calculate = <E, D>(universe: Universe<E, D>, item: E): Optional<string> => {
-  return universe.up().closest(item, '[lang]', Fun.never).bind((el) => {
-    const lang = universe.attrs().get(el, 'lang');
-    return lang === undefined ? Optional.none<string>() : Optional.some(lang);
+  const props = universe.property();
+  return props.getLanguage(item).orThunk(() => {
+    const ancestors = universe.up().all(item, Fun.never);
+    return Arr.findMap(ancestors, props.getLanguage);
   });
 };
 

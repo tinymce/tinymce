@@ -67,7 +67,17 @@ UnitTest.test('RegexesTest', () => {
     // 'http://☺.damowmow.com/',
   ];
 
-  const trueCases = ephoxCases.concat(mathiasBynens);
+  const validSchemes = [
+    'h://foo.com',
+    'h1://foo.com',
+    'h1+://foo.com',
+    'h1+.://foo.com',
+    'h1+.-://foo.com',
+    'p72internal://foo.com',
+    'but15characters://foo.com',
+  ];
+
+  const trueCases = ephoxCases.concat(mathiasBynens).concat(validSchemes);
 
   const ephoxFalseCases = [
     'I am not a link',
@@ -92,7 +102,6 @@ UnitTest.test('RegexesTest', () => {
     'http:// shouldfail.com',
     'http://foo.bar/foo(bar)baz quux',
     'foo.com',
-    'h://test',
     ':// should fail',
     'http://?',
     'http://??',
@@ -129,7 +138,18 @@ UnitTest.test('RegexesTest', () => {
     // 'http://10.1.1.1'
   ];
 
-  const falseCases = ephoxFalseCases.concat(mathiasBynensFalse);
+  const invalidSchemes = [
+    '1h://foo.com',
+    '+h://foo.com',
+    '.h://foo.com',
+    '-h://foo.com',
+    'h!://foo.com',
+    'h/://foo.com',
+    'h_://foo.com',
+    'morethanfifteencharacters://foo.com',
+  ];
+
+  const falseCases = ephoxFalseCases.concat(mathiasBynensFalse).concat(invalidSchemes);
 
   Arr.each(trueCases, (cs) => {
     const matched = Regexes.link().exec(cs);
