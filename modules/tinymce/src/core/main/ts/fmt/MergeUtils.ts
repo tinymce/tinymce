@@ -5,13 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Strings } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
 import { isCaretNode } from './FormatContainer';
-import { FormatVars } from './FormatTypes';
+import { ApplyFormat, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 const each = Tools.each;
@@ -20,10 +22,8 @@ const isElementNode = (node: Node) =>
   NodeType.isElement(node) && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 
 const findElementSibling = (node: Node, siblingName: 'nextSibling' | 'previousSibling') => {
-  let sibling;
-
-  for (sibling = node; sibling; sibling = sibling[siblingName]) {
-    if (NodeType.isText(sibling) && sibling.nodeValue.length !== 0) {
+  for (let sibling = node; sibling; sibling = sibling[siblingName]) {
+    if (NodeType.isText(sibling) && Strings.isNotEmpty(sibling.data)) {
       return node;
     }
 
@@ -35,8 +35,7 @@ const findElementSibling = (node: Node, siblingName: 'nextSibling' | 'previousSi
   return node;
 };
 
-const mergeSiblingsNodes = (dom: DOMUtils, prev: Node, next: Node) => {
-  let sibling, tmpSibling;
+const mergeSiblingsNodes = (dom: DOMUtils, prev: Node | undefined, next: Node | undefined) => {
   const elementUtils = ElementUtils(dom);
 
   // Check if next/prev exists and that they are elements
@@ -48,8 +47,8 @@ const mergeSiblingsNodes = (dom: DOMUtils, prev: Node, next: Node) => {
     // Compare next and previous nodes
     if (elementUtils.compare(prev, next)) {
       // Append nodes between
-      for (sibling = prev.nextSibling; sibling && sibling !== next;) {
-        tmpSibling = sibling;
+      for (let sibling = prev.nextSibling; sibling && sibling !== next;) {
+        const tmpSibling = sibling;
         sibling = sibling.nextSibling;
         prev.appendChild(tmpSibling);
       }
@@ -77,7 +76,7 @@ const mergeSiblings = (dom: DOMUtils, format, vars: FormatVars, node: Node) => {
   }
 };
 
-const clearChildStyles = (dom: DOMUtils, format, node: Node) => {
+const clearChildStyles = (dom: DOMUtils, format: ApplyFormat, node: Node) => {
   if (format.clear_child_styles) {
     const selector = format.links ? '*:not(a)' : '*';
     each(dom.select(selector, node), (node) => {

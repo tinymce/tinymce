@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Optionals, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
@@ -13,7 +13,7 @@ import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as Whitespace from '../text/Whitespace';
-import { ApplyFormat, BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, SelectorFormat } from './FormatTypes';
+import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
 
@@ -109,10 +109,10 @@ const isEmptyTextNode = (node: Node | null) => {
  * @param {Object} vars Name/value array with variables to replace.
  * @return {String} New value with replaced variables.
  */
-const replaceVars = (value: FormatAttrOrStyleValue, vars: FormatVars): string => {
-  if (typeof value !== 'string') {
+const replaceVars = (value: FormatAttrOrStyleValue, vars?: FormatVars): string => {
+  if (Type.isFunction(value)) {
     value = value(vars);
-  } else if (vars) {
+  } else if (Type.isNonNullable(vars)) {
     value = value.replace(/%(\w+)/g, (str, name) => {
       return vars[name] || str;
     });
@@ -206,16 +206,17 @@ const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: 
   });
 };
 
-const isBlockFormat = (format: ApplyFormat): format is BlockFormat =>
+const isBlockFormat = (format: Format): format is BlockFormat =>
   Obj.hasNonNullableKey(format as any, 'block');
 
-// TODO: is this correct? As a "mixed" format has both `selector` and `inline` properties
-const isSelectorFormat = (format: ApplyFormat): format is SelectorFormat =>
+const isSelectorFormat = (format: Format): format is SelectorFormat =>
   Obj.hasNonNullableKey(format as any, 'selector');
 
-// TODO: is this correct? As a "mixed" format has both `selector` and `inline` properties
-const isInlineFormat = (format: ApplyFormat): format is InlineFormat =>
+const isInlineFormat = (format: Format): format is InlineFormat =>
   Obj.hasNonNullableKey(format as any, 'inline');
+
+const isMixedFormat = (format: Format): format is MixedFormat =>
+  isSelectorFormat(format) && isInlineFormat(format) && Optionals.is(Obj.get(format as any, 'mixed'), true);
 
 const hasBlockChildren = (dom: DOMUtils, elm: Node) => Arr.exists(elm.childNodes, dom.isBlock);
 
@@ -239,5 +240,6 @@ export {
   isSelectorFormat,
   isInlineFormat,
   isBlockFormat,
+  isMixedFormat,
   hasBlockChildren
 };

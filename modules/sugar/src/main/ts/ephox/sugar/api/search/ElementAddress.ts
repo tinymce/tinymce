@@ -39,7 +39,7 @@ const childOf = (element: SugarElement<Node>, ancestor: SugarElement<Node>): Opt
   PredicateFind.closest(element, (elem) =>
     Traverse.parent(elem).exists((parent) => Compare.eq(parent, ancestor)));
 
-const indexInParent = <E extends Node> (element: SugarElement<E>): Optional<AddressInParent<Node & ParentNode, ChildNode, E>> =>
+const indexInParent = <E extends Node> (element: SugarElement<E>): Optional<AddressInParent<Node & ParentNode, Node & ChildNode, E>> =>
   Traverse.parent(element).bind((parent) => {
     const children = Traverse.children(parent);
     return indexOf(children, element).map((index) => inParent(parent, children, element, index));
