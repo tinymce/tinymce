@@ -35,9 +35,9 @@ const moveSelection = (editor: Editor): void => {
   }
 };
 
-const setEditorHtml = (editor: Editor, html: string, noSelection: boolean = false): void => {
+const setEditorHtml = (editor: Editor, html: string, noSelection: boolean | undefined): void => {
   editor.dom.setHTML(editor.getBody(), html);
-  if (!noSelection) {
+  if (noSelection !== true) {
     moveSelection(editor);
   }
 };
@@ -96,7 +96,7 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, arg
   const html = HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(content);
 
   args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html);
-  setEditorHtml(editor, args.content);
+  setEditorHtml(editor, args.content, args.no_selection);
 
   if (!args.no_events) {
     editor.fire('SetContent', args);
