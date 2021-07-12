@@ -3,7 +3,7 @@ import { before, describe, it, TestLabel } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { SelectorExists, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
+import { SelectorExists, SugarBody, SugarDocument, SugarElement, WindowSelection } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -12,8 +12,9 @@ describe('browser.tinymce.themes.silver.editor.DialogPopupsTest', () => {
   before(function () {
     // NOTE: This test uses the caretRangeFromPoint API which is not supported on every browser. We are
     // using this API to check if the popups appearing from things like the color input button and
-    // the urlinput are on top of the dialog. Just test in Chrome.
-    if (!PlatformDetection.detect().browser.isChrome()) {
+    // the urlinput are on top of the dialog. Just test in Firefox and Chrome.
+    const browser = PlatformDetection.detect().browser;
+    if (!browser.isChrome() && !browser.isFirefox()) {
       this.skip();
     }
   });
@@ -74,11 +75,9 @@ describe('browser.tinymce.themes.silver.editor.DialogPopupsTest', () => {
     const elem = getFocused(SugarDocument.getDocument()).getOrDie();
     const rect = elem.dom.getBoundingClientRect();
     const middle = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-    const range = document.caretRangeFromPoint(middle.x, middle.y);
-    if (!range) {
-      throw new Error('Could not find a range at coordinate: (' + middle.x + ', ' + middle.y + ')');
-    } else if (!SelectorExists.closest(SugarElement.fromDom(range.startContainer), selector)) {
-      throw new Error('Range was not within: "' + selector + '". Are you sure that it is on top of the dialog?');
+    const range = WindowSelection.getAtPoint(window, middle.x, middle.y).getOrDie(`Could not find a range at coordinate: (${middle.x}, ${middle.y})`);
+    if (!SelectorExists.closest(range.start, selector)) {
+      throw new Error(`Range was not within: "${selector}". Are you sure that it is on top of the dialog?`);
     } else {
       return rect;
     }
