@@ -237,7 +237,6 @@ module.exports = function (grunt) {
       {plugins: () => gruntWebPack.allPluginDemos(plugins)},
       {themes: () => {
         gruntWebPack.allThemeDemos(themes);
-        gruntWebPack.allComponentDemos(themes);
       }},
       gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
       gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) )

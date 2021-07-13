@@ -1,52 +1,29 @@
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Fun, Singleton } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { nuState } from '../common/BehaviourState';
 import { TooltippingState } from './TooltippingTypes';
 
 const init = (): TooltippingState => {
-  const timer = Cell(Optional.none<number>());
-  const popup = Cell(Optional.none<AlloyComponent>());
-
-  const getTooltip = () => popup.get();
-
-  const setTooltip = (comp: AlloyComponent) => {
-    popup.set(Optional.some(comp));
-  };
-
-  const clearTooltip = () => {
-    popup.set(Optional.none());
-  };
+  const timer = Singleton.value<number>();
+  const popup = Singleton.value<AlloyComponent>();
 
   const clearTimer = () => {
-    timer.get().each((t) => {
-      clearTimeout(t);
-    });
+    timer.on(clearTimeout);
   };
 
-  const resetTimer = (f: () => any, delay: number) => {
+  const resetTimer = (f: () => void, delay: number) => {
     clearTimer();
-    timer.set(
-      Optional.some(
-        setTimeout(
-          () => {
-            f();
-          },
-          delay
-        )
-      )
-    );
+    timer.set(setTimeout(f, delay));
   };
-
-  const isShowing = () => popup.get().isSome();
 
   const readState = Fun.constant('not-implemented');
 
   return nuState({
-    getTooltip,
-    isShowing,
-    setTooltip,
-    clearTooltip,
+    getTooltip: popup.get,
+    isShowing: popup.isSet,
+    setTooltip: popup.set,
+    clearTooltip: popup.clear,
     clearTimer,
     resetTimer,
     readState

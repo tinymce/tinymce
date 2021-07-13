@@ -74,11 +74,25 @@ const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpe
   }
 }];
 
+const changeRowHeader = (editor: Editor) => () => {
+  const currentType = editor.queryCommandValue('mceTableRowType');
+  const newType = currentType === 'header' ? 'body' : 'header';
+  editor.execCommand('mceTableRowType', false, { type: newType });
+};
+
+const changeColumnHeader = (editor: Editor) => () => {
+  const currentType = editor.queryCommandValue('mceTableColType');
+  const newType = currentType === 'th' ? 'td' : 'th';
+  editor.execCommand('mceTableColType', false, { type: newType });
+};
+
 export {
   onSetupToggle,
   generateItems,
   generateItemsCallback,
   filterNoneItem,
   generateColorSelector,
+  changeRowHeader,
+  changeColumnHeader,
   applyTableCellStyle
 };

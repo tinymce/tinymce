@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Id, Optional, Unicode } from '@ephox/katamari';
+import { Arr, Id, Singleton, Unicode } from '@ephox/katamari';
 import { Attribute, Class, Classes, Html, Insert, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -28,7 +28,7 @@ export type Decorator = (
 };
 
 const applyWordGrab = (editor: Editor, rng: Range): void => {
-  const r = ExpandRange.expandRng(editor, rng, [{ inline: true }]);
+  const r = ExpandRange.expandRng(editor, rng, [{ inline: 'span' }]);
   rng.setStart(r.startContainer, r.startOffset);
   rng.setEnd(r.endContainer, r.endOffset);
   editor.selection.setRng(rng);
@@ -54,12 +54,12 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
 
   // Set the current wrapping element
-  const wrapper = Cell(Optional.none<SugarElement<any>>());
+  const wrapper = Singleton.value<SugarElement<any>>();
 
   // Clear the current wrapping element, so that subsequent calls to
   // getOrOpenWrapper spawns a new one.
   const finishWrapper = () => {
-    wrapper.set(Optional.none());
+    wrapper.clear();
   };
 
   // Get the existing wrapper, or spawn a new one.
@@ -67,7 +67,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
     wrapper.get().getOrThunk(() => {
       const nu = Replication.shallow(master);
       newWrappers.push(nu);
-      wrapper.set(Optional.some(nu));
+      wrapper.set(nu);
       return nu;
     });
 

@@ -42,6 +42,8 @@ export interface SelectionTargets {
   readonly onSetupUnmergeable: (api: UiApi) => () => void;
   readonly resetTargets: () => void;
   readonly onSetupTableWithCaption: (api: UiToggleApi) => () => void;
+  readonly onSetupTableRowHeaders: (api: UiToggleApi) => () => void;
+  readonly onSetupTableColumnHeaders: (api: UiToggleApi) => () => void;
   readonly targets: () => Optional<RunOperation.CombinedTargets>;
 }
 
@@ -161,6 +163,19 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
       return tableOpt.exists((table) => SelectorExists.child(table, 'caption'));
     });
   };
+
+  const onSetupTableHeaders = (command: string, headerType: 'header' | 'th') =>
+    (api: UiToggleApi): () => void => {
+      return onSetupWithToggle(api,
+        (targets) => isCaption(targets.element),
+        () => editor.queryCommandValue(command) === headerType
+      );
+    };
+
+  const onSetupTableRowHeaders = onSetupTableHeaders('mceTableRowType', 'header');
+
+  const onSetupTableColumnHeaders = onSetupTableHeaders('mceTableColType', 'th');
+
   editor.on('NodeChange ExecCommand TableSelectorChange', resetTargets);
 
   return {
@@ -173,6 +188,8 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     onSetupUnmergeable,
     resetTargets,
     onSetupTableWithCaption,
+    onSetupTableRowHeaders,
+    onSetupTableColumnHeaders,
     targets: () => targets.get()
   };
 };

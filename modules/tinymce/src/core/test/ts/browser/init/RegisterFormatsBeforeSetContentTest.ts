@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Cell, Obj, Optional, Strings } from '@ephox/katamari';
+import { Arr, Obj, Singleton, Strings } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.RegisterFormatsBeforeSetContentTest', () => {
-  const customFormatNames = Cell<Optional<string[]>>(Optional.none());
+  const customFormatNames = Singleton.value<string[]>();
   TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     style_formats: [
@@ -18,7 +18,7 @@ describe('browser.tinymce.core.init.RegisterFormatsBeforeSetContentTest', () => 
     setup: (editor: Editor) => {
       editor.on('BeforeSetContent', (_) => {
         const names = Arr.filter(Obj.keys(editor.formatter.get()), (key) => Strings.startsWith(key, 'custom-'));
-        customFormatNames.set(Optional.some(names));
+        customFormatNames.set(names);
       });
     }
   }, [ Theme ]);

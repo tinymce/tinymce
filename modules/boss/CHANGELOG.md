@@ -8,3 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
+
+## 4.2.0 - 2021-07-12
+
+### Added
+- Added `property().getLanguage` function to Universe #TINY-7570

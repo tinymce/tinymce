@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Cell, Optional } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 import { Chain } from 'ephox/agar/api/Chain';
@@ -12,7 +12,7 @@ import { Step } from 'ephox/agar/api/Step';
 
 UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
   const files = [ createFile('a.txt', 0, new Blob([ 'x' ])) ];
-  const filesState = Cell(Optional.none<FileList>());
+  const filesState = Singleton.value<FileList>();
 
   const pickFiles = (body: SugarElement<any>, next: (files: FileList) => void) => {
     const elm = SugarElement.fromHtml<HTMLInputElement>('<input type="file">');
@@ -26,7 +26,7 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
 
   const cPickFiles = Chain.async<SugarElement, FileList>((input, next, _die) => pickFiles(input, next));
   const sPickFiles = Step.async((next, _die) => pickFiles(SugarBody.body(), (files) => {
-    filesState.set(Optional.some(files));
+    filesState.set(files);
     next();
   }));
 
@@ -42,7 +42,7 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
       Step.sync(() => {
         const files = filesState.get().getOrDie('Failed to get files state');
         assetFiles(files);
-        filesState.set(Optional.none());
+        filesState.clear();
       })
     ])),
 
