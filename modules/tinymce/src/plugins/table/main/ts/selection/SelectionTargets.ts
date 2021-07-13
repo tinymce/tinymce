@@ -42,7 +42,8 @@ export interface SelectionTargets {
   readonly onSetupUnmergeable: (api: UiApi) => () => void;
   readonly resetTargets: () => void;
   readonly onSetupTableWithCaption: (api: UiToggleApi) => () => void;
-  readonly onSetupTableHeaders: (api: UiToggleApi) => () => void;
+  readonly onSetupTableRowHeaders: (api: UiToggleApi) => () => void;
+  readonly onSetupTableColumnHeaders: (api: UiToggleApi) => () => void;
   readonly targets: () => Optional<RunOperation.CombinedTargets>;
 }
 
@@ -163,12 +164,17 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     });
   };
 
-  const onSetupTableHeaders = (api: UiToggleApi): () => void => {
-    return onSetupWithToggle(api,
-      (targets) => isCaption(targets.element),
-      () => editor.queryCommandValue('mceTableRowType') === 'header'
-    );
-  };
+  const onSetupTableHeaders = (command: string, headerType: 'header' | 'th') =>
+    (api: UiToggleApi): () => void => {
+      return onSetupWithToggle(api,
+        (targets) => isCaption(targets.element),
+        () => editor.queryCommandValue(command) === headerType
+      );
+    };
+
+  const onSetupTableRowHeaders = onSetupTableHeaders('mceTableRowType', 'header');
+
+  const onSetupTableColumnHeaders = onSetupTableHeaders('mceTableColType', 'th');
 
   editor.on('NodeChange ExecCommand TableSelectorChange', resetTargets);
 
@@ -182,7 +188,8 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     onSetupUnmergeable,
     resetTargets,
     onSetupTableWithCaption,
-    onSetupTableHeaders,
+    onSetupTableRowHeaders,
+    onSetupTableColumnHeaders,
     targets: () => targets.get()
   };
 };
