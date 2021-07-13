@@ -578,9 +578,9 @@ describe('browser.tinymce.core.UndoManager', () => {
       TinyAssertions.assertContentPresence(editor, { 'p[data-mce-caret=before]': 1 });
       // selection path must include fake caret which is before the CEF div
       TinySelections.setCursor(editor, [ 3, 0 ], 14);
-      // moving the selection removed the CEF div
+      // moving the selection removed the fake caret
       TinyAssertions.assertContentPresence(editor, { 'p[data-mce-caret=before]': 0 });
-      // the act of moving the cursor removed the CEF div so now the selection path is off by one (expected)
+      // the act of moving the cursor removed the fake caret so now the selection path is off by one (expected)
       TinyAssertions.assertCursor(editor, [ 2, 0 ], 14);
 
       TinyContentActions.keystroke(editor, Keys.enter());
