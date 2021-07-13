@@ -218,7 +218,8 @@ const isInlineFormat = (format: Format): format is InlineFormat =>
 const isMixedFormat = (format: Format): format is MixedFormat =>
   isSelectorFormat(format) && isInlineFormat(format) && Optionals.is(Obj.get(format as any, 'mixed'), true);
 
-const hasBlockChildren = (dom: DOMUtils, elm: Node) => Arr.exists(elm.childNodes, dom.isBlock);
+const shouldExpandToSelector = (format: Format) =>
+  isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);
 
 export {
   isNode,
@@ -241,5 +242,5 @@ export {
   isInlineFormat,
   isBlockFormat,
   isMixedFormat,
-  hasBlockChildren
+  shouldExpandToSelector
 };

@@ -102,18 +102,18 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
   const applyNodeStyle = (formatList: ApplyFormat[], node: Node) => {
     let found = false;
 
-    if (!FormatUtils.isSelectorFormat(format)) {
-      return false;
-    }
-
     // Look for matching formats
     each(formatList, (format) => {
+      if (!FormatUtils.isSelectorFormat(format)) {
+        return false;
+      }
+
       // Check collapsed state if it exists
       if (Type.isNonNullable(format.collapsed) && format.collapsed !== isCollapsed) {
         return;
       }
 
-      if (FormatUtils.isSelectorFormat(format) && dom.is(node, format.selector) && !isCaretNode(node)) {
+      if (dom.is(node, format.selector) && !isCaretNode(node)) {
         setElementFormat(node, format);
         found = true;
         return false;
@@ -150,7 +150,8 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         let hasContentEditableState = false;
         let lastContentEditable = contentEditable;
         const nodeName = node.nodeName.toLowerCase();
-        const parentName = node.parentNode.nodeName.toLowerCase();
+        const parentNode = node.parentNode;
+        const parentName = parentNode.nodeName.toLowerCase();
 
         // Node has a contentEditable value
         if (NodeType.isElement(node) && dom.getContentEditable(node)) {
@@ -188,11 +189,11 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
         // Handle selector patterns
         if (FormatUtils.isSelectorFormat(format)) {
-          const found = applyNodeStyle(formatList, node);
+          let found = applyNodeStyle(formatList, node);
 
-          // TINY-6567 Include the last node in the selection
-          if (NodeType.isText(node) && FormatUtils.hasBlockChildren(dom, node.parentNode)) {
-            applyNodeStyle(formatList, node.parentNode);
+          // TINY-6567/TINY-7393: Include the parent if using an expanded selector format and no match was found for the current node
+          if (!found && Type.isNonNullable(parentNode) && FormatUtils.shouldExpandToSelector(format)) {
+            found = applyNodeStyle(formatList, parentNode);
           }
 
           // Continue processing if a selector match wasn't found and a inline element is defined
