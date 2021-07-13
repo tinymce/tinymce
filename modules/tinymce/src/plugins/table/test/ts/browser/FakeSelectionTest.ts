@@ -1,14 +1,16 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
-import { assert } from 'chai';
+import { Arr } from '@ephox/katamari';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-describe('browser.tinymce.plugins.table.GridSelectionTest', () => {
+import { assertSelectedCells, selectWithMouse } from '../module/test/TableTestUtils';
+
+describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     indent: false,
@@ -18,38 +20,25 @@ describe('browser.tinymce.plugins.table.GridSelectionTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  const assertTableSelection = (editor: Editor, tableHtml: string, selectCells: string[], cellContents: string[]) => {
-    const selectRangeXY = (table: HTMLTableElement, startTd: HTMLTableCellElement, endTd: HTMLTableCellElement) => {
-      editor.fire('mousedown', { target: startTd, button: 0 } as unknown as MouseEvent);
-      editor.fire('mouseover', { target: endTd, button: 0 } as unknown as MouseEvent);
-      editor.fire('mouseup', { target: endTd, button: 0 } as unknown as MouseEvent);
-    };
+  const simpleTable =
+  '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
 
-    const getCells = (table: HTMLTableElement) => editor.$(table).find('td').toArray();
+  const simpleColgroupTable =
+  '<table><colgroup><col /><col /></colgroup><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
 
-    const getSelectedCells = (table: HTMLTableElement) =>
-      editor.$(table).find<HTMLTableCellElement>('td[data-mce-selected]').toArray();
+  const getCells = (table: SugarElement<HTMLTableElement>, selector: string = 'td,th'): SugarElement<HTMLTableCellElement>[] =>
+    SelectorFilter.descendants(table, selector);
 
+  const assertTableSelection = (editor: Editor, tableHtml: string, selectCells: [ string, string ], cellContents: string[]) => {
     editor.setContent(tableHtml);
 
-    const table = editor.$<HTMLTableElement>('table')[0];
+    const table = SelectorFind.descendant<HTMLTableElement>(TinyDom.body(editor), 'table').getOrDie('Could not find table');
     const cells = getCells(table);
+    const startTd = Arr.find(cells, (elm) => Html.get(elm) === selectCells[0]).getOrDie('Could not find start TD');
+    const endTd = Arr.find(cells, (elm) => Html.get(elm) === selectCells[1]).getOrDie('Could not find end TD');
 
-    const startTd = Tools.grep(cells, (elm) => {
-      return elm.innerHTML === selectCells[0];
-    })[0];
-
-    const endTd = Tools.grep(cells, (elm) => {
-      return elm.innerHTML === selectCells[1];
-    })[0];
-
-    selectRangeXY(table, startTd, endTd);
-
-    const selection = Tools.map(getSelectedCells(table), (elm) => {
-      return elm.innerHTML;
-    });
-
-    assert.deepEqual(selection, cellContents);
+    selectWithMouse(startTd, endTd);
+    assertSelectedCells(editor, cellContents, Html.get);
   };
 
   const assertSelectionContent = (editor: Editor, expectedHtml: string) => {
@@ -58,21 +47,42 @@ describe('browser.tinymce.plugins.table.GridSelectionTest', () => {
 
   it('TBA: select row', () => assertTableSelection(
     hook.editor(),
-    '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>',
+    simpleTable,
+    [ '1', '2' ],
+    [ '1', '2' ]
+  ));
+
+  it('TBA: select row - colgroup', () => assertTableSelection(
+    hook.editor(),
+    simpleColgroupTable,
     [ '1', '2' ],
     [ '1', '2' ]
   ));
 
   it('TBA: select column', () => assertTableSelection(
     hook.editor(),
-    '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>',
+    simpleTable,
+    [ '1', '3' ],
+    [ '1', '3' ]
+  ));
+
+  it('TBA: select column - colgroup', () => assertTableSelection(
+    hook.editor(),
+    simpleColgroupTable,
     [ '1', '3' ],
     [ '1', '3' ]
   ));
 
   it('TBA: select whole table', () => assertTableSelection(
     hook.editor(),
-    '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>',
+    simpleTable,
+    [ '1', '4' ],
+    [ '1', '2', '3', '4' ]
+  ));
+
+  it('TBA: select whole table - colgroup', () => assertTableSelection(
+    hook.editor(),
+    simpleColgroupTable,
     [ '1', '4' ],
     [ '1', '2', '3', '4' ]
   ));

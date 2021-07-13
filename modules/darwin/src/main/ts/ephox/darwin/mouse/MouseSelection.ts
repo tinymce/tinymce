@@ -1,5 +1,5 @@
-import { Singleton } from '@ephox/katamari';
-import { Compare, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Optional, Singleton } from '@ephox/katamari';
+import { EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
@@ -12,11 +12,11 @@ export interface MouseSelection {
   readonly mouseup: (event: EventArgs<MouseEvent>) => void;
 }
 
-const findCell = (target: SugarElement, isRoot: (e: SugarElement) => boolean) =>
-  SelectorFind.closest(target, 'td,th', isRoot);
+const findCell = (target: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean): Optional<SugarElement<HTMLTableCellElement>> =>
+  SelectorFind.closest<HTMLTableCellElement>(target, 'td,th', isRoot);
 
-export const MouseSelection = (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): MouseSelection => {
-  const cursor = Singleton.value<SugarElement>();
+export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean, annotations: SelectionAnnotation): MouseSelection => {
+  const cursor = Singleton.value<SugarElement<HTMLTableCellElement>>();
   const clearstate = cursor.clear;
 
   const applySelection = (event: EventArgs<MouseEvent>) => {
@@ -26,9 +26,7 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement, is
         CellSelection.identify(start, finish, isRoot).each((cellSel) => {
           const boxes = cellSel.boxes.getOr([]);
           // Wait until we have more than one, otherwise you can't do text selection inside a cell.
-          // Alternatively, if the one cell selection starts in one cell and ends in a different cell,
-          // we can assume that the user is trying to make a one cell selection in two different tables which should be possible.
-          if (boxes.length > 1 || (boxes.length === 1 && !Compare.eq(start, finish))) {
+          if (boxes.length > 1) {
             annotations.selectRange(container, boxes, cellSel.start, cellSel.finish);
 
             // stop the browser from creating a big text selection, select the cell where the cursor is
