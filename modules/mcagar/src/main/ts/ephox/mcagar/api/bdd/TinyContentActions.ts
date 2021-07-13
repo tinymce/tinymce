@@ -1,4 +1,5 @@
-import { Keyboard } from '@ephox/agar';
+import { Keyboard, Mouse } from '@ephox/agar';
+import { SugarElement } from '@ephox/sugar';
 
 import { Editor } from '../../alien/EditorTypes';
 import * as TypeText from '../../keyboard/TypeText';
@@ -19,10 +20,18 @@ const keystroke = (editor: Editor, keyvalue: number, modifiers: Keyboard.KeyModi
 const type = (editor: Editor, content: string): void =>
   TypeText.typeContentAtSelection(TinyDom.document(editor), content);
 
+const trueClick = (editor: Editor): void =>
+  Mouse.trueClick(TinyDom.body(editor));
+
+const trueClickOn = (editor: Editor, selector: string): void =>
+  Mouse.trueClickOn(TinyDom.body(editor), selector);
+
 export {
   keydown,
   keypress,
   keystroke,
   keyup,
-  type
+  type,
+  trueClick,
+  trueClickOn
 };
