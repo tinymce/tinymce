@@ -1,7 +1,8 @@
-import { Assertions, RealKeys } from '@ephox/agar';
+import { RealKeys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
-import { Focus, Insert, SugarElement } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { Focus, Insert, Remove, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -13,12 +14,14 @@ describe('webdriver.tinymce.themes.silver.editor.TabbingTest', () => {
 
   it('TINY-3707: Should focus on text editor when tabbing into it', async () => {
     const editor = hook.editor();
-    const textInput = SugarElement.fromHtml('<input>') as SugarElement<HTMLElement>;
-    const editorElement = SugarElement.fromDom(editor.getElement());
+    const textInput = SugarElement.fromTag('input');
+    const editorElement = TinyDom.targetElement(editor);
     Insert.before(editorElement, textInput);
 
     Focus.focus(textInput);
     await RealKeys.pSendKeysOn('input', [ RealKeys.text('\t') ]);
-    Assertions.assertEq('Editor has focus', true, editor.hasFocus());
+    assert.isTrue(editor.hasFocus());
+
+    Remove.remove(textInput);
   });
 });
