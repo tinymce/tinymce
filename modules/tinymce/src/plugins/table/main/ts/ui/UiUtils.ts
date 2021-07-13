@@ -31,13 +31,11 @@ const onSetupToggle = (editor: Editor, formatName: string, active: () => boolean
   };
 };
 
-const onSetupToggleSingle = (editor: Editor, formatName: string, formatValue: string) => {
-  return onSetupToggle(editor, formatName, () => editor.formatter.match(formatName, { value: formatValue }));
-};
+const onSetupToggleSingle = (editor: Editor, formatName: string, formatValue: string) =>
+  onSetupToggle(editor, formatName, () => editor.formatter.match(formatName, { value: formatValue }));
 
-const onSetupToggleInverse = (editor: Editor, formatName: string, formatValues: string[]) => {
-  return onSetupToggle(editor, formatName, () => !Arr.exists(formatValues, (value) => editor.formatter.match(formatName, { value })));
-};
+const onSetupToggleInverse = (editor: Editor, formatName: string, formatValues: string[]) =>
+  onSetupToggle(editor, formatName, () => !Arr.exists(formatValues, (value) => editor.formatter.match(formatName, { value })));
 
 const applyTableCellStyle = <T extends Item>(editor: Editor, style: string) =>
   (item: T) =>
@@ -58,7 +56,7 @@ const generateItem = <T extends Item>(editor: Editor, item: T, otherValues: Opti
 
 const generateItems = <T extends Item>(editor: Editor, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec[] =>
   Arr.map(items, (item) => {
-    if (item.value === '') {
+    if (Strings.isEmpty(item.value)) {
       const otherValues = Optional.some(Arr.map(filterNoneItem(items), (itemValue) => itemValue.value));
       return generateItem(editor, item, otherValues, format, extractText, onAction);
     } else {
