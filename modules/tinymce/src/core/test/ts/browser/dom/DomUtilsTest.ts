@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -776,58 +776,79 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     assert.equal(count, 0);
   });
 
-  it('get - by id in head', () => {
-    const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
+  context('get', () => {
+    it('by id in head', () => {
+      const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
-    const meta: HTMLMetaElement = document.createElement('meta');
-    meta.setAttribute('id', 'myid');
-    document.head.appendChild(meta);
+      const meta: HTMLMetaElement = document.createElement('meta');
+      meta.setAttribute('id', 'myid');
+      document.head.appendChild(meta);
 
-    assert.strictEqual(DOM.get('myid'), meta, 'get meta');
-    document.head.removeChild(meta);
+      assert.strictEqual(DOM.get('myid'), meta, 'get meta');
+      document.head.removeChild(meta);
+    });
+
+    it('does not find element by name in head', () => {
+      const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
+
+      const meta: HTMLMetaElement = document.createElement('meta');
+      meta.setAttribute('name', 'myname');
+      document.head.appendChild(meta);
+
+      assert.isNull(DOM.get('myname'), 'get meta');
+      document.head.removeChild(meta);
+    });
+
+    it('does not find element by name in body', () => {
+      const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
+
+      const meta: HTMLMetaElement = document.createElement('meta');
+      meta.setAttribute('name', 'myname');
+      document.body.appendChild(meta);
+
+      assert.isNull(DOM.get('myname'), 'get meta');
+      document.body.removeChild(meta);
+    });
+
+    it('finds element by id in body, not element by name in head', () => {
+      const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
+
+      const meta = document.createElement('meta');
+      meta.setAttribute('name', 'myname');
+      document.head.appendChild(meta);
+
+      const div = document.createElement('div');
+      div.setAttribute('id', 'myname');
+      document.body.appendChild(div);
+
+      assert.strictEqual(DOM.get('myname'), div, 'get div');
+      document.head.removeChild(meta);
+      document.body.removeChild(div);
+    });
+
+    it('returns element', () => {
+      const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
+      const e = document.createElement('div');
+      assert.strictEqual(DOM.get(e), e, 'get');
+    });
   });
 
-  it('get - does not find element by name in head', () => {
-    const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
+  context('isChildOf', () => {
+    it('same node', () => {
+      const p = document.createElement('div');
+      assert.isTrue(DOM.isChildOf(p, p), 'Same node');
+    });
 
-    const meta: HTMLMetaElement = document.createElement('meta');
-    meta.setAttribute('name', 'myname');
-    document.head.appendChild(meta);
-
-    assert.isNull(DOM.get('myname'), 'get meta');
-    document.head.removeChild(meta);
-  });
-
-  it('get - does not find element by name in body', () => {
-    const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
-
-    const meta: HTMLMetaElement = document.createElement('meta');
-    meta.setAttribute('name', 'myname');
-    document.body.appendChild(meta);
-
-    assert.isNull(DOM.get('myname'), 'get meta');
-    document.body.removeChild(meta);
-  });
-
-  it('get - finds element by id in body, not element by name in head', () => {
-    const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
-
-    const meta = document.createElement('meta');
-    meta.setAttribute('name', 'myname');
-    document.head.appendChild(meta);
-
-    const div = document.createElement('div');
-    div.setAttribute('id', 'myname');
-    document.body.appendChild(div);
-
-    assert.strictEqual(DOM.get('myname'), div, 'get div');
-    document.head.removeChild(meta);
-    document.body.removeChild(div);
-  });
-
-  it('get - returns element', () => {
-    const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
-    const e = document.createElement('div');
-    assert.strictEqual(DOM.get(e), e, 'get');
+    it('child nodes', () => {
+      const p = document.createElement('div');
+      const m = document.createElement('p');
+      const s = document.createTextNode('Content');
+      m.appendChild(s);
+      assert.isFalse(DOM.isChildOf(s, p), 'Detached text node');
+      assert.isFalse(DOM.isChildOf(m, p), 'Detached para node');
+      p.appendChild(m);
+      assert.isTrue(DOM.isChildOf(s, p), 'Attached text node');
+      assert.isTrue(DOM.isChildOf(m, p), 'Attached para node');
+    });
   });
 });

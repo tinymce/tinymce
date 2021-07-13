@@ -10,18 +10,18 @@ import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
-import { Format, FormatVars, SelectorFormat } from './FormatTypes';
+import { Format, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 const isEq = FormatUtils.isEq;
 
 const matchesUnInheritedFormatSelector = (ed: Editor, node: Node, name: string) => {
-  // TODO: Is this safe? it doesn't look like it is this could be a block or inline format
-  const formatList = ed.formatter.get(name) as SelectorFormat[];
+  const formatList = ed.formatter.get(name);
 
   if (formatList) {
     for (let i = 0; i < formatList.length; i++) {
-      if (formatList[i].inherit === false && ed.dom.is(node, formatList[i].selector)) {
+      const format = formatList[i];
+      if (FormatUtils.isSelectorFormat(format) && format.inherit === false && ed.dom.is(node, format.selector)) {
         return true;
       }
     }
