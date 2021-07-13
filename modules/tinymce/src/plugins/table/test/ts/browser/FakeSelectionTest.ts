@@ -1,15 +1,16 @@
-import { Assertions, Mouse } from '@ephox/agar';
+import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyDom, TinyHooks } from '@ephox/mcagar';
 import { Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
-import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-describe('browser.tinymce.plugins.table.GridSelectionTest', () => {
+import { assertSelectedCells, selectWithMouse } from '../module/test/TableTestUtils';
+
+describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     indent: false,
@@ -25,13 +26,6 @@ describe('browser.tinymce.plugins.table.GridSelectionTest', () => {
   const simpleColgroupTable =
   '<table><colgroup><col /><col /></colgroup><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
 
-  // The critical part is the target element as this is what Darwin (MouseSelection.ts) uses to determine the fake selection
-  const selectWithMouse = (startTd: SugarElement<Element>, endTd: SugarElement<Element>) => {
-    Mouse.mouseDown(startTd, { button: 0 });
-    Mouse.mouseOver(endTd, { button: 0 });
-    Mouse.mouseUp(endTd, { button: 0 });
-  };
-
   const getCells = (table: SugarElement<HTMLTableElement>, selector: string = 'td,th'): SugarElement<HTMLTableCellElement>[] =>
     SelectorFilter.descendants(table, selector);
 
@@ -44,9 +38,7 @@ describe('browser.tinymce.plugins.table.GridSelectionTest', () => {
     const endTd = Arr.find(cells, (elm) => Html.get(elm) === selectCells[1]).getOrDie('Could not find end TD');
 
     selectWithMouse(startTd, endTd);
-    const selectedCells = getCells(table, 'td[data-mce-selected],th[data-mce-selected]');
-    const selection = Arr.map(selectedCells, Html.get);
-    assert.deepEqual(selection, cellContents);
+    assertSelectedCells(editor, cellContents, Html.get);
   };
 
   const assertSelectionContent = (editor: Editor, expectedHtml: string) => {
