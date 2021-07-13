@@ -36,7 +36,7 @@ const isNotPre = Fun.not(NodeType.matchStyleValues('white-space', 'pre pre-line 
 const isText = NodeType.isText;
 const isBr = NodeType.isBr;
 const nodeIndex = DOMUtils.nodeIndex;
-const resolveIndex = RangeNodes.getNode;
+const resolveIndex = RangeNodes.getNodeUnsafe;
 const createRange = (doc: Document): Range => 'createRange' in doc ? doc.createRange() : DOMUtils.DOM.createRng();
 const isWhiteSpace = (chr: string): boolean => chr && /[\r\n\t ]/.test(chr);
 const isRange = (rng: any): rng is Range => !!rng.setStart && !!rng.setEnd;
@@ -230,7 +230,7 @@ export interface CaretPosition {
   isAtStart: () => boolean;
   isAtEnd: () => boolean;
   isEqual: (caretPosition: CaretPosition) => boolean;
-  getNode: (before?: boolean) => Node;
+  getNode: (before?: boolean) => Node | undefined;
 }
 
 /**
@@ -278,7 +278,8 @@ export const CaretPosition = (container: Node, offset: number, clientRects?: Cli
 
   const isEqual = (caretPosition: CaretPosition) => caretPosition && container === caretPosition.container() && offset === caretPosition.offset();
 
-  const getNode = (before?: boolean): Node => resolveIndex(container, before ? offset - 1 : offset);
+  const getNode = (before?: boolean): Node | undefined =>
+    resolveIndex(container, before ? offset - 1 : offset);
 
   return {
     /**

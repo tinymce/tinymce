@@ -1205,15 +1205,21 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const isChildOf = (node: Node, parent: Node) => {
-    while (node) {
-      if (parent === node) {
-        return true;
+    // IE only supports the native `contains` functions on HTMLElements, but not Nodes or Elements
+    // so we have to use the slow walking path for IE unfortunately.
+    if (!isIE) {
+      return node === parent || parent.contains(node);
+    } else {
+      while (node) {
+        if (parent === node) {
+          return true;
+        }
+
+        node = node.parentNode;
       }
 
-      node = node.parentNode;
+      return false;
     }
-
-    return false;
   };
 
   const dumpRng = (r: Range) => (
