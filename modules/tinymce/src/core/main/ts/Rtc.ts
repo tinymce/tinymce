@@ -45,7 +45,7 @@ interface RtcRuntimeApi {
     match: (format: string, vars: Record<string, string>) => boolean;
     matchAll: () => string[];
     matchNode: () => Format | undefined;
-    closest: (formats: string) => string;
+    closest: (formats: string[]) => string;
     apply: (format: string, vars: Record<string, string>) => void;
     remove: (format: string, vars: Record<string, string>) => void;
     toggle: (format: string, vars: Record<string, string>) => void;
@@ -372,7 +372,7 @@ export const canApplyFormat = (
 
 export const closestFormat = (
   editor: Editor,
-  names: string): string => getRtcInstanceWithError(editor).formatter.closest(names);
+  names: string[]): string => getRtcInstanceWithError(editor).formatter.closest(names);
 
 export const applyFormat = (
   editor: Editor,

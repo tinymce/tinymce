@@ -319,7 +319,7 @@ const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrai
   }
 
   // Expand start/end container to matching selector
-  if (FormatUtils.isSelectorFormat(format) && format.expand !== false && !FormatUtils.isInlineFormat(format)) {
+  if (FormatUtils.shouldExpandToSelector(format)) {
     // Find new startContainer/endContainer if there is better one
     startContainer = findSelectorEndPoint(dom, formatList, rng, startContainer, 'previousSibling');
     endContainer = findSelectorEndPoint(dom, formatList, rng, endContainer, 'nextSibling');
