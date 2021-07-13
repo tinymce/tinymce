@@ -35,9 +35,11 @@ const moveSelection = (editor: Editor): void => {
   }
 };
 
-const setEditorHtml = (editor: Editor, html: string): void => {
+const setEditorHtml = (editor: Editor, html: string, noSelection: boolean | undefined): void => {
   editor.dom.setHTML(editor.getBody(), html);
-  moveSelection(editor);
+  if (noSelection !== true) {
+    moveSelection(editor);
+  }
 };
 
 const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
@@ -65,7 +67,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
       content = '<br data-mce-bogus="1">';
     }
 
-    setEditorHtml(editor, content);
+    setEditorHtml(editor, content, args.no_selection);
 
     editor.fire('SetContent', args);
   } else {
@@ -78,7 +80,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
     }
 
     args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? content : Tools.trim(content);
-    setEditorHtml(editor, args.content);
+    setEditorHtml(editor, args.content, args.no_selection);
 
     if (!args.no_events) {
       editor.fire('SetContent', args);
@@ -94,7 +96,7 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, arg
   const html = HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(content);
 
   args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html);
-  setEditorHtml(editor, args.content);
+  setEditorHtml(editor, args.content, args.no_selection);
 
   if (!args.no_events) {
     editor.fire('SetContent', args);

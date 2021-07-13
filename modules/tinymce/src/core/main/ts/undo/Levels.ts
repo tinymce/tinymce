@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Thunk } from '@ephox/katamari';
+import { Arr, Thunk, Type } from '@ephox/katamari';
 import { Html, Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import { isPathBookmark } from '../bookmark/BookmarkTypes';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Fragments from './Fragments';
 import { UndoLevel, UndoLevelType } from './UndoManagerTypes';
@@ -53,13 +54,22 @@ const createFromEditor = (editor: Editor): UndoLevel => {
 };
 
 const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean) => {
+  const bookmark = before ? level.beforeBookmark : level.bookmark;
+
   if (level.type === UndoLevelType.Fragmented) {
     Fragments.write(level.fragments, editor.getBody());
   } else {
-    editor.setContent(level.content, { format: 'raw' });
+    editor.setContent(level.content, {
+      format: 'raw',
+      // If we have a path bookmark, we need to check if the bookmark location was a fake caret.
+      // If the bookmark was not a fake caret, then we need to ensure that setContent does not move the selection
+      // as this can create a new fake caret - particularly if the first element in the body is contenteditable=false.
+      // The creation of this new fake caret will cause our path offset to be off by one when restoring the original selection.
+      no_selection: Type.isNonNullable(bookmark) && isPathBookmark(bookmark) ? !bookmark.isFakeCaret : true
+    });
   }
 
-  editor.selection.moveToBookmark(before ? level.beforeBookmark : level.bookmark);
+  editor.selection.moveToBookmark(bookmark);
 };
 
 const getLevelContent = (level: UndoLevel): string => {
