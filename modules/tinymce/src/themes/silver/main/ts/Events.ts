@@ -31,7 +31,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   const dismissPopupsOnEditor = () => {
     Arr.each(editor.editorManager.get(), (loopEditor) => {
       if (editor !== loopEditor) {
-        loopEditor.fire('DismissPopups', editor);
+        loopEditor.fire('DismissPopups', { relatedTarget: editor });
       }
     });
   };
@@ -42,7 +42,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   const onTouchend = DomEvent.bind(SugarElement.fromDom(document), 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
 
   // Document mouse events
-  const onMousedown = DomEvent.bind(SugarElement.fromDom(document), 'mousedown', dismissPopupsOnEditor);
+  const onMousedown = DomEvent.bind(SugarElement.fromDom(document), 'mousedown', fireDismissPopups);
   const onMouseup = DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
     if (evt.raw.button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: evt.target });
@@ -51,13 +51,14 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
 
   // Editor content events
   const onContentClick = () => {
-    Arr.each(editor.editorManager.get(), (loopEditor) => loopEditor.fire('DismissPopups', editor));
+    // Close others editors menu
+    Arr.each(editor.editorManager.get(), (loopEditor) => loopEditor.fire('DismissPopups', { relatedTarget: editor }));
   };
   const onContentMouseup = (raw: MouseEvent) => {
     if (raw.button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: SugarElement.fromDom(raw.target as Node) });
     } else {
-      dismissPopupsOnEditor();
+      dismissPopupsOnEditor(); // prevent multiple context menus open
     }
   };
 
@@ -75,8 +76,8 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     }
   };
 
-  const onDismissPopups = (eventEditor: Editor) => {
-    broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(eventEditor.getContainer()) });
+  const onDismissPopups = (event: { relatedTarget: Editor }) => {
+    broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(event.relatedTarget.getContainer()) });
   };
 
   // Don't start listening to events until the UI has rendered
