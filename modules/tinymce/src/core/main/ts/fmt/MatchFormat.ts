@@ -30,7 +30,7 @@ const matchesUnInheritedFormatSelector = (ed: Editor, node: Node, name: string) 
   return false;
 };
 
-const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars): boolean => {
+const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars, similar?: boolean): boolean => {
   const root = editor.dom.getRoot();
 
   if (node === root) {
@@ -47,7 +47,7 @@ const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars
   });
 
   // Do an exact check on the similar format element
-  return !!matchNode(editor, node, name, vars);
+  return !!matchNode(editor, node, name, vars, similar);
 };
 
 const matchName = (dom: DOMUtils, node: Node, format) => {
@@ -139,22 +139,22 @@ const matchNode = (ed: Editor, node: Node, name: string, vars?: FormatVars, simi
   }
 };
 
-const match = (editor: Editor, name: string, vars: FormatVars, node?: Node): boolean => {
+const match = (editor: Editor, name: string, vars: FormatVars, node?: Node, similar?: boolean): boolean => {
   // Check specified node
   if (node) {
-    return matchParents(editor, node, name, vars);
+    return matchParents(editor, node, name, vars, similar);
   }
 
   // Check selected node
   node = editor.selection.getNode();
-  if (matchParents(editor, node, name, vars)) {
+  if (matchParents(editor, node, name, vars, similar)) {
     return true;
   }
 
   // Check start node if it's different
   const startNode = editor.selection.getStart();
   if (startNode !== node) {
-    if (matchParents(editor, startNode, name, vars)) {
+    if (matchParents(editor, startNode, name, vars, similar)) {
       return true;
     }
   }
