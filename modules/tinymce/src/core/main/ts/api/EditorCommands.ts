@@ -518,6 +518,9 @@ class EditorCommands {
         if (value.href) {
           editor.formatter.apply('link', value, anchor);
         }
+
+        // Move the selection behind the new link, so the user can go on typing.
+        editor.selection.setStart(editor.selection.getEnd());
       },
 
       'selectAll': () => {
