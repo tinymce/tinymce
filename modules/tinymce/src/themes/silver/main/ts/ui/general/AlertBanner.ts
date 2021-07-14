@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers, Button, Container, SketchSpec } from '@ephox/alloy';
+import { AlloyTriggers, Behaviour, Button, Container, SketchSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
@@ -48,7 +48,10 @@ export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: 
             // TODO: aria label this button!
             action: (comp) => {
               AlloyTriggers.emitWith(comp, formActionEvent, { name: 'alert-banner', value: spec.url });
-            }
+            },
+            buttonBehaviours: Behaviour.derive([
+              Icons.addFocusableBehaviour()
+            ])
           })
         ]
       },

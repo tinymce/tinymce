@@ -14,7 +14,7 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 
-import { get as getIcon, getFirst, IconProvider } from '../icons/Icons';
+import { addFocusableBehaviour, get as getIcon, getFirst, IconProvider } from '../icons/Icons';
 
 export interface NotificationSketchApis {
   updateProgress: (comp: AlloyComponent, percent: number) => void;
@@ -162,7 +162,10 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         attributes: {
           'aria-label': detail.translationProvider('Close')
         }
-      }
+      },
+      behaviours: Behaviour.derive([
+        addFocusableBehaviour()
+      ])
     }],
     action: (comp) => {
       detail.onAction(comp);

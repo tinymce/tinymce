@@ -30,6 +30,9 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
 
   const ratioEvent = Id.generate('ratio-event');
 
+  const iconLockSpec = Icons.render('span', Icons.get('lock', providersBackstage.icons), [ 'tox-icon', 'tox-lock-icon__lock' ]);
+  const iconUnlockSpec = Icons.render('span', Icons.get('unlock', providersBackstage.icons), [ 'tox-icon', 'tox-lock-icon__unlock' ]);
+
   const pLock = AlloyFormCoupledInputs.parts.lock({
     dom: {
       tag: 'button',
@@ -38,22 +41,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
         title: providersBackstage.translate(spec.label.getOr('Constrain proportions'))  // TODO: tooltips AP-213
       }
     },
-    components: [
-      {
-        dom: {
-          tag: 'span',
-          classes: [ 'tox-icon', 'tox-lock-icon__lock' ],
-          innerHtml: Icons.get('lock', providersBackstage.icons)
-        }
-      },
-      {
-        dom: {
-          tag: 'span',
-          classes: [ 'tox-icon', 'tox-lock-icon__unlock' ],
-          innerHtml: Icons.get('unlock', providersBackstage.icons)
-        }
-      }
-    ],
+    components: [ iconLockSpec, iconUnlockSpec ],
     buttonBehaviours: Behaviour.derive([
       Disabling.config({
         disabled: () => spec.disabled || providersBackstage.isDisabled()

@@ -12,7 +12,7 @@ import { SugarPosition } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { get as getIcon } from '../icons/Icons';
+import * as Icons from '../icons/Icons';
 import { resize, ResizeTypes } from '../sizing/Resize';
 
 const getResizeType = (editor: Editor): ResizeTypes => {
@@ -48,7 +48,7 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
       attributes: {
         title: providersBackstage.translate('Resize'), // TODO: tooltips AP-213
       },
-      innerHtml: getIcon('resize-handle', providersBackstage.icons)
+      innerHtml: Icons.get('resize-handle', providersBackstage.icons)
     },
     behaviours: Behaviour.derive([
       Dragging.config({
@@ -65,7 +65,8 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
         onDown: () => keyboardHandler(editor, resizeType, 0, 1),
       }),
       Tabstopping.config({}),
-      Focusing.config({})
+      Focusing.config({}),
+      Icons.addFocusableBehaviour()
     ])
   });
 };
