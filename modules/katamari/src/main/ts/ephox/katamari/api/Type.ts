@@ -26,6 +26,9 @@ export const isString: (value: any) => value is string =
 export const isObject: (value: any) => value is Object =
   isType('object');
 
+export const isPlainObject = (value: unknown): value is Object =>
+  isObject(value) && value.constructor?.name === 'Object';
+
 export const isArray: (value: any) => value is Array<unknown> =
   isType('array');
 

@@ -31,7 +31,7 @@ const shallow = (old: Record<string, any>, nu: Record<string, any>) => {
 };
 
 const deep = (old: Record<string, any>, nu: Record<string, any>) => {
-  const bothObjects = Type.isObject(old) && Type.isObject(nu);
+  const bothObjects = Type.isPlainObject(old) && Type.isPlainObject(nu);
   return bothObjects ? deepMerge(old, nu) : nu;
 };
 
