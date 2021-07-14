@@ -20,6 +20,9 @@ interface Scenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInlinePositionTest', () => {
+  const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset)';
+  const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset)';
+
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,
     base_url: '/project/tinymce/js/tinymce',
@@ -69,12 +72,12 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
       editor.setContent(`<p style="height: ${offset}px"></p><p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p><p style="height: 100px"></p>`);
       scrollTo(editor, 0, -250, offset);
       TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), '.tox-pop.tox-pop--bottom' + scenario.classes);
+      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
       await pAssertPosition('absolute', 'bottom', 1637);
 
       // Position the link at the top of the viewport, just below the toolbar
       scrollTo(editor, 0, -80, offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), '.tox-pop.tox-pop--top' + scenario.classes);
+      await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector + scenario.classes);
       await pAssertPosition('fixed', 'top', 109);
 
       // Position the element offscreen and check the toolbar is hidden
@@ -83,7 +86,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
 
       // Position the element back into view
       scrollTo(editor, 0, -250, offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), '.tox-pop.tox-pop--bottom' + scenario.classes);
+      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
       await pAssertPosition('absolute', 'bottom', 1637);
 
       // Position the element behind the docked toolbar and check the toolbar is hidden

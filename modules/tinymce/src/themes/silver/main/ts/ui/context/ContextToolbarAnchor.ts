@@ -32,7 +32,8 @@ const bubbleAlignments = {
   right: [ 'tox-pop--right' ],
   left: [ 'tox-pop--left' ],
   bottom: [ 'tox-pop--bottom' ],
-  top: [ 'tox-pop--top' ]
+  top: [ 'tox-pop--top' ],
+  inset: [ 'tox-pop--inset' ]
 };
 
 const anchorOverrides = {
@@ -110,7 +111,8 @@ const getAnchorLayout = (editor: Editor, position: InlineContent.ContextPosition
     };
   } else {
     return {
-      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
+      // Ensure that insets use half the bubble size since we're hiding the bubble arrow
+      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments, 0.5),
       layouts: getAnchorSpec(editor, isTouch, data),
       overrides: anchorOverrides
     };
