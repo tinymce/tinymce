@@ -48,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
 - HTML comments with mismatched quotes were parsed incorrectly under certain circumstances #TINY-7589
 - Links in notification text did not show the correct mouse pointer #TINY-7661
-- Applying selector formats would sometimes not apply the format correctly on lists #TINY-7393
+- Applying selector formats would sometimes not apply the format correctly to elements in a list #TINY-7393
 - The formatter match APIs were incorrectly returning false for formats that specified an attribute or style should be removed from an element #TINY-6149
 - The type signature on `editor.formatter.matchNode` had the wrong return type (was `boolean` but should have been `Formatter | undefined`) #TINY-6149
 

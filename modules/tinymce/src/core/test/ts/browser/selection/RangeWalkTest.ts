@@ -39,7 +39,7 @@ describe('browser.tinymce.core.selection.RangeWalkTest', () => {
     assert.deepEqual(nodeNames, expected);
   };
 
-  it('TBD: should only include itself if the full node is selected', () => {
+  it('should only include itself if the full node is selected', () => {
     const editor = hook.editor();
     editor.setContent(
       '<div>' +
@@ -54,7 +54,7 @@ describe('browser.tinymce.core.selection.RangeWalkTest', () => {
     ]);
   });
 
-  it('TBD: should only traverse the boundaries once if the end node is inside the start node', () => {
+  it('should only traverse the boundaries once if the end node is inside the start node', () => {
     const editor = hook.editor();
     editor.setContent('<p><strong>Some <em>text <span style="color: red">with</span> formatting</em></strong></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0, 1, 1, 0 ], 2);
@@ -66,7 +66,7 @@ describe('browser.tinymce.core.selection.RangeWalkTest', () => {
     ]);
   });
 
-  it('TBD: should only traverse the boundaries once if the start node is inside the end node', () => {
+  it('should only traverse the boundaries once if the start node is inside the end node', () => {
     const editor = hook.editor();
     editor.setContent('<p><strong>Some <em>text <span style="color: red">with</span> formatting</em></strong></p>');
     TinySelections.setSelection(editor, [ 0, 0, 1, 1, 0 ], 2, [ 0 ], 1);
@@ -77,7 +77,7 @@ describe('browser.tinymce.core.selection.RangeWalkTest', () => {
     ]);
   });
 
-  it('TBD: should only walk over siblings and not traverse down', () => {
+  it('should only walk over siblings and not traverse down', () => {
     const editor = hook.editor();
     editor.setContent(
       '<div>' +
@@ -95,7 +95,7 @@ describe('browser.tinymce.core.selection.RangeWalkTest', () => {
     ]);
   });
 
-  it('TINY-7393: should exclude edge nodes when walking boundaries', () => {
+  it('should exclude edge nodes when walking boundaries', () => {
     const editor = hook.editor();
     editor.setContent(complexList);
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 2, [ 0, 1, 1, 1, 1, 0, 0 ], 4);

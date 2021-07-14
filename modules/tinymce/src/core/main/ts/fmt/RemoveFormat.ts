@@ -520,7 +520,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     }
 
     // Note: Assists with cleaning up any stray text decorations that may been applied when text decorations
-    // and text colors were merged together from a applied format
+    // and text colors were merged together from an applied format
     // Remove child span if it only contains text-decoration and a parent node also has the same text decoration.
     const textDecorations = [ 'underline', 'line-through', 'overline' ];
     Arr.each(textDecorations, (decoration) => {
