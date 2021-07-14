@@ -1,28 +1,76 @@
-import { UiFinder, Waiter } from '@ephox/agar';
+import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
   const hook1 = TinyHooks.bddSetup({
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    plugins: 'link',
   }, [ Theme ]);
 
-  it('TINY-7399: Click on the editor should close the menu', async () => {
+  const hook2 = TinyHooks.bddSetup({
+    base_url: '/project/tinymce/js/tinymce',
+    plugins: 'link',
+  }, [ Theme ]);
+
+  const waitToOpen = (selector: string) => {
+    return Waiter.pTryUntil(`Wait ${selector} to open`, () => UiFinder.exists(SugarBody.body(), selector));
+  };
+
+  const waitToClose = (selector: string) => {
+    return Waiter.pTryUntil(`Wait ${selector} to close`, () => UiFinder.notExists(SugarBody.body(), selector));
+  };
+
+  it('TINY-7399: Clicking on the editor should close the menu', async () => {
     const editor = hook1.editor();
-
     TinyUiActions.clickOnMenu(editor, '[role="menuitem"]');
-    await Waiter.pTryUntil(
-      'Wait for menu to open',
-      () => UiFinder.exists(SugarBody.body(), '[role="menu"]')
-    );
-
+    await waitToOpen('[role="menu"]');
     TinyContentActions.trueClick(editor);
-    await Waiter.pTryUntil(
-      'Wait for menu to close',
-      () => UiFinder.notExists(SugarBody.body(), '[role="menu"]')
-    );
+    await waitToClose('[role="menu"]');
+  });
+
+  it('TINY-7399: Clicking on the editor should close the context menu', async () => {
+    const editor = hook1.editor();
+    TinyContentActions.trueClick(editor);
+    Mouse.contextMenuOn(TinyDom.body(editor), 'p');
+    await waitToOpen('[role="menu"]');
+    TinyContentActions.trueClick(editor);
+    await waitToClose('[role="menu"]');
+  });
+
+  it('TINY-7399: Clicking on the editor should close other editor menu', async () => {
+    const editor1 = hook1.editor();
+    const editor2 = hook2.editor();
+
+    TinyUiActions.clickOnMenu(editor1, '[role="menuitem"]');
+    await waitToOpen('[role="menu"]');
+    TinyContentActions.trueClick(editor2);
+    await waitToClose('[role="menu"]');
+  });
+
+  it('TINY-7399: Clicking on the editor should close other editor context menu', async () => {
+    const editor1 = hook1.editor();
+    const editor2 = hook2.editor();
+
+    Mouse.contextMenuOn(TinyDom.body(editor1), 'p');
+    await waitToOpen('[role="menu"]');
+    TinyContentActions.trueClick(editor2);
+    await waitToClose('[role="menu"]');
+  });
+
+  it('TINY-7399: Opening a menu in the editor should close other editor\'s menu', async () => {
+    const editor1 = hook1.editor();
+    const editor2 = hook2.editor();
+
+    TinyUiActions.clickOnMenu(editor1, '[role="menuitem"]');
+    // await waitToOpen('[role="menu"]');
+    await Waiter.pWait(1000);
+    TinyUiActions.clickOnMenu(editor2, '[role="menuitem"]');
+    // await waitToClose('[role="menu"]');
+    // await waitToOpen('[role="menu"]');
+    await Waiter.pWait(10000);
   });
 });
