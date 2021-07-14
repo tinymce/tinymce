@@ -103,6 +103,8 @@ const renderCommonDropdown = <T>(
     }
   );
 
+  const iconSpec = Icons.render('div', Icons.get('chevron-down', sharedBackstage.providers.icons), [ `${prefix}__select-chevron` ]);
+
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({
       ...spec.uid ? { uid: spec.uid } : { },
@@ -117,13 +119,7 @@ const renderCommonDropdown = <T>(
       components: componentRenderPipeline([
         optMemDisplayIcon.map((mem) => mem.asSpec()),
         optMemDisplayText.map((mem) => mem.asSpec()),
-        Optional.some({
-          dom: {
-            tag: 'div',
-            classes: [ `${prefix}__select-chevron` ],
-            innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
-          }
-        })
+        Optional.some(iconSpec)
       ]),
       matchWidth: true,
       useMinWidth: true,
@@ -149,7 +145,7 @@ const renderCommonDropdown = <T>(
             optMemDisplayIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
               Replacing.set(displayIcon, [
                 renderReplacableIconFromPack(se.event.icon, sharedBackstage.providers.icons)
-              ] );
+              ]);
             });
           })
         ])

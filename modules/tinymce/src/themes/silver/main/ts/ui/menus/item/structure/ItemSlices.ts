@@ -16,7 +16,7 @@ import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ItemClasses from '../ItemClasses';
 
 const renderIcon = (iconHtml: string): AlloySpec =>
-  renderIconElement('div', iconHtml, [ ItemClasses.iconClass ], Optional.none());
+  renderIconElement('div', iconHtml, [ ItemClasses.iconClass ]);
 
 const renderText = (text: string): AlloySpec => ({
   dom: {

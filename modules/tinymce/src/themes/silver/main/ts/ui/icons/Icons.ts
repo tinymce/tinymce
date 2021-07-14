@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, Behaviour, SimpleOrSketchSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleOrSketchSpec } from '@ephox/alloy';
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 
@@ -19,26 +19,25 @@ const getOr = (name: string, icons: IconProvider, fallback: Optional<string>): s
 
 const getFirst = (names: string[], icons: IconProvider): string => Arr.findMap(names, (name) => Optional.from(icons()[name.toLowerCase()])).getOrThunk(() => defaultIcon(icons));
 
-const render = (tagName: string, iconHtml: string, classes: string[], behavioursOpt: Optional<Behaviour.AlloyBehaviourRecord>): SimpleOrSketchSpec => {
-  const iconSpec = {
+const addFocusableBehaviour = () =>
+  AddEventsBehaviour.config('add-focusable', [
+    AlloyEvents.runOnAttached((comp) => {
+      // set focusable=false on SVGs to prevent IE 11 from focusing the toolbar when tabbing into the editor
+      SelectorFind.child(comp.element, 'svg').each((svg) => Attribute.set(svg, 'focusable', 'false'));
+    })
+  ]);
+
+const render = (tagName: string, iconHtml: string, classes: string[], behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>> = []): SimpleOrSketchSpec => {
+  return {
     dom: {
       tag: tagName,
       innerHtml: iconHtml,
       classes
     },
-    events: AlloyEvents.derive([
-      AlloyEvents.runOnAttached((comp) => {
-        // set focusable=false on SVGs to prevent IE 11 from focusing the toolbar when tabbing into the editor
-        SelectorFind.child(comp.element, 'svg').each((svg) => Attribute.set(svg, 'focusable', 'false'));
-      })
+    behaviours: Behaviour.derive([
+      ...behaviours,
+      addFocusableBehaviour()
     ])
-  };
-
-  const behavioursSpec = behavioursOpt.map((behaviours) => ({ behaviours })).getOr({});
-
-  return {
-    ...iconSpec,
-    ...behavioursSpec
   };
 };
 
@@ -46,5 +45,6 @@ export {
   getFirst,
   getOr,
   get,
-  render
+  render,
+  addFocusableBehaviour
 };

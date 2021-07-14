@@ -6,22 +6,21 @@
  */
 
 import { Behaviour, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { get as getIcon, IconProvider, render as renderIconElement } from '../icons/Icons';
+import * as Icons from '../icons/Icons';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-const renderIcon = (iconHtml: string, behaviours: Optional<Behaviour.AlloyBehaviourRecord>): SimpleOrSketchSpec =>
-  renderIconElement('span', iconHtml, [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ], behaviours);
+const renderIcon = (iconHtml: string, behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>): SimpleOrSketchSpec =>
+  Icons.render('span', iconHtml, [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ], behaviours);
 
-const renderIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec =>
-  renderIcon(getIcon(iconName, iconsProvider), Optional.none());
+const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleOrSketchSpec =>
+  renderIcon(Icons.get(iconName, iconsProvider), []);
 
-const renderReplacableIconFromPack = (iconName: string, iconsProvider: IconProvider): SimpleOrSketchSpec => {
-  const icon = getIcon(iconName, iconsProvider);
-  const behaviours = Behaviour.derive([ Replacing.config({ }) ]);
-  return renderIcon(icon, Optional.from(behaviours));
+const renderReplacableIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleOrSketchSpec => {
+  const icon = Icons.get(iconName, iconsProvider);
+  const behaviours = [ Replacing.config({ }) ];
+  return renderIcon(icon, behaviours);
 };
 
 const renderLabel = (text: string, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
