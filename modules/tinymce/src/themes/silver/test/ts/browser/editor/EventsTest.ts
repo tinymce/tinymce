@@ -1,7 +1,8 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -66,11 +67,11 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
     const editor2 = hook2.editor();
 
     TinyUiActions.clickOnMenu(editor1, '[role="menuitem"]');
-    // await waitToOpen('[role="menu"]');
-    await Waiter.pWait(1000);
-    TinyUiActions.clickOnMenu(editor2, '[role="menuitem"]');
-    // await waitToClose('[role="menu"]');
-    // await waitToOpen('[role="menu"]');
-    await Waiter.pWait(10000);
+    await waitToOpen('[role="menu"]');
+    Mouse.trueClickOn(SugarElement.fromDom(editor2.getContainer()), '[role="menuitem"]');
+    await waitToOpen('[role="menu"]');
+
+    const menus = UiFinder.findAllIn(SugarBody.body(), '[role="menu"]');
+    assert.equal(menus.length, 1, 'Should have one menu open');
   });
 });
