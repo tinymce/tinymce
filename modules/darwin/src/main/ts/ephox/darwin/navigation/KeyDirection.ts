@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
-import { DomGather } from '@ephox/phoenix';
-import { Situ, SugarElement, Traverse } from '@ephox/sugar';
+import { DomGather, Spot, SpotPoint } from '@ephox/phoenix';
+import { SimRange, Situ, SugarElement, Traverse } from '@ephox/sugar';
 
 import { WindowBridge } from '../api/WindowBridge';
 import { Carets } from '../keyboard/Carets';
@@ -15,6 +15,7 @@ export interface KeyDirection {
   otherRetry: (bridge: WindowBridge, caret: Carets) => Optional<Situs>;
   ieRetry: (bridge: WindowBridge, caret: Carets) => Optional<Situs>;
   failure: BeforeAfterFailureConstructor;
+  spot: (sel: SimRange) => SpotPoint<SugarElement>;
 }
 
 const down: KeyDirection = {
@@ -23,7 +24,8 @@ const down: KeyDirection = {
   relative: Situ.before,
   otherRetry: Retries.tryDown,
   ieRetry: Retries.ieTryDown,
-  failure: BeforeAfter.failedDown
+  failure: BeforeAfter.failedDown,
+  spot: (sel) => Spot.point(sel.finish, sel.foffset)
 };
 
 const up: KeyDirection = {
@@ -32,7 +34,8 @@ const up: KeyDirection = {
   relative: Situ.before,
   otherRetry: Retries.tryUp,
   ieRetry: Retries.ieTryUp,
-  failure: BeforeAfter.failedUp
+  failure: BeforeAfter.failedUp,
+  spot: (sel) => Spot.point(sel.start, sel.soffset)
 };
 
 export {

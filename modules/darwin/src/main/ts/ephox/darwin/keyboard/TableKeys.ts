@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { Spot, SpotPoint } from '@ephox/phoenix';
+import { SpotPoint } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
 import { Awareness, Compare, SimRange, SugarElement } from '@ephox/sugar';
 
@@ -18,11 +18,13 @@ const MAX_RETRIES = 20;
 
 const findSpot = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection): Optional<SpotPoint<SugarElement<Node>>> => {
   return bridge.getSelection().bind((sel) => {
-    return BrTags.tryBr(isRoot, sel.finish, sel.foffset, direction).fold(() => {
-      return Optional.some(Spot.point(sel.finish, sel.foffset));
+    const spot = direction.spot(sel);
+    return BrTags.tryBr(isRoot, spot.element, spot.offset, direction).fold(() => {
+      return Optional.some(spot);
     }, (brNeighbour) => {
       const range = bridge.fromSitus(brNeighbour);
-      const analysis = BeforeAfter.verify(bridge, sel.finish, sel.foffset, range.finish, range.foffset, direction.failure, isRoot);
+      const brSpot = direction.spot(range);
+      const analysis = BeforeAfter.verify(bridge, spot.element, spot.offset, brSpot.element, brSpot.offset, direction.failure, isRoot);
       return BrTags.process(analysis);
     });
   });
@@ -35,8 +37,9 @@ const scan = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, elemen
   // Firstly, move the (x, y) and see what element we end up on.
   return tryCursor(bridge, isRoot, element, offset, direction).bind((situs) => {
     const range = bridge.fromSitus(situs);
+    const spot = direction.spot(range);
     // Now, check to see if the element is a new cell.
-    const analysis = BeforeAfter.verify(bridge, element, offset, range.finish, range.foffset, direction.failure, isRoot);
+    const analysis = BeforeAfter.verify(bridge, element, offset, spot.element, spot.offset, direction.failure, isRoot);
     return BeforeAfter.cata(analysis, () => {
       return Optional.none<Situs>();
     }, () => {
