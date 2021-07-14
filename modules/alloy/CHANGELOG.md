@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added a new `preserve` option to `LayoutInset` which will preserve the previous placement inside the component.
 - Added a new `flip` option to `LayoutInset` which will swap the previous placement to the opposite direction inside the component.
 - Added the `alwaysFit` layout property which allows for the layout to specify if it should always claim to fit, no matter what.
+- `Bubble` can include an optional `inset` class to be added when using an inset layout.
 
 ### Improved
 - Improved the performance of constructing event handlers and components.
