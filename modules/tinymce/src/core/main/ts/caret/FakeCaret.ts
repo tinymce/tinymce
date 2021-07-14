@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Optional } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
@@ -104,7 +104,7 @@ const trimInlineCaretContainers = (root: HTMLElement): void => {
 };
 
 export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => node is HTMLElement, hasFocus: () => boolean): FakeCaret => {
-  const lastVisualCaret = Cell<Optional<CaretState>>(Optional.none());
+  const lastVisualCaret = Singleton.value<CaretState>();
   let cursorInterval: number | undefined;
   let caretContainerNode: Node | null;
   const rootBlock = Settings.getForcedRootBlock(editor);
@@ -125,14 +125,11 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       DomQuery(caretContainerNode).css('top', clientRect.top);
 
       const caret = DomQuery<HTMLElement>('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css({ ...clientRect }).appendTo(root)[0];
-      lastVisualCaret.set(Optional.some({ caret, element, before }));
+      lastVisualCaret.set({ caret, element, before });
 
-      lastVisualCaret.get().each((caretState) => {
-        if (before) {
-          DomQuery(caretState.caret).addClass('mce-visual-caret-before');
-        }
-      });
-
+      if (before) {
+        DomQuery(caret).addClass('mce-visual-caret-before');
+      }
       startBlink();
 
       rng = element.ownerDocument.createRange();
@@ -166,9 +163,9 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       caretContainerNode = null;
     }
 
-    lastVisualCaret.get().each((caretState) => {
+    lastVisualCaret.on((caretState) => {
       DomQuery(caretState.caret).remove();
-      lastVisualCaret.set(Optional.none());
+      lastVisualCaret.clear();
     });
 
     if (cursorInterval) {
@@ -188,7 +185,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
   };
 
   const reposition = () => {
-    lastVisualCaret.get().each((caretState) => {
+    lastVisualCaret.on((caretState) => {
       const clientRect = getAbsoluteClientRect(root, caretState.element, caretState.before);
       DomQuery(caretState.caret).css({ ...clientRect });
     });

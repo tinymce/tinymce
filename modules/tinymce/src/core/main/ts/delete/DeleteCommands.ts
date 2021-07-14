@@ -14,24 +14,24 @@ import * as CaretBoundaryDelete from './CaretBoundaryDelete';
 import * as CefDelete from './CefDelete';
 import * as DeleteUtils from './DeleteUtils';
 import * as ImageBlockDelete from './ImageBlockDelete';
-import * as BoundaryDelete from './InlineBoundaryDelete';
+import * as InlineBoundaryDelete from './InlineBoundaryDelete';
 import * as InlineFormatDelete from './InlineFormatDelete';
 import * as MediaDelete from './MediaDelete';
 import * as Outdent from './Outdent';
 import * as TableDelete from './TableDelete';
 
-const nativeCommand = (editor: Editor, command: string) => {
+const nativeCommand = (editor: Editor, command: string): void => {
   editor.getDoc().execCommand(command, false, null);
 };
 
-const deleteCommand = (editor: Editor, caret: Cell<Text>) => {
+const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
   if (Outdent.backspaceDelete(editor, false)) {
     return;
   } else if (CefDelete.backspaceDelete(editor, false)) {
     return;
   } else if (CaretBoundaryDelete.backspaceDelete(editor, false)) {
     return;
-  } else if (BoundaryDelete.backspaceDelete(editor, caret, false)) {
+  } else if (InlineBoundaryDelete.backspaceDelete(editor, caret, false)) {
     return;
   } else if (BlockBoundaryDelete.backspaceDelete(editor, false)) {
     return;
@@ -51,12 +51,12 @@ const deleteCommand = (editor: Editor, caret: Cell<Text>) => {
   }
 };
 
-const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>) => {
+const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>): void => {
   if (CefDelete.backspaceDelete(editor, true)) {
     return;
   } else if (CaretBoundaryDelete.backspaceDelete(editor, true)) {
     return;
-  } else if (BoundaryDelete.backspaceDelete(editor, caret, true)) {
+  } else if (InlineBoundaryDelete.backspaceDelete(editor, caret, true)) {
     return;
   } else if (BlockBoundaryDelete.backspaceDelete(editor, true)) {
     return;
@@ -75,7 +75,7 @@ const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>) => {
   }
 };
 
-const setup = (editor: Editor, caret: Cell<Text>) => {
+const setup = (editor: Editor, caret: Cell<Text>): void => {
   editor.addCommand('delete', () => {
     deleteCommand(editor, caret);
   });

@@ -24,7 +24,7 @@ export interface TableSelectionDetails {
 const isRootFromElement = (root: SugarElement<Node>): IsRootFn =>
   (cur: SugarElement<Node>): boolean => Compare.eq(root, cur);
 
-const getTableCells = (table: SugarElement<HTMLTableElement>) =>
+const getTableCells = (table: SugarElement<HTMLTableElement>): SugarElement<HTMLTableCellElement>[] =>
   SelectorFilter.descendants<HTMLTableCellElement>(table, 'td,th');
 
 const getTableDetailsFromRange = (rng: Range, isRoot: IsRootFn): TableSelectionDetails => {

@@ -12,13 +12,13 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ], true);
 
-  const removeFormat = [{
+  const removeFormat: Format[] = [{
     selector: 'strong, em',
     remove: 'all',
     split: true,
     expand: false
   }];
-  const boldFormat = [{
+  const boldFormat: Format[] = [{
     inline: 'strong',
     remove: 'all',
     preserve_attributes: [ 'style', 'class' ]

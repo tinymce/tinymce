@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Optional, Throttler } from '@ephox/katamari';
+import { Cell, Optional, Singleton, Throttler } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 
@@ -34,7 +34,7 @@ const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
 };
 
 const setup = (editor: Editor) => {
-  const startData = Cell<Optional<TouchHistoryData>>(Optional.none());
+  const startData = Singleton.value<TouchHistoryData>();
   const longpressFired = Cell<boolean>(false);
 
   const debounceLongpress = Throttler.last((e) => {
@@ -54,16 +54,16 @@ const setup = (editor: Editor) => {
 
       debounceLongpress.throttle(e);
       longpressFired.set(false);
-      startData.set(Optional.some(data));
+      startData.set(data);
     });
   }, true);
 
   editor.on('touchmove', (e) => {
     debounceLongpress.cancel();
     getTouch(e).each((touch) => {
-      startData.get().each((data) => {
+      startData.on((data) => {
         if (isFarEnough(touch, data)) {
-          startData.set(Optional.none());
+          startData.clear();
           longpressFired.set(false);
           editor.fire('longpresscancel');
         }

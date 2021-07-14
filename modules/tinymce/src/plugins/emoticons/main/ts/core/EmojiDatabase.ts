@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Merger, Obj, Optional, Strings } from '@ephox/katamari';
+import { Merger, Obj, Optional, Singleton, Strings } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
@@ -58,8 +58,8 @@ const getUserDefinedEmoticons = (editor: Editor) => {
 
 // TODO: Consider how to share this loading across different editors
 const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): EmojiDatabase => {
-  const categories = Cell<Optional<Record<string, EmojiEntry[]>>>(Optional.none());
-  const all = Cell<Optional<EmojiEntry[]>>(Optional.none());
+  const categories = Singleton.value<Record<string, EmojiEntry[]>>();
+  const all = Singleton.value<EmojiEntry[]>();
 
   const emojiImagesUrl = Settings.getEmotionsImageUrl(editor);
 
@@ -89,8 +89,8 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
       everything.push(entry);
     });
 
-    categories.set(Optional.some(cats));
-    all.set(Optional.some(everything));
+    categories.set(cats);
+    all.set(everything);
   };
 
   editor.on('init', () => {
@@ -100,8 +100,8 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
     }, (err) => {
       // eslint-disable-next-line no-console
       console.log(`Failed to load emoticons: ${err}`);
-      categories.set(Optional.some({}));
-      all.set(Optional.some([]));
+      categories.set({});
+      all.set([]);
     });
   });
 
@@ -142,7 +142,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
     }
   };
 
-  const hasLoaded = (): boolean => categories.get().isSome() && all.get().isSome();
+  const hasLoaded = (): boolean => categories.isSet() && all.isSet();
 
   return {
     listCategories,

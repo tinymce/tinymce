@@ -16,7 +16,7 @@ import * as CaretFormat from '../fmt/CaretFormat';
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';
 
-const getParentInlines = (rootElm: SugarElement, startElm: SugarElement): SugarElement[] => {
+const getParentInlines = (rootElm: SugarElement<Node>, startElm: SugarElement<Node>): SugarElement<Node>[] => {
   const parents = Parents.parentsAndSelf(startElm, rootElm);
   return Arr.findIndex(parents, ElementType.isBlock).fold(
     Fun.constant(parents),
@@ -24,9 +24,10 @@ const getParentInlines = (rootElm: SugarElement, startElm: SugarElement): SugarE
   );
 };
 
-const hasOnlyOneChild = (elm: SugarElement) => Traverse.children(elm).length === 1;
+const hasOnlyOneChild = (elm: SugarElement<Node>): boolean =>
+  Traverse.childNodesCount(elm) === 1;
 
-const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarElement, parentInlines: SugarElement[]) => {
+const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarElement<Node>, parentInlines: SugarElement<Node>[]) => {
   const isFormatElement = Fun.curry(CaretFormat.isFormatElement, editor);
   const formatNodes = Arr.map(Arr.filter(parentInlines, isFormatElement), (elm) => elm.dom);
 
@@ -38,7 +39,7 @@ const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarEleme
   }
 };
 
-const deleteCaret = (editor: Editor, forward: boolean) => {
+const deleteCaret = (editor: Editor, forward: boolean): boolean => {
   const rootElm = SugarElement.fromDom(editor.getBody());
   const startElm = SugarElement.fromDom(editor.selection.getStart());
   const parentInlines = Arr.filter(getParentInlines(rootElm, startElm), hasOnlyOneChild);
@@ -54,7 +55,8 @@ const deleteCaret = (editor: Editor, forward: boolean) => {
   });
 };
 
-const backspaceDelete = (editor: Editor, forward: boolean) => editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
+const backspaceDelete = (editor: Editor, forward: boolean): boolean =>
+  editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
 
 export {
   backspaceDelete

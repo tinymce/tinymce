@@ -7,6 +7,7 @@
 
 import PluginManager from 'tinymce/core/api/PluginManager';
 
+import * as Commands from './api/Commands';
 import * as Settings from './api/Settings';
 import { initDatabase } from './core/EmojiDatabase';
 import * as Filters from './core/Filters';
@@ -27,7 +28,8 @@ export default () => {
 
     const database = initDatabase(editor, databaseUrl, databaseId);
 
-    Buttons.register(editor, database);
+    Commands.register(editor, database);
+    Buttons.register(editor);
     Autocompletion.init(editor, database);
     Filters.setup(editor);
   });

@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyEvents, AlloyParts, Receiving } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Obj, Optional, Type } from '@ephox/katamari';
+import { Obj, Optional, Singleton, Type } from '@ephox/katamari';
 import { DomEvent, EventUnbinder, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -81,7 +81,7 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: WindowExtra, e
   // Determine the iframe urls domain, so we can target that specifically when sending messages
   const iframeUri = new URI(internalDialog.url, { base_uri: new URI(window.location.href) });
   const iframeDomain = `${iframeUri.protocol}://${iframeUri.host}${iframeUri.port ? ':' + iframeUri.port : ''}`;
-  const messageHandlerUnbinder = Cell(Optional.none<EventUnbinder>());
+  const messageHandlerUnbinder = Singleton.unbindable<EventUnbinder>();
 
   // Setup the behaviours for dealing with messages between the iframe and current window
   const extraBehaviours = [
@@ -101,13 +101,11 @@ const renderUrlDialog = (internalDialog: Dialog.UrlDialog, extra: WindowExtra, e
             }
           }
         });
-        messageHandlerUnbinder.set(Optional.some(unbind));
+        messageHandlerUnbinder.set(unbind);
       }),
 
       // When the dialog is closed, unbind the window message listener
-      AlloyEvents.runOnDetached(() => {
-        messageHandlerUnbinder.get().each((unbinder) => unbinder.unbind());
-      })
+      AlloyEvents.runOnDetached(messageHandlerUnbinder.clear)
     ]),
     Receiving.config({
       channels: {

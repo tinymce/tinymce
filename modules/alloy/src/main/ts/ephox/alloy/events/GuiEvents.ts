@@ -1,5 +1,5 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Arr, Cell, Optional } from '@ephox/katamari';
+import { Arr, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, EventArgs, EventUnbinder, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
 
@@ -95,7 +95,7 @@ const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void 
       }
     })
   );
-  const pasteTimeout = Cell(Optional.none<number>());
+  const pasteTimeout = Singleton.value<number>();
   const onPaste = DomEvent.bind(container, 'paste', (event) => {
     tapEvent.fireIfReady(event, 'paste').each((tapStopped) => {
       if (tapStopped) {
@@ -107,9 +107,9 @@ const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void 
     if (stopped) {
       event.kill();
     }
-    pasteTimeout.set(Optional.some(setTimeout(() => {
+    pasteTimeout.set(setTimeout(() => {
       settings.triggerEvent(SystemEvents.postPaste(), event);
-    }, 0)));
+    }, 0));
   });
 
   const onKeydown = DomEvent.bind(container, 'keydown', (event) => {
@@ -129,7 +129,7 @@ const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void 
     }
   });
 
-  const focusoutTimeout = Cell(Optional.none<number>());
+  const focusoutTimeout = Singleton.value<number>();
   const onFocusOut = bindBlur(container, (event) => {
     const stopped = settings.triggerEvent('focusout', event);
     if (stopped) {
@@ -139,9 +139,9 @@ const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void 
     // INVESTIGATE: Come up with a better way of doing this. Related target can be used, but not on FF.
     // It allows the active element to change before firing the blur that we will listen to
     // for things like closing popups
-    focusoutTimeout.set(Optional.some(setTimeout(() => {
+    focusoutTimeout.set(setTimeout(() => {
       settings.triggerEvent(SystemEvents.postBlur(), event);
-    }, 0)));
+    }, 0));
   });
 
   const unbind = (): void => {
@@ -152,8 +152,8 @@ const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void 
     onFocusIn.unbind();
     onFocusOut.unbind();
     onPaste.unbind();
-    pasteTimeout.get().each(clearTimeout);
-    focusoutTimeout.get().each(clearTimeout);
+    pasteTimeout.on(clearTimeout);
+    focusoutTimeout.on(clearTimeout);
   };
 
   return {

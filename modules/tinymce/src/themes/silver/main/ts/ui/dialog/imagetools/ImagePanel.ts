@@ -6,7 +6,7 @@
  */
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Memento, Replacing } from '@ephox/alloy';
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
 
 import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
@@ -41,7 +41,7 @@ const renderImagePanel = (initialUrl: string) => {
   );
 
   const zoomState = Cell(1);
-  const cropRect = Cell(Optional.none<CropRect>());
+  const cropRect = Singleton.value<CropRect>();
   const rectState = Cell({
     x: 0,
     y: 0,
@@ -79,7 +79,7 @@ const renderImagePanel = (initialUrl: string) => {
         Css.setAll(bg.element, css);
       });
 
-      cropRect.get().each((cRect) => {
+      cropRect.on((cRect) => {
         const rect = rectState.get();
         cRect.setRect({
           x: rect.x * zoom + left,
@@ -166,13 +166,13 @@ const renderImagePanel = (initialUrl: string) => {
   };
 
   const showCrop = (): void => {
-    cropRect.get().each((cRect) => {
+    cropRect.on((cRect) => {
       cRect.toggleVisibility(true);
     });
   };
 
   const hideCrop = (): void => {
-    cropRect.get().each((cRect) => {
+    cropRect.on((cRect) => {
       cRect.toggleVisibility(false);
     });
   };
@@ -222,7 +222,7 @@ const renderImagePanel = (initialUrl: string) => {
                   };
                   rectState.set(newRect);
                 });
-                cropRect.set(Optional.some(cRect));
+                cropRect.set(cRect);
               });
             })
           ])

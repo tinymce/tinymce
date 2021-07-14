@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Singleton } from '@ephox/katamari';
 
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as Rtc from '../Rtc';
@@ -19,7 +19,7 @@ import Editor from './Editor';
  * @class tinymce.UndoManager
  */
 const UndoManager = (editor: Editor): UndoManager => {
-  const beforeBookmark: Cell<Optional<Bookmark>> = Cell(Optional.none());
+  const beforeBookmark = Singleton.value<Bookmark>();
   const locks: Locks = Cell(0);
   const index: Index = Cell(0);
 

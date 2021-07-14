@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 
 import { Gene } from '../api/Gene';
 import TagBoundaries from '../common/TagBoundaries';
@@ -42,6 +42,9 @@ const isSpecial = (item: Gene): boolean => {
   return item.name === GeneTypes.Special;
 };
 
+const getLanguage = (item: Gene): Optional<string> =>
+  Obj.get(item.attrs, 'lang');
+
 const getText = (item: Gene): string => {
   return Optional.from(item.text).getOrDie('Text not available on this node');
 };
@@ -71,6 +74,7 @@ export {
   isComment,
   isElement,
   isSpecial,
+  getLanguage,
   getText,
   setText,
   isEmptyTag,

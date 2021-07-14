@@ -15,7 +15,7 @@ import * as Empty from '../dom/Empty';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 
-const getChildrenUntilBlockBoundary = (block: SugarElement) => {
+const getChildrenUntilBlockBoundary = (block: SugarElement<Element>): SugarElement<Node>[] => {
   const children = Traverse.children(block);
   return Arr.findIndex(children, ElementType.isBlock).fold(
     Fun.constant(children),
@@ -23,20 +23,26 @@ const getChildrenUntilBlockBoundary = (block: SugarElement) => {
   );
 };
 
-const extractChildren = (block: SugarElement) => {
+const extractChildren = (block: SugarElement<Element>): SugarElement<Node>[] => {
   const children = getChildrenUntilBlockBoundary(block);
   Arr.each(children, Remove.remove);
   return children;
 };
 
-const removeEmptyRoot = (rootNode: SugarElement, block: SugarElement) => {
+const removeEmptyRoot = (rootNode: SugarElement<Node>, block: SugarElement<Element>) => {
   const parents = Parents.parentsAndSelf(block, rootNode);
   return Arr.find(parents.reverse(), (element) => Empty.isEmpty(element)).each(Remove.remove);
 };
 
-const isEmptyBefore = (el: SugarElement) => Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length === 0;
+const isEmptyBefore = (el: SugarElement<Node>): boolean =>
+  Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length === 0;
 
-const nestedBlockMerge = (rootNode: SugarElement, fromBlock: SugarElement, toBlock: SugarElement, insertionPoint: SugarElement): Optional<CaretPosition> => {
+const nestedBlockMerge = (
+  rootNode: SugarElement<Node>,
+  fromBlock: SugarElement<Element>,
+  toBlock: SugarElement<Element>,
+  insertionPoint: SugarElement<Node>
+): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
     PaddingBr.fillWithPaddingBr(toBlock);
     return CaretFinder.firstPositionIn(toBlock.dom);
@@ -54,7 +60,7 @@ const nestedBlockMerge = (rootNode: SugarElement, fromBlock: SugarElement, toBlo
   return position;
 };
 
-const sidelongBlockMerge = (rootNode: SugarElement, fromBlock: SugarElement, toBlock: SugarElement): Optional<CaretPosition> => {
+const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<CaretPosition> => {
   if (Empty.isEmpty(toBlock)) {
     Remove.remove(toBlock);
     if (Empty.isEmpty(fromBlock)) {
@@ -71,12 +77,12 @@ const sidelongBlockMerge = (rootNode: SugarElement, fromBlock: SugarElement, toB
   return position;
 };
 
-const findInsertionPoint = (toBlock: SugarElement, block: SugarElement) => {
+const findInsertionPoint = (toBlock: SugarElement<Element>, block: SugarElement<Element>) => {
   const parentsAndSelf = Parents.parentsAndSelf(block, toBlock);
   return Optional.from(parentsAndSelf[parentsAndSelf.length - 1]);
 };
 
-const getInsertionPoint = (fromBlock: SugarElement, toBlock: SugarElement): Optional<SugarElement> =>
+const getInsertionPoint = (fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<SugarElement> =>
   Compare.contains(toBlock, fromBlock) ? findInsertionPoint(toBlock, fromBlock) : Optional.none();
 
 const trimBr = (first: boolean, block: SugarElement) => {
@@ -87,7 +93,7 @@ const trimBr = (first: boolean, block: SugarElement) => {
     .each(Remove.remove);
 };
 
-const mergeBlockInto = (rootNode: SugarElement, fromBlock: SugarElement, toBlock: SugarElement): Optional<CaretPosition> => {
+const mergeBlockInto = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>): Optional<CaretPosition> => {
   trimBr(true, fromBlock);
   trimBr(false, toBlock);
 
@@ -97,7 +103,7 @@ const mergeBlockInto = (rootNode: SugarElement, fromBlock: SugarElement, toBlock
   );
 };
 
-const mergeBlocks = (rootNode: SugarElement, forward: boolean, block1: SugarElement, block2: SugarElement) =>
+const mergeBlocks = (rootNode: SugarElement<Node>, forward: boolean, block1: SugarElement<Element>, block2: SugarElement<Element>): Optional<CaretPosition> =>
   forward ? mergeBlockInto(rootNode, block2, block1) : mergeBlockInto(rootNode, block1, block2);
 
 export {

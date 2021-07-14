@@ -3,6 +3,10 @@ import { PlatformDetection } from '@ephox/sand';
 
 import { SugarElement } from './SugarElement';
 
+interface VendorDocument {
+  readonly createTreeWalker: (root: Node, whatToShow: number, filter: NodeFilter | null, entityReferenceExpansion?: boolean) => TreeWalker;
+}
+
 const regularGetNodes = <T extends Node> (texas: TreeWalker): SugarElement<T>[] => {
   const ret: SugarElement<T>[] = [];
   while (texas.nextNode() !== null) {
@@ -38,7 +42,9 @@ const find = (node: SugarElement<Node>, filterOpt: Optional<(n: string | null) =
   // http://www.bennadel.com/blog/2607-finding-html-comment-nodes-in-the-dom-using-treewalker.htm
   vmlFilter.acceptNode = vmlFilter;
 
-  const texas = document.createTreeWalker(node.dom, NodeFilter.SHOW_COMMENT, vmlFilter, false);
+  // Need to use a cast here, as tslib doesn't include the fourth argument anymore since it's deprecated
+  // however we still need it for IE unfortunately.
+  const texas = (document as VendorDocument).createTreeWalker(node.dom, NodeFilter.SHOW_COMMENT, vmlFilter, false);
 
   return getNodes<Comment>(texas);
 };

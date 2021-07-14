@@ -22,7 +22,7 @@ import * as SplitRange from '../selection/SplitRange';
 import * as TableCellSelection from '../selection/TableCellSelection';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
-import { FormatAttrOrStyleValue, FormatVars, RemoveFormat, RemoveFormatPartial } from './FormatTypes';
+import { Format, FormatAttrOrStyleValue, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 import { mergeSiblings } from './MergeUtils';
@@ -60,10 +60,8 @@ const isTableCellOrRow = (node: Node) => /^(TR|TH|TD)$/.test(node.nodeName);
 const isChildOfInlineParent = (dom: DOMUtils, node: Node, parent: Node): boolean => dom.isChildOf(node, parent) && node !== parent && !dom.isBlock(parent);
 
 const getContainer = (ed: Editor, rng: RangeLikeObject, start?: boolean) => {
-  let container: Node, offset: number;
-
-  container = rng[start ? 'startContainer' : 'endContainer'];
-  offset = rng[start ? 'startOffset' : 'endOffset'];
+  let container = rng[start ? 'startContainer' : 'endContainer'];
+  let offset = rng[start ? 'startOffset' : 'endOffset'];
 
   if (NodeType.isElement(container)) {
     const lastIdx = container.childNodes.length - 1;
@@ -136,28 +134,28 @@ const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string
  * @param {Object} format Format object o match with.
  * @return {boolean} true/false if the format matches.
  */
-const matchName = (dom: DOMUtils, node: Node, format: RemoveFormatPartial) => {
+const matchName = (dom: DOMUtils, node: Node, format: Format) => {
   // Check for inline match
-  if (isEq(node, format.inline)) {
+  if (FormatUtils.isInlineFormat(format) && isEq(node, format.inline)) {
     return true;
   }
 
   // Check for block match
-  if (isEq(node, format.block)) {
+  if (FormatUtils.isBlockFormat(format) && isEq(node, format.block)) {
     return true;
   }
 
   // Check for selector match
-  if (format.selector) {
+  if (FormatUtils.isSelectorFormat(format)) {
     return NodeType.isElement(node) && dom.is(node, format.selector);
   }
 };
 
-const isColorFormatAndAnchor = (node: Node, format: RemoveFormatPartial) => format.links && node.nodeName === 'A';
+const isColorFormatAndAnchor = (node: Node, format: Format) => format.links && node.nodeName === 'A';
 
-const find = (dom: DOMUtils, node: Node, next: boolean, inc?: boolean) => {
-  node = FormatUtils.getNonWhiteSpaceSibling(node, next, inc);
-  return !node || (node.nodeName === 'BR' || dom.isBlock(node));
+const find = (dom: DOMUtils, node: Node, next: boolean, inc?: boolean): boolean => {
+  const sibling = FormatUtils.getNonWhiteSpaceSibling(node, next, inc);
+  return Type.isNullable(sibling) || sibling.nodeName === 'BR' || dom.isBlock(sibling);
 };
 
 /**
@@ -178,12 +176,12 @@ const find = (dom: DOMUtils, node: Node, next: boolean, inc?: boolean) => {
  * @param {Object} format Format rule.
  * @return {Node} Input node.
  */
-const removeNode = (ed: Editor, node: Node, format: RemoveFormatPartial) => {
+const removeNode = (ed: Editor, node: Node, format: Format) => {
   const parentNode = node.parentNode;
-  let rootBlockElm;
+  let rootBlockElm: Node | null;
   const dom = ed.dom, forcedRootBlock = Settings.getForcedRootBlock(ed);
 
-  if (format.block) {
+  if (FormatUtils.isBlockFormat(format)) {
     if (!forcedRootBlock) {
       // Append BR elements if needed before we remove the block
       if (dom.isBlock(node) && !dom.isBlock(parentNode)) {
@@ -208,7 +206,7 @@ const removeNode = (ed: Editor, node: Node, format: RemoveFormatPartial) => {
                 rootBlockElm.appendChild(node);
               }
             } else {
-              rootBlockElm = 0;
+              rootBlockElm = null;
             }
           });
         }
@@ -216,15 +214,15 @@ const removeNode = (ed: Editor, node: Node, format: RemoveFormatPartial) => {
     }
   }
 
-  // Never remove nodes that isn't the specified inline element if a selector is specified too
-  if (format.selector && format.inline && !isEq(format.inline, node)) {
+  // Never remove nodes that aren't the specified inline element if a selector is specified too
+  if (FormatUtils.isMixedFormat(format) && !isEq(format.inline, node)) {
     return;
   }
 
   dom.remove(node, true);
 };
 
-const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars, node?: Node, compareNode?: Node): RemoveFormatAdt => {
+const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node): RemoveFormatAdt => {
   let stylesModified: boolean;
   const dom = ed.dom;
 
@@ -237,7 +235,7 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
   const elm = node as Element;
 
   // Applies to styling elements like strong, em, i, u, etc. so that if they have styling attributes, the attributes can be kept but the styling element is removed
-  if (format.inline && format.remove === 'all' && Type.isArray(format.preserve_attributes)) {
+  if (FormatUtils.isInlineFormat(format) && format.remove === 'all' && Type.isArray(format.preserve_attributes)) {
     // Remove all attributes except for the attributes specified in preserve_attributes
     const attrsToPreserve = Arr.filter(dom.getAttribs(elm), (attr) => Arr.contains(format.preserve_attributes, attr.name.toLowerCase()));
     dom.removeAllAttribs(elm);
@@ -367,7 +365,7 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
  * @param {Node} compareNode Optional compare node, if specified the styles will be compared to that node.
  * @return {Boolean} True/false if the node was removed or not.
  */
-const removeFormat = (ed: Editor, format: RemoveFormatPartial, vars?: FormatVars, node?: Node, compareNode?: Node): boolean =>
+const removeFormat = (ed: Editor, format: Format, vars?: FormatVars, node?: Node, compareNode?: Node): boolean =>
   removeFormatInternal(ed, format, vars, node, compareNode).fold(
     Fun.never,
     (newName) => {
@@ -387,7 +385,7 @@ const findFormatRoot = (editor: Editor, container: Node, name: string, vars: For
     if (!formatRoot && parent.id !== '_start' && parent.id !== '_end') {
       // Is the node matching the format we are looking for
       const format = MatchFormat.matchNode(editor, parent, name, vars, similar);
-      if (format && (format as RemoveFormat).split !== false) {
+      if (format && format.split !== false) {
         formatRoot = parent;
       }
     }
@@ -396,7 +394,7 @@ const findFormatRoot = (editor: Editor, container: Node, name: string, vars: For
   return formatRoot;
 };
 
-const removeFormatFromClone = (editor: Editor, format: RemoveFormatPartial, vars: FormatVars, clone: Node) =>
+const removeFormatFromClone = (editor: Editor, format: Format, vars: FormatVars, clone: Node) =>
   removeFormatInternal(editor, format, vars, clone, clone).fold(
     Fun.constant(clone),
     (newName) => {
@@ -409,7 +407,7 @@ const removeFormatFromClone = (editor: Editor, format: RemoveFormatPartial, vars
     Fun.constant(null)
   );
 
-const wrapAndSplit = (editor: Editor, formatList: RemoveFormatPartial[], formatRoot: Node, container: Node, target: Node, split: boolean, format: RemoveFormatPartial, vars: FormatVars) => {
+const wrapAndSplit = (editor: Editor, formatList: Format[], formatRoot: Node, container: Node, target: Node, split: boolean, format: Format, vars: FormatVars) => {
   let clone: Node | null, lastClone: Node, firstClone: Node;
   const dom = editor.dom;
 
@@ -453,7 +451,7 @@ const wrapAndSplit = (editor: Editor, formatList: RemoveFormatPartial[], formatR
 
       // After splitting the nodes may match with other siblings so we need to attempt to merge them
       // Note: We can't use MergeFormats, as that'd create a circular dependency
-      if (format.inline) {
+      if (FormatUtils.isInlineFormat(format)) {
         mergeSiblings(dom, format, vars, lastClone);
       }
     }
@@ -463,7 +461,7 @@ const wrapAndSplit = (editor: Editor, formatList: RemoveFormatPartial[], formatR
 };
 
 const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean) => {
-  const formatList = ed.formatter.get(name) as RemoveFormatPartial[];
+  const formatList = ed.formatter.get(name);
   const format = formatList[0];
   let contentEditable = true;
   const dom = ed.dom;
@@ -662,7 +660,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     return;
   }
 
-  if (!selection.isCollapsed() || !format.inline || TableCellSelection.getCellsFromEditor(ed).length) {
+  if (!selection.isCollapsed() || !FormatUtils.isInlineFormat(format) || TableCellSelection.getCellsFromEditor(ed).length) {
     // Remove formatting on the selection
     SelectionUtils.preserve(selection, true, () => {
       SelectionUtils.runOnRanges(ed, removeRngStyle);
@@ -670,7 +668,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
     // Check if start element still has formatting then we are at: "<b>text|</b>text"
     // and need to move the start into the next text node
-    if (format.inline && MatchFormat.match(ed, name, vars, selection.getStart())) {
+    if (FormatUtils.isInlineFormat(format) && MatchFormat.match(ed, name, vars, selection.getStart())) {
       FormatUtils.moveStart(dom, selection, selection.getRng());
     }
 
