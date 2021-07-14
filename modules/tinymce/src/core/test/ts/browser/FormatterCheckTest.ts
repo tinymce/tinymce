@@ -1,5 +1,5 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -161,6 +161,63 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
     assert.isTrue(editor.formatter.match('complex', { color: '#ff00' }), 'Selected element match with variable and function');
+  });
+
+  context('using similar', () => {
+    const setupRegister = (editor: Editor) => {
+      editor.formatter.register({
+        tablecellverticalalign: {
+          selector: 'td,th',
+          styles: {
+            'vertical-align': '%value'
+          },
+          remove_similar: true
+        }
+      });
+    };
+
+    const setContentWithoutAttribute = (editor: Editor) => {
+      editor.getBody().innerHTML = (
+        '<table>' +
+          '<tr>' +
+            '<td>&nbsp;</td>' +
+          '</tr>' +
+        '</table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+    };
+
+    const setContentWithAttribute = (editor: Editor, attributeVaue: string) => {
+      editor.getBody().innerHTML = (
+        '<table>' +
+          '<tr>' +
+            `<td style="vertical-align: ${attributeVaue};">&nbsp;</td>` +
+          '</tr>' +
+        '</table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+    };
+
+    it('Without an attribute set', () => {
+      const editor = hook.editor();
+      setupRegister(editor);
+      setContentWithoutAttribute(editor);
+      assert.isFalse(editor.formatter.match('tablecellverticalalign', { value: 'top' }, undefined, true));
+    });
+
+    it('With a different attribute set', () => {
+      const editor = hook.editor();
+      setupRegister(editor);
+      setContentWithAttribute(editor, 'bottom');
+      assert.isTrue(editor.formatter.match('tablecellverticalalign', { value: 'top' }, undefined, true));
+    });
+
+    it('With the same attribute set', () => {
+      const editor = hook.editor();
+      setupRegister(editor);
+      setContentWithAttribute(editor, 'top');
+      assert.isTrue(editor.formatter.match('tablecellverticalalign', { value: 'top' }, undefined, true));
+    });
   });
 
   it('matchAll', () => {

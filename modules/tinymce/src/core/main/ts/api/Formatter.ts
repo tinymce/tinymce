@@ -132,7 +132,7 @@ const Formatter = (editor: Editor): Formatter => {
      * @param {String} name Name of format to match.
      * @param {Object} vars Optional list of variables to replace before checking it.
      * @param {Node} node Optional node to check.
-     * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
+     * @param {Boolean} similar Optional argument to specify that similar formats should be checked instead of only exact formats.
      * @return {boolean} true/false if the specified selection/node matches the format.
      */
     match: (name, vars?, node?, similar?) => Rtc.matchFormat(editor, name, vars, node, similar),
