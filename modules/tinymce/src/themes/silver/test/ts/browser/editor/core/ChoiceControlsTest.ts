@@ -1,7 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { McEditor, TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { Attribute } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -158,17 +158,26 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
   });
 
   context('Content language', () => {
-    const hook = TinyHooks.bddSetup<Editor>({
+    const baseSettings = {
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'language',
-      menu: {
-        format: { title: 'Format', items: 'language' }
-      }
-    }, [ Theme ]);
-
-    const defaultLanguages = [ 'English', 'Spanish', 'French', 'German', 'Portuguese', 'Chinese' ];
+      toolbar: 'language'
+    };
 
     context('Default settings', () => {
+      const hook = TinyHooks.bddSetup<Editor>({
+        ...baseSettings,
+        content_langs: [
+          { title: 'English', code: 'en' },
+          { title: 'Spanish', code: 'es' },
+          { title: 'French', code: 'fr' },
+          { title: 'German', code: 'de' },
+          { title: 'Portuguese', code: 'pt' },
+          { title: 'Chinese', code: 'zh' }
+        ]
+      }, [ Theme ]);
+
+      const defaultLanguages = [ 'English', 'Spanish', 'French', 'German', 'Portuguese', 'Chinese' ];
+
       Arr.each([ menuSpec, toolbarSpec ], (spec) => {
         it(`TINY-6149: ${spec.name} shows the correct default languages`, async () => {
           const editor = hook.editor();
@@ -231,28 +240,16 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
     });
 
     context('Advanced settings', () => {
-      beforeEach(() => {
-        hook.editor().settings.content_langs = undefined;
+      before(() => {
+        Theme();
       });
 
       Arr.each([ menuSpec, toolbarSpec ], (spec) => {
-        it(`TINY-6149: ${spec.name} uses settings not available during initialisation to populate the UI`, async () => {
-          const editor = hook.editor();
-
-          editor.settings.content_langs = [{ title: 'English (AU)', code: 'en_AU' }];
-          await spec.pOpen(editor, 'Language');
-          await pAssertOptions(editor, spec.menuSelector, [ 'English (AU)' ], Optional.none());
-          spec.close(editor, 'Language');
-
-          editor.settings.content_langs = undefined;
-          await spec.pOpen(editor, 'Language');
-          await pAssertOptions(editor, spec.menuSelector, defaultLanguages, Optional.none());
-          spec.close(editor, 'Language');
-        });
-
         it(`TINY-6149: ${spec.name} applies custom language attributes`, async () => {
-          const editor = hook.editor();
-          editor.settings.content_langs = [{ title: 'Medical English (US)', code: 'en_US', customCode: 'en_US-medical' }];
+          const editor = await McEditor.pFromSettings<Editor>({
+            ...baseSettings,
+            content_langs: [{ title: 'Medical English (US)', code: 'en_US', customCode: 'en_US-medical' }]
+          });
 
           editor.setContent('<p>Hello world</p>');
           TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'Hello world'.length);
@@ -268,15 +265,18 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           await pSelectItem(editor, spec.menuSelector, 'Medical English (US)');
 
           TinyAssertions.assertContent(editor, '<p>Hello world</p>');
+          McEditor.remove(editor);
         });
 
         it(`TINY-6149: ${spec.name} differentiates languages with the same code but different custom codes`, async () => {
-          const editor = hook.editor();
-          editor.settings.content_langs = [
-            { title: 'English', code: 'en' },
-            { title: 'English (Variant)', code: 'en', customCode: 'en-variant' },
-            { title: 'English (Other variant)', code: 'en', customCode: 'en-variant-2' }
-          ];
+          const editor = await McEditor.pFromSettings<Editor>({
+            ...baseSettings,
+            content_langs: [
+              { title: 'English', code: 'en' },
+              { title: 'English (Variant)', code: 'en', customCode: 'en-variant' },
+              { title: 'English (Other variant)', code: 'en', customCode: 'en-variant-2' }
+            ]
+          });
           const variants = [ 'English', 'English (Variant)', 'English (Other variant)' ];
 
           editor.setContent('<p><span lang="en">Hello world</span></p>');
@@ -294,6 +294,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           await pAssertOptions(editor, spec.menuSelector, variants, Optional.some('English (Other variant)'));
 
           spec.close(editor, 'Language');
+          McEditor.remove(editor);
         });
       });
     });

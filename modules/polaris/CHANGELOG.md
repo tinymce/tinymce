@@ -8,3 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
+
+## 4.0.8 - 2021-07-02
+
+### Fixed
+- Fixed incorrect `Regexes.link` URL detection for custom schemes #TINY-5074

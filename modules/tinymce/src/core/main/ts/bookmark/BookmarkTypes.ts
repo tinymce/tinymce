@@ -31,6 +31,7 @@ export interface IndexBookmark {
 export interface PathBookmark {
   start: number[];
   end?: number[];
+  isFakeCaret?: boolean;
 }
 
 export type Bookmark = StringPathBookmark | RangeBookmark | IdBookmark | IndexBookmark | PathBookmark;

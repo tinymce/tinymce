@@ -27,7 +27,7 @@ const detect = (container: SugarElement, isRoot: (element: SugarElement) => bool
   if (!Compare.eq(start, finish)) {
     return CellSelection.identify(start, finish, isRoot).bind((cellSel) => {
       const boxes = cellSel.boxes.getOr([]);
-      if (boxes.length > 0) {
+      if (boxes.length > 1) {
         selectRange(container, boxes, cellSel.start, cellSel.finish);
         return Optional.some(Response.create(
           Optional.some(Util.makeSitus(start, 0, start, Awareness.getEnd(start))),

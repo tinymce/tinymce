@@ -70,6 +70,10 @@ const getLocation = (trim: TrimFn, selection: EditorSelection, normalized: boole
     bookmark.end = getPoint(dom, trim, normalized, rng, false);
   }
 
+  if (CaretContainer.isRangeInCaretContainerBlock(rng)) {
+    bookmark.isFakeCaret = true;
+  }
+
   return bookmark;
 };
 

@@ -80,6 +80,12 @@ const changeRowHeader = (editor: Editor) => () => {
   editor.execCommand('mceTableRowType', false, { type: newType });
 };
 
+const changeColumnHeader = (editor: Editor) => () => {
+  const currentType = editor.queryCommandValue('mceTableColType');
+  const newType = currentType === 'th' ? 'td' : 'th';
+  editor.execCommand('mceTableColType', false, { type: newType });
+};
+
 export {
   onSetupToggle,
   generateItems,
@@ -87,5 +93,6 @@ export {
   filterNoneItem,
   generateColorSelector,
   changeRowHeader,
+  changeColumnHeader,
   applyTableCellStyle
 };
