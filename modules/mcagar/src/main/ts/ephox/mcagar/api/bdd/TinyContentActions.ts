@@ -1,5 +1,4 @@
 import { Keyboard, Mouse } from '@ephox/agar';
-import { SugarElement } from '@ephox/sugar';
 
 import { Editor } from '../../alien/EditorTypes';
 import * as TypeText from '../../keyboard/TypeText';
