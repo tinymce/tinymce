@@ -172,10 +172,11 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     TinySelections.setCursor(editor, [ 0 ], 1);
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyContentActions.keystroke(editor, Keys.enter());
+    TinyContentActions.keystroke(editor, Keys.enter());
     editor.nodeChanged();
     TinySelections.select(editor, 'img', []);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector);
-    await pAssertPosition('top', -56);
+    await pAssertPosition('top', -76);
   });
 
   it(`TINY-4586: Line context toolbar remains inside iframe container and doesn't overlap the header`, async () => {
@@ -257,7 +258,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
 
     scrollTo(editor, 0, 400);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), bottomInsetSelector);
-    await pAssertPosition('bottom', 6);
+    await pAssertPosition('bottom', 24);
 
     scrollTo(editor, 0, 0);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), topSelector);

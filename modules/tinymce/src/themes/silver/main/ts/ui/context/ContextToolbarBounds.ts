@@ -6,6 +6,7 @@
  */
 
 import { Bounds, Boxes } from '@ephox/alloy';
+import { InlineContent } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import { Scroll, SelectorFind, SugarBody, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
@@ -59,7 +60,13 @@ const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { 
   return { x, width };
 };
 
-const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBounds: Bounds, isToolbarLocationTop: boolean): { y: number; bottom: number } => {
+const getVerticalBounds = (
+  editor: Editor,
+  contentAreaBox: Bounds,
+  viewportBounds: Bounds,
+  isToolbarLocationTop: boolean,
+  toolbarType: InlineContent.ContextPosition
+): { y: number; bottom: number } => {
   const container = SugarElement.fromDom(editor.getContainer());
   const header = SelectorFind.descendant<HTMLElement>(container, '.tox-editor-header').getOr(container);
   const headerBox = Boxes.box(header);
@@ -82,7 +89,8 @@ const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBound
     };
   }
 
-  const containerBounds = Boxes.box(container);
+  // Allow line based context toolbar to overlap the statusbar
+  const containerBounds = toolbarType === 'line' ? Boxes.box(container) : contentAreaBox;
 
   // Scenario toolbar bottom & Iframe: Bottom of the header -> Bottom of the editor container
   if (isToolbarAbove) {
@@ -99,7 +107,7 @@ const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBound
   };
 };
 
-const getContextToolbarBounds = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): Bounds => {
+const getContextToolbarBounds = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, toolbarType: InlineContent.ContextPosition): Bounds => {
   const viewportBounds = WindowVisualViewport.getBounds(window);
   const contentAreaBox = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
   const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
@@ -111,7 +119,7 @@ const getContextToolbarBounds = (editor: Editor, sharedBackstage: UiFactoryBacks
     return Boxes.bounds(x, viewportBounds.y, width, viewportBounds.height);
   } else {
     const isToolbarTop = sharedBackstage.header.isPositionedAtTop();
-    const { y, bottom } = getVerticalBounds(editor, contentAreaBox, viewportBounds, isToolbarTop);
+    const { y, bottom } = getVerticalBounds(editor, contentAreaBox, viewportBounds, isToolbarTop, toolbarType);
     return Boxes.bounds(x, y, width, bottom - y);
   }
 };

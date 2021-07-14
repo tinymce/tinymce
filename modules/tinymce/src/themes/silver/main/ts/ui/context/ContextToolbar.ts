@@ -53,6 +53,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   const lastPosition = Singleton.value<Bounds>();
   const lastTrigger = Singleton.value<TriggerCause>();
   const lastBounds = Singleton.value<Bounds>();
+  const lastContextPosition = Singleton.value<InlineContent.ContextPosition>();
 
   const contextbar = GuiFactory.build(
     renderContextToolbar({
@@ -65,7 +66,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   );
 
   const getBounds = () => {
-    const bounds = ContextToolbarBounds.getContextToolbarBounds(editor, sharedBackstage);
+    const position = lastContextPosition.get().getOr('node');
+    const bounds = ContextToolbarBounds.getContextToolbarBounds(editor, sharedBackstage, position);
     lastBounds.set(bounds);
     return bounds;
   };
@@ -92,6 +94,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     lastPosition.clear();
     lastTrigger.clear();
     lastBounds.clear();
+    lastContextPosition.clear();
     InlineView.hide(contextbar);
   };
 
@@ -192,7 +195,9 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     // TINY-4495 ASSUMPTION: Can only do toolbarApi[0].position because ContextToolbarLookup.filterToolbarsByPosition
     // ensures all toolbars returned by ContextToolbarLookup have the same position.
     // And everything else that gets toolbars from elsewhere only returns maximum 1 toolbar
-    const anchor = getAnchor(toolbarApi[0].position, sElem);
+    const position = toolbarApi[0].position;
+    const anchor = getAnchor(position, sElem);
+    lastContextPosition.set(position);
     lastTrigger.set(TriggerCause.NewAnchor);
 
     const contextBarEle = contextbar.element;
