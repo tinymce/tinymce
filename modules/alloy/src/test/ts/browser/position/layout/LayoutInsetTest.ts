@@ -6,11 +6,11 @@ import * as fc from 'fast-check';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
-import * as LayoutInside from 'ephox/alloy/positioning/layout/LayoutInside';
+import * as LayoutInset from 'ephox/alloy/positioning/layout/LayoutInset';
 import { Placement, setPlacement } from 'ephox/alloy/positioning/layout/Placement';
 import { boxArb } from 'ephox/alloy/test/BoundsUtils';
 
-describe('LayoutInsideTest', () => {
+describe('LayoutInsetTest', () => {
   const placements = [
     Placement.North, Placement.South, Placement.Northeast, Placement.Southeast,
     Placement.Northwest, Placement.Southwest, Placement.East, Placement.West
@@ -21,14 +21,14 @@ describe('LayoutInsideTest', () => {
       const element = SugarElement.fromTag('div');
       fc.assert(fc.property(boxArb(), fc.constantFrom(...placements), (box, placement) => {
         setPlacement(element, placement);
-        const newLayout = LayoutInside.preserve(box, { width: 10, height: 10 }, Bubble.fallback(), element);
+        const newLayout = LayoutInset.preserve(box, { width: 10, height: 10 }, Bubble.fallback(), element);
         assert.equal(newLayout.placement, placement);
       }));
     });
 
     it('TINY-7545: falls back to north if no previous placement is found', () => {
       const element = SugarElement.fromTag('div');
-      const newLayout = LayoutInside.preserve(Boxes.bounds(0, 0, 50, 50), { width: 10, height: 10 }, Bubble.fallback(), element);
+      const newLayout = LayoutInset.preserve(Boxes.bounds(0, 0, 50, 50), { width: 10, height: 10 }, Bubble.fallback(), element);
       assert.equal(newLayout.placement, Placement.North);
     });
   });
@@ -54,7 +54,7 @@ describe('LayoutInsideTest', () => {
       const element = SugarElement.fromTag('div');
       fc.assert(fc.property(boxArb(), fc.constantFrom(...placements), (box, placement) => {
         setPlacement(element, placement);
-        const newLayout = LayoutInside.flip(box, { width: 10, height: 10 }, Bubble.fallback(), element);
+        const newLayout = LayoutInset.flip(box, { width: 10, height: 10 }, Bubble.fallback(), element);
         const expectedLayout = getExpectedFlippedPlacement(placement);
         assert.equal(newLayout.placement, expectedLayout);
       }));
@@ -62,7 +62,7 @@ describe('LayoutInsideTest', () => {
 
     it('TINY-7192: falls back to north if no previous placement is found', () => {
       const element = SugarElement.fromTag('div');
-      const newLayout = LayoutInside.flip(Boxes.bounds(0, 0, 50, 50), { width: 10, height: 10 }, Bubble.fallback(), element);
+      const newLayout = LayoutInset.flip(Boxes.bounds(0, 0, 50, 50), { width: 10, height: 10 }, Bubble.fallback(), element);
       assert.equal(newLayout.placement, Placement.North);
     });
   });
