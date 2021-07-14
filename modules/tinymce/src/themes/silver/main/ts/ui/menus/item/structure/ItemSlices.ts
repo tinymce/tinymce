@@ -11,12 +11,12 @@ import { Optional } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
-import { get as getIcon, IconProvider, render as renderIconElement } from '../../../icons/Icons';
+import * as Icons from '../../../icons/Icons';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ItemClasses from '../ItemClasses';
 
 const renderIcon = (iconHtml: string): AlloySpec =>
-  renderIconElement('div', iconHtml, [ ItemClasses.iconClass ]);
+  Icons.render('div', iconHtml, [ ItemClasses.iconClass ]);
 
 const renderText = (text: string): AlloySpec => ({
   dom: {
@@ -63,29 +63,14 @@ const renderShortcut = (shortcut: string): AlloySpec => ({
   }
 });
 
-const renderCheckmark = (icons: IconProvider): AlloySpec => ({
-  dom: {
-    tag: 'div',
-    classes: [ ItemClasses.checkmarkClass ],
-    innerHtml: getIcon('checkmark', icons)
-  }
-});
+const renderCheckmark = (icons: Icons.IconProvider): AlloySpec =>
+  Icons.render('div', Icons.get('checkmark', icons), [ ItemClasses.checkmarkClass ]);
 
-const renderSubmenuCaret = (icons: IconProvider): AlloySpec => ({
-  dom: {
-    tag: 'div',
-    classes: [ ItemClasses.caretClass ],
-    innerHtml: getIcon('chevron-right', icons)
-  }
-});
+const renderSubmenuCaret = (icons: Icons.IconProvider): AlloySpec =>
+  Icons.render('div', Icons.get('chevron-right', icons), [ ItemClasses.caretClass ]);
 
-const renderDownwardsCaret = (icons: IconProvider): AlloySpec => ({
-  dom: {
-    tag: 'div',
-    classes: [ ItemClasses.caretClass ],
-    innerHtml: getIcon('chevron-down', icons)
-  }
-});
+const renderDownwardsCaret = (icons: Icons.IconProvider): AlloySpec =>
+  Icons.render('div', Icons.get('chevron-down', icons), [ ItemClasses.caretClass ]);
 
 const renderContainer = (container: Menu.CardContainer, components: Array<AlloySpec>): AlloySpec => {
   const directionClass = container.direction === 'vertical' ? ItemClasses.containerColumnClass : ItemClasses.containerRowClass;
