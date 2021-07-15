@@ -51,7 +51,7 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
     await waitToClose('[role="menu"]');
   });
 
-  it('TINY-7399: Clicking on the editor should close other editor context menu', async () => {
+  it('TINY-7399: Clicking on the editor should close other editors context menus', async () => {
     const editor1 = hook1.editor();
     const editor2 = hook2.editor();
 
