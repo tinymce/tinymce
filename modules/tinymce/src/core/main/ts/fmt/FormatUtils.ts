@@ -23,17 +23,18 @@ const isInlineBlock = (node: Node): boolean => {
 
 const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range) => {
   const offset = rng.startOffset;
-  let container = rng.startContainer, walker, node, nodes;
+  let container = rng.startContainer;
 
-  if (rng.startContainer === rng.endContainer) {
-    if (isInlineBlock(rng.startContainer.childNodes[rng.startOffset])) {
+  if (container === rng.endContainer) {
+    if (isInlineBlock(container.childNodes[offset])) {
       return;
     }
   }
 
   // Move startContainer/startOffset in to a suitable node
-  if (container.nodeType === 1) {
-    nodes = container.childNodes;
+  if (NodeType.isElement(container)) {
+    const nodes = container.childNodes;
+    let walker: DomTreeWalker;
     if (offset < nodes.length) {
       container = nodes[offset];
       walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock));
@@ -43,8 +44,8 @@ const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range) => {
       walker.next(true);
     }
 
-    for (node = walker.current(); node; node = walker.next()) {
-      if (node.nodeType === 3 && !isWhiteSpaceNode(node)) {
+    for (let node = walker.current(); node; node = walker.next()) {
+      if (NodeType.isText(node) && !isWhiteSpaceNode(node)) {
         rng.setStart(node, 0);
         selection.setRng(rng);
 
@@ -68,7 +69,7 @@ const getNonWhiteSpaceSibling = (node: Node, next?: boolean, inc?: boolean) => {
     const nextName = next ? 'nextSibling' : 'previousSibling';
 
     for (node = inc ? node : node[nextName]; node; node = node[nextName]) {
-      if (node.nodeType === 1 || !isWhiteSpaceNode(node)) {
+      if (NodeType.isElement(node) || !isWhiteSpaceNode(node)) {
         return node;
       }
     }
@@ -218,7 +219,8 @@ const isInlineFormat = (format: Format): format is InlineFormat =>
 const isMixedFormat = (format: Format): format is MixedFormat =>
   isSelectorFormat(format) && isInlineFormat(format) && Optionals.is(Obj.get(format as any, 'mixed'), true);
 
-const hasBlockChildren = (dom: DOMUtils, elm: Node) => Arr.exists(elm.childNodes, dom.isBlock);
+const shouldExpandToSelector = (format: Format) =>
+  isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);
 
 export {
   isNode,
@@ -241,5 +243,5 @@ export {
   isInlineFormat,
   isBlockFormat,
   isMixedFormat,
-  hasBlockChildren
+  shouldExpandToSelector
 };

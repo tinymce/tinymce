@@ -37,7 +37,7 @@ interface Formatter extends FormatRegistry {
   remove: (name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean) => void;
   toggle: (name: string, vars?: FormatVars, node?: Node) => void;
   match: (name: string, vars?: FormatVars, node?: Node) => boolean;
-  closest: (names) => string | null;
+  closest: (names: string[]) => string | null;
   matchAll: (names: string[], vars?: FormatVars) => string[];
   matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => Format | undefined;
   canApply: (name: string) => boolean;
@@ -167,7 +167,7 @@ const Formatter = (editor: Editor): Formatter => {
      * @param {Boolean} similar Match format that has similar properties.
      * @return {Object} Returns the format object it matches or undefined if it doesn't match.
      */
-    matchNode: (node, names, vars?, similar?) => Rtc.matchNodeFormat(editor, node, names, vars, similar),
+    matchNode: (node, name, vars?, similar?) => Rtc.matchNodeFormat(editor, node, name, vars, similar),
 
     /**
      * Returns true/false if the specified format can be applied to the current selection or not. It

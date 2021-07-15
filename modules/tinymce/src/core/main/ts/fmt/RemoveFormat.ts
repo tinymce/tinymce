@@ -474,17 +474,16 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
   // Make sure to only check for bookmarks created here (eg _start or _end)
   // as there maybe nested bookmarks
-  const isRemoveBookmarkNode = (node: Node) => Bookmarks.isBookmarkNode(node) && NodeType.isElement(node) && (node.id === '_start' || node.id === '_end');
+  const isRemoveBookmarkNode = (node: Node) =>
+    Bookmarks.isBookmarkNode(node) && NodeType.isElement(node) && (node.id === '_start' || node.id === '_end');
+
+  const removeNodeFormat = (node: Node) =>
+    Arr.exists(formatList, (fmt) => removeFormat(ed, fmt, vars, node, node));
 
   // Merges the styles for each node
   const process = (node: Node) => {
-    let lastContentEditable: boolean, hasContentEditableState: boolean;
-
-    // TINY-6567 Include the last node in the selection
-    const parentNode = node.parentNode;
-    if (NodeType.isText(node) && FormatUtils.hasBlockChildren(dom, parentNode)) {
-      removeFormat(ed, format, vars, parentNode, parentNode);
-    }
+    let lastContentEditable = true;
+    let hasContentEditableState = false;
 
     // Node has a contentEditable value
     if (NodeType.isElement(node) && dom.getContentEditable(node)) {
@@ -498,10 +497,12 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
     // Process current node
     if (contentEditable && !hasContentEditableState) {
-      for (let i = 0; i < formatList.length; i++) {
-        if (removeFormat(ed, formatList[i], vars, node, node)) {
-          break;
-        }
+      const removed = removeNodeFormat(node);
+
+      // TINY-6567/TINY-7393: Include the parent if using an expanded selector format and no match was found for the current node
+      const parentNode = node.parentNode;
+      if (!removed && Type.isNonNullable(parentNode) && FormatUtils.shouldExpandToSelector(format)) {
+        removeNodeFormat(parentNode);
       }
     }
 
@@ -517,6 +518,24 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
         }
       }
     }
+
+    // Note: Assists with cleaning up any stray text decorations that may been applied when text decorations
+    // and text colors were merged together from an applied format
+    // Remove child span if it only contains text-decoration and a parent node also has the same text decoration.
+    const textDecorations = [ 'underline', 'line-through', 'overline' ];
+    Arr.each(textDecorations, (decoration) => {
+      if (NodeType.isElement(node) && ed.dom.getStyle(node, 'text-decoration') === decoration &&
+        node.parentNode && FormatUtils.getTextDecoration(dom, node.parentNode) === decoration) {
+        removeFormat(ed, {
+          deep: false,
+          exact: true,
+          inline: 'span',
+          styles: {
+            textDecoration: decoration
+          }
+        }, null, node);
+      }
+    });
   };
 
   const unwrap = (start?: boolean) => {
@@ -609,27 +628,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
 
     // Remove items between start/end
     RangeWalk.walk(dom, expandedRng, (nodes) => {
-      Arr.each(nodes, (node) => {
-        process(node);
-
-        // Note: Assists with cleaning up any stray text decorations that may been applied when text decorations
-        // and text colors were merged together from a applied format
-        // Remove child span if it only contains text-decoration and a parent node also has the same text decoration.
-        const textDecorations = [ 'underline', 'line-through', 'overline' ];
-        Arr.each(textDecorations, (decoration) => {
-          if (NodeType.isElement(node) && ed.dom.getStyle(node, 'text-decoration') === decoration &&
-            node.parentNode && FormatUtils.getTextDecoration(dom, node.parentNode) === decoration) {
-            removeFormat(ed, {
-              deep: false,
-              exact: true,
-              inline: 'span',
-              styles: {
-                textDecoration: decoration
-              }
-            }, null, node);
-          }
-        });
-      });
+      Arr.each(nodes, process);
     });
   };
 
