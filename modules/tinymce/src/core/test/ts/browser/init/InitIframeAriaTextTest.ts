@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.init.InitIframeContentAriaLabelTest', () => {
+describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
   const defaultIframeTitle = 'Rich Text Area. Press ALT-0 for help.';
   const customIframeTitle = 'Cupidatat magna aliquip.';
 
