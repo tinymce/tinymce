@@ -25,7 +25,7 @@ const ModernThemeSelectors: ThemeSelectors = {
   menuBarSelector: '.mce-menubar',
   dialogSelector: '.mce-window',
   dialogCancelSelector: 'div[role="button"]:contains(Cancel)',
-  dialogCloseSelector: 'div[role="button"].mce-close',
+  dialogCloseSelector: 'button.mce-close',
   dialogSubmitSelector: 'div[role="button"].mce-primary'
 };
 
