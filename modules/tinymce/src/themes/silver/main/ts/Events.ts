@@ -28,14 +28,6 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
 
   const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target });
 
-  const dismissPopupsOnEditor = () => {
-    Arr.each(editor.editorManager.get(), (loopEditor) => {
-      if (editor !== loopEditor) {
-        loopEditor.fire('DismissPopups', { relatedTarget: editor });
-      }
-    });
-  };
-
   // Document touch events
   const onTouchstart = DomEvent.bind(SugarElement.fromDom(document), 'touchstart', fireDismissPopups);
   const onTouchmove = DomEvent.bind(SugarElement.fromDom(document), 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
@@ -50,16 +42,18 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   });
 
   // Editor content events
-  const onContentClick = () => {
-    // Close others editors menu
-    Arr.each(editor.editorManager.get(), (loopEditor) => loopEditor.fire('DismissPopups', { relatedTarget: editor }));
-  };
+  const onContentClick = (raw: UIEvent) => broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(raw.target as Node) });
   const onContentMouseup = (raw: MouseEvent) => {
     if (raw.button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: SugarElement.fromDom(raw.target as Node) });
-    } else {
-      dismissPopupsOnEditor(); // prevent multiple context menus open
     }
+  };
+  const onContentMousedown = () => {
+    Arr.each(editor.editorManager.get(), (loopEditor) => {
+      if (editor !== loopEditor) {
+        loopEditor.fire('DismissPopups', { relatedTarget: editor });
+      }
+    });
   };
 
   // Window events
@@ -85,6 +79,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.on('click', onContentClick);
     editor.on('tap', onContentClick);
     editor.on('mouseup', onContentMouseup);
+    editor.on('mousedown', onContentMousedown);
     editor.on('ScrollWindow', onWindowScroll);
     editor.on('ResizeWindow', onWindowResize);
     editor.on('ResizeEditor', onEditorResize);
@@ -97,6 +92,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.off('click', onContentClick);
     editor.off('tap', onContentClick);
     editor.off('mouseup', onContentMouseup);
+    editor.off('mousedown', onContentMousedown);
     editor.off('ScrollWindow', onWindowScroll);
     editor.off('ResizeWindow', onWindowResize);
     editor.off('ResizeEditor', onEditorResize);
