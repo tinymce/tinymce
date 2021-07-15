@@ -1,7 +1,7 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -66,7 +66,7 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
 
     TinyUiActions.clickOnMenu(editor1, '[role="menuitem"]');
     await waitToOpen('[role="menu"]');
-    Mouse.trueClickOn(SugarElement.fromDom(editor2.getContainer()), '[role="menuitem"]');
+    Mouse.trueClickOn(TinyDom.container(editor2), '[role="menuitem"]');
     await waitToOpen('[role="menu"]');
 
     const menus = UiFinder.findAllIn(SugarBody.body(), '[role="menu"]');
