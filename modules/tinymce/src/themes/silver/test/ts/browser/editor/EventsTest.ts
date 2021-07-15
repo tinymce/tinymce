@@ -36,7 +36,7 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
   it('TINY-7399: Clicking on the editor should close the context menu', async () => {
     const editor = hook1.editor();
     TinyContentActions.trueClick(editor);
-    TinyUiActions.pTriggerContextMenu(editor, 'p', '[role="menu"]');
+    await TinyUiActions.pTriggerContextMenu(editor, 'p', '[role="menu"]');
     TinyContentActions.trueClick(editor);
     await waitToClose('[role="menu"]');
   });
@@ -55,7 +55,7 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
     const editor1 = hook1.editor();
     const editor2 = hook2.editor();
 
-    TinyUiActions.pTriggerContextMenu(editor1, 'p', '[role="menu"]');
+    await TinyUiActions.pTriggerContextMenu(editor1, 'p', '[role="menu"]');
     TinyContentActions.trueClick(editor2);
     await waitToClose('[role="menu"]');
   });
