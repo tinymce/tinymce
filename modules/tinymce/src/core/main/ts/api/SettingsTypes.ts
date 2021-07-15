@@ -69,7 +69,7 @@ interface BaseEditorSettings {
   cache_suffix?: string;
   color_cols?: number;
   color_map?: string[];
-  content_aria_label?: string;
+  iframe_aria_text?: string;
   content_css?: boolean | string | string[];
   content_css_cors?: boolean;
   content_security_policy?: string;

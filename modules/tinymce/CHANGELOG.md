@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new plugin commands: `mceEmoticons` (emoticons), `mceWordCount` (wordcount), and `mceTemplate` (template) #TINY-7619
 - Added a new `tablerowheader` toolbar button and menu item to toggle the header state of row cells #TINY-7478
 - Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482
-- Added a new `content_aria_label` setting to set the iframe title attribute #TINY-1264
+- Added a new `iframe_aria_text` setting to set the iframe title attribute #TINY-1264
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
