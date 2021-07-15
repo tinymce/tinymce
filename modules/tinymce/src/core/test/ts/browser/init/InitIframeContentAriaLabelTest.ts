@@ -17,7 +17,7 @@ describe('browser.tinymce.core.init.InitIframeContentAriaLabelTest', () => {
     content_aria_label: customIframeTitle
   }, [ Theme ]);
 
-  it('TINY-1264: Should use default iframe title when content_aria_label is not set', () => {
+  it('TINY-1264: Should use the default iframe title when content_aria_label is not set', () => {
     const editor = hookWithDefaultIframeTitle.editor();
     const iframe = SugarElement.fromDom(editor.iframeElement);
 
