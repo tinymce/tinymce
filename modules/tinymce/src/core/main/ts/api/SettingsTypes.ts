@@ -69,7 +69,6 @@ interface BaseEditorSettings {
   cache_suffix?: string;
   color_cols?: number;
   color_map?: string[];
-  iframe_aria_text?: string;
   content_css?: boolean | string | string[];
   content_css_cors?: boolean;
   content_security_policy?: string;
@@ -116,6 +115,7 @@ interface BaseEditorSettings {
   icons?: string;
   icons_url?: string;
   id?: string;
+  iframe_aria_text?: string;
   images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
   images_file_types?: string;
   images_replace_blob_uris?: boolean;
