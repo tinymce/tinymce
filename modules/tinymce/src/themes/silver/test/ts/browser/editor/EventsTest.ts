@@ -70,6 +70,6 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
     await waitToOpen('[role="menu"]');
 
     const menus = UiFinder.findAllIn(SugarBody.body(), '[role="menu"]');
-    assert.equal(menus.length, 1, 'Should have one menu open');
+    assert.lengthOf(menus, 1, 'Should have one menu open');
   });
 });
