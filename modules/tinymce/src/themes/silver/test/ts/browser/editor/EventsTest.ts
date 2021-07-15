@@ -7,15 +7,14 @@ import { assert } from 'chai';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
-  const hook1 = TinyHooks.bddSetup({
+  const settings = {
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'link',
-  }, [ Theme ]);
+    menubar: 'file'
+  };
 
-  const hook2 = TinyHooks.bddSetup({
-    base_url: '/project/tinymce/js/tinymce',
-    plugins: 'link',
-  }, [ Theme ]);
+  const hook1 = TinyHooks.bddSetupLight(settings, [ Theme ]);
+  const hook2 = TinyHooks.bddSetupLight(settings, [ Theme ]);
 
   const waitToOpen = (selector: string) => {
     return Waiter.pTryUntil(`Wait ${selector} to open`, () => UiFinder.exists(SugarBody.body(), selector));
