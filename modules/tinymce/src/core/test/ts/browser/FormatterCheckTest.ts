@@ -1,4 +1,4 @@
-import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { before, context, describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -163,8 +163,8 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     assert.isTrue(editor.formatter.match('complex', { color: '#ff00' }), 'Selected element match with variable and function');
   });
 
-  context('using similar', () => {
-    beforeEach(() => {
+  context('Match using similar', () => {
+    before(() => {
       const editor = hook.editor();
       editor.formatter.register({
         tablecellverticalalign: {
@@ -205,13 +205,13 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
       assert.isFalse(editor.formatter.match('tablecellverticalalign', { value: 'top' }, undefined, true));
     });
 
-    it('TINY-7712: Should match if the attribute is set to a different value than what is provided.', () => {
+    it('TINY-7712: Should match if the attribute is set to a different value than what is provided', () => {
       const editor = hook.editor();
       setContentWithAttribute(editor, 'bottom');
       assert.isTrue(editor.formatter.match('tablecellverticalalign', { value: 'top' }, undefined, true));
     });
 
-    it('TINY-7712: Should match if the attribute is set to the same value that is provided.', () => {
+    it('TINY-7712: Should match if the attribute is set to the same value that is provided', () => {
       const editor = hook.editor();
       setContentWithAttribute(editor, 'top');
       assert.isTrue(editor.formatter.match('tablecellverticalalign', { value: 'top' }, undefined, true));
