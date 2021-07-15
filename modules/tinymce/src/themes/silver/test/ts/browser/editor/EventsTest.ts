@@ -1,6 +1,6 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -36,8 +36,7 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
   it('TINY-7399: Clicking on the editor should close the context menu', async () => {
     const editor = hook1.editor();
     TinyContentActions.trueClick(editor);
-    Mouse.contextMenuOn(TinyDom.body(editor), 'p');
-    await waitToOpen('[role="menu"]');
+    TinyUiActions.pTriggerContextMenu(editor, 'p', '[role="menu"]');
     TinyContentActions.trueClick(editor);
     await waitToClose('[role="menu"]');
   });
@@ -56,8 +55,7 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
     const editor1 = hook1.editor();
     const editor2 = hook2.editor();
 
-    Mouse.contextMenuOn(TinyDom.body(editor1), 'p');
-    await waitToOpen('[role="menu"]');
+    TinyUiActions.pTriggerContextMenu(editor1, 'p', '[role="menu"]');
     TinyContentActions.trueClick(editor2);
     await waitToClose('[role="menu"]');
   });
