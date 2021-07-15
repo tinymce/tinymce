@@ -83,11 +83,10 @@ const getIframeHtml = (editor: Editor) => {
 };
 
 const createIframe = (editor: Editor, o) => {
-  const title = editor.editorManager.translate(
-    'Rich Text Area. Press ALT-0 for help.'
-  );
+  const iframeTitle = editor.getParam('content_aria_label', 'Rich Text Area. Press ALT-0 for help.');
+  const iframeTranslatedTitle = editor.editorManager.translate(iframeTitle);
 
-  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom;
+  const ifr = createIframeElement(editor.id, iframeTranslatedTitle, o.height, Settings.getIframeAttrs(editor)).dom;
 
   ifr.onload = () => {
     ifr.onload = null;
