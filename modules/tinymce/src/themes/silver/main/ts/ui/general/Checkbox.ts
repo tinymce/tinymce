@@ -85,13 +85,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
 
   const makeIcon = (className: string) => {
     const iconName = className === 'checked' ? 'selected' : 'unselected';
-    return {
-      dom: {
-        tag: 'span',
-        classes: [ 'tox-icon', 'tox-checkbox-icon__' + className ],
-        innerHtml: Icons.get(iconName, providerBackstage.icons)
-      }
-    };
+    return Icons.render('span', Icons.get(iconName, providerBackstage.icons), [ 'tox-icon', 'tox-checkbox-icon__' + className ]);
   };
 
   const memIcons = Memento.record(

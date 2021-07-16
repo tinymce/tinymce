@@ -14,7 +14,7 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 
-import { get as getIcon, getFirst, IconProvider } from '../icons/Icons';
+import * as Icons from '../icons/Icons';
 
 export interface NotificationSketchApis {
   updateProgress: (comp: AlloyComponent, percent: number) => void;
@@ -29,7 +29,7 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
   closeButton?: boolean;
   progress: boolean;
   onAction: Function;
-  iconProvider: IconProvider;
+  iconProvider: Icons.IconProvider;
   translationProvider: (text: Untranslated) => TranslatedString;
 }
 
@@ -41,7 +41,7 @@ export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
   closeButton: boolean;
   onAction: Function;
   progress: boolean;
-  iconProvider: IconProvider;
+  iconProvider: Icons.IconProvider;
   translationProvider: (text: Untranslated) => TranslatedString;
 }
 
@@ -158,38 +158,35 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       dom: {
         tag: 'div',
         classes: [ 'tox-icon' ],
-        innerHtml: getIcon('close', detail.iconProvider),
+        innerHtml: Icons.get('close', detail.iconProvider),
         attributes: {
           'aria-label': detail.translationProvider('Close')
         }
-      }
+      },
+      behaviours: Behaviour.derive([
+        Icons.addFocusableBehaviour()
+      ])
     }],
     action: (comp) => {
       detail.onAction(comp);
     }
   }));
 
-  const components: AlloySpec[] = [
-    {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-notification__icon' ],
-        innerHtml: getFirst(iconChoices, detail.iconProvider)
-      }
+  const notificationIconSpec = Icons.render('div', Icons.getFirst(iconChoices, detail.iconProvider), [ 'tox-notification__icon' ]);
+  const notificationBodySpec = {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-notification__body' ]
     },
-    {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-notification__body' ]
-      },
-      components: [
-        memBannerText.asSpec()
-      ],
-      behaviours: Behaviour.derive([
-        Replacing.config({ })
-      ])
-    }
-  ];
+    components: [
+      memBannerText.asSpec()
+    ],
+    behaviours: Behaviour.derive([
+      Replacing.config({ })
+    ])
+  };
+
+  const components: AlloySpec[] = [ notificationIconSpec, notificationBodySpec ];
 
   return {
     uid: detail.uid,

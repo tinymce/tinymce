@@ -12,7 +12,7 @@ import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
-import { get as getIcon } from '../icons/Icons';
+import * as Icons from '../icons/Icons';
 import { titleChannel } from './DialogChannels';
 
 /* eslint-enable max-len */
@@ -33,13 +33,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
     }
   },
   components: [
-    {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-icon' ],
-        innerHtml: getIcon('close', providersBackstage.icons)
-      }
-    }
+    Icons.render('div', Icons.get('close', providersBackstage.icons), [ 'tox-icon' ])
   ],
   action: (comp) => {
     AlloyTriggers.emit(comp, formCancelEvent);
