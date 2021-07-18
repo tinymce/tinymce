@@ -20,6 +20,7 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
     const isNone = Strings.isEmpty(formatValue);
 
     const init = () => {
+      // If value is empty (A None-entry in the list), check it only if the format is not set at all. Otherwise, check it if the format is set to the correct value.
       const setActive = (matched) =>
         api.setActive(isNone ? !matched : matched);
 
