@@ -24,16 +24,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new plugin commands: `mceEmoticons` (emoticons), `mceWordCount` (wordcount), and `mceTemplate` (template) #TINY-7619
 - Added a new `tablerowheader` toolbar button and menu item to toggle the header state of row cells #TINY-7478
 - Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482
+- Added a new `iframe_aria_text` setting to set the iframe title attribute #TINY-1264
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
 - Improved the performance when rendering UI components #TINY-7572
 - When scrolling, the context toolbar will stick to where it was previously for large elements, such as tables #TINY-7545
 - The context toolbar will now move out of the way when it overlaps with the selection, such as in table cells #TINY-7192
+- The `formatter.match` API can now take an optional `similar` parameter to check if the format partial matches #TINY-7712
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents #TINY-7249
 - Changed `emoticons`, `wordcount`, `code`, `codesample`, and `template` plugins to open dialogs using commands #TINY-7619
+- The context toolbar will no longer show an arrow when it overlaps the content, such as in table cells #TINY-7665
+- The context toolbar will no longer overlap the statusbar for toolbars using `node` or `selection` positions #TINY-7666
 
 ### Fixed
 - The `dir` attribute was being incorrectly applied to list items #TINY-4589
@@ -53,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The formatter match APIs were incorrectly returning false for formats that specified an attribute or style should be removed from an element #TINY-6149
 - The type signature on `editor.formatter.matchNode` had the wrong return type (was `boolean` but should have been `Formatter | undefined`) #TINY-6149
 - Menus and context menus were not closed when clicking into a different editor #TINY-7399
+- Using the Tab key to navigate into the editor on IE 11 would incorrectly focus the toolbar #TINY-3707
 - The editor selection could be placed in an incorrect location when undoing or redoing changes in a document containing `contenteditable="false"` elements #TINY-7663
 
 ## 5.8.2 - 2021-06-23

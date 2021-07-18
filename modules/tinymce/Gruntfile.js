@@ -185,6 +185,10 @@ module.exports = function (grunt) {
             comments: 'all',
             ascii_only: true
           },
+          compress: {
+            // TINY-7720: Disable merge_vars as it has a bug that causes errors on IE 11
+            merge_vars: false
+          },
           ie8: true
         },
         core: {

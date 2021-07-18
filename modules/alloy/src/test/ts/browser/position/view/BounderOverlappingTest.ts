@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import { Bubble, BubbleInstance } from 'ephox/alloy/positioning/layout/Bubble';
-import * as LayoutInside from 'ephox/alloy/positioning/layout/LayoutInside';
+import * as LayoutInset from 'ephox/alloy/positioning/layout/LayoutInset';
 import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 
@@ -89,19 +89,19 @@ describe('BounderOverlappingTest', () => {
       north: notImplemented,
       east: notImplemented,
       west: notImplemented,
-      innerSouthwest: southwest,
-      innerSoutheast: southeast,
-      innerSouth: south,
-      innerNorthwest: northwest,
-      innerNortheast: northeast,
-      innerNorth: north,
-      innerWest: west,
-      innerEast: east
+      insetSouthwest: southwest,
+      insetSoutheast: southeast,
+      insetSouth: south,
+      insetNorthwest: northwest,
+      insetNortheast: northeast,
+      insetNorth: north,
+      insetWest: west,
+      insetEast: east
     };
   };
 
-  const four = [ LayoutInside.southeast, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.northwest ];
-  const two = [ LayoutInside.east, LayoutInside.west ];
+  const four = [ LayoutInset.southeast, LayoutInset.southwest, LayoutInset.northeast, LayoutInset.northwest ];
+  const two = [ LayoutInset.east, LayoutInset.west ];
 
   const panelBox = bounds(0, 0, 15, 10);
   const bigPanel = bounds(0, 0, 100, 100);

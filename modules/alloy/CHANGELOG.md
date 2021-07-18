@@ -8,9 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added new `focus` property to the `Blocking` behaviour config.
-- Added a new `preserve` option to `LayoutInside` which will preserve the previous placement inside the component.
-- Added a new `flip` option to `LayoutInside` which will swap the previous placement to the opposite direction inside the component.
+- Added a new `preserve` option to `LayoutInset` which will preserve the previous placement inside the component.
+- Added a new `flip` option to `LayoutInset` which will swap the previous placement to the opposite direction inside the component.
 - Added the `alwaysFit` layout property which allows for the layout to specify if it should always claim to fit, no matter what.
+- `Bubble` can include an optional `inset` class to be added when using an inset layout.
 
 ### Improved
 - Improved the performance of constructing event handlers and components.
@@ -18,12 +19,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Changed disconnected components to log a warning instead of throwing an error when triggering or broadcasting events.
-- Changed `LayoutInside` rendering behaviour, as it was inconsistent with other layouts. It will now mirror the `Layout` logic for each direction.
+- Renamed `LayoutInside` to `LayoutInset` to better reflect what it does.
+- Changed `LayoutInset` rendering behaviour, as it was inconsistent with other layouts. It will now mirror the `Layout` logic for each direction.
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
 
 ### Fixed
-- Fixed a number of positioning bugs when using an "inside" layout, especially any that renders at the bottom.
-- `LayoutInside` bubble classes were applied incorrectly, causing the bubble arrows to show on the opposite side.
+- Fixed a number of positioning bugs when using an "inset" layout, especially any that renders at the bottom.
+- `LayoutInset` bubble classes were applied incorrectly, causing the bubble arrows to show on the opposite side.
 
 ## 8.2.0 - 2021-05-06
 

@@ -9,7 +9,7 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import * as LayoutInside from 'ephox/alloy/positioning/layout/LayoutInside';
+import * as LayoutInset from 'ephox/alloy/positioning/layout/LayoutInset';
 import { Layouts } from 'ephox/alloy/positioning/mode/Anchoring';
 
 export default (): void => {
@@ -82,37 +82,37 @@ export default (): void => {
 
   // North
   makeExample('n', 'top', 'top', {
-    onLtr: () => [ LayoutInside.north ],
-    onRtl: () => [ LayoutInside.north ]
+    onLtr: () => [ LayoutInset.north ],
+    onRtl: () => [ LayoutInset.north ]
   });
 
   // South
   makeExample('s', 'bottom', 'bottom', {
-    onLtr: () => [ LayoutInside.south ],
-    onRtl: () => [ LayoutInside.south ]
+    onLtr: () => [ LayoutInset.south ],
+    onRtl: () => [ LayoutInset.south ]
   });
 
   // East/west
   makeExample('e', 'right', 'left', {
-    onLtr: () => [ LayoutInside.east ],
-    onRtl: () => [ LayoutInside.west ]
+    onLtr: () => [ LayoutInset.east ],
+    onRtl: () => [ LayoutInset.west ]
   });
 
   // West/east
   makeExample('w', 'left', 'right', {
-    onLtr: () => [ LayoutInside.west ],
-    onRtl: () => [ LayoutInside.east ]
+    onLtr: () => [ LayoutInset.west ],
+    onRtl: () => [ LayoutInset.east ]
   });
 
   // Northeast/northwest
   makeExample('ne-nw', 'top right', 'top left', {
-    onLtr: () => [ LayoutInside.northwest ],
-    onRtl: () => [ LayoutInside.northeast ]
+    onLtr: () => [ LayoutInset.northwest ],
+    onRtl: () => [ LayoutInset.northeast ]
   });
 
   // Southeast/southwestt
   makeExample('se-sw', 'bottom right', 'bottom left', {
-    onLtr: () => [ LayoutInside.southwest ],
-    onRtl: () => [ LayoutInside.southeast ]
+    onLtr: () => [ LayoutInset.southwest ],
+    onRtl: () => [ LayoutInset.southeast ]
   });
 };

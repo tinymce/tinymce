@@ -1,5 +1,6 @@
 import { Bounds, Boxes } from '@ephox/alloy';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { InlineContent } from '@ephox/bridge';
 import { McEditor, TinyDom } from '@ephox/mcagar';
 import { Css, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -21,6 +22,7 @@ interface TestBounds {
 interface Scenario {
   readonly label: string;
   readonly settings: Record<string, any>;
+  readonly position: InlineContent.ContextPosition;
   readonly scroll?: {
     readonly relativeTop: boolean;
     readonly delta: number;
@@ -81,7 +83,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
     };
 
     const asserted = scenario.assertBounds(getBounds(editor));
-    const actual = getContextToolbarBounds(editor, backstage.shared);
+    const actual = getContextToolbarBounds(editor, backstage.shared, scenario.position);
 
     assertBounds('x');
     assertBounds('y');
@@ -108,6 +110,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
     testScenario({
       label: 'Inline(full view): bottom of the header -> Bottom of the viewport',
       settings: { inline: true },
+      position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
         x: bounds.content.x,
@@ -120,6 +123,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
     testScenario({
       label: 'Distraction Free(full view): Top of the viewport -> Bottom of the viewport',
       settings: { menubar: false, inline: true, toolbar: false },
+      position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
         x: bounds.content.x,
@@ -130,8 +134,35 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
     });
 
     testScenario({
-      label: 'Iframe(full view): Bottom of the header -> Bottom of the editor container',
+      label: 'Iframe(full view) selection toolbar: Bottom of the header -> Bottom of the content area',
       settings: { },
+      position: 'selection',
+      scroll: { relativeTop: true, delta: -10 },
+      assertBounds: (bounds) => ({
+        x: bounds.content.x,
+        y: bounds.header.bottom,
+        right: bounds.content.right,
+        bottom: bounds.content.bottom
+      })
+    });
+
+    testScenario({
+      label: 'Iframe(full view) node toolbar: Bottom of the header -> Bottom of the content area',
+      settings: { },
+      position: 'node',
+      scroll: { relativeTop: true, delta: -10 },
+      assertBounds: (bounds) => ({
+        x: bounds.content.x,
+        y: bounds.header.bottom,
+        right: bounds.content.right,
+        bottom: bounds.content.bottom
+      })
+    });
+
+    testScenario({
+      label: 'Iframe(full view) line toolbar: Bottom of the header -> Bottom of the editor container',
+      settings: { },
+      position: 'line',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
         x: bounds.content.x,
@@ -142,20 +173,22 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
     });
 
     testScenario({
-      label: 'Iframe(editor partly in view): Top of viewport -> Bottom of the editor container',
+      label: 'Iframe(editor partly in view): Top of viewport -> Bottom of the content area',
       settings: { height: 400 },
+      position: 'selection',
       scroll: { relativeTop: true, delta: 200 },
       assertBounds: (bounds) => ({
         x: bounds.content.x,
         y: bounds.viewport.y,
         right: bounds.content.right,
-        bottom: bounds.container.bottom
+        bottom: bounds.content.bottom
       })
     });
 
     testScenario({
-      label: 'Iframe(editor partly in view): Bottom of viewport -> Top of content area',
+      label: 'Iframe(editor partly in view): Bottom of viewport -> Top of the content area',
       settings: { height: 400 },
+      position: 'selection',
       scroll: { relativeTop: false, delta: -200 },
       assertBounds: (bounds: TestBounds) => ({
         x: bounds.content.x,
@@ -168,12 +201,13 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
 
   context('Context toolbar bounds with toolbar bottom', () => {
     testScenario({
-      label: 'Iframe(full view): Bottom of the header -> Bottom of the editor container',
+      label: 'Iframe(full view): Top of the content area -> Top of the header',
       settings: { toolbar_location: 'bottom' },
+      position: 'node',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds: TestBounds) => ({
         x: bounds.content.x,
-        y: bounds.container.y,
+        y: bounds.content.y,
         right: bounds.content.right,
         bottom: bounds.header.y
       })
@@ -182,6 +216,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
     testScenario({
       label: 'Inline(full view): Top of the viewport -> Top of the header',
       settings: { inline: true, toolbar_location: 'bottom' },
+      position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds: TestBounds) => ({
         x: bounds.content.x,

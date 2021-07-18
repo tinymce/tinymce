@@ -115,6 +115,7 @@ interface BaseEditorSettings {
   icons?: string;
   icons_url?: string;
   id?: string;
+  iframe_aria_text?: string;
   images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
   images_file_types?: string;
   images_replace_blob_uris?: boolean;

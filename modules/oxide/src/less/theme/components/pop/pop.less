@@ -64,6 +64,12 @@
     width: 0;
   }
 
+  // Hide the arrows on inset layouts
+  .tox-pop.tox-pop--inset::before,
+  .tox-pop.tox-pop--inset::after {
+    opacity: 0;
+  }
+
   // Default (bottom) pointing arrow
   .tox-pop.tox-pop--bottom::before,
   .tox-pop.tox-pop--bottom::after {

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Gui, GuiFactory, InlineView, Layout, LayoutInside, NodeAnchorSpec } from '@ephox/alloy';
+import { Gui, GuiFactory, InlineView, Layout, LayoutInset, NodeAnchorSpec } from '@ephox/alloy';
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -22,9 +22,9 @@ export default (editor: Editor, extras, uiMothership: Gui.GuiSystem): Notificati
   const getLayoutDirection = (rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc') => {
     switch (rel) {
       case 'bc-bc':
-        return LayoutInside.south;
+        return LayoutInset.south;
       case 'tc-tc':
-        return LayoutInside.north;
+        return LayoutInset.north;
       case 'tc-bc':
         return Layout.north;
       case 'bc-tc':

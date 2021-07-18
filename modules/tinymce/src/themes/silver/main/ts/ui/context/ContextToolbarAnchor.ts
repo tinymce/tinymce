@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AnchorSpec, Bounds, Bubble, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
+import { AnchorSpec, Bounds, Bubble, Layout, LayoutInset, MaxHeight, MaxWidth } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import { Compare, Height, SugarElement, Traverse } from '@ephox/sugar';
@@ -14,7 +14,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { getSelectionBounds, isVerticalOverlap } from './ContextToolbarBounds';
 
-type Layout = typeof LayoutInside.north;
+type Layout = typeof LayoutInset.north;
 
 export interface PositionData {
   readonly lastPos: () => Optional<Bounds>;
@@ -32,7 +32,8 @@ const bubbleAlignments = {
   right: [ 'tox-pop--right' ],
   left: [ 'tox-pop--left' ],
   bottom: [ 'tox-pop--bottom' ],
-  top: [ 'tox-pop--top' ]
+  top: [ 'tox-pop--top' ],
+  inset: [ 'tox-pop--inset' ]
 };
 
 const anchorOverrides = {
@@ -59,17 +60,17 @@ const determineInsideLayout = (editor: Editor, contextbar: SugarElement<HTMLElem
   if (isEntireElementSelected(editor, elem)) {
     // The entire anchor element is selected so it'll always overlap with the selection, in which case just
     // preserve or show at the top for a new anchor element.
-    return isSameAnchorElement ? LayoutInside.preserve : LayoutInside.north;
+    return isSameAnchorElement ? LayoutInset.preserve : LayoutInset.north;
   } else if (isSameAnchorElement) {
     // If overlapping and this wasn't triggered by a reposition then flip the placement
     const isOverlapping = data.lastPos().exists((box) => isVerticalOverlap(selectionBounds, box));
-    return isOverlapping && !data.isReposition() ? LayoutInside.flip : LayoutInside.preserve;
+    return isOverlapping && !data.isReposition() ? LayoutInset.flip : LayoutInset.preserve;
   } else {
     // Attempt to find the best layout to use that won't cause an overlap for the new anchor element
     return data.bounds().map((bounds) => {
       const contextbarHeight = Height.get(contextbar) + bubbleSize;
-      return bounds.y + contextbarHeight <= selectionBounds.y ? LayoutInside.north : LayoutInside.south;
-    }).getOr(LayoutInside.north);
+      return bounds.y + contextbarHeight <= selectionBounds.y ? LayoutInset.north : LayoutInset.south;
+    }).getOr(LayoutInset.north);
   }
 };
 
@@ -110,7 +111,8 @@ const getAnchorLayout = (editor: Editor, position: InlineContent.ContextPosition
     };
   } else {
     return {
-      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
+      // Ensure that insets use half the bubble size since we're hiding the bubble arrow
+      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments, 0.5),
       layouts: getAnchorSpec(editor, isTouch, data),
       overrides: anchorOverrides
     };

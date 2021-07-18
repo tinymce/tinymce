@@ -1,5 +1,5 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { before, context, describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,7 +14,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     forced_root_block: false,
     valid_styles: {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
-        'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
+        'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align,vertical-align'
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ]);
@@ -23,7 +23,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     const editor = hook.editor();
     editor.focus();
     editor.formatter.register('bold', { inline: 'b' });
-    editor.getBody().innerHTML = '<p><b>1234</b></p>';
+    editor.setContent('<p><b>1234</b></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
@@ -34,7 +34,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
   it('Selected style element with css styles', () => {
     const editor = hook.editor();
     editor.formatter.register('color', { inline: 'span', styles: { color: '#ff0000' }});
-    editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+    editor.setContent('<p><span style="color:#ff0000">1234</span></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
@@ -45,7 +45,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
   it('Selected style element with css styles indexed', () => {
     const editor = hook.editor();
     editor.formatter.register('color', { inline: 'span', styles: [ 'color' ] });
-    editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+    editor.setContent('<p><span style="color:#ff0000">1234</span></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
@@ -56,7 +56,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
   it('Selected style element with attributes', () => {
     const editor = hook.editor();
     editor.formatter.register('fontsize', { inline: 'font', attributes: { size: '7' }});
-    editor.getBody().innerHTML = '<p><font size="7">1234</font></p>';
+    editor.setContent('<p><font size="7">1234</font></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('font')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('font')[0].firstChild, 4);
@@ -70,7 +70,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
       { inline: 'b' },
       { inline: 'strong' }
     ]);
-    editor.getBody().innerHTML = '<p><strong>1234</strong></p>';
+    editor.setContent('<p><strong>1234</strong></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('strong')[0].firstChild, 4);
@@ -81,7 +81,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
   it('Selected complex style element', () => {
     const editor = hook.editor();
     editor.formatter.register('complex', { inline: 'span', styles: { fontWeight: 'bold' }});
-    editor.getBody().innerHTML = '<p><span style="color:#ff0000; font-weight:bold">1234</span></p>';
+    editor.setContent('<p><span style="color:#ff0000; font-weight:bold">1234</span></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
@@ -92,7 +92,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
   it('Selected non style element text', () => {
     const editor = hook.editor();
     editor.formatter.register('bold', { inline: 'b' });
-    editor.getBody().innerHTML = '<p>1234</p>';
+    editor.setContent('<p>1234</p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
@@ -103,7 +103,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
   it('Selected partial style element (start)', () => {
     const editor = hook.editor();
     editor.formatter.register('bold', { inline: 'b' });
-    editor.getBody().innerHTML = '<p><b>1234</b>5678</p>';
+    editor.setContent('<p><b>1234</b>5678</p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
@@ -114,7 +114,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
   it('Selected partial style element (end)', () => {
     const editor = hook.editor();
     editor.formatter.register('bold', { inline: 'b' });
-    editor.getBody().innerHTML = '<p>1234<b>5678</b></p>';
+    editor.setContent('<p>1234<b>5678</b></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].lastChild, 4);
@@ -125,7 +125,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
   it('Selected element text with parent inline element', () => {
     const editor = hook.editor();
     editor.formatter.register('bold', { inline: 'b' });
-    editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
+    editor.setContent('<p><b><em><span>1234</span></em></b></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
@@ -136,7 +136,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
   it('Selected element match with variable', () => {
     const editor = hook.editor();
     editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' }});
-    editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+    editor.setContent('<p><span style="color:#ff0000">1234</span></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
@@ -155,7 +155,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
       }
     });
 
-    editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
+    editor.setContent('<p><span style="color:#ff0000">1234</span></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
@@ -163,16 +163,71 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     assert.isTrue(editor.formatter.match('complex', { color: '#ff00' }), 'Selected element match with variable and function');
   });
 
+  context('Match using similar', () => {
+    before(() => {
+      const editor = hook.editor();
+      editor.formatter.register({
+        tablecellverticalalign: {
+          selector: 'td,th',
+          styles: {
+            'vertical-align': '%value'
+          },
+          remove_similar: true
+        }
+      });
+    });
+
+    const setContentWithoutAttribute = (editor: Editor) => {
+      editor.setContent(
+        '<table>' +
+          '<tr>' +
+            '<td>&nbsp;</td>' +
+          '</tr>' +
+        '</table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+    };
+
+    const setContentWithAttribute = (editor: Editor, attributeVaue: string) => {
+      editor.setContent(
+        '<table>' +
+          '<tr>' +
+            `<td style="vertical-align: ${attributeVaue};">&nbsp;</td>` +
+          '</tr>' +
+        '</table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+    };
+
+    it('TINY-7712: Should not match without an attribute set in the content', () => {
+      const editor = hook.editor();
+      setContentWithoutAttribute(editor);
+      assert.isFalse(editor.formatter.match('tablecellverticalalign', { value: 'top' }, undefined, true));
+    });
+
+    it('TINY-7712: Should match if the attribute is set to a different value than what is provided', () => {
+      const editor = hook.editor();
+      setContentWithAttribute(editor, 'bottom');
+      assert.isTrue(editor.formatter.match('tablecellverticalalign', { value: 'top' }, undefined, true));
+    });
+
+    it('TINY-7712: Should match if the attribute is set to the same value that is provided', () => {
+      const editor = hook.editor();
+      setContentWithAttribute(editor, 'top');
+      assert.isTrue(editor.formatter.match('tablecellverticalalign', { value: 'top' }, undefined, true));
+    });
+  });
+
   it('matchAll', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p><b><i>a</i></b></p>';
+    editor.setContent('<p><b><i>a</i></b></p>');
     LegacyUnit.setSelection(editor, 'i', 0, 'i', 1);
     assert.sameMembers(editor.formatter.matchAll([ 'bold', 'italic', 'underline' ]), [ 'italic', 'bold' ]);
   });
 
   it('canApply', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p>a</p>';
+    editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     assert.isTrue(editor.formatter.canApply('bold'));
   });
@@ -204,7 +259,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
       newArgs = args;
     }, true);
 
-    editor.getBody().innerHTML = '<p>text</p>';
+    editor.setContent('<p>text</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
 
     // Check apply
@@ -229,11 +284,11 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
 
   it('Match on link format', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML =
+    editor.setContent(
       '<p><a href="http://www.test.com">http://www.test.com</a></p>' +
       '<p>Normal text</p>' +
       '<p><a>Bare Anchor</a></p>' +
-      '<p><a id="abc"></a></p>';
+      '<p><a id="abc"></a></p>');
     const rng = editor.dom.createRng();
 
     // Check link format matches on link
