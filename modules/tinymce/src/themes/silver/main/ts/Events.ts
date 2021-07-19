@@ -48,6 +48,13 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
       broadcastOn(Channels.mouseReleased(), { target: SugarElement.fromDom(raw.target as Node) });
     }
   };
+  const onContentMousedown = () => {
+    Arr.each(editor.editorManager.get(), (loopEditor) => {
+      if (editor !== loopEditor) {
+        loopEditor.fire('DismissPopups', { relatedTarget: editor });
+      }
+    });
+  };
 
   // Window events
   const onWindowScroll = (evt: UIEvent) => broadcastEvent(SystemEvents.windowScroll(), DomEvent.fromRawEvent(evt));
@@ -63,15 +70,21 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     }
   };
 
+  const onDismissPopups = (event: { relatedTarget: Editor }) => {
+    broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(event.relatedTarget.getContainer()) });
+  };
+
   // Don't start listening to events until the UI has rendered
   editor.on('PostRender', () => {
     editor.on('click', onContentClick);
     editor.on('tap', onContentClick);
     editor.on('mouseup', onContentMouseup);
+    editor.on('mousedown', onContentMousedown);
     editor.on('ScrollWindow', onWindowScroll);
     editor.on('ResizeWindow', onWindowResize);
     editor.on('ResizeEditor', onEditorResize);
     editor.on('AfterProgressState', onEditorProgress);
+    editor.on('DismissPopups', onDismissPopups);
   });
 
   editor.on('remove', () => {
@@ -79,10 +92,12 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.off('click', onContentClick);
     editor.off('tap', onContentClick);
     editor.off('mouseup', onContentMouseup);
+    editor.off('mousedown', onContentMousedown);
     editor.off('ScrollWindow', onWindowScroll);
     editor.off('ResizeWindow', onWindowResize);
     editor.off('ResizeEditor', onEditorResize);
     editor.off('AfterProgressState', onEditorProgress);
+    editor.off('DismissPopups', onDismissPopups);
 
     onMousedown.unbind();
     onTouchstart.unbind();
