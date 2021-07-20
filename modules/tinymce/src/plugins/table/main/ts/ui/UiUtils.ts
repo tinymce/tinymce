@@ -20,11 +20,12 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
     const isNone = Strings.isEmpty(formatValue);
 
     const init = () => {
-      // If value is empty (A None-entry in the list), check it only if the format is not set at all. Otherwise, check it if the format is set to the correct value.
-      const setActive = (matched) =>
+      // If value is empty (A None-entry in the list), check if the format is not set at all. Otherwise, check if the format is set to the correct value.
+      const setActive = (matched: boolean) =>
         api.setActive(isNone ? !matched : matched);
 
       setActive(editor.formatter.match(formatName, { value: formatValue }, undefined, isNone));
+      // formatChanged currently incorrectly highlights items. TODO TINY-7713
       const binding = editor.formatter.formatChanged(formatName, setActive, isNone);
       boundCallback.set(binding);
     };
@@ -51,8 +52,7 @@ const generateItem = <T extends Item>(editor: Editor, item: T, format: string, e
 });
 
 const generateItems = <T extends Item>(editor: Editor, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec[] =>
-  Arr.map(items, (item) =>
-    generateItem(editor, item, format, extractText, onAction));
+  Arr.map(items, (item) => generateItem(editor, item, format, extractText, onAction));
 
 const generateItemsCallback = <T extends Item>(editor: Editor, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void) =>
   (callback: (items: Menu.ToggleMenuItemSpec[]) => void) =>
