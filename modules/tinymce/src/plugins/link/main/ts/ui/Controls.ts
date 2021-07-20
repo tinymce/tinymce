@@ -105,28 +105,25 @@ const setupContextToolbars = (editor: Editor) => {
           return Actions.toggleActiveState(editor)(buttonApi);
         },
         onAction: (formApi) => {
-          const anchor = Utils.getAnchorElement(editor);
           const value = formApi.getValue();
-          if (!anchor) {
-            const attachState = { href: value, attach: Fun.noop };
-            const onlyText = Utils.isOnlyTextSelected(editor);
-            const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Optional.from(value)) : Optional.none();
-            Utils.link(editor, attachState, {
-              href: value,
-              text,
-              title: Optional.none(),
-              rel: Optional.none(),
-              target: Optional.none(),
-              class: Optional.none()
-            });
-            formApi.hide();
-          } else {
-            editor.undoManager.transact(() => {
-              editor.dom.setAttrib(anchor, 'href', value);
-              collapseSelectionToEnd(editor);
-              formApi.hide();
-            });
-          }
+
+          // if we're editing a link, don't change the text.
+          // if anything other than text is selected, don't change the text.
+          const anchor = Utils.getAnchorElement(editor);
+          const onlyText = Utils.isOnlyTextSelected(editor);
+          const text: Optional<string> = !anchor && onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Optional.from(value)) : Optional.none();
+
+          const attachState = { href: value, attach: Fun.noop };
+          Utils.link(editor, attachState, {
+            href: value,
+            text,
+            title: Optional.none(),
+            rel: Optional.none(),
+            target: Optional.none(),
+            class: Optional.none()
+          });
+          collapseSelectionToEnd(editor);
+          formApi.hide();
         }
       },
       {
