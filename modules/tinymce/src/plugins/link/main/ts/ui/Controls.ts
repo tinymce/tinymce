@@ -79,6 +79,21 @@ const setupContextToolbars = (editor: Editor) => {
     return Fun.noop;
   };
 
+  /**
+   * if we're editing a link, don't change the text.
+   * if anything other than text is selected, don't change the text.
+   */
+  const getLinkText = (value: string) => {
+    const anchor = Utils.getAnchorElement(editor);
+    const onlyText = Utils.isOnlyTextSelected(editor);
+    if (!anchor && onlyText) {
+      const text = Utils.getAnchorText(editor.selection, anchor);
+      return Optional.some(text.length > 0 ? text : value);
+    } else {
+      return Optional.none();
+    }
+  };
+
   editor.ui.registry.addContextForm('quicklink', {
     launch: {
       type: 'contextformtogglebutton',
@@ -106,13 +121,7 @@ const setupContextToolbars = (editor: Editor) => {
         },
         onAction: (formApi) => {
           const value = formApi.getValue();
-
-          // if we're editing a link, don't change the text.
-          // if anything other than text is selected, don't change the text.
-          const anchor = Utils.getAnchorElement(editor);
-          const onlyText = Utils.isOnlyTextSelected(editor);
-          const text: Optional<string> = !anchor && onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Optional.from(value)) : Optional.none();
-
+          const text = getLinkText(value);
           const attachState = { href: value, attach: Fun.noop };
           Utils.link(editor, attachState, {
             href: value,
