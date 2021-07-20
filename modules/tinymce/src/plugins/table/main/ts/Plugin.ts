@@ -40,8 +40,8 @@ const Plugin = (editor: Editor) => {
   QueryCommands.registerQueryCommands(editor, actions, selections);
   Clipboard.registerEvents(editor, selections, actions, cellSelection);
 
-  MenuItems.addMenuItems(editor, selectionTargets, clipboard);
-  Buttons.addButtons(editor, selectionTargets, clipboard);
+  MenuItems.addMenuItems(editor, selections, selectionTargets, clipboard);
+  Buttons.addButtons(editor, selections, selectionTargets, clipboard);
   Buttons.addToolbars(editor);
 
   editor.on('PreInit', () => {
