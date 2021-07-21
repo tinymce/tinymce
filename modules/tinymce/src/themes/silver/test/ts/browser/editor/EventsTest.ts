@@ -6,7 +6,7 @@ import { SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-describe('webdriver.tinymce.themes.silver.editor.EventsTest', () => {
+describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'link',
