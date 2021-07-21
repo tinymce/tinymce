@@ -209,7 +209,7 @@ const unlinkDomMutation = (editor: Editor) => {
   });
 };
 
-/**
+/*
  * RTC uses unwrapped options.
  *
  * To best simulate this, we unwrap to null and filter out empty values.

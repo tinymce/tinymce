@@ -79,7 +79,7 @@ const setupContextToolbars = (editor: Editor) => {
     return Fun.noop;
   };
 
-  /**
+  /*
    * if we're editing a link, don't change the text.
    * if anything other than text is selected, don't change the text.
    */
