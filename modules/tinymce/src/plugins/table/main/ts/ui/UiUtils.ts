@@ -25,9 +25,9 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
         api.setActive(isNone ? !matched : matched);
 
       setActive(editor.formatter.match(formatName, { value: formatValue }, undefined, isNone));
-      // formatChanged currently incorrectly highlights items. TODO TINY-7713
-      const binding = editor.formatter.formatChanged(formatName, setActive, isNone);
-      boundCallback.set(binding);
+      // TODO: TINY-7713: formatChanged doesn't currently handle formats with dynamic values so this will currently cause all items to show as active
+      // const binding = editor.formatter.formatChanged(formatName, setActive, isNone);
+      // boundCallback.set(binding);
     };
 
     // The editor may or may not have been setup yet, so check for that
