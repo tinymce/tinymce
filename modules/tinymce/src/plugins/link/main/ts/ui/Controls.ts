@@ -79,6 +79,21 @@ const setupContextToolbars = (editor: Editor) => {
     return Fun.noop;
   };
 
+  /*
+   * if we're editing a link, don't change the text.
+   * if anything other than text is selected, don't change the text.
+   */
+  const getLinkText = (value: string) => {
+    const anchor = Utils.getAnchorElement(editor);
+    const onlyText = Utils.isOnlyTextSelected(editor);
+    if (!anchor && onlyText) {
+      const text = Utils.getAnchorText(editor.selection, anchor);
+      return Optional.some(text.length > 0 ? text : value);
+    } else {
+      return Optional.none();
+    }
+  };
+
   editor.ui.registry.addContextForm('quicklink', {
     launch: {
       type: 'contextformtogglebutton',
@@ -105,28 +120,19 @@ const setupContextToolbars = (editor: Editor) => {
           return Actions.toggleActiveState(editor)(buttonApi);
         },
         onAction: (formApi) => {
-          const anchor = Utils.getAnchorElement(editor);
           const value = formApi.getValue();
-          if (!anchor) {
-            const attachState = { href: value, attach: Fun.noop };
-            const onlyText = Utils.isOnlyTextSelected(editor);
-            const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Optional.from(value)) : Optional.none();
-            Utils.link(editor, attachState, {
-              href: value,
-              text,
-              title: Optional.none(),
-              rel: Optional.none(),
-              target: Optional.none(),
-              class: Optional.none()
-            });
-            formApi.hide();
-          } else {
-            editor.undoManager.transact(() => {
-              editor.dom.setAttrib(anchor, 'href', value);
-              collapseSelectionToEnd(editor);
-              formApi.hide();
-            });
-          }
+          const text = getLinkText(value);
+          const attachState = { href: value, attach: Fun.noop };
+          Utils.link(editor, attachState, {
+            href: value,
+            text,
+            title: Optional.none(),
+            rel: Optional.none(),
+            target: Optional.none(),
+            class: Optional.none()
+          });
+          collapseSelectionToEnd(editor);
+          formApi.hide();
         }
       },
       {
