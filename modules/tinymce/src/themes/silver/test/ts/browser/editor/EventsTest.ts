@@ -4,6 +4,7 @@ import { McEditor, TinyContentActions, TinyDom, TinyUiActions } from '@ephox/mca
 import { SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
@@ -21,6 +22,7 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
 
   before(() => {
     Theme();
+    LinkPlugin();
   });
 
   const pAssertMenuOpen = (selector: string) =>
