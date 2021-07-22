@@ -243,8 +243,9 @@ const EditorUpload = (editor: Editor): EditorUpload => {
         return true;
       });
 
-      if (!Rtc.isRtc(editor)) {
+      if (Rtc.isRtc(editor)) {
         // RTC is set up so that image sources are only ever blob
+      } else {
         Arr.each(result, (resultItem) => {
           replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
           resultItem.image.src = resultItem.blobInfo.blobUri();
