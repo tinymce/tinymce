@@ -6,7 +6,8 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Bounds, GuiFactory, InlineView, Keying
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Bounds, GuiFactory, InlineView, Keying,
+  Positioning
 } from '@ephox/alloy';
 import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Id, Merger, Obj, Optional, Optionals, Singleton, Thunk } from '@ephox/katamari';
@@ -172,7 +173,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     const anchorLayout = ContextToolbarAnchor.getAnchorLayout(editor, position, isTouch(), {
       lastElement: lastElement.get,
       isReposition: () => Optionals.is(lastTrigger.get(), TriggerCause.Reposition),
-      bounds: lastBounds.get
+      bounds: lastBounds.get,
+      getMode: () => Positioning.getMode(sink)
     });
     return Merger.deepMerge(anchorage, anchorLayout);
   };

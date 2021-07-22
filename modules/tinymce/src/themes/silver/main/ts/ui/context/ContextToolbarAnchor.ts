@@ -20,6 +20,7 @@ export interface PositionData {
   readonly lastElement: () => Optional<SugarElement<Element>>;
   readonly bounds: () => Optional<Bounds>;
   readonly isReposition: () => boolean;
+  readonly getMode: () => string;
 }
 
 const bubbleSize = 12;
@@ -46,9 +47,9 @@ const isEntireElementSelected = (editor: Editor, elem: SugarElement<Element>) =>
   return rng.startContainer === rng.endContainer && rng.startOffset === rng.endOffset - 1 && Compare.eq(leaf.element, elem);
 };
 
-const preservePosition = <T>(elem: SugarElement<HTMLElement>, f: (elem: SugarElement<HTMLElement>) => T): T => {
+const preservePosition = <T>(elem: SugarElement<HTMLElement>, position: string, f: (elem: SugarElement<HTMLElement>) => T): T => {
   const currentPosition = Css.getRaw(elem, 'position');
-  Css.set(elem, 'position', 'absolute');
+  Css.set(elem, 'position', position);
   const result = f(elem);
   currentPosition.each((pos) => Css.set(elem, 'position', pos));
   return result;
@@ -71,7 +72,7 @@ const determineInsideLayout = (editor: Editor, contextbar: SugarElement<HTMLElem
   } else if (isSameAnchorElement) {
     // Preserve the position, get the bounds and then see if we have an overlap.
     // If overlapping and this wasn't triggered by a reposition then flip the placement
-    return preservePosition(contextbar, () => {
+    return preservePosition(contextbar, data.getMode(), () => {
       const isOverlapping = isVerticalOverlap(selectionBounds, Boxes.box(contextbar));
       return isOverlapping && !data.isReposition() ? LayoutInset.flip : LayoutInset.preserve;
     });
