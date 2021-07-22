@@ -89,8 +89,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       const allHaveClass = Arr.forall(selectedCells, (cell) => editor.formatter.match('tablecellclass', { value: clazz }, cell.dom));
       const formatterAction = allHaveClass ? editor.formatter.remove : editor.formatter.apply;
 
-      Arr.each(selectedCells, (value) =>
-        formatterAction('tablecellclass', { value: clazz }, value.dom)
+      Arr.each(selectedCells, (cell) =>
+        formatterAction('tablecellclass', { value: clazz }, cell.dom)
       );
       Events.fireTableModified(editor, table.dom, Events.styleModified);
     });
