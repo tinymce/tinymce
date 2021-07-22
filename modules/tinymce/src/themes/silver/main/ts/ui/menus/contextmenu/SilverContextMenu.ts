@@ -5,20 +5,43 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AnchorSpec, Behaviour, Bubble, GuiFactory, InlineView, Layout, LayoutInset, MaxHeight, MaxWidth, Sandboxing, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorExists, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/PublicApi';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
+import { getNodeAnchor, getPointAnchor, getSelectionAnchor } from './Coords';
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';
 import * as Settings from './Settings';
 
 type MenuItem = string | Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.SeparatorMenuItemSpec;
+
+const isTouch = PlatformDetection.detect().deviceType.isTouch;
+
+const layouts = {
+  onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
+    LayoutInset.north, LayoutInset.south, LayoutInset.northeast, LayoutInset.southeast, LayoutInset.northwest, LayoutInset.southwest ],
+  onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
+    LayoutInset.north, LayoutInset.south, LayoutInset.northwest, LayoutInset.southwest, LayoutInset.northeast, LayoutInset.southeast ]
+};
+
+const bubbleSize = 12;
+const bubbleAlignments = {
+  valignCentre: [],
+  alignCentre: [],
+  alignLeft: [ 'tox-pop--align-left' ],
+  alignRight: [ 'tox-pop--align-right' ],
+  right: [ 'tox-pop--right' ],
+  left: [ 'tox-pop--left' ],
+  bottom: [ 'tox-pop--bottom' ],
+  top: [ 'tox-pop--top' ]
+};
 
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
@@ -119,22 +142,37 @@ export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
 const getSelectedElement = (editor: Editor, e: PointerEvent) =>
   isTriggeredByKeyboard(editor, e) ? editor.selection.getStart(true) : e.target as Element;
 
-const shouldUseNodeAnchor = (editor: Editor, e: PointerEvent) => {
-  const selector = Settings.getAvoidOverlapSelector(editor);
-  if (isTriggeredByKeyboard(editor, e)) {
-    return true;
-  } else if (selector) {
-    const target = getSelectedElement(editor, e);
-    return SelectorExists.closest(SugarElement.fromDom(target), selector);
+const getPointAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>) => {
+  const pointAnchor = getPointAnchor(editor, e);
+  if (isTouch()) {
+    return {
+      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
+      layouts,
+      overrides: {
+        maxWidthFunction: MaxWidth.expandable(),
+        maxHeightFunction: MaxHeight.expandable()
+      },
+      ...pointAnchor
+    };
   } else {
-    return false;
+    return pointAnchor;
+  }
+};
+
+const getAnchorSpec = (editor: Editor, e): AnchorSpec => {
+  const selector = Settings.getAvoidOverlapSelector(editor);
+  if (Type.isString(selector) && selector !== '') {
+    const target = getSelectedElement(editor, e);
+    const selectorExists = SelectorExists.closest(SugarElement.fromDom(target), selector);
+    return selectorExists && !isTouch() ? getNodeAnchor(editor) : getPointAnchorSpec(editor, e);
+  } else if (isTriggeredByKeyboard(editor, e)) {
+    return getSelectionAnchor(editor);
+  } else {
+    return getPointAnchorSpec(editor, e);
   }
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
-  const detection = PlatformDetection.detect();
-  const isTouch = detection.deviceType.isTouch;
-
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
       dom: {
@@ -168,19 +206,17 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       return;
     }
 
-    const useNodeAnchor = shouldUseNodeAnchor(editor, e);
-
     const buildMenu = () => {
       // Use the event target element for touch events, otherwise fallback to the current selection
       const selectedElement = getSelectedElement(editor, e);
-
       const registry = editor.ui.registry.getAll();
       const menuConfig = Settings.getContextMenu(editor);
       return generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
     };
 
+    const anchorSpec = getAnchorSpec(editor, e);
     const initAndShow = isTouch() ? MobileContextMenu.initAndShow : DesktopContextMenu.initAndShow;
-    initAndShow(editor, e, buildMenu, backstage, contextmenu, useNodeAnchor);
+    initAndShow(editor, e, buildMenu, backstage, contextmenu, anchorSpec);
   };
 
   editor.on('init', () => {
