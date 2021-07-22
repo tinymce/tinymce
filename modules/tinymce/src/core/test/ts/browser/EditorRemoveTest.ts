@@ -89,8 +89,8 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
     testRemoveStyles(editor, 'block');
   });
 
-  it('remove editor that unbinds mousedown in the remove handler', async () => {
-    const editor = await McEditor.pFromHtml('<textarea></textarea>', {
+  it('TINY-7730: remove editor that unbinds mousedown in the remove handler', async () => {
+    const editor = await McEditor.pFromSettings({
       ...settings,
       setup: (editor: Editor) => {
         editor.on('remove', () => {
