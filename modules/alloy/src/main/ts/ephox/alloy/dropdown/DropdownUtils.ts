@@ -37,12 +37,11 @@ const getAnchor = (
   component: AlloyComponent
 ): HotspotAnchorSpec => {
   const hotspot = detail.getHotspot(component).getOr(component);
-  // type required on TS3.3, can remove once we upgrade to 3.4
-  const anchor: 'hotspot' = 'hotspot';
+  const type = 'hotspot';
   const overrides = detail.getAnchorOverrides();
   return detail.layouts.fold(
-    () => ({ anchor, hotspot, overrides }),
-    (layouts) => ({ anchor, hotspot, overrides, layouts })
+    () => ({ type, hotspot, overrides }),
+    (layouts) => ({ type, hotspot, overrides, layouts })
   );
 };
 
@@ -86,7 +85,7 @@ const openF = (
     onOpenSubmenu: (tmenu, item, submenu) => {
       const sink = getLazySink().getOrDie();
       Positioning.position(sink, {
-        anchor: 'submenu',
+        type: 'submenu',
         item
       }, submenu);
       Sandboxing.decloak(sandbox);
@@ -96,7 +95,7 @@ const openF = (
       const sink = getLazySink().getOrDie();
       Positioning.position(sink, anchor, primaryMenu);
       Arr.each(submenuTriggers, (st) => {
-        Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem }, st.triggeredMenu);
+        Positioning.position(sink, { type: 'submenu', item: st.triggeringItem }, st.triggeredMenu);
       });
     },
 

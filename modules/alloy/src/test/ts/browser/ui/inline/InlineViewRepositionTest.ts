@@ -96,7 +96,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
     );
 
     const anchorSpec: NodeAnchorSpec = {
-      anchor: 'node',
+      type: 'node',
       root: gui.element,
       node: Optional.some(anchor.element),
       layouts: {

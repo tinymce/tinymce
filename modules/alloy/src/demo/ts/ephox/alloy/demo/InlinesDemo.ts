@@ -71,7 +71,7 @@ export default (): void => {
           GuiFactory.text(t)
         ],
         anchor: (comp) => ({
-          anchor: 'submenu',
+          type: 'submenu',
           item: comp
         }),
         onShow: (component, _tooltip) => {
@@ -115,7 +115,7 @@ export default (): void => {
     onOpenSubmenu: (sandbox, item, submenu) => {
       const sink = lazySink(sandbox).getOrDie();
       Positioning.position(sink, {
-        anchor: 'submenu',
+        type: 'submenu',
         item
       }, submenu);
 
@@ -167,7 +167,7 @@ export default (): void => {
         AlloyEvents.run<EventArgs>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
           simulatedEvent.event.kill();
           InlineView.showAt(inlineComp, {
-            anchor: 'makeshift',
+            type: 'makeshift',
             x: simulatedEvent.event.x,
             y: simulatedEvent.event.y
           }, inlineMenu);
@@ -199,12 +199,12 @@ export default (): void => {
             AddEventsBehaviour.config('adhoc-show-popup', [
               AlloyEvents.run(NativeEvents.focusin(), (input) => {
                 const emptyAnchor: SubmenuAnchorSpec = {
-                  anchor: 'submenu',
+                  type: 'submenu',
                   item: input
                 };
 
                 const nonEmptyAnchor: SelectionAnchorSpec = {
-                  anchor: 'selection',
+                  type: 'selection',
                   root: gui.element
                 };
 

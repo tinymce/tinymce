@@ -6,7 +6,7 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Bounds, Boxes, GuiFactory, InlineView, Keying
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Bounds, GuiFactory, InlineView, Keying
 } from '@ephox/alloy';
 import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Id, Merger, Obj, Optional, Optionals, Singleton, Thunk } from '@ephox/katamari';
@@ -50,7 +50,6 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   const isTouch = PlatformDetection.detect().deviceType.isTouch;
 
   const lastElement = Singleton.value<SugarElement<Element>>();
-  const lastPosition = Singleton.value<Bounds>();
   const lastTrigger = Singleton.value<TriggerCause>();
   const lastBounds = Singleton.value<Bounds>();
   const lastContextPosition = Singleton.value<InlineContent.ContextPosition>();
@@ -74,7 +73,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
   const canLaunchToolbar = () => {
     // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
-    return !(isTouch() && backstage.isContextMenuOpen());
+    return !editor.removed && !(isTouch() && backstage.isContextMenuOpen());
   };
 
   const shouldContextToolbarHide = (): boolean => {
@@ -91,7 +90,6 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
   const close = () => {
     lastElement.clear();
-    lastPosition.clear();
     lastTrigger.clear();
     lastBounds.clear();
     lastContextPosition.clear();
@@ -107,7 +105,6 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       } else {
         lastTrigger.set(TriggerCause.Reposition);
         InlineView.reposition(contextbar);
-        lastPosition.set(Boxes.box(contextbar.element));
       }
     }
   };
@@ -173,7 +170,6 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   const getAnchor = (position: InlineContent.ContextPosition, element: Optional<SugarElement<Element>>): AnchorSpec => {
     const anchorage = position === 'node' ? sharedBackstage.anchors.node(element) : sharedBackstage.anchors.cursor();
     const anchorLayout = ContextToolbarAnchor.getAnchorLayout(editor, position, isTouch(), {
-      lastPos: lastPosition.get,
       lastElement: lastElement.get,
       isReposition: () => Optionals.is(lastTrigger.get(), TriggerCause.Reposition),
       bounds: lastBounds.get
@@ -181,7 +177,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     return Merger.deepMerge(anchorage, anchorLayout);
   };
 
-  const launchContext = (toolbarApi: Array<ContextType>, elem: Optional<Element>) => {
+  const launchContext = (toolbarApi: Array<ContextType>, elem: Optional<SugarElement<Element>>) => {
     launchContextToolbar.stop();
 
     // Don't launch if the editor has something else open that would conflict
@@ -190,13 +186,12 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     }
 
     const toolbarSpec = buildToolbar(toolbarApi);
-    const sElem = elem.map(SugarElement.fromDom);
 
     // TINY-4495 ASSUMPTION: Can only do toolbarApi[0].position because ContextToolbarLookup.filterToolbarsByPosition
     // ensures all toolbars returned by ContextToolbarLookup have the same position.
     // And everything else that gets toolbars from elsewhere only returns maximum 1 toolbar
     const position = toolbarApi[0].position;
-    const anchor = getAnchor(position, sElem);
+    const anchor = getAnchor(position, elem);
     lastContextPosition.set(position);
     lastTrigger.set(TriggerCause.NewAnchor);
 
@@ -206,8 +201,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
     // IMPORTANT: This must be stored after the initial render, otherwise the lookup of the last element in the
     // anchor placement will be incorrect as it'll reuse the new element as the anchor point.
-    sElem.fold(lastElement.clear, lastElement.set);
-    lastPosition.set(Boxes.box(contextbar.element));
+    elem.fold(lastElement.clear, lastElement.set);
 
     // It's possible we may have launched offscreen, if so then hide
     if (shouldContextToolbarHide()) {
@@ -224,7 +218,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     const scopes = getScopes();
     ToolbarLookup.lookup(scopes, editor).fold(
       close,
-      (info) => launchContext(info.toolbars, Optional.some(info.elem.dom))
+      (info) => launchContext(info.toolbars, Optional.some(info.elem))
     );
   }, 0);
 

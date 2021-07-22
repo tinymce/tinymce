@@ -41,7 +41,7 @@ const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: Float
   const sink = detail.lazySink(button).getOrDie();
 
   Positioning.positionWithinBounds(sink, {
-    anchor: 'hotspot',
+    type: 'hotspot',
     hotspot: button,
     layouts,
     overrides: {

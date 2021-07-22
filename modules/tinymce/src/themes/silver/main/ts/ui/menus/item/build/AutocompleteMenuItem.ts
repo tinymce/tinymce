@@ -36,7 +36,7 @@ const tooltipBehaviour = (
         tooltipComponents: [
         ],
         anchor: (comp) => ({
-          anchor: 'submenu',
+          type: 'submenu',
           item: comp,
           overrides: {
             // NOTE: this avoids it setting overflow and max-height.
