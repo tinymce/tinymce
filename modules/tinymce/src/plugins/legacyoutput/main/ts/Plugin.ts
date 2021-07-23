@@ -17,8 +17,8 @@ import * as Formats from './core/Formats';
  */
 
 export default () => {
-  console.warn('Notice: The legacyoutput plugin has been marked for removal from TinyMCE 6.0');
   PluginManager.add('legacyoutput', (editor) => {
+    console.warn('The legacyoutput plugin has been deprecated and marked for removal in TinyMCE 6.0');
     Formats.setup(editor);
   });
 };

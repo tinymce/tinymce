@@ -10,8 +10,8 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Convert from './core/Convert';
 
 export default () => {
-  console.warn('Notice: The bbcode plugin has been marked for removal from TinyMCE 6.0');
   PluginManager.add('bbcode', (editor) => {
+    console.warn('The bbcode plugin has been deprecated and marked for removal in TinyMCE 6.0');
     editor.on('BeforeSetContent', (e) => {
       e.content = Convert.bbcode2html(e.content);
     });
