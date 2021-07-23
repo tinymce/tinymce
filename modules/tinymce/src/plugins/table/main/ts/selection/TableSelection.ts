@@ -12,22 +12,27 @@ import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNod
 
 import { ephemera } from './Ephemera';
 
-const getSelectionStartCellFallback = (start: SugarElement<Node>) =>
-  TableLookup.table(start).bind((table) =>
+const getSelectionCellFallback = (element: SugarElement<Node>, takeLast: boolean) =>
+  TableLookup.table(element).bind((table) =>
     TableSelection.retrieve(table, ephemera.firstSelectedSelector)
-  ).fold(() => start, (cells) => cells[0]);
+  ).fold(
+    () => element,
+    (cells) => takeLast ? cells[cells.length - 1] : cells[0]);
 
-const getSelectionStartFromSelector = <T extends Element>(selector: string) => (start: SugarElement<Node>, isRoot?: (el: SugarElement<Node>) => boolean) => {
-  const startCellName = SugarNode.name(start);
-  const startCell = startCellName === 'col' || startCellName === 'colgroup' ? getSelectionStartCellFallback(start) : start;
-  return SelectorFind.closest<T>(startCell, selector, isRoot);
-};
+const getSelectionFromSelector = <T extends Element>(selector: string, takeLast: boolean) =>
+  (initCell: SugarElement<Node>, isRoot?: (el: SugarElement<Node>) => boolean) => {
+    const cellName = SugarNode.name(initCell);
+    const cell = cellName === 'col' || cellName === 'colgroup' ? getSelectionCellFallback(initCell, takeLast) : initCell;
+    return SelectorFind.closest<T>(cell, selector, isRoot);
+  };
 
-const getSelectionStartCaption = getSelectionStartFromSelector<HTMLTableCaptionElement>('caption');
+const getSelectionStartCaption = getSelectionFromSelector<HTMLTableCaptionElement>('caption', false);
 
-const getSelectionStartCell = getSelectionStartFromSelector<HTMLTableCellElement>('th,td');
+const getSelectionStartCell = getSelectionFromSelector<HTMLTableCellElement>('th,td', false);
 
-const getSelectionStartCellOrCaption = getSelectionStartFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
+const getSelectionStartCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption', false);
+
+const getSelectionEndCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption', false);
 
 const getCellsFromSelection = (start: SugarElement<Node>, selections: Selections, isRoot?: (el: SugarElement<Node>) => boolean): SugarElement<HTMLTableCellElement>[] =>
   getSelectionStartCell(start, isRoot)
@@ -47,4 +52,11 @@ const getRowsFromSelection = (start: SugarElement<Node>, selector: string): Suga
   ).getOr([]);
 };
 
-export { getSelectionStartCaption, getSelectionStartCell, getSelectionStartCellOrCaption, getCellsFromSelection, getRowsFromSelection };
+export {
+  getSelectionStartCaption,
+  getSelectionStartCell,
+  getSelectionStartCellOrCaption,
+  getSelectionEndCellOrCaption,
+  getCellsFromSelection,
+  getRowsFromSelection
+};
