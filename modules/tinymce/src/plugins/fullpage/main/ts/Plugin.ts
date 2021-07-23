@@ -14,6 +14,7 @@ import * as FilterContent from './core/FilterContent';
 import * as Buttons from './ui/Buttons';
 
 export default () => {
+  console.warn('Notice: The fullpage plugin has been marked for removal from TinyMCE 6.0');
   PluginManager.add('fullpage', (editor) => {
     const headState = Cell(''), footState = Cell('');
 

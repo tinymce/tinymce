@@ -18,6 +18,7 @@ import * as Buttons from './ui/Buttons';
 import * as SuggestionsMenu from './ui/SuggestionsMenu';
 
 export default () => {
+  console.warn('Notice: The spellchecker plugin has been marked for removal from TinyMCE 6.0');
   PluginManager.add('spellchecker', (editor, pluginUrl) => {
     if (DetectProPlugin.hasProPlugin(editor) === false) {
       const startedState = Cell(false);
