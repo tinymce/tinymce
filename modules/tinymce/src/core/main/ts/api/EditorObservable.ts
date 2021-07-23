@@ -174,6 +174,11 @@ const EditorObservable: EditorObservable = {
       return;
     }
 
+    // If the editor has been removed, `unbindAllNativeEvents` has already deleted all native event delegates
+    if (self.removed) {
+      return;
+    }
+
     if (state) {
       if (self.initialized) {
         bindEventDelegate(self, name);
