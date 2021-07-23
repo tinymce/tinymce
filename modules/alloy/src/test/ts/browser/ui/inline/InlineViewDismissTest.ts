@@ -87,7 +87,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
       UiFinder.sNotExists(gui.element, '.test-inline'),
       Step.sync(() => {
         InlineView.showAt(inline, {
-          anchor: 'selection',
+          type: 'selection',
           root: gui.element
         }, Container.sketch({
           dom: {
@@ -107,7 +107,7 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
         'Show inline view again with different content',
         Step.sync(() => {
           InlineView.showAt(inline, {
-            anchor: 'selection',
+            type: 'selection',
             root: gui.element
           }, Container.sketch({
             components: [

@@ -10,15 +10,15 @@ import { AlloySystemApi } from '../system/SystemApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import { AlloyComponent } from './ComponentApi';
-import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from './SpecTypes';
+import { AlloySpec, PremadeSpec, SimpleOrSketchSpec, SketchSpec } from './SpecTypes';
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
   const components = Obj.get(spec, 'components').getOr([ ]);
   return Arr.map(components, build);
 };
 
-const buildFromSpec = (userSpec: SimpleOrSketchSpec): Result<AlloyComponent, string> => {
-  const { events: specEvents, ...spec }: SimpleOrSketchSpec = CustomSpec.make(userSpec);
+const buildFromSpec = (userSpec: SketchSpec): Result<AlloyComponent, string> => {
+  const { events: specEvents, ...spec }: SketchSpec = CustomSpec.make(userSpec);
 
   // Build the subcomponents. A spec hierarchy is built from the bottom up.
   const components: AlloyComponent[] = buildSubcomponents(spec);
@@ -90,16 +90,16 @@ const external = (spec: ExternalElement): PremadeSpec => {
 // There are other solutions than this ... not sure if they are going to have better performance, though
 const uids = Tagger.generate;
 
-const isSimpleOrSketchSpec = (spec: AlloySpec): spec is SimpleOrSketchSpec =>
+const isSketchSpec = (spec: AlloySpec): spec is SketchSpec =>
   Obj.has(spec as SimpleOrSketchSpec, 'uid');
 
 // INVESTIGATE: A better way to provide 'meta-specs'
 const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).getOrThunk(() => {
   // EFFICIENCY: Consider not merging here, and passing uid through separately
-  const userSpecWithUid = isSimpleOrSketchSpec(spec) ? spec : {
+  const userSpecWithUid = isSketchSpec(spec) ? spec : {
     uid: uids(''),
     ...spec
-  } as SimpleOrSketchSpec;
+  } as SketchSpec;
   return buildFromSpec(userSpecWithUid).getOrDie();
 });
 

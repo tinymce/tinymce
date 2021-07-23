@@ -17,13 +17,11 @@ interface Position {
   y: number;
 }
 
-const nu = (x: number, y: number): MakeshiftAnchorSpec => {
-  return {
-    anchor: 'makeshift',
-    x,
-    y
-  };
-};
+const nu = (x: number, y: number): MakeshiftAnchorSpec => ({
+  type: 'makeshift',
+  x,
+  y
+});
 
 const transpose = (pos: Position, dx: number, dy: number) => {
   return nu(pos.x + dx, pos.y + dy);
@@ -69,13 +67,13 @@ export const getPointAnchor = (editor: Editor, e: MouseEvent | TouchEvent) => {
 
 export const getSelectionAnchor = (editor: Editor): SelectionAnchorSpec => {
   return {
-    anchor: 'selection',
+    type: 'selection',
     root: SugarElement.fromDom(editor.selection.getNode())
   };
 };
 
 export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => ({
-  anchor: 'node',
+  type: 'node',
   node: Optional.some(SugarElement.fromDom(editor.selection.getNode())),
   root: SugarElement.fromDom(editor.getBody())
 });

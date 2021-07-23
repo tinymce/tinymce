@@ -61,7 +61,7 @@ export default (): void => {
         if (Toggling.isOn(comp)) {
           Attachment.attach(sink, popup);
           Positioning.position(sink, {
-            anchor: 'hotspot',
+            type: 'hotspot',
             hotspot: comp
           }, popup);
         } else {
@@ -104,7 +104,7 @@ export default (): void => {
             AlloyEvents.run(NativeEvents.mouseover(), (item) => {
               Attachment.attach(sink, popup);
               Positioning.position(sink, {
-                anchor: 'submenu',
+                type: 'submenu',
                 item
               }, popup);
             })
@@ -146,7 +146,7 @@ export default (): void => {
           action: (button) => {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
-              anchor: 'selection',
+              type: 'selection',
               root: button.getSystem().getByUid('text-editor').getOrDie().element
             }, popup);
           }
@@ -181,7 +181,7 @@ export default (): void => {
           action: (_button) => {
             Attachment.attach(sink, popup);
             Positioning.position(sink, {
-              anchor: 'selection',
+              type: 'selection',
               root: SugarElement.fromDom(Traverse.defaultView(frame).dom.document.body)
             }, popup);
           }

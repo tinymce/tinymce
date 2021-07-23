@@ -49,7 +49,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
   }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((data: any) => ({
-      anchor: 'selection',
+      type: 'selection',
       root: SugarElement.fromDom(data.classic.element.dom.contentWindow.document.body)
     }));
 

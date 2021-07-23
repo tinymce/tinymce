@@ -12,14 +12,15 @@ import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as Layout from '../../positioning/layout/Layout';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { TouchMenuDetail } from '../types/TouchMenuTypes';
 
-const anchorAtCentre = (component: AlloyComponent) => {
+const anchorAtCentre = (component: AlloyComponent): AnchorSpec => {
   const pos = SugarLocation.absolute(component.element);
   const w = Width.get(component.element);
   const h = Height.get(component.element);
   return {
-    anchor: 'makeshift',
+    type: 'makeshift',
     x: pos.left + w / 2,
     y: pos.top + h / 2,
     layouts: {

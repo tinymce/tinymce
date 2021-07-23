@@ -7,7 +7,7 @@ import SelectionAnchor from './SelectionAnchor';
 import SubmenuAnchor from './SubmenuAnchor';
 
 export default StructureSchema.choose(
-  'anchor', {
+  'type', {
     selection: SelectionAnchor,
     node: NodeAnchor,
     hotspot: HotspotAnchor,

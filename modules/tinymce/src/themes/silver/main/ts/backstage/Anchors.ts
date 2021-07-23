@@ -31,7 +31,7 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
   };
 
   const editableAreaAnchor = (): NodeAnchorSpec => ({
-    anchor: 'node',
+    type: 'node',
     root: SugarShadowDom.getContentContainer(contentAreaElement()),
     node: Optional.from(contentAreaElement()),
     bubble: Bubble.nu(bubbleSize, bubbleSize, bubbleAlignments),
@@ -43,7 +43,7 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
   });
 
   const standardAnchor = (): HotspotAnchorSpec => ({
-    anchor: 'hotspot',
+    type: 'hotspot',
     hotspot: lazyAnchorbar(),
     bubble: Bubble.nu(-bubbleSize, bubbleSize, bubbleAlignments),
     layouts: {
@@ -58,7 +58,7 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
 
 const getBannerAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   const editableAreaAnchor = (): NodeAnchorSpec => ({
-    anchor: 'node',
+    type: 'node',
     root: SugarShadowDom.getContentContainer(contentAreaElement()),
     node: Optional.from(contentAreaElement()),
     layouts: {
@@ -68,7 +68,7 @@ const getBannerAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: 
   });
 
   const standardAnchor = (): HotspotAnchorSpec => ({
-    anchor: 'hotspot',
+    type: 'hotspot',
     hotspot: lazyAnchorbar(),
     layouts: {
       onRtl: () => [ Layout.south ],
@@ -80,7 +80,7 @@ const getBannerAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: 
 };
 
 const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement) => (): SelectionAnchorSpec => ({
-  anchor: 'selection',
+  type: 'selection',
   root: bodyElement(),
   getSelection: () => {
     const rng = editor.selection.getRng();
@@ -91,7 +91,7 @@ const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement) => ():
 });
 
 const getNodeAnchor = (bodyElement) => (element: Optional<SugarElement>): NodeAnchorSpec => ({
-  anchor: 'node',
+  type: 'node',
   root: bodyElement(),
   node: element
 });

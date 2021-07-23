@@ -12,7 +12,7 @@ const isPartOf = (component: AlloyComponent, queryElem: SugarElement): boolean =
   PredicateExists.closest(queryElem, (el: SugarElement) => Compare.eq(el, component.element), Fun.never) || isAriaPartOf(component, queryElem);
 
 const isPartOfAnchor = (anchor: AnchorSpec, queryElem: SugarElement): boolean =>
-  anchor.anchor === 'hotspot' && isPartOf(anchor.hotspot, queryElem);
+  anchor.type === 'hotspot' && isPartOf(anchor.hotspot, queryElem);
 
 export {
   isPartOf,

@@ -140,7 +140,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     InlineView.showAt(
       autocompleter,
       {
-        anchor: 'node',
+        type: 'node',
         root: SugarElement.fromDom(editor.getBody()),
         node: Optional.from(ac.element)
       },

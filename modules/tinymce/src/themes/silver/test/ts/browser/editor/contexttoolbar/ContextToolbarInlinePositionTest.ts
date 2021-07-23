@@ -22,6 +22,8 @@ interface Scenario {
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInlinePositionTest', () => {
   const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset)';
   const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset)';
+  const topInsetSelector = '.tox-pop.tox-pop--top.tox-pop--inset';
+  const bottomInsetSelector = '.tox-pop.tox-pop--bottom.tox-pop--inset';
 
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,
@@ -154,10 +156,10 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
     // Scroll so the 5th row is at the top and select an initial position that's not at the top (15th row)
     scrollTo(editor, 0, 4 * 22 - toolbarHeight);
     TinySelections.setCursor(editor, [ 0, 0, 14, 0, 0 ], 0);
-    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), '.tox-pop.tox-pop--top');
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), topInsetSelector);
 
     // Select the 5th row in the table, then make sure the toolbar appears at the bottom due to the overlap
     TinySelections.setCursor(editor, [ 0, 0, 4, 0, 0 ], 0);
-    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), '.tox-pop.tox-pop--bottom');
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), bottomInsetSelector);
   });
 });

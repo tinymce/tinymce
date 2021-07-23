@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AnchorSpec, Bounds, Bubble, Layout, LayoutInset, MaxHeight, MaxWidth } from '@ephox/alloy';
+import { AnchorSpec, Bounds, Boxes, Bubble, Layout, LayoutInset, MaxHeight, MaxWidth } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
-import { Compare, Height, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Css, Height, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -17,10 +17,10 @@ import { getSelectionBounds, isVerticalOverlap } from './ContextToolbarBounds';
 type Layout = typeof LayoutInset.north;
 
 export interface PositionData {
-  readonly lastPos: () => Optional<Bounds>;
   readonly lastElement: () => Optional<SugarElement<Element>>;
   readonly bounds: () => Optional<Bounds>;
   readonly isReposition: () => boolean;
+  readonly getMode: () => string;
 }
 
 const bubbleSize = 12;
@@ -47,6 +47,14 @@ const isEntireElementSelected = (editor: Editor, elem: SugarElement<Element>) =>
   return rng.startContainer === rng.endContainer && rng.startOffset === rng.endOffset - 1 && Compare.eq(leaf.element, elem);
 };
 
+const preservePosition = <T>(elem: SugarElement<HTMLElement>, position: string, f: (elem: SugarElement<HTMLElement>) => T): T => {
+  const currentPosition = Css.getRaw(elem, 'position');
+  Css.set(elem, 'position', position);
+  const result = f(elem);
+  currentPosition.each((pos) => Css.set(elem, 'position', pos));
+  return result;
+};
+
 /**
  * This function is designed to attempt to intelligently detect where the contextbar should be anchored when using an inside
  * layout. It will attempt to preserve the previous outside placement when anchoring to the same element. However, when the
@@ -62,9 +70,12 @@ const determineInsideLayout = (editor: Editor, contextbar: SugarElement<HTMLElem
     // preserve or show at the top for a new anchor element.
     return isSameAnchorElement ? LayoutInset.preserve : LayoutInset.north;
   } else if (isSameAnchorElement) {
+    // Preserve the position, get the bounds and then see if we have an overlap.
     // If overlapping and this wasn't triggered by a reposition then flip the placement
-    const isOverlapping = data.lastPos().exists((box) => isVerticalOverlap(selectionBounds, box));
-    return isOverlapping && !data.isReposition() ? LayoutInset.flip : LayoutInset.preserve;
+    return preservePosition(contextbar, data.getMode(), () => {
+      const isOverlapping = isVerticalOverlap(selectionBounds, Boxes.box(contextbar));
+      return isOverlapping && !data.isReposition() ? LayoutInset.flip : LayoutInset.preserve;
+    });
   } else {
     // Attempt to find the best layout to use that won't cause an overlap for the new anchor element
     return data.bounds().map((bounds) => {
