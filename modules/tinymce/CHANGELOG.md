@@ -62,8 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
 
 ### Deprecated
-
-- Added removal notices for the `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins #TINY-7260
+- The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and will be removed in the next major release #TINY-7260
 
 ## 5.8.2 - 2021-06-23
 
