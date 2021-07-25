@@ -18,6 +18,7 @@ import * as Formats from './core/Formats';
 
 export default () => {
   PluginManager.add('legacyoutput', (editor) => {
+    // eslint-disable-next-line no-console
     console.warn('The legacyoutput plugin has been deprecated and marked for removal in TinyMCE 6.0');
     Formats.setup(editor);
   });
