@@ -4,7 +4,8 @@
   "description": "Testing infrastructure",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce"
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/agar"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
@@ -20,7 +21,7 @@
     "browser",
     "test"
   ],
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/bedrock-client": "^11.0.0",

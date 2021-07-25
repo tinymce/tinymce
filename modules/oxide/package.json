@@ -2,6 +2,11 @@
   "name": "@tinymce/oxide",
   "version": "1.8.1",
   "description": "TinyMCE 5 Oxide skin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/oxide"
+  },
   "scripts": {
     "test": "echo 'No tests'",
     "build": "gulp build",
@@ -12,7 +17,7 @@
   "keywords": [
     "TinyMCE"
   ],
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "LGPL-2.1",
   "files": [
     "build/skins/content/**/*.css",
