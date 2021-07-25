@@ -19,8 +19,8 @@ import * as SuggestionsMenu from './ui/SuggestionsMenu';
 
 export default () => {
   PluginManager.add('spellchecker', (editor, pluginUrl) => {
-    console.warn('The spellchecker plugin has been deprecated and marked for removal in TinyMCE 6.0');
     if (DetectProPlugin.hasProPlugin(editor) === false) {
+      console.warn('The spellchecker plugin has been deprecated and marked for removal in TinyMCE 6.0');
       const startedState = Cell(false);
       const currentLanguageState = Cell<string>(Settings.getLanguage(editor));
       const textMatcherState = Cell(null);
