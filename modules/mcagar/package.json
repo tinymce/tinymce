@@ -4,7 +4,8 @@
   "description": "Tinymce agar wrapper",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce"
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/mcagar"
   },
   "files": [
     "lib/main",
@@ -20,7 +21,7 @@
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/agar": "^5.4.0",

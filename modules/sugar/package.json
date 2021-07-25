@@ -4,7 +4,8 @@
   "description": "Basic DOM manipulation",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce"
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/sugar"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
@@ -18,7 +19,7 @@
     "append",
     "predicate"
   ],
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/katamari": "^7.2.1",

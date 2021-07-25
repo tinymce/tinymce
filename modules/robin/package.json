@@ -4,7 +4,8 @@
   "version": "8.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce"
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/robin"
   },
   "files": [
     "lib/main",
@@ -28,7 +29,7 @@
   "devDependencies": {
     "@ephox/katamari-assertions": "^2.0.7"
   },
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "main": "./lib/main/ts/ephox/robin/api/Main.js",
   "module": "./lib/main/ts/ephox/robin/api/Main.js",

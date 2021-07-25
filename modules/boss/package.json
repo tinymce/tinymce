@@ -4,7 +4,8 @@
   "version": "4.2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce"
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/boss"
   },
   "files": [
     "lib/main",
@@ -31,7 +32,7 @@
     "test-manual": "bedrock -d src/test/ts",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "main": "./lib/main/ts/ephox/boss/api/Main.js",
   "module": "./lib/main/ts/ephox/boss/api/Main.js",
