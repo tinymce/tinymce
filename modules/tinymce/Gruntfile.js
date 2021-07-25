@@ -559,12 +559,14 @@ module.exports = function (grunt) {
               return new Buffer(JSON.stringify(json, null, '\t'));
             }
 
+            const keywords = ['wysiwyg', 'tinymce', 'richtext', 'javascript', 'html', 'text', 'rich editor', 'rich text editor', 'rte', 'rich text', 'contenteditable', 'editing']
+
             zip.addData('bower.json', jsonToBuffer({
               'name': 'tinymce',
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
               'license': 'LGPL-2.1',
-              'keywords': ['editor', 'wysiwyg', 'tinymce', 'richtext', 'javascript', 'html'],
-              'homepage': 'http://www.tinymce.com',
+              'keywords': keywords,
+              'homepage': 'https://www.tiny.cloud/',
               'ignore': ['README.md', 'composer.json', 'package.json', '.npmignore', 'CHANGELOG.md']
             }));
 
@@ -580,7 +582,8 @@ module.exports = function (grunt) {
               'main': 'tinymce.js',
               'types': 'tinymce.d.ts',
               'license': 'LGPL-2.1',
-              'keywords': ['editor', 'wysiwyg', 'tinymce', 'richtext', 'javascript', 'html'],
+              'keywords': keywords,
+              'homepage': 'https://www.tiny.cloud/',
               'bugs': { 'url': 'https://github.com/tinymce/tinymce/issues' }
             }));
 
@@ -589,8 +592,8 @@ module.exports = function (grunt) {
               'version': packageData.version,
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
               'license': ['LGPL-2.1-only'],
-              'keywords': ['editor', 'wysiwyg', 'tinymce', 'richtext', 'javascript', 'html'],
-              'homepage': 'http://www.tinymce.com',
+              'keywords': keywords,
+              'homepage': 'https://www.tiny.cloud/',
               'type': 'component',
               'extra': {
                 'component': {
@@ -674,9 +677,9 @@ module.exports = function (grunt) {
           releaseNotes: 'Release notes for my package.',
           summary: 'TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
           'control released as Open Source under LGPL by Tiny Technologies, Inc.',
-          projectUrl: 'http://www.tinymce.com/',
-          iconUrl: 'http://www.tinymce.com/favicon.ico',
-          licenseUrl: 'http://www.tinymce.com/license',
+          projectUrl: 'https://www.tiny.cloud/',
+          iconUrl: 'https://www.tiny.cloud/favicon-32x32.png',
+          licenseUrl: 'https://www.tiny.cloud/license',
           requireLicenseAcceptance: true,
           tags: 'Editor TinyMCE HTML HTMLEditor',
           excludes: [
@@ -718,9 +721,9 @@ module.exports = function (grunt) {
           description: 'This package has been deprecated use https://www.nuget.org/packages/TinyMCE/',
           releaseNotes: 'This package has been deprecated use https://www.nuget.org/packages/TinyMCE/',
           summary: 'This package has been deprecated use https://www.nuget.org/packages/TinyMCE/',
-          projectUrl: 'http://www.tinymce.com/',
-          iconUrl: 'http://www.tinymce.com/favicon.ico',
-          licenseUrl: 'http://www.tinymce.com/license',
+          projectUrl: 'https://www.tiny.cloud/',
+          iconUrl: 'https://www.tiny.cloud/favicon-32x32.png',
+          licenseUrl: 'https://www.tiny.cloud/license',
           requireLicenseAcceptance: true,
           tags: 'Editor TinyMCE HTML HTMLEditor',
           excludes: [
