@@ -109,7 +109,7 @@ const lineHeightSpec: ControlSpec<string> = {
   display: Fun.identity,
 
   getCurrent: (editor) => Optional.from(editor.queryCommandValue('LineHeight')),
-  setCurrent: (editor, value) => editor.execCommand('LineHeight', false, value),
+  setCurrent: (editor, value) => editor.execCommand('LineHeight', false, value)
 };
 
 const languageSpec = (editor: Editor): Optional<ControlSpec<ContentLanguage>> => {
