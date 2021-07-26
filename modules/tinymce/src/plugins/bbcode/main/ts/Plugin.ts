@@ -11,6 +11,8 @@ import * as Convert from './core/Convert';
 
 export default () => {
   PluginManager.add('bbcode', (editor) => {
+    // eslint-disable-next-line no-console
+    console.warn('The bbcode plugin has been deprecated and marked for removal in TinyMCE 6.0');
     editor.on('BeforeSetContent', (e) => {
       e.content = Convert.bbcode2html(e.content);
     });
