@@ -10,7 +10,7 @@ import { Attribute, Dimension, SugarElement, SugarNode, TransformFind } from '@e
 
 import Editor from 'tinymce/core/api/Editor';
 import { ContentLanguage } from 'tinymce/core/api/SettingsTypes';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Settings from '../../api/Settings';
 
@@ -26,6 +26,9 @@ interface ControlSpec<T> {
 
   readonly getCurrent: (editor: Editor) => Optional<T>;
   readonly setCurrent: (editor: Editor, value: T) => void;
+
+  readonly onToolbarSetup?: (api: Toolbar.ToolbarMenuButtonInstanceApi) => () => void;
+  readonly onMenuSetup?: (api: Menu.NestedMenuItemInstanceApi) => () => void;
 }
 
 const registerController = <T>(editor: Editor, spec: ControlSpec<T>) => {
@@ -84,13 +87,15 @@ const registerController = <T>(editor: Editor, spec: ControlSpec<T>) => {
   editor.ui.registry.addMenuButton(spec.name, {
     tooltip: spec.text,
     icon: spec.icon,
-    fetch: (callback) => callback(getMenuItems())
+    fetch: (callback) => callback(getMenuItems()),
+    onSetup: spec.onToolbarSetup
   });
 
   editor.ui.registry.addNestedMenuItem(spec.name, {
     type: 'nestedmenuitem',
     text: spec.text,
-    getSubmenuItems: getMenuItems
+    getSubmenuItems: getMenuItems,
+    onSetup: spec.onMenuSetup
   });
 };
 
@@ -104,7 +109,7 @@ const lineHeightSpec: ControlSpec<string> = {
   display: Fun.identity,
 
   getCurrent: (editor) => Optional.from(editor.queryCommandValue('LineHeight')),
-  setCurrent: (editor, value) => editor.execCommand('LineHeight', false, value)
+  setCurrent: (editor, value) => editor.execCommand('LineHeight', false, value),
 };
 
 const languageSpec = (editor: Editor): Optional<ControlSpec<ContentLanguage>> => {
@@ -132,7 +137,14 @@ const languageSpec = (editor: Editor): Optional<ControlSpec<ContentLanguage>> =>
           })
       );
     },
-    setCurrent: (editor, lang) => editor.execCommand('Lang', false, lang)
+    setCurrent: (editor, lang) => editor.execCommand('Lang', false, lang),
+
+    onToolbarSetup: (api) => {
+      const unbinder = Singleton.unbindable();
+      api.setActive(editor.formatter.match('lang', {}, undefined, true));
+      unbinder.set(editor.formatter.formatChanged('lang', api.setActive, true));
+      return unbinder.clear;
+    }
   }));
 };
 
