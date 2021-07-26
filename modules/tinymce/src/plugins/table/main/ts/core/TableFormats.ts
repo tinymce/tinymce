@@ -11,39 +11,46 @@ const cellFormats = {
   tablecellbackgroundcolor: {
     selector: 'td,th',
     styles: { backgroundColor: '%value' },
-    remove_similar: true
+    remove_similar: true,
+    inherit: false
   },
   tablecellverticalalign: {
     selector: 'td,th',
     styles: {
       'vertical-align': '%value'
     },
-    remove_similar: true
+    remove_similar: true,
+    inherit: false
   },
   tablecellbordercolor: {
     selector: 'td,th',
     styles: { borderColor: '%value' },
-    remove_similar: true
+    remove_similar: true,
+    inherit: false
   },
   tablecellclass: {
     selector: 'td,th',
     classes: [ '%value' ],
-    remove_similar: true
+    remove_similar: true,
+    inherit: false
   },
   tableclass: {
     selector: 'table',
     classes: [ '%value' ],
-    remove_similar: true
+    remove_similar: true,
+    inherit: false
   },
   tablecellborderstyle: {
     selector: 'td,th',
     styles: { borderStyle: '%value' },
-    remove_similar: true
+    remove_similar: true,
+    inherit: false
   },
   tablecellborderwidth: {
     selector: 'td,th',
     styles: { borderWidth: '%value' },
-    remove_similar: true
+    remove_similar: true,
+    inherit: false
   }
 };
 
