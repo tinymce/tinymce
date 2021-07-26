@@ -2,7 +2,7 @@
 
 The world's #1 open source rich text editor.
 
-Used and trusted by millions of developers, TinyMCE is the world’s most customizable, scalable and flexible rich text editor. We’ve helped launch the likes of Atlassian, Medium, Evernote (and lots more that we can’t tell you), by empowering them to create exceptional content and experiences for their users.
+Used and trusted by millions of developers, TinyMCE is the world’s most customizable, scalable, and flexible rich text editor. We’ve helped launch the likes of Atlassian, Medium, Evernote (and lots more that we can’t tell you), by empowering them to create exceptional content and experiences for their users.
 
 With more than 350M+ downloads every year, we’re also one of the most trusted enterprise-grade open source HTML editors on the internet. There’s currently more than 100M+ products worldwide, powered by Tiny. As a high powered WYSIWYG editor, TinyMCE is built to scale, designed to innovate, and thrives on delivering results to difficult edge-cases.
 
@@ -38,7 +38,7 @@ TinyMCE is easily integrated into your projects with the help of components such
 - [tinymce-vue](https://github.com/tinymce/tinymce-vue)
 - [tinymce-angular](https://github.com/tinymce/tinymce-angular)
 
-With over 29 integrations, and 400+ API’s, see the TinyMCE docs for a full list of editor [integrations](https://www.tiny.cloud/docs/integrations/).
+With over 29 integrations, and 400+ APIs, see the TinyMCE docs for a full list of editor [integrations](https://www.tiny.cloud/docs/integrations/).
 
 ### Customization
 
@@ -50,7 +50,7 @@ Realizing the full power of most plugins requires only a few lines more.
 
 ### Extensibility
 
-Sometimes your editor requirements can be quite unique, and you need the freedom and flexibility to innovate. View the source code and develop your own extensions for custom functionality to meet your own requirements thanks to TinyMCE being open source.
+Sometimes your editor requirements can be quite unique, and you need the freedom and flexibility to innovate. Thanks to TinyMCE being open source, you can view the source code and develop your own extensions for custom functionality to meet your own requirements.
 
 The TinyMCE [API](https://www.tiny.cloud/docs/api/) is exposed to make it easier for you to write custom functionality that fits within the existing framework of TinyMCE [UI components](https://www.tiny.cloud/docs/ui-components/).
 
