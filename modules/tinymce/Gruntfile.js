@@ -575,7 +575,8 @@ module.exports = function (grunt) {
               'version': packageData.version,
               'repository': {
                 'type': 'git',
-                'url': 'https://github.com/tinymce/tinymce-dist.git'
+                'url': 'https://github.com/tinymce/tinymce.git',
+                'directory': 'modules/tinymce'
               },
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
               'author': 'Tiny Technologies, Inc',
