@@ -44,7 +44,7 @@ UnitTest.test('ColumnSizes.getPixelWidths', () => {
   sTest('Pixel Table - Column width should be the size of the table when using colspans', tableWithSpansHtml, () => [ 0, 400 ]);
   sTest('None Table - Column widths should be the computed size of the cell', noneTableHtml, (width) => [ width, width ]);
   if (isChrome92) {
-    // TODO: TINY-7758 This handles a bug in Chrome 92
+    // TODO: Remove this once the cell width bug introduced in Chrome 92 is fixed (see TINY-7758 for more details)
     sTest('None Table - Column widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 1 ]);
   } else {
     sTest('None Table - Column widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 2 ]); // Add 2 to account for the borders
