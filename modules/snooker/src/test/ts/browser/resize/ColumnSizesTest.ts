@@ -19,7 +19,7 @@ const pixelTableMissingWidthsHtml = `<table style="width: 400px; border-collapse
 const tableWithSpansHtml = '<table style="width: 400px; border-collapse: collapse"><tbody><tr><td style="width: 400px;" colspan="2">A</td></tr></tbody></table>';
 const noneTableWithColsHtml = '<table><colgroup><col><col></colgroup><tbody><tr><td>A</td><td>A</td></tr></tbody></table>';
 const browser = PlatformDetection.detect().browser;
-const isChrome92 = browser.isChrome() && browser.version.major === 92;
+const isChrome92 = browser.isChrome() && browser.version.major >= 92;
 
 UnitTest.test('ColumnSizes.getPixelWidths', () => {
   const sTest = (label: string, html: string, getExpectedWidths: (cellWidth: number) => number[]) => {
@@ -44,7 +44,7 @@ UnitTest.test('ColumnSizes.getPixelWidths', () => {
   sTest('Pixel Table - Column width should be the size of the table when using colspans', tableWithSpansHtml, () => [ 0, 400 ]);
   sTest('None Table - Column widths should be the computed size of the cell', noneTableHtml, (width) => [ width, width ]);
   if (isChrome92) {
-    // Handle bug in Chrome 92
+    // TODO: TINY-7758 This handles a bug in Chrome 92
     sTest('None Table - Column widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 1 ]);
   } else {
     sTest('None Table - Column widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 2 ]); // Add 2 to account for the borders
