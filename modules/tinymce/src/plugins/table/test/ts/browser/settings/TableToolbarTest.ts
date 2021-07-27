@@ -1,5 +1,5 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { before, context, describe, it } from '@ephox/bedrock-client';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
@@ -15,7 +15,6 @@ describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
   const tableWithCaptionHtml = '<table><caption>Caption</caption><tbody><tr><td>x</td></tr></tbody></table>';
-  const tableWithAdditionalHtml = '<p>A</p><table><tbody><tr><td>B</td></tr></tbody></table><p>C</p>';
 
   const pCreateEditor = (toolbar: string) => McEditor.pFromSettings<Editor>({
     plugins: 'table',
@@ -51,56 +50,5 @@ describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
     // The paste row button should now be enabled
     await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn[title="Paste row before"]:not(.tox-tbtn--disabled)');
     McEditor.remove(editor);
-  });
-
-  context('Ensure table buttons are enabled when appropriate', () => {
-    it('TINY-7737: When the whole selection is in the table', async () => {
-      const editor = await pCreateEditor('tablecaption');
-      editor.focus();
-      editor.setContent(tableWithAdditionalHtml);
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[title="Table caption"]');
-      TinySelections.setSelection(editor, [ 1, 0, 0, 0 ], 0, [ 1, 0, 0, 0 ], 1);
-      // Wait for a while to allow the toolbar a chance to render
-      await Waiter.pWait(100);
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn[title="Table caption"]');
-      UiFinder.notExists(SugarBody.body(), '.tox-tbtn--disabled[title="Table caption"]');
-      McEditor.remove(editor);
-    });
-
-    it('TINY-7737: When the selection starts outside the table, but ends in the table', async () => {
-      const editor = await pCreateEditor('tablecaption');
-      editor.focus();
-      editor.setContent(tableWithAdditionalHtml);
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[title="Table caption"]');
-      TinySelections.setSelection(editor, [ 1, 0, 0, 0 ], 0, [ 2 ], 1);
-      // Wait for a while to allow the toolbar a chance to render
-      await Waiter.pWait(100);
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[title="Table caption"]');
-      McEditor.remove(editor);
-    });
-
-    it('TINY-7737: When the selection starts inside the table, but ends outside the table', async () => {
-      const editor = await pCreateEditor('tablecaption');
-      editor.focus();
-      editor.setContent(tableWithAdditionalHtml);
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[title="Table caption"]');
-      TinySelections.setSelection(editor, [ 0 ], 0, [ 1, 0, 0, 0 ], 1);
-      // Wait for a while to allow the toolbar a chance to render
-      await Waiter.pWait(100);
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[title="Table caption"]');
-      McEditor.remove(editor);
-    });
-
-    it('TINY-7737: When the selection starts and ends outside of the table', async () => {
-      const editor = await pCreateEditor('tablecaption');
-      editor.focus();
-      editor.setContent(tableWithAdditionalHtml);
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[title="Table caption"]');
-      TinySelections.setSelection(editor, [ 0 ], 0, [ 2 ], 1);
-      // Wait for a while to allow the toolbar a chance to render
-      await Waiter.pWait(100);
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[title="Table caption"]');
-      McEditor.remove(editor);
-    });
   });
 });
