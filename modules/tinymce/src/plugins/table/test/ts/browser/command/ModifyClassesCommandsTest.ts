@@ -31,6 +31,11 @@ describe('browser.tinymce.plugins.table.command.ModifyClassesCommandsTest', () =
     TinySelections.setSelection(editor, [ 0, 0, 0 ], startCellOffset, [ 0, 0, 0 ], endCellOffset);
   };
 
+  const setContentAndCursor = (editor: Editor, content: string) => {
+    editor.setContent(content);
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+  };
+
   const execCmdAndAssertEvent = (editor: Editor, cmdName: string, data: string) => {
     assert.lengthOf(events, 0, 'Before executing the command');
     editor.execCommand(cmdName, false, data);
@@ -130,7 +135,7 @@ describe('browser.tinymce.plugins.table.command.ModifyClassesCommandsTest', () =
 
         it('TINY-7691: Can be toggled on', () => {
           const editor = hook.editor();
-          editor.setContent(contentWithoutClassDoubleSelection);
+          setContentAndCursor(editor, contentWithoutClassDoubleSelection);
 
           execCmdAndAssertEvent(editor, 'mceTableCellToggleClass', 'a');
           TinyAssertions.assertContent(editor, contentWithDoubleClass);
@@ -138,7 +143,7 @@ describe('browser.tinymce.plugins.table.command.ModifyClassesCommandsTest', () =
 
         it('TINY-7691: Can be toggled on while mixed', () => {
           const editor = hook.editor();
-          editor.setContent(contentWithMixedClassDoubleSelection);
+          setContentAndCursor(editor, contentWithMixedClassDoubleSelection);
 
           execCmdAndAssertEvent(editor, 'mceTableCellToggleClass', 'a');
           TinyAssertions.assertContent(editor, contentWithDoubleClass);
@@ -146,7 +151,7 @@ describe('browser.tinymce.plugins.table.command.ModifyClassesCommandsTest', () =
 
         it('TINY-7163: Can be toggled off', () => {
           const editor = hook.editor();
-          editor.setContent(contentWithClassDoubleSelection);
+          setContentAndCursor(editor, contentWithClassDoubleSelection);
 
           execCmdAndAssertEvent(editor, 'mceTableCellToggleClass', 'a');
           TinyAssertions.assertContent(editor, contentWithoutClass);
