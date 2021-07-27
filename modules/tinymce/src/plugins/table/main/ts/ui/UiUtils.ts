@@ -25,14 +25,14 @@ const onSetupToggle = (editor: Editor, selections: Selections, formatName: strin
     const isNone = Strings.isEmpty(formatValue);
 
     const init = () => {
-      // If value is empty (A None-entry in the list), check if the format is not set at all. Otherwise, check if the format is set to the correct value.
-      const setActive = (matched: boolean) =>
-        api.setActive(isNone ? !matched : matched);
-
       const selectedCells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections, Util.getIsRoot(editor));
 
       const checkNode = (cell: SugarElement<Element>) =>
         editor.formatter.match(formatName, { value: formatValue }, cell.dom, isNone);
+
+      // If value is empty (A None-entry in the list), check if the format is not set at all. Otherwise, check if the format is set to the correct value.
+      const setActive = (matched: boolean) =>
+        api.setActive(isNone ? !matched : matched);
 
       if (isNone) {
         setActive(Arr.exists(selectedCells, checkNode));

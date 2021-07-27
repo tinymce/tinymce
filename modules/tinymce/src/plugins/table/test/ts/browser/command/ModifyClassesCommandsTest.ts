@@ -26,9 +26,9 @@ describe('browser.tinymce.plugins.table.command.ModifyClassesCommandsTest', () =
     events.push(event);
   };
 
-  const setContentAndSelection = (editor: Editor, content: string, selectionStart: number, selectionEnd: number) => {
+  const setContentAndSelection = (editor: Editor, content: string, startCellOffset: number, endCellOffset: number) => {
     editor.setContent(content);
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], selectionStart, [ 0, 0, 0 ], selectionEnd);
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], startCellOffset, [ 0, 0, 0 ], endCellOffset);
   };
 
   const execCmdAndAssertEvent = (editor: Editor, cmdName: string, data: string) => {
