@@ -6,7 +6,7 @@
  */
 
 import { Selections } from '@ephox/darwin';
-import { Arr, Cell, Fun, Optional, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Optionals, Thunk } from '@ephox/katamari';
 import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
 import { Compare, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
 
@@ -67,8 +67,8 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
 
   const findTargets = (): Optional<RunOperation.CombinedTargets> =>
     getStart().bind((startCellOrCaption) =>
-      getEnd().bind(TableLookup.table).bind((endTable) =>
-        TableLookup.table(startCellOrCaption).bind((startTable) => {
+      Optionals.flatten(
+        Optionals.lift2(TableLookup.table(startCellOrCaption), getEnd().bind(TableLookup.table), (startTable, endTable) => {
           if (Compare.eq(startTable, endTable)) {
             if (isCaption(startCellOrCaption)) {
               return Optional.some(TableTargets.noMenu(startCellOrCaption));

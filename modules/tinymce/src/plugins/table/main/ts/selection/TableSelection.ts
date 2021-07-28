@@ -6,7 +6,7 @@
  */
 
 import { CellOpSelection, Selections, TableSelection } from '@ephox/darwin';
-import { Arr, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Optionals } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
@@ -16,7 +16,7 @@ const getSelectionCellFallback = (element: SugarElement<Node>, takeLast: boolean
   TableLookup.table(element).bind((table) =>
     TableSelection.retrieve(table, ephemera.firstSelectedSelector)
   ).fold(
-    () => element,
+    Fun.constant(element),
     (cells) => takeLast ? cells[cells.length - 1] : cells[0]);
 
 const getSelectionFromSelector = <T extends Element>(selector: string, takeLast: boolean) =>
