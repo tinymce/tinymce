@@ -1,13 +1,13 @@
 {
   "name": "@ephox/alloy",
-  "version": "8.2.4",
+  "version": "8.2.5",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^5.4.0",
+    "@ephox/agar": "^5.4.1",
     "@ephox/boulder": "^5.0.7",
     "@ephox/katamari": "^7.2.1",
-    "@ephox/sand": "^4.0.7",
-    "@ephox/sugar": "^7.1.3",
+    "@ephox/sand": "^4.0.8",
+    "@ephox/sugar": "^7.1.4",
     "tslib": "^2.0.0"
   },
   "files": [
