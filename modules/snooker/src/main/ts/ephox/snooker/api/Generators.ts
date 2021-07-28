@@ -1,21 +1,25 @@
-import { Arr, Fun, Optional, Optionals, Singleton } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { getAttrValue } from '../util/CellUtils';
 
-export interface CellSpan {
+export interface RowData {
+  readonly element: SugarElement<HTMLTableRowElement | HTMLTableColElement>;
+}
+
+export interface CellData {
   readonly element: SugarElement<HTMLTableCellElement | HTMLTableColElement>;
   readonly colspan: number;
   readonly rowspan: number;
 }
 
 export interface Generators {
-  readonly cell: (cellSpan: CellSpan) => SugarElement<HTMLTableCellElement>;
-  readonly row: () => SugarElement<HTMLTableRowElement>;
+  readonly cell: (cellData: CellData) => SugarElement<HTMLTableCellElement>;
+  readonly row: (rowData: RowData) => SugarElement<HTMLTableRowElement>;
   readonly replace: <K extends keyof HTMLElementTagNameMap>(cell: SugarElement<HTMLTableCellElement>, tag: K, attrs: Record<string, string | number | boolean | null>) => SugarElement<HTMLElementTagNameMap[K]>;
   readonly gap: () => SugarElement<HTMLTableCellElement>;
-  readonly col: (prev: CellSpan) => SugarElement<HTMLTableColElement>;
-  readonly colgroup: () => SugarElement<HTMLTableColElement>;
+  readonly col: (prev: CellData) => SugarElement<HTMLTableColElement>;
+  readonly colgroup: (prev: RowData) => SugarElement<HTMLTableColElement>;
 }
 
 export interface SimpleGenerators extends Generators {
@@ -27,9 +31,7 @@ export interface SimpleGenerators extends Generators {
   readonly colgroup: () => SugarElement<HTMLTableColElement>;
 }
 
-export interface GeneratorsWrapper {
-  readonly cursor: () => Optional<SugarElement>;
-}
+export interface GeneratorsWrapper {}
 
 export interface GeneratorsModification extends GeneratorsWrapper {
   readonly getOrInit: (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) => SugarElement;
@@ -54,7 +56,7 @@ interface Item {
   readonly sub: SugarElement;
 }
 
-const elementToData = (element: SugarElement): CellSpan => {
+const elementToData = (element: SugarElement): CellData => {
   const colspan = getAttrValue(element, 'colspan', 1);
   const rowspan = getAttrValue(element, 'rowspan', 1);
   return {
@@ -64,11 +66,17 @@ const elementToData = (element: SugarElement): CellSpan => {
   };
 };
 
+const isCol = SugarNode.isTag('col');
+
+const isRow = (element: SugarElement): element is SugarElement<HTMLTableRowElement | HTMLTableColElement> => {
+  const name = SugarNode.name(element);
+  return name === 'tr' || name === 'colgroup';
+};
+
 // note that `toData` seems to be only for testing
 const modification = (generators: Generators, toData = elementToData): GeneratorsModification => {
-  const position = Singleton.value<SugarElement>();
 
-  const nu = (data: CellSpan) => {
+  const nuCell = (data: CellData) => {
     switch (SugarNode.name(data.element)) {
       case 'col':
         return generators.col(data);
@@ -77,18 +85,23 @@ const modification = (generators: Generators, toData = elementToData): Generator
     }
   };
 
-  const nuFrom = (element: SugarElement) => {
-    const data = toData(element);
-    return nu(data);
+  const nuRow = (data: RowData) => {
+    switch (SugarNode.name(data.element)) {
+      case 'colgroup':
+        return generators.colgroup(data);
+      default:
+        return generators.row(data);
+    }
   };
 
   const add = (element: SugarElement) => {
-    const replacement = nuFrom(element);
-    if (!position.isSet()) {
-      position.set(replacement);
+    if (isRow(element)) {
+      return nuRow({ element });
+    } else {
+      const replacement = nuCell(toData(element));
+      recent = Optional.some({ item: element, replacement });
+      return replacement;
     }
-    recent = Optional.some({ item: element, replacement });
-    return replacement;
   };
 
   let recent = Optional.none<Recent>();
@@ -101,14 +114,12 @@ const modification = (generators: Generators, toData = elementToData): Generator
   };
 
   return {
-    getOrInit,
-    cursor: position.get
+    getOrInit
   };
 };
 
 const transform = <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) => {
   return (generators: Generators): GeneratorsTransform => {
-    const position = Singleton.value<SugarElement>();
     const list: Item[] = [];
 
     const find = (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) => {
@@ -126,14 +137,11 @@ const transform = <K extends keyof HTMLElementTagNameMap> (scope: string | null,
         item: element,
         sub: cell
       });
-      if (!position.isSet()) {
-        position.set(cell);
-      }
       return cell;
     };
 
     const replaceOrInit = (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) => {
-      if (SugarNode.name(element) === 'col') {
+      if (isRow(element) || isCol(element)) {
         return element;
       } else {
         return find(element, comparator).fold(() => {
@@ -145,8 +153,7 @@ const transform = <K extends keyof HTMLElementTagNameMap> (scope: string | null,
     };
 
     return {
-      replaceOrInit,
-      cursor: position.get
+      replaceOrInit
     };
   };
 };
@@ -159,13 +166,7 @@ const getScopeAttribute = (cell: SugarElement) =>
   );
 
 const merging = (generators: Generators): GeneratorsMerging => {
-  const position = Singleton.value<SugarElement>();
-
   const unmerge = (cell: SugarElement) => {
-    if (!position.isSet()) {
-      position.set(cell);
-    }
-
     const scope = getScopeAttribute(cell);
 
     scope.each((attribute) => Attribute.set(cell, 'scope', attribute));
@@ -219,8 +220,7 @@ const merging = (generators: Generators): GeneratorsMerging => {
 
   return {
     unmerge,
-    merge,
-    cursor: position.get
+    merge
   };
 };
 

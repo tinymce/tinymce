@@ -9,8 +9,8 @@ import { Optional, Singleton } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 export interface Clipboard {
-  getRows: () => Optional<SugarElement<HTMLTableRowElement>[]>;
-  setRows: (rows: Optional<SugarElement<HTMLTableRowElement>[]>) => void;
+  getRows: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;
+  setRows: (rows: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => void;
   clearRows: () => void;
 
   getColumns: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;

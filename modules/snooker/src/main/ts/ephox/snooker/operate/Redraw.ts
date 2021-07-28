@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Attribute, Insert, InsertAll, Remove, Replication, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
-import { Detail, DetailNew, RowDataNew, Section } from '../api/Structs';
+import { Detail, DetailNew, RowDetailNew, Section } from '../api/Structs';
 
 interface NewRowsAndCells {
   readonly newRows: SugarElement[];
@@ -41,11 +41,11 @@ const generateSection = (table: SugarElement<HTMLTableElement>, sectionName: Sec
   return section;
 };
 
-const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, grid: RowDataNew<T>[]): NewRowsAndCells => {
+const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, grid: RowDetailNew<T>[]): NewRowsAndCells => {
   const newRows: SugarElement[] = [];
   const newCells: SugarElement[] = [];
 
-  const syncRows = (gridSection: RowDataNew<T>[]) =>
+  const syncRows = (gridSection: RowDetailNew<T>[]) =>
     Arr.map(gridSection, (row) => {
       if (row.isNew) {
         newRows.push(row.element);
@@ -64,7 +64,7 @@ const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, gri
     });
 
   // Assumption we should only ever have 1 colgroup. The spec allows for multiple, however it's currently unsupported
-  const syncColGroup = (gridSection: RowDataNew<T>[]) =>
+  const syncColGroup = (gridSection: RowDetailNew<T>[]) =>
     Arr.bind(gridSection, (colGroup) =>
       Arr.map(colGroup.cells, (col) => {
         setIfNot(col.element, 'span', col.colspan, 1);
@@ -72,7 +72,7 @@ const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, gri
       })
     );
 
-  const renderSection = (gridSection: RowDataNew<T>[], sectionName: Section) => {
+  const renderSection = (gridSection: RowDetailNew<T>[], sectionName: Section) => {
     const section = generateSection(table, sectionName);
     const sync = sectionName === 'colgroup' ? syncColGroup : syncRows;
     const sectionElems = sync(gridSection);
@@ -83,7 +83,7 @@ const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, gri
     SelectorFind.child(table, sectionName).each(Remove.remove);
   };
 
-  const renderOrRemoveSection = (gridSection: RowDataNew<T>[], sectionName: Section) => {
+  const renderOrRemoveSection = (gridSection: RowDetailNew<T>[], sectionName: Section) => {
     if (gridSection.length > 0) {
       renderSection(gridSection, sectionName);
     } else {
@@ -91,10 +91,10 @@ const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, gri
     }
   };
 
-  const headSection: RowDataNew<T>[] = [];
-  const bodySection: RowDataNew<T>[] = [];
-  const footSection: RowDataNew<T>[] = [];
-  const columnGroupsSection: RowDataNew<T>[] = [];
+  const headSection: RowDetailNew<T>[] = [];
+  const bodySection: RowDetailNew<T>[] = [];
+  const footSection: RowDetailNew<T>[] = [];
+  const columnGroupsSection: RowDetailNew<T>[] = [];
 
   Arr.each(grid, (row) => {
     switch (row.section) {
@@ -124,7 +124,7 @@ const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, gri
   };
 };
 
-const copy = <T extends Detail> (grid: RowDataNew<T>[]): SugarElement<HTMLTableRowElement>[] => Arr.map(grid, (row) => {
+const copy = <T extends Detail> (grid: RowDetailNew<T>[]): SugarElement<HTMLTableRowElement | HTMLTableColElement>[] => Arr.map(grid, (row) => {
   // Shallow copy the row element
   const tr = Replication.shallow(row.element);
   Arr.each(row.cells, (cell) => {
