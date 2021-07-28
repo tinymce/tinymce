@@ -2,6 +2,8 @@ import { ApproxStructure, Assertions, Step, Waiter } from '@ephox/agar';
 import { Fun, Merger } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
+import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Disabling } from 'ephox/alloy/api/behaviour/Disabling';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
@@ -50,12 +52,18 @@ const renderItem = (spec: { type: any; widget?: any; data: { value: string; meta
     tag: 'li',
     attributes: {
       'data-value': spec.data.value,
-      'data-test-id': 'item-' + spec.data.value
+      'data-test-id': 'item-' + spec.data.value,
+      'aria-disabled': spec.data.meta.disabled === true ? true : false
     },
     classes: [ ],
     innerHtml: spec.data.meta.text
   },
-  components: [ ]
+  components: [ ],
+  itemBehaviours: Behaviour.derive([
+    Disabling.config({
+      disabled: () => spec.data.meta.disabled
+    })
+  ])
 };
 
 const part = (store: TestStore): Partial<TieredMenuSpec> => ({
