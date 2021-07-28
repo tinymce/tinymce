@@ -22,7 +22,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledMenuItemTest', 
     menubar: 'table',
   };
 
-  const pOpenTableMenu = (editor) => {
+  const pOpenTableMenu = (editor: Editor) => {
     const tableMenuItemSelector = '[role="menuitem"]:contains("Table")';
     TinyUiActions.clickOnMenu(editor, tableMenuItemSelector);
     return Waiter.pTryUntil('Wait for a specific menu to open', () => UiFinder.exists(SugarBody.body(), tableMenuItemSelector));
