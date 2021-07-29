@@ -1,5 +1,5 @@
 import { Keys, Mouse, RealKeys, UiFinder, Waiter } from '@ephox/agar';
-import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
@@ -42,26 +42,30 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
   }, [ Theme ]);
 
   const pOpenCodeMenu = () => {
-    const editor = hook.editor();
-    TinyUiActions.keydown(editor, Keys.escape()); // to close "Code" menu before opening
-    TinyUiActions.clickOnMenu(editor, codeMenuItemSelector);
+    TinyUiActions.clickOnMenu(hook.editor(), codeMenuItemSelector);
     return Waiter.pTryUntil('Wait for Code menu to open', () => UiFinder.exists(SugarBody.body(), preferencesMenuItemSelector));
   };
 
-  beforeEach(async () => {
-    await pOpenCodeMenu();
-  });
+  const closeCodeMenu = () => {
+    TinyUiActions.keydown(hook.editor(), Keys.escape());
+  };
 
   const assertPreferencesMenuIsNotOpen = () => {
     UiFinder.notExists(SugarBody.body(), '[role="menuitem"]:contains("Settings")');
   };
 
-  it('TINY-7700: Disabled menu item with children should not open on mouse hover', () => {
+  afterEach(() => {
+    closeCodeMenu();
+  });
+
+  it('TINY-7700: Disabled menu item with children should not open on mouse hover', async () => {
+    await pOpenCodeMenu();
     Mouse.hoverOn(SugarBody.body(), '[role="menuitem"]:contains("Preferences")');
     assertPreferencesMenuIsNotOpen();
   });
 
   it('TINY-7700: Disabled menu item with children should not open on keyboard arrow right', async () => {
+    await pOpenCodeMenu();
     await RealKeys.pSendKeysOn(preferencesMenuItemSelector, [ RealKeys.combo({}, 'arrowright') ]);
     assertPreferencesMenuIsNotOpen();
   });
