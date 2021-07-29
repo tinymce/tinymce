@@ -1,32 +1,36 @@
-import { Mouse, RealKeys, UiFinder, Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyUiActions } from '@ephox/mcagar';
+import { Keys, Mouse, RealKeys, UiFinder, Waiter } from '@ephox/agar';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
+import { Editor } from 'tinymce/core/api/PublicApi';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledMenuItemTest', () => {
 
-  before(() => {
-    Theme();
-    TablePlugin();
-  });
+  const verticalAlignMenuItemSelector = '[title="Vertical align"]';
+  const tableMenuItemSelector = '[role="menuitem"]:contains("Table")';
 
-  const settings = {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'table',
     menu: {
       table: { title: 'Table', items: 'inserttable | cell row column | tableclass tablecellclass tablecellvalign tablecellborderwidth tablecellborderstyle tablecaption tablecellbackgroundcolor tablecellbordercolor | advtablesort | tableprops deletetable' }
     },
     menubar: 'table',
+  }, [ Theme, TablePlugin ]);
+
+  const pOpenTableMenu = () => {
+    const editor = hook.editor();
+    TinyUiActions.keydown(editor, Keys.escape()); // to close table menu before opening
+    TinyUiActions.clickOnMenu(editor, tableMenuItemSelector);
+    return Waiter.pTryUntil('Wait for table menu to open', () => UiFinder.exists(SugarBody.body(), verticalAlignMenuItemSelector));
   };
 
-  const pOpenTableMenu = (editor: Editor) => {
-    const tableMenuItemSelector = '[role="menuitem"]:contains("Table")';
-    TinyUiActions.clickOnMenu(editor, tableMenuItemSelector);
-    return Waiter.pTryUntil('Wait for a specific menu to open', () => UiFinder.exists(SugarBody.body(), tableMenuItemSelector));
-  };
+  beforeEach(async () => {
+    await pOpenTableMenu();
+  });
 
   const assertVerticalAlignMenuIsNotOpen = () => {
     UiFinder.notExists(SugarBody.body(), '[role="menuitemcheckbox"]:contains("None")');
@@ -35,21 +39,13 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledMenuItemTest', 
     UiFinder.notExists(SugarBody.body(), '[role="menuitemcheckbox"]:contains("Bottom")');
   };
 
-  it('TINY-7700: Disabled menu item with children should not open on mouse hover', async () => {
-    const editor = await McEditor.pFromSettings(settings);
-    await pOpenTableMenu(editor);
-    const disabledMenuItemSelector = '[role="menuitem"]:contains("Vertical align")';
-    Mouse.hoverOn(SugarBody.body(), disabledMenuItemSelector);
+  it('TINY-7700: Disabled menu item with children should not open on mouse hover', () => {
+    Mouse.hoverOn(SugarBody.body(), '[role="menuitem"]:contains("Vertical align")');
     assertVerticalAlignMenuIsNotOpen();
-    McEditor.remove(editor);
   });
 
   it('TINY-7700: Disabled menu item with children should not open on keyboard arrow right', async () => {
-    const editor = await McEditor.pFromSettings(settings);
-    await pOpenTableMenu(editor);
-    const disabledMenuItemSelector = '[title="Vertical align"]';
-    await RealKeys.pSendKeysOn(disabledMenuItemSelector, [ RealKeys.combo({}, 'arrowright') ]);
+    await RealKeys.pSendKeysOn(verticalAlignMenuItemSelector, [ RealKeys.combo({}, 'arrowright') ]);
     assertVerticalAlignMenuIsNotOpen();
-    McEditor.remove(editor);
   });
 });
