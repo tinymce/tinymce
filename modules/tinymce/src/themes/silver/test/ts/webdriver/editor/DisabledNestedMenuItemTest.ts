@@ -9,12 +9,13 @@ import Theme from 'tinymce/themes/silver/Theme';
 describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemTest', () => {
 
   const preferencesMenuItemSelector = '[title="Preferences"]';
+  const servicesMenuItemSelector = '[title="Services"]';
   const codeMenuItemSelector = '[role="menuitem"]:contains("Code")';
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     menu: {
-      custom: { title: 'Code', items: 'about restart preferences' }
+      custom: { title: 'Code', items: 'about restart preferences services' }
     },
     menubar: 'custom',
     setup: (editor: Editor) => {
@@ -34,6 +35,14 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
           text: 'Settings',
         }]
       });
+
+      editor.ui.registry.addNestedMenuItem('services', {
+        text: 'Services',
+        getSubmenuItems: () => [{
+          type: 'menuitem',
+          text: 'Services Preferences...',
+        }]
+      });
     }
   }, [ Theme ]);
 
@@ -50,6 +59,10 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
     UiFinder.notExists(SugarBody.body(), '[role="menuitem"]:contains("Settings")');
   };
 
+  const assertServicesMenuIsOpen = () => {
+    UiFinder.exists(SugarBody.body(), '[role="menuitem"]:contains("Services Preferences...")');
+  };
+
   afterEach(() => {
     closeCodeMenu();
   });
@@ -64,5 +77,17 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
     await pOpenCodeMenu();
     await RealKeys.pSendKeysOn(preferencesMenuItemSelector, [ RealKeys.combo({}, 'arrowright') ]);
     assertPreferencesMenuIsNotOpen();
+  });
+
+  it('TINY-7700: Enabled menu item with children should open on mouse hover', async () => {
+    await pOpenCodeMenu();
+    Mouse.hoverOn(SugarBody.body(), '[role="menuitem"]:contains("Services")');
+    assertServicesMenuIsOpen();
+  });
+
+  it('TINY-7700: Enabled menu item with children should open on keyboard arrow right', async () => {
+    await pOpenCodeMenu();
+    await RealKeys.pSendKeysOn(servicesMenuItemSelector, [ RealKeys.combo({}, 'arrowright') ]);
+    assertServicesMenuIsOpen();
   });
 });
