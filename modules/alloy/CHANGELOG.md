@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed a number of positioning bugs when using an "inset" layout, especially any that renders at the bottom.
 - `LayoutInset` bubble classes were applied incorrectly, causing the bubble arrows to show on the opposite side.
 - `MakeshiftAnchorSpec` did not extend `HasLayoutAnchorSpec` which meant layouts couldn't be used for makeshift anchors.
+- Disabled nested menu items could still be opened.
 
 ## 8.2.0 - 2021-05-06
 
