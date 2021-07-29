@@ -8,9 +8,9 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemTest', () => {
 
+  const codeMenuItemSelector = '[role="menuitem"]:contains("Code")';
   const preferencesMenuItemSelector = '[title="Preferences"]';
   const servicesMenuItemSelector = '[title="Services"]';
-  const codeMenuItemSelector = '[role="menuitem"]:contains("Code")';
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
@@ -69,7 +69,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
 
   it('TINY-7700: Disabled menu item with children should not open on mouse hover', async () => {
     await pOpenCodeMenu();
-    Mouse.hoverOn(SugarBody.body(), '[role="menuitem"]:contains("Preferences")');
+    Mouse.hoverOn(SugarBody.body(), preferencesMenuItemSelector);
     assertPreferencesMenuIsNotOpen();
   });
 
@@ -81,7 +81,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
 
   it('TINY-7700: Enabled menu item with children should open on mouse hover', async () => {
     await pOpenCodeMenu();
-    Mouse.hoverOn(SugarBody.body(), '[role="menuitem"]:contains("Services")');
+    Mouse.hoverOn(SugarBody.body(), servicesMenuItemSelector);
     assertServicesMenuIsOpen();
   });
 
