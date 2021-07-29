@@ -7,7 +7,7 @@ import { Editor } from 'tinymce/core/api/PublicApi';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledMenuItemTest', () => {
+describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemTest', () => {
 
   const verticalAlignMenuItemSelector = '[title="Vertical align"]';
   const tableMenuItemSelector = '[role="menuitem"]:contains("Table")';
