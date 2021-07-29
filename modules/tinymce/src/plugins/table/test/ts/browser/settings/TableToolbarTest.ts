@@ -18,7 +18,6 @@ describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
 
   const pCreateEditor = (toolbar: string) => McEditor.pFromSettings<Editor>({
     plugins: 'table',
-    toolbar: 'tablecaption',
     table_toolbar: toolbar,
     base_url: '/project/tinymce/js/tinymce'
   });

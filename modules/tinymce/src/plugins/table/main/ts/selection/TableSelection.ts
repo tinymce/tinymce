@@ -32,7 +32,7 @@ const getSelectionStartCell = getSelectionFromSelector<HTMLTableCellElement>('th
 
 const getSelectionStartCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption', false);
 
-const getSelectionEndCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption', false);
+const getSelectionEndCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption', true);
 
 const getCellsFromSelection = (start: SugarElement<Node>, selections: Selections, isRoot?: (el: SugarElement<Node>) => boolean): SugarElement<HTMLTableCellElement>[] =>
   getSelectionStartCell(start, isRoot)
