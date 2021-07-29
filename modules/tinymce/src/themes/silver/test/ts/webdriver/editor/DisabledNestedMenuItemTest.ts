@@ -29,14 +29,10 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
       editor.ui.registry.addNestedMenuItem('preferences', {
         text: 'Preferences',
         disabled: true,
-        getSubmenuItems: () => {
-          return [
-            {
-              type: 'menuitem',
-              text: 'Settings',
-            }
-          ];
-        }
+        getSubmenuItems: () => [{
+          type: 'menuitem',
+          text: 'Settings',
+        }]
       });
     }
   }, [ Theme ]);
