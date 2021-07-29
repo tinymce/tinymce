@@ -1004,8 +1004,152 @@ UnitTest.test('HeaderOperationsTest', () => {
     );
   };
 
+  const testSingleCellHeader = () => {
+    Assertions.checkOld(
+      'Convert single regular cell to header cell',
+      Optional.some({ section: 0, row: 0, column: 1 }),
+      '<table><tbody>' +
+      '<tr><td>A1</td><th>B1</th><td>C1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><tbody>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.makeCellHeader, 0, 0, 1
+    );
+
+    Assertions.checkOld(
+      'Convert single regular cell with colspan to header cell',
+      Optional.some({ section: 0, row: 0, column: 1 }),
+      '<table><tbody>' +
+      '<tr><td>A1</td><th colspan="2">B1</th><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><tbody>' +
+      '<tr><td>A1</td><td colspan="2">B1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.makeCellHeader, 0, 0, 1
+    );
+
+    Assertions.checkOld(
+      'Convert single header cell to regular cell',
+      Optional.some({ section: 1, row: 0, column: 1 }),
+      '<table><thead>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr><th>A2</th><td>B2</td><th>C2</th><th>D2</th></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr><th>A2</th><th>B2</th><th>C2</th><th>D2</th></tr>' +
+      '</tbody></table>',
+
+      TableOperations.unmakeCellHeader, 1, 0, 1
+    );
+
+    Assertions.checkOld(
+      'Convert single header cell with scope to regular cell',
+      Optional.some({ section: 1, row: 0, column: 1 }),
+      '<table><thead>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr><th scope="col">A2</th><td scope="col">B2</td><th scope="col">C2</th><th scope="col">D2</th></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr><th scope="col">A2</th><th scope="col">B2</th><th scope="col">C2</th><th scope="col">D2</th></tr>' +
+      '</tbody></table>',
+
+      TableOperations.unmakeCellHeader, 1, 0, 1
+    );
+  };
+
+  const testMultipleCellHeader = () => {
+    Assertions.checkOldMultiple(
+      'Convert multiple regular cells to header cells',
+      Optional.some({ section: 0, row: 0, column: 1 }),
+      '<table><tbody>' +
+      '<tr><td>A1</td><th>B1</th><th>C1</th><th>D1</th></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><tbody>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.makeCellsHeader, [
+        { section: 0, row: 0, column: 1 },
+        { section: 0, row: 0, column: 2 },
+        { section: 0, row: 0, column: 3 }
+      ]
+    );
+
+    Assertions.checkOldMultiple(
+      'Convert multiple header cells to regular cells',
+      Optional.some({ section: 0, row: 0, column: 2 }),
+      '<table><thead>' +
+      '<tr><th>A1</th><th>B1</th><td>C1</td><td>D1</td></tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+      '<tr><th>A1</th><th>B1</th><th>C1</th><th>D1</th></tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.unmakeCellsHeader, [
+        { section: 0, row: 0, column: 2 },
+        { section: 0, row: 0, column: 3 }
+      ]
+    );
+
+    Assertions.checkOldMultiple(
+      'Convert multiple header cells with scope to regular cell',
+      Optional.some({ section: 1, row: 0, column: 0 }),
+      '<table><thead>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr><td scope="col">A2</td><td scope="col">B2</td><th scope="col">C2</th><th scope="col">D2</th></tr>' +
+      '</tbody></table>',
+
+      '<table><thead>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr><th scope="col">A2</th><th scope="col">B2</th><th scope="col">C2</th><th scope="col">D2</th></tr>' +
+      '</tbody></table>',
+
+      TableOperations.unmakeCellsHeader, [
+        { section: 1, row: 0, column: 0 },
+        { section: 1, row: 0, column: 1 }
+      ]
+    );
+  };
+
   testSingleRowHeader();
   testMultipleRowHeader();
   testSingleColumnHeader();
   testMultipleColumnHeader();
+  testSingleCellHeader();
+  testMultipleCellHeader();
 });
