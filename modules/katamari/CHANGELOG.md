@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - All singletons now have a `get` function that returns an `Optional` value.
 - Made constructing `Optional`s faster by re-implementing them as a class.
 
+### Fixed
+- `Throttler.adaptable` could not re-throttle from within the callback function.
+
 ## 7.2.0 - 2021-05-06
 
 ### Added

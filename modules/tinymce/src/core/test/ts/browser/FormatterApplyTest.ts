@@ -2323,7 +2323,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</li>' +
       '</ul>'
     );
-    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 1 ], 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 1 ], 1);
     editor.formatter.apply('aligncenter');
     assert.equal(getContent(editor),
       '<ul>' +
@@ -2351,7 +2351,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</li>' +
       '</ol>'
     );
-    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 0 ], 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 0 ], 1);
     editor.formatter.apply('aligncenter');
     assert.equal(getContent(editor),
       '<ol>' +
@@ -2363,6 +2363,34 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
           '</ol>' +
         '</li>' +
       '</ol>'
+    );
+  });
+
+  it('TINY-7393: Apply aligncenter to lists with other formatting', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>a</li>' +
+        '<li><strong>b</strong><br />' +
+          '<ul>' +
+            '<li>c</li>' +
+            '<li>d</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 1 ], 1);
+    editor.formatter.apply('aligncenter');
+    assert.equal(getContent(editor),
+      '<ul>' +
+        '<li style="text-align: center;">a</li>' +
+        '<li style="text-align: center;"><strong>b</strong><br />' +
+          '<ul>' +
+            '<li style="text-align: center;">c</li>' +
+            '<li style="text-align: center;">d</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
     );
   });
 

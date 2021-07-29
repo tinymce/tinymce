@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Optionals, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
@@ -13,7 +13,7 @@ import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as Whitespace from '../text/Whitespace';
-import { ApplyFormat, BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, SelectorFormat } from './FormatTypes';
+import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
 
@@ -23,17 +23,18 @@ const isInlineBlock = (node: Node): boolean => {
 
 const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range) => {
   const offset = rng.startOffset;
-  let container = rng.startContainer, walker, node, nodes;
+  let container = rng.startContainer;
 
-  if (rng.startContainer === rng.endContainer) {
-    if (isInlineBlock(rng.startContainer.childNodes[rng.startOffset])) {
+  if (container === rng.endContainer) {
+    if (isInlineBlock(container.childNodes[offset])) {
       return;
     }
   }
 
   // Move startContainer/startOffset in to a suitable node
-  if (container.nodeType === 1) {
-    nodes = container.childNodes;
+  if (NodeType.isElement(container)) {
+    const nodes = container.childNodes;
+    let walker: DomTreeWalker;
     if (offset < nodes.length) {
       container = nodes[offset];
       walker = new DomTreeWalker(container, dom.getParent(container, dom.isBlock));
@@ -43,8 +44,8 @@ const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range) => {
       walker.next(true);
     }
 
-    for (node = walker.current(); node; node = walker.next()) {
-      if (node.nodeType === 3 && !isWhiteSpaceNode(node)) {
+    for (let node = walker.current(); node; node = walker.next()) {
+      if (NodeType.isText(node) && !isWhiteSpaceNode(node)) {
         rng.setStart(node, 0);
         selection.setRng(rng);
 
@@ -68,7 +69,7 @@ const getNonWhiteSpaceSibling = (node: Node, next?: boolean, inc?: boolean) => {
     const nextName = next ? 'nextSibling' : 'previousSibling';
 
     for (node = inc ? node : node[nextName]; node; node = node[nextName]) {
-      if (node.nodeType === 1 || !isWhiteSpaceNode(node)) {
+      if (NodeType.isElement(node) || !isWhiteSpaceNode(node)) {
         return node;
       }
     }
@@ -109,10 +110,10 @@ const isEmptyTextNode = (node: Node | null) => {
  * @param {Object} vars Name/value array with variables to replace.
  * @return {String} New value with replaced variables.
  */
-const replaceVars = (value: FormatAttrOrStyleValue, vars: FormatVars): string => {
-  if (typeof value !== 'string') {
+const replaceVars = (value: FormatAttrOrStyleValue, vars?: FormatVars): string => {
+  if (Type.isFunction(value)) {
     value = value(vars);
-  } else if (vars) {
+  } else if (Type.isNonNullable(vars)) {
     value = value.replace(/%(\w+)/g, (str, name) => {
       return vars[name] || str;
     });
@@ -206,18 +207,20 @@ const areSimilarFormats = (editor: Editor, formatName: string, otherFormatName: 
   });
 };
 
-const isBlockFormat = (format: ApplyFormat): format is BlockFormat =>
+const isBlockFormat = (format: Format): format is BlockFormat =>
   Obj.hasNonNullableKey(format as any, 'block');
 
-// TODO: is this correct? As a "mixed" format has both `selector` and `inline` properties
-const isSelectorFormat = (format: ApplyFormat): format is SelectorFormat =>
+const isSelectorFormat = (format: Format): format is SelectorFormat =>
   Obj.hasNonNullableKey(format as any, 'selector');
 
-// TODO: is this correct? As a "mixed" format has both `selector` and `inline` properties
-const isInlineFormat = (format: ApplyFormat): format is InlineFormat =>
+const isInlineFormat = (format: Format): format is InlineFormat =>
   Obj.hasNonNullableKey(format as any, 'inline');
 
-const hasBlockChildren = (dom: DOMUtils, elm: Node) => Arr.exists(elm.childNodes, dom.isBlock);
+const isMixedFormat = (format: Format): format is MixedFormat =>
+  isSelectorFormat(format) && isInlineFormat(format) && Optionals.is(Obj.get(format as any, 'mixed'), true);
+
+const shouldExpandToSelector = (format: Format) =>
+  isSelectorFormat(format) && format.expand !== false && !isInlineFormat(format);
 
 export {
   isNode,
@@ -239,5 +242,6 @@ export {
   isSelectorFormat,
   isInlineFormat,
   isBlockFormat,
-  hasBlockChildren
+  isMixedFormat,
+  shouldExpandToSelector
 };

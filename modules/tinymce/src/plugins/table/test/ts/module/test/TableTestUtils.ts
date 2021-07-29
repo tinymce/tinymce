@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Cursors, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Obj } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyUiActions } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, Checked, Class, Html, SelectorFilter, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -180,6 +180,29 @@ const pDragResizeBar = async (editor: Editor, rowOrCol: 'row' | 'column', index:
   Mouse.mouseMove(blocker);
   Mouse.mouseMoveTo(blocker, dx, dy);
   Mouse.mouseUp(blocker);
+};
+
+// The critical part is the target element as this is what Darwin (MouseSelection.ts) uses to determine the fake selection
+const selectWithMouse = (start: SugarElement<Element>, end: SugarElement<Element>): void => {
+  Mouse.mouseDown(start, { button: 0 });
+  Mouse.mouseOver(end, { button: 0 });
+  Mouse.mouseUp(end, { button: 0 });
+};
+
+// Set up to mock what the listeners are looking for in InputHandlers.ts - keyup()
+const selectWithKeyboard = (editor: Editor, cursorRange: Cursors.CursorPath, keyDirection: number): void => {
+  const { startPath, soffset, finishPath, foffset } = cursorRange;
+  TinySelections.setSelection(editor, startPath, soffset, finishPath, foffset);
+  TinyContentActions.keydown(editor, keyDirection, { shiftKey: true });
+  TinyContentActions.keyup(editor, keyDirection, { shiftKey: true });
+};
+
+const getSelectedCells = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
+  SelectorFilter.descendants(TinyDom.body(editor), 'td[data-mce-selected],th[data-mce-selected]');
+
+const assertSelectedCells = (editor: Editor, expectedSelectedCells: string[], mapper: (cell: SugarElement<HTMLTableCellElement>) => string): void => {
+  const selectedCells = Arr.map(getSelectedCells(editor), mapper);
+  assert.deepEqual(selectedCells, expectedSelectedCells);
 };
 
 const getCellWidth = (editor: Editor, table: SugarElement<HTMLTableElement>, rowNumber: number, columnNumber: number): WidthData => {
@@ -449,6 +472,10 @@ export {
   splitCells,
   pDragHandle,
   pDragResizeBar,
+  selectWithKeyboard,
+  selectWithMouse,
+  getSelectedCells,
+  assertSelectedCells,
   getWidths,
   insertColumnBefore,
   insertColumnAfter,

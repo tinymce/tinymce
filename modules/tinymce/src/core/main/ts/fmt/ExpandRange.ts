@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional, Type } from '@ephox/katamari';
+import { Optional, Strings, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import TextSeeker from '../api/dom/TextSeeker';
@@ -15,6 +15,7 @@ import * as NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
+import { Format } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 type Sibling = 'previousSibling' | 'nextSibling';
@@ -95,22 +96,22 @@ const findWordEndPoint = (
   );
 };
 
-const findSelectorEndPoint = (dom: DOMUtils, format, rng: Range, container: Node, siblingName: Sibling) => {
-  if (NodeType.isText(container) && container.nodeValue.length === 0 && container[siblingName]) {
+const findSelectorEndPoint = (dom: DOMUtils, formatList: Format[], rng: Range, container: Node, siblingName: Sibling) => {
+  if (NodeType.isText(container) && Strings.isEmpty(container.data) && container[siblingName]) {
     container = container[siblingName];
   }
 
   const parents = getParents(dom, container);
   for (let i = 0; i < parents.length; i++) {
-    for (let y = 0; y < format.length; y++) {
-      const curFormat = format[y];
+    for (let y = 0; y < formatList.length; y++) {
+      const curFormat = formatList[y];
 
       // If collapsed state is set then skip formats that doesn't match that
-      if ('collapsed' in curFormat && curFormat.collapsed !== rng.collapsed) {
+      if (Type.isNonNullable(curFormat.collapsed) && curFormat.collapsed !== rng.collapsed) {
         continue;
       }
 
-      if (dom.is(parents[i], curFormat.selector)) {
+      if (FormatUtils.isSelectorFormat(curFormat) && dom.is(parents[i], curFormat.selector)) {
         return parents[i];
       }
     }
@@ -119,14 +120,15 @@ const findSelectorEndPoint = (dom: DOMUtils, format, rng: Range, container: Node
   return container;
 };
 
-const findBlockEndPoint = (editor: Editor, format, container: Node, siblingName: Sibling) => {
-  let node: Node;
+const findBlockEndPoint = (editor: Editor, formatList: Format[], container: Node, siblingName: Sibling) => {
+  let node = container;
   const dom = editor.dom;
   const root = dom.getRoot();
+  const format = formatList[0];
 
   // Expand to block of similar type
-  if (!format[0].wrapper) {
-    node = dom.getParent(container, format[0].block, root);
+  if (FormatUtils.isBlockFormat(format) && !format.wrapper) {
+    node = dom.getParent(container, format.block, root);
   }
 
   // Expand to first wrappable block element or any block element
@@ -141,7 +143,7 @@ const findBlockEndPoint = (editor: Editor, format, container: Node, siblingName:
   }
 
   // Exclude inner lists from wrapping
-  if (node && format[0].wrapper) {
+  if (node && FormatUtils.isBlockFormat(format) && format.wrapper) {
     node = getParents(dom, node, 'ul,ol').reverse()[0] || node;
   }
 
@@ -180,13 +182,12 @@ const isAtBlockBoundary = (dom: DOMUtils, root: Node, container: Node, siblingNa
 // If a sibling is found then the container is returned
 const findParentContainer = (
   dom: DOMUtils,
-  format,
+  formatList: Format[],
   container: Node,
   offset: number,
   start: boolean
 ) => {
   let parent = container;
-  let sibling: Node;
 
   const siblingName = start ? 'previousSibling' : 'nextSibling';
   const root = dom.getRoot();
@@ -201,12 +202,12 @@ const findParentContainer = (
   /* eslint no-constant-condition:0 */
   while (true) {
     // Stop expanding on block elements
-    if (!format[0].block_expand && dom.isBlock(parent)) {
+    if (!formatList[0].block_expand && dom.isBlock(parent)) {
       return parent;
     }
 
     // Walk left/right
-    for (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
+    for (let sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
       // Allow spaces if not at the edge of a block element, as the spaces won't have been collapsed
       const allowSpaces = NodeType.isText(sibling) && !isAtBlockBoundary(dom, root, sibling, siblingName);
       if (!isBookmarkNode(sibling) && !isBogusBr(sibling) && !isWhiteSpaceNode(sibling, allowSpaces)) {
@@ -228,12 +229,10 @@ const findParentContainer = (
 
 const isSelfOrParentBookmark = (container: Node) => isBookmarkNode(container.parentNode) || isBookmarkNode(container);
 
-const expandRng = (editor: Editor, rng: Range, format, includeTrailingSpace: boolean = false): RangeLikeObject => {
-  let startContainer = rng.startContainer,
-    startOffset = rng.startOffset,
-    endContainer = rng.endContainer,
-    endOffset = rng.endOffset;
+const expandRng = (editor: Editor, rng: Range, formatList: Format[], includeTrailingSpace: boolean = false): RangeLikeObject => {
+  let { startContainer, startOffset, endContainer, endOffset } = rng;
   const dom = editor.dom;
+  const format = formatList[0];
 
   // If index based start position then resolve it
   if (NodeType.isElement(startContainer) && startContainer.hasChildNodes()) {
@@ -309,37 +308,37 @@ const expandRng = (editor: Editor, rng: Range, format, includeTrailingSpace: boo
   // Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!
   // This will reduce the number of wrapper elements that needs to be created
   // Move start point up the tree
-  if (format[0].inline || format[0].block_expand) {
-    if (!format[0].inline || (!NodeType.isText(startContainer) || startOffset === 0)) {
-      startContainer = findParentContainer(dom, format, startContainer, startOffset, true);
+  if (FormatUtils.isInlineFormat(format) || format.block_expand) {
+    if (!FormatUtils.isInlineFormat(format) || (!NodeType.isText(startContainer) || startOffset === 0)) {
+      startContainer = findParentContainer(dom, formatList, startContainer, startOffset, true);
     }
 
-    if (!format[0].inline || (!NodeType.isText(endContainer) || endOffset === endContainer.nodeValue.length)) {
-      endContainer = findParentContainer(dom, format, endContainer, endOffset, false);
+    if (!FormatUtils.isInlineFormat(format) || (!NodeType.isText(endContainer) || endOffset === endContainer.nodeValue.length)) {
+      endContainer = findParentContainer(dom, formatList, endContainer, endOffset, false);
     }
   }
 
   // Expand start/end container to matching selector
-  if (format[0].selector && format[0].expand !== false && !format[0].inline) {
+  if (FormatUtils.shouldExpandToSelector(format)) {
     // Find new startContainer/endContainer if there is better one
-    startContainer = findSelectorEndPoint(dom, format, rng, startContainer, 'previousSibling');
-    endContainer = findSelectorEndPoint(dom, format, rng, endContainer, 'nextSibling');
+    startContainer = findSelectorEndPoint(dom, formatList, rng, startContainer, 'previousSibling');
+    endContainer = findSelectorEndPoint(dom, formatList, rng, endContainer, 'nextSibling');
   }
 
   // Expand start/end container to matching block element or text node
-  if (format[0].block || format[0].selector) {
+  if (FormatUtils.isBlockFormat(format) || FormatUtils.isSelectorFormat(format)) {
     // Find new startContainer/endContainer if there is better one
-    startContainer = findBlockEndPoint(editor, format, startContainer, 'previousSibling');
-    endContainer = findBlockEndPoint(editor, format, endContainer, 'nextSibling');
+    startContainer = findBlockEndPoint(editor, formatList, startContainer, 'previousSibling');
+    endContainer = findBlockEndPoint(editor, formatList, endContainer, 'nextSibling');
 
     // Non block element then try to expand up the leaf
-    if (format[0].block) {
+    if (FormatUtils.isBlockFormat(format)) {
       if (!dom.isBlock(startContainer)) {
-        startContainer = findParentContainer(dom, format, startContainer, startOffset, true);
+        startContainer = findParentContainer(dom, formatList, startContainer, startOffset, true);
       }
 
       if (!dom.isBlock(endContainer)) {
-        endContainer = findParentContainer(dom, format, endContainer, endOffset, false);
+        endContainer = findParentContainer(dom, formatList, endContainer, endOffset, false);
       }
     }
   }

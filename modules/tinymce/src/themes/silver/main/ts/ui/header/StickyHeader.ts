@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
-import { Arr, Cell, Optional, Result } from '@ephox/katamari';
+import { Arr, Optional, Result, Singleton } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -184,7 +184,7 @@ const getIframeBehaviours = () => [
 ];
 
 const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
-  const focusedElm = Cell<Optional<SugarElement>>(Optional.none());
+  const focusedElm = Singleton.value<SugarElement>();
   const lazySink = sharedBackstage.getSink;
 
   const runOnSinkElement = (f: (sink: SugarElement) => void) => {
@@ -223,11 +223,11 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           // Restore focus and reset the stored focused element
           focusedElm.get().each((elem) => {
             restoreFocus(comp.element, elem);
-            focusedElm.set(Optional.none());
+            focusedElm.clear();
           });
         },
         onHide: (comp) => {
-          focusedElm.set(findFocusedElem(comp.element, lazySink));
+          findFocusedElem(comp.element, lazySink).fold(focusedElm.clear, focusedElm.set);
           runOnSinkElement((elem) => updateSinkVisibility(elem, false));
         },
         onHidden: () => {

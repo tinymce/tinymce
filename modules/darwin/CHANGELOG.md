@@ -8,3 +8,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
+- Changed the `MouseSelection` and `KeySelection` fake selection logic to only apply if more than one cell of the same table is selected.

@@ -155,7 +155,11 @@ const EditorUpload = (editor: Editor): EditorUpload => {
 
           if (uploadInfo.status && Settings.shouldReplaceBlobUris(editor)) {
             blobCache.removeByUri(image.src);
-            replaceImageUriInView(image, uploadInfo.url);
+            if (Rtc.isRtc(editor)) {
+              // RTC handles replacing the image URL through callback events
+            } else {
+              replaceImageUriInView(image, uploadInfo.url);
+            }
           } else if (uploadInfo.error) {
             if (uploadInfo.error.options.remove) {
               replaceUrlInUndoStack(image.getAttribute('src'), Env.transparentSrc);
@@ -179,7 +183,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
 
         if (imagesToRemove.length > 0) {
           if (Rtc.isRtc(editor)) {
-            // To be replaced by RTC API to mirror DOM changes when such is implemented.
+            // TODO TINY-7735 replace with RTC API to remove images
             console.error('Removing images on failed uploads is currently unsupported for RTC'); // eslint-disable-line no-console
           } else {
             editor.undoManager.transact(() => {
@@ -239,11 +243,15 @@ const EditorUpload = (editor: Editor): EditorUpload => {
         return true;
       });
 
-      Arr.each(result, (resultItem) => {
-        replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
-        resultItem.image.src = resultItem.blobInfo.blobUri();
-        resultItem.image.removeAttribute('data-mce-src');
-      });
+      if (Rtc.isRtc(editor)) {
+        // RTC is set up so that image sources are only ever blob
+      } else {
+        Arr.each(result, (resultItem) => {
+          replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
+          resultItem.image.src = resultItem.blobInfo.blobUri();
+          resultItem.image.removeAttribute('data-mce-src');
+        });
+      }
 
       return result;
     }));

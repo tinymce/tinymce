@@ -90,14 +90,14 @@ describe('BounderToolbuttonTest', () => {
       north,
       east,
       west,
-      innerSouthwest: notImplemented,
-      innerSoutheast: notImplemented,
-      innerSouth: notImplemented,
-      innerNorthwest: notImplemented,
-      innerNortheast: notImplemented,
-      innerNorth: notImplemented,
-      innerWest: notImplemented,
-      innerEast: notImplemented
+      insetSouthwest: notImplemented,
+      insetSoutheast: notImplemented,
+      insetSouth: notImplemented,
+      insetNorthwest: notImplemented,
+      insetNortheast: notImplemented,
+      insetNorth: notImplemented,
+      insetWest: notImplemented,
+      insetEast: notImplemented
     };
   };
 

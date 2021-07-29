@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Replacing } from '@ephox/alloy';
-import { Arr, Cell, Optional, Type } from '@ephox/katamari';
+import { Arr, Cell, Optional, Singleton, Type } from '@ephox/katamari';
 import { Attribute, Class, Css, Focus, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
@@ -125,7 +125,7 @@ const isPasteBinTarget = (event: EditorEvent<ExecCommandEvent> | EventUtilsEvent
 
 const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared) => {
   const throbberState = Cell<boolean>(false);
-  const timer = Cell<Optional<number>>(Optional.none());
+  const timer = Singleton.value<number>();
 
   const stealFocus = (e: EditorEvent<ExecCommandEvent> | EventUtilsEvent<FocusEvent>) => {
     if (throbberState.get() && !isPasteBinTarget(e)) {
@@ -159,13 +159,13 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
   };
 
   editor.on('ProgressState', (e) => {
-    timer.get().each(Delay.clearTimeout);
+    timer.on(Delay.clearTimeout);
     if (Type.isNumber(e.time)) {
       const timerId = Delay.setEditorTimeout(editor, () => toggle(e.state), e.time);
-      timer.set(Optional.some(timerId));
+      timer.set(timerId);
     } else {
       toggle(e.state);
-      timer.set(Optional.none());
+      timer.clear();
     }
   });
 };

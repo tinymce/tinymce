@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, Menu, SystemEvents } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Arr, Cell, Optional, Throttler, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Optional, Singleton, Throttler, Thunk } from '@ephox/katamari';
 import { Remove, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -29,7 +29,7 @@ interface ActiveAutocompleter {
 }
 
 const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
-  const activeAutocompleter = Cell<Optional<ActiveAutocompleter>>(Optional.none());
+  const activeAutocompleter = Singleton.value<ActiveAutocompleter>();
   const processingAction = Cell<boolean>(false);
 
   const autocompleter = GuiFactory.build(
@@ -66,7 +66,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
 
       // Hide the menu and reset
       hideIfNecessary();
-      activeAutocompleter.set(Optional.none());
+      activeAutocompleter.clear();
       processingAction.set(false);
     }
   };
@@ -122,11 +122,11 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
       const wrapper = AutocompleteTag.create(editor, context.range);
 
       // store the element/context
-      activeAutocompleter.set(Optional.some({
+      activeAutocompleter.set({
         triggerChar: context.triggerChar,
         element: wrapper,
         matchLength: context.text.length
-      }));
+      });
       processingAction.set(false);
     }
   };
@@ -140,7 +140,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     InlineView.showAt(
       autocompleter,
       {
-        anchor: 'node',
+        type: 'node',
         root: SugarElement.fromDom(editor.getBody()),
         node: Optional.from(ac.element)
       },

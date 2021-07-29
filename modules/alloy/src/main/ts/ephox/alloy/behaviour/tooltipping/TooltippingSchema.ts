@@ -4,6 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import * as Layout from '../../positioning/layout/Layout';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
 export default [
   FieldSchema.required('lazySink'),
@@ -12,8 +13,8 @@ export default [
   FieldSchema.defaulted('tooltipComponents', []),
   FieldSchema.defaulted('delay', 300),
   FieldSchema.defaultedStringEnum('mode', 'normal', [ 'normal', 'follow-highlight' ]),
-  FieldSchema.defaulted('anchor', (comp: AlloyComponent) => ({
-    anchor: 'hotspot',
+  FieldSchema.defaulted('anchor', (comp: AlloyComponent): AnchorSpec => ({
+    type: 'hotspot',
     hotspot: comp,
     layouts: {
       onLtr: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]),

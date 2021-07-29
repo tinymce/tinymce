@@ -42,7 +42,7 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
 
   }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((hotspot) => ({
-      anchor: 'hotspot',
+      type: 'hotspot',
       hotspot
     }));
 

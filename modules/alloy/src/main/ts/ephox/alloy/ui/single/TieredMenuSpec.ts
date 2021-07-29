@@ -1,4 +1,4 @@
-import { Arr, Cell, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals, Singleton } from '@ephox/katamari';
 import { Attribute, Class, Classes, SelectorFilter, SelectorFind, SugarBody } from '@ephox/sugar';
 
 import * as EditableFields from '../../alien/EditableFields';
@@ -37,7 +37,7 @@ export interface MenuNotBuilt {
 }
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _rawUiSpec) => {
-  const submenuParentItems: Cell<Optional<Record<string, AlloyComponent>>> = Cell(Optional.none());
+  const submenuParentItems = Singleton.value<Record<string, AlloyComponent>>();
 
   const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => Obj.map(menus, (spec, name) => {
 
@@ -120,7 +120,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
         r[key] = itemComp;
       });
     });
-    submenuParentItems.set(Optional.some(r));
+    submenuParentItems.set(r);
     return r;
   });
 

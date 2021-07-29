@@ -42,10 +42,10 @@ interface RtcRuntimeApi {
   };
   formatter: {
     canApply: (format: string) => boolean;
-    match: (format: string, vars: Record<string, string>) => boolean;
+    match: (format: string, vars: Record<string, string>, similar?: boolean) => boolean;
     matchAll: () => string[];
     matchNode: () => Format | undefined;
-    closest: (formats: string) => string;
+    closest: (formats: string[]) => string;
     apply: (format: string, vars: Record<string, string>) => void;
     remove: (format: string, vars: Record<string, string>) => void;
     toggle: (format: string, vars: Record<string, string>) => void;
@@ -141,7 +141,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
       Operations.extra(editor, undoManager, index, callback1, callback2)
   },
   formatter: {
-    match: (name, vars?, node?) => MatchFormat.match(editor, name, vars, node),
+    match: (name, vars?, node?, similar?) => MatchFormat.match(editor, name, vars, node, similar),
     matchAll: (names, vars) => MatchFormat.matchAll(editor, names, vars),
     matchNode: (node, name, vars, similar) => MatchFormat.matchNode(editor, node, name, vars, similar),
     canApply: (name) => MatchFormat.canApply(editor, name),
@@ -184,7 +184,7 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
       extra: (_undoManager, _index, callback1, callback2) => undoManager.extra(callback1, callback2)
     },
     formatter: {
-      match: (name, vars?, _node?) => formatter.match(name, defaultVars(vars)),
+      match: (name, vars?, _node?, similar?) => formatter.match(name, defaultVars(vars), similar),
       matchAll: formatter.matchAll,
       matchNode: formatter.matchNode,
       canApply: (name) => formatter.canApply(name),
@@ -352,7 +352,9 @@ export const matchFormat = (
   editor: Editor,
   name: string,
   vars?: Record<string, string>,
-  node?: Node): boolean => getRtcInstanceWithError(editor).formatter.match(name, vars, node);
+  node?: Node,
+  similar?: boolean
+): boolean => getRtcInstanceWithError(editor).formatter.match(name, vars, node, similar);
 
 export const matchAllFormats = (
   editor: Editor,
@@ -372,7 +374,7 @@ export const canApplyFormat = (
 
 export const closestFormat = (
   editor: Editor,
-  names: string): string => getRtcInstanceWithError(editor).formatter.closest(names);
+  names: string[]): string => getRtcInstanceWithError(editor).formatter.closest(names);
 
 export const applyFormat = (
   editor: Editor,

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Bubble, InlineView, Layout, LayoutInside, MaxHeight, MaxWidth } from '@ephox/alloy';
+import { AlloyComponent, Bubble, InlineView, Layout, LayoutInset, MaxHeight, MaxWidth } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SimSelection, WindowSelection } from '@ephox/sugar';
@@ -27,9 +27,9 @@ type MenuItems = string | Array<string | SingleMenuItemSpec>;
 
 const layouts = {
   onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
+    LayoutInset.north, LayoutInset.south, LayoutInset.northeast, LayoutInset.southeast, LayoutInset.northwest, LayoutInset.southwest ],
   onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
+    LayoutInset.north, LayoutInset.south, LayoutInset.northwest, LayoutInset.southwest, LayoutInset.northeast, LayoutInset.southeast ]
 };
 
 const bubbleSize = 12;
@@ -115,7 +115,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
       },
       data: menuData,
       type: 'horizontal'
-    }, () => Optional.some(getContextToolbarBounds(editor, backstage.shared)));
+    }, () => Optional.some(getContextToolbarBounds(editor, backstage.shared, useNodeAnchor ? 'node' : 'selection')));
 
     // Ensure the context toolbar is hidden
     editor.fire(hideContextToolbarEvent);

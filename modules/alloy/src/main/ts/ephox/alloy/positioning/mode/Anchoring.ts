@@ -12,7 +12,7 @@ export type AnchorPlacement =
   (comp: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent) => void;
 
 export interface CommonAnchorSpec {
-  anchor: string;
+  type: string;
 }
 
 export type AnchorSpec = SelectionAnchorSpec | HotspotAnchorSpec | SubmenuAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec;
@@ -51,7 +51,7 @@ export interface HasLayoutAnchorSpec {
 }
 
 export interface SelectionAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
-  anchor: 'selection';
+  type: 'selection';
   getSelection?: () => Optional<SimRange>;
   root: SugarElement;
   bubble?: Bubble;
@@ -68,7 +68,7 @@ export interface SelectionAnchor extends AnchorDetail<SelectionAnchor>, HasLayou
 }
 
 export interface NodeAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
-  anchor: 'node';
+  type: 'node';
   node: Optional<SugarElement>;
   root: SugarElement;
   bubble?: Bubble;
@@ -85,7 +85,7 @@ export interface NodeAnchor extends AnchorDetail<NodeAnchor>, HasLayoutAnchor {
 }
 
 export interface HotspotAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
-  anchor: 'hotspot';
+  type: 'hotspot';
   hotspot: AlloyComponent;
   bubble?: Bubble;
   overrides?: AnchorOverrides;
@@ -98,7 +98,7 @@ export interface HotspotAnchor extends AnchorDetail<HotspotAnchor>, HasLayoutAnc
 }
 
 export interface SubmenuAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
-  anchor: 'submenu';
+  type: 'submenu';
   overrides?: AnchorOverrides;
   item: AlloyComponent;
 }
@@ -108,8 +108,8 @@ export interface SubmenuAnchor extends AnchorDetail<SubmenuAnchor>, HasLayoutAnc
   overrides: AnchorOverrides;
 }
 
-export interface MakeshiftAnchorSpec extends CommonAnchorSpec {
-  anchor: 'makeshift';
+export interface MakeshiftAnchorSpec extends CommonAnchorSpec, HasLayoutAnchorSpec {
+  type: 'makeshift';
   x: number;
   y: number;
   height?: number;

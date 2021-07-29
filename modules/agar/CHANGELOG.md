@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `DataTransfer.clearData` API threw an exception when no format was provided.
 - The `Keyboard` module generated fake keys was missing the `charCode` property for `keypress` events.
 
+## 5.4.0 - 2021-07-19
+
+### Improved
+- `UiControls.setValue` now takes an optional `eventName` to fire after changing the value.
+
 ## 5.3.0 - 2021-05-06
 
 ### Added

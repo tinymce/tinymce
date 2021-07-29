@@ -11,7 +11,7 @@ import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableC
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
-import { applyTableCellStyle, filterNoneItem, generateColorSelector, generateItemsCallback } from './UiUtils';
+import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, generateColorSelector, generateItemsCallback } from './UiUtils';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -262,6 +262,20 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Border color',
     fetch: (callback) => callback(generateColorSelector(editor, tableCellBorderColors, 'border-color')),
     onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addToggleButton('tablerowheader', {
+    tooltip: 'Row header',
+    icon: 'table-top-header',
+    onAction: changeRowHeader(editor),
+    onSetup: selectionTargets.onSetupTableRowHeaders
+  });
+
+  editor.ui.registry.addToggleButton('tablecolheader', {
+    tooltip: 'Column header',
+    icon: 'table-left-header',
+    onAction: changeColumnHeader(editor),
+    onSetup: selectionTargets.onSetupTableColumnHeaders
   });
 };
 

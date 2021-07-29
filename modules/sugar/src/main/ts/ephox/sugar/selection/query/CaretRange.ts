@@ -6,10 +6,20 @@ import { SimRange } from '../../api/selection/SimRange';
 import * as ContainerPoint from './ContainerPoint';
 import * as EdgePoint from './EdgePoint';
 
-declare const document: any;
+interface CaretPosition {
+  readonly offsetNode: Node | null;
+  readonly offset: number;
+}
+
+interface VendorDocument {
+  readonly caretPositionFromPoint?: (x: number, y: number) => CaretPosition | null;
+  readonly caretRangeFromPoint?: (x: number, y: number) => Range | null;
+}
+
+declare const document: VendorDocument;
 
 const caretPositionFromPoint = (doc: SugarElement<Document>, x: number, y: number): Optional<Range> =>
-  Optional.from((doc.dom as any).caretPositionFromPoint(x, y))
+  Optional.from((doc.dom as VendorDocument).caretPositionFromPoint?.(x, y))
     .bind((pos) => {
       // It turns out that Firefox can return null for pos.offsetNode
       if (pos.offsetNode === null) {
@@ -22,7 +32,7 @@ const caretPositionFromPoint = (doc: SugarElement<Document>, x: number, y: numbe
     });
 
 const caretRangeFromPoint = (doc: SugarElement<Document>, x: number, y: number): Optional<Range> =>
-  Optional.from(doc.dom.caretRangeFromPoint(x, y));
+  Optional.from((doc.dom as VendorDocument).caretRangeFromPoint?.(x, y));
 
 const searchTextNodes = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number): Optional<Range> => {
   const r = doc.dom.createRange();

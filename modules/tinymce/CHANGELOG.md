@@ -22,18 +22,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `language` menu item and toolbar button to add `lang` attributes to content, with an accompanying `content_langs` setting to specify the languages available #TINY-6149
 - A new `lang` format is now available that can be used with `editor.formatter`, or applied with the `Lang` editor command #TINY-6149
 - Added new plugin commands: `mceEmoticons` (emoticons), `mceWordCount` (wordcount), and `mceTemplate` (template) #TINY-7619
+- Added a new `tablerowheader` toolbar button and menu item to toggle the header state of row cells #TINY-7478
+- Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482
+- Added a new `iframe_aria_text` setting to set the iframe title attribute #TINY-1264
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
 - Improved the performance when rendering UI components #TINY-7572
 - When scrolling, the context toolbar will stick to where it was previously for large elements, such as tables #TINY-7545
 - The context toolbar will now move out of the way when it overlaps with the selection, such as in table cells #TINY-7192
+- The `formatter.match` API can now take an optional `similar` parameter to check if the format partial matches #TINY-7712
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents #TINY-7249
 - Changed `emoticons`, `wordcount`, `code`, `codesample`, and `template` plugins to open dialogs using commands #TINY-7619
+- The context toolbar will no longer show an arrow when it overlaps the content, such as in table cells #TINY-7665
+- The context toolbar will no longer overlap the statusbar for toolbars using `node` or `selection` positions #TINY-7666
 
 ### Fixed
+- The `dir` attribute was being incorrectly applied to list items #TINY-4589
 - `editor.fire` was incorrectly mutating the original `args` provided #TINY-3254
 - The `SetContent` event contained the incorrect `content` when using the `editor.selection.setContent()` API #TINY-3254
 - The editor content could be edited after calling `setProgressState(true)` in iframe mode #TINY-7373
@@ -41,12 +48,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Flash of unstyled content while loading the editor because the content css was loaded after the editor content was rendered #TINY-7249
 - Only table content would be deleted when partially selecting a table and content outside the table #TINY-6044
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
+- The table cell selection handling was incorrect in some cases when dealing with nested tables #TINY-6298
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
 - HTML comments with mismatched quotes were parsed incorrectly under certain circumstances #TINY-7589
 - Links in notification text did not show the correct mouse pointer #TINY-7661
+- Applying selector formats would sometimes not apply the format correctly to elements in a list #TINY-7393
 - The formatter match APIs were incorrectly returning false for formats that specified an attribute or style should be removed from an element #TINY-6149
 - The type signature on `editor.formatter.matchNode` had the wrong return type (was `boolean` but should have been `Formatter | undefined`) #TINY-6149
+- Menus and context menus were not closed when clicking into a different editor #TINY-7399
+- Using the Tab key to navigate into the editor on IE 11 would incorrectly focus the toolbar #TINY-3707
+- The editor selection could be placed in an incorrect location when undoing or redoing changes in a document containing `contenteditable="false"` elements #TINY-7663
+- Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
+
+### Deprecated
+- The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260
 
 ## 5.8.2 - 2021-06-23
 

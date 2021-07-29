@@ -347,7 +347,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         },
         buttonBehaviours: Behaviour.derive([
           DisablingConfigs.splitButton(sharedBackstage.providers.isDisabled),
-          ReadOnly.receivingConfig()
+          ReadOnly.receivingConfig(),
+          Icons.addFocusableBehaviour()
         ])
       }),
       AlloySplitDropdown.parts['aria-descriptor']({

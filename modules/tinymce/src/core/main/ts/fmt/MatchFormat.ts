@@ -5,23 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
-import { Format, FormatVars, SelectorFormat } from './FormatTypes';
+import { Format, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 const isEq = FormatUtils.isEq;
 
 const matchesUnInheritedFormatSelector = (ed: Editor, node: Node, name: string) => {
-  // TODO: Is this safe? it doesn't look like it is this could be a block or inline format
-  const formatList = ed.formatter.get(name) as SelectorFormat[];
+  const formatList = ed.formatter.get(name);
 
   if (formatList) {
     for (let i = 0; i < formatList.length; i++) {
-      if (formatList[i].inherit === false && ed.dom.is(node, formatList[i].selector)) {
+      const format = formatList[i];
+      if (FormatUtils.isSelectorFormat(format) && format.inherit === false && ed.dom.is(node, format.selector)) {
         return true;
       }
     }
@@ -30,7 +30,7 @@ const matchesUnInheritedFormatSelector = (ed: Editor, node: Node, name: string) 
   return false;
 };
 
-const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars): boolean => {
+const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars, similar?: boolean): boolean => {
   const root = editor.dom.getRoot();
 
   if (node === root) {
@@ -47,7 +47,7 @@ const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars
   });
 
   // Do an exact check on the similar format element
-  return !!matchNode(editor, node, name, vars);
+  return !!matchNode(editor, node, name, vars, similar);
 };
 
 const matchName = (dom: DOMUtils, node: Node, format) => {
@@ -71,7 +71,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
   const items = format[itemName];
 
   // Custom match
-  if (format.onmatch) {
+  if (Type.isFunction(format.onmatch)) {
     // onmatch is generic in a way that we can't really express without casting
     return format.onmatch(node, format as any, itemName);
   }
@@ -79,17 +79,18 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
   // Check all items
   if (items) {
     // Non indexed object
-    if (typeof items.length === 'undefined') {
+    if (Type.isUndefined(items.length)) {
       for (const key in items) {
         if (Obj.has(items, key)) {
           const value = itemName === 'attributes' ? dom.getAttrib(node, key) : FormatUtils.getStyle(dom, node, key);
           const expectedValue = FormatUtils.replaceVars(items[key], vars);
+          const isEmptyValue = Type.isNullable(value) || Strings.isEmpty(value);
 
-          if ((Type.isNullable(value) || value === '') && Type.isNullable(expectedValue)) {
+          if (isEmptyValue && Type.isNullable(expectedValue)) {
             continue;
           }
 
-          if (similar && !value && !format.exact) {
+          if (similar && isEmptyValue && !format.exact) {
             return false;
           }
 
@@ -138,22 +139,22 @@ const matchNode = (ed: Editor, node: Node, name: string, vars?: FormatVars, simi
   }
 };
 
-const match = (editor: Editor, name: string, vars: FormatVars, node?: Node): boolean => {
+const match = (editor: Editor, name: string, vars: FormatVars, node?: Node, similar?: boolean): boolean => {
   // Check specified node
   if (node) {
-    return matchParents(editor, node, name, vars);
+    return matchParents(editor, node, name, vars, similar);
   }
 
   // Check selected node
   node = editor.selection.getNode();
-  if (matchParents(editor, node, name, vars)) {
+  if (matchParents(editor, node, name, vars, similar)) {
     return true;
   }
 
   // Check start node if it's different
   const startNode = editor.selection.getStart();
   if (startNode !== node) {
-    if (matchParents(editor, startNode, name, vars)) {
+    if (matchParents(editor, startNode, name, vars, similar)) {
       return true;
     }
   }
@@ -191,24 +192,23 @@ const closest = (editor: Editor, names: string[]): string | null => {
 
 const canApply = (editor: Editor, name: string) => {
   const formatList = editor.formatter.get(name);
-  let startNode, parents, i, x, selector;
   const dom = editor.dom;
 
   if (formatList) {
-    startNode = editor.selection.getStart();
-    parents = FormatUtils.getParents(dom, startNode);
+    const startNode = editor.selection.getStart();
+    const parents = FormatUtils.getParents(dom, startNode);
 
-    for (x = formatList.length - 1; x >= 0; x--) {
-      selector = (formatList[x] as SelectorFormat).selector;
+    for (let x = formatList.length - 1; x >= 0; x--) {
+      const format = formatList[x];
 
       // Format is not selector based then always return TRUE
-      // Is it has a defaultBlock then it's likely it can be applied for example align on a non block element line
-      if (!selector || (formatList[x] as SelectorFormat).defaultBlock) {
+      // If it has a defaultBlock then it's likely it can be applied, for example align on a non block element line
+      if (!FormatUtils.isSelectorFormat(format) || Type.isNonNullable(format.defaultBlock)) {
         return true;
       }
 
-      for (i = parents.length - 1; i >= 0; i--) {
-        if (dom.is(parents[i], selector)) {
+      for (let i = parents.length - 1; i >= 0; i--) {
+        if (dom.is(parents[i], format.selector)) {
           return true;
         }
       }

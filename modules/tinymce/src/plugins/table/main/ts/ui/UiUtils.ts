@@ -17,11 +17,17 @@ interface Item {
 const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) => {
   return (api: Toolbar.ToolbarMenuButtonInstanceApi) => {
     const boundCallback = Singleton.unbindable();
+    const isNone = Strings.isEmpty(formatValue);
 
     const init = () => {
-      api.setActive(editor.formatter.match(formatName, { value: formatValue }));
-      const binding = editor.formatter.formatChanged(formatName, api.setActive);
-      boundCallback.set(binding);
+      // If value is empty (A None-entry in the list), check if the format is not set at all. Otherwise, check if the format is set to the correct value.
+      const setActive = (matched: boolean) =>
+        api.setActive(isNone ? !matched : matched);
+
+      setActive(editor.formatter.match(formatName, { value: formatValue }, undefined, isNone));
+      // TODO: TINY-7713: formatChanged doesn't currently handle formats with dynamic values so this will currently cause all items to show as active
+      // const binding = editor.formatter.formatChanged(formatName, setActive, isNone);
+      // boundCallback.set(binding);
     };
 
     // The editor may or may not have been setup yet, so check for that
@@ -74,11 +80,25 @@ const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpe
   }
 }];
 
+const changeRowHeader = (editor: Editor) => () => {
+  const currentType = editor.queryCommandValue('mceTableRowType');
+  const newType = currentType === 'header' ? 'body' : 'header';
+  editor.execCommand('mceTableRowType', false, { type: newType });
+};
+
+const changeColumnHeader = (editor: Editor) => () => {
+  const currentType = editor.queryCommandValue('mceTableColType');
+  const newType = currentType === 'th' ? 'td' : 'th';
+  editor.execCommand('mceTableColType', false, { type: newType });
+};
+
 export {
   onSetupToggle,
   generateItems,
   generateItemsCallback,
   filterNoneItem,
   generateColorSelector,
+  changeRowHeader,
+  changeColumnHeader,
   applyTableCellStyle
 };

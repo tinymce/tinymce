@@ -12,13 +12,13 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ], true);
 
-  const removeFormat = [{
+  const removeFormat: Format[] = [{
     selector: 'strong, em',
     remove: 'all',
     split: true,
     expand: false
   }];
-  const boldFormat = [{
+  const boldFormat: Format[] = [{
     inline: 'strong',
     remove: 'all',
     preserve_attributes: [ 'style', 'class' ]
@@ -140,7 +140,9 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       TinyAssertions.assertContent(editor, '<p><em>ab&nbsp; &nbsp;<strong>cd</strong></em></p>');
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2);
     });
+  });
 
+  context('Remove single format with range selection', () => {
     it('TINY-6567: Remove format including the final item in the list', () => {
       const editor = hook.editor();
       editor.setContent(
@@ -179,7 +181,7 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
           '<li style="text-align: center;">2' +
             '<ul>' +
               '<li style="text-align: center;">a</li>' +
-              '<li style="text-align: center;">b' +
+              '<li style="text-align: center;"><strong>b</strong>' +
                 '<ul>' +
                   '<li style="text-align: center;">1</li>' +
                   '<li style="text-align: center;">2</li>' +
@@ -198,7 +200,7 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
           '<li>2' +
             '<ul>' +
               '<li>a</li>' +
-              '<li>b' +
+              '<li><strong>b</strong>' +
                 '<ul>' +
                   '<li>1</li>' +
                   '<li>2</li>' +

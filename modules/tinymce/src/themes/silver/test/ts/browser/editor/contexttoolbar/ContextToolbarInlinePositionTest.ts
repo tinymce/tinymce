@@ -20,6 +20,11 @@ interface Scenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInlinePositionTest', () => {
+  const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset)';
+  const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset)';
+  const topInsetSelector = '.tox-pop.tox-pop--top.tox-pop--inset';
+  const bottomInsetSelector = '.tox-pop.tox-pop--bottom.tox-pop--inset';
+
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,
     base_url: '/project/tinymce/js/tinymce',
@@ -69,12 +74,12 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
       editor.setContent(`<p style="height: ${offset}px"></p><p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p><p style="height: 100px"></p>`);
       scrollTo(editor, 0, -250, offset);
       TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), '.tox-pop.tox-pop--bottom' + scenario.classes);
+      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
       await pAssertPosition('absolute', 'bottom', 1637);
 
       // Position the link at the top of the viewport, just below the toolbar
       scrollTo(editor, 0, -80, offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), '.tox-pop.tox-pop--top' + scenario.classes);
+      await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector + scenario.classes);
       await pAssertPosition('fixed', 'top', 109);
 
       // Position the element offscreen and check the toolbar is hidden
@@ -83,7 +88,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
 
       // Position the element back into view
       scrollTo(editor, 0, -250, offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), '.tox-pop.tox-pop--bottom' + scenario.classes);
+      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
       await pAssertPosition('absolute', 'bottom', 1637);
 
       // Position the element behind the docked toolbar and check the toolbar is hidden
@@ -151,10 +156,10 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
     // Scroll so the 5th row is at the top and select an initial position that's not at the top (15th row)
     scrollTo(editor, 0, 4 * 22 - toolbarHeight);
     TinySelections.setCursor(editor, [ 0, 0, 14, 0, 0 ], 0);
-    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), '.tox-pop.tox-pop--top');
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), topInsetSelector);
 
     // Select the 5th row in the table, then make sure the toolbar appears at the bottom due to the overlap
     TinySelections.setCursor(editor, [ 0, 0, 4, 0, 0 ], 0);
-    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), '.tox-pop.tox-pop--bottom');
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), bottomInsetSelector);
   });
 });

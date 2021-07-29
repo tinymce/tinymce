@@ -20,6 +20,9 @@ interface Scenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarDistractionFreePositionTest', () => {
+  const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset)';
+  const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset)';
+
   const hook = TinyHooks.bddSetup<Editor>({
     toolbar: false,
     menubar: false,
@@ -62,12 +65,12 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarDist
       editor.setContent(`<p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p>`);
       scrollTo(editor, 0, -250);
       TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), '.tox-pop.tox-pop--bottom' + scenario.classes);
+      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
       assertPosition('bottom', 1537);
 
       // Position the link at the top of the viewport
       scrollTo(editor, 0, 0);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), '.tox-pop.tox-pop--top' + scenario.classes);
+      await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector + scenario.classes);
       assertPosition('top', -1496);
 
       // Position the element off the bottom of the screen and check the toolbar is hidden
@@ -76,7 +79,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarDist
 
       // Position the element just back into view
       scrollTo(editor, 0, -60);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), '.tox-pop.tox-pop--bottom' + scenario.classes);
+      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
       assertPosition('bottom', 1537);
 
       // Position the element off the top of the screen and check the toolbar is hidden

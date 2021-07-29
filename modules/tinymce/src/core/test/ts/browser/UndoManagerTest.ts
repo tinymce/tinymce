@@ -1,6 +1,7 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { Keys } from '@ephox/agar';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -190,7 +191,7 @@ describe('browser.tinymce.core.UndoManager', () => {
     editor.dom.fire(editor.getBody(), 'keyup', evt);
 
     assert.isFalse(added);
-    assert.deepEqual(commands, [ 'mceFocus', 'mceFocus', 'Undo' ]);
+    assert.deepEqual(commands, [ 'mceFocus', 'Undo' ]);
   });
 
   it('Transact', () => {
@@ -563,5 +564,40 @@ describe('browser.tinymce.core.UndoManager', () => {
     editor.undoManager.clear();
     editor.execCommand('mceFocus');
     assert.isFalse(editor.undoManager.hasUndo());
+  });
+
+  context('Undo when first element is contenteditable="false"', () => {
+    beforeEach(() => {
+      const editor = hook.editor();
+      editor.resetContent('<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>');
+      editor.focus();
+    });
+
+    it('TINY-7663: No fake caret - should restore correct cursor location', () => {
+      const editor = hook.editor();
+      TinyAssertions.assertContentPresence(editor, { 'p[data-mce-caret=before]': 1 });
+      // selection path must include fake caret which is before the CEF div
+      TinySelections.setCursor(editor, [ 3, 0 ], 14);
+      // moving the selection removed the fake caret
+      TinyAssertions.assertContentPresence(editor, { 'p[data-mce-caret=before]': 0 });
+      // the act of moving the cursor removed the fake caret so now the selection path is off by one (expected)
+      TinyAssertions.assertCursor(editor, [ 2, 0 ], 14);
+
+      TinyContentActions.keystroke(editor, Keys.enter());
+      editor.undoManager.undo();
+      TinyAssertions.assertContent(editor, '<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>');
+      TinyAssertions.assertCursor(editor, [ 2, 0 ], 14);
+    });
+
+    it('TINY-7663: Fake caret - should restore correct cursor location', () => {
+      const editor = hook.editor();
+      TinyAssertions.assertContentPresence(editor, { 'p[data-mce-caret=before]': 1 });
+      TinyAssertions.assertCursor(editor, [ 0 ], 0);
+
+      TinyContentActions.keystroke(editor, Keys.enter());
+      editor.undoManager.undo();
+      TinyAssertions.assertContent(editor, '<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>');
+      TinyAssertions.assertCursor(editor, [ 0 ], 0);
+    });
   });
 });

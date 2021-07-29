@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInside, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { AlloyComponent, Bubble, HotspotAnchorSpec, Layout, LayoutInset, MaxHeight, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
@@ -31,19 +31,19 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
   };
 
   const editableAreaAnchor = (): NodeAnchorSpec => ({
-    anchor: 'node',
+    type: 'node',
     root: SugarShadowDom.getContentContainer(contentAreaElement()),
     node: Optional.from(contentAreaElement()),
     bubble: Bubble.nu(bubbleSize, bubbleSize, bubbleAlignments),
     layouts: {
-      onRtl: () => [ LayoutInside.northeast ],
-      onLtr: () => [ LayoutInside.northwest ]
+      onRtl: () => [ LayoutInset.northeast ],
+      onLtr: () => [ LayoutInset.northwest ]
     },
     overrides
   });
 
   const standardAnchor = (): HotspotAnchorSpec => ({
-    anchor: 'hotspot',
+    type: 'hotspot',
     hotspot: lazyAnchorbar(),
     bubble: Bubble.nu(-bubbleSize, bubbleSize, bubbleAlignments),
     layouts: {
@@ -58,17 +58,17 @@ const getInlineDialogAnchor = (contentAreaElement: () => SugarElement, lazyAncho
 
 const getBannerAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: () => AlloyComponent, lazyUseEditableAreaAnchor: () => boolean): () => HotspotAnchorSpec | NodeAnchorSpec => {
   const editableAreaAnchor = (): NodeAnchorSpec => ({
-    anchor: 'node',
+    type: 'node',
     root: SugarShadowDom.getContentContainer(contentAreaElement()),
     node: Optional.from(contentAreaElement()),
     layouts: {
-      onRtl: () => [ LayoutInside.north ],
-      onLtr: () => [ LayoutInside.north ]
+      onRtl: () => [ LayoutInset.north ],
+      onLtr: () => [ LayoutInset.north ]
     }
   });
 
   const standardAnchor = (): HotspotAnchorSpec => ({
-    anchor: 'hotspot',
+    type: 'hotspot',
     hotspot: lazyAnchorbar(),
     layouts: {
       onRtl: () => [ Layout.south ],
@@ -80,7 +80,7 @@ const getBannerAnchor = (contentAreaElement: () => SugarElement, lazyAnchorbar: 
 };
 
 const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement) => (): SelectionAnchorSpec => ({
-  anchor: 'selection',
+  type: 'selection',
   root: bodyElement(),
   getSelection: () => {
     const rng = editor.selection.getRng();
@@ -91,7 +91,7 @@ const getCursorAnchor = (editor: Editor, bodyElement: () => SugarElement) => ():
 });
 
 const getNodeAnchor = (bodyElement) => (element: Optional<SugarElement>): NodeAnchorSpec => ({
-  anchor: 'node',
+  type: 'node',
   root: bodyElement(),
   node: element
 });

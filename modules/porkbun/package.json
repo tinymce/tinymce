@@ -4,7 +4,8 @@
   "version": "5.0.7",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce"
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/porkbun"
   },
   "files": [
     "lib/main",
@@ -26,7 +27,7 @@
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "main": "./lib/main/ts/ephox/porkbun/api/Main.js",
   "module": "./lib/main/ts/ephox/porkbun/api/Main.js",
