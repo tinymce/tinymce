@@ -62,8 +62,8 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
 
   const isCaption = SugarNode.isTag('caption');
   const isDisabledForSelection = (key: keyof ExtractedSelectionDetails) => selectionDetails.forall((details) => !details[key]);
-  const getStart = () => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
-  const getEnd = () => TableSelection.getSelectionEndCellOrCaption(Util.getSelectionEnd(editor), Util.getIsRoot(editor));
+  const getStart = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+  const getEnd = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionEnd(editor), Util.getIsRoot(editor));
 
   const findTargets = (): Optional<RunOperation.CombinedTargets> =>
     getStart().bind((startCellOrCaption) =>

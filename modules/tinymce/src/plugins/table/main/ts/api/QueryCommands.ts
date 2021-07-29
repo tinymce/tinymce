@@ -24,7 +24,7 @@ const registerQueryCommands = (editor: Editor, actions: TableActions, selections
   Obj.each({
     mceTableRowType: () => actions.getTableRowType(editor),
     mceTableCellType: () => actions.getTableCellType(editor),
-    mceTableColType: () => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).bind((cell) =>
+    mceTableColType: () => TableSelection.getSelectionCell(Util.getSelectionStart(editor)).bind((cell) =>
       getTableFromCell(cell).map((table): string => {
         const targets = TableTargets.forMenu(selections, table, cell);
         return actions.getTableColType(table, targets);

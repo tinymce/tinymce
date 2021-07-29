@@ -12,35 +12,31 @@ import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNod
 
 import { ephemera } from './Ephemera';
 
-const getSelectionCellFallback = (element: SugarElement<Node>, takeLast: boolean) =>
+const getSelectionCellFallback = (element: SugarElement<Node>) =>
   TableLookup.table(element).bind((table) =>
     TableSelection.retrieve(table, ephemera.firstSelectedSelector)
-  ).fold(
-    Fun.constant(element),
-    (cells) => takeLast ? cells[cells.length - 1] : cells[0]);
+  ).fold(Fun.constant(element), (cells) => cells[0]);
 
-const getSelectionFromSelector = <T extends Element>(selector: string, takeLast: boolean) =>
+const getSelectionFromSelector = <T extends Element>(selector: string) =>
   (initCell: SugarElement<Node>, isRoot?: (el: SugarElement<Node>) => boolean) => {
     const cellName = SugarNode.name(initCell);
-    const cell = cellName === 'col' || cellName === 'colgroup' ? getSelectionCellFallback(initCell, takeLast) : initCell;
+    const cell = cellName === 'col' || cellName === 'colgroup' ? getSelectionCellFallback(initCell) : initCell;
     return SelectorFind.closest<T>(cell, selector, isRoot);
   };
 
-const getSelectionStartCaption = getSelectionFromSelector<HTMLTableCaptionElement>('caption', false);
+const getSelectionCaption = getSelectionFromSelector<HTMLTableCaptionElement>('caption');
 
-const getSelectionStartCell = getSelectionFromSelector<HTMLTableCellElement>('th,td', false);
+const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
-const getSelectionStartCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption', false);
+const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
-const getSelectionEndCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption', true);
-
-const getCellsFromSelection = (start: SugarElement<Node>, selections: Selections, isRoot?: (el: SugarElement<Node>) => boolean): SugarElement<HTMLTableCellElement>[] =>
-  getSelectionStartCell(start, isRoot)
+const getCellsFromSelection = (selected: SugarElement<Node>, selections: Selections, isRoot?: (el: SugarElement<Node>) => boolean): SugarElement<HTMLTableCellElement>[] =>
+  getSelectionCell(selected, isRoot)
     .map((_cell) => CellOpSelection.selection(selections))
     .getOr([]);
 
-const getRowsFromSelection = (start: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
-  const cellOpt = getSelectionStartCell(start);
+const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
+  const cellOpt = getSelectionCell(selected);
   const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
     .map((table) => TableLookup.rows(table));
   return Optionals.lift2(cellOpt, rowsOpt, (cell, rows) =>
@@ -53,10 +49,9 @@ const getRowsFromSelection = (start: SugarElement<Node>, selector: string): Suga
 };
 
 export {
-  getSelectionStartCaption,
-  getSelectionStartCell,
-  getSelectionStartCellOrCaption,
-  getSelectionEndCellOrCaption,
+  getSelectionCaption,
+  getSelectionCell,
+  getSelectionCellOrCaption,
   getCellsFromSelection,
   getRowsFromSelection
 };

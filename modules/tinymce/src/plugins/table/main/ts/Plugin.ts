@@ -24,12 +24,12 @@ import * as TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
 import { ephemera } from './selection/Ephemera';
 import { getSelectionTargets } from './selection/SelectionTargets';
-import { getSelectionStartCellOrCaption } from './selection/TableSelection';
+import { getSelectionCellOrCaption } from './selection/TableSelection';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 
 const Plugin = (editor: Editor) => {
-  const selections = Selections(() => Util.getBody(editor), () => getSelectionStartCellOrCaption(Util.getSelectionStart(editor)), ephemera.selectedSelector);
+  const selections = Selections(() => Util.getBody(editor), () => getSelectionCellOrCaption(Util.getSelectionStart(editor)), ephemera.selectedSelector);
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
