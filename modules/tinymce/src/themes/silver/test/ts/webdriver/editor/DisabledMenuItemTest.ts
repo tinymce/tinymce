@@ -1,5 +1,5 @@
 import { Keys, Mouse, RealKeys, UiFinder, Waiter } from '@ephox/agar';
-import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
@@ -28,10 +28,6 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledMenuItemTest', 
     return Waiter.pTryUntil('Wait for table menu to open', () => UiFinder.exists(SugarBody.body(), verticalAlignMenuItemSelector));
   };
 
-  beforeEach(async () => {
-    await pOpenTableMenu();
-  });
-
   const assertVerticalAlignMenuIsNotOpen = () => {
     UiFinder.notExists(SugarBody.body(), '[role="menuitemcheckbox"]:contains("None")');
     UiFinder.notExists(SugarBody.body(), '[role="menuitemcheckbox"]:contains("Top")');
@@ -39,13 +35,19 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledMenuItemTest', 
     UiFinder.notExists(SugarBody.body(), '[role="menuitemcheckbox"]:contains("Bottom")');
   };
 
+  beforeEach(async () => {
+    await pOpenTableMenu();
+  });
+
+  afterEach(() => {
+    assertVerticalAlignMenuIsNotOpen();
+  });
+
   it('TINY-7700: Disabled menu item with children should not open on mouse hover', () => {
     Mouse.hoverOn(SugarBody.body(), '[role="menuitem"]:contains("Vertical align")');
-    assertVerticalAlignMenuIsNotOpen();
   });
 
   it('TINY-7700: Disabled menu item with children should not open on keyboard arrow right', async () => {
     await RealKeys.pSendKeysOn(verticalAlignMenuItemSelector, [ RealKeys.combo({}, 'arrowright') ]);
-    assertVerticalAlignMenuIsNotOpen();
   });
 });
