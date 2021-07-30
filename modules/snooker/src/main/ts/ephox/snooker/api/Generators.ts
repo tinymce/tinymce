@@ -56,6 +56,12 @@ interface Item {
   readonly sub: SugarElement;
 }
 
+const isCol = SugarNode.isTag('col');
+const isColgroup = SugarNode.isTag('colgroup');
+
+const isRow = (element: SugarElement): element is SugarElement<HTMLTableRowElement | HTMLTableColElement> =>
+  SugarNode.name(element) === 'tr' || isColgroup(element);
+
 const elementToData = (element: SugarElement): CellData => {
   const colspan = getAttrValue(element, 'colspan', 1);
   const rowspan = getAttrValue(element, 'rowspan', 1);
@@ -66,33 +72,14 @@ const elementToData = (element: SugarElement): CellData => {
   };
 };
 
-const isCol = SugarNode.isTag('col');
-
-const isRow = (element: SugarElement): element is SugarElement<HTMLTableRowElement | HTMLTableColElement> => {
-  const name = SugarNode.name(element);
-  return name === 'tr' || name === 'colgroup';
-};
-
 // note that `toData` seems to be only for testing
 const modification = (generators: Generators, toData = elementToData): GeneratorsModification => {
 
-  const nuCell = (data: CellData) => {
-    switch (SugarNode.name(data.element)) {
-      case 'col':
-        return generators.col(data);
-      default:
-        return generators.cell(data);
-    }
-  };
+  const nuCell = (data: CellData) =>
+    isCol(data.element) ? generators.col(data) : generators.cell(data);
 
-  const nuRow = (data: RowData) => {
-    switch (SugarNode.name(data.element)) {
-      case 'colgroup':
-        return generators.colgroup(data);
-      default:
-        return generators.row(data);
-    }
-  };
+  const nuRow = (data: RowData) =>
+    isColgroup(data.element) ? generators.colgroup(data) : generators.row(data);
 
   const add = (element: SugarElement) => {
     if (isRow(element)) {

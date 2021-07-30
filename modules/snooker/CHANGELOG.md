@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Rows are now stored and tracked in the table model structures.
 
 ### Changed
-- `RowDetails` has been renamed to `RowDetail` and now takes a generic argument to define what is the type of cells stored.
+- `RowDetails` has been renamed to `RowDetail` and now takes a generic argument to define the type of cells stored.
 - `row` and `colgroup` generators are now passed the previous element during transform or modification operations.
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
 

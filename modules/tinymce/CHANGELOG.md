@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Using the Tab key to navigate into the editor on IE 11 would incorrectly focus the toolbar #TINY-3707
 - The editor selection could be placed in an incorrect location when undoing or redoing changes in a document containing `contenteditable="false"` elements #TINY-7663
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
+- Some table operations would incorrectly cause table row attributes and styles to be lost #TINY-6666
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260
