@@ -110,11 +110,11 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
 
   const bodyMultipleChangesColumnContent = `<table>
 <tbody>
-<tr>
+<tr id="one">
 <td>text</td>
 <td>text</td>
 </tr>
-<tr>
+<tr id="two">
 <td>text</td>
 <td>text</td>
 </tr>
@@ -136,11 +136,11 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
 
   const headerMultipleChangesColumnContent = `<table>
 <tbody>
-<tr>
+<tr id="one">
 <th scope="row">text</th>
 <th scope="row">text</th>
 </tr>
-<tr>
+<tr id="two">
 <th scope="row">text</th>
 <th scope="row">text</th>
 </tr>

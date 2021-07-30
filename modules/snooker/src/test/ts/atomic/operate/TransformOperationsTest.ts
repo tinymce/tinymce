@@ -32,7 +32,7 @@ UnitTest.test('TransformOperationsTest', () => {
   const mapToStructGrid = (grid: Structs.ElementNew[][]) => {
     return Arr.map(grid, (row) => {
       const hasCol = Arr.exists(row, (elementNew) => SugarNode.isTag('col')(elementNew.element));
-      return Structs.rowcells(row, hasCol ? 'colgroup' : 'tbody');
+      return Structs.rowcells('tr' as any, row, hasCol ? 'colgroup' : 'tbody', false);
     });
   };
 

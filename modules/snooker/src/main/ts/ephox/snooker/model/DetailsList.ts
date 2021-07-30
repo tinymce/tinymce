@@ -5,14 +5,14 @@ import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
 import { getAttrValue } from '../util/CellUtils';
 
-const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], getSection: (group: SugarElement<HTMLElement>) => Structs.Section): Structs.RowData<Structs.Detail>[] =>
+const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], getSection: (group: SugarElement<HTMLElement>) => Structs.Section): Structs.RowDetail<Structs.Detail>[] =>
   Arr.map(elems, (row) => {
     if (SugarNode.name(row) === 'colgroup') {
       const cells = Arr.map(TableLookup.columns(row), (column) => {
         const colspan = getAttrValue(column, 'span', 1);
         return Structs.detail(column, 1, colspan);
       });
-      return Structs.rowdata(row, cells, 'colgroup');
+      return Structs.rowdetail(row, cells, 'colgroup');
     } else {
       const cells = Arr.map(TableLookup.cells(row), (cell) => {
         const rowspan = getAttrValue(cell, 'rowspan', 1);
@@ -20,7 +20,7 @@ const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTable
         return Structs.detail(cell, rowspan, colspan);
       });
 
-      return Structs.rowdata(row, cells, getSection(row));
+      return Structs.rowdetail(row, cells, getSection(row));
     }
   });
 
@@ -35,7 +35,7 @@ const getParentSection = (group: SugarElement<HTMLElement>): Structs.Section =>
    element: row element
    cells: (id, rowspan, colspan) structs
  */
-const fromTable = (table: SugarElement<HTMLTableElement>): Structs.RowData<Structs.Detail>[] => {
+const fromTable = (table: SugarElement<HTMLTableElement>): Structs.RowDetail<Structs.Detail>[] => {
   const rows = TableLookup.rows(table);
   const columnGroups = TableLookup.columnGroups(table);
 
@@ -43,7 +43,7 @@ const fromTable = (table: SugarElement<HTMLTableElement>): Structs.RowData<Struc
   return fromRowsOrColGroups(elems, getParentSection);
 };
 
-const fromPastedRows = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], section: Structs.Section): Structs.RowData<Structs.Detail>[] =>
+const fromPastedRows = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], section: Structs.Section): Structs.RowDetail<Structs.Detail>[] =>
   fromRowsOrColGroups(elems, () => section);
 
 export {

@@ -6,7 +6,7 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 
 UnitTest.test('WarehouseTest', () => {
-  const check = (expected: Record<string, string>, input: Structs.RowData<Structs.Detail>[]) => {
+  const check = (expected: Record<string, string>, input: Structs.RowDetail<Structs.Detail>[]) => {
     const actual = Warehouse.generate(input);
     assert.eq(expected, Obj.map(actual.access, (x) => TextContent.get(x.element)));
   };
@@ -17,7 +17,7 @@ UnitTest.test('WarehouseTest', () => {
     return elem;
   };
   const s = (elemText: string, rowspan: number, colspan: number) => Structs.detail(createCell(elemText), rowspan, colspan);
-  const f = (cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(SugarElement.fromTag('tr'), cells, section);
+  const f = (cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdetail(SugarElement.fromTag('tr'), cells, section);
 
   const testTable = [
     f([ s('a', 1, 2), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1), s('f', 1, 1) ], 'thead'),
