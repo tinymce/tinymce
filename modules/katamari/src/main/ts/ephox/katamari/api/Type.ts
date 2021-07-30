@@ -26,8 +26,20 @@ export const isString: (value: any) => value is string =
 export const isObject: (value: any) => value is Object =
   isType('object');
 
-export const isPlainObject = (value: unknown): value is Object =>
-  isObject(value) && value.constructor?.name === 'Object';
+const getPrototypeOf = Object.getPrototypeOf;
+
+export const isPlainObject = (value: unknown): value is Object => {
+  if (!isObject(value)) {
+    return false;
+  }
+
+  const proto = getPrototypeOf(value);
+  if (proto === Object.prototype) {
+    return true;
+  } else {
+    return proto.toString() === '[object Object]';
+  }
+};
 
 export const isArray: (value: any) => value is Array<unknown> =
   isType('array');
