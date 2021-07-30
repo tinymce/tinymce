@@ -54,8 +54,8 @@ export class Optional<T> {
   /**
    * Perform a transform on an Optional type. Similar to the fold method on a
    * number of ADTs in the TinyMCE codebase, you pass two functions into this -
-   * if `self` **does not** contain a value then `onNone` will be called (with
-   * no argument) but if `self` **does** contain a value then `onSome` will be
+   * if `this` **does not** contain a value then `onNone` will be called (with
+   * no argument) but if `this` **does** contain a value then `onSome` will be
    * called (with the value as its argument).
    *
    * For the FP enthusiasts in the room, this function:
@@ -89,9 +89,9 @@ export class Optional<T> {
   /**
    * Perform a transform on an Optional object, **if** there is a value. If you
    * provide a function to turn a T into a U, this is the function you use to
-   * turn an `Optional<T>` into an `Optional<U>`. If self **does** contain a
+   * turn an `Optional<T>` into an `Optional<U>`. If this **does** contain a
    * value then the output will also contain a value (that value being the
-   * output of `mapper(self.value)`), and if self **does not** contain a value
+   * output of `mapper(this.value)`), and if this **does not** contain a value
    * then neither will the output.
    */
   public map<U>(mapper: (value: T) => U): Optional<U> {
@@ -131,7 +131,7 @@ export class Optional<T> {
 
   /**
    * For a given predicate, this function finds out if **all** the values inside
-   * this maybe object meet the predicate. In practice, this means that for
+   * this Optional object meet the predicate. In practice, this means that for
    * empty objects it returns true (as all 0 objects do meet the predicate).
    */
   public forall(predicate: (value: T) => boolean): boolean {
@@ -211,6 +211,8 @@ export class Optional<T> {
    * You should only be using this function if you know that the Optional
    * object **is not** empty (otherwise you're throwing exceptions in production
    * code, which is bad).
+   *
+   * In tests this is more acceptable.
    *
    * Prefer other methods to this, such as `.each`.
    */
