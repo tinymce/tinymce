@@ -88,6 +88,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     root_name: getRootName(editor),
     validate: true,
     blob_cache: blobCache,
+    document: editor.getDoc(),
 
     // Deprecated
     images_dataimg_filter: settings.images_dataimg_filter

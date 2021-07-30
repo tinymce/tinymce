@@ -1121,4 +1121,33 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     parser.parse(`${inner}<div data-mce-bogus="all">${inner}</div>`);
     assert.equal(writer.getContent(), inner);
   });
+
+  it('TINY-7756: should prevent dom clobbering overriding document/form properties', () => {
+    const counter = createCounter(writer);
+    const parser = SaxParser(counter, schema);
+
+    writer.reset();
+    parser.parse(
+      '<img src="x" name="getElementById" />' +
+      '<form>' +
+      '<input id="attributes" />' +
+      '<output id="style"></output>' +
+      '<button name="action"></button>' +
+      '<select name="getElementsByName"></select>' +
+      '<fieldset name="method"></fieldset>' +
+      '<textarea name="click"></textarea>' +
+      '</form>'
+    );
+    assert.equal(writer.getContent(),
+      '<img src="x" />' +
+      '<form>' +
+        '<input />' +
+        '<output></output>' +
+        '<button></button>' +
+        '<select></select>' +
+        '<fieldset></fieldset>' +
+        '<textarea></textarea>' +
+      '</form>'
+    );
+  });
 });
