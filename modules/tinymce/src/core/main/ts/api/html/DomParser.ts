@@ -70,6 +70,7 @@ export interface DomParserSettings {
   validate?: boolean;
   inline_styles?: boolean;
   blob_cache?: BlobCache;
+  document?: Document;
   images_dataimg_filter?: (img: HTMLImageElement) => boolean;
 }
 
@@ -475,6 +476,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
     const parser = SaxParser({
       validate,
+      document: settings.document,
       allow_html_data_urls: settings.allow_html_data_urls,
       allow_svg_data_urls: settings.allow_svg_data_urls,
       allow_script_urls: settings.allow_script_urls,
