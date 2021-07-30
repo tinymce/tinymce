@@ -4,7 +4,8 @@
   "description": "Basic data type library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce"
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/katamari"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
@@ -12,7 +13,7 @@
     "test-manual": "bedrock -d src/test/ts",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/dispute": "^1.0.3",

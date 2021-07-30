@@ -65,6 +65,7 @@ export interface SaxParserSettings {
   remove_internals?: boolean;
   self_closing_elements?: Record<string, {}>;
   validate?: boolean;
+  document?: Document;
 
   cdata?: (text: string) => void;
   comment?: (text: string) => void;
@@ -99,6 +100,11 @@ const enum MatchType {
 }
 
 const safeSvgDataUrlElements = [ 'img', 'video' ];
+
+// A list of form control or other elements whereby a name/id would override a form or document property
+// https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/elements#value
+// https://portswigger.net/research/dom-clobbering-strikes-back
+const filteredClobberElements = Tools.makeMap('button,fieldset,form,iframe,img,image,input,object,output,select,textarea');
 
 const isValidPrefixAttrName = (name: string): boolean => name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 
@@ -222,6 +228,8 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
  */
 const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser => {
   settings = settings || {};
+  const doc = settings.document ?? document;
+  const form = doc.createElement('form');
 
   if (settings.fix_self_closing !== false) {
     settings.fix_self_closing = true;
@@ -347,6 +355,13 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
         if (attrRule.validValues && !(value in attrRule.validValues)) {
           return;
         }
+      }
+
+      // Attempt to block any dom clobbering on document or forms
+      // See https://www.slideshare.net/x00mario/in-the-dom-no-one-will-hear-you-scream
+      const isNameOrId = name === 'name' || name === 'id';
+      if (isNameOrId && tagName in filteredClobberElements && (value in doc || value in form)) {
+        return;
       }
 
       // Block any javascript: urls or non image data uris

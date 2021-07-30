@@ -89,7 +89,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
       Step.sync(() => {
         InlineView.showAt(inline, {
-          anchor: 'selection',
+          type: 'selection',
           root: gui.element
         }, Container.sketch({
           dom: {
@@ -160,7 +160,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
       Step.sync(() => {
         InlineView.showAt(inline, {
-          anchor: 'makeshift',
+          type: 'makeshift',
           x: 50,
           y: 50
         }, Container.sketch({
@@ -222,7 +222,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           });
 
           InlineView.showAt(inline, {
-            anchor: 'selection',
+            type: 'selection',
             root: gui.element
           }, Container.sketch({
             components: [

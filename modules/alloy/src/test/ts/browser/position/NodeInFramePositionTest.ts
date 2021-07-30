@@ -52,7 +52,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
     const cSetupAnchor = Chain.mapper((data: any) => {
       const node = data.classic.element.dom.contentWindow.document.querySelector('#p3');
       return {
-        anchor: 'node',
+        type: 'node',
         root: SugarElement.fromDom(data.classic.element.dom.contentWindow.document.body),
         node: Optional.some(SugarElement.fromDom(node))
       };

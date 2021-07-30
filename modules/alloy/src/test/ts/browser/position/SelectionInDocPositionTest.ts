@@ -48,7 +48,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
 
   }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = Chain.mapper((data: any) => ({
-      anchor: 'selection',
+      type: 'selection',
       root: data.inline.element,
       getSelection: () => {
         return Optional.some(

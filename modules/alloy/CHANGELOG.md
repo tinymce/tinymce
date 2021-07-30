@@ -21,11 +21,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed disconnected components to log a warning instead of throwing an error when triggering or broadcasting events.
 - Renamed `LayoutInside` to `LayoutInset` to better reflect what it does.
 - Changed `LayoutInset` rendering behaviour, as it was inconsistent with other layouts. It will now mirror the `Layout` logic for each direction.
+- Renamed the `anchor` property in anchor specs to `type`.
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
 
 ### Fixed
 - Fixed a number of positioning bugs when using an "inset" layout, especially any that renders at the bottom.
 - `LayoutInset` bubble classes were applied incorrectly, causing the bubble arrows to show on the opposite side.
+- `MakeshiftAnchorSpec` did not extend `HasLayoutAnchorSpec` which meant layouts couldn't be used for makeshift anchors.
+- `TieredMenu` child menus were incorrectly opened when the parent menu item was disabled.
 
 ## 8.2.0 - 2021-05-06
 

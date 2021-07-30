@@ -1,6 +1,8 @@
-import { Resolve } from '@ephox/katamari';
+import { Resolve, Type } from '@ephox/katamari';
 
 import * as Global from '../util/Global';
+
+const getPrototypeOf = Object.getPrototypeOf;
 
 /*
  * IE9 and above
@@ -17,7 +19,9 @@ const isPrototypeOf = (x: any): x is HTMLElement => {
   // undefined scope later triggers using the global window.
   const scope: Window | undefined = Resolve.resolve('ownerDocument.defaultView', x);
 
-  return sandHTMLElement(scope).prototype.isPrototypeOf(x);
+  // TINY-7374: We can't rely on looking at the owner window HTMLElement as the element may have
+  // been constructed in a different window and then appended to the current window document.
+  return Type.isObject(x) && (sandHTMLElement(scope).prototype.isPrototypeOf(x) || /^\[object HTML\w*Element\]$/.test(getPrototypeOf(x).toString()));
 };
 
 export {

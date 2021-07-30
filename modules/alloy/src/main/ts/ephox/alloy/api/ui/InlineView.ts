@@ -74,7 +74,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
     onOpenSubmenu: (tmenu, item, submenu, triggeringPaths) => {
       const sink = lazySink().getOrDie();
       Positioning.position(sink, {
-        anchor: 'submenu',
+        type: 'submenu',
         item,
         ...getSubmenuLayouts(triggeringPaths)
       }, submenu);
@@ -85,7 +85,11 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds());
       Arr.each(submenuTriggers, (st) => {
         const submenuLayouts = getSubmenuLayouts(st.triggeringPath);
-        Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem, ...submenuLayouts }, st.triggeredMenu);
+        Positioning.position(sink, {
+          type: 'submenu',
+          item: st.triggeringItem,
+          ...submenuLayouts
+        }, st.triggeredMenu);
       });
     }
   });
@@ -101,12 +105,13 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     // Keep the same location, and just change the content.
     Sandboxing.setContent(sandbox, thing);
   };
-  const showAt = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) => {
+
+  const showAt = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) =>
     showWithin(sandbox, anchor, thing, Optional.none());
-  };
-  const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Optional<SugarElement>) => {
+
+  const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Optional<SugarElement>) =>
     showWithinBounds(sandbox, anchor, thing, () => boxElement.map((elem) => Boxes.box(elem)));
-  };
+
   const showWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Optional<Boxes.Bounds>) => {
     const sink = detail.lazySink(sandbox).getOrDie();
     Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithinBounds(sink, anchor, sandbox, getBounds()));
@@ -116,10 +121,11 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       getBounds
     }));
   };
+
   // TODO AP-191 write a test for showMenuAt
-  const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) => {
-    showMenuWithinBounds(sandbox, anchor, menuSpec, () => Optional.none());
-  };
+  const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) =>
+    showMenuWithinBounds(sandbox, anchor, menuSpec, Optional.none);
+
   const showMenuWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Optional<Boxes.Bounds>) => {
     const menu = makeMenu(detail, sandbox, anchor, menuSpec, getBounds);
     Sandboxing.open(sandbox, menu);
@@ -128,13 +134,16 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       menu
     }));
   };
+
   const hide = (sandbox: AlloyComponent) => {
     if (Sandboxing.isOpen(sandbox)) {
       Representing.setValue(sandbox, Optional.none());
       Sandboxing.close(sandbox);
     }
   };
+
   const getContent = (sandbox: AlloyComponent): Optional<AlloyComponent> => Sandboxing.getState(sandbox);
+
   const reposition = (sandbox: AlloyComponent) => {
     if (Sandboxing.isOpen(sandbox)) {
       Representing.getValue(sandbox).each((state: InlineViewState) => {

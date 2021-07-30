@@ -16,8 +16,12 @@ import Delay from 'tinymce/core/api/util/Delay';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { Notification } from '../ui/general/Notification';
 
-export default (editor: Editor, extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl => {
-  const backstage: UiFactoryBackstage = extras.backstage;
+interface Extras {
+  readonly backstage: UiFactoryBackstage;
+}
+
+export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl => {
+  const sharedBackstage = extras.backstage.shared;
 
   const getLayoutDirection = (rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc') => {
     switch (rel) {
@@ -71,8 +75,8 @@ export default (editor: Editor, extras, uiMothership: Gui.GuiSystem): Notificati
         icon: Optional.from(settings.icon),
         closeButton: !hideCloseButton,
         onAction: close,
-        iconProvider: backstage.shared.providers.icons,
-        translationProvider: backstage.shared.providers.translate
+        iconProvider: sharedBackstage.providers.icons,
+        translationProvider: sharedBackstage.providers.translate
       })
     );
 
@@ -82,9 +86,9 @@ export default (editor: Editor, extras, uiMothership: Gui.GuiSystem): Notificati
           tag: 'div',
           classes: [ 'tox-notifications-container' ]
         },
-        lazySink: extras.backstage.shared.getSink,
+        lazySink: sharedBackstage.getSink,
         fireDismissalEventInstead: { },
-        ...backstage.shared.header.isPositionedAtTop() ? { } : { fireRepositionEventInstead: { }}
+        ...sharedBackstage.header.isPositionedAtTop() ? { } : { fireRepositionEventInstead: { }}
       })
     );
 
@@ -100,7 +104,7 @@ export default (editor: Editor, extras, uiMothership: Gui.GuiSystem): Notificati
       close,
       moveTo: (x: number, y: number) => {
         InlineView.showAt(notificationWrapper, {
-          anchor: 'makeshift',
+          type: 'makeshift',
           x,
           y
         }, GuiFactory.premade(notification));
@@ -109,7 +113,7 @@ export default (editor: Editor, extras, uiMothership: Gui.GuiSystem): Notificati
         if (rel !== 'banner') {
           const layoutDirection = getLayoutDirection(rel);
           const nodeAnchor: NodeAnchorSpec = {
-            anchor: 'node',
+            type: 'node',
             root: SugarBody.body(),
             node: Optional.some(SugarElement.fromDom(element)),
             layouts: {
@@ -119,7 +123,7 @@ export default (editor: Editor, extras, uiMothership: Gui.GuiSystem): Notificati
           };
           InlineView.showAt(notificationWrapper, nodeAnchor, GuiFactory.premade(notification));
         } else {
-          InlineView.showAt(notificationWrapper, extras.backstage.shared.anchors.banner(), GuiFactory.premade(notification));
+          InlineView.showAt(notificationWrapper, sharedBackstage.anchors.banner(), GuiFactory.premade(notification));
         }
       },
       text: (nuText: string) => {

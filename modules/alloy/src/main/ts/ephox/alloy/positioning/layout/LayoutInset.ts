@@ -15,7 +15,7 @@ import { Placement, getPlacement } from './Placement';
   `LayoutInset.north` will appear horizontally centered overlapping the top of the anchor.
  */
 
-const labelPrefix = 'layout-inner';
+const labelPrefix = 'layout-inset';
 
 // returns left edge of anchor - used to display element to the left, left edge against the anchor
 const westEdgeX = (anchor: AnchorBox): number => anchor.x;
