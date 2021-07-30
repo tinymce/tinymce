@@ -103,6 +103,7 @@ const setupiOSOverrides = (editor: Editor) => {
 
 const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, useNodeAnchor: boolean, highlightImmediately: boolean) => {
   const anchorSpec = useNodeAnchor ? getNodeAnchor(editor) : getPointAnchorSpec(editor, e);
+  console.log(anchorSpec.anchor);
 
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
@@ -127,6 +128,7 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();
   const isAndroid = detection.os.isAndroid();
+  const isAndroid10 = isAndroid && detection.os.version.major === 10;
   const isTouch = detection.deviceType.isTouch();
 
   const shouldHighlightImmediately = () => !(isAndroid || isiOS || (isOSX && isTouch));
@@ -154,7 +156,8 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
   } else {
     // On Android editor.selection hasn't updated yet at this point, so need to do it manually
     // Without this longpress causes drag-n-drop duplication of code on Android
-    if (isAndroid && !useNodeAnchor) {
+    if (isAndroid10 && !useNodeAnchor) {
+      console.log('android workaround');
       editor.selection.setCursorLocation(e.target, 0);
     }
 

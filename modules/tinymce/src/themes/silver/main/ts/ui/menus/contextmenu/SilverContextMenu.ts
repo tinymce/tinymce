@@ -20,6 +20,7 @@ import * as Settings from './Settings';
 
 type MenuItem = string | Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.SeparatorMenuItemSpec;
 
+const isTouch = PlatformDetection.detect().deviceType.isTouch;
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
 const separator: Menu.SeparatorMenuItemSpec = {
@@ -122,19 +123,18 @@ const getSelectedElement = (editor: Editor, e: PointerEvent) =>
 const shouldUseNodeAnchor = (editor: Editor, e: PointerEvent) => {
   const selector = Settings.getAvoidOverlapSelector(editor);
   if (isTriggeredByKeyboard(editor, e)) {
-    return true;
+    console.log('isTriggeredByKeyboard - nodeAchor');
+    return false;
   } else if (selector) {
     const target = getSelectedElement(editor, e);
-    return SelectorExists.closest(SugarElement.fromDom(target), selector);
+    return !isTouch() && SelectorExists.closest(SugarElement.fromDom(target), selector);
   } else {
+    console.log('false');
     return false;
   }
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
-  const detection = PlatformDetection.detect();
-  const isTouch = detection.deviceType.isTouch;
-
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
       dom: {
