@@ -123,13 +123,11 @@ const getSelectedElement = (editor: Editor, e: PointerEvent) =>
 const shouldUseNodeAnchor = (editor: Editor, e: PointerEvent) => {
   const selector = Settings.getAvoidOverlapSelector(editor);
   if (isTriggeredByKeyboard(editor, e)) {
-    console.log('isTriggeredByKeyboard - nodeAchor');
     return false;
   } else if (selector) {
     const target = getSelectedElement(editor, e);
     return !isTouch() && SelectorExists.closest(SugarElement.fromDom(target), selector);
   } else {
-    console.log('false');
     return false;
   }
 };

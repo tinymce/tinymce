@@ -156,8 +156,9 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
   } else {
     // On Android editor.selection hasn't updated yet at this point, so need to do it manually
     // Without this longpress causes drag-n-drop duplication of code on Android
+    // TINY-7688: Changed the condition to Android 10 only cause when on v8,9,11
+    // it clears the selection and places the cursor at the beginning of selected the node
     if (isAndroid10 && !useNodeAnchor) {
-      console.log('android workaround');
       editor.selection.setCursorLocation(e.target, 0);
     }
 
