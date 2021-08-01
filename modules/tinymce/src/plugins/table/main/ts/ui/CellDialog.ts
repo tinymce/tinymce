@@ -107,7 +107,8 @@ const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData) =
 };
 
 const applyStructureData = (editor: Editor, data: CellData) => {
-  // Switch cell type if applicable. This will also fire a table modified event for the structure change
+  // Switch cell type if applicable. Note that we specifically tell the command to not fire events
+  // as we'll batch the events and fire a `TableModified` event at the end of the updates.
   editor.execCommand('mceTableCellType', false, { type: data.celltype, no_events: true });
 };
 
