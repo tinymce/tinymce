@@ -161,8 +161,8 @@ const opMakeRowHeader = (grid: Structs.RowCells[], detail: Structs.DetailExt, co
 };
 
 const opMakeRowsHeader = (initialGrid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsTransform) => {
-  const replacer = (currentGrid: Structs.RowCells[], row: Structs.DetailExt) =>
-    TransformOperations.replaceRow(currentGrid, row.row, comparator, genWrappers.replaceOrInit);
+  const replacer = (currentGrid: Structs.RowCells[], detail: Structs.DetailExt) =>
+    TransformOperations.replaceRow(currentGrid, detail.row, comparator, genWrappers.replaceOrInit);
 
   const rows = uniqueRows(details);
   const newGrid = Arr.foldl(rows, replacer, initialGrid);

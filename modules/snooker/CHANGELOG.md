@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - `Warehouse` now contains the colgroup elements from the table.
+- `TableOperations` now includes functions to convert individual table cells to header cells (and vice-versa).
 
 ### Improved
 - Rows are now stored and tracked in the table model structures.
