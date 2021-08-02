@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Toolbar } from '@ephox/bridge';
+
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Actions from '../core/Actions';
@@ -12,7 +14,7 @@ import * as Actions from '../core/Actions';
 const register = (editor: Editor) => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
-  const onSetup = (buttonApi) => {
+  const onSetup = (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
     const setDisabled = () => {
       const disabled = Actions.getSelectedImage(editor).forall((element) => {
         return Actions.getEditableImage(editor, element.dom).isNone();
