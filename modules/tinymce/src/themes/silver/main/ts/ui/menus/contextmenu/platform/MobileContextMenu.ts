@@ -103,7 +103,6 @@ const setupiOSOverrides = (editor: Editor) => {
 
 const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, useNodeAnchor: boolean, highlightImmediately: boolean) => {
   const anchorSpec = useNodeAnchor ? getNodeAnchor(editor) : getPointAnchorSpec(editor, e);
-  console.log(anchorSpec.anchor);
 
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
