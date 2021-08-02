@@ -6,7 +6,7 @@ import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
-import { DetailExt, RowData, Column } from './Structs';
+import { DetailExt, RowDetail, Column, Detail } from './Structs';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 
@@ -27,7 +27,7 @@ const redistributeToColumns = (newWidths: string[], columns: Column[], unit: str
   });
 };
 
-const redistributeToH = <T> (newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string): void => {
+const redistributeToH = <T extends Detail> (newHeights: string[], rows: RowDetail<T>[], cells: DetailExt[], unit: string): void => {
   Arr.each(cells, (cell) => {
     const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
     const h = Redistribution.sum(heights, CellUtils.minHeight());

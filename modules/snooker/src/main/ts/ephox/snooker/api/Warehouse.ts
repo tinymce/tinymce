@@ -9,18 +9,17 @@ import * as TableLookup from './TableLookup';
 export interface Warehouse {
   readonly grid: Structs.Grid;
   readonly access: Record<string, Structs.DetailExt>;
-  readonly all: Structs.RowData<Structs.DetailExt>[];
-  readonly columns: Record<string, Structs.ColumnExt>;
+  readonly all: Structs.RowDetail<Structs.DetailExt>[];
+  readonly columns: Record<number, Structs.ColumnExt>;
+  readonly colgroups: Structs.Colgroup<Structs.ColumnExt>[];
 }
 
 const key = (row: number, column: number): string => {
   return row + ',' + column;
 };
 
-const getAt = (warehouse: Warehouse, row: number, column: number): Optional<Structs.DetailExt> => {
-  const raw = warehouse.access[key(row, column)];
-  return raw !== undefined ? Optional.some(raw) : Optional.none<Structs.DetailExt>();
-};
+const getAt = (warehouse: Warehouse, row: number, column: number): Optional<Structs.DetailExt> =>
+  Optional.from(warehouse.access[key(row, column)]);
 
 const findItem = <T>(warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean): Optional<Structs.DetailExt> => {
   const filtered = filterItems(warehouse, (detail) => {
@@ -37,7 +36,7 @@ const filterItems = (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: 
   return Arr.filter(all, predicate);
 };
 
-const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowData<T>): Record<number, Structs.ColumnExt> => {
+const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowDetail<T>): Record<number, Structs.ColumnExt> => {
   const columnsGroup: Record<number, Structs.ColumnExt> = {};
   let index = 0;
 
@@ -61,7 +60,7 @@ const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowData<T>):
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehouse => {
+const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Warehouse => {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.
@@ -70,8 +69,9 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
   //          element
   //          rowspan (merge cols)
   const access: Record<string, Structs.DetailExt> = {};
-  const cells: Structs.RowData<Structs.DetailExt>[] = [];
+  const cells: Structs.RowDetail<Structs.DetailExt>[] = [];
   let columns: Record<number, Structs.ColumnExt> = {};
+  let colgroups: Structs.Colgroup<Structs.ColumnExt>[] = [];
 
   const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
   const lockedColumns: Record<string, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
@@ -82,7 +82,9 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
 
   Arr.each(list, (rowData) => {
     if (rowData.section === 'colgroup') {
+      // Note: Currently only a single colgroup is supported so just override
       columns = generateColumns<T>(rowData);
+      colgroups = [ Structs.colgroup(rowData.element as SugarElement<HTMLTableColElement>, Obj.values(columns)) ];
     } else {
       const currentRow: Structs.DetailExt[] = [];
       Arr.each(rowData.cells, (rowCell) => {
@@ -111,7 +113,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
       });
 
       maxRows++;
-      cells.push(Structs.rowdata(rowData.element, currentRow, rowData.section));
+      cells.push(Structs.rowdetail(rowData.element, currentRow, rowData.section));
       rowCount++;
     }
   });
@@ -122,7 +124,8 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
     grid,
     access,
     all: cells,
-    columns
+    columns,
+    colgroups
   };
 };
 

@@ -6,7 +6,7 @@ import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 import * as TableGrid from './TableGrid';
 
-const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: SugarElement) => boolean): Structs.RowDetails[] => {
+const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: SugarElement) => boolean): Structs.RowDetailNew<Structs.DetailNew>[] => {
   const seen: boolean[][] = Arr.map(grid, (row) =>
     Arr.map(row.cells, Fun.never)
   );
@@ -30,20 +30,19 @@ const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: Su
         return [] as Structs.DetailNew[];
       }
     });
-    return Structs.rowdetails(details, row.section);
+    return Structs.rowdetailnew(row.element, details, row.section, row.isNew);
   });
 };
 
 const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean): Structs.RowCells[] => {
   const grid: Structs.RowCells[] = [];
 
-  if (Warehouse.hasColumns(warehouse)) {
-    const groupElementNew = Arr.map(Warehouse.justColumns(warehouse), (column: Structs.Column): Structs.ElementNew =>
+  Arr.each(warehouse.colgroups, (colgroup) => {
+    const cols = Arr.map(colgroup.columns, (column): Structs.ElementNew =>
       Structs.elementnew(column.element, isNew, false)
     );
-
-    grid.push(Structs.rowcells(groupElementNew, 'colgroup'));
-  }
+    grid.push(Structs.rowcells(colgroup.element, cols, 'colgroup', isNew));
+  });
 
   for (let rowIndex = 0; rowIndex < warehouse.grid.rows; rowIndex++) {
     const rowCells: Structs.ElementNew[] = [];
@@ -56,7 +55,8 @@ const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean): S
       );
       rowCells.push(element);
     }
-    const row = Structs.rowcells(rowCells, warehouse.all[rowIndex].section);
+    const rowDetail = warehouse.all[rowIndex];
+    const row = Structs.rowcells(rowDetail.element, rowCells, rowDetail.section, isNew);
     grid.push(row);
   }
 

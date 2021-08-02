@@ -63,6 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Certain HTML content when inserted could cause the editor to crash #TINY-7756
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
 - Disabled nested menu items could still be opened #TINY-7700
+- Some table operations would incorrectly cause table row attributes and styles to be lost #TINY-6666
+- The selection was incorrectly lost when using the `mceTableCellType` command #TINY-6666
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260

@@ -5,7 +5,7 @@ import * as DetailsList from '../model/DetailsList';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as LayerSelector from '../util/LayerSelector';
 import { LOCKED_COL_ATTR } from '../util/LockedColumnUtils';
-import { DetailExt, RowData } from './Structs';
+import { Detail, DetailExt, RowDetail } from './Structs';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 
@@ -62,7 +62,7 @@ const findSelectedStats = (house: Warehouse, isSelected: (detail: DetailExt) => 
   return statsStruct(minRow, minCol, maxRow, maxCol, allCells, selectedCells);
 };
 
-const makeCell = <T>(list: RowData<T>[], seenSelected: boolean, rowIndex: number): void => {
+const makeCell = (list: RowDetail<Detail>[], seenSelected: boolean, rowIndex: number): void => {
   // no need to check bounds, as anything outside this index is removed in the nested for loop
   const row = list[rowIndex].element;
   const td = SugarElement.fromTag('td');
@@ -71,7 +71,7 @@ const makeCell = <T>(list: RowData<T>[], seenSelected: boolean, rowIndex: number
   f(row, td);
 };
 
-const fillInGaps = <T>(list: RowData<T>[], house: Warehouse, stats: StatsStruct, isSelected: (detail: DetailExt) => boolean) => {
+const fillInGaps = (list: RowDetail<Detail>[], house: Warehouse, stats: StatsStruct, isSelected: (detail: DetailExt) => boolean) => {
   const totalColumns = house.grid.columns;
   const totalRows = house.grid.rows;
   // unselected cells have been deleted, now fill in the gaps in the model

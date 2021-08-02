@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Compare, SugarElement, Traverse } from '@ephox/sugar';
+import { Attribute, Compare, SugarElement } from '@ephox/sugar';
 
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import * as ResizeBehaviour from '../api/ResizeBehaviour';
@@ -16,7 +16,7 @@ import * as Transitions from './Transitions';
 
 type DetailExt = Structs.DetailExt;
 type DetailNew = Structs.DetailNew;
-type RowDataNew<A> = Structs.RowDataNew<A>;
+type RowDetailNew<A extends Structs.Detail> = Structs.RowDetailNew<A>;
 
 export interface RunOperationOutput {
   readonly cursor: Optional<SugarElement>;
@@ -74,27 +74,8 @@ export interface ExtractPasteRows {
 const fromWarehouse = (warehouse: Warehouse, generators: Generators) =>
   Transitions.toGrid(warehouse, generators, false);
 
-const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
-  // The row is either going to be a new row, or the row of any of the cells.
-  const findRow = (details: Structs.DetailNew[]) => {
-    const rowOfCells = Arr.findMap(details, (detail) => Traverse.parent(detail.element).map((row) => {
-      // If the row has a parent, it's within the existing table, otherwise it's a copied row
-      const isNew = Traverse.parent(row).isNone();
-      return Structs.elementnew(row, isNew, false);
-    }));
-    return rowOfCells.getOrThunk(() => Structs.elementnew(generators.row(), true, false));
-  };
-
-  return Arr.map(rendered, (details) => {
-    const row = findRow(details.details);
-    return Structs.rowdatanew(row.element, details.details, details.section, row.isNew);
-  });
-};
-
-const toDetailList = (grid: Structs.RowCells[], generators: Generators): RowDataNew<DetailNew>[] => {
-  const rendered = Transitions.toDetails(grid, Compare.eq);
-  return deriveRows(rendered, generators);
-};
+const toDetailList = (grid: Structs.RowCells[]): RowDetailNew<DetailNew>[] =>
+  Transitions.toDetails(grid, Compare.eq);
 
 const findInWarehouse = (warehouse: Warehouse, element: SugarElement): Optional<DetailExt> => Arr.findMap(warehouse.all, (r) =>
   Arr.find(r.cells, (e) => Compare.eq(element, e.element))
@@ -113,7 +94,7 @@ const extractCells = (warehouse: Warehouse, target: TargetSelection, predicate: 
 type EqEle = (e1: SugarElement, e2: SugarElement) => boolean;
 type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
 type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Optional<INFO>;
-type Adjustment<INFO> = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDataNew<T>[], info: INFO, tableSize: TableSize, resizeBehaviour: ResizeBehaviour.ResizeBehaviour) => void;
+type Adjustment<INFO> = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDetailNew<T>[], info: INFO, tableSize: TableSize, resizeBehaviour: ResizeBehaviour.ResizeBehaviour) => void;
 type PostAction = (e: SugarElement) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
@@ -127,7 +108,7 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
       const model = fromWarehouse(warehouse, generators);
       const result = operation(model, info, Compare.eq, genWrappers(generators));
       const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(result.grid);
-      const grid = toDetailList(result.grid, generators);
+      const grid = toDetailList(result.grid);
       return {
         info,
         grid,

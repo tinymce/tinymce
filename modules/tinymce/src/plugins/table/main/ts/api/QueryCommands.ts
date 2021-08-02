@@ -6,30 +6,31 @@
  */
 
 import { Selections } from '@ephox/darwin';
-import { Obj, Optional } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { TableActions } from '../actions/TableActions';
+import { LookupAction, TableActions } from '../actions/TableActions';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
 
 const registerQueryCommands = (editor: Editor, actions: TableActions, selections: Selections) => {
   const isRoot = Util.getIsRoot(editor);
-  const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
+
+  const lookupOnSelection = (action: LookupAction): string =>
+    TableSelection.getSelectionCell(Util.getSelectionStart(editor)).bind((cell) =>
+      TableLookup.table(cell, isRoot).map((table) => {
+        const targets = TableTargets.forMenu(selections, table, cell);
+        return action(table, targets);
+      })
+    ).getOr('');
 
   Obj.each({
     mceTableRowType: () => actions.getTableRowType(editor),
-    mceTableCellType: () => actions.getTableCellType(editor),
-    mceTableColType: () => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).bind((cell) =>
-      getTableFromCell(cell).map((table): string => {
-        const targets = TableTargets.forMenu(selections, table, cell);
-        return actions.getTableColType(table, targets);
-      })
-    ).getOr('')
+    mceTableCellType: () => lookupOnSelection(actions.getTableCellType),
+    mceTableColType: () => lookupOnSelection(actions.getTableColType)
   }, (func, name) => editor.addQueryValueHandler(name, func));
 
 };
