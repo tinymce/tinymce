@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
 import { Attribute, Css, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { getAttrValue } from '../util/CellUtils';
@@ -105,7 +105,7 @@ const modification = (generators: Generators, toData = elementToData): Generator
   };
 };
 
-const transform = <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) => {
+const transform = <K extends keyof HTMLElementTagNameMap> (tag: K, scope?: string | null) => {
   return (generators: Generators): GeneratorsTransform => {
     const list: Item[] = [];
 
@@ -116,9 +116,7 @@ const transform = <K extends keyof HTMLElementTagNameMap> (scope: string | null,
     };
 
     const makeNew = (element: SugarElement) => {
-      const attrs: Record<string, string | number | boolean | null> = {
-        scope
-      };
+      const attrs: Record<string, string | number | null> = Type.isUndefined(scope) ? {} : { scope };
       const cell = generators.replace(element, tag, attrs);
       list.push({
         item: element,

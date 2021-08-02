@@ -56,7 +56,15 @@ const replaceRow = (grid: Structs.RowCells[], index: number, comparator: CompElm
   return replaceIn(grid, targets, comparator, substitution);
 };
 
+const replaceCell = (grid: Structs.RowCells[], rowIndex: number, columnIndex: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
+  const rows = GridRow.extractGridDetails(grid).rows;
+  const targetRow = rows[rowIndex];
+  const targetCell = GridRow.getCell(targetRow, columnIndex);
+  return replaceIn(grid, [ targetCell ], comparator, substitution);
+};
+
 export {
   replaceColumn,
-  replaceRow
+  replaceRow,
+  replaceCell
 };
