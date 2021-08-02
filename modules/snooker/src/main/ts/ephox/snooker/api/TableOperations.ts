@@ -348,7 +348,7 @@ const opPasteRowsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRo
 
 const isTableHeaderCell = SugarNode.isTag('th');
 
-const findCommonCellType = (cells: Structs.DetailExt[]): Optional<string> => {
+const findCommonCellType = (cells: Structs.DetailExt[]): Optional<'td' | 'th'> => {
   const headerCells = Arr.filter(cells, (cell) => isTableHeaderCell(cell.element));
   if (headerCells.length === 0) {
     return Optional.some('td');
@@ -359,7 +359,7 @@ const findCommonCellType = (cells: Structs.DetailExt[]): Optional<string> => {
   }
 };
 
-const opGetColumnsType = (table: SugarElement, target: TargetSelection): string => {
+const opGetColumnsType = (table: SugarElement<HTMLTableElement>, target: TargetSelection): string => {
   const house = Warehouse.fromTable(table);
   const details = RunOperation.onCells(house, target);
   return details.bind((selectedCells) => {
@@ -372,7 +372,7 @@ const opGetColumnsType = (table: SugarElement, target: TargetSelection): string 
   }).getOr('');
 };
 
-const opGetCellsType = (table: SugarElement, target: TargetSelection): string => {
+const opGetCellsType = (table: SugarElement<HTMLTableElement>, target: TargetSelection): string => {
   const house = Warehouse.fromTable(table);
   const details = RunOperation.onCells(house, target);
   return details.bind(findCommonCellType).getOr('');
