@@ -15,7 +15,6 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import { hasAdvancedRowTab } from '../api/Settings';
-import { switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import { ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
@@ -37,35 +36,47 @@ const updateAdvancedProps = (modifier: DomModifier, data: RowData) => {
   modifier.setStyle('border-style', data.borderstyle);
 };
 
-const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, data: RowData) => {
+const applyStyleData = (editor: Editor, rows: HTMLTableRowElement[], data: RowData, oldData: RowData) => {
   const isSingleRow = rows.length === 1;
+  Arr.each(rows, (rowElm) => {
+    const modifier = isSingleRow ? DomModifier.normal(editor, rowElm) : DomModifier.ifTruthy(editor, rowElm);
 
+    updateSimpleProps(modifier, data);
+
+    if (hasAdvancedRowTab(editor)) {
+      updateAdvancedProps(modifier, data);
+    }
+
+    if (data.align !== oldData.align) {
+      Styles.unApplyAlign(editor, rowElm);
+      Styles.applyAlign(editor, rowElm, data.align);
+    }
+  });
+};
+
+const applyStructureData = (editor: Editor, data: RowData) => {
+  // Switch cell type if applicable. Note that we specifically tell the command to not fire events
+  // as we'll batch the events and fire a `TableModified` event at the end of the updates.
+  editor.execCommand('mceTableRowType', false, { type: data.type, no_events: true });
+};
+
+const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, data: RowData) => {
   const modifiedData = Obj.filter(data, (value, key) => oldData[key] !== value);
 
   if (Obj.size(modifiedData) > 0) {
-    Arr.each(rows, (rowElm) => {
-      // Switch row type
-      if (data.type !== Util.getNodeName(rowElm.parentNode)) {
-        switchSectionType(editor, rowElm, data.type);
-      }
-
-      const modifier = isSingleRow ? DomModifier.normal(editor, rowElm) : DomModifier.ifTruthy(editor, rowElm);
-
-      updateSimpleProps(modifier, data);
-
-      if (hasAdvancedRowTab(editor)) {
-        updateAdvancedProps(modifier, data);
-      }
-
-      if (data.align !== oldData.align) {
-        Styles.unApplyAlign(editor, rowElm);
-        Styles.applyAlign(editor, rowElm, data.align);
-      }
-    });
-
     const typeModified = Obj.has(modifiedData, 'type');
     // style modified if there's at least one other change apart from 'type'
     const styleModified = typeModified ? Obj.size(modifiedData) > 1 : true;
+
+    // Update the rows styling using the dialog data
+    if (styleModified) {
+      applyStyleData(editor, rows, data, oldData);
+    }
+
+    // Update the rows structure using the dialog data
+    if (typeModified) {
+      applyStructureData(editor, data);
+    }
 
     TableLookup.table(SugarElement.fromDom(rows[0])).each(
       (table) => Events.fireTableModified(editor, table.dom, {
