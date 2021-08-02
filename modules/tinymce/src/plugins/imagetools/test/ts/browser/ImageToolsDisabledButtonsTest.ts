@@ -64,41 +64,33 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
   });
 
   it('TINY-7772: Edit, flip and rotate should be disabled for remote images without imagetools_proxy set', async () => {
-    try {
-      const editor = await McEditor.pFromSettings(settings);
-      await pLoadRemoteImage(editor);
-      TinySelections.select(editor, 'img', []);
+    const editor = await McEditor.pFromSettings(settings);
+    await pLoadRemoteImage(editor);
+    TinySelections.select(editor, 'img', []);
 
-      assertImageToolsButtonsExist(editor);
-      const enabled = true;
-      assertButtonStatus(editor, editImageButtonSelector, enabled);
-      assertButtonStatus(editor, flipHorizontallyImageButtonSelector, enabled);
-      assertButtonStatus(editor, flipVerticallyImageButtonSelector, enabled);
-      assertButtonStatus(editor, rotateCounterClockwiseImageButtonSelector, enabled);
-      assertButtonStatus(editor, rotateClockwiseImageButtonSelector, enabled);
-      McEditor.remove(editor);
-    } catch (e) {
-      assert.fail(`Test failed: ${e.message}`);
-    }
+    assertImageToolsButtonsExist(editor);
+    const enabled = true;
+    assertButtonStatus(editor, editImageButtonSelector, enabled);
+    assertButtonStatus(editor, flipHorizontallyImageButtonSelector, enabled);
+    assertButtonStatus(editor, flipVerticallyImageButtonSelector, enabled);
+    assertButtonStatus(editor, rotateCounterClockwiseImageButtonSelector, enabled);
+    assertButtonStatus(editor, rotateClockwiseImageButtonSelector, enabled);
+    McEditor.remove(editor);
   });
 
   it('TINY-7772: Edit, flip and rotate should be enabled for remote images with imagetools_proxy set', async () => {
-    try {
-      const editor = await McEditor.pFromSettings({ ...settings, imagetools_proxy: 'foo.php' });
-      await pLoadRemoteImage(editor);
-      TinySelections.select(editor, 'img', []);
-      await pWaitImageToolsContextMenu();
+    const editor = await McEditor.pFromSettings({ ...settings, imagetools_proxy: 'foo.php' });
+    await pLoadRemoteImage(editor);
+    TinySelections.select(editor, 'img', []);
+    await pWaitImageToolsContextMenu();
 
-      assertImageToolsButtonsExist(editor);
-      const enabled = false;
-      assertButtonStatus(editor, editImageButtonSelector, enabled);
-      assertButtonStatus(editor, flipHorizontallyImageButtonSelector, enabled);
-      assertButtonStatus(editor, flipVerticallyImageButtonSelector, enabled);
-      assertButtonStatus(editor, rotateCounterClockwiseImageButtonSelector, enabled);
-      assertButtonStatus(editor, rotateClockwiseImageButtonSelector, enabled);
-      McEditor.remove(editor);
-    } catch (e) {
-      assert.fail(`Test failed: ${e.message}`);
-    }
+    assertImageToolsButtonsExist(editor);
+    const enabled = false;
+    assertButtonStatus(editor, editImageButtonSelector, enabled);
+    assertButtonStatus(editor, flipHorizontallyImageButtonSelector, enabled);
+    assertButtonStatus(editor, flipVerticallyImageButtonSelector, enabled);
+    assertButtonStatus(editor, rotateCounterClockwiseImageButtonSelector, enabled);
+    assertButtonStatus(editor, rotateClockwiseImageButtonSelector, enabled);
+    McEditor.remove(editor);
   });
 });
