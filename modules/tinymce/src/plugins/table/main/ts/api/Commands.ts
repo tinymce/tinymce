@@ -29,9 +29,9 @@ import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Setti
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
 
-const getSelectionStartCellOrCaption = (editor: Editor) => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+const getSelectionStartCellOrCaption = (editor: Editor) => TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
 
-const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = Util.getIsRoot(editor);
