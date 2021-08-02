@@ -153,15 +153,6 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
       editor.once('touchend', () => editor.off('selectionchange', openiOS));
     }
   } else {
-    // TINY-7688: Commented out cause when longpressing doesn't select and
-    // places the cursor at the beginning of the node (Android 10 and 11)
-
-    // if (isAndroid && !useNodeAnchor) {
-    //   // On Android editor.selection hasn't updated yet at this point, so need to do it manually
-    //   // Without this longpress causes drag-n-drop duplication of code on Android
-    //   editor.selection.setCursorLocation(e.target, 0);
-    // }
-
     open();
   }
 };
