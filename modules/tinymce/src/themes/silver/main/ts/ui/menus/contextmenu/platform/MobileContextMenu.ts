@@ -128,7 +128,6 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();
   const isAndroid = detection.os.isAndroid();
-  const isAndroid10 = isAndroid && detection.os.version.major === 10;
   const isTouch = detection.deviceType.isTouch();
 
   const shouldHighlightImmediately = () => !(isAndroid || isiOS || (isOSX && isTouch));
@@ -154,13 +153,14 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
       editor.once('touchend', () => editor.off('selectionchange', openiOS));
     }
   } else {
-    // On Android editor.selection hasn't updated yet at this point, so need to do it manually
-    // Without this longpress causes drag-n-drop duplication of code on Android
-    // TINY-7688: Changed the condition to Android 10 only cause when on v8,9,11
-    // it clears the selection and places the cursor at the beginning of selected the node
-    if (isAndroid10 && !useNodeAnchor) {
-      editor.selection.setCursorLocation(e.target, 0);
-    }
+    // TINY-7688: Commented out cause when longpressing doesn't select and
+    // places the cursor at the beginning of the node (Android 10 and 11)
+
+    // if (isAndroid && !useNodeAnchor) {
+    //   // On Android editor.selection hasn't updated yet at this point, so need to do it manually
+    //   // Without this longpress causes drag-n-drop duplication of code on Android
+    //   editor.selection.setCursorLocation(e.target, 0);
+    // }
 
     open();
   }
