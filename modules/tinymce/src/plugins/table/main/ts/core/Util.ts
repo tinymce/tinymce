@@ -44,6 +44,8 @@ const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
 
 const getSelectionStart = (editor: Editor) => SugarElement.fromDom(editor.selection.getStart());
 
+const getSelectionEnd = (editor: Editor) => SugarElement.fromDom(editor.selection.getEnd());
+
 const getThunkedSelectionStart = (editor: Editor) => () => SugarElement.fromDom(editor.selection.getStart());
 
 export {
@@ -59,5 +61,6 @@ export {
   isPercentage,
   isPixel,
   getSelectionStart,
+  getSelectionEnd,
   getThunkedSelectionStart
 };

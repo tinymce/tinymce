@@ -20,7 +20,7 @@ const registerQueryCommands = (editor: Editor, actions: TableActions, selections
   const isRoot = Util.getIsRoot(editor);
 
   const lookupOnSelection = (action: LookupAction): string =>
-    TableSelection.getSelectionStartCell(Util.getSelectionStart(editor)).bind((cell) =>
+    TableSelection.getSelectionCell(Util.getSelectionStart(editor)).bind((cell) =>
       TableLookup.table(cell, isRoot).map((table) => {
         const targets = TableTargets.forMenu(selections, table, cell);
         return action(table, targets);
