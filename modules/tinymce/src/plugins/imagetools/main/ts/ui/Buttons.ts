@@ -12,48 +12,54 @@ import * as Actions from '../core/Actions';
 const register = (editor: Editor) => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
+  const onSetup = (buttonApi) => {
+    const setDisabled = () => {
+      const disabled = Actions.getSelectedImage(editor).forall((element) => {
+        return Actions.getEditableImage(editor, element.dom).isNone();
+      });
+      buttonApi.setDisabled(disabled);
+    };
+
+    editor.on('NodeChange', setDisabled);
+
+    return () => {
+      editor.off('NodeChange', setDisabled);
+    };
+  };
+
   editor.ui.registry.addButton('rotateleft', {
     tooltip: 'Rotate counterclockwise',
     icon: 'rotate-left',
-    onAction: cmd('mceImageRotateLeft')
+    onAction: cmd('mceImageRotateLeft'),
+    onSetup
   });
 
   editor.ui.registry.addButton('rotateright', {
     tooltip: 'Rotate clockwise',
     icon: 'rotate-right',
-    onAction: cmd('mceImageRotateRight')
+    onAction: cmd('mceImageRotateRight'),
+    onSetup
   });
 
   editor.ui.registry.addButton('flipv', {
     tooltip: 'Flip vertically',
     icon: 'flip-vertically',
-    onAction: cmd('mceImageFlipVertical')
+    onAction: cmd('mceImageFlipVertical'),
+    onSetup
   });
 
   editor.ui.registry.addButton('fliph', {
     tooltip: 'Flip horizontally',
     icon: 'flip-horizontally',
-    onAction: cmd('mceImageFlipHorizontal')
+    onAction: cmd('mceImageFlipHorizontal'),
+    onSetup
   });
 
   editor.ui.registry.addButton('editimage', {
     tooltip: 'Edit image',
     icon: 'edit-image',
     onAction: cmd('mceEditImage'),
-    onSetup: (buttonApi) => {
-      const setDisabled = () => {
-        const disabled = Actions.getSelectedImage(editor).forall((element) => {
-          return Actions.getEditableImage(editor, element.dom).isNone();
-        });
-        buttonApi.setDisabled(disabled);
-      };
-
-      editor.on('NodeChange', setDisabled);
-
-      return () => {
-        editor.off('NodeChange', setDisabled);
-      };
-    }
+    onSetup
   });
 
   editor.ui.registry.addButton('imageoptions', {
