@@ -29,9 +29,9 @@ import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Setti
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
 
-const getSelectionStartCellOrCaption = (editor: Editor) => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+const getSelectionStartCellOrCaption = (editor: Editor) => TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
 
-const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = Util.getIsRoot(editor);
@@ -84,11 +84,14 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   };
 
   const toggleTableCellClass = (_ui: boolean, clazz: string) => {
-    performActionOnSelection((table, startCell) => {
-      const cells = TableSelection.getCellsFromSelection(startCell, selections, isRoot);
-      Arr.each(cells, (value) => {
-        editor.formatter.toggle('tablecellclass', { value: clazz }, value.dom);
-      });
+    performActionOnSelection((table) => {
+      const selectedCells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections, Util.getIsRoot(editor));
+      const allHaveClass = Arr.forall(selectedCells, (cell) => editor.formatter.match('tablecellclass', { value: clazz }, cell.dom));
+      const formatterAction = allHaveClass ? editor.formatter.remove : editor.formatter.apply;
+
+      Arr.each(selectedCells, (cell) =>
+        formatterAction('tablecellclass', { value: clazz }, cell.dom)
+      );
       Events.fireTableModified(editor, table.dom, Events.styleModified);
     });
   };

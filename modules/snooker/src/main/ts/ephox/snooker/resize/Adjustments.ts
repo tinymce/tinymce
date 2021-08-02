@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { ResizeBehaviour } from '../api/ResizeBehaviour';
-import { Detail, RowData } from '../api/Structs';
+import { Detail, RowDetail } from '../api/Structs';
 import { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Deltas from '../calc/Deltas';
@@ -68,7 +68,7 @@ const adjustHeight = (table: SugarElement, delta: number, index: number, directi
 };
 
 // Using the width of the added/removed columns gathered on extraction (pixelDelta), get and apply the new column sizes and overall table width delta
-const adjustAndRedistributeWidths = <T extends Detail> (_table: SugarElement<HTMLTableElement>, list: RowData<T>[], details: { pixelDelta: number }, tableSize: TableSize, resizeBehaviour: ResizeBehaviour): void => {
+const adjustAndRedistributeWidths = <T extends Detail> (_table: SugarElement<HTMLTableElement>, list: RowDetail<T>[], details: { pixelDelta: number }, tableSize: TableSize, resizeBehaviour: ResizeBehaviour): void => {
   const warehouse = Warehouse.generate(list);
   const sizes = tableSize.getWidths(warehouse, tableSize);
   const tablePixelWidth = tableSize.pixelWidth();
@@ -79,7 +79,7 @@ const adjustAndRedistributeWidths = <T extends Detail> (_table: SugarElement<HTM
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = <T extends Detail> (_table: SugarElement, list: RowData<T>[], _info: { }, tableSize: TableSize): void => {
+const adjustWidthTo = <T extends Detail> (_table: SugarElement, list: RowDetail<T>[], _info: { }, tableSize: TableSize): void => {
   const warehouse = Warehouse.generate(list);
   const widths = tableSize.getWidths(warehouse, tableSize);
 

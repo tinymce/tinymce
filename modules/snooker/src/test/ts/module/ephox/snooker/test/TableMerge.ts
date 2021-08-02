@@ -9,7 +9,7 @@ import * as Fitment from 'ephox/snooker/test/Fitment';
 
 const mapToStructGrid = (grid: Structs.ElementNew[][]): Structs.RowCells[] => {
   return Arr.map(grid, (row) => {
-    return Structs.rowcells(row, 'tbody');
+    return Structs.rowcells('tr' as any, row, 'tbody', false);
   });
 };
 

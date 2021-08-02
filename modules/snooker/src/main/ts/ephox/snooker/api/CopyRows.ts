@@ -8,7 +8,7 @@ import * as Redraw from '../operate/Redraw';
 import { Generators } from './Generators';
 import { Warehouse } from './Warehouse';
 
-const copyRows = (table: SugarElement<HTMLTableElement>, target: TargetSelection, generators: Generators): Optional<SugarElement<HTMLTableRowElement>[]> => {
+const copyRows = (table: SugarElement<HTMLTableElement>, target: TargetSelection, generators: Generators): Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]> => {
   const warehouse = Warehouse.fromTable(table);
   // Cannot use onUnlockedCells like extractor here as if only cells in a locked column are selected, then this will be Optional.none and
   // there is now no way of knowing which rows are selected
@@ -23,7 +23,7 @@ const copyRows = (table: SugarElement<HTMLTableElement>, target: TargetSelection
       const newCells = Arr.filter(row.cells, (cell) => !cell.isLocked);
       return newCells.length > 0 ? [{ ...row, cells: newCells }] : [];
     });
-    const slicedDetails = toDetailList(filteredGrid, generators);
+    const slicedDetails = toDetailList(filteredGrid);
     return Optionals.someIf(slicedDetails.length > 0, slicedDetails);
   }).map((slicedDetails) => Redraw.copy(slicedDetails));
 };

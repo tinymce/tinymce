@@ -65,12 +65,15 @@ const generateElements = (amount: number, row: Structs.RowCells, generators: Sim
   return Arr.range(amount, (idx) => Structs.elementnew(generator(), true, isLocked(idx)));
 };
 
-const rowFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators, lockedColumns: Record<string, boolean>): Structs.RowCells[] =>
-  grid.concat(Arr.range(amount, () => {
-    const row = grid[grid.length - 1];
+const rowFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators, lockedColumns: Record<string, boolean>): Structs.RowCells[] => {
+  const exampleRow = grid[grid.length - 1];
+  return grid.concat(Arr.range(amount, () => {
+    const generator = exampleRow.section === 'colgroup' ? generators.colgroup : generators.row;
+    const row = GridRow.clone(exampleRow, generator, Fun.identity);
     const elements = generateElements(row.cells.length, row, generators, (idx) => Obj.has(lockedColumns, idx.toString()));
     return GridRow.setCells(row, elements);
   }));
+};
 
 const colFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators, startIndex: number): Structs.RowCells[] =>
   Arr.map(grid, (row) => {
