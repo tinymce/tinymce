@@ -1,3 +1,4 @@
+import * as Fun from './Fun';
 import { Optional } from './Optional';
 
 /**
@@ -10,47 +11,26 @@ import { Optional } from './Optional';
  * a Haskell programmer so it might be imperfect.
  *
  * Comparison with exceptions:
- * - Result isn't supported by first-class language features (no try/catch syntax)
+ * - Result isn't supported by first-class language features (no try/catch
+ *   syntax)
  * - You can never forget to wrap a Result in a try/catch, as you need to call
  * one of these helper functions to get the value inside
- * - Result will track the type of your error (typescript forces you to use either any or unknown in catch blocks)
+ * - Result will track the type of your error (typescript forces you to use
+ *   either any or unknown in catch blocks)
  * - Try to use Result instead of exceptions where you can
  *
  * Comparison with Optional<T>:
- * - The only difference is that in the "doesn't have a value" case, a Result has an error and an Optional has nothing
- * - If it's important for the person holding the object to know what went wrong, or handle an error, use Result
- * - If there's absolutely nothing that can be done with the error any more, use Optional
+ * - The only difference is that in the "doesn't have a value" case, a Result
+ *   has an error and an Optional has nothing
+ * - If it's important for the person holding the object to know what went
+ *   wrong, or handle an error, use Result
+ * - If there's absolutely nothing that can be done with the error any more,
+ *   use Optional
  * - If the word "error" doesn't describe what happens when the value isn't
- * present (ie. nothing went wrong, it just simply isn't there) use Optional
+ *   present (ie. nothing went wrong, it just simply isn't there) use Optional
  */
-export class Result<T, E> {
-  private readonly tag: boolean;
-  private readonly item: T | E;
-
-  private constructor(tag: boolean, item: T | E) {
-    this.tag = tag;
-    this.item = item;
-  }
-
+export interface Result<T, E> {
   // --- Identities ---
-
-  /**
-   * Creates a new Result<T, E> that **does** contain a value. The error type
-   * doesn't matter here, as there is no error in this object, so we default it
-   * to `never` to make casting easier.
-   */
-  public static value<T, E = never>(this: void, value: T): Result<T, E> {
-    return new Result<T, E>(true, value);
-  }
-
-  /**
-   * Creates a new Result that **does not** contain a value, and therefore
-   * contains an error. The value type doesn't matter here, as there is no value
-   * in this object, so we default it to `never` to make casting easier.
-   */
-  public static error<T = never, E = any>(this: void, error: E): Result<T, E> {
-    return new Result<T, E>(false, error);
-  }
 
   /**
    * Perform a transform on the Result type. Similar to the fold method on a
@@ -60,28 +40,18 @@ export class Result<T, E> {
    * `this` **does** contain a value then `onValue` will be called (with the
    * value as its argument).
    */
-  public fold<U>(onError: (err: E) => U, onValue: (value: T) => U): U {
-    if (this.tag) {
-      return onValue(this.item as T);
-    } else {
-      return onError(this.item as E);
-    }
-  }
+  fold: <U> (onError: (err: E) => U, onValue: (value: T) => U) => U;
 
   /**
    * Determines if this Result object contains a value.
    */
-  public isValue(): boolean {
-    return this.tag;
-  }
+  isValue: () => boolean;
 
   /**
    * Determines if this Result object contains an error (and therefore does not
    * contain an error).
    */
-  public isError(): boolean {
-    return !this.tag;
-  }
+  isError: () => boolean;
 
   // --- Functor ---
 
@@ -94,13 +64,7 @@ export class Result<T, E> {
    * then neither will the output (and the output will keep the same error as
    * this).
    */
-  public map<U>(mapper: (value: T) => U): Result<U, E> {
-    if (this.tag) {
-      return Result.value(mapper(this.item as T));
-    } else {
-      return this as unknown as Result<U, E>;
-    }
-  }
+  map: <U> (mapper: (value: T) => U) => Result<U, E>;
 
   /**
    * Perform a transform on this Result object, if there **is not** a value. If
@@ -111,13 +75,7 @@ export class Result<T, E> {
    * contain a value then so will the output (and the output will keep the same
    * value as this).
    */
-  public mapError<F>(mapper: (err: E) => F): Result<T, F> {
-    if (this.tag) {
-      return this as unknown as Result<T, F>;
-    } else {
-      return Result.error(mapper(this.item as E));
-    }
-  }
+  mapError: <U> (mapper: (err: E) => U) => Result<T, U>;
 
   // --- Monad ---
 
@@ -126,13 +84,7 @@ export class Result<T, E> {
    * the map function earlier in the piece, here the transformation also can
    * fail (and therefore returns a Result).
    */
-  public bind<U>(binder: (value: T) => Result<U, E>): Result<U, E> {
-    if (this.tag) {
-      return binder(this.item as T);
-    } else {
-      return this as unknown as Result<U, E>;
-    }
-  }
+  bind: <U> (binder: (value: T) => Result<U, E>) => Result<U, E>;
 
   // --- Traversable ---
 
@@ -142,13 +94,7 @@ export class Result<T, E> {
    * means that for error containing objects it returns false (as no predicate
    * meeting value exists).
    */
-  public exists(predicate: (value: T) => boolean): boolean {
-    if (this.tag) {
-      return predicate(this.item as T);
-    } else {
-      return false;
-    }
-  }
+  exists: (predicate: (value: T) => boolean) => boolean;
 
   /**
    * For a given predicate, this function finds out if **all** the values inside
@@ -156,13 +102,7 @@ export class Result<T, E> {
    * error containing objects it returns true (as all 0 values do meet the
    * predicate).
    */
-  public forall(predicate: (value: T) => boolean): boolean {
-    if (this.tag) {
-      return predicate(this.item as T);
-    } else {
-      return true;
-    }
-  }
+  forall: (predicate: (value: T) => boolean) => boolean;
 
   // --- Getters ---
 
@@ -170,13 +110,7 @@ export class Result<T, E> {
    * Get the value out of this Result object, using a default replacement value
    * if the provided Result object contains an error instead.
    */
-  public getOr<T2 = T>(defaultValue: T2): T | T2 {
-    if (this.tag) {
-      return this.item as T;
-    } else {
-      return defaultValue;
-    }
-  }
+  getOr: <T2 = T>(defaultValue: T2) => T | T2;
 
   /**
    * Get the value out of this Result object, using a default replacement value
@@ -184,9 +118,7 @@ export class Result<T, E> {
    * the replacement is also a Result - meaning that this method will always
    * return a Result.
    */
-  public or<T2 = T, E2 = E>(other: Result<T2, E2>): Result<T | T2, E | E2> {
-    return this.tag ? this : other;
-  }
+  or: <T2 = T, E2 = E>(result: Result<T2, E2>) => Result<T | T2, E | E2>;
 
   /**
    * Get the value out of this Result object, using a default replacement value
@@ -195,13 +127,7 @@ export class Result<T, E> {
    * value to `getOrThunk`, you pass a function which (if called) will
    * **return** the value you want to use.
    */
-  public getOrThunk<T2 = T>(makeDefaultValue: () => T2): T | T2 {
-    if (this.tag) {
-      return this.item as T;
-    } else {
-      return makeDefaultValue();
-    }
-  }
+  getOrThunk: <T2 = T>(getDefaultValue: () => T2) => T | T2;
 
   /**
    * Get the value out of this Result object, using a default replacement value
@@ -214,9 +140,7 @@ export class Result<T, E> {
    * Unlike `getOrThunk`, in this method the default is also a Result - meaning
    * that this method will always return a Result.
    */
-  public orThunk<T2 = T, E2 = E>(makeOther: () => Result<T2, E2>): Result<T | T2, E | E2> {
-    return this.tag ? this : makeOther();
-  }
+  orThunk: <T2 = T, E2 = E>(makeResult: () => Result<T2, E2>) => Result<T | T2, E | E2>;
 
   /**
    * Get the value out of the inside of the Result object, throwing an
@@ -231,13 +155,7 @@ export class Result<T, E> {
    *
    * Prefer other methods to this, such as `.each`.
    */
-  public getOrDie(): T {
-    if (this.tag) {
-      return this.item as T;
-    } else {
-      throw new Error(String(this.item));
-    }
-  }
+  getOrDie: () => T;
 
   // --- Utilities ---
 
@@ -252,35 +170,149 @@ export class Result<T, E> {
    * something, check whether it has a return value. If it does, you're looking
    * at a transform.
    */
-  public each(worker: (value: T) => void): void {
-    if (this.tag) {
-      worker(this.item as T);
-    }
-  }
+  each: (worker: (value: T) => void) => void;
 
   /**
    * Turn this Result into an Optional. If this Result has a value in it, so
    * will the returned Optional. If this Result has an error in it, the error
    * will be discarded and `Optional.none()` will be returned.
    */
-  public toOptional(): Optional<T> {
-    if (this.tag) {
-      return Optional.some(this.item as T);
-    } else {
-      return Optional.none();
-    }
-  }
-
-  /**
-   * Convert an Optional into a Result. If the Optional has a value in it, so
-   * will the returned Result. If the Optional does not have a value in it, the
-   * returned Result will have an error in it (and the error will be the
-   * argument `err`).
-   */
-  public static fromOption<T, E>(this: void, optional: Optional<T>, err: E): Result<T, E> {
-    return optional.fold(
-      () => Result.error(err),
-      Result.value
-    );
-  }
+  toOptional: () => Optional<T>;
 }
+
+/**
+ * Creates a new Result<T, E> that **does** contain a value. The error type
+ * doesn't matter here, as there is no error in this object, so we default it
+ * to `never` to make casting easier.
+ */
+const value = <T, E = never>(o: T): Result<T, E> => {
+  const or = <T2 = T, E2 = E>(_opt: Result<T2, E2>) => {
+    return value(o);
+  };
+
+  const orThunk = <T2 = T, E2 = E>(_f: () => Result<T2, E2>) => {
+    return value(o);
+  };
+
+  const map = <U>(f: (value: T) => U) => {
+    return value(f(o));
+  };
+
+  const mapError = <U>(_f: (error: E) => U) => {
+    return value(o);
+  };
+
+  const each = (f: (value: T) => void) => {
+    f(o);
+  };
+
+  const bind = <U>(f: (value: T) => Result<U, E>) => {
+    return f(o);
+  };
+
+  const fold = <U>(_: (err: E) => U, onValue: (value: T) => U) => {
+    return onValue(o);
+  };
+
+  const exists = (f: (value: T) => boolean) => {
+    return f(o);
+  };
+
+  const forall = (f: (value: T) => boolean) => {
+    return f(o);
+  };
+
+  const toOptional = () => {
+    return Optional.some(o);
+  };
+
+  return {
+    isValue: Fun.always,
+    isError: Fun.never,
+    getOr: Fun.constant(o),
+    getOrThunk: Fun.constant(o),
+    getOrDie: Fun.constant(o),
+    or,
+    orThunk,
+    fold,
+    map,
+    mapError,
+    each,
+    bind,
+    exists,
+    forall,
+    toOptional
+  };
+};
+
+/**
+ * Creates a new Result that **does not** contain a value, and therefore
+ * contains an error. The value type doesn't matter here, as there is no value
+ * in this object, so we default it to `never` to make casting easier.
+ */
+const error = <T = never, E = any>(message: E): Result<T, E> => {
+  const getOrThunk = <T2 = T> (f: () => T2) => {
+    return f();
+  };
+
+  const getOrDie = (): T => {
+    return Fun.die(String(message))();
+  };
+
+  const or = Fun.identity;
+
+  const orThunk = <T2 = T, E2 = E>(f: () => Result<T2, E2>) => {
+    return f();
+  };
+
+  const map = <U>(_f: (value: T) => U) => {
+    return error<U, E>(message);
+  };
+
+  const mapError = <U> (f: (error: E) => U) => {
+    return error(f(message));
+  };
+
+  const bind = <U>(_f: (value: T) => Result<U, E>) => {
+    return error<U, E>(message);
+  };
+
+  const fold = <U>(onError: (err: E) => U, _: (value: T) => U) => {
+    return onError(message);
+  };
+
+  return {
+    isValue: Fun.never,
+    isError: Fun.always,
+    getOr: Fun.identity,
+    getOrThunk,
+    getOrDie,
+    or,
+    orThunk,
+    fold,
+    map,
+    mapError,
+    each: Fun.noop,
+    bind,
+    exists: Fun.never,
+    forall: Fun.always,
+    toOptional: Optional.none
+  };
+};
+
+/**
+ * Convert an Optional into a Result. If the Optional has a value in it, so
+ * will the returned Result. If the Optional does not have a value in it, the
+ * returned Result will have an error in it (and the error will be the argument
+ * `err`).
+ */
+const fromOption = <T, E>(opt: Optional<T>, err: E): Result<T, E> => opt.fold(
+  () => error(err),
+  value
+);
+
+export const Result = {
+  value,
+  error,
+  fromOption
+};
