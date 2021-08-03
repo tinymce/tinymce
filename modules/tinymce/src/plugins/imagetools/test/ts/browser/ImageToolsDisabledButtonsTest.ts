@@ -1,10 +1,8 @@
-import { UiFinder, Waiter } from '@ephox/agar';
+import { Mouse, UiFinder } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyDom, TinySelections } from '@ephox/mcagar';
-import { Attribute, SugarBody } from '@ephox/sugar';
-import { assert } from 'chai';
+import { McEditor, TinyDom } from '@ephox/mcagar';
 
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
+import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -24,73 +22,53 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
   const rotateCounterClockwiseImageButtonSelector = '[role="toolbar"] button[title="Rotate counterclockwise"]';
   const rotateClockwiseImageButtonSelector = '[role="toolbar"] button[title="Rotate clockwise"]';
 
-  const assertImageToolsButtonsExist = (editor) => {
-    UiFinder.exists(TinyDom.container(editor), editImageButtonSelector);
-    UiFinder.exists(TinyDom.container(editor), flipHorizontallyImageButtonSelector);
-    UiFinder.exists(TinyDom.container(editor), flipVerticallyImageButtonSelector);
-    UiFinder.exists(TinyDom.container(editor), rotateCounterClockwiseImageButtonSelector);
-    UiFinder.exists(TinyDom.container(editor), rotateClockwiseImageButtonSelector);
-  };
-
-  const assertButtonStatus = (editor, selector: string, enabled: boolean) => {
-    UiFinder.findIn(TinyDom.container(editor), selector).map((button) => {
-      assert.equal(Attribute.get(button, 'aria-disabled'), Boolean(enabled).toString());
-    });
-  };
-
-  const pLoadRemoteImage = (editor): Promise<void> => {
-    return new PromisePolyfill((resolve, reject) => {
-      const remoteImageSrc = 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png';
-      const img = new Image();
-      img.src = remoteImageSrc;
-
-      img.onload = () => {
-        editor.setContent(`<p><img src="${remoteImageSrc}" width="50" height="50" /></p>`);
-        editor.focus();
-        resolve();
-      };
-
-      img.onerror = (e) => reject(e);
-    });
-  };
-
-  const pWaitImageToolsContextMenu = () =>
-    Waiter.pTryUntil('Wait for Image Tools context menu to open', () => UiFinder.exists(SugarBody.body(), '.tox-pop'));
-
   before(() => {
     Theme();
     ImageToolsPlugin();
     ImagePlugin();
   });
 
-  it('TINY-7772: Edit, flip and rotate should be disabled for remote images without imagetools_proxy set', async () => {
-    const editor = await McEditor.pFromSettings(settings);
-    await pLoadRemoteImage(editor);
-    TinySelections.select(editor, 'img', []);
+  const assertButtonsStatus = (editor: Editor, disabled: boolean) => {
+    const container = TinyDom.container(editor);
+    UiFinder.exists(container, `${editImageButtonSelector}[aria-disabled="${disabled}"]`);
+    UiFinder.exists(container, `${flipHorizontallyImageButtonSelector}[aria-disabled="${disabled}"]`);
+    UiFinder.exists(container, `${flipVerticallyImageButtonSelector}[aria-disabled="${disabled}"]`);
+    UiFinder.exists(container, `${rotateCounterClockwiseImageButtonSelector}[aria-disabled="${disabled}"]`);
+    UiFinder.exists(container, `${rotateClockwiseImageButtonSelector}[aria-disabled="${disabled}"]`);
+  };
 
-    assertImageToolsButtonsExist(editor);
-    const enabled = true;
-    assertButtonStatus(editor, editImageButtonSelector, enabled);
-    assertButtonStatus(editor, flipHorizontallyImageButtonSelector, enabled);
-    assertButtonStatus(editor, flipVerticallyImageButtonSelector, enabled);
-    assertButtonStatus(editor, rotateCounterClockwiseImageButtonSelector, enabled);
-    assertButtonStatus(editor, rotateClockwiseImageButtonSelector, enabled);
+  const insertRemoteImage = (editor: Editor) => {
+    const remoteImageSrc = 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png';
+    editor.setContent(`<p><img src="${remoteImageSrc}" width="50" height="50" /></p>`);
+  };
+
+  it('TINY-7772: Edit, flip and rotate should be disabled for remote images without imagetools_proxy set', async () => {
+    const editor = await McEditor.pFromSettings<Editor>(settings);
+    insertRemoteImage(editor);
+    Mouse.clickOn(TinyDom.body(editor), 'img');
+
+    const disabled = true;
+    assertButtonsStatus(editor, disabled);
     McEditor.remove(editor);
+
   });
 
   it('TINY-7772: Edit, flip and rotate should be enabled for remote images with imagetools_proxy set', async () => {
-    const editor = await McEditor.pFromSettings({ ...settings, imagetools_proxy: 'foo.php' });
-    await pLoadRemoteImage(editor);
-    TinySelections.select(editor, 'img', []);
-    await pWaitImageToolsContextMenu();
+    const editor = await McEditor.pFromSettings<Editor>({ ...settings, imagetools_proxy: 'foo.php' });
+    insertRemoteImage(editor);
+    Mouse.clickOn(TinyDom.body(editor), 'img');
 
-    assertImageToolsButtonsExist(editor);
-    const enabled = false;
-    assertButtonStatus(editor, editImageButtonSelector, enabled);
-    assertButtonStatus(editor, flipHorizontallyImageButtonSelector, enabled);
-    assertButtonStatus(editor, flipVerticallyImageButtonSelector, enabled);
-    assertButtonStatus(editor, rotateCounterClockwiseImageButtonSelector, enabled);
-    assertButtonStatus(editor, rotateClockwiseImageButtonSelector, enabled);
+    const disabled = false;
+    assertButtonsStatus(editor, disabled);
+    McEditor.remove(editor);
+  });
+
+  it('TINY-7772: Edit, flip and rotate should be disabled when no images are selected', async () => {
+    const editor = await McEditor.pFromSettings<Editor>(settings);
+    insertRemoteImage(editor);
+
+    const disabled = true;
+    assertButtonsStatus(editor, disabled);
     McEditor.remove(editor);
   });
 });
