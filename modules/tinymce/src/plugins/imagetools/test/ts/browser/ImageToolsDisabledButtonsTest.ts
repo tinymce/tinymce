@@ -1,6 +1,6 @@
-import { Mouse, UiFinder } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyDom } from '@ephox/mcagar';
+import { McEditor, TinyDom, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
@@ -45,18 +45,18 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
   it('TINY-7772: Edit, flip and rotate should be disabled for remote images without imagetools_proxy set', async () => {
     const editor = await McEditor.pFromSettings<Editor>(settings);
     insertRemoteImage(editor);
-    Mouse.clickOn(TinyDom.body(editor), 'img');
+    TinySelections.select(editor, 'img', []);
 
     const disabled = true;
     assertButtonsStatus(editor, disabled);
     McEditor.remove(editor);
-
   });
 
   it('TINY-7772: Edit, flip and rotate should be enabled for remote images with imagetools_proxy set', async () => {
     const editor = await McEditor.pFromSettings<Editor>({ ...settings, imagetools_proxy: 'foo.php' });
     insertRemoteImage(editor);
-    Mouse.clickOn(TinyDom.body(editor), 'img');
+    TinySelections.select(editor, 'img', []);
+    await UiFinder.pWaitFor('Wait for edit image button to became enabled', TinyDom.container(editor), `${editImageButtonSelector}[aria-disabled="false"]`);
 
     const disabled = false;
     assertButtonsStatus(editor, disabled);
