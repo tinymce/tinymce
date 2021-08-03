@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Toolbar } from '@ephox/bridge';
-
 import Editor from 'tinymce/core/api/Editor';
+import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Actions from '../core/Actions';
 
