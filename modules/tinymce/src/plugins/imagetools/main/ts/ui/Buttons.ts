@@ -5,62 +5,85 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Actions from '../core/Actions';
 
 const register = (editor: Editor) => {
+
+  const buttonApiMap = new Map<string, Toolbar.ToolbarButtonInstanceApi>();
+
   const cmd = (command: string) => () => editor.execCommand(command);
 
-  const onSetup = (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
-    const setDisabled = () => {
-      const disabled = Actions.getSelectedImage(editor).forall((element) => {
-        return Actions.getEditableImage(editor, element.dom).isNone();
-      });
-      buttonApi.setDisabled(disabled);
-    };
+  const setDisabled = () => {
+    const disabled = Actions.getSelectedImage(editor).forall((element) => {
+      return Actions.getEditableImage(editor, element.dom).isNone();
+    });
 
-    editor.on('NodeChange', setDisabled);
-
-    return () => {
-      editor.off('NodeChange', setDisabled);
-    };
+    buttonApiMap.forEach((api: Toolbar.ToolbarButtonInstanceApi) => {
+      api.setDisabled(disabled);
+    });
   };
+
+  const addToButtonApiMap = (key: string, api: Toolbar.ToolbarButtonInstanceApi) => {
+    if (!buttonApiMap.has(key)) {
+      buttonApiMap.set(key, api);
+    }
+  };
+
+  editor.on('NodeChange', setDisabled);
 
   editor.ui.registry.addButton('rotateleft', {
     tooltip: 'Rotate counterclockwise',
     icon: 'rotate-left',
     onAction: cmd('mceImageRotateLeft'),
-    onSetup
+    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
+      addToButtonApiMap('rotateleft', buttonApi);
+      return Fun.noop;
+    }
   });
 
   editor.ui.registry.addButton('rotateright', {
     tooltip: 'Rotate clockwise',
     icon: 'rotate-right',
     onAction: cmd('mceImageRotateRight'),
-    onSetup
+    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
+      addToButtonApiMap('rotateright', buttonApi);
+      return Fun.noop;
+    }
   });
 
   editor.ui.registry.addButton('flipv', {
     tooltip: 'Flip vertically',
     icon: 'flip-vertically',
     onAction: cmd('mceImageFlipVertical'),
-    onSetup
+    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
+      addToButtonApiMap('flipv', buttonApi);
+      return Fun.noop;
+    }
   });
 
   editor.ui.registry.addButton('fliph', {
     tooltip: 'Flip horizontally',
     icon: 'flip-horizontally',
     onAction: cmd('mceImageFlipHorizontal'),
-    onSetup
+    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
+      addToButtonApiMap('fliph', buttonApi);
+      return Fun.noop;
+    }
   });
 
   editor.ui.registry.addButton('editimage', {
     tooltip: 'Edit image',
     icon: 'edit-image',
     onAction: cmd('mceEditImage'),
-    onSetup
+    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
+      addToButtonApiMap('editimage', buttonApi);
+      return Fun.noop;
+    }
   });
 
   editor.ui.registry.addButton('imageoptions', {
