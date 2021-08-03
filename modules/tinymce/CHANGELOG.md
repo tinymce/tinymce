@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `initData` property to `fancymenuitem` to allow custom initialization data #TINY-7480
 - Added a new `language` menu item and toolbar button to add `lang` attributes to content, with an accompanying `content_langs` setting to specify the languages available #TINY-6149
 - A new `lang` format is now available that can be used with `editor.formatter`, or applied with the `Lang` editor command #TINY-6149
+- Added a new `language` icon for the `language` toolbar button #TINY-7670
 - Added new plugin commands: `mceEmoticons` (emoticons), `mceWordCount` (wordcount), and `mceTemplate` (template) #TINY-7619
 - Added a new `tablerowheader` toolbar button and menu item to toggle the header state of row cells #TINY-7478
 - Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482

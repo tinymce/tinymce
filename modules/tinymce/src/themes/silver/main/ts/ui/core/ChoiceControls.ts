@@ -117,7 +117,7 @@ const languageSpec = (editor: Editor): Optional<ControlSpec<ContentLanguage>> =>
   return settingsOpt.map((settings) => ({
     name: 'language',
     text: 'Language',
-    icon: 'translate',
+    icon: 'language',
 
     getOptions: Fun.constant(settings),
     hash: (input) => Type.isUndefined(input.customCode) ? input.code : `${input.code}/${input.customCode}`,
