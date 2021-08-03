@@ -28,13 +28,13 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
     ImagePlugin();
   });
 
-  const assertButtonsStatus = (editor: Editor, disabled: boolean) => {
+  const assertButtonsStatus = (editor: Editor, spec: { disabled: boolean }) => {
     const container = TinyDom.container(editor);
-    UiFinder.exists(container, `${editImageButtonSelector}[aria-disabled="${disabled}"]`);
-    UiFinder.exists(container, `${flipHorizontallyImageButtonSelector}[aria-disabled="${disabled}"]`);
-    UiFinder.exists(container, `${flipVerticallyImageButtonSelector}[aria-disabled="${disabled}"]`);
-    UiFinder.exists(container, `${rotateCounterClockwiseImageButtonSelector}[aria-disabled="${disabled}"]`);
-    UiFinder.exists(container, `${rotateClockwiseImageButtonSelector}[aria-disabled="${disabled}"]`);
+    UiFinder.exists(container, `${editImageButtonSelector}[aria-disabled="${spec.disabled}"]`);
+    UiFinder.exists(container, `${flipHorizontallyImageButtonSelector}[aria-disabled="${spec.disabled}"]`);
+    UiFinder.exists(container, `${flipVerticallyImageButtonSelector}[aria-disabled="${spec.disabled}"]`);
+    UiFinder.exists(container, `${rotateCounterClockwiseImageButtonSelector}[aria-disabled="${spec.disabled}"]`);
+    UiFinder.exists(container, `${rotateClockwiseImageButtonSelector}[aria-disabled="${spec.disabled}"]`);
   };
 
   const insertRemoteImage = (editor: Editor) => {
@@ -47,8 +47,7 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
     insertRemoteImage(editor);
     TinySelections.select(editor, 'img', []);
 
-    const disabled = true;
-    assertButtonsStatus(editor, disabled);
+    assertButtonsStatus(editor, { disabled: true });
     McEditor.remove(editor);
   });
 
@@ -58,8 +57,7 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
     TinySelections.select(editor, 'img', []);
     await UiFinder.pWaitFor('Wait for edit image button to became enabled', TinyDom.container(editor), `${editImageButtonSelector}[aria-disabled="false"]`);
 
-    const disabled = false;
-    assertButtonsStatus(editor, disabled);
+    assertButtonsStatus(editor, { disabled: false });
     McEditor.remove(editor);
   });
 
@@ -67,8 +65,7 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
     const editor = await McEditor.pFromSettings<Editor>(settings);
     insertRemoteImage(editor);
 
-    const disabled = true;
-    assertButtonsStatus(editor, disabled);
+    assertButtonsStatus(editor, { disabled: true });
     McEditor.remove(editor);
   });
 });
