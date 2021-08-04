@@ -1,7 +1,8 @@
 import { Keys, UiFinder, Waiter } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { Css, Scroll, SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -23,6 +24,7 @@ interface Scenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFramePosition test', () => {
+  const browser = PlatformDetection.detect().browser;
   const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset)';
   const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset)';
   const rightSelector = '.tox-pop.tox-pop--left:not(.tox-pop--inset)';
@@ -37,7 +39,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     toolbar: 'fullscreen',
     height: 400,
     base_url: '/project/tinymce/js/tinymce',
-    content_style: 'body, p { margin: 0; } tr { height: 36px; }',
+    content_style: 'body, p { margin: 0; line-height: 22px; font-family: sans-serif; } tr { height: 36px; }',
     setup: (ed: Editor) => {
       ed.ui.registry.addButton('alpha', {
         text: 'Alpha',
@@ -46,6 +48,11 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
       ed.ui.registry.addContextToolbar('test-selection-toolbar', {
         predicate: (node) => node.nodeName.toLowerCase() === 'a',
         items: 'alpha'
+      });
+      ed.ui.registry.addContextToolbar('test-selection-toolbar-2', {
+        predicate: (node) => node.nodeName.toLowerCase() === 'p' && !ed.selection.isCollapsed(),
+        items: 'alpha',
+        position: 'selection'
       });
       ed.ui.registry.addContextToolbar('test-node-toolbar', {
         predicate: (node) => node.nodeName.toLowerCase() === 'img',
@@ -64,6 +71,11 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
       });
     }
   }, [ FullscreenPlugin, Theme ], true);
+
+  beforeEach(() => {
+    // Reset scroll position for each test
+    scrollTo(hook.editor(), 0, 0);
+  });
 
   const scrollTo = (editor: Editor, x: number, y: number) =>
     Scroll.to(x, y, TinyDom.document(editor));
@@ -198,7 +210,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     await pWaitForToolbarHidden();
 
     // Bottom
-    scrollTo(editor, 0, 100);
+    scrollTo(editor, 0, 105);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear', SugarBody.body(), rightSelector);
     await pAssertPosition('top', -40);
 
@@ -207,7 +219,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     await pWaitForToolbarHidden();
 
     // Top
-    scrollTo(editor, 0, 420);
+    scrollTo(editor, 0, 400);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear', SugarBody.body(), rightSelector);
     await pAssertPosition('top', -321);
   });
@@ -235,6 +247,19 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     window.scrollTo(0, 2000);
     await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
     Css.remove(TinyDom.container(editor), 'margin-bottom');
+  });
+
+  it('TINY-7739: Selection context toolbar should not escape the bounds or use an inset layout', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p>text</p>');
+    TinySelections.setSelection(editor, [ 3, 0 ], 1, [ 3, 0 ], 3);
+    // Place the selected text right at the bottom of the editor so only 1px of the selection is visible
+    // Note: IE 11 uses a different selection height (22px vs 17px)
+    scrollTo(editor, 0, browser.isIE() ? 65 : 67);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear above the content', SugarBody.body(), topSelector);
+    // Moving 1px more the selected text is now offscreen so the context toolbar should hide
+    scrollTo(editor, 0, browser.isIE() ? 64 : 66);
+    await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
   });
 
   it('TINY-7545: Context toolbar preserves the previous position when scrolling top to bottom and back', async () => {

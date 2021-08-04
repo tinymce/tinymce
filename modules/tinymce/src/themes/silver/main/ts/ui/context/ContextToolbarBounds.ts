@@ -16,7 +16,7 @@ import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 const isVerticalOverlap = (a: Bounds, b: Bounds): boolean =>
-  Math.max(a.y, b.y) <= Math.min(a.bottom, b.bottom);
+  a.y < b.bottom && a.bottom > b.y;
 
 const getRangeRect = (rng: Range): DOMRect => {
   const rect = rng.getBoundingClientRect();
