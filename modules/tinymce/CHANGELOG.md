@@ -63,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
 - Disabled nested menu items could still be opened #TINY-7700
 - Some table operations would incorrectly cause table row attributes and styles to be lost #TINY-6666
-- The selection was incorrectly lost when using the `mceTableCellType` and `mceTableRowType` command #TINY-6666
+- The selection was incorrectly lost when using the `mceTableCellType` and `mceTableRowType` commands #TINY-6666
 - The `mceTableRowType` was reversing the order of the rows when converting multiple header rows back to body rows #TINY-6666
 
 ### Deprecated
