@@ -21,6 +21,7 @@
 @collection-item-label-text-transform: none;
 
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
+@collection-item-caret-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
 @collection-list-item-active-background-color: @toolbar-button-hover-background-color;
 @collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
@@ -233,6 +234,12 @@
 
     svg {
       fill: @collection-item-label-text-color;
+    }
+  }
+
+  .tox-collection__item--state-disabled .tox-collection__item-caret {
+    svg {
+      fill: @collection-item-caret-disabled-text-color;
     }
   }
 
