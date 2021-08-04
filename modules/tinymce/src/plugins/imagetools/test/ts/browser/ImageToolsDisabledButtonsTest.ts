@@ -62,7 +62,7 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
   });
 
   it('TINY-7772: Edit, flip and rotate should be disabled when no images are selected', async () => {
-    const editor = await McEditor.pFromSettings<Editor>(settings);
+    const editor = await McEditor.pFromSettings<Editor>({ ...settings, imagetools_proxy: 'foo.php' });
     insertRemoteImage(editor);
 
     assertButtonsStatus(editor, { disabled: true });
