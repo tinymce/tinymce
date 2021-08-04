@@ -65,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disabled nested menu items could still be opened #TINY-7700
 - Some table operations would incorrectly cause table row attributes and styles to be lost #TINY-6666
 - The selection was incorrectly lost when using the `mceTableCellType` command #TINY-6666
+- The table dialog did not always respect the `table_style_with_css` option #TINY-4926
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260
