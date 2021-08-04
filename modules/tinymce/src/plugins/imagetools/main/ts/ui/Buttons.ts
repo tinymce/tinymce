@@ -5,87 +5,72 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Actions from '../core/Actions';
 
-type ButtonApiRecord = Record<string, Toolbar.ToolbarButtonInstanceApi>;
-
 const register = (editor: Editor) => {
-
-  const buttonApiRecord: ButtonApiRecord = {};
+  let changeHandlers: Array<(isEditableImage: boolean) => void> = [];
 
   const cmd = (command: string) => () => editor.execCommand(command);
 
-  const setDisabled = () => {
-    const disabled = Actions.getSelectedImage(editor).forall((element) => {
-      return Actions.getEditableImage(editor, element.dom).isNone();
-    });
+  const isEditableImage = () => Actions.getSelectedImage(editor).exists((element) => {
+    return Actions.getEditableImage(editor, element.dom).isSome();
+  });
 
-    Obj.each(buttonApiRecord, (api: Toolbar.ToolbarButtonInstanceApi) => {
-      api.setDisabled(disabled);
-    });
+  const onSetup = (api: Toolbar.ToolbarButtonInstanceApi) => {
+    const handler = (isEditableImage: boolean) => api.setDisabled(!isEditableImage);
+    // Execute the handler to set the initial state
+    handler(isEditableImage());
+    // Register the handler so we can update the state when the selected node changes
+    changeHandlers = changeHandlers.concat([ handler ]);
+    return () => {
+      changeHandlers = Arr.filter(changeHandlers, (h) => h !== handler);
+    };
   };
 
-  const addToButtonApiRecord = (key: string, api: Toolbar.ToolbarButtonInstanceApi) => {
-    if (!Obj.has(buttonApiRecord, key)) {
-      buttonApiRecord[key] = api;
-    }
-  };
-
-  editor.on('NodeChange', setDisabled);
+  // Listen to NodeChange events and update button states
+  editor.on('NodeChange', () => {
+    const isEditable = isEditableImage();
+    Arr.each(changeHandlers, (handler) => handler(isEditable));
+  });
 
   editor.ui.registry.addButton('rotateleft', {
     tooltip: 'Rotate counterclockwise',
     icon: 'rotate-left',
     onAction: cmd('mceImageRotateLeft'),
-    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
-      addToButtonApiRecord('rotateleft', buttonApi);
-      return Fun.noop;
-    }
+    onSetup
   });
 
   editor.ui.registry.addButton('rotateright', {
     tooltip: 'Rotate clockwise',
     icon: 'rotate-right',
     onAction: cmd('mceImageRotateRight'),
-    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
-      addToButtonApiRecord('rotateright', buttonApi);
-      return Fun.noop;
-    }
+    onSetup
   });
 
   editor.ui.registry.addButton('flipv', {
     tooltip: 'Flip vertically',
     icon: 'flip-vertically',
     onAction: cmd('mceImageFlipVertical'),
-    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
-      addToButtonApiRecord('flipv', buttonApi);
-      return Fun.noop;
-    }
+    onSetup
   });
 
   editor.ui.registry.addButton('fliph', {
     tooltip: 'Flip horizontally',
     icon: 'flip-horizontally',
     onAction: cmd('mceImageFlipHorizontal'),
-    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
-      addToButtonApiRecord('fliph', buttonApi);
-      return Fun.noop;
-    }
+    onSetup
   });
 
   editor.ui.registry.addButton('editimage', {
     tooltip: 'Edit image',
     icon: 'edit-image',
     onAction: cmd('mceEditImage'),
-    onSetup: (buttonApi: Toolbar.ToolbarButtonInstanceApi) => {
-      addToButtonApiRecord('editimage', buttonApi);
-      return Fun.noop;
-    }
+    onSetup
   });
 
   editor.ui.registry.addButton('imageoptions', {
