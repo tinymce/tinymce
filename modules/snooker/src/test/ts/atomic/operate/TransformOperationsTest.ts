@@ -10,12 +10,12 @@ import * as MockStructs from 'ephox/snooker/test/MockStructs';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 
 UnitTest.test('TransformOperationsTest', () => {
-  let originalElements: Structs.ElementNew[] = [];
-  let expectedElements: Structs.ElementNew[] = [];
+  const originalElements: Structs.ElementNew[] = [];
+  const expectedElements: Structs.ElementNew[] = [];
 
   const clearElements = () => {
-    originalElements = [];
-    expectedElements = [];
+    originalElements.length = 0;
+    expectedElements.length = 0;
   };
 
   const en = (elements: Structs.ElementNew[]) => (text: string, isNew: boolean, elemType: 'td' | 'th' | 'col' = 'td', isLocked: boolean = false) => {
@@ -32,7 +32,7 @@ UnitTest.test('TransformOperationsTest', () => {
   const mapToStructGrid = (grid: Structs.ElementNew[][]) => {
     return Arr.map(grid, (row) => {
       const hasCol = Arr.exists(row, (elementNew) => SugarNode.isTag('col')(elementNew.element));
-      return Structs.rowcells(row, hasCol ? 'colgroup' : 'tbody');
+      return Structs.rowcells('tr' as any, row, hasCol ? 'colgroup' : 'tbody', false);
     });
   };
 
@@ -42,6 +42,7 @@ UnitTest.test('TransformOperationsTest', () => {
       Arr.each(row.cells, (cell, j) => {
         const actualCell = actual[i].cells[j];
         assert.equal(TextContent.get(actualCell.element), TextContent.get(cell.element));
+        assert.equal(actualCell.isNew, cell.isNew, `${i}x${j} cell is new`);
       });
       assert.equal(actual[i].section, row.section);
     });
@@ -54,7 +55,7 @@ UnitTest.test('TransformOperationsTest', () => {
     const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const actual = TransformOperations.replaceColumn(structGrid, index, comparator, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
+      const actual = TransformOperations.replaceColumn(structGrid, index, comparator, Generators.transform('td', 'scope')(TestGenerator()).replaceOrInit);
       assertGrids(actual, structExpected);
       clearElements();
     };
@@ -122,7 +123,7 @@ UnitTest.test('TransformOperationsTest', () => {
     const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const actual = TransformOperations.replaceRow(structGrid, index, comparator, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
+      const actual = TransformOperations.replaceRow(structGrid, index, comparator, Generators.transform('td', 'scope')(TestGenerator()).replaceOrInit);
       assertGrids(actual, structExpected);
       clearElements();
     };
@@ -174,5 +175,34 @@ UnitTest.test('TransformOperationsTest', () => {
       [ enO('a', false), enO('a', false), enO('c', false), enO('f', false) ],
       [ enO('a', false), enO('a', false), enO('d', false), enO('f', false) ]
     ], 0);
+  })();
+
+  // Test basic changing to header (cell)
+  (() => {
+    const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], rowIndex: number, colIndex: number) => {
+      const structExpected = mapToStructGrid(expected);
+      const structGrid = mapToStructGrid(grid);
+      const actual = TransformOperations.replaceCell(structGrid, rowIndex, colIndex, comparator, Generators.transform('td')(TestGenerator()).replaceOrInit);
+      assertGrids(actual, structExpected);
+      clearElements();
+    };
+
+    check([[]], [[]], 0, 0);
+
+    check([
+      [ enE('h(a)_0', true) ]
+    ], [
+      [ enO('a', false) ]
+    ], 0, 0);
+
+    check([
+      [ enE('a', false), enE('b', false), enE('e', false) ],
+      [ enE('a', false), enE('h(c)_0', true), enE('f', false) ],
+      [ enE('a', false), enE('d', false), enE('f', true) ]
+    ], [
+      [ enO('a', false), enO('b', false), enO('e', false) ],
+      [ enO('a', false), enO('c', false), enO('f', false) ],
+      [ enO('a', false), enO('d', false), enO('f', false) ]
+    ], 1, 1);
   })();
 });

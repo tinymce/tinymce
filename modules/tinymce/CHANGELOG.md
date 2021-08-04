@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `initData` property to `fancymenuitem` to allow custom initialization data #TINY-7480
 - Added a new `language` menu item and toolbar button to add `lang` attributes to content, with an accompanying `content_langs` setting to specify the languages available #TINY-6149
 - A new `lang` format is now available that can be used with `editor.formatter`, or applied with the `Lang` editor command #TINY-6149
+- Added a new `language` icon for the `language` toolbar button #TINY-7670
 - Added new plugin commands: `mceEmoticons` (emoticons), `mceWordCount` (wordcount), and `mceTemplate` (template) #TINY-7619
 - Added a new `tablerowheader` toolbar button and menu item to toggle the header state of row cells #TINY-7478
 - Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482
@@ -59,8 +60,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Menus and context menus were not closed when clicking into a different editor #TINY-7399
 - Using the Tab key to navigate into the editor on IE 11 would incorrectly focus the toolbar #TINY-3707
 - The editor selection could be placed in an incorrect location when undoing or redoing changes in a document containing `contenteditable="false"` elements #TINY-7663
+- Certain HTML content when inserted could cause the editor to crash #TINY-7756
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
 - Disabled nested menu items could still be opened #TINY-7700
+- Some table operations would incorrectly cause table row attributes and styles to be lost #TINY-6666
+- The selection was incorrectly lost when using the `mceTableCellType` command #TINY-6666
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260

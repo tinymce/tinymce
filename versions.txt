@@ -14,6 +14,7 @@ jax@6.0.0
 katamari-assertions@3.0.0
 katamari@8.0.0
 mcagar@7.0.0
+oxide-icons-default@1.6.0
 phoenix@7.0.0
 polaris@5.0.0
 porkbun@6.0.0

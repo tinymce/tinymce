@@ -237,6 +237,20 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           await Waiter.pTryUntil('Language has changed back', () => TinyAssertions.assertContent(editor, '<p>Some content</p>'));
         });
       });
+
+      it('TINY-7707: The toolbar button should be active when the selection is within lang span', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p><span lang="de">Some German content</span></p><p>Some content</p>');
+
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+        await TinyUiActions.pWaitForUi(editor, '.tox-tbtn.tox-tbtn--enabled');
+
+        TinySelections.setCursor(editor, [ 1, 0 ], 4);
+        await TinyUiActions.pWaitForUi(editor, '.tox-tbtn:not(.tox-tbtn--enabled)');
+
+        editor.formatter.apply('lang', { value: 'zh' });
+        await TinyUiActions.pWaitForUi(editor, '.tox-tbtn.tox-tbtn--enabled');
+      });
     });
 
     context('Advanced settings', () => {

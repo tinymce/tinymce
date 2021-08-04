@@ -1,7 +1,7 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
-import { Attribute, Compare, Css, CursorPosition, Insert, Replication, SelectorFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Compare, Css, CursorPosition, Insert, Replication, SelectorFilter, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { CellSpan, Generators, SimpleGenerators } from './Generators';
+import { CellData, Generators, SimpleGenerators } from './Generators';
 
 const transferableAttributes: Record<string, string[]> = {
   scope: [
@@ -11,15 +11,23 @@ const transferableAttributes: Record<string, string[]> = {
 };
 
 // NOTE: This may create a td instead of a th, but it is for irregular table handling.
-const createCell = () => {
-  const td = SugarElement.fromTag('td');
-  Insert.append(td, SugarElement.fromTag('br'));
+const createCell = (doc: SugarElement<Document>) => () => {
+  const td = SugarElement.fromTag('td', doc.dom);
+  Insert.append(td, SugarElement.fromTag('br', doc.dom));
   return td;
 };
 
-const createCol = () => SugarElement.fromTag('col');
+const createCol = (doc: SugarElement<Document>) => () => {
+  return SugarElement.fromTag('col', doc.dom);
+};
 
-const createColgroup = () => SugarElement.fromTag('colgroup');
+const createColgroup = (doc: SugarElement<Document>) => () => {
+  return SugarElement.fromTag('colgroup', doc.dom);
+};
+
+const createRow = (doc: SugarElement<Document>) => () => {
+  return SugarElement.fromTag('tr', doc.dom);
+};
 
 const replace = <K extends keyof HTMLElementTagNameMap>(cell: SugarElement, tag: K, attrs: Record<string, string | number | boolean | null>) => {
   const replica = Replication.copy(cell, tag);
@@ -38,12 +46,6 @@ const replace = <K extends keyof HTMLElementTagNameMap>(cell: SugarElement, tag:
 const pasteReplace = (cell: SugarElement) => {
   // TODO: check for empty content and don't return anything
   return cell;
-};
-
-const newRow = (doc: SugarElement) => {
-  return () => {
-    return SugarElement.fromTag('tr', doc.dom);
-  };
 };
 
 const cloneFormats = (oldCell: SugarElement, newCell: SugarElement, formats: string[]) => {
@@ -72,8 +74,8 @@ const cloneAppropriateAttributes = <T extends HTMLElement>(original: SugarElemen
   );
 };
 
-const cellOperations = (mutate: (e1: SugarElement, e2: SugarElement) => void, doc: SugarElement, formatsToClone: Optional<string[]>): Generators => {
-  const cloneCss = <T extends HTMLElement> (prev: CellSpan, clone: SugarElement<T>) => {
+const cellOperations = (mutate: (e1: SugarElement, e2: SugarElement) => void, doc: SugarElement<Document>, formatsToClone: Optional<string[]>): Generators => {
+  const cloneCss = <T extends HTMLElement> (prev: CellData, clone: SugarElement<T>) => {
     // inherit the style and width, dont inherit the row height
     Css.copy(prev.element, clone);
     Css.remove(clone, 'height');
@@ -83,9 +85,8 @@ const cellOperations = (mutate: (e1: SugarElement, e2: SugarElement) => void, do
     }
   };
 
-  const newCell = (prev: CellSpan) => {
-    const docu = Traverse.owner(prev.element);
-    const td = SugarElement.fromTag(SugarNode.name(prev.element) as 'td' | 'th', docu.dom);
+  const newCell = (prev: CellData) => {
+    const td = SugarElement.fromTag(SugarNode.name(prev.element) as 'td' | 'th', doc.dom);
 
     const formats = formatsToClone.getOr([ 'strong', 'em', 'b', 'i', 'span', 'font', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div' ]);
 
@@ -99,8 +100,7 @@ const cellOperations = (mutate: (e1: SugarElement, e2: SugarElement) => void, do
     return td;
   };
 
-  const newCol = (prev: CellSpan) => {
-    const doc = Traverse.owner(prev.element);
+  const newCol = (prev: CellData) => {
     const col = SugarElement.fromTag(SugarNode.name(prev.element) as 'col', doc.dom);
     cloneCss(prev, col);
     mutate(prev.element, col);
@@ -109,22 +109,22 @@ const cellOperations = (mutate: (e1: SugarElement, e2: SugarElement) => void, do
 
   return {
     col: newCol,
-    colgroup: createColgroup,
-    row: newRow(doc),
+    colgroup: createColgroup(doc),
+    row: createRow(doc),
     cell: newCell,
     replace,
-    gap: createCell
+    gap: createCell(doc)
   };
 };
 
-const paste = (doc: SugarElement): SimpleGenerators => {
+const paste = (doc: SugarElement<Document>): SimpleGenerators => {
   return {
-    col: createCol,
-    colgroup: createColgroup,
-    row: newRow(doc),
-    cell: createCell,
+    col: createCol(doc),
+    colgroup: createColgroup(doc),
+    row: createRow(doc),
+    cell: createCell(doc),
     replace: pasteReplace,
-    gap: createCell
+    gap: createCell(doc)
   };
 };
 

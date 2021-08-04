@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Unicode } from '@ephox/katamari';
-import { Compare, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, SugarElement } from '@ephox/sugar';
 
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
@@ -12,26 +12,14 @@ import * as Bridge from 'ephox/snooker/test/Bridge';
 UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
 
   const getRowData = (table: SugarElement) => {
-    const findRow = (details: Structs.DetailNew[]) => {
-      const rowOfCells = Arr.findMap(details, (detail) =>
-        Traverse.parent(detail.element).map((row) =>
-          Structs.elementnew(row, false, false)));
-      return rowOfCells.getOrThunk(() => Structs.elementnew(Bridge.generators.row(), true, false));
-    };
-
     const warehouse = Warehouse.fromTable(table);
     const model = Transitions.toGrid(warehouse, Bridge.generators, false);
-    const rendered = Transitions.toDetails(model, Compare.eq);
-
-    return Arr.map(rendered, (details) => {
-      const row = findRow(details.details);
-      return Structs.rowdatanew(row.element, details.details, details.section, row.isNew);
-    });
+    return Transitions.toDetails(model, Compare.eq);
   };
 
   const changeTableSections = (table: SugarElement<HTMLTableElement>, rowIndex: number, newSection: Structs.Section) => {
     const updatedModelData = Arr.map(getRowData(table), (row, i) =>
-      i === rowIndex ? Structs.rowdatanew(row.element, row.cells, newSection, row.isNew) : row);
+      i === rowIndex ? Structs.rowdetailnew(row.element, row.cells, newSection, row.isNew) : row);
     Redraw.render(table, updatedModelData);
   };
 
