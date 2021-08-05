@@ -15,8 +15,9 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
+// Note: We round the values here as we are looking for changes that aren't just 0.001px difference
 const isVerticalOverlap = (a: Bounds, b: Bounds): boolean =>
-  a.y < b.bottom && a.bottom > b.y;
+  Math.round(a.y) < Math.round(b.bottom) && Math.round(a.bottom) > Math.round(b.y);
 
 const getRangeRect = (rng: Range): DOMRect => {
   const rect = rng.getBoundingClientRect();
