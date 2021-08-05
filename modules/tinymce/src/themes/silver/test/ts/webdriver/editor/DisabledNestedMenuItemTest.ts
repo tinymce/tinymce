@@ -112,13 +112,13 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
     assertServicesMenuIsOpen();
   });
 
-  it('TINY-7700: Enabled menu item with children should have enabled arrow right icon colour', async () => {
+  it('TINY-7700: Enabled menu item with children should have arrow icon enabled', async () => {
     await pOpenCodeMenu();
     const servicesMenuItemRightArrow = getMenuItemRightArrow(servicesMenuItemSelector);
     assert.equal(Css.get(servicesMenuItemRightArrow, 'fill'), enabledColour);
   });
 
-  it('TINY-7700: Disabled menu item with children should have disabled arrow right icon colour', async () => {
+  it('TINY-7700: Disabled menu item with children should have arrow icon disabled', async () => {
     await pOpenCodeMenu();
     const preferencesMenuItemRightArrow = getMenuItemRightArrow(preferencesMenuItemSelector);
     assert.equal(Css.get(preferencesMenuItemRightArrow, 'fill'), disabledColour);
