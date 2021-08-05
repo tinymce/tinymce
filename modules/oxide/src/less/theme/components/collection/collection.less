@@ -173,17 +173,6 @@
     color: @collection-toolbar-item-label-active-text-color;
   }
 
-  // Disabled item
-  .tox-collection__item--state-disabled {
-    background-color: transparent;
-    color: @collection-item-label-disabled-text-color;
-    cursor: not-allowed;
-
-    .tox-collection__item-caret svg {
-        fill: @collection-item-caret-disabled-text-color;
-    }
-  }
-
   .tox-collection__item-icon,
   .tox-collection__item-checkmark {
     align-items: center;
@@ -238,6 +227,17 @@
 
     svg {
       fill: @collection-item-label-text-color;
+    }
+  }
+
+  // Disabled item
+  .tox-collection__item--state-disabled {
+    background-color: transparent;
+    color: @collection-item-label-disabled-text-color;
+    cursor: not-allowed;
+
+    .tox-collection__item-caret svg {
+      fill: @collection-item-caret-disabled-text-color;
     }
   }
 
