@@ -580,7 +580,7 @@ UnitTest.test('EraseOperationsTest', () => {
   };
   Assertions.checkDelete(
     'TBA',
-    Optional.some({ section: 0, row: 0, column: 0 }),
+    Optional.some({ section: 0, row: 2, column: 0 }),
     Optional.some(deleteExpected18),
 
     '<table border="1"><tbody>' +
@@ -968,6 +968,65 @@ UnitTest.test('EraseOperationsTest', () => {
       { section: 1, row: 0, column: 1 },
       { section: 1, row: 0, column: 2 },
       { section: 1, row: 0, column: 3 },
+    ],
+    platform
+  );
+
+  const deleteExpectedContent30 = '<table>' +
+    '<tbody>' +
+      '<tr><td contenteditable="false">A1</td><td>B1</td></tr>' +
+    '</tbody>' +
+  '</table>';
+  const deleteExpected30 = {
+    normal: deleteExpectedContent30,
+    ie: deleteExpectedContent30
+  };
+  Assertions.checkDelete(
+    'TINY-7695: Deleting the last row should not move the selection into a cef element',
+    Optional.some({ section: 0, row: 0, column: 1 }),
+    Optional.some(deleteExpected30),
+
+    '<table>' +
+      '<tbody>' +
+        '<tr><td contenteditable="false">A1</td><td>B1</td></tr>' +
+        '<tr><td>A2</td><td>B2</td></tr>' +
+      '</tbody>' +
+    '</table>',
+
+    TableOperations.eraseRows,
+    [
+      { section: 0, row: 1, column: 0 },
+      { section: 0, row: 1, column: 1 }
+    ],
+    platform
+  );
+
+  const deleteExpectedContent31 = '<table>' +
+    '<tbody>' +
+    '<tr><td contenteditable="false">A1</td></tr>' +
+    '<tr><td>A2</td></tr>' +
+    '</tbody>' +
+    '</table>';
+  const deleteExpected31 = {
+    normal: deleteExpectedContent31,
+    ie: deleteExpectedContent31
+  };
+  Assertions.checkDelete(
+    'TINY-7695: Deleting the last column should not move the selection into a cef element',
+    Optional.some({ section: 0, row: 1, column: 0 }),
+    Optional.some(deleteExpected31),
+
+    '<table>' +
+    '<tbody>' +
+    '<tr><td contenteditable="false">A1</td><td>B1</td></tr>' +
+    '<tr><td>A2</td><td>B2</td></tr>' +
+    '</tbody>' +
+    '</table>',
+
+    TableOperations.eraseColumns,
+    [
+      { section: 0, row: 0, column: 1 },
+      { section: 0, row: 1, column: 1 }
     ],
     platform
   );
