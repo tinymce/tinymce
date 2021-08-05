@@ -74,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed an issue when pasting cells from tables containing `colgroup`s into tables without `colgroup`s #TINY-6675
 - Fixed an issue that could cause an invalid toolbar button state when multiple inline editors were on a single page #TINY-6297
+- Disabled menu items had expand right icon enabled #TINY-7700
 
 ## 5.8.1 - 2021-05-20
 
