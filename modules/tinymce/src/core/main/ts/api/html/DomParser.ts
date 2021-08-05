@@ -95,6 +95,19 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
   settings.root_name = settings.root_name || 'body';
 
   const fixInvalidChildren = (nodes: AstNode[]) => {
+    const unwrapInvalidChildren = (node: AstNode, topLevelParent: AstNode = node.parent): void => {
+      // is node.firstChild a valid child of the top level parent?
+      // if not, unwrap it too
+      // TODO: this should call for all children not just the first -> create .children() function on AstNode
+      const childNode = node.firstChild;
+      if (childNode) {
+        if (!schema.isValidChild(topLevelParent.name, childNode.name)) {
+          unwrapInvalidChildren(childNode, topLevelParent);
+          childNode.unwrap();
+        }
+      }
+    };
+
     const nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
     const nonEmptyElements = schema.getNonEmptyElements();
     const whitespaceElements = schema.getWhiteSpaceElements();
@@ -149,6 +162,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
         // Start cloning and moving children on the left side of the target node
         let currentNode = newParent;
+        // TODO why is this i=0? Should it not be i=1 given we have already cloned the first element
         for (let i = 0; i < parents.length - 1; i++) {
           if (schema.isValidChild(currentNode.name, parents[i].name)) {
             tempNode = filterNode(parents[i].clone());
@@ -168,9 +182,19 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
         if (!isEmpty(schema, nonEmptyElements, whitespaceElements, newParent)) {
           parent.insert(newParent, parents[0], true);
-          parent.insert(node, newParent);
+          if (schema.isValidChild(parent.name, node.name)) {
+            parent.insert(node, newParent);
+          } else {
+            unwrapInvalidChildren(node);
+            node.unwrap();
+          }
         } else {
-          parent.insert(node, parents[0], true);
+          if (schema.isValidChild(parent.name, node.name)) {
+            parent.insert(node, parents[0], true);
+          } else {
+            unwrapInvalidChildren(node);
+            node.unwrap();
+          }
         }
 
         // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
@@ -205,6 +229,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
           if (specialElements[node.name]) {
             node.empty().remove();
           } else {
+            unwrapInvalidChildren(node);
             node.unwrap();
           }
         }
@@ -429,6 +454,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     };
 
     const removeWhitespaceBefore = (node: AstNode): void => {
+      // TODO - why are we redefining this without the default list ('script,style,head,html,body,title,meta,param')?
       const blockElements = schema.getBlockElements();
 
       for (let textNode = node.prev; textNode && textNode.type === 3;) {
