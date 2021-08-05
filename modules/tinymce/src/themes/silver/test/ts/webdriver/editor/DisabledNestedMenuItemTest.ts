@@ -1,7 +1,7 @@
 import { Keys, Mouse, RealKeys, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { Css, SugarBody, SugarElement } from '@ephox/sugar';
+import { Class, SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { Editor } from 'tinymce/core/api/PublicApi';
@@ -12,19 +12,16 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
   const codeMenuItemSelector = '[role="menuitem"]:contains("Code")';
   const preferencesMenuItemSelector = '[title="Preferences"]';
   const servicesMenuItemSelector = '[title="Services"]';
-  const rightArrowSelector = '.tox-collection__item-caret svg';
-  const disabledColour = 'rgba(34, 47, 62, 0.5)';
-  const enabledColour = 'rgb(34, 47, 62)';
   const highligthedCodeMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Code")';
   const highligthedToolsMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Tools")';
+  const disabledClass = 'tox-collection__item--state-disabled';
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    plugins: 'code',
     menu: {
       custom: { title: 'Code', items: 'about restart preferences services' }
     },
-    menubar: 'file custom tools',
+    menubar: 'file custom edit',
     setup: (editor: Editor) => {
       editor.ui.registry.addMenuItem('about', {
         text: 'About',
@@ -72,11 +69,6 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
     UiFinder.exists(SugarBody.body(), '[role="menuitem"]:contains("Services Preferences...")');
   };
 
-  const getMenuItemRightArrow = (menuItemSelector: string): SugarElement<SVGElement> => {
-    const menuItem = UiFinder.findIn(SugarBody.body(), menuItemSelector).getOrDie();
-    return UiFinder.findIn(menuItem, rightArrowSelector).getOrDie();
-  };
-
   afterEach(() => {
     closeCodeMenu();
   });
@@ -114,13 +106,13 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
 
   it('TINY-7700: Enabled menu item with children should have arrow icon enabled', async () => {
     await pOpenCodeMenu();
-    const servicesMenuItemRightArrow = getMenuItemRightArrow(servicesMenuItemSelector);
-    assert.equal(Css.get(servicesMenuItemRightArrow, 'fill'), enabledColour);
+    const menuItem = UiFinder.findIn(SugarBody.body(), servicesMenuItemSelector).getOrDie();
+    assert.isFalse(Class.has(menuItem, disabledClass));
   });
 
   it('TINY-7700: Disabled menu item with children should have arrow icon disabled', async () => {
     await pOpenCodeMenu();
-    const preferencesMenuItemRightArrow = getMenuItemRightArrow(preferencesMenuItemSelector);
-    assert.equal(Css.get(preferencesMenuItemRightArrow, 'fill'), disabledColour);
+    const menuItem = UiFinder.findIn(SugarBody.body(), preferencesMenuItemSelector).getOrDie();
+    assert.isTrue(Class.has(menuItem, disabledClass));
   });
 });
