@@ -19,6 +19,7 @@ import * as MobileContextMenu from './platform/MobileContextMenu';
 import * as Settings from './Settings';
 
 type MenuItem = string | Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.SeparatorMenuItemSpec;
+export type ContextMenuAnchorType = 'node' | 'selection' | 'point';
 
 const isTouch = PlatformDetection.detect().deviceType.isTouch;
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
@@ -120,15 +121,16 @@ export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
 const getSelectedElement = (editor: Editor, e: PointerEvent) =>
   isTriggeredByKeyboard(editor, e) ? editor.selection.getStart(true) : e.target as Element;
 
-const shouldUseNodeAnchor = (editor: Editor, e: PointerEvent) => {
+const getAnchorType = (editor: Editor, e: PointerEvent): ContextMenuAnchorType => {
   const selector = Settings.getAvoidOverlapSelector(editor);
-  if (isTriggeredByKeyboard(editor, e)) {
-    return false;
-  } else if (selector) {
+  if (selector) {
     const target = getSelectedElement(editor, e);
-    return !isTouch() && SelectorExists.closest(SugarElement.fromDom(target), selector);
+    const selectorExists = SelectorExists.closest(SugarElement.fromDom(target), selector);
+    return selectorExists ? 'node' : 'point';
+  } else if (isTriggeredByKeyboard(editor, e)) {
+    return 'selection';
   } else {
-    return false;
+    return 'point';
   }
 };
 
@@ -166,7 +168,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       return;
     }
 
-    const useNodeAnchor = shouldUseNodeAnchor(editor, e);
+    const anchorType = getAnchorType(editor, e);
 
     const buildMenu = () => {
       // Use the event target element for touch events, otherwise fallback to the current selection
@@ -178,7 +180,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     };
 
     const initAndShow = isTouch() ? MobileContextMenu.initAndShow : DesktopContextMenu.initAndShow;
-    initAndShow(editor, e, buildMenu, backstage, contextmenu, useNodeAnchor);
+    initAndShow(editor, e, buildMenu, backstage, contextmenu, anchorType);
   };
 
   editor.on('init', () => {

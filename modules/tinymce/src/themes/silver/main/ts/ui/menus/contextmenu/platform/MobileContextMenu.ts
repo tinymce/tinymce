@@ -21,7 +21,8 @@ import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
 import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
-import { getNodeAnchor, getPointAnchor } from '../Coords';
+import { getNodeAnchor, getPointAnchor, getSelectionAnchor } from '../Coords';
+import { ContextMenuAnchorType } from '../SilverContextMenu';
 
 type MenuItems = string | Array<string | SingleMenuItemSpec>;
 
@@ -101,13 +102,27 @@ const setupiOSOverrides = (editor: Editor) => {
   };
 };
 
-const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, useNodeAnchor: boolean, highlightImmediately: boolean) => {
-  const anchorSpec = useNodeAnchor ? getNodeAnchor(editor) : getPointAnchorSpec(editor, e);
+const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: ContextMenuAnchorType) => {
+  switch (anchorType) {
+    case 'node':
+      return getNodeAnchor(editor);
+    case 'point':
+      return getPointAnchorSpec(editor, e);
+    case 'selection':
+      return getSelectionAnchor(editor);
+  }
+};
+
+const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: ContextMenuAnchorType, highlightImmediately: boolean) => {
+
+  const anchorSpec = getAnchorSpec(editor, e, anchorType);
 
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
     e.preventDefault();
 
     // Show the context menu, with items set to close on click
+    const toolbarType = anchorType === 'node' ? 'node' : 'selection';
+    const contextToolbarBounds = getContextToolbarBounds(editor, backstage.shared, toolbarType);
     InlineView.showMenuWithinBounds(contextmenu, anchorSpec, {
       menu: {
         markers: MenuParts.markers('normal'),
@@ -115,14 +130,14 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
       },
       data: menuData,
       type: 'horizontal'
-    }, () => Optional.some(getContextToolbarBounds(editor, backstage.shared, useNodeAnchor ? 'node' : 'selection')));
+    }, () => Optional.some(contextToolbarBounds));
 
     // Ensure the context toolbar is hidden
     editor.fire(hideContextToolbarEvent);
   });
 };
 
-export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, useNodeAnchor: boolean): void => {
+export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: ContextMenuAnchorType): void => {
   const detection = PlatformDetection.detect();
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();
@@ -133,13 +148,13 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
 
   const open = () => {
     const items = buildMenu();
-    show(editor, e, items, backstage, contextmenu, useNodeAnchor, shouldHighlightImmediately());
+    show(editor, e, items, backstage, contextmenu, anchorType, shouldHighlightImmediately());
   };
 
   // On iOS/iPadOS if we've long pressed on a ranged selection then we've already selected the content
   // and just need to open the menu. Otherwise we need to wait for a selection change to occur as long
   // press triggers a ranged selection on iOS.
-  if ((isOSX || isiOS) && !useNodeAnchor) {
+  if ((isOSX || isiOS) && anchorType !== 'node') {
     const openiOS = () => {
       setupiOSOverrides(editor);
       open();
