@@ -972,19 +972,52 @@ UnitTest.test('EraseOperationsTest', () => {
     platform
   );
 
-  const deleteExpectedContent30 = '<table>' +
-    '<tbody>' +
-      '<tr><td contenteditable="false">A1</td><td>B1</td></tr>' +
-    '</tbody>' +
-  '</table>';
+  const deleteExpectedContent30 =
+    '<table><tbody>' +
+    '<tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr>' +
+    '<tr><td>row 1 cell 1</td></tr>' +
+    '<tr><td>row 2 cell 0</td><td>row 2 cell 1</td></tr>' +
+    '</tbody></table>';
   const deleteExpected30 = {
     normal: deleteExpectedContent30,
     ie: deleteExpectedContent30
   };
   Assertions.checkDelete(
+    'TINY-7695: Deleting the last 2 rows should keep the cursor in the last row',
+    Optional.some({ section: 0, row: 2, column: 1 }),
+    Optional.some(deleteExpected30),
+
+    '<table><tbody>' +
+    '<tr><td rowspan="2">row 0 cell 0 row 1 cell 0 </td><td>row 0 cell 1</td><td rowspan="3">row 0 cell 2 row 1 cell 2 row 2 cell 2 </td></tr>' +
+    '<tr><td>row 1 cell 1</td></tr>' +
+    '<tr><td>row 2 cell 0</td><td>row 2 cell 1</td></tr>' +
+    '<tr><td>row 3 cell 0</td><td>row 3 cell 1</td><td>row 3 cell 2</td></tr>' +
+    '<tr><td>row 4 cell 0</td><td>row 4 cell 1</td><td>row 4 cell 2</td></tr>' +
+    '</tbody></table>',
+
+    TableOperations.eraseRows,
+    [
+      { section: 0, row: 3, column: 1 },
+      { section: 0, row: 3, column: 2 },
+      { section: 0, row: 4, column: 1 },
+      { section: 0, row: 4, column: 2 },
+    ],
+    platform
+  );
+
+  const deleteExpectedContent31 = '<table>' +
+    '<tbody>' +
+      '<tr><td contenteditable="false">A1</td><td>B1</td></tr>' +
+    '</tbody>' +
+  '</table>';
+  const deleteExpected31 = {
+    normal: deleteExpectedContent31,
+    ie: deleteExpectedContent31
+  };
+  Assertions.checkDelete(
     'TINY-7695: Deleting the last row should not move the selection into a cef element',
     Optional.some({ section: 0, row: 0, column: 1 }),
-    Optional.some(deleteExpected30),
+    Optional.some(deleteExpected31),
 
     '<table>' +
       '<tbody>' +
@@ -1001,20 +1034,20 @@ UnitTest.test('EraseOperationsTest', () => {
     platform
   );
 
-  const deleteExpectedContent31 = '<table>' +
+  const deleteExpectedContent32 = '<table>' +
     '<tbody>' +
     '<tr><td contenteditable="false">A1</td></tr>' +
     '<tr><td>A2</td></tr>' +
     '</tbody>' +
     '</table>';
-  const deleteExpected31 = {
-    normal: deleteExpectedContent31,
-    ie: deleteExpectedContent31
+  const deleteExpected32 = {
+    normal: deleteExpectedContent32,
+    ie: deleteExpectedContent32
   };
   Assertions.checkDelete(
     'TINY-7695: Deleting the last column should not move the selection into a cef element',
     Optional.some({ section: 0, row: 1, column: 0 }),
-    Optional.some(deleteExpected31),
+    Optional.some(deleteExpected32),
 
     '<table>' +
     '<tbody>' +
