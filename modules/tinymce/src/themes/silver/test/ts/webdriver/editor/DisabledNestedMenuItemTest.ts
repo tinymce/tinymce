@@ -1,8 +1,7 @@
 import { Keys, Mouse, RealKeys, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { Class, SugarBody } from '@ephox/sugar';
-import { assert } from 'chai';
+import { SugarBody } from '@ephox/sugar';
 
 import { Editor } from 'tinymce/core/api/PublicApi';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -14,7 +13,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
   const servicesMenuItemSelector = '[title="Services"]';
   const highligthedCodeMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Code")';
   const highligthedToolsMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Tools")';
-  const disabledClass = 'tox-collection__item--state-disabled';
+  const disabledClass = '.tox-collection__item--state-disabled';
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
@@ -106,13 +105,12 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
 
   it('TINY-7700: Enabled menu item with children should have arrow icon enabled', async () => {
     await pOpenCodeMenu();
-    const menuItem = UiFinder.findIn(SugarBody.body(), servicesMenuItemSelector).getOrDie();
-    assert.isFalse(Class.has(menuItem, disabledClass));
+    UiFinder.notExists(SugarBody.body(), `${disabledClass}${servicesMenuItemSelector}`);
+    UiFinder.exists(SugarBody.body(), servicesMenuItemSelector);
   });
 
   it('TINY-7700: Disabled menu item with children should have arrow icon disabled', async () => {
     await pOpenCodeMenu();
-    const menuItem = UiFinder.findIn(SugarBody.body(), preferencesMenuItemSelector).getOrDie();
-    assert.isTrue(Class.has(menuItem, disabledClass));
+    UiFinder.exists(SugarBody.body(), `${disabledClass}${preferencesMenuItemSelector}`);
   });
 });
