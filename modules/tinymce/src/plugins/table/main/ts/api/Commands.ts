@@ -196,22 +196,18 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableToggleCaption: toggleCaption,
     mceTableSizingMode: (_ui: boolean, sizing: string) => setSizingMode(sizing),
     mceTableCellType: actOnType((type) => type === 'th' ? actions.makeCellsHeader : actions.unmakeCellsHeader),
-    mceTableColType: actOnType((type) => type === 'th' ? actions.makeColumnsHeader : actions.unmakeColumnsHeader)
+    mceTableColType: actOnType((type) => type === 'th' ? actions.makeColumnsHeader : actions.unmakeColumnsHeader),
+    mceTableRowType: actOnType((type) => {
+      switch (type) {
+        case 'header':
+          return actions.makeRowsHeader;
+        case 'footer':
+          return actions.makeRowsFooter;
+        default:
+          return actions.makeRowsBody;
+      }
+    })
   }, (func, name) => editor.addCommand(name, func));
-
-  // TINY-6666: Due to a bug, we need to pass through a reference to the table obtained before the modification
-  const fireTableModifiedForSelection = (editor: Editor, tableOpt: Optional<SugarElement<HTMLTableElement>>): void => {
-    // Due to the same bug, the selection may incorrectly be on a row so we can't use getSelectionStartCell here
-    tableOpt.each((table) => {
-      Events.fireTableModified(editor, table.dom, Events.structureModified);
-    });
-  };
-
-  editor.addCommand('mceTableRowType', (_ui, args) => {
-    const tableOpt = TableLookup.table(Util.getSelectionStart(editor), isRoot);
-    actions.setTableRowType(editor, args);
-    fireTableModifiedForSelection(editor, tableOpt);
-  });
 
   // Register dialog commands
   Obj.each({

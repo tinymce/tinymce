@@ -75,7 +75,8 @@ const focusButtonEvent = Id.generate('focus-button');
 // Icons that have `-rtl` equivalents
 const rtlIcon = [
   'checklist',
-  'ordered-list'
+  'ordered-list',
+  'table-row-numbering'
 ];
 
 // Icons that need to be transformed in RTL

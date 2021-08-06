@@ -2,11 +2,12 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
+import { TableSection } from 'ephox/snooker/api/TableSection';
 import * as Assertions from 'ephox/snooker/test/Assertions';
 import { generateTestTable } from 'ephox/snooker/test/CreateTableUtils';
 
 UnitTest.test('HeaderOperationsTest', () => {
-  const testSingleRowHeader = () => {
+  const testSingleRowSection = () => {
     Assertions.checkOld(
       'TBA',
       Optional.some({ section: 0, row: 0, column: 1 }),
@@ -62,7 +63,7 @@ UnitTest.test('HeaderOperationsTest', () => {
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.unmakeRowHeader, 0, 0, 1
+      TableOperations.makeRowBody, 0, 0, 1
     );
 
     Assertions.checkOld(
@@ -88,7 +89,7 @@ UnitTest.test('HeaderOperationsTest', () => {
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.unmakeRowHeader, 0, 0, 1
+      TableOperations.makeRowBody, 0, 0, 1
     );
 
     Assertions.checkOld(
@@ -128,7 +129,7 @@ UnitTest.test('HeaderOperationsTest', () => {
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.unmakeRowHeader, 0, 0, 1
+      TableOperations.makeRowBody, 0, 0, 1
     );
 
     Assertions.checkOld(
@@ -168,7 +169,7 @@ UnitTest.test('HeaderOperationsTest', () => {
         '<tr><th scope="col">A2</th><th scope="col">B2</th><th scope="col">C2</th><th scope="col">D2</th></tr>' +
       '</tbody></table>',
 
-      TableOperations.unmakeRowHeader, 1, 0, 1
+      TableOperations.makeRowBody, 1, 0, 1
     );
 
     Assertions.checkOld(
@@ -186,9 +187,57 @@ UnitTest.test('HeaderOperationsTest', () => {
 
       TableOperations.makeRowHeader, 0, 0, 1
     );
+
+    Assertions.checkOld(
+      'TINY-6666: Convert body to header (section cells)',
+      Optional.some({ section: 0, row: 0, column: 1 }),
+      '<table>' +
+      '<thead><tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col">C1</th><th scope="col">D1</th></tr></thead>' +
+      '<tbody><tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr></tbody>' +
+      '</table>',
+
+      '<table><tbody>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.makeRowHeader, 0, 0, 1, TableSection.sectionCells()
+    );
+
+    Assertions.checkOld(
+      'TINY-6666: Convert body to footer (section)',
+      Optional.some({ section: 1, row: 0, column: 1 }),
+      '<table>' +
+      '<tbody><tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr></tbody>' +
+      '<tfoot><tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr></tfoot>' +
+      '</table>',
+
+      '<table><tbody>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.makeRowFooter, 0, 0, 1, TableSection.section()
+    );
+
+    Assertions.checkOld(
+      'TINY-6666: Convert header to footer (section cells)',
+      Optional.some({ section: 1, row: 0, column: 1 }),
+      '<table>' +
+      '<tbody><tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr></tbody>' +
+      '<tfoot><tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr></tfoot>' +
+      '</table>',
+
+      '<table>' +
+      '<thead><tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col">C1</th><th scope="col">D1</th></tr></thead>' +
+      '<tbody><tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr></tbody>' +
+      '</table>',
+
+      TableOperations.makeRowFooter, 0, 0, 1, TableSection.sectionCells()
+    );
   };
 
-  const testMultipleRowHeader = () => {
+  const testMultipleRowSection = () => {
     Assertions.checkOldMultiple(
       'TBA',
       Optional.some({ section: 0, row: 0, column: 1 }),
@@ -252,7 +301,7 @@ UnitTest.test('HeaderOperationsTest', () => {
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.unmakeRowsHeader, [{
+      TableOperations.makeRowsBody, [{
         section: 0,
         row: 0,
         column: 1
@@ -282,7 +331,7 @@ UnitTest.test('HeaderOperationsTest', () => {
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.unmakeRowsHeader, [{
+      TableOperations.makeRowsBody, [{
         section: 0,
         row: 0,
         column: 1
@@ -330,7 +379,7 @@ UnitTest.test('HeaderOperationsTest', () => {
         '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
       '</tbody></table>',
 
-      TableOperations.unmakeRowsHeader, [{
+      TableOperations.makeRowsBody, [{
         section: 0,
         row: 0,
         column: 1
@@ -378,7 +427,7 @@ UnitTest.test('HeaderOperationsTest', () => {
         '<tr><th scope="col">A2</th><th scope="col">B2</th><th scope="col">C2</th><th scope="col">D2</th></tr>' +
       '</tbody></table>',
 
-      TableOperations.unmakeRowsHeader, [{
+      TableOperations.makeRowsBody, [{
         section: 1,
         row: 0,
         column: 1
@@ -442,7 +491,7 @@ UnitTest.test('HeaderOperationsTest', () => {
         '</thead>' +
       '</table>',
 
-      TableOperations.unmakeRowsHeader, [
+      TableOperations.makeRowsBody, [
         {
           section: 0,
           row: 0,
@@ -505,6 +554,87 @@ UnitTest.test('HeaderOperationsTest', () => {
           column: 1
         }
       ]
+    );
+
+    Assertions.checkOldMultiple(
+      'TINY-6666: Footer rows to header rows (section cells)',
+      Optional.some({ section: 0, row: 0, column: 1 }),
+      '<table><thead>' +
+      '<tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col">C1</th><th scope="col">D1</th></tr>' +
+      '<tr><th scope="col">A2</th><th scope="col">B2</th><th scope="col">C2</th><th scope="col">D2</th></tr>' +
+      '</thead></table>',
+
+      '<table><tfoot>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tfoot></table>',
+
+      TableOperations.makeRowsHeader, [
+        {
+          section: 0,
+          row: 0,
+          column: 1
+        },
+        {
+          section: 0,
+          row: 1,
+          column: 1
+        }
+      ], TableSection.sectionCells()
+    );
+
+    Assertions.checkOldMultiple(
+      'TINY-6666: Body rows to footer rows (section)',
+      Optional.some({ section: 0, row: 0, column: 1 }),
+      '<table><tfoot>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tfoot></table>',
+
+      '<table><tbody>' +
+      '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>' +
+      '</tbody></table>',
+
+      TableOperations.makeRowsFooter, [
+        {
+          section: 0,
+          row: 0,
+          column: 1
+        },
+        {
+          section: 0,
+          row: 1,
+          column: 1
+        }
+      ], TableSection.section()
+    );
+
+    Assertions.checkOldMultiple(
+      'TINY-6666: Header rows to footer rows (section cells)',
+      Optional.some({ section: 0, row: 0, column: 1 }),
+      '<table><tfoot>' +
+      '<tr><td>A1</td><td>B1</td><td rowspan="2">C1</td><td>D1</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>D2</td></tr>' +
+      '</tfoot></table>',
+
+      '<table><thead>' +
+      '<tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col" rowspan="2">C1</th><th scope="col">D1</th></tr>' +
+      '<tr><th scope="col">A2</th><th scope="col">B2</th><th scope="col">D2</th></tr>' +
+      '</thead></table>',
+
+      TableOperations.makeRowsFooter, [
+        {
+          section: 0,
+          row: 0,
+          column: 1
+        },
+        {
+          section: 0,
+          row: 1,
+          column: 1
+        }
+      ], TableSection.sectionCells()
     );
   };
 
@@ -1146,8 +1276,8 @@ UnitTest.test('HeaderOperationsTest', () => {
     );
   };
 
-  testSingleRowHeader();
-  testMultipleRowHeader();
+  testSingleRowSection();
+  testMultipleRowSection();
   testSingleColumnHeader();
   testMultipleColumnHeader();
   testSingleCellHeader();
