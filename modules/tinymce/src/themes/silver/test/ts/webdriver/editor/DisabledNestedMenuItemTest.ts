@@ -12,7 +12,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
   const preferencesMenuItemSelector = '[title="Preferences"]';
   const servicesMenuItemSelector = '[title="Services"]';
   const highligthedCodeMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Code")';
-  const highligthedToolsMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Tools")';
+  const highligthedEditMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Edit")';
   const disabledClass = '.tox-collection__item--state-disabled';
 
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -88,7 +88,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
     await pOpenCodeMenu();
     await RealKeys.pSendKeysOn(preferencesMenuItemSelector, [ RealKeys.combo({}, 'arrowright') ]);
     UiFinder.exists(SugarBody.body(), highligthedCodeMenuSelector);
-    UiFinder.notExists(SugarBody.body(), highligthedToolsMenuSelector);
+    UiFinder.notExists(SugarBody.body(), highligthedEditMenuSelector);
   });
 
   it('TINY-7700: Enabled menu item with children should open on mouse hover', async () => {
