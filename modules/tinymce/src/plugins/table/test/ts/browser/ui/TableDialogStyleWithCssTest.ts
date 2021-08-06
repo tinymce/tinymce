@@ -10,7 +10,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
-describe('browser.tinymce.plugins.table.ui.TableCellDialogTest', () => {
+describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () => {
   const generalSelectors = {
     cellspacing: 'label.tox-label:contains(Cell spacing) + input.tox-textfield',
     cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield'
@@ -61,10 +61,10 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogTest', () => {
   };
 
   Arr.each([
-    { title: 'using attributes', style_by_css: false },
-    { title: 'using styles', style_by_css: true }
+    { title: 'attributes', style_by_css: false },
+    { title: 'styles', style_by_css: true }
   ], (spec) => {
-    context(`Control table layout ${spec.title}`, () => {
+    context(`Table layout using ${spec.title}`, () => {
       const hook = TinyHooks.bddSetup<Editor>({
         plugins: 'table',
         base_url: '/project/tinymce/js/tinymce',
@@ -72,21 +72,21 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogTest', () => {
         table_style_by_css: spec.style_by_css
       }, [ Plugin, Theme ]);
 
-      it('falls back to cellpadding attribute if no CSS is defined', async () => {
+      it('TINY-4926: TINY-4926: falls back to cellpadding attribute if no CSS is defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, { cellpadding: '20px' }, {}, {});
+        initializeTable(editor, { cellpadding: '20' }, {}, {});
 
         await TableTestUtils.pOpenTableDialog(editor);
 
         TableTestUtils.assertDialogValues({
           cellspacing: 0,
-          cellpadding: '20px'
+          cellpadding: '20'
         }, false, generalSelectors);
 
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
-      it('falls back to td padding styles if no cellpadding attribute is defined', async () => {
+      it('TINY-4926: TINY-4926: falls back to td padding styles if no cellpadding attribute is defined', async () => {
         const editor = hook.editor();
         initializeTable(editor, {}, {}, { padding: '20px' });
 
@@ -100,15 +100,15 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogTest', () => {
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
-      it('uses the integrators preference when both td "padding" style and cellpadding attribute are defined', async () => {
+      it('TINY-4926: uses the integrators preference when both td "padding" style and cellpadding attribute are defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, { cellpadding: '20px' }, {}, { padding: '30px' });
+        initializeTable(editor, { cellpadding: '20' }, {}, { padding: '30px' });
 
         await TableTestUtils.pOpenTableDialog(editor);
 
         TableTestUtils.assertDialogValues({
           cellspacing: 0,
-          cellpadding: spec.style_by_css ? '30px' : '20px'
+          cellpadding: spec.style_by_css ? '30px' : '20'
         }, false, generalSelectors);
 
         await TableTestUtils.pClickDialogButton(editor, false);
@@ -122,7 +122,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogTest', () => {
 
         TableTestUtils.setDialogValues({
           cellspacing: 0,
-          cellpadding: '30px'
+          cellpadding: '30'
         }, false, generalSelectors);
 
         await TableTestUtils.pClickDialogButton(editor, true);
@@ -130,25 +130,25 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogTest', () => {
         if (spec.style_by_css) {
           assertTable(editor, { cellpadding: '' }, {}, { padding: '30px' });
         } else {
-          assertTable(editor, { cellpadding: '30px' }, {}, { padding: '' });
+          assertTable(editor, { cellpadding: '30' }, {}, { padding: '' });
         }
       });
 
-      it('falls back to cellspacing attribute if no CSS is defined', async () => {
+      it('TINY-4926: falls back to cellspacing attribute if no CSS is defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, { cellspacing: '5px' }, {}, {});
+        initializeTable(editor, { cellspacing: '5' }, {}, {});
 
         await TableTestUtils.pOpenTableDialog(editor);
 
         TableTestUtils.assertDialogValues({
-          cellspacing: '5px',
+          cellspacing: '5',
           cellpadding: 0
         }, false, generalSelectors);
 
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
-      it('falls back to table border-spacing style if no cellspacing attribute is defined', async () => {
+      it('TINY-4926: falls back to table border-spacing style if no cellspacing attribute is defined', async () => {
         const editor = hook.editor();
         initializeTable(editor, {}, { 'border-spacing': '5px' }, {});
 
@@ -162,14 +162,14 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogTest', () => {
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
-      it('uses the integrators preference when both table "border-spacing" style and cellspacing attribute are defined', async () => {
+      it('TINY-4926: uses the integrators preference when both table "border-spacing" style and cellspacing attribute are defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, { cellspacing: '5px' }, { 'border-spacing': '10px' }, {});
+        initializeTable(editor, { cellspacing: '5' }, { 'border-spacing': '10px' }, {});
 
         await TableTestUtils.pOpenTableDialog(editor);
 
         TableTestUtils.assertDialogValues({
-          cellspacing: spec.style_by_css ? '10px' : '5px',
+          cellspacing: spec.style_by_css ? '10px' : '5',
           cellpadding: 0
         }, false, generalSelectors);
 
@@ -183,7 +183,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogTest', () => {
         await TableTestUtils.pOpenTableDialog(editor);
 
         TableTestUtils.setDialogValues({
-          cellspacing: '5px',
+          cellspacing: '5',
           cellpadding: 0
         }, false, generalSelectors);
 
@@ -192,7 +192,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogTest', () => {
         if (spec.style_by_css) {
           assertTable(editor, { cellspacing: '' }, { 'border-spacing': '5px' }, {});
         } else {
-          assertTable(editor, { cellspacing: '5px' }, { 'border-spacing': '' }, {});
+          assertTable(editor, { cellspacing: '5' }, { 'border-spacing': '' }, {});
         }
       });
     });
