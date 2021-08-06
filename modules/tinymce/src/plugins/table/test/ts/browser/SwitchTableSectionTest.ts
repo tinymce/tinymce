@@ -3,7 +3,6 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as TableSections from 'tinymce/plugins/table/core/TableSections';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -176,7 +175,8 @@ describe('browser.tinymce.plugins.table.SwitchTableSectionTest', () => {
 
   const switchSectionType = (editor: Editor, rowSelector: string, newSectionType: string) => {
     const row = UiFinder.findIn(TinyDom.body(editor), rowSelector).getOrDie();
-    TableSections.switchSectionType(editor, row.dom, newSectionType);
+    editor.selection.select(row.dom, true);
+    editor.execCommand('mceTableRowType', false, { type: newSectionType });
   };
 
   const switchToHeader = (editor: Editor, startContent: string, expected: string) => {

@@ -5,27 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
-import { CellMutations, ResizeBehaviour, ResizeWire, RunOperation, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
+import { CellMutations, ResizeBehaviour, ResizeWire, RunOperation, TableFill, TableGridSize, TableSection, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
-import { getCloneElements, isResizeTableColumnResizing } from '../api/Settings';
-import { getRowType, switchSectionType } from '../core/TableSections';
+import { getCloneElements, isResizeTableColumnResizing, getTableHeaderType } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
-import { ephemera } from '../selection/Ephemera';
-import { getRowsFromSelection } from '../selection/TableSelection';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<TableActionResult>;
 export interface TableActionResult {
   readonly rng: Range;
   readonly effect: Events.TableEventData;
 }
-export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;
 export type CombinedTargetsTableAction = TableAction<RunOperation.CombinedTargets>;
 export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
 export type AdvancedPasteTableAction = TableAction<RunOperation.TargetPasteRows>;
@@ -50,10 +46,12 @@ export interface TableActions {
   pasteRowsAfter: AdvancedPasteTableAction;
   makeCellsHeader: CombinedTargetsTableAction;
   unmakeCellsHeader: CombinedTargetsTableAction;
-  setTableRowType: SimpleTableAction;
   makeColumnsHeader: CombinedTargetsTableAction;
   unmakeColumnsHeader: CombinedTargetsTableAction;
-  getTableRowType: (editor: Editor) => string;
+  makeRowsHeader: CombinedTargetsTableAction;
+  makeRowsBody: CombinedTargetsTableAction;
+  makeRowsFooter: CombinedTargetsTableAction;
+  getTableRowType: LookupAction;
   getTableCellType: LookupAction;
   getTableColType: LookupAction;
 }
@@ -72,15 +70,33 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
 
   const colMutationOp = isResizeTableColumnResizing(editor) ? Fun.noop : CellMutations.halve;
 
+  const getTableSectionType = (table: SugarElement<HTMLTableElement>) => {
+    switch (getTableHeaderType(editor)) {
+      case 'section':
+        return TableSection.section();
+      case 'sectionCells':
+        return TableSection.sectionCells();
+      case 'cells':
+        return TableSection.cells();
+      default:
+        // Attempt to automatically find the type. If a type can't be found
+        // then fallback to "section" to maintain backwards compatibility.
+        return TableSection.getTableSectionType(table, 'section');
+    }
+  };
+
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, lazyWire: () => ResizeWire, effect: Events.TableEventData) =>
     (table: SugarElement<HTMLTableElement>, target: T): Optional<TableActionResult> => {
       Util.removeDataStyle(table);
       const wire = lazyWire();
       const doc = SugarElement.fromDom(editor.getDoc());
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
-      const sizing = TableSize.get(editor, table);
-      const resizeBehaviour = isResizeTableColumnResizing(editor) ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable();
-      return guard(table) ? operation(wire, table, target, generators, sizing, resizeBehaviour).bind((result) => {
+      const behaviours: RunOperation.OperationBehaviours = {
+        sizing: TableSize.get(editor, table),
+        resize: isResizeTableColumnResizing(editor) ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable(),
+        section: getTableSectionType(table)
+      };
+      return guard(table) ? operation(wire, table, target, generators, behaviours).bind((result) => {
         Arr.each(result.newRows, (row) => {
           Events.fireNewRow(editor, row.dom);
         });
@@ -126,43 +142,19 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
 
   const pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, lazyWire, Events.structureModified);
 
-  const extractType = (args: Record<string, any>, validTypes: string[]) =>
-    Obj.get(args, 'type').filter((type) => Arr.contains(validTypes, type));
-
-  const setTableRowType = (editor: Editor, args: Record<string, any>) =>
-    extractType(args, [ 'header', 'body', 'footer' ]).each((type) => {
-      Arr.map(getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected), (row) => switchSectionType(editor, row.dom, type));
-    });
-
   const makeCellsHeader = execute(TableOperations.makeCellsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
   const unmakeCellsHeader = execute(TableOperations.unmakeCellsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
 
   const makeColumnsHeader = execute(TableOperations.makeColumnsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
   const unmakeColumnsHeader = execute(TableOperations.unmakeColumnsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
 
-  const getTableRowType = (editor: Editor): 'header' | 'body' | 'footer' | '' => {
-    const rows = getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
-    if (rows.length > 0) {
-      const rowTypes = Arr.map(rows, (r) => getRowType(editor, r.dom));
-      const hasHeader = Arr.contains(rowTypes, 'header');
-      const hasFooter = Arr.contains(rowTypes, 'footer');
-      if (!hasHeader && !hasFooter) {
-        return 'body';
-      } else {
-        const hasBody = Arr.contains(rowTypes, 'body');
-        if (hasHeader && !hasBody && !hasFooter) {
-          return 'header';
-        } else if (!hasHeader && !hasBody && hasFooter) {
-          return 'footer';
-        } else {
-          return '';
-        }
-      }
-    }
-  };
+  const makeRowsHeader = execute(TableOperations.makeRowsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const makeRowsBody = execute(TableOperations.makeRowsBody, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const makeRowsFooter = execute(TableOperations.makeRowsFooter, Fun.always, Fun.noop, lazyWire, Events.structureModified);
 
   const getTableCellType = TableOperations.getCellsType;
   const getTableColType = TableOperations.getColumnsType;
+  const getTableRowType = TableOperations.getRowsType;
 
   return {
     deleteRow,
@@ -180,9 +172,11 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
     pasteCells,
     makeCellsHeader,
     unmakeCellsHeader,
-    setTableRowType,
     makeColumnsHeader,
     unmakeColumnsHeader,
+    makeRowsHeader,
+    makeRowsBody,
+    makeRowsFooter,
     getTableRowType,
     getTableCellType,
     getTableColType

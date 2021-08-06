@@ -200,11 +200,8 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
     assertEvents('TINY-6629: Assert table modified events', expectedEvents);
     TinyAssertions.assertContent(editor, expectedContent);
     // Ensure the selection hasn't been lost and is still within a cell
-    // TODO: TINY-6666 fix selection getting lost for rows
-    if (command !== 'mceTableRowType') {
-      assert.isTrue(editor.selection.isCollapsed(), 'selection should be collapsed');
-      assert.match(editor.selection.getNode().nodeName, /^(TD|TH)$/, 'selection should be within a cell');
-    }
+    assert.isTrue(editor.selection.isCollapsed(), 'selection should be collapsed');
+    assert.match(editor.selection.getNode().nodeName, /^(TD|TH)$/, 'selection should be within a cell');
   };
 
   const switchMultipleColumnsType = (editor: Editor, startContent: string, expectedContent: string, command: string, type: 'td' | 'th', expectedEvents: string[] = defaultEvents) => {

@@ -139,7 +139,8 @@ const rtlIcon = [
   'list-num-lower-greek',
   'list-num-lower-roman',
   'list-num-upper-alpha',
-  'list-num-upper-roman'
+  'list-num-upper-roman',
+  'table-row-numbering'
 ];
 
 // Icons that need to be transformed in RTL
