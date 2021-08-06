@@ -1,6 +1,6 @@
 import { ApproxStructure } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { Attribute, Css, Html, SelectorFilter, SugarElement } from '@ephox/sugar';
 
@@ -10,13 +10,24 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
+interface TableSpec {
+  readonly cellPaddingAttr?: string;
+  readonly cellPaddingStyle?: string;
+
+  readonly cellSpacingAttr?: string;
+  readonly cellSpacingStyle?: string;
+}
+
 describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () => {
   const generalSelectors = {
     cellspacing: 'label.tox-label:contains(Cell spacing) + input.tox-textfield',
     cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield'
   };
 
-  const initializeTable = (editor: Editor, tableAttributes: Record<string, string>, tableStyles: Record<string, string>, cellStyles: Record<string, string>) => {
+  const setDialogValues = (data: Record<string, string>) => TableTestUtils.setDialogValues(data, false, generalSelectors);
+  const assertDialogValues = (data: Record<string, string>) => TableTestUtils.assertDialogValues(data, false, generalSelectors);
+
+  const initializeTable = (editor: Editor, table: TableSpec) => {
     const defaultTable = SugarElement.fromHtml<HTMLTableElement>(
       '<table>' +
       '<tbody>' +
@@ -32,28 +43,45 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
       '</table>'
     );
 
-    Attribute.setAll(defaultTable, tableAttributes);
-    Css.setAll(defaultTable, tableStyles);
-
-    Arr.each(SelectorFilter.descendants(defaultTable, 'td,th'), (elem) => Css.setAll(elem, cellStyles));
+    if (Type.isNonNullable(table.cellPaddingAttr)) {
+      Attribute.set(defaultTable, 'cellpadding', table.cellPaddingAttr);
+    }
+    if (Type.isNonNullable(table.cellSpacingAttr)) {
+      Attribute.set(defaultTable, 'cellspacing', table.cellSpacingAttr);
+    }
+    if (Type.isNonNullable(table.cellSpacingStyle)) {
+      Css.set(defaultTable, 'border-spacing', table.cellSpacingStyle);
+    }
+    if (Type.isNonNullable(table.cellPaddingStyle)) {
+      Arr.each(SelectorFilter.descendants(defaultTable, 'td,th'), (cell) => Css.set(cell, 'padding', table.cellPaddingStyle));
+    }
 
     editor.setContent(Html.getOuter(defaultTable));
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
   };
 
-  const assertTable = (editor: Editor, tableAttributes: Record<string, string>, tableStyles: Record<string, string>, cellStyles: Record<string, string>) => {
+  const assertTable = (editor: Editor, spec: TableSpec) => {
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, _arr) => {
-      const cell = s.element('td', {
-        styles: Obj.map(cellStyles, (val) => val === '' ? str.none() : str.is(val))
-      });
+      const transformMap = (record: Record<string, undefined | string>) => {
+        const definedOnly = Obj.filter(record, Type.isNonNullable);
+        return Obj.map(definedOnly, (val) => val !== '' ? str.is(val) : str.none());
+      };
+      const cell = s.element('td', { styles: transformMap({ padding: spec.cellPaddingStyle }) });
 
       const row = s.element('tr', { children: [ cell, cell ] });
       const tbody = s.element('tbody', { children: [ row, row ] });
 
+      const tableAttributes = {
+        cellspacing: spec.cellSpacingAttr,
+        cellpadding: spec.cellPaddingAttr
+      };
+
+      const tableStyles = { 'border-spacing': spec.cellSpacingStyle };
+
       const table = s.element('table', {
         children: [ tbody ],
-        attrs: Obj.map(tableAttributes, (val) => val === '' ? str.none() : str.is(val)),
-        styles: Obj.map(tableStyles, (val) => val === '' ? str.none() : str.is(val))
+        attrs: transformMap(tableAttributes),
+        styles: transformMap(tableStyles)
       });
 
       return s.element('body', { children: [ table ] });
@@ -74,125 +102,125 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
 
       it('TINY-4926: TINY-4926: falls back to cellpadding attribute if no CSS is defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, { cellpadding: '20' }, {}, {});
+        initializeTable(editor, { cellPaddingAttr: '20' });
 
         await TableTestUtils.pOpenTableDialog(editor);
 
-        TableTestUtils.assertDialogValues({
-          cellspacing: 0,
+        assertDialogValues({
+          cellspacing: '',
           cellpadding: '20'
-        }, false, generalSelectors);
+        });
 
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
       it('TINY-4926: TINY-4926: falls back to td padding styles if no cellpadding attribute is defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, {}, {}, { padding: '20px' });
+        initializeTable(editor, { cellPaddingStyle: '20px' });
 
         await TableTestUtils.pOpenTableDialog(editor);
 
-        TableTestUtils.assertDialogValues({
-          cellspacing: 0,
+        assertDialogValues({
+          cellspacing: '',
           cellpadding: '20px'
-        }, false, generalSelectors);
+        });
 
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
       it('TINY-4926: uses the integrators preference when both td "padding" style and cellpadding attribute are defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, { cellpadding: '20' }, {}, { padding: '30px' });
+        initializeTable(editor, { cellPaddingAttr: '20', cellPaddingStyle: '30px' });
 
         await TableTestUtils.pOpenTableDialog(editor);
 
-        TableTestUtils.assertDialogValues({
-          cellspacing: 0,
+        assertDialogValues({
+          cellspacing: '',
           cellpadding: spec.style_by_css ? '30px' : '20'
-        }, false, generalSelectors);
+        });
 
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
       it('sets either td "padding" style or cellpadding attribute, based on integrator preference', async () => {
         const editor = hook.editor();
-        initializeTable(editor, {}, {}, {});
+        initializeTable(editor, {});
 
         await TableTestUtils.pOpenTableDialog(editor);
 
-        TableTestUtils.setDialogValues({
-          cellspacing: 0,
+        setDialogValues({
+          cellspacing: '',
           cellpadding: '30'
-        }, false, generalSelectors);
+        });
 
         await TableTestUtils.pClickDialogButton(editor, true);
 
         if (spec.style_by_css) {
-          assertTable(editor, { cellpadding: '' }, {}, { padding: '30px' });
+          assertTable(editor, { cellPaddingAttr: '', cellPaddingStyle: '30px' });
         } else {
-          assertTable(editor, { cellpadding: '30' }, {}, { padding: '' });
+          assertTable(editor, { cellPaddingAttr: '30', cellPaddingStyle: '' });
         }
       });
 
       it('TINY-4926: falls back to cellspacing attribute if no CSS is defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, { cellspacing: '5' }, {}, {});
+        initializeTable(editor, { cellSpacingAttr: '5' });
 
         await TableTestUtils.pOpenTableDialog(editor);
 
-        TableTestUtils.assertDialogValues({
+        assertDialogValues({
           cellspacing: '5',
-          cellpadding: 0
-        }, false, generalSelectors);
+          cellpadding: ''
+        });
 
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
       it('TINY-4926: falls back to table border-spacing style if no cellspacing attribute is defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, {}, { 'border-spacing': '5px' }, {});
+        initializeTable(editor, { cellSpacingStyle: '5px' });
 
         await TableTestUtils.pOpenTableDialog(editor);
 
-        TableTestUtils.assertDialogValues({
+        assertDialogValues({
           cellspacing: '5px',
-          cellpadding: 0
-        }, false, generalSelectors);
+          cellpadding: ''
+        });
 
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
       it('TINY-4926: uses the integrators preference when both table "border-spacing" style and cellspacing attribute are defined', async () => {
         const editor = hook.editor();
-        initializeTable(editor, { cellspacing: '5' }, { 'border-spacing': '10px' }, {});
+        initializeTable(editor, { cellSpacingAttr: '5', cellSpacingStyle: '10px' });
 
         await TableTestUtils.pOpenTableDialog(editor);
 
-        TableTestUtils.assertDialogValues({
+        assertDialogValues({
           cellspacing: spec.style_by_css ? '10px' : '5',
-          cellpadding: 0
-        }, false, generalSelectors);
+          cellpadding: ''
+        });
 
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
       it('sets either table "border-spacing" style or cellspacing attribute, based on integrator preference', async () => {
         const editor = hook.editor();
-        initializeTable(editor, {}, {}, {});
+        initializeTable(editor, {});
 
         await TableTestUtils.pOpenTableDialog(editor);
 
-        TableTestUtils.setDialogValues({
+        setDialogValues({
           cellspacing: '5',
-          cellpadding: 0
-        }, false, generalSelectors);
+          cellpadding: ''
+        });
 
         await TableTestUtils.pClickDialogButton(editor, true);
 
         if (spec.style_by_css) {
-          assertTable(editor, { cellspacing: '' }, { 'border-spacing': '5px' }, {});
+          assertTable(editor, { cellSpacingAttr: '', cellSpacingStyle: '5px' });
         } else {
-          assertTable(editor, { cellspacing: '5' }, { 'border-spacing': '' }, {});
+          assertTable(editor, { cellSpacingAttr: '5', cellSpacingStyle: '' });
         }
       });
     });
