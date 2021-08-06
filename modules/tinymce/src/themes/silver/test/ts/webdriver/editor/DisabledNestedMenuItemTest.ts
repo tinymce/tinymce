@@ -11,8 +11,8 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
   const codeMenuItemSelector = '[role="menuitem"]:contains("Code")';
   const preferencesMenuItemSelector = '[title="Preferences"]';
   const servicesMenuItemSelector = '[title="Services"]';
-  const highligthedCodeMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Code")';
-  const highligthedEditMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Edit")';
+  const highlightedCodeMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Code")';
+  const highlightedEditMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Edit")';
   const disabledClass = '.tox-collection__item--state-disabled';
 
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -87,8 +87,8 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
   it('TINY-7700: Disabled menu item with children should not navigate to top level menu on keyboard arrow right', async () => {
     await pOpenCodeMenu();
     await RealKeys.pSendKeysOn(preferencesMenuItemSelector, [ RealKeys.combo({}, 'arrowright') ]);
-    UiFinder.exists(SugarBody.body(), highligthedCodeMenuSelector);
-    UiFinder.notExists(SugarBody.body(), highligthedEditMenuSelector);
+    UiFinder.exists(SugarBody.body(), highlightedCodeMenuSelector);
+    UiFinder.notExists(SugarBody.body(), highlightedEditMenuSelector);
   });
 
   it('TINY-7700: Enabled menu item with children should open on mouse hover', async () => {
