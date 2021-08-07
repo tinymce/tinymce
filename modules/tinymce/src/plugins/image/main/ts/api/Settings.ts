@@ -9,31 +9,48 @@ import { Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const hasDimensions = (editor: Editor) => editor.getParam('image_dimensions', true, 'boolean');
+import { UserListItem } from '../ui/DialogTypes';
 
-const hasAdvTab = (editor: Editor) => editor.getParam('image_advtab', false, 'boolean');
+type UserImageListCallback = (callback: (imageList: UserListItem[]) => void) => void;
 
-const hasUploadTab = (editor: Editor) => editor.getParam('image_uploadtab', true, 'boolean');
+const hasDimensions = (editor: Editor): boolean =>
+  editor.getParam('image_dimensions', true, 'boolean');
 
-const getPrependUrl = (editor: Editor) => editor.getParam('image_prepend_url', '', 'string');
+const hasAdvTab = (editor: Editor): boolean =>
+  editor.getParam('image_advtab', false, 'boolean');
 
-const getClassList = (editor: Editor) => editor.getParam('image_class_list');
+const hasUploadTab = (editor: Editor): boolean =>
+  editor.getParam('image_uploadtab', true, 'boolean');
 
-const hasDescription = (editor: Editor) => editor.getParam('image_description', true, 'boolean');
+const getPrependUrl = (editor: Editor): string =>
+  editor.getParam('image_prepend_url', '', 'string');
 
-const hasImageTitle = (editor: Editor) => editor.getParam('image_title', false, 'boolean');
+const getClassList = (editor: Editor): UserListItem[] | undefined =>
+  editor.getParam('image_class_list');
 
-const hasImageCaption = (editor: Editor) => editor.getParam('image_caption', false, 'boolean');
+const hasDescription = (editor: Editor): boolean =>
+  editor.getParam('image_description', true, 'boolean');
 
-const getImageList = (editor: Editor) => editor.getParam('image_list', false);
+const hasImageTitle = (editor: Editor): boolean =>
+  editor.getParam('image_title', false, 'boolean');
 
-const hasUploadUrl = (editor: Editor) => Type.isNonNullable(editor.getParam('images_upload_url'));
+const hasImageCaption = (editor: Editor): boolean =>
+  editor.getParam('image_caption', false, 'boolean');
 
-const hasUploadHandler = (editor: Editor) => Type.isNonNullable(editor.getParam('images_upload_handler'));
+const getImageList = (editor: Editor): string | UserListItem[] | UserImageListCallback | false =>
+  editor.getParam('image_list', false);
 
-const showAccessibilityOptions = (editor: Editor) => editor.getParam('a11y_advanced_options', false, 'boolean');
+const hasUploadUrl = (editor: Editor): boolean =>
+  Type.isNonNullable(editor.getParam('images_upload_url'));
 
-const isAutomaticUploadsEnabled = (editor: Editor): boolean => editor.getParam('automatic_uploads', true, 'boolean');
+const hasUploadHandler = (editor: Editor): boolean =>
+  Type.isNonNullable(editor.getParam('images_upload_handler'));
+
+const showAccessibilityOptions = (editor: Editor): boolean =>
+  editor.getParam('a11y_advanced_options', false, 'boolean');
+
+const isAutomaticUploadsEnabled = (editor: Editor): boolean =>
+  editor.getParam('automatic_uploads', true, 'boolean');
 
 export {
   hasDimensions,
