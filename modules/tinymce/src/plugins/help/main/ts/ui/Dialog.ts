@@ -18,8 +18,8 @@ import * as PluginsTab from './PluginsTab';
 import * as VersionTab from './VersionTab';
 
 interface TabData {
-  tabs: TabSpecs;
-  names: string[];
+  readonly tabs: TabSpecs;
+  readonly names: string[];
 }
 
 const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, tabs: TabSpecs): TabData => {
@@ -54,7 +54,7 @@ const getNamesFromTabs = (tabs: TabSpecs): TabData => {
   return { tabs, names };
 };
 
-const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
+const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs): TabData => {
   const shortcuts = KeyboardShortcutsTab.tab();
   const nav = KeyboardNavTab.tab();
   const plugins = PluginsTab.tab(editor);
@@ -73,7 +73,7 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
   );
 };
 
-const init = (editor: Editor, customTabs: CustomTabSpecs): () => void => () => {
+const init = (editor: Editor, customTabs: CustomTabSpecs) => (): void => {
   // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
   const { tabs, names } = parseCustomTabs(editor, customTabs);
   const foundTabs: Optional<Dialog.TabSpec>[] = Arr.map(names, (name) => Obj.get(tabs, name));
