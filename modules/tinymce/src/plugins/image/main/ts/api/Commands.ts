@@ -11,7 +11,7 @@ import { ImageData } from '../core/ImageData';
 import { insertOrUpdateImage } from '../core/ImageSelection';
 import { Dialog } from '../ui/Dialog';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   editor.addCommand('mceImage', Dialog(editor).open);
 
   // TODO: This command is likely to be short lived we only need it until we expose the rtc model though a new api so it shouldn't be documented
