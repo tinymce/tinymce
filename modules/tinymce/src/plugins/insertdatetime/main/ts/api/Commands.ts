@@ -5,10 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
+
 import * as Actions from '../core/Actions';
 import * as Settings from './Settings';
 
-const register = (editor) => {
+const register = (editor: Editor): void => {
   editor.addCommand('mceInsertDate', () => {
     Actions.insertDateTime(editor, Settings.getDateFormat(editor));
   });
