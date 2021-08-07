@@ -13,7 +13,7 @@ import * as Keyboard from './core/Keyboard';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 
-export default () => {
+export default (): void => {
   PluginManager.add('lists', (editor) => {
     if (editor.hasPlugin('rtc', true) === false) {
       Keyboard.setup(editor);

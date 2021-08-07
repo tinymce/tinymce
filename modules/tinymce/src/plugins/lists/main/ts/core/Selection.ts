@@ -6,7 +6,6 @@
  */
 
 import { Arr, Optional } from '@ephox/katamari';
-import { SandHTMLElement } from '@ephox/sand';
 
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Editor from 'tinymce/core/api/Editor';
@@ -14,36 +13,32 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as NodeType from './NodeType';
 
-const getParentList = (editor: Editor, node?: Node) => {
+const getParentList = (editor: Editor, node?: Node): HTMLElement => {
   const selectionStart = node || editor.selection.getStart(true);
 
-  return editor.dom.getParent(selectionStart, 'OL,UL,DL', getClosestListRootElm(editor, selectionStart)) as HTMLElement;
+  return editor.dom.getParent(selectionStart, 'OL,UL,DL', getClosestListRootElm(editor, selectionStart));
 };
 
-const isParentListSelected = (parentList, selectedBlocks) => {
-  return parentList && selectedBlocks.length === 1 && selectedBlocks[0] === parentList;
-};
+const isParentListSelected = (parentList: HTMLElement, selectedBlocks: Element[]): boolean =>
+  parentList && selectedBlocks.length === 1 && selectedBlocks[0] === parentList;
 
-const findSubLists = (parentList) => {
-  return Tools.grep(parentList.querySelectorAll('ol,ul,dl'), (elm: Node) => {
-    return NodeType.isListNode(elm);
-  });
-};
+const findSubLists = (parentList: HTMLElement): HTMLElement[] =>
+  Arr.filter(parentList.querySelectorAll('ol,ul,dl'), NodeType.isListNode);
 
-const getSelectedSubLists = (editor) => {
+const getSelectedSubLists = (editor: Editor): HTMLElement[] => {
   const parentList = getParentList(editor);
   const selectedBlocks = editor.selection.getSelectedBlocks();
 
   if (isParentListSelected(parentList, selectedBlocks)) {
-    return findSubLists(parentList) as HTMLElement[];
+    return findSubLists(parentList);
   } else {
-    return Tools.grep(selectedBlocks, (elm: Node) => {
+    return Arr.filter(selectedBlocks, (elm): elm is HTMLElement => {
       return NodeType.isListNode(elm) && parentList !== elm;
-    }) as HTMLElement[];
+    });
   }
 };
 
-const findParentListItemsNodes = (editor, elms) => {
+const findParentListItemsNodes = (editor: Editor, elms: Element[]): Element[] => {
   const listItemsElms = Tools.map(elms, (elm) => {
     const parentLi = editor.dom.getParent(elm, 'li,dd,dt', getClosestListRootElm(editor, elm));
 
@@ -53,51 +48,42 @@ const findParentListItemsNodes = (editor, elms) => {
   return DomQuery.unique(listItemsElms);
 };
 
-const getSelectedListItems = (editor) => {
+const getSelectedListItems = (editor: Editor): Array<HTMLLIElement | HTMLElement> => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
-  return Tools.grep(findParentListItemsNodes(editor, selectedBlocks), (block) => {
-    return NodeType.isListItemNode(block);
-  });
+  return Arr.filter(findParentListItemsNodes(editor, selectedBlocks), NodeType.isListItemNode);
 };
 
-const getSelectedDlItems = (editor: Editor): Node[] => Arr.filter(getSelectedListItems(editor), NodeType.isDlItemNode);
+const getSelectedDlItems = (editor: Editor): HTMLElement[] =>
+  Arr.filter(getSelectedListItems(editor), NodeType.isDlItemNode);
 
-const getClosestListRootElm = (editor, elm) => {
-  const parentTableCell = editor.dom.getParents(elm, 'TD,TH');
-  const root = parentTableCell.length > 0 ? parentTableCell[0] : editor.getBody();
-
-  return root;
+const getClosestListRootElm = (editor: Editor, elm: Node): HTMLElement => {
+  const parentTableCell = editor.dom.getParents<HTMLTableCellElement>(elm, 'TD,TH');
+  return parentTableCell.length > 0 ? parentTableCell[0] : editor.getBody();
 };
 
-const findLastParentListNode = (editor: Editor, elm: Node): Optional<Node> => {
-  const parentLists = editor.dom.getParents(elm, 'ol,ul', getClosestListRootElm(editor, elm));
+const findLastParentListNode = (editor: Editor, elm: Node): Optional<HTMLOListElement | HTMLUListElement> => {
+  const parentLists = editor.dom.getParents<HTMLOListElement | HTMLUListElement>(elm, 'ol,ul', getClosestListRootElm(editor, elm));
   return Arr.last(parentLists);
 };
 
-const getSelectedLists = (editor: Editor): Node[] => {
+const getSelectedLists = (editor: Editor): Array<HTMLOListElement | HTMLUListElement> => {
   const firstList = findLastParentListNode(editor, editor.selection.getStart());
   const subsequentLists = Arr.filter(editor.selection.getSelectedBlocks(), NodeType.isOlUlNode);
 
   return firstList.toArray().concat(subsequentLists);
 };
 
-const getSelectedListRoots = (editor: Editor): Node[] => {
+const getSelectedListRoots = (editor: Editor): HTMLElement[] => {
   const selectedLists = getSelectedLists(editor);
   return getUniqueListRoots(editor, selectedLists);
 };
 
-const getUniqueListRoots = (editor: Editor, lists: Node[]): Node[] => {
+const getUniqueListRoots = (editor: Editor, lists: HTMLElement[]): HTMLElement[] => {
   const listRoots = Arr.map(lists, (list) => findLastParentListNode(editor, list).getOr(list));
   return DomQuery.unique(listRoots);
 };
 
-const isList = (editor: Editor): boolean => {
-  const list = getParentList(editor);
-  return SandHTMLElement.isPrototypeOf(list);
-};
-
 export {
-  isList,
   getParentList,
   getSelectedSubLists,
   getSelectedListItems,

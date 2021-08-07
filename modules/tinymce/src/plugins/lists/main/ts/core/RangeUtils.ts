@@ -10,8 +10,8 @@ import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import * as NodeType from './NodeType';
 
 interface Point {
-  container: Node;
-  offset: number;
+  readonly container: Node;
+  readonly offset: number;
 }
 
 const getNormalizedPoint = (container: Node, offset: number): Point => {

@@ -28,18 +28,18 @@ General workflow: Parse lists to entries -> Manipulate entries -> Compose entrie
 export interface Entry {
   depth: number;
   dirty: boolean;
-  content: SugarElement[];
+  content: SugarElement<Node>[];
   isSelected: boolean;
   listType: ListType;
   listAttributes: Record<string, any>;
   itemAttributes: Record<string, any>;
 }
 
-const isIndented = (entry: Entry) => entry.depth > 0;
+const isIndented = (entry: Entry): boolean => entry.depth > 0;
 
-const isSelected = (entry: Entry) => entry.isSelected;
+const isSelected = (entry: Entry): boolean => entry.isSelected;
 
-const cloneItemContent = (li: SugarElement): SugarElement[] => {
+const cloneItemContent = (li: SugarElement<HTMLElement>): SugarElement<Node>[] => {
   const children = Traverse.children(li);
   const content = hasLastChildList(li) ? children.slice(0, -1) : children;
   return Arr.map(content, Replication.deep);

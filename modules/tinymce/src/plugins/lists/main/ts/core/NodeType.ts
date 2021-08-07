@@ -8,10 +8,13 @@
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
-const matchNodeName = <T extends Node = Node>(name: string) => (node: Node): node is T => node && node.nodeName.toLowerCase() === name;
-const matchNodeNames = <T extends Node = Node>(regex: RegExp) => (node: Node): node is T => node && regex.test(node.nodeName);
+const matchNodeName = <T extends Node = Node>(name: string) =>
+  (node: Node | null): node is T => node && node.nodeName.toLowerCase() === name;
 
-const isTextNode = (node: Node): node is Text => node && node.nodeType === 3;
+const matchNodeNames = <T extends Node = Node>(regex: RegExp) =>
+  (node: Node | null): node is T => node && regex.test(node.nodeName);
+
+const isTextNode = (node: Node | null): node is Text => node && node.nodeType === 3;
 
 const isListNode = matchNodeNames<HTMLOListElement | HTMLUListElement | HTMLDListElement>(/^(OL|UL|DL)$/);
 
@@ -27,15 +30,19 @@ const isTableCellNode = matchNodeNames<HTMLTableHeaderCellElement | HTMLTableCel
 
 const isBr = matchNodeName<HTMLBRElement>('br');
 
-const isFirstChild = (node: Node) => node.parentNode.firstChild === node;
+const isFirstChild = (node: Node): boolean =>
+  node.parentNode.firstChild === node;
 
-const isLastChild = (node: Node) => node.parentNode.lastChild === node;
+const isLastChild = (node: Node): boolean =>
+  node.parentNode.lastChild === node;
 
-const isTextBlock = (editor: Editor, node: Node): node is HTMLElement => node && !!editor.schema.getTextBlockElements()[node.nodeName];
+const isTextBlock = (editor: Editor, node: Node): node is HTMLElement =>
+  node && !!editor.schema.getTextBlockElements()[node.nodeName];
 
-const isBlock = (node: Node, blockElements: Record<string, any>) => node && node.nodeName in blockElements;
+const isBlock = (node: Node | null, blockElements: Record<string, any>): boolean =>
+  node && node.nodeName in blockElements;
 
-const isBogusBr = (dom: DOMUtils, node: Node) => {
+const isBogusBr = (dom: DOMUtils, node: Node): node is HTMLBRElement => {
   if (!isBr(node)) {
     return false;
   }
@@ -43,7 +50,7 @@ const isBogusBr = (dom: DOMUtils, node: Node) => {
   return dom.isBlock(node.nextSibling) && !isBr(node.previousSibling);
 };
 
-const isEmpty = (dom: DOMUtils, elm: Node, keepBookmarks?: boolean) => {
+const isEmpty = (dom: DOMUtils, elm: Node, keepBookmarks?: boolean): boolean => {
   const empty = dom.isEmpty(elm);
 
   if (keepBookmarks && dom.select('span[data-mce-type=bookmark]', elm).length > 0) {
@@ -53,7 +60,8 @@ const isEmpty = (dom: DOMUtils, elm: Node, keepBookmarks?: boolean) => {
   return empty;
 };
 
-const isChildOfBody = (dom: DOMUtils, elm: Element) => dom.isChildOf(elm, dom.getRoot());
+const isChildOfBody = (dom: DOMUtils, elm: Element): boolean =>
+  dom.isChildOf(elm, dom.getRoot());
 
 export {
   isTextNode,
