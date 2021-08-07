@@ -6,17 +6,18 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Storage from '../core/Storage';
 
-const makeSetupHandler = (editor: Editor) => (api) => {
+const makeSetupHandler = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
   api.setDisabled(!Storage.hasDraft(editor));
   const editorEventCallback = () => api.setDisabled(!Storage.hasDraft(editor));
   editor.on('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
   return () => editor.off('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
 };
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   // TODO: This was moved from makeSetupHandler as it would only be called when the menu item was rendered?
   //       Is it safe to start this process when the plugin is registered?
   Storage.startStoreDraft(editor);
