@@ -12,10 +12,13 @@ import { isEmptyString } from './Utils';
 
 // Note: node.firstChild check is for the 'allow_html_in_named_anchor' setting
 // Only want to add contenteditable attributes if there is no text within the anchor
-const isNamedAnchorNode = (node: AstNode) => node && isEmptyString(node.attr('href')) && !isEmptyString(node.attr('id') || node.attr('name'));
-const isEmptyNamedAnchorNode = (node: AstNode) => isNamedAnchorNode(node) && !node.firstChild;
+const isNamedAnchorNode = (node: AstNode | undefined) =>
+  node && isEmptyString(node.attr('href')) && !isEmptyString(node.attr('id') || node.attr('name'));
 
-const setContentEditable = (state: string | null) => (nodes: AstNode[]) => {
+const isEmptyNamedAnchorNode = (node: AstNode | undefined) =>
+  isNamedAnchorNode(node) && !node.firstChild;
+
+const setContentEditable = (state: string | null) => (nodes: AstNode[]): void => {
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
     if (isEmptyNamedAnchorNode(node)) {
@@ -24,7 +27,7 @@ const setContentEditable = (state: string | null) => (nodes: AstNode[]) => {
   }
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.on('PreInit', () => {
     editor.parser.addNodeFilter('a', setContentEditable('false'));
     editor.serializer.addNodeFilter('a', setContentEditable(null));
