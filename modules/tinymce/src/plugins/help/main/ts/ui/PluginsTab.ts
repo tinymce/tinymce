@@ -70,7 +70,7 @@ const tab = (editor: Editor): Dialog.TabSpec => {
       Arr.filter(keys, (k) => !Arr.contains(forced_plugins, k));
   };
 
-  const pluginLister = (editor) => {
+  const pluginLister = (editor: Editor) => {
     const pluginKeys = getPluginKeys(editor);
     const pluginLis = Arr.map(pluginKeys, (key) => {
       return '<li>' + maybeUrlize(editor, key) + '</li>';
@@ -84,7 +84,7 @@ const tab = (editor: Editor): Dialog.TabSpec => {
     return html;
   };
 
-  const installedPlugins = (editor) => {
+  const installedPlugins = (editor: Editor) => {
     if (editor == null) {
       return '';
     }
