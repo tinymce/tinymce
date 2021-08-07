@@ -14,7 +14,7 @@ import * as Languages from '../core/Languages';
 
 type LanguageSpec = Languages.LanguageSpec;
 
-const open = (editor: Editor) => {
+const open = (editor: Editor): void => {
   const languages: LanguageSpec[] = Languages.getLanguages(editor);
   const defaultLanguage: string = Arr.head(languages).fold(Fun.constant(''), (l) => l.value);
   const currentLanguage: string = Languages.getCurrentLanguage(editor, defaultLanguage);
