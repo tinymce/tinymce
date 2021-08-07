@@ -14,18 +14,23 @@ import { insertEmoticon } from '../core/Actions';
 import { ALL_CATEGORY, EmojiDatabase } from '../core/EmojiDatabase';
 import { emojisFrom } from '../core/Lookup';
 
+interface DialogData {
+  readonly pattern: string;
+  readonly results: Array<{ value: string; icon: string; text: string }>;
+}
+
 const patternName = 'pattern';
 
-const open = (editor: Editor, database: EmojiDatabase) => {
+const open = (editor: Editor, database: EmojiDatabase): void => {
 
-  const initialState = {
+  const initialState: DialogData = {
     pattern: '',
     results: emojisFrom(database.listAll(), '', Optional.some(300))
   };
 
   const currentTab = Cell(ALL_CATEGORY);
 
-  const scan = (dialogApi) => {
+  const scan = (dialogApi: Dialog.DialogInstanceApi<DialogData>) => {
     const dialogData = dialogApi.getData();
     const category = currentTab.get();
     const candidates = database.listCategory(category);
@@ -52,7 +57,7 @@ const open = (editor: Editor, database: EmojiDatabase) => {
     // columns: 'auto'
   };
 
-  const getInitialState = (): Dialog.DialogSpec<typeof initialState> => {
+  const getInitialState = (): Dialog.DialogSpec<DialogData> => {
     const body: Dialog.TabPanelSpec = {
       type: 'tabpanel',
       // All tabs have the same fields.
