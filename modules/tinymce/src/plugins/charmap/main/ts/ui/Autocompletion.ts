@@ -13,7 +13,7 @@ import * as Scan from '../core/Scan';
 
 type CharMap = CharMap.CharMap;
 
-const init = (editor: Editor, all: CharMap) => {
+const init = (editor: Editor, all: CharMap): void => {
   editor.ui.registry.addAutocompleter('charmap', {
     ch: ':',
     columns: 'auto',

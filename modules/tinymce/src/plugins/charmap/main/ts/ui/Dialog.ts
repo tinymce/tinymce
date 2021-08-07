@@ -16,7 +16,7 @@ import * as Scan from '../core/Scan';
 
 const patternName = 'pattern';
 
-const open = (editor: Editor, charMap: CharMap[]) => {
+const open = (editor: Editor, charMap: CharMap[]): void => {
   const makeGroupItems = (): Dialog.BodyComponentSpec[] => [
     {
       label: 'Search',
