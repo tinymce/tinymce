@@ -17,6 +17,7 @@ export interface UserListItem {
   text?: string;
   title?: string;
   value?: string;
+  url?: string;
   menu?: UserListItem[];
 }
 
@@ -29,59 +30,59 @@ export interface LinkDialogCatalog {
 }
 
 export interface LinkDialogInfo {
-  anchor: {
-    url: Optional<string>;
-    text: Optional<string>;
-    target: Optional<string>;
-    rel: Optional<string>;
-    linkClass: Optional<string>;
-    title: Optional<string>;
+  readonly anchor: {
+    readonly url: Optional<string>;
+    readonly text: Optional<string>;
+    readonly target: Optional<string>;
+    readonly rel: Optional<string>;
+    readonly linkClass: Optional<string>;
+    readonly title: Optional<string>;
   };
-  catalogs: LinkDialogCatalog;
-  flags: {
-    titleEnabled: boolean;
+  readonly catalogs: LinkDialogCatalog;
+  readonly flags: {
+    readonly titleEnabled: boolean;
   };
-  optNode: Optional<HTMLAnchorElement>;
-  onSubmit?: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void;
+  readonly optNode: Optional<HTMLAnchorElement>;
+  readonly onSubmit?: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void;
 }
 
 export interface LinkDialogUrlData {
-  value: string;
-  meta?: LinkUrlMeta;
+  readonly value: string;
+  readonly meta?: LinkUrlMeta;
 }
 
 export type LinkDialogKey = 'text' | 'target' | 'rel' | 'linkClass' | 'title';
 
 export interface LinkDialogData {
-  url: LinkDialogUrlData;
-  text: string;
-  title: string;
-  anchor: string;
-  link: string;
-  rel: string;
-  target: string;
-  linkClass: string;
+  readonly url: LinkDialogUrlData;
+  readonly text: string;
+  readonly title: string;
+  readonly anchor: string;
+  readonly link: string;
+  readonly rel: string;
+  readonly target: string;
+  readonly linkClass: string;
 }
 
 export interface LinkDialogOutput {
-  href: string;
-  text: Optional<string>;
-  target: Optional<string>;
-  rel: Optional<string>;
-  class: Optional<string>;
-  title: Optional<string>;
+  readonly href: string;
+  readonly text: Optional<string>;
+  readonly target: Optional<string>;
+  readonly rel: Optional<string>;
+  readonly class: Optional<string>;
+  readonly title: Optional<string>;
 }
 
 interface LinkUrlMeta {
-  text?: string;
-  title?: string;
-  attach?: () => void;
-  original?: {
-    value: string;
+  readonly text?: string;
+  readonly title?: string;
+  readonly attach?: () => void;
+  readonly original?: {
+    readonly value: string;
   };
 }
 
 export interface AttachState {
-  href?: string;
-  attach?: () => void;
+  readonly href?: string;
+  readonly attach?: () => void;
 }
