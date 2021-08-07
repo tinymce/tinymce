@@ -12,7 +12,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Utils from './Utils';
 
-const removeEmptyNamedAnchorsInSelection = (editor: Editor) => {
+const removeEmptyNamedAnchorsInSelection = (editor: Editor): void => {
   const dom = editor.dom;
   RangeUtils(dom).walk(editor.selection.getRng(), (nodes) => {
     Tools.each(nodes, (node) => {
@@ -23,14 +23,14 @@ const removeEmptyNamedAnchorsInSelection = (editor: Editor) => {
   });
 };
 
-const isValidId = (id: string) =>
+const isValidId = (id: string): boolean =>
   // Follows HTML4 rules: https://www.w3.org/TR/html401/types.html#type-id
   /^[A-Za-z][A-Za-z0-9\-:._]*$/.test(id);
 
 const getNamedAnchor = (editor: Editor): HTMLAnchorElement | null =>
-  editor.dom.getParent(editor.selection.getStart(), Utils.namedAnchorSelector) as HTMLAnchorElement;
+  editor.dom.getParent<HTMLAnchorElement>(editor.selection.getStart(), Utils.namedAnchorSelector);
 
-const getId = (editor: Editor) => {
+const getId = (editor: Editor): string => {
   const anchor = getNamedAnchor(editor);
   if (anchor) {
     return Utils.getIdFromAnchor(anchor);
@@ -39,7 +39,7 @@ const getId = (editor: Editor) => {
   }
 };
 
-const createAnchor = (editor: Editor, id: string) => {
+const createAnchor = (editor: Editor, id: string): void => {
   editor.undoManager.transact(() => {
     if (!Settings.allowHtmlInNamedAnchor(editor)) {
       editor.selection.collapse(true);
@@ -66,7 +66,7 @@ const updateAnchor = (editor: Editor, id: string, anchorElement: HTMLAnchorEleme
   editor.undoManager.add();
 };
 
-const insert = (editor: Editor, id: string) => {
+const insert = (editor: Editor, id: string): void => {
   const anchor = getNamedAnchor(editor);
   if (anchor) {
     updateAnchor(editor, id, anchor);
