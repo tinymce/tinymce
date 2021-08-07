@@ -9,9 +9,10 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Time from '../core/Time';
 
-const shouldAskBeforeUnload = (editor: Editor) => editor.getParam('autosave_ask_before_unload', true);
+const shouldAskBeforeUnload = (editor: Editor): boolean =>
+  editor.getParam('autosave_ask_before_unload', true);
 
-const getAutoSavePrefix = (editor: Editor) => {
+const getAutoSavePrefix = (editor: Editor): string => {
   const location = document.location;
 
   return editor.getParam('autosave_prefix', 'tinymce-autosave-{path}{query}{hash}-{id}-')
@@ -21,13 +22,17 @@ const getAutoSavePrefix = (editor: Editor) => {
     .replace(/{id}/g, editor.id);
 };
 
-const shouldRestoreWhenEmpty = (editor: Editor) => editor.getParam('autosave_restore_when_empty', false);
+const shouldRestoreWhenEmpty = (editor: Editor): boolean =>
+  editor.getParam('autosave_restore_when_empty', false);
 
-const getAutoSaveInterval = (editor: Editor) => Time.parse(editor.getParam('autosave_interval'), '30s');
+const getAutoSaveInterval = (editor: Editor): number =>
+  Time.parse(editor.getParam('autosave_interval'), '30s');
 
-const getAutoSaveRetention = (editor: Editor) => Time.parse(editor.getParam('autosave_retention'), '20m');
+const getAutoSaveRetention = (editor: Editor): number =>
+  Time.parse(editor.getParam('autosave_retention'), '20m');
 
-const getForcedRootBlock = (editor: Editor) => editor.getParam('forced_root_block');
+const getForcedRootBlock = (editor: Editor): string | boolean =>
+  editor.getParam('forced_root_block');
 
 export {
   shouldAskBeforeUnload,
