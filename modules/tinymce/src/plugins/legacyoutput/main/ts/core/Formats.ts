@@ -10,7 +10,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Settings from '../api/Settings';
 
-const overrideFormats = (editor: Editor) => {
+const overrideFormats = (editor: Editor): void => {
   const alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table',
     fontSizes = Tools.explode(Settings.getFontSizeStyleValues(editor)),
     schema = editor.schema;
@@ -83,7 +83,7 @@ const overrideFormats = (editor: Editor) => {
   });
 };
 
-const overrideSettings = (editor: Editor) => {
+const overrideSettings = (editor: Editor): void => {
   const defaultFontsizeFormats = '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7';
   const defaultFontsFormats =
     'Andale Mono=andale mono,monospace;' +
@@ -118,7 +118,7 @@ const overrideSettings = (editor: Editor) => {
   }
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   overrideSettings(editor);
   editor.on('PreInit', () => overrideFormats(editor));
 };
