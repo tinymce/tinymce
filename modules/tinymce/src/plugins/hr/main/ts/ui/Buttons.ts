@@ -7,17 +7,19 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
+  const onAction = () => editor.execCommand('InsertHorizontalRule');
+
   editor.ui.registry.addButton('hr', {
     icon: 'horizontal-rule',
     tooltip: 'Horizontal line',
-    onAction: () => editor.execCommand('InsertHorizontalRule')
+    onAction
   });
 
   editor.ui.registry.addMenuItem('hr', {
     icon: 'horizontal-rule',
     text: 'Horizontal line',
-    onAction: () => editor.execCommand('InsertHorizontalRule')
+    onAction
   });
 };
 
