@@ -6,7 +6,9 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
+import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Settings from '../api/Settings';
@@ -18,7 +20,7 @@ const enum ListType {
   UnorderedList = 'UL'
 }
 
-const findIndex = (list, predicate) => {
+const findIndex = <T>(list: T[], predicate: (element: T) => boolean): number => {
   for (let index = 0; index < list.length; index++) {
     const element = list[index];
 
@@ -30,20 +32,29 @@ const findIndex = (list, predicate) => {
 };
 
 // <ListStyles>
-const styleValueToText = (styleValue) => {
+const styleValueToText = (styleValue: string): string => {
   return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, (chr) => {
     return chr.toUpperCase();
   });
 };
 
-const isWithinList = (editor: Editor, e, nodeName) => {
+const isWithinList = (editor: Editor, e: EditorEvent<NodeChangeEvent>, nodeName: ListType): boolean => {
   const tableCellIndex = findIndex(e.parents, ListUtils.isTableCellNode);
   const parents = tableCellIndex !== -1 ? e.parents.slice(0, tableCellIndex) : e.parents;
   const lists = Tools.grep(parents, ListUtils.isListNode(editor));
   return lists.length > 0 && lists[0].nodeName === nodeName;
 };
 
-const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]) => {
+const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.ToolbarSplitButtonInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi) => {
+  const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
+    api.setActive(isWithinList(editor, e, nodeName));
+  };
+  editor.on('NodeChange', nodeChangeHandler);
+
+  return () => editor.off('NodeChange', nodeChangeHandler);
+};
+
+const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]): void => {
   editor.ui.registry.addSplitButton(id, {
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
@@ -72,35 +83,21 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
       const listStyleType = ListUtils.getSelectedStyleType(editor);
       return listStyleType.map((listStyle) => value === listStyle).getOr(false);
     },
-    onSetup: (api) => {
-      const nodeChangeHandler = (e) => {
-        api.setActive(isWithinList(editor, e, nodeName));
-      };
-      editor.on('NodeChange', nodeChangeHandler);
-
-      return () => editor.off('NodeChange', nodeChangeHandler);
-    }
+    onSetup: makeSetupHandler(editor, nodeName)
   });
 };
 
-const addButton = (editor: Editor, id, tooltip, cmd, nodeName, _styles) => {
+const addButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, _styles: string[]): void => {
   editor.ui.registry.addToggleButton(id, {
     active: false,
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
-    onSetup: (api) => {
-      const nodeChangeHandler = (e) => {
-        api.setActive(isWithinList(editor, e, nodeName));
-      };
-      editor.on('NodeChange', nodeChangeHandler);
-
-      return () => editor.off('NodeChange', nodeChangeHandler);
-    },
+    onSetup: makeSetupHandler(editor, nodeName),
     onAction: () => editor.execCommand(cmd)
   });
 };
 
-const addControl = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]) => {
+const addControl = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]): void => {
   if (styles.length > 1) {
     addSplitButton(editor, id, tooltip, cmd, nodeName, styles);
   } else {
@@ -108,7 +105,7 @@ const addControl = (editor: Editor, id: string, tooltip: string, cmd: string, no
   }
 };
 
-const register = (editor) => {
+const register = (editor: Editor): void => {
   addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', ListType.OrderedList, Settings.getNumberStyles(editor));
   addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
 };

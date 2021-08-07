@@ -77,7 +77,7 @@ export interface DomQueryConstructor {
   grep <T>(array: T[], callback: (item, i: number) => boolean): T[];
   unique <T>(results: T[]): T[];
   text (elem: Node): string;
-  contains (context, elem: Node): number;
+  contains (context, elem: Node): boolean;
   filter (expr: string, elems: Node[], not?: boolean);
 }
 
