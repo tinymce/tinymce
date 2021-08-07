@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const setContent = (editor, html) => {
+import Editor from 'tinymce/core/api/Editor';
+
+const setContent = (editor: Editor, html: string): void => {
   // We get a lovely "Wrong document" error in IE 11 if we
   // don't move the focus to the editor before creating an undo
   // transaction since it tries to make a bookmark for the current selection
@@ -19,7 +21,7 @@ const setContent = (editor, html) => {
   editor.nodeChanged();
 };
 
-const getContent = (editor) => {
+const getContent = (editor: Editor): string => {
   return editor.getContent({ source_view: true });
 };
 
