@@ -6,6 +6,7 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as NodeType from './NodeType';
@@ -13,8 +14,8 @@ import { createTextBlock } from './TextBlock';
 
 const DOM = DOMUtils.DOM;
 
-const splitList = (editor, ul, li) => {
-  const removeAndKeepBookmarks = (targetNode) => {
+const splitList = (editor: Editor, list: Node, li: Node): void => {
+  const removeAndKeepBookmarks = (targetNode: Node) => {
     Tools.each(bookmarks, (node) => {
       targetNode.parentNode.insertBefore(node, li.parentNode);
     });
@@ -22,11 +23,11 @@ const splitList = (editor, ul, li) => {
     DOM.remove(targetNode);
   };
 
-  const bookmarks = DOM.select('span[data-mce-type="bookmark"]', ul);
+  const bookmarks = DOM.select('span[data-mce-type="bookmark"]', list);
   const newBlock = createTextBlock(editor, li);
   const tmpRng = DOM.createRng();
   tmpRng.setStartAfter(li);
-  tmpRng.setEndAfter(ul);
+  tmpRng.setEndAfter(list);
   const fragment = tmpRng.extractContents();
 
   for (let node = fragment.firstChild; node; node = node.firstChild) {
@@ -37,10 +38,10 @@ const splitList = (editor, ul, li) => {
   }
 
   if (!editor.dom.isEmpty(fragment)) {
-    DOM.insertAfter(fragment, ul);
+    DOM.insertAfter(fragment, list);
   }
 
-  DOM.insertAfter(newBlock, ul);
+  DOM.insertAfter(newBlock, list);
 
   if (NodeType.isEmpty(editor.dom, li.parentNode)) {
     removeAndKeepBookmarks(li.parentNode);
@@ -48,8 +49,8 @@ const splitList = (editor, ul, li) => {
 
   DOM.remove(li);
 
-  if (NodeType.isEmpty(editor.dom, ul)) {
-    DOM.remove(ul);
+  if (NodeType.isEmpty(editor.dom, list)) {
+    DOM.remove(list);
   }
 };
 

@@ -12,11 +12,11 @@ import Editor from 'tinymce/core/api/Editor';
 import { getParentList } from '../core/Selection';
 
 interface ListUpdate {
-  attrs?: Record<string, string>;
-  styles?: Record<string, string>;
+  readonly attrs?: Record<string, string>;
+  readonly styles?: Record<string, string>;
 }
 
-export const updateList = (editor: Editor, update: ListUpdate) => {
+export const updateList = (editor: Editor, update: ListUpdate): void => {
   const parentList = getParentList(editor);
   editor.undoManager.transact(() => {
     if (Type.isObject(update.styles)) {

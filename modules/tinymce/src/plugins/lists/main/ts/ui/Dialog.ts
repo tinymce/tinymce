@@ -13,7 +13,7 @@ import { parseDetail, parseStartValue } from '../core/ListNumbering';
 import { isOlNode } from '../core/NodeType';
 import { getParentList } from '../core/Selection';
 
-const open = (editor: Editor) => {
+const open = (editor: Editor): void => {
   // Find the current list and skip opening if the selection isn't in an ordered list
   const currentList = getParentList(editor);
   if (!isOlNode(currentList)) {

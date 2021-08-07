@@ -9,8 +9,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Util from '../core/Util';
 
-const register = (editor: Editor) => {
-  const exec = (command) => () => editor.execCommand(command);
+const register = (editor: Editor): void => {
+  const exec = (command: string) => () => editor.execCommand(command);
 
   if (!editor.hasPlugin('advlist')) {
     editor.ui.registry.addToggleButton('numlist', {

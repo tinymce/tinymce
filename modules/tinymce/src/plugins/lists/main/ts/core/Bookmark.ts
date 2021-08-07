@@ -11,6 +11,13 @@ import * as Range from './RangeUtils';
 
 const DOM = DOMUtils.DOM;
 
+interface Bookmark {
+  startContainer: Node;
+  startOffset: number;
+  endContainer?: Node;
+  endOffset?: number;
+}
+
 /**
  * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with
  * index 0 so that they can be restored properly after the DOM has been modified. Text bookmarks will not have spans
@@ -22,17 +29,15 @@ const DOM = DOMUtils.DOM;
  * @param  {DOMRange} rng DOM Range to get bookmark on.
  * @return {Object} Bookmark object.
  */
-const createBookmark = (rng) => {
-  const bookmark = {};
+const createBookmark = (rng: Range): Bookmark => {
+  const bookmark: Partial<Bookmark> = {};
 
-  const setupEndPoint = (start?) => {
-    let offsetNode, container, offset;
-
-    container = rng[start ? 'startContainer' : 'endContainer'];
-    offset = rng[start ? 'startOffset' : 'endOffset'];
+  const setupEndPoint = (start?: boolean) => {
+    let container = rng[start ? 'startContainer' : 'endContainer'];
+    let offset = rng[start ? 'startOffset' : 'endOffset'];
 
     if (container.nodeType === 1) {
-      offsetNode = DOM.create('span', { 'data-mce-type': 'bookmark' });
+      const offsetNode = DOM.create('span', { 'data-mce-type': 'bookmark' });
 
       if (container.hasChildNodes()) {
         offset = Math.min(offset, container.childNodes.length - 1);
@@ -60,14 +65,14 @@ const createBookmark = (rng) => {
     setupEndPoint();
   }
 
-  return bookmark;
+  return bookmark as Bookmark;
 };
 
-const resolveBookmark = (bookmark) => {
-  const restoreEndPoint = (start?) => {
-    let container, offset, node;
+const resolveBookmark = (bookmark: Bookmark): Range => {
+  const restoreEndPoint = (start?: boolean) => {
+    let node: Node;
 
-    const nodeIndex = (container) => {
+    const nodeIndex = (container: Node): number => {
       let node = container.parentNode.firstChild, idx = 0;
 
       while (node) {
@@ -76,7 +81,7 @@ const resolveBookmark = (bookmark) => {
         }
 
         // Skip data-mce-type=bookmark nodes
-        if (node.nodeType !== 1 || node.getAttribute('data-mce-type') !== 'bookmark') {
+        if (node.nodeType !== 1 || (node as Element).getAttribute('data-mce-type') !== 'bookmark') {
           idx++;
         }
 
@@ -86,8 +91,8 @@ const resolveBookmark = (bookmark) => {
       return -1;
     };
 
-    container = node = bookmark[start ? 'startContainer' : 'endContainer'];
-    offset = bookmark[start ? 'startOffset' : 'endOffset'];
+    let container = node = bookmark[start ? 'startContainer' : 'endContainer'];
+    let offset = bookmark[start ? 'startOffset' : 'endOffset'];
 
     if (!container) {
       return;
