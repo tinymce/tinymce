@@ -9,11 +9,13 @@ import { Cell } from '@ephox/katamari';
 
 import { ScrollInfo } from '../core/Actions';
 
-const get = (fullscreenState: Cell<ScrollInfo | null>) => {
-  return {
-    isFullscreen: () => fullscreenState.get() !== null
-  };
-};
+export interface Api {
+  readonly isFullscreen: () => boolean;
+}
+
+const get = (fullscreenState: Cell<ScrollInfo | null>): Api => ({
+  isFullscreen: () => fullscreenState.get() !== null
+});
 
 export {
   get
