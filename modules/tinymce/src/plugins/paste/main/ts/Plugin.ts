@@ -20,21 +20,21 @@ import * as PrePostProcess from './core/PrePostProcess';
 import * as Quirks from './core/Quirks';
 import * as Buttons from './ui/Buttons';
 
-export default () => {
+export default (): void => {
   PluginManager.add('paste', (editor) => {
     if (DetectProPlugin.hasProPlugin(editor) === false) {
       const draggingInternallyState = Cell(false);
       const pasteFormat = Cell(Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html');
       const clipboard = Clipboard(editor, pasteFormat);
-      const quirks = Quirks.setup(editor);
 
+      Quirks.setup(editor);
       Buttons.register(editor, clipboard);
       Commands.register(editor, clipboard);
       PrePostProcess.setup(editor);
       CutCopy.register(editor);
       DragDrop.setup(editor, clipboard, draggingInternallyState);
 
-      return Api.get(clipboard, quirks);
+      return Api.get(clipboard);
     }
   });
 };
