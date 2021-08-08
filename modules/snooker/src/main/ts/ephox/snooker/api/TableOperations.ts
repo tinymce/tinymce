@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Remove, SugarElement, Width } from '@ephox/sugar';
+import { ContentEditable, Remove, SugarElement, Width } from '@ephox/sugar';
 
 import { TableSection } from '../api/TableSection';
 import * as Blocks from '../lookup/Blocks';
@@ -42,8 +42,10 @@ interface ExtractColsDetail {
 
 type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
 
+// This uses a slight variation to the default `ContentEditable.isEditable` behaviour,
+// as when the element is detached we assume it is editable instead as it'll be a new cell.
 const isEditable = (elem: SugarElement<HTMLElement>) =>
-  elem.dom.contentEditable !== 'false';
+  ContentEditable.isEditable(elem, true);
 
 const prune = (table: SugarElement<HTMLTableElement>) => {
   const cells = TableLookup.cells(table);

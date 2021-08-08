@@ -7,7 +7,9 @@
 
 import { Arr, Optional } from '@ephox/katamari';
 import { CellLocation, CellNavigation, TableLookup } from '@ephox/snooker';
-import { Compare, CursorPosition, SelectorFilter, SelectorFind, SimSelection, SugarElement, SugarNode, WindowSelection } from '@ephox/sugar';
+import {
+  Compare, ContentEditable, CursorPosition, SelectorFilter, SelectorFind, SimSelection, SugarElement, SugarNode, WindowSelection
+} from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
@@ -16,11 +18,11 @@ import * as Util from '../core/Util';
 import { CellSelectionApi } from '../selection/CellSelection';
 
 const forward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>) => {
-  return go(editor, isRoot, CellNavigation.next(cell));
+  return go(editor, isRoot, CellNavigation.next(cell, ContentEditable.isEditable));
 };
 
 const backward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>) => {
-  return go(editor, isRoot, CellNavigation.prev(cell));
+  return go(editor, isRoot, CellNavigation.prev(cell, ContentEditable.isEditable));
 };
 
 const getCellFirstCursorPosition = (editor: Editor, cell: SugarElement<Node>): Range => {
