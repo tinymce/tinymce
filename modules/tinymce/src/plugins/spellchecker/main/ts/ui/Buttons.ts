@@ -18,8 +18,8 @@ import { DomTextMatcher } from '../core/DomTextMatcher';
 type LastSuggestion = Actions.LastSuggestion;
 
 interface LanguageValue {
-  name: string;
-  value: string;
+  readonly name: string;
+  readonly value: string;
 }
 
 const spellcheckerEvents = 'SpellcheckStart SpellcheckEnd';
@@ -49,7 +49,7 @@ const getItems = (editor: Editor): LanguageValue[] => {
   });
 };
 
-const register = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, lastSuggestionsState: Cell<LastSuggestion>) => {
+const register = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, lastSuggestionsState: Cell<LastSuggestion>): void => {
   const languageMenuItems = buildMenuItems('Language', getItems(editor));
   const startSpellchecking = () => {
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
