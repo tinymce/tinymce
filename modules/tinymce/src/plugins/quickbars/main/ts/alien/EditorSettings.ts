@@ -9,7 +9,7 @@ import { Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const validDefaultOrDie = (value: any, predicate: (value: any) => boolean): boolean => {
+const validDefaultOrDie = <T>(value: T, predicate: (value: T) => boolean): boolean => {
   if (predicate(value)) {
     return true;
   }
