@@ -16,40 +16,12 @@ import XHR from 'tinymce/core/api/util/XHR';
 
 import * as Settings from '../api/Settings';
 import * as Templates from '../core/Templates';
+import { DialogData, ExternalTemplate, InternalTemplate, UrlTemplate } from '../core/Types';
 import * as Utils from '../core/Utils';
-
-interface UrlTemplate {
-  title: string;
-  description: string;
-  url: string;
-}
-
-interface ContentTemplate {
-  title: string;
-  description: string;
-  content: string;
-}
-
-type ExternalTemplate = UrlTemplate | ContentTemplate;
-
-interface InternalTemplate {
-  selected: boolean;
-  text: string;
-  value: {
-    url: Optional<string>;
-    content: Optional<string>;
-    description: string;
-  };
-}
-
-interface DialogData {
-  template: string;
-  preview: string;
-}
 
 type UpdateDialogCallback = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
 
-const getPreviewContent = (editor: Editor, html: string) => {
+const getPreviewContent = (editor: Editor, html: string): string => {
   if (html.indexOf('<html>') === -1) {
     let contentCssEntries = '';
     const contentStyle = Settings.getContentStyle(editor);
@@ -105,7 +77,7 @@ const getPreviewContent = (editor: Editor, html: string) => {
   return Templates.replaceTemplateValues(html, Settings.getPreviewReplaceValues(editor));
 };
 
-const open = (editor: Editor, templateList: ExternalTemplate[]) => {
+const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
   const createTemplates = (): Optional<Array<InternalTemplate>> => {
     if (!templateList || templateList.length === 0) {
       const message = editor.translate('No templates defined.');
