@@ -7,12 +7,14 @@
 
 import { Obj } from '@ephox/katamari';
 
-export const charMap = {
+type CharMap = Record<string, string>;
+
+export const charMap: CharMap = {
   '\u00a0': 'nbsp',
   '\u00ad': 'shy'
 };
 
-export const charMapToRegExp = (charMap, global?) => {
+export const charMapToRegExp = (charMap: CharMap, global?: boolean): RegExp => {
   let regExp = '';
 
   Obj.each(charMap, (_value, key) => {
@@ -22,7 +24,7 @@ export const charMapToRegExp = (charMap, global?) => {
   return new RegExp('[' + regExp + ']', global ? 'g' : '');
 };
 
-export const charMapToSelector = (charMap) => {
+export const charMapToSelector = (charMap: CharMap): string => {
   let selector = '';
   Obj.each(charMap, (value) => {
     if (selector) {

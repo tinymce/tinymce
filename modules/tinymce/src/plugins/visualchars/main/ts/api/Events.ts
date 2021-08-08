@@ -5,7 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireVisualChars = (editor, state) => {
+import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
+const fireVisualChars = (editor: Editor, state: boolean): EditorEvent<{ state: boolean }> => {
   return editor.fire('VisualChars', { state });
 };
 
