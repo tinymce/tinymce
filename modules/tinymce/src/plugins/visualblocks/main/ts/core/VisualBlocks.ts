@@ -11,7 +11,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
 
-const toggleVisualBlocks = (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) => {
+const toggleVisualBlocks = (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>): void => {
   const dom = editor.dom;
 
   dom.toggleClass(editor.getBody(), 'mce-visualblocks');

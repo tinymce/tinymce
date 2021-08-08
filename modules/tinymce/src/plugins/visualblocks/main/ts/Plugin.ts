@@ -13,7 +13,7 @@ import * as Commands from './api/Commands';
 import * as Bindings from './core/Bindings';
 import * as Buttons from './ui/Buttons';
 
-export default () => {
+export default (): void => {
   PluginManager.add('visualblocks', (editor, pluginUrl) => {
     const enabledState = Cell(false);
 
