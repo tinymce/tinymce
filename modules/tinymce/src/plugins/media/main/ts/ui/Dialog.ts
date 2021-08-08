@@ -17,7 +17,8 @@ import * as Service from '../core/Service';
 import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
 import * as UpdateHtml from '../core/UpdateHtml';
 
-const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Optional<Record<string, string>> => Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
+const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Optional<Record<string, string>> =>
+  Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
 
 const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourceInput?: keyof MediaDialogData) => (prop: keyof MediaDialogData): Record<string, string> => {
   // Cases:
@@ -41,7 +42,7 @@ const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourc
   return { [prop]: (prop === sourceInput ? getFromValueFirst() : getFromMetaFirst()).getOr('') };
 };
 
-const getDimensions = (data: MediaDialogData, metaData: Record<string, string>) => {
+const getDimensions = (data: MediaDialogData, metaData: Record<string, string>): MediaDialogData['dimensions'] => {
   const dimensions = {};
   Obj.get(data, 'dimensions').each((dims) => {
     Arr.each([ 'width', 'height' ] as ('width' | 'height')[], (prop) => {
@@ -83,18 +84,18 @@ const wrap = (data: MediaData): MediaDialogData => {
   return wrapped;
 };
 
-const handleError = (editor: Editor): (error?: { msg: string }) => void => {
-  return (error) => {
-    const errorMessage = error && error.msg ?
-      'Media embed handler error: ' + error.msg :
-      'Media embed handler threw unknown error.';
-    editor.notificationManager.open({ type: 'error', text: errorMessage });
-  };
+const handleError = (editor: Editor) => (error?: { msg: string }): void => {
+  const errorMessage = error && error.msg ?
+    'Media embed handler error: ' + error.msg :
+    'Media embed handler threw unknown error.';
+  editor.notificationManager.open({ type: 'error', text: errorMessage });
 };
 
-const snippetToData = (editor: Editor, embedSnippet: string): MediaData => HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet);
+const snippetToData = (editor: Editor, embedSnippet: string): MediaData =>
+  HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet);
 
-const isMediaElement = (element: Element) => element.getAttribute('data-mce-object') || element.getAttribute('data-ephox-embed-iri');
+const isMediaElement = (element: Element): boolean =>
+  element.hasAttribute('data-mce-object') || element.hasAttribute('data-ephox-embed-iri');
 
 const getEditorData = (editor: Editor): MediaData => {
   const element = editor.selection.getNode();
@@ -105,24 +106,22 @@ const getEditorData = (editor: Editor): MediaData => {
   };
 };
 
-const addEmbedHtml = (api: Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) => {
-  return (response: { url: string; html: string }) => {
-    // Only set values if a URL has been defined
-    if (Type.isString(response.url) && response.url.trim().length > 0) {
-      const html = response.html;
-      const snippetData = snippetToData(editor, html);
-      const nuData: MediaData = {
-        ...snippetData,
-        source: response.url,
-        embed: html
-      };
+const addEmbedHtml = (api: Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) => (response: Service.EmbedResult): void => {
+  // Only set values if a URL has been defined
+  if (Type.isString(response.url) && response.url.trim().length > 0) {
+    const html = response.html;
+    const snippetData = snippetToData(editor, html);
+    const nuData: MediaData = {
+      ...snippetData,
+      source: response.url,
+      embed: html
+    };
 
-      api.setData(wrap(nuData));
-    }
-  };
+    api.setData(wrap(nuData));
+  }
 };
 
-const selectPlaceholder = (editor: Editor, beforeObjects: HTMLElement[]) => {
+const selectPlaceholder = (editor: Editor, beforeObjects: HTMLElement[]): void => {
   const afterObjects = editor.dom.select('*[data-mce-object]');
 
   // Find new image placeholder so we can select it
@@ -137,7 +136,7 @@ const selectPlaceholder = (editor: Editor, beforeObjects: HTMLElement[]) => {
   editor.selection.select(afterObjects[0]);
 };
 
-const handleInsert = (editor: Editor, html: string) => {
+const handleInsert = (editor: Editor, html: string): void => {
   const beforeObjects = editor.dom.select('*[data-mce-object]');
 
   editor.insertContent(html);
@@ -145,7 +144,7 @@ const handleInsert = (editor: Editor, html: string) => {
   editor.nodeChanged();
 };
 
-const submitForm = (prevData: MediaData, newData: MediaData, editor: Editor) => {
+const submitForm = (prevData: MediaData, newData: MediaData, editor: Editor): void => {
   newData.embed = UpdateHtml.updateHtml(newData.embed, newData);
 
   // Only fetch the embed HTML content if the URL has changed from what it previously was
@@ -159,12 +158,12 @@ const submitForm = (prevData: MediaData, newData: MediaData, editor: Editor) => 
   }
 };
 
-const showDialog = (editor: Editor) => {
+const showDialog = (editor: Editor): void => {
   const editorData = getEditorData(editor);
   const currentData = Cell<MediaData>(editorData);
   const initialData = wrap(editorData);
 
-  const handleSource = (prevData: MediaData, api: Dialog.DialogInstanceApi<MediaDialogData>) => {
+  const handleSource = (prevData: MediaData, api: Dialog.DialogInstanceApi<MediaDialogData>): void => {
     const serviceData = unwrap(api.getData(), 'source');
 
     // If a new URL is entered, then clear the embed html and fetch the new data
@@ -177,13 +176,13 @@ const showDialog = (editor: Editor) => {
     }
   };
 
-  const handleEmbed = (api: Dialog.DialogInstanceApi<MediaDialogData>) => {
+  const handleEmbed = (api: Dialog.DialogInstanceApi<MediaDialogData>): void => {
     const data = unwrap(api.getData());
     const dataFromEmbed = snippetToData(editor, data.embed);
     api.setData(wrap(dataFromEmbed));
   };
 
-  const handleUpdate = (api: Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: keyof MediaDialogData) => {
+  const handleUpdate = (api: Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: keyof MediaDialogData): void => {
     const data = unwrap(api.getData(), sourceInput);
     const embed = dataToHtml(editor, data);
     api.setData(wrap({

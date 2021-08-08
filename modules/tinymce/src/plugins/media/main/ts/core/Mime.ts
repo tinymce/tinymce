@@ -6,7 +6,7 @@
  */
 
 const guess = (url: string): string => {
-  const mimes = {
+  const mimes: Record<string, string> = {
     mp3: 'audio/mpeg',
     m4a: 'audio/x-m4a',
     wav: 'audio/wav',

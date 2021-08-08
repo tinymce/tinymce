@@ -18,7 +18,8 @@ type AttrList = Array<{ name: string; value: string }> & { map: Record<string, s
 
 const DOM = DOMUtils.DOM;
 
-const trimPx = (value: string) => value.replace(/px$/, '');
+const trimPx = (value: string): string =>
+  value.replace(/px$/, '');
 
 const getEphoxEmbedData = (attrs: AttrList): MediaData => {
   const style = attrs.map.style;
