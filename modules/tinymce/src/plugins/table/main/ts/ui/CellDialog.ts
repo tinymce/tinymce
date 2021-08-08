@@ -24,14 +24,14 @@ import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';
 
 type CellData = Helpers.CellData;
+
 interface SelectedCell {
-  element: HTMLTableCellElement;
-  column: Optional<HTMLTableColElement>;
+  readonly element: HTMLTableCellElement;
+  readonly column: Optional<HTMLTableColElement>;
 }
 
 const getSelectedCells = (table: SugarElement<HTMLTableElement>, cells: SugarElement<HTMLTableCellElement>[]): SelectedCell[] => {
   const warehouse = Warehouse.fromTable(table);
-
   const allCells = Warehouse.justCells(warehouse);
 
   const filtered = Arr.filter(allCells, (cellA) =>
@@ -46,14 +46,14 @@ const getSelectedCells = (table: SugarElement<HTMLTableElement>, cells: SugarEle
   }));
 };
 
-const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data: CellData) => {
+const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data: CellData): void => {
   modifier.setAttrib('scope', data.scope);
   modifier.setAttrib('class', data.class);
   modifier.setStyle('height', Util.addPxSuffix(data.height));
   colModifier.setStyle('width', Util.addPxSuffix(data.width));
 };
 
-const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
+const updateAdvancedProps = (modifier: DomModifier, data: CellData): void => {
   modifier.setFormat('tablecellbackgroundcolor', data.backgroundcolor);
   modifier.setFormat('tablecellbordercolor', data.bordercolor);
   modifier.setFormat('tablecellborderstyle', data.borderstyle);
@@ -73,7 +73,7 @@ const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
   how as part of this, it doesn't remove any original alignment before
   applying any specified alignment.
  */
-const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData) => {
+const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData): void => {
   const isSingleCell = cells.length === 1;
   Arr.each(cells, (item) => {
     const cellElm = item.element;
@@ -106,13 +106,13 @@ const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData) =
   });
 };
 
-const applyStructureData = (editor: Editor, data: CellData) => {
+const applyStructureData = (editor: Editor, data: CellData): void => {
   // Switch cell type if applicable. Note that we specifically tell the command to not fire events
   // as we'll batch the events and fire a `TableModified` event at the end of the updates.
   editor.execCommand('mceTableCellType', false, { type: data.celltype, no_events: true });
 };
 
-const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], oldData: CellData, data: CellData) => {
+const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], oldData: CellData, data: CellData): void => {
   const modifiedData = Obj.filter(data, (value, key) => oldData[key] !== value);
 
   if (Obj.size(modifiedData) > 0 && cells.length >= 1) {
@@ -143,8 +143,8 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
   }
 };
 
-const onSubmitCellForm = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], oldData: CellData, api) => {
-  const data: CellData = api.getData();
+const onSubmitCellForm = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], oldData: CellData, api: Dialog.DialogInstanceApi<CellData>): void => {
+  const data = api.getData();
   api.close();
 
   editor.undoManager.transact(() => {
@@ -153,7 +153,7 @@ const onSubmitCellForm = (editor: Editor, cells: SugarElement<HTMLTableCellEleme
   });
 };
 
-const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) => {
+const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]): CellData => {
   const cellsData = TableLookup.table(cells[0]).map((table) =>
     Arr.map(getSelectedCells(table, cells), (item) =>
       Helpers.extractDataFromCellElement(editor, item.element, hasAdvancedCellTab(editor), item.column)
@@ -163,7 +163,7 @@ const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) =>
   return Helpers.getSharedValues<CellData>(cellsData.getOrDie());
 };
 
-const open = (editor: Editor, selections: Selections) => {
+const open = (editor: Editor, selections: Selections): void => {
   const cells = TableSelection.getCellsFromSelection(selections);
 
   // Check if there are any cells to operate on
