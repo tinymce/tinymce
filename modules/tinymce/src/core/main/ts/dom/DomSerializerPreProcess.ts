@@ -14,7 +14,7 @@ const preProcess = (editor: Editor, node: Element, args: ParserArgs): Node => {
   let oldDoc: Document;
   const dom = editor.dom;
 
-  let clonedNode = node.cloneNode(true);
+  let clonedNode = node.cloneNode(true) as Element;
 
   // Nodes needs to be attached to something in WebKit/Opera
   // This fix will make DOM ranges and make Sizzle happy!
@@ -30,7 +30,8 @@ const preProcess = (editor: Editor, node: Element, args: ParserArgs): Node => {
 
     // Grab first child or body element for serialization
     if (clonedNode.nodeName !== 'BODY') {
-      clonedNode = doc.body.firstChild;
+      // We cast to a Element here, as this will be the cloned node imported and appended above
+      clonedNode = doc.body.firstChild as Element;
     } else {
       clonedNode = doc.body;
     }
