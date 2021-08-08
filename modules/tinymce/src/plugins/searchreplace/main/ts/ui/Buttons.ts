@@ -12,13 +12,11 @@ import Editor from 'tinymce/core/api/Editor';
 import { SearchState } from '../core/Actions';
 import * as Dialog from './Dialog';
 
-const showDialog = (editor: Editor, currentSearchState: Cell<SearchState>) => {
-  return () => {
-    Dialog.open(editor, currentSearchState);
-  };
+const showDialog = (editor: Editor, currentSearchState: Cell<SearchState>) => (): void => {
+  Dialog.open(editor, currentSearchState);
 };
 
-const register = (editor: Editor, currentSearchState: Cell<SearchState>) => {
+const register = (editor: Editor, currentSearchState: Cell<SearchState>): void => {
   editor.ui.registry.addMenuItem('searchreplace', {
     text: 'Find and replace...',
     shortcut: 'Meta+F',
