@@ -8,6 +8,7 @@
 import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
+import { ParserArgs } from './html/DomParser';
 import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
 import { InstanceApi } from './WindowManager';
@@ -46,6 +47,9 @@ export interface AfterProgressStateEvent { state: boolean }
 export interface PlaceholderToggleEvent { state: boolean }
 
 export interface LoadErrorEvent { message: string }
+
+export interface PreProcessEvent extends ParserArgs { node: Element }
+export interface PostProcessEvent extends ParserArgs { content: string }
 
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
@@ -104,6 +108,8 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'tap': TouchEvent;
   'longpress': TouchEvent;
   'longpresscancel': { };
+  'PreProcess': PreProcessEvent;
+  'PostProcess': PostProcessEvent;
 }
 
 export interface EditorManagerEventMap {
