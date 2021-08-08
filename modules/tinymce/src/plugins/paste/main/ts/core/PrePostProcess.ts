@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Settings from '../api/Settings';
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   const plugin = editor.plugins.paste;
 
   const preProcess = Settings.getPreProcess(editor);

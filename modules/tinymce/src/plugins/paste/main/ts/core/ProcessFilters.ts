@@ -14,7 +14,12 @@ import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import * as WordFilter from './WordFilter';
 
-const preProcess = (editor: Editor, html: string) => {
+interface ProcessResult {
+  readonly content: string;
+  readonly cancelled: boolean;
+}
+
+const preProcess = (editor: Editor, html: string): string => {
   const parser = DomParser({ }, editor.schema);
 
   // Strip meta elements
@@ -28,15 +33,15 @@ const preProcess = (editor: Editor, html: string) => {
   return HtmlSerializer({ validate: Settings.getValidate(editor) }, editor.schema).serialize(fragment);
 };
 
-const processResult = (content: string, cancelled: boolean) => ({ content, cancelled });
+const processResult = (content: string, cancelled: boolean): ProcessResult => ({ content, cancelled });
 
-const postProcessFilter = (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) => {
+const postProcessFilter = (editor: Editor, html: string, internal: boolean, isWordHtml: boolean): ProcessResult => {
   const tempBody = editor.dom.create('div', { style: 'display:none' }, html);
   const postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
   return processResult(postProcessArgs.node.innerHTML, postProcessArgs.isDefaultPrevented());
 };
 
-const filterContent = (editor: Editor, content: string, internal: boolean, isWordHtml: boolean) => {
+const filterContent = (editor: Editor, content: string, internal: boolean, isWordHtml: boolean): ProcessResult => {
   const preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
 
   // Filter the content to remove potentially dangerous content (eg scripts)
@@ -49,7 +54,7 @@ const filterContent = (editor: Editor, content: string, internal: boolean, isWor
   }
 };
 
-const process = (editor: Editor, html: string, internal: boolean) => {
+const process = (editor: Editor, html: string, internal: boolean): ProcessResult => {
   const isWordHtml = WordFilter.isWordContent(html);
   const content = isWordHtml ? WordFilter.preProcess(editor, html) : html;
 
