@@ -12,13 +12,13 @@ import Editor from 'tinymce/core/api/Editor';
 import { PatternSet } from '../core/PatternTypes';
 import { createPatternSet, normalizePattern } from './Pattern';
 
-const error = (...args: Parameters<Console['error']>) => {
+const error = (...args: Parameters<Console['error']>): void => {
   const console: Console = Global.console;
   if (console) { // Skip test env
-    if (console.error) { // tslint:disable-line:no-console
-      console.error.apply(console, args); // tslint:disable-line:no-console
+    if (console.error) {
+      console.error.apply(console, args);
     } else {
-      console.log.apply(console, args); // tslint:disable-line:no-console
+      console.log.apply(console, args);
     }
   }
 };
