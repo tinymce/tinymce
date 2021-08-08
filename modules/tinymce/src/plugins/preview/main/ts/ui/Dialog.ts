@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as IframeContent from '../core/IframeContent';
 
-export const open = (editor: Editor) => {
+export const open = (editor: Editor): void => {
 
   const content = IframeContent.getPreviewHtml(editor);
 
