@@ -15,20 +15,18 @@ import VK from 'tinymce/core/api/util/VK';
 import * as Util from '../core/Util';
 import { CellSelectionApi } from '../selection/CellSelection';
 
-const forward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>) => {
-  return go(editor, isRoot, CellNavigation.next(cell, ContentEditable.isEditable));
-};
+const forward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: SugarElement<HTMLTableCellElement>) =>
+  go(editor, isRoot, CellNavigation.next(cell, ContentEditable.isEditable));
 
-const backward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>) => {
-  return go(editor, isRoot, CellNavigation.prev(cell, ContentEditable.isEditable));
-};
+const backward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: SugarElement<HTMLTableCellElement>) =>
+  go(editor, isRoot, CellNavigation.prev(cell, ContentEditable.isEditable));
 
 const getCellFirstCursorPosition = (editor: Editor, cell: SugarElement<Node>): Range => {
   const selection = SimSelection.exact(cell, 0, cell, 0);
   return WindowSelection.toNative(selection);
 };
 
-const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLocation): Optional<Range> => {
+const go = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: CellLocation): Optional<Range> => {
   return cell.fold<Optional<Range>>(Optional.none, Optional.none, (current, next) => {
     return CursorPosition.first(next).map((cell) => {
       return getCellFirstCursorPosition(editor, cell);
@@ -42,10 +40,10 @@ const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLoca
 
 const rootElements = [ 'table', 'li', 'dl' ];
 
-const handle = (event: KeyboardEvent, editor: Editor, cellSelection: CellSelectionApi) => {
+const handle = (event: KeyboardEvent, editor: Editor, cellSelection: CellSelectionApi): void => {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
-    const isRoot = (element) => {
+    const isRoot = (element: SugarElement<Node>) => {
       const name = SugarNode.name(element);
       return Compare.eq(element, body) || Arr.contains(rootElements, name);
     };

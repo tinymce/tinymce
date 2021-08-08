@@ -16,7 +16,7 @@ import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
 
-const registerQueryCommands = (editor: Editor, actions: TableActions, selections: Selections) => {
+const registerQueryCommands = (editor: Editor, actions: TableActions, selections: Selections): void => {
   const isRoot = Util.getIsRoot(editor);
 
   const lookupOnSelection = (action: LookupAction): string =>
@@ -32,7 +32,6 @@ const registerQueryCommands = (editor: Editor, actions: TableActions, selections
     mceTableCellType: () => lookupOnSelection(actions.getTableCellType),
     mceTableColType: () => lookupOnSelection(actions.getTableColType)
   }, (func, name) => editor.addQueryValueHandler(name, func));
-
 };
 
 export { registerQueryCommands };

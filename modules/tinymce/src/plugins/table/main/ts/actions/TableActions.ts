@@ -31,38 +31,39 @@ type GuardFn = (table: SugarElement<HTMLTableElement>) => boolean;
 type MutateFn = (e1: SugarElement<any>, e2: SugarElement<any>) => void;
 
 export interface TableActions {
-  deleteRow: CombinedTargetsTableAction;
-  deleteColumn: CombinedTargetsTableAction;
-  insertRowsBefore: CombinedTargetsTableAction;
-  insertRowsAfter: CombinedTargetsTableAction;
-  insertColumnsBefore: CombinedTargetsTableAction;
-  insertColumnsAfter: CombinedTargetsTableAction;
-  mergeCells: CombinedTargetsTableAction;
-  unmergeCells: CombinedTargetsTableAction;
-  pasteCells: PasteTableAction;
-  pasteColsBefore: AdvancedPasteTableAction;
-  pasteColsAfter: AdvancedPasteTableAction;
-  pasteRowsBefore: AdvancedPasteTableAction;
-  pasteRowsAfter: AdvancedPasteTableAction;
-  makeCellsHeader: CombinedTargetsTableAction;
-  unmakeCellsHeader: CombinedTargetsTableAction;
-  makeColumnsHeader: CombinedTargetsTableAction;
-  unmakeColumnsHeader: CombinedTargetsTableAction;
-  makeRowsHeader: CombinedTargetsTableAction;
-  makeRowsBody: CombinedTargetsTableAction;
-  makeRowsFooter: CombinedTargetsTableAction;
-  getTableRowType: LookupAction;
-  getTableCellType: LookupAction;
-  getTableColType: LookupAction;
+  readonly deleteRow: CombinedTargetsTableAction;
+  readonly deleteColumn: CombinedTargetsTableAction;
+  readonly insertRowsBefore: CombinedTargetsTableAction;
+  readonly insertRowsAfter: CombinedTargetsTableAction;
+  readonly insertColumnsBefore: CombinedTargetsTableAction;
+  readonly insertColumnsAfter: CombinedTargetsTableAction;
+  readonly mergeCells: CombinedTargetsTableAction;
+  readonly unmergeCells: CombinedTargetsTableAction;
+  readonly pasteCells: PasteTableAction;
+  readonly pasteColsBefore: AdvancedPasteTableAction;
+  readonly pasteColsAfter: AdvancedPasteTableAction;
+  readonly pasteRowsBefore: AdvancedPasteTableAction;
+  readonly pasteRowsAfter: AdvancedPasteTableAction;
+  readonly makeCellsHeader: CombinedTargetsTableAction;
+  readonly unmakeCellsHeader: CombinedTargetsTableAction;
+  readonly makeColumnsHeader: CombinedTargetsTableAction;
+  readonly unmakeColumnsHeader: CombinedTargetsTableAction;
+  readonly makeRowsHeader: CombinedTargetsTableAction;
+  readonly makeRowsBody: CombinedTargetsTableAction;
+  readonly makeRowsFooter: CombinedTargetsTableAction;
+  readonly getTableRowType: LookupAction;
+  readonly getTableCellType: LookupAction;
+  readonly getTableColType: LookupAction;
 }
 
 export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
-  const isTableBody = (editor: Editor) => SugarNode.name(Util.getBody(editor)) === 'table';
+  const isTableBody = (editor: Editor): boolean =>
+    SugarNode.name(Util.getBody(editor)) === 'table';
 
-  const lastRowGuard = (table: SugarElement<HTMLTableElement>) =>
+  const lastRowGuard = (table: SugarElement<HTMLTableElement>): boolean =>
     isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
 
-  const lastColumnGuard = (table: SugarElement<HTMLTableElement>) =>
+  const lastColumnGuard = (table: SugarElement<HTMLTableElement>): boolean =>
     isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
 
   // Optional.none gives the default cloneFormats.

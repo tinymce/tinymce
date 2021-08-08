@@ -6,7 +6,7 @@
  */
 
 import { Selections, SelectionTypes } from '@ephox/darwin';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
@@ -15,11 +15,12 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
+import { CellSelectionApi } from '../selection/CellSelection';
 import * as Ephemera from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
 import { TableActions } from './TableActions';
 
-const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]) => {
+const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<SugarElement<HTMLTableElement>[]> => {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
   return TableLookup.table(cells[0]).map(
     (table) => {
@@ -30,13 +31,15 @@ const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]) => {
   );
 };
 
-const serializeElements = (editor: Editor, elements: SugarElement[]): string => Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom, {})).join('');
+const serializeElements = (editor: Editor, elements: SugarElement[]): string =>
+  Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom, {})).join('');
 
-const getTextContent = (elements: SugarElement[]): string => Arr.map(elements, (element) => element.dom.innerText).join('');
+const getTextContent = (elements: SugarElement[]): string =>
+  Arr.map(elements, (element) => element.dom.innerText).join('');
 
-const registerEvents = (editor: Editor, selections: Selections, actions: TableActions, cellSelection) => {
+const registerEvents = (editor: Editor, selections: Selections, actions: TableActions, cellSelection: CellSelectionApi): void => {
   editor.on('BeforeGetContent', (e) => {
-    const multiCellContext = (cells) => {
+    const multiCellContext = (cells: SugarElement<HTMLTableCellElement>[]) => {
       e.preventDefault();
       extractSelected(cells).each((elements) => {
         e.content = e.format === 'text' ? getTextContent(elements) : serializeElements(editor, elements);

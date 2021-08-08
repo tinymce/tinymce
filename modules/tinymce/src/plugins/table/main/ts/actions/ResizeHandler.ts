@@ -19,9 +19,9 @@ import { enforcePercentage, enforcePixels, syncPixels } from './EnforceUnit';
 import * as TableWire from './TableWire';
 
 export interface ResizeHandler {
-  lazyResize: () => Optional<TableResize>;
-  lazyWire: () => any;
-  destroy: () => void;
+  readonly lazyResize: () => Optional<TableResize>;
+  readonly lazyWire: () => any;
+  readonly destroy: () => void;
 }
 
 const barResizerPrefix = 'bar-';
