@@ -5,6 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr } from '@ephox/katamari';
+
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
@@ -19,14 +22,13 @@ import * as Bookmark from './Bookmark';
  *  a[b<a href="x">c]d</a>e -> a[bc]<a href="x">d</a>e
  */
 
-const getSelectedElements = (rootElm: HTMLElement, startNode: Node, endNode: Node) => {
-  let node;
-  const elms = [];
+const getSelectedElements = (rootElm: HTMLElement, startNode: Node, endNode: Node): Element[] => {
+  const elms: Element[] = [];
 
   const walker = new DomTreeWalker(startNode, rootElm);
-  for (node = startNode; node; node = walker.next()) {
+  for (let node = startNode; node; node = walker.next()) {
     if (node.nodeType === 1) {
-      elms.push(node);
+      elms.push(node as Element);
     }
 
     if (node === endNode) {
@@ -37,7 +39,7 @@ const getSelectedElements = (rootElm: HTMLElement, startNode: Node, endNode: Nod
   return elms;
 };
 
-const unwrapElements = (editor: Editor, elms: HTMLElement[]) => {
+const unwrapElements = (editor: Editor, elms: Element[]): void => {
   const dom = editor.dom;
   const selection = editor.selection;
   const bookmark = Bookmark.create(dom, selection.getRng());
@@ -49,11 +51,10 @@ const unwrapElements = (editor: Editor, elms: HTMLElement[]) => {
   selection.setRng(Bookmark.resolve(dom, bookmark));
 };
 
-const isLink = (elm: HTMLElement) => {
-  return elm.nodeName === 'A' && elm.hasAttribute('href');
-};
+const isLink = (elm: Node): elm is HTMLAnchorElement =>
+  elm.nodeName === 'A' && (elm as HTMLAnchorElement).hasAttribute('href');
 
-const getParentAnchorOrSelf = (dom, elm: Node) => {
+const getParentAnchorOrSelf = (dom: DOMUtils, elm: Node): Node => {
   const anchorElm = dom.getParent(elm, isLink);
   return anchorElm ? anchorElm : elm;
 };
@@ -66,10 +67,10 @@ const getSelectedAnchors = (editor: Editor) => {
   const endElm = RangeUtils.getNode(rng.endContainer, rng.endOffset);
   const rootElm = editor.getBody();
 
-  return Tools.grep(getSelectedElements(rootElm, startElm, endElm), isLink);
+  return Arr.filter(getSelectedElements(rootElm, startElm, endElm), isLink);
 };
 
-const unlinkSelection = (editor: Editor) => {
+const unlinkSelection = (editor: Editor): void => {
   unwrapElements(editor, getSelectedAnchors(editor));
 };
 
