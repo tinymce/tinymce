@@ -6,21 +6,21 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Settings from '../api/Settings';
 
-const stateToggle = (editor: Editor) => {
-  return (api) => {
-    const handler = () => {
-      api.setDisabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
-    };
-
-    editor.on('NodeChange dirty', handler);
-    return () => editor.off('NodeChange dirty', handler);
+const stateToggle = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
+  const handler = () => {
+    api.setDisabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
   };
+
+  handler();
+  editor.on('NodeChange dirty', handler);
+  return () => editor.off('NodeChange dirty', handler);
 };
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   editor.ui.registry.addButton('save', {
     icon: 'save',
     tooltip: 'Save',
