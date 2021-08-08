@@ -11,7 +11,15 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Actions from '../core/Actions';
 
-const get = (editor: Editor, currentState: Cell<Actions.SearchState>) => {
+export interface Api {
+  readonly done: (keepEditorSelection?: boolean) => Range | undefined;
+  readonly find: (text: string, matchCase: boolean, wholeWord: boolean, inSelection?: boolean) => number;
+  readonly next: () => void;
+  readonly prev: () => void;
+  readonly replace: (text: string, forward?: boolean, all?: boolean) => boolean;
+}
+
+const get = (editor: Editor, currentState: Cell<Actions.SearchState>): Api => {
   const done = (keepEditorSelection?: boolean) => {
     return Actions.done(editor, currentState, keepEditorSelection);
   };
