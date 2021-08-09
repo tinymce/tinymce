@@ -80,7 +80,7 @@ export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => ({
   root: SugarElement.fromDom(editor.getBody())
 });
 
-export const getAnchorSpec = (editor: Editor, e: MouseEvent | TouchEvent, anchorType: ContextMenuAnchorType): AnchorSpec => {
+export const getAnchorSpec = (editor: Editor, e: MouseEvent | TouchEvent, anchorType: AnchorType): AnchorSpec => {
   switch (anchorType) {
     case 'node':
       return getNodeAnchor(editor);
