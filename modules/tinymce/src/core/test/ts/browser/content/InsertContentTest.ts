@@ -539,4 +539,37 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       '</span>' +
       '</p>');
   });
+
+  it('TINY-7756: Content with nested elements that will be invalid if parent is unwrapped', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(
+      editor,
+      '<table><button><a><meta>'
+    );
+    TinyAssertions.assertContent(editor, '');
+
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(
+      editor,
+      '<table><tbody><tr><td><meta><button><img/><button><a><meta/></a></button><img/></button>'
+    );
+    TinyAssertions.assertContent(
+      editor,
+      '<table><tbody><tr><td><button></button><button><img /></button><button></button><button></button><button></button><img /></td></tr></tbody></table>'
+    );
+
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(
+      editor,
+      '<table><tbody><tr><td><meta><button><img/><button><a><meta/></a></button><img/></button>'
+    );
+    TinyAssertions.assertContent(
+      editor,
+      '<table><tbody><tr><td><button></button><button><img /></button><button></button><button></button><button></button><img /></td></tr></tbody></table>'
+    );
+  });
 });
