@@ -39,7 +39,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     toolbar: 'fullscreen',
     height: 400,
     base_url: '/project/tinymce/js/tinymce',
-    content_style: 'body, p { margin: 0; line-height: 22px; font-family: sans-serif; } tr { height: 36px; }',
+    // Note: We provide overrides to keep consistent positions across all browsers/os's
+    content_style: 'body, p { margin: 0; line-height: 22px; font-family: Arial,sans-serif; } tr { height: 36px; }',
     setup: (ed: Editor) => {
       ed.ui.registry.addButton('alpha', {
         text: 'Alpha',
