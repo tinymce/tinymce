@@ -115,8 +115,6 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
     e.preventDefault();
 
     // Show the context menu, with items set to close on click
-    const toolbarType = anchorType === 'node' ? 'node' : 'selection';
-    const contextToolbarBounds = getContextToolbarBounds(editor, backstage.shared, toolbarType);
     InlineView.showMenuWithinBounds(contextmenu, anchorSpec, {
       menu: {
         markers: MenuParts.markers('normal'),
@@ -124,7 +122,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
       },
       data: menuData,
       type: 'horizontal'
-    }, () => Optional.some(contextToolbarBounds));
+    }, () => Optional.some(getContextToolbarBounds(editor, backstage.shared, anchorType === 'node' ? 'node' : 'selection')));
 
     // Ensure the context toolbar is hidden
     editor.fire(hideContextToolbarEvent);
