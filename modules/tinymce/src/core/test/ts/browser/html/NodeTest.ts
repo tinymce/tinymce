@@ -407,7 +407,7 @@ describe('browser.tinymce.core.html.NodeTest', () => {
 
       const children = root.children();
       assert.lengthOf(children, 1);
-      assert.deepEqual(children[0], child);
+      assert.strictEqual(children[0], child);
     });
 
     it('TINY-7756: Returns all children in order', () => {
@@ -418,9 +418,9 @@ describe('browser.tinymce.core.html.NodeTest', () => {
 
       const children = root.children();
       assert.lengthOf(children, 3);
-      assert.deepEqual(children[0], child1);
-      assert.deepEqual(children[1], child2);
-      assert.deepEqual(children[2], child3);
+      assert.strictEqual(children[0], child1);
+      assert.strictEqual(children[1], child2);
+      assert.strictEqual(children[2], child3);
     });
 
     it('TINY-7756: Does not return descendents', () => {
@@ -433,9 +433,9 @@ describe('browser.tinymce.core.html.NodeTest', () => {
 
       const children = root.children();
       assert.lengthOf(children, 3);
-      assert.deepEqual(children[0], child1);
-      assert.deepEqual(children[1], child2);
-      assert.deepEqual(children[2], child3);
+      assert.strictEqual(children[0], child1);
+      assert.strictEqual(children[1], child2);
+      assert.strictEqual(children[2], child3);
     });
   });
 });
