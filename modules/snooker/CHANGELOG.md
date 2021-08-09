@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Renamed `getColType` to `getColsType` in the `TableOperations` module to reflect that it can lookup the type from multiple columns.
 - The `getCellsType` in the `TableOperations` module has been changed to be consistent with the `getColsType` function.
 - The `RunOperation` and `TableOperation` module now requires an object containing the optional table behaviours (e.g. sizing and resizing) instead of passing them as separate arguments.
+- The `prev` and `next` functions in `CellNavigation` now accept a predicate to check if the next or previous location is an eligible location to move to. If it's not then it'll keep walking to find an eligible location.
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
 
 ### Fixed
