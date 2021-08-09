@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections, SelectionTypes } from '@ephox/darwin';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { CellOpSelection, Selections, SelectionTypes } from '@ephox/darwin';
+import { Arr, Fun } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
@@ -48,16 +48,15 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
 
   editor.on('BeforeSetContent', (e) => {
     if (e.selection === true && e.paste === true) {
-      const cellOpt = Optional.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-      cellOpt.each((domCell) => {
-        const cell = SugarElement.fromDom(domCell);
+      const selectedCells = CellOpSelection.selection(selections);
+      Arr.head(selectedCells).each((cell) => {
         TableLookup.table(cell).each((table) => {
 
           const elements = Arr.filter(SugarElements.fromHtml(e.content), (content) => {
             return SugarNode.name(content) !== 'meta';
           });
 
-          const isTable = (elm: SugarElement<Node>): elm is SugarElement<HTMLTableElement> => SugarNode.name(elm) === 'table';
+          const isTable = SugarNode.isTag('table');
           if (elements.length === 1 && isTable(elements[0])) {
             e.preventDefault();
 
