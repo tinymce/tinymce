@@ -461,14 +461,9 @@ class AstNode {
   public children(): AstNode[] {
     const self = this;
     const collection: AstNode[] = [];
-    let node = self.firstChild;
 
-    if (node) {
-      // Case where there is only one child
+    for (let node = self.firstChild; node; node = node.next) {
       collection.push(node);
-      for (node = node.next; node; node = node.next) {
-        collection.push(node);
-      }
     }
 
     return collection;

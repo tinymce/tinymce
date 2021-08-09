@@ -101,23 +101,18 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     const textBlockElements = schema.getTextBlockElements();
     const specialElements = schema.getSpecialElements();
 
-    const unwrapInvalidChildren = (node: AstNode, originalNodeParent: AstNode): void => {
-      // are the children of `node` valid children of the top level parent?
-      // if not, unwrap them too
-      const children = node.children();
-      for (const childNode of children) {
-        if (specialElements[childNode.name]) {
-          node.empty().remove();
-        } else if (!schema.isValidChild(originalNodeParent.name, childNode.name)) {
-          unwrapInvalidChildren(childNode, originalNodeParent);
-          childNode.unwrap();
+    const unwrapInvalidNode = (node: AstNode, originalNodeParent: AstNode = node.parent): void => {
+      if (specialElements[node.name]) {
+        node.empty().remove();
+      } else if (!schema.isValidChild(originalNodeParent.name, node.name)) {
+        // are the children of `node` valid children of the top level parent?
+        // if not, unwrap them too
+        const children = node.children();
+        for (const childNode of children) {
+          unwrapInvalidNode(childNode, originalNodeParent);
         }
+        node.unwrap();
       }
-    };
-
-    const unwrapInvalidNode = (node: AstNode) => {
-      unwrapInvalidChildren(node, node.parent);
-      node.unwrap();
     };
 
     for (let ni = 0; ni < nodes.length; ni++) {
@@ -228,10 +223,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
         if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
           node.wrap(filterNode(new AstNode('div', 1)));
         } else {
-          // We failed wrapping it, then remove if special and then unwrap it
-          if (specialElements[node.name]) {
-            node.empty().remove();
-          }
+          // We failed wrapping it, unwrap it
           unwrapInvalidNode(node);
         }
       }
