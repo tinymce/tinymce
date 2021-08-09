@@ -84,7 +84,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
         styles: transformMap(tableStyles)
       });
 
-      return s.element('body', { children: [ table ] });
+      return s.element('body', { children: [ table, s.theRest() ] });
     }));
   };
 
