@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Improved
 - Rows are now stored and tracked in the table model structures.
+- Table operations will now ensure the cursor is placed in an editable cell.
 
 ### Changed
 - `RowDetails` has been renamed to `RowDetail` and now takes a generic argument to define the type of cells stored.
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Table operations that replace all cells in a row now re-use the existing row instead of creating a new row.
+- Table erase operations could place the cursor in an invalid location if erasing the last row or column.
 
 ### Removed
 - `Structs.RowData` has been merged into and replaced by `Structs.RowDetail` to remove some duplication.
