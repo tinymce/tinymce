@@ -21,7 +21,6 @@ import * as Settings from './Settings';
 type MenuItem = string | Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.SeparatorMenuItemSpec;
 export type ContextMenuAnchorType = 'node' | 'selection' | 'point';
 
-const isTouch = PlatformDetection.detect().deviceType.isTouch;
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
 const separator: Menu.SeparatorMenuItemSpec = {
@@ -135,6 +134,9 @@ const getAnchorType = (editor: Editor, e: PointerEvent): ContextMenuAnchorType =
 };
 
 export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
+  const detection = PlatformDetection.detect();
+  const isTouch = detection.deviceType.isTouch;
+
   const contextmenu = GuiFactory.build(
     InlineView.sketch({
       dom: {
