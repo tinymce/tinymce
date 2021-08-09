@@ -109,7 +109,6 @@ const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: C
 };
 
 const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: Coords.AnchorType, highlightImmediately: boolean) => {
-
   const anchorSpec = getAnchorSpec(editor, e, anchorType);
 
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, true).map((menuData) => {
