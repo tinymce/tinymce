@@ -100,7 +100,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
         table_style_by_css: spec.style_by_css
       }, [ Plugin, Theme ]);
 
-      it('TINY-4926: TINY-4926: falls back to cellpadding attribute if no CSS is defined', async () => {
+      it('TINY-4926: falls back to cellpadding attribute if no CSS is defined', async () => {
         const editor = hook.editor();
         initializeTable(editor, { cellPaddingAttr: '20' });
 
@@ -114,7 +114,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
         await TableTestUtils.pClickDialogButton(editor, false);
       });
 
-      it('TINY-4926: TINY-4926: falls back to td padding styles if no cellpadding attribute is defined', async () => {
+      it('TINY-4926: falls back to td padding styles if no cellpadding attribute is defined', async () => {
         const editor = hook.editor();
         initializeTable(editor, { cellPaddingStyle: '20px' });
 
