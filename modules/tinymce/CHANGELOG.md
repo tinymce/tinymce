@@ -68,10 +68,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disabled nested menu items could still be opened #TINY-7700
 - `imagetools` buttons were incorrectly enabled for remote images without `imagetools_proxy` set #TINY-7772
 - Removing a table row or column could result in the cursor getting placed in an invalid location #TINY-7695
+- Pressing the Tab key to navigate through table cells did not skip noneditable cells #TINY-7705
 - Some table operations would incorrectly cause table row attributes and styles to be lost #TINY-6666
 - The selection was incorrectly lost when using the `mceTableCellType` and `mceTableRowType` commands #TINY-6666
 - The `mceTableRowType` was reversing the order of the rows when converting multiple header rows back to body rows #TINY-6666
 - The nested menu item chevron icon was not fading when the menu item was disabled #TINY-7700
+- The table dialog did not always respect the `table_style_with_css` option #TINY-4926
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260
