@@ -92,6 +92,7 @@ const setupiOSOverrides = (editor: Editor) => {
 };
 
 const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: Coords.AnchorType) => {
+  const anchorSpec = Coords.getAnchorSpec(editor, e, anchorType);
   if (anchorType === 'point') {
     return {
       bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
@@ -100,10 +101,10 @@ const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: C
         maxWidthFunction: MaxWidth.expandable(),
         maxHeightFunction: MaxHeight.expandable()
       },
-      ...Coords.getPointAnchor(editor, e)
+      ...anchorSpec
     };
   } else {
-    return Coords.getAnchorSpec(editor, e, anchorType);
+    return anchorSpec;
   }
 };
 
