@@ -81,11 +81,15 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     if (!canLaunchToolbar()) {
       return true;
     } else {
-      const lastElementBounds = ContextToolbarBounds.getAnchorElementBounds(editor, lastElement.get());
       const contextToolbarBounds = getBounds();
+      // Get the anchor bounds. For node anchors we should always try to use the last element bounds
+      const anchorBounds = Optionals.is(lastContextPosition.get(), 'node') ?
+        ContextToolbarBounds.getAnchorElementBounds(editor, lastElement.get()) :
+        ContextToolbarBounds.getSelectionBounds(editor);
 
-      // If the element bound isn't overlapping with the context toolbar bounds, the context toolbar should hide
-      return !ContextToolbarBounds.isVerticalOverlap(lastElementBounds, contextToolbarBounds);
+      // If the anchor bounds aren't overlapping with the context toolbar bounds, then the context toolbar should hide
+      // Note: We want to avoid showing with small difference such as 0.001px so we ensure at least 0.5px is visible
+      return !ContextToolbarBounds.isVerticalOverlap(anchorBounds, contextToolbarBounds, 0.5);
     }
   };
 
