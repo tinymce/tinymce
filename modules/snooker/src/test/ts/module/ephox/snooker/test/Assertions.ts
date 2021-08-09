@@ -6,6 +6,7 @@ import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarB
 
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
+import { TableSection } from 'ephox/snooker/api/TableSection';
 import { TargetElement, TargetPaste, TargetPasteRows, TargetSelection, OperationCallback } from 'ephox/snooker/model/RunOperation';
 import * as Bars from 'ephox/snooker/resize/Bars';
 import * as Bridge from 'ephox/snooker/test/Bridge';
@@ -24,6 +25,9 @@ interface ExpCell {
   readonly column: number;
 }
 
+const makeContainer = () =>
+  SugarElement.fromHtml<HTMLDivElement>('<div contenteditable="true"></div>');
+
 const checkOld = (
   label: string,
   optExpCell: Optional<ExpCell>,
@@ -32,14 +36,17 @@ const checkOld = (
   operation: OperationCallback<TargetElement>,
   section: number,
   row: number,
-  column: number
+  column: number,
+  tableSection?: TableSection
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
-  Insert.append(SugarBody.body(), table);
+  const container = makeContainer();
+  Insert.append(container, table);
+  Insert.append(SugarBody.body(), container);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const result = operation(wire, table, {
     element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie(label + ': could not find element')
-  }, Bridge.generators);
+  }, Bridge.generators, { section: tableSection });
 
   optExpCell.each((expCell) => {
     const actualPath = Hierarchy.path(
@@ -54,7 +61,7 @@ const checkOld = (
   Arr.each(all, (elem) => Css.remove(elem, 'width') );
 
   Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
-  Remove.remove(table);
+  Remove.remove(container);
   // Ensure all the resize bars are destroyed before of running the next test.
   Bars.destroy(wire);
 };
@@ -65,10 +72,13 @@ const checkOldMultiple = (
   expectedHtml: string,
   input: string,
   operation: OperationCallback<TargetSelection>,
-  paths: TargetLocation[]
+  paths: TargetLocation[],
+  tableSection?: TableSection
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
-  Insert.append(SugarBody.body(), table);
+  const container = makeContainer();
+  Insert.append(container, table);
+  Insert.append(SugarBody.body(), container);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const result = operation(wire, table,
     {
@@ -76,7 +86,8 @@ const checkOldMultiple = (
         Hierarchy.follow(table, [ path.section, path.row, path.column, 0 ]).getOrDie(label + ': could not follow path')
       )
     },
-    Bridge.generators
+    Bridge.generators,
+    { section: tableSection }
   );
 
   optExpCell.each((expCell) => {
@@ -91,7 +102,7 @@ const checkOldMultiple = (
   const all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));
   Arr.each(all, (elem) => Css.remove(elem, 'width') );
   Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
-  Remove.remove(table);
+  Remove.remove(container);
   // Ensure all the resize bars are destroyed before of running the next test.
   Bars.destroy(wire);
 };
@@ -107,7 +118,9 @@ const checkPaste = (
   column: number
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
-  Insert.append(SugarBody.body(), table);
+  const container = makeContainer();
+  Insert.append(container, table);
+  Insert.append(SugarBody.body(), container);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
 
   const pasteTable = SugarElement.fromHtml<HTMLTableElement>('<table><tbody>' + pasteHtml + '</tbody></table>');
@@ -123,7 +136,7 @@ const checkPaste = (
   );
 
   Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
-  Remove.remove(table);
+  Remove.remove(container);
   // Ensure all the resize bars are destroyed before of running the next test.
   Bars.destroy(wire);
 };
@@ -139,7 +152,9 @@ const checkPasteRaw = (
   column: number
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(inputTable);
-  Insert.append(SugarBody.body(), table);
+  const container = makeContainer();
+  Insert.append(container, table);
+  Insert.append(SugarBody.body(), container);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
 
   const pasteTable = SugarElement.fromHtml<HTMLTableElement>(pastedTableHTML);
@@ -155,7 +170,7 @@ const checkPasteRaw = (
   );
 
   Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
-  Remove.remove(table);
+  Remove.remove(container);
   // Ensure all the resize bars are destroyed before of running the next test.
   Bars.destroy(wire);
 };
@@ -170,7 +185,9 @@ const checkStructure = (
   column: number
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
-  Insert.append(SugarBody.body(), table);
+  const container = makeContainer();
+  Insert.append(container, table);
+  Insert.append(SugarBody.body(), container);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const result = operation(wire, table, {
     element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()
@@ -186,7 +203,7 @@ const checkStructure = (
     return Arr.map(cells, Html.get);
   });
   assert.eq(expected, actual);
-  Remove.remove(table);
+  Remove.remove(container);
   Bars.destroy(wire);
 };
 
@@ -200,7 +217,9 @@ const checkDelete = (
   platform: ReturnType<typeof PlatformDetection.detect>
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
-  Insert.append(SugarBody.body(), table);
+  const container = makeContainer();
+  Insert.append(container, table);
+  Insert.append(SugarBody.body(), container);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const cellz = Arr.map(cells, (cell) =>
     Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ]).getOrDie(label + ': could not find cell')
@@ -235,7 +254,7 @@ const checkDelete = (
     } else {
       Assertions.assertHtml(label, expectedHtml.normal, Html.getOuter(table));
     }
-    Remove.remove(table);
+    Remove.remove(container);
   });
 
   // Ensure all the resize bars are destroyed before of running the next test.
@@ -251,9 +270,11 @@ const checkMerge = (
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   const expectedDom = SugarElement.fromHtml(expected);
+  const container = makeContainer();
 
-  Insert.append(SugarBody.body(), expectedDom);
-  Insert.append(SugarBody.body(), table);
+  Insert.append(container, expectedDom);
+  Insert.append(container, table);
+  Insert.append(SugarBody.body(), container);
 
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const target = Bridge.targetStub(selection, bounds, table);
@@ -270,8 +291,7 @@ const checkMerge = (
   Attribute.remove(table, 'border');
   Assertions.assertHtmlStructure(label, expected, Html.getOuter(table));
 
-  Remove.remove(table);
-  Remove.remove(expectedDom);
+  Remove.remove(container);
   Bars.destroy(wire);
 };
 
@@ -282,7 +302,9 @@ const checkUnmerge = (
   unmergablePaths: ExpCell[]
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
-  Insert.append(SugarBody.body(), table);
+  const container = makeContainer();
+  Insert.append(container, table);
+  Insert.append(SugarBody.body(), container);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const unmergables = Arr.map(unmergablePaths, (path) =>
     Hierarchy.follow(table, [ path.section, path.row, path.column ])
@@ -298,7 +320,7 @@ const checkUnmerge = (
   Arr.each(all, (elem) => Css.remove(elem, 'width') );
 
   Assertions.assertEq(label, expected, Html.getOuter(table));
-  Remove.remove(table);
+  Remove.remove(container);
   Bars.destroy(wire);
 };
 

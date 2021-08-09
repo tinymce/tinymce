@@ -6,7 +6,8 @@
  */
 
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { TableLookup, TableOperations } from '@ephox/snooker';
+import { Css, SugarElement, SugarElements } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -14,7 +15,6 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Styles from '../actions/Styles';
 import { getDefaultAttributes, getDefaultStyles, shouldStyleWithCss } from '../api/Settings';
-import { getRowType } from '../core/TableSections';
 import * as Util from '../core/Util';
 
 /**
@@ -203,6 +203,12 @@ const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): Table
   return data;
 };
 
+const getRowType = (elm: HTMLTableRowElement) =>
+  TableLookup.table(SugarElement.fromDom(elm)).map((table) => {
+    const target = { selection: SugarElements.fromDom(elm.cells) };
+    return TableOperations.getRowsType(table, target);
+  }).getOr('');
+
 const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTab: boolean): TableData => {
   const getBorder = (dom: DOMUtils, elm: Element) => {
     // Cases (in order to check):
@@ -220,11 +226,19 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
 
   const dom = editor.dom;
 
+  const cellspacing = shouldStyleWithCss(editor) ?
+    dom.getStyle(elm, 'border-spacing') || dom.getAttrib(elm, 'cellspacing') :
+    dom.getAttrib(elm, 'cellspacing') || dom.getStyle(elm, 'border-spacing');
+
+  const cellpadding = shouldStyleWithCss(editor) ?
+    Styles.getTDTHOverallStyle(dom, elm, 'padding') || dom.getAttrib(elm, 'cellpadding') :
+    dom.getAttrib(elm, 'cellpadding') || Styles.getTDTHOverallStyle(dom, elm, 'padding');
+
   return {
     width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
-    cellspacing: dom.getStyle(elm, 'border-spacing') || dom.getAttrib(elm, 'cellspacing'),
-    cellpadding: dom.getAttrib(elm, 'cellpadding') || Styles.getTDTHOverallStyle(editor.dom, elm, 'padding'),
+    cellspacing,
+    cellpadding,
     border: getBorder(dom, elm),
     caption: !!dom.select('caption', elm)[0],
     class: dom.getAttrib(elm, 'class', ''),
@@ -238,7 +252,7 @@ const extractDataFromRowElement = (editor: Editor, elm: HTMLTableRowElement, has
   return {
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     class: dom.getAttrib(elm, 'class', ''),
-    type: getRowType(editor, elm),
+    type: getRowType(elm),
     align: getHAlignment(editor, elm),
     ...(hasAdvancedRowTab ? extractAdvancedStyles(dom, elm) : {})
   };

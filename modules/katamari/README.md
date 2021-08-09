@@ -32,7 +32,7 @@ Below is a list of commonly used parts of `katamari`
 
 ## Mutable Data Types
 
-- `Cell`: A mutable piece of data'
+- `Cell`: A mutable piece of data
 - `Singleton`: A mutable piece of optional data
 
 ## Algebraic Data Types

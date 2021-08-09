@@ -28,7 +28,7 @@ const registerQueryCommands = (editor: Editor, actions: TableActions, selections
     ).getOr('');
 
   Obj.each({
-    mceTableRowType: () => actions.getTableRowType(editor),
+    mceTableRowType: () => lookupOnSelection(actions.getTableRowType),
     mceTableCellType: () => lookupOnSelection(actions.getTableCellType),
     mceTableColType: () => lookupOnSelection(actions.getTableColType)
   }, (func, name) => editor.addQueryValueHandler(name, func));

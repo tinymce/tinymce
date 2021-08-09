@@ -5,6 +5,7 @@ import { assert } from 'chai';
 
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
+import { TableSection } from 'ephox/snooker/api/TableSection';
 import * as TransformOperations from 'ephox/snooker/operate/TransformOperations';
 import * as MockStructs from 'ephox/snooker/test/MockStructs';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
@@ -123,7 +124,8 @@ UnitTest.test('TransformOperationsTest', () => {
     const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const actual = TransformOperations.replaceRow(structGrid, index, comparator, Generators.transform('td', 'scope')(TestGenerator()).replaceOrInit);
+      const substitution = Generators.transform('td', 'scope')(TestGenerator()).replaceOrInit;
+      const actual = TransformOperations.replaceRow(structGrid, index, 'tbody', comparator, substitution, TableSection.fallback());
       assertGrids(actual, structExpected);
       clearElements();
     };
@@ -198,11 +200,21 @@ UnitTest.test('TransformOperationsTest', () => {
     check([
       [ enE('a', false), enE('b', false), enE('e', false) ],
       [ enE('a', false), enE('h(c)_0', true), enE('f', false) ],
-      [ enE('a', false), enE('d', false), enE('f', true) ]
+      [ enE('a', false), enE('d', false), enE('f', false) ]
     ], [
       [ enO('a', false), enO('b', false), enO('e', false) ],
       [ enO('a', false), enO('c', false), enO('f', false) ],
       [ enO('a', false), enO('d', false), enO('f', false) ]
     ], 1, 1);
+
+    check([
+      [ enE('a', false), enE('b', false), enE('e', false) ],
+      [ enE('a', false), enE('c', false), enE('h(f)_0', true) ],
+      [ enE('a', false), enE('d', false), enE('h(f)_0', true) ]
+    ], [
+      [ enO('a', false), enO('b', false), enO('e', false) ],
+      [ enO('a', false), enO('c', false), enO('f', false) ],
+      [ enO('a', false), enO('d', false), enO('f', false) ]
+    ], 1, 2);
   })();
 });

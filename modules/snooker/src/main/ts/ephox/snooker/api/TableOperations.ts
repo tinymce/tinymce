@@ -1,7 +1,9 @@
-import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Remove, SugarElement, SugarNode, Width } from '@ephox/sugar';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
+import { ContentEditable, Remove, SugarElement, Width } from '@ephox/sugar';
 
+import { TableSection } from '../api/TableSection';
 import * as Blocks from '../lookup/Blocks';
+import { findCommonCellType, findCommonRowType } from '../lookup/Type';
 import * as DetailsList from '../model/DetailsList';
 import * as GridRow from '../model/GridRow';
 import * as RunOperation from '../model/RunOperation';
@@ -40,7 +42,12 @@ interface ExtractColsDetail {
 
 type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
 
-const prune = (table: SugarElement) => {
+// This uses a slight variation to the default `ContentEditable.isEditable` behaviour,
+// as when the element is detached we assume it is editable because it is a new cell.
+const isEditable = (elem: SugarElement<HTMLElement>) =>
+  ContentEditable.isEditable(elem, true);
+
+const prune = (table: SugarElement<HTMLTableElement>) => {
   const cells = TableLookup.cells(table);
   if (cells.length === 0) {
     Remove.remove(table);
@@ -52,23 +59,25 @@ const outcome = (grid: Structs.RowCells[], cursor: Optional<SugarElement>): Tabl
   cursor
 });
 
+const findEditableCursorPosition = (rows: Structs.RowCells[]) =>
+  Arr.findMap(rows, (row) =>
+    Arr.findMap(row.cells, (cell) => {
+      const elem = cell.element;
+      return Optionals.someIf(isEditable(elem), elem);
+    })
+  );
+
 const elementFromGrid = (grid: Structs.RowCells[], row: number, column: number) => {
   const rows = GridRow.extractGridDetails(grid).rows;
-  return findIn(rows, row, column).orThunk(() =>
-    findIn(rows, 0, 0)
-  );
+  return Optional.from(rows[row]?.cells[column]?.element)
+    .filter(isEditable)
+    // Fallback to the first valid position in the table
+    .orThunk(() => findEditableCursorPosition(rows));
 };
 
-const findIn = (grid: Structs.RowCells[], row: number, column: number) =>
-  Optional.from(grid[row]).bind((r) =>
-    Optional.from(r.cells[column]).bind((c) =>
-      Optional.from(c.element)
-    )
-  );
-
 const bundle = (grid: Structs.RowCells[], row: number, column: number) => {
-  const rows = GridRow.extractGridDetails(grid).rows;
-  return outcome(grid, findIn(rows, row, column));
+  const cursorElement = elementFromGrid(grid, row, column);
+  return outcome(grid, cursorElement);
 };
 
 const uniqueRows = (details: Structs.DetailExt[]) => {
@@ -155,20 +164,6 @@ const opInsertColumnsAfter = (grid: Structs.RowCells[], extractDetail: ExtractCo
   return bundle(newGrid, details[0].row, targetIndex);
 };
 
-const opMakeRowHeader = (grid: Structs.RowCells[], detail: Structs.DetailExt, comparator: CompElm, genWrappers: GeneratorsTransform) => {
-  const newGrid = TransformOperations.replaceRow(grid, detail.row, comparator, genWrappers.replaceOrInit);
-  return bundle(newGrid, detail.row, detail.column);
-};
-
-const opMakeRowsHeader = (initialGrid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsTransform) => {
-  const replacer = (currentGrid: Structs.RowCells[], detail: Structs.DetailExt) =>
-    TransformOperations.replaceRow(currentGrid, detail.row, comparator, genWrappers.replaceOrInit);
-
-  const rows = uniqueRows(details);
-  const newGrid = Arr.foldl(rows, replacer, initialGrid);
-  return bundle(newGrid, details[0].row, details[0].column);
-};
-
 const opMakeColumnHeader = (initialGrid: Structs.RowCells[], detail: Structs.DetailExt, comparator: CompElm, genWrappers: GeneratorsTransform) => {
   const newGrid = TransformOperations.replaceColumn(initialGrid, detail.column, comparator, genWrappers.replaceOrInit);
   return bundle(newGrid, detail.row, detail.column);
@@ -194,20 +189,6 @@ const opMakeCellsHeader = (initialGrid: Structs.RowCells[], details: Structs.Det
 
   const columns = ColUtils.uniqueColumns(details);
   const newGrid = Arr.foldl(columns, replacer, initialGrid);
-  return bundle(newGrid, details[0].row, details[0].column);
-};
-
-const opUnmakeRowHeader = (grid: Structs.RowCells[], detail: Structs.DetailExt, comparator: CompElm, genWrappers: GeneratorsTransform) => {
-  const newGrid = TransformOperations.replaceRow(grid, detail.row, comparator, genWrappers.replaceOrInit);
-  return bundle(newGrid, detail.row, detail.column);
-};
-
-const opUnmakeRowsHeader = (initialGrid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsTransform) => {
-  const replacer = (currentGrid: Structs.RowCells[], row: Structs.DetailExt) =>
-    TransformOperations.replaceRow(currentGrid, row.row, comparator, genWrappers.replaceOrInit);
-
-  const rows = uniqueRows(details);
-  const newGrid = Arr.foldl(rows, replacer, initialGrid);
   return bundle(newGrid, details[0].row, details[0].column);
 };
 
@@ -239,6 +220,29 @@ const opUnmakeCellsHeader = (initialGrid: Structs.RowCells[], details: Structs.D
   return bundle(newGrid, details[0].row, details[0].column);
 };
 
+const makeRowSection = (section: Structs.Section) =>
+  (grid: Structs.RowCells[], detail: Structs.DetailExt, comparator: CompElm, genWrappers: GeneratorsTransform, tableSection: TableSection) => {
+    const newGrid = TransformOperations.replaceRow(grid, detail.row, section, comparator, genWrappers.replaceOrInit, tableSection);
+    return bundle(newGrid, detail.row, detail.column);
+  };
+
+const makeRowsSection = (section: Structs.Section) =>
+  (initialGrid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsTransform, tableSection: TableSection) => {
+    const replacer = (currentGrid: Structs.RowCells[], detail: Structs.DetailExt) =>
+      TransformOperations.replaceRow(currentGrid, detail.row, section, comparator, genWrappers.replaceOrInit, tableSection);
+
+    const rows = uniqueRows(details);
+    const newGrid = Arr.foldl(rows, replacer, initialGrid);
+    return bundle(newGrid, details[0].row, details[0].column);
+  };
+
+const opMakeRowHeader = makeRowSection('thead');
+const opMakeRowsHeader = makeRowsSection('thead');
+const opMakeRowBody = makeRowSection('tbody');
+const opMakeRowsBody = makeRowsSection('tbody');
+const opMakeRowFooter = makeRowSection('tfoot');
+const opMakeRowsFooter = makeRowsSection('tfoot');
+
 const opSplitCellIntoColumns = (grid: Structs.RowCells[], detail: Structs.DetailExt, comparator: CompElm, genWrappers: GeneratorsModification) => {
   const newGrid = ModificationOperations.splitCellIntoColumns(grid, detail.row, detail.column, comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row, detail.column);
@@ -253,16 +257,16 @@ const opEraseColumns = (grid: Structs.RowCells[], extractDetail: ExtractColsDeta
   const columns = ColUtils.uniqueColumns(extractDetail.details);
 
   const newGrid = ModificationOperations.deleteColumnsAt(grid, Arr.map(columns, (column) => column.column));
-  const cursor = elementFromGrid(newGrid, columns[0].row, columns[0].column);
-  return outcome(newGrid, cursor);
+  const maxColIndex = newGrid.length > 0 ? newGrid[0].cells.length - 1 : 0;
+  return bundle(newGrid, columns[0].row, Math.min(columns[0].column, maxColIndex));
 };
 
 const opEraseRows = (grid: Structs.RowCells[], details: Structs.DetailExt[], _comparator: CompElm, _genWrappers: GeneratorsModification) => {
   const rows = uniqueRows(details);
 
   const newGrid = ModificationOperations.deleteRowsAt(grid, rows[0].row, rows[rows.length - 1].row);
-  const cursor = elementFromGrid(newGrid, details[0].row, details[0].column);
-  return outcome(newGrid, cursor);
+  const maxRowIndex = newGrid.length > 0 ? newGrid.length - 1 : 0;
+  return bundle(newGrid, Math.min(details[0].row, maxRowIndex), details[0].column);
 };
 
 const opMergeCells = (grid: Structs.RowCells[], mergable: ExtractMergable, comparator: CompElm, genWrappers: GeneratorsMerging) => {
@@ -294,8 +298,7 @@ const opPasteCells = (grid: Structs.RowCells[], pasteDetails: ExtractPaste, comp
   return mergedGrid.fold(
     () => outcome(grid, Optional.some(pasteDetails.element)),
     (newGrid) => {
-      const cursor = elementFromGrid(newGrid, pasteDetails.row, pasteDetails.column);
-      return outcome(newGrid, cursor);
+      return bundle(newGrid, pasteDetails.row, pasteDetails.column);
     }
   );
 };
@@ -312,8 +315,7 @@ const opPasteColsBefore = (grid: Structs.RowCells[], pasteDetails: ExtractPasteR
   const context = rows[pasteDetails.cells[0].row];
   const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, context);
   const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators, comparator);
-  const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
-  return outcome(mergedGrid, cursor);
+  return bundle(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
 };
 
 const opPasteColsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) => {
@@ -322,8 +324,7 @@ const opPasteColsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRo
   const context = rows[pasteDetails.cells[0].row];
   const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, context);
   const mergedGrid = TableMerge.insertCols(index, grid, gridB, pasteDetails.generators, comparator);
-  const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
-  return outcome(mergedGrid, cursor);
+  return bundle(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
 };
 
 const opPasteRowsBefore = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) => {
@@ -332,8 +333,7 @@ const opPasteRowsBefore = (grid: Structs.RowCells[], pasteDetails: ExtractPasteR
   const context = rows[index];
   const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, context);
   const mergedGrid = TableMerge.insertRows(index, grid, gridB, pasteDetails.generators, comparator);
-  const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
-  return outcome(mergedGrid, cursor);
+  return bundle(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
 };
 
 const opPasteRowsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRows, comparator: CompElm, _genWrappers: GeneratorsModification) => {
@@ -342,21 +342,7 @@ const opPasteRowsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRo
   const context = rows[pasteDetails.cells[0].row];
   const gridB = gridifyRows(pasteDetails.clipboard, pasteDetails.generators, context);
   const mergedGrid = TableMerge.insertRows(index, grid, gridB, pasteDetails.generators, comparator);
-  const cursor = elementFromGrid(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
-  return outcome(mergedGrid, cursor);
-};
-
-const isTableHeaderCell = SugarNode.isTag('th');
-
-const findCommonCellType = (cells: Structs.DetailExt[]): Optional<'td' | 'th'> => {
-  const headerCells = Arr.filter(cells, (cell) => isTableHeaderCell(cell.element));
-  if (headerCells.length === 0) {
-    return Optional.some('td');
-  } else if (headerCells.length === cells.length) {
-    return Optional.some('th');
-  } else {
-    return Optional.none();
-  }
+  return bundle(mergedGrid, pasteDetails.cells[0].row, pasteDetails.cells[0].column);
 };
 
 const opGetColumnsType = (table: SugarElement<HTMLTableElement>, target: TargetSelection): string => {
@@ -378,9 +364,24 @@ const opGetCellsType = (table: SugarElement<HTMLTableElement>, target: TargetSel
   return details.bind(findCommonCellType).getOr('');
 };
 
+const opGetRowsType = (table: SugarElement<HTMLTableElement>, target: TargetSelection): string => {
+  const house = Warehouse.fromTable(table);
+  const details = RunOperation.onCells(house, target);
+  return details.bind((selectedCells) => {
+    const lastSelectedCell = selectedCells[selectedCells.length - 1];
+    const minRowRange = selectedCells[0].row;
+    const maxRowRange = lastSelectedCell.row + lastSelectedCell.rowspan;
+    const selectedRows = house.all.slice(minRowRange, maxRowRange);
+    return findCommonRowType(selectedRows);
+  }).getOr('');
+};
+
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
-const resize = Adjustments.adjustWidthTo;
-const adjustAndRedistributeWidths = Adjustments.adjustAndRedistributeWidths;
+const resize: RunOperation.Adjustment<{}> = (table, list, details, behaviours) =>
+  Adjustments.adjustWidthTo(table, list, details, behaviours.sizing);
+
+const adjustAndRedistributeWidths: RunOperation.Adjustment<{ pixelDelta: number }> = (table, list, details, behaviours) =>
+  Adjustments.adjustAndRedistributeWidths(table, list, details, behaviours.sizing, behaviours.resize);
 
 // Custom selection extractors
 
@@ -446,10 +447,12 @@ export const makeColumnHeader = RunOperation.run(opMakeColumnHeader, RunOperatio
 export const makeColumnsHeader = RunOperation.run(opMakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('th', 'row'));
 export const unmakeColumnHeader = RunOperation.run(opUnmakeColumnHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('td', null));
 export const unmakeColumnsHeader = RunOperation.run(opUnmakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('td', null));
-export const makeRowHeader = RunOperation.run(opMakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('th', 'col'));
-export const makeRowsHeader = RunOperation.run(opMakeRowsHeader, RunOperation.onCells, Fun.noop, Fun.noop, Generators.transform('th', 'col'));
-export const unmakeRowHeader = RunOperation.run(opUnmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('td', null));
-export const unmakeRowsHeader = RunOperation.run(opUnmakeRowsHeader, RunOperation.onCells, Fun.noop, Fun.noop, Generators.transform('td', null));
+export const makeRowHeader = RunOperation.run(opMakeRowHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('th', 'col'));
+export const makeRowsHeader = RunOperation.run(opMakeRowsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('th', 'col'));
+export const makeRowBody = RunOperation.run(opMakeRowBody, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('td', null));
+export const makeRowsBody = RunOperation.run(opMakeRowsBody, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('td', null));
+export const makeRowFooter = RunOperation.run(opMakeRowFooter, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('td', null));
+export const makeRowsFooter = RunOperation.run(opMakeRowsFooter, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('td', null));
 export const makeCellHeader = RunOperation.run(opMakeCellHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('th'));
 export const makeCellsHeader = RunOperation.run(opMakeCellsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('th'));
 export const unmakeCellHeader = RunOperation.run(opUnmakeCellHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('td'));
@@ -464,3 +467,4 @@ export const pasteRowsAfter = RunOperation.run(opPasteRowsAfter, RunOperation.on
 
 export const getColumnsType = opGetColumnsType;
 export const getCellsType = opGetCellsType;
+export const getRowsType = opGetRowsType;
