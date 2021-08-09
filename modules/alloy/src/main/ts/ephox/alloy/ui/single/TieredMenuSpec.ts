@@ -172,7 +172,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
   const expandRight = (container: AlloyComponent, item: AlloyComponent, decision: ExpandHighlightDecision = ExpandHighlightDecision.HighlightSubmenu): Optional<AlloyComponent> => {
     if (item.hasConfigured(Disabling) && Disabling.isDisabled(item)) {
-      return Optional.none();
+      return Optional.some(item);
     } else {
       const value = getItemValue(item);
       return layeredState.expand(value).bind((path) => {
