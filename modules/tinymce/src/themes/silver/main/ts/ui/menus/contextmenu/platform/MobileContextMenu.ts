@@ -91,7 +91,7 @@ const setupiOSOverrides = (editor: Editor) => {
   };
 };
 
-const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: Coords.ContextMenuAnchorType) => {
+const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: Coords.AnchorType) => {
   if (anchorType === 'point') {
     return {
       bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
@@ -107,7 +107,7 @@ const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: C
   }
 };
 
-const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: Coords.ContextMenuAnchorType, highlightImmediately: boolean) => {
+const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: Coords.AnchorType, highlightImmediately: boolean) => {
 
   const anchorSpec = getAnchorSpec(editor, e, anchorType);
 
@@ -131,7 +131,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
   });
 };
 
-export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: Coords.ContextMenuAnchorType): void => {
+export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: Coords.AnchorType): void => {
   const detection = PlatformDetection.detect();
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();

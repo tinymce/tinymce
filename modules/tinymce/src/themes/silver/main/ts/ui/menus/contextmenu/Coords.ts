@@ -12,7 +12,7 @@ import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
-export type ContextMenuAnchorType = 'node' | 'selection' | 'point';
+export type AnchorType = 'node' | 'selection' | 'point';
 
 interface Position {
   x: number;

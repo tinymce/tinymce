@@ -15,9 +15,9 @@ import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
 import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
-import { ContextMenuAnchorType, getAnchorSpec } from '../Coords';
+import { AnchorType, getAnchorSpec } from '../Coords';
 
-export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemSpec>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: ContextMenuAnchorType) => {
+export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemSpec>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: AnchorType) => {
   const items = buildMenu();
   const anchorSpec = getAnchorSpec(editor, e, anchorType);
 

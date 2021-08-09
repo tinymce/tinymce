@@ -14,7 +14,7 @@ import { SelectorExists, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
-import { ContextMenuAnchorType } from './Coords';
+import { AnchorType } from './Coords';
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';
 import * as Settings from './Settings';
@@ -120,7 +120,7 @@ export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
 const getSelectedElement = (editor: Editor, e: PointerEvent) =>
   isTriggeredByKeyboard(editor, e) ? editor.selection.getStart(true) : e.target as Element;
 
-const getAnchorType = (editor: Editor, e: PointerEvent): ContextMenuAnchorType => {
+const getAnchorType = (editor: Editor, e: PointerEvent): AnchorType => {
   const selector = Settings.getAvoidOverlapSelector(editor);
   if (selector) {
     const target = getSelectedElement(editor, e);
