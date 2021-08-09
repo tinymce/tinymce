@@ -556,6 +556,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       editor,
       '<table><tbody><tr><td><meta><button><img/><button><a><meta/></a></button><img/></button>'
     );
+    // TINY-7793: Fix duplicated nodes
     TinyAssertions.assertContent(
       editor,
       '<table><tbody><tr><td><button></button><button><img /></button><button></button><button></button><button></button><img /></td></tr></tbody></table>'
@@ -567,6 +568,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       editor,
       '<table><tbody><tr><td><meta><button><img/><button><a><meta/></a></button><img/></button>'
     );
+    // TINY-7793: Fix duplicated nodes
     TinyAssertions.assertContent(
       editor,
       '<table><tbody><tr><td><button></button><button><img /></button><button></button><button></button><button></button><img /></td></tr></tbody></table>'

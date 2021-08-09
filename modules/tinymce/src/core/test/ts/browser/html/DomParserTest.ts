@@ -778,6 +778,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const html = '<table><tbody><tr><td><meta><button><img/><button><a><meta/></a></button><img/></button>';
     const serializedHtml = serializer.serialize(parser.parse(html));
 
+    // TINY-7793: Fix duplicated nodes
     assert.equal(
       serializedHtml,
       '<table><tbody><tr><td><button><button><img /><button><a></a></button></button></button><button><button><a></a></button><img /></button></td></tr></tbody></table>'
