@@ -155,50 +155,48 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
       // Found a suitable parent
       if (parent && parents.length > 1) {
-        // Reverse the array since it makes looping easier
-        parents.reverse();
+        // If the node won't be a valid child of the parent then just unwrap
+        // instead of trying to move it
+        if (schema.isValidChild(parent.name, node.name)) {
+          // Reverse the array since it makes looping easier
+          parents.reverse();
 
-        // Clone the related parent and insert that after the moved node
-        newParent = filterNode(parents[0].clone());
+          // Clone the related parent and insert that after the moved node
+          newParent = filterNode(parents[0].clone());
 
-        // Start cloning and moving children on the left side of the target node
-        let currentNode = newParent;
-        for (let i = 0; i < parents.length - 1; i++) {
-          if (schema.isValidChild(currentNode.name, parents[i].name)) {
-            tempNode = filterNode(parents[i].clone());
-            currentNode.append(tempNode);
-          } else {
-            tempNode = currentNode;
+          // Start cloning and moving children on the left side of the target node
+          let currentNode = newParent;
+          for (let i = 0; i < parents.length - 1; i++) {
+            if (schema.isValidChild(currentNode.name, parents[i].name)) {
+              tempNode = filterNode(parents[i].clone());
+              currentNode.append(tempNode);
+            } else {
+              tempNode = currentNode;
+            }
+
+            for (let childNode = parents[i].firstChild; childNode && childNode !== parents[i + 1];) {
+              const nextNode = childNode.next;
+              tempNode.append(childNode);
+              childNode = nextNode;
+            }
+
+            currentNode = tempNode;
           }
 
-          for (let childNode = parents[i].firstChild; childNode && childNode !== parents[i + 1];) {
-            const nextNode = childNode.next;
-            tempNode.append(childNode);
-            childNode = nextNode;
-          }
-
-          currentNode = tempNode;
-        }
-
-        if (!isEmpty(schema, nonEmptyElements, whitespaceElements, newParent)) {
-          parent.insert(newParent, parents[0], true);
-          if (schema.isValidChild(parent.name, node.name)) {
+          if (!isEmpty(schema, nonEmptyElements, whitespaceElements, newParent)) {
+            parent.insert(newParent, parents[0], true);
             parent.insert(node, newParent);
           } else {
-            unwrapInvalidNode(node);
+            parent.insert(node, parents[0], true);
+          }
+
+          // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
+          parent = parents[0];
+          if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent) || hasOnlyChild(parent, 'br')) {
+            parent.empty().remove();
           }
         } else {
-          if (schema.isValidChild(parent.name, node.name)) {
-            parent.insert(node, parents[0], true);
-          } else {
-            unwrapInvalidNode(node);
-          }
-        }
-
-        // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
-        parent = parents[0];
-        if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent) || hasOnlyChild(parent, 'br')) {
-          parent.empty().remove();
+          unwrapInvalidNode(node);
         }
       } else if (node.parent) {
         // If it's an LI try to find a UL/OL for it or wrap it

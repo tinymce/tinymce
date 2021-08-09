@@ -584,7 +584,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
         '</tbody>' +
       '</table>'
     );
-    // TINY-7793: Fix duplicated nodes
+
     if (browser.isIE()) {
       // IE renders this verbatim and other browsers remove nested buttons
       TinyAssertions.assertContent(
@@ -594,14 +594,9 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
             '<tr>' +
               '<td>' +
                 '<button>' +
-                  '<button>' +
-                    '<img />' +
-                    '<button></button>' +
-                    '<button>' +
-                      '<button></button>' +
-                      '<img />' +
-                    '</button>' +
-                  '</button>' +
+                  '<img />' +
+                  '<button></button>' +
+                  '<img />' +
                 '</button>' +
               '</td>' +
             '</tr>' +
@@ -615,12 +610,9 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
           '<tbody>' +
             '<tr>' +
               '<td>' +
-                '<button></button>' +
                 '<button>' +
                   '<img />' +
                 '</button>' +
-                '<button></button>' +
-                '<button></button>' +
                 '<button></button>' +
                 '<img />' +
               '</td>' +
