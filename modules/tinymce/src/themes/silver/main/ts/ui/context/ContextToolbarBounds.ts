@@ -15,9 +15,8 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
-// Note: We want to avoid a small difference such as 0.001px so we ensure at least 1px is visible
-const isVerticalOverlap = (a: Bounds, b: Bounds): boolean =>
-  b.bottom - a.y >= 1 && a.bottom - b.y >= 1;
+const isVerticalOverlap = (a: Bounds, b: Bounds, threshold: number = 0): boolean =>
+  b.bottom - a.y >= threshold && a.bottom - b.y >= threshold;
 
 const getRangeRect = (rng: Range): DOMRect => {
   const rect = rng.getBoundingClientRect();

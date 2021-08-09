@@ -88,7 +88,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
         ContextToolbarBounds.getSelectionBounds(editor);
 
       // If the anchor bounds aren't overlapping with the context toolbar bounds, then the context toolbar should hide
-      return !ContextToolbarBounds.isVerticalOverlap(anchorBounds, contextToolbarBounds);
+      // Note: We want to avoid showing with small difference such as 0.001px so we ensure at least 0.5px is visible
+      return !ContextToolbarBounds.isVerticalOverlap(anchorBounds, contextToolbarBounds, 0.5);
     }
   };
 
