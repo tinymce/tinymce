@@ -43,7 +43,7 @@ interface ExtractColsDetail {
 type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
 
 // This uses a slight variation to the default `ContentEditable.isEditable` behaviour,
-// as when the element is detached we assume it is editable instead as it'll be a new cell.
+// as when the element is detached we assume it is editable because it is a new cell.
 const isEditable = (elem: SugarElement<HTMLElement>) =>
   ContentEditable.isEditable(elem, true);
 
