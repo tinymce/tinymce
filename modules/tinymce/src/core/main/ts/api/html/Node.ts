@@ -433,11 +433,11 @@ class AstNode {
   }
 
   /**
-   * Get all children by name.
+   * Get all descendents by name.
    *
    * @method getAll
-   * @param {String} name Name of the child nodes to collect.
-   * @return {Array} Array with child nodes matchin the specified name.
+   * @param {String} name Name of the descendent nodes to collect.
+   * @return {Array} Array with descendent nodes matching the specified name.
    */
   public getAll(name: string): AstNode[] {
     const self = this;
@@ -445,6 +445,28 @@ class AstNode {
 
     for (let node = self.firstChild; node; node = walk(node, self)) {
       if (node.name === name) {
+        collection.push(node);
+      }
+    }
+
+    return collection;
+  }
+
+  /**
+   * Get all children of the current node.
+   *
+   * @method children
+   * @return {Array} Array containing child nodes.
+   */
+  public children(): AstNode[] {
+    const self = this;
+    const collection: AstNode[] = [];
+    let node = self.firstChild;
+
+    if (node) {
+      // Case where there is only one child
+      collection.push(node);
+      for (node = node.next; node; node = node.next) {
         collection.push(node);
       }
     }
