@@ -63,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Using the Tab key to navigate into the editor on IE 11 would incorrectly focus the toolbar #TINY-3707
 - The editor selection could be placed in an incorrect location when undoing or redoing changes in a document containing `contenteditable="false"` elements #TINY-7663
 - Certain HTML content when inserted could cause the editor to crash #TINY-7756
+- Inserting certain HTML content into the editor could result in invalid HTML once parsed #TINY-7756
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
 - Disabled nested menu items could still be opened #TINY-7700
 - `imagetools` buttons were incorrectly enabled for remote images without `imagetools_proxy` set #TINY-7772
@@ -71,7 +72,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The selection was incorrectly lost when using the `mceTableCellType` and `mceTableRowType` commands #TINY-6666
 - The `mceTableRowType` was reversing the order of the rows when converting multiple header rows back to body rows #TINY-6666
 - The nested menu item chevron icon was not fading when the menu item was disabled #TINY-7700
-- Inserting certain HTML content into the editor could result in invalid HTML once parsed #TINY-7756
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260
