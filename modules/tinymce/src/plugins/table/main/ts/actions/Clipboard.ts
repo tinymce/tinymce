@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { CellOpSelection, Selections, SelectionTypes } from '@ephox/darwin';
+import { Selections, SelectionTypes } from '@ephox/darwin';
 import { Arr, Fun } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
@@ -15,6 +15,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
+import * as TableSelection from '../selection/TableSelection';
 import { TableActions } from './TableActions';
 
 const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]) => {
@@ -48,7 +49,7 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
 
   editor.on('BeforeSetContent', (e) => {
     if (e.selection === true && e.paste === true) {
-      const selectedCells = CellOpSelection.selection(selections);
+      const selectedCells = TableSelection.getCellsFromSelection(selections);
       Arr.head(selectedCells).each((cell) => {
         TableLookup.table(cell).each((table) => {
 
