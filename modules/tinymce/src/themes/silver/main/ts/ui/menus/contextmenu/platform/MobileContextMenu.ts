@@ -21,8 +21,7 @@ import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
 import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
-import { getNodeAnchor, getPointAnchor, getSelectionAnchor } from '../Coords';
-import { ContextMenuAnchorType } from '../SilverContextMenu';
+import * as Coords from '../Coords';
 
 type MenuItems = string | Array<string | SingleMenuItemSpec>;
 
@@ -61,16 +60,6 @@ const isTouchWithinSelection = (editor: Editor, e: EditorEvent<TouchEvent>) => {
   }
 };
 
-const getPointAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>) => ({
-  bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-  layouts,
-  overrides: {
-    maxWidthFunction: MaxWidth.expandable(),
-    maxHeightFunction: MaxHeight.expandable()
-  },
-  ...getPointAnchor(editor, e)
-});
-
 const setupiOSOverrides = (editor: Editor) => {
   // iOS will change the selection due to longpress also being a range selection gesture. As such we
   // need to reset the selection back to the original selection after the touchend event has fired
@@ -102,18 +91,23 @@ const setupiOSOverrides = (editor: Editor) => {
   };
 };
 
-const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: ContextMenuAnchorType) => {
-  switch (anchorType) {
-    case 'node':
-      return getNodeAnchor(editor);
-    case 'point':
-      return getPointAnchorSpec(editor, e);
-    case 'selection':
-      return getSelectionAnchor(editor);
+const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: Coords.ContextMenuAnchorType) => {
+  if (anchorType === 'point') {
+    return {
+      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
+      layouts,
+      overrides: {
+        maxWidthFunction: MaxWidth.expandable(),
+        maxHeightFunction: MaxHeight.expandable()
+      },
+      ...Coords.getPointAnchor(editor, e)
+    };
+  } else {
+    return Coords.getAnchorSpec(editor, e, anchorType);
   }
 };
 
-const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: ContextMenuAnchorType, highlightImmediately: boolean) => {
+const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: Coords.ContextMenuAnchorType, highlightImmediately: boolean) => {
 
   const anchorSpec = getAnchorSpec(editor, e, anchorType);
 
@@ -137,7 +131,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
   });
 };
 
-export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: ContextMenuAnchorType): void => {
+export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: Coords.ContextMenuAnchorType): void => {
   const detection = PlatformDetection.detect();
   const isiOS = detection.os.isiOS();
   const isOSX = detection.os.isOSX();

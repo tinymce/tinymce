@@ -14,12 +14,12 @@ import { SelectorExists, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
+import { ContextMenuAnchorType } from './Coords';
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';
 import * as Settings from './Settings';
 
 type MenuItem = string | Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.SeparatorMenuItemSpec;
-export type ContextMenuAnchorType = 'node' | 'selection' | 'point';
 
 const isSeparator = (item: MenuItem): boolean => Type.isString(item) ? item === '|' : item.type === 'separator';
 
@@ -125,11 +125,13 @@ const getAnchorType = (editor: Editor, e: PointerEvent): ContextMenuAnchorType =
   if (selector) {
     const target = getSelectedElement(editor, e);
     const selectorExists = SelectorExists.closest(SugarElement.fromDom(target), selector);
-    return selectorExists ? 'node' : 'point';
-  } else if (isTriggeredByKeyboard(editor, e)) {
-    return 'selection';
+    if (selectorExists) {
+      return 'node';
+    } else {
+      return isTriggeredByKeyboard(editor, e) ? 'selection' : 'point';
+    }
   } else {
-    return 'point';
+    return isTriggeredByKeyboard(editor, e) ? 'selection' : 'point';
   }
 };
 

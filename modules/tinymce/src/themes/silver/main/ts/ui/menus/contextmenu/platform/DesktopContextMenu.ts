@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, InlineView, AnchorSpec } from '@ephox/alloy';
+import { AlloyComponent, InlineView } from '@ephox/alloy';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -15,19 +15,7 @@ import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
 import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
-import { getNodeAnchor, getPointAnchor, getSelectionAnchor } from '../Coords';
-import { ContextMenuAnchorType } from '../SilverContextMenu';
-
-const getAnchorSpec = (editor: Editor, e: EditorEvent<PointerEvent>, anchorType: ContextMenuAnchorType): AnchorSpec => {
-  switch (anchorType) {
-    case 'node':
-      return getNodeAnchor(editor);
-    case 'point':
-      return getPointAnchor(editor, e);
-    case 'selection':
-      return getSelectionAnchor(editor);
-  }
-};
+import { ContextMenuAnchorType, getAnchorSpec } from '../Coords';
 
 export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemSpec>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: ContextMenuAnchorType) => {
   const items = buildMenu();

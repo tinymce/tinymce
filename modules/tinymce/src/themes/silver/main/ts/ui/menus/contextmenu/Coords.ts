@@ -5,12 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { AnchorSpec, MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+
+export type ContextMenuAnchorType = 'node' | 'selection' | 'point';
 
 interface Position {
   x: number;
@@ -77,3 +79,14 @@ export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => ({
   node: Optional.some(SugarElement.fromDom(editor.selection.getNode())),
   root: SugarElement.fromDom(editor.getBody())
 });
+
+export const getAnchorSpec = (editor: Editor, e: MouseEvent | TouchEvent, anchorType: ContextMenuAnchorType): AnchorSpec => {
+  switch (anchorType) {
+    case 'node':
+      return getNodeAnchor(editor);
+    case 'point':
+      return getPointAnchor(editor, e);
+    case 'selection':
+      return getSelectionAnchor(editor);
+  }
+};
