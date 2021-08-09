@@ -6,6 +6,7 @@ import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarB
 
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
+import { TableSection } from 'ephox/snooker/api/TableSection';
 import { TargetElement, TargetPaste, TargetPasteRows, TargetSelection, OperationCallback } from 'ephox/snooker/model/RunOperation';
 import * as Bars from 'ephox/snooker/resize/Bars';
 import * as Bridge from 'ephox/snooker/test/Bridge';
@@ -32,14 +33,15 @@ const checkOld = (
   operation: OperationCallback<TargetElement>,
   section: number,
   row: number,
-  column: number
+  column: number,
+  tableSection?: TableSection
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const result = operation(wire, table, {
     element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie(label + ': could not find element')
-  }, Bridge.generators);
+  }, Bridge.generators, { section: tableSection });
 
   optExpCell.each((expCell) => {
     const actualPath = Hierarchy.path(
@@ -65,7 +67,8 @@ const checkOldMultiple = (
   expectedHtml: string,
   input: string,
   operation: OperationCallback<TargetSelection>,
-  paths: TargetLocation[]
+  paths: TargetLocation[],
+  tableSection?: TableSection
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
@@ -76,7 +79,8 @@ const checkOldMultiple = (
         Hierarchy.follow(table, [ path.section, path.row, path.column, 0 ]).getOrDie(label + ': could not follow path')
       )
     },
-    Bridge.generators
+    Bridge.generators,
+    { section: tableSection }
   );
 
   optExpCell.each((expCell) => {
