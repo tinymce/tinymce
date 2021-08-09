@@ -254,12 +254,12 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     const editor = hook.editor();
     editor.setContent('<p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p>text</p>');
     TinySelections.setSelection(editor, [ 3, 0 ], 1, [ 3, 0 ], 3);
-    // Place the selected text right at the bottom of the editor so only 1px of the selection is visible
+    // Place the selected text right at the bottom of the editor so only ~1px of the selection is visible
     // Note: IE 11 uses a different selection height (22px vs 17px)
     scrollTo(editor, 0, browser.isIE() ? 65 : 67);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear above the content', SugarBody.body(), topSelector);
-    // Moving 1px more the selected text is now offscreen so the context toolbar should hide
-    scrollTo(editor, 0, browser.isIE() ? 64 : 66);
+    // Moving 2px more the selected text is now offscreen so the context toolbar should hide
+    scrollTo(editor, 0, browser.isIE() ? 63 : 65);
     await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
   });
 
