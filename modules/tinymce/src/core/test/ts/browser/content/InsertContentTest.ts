@@ -549,7 +549,14 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     TinySelections.setCursor(editor, [ 0 ], 0);
     InsertContent.insertAtCaret(
       editor,
-      '<table><button><a><meta>'
+      '<table>' +
+        '<button>' +
+          '<a>' +
+            '<meta>' +
+            '</meta>' +
+          '</a>' +
+        '</button>' +
+      '</table>'
     );
     TinyAssertions.assertContent(editor, '');
 
@@ -557,19 +564,69 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     TinySelections.setCursor(editor, [ 0 ], 0);
     InsertContent.insertAtCaret(
       editor,
-      '<table><tbody><tr><td><meta><button><img/><button><a><meta/></a></button><img/></button>'
+      '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>' +
+              '<meta>' +
+                '<button>' +
+                  '<img/>' +
+                  '<button>' +
+                    '<a>' +
+                      '<meta></meta>' +
+                    '</a>' +
+                  '</button>' +
+                  '<img/>' +
+                '</button>' +
+              '</meta>' +
+            '</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>'
     );
     // TINY-7793: Fix duplicated nodes
     if (browser.isIE()) {
       // IE renders this verbatim and other browsers remove nested buttons
       TinyAssertions.assertContent(
         editor,
-        '<table><tbody><tr><td><button><button><img /><button></button><button><button></button><img /></button></button></button></td></tr></tbody></table>'
+        '<table>' +
+          '<tbody>' +
+            '<tr>' +
+              '<td>' +
+                '<button>' +
+                  '<button>' +
+                    '<img />' +
+                    '<button></button>' +
+                    '<button>' +
+                      '<button></button>' +
+                      '<img />' +
+                    '</button>' +
+                  '</button>' +
+                '</button>' +
+              '</td>' +
+            '</tr>' +
+          '</tbody>' +
+        '</table>'
       );
     } else {
       TinyAssertions.assertContent(
         editor,
-        '<table><tbody><tr><td><button></button><button><img /></button><button></button><button></button><button></button><img /></td></tr></tbody></table>'
+        '<table>' +
+          '<tbody>' +
+            '<tr>' +
+              '<td>' +
+                '<button></button>' +
+                '<button>' +
+                  '<img />' +
+                '</button>' +
+                '<button></button>' +
+                '<button></button>' +
+                '<button></button>' +
+                '<img />' +
+              '</td>' +
+            '</tr>' +
+          '</tbody>' +
+        '</table>'
       );
     }
   });
