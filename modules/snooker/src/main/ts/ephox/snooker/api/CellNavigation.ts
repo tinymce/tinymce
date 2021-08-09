@@ -12,6 +12,11 @@ interface NavigationInfo {
 type IsEligibleFn = (cell: SugarElement<HTMLTableCellElement>) => boolean;
 type IsRootFn = (e: SugarElement<Node>) => boolean;
 
+const enum Direction {
+  Forwards = 1,
+  Backwards = -1
+}
+
 /*
  *  Walk until the next eligible cell location is found, or the start/end of the table is found.
  */
@@ -19,10 +24,10 @@ const walk = (
   all: SugarElement<HTMLTableCellElement>[],
   current: SugarElement<HTMLTableCellElement>,
   index: number,
-  direction: number,
+  direction: Direction,
   isEligible: IsEligibleFn = Fun.always
 ): CellLocation => {
-  const forwards = direction > 0;
+  const forwards = direction === Direction.Forwards;
   if (!forwards && index <= 0) {
     return CellLocation.first(all[0]);
   } else if (forwards && index >= all.length - 1) {
@@ -55,7 +60,7 @@ const next = (current: SugarElement<HTMLTableCellElement>, isEligible?: IsEligib
   return detection.fold(() => {
     return CellLocation.none(current);
   }, (info) => {
-    return walk(info.all, current, info.index, 1, isEligible);
+    return walk(info.all, current, info.index, Direction.Forwards, isEligible);
   });
 };
 
@@ -67,7 +72,7 @@ const prev = (current: SugarElement<HTMLTableCellElement>, isEligible?: IsEligib
   return detection.fold(() => {
     return CellLocation.none();
   }, (info) => {
-    return walk(info.all, current, info.index, -1, isEligible);
+    return walk(info.all, current, info.index, Direction.Backwards, isEligible);
   });
 };
 
