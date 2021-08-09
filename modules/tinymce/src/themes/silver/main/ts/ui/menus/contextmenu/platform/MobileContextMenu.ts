@@ -93,19 +93,16 @@ const setupiOSOverrides = (editor: Editor) => {
 
 const getAnchorSpec = (editor: Editor, e: EditorEvent<TouchEvent>, anchorType: Coords.AnchorType) => {
   const anchorSpec = Coords.getAnchorSpec(editor, e, anchorType);
-  if (anchorType === 'point') {
-    return {
-      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-      layouts,
-      overrides: {
-        maxWidthFunction: MaxWidth.expandable(),
-        maxHeightFunction: MaxHeight.expandable()
-      },
-      ...anchorSpec
-    };
-  } else {
-    return anchorSpec;
-  }
+  const bubbleYOffset = anchorType === 'point' ? bubbleSize : 0;
+  return {
+    bubble: Bubble.nu(0, bubbleYOffset, bubbleAlignments),
+    layouts,
+    overrides: {
+      maxWidthFunction: MaxWidth.expandable(),
+      maxHeightFunction: MaxHeight.expandable()
+    },
+    ...anchorSpec
+  };
 };
 
 const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: Coords.AnchorType, highlightImmediately: boolean) => {
