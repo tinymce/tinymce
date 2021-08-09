@@ -122,13 +122,13 @@ const getSelectedElement = (editor: Editor, e: PointerEvent) =>
 
 const getAnchorType = (editor: Editor, e: PointerEvent): AnchorType => {
   const selector = Settings.getAvoidOverlapSelector(editor);
-  const triggeredByKeyboard = isTriggeredByKeyboard(editor, e) ? 'selection' : 'point';
+  const anchorType = isTriggeredByKeyboard(editor, e) ? 'selection' : 'point';
   if (selector) {
     const target = getSelectedElement(editor, e);
     const selectorExists = SelectorExists.closest(SugarElement.fromDom(target), selector);
-    return selectorExists ? 'node' : triggeredByKeyboard;
+    return selectorExists ? 'node' : anchorType;
   } else {
-    return triggeredByKeyboard;
+    return anchorType;
   }
 };
 
