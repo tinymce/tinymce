@@ -155,8 +155,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
       // Found a suitable parent
       if (parent && parents.length > 1) {
-        // If the node won't be a valid child of the parent then just unwrap
-        // instead of trying to move it
+        // If the node is a valid child of the parent, then try to move it. Otherwise unwrap it
         if (schema.isValidChild(parent.name, node.name)) {
           // Reverse the array since it makes looping easier
           parents.reverse();
