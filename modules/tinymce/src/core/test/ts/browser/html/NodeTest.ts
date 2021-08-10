@@ -423,7 +423,7 @@ describe('browser.tinymce.core.html.NodeTest', () => {
       assert.strictEqual(children[2], child3);
     });
 
-    it('TINY-7756: Does not return descendents', () => {
+    it('TINY-7756: Does not return descendants', () => {
       const root = new AstNode('div', 1);
       const child1 = root.append(new AstNode('span', 1));
       child1.append(new AstNode('#text', 3));
