@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482
 - Added a new `table-row-numbering` icon #TINY-7327
 - Added a new `iframe_aria_text` setting to set the iframe title attribute #TINY-1264
+- Added a new `AstNode.children()` method to return all the children of an `AstNode` #TINY-7756
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
@@ -62,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Using the Tab key to navigate into the editor on IE 11 would incorrectly focus the toolbar #TINY-3707
 - The editor selection could be placed in an incorrect location when undoing or redoing changes in a document containing `contenteditable="false"` elements #TINY-7663
 - Certain HTML content when inserted could cause the editor to crash #TINY-7756
+- Inserting certain HTML content into the editor could result in invalid HTML once parsed #TINY-7756
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
 - Disabled nested menu items could still be opened #TINY-7700
 - `imagetools` buttons were incorrectly enabled for remote images without `imagetools_proxy` set #TINY-7772
