@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482
 - Added a new `table-row-numbering` icon #TINY-7327
 - Added a new `iframe_aria_text` setting to set the iframe title attribute #TINY-1264
+- Added a new `AstNode.children()` method to return all the children of an `AstNode` #TINY-7756
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
@@ -63,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor selection could be placed in an incorrect location when undoing or redoing changes in a document containing `contenteditable="false"` elements #TINY-7663
 - Context menus on Android were not displayed when more than one HTML element was selected #TINY-7688
 - Certain HTML content when inserted could cause the editor to crash #TINY-7756
+- Inserting certain HTML content into the editor could result in invalid HTML once parsed #TINY-7756
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
 - Disabled nested menu items could still be opened #TINY-7700
 - `imagetools` buttons were incorrectly enabled for remote images without `imagetools_proxy` set #TINY-7772
@@ -73,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `mceTableRowType` was reversing the order of the rows when converting multiple header rows back to body rows #TINY-6666
 - The nested menu item chevron icon was not fading when the menu item was disabled #TINY-7700
 - The table dialog did not always respect the `table_style_with_css` option #TINY-4926
+- Pasting into a table with multiple cells selected could cause the content to be pasted in the wrong location #TINY-7485
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260

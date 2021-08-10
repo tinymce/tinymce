@@ -12,7 +12,6 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
 
 interface Item {
@@ -25,7 +24,7 @@ const onSetupToggle = (editor: Editor, selections: Selections, formatName: strin
     const isNone = Strings.isEmpty(formatValue);
 
     const init = () => {
-      const selectedCells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections, Util.getIsRoot(editor));
+      const selectedCells = TableSelection.getCellsFromSelection(selections);
 
       const checkNode = (cell: SugarElement<Element>) =>
         editor.formatter.match(formatName, { value: formatValue }, cell.dom, isNone);
