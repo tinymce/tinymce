@@ -104,12 +104,14 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     const removeOrUnwrapInvalidNode = (node: AstNode, originalNodeParent: AstNode = node.parent): void => {
       if (specialElements[node.name]) {
         node.empty().remove();
-      } else if (!schema.isValidChild(originalNodeParent.name, node.name)) {
+      } else {
         // are the children of `node` valid children of the top level parent?
         // if not, remove or unwrap them too
         const children = node.children();
         for (const childNode of children) {
-          removeOrUnwrapInvalidNode(childNode, originalNodeParent);
+          if (!schema.isValidChild(originalNodeParent.name, childNode.name)) {
+            removeOrUnwrapInvalidNode(childNode, originalNodeParent);
+          }
         }
         node.unwrap();
       }
