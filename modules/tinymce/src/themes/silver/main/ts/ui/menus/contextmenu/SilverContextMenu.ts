@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Result, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorExists, SugarElement } from '@ephox/sugar';
 
@@ -123,7 +123,7 @@ const getSelectedElement = (editor: Editor, e: PointerEvent) =>
 const getAnchorType = (editor: Editor, e: PointerEvent): AnchorType => {
   const selector = Settings.getAvoidOverlapSelector(editor);
   const anchorType = isTriggeredByKeyboard(editor, e) ? 'selection' : 'point';
-  if (selector) {
+  if (Strings.isNotEmpty(selector)) {
     const target = getSelectedElement(editor, e);
     const selectorExists = SelectorExists.closest(SugarElement.fromDom(target), selector);
     return selectorExists ? 'node' : anchorType;
