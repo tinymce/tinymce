@@ -5,12 +5,12 @@ export interface SelectionType {
   fold: <T>(
     none: () => T,
     multiple: (elements: SugarElement<HTMLTableCellElement>[]) => T,
-    single: (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>) => T,
+    single: (element: SugarElement<HTMLTableCellElement>) => T,
   ) => T;
   match: <T> (branches: {
     none: () => T;
     multiple: (elements: SugarElement<HTMLTableCellElement>[]) => T;
-    single: (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>) => T;
+    single: (element: SugarElement<HTMLTableCellElement>) => T;
   }) => T;
   log: (label: string) => void;
 }
@@ -18,14 +18,14 @@ export interface SelectionType {
 const type: {
   none: () => SelectionType;
   multiple: (elements: SugarElement<HTMLTableCellElement>[]) => SelectionType;
-  single: (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>) => SelectionType;
+  single: (element: SugarElement<HTMLTableCellElement>) => SelectionType;
 } = Adt.generate([
   { none: [] },
   { multiple: [ 'elements' ] },
   { single: [ 'element' ] }
 ]);
 
-export const cata = <T> (subject: SelectionType, onNone: () => T, onMultiple: (multiple: SugarElement<Element>[]) => T, onSingle: (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>) => T): T =>
+export const cata = <T> (subject: SelectionType, onNone: () => T, onMultiple: (multiple: SugarElement<HTMLTableCellElement>[]) => T, onSingle: (element: SugarElement<HTMLTableCellElement>) => T): T =>
   subject.fold(onNone, onMultiple, onSingle);
 
 export const none = type.none;

@@ -6,7 +6,7 @@
  */
 
 import { Selections, SelectionTypes } from '@ephox/darwin';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
@@ -15,6 +15,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
+import * as TableSelection from '../selection/TableSelection';
 import { TableActions } from './TableActions';
 
 const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]) => {
@@ -48,16 +49,15 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
 
   editor.on('BeforeSetContent', (e) => {
     if (e.selection === true && e.paste === true) {
-      const cellOpt = Optional.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-      cellOpt.each((domCell) => {
-        const cell = SugarElement.fromDom(domCell);
+      const selectedCells = TableSelection.getCellsFromSelection(selections);
+      Arr.head(selectedCells).each((cell) => {
         TableLookup.table(cell).each((table) => {
 
           const elements = Arr.filter(SugarElements.fromHtml(e.content), (content) => {
             return SugarNode.name(content) !== 'meta';
           });
 
-          const isTable = (elm: SugarElement<Node>): elm is SugarElement<HTMLTableElement> => SugarNode.name(elm) === 'table';
+          const isTable = SugarNode.isTag('table');
           if (elements.length === 1 && isTable(elements[0])) {
             e.preventDefault();
 
