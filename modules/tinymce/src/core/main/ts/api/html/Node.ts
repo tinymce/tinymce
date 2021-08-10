@@ -433,11 +433,11 @@ class AstNode {
   }
 
   /**
-   * Get all descendents by name.
+   * Get all descendants by name.
    *
    * @method getAll
-   * @param {String} name Name of the descendent nodes to collect.
-   * @return {Array} Array with descendent nodes matching the specified name.
+   * @param {String} name Name of the descendant nodes to collect.
+   * @return {Array} Array with descendant nodes matching the specified name.
    */
   public getAll(name: string): AstNode[] {
     const self = this;
@@ -453,7 +453,7 @@ class AstNode {
   }
 
   /**
-   * Get all children of the current node.
+   * Get all children of this node.
    *
    * @method children
    * @return {Array} Array containing child nodes.
