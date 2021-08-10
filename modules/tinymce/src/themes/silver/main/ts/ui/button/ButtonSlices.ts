@@ -11,17 +11,18 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-const renderIcon = (iconHtml: string, behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>): SimpleOrSketchSpec =>
-  Icons.render('span', iconHtml, [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ], behaviours);
+const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>): SimpleOrSketchSpec => {
+  // If RTL, add the RTL icon class for icons that don't have a `-rtl` icon available.
+  const rtlIconClasses = Icons.needsRtlTransform(iconName) ? [ ToolbarButtonClasses.IconRtl ] : [];
+  const iconHtml = Icons.get(iconName, iconsProvider);
+  return Icons.render('span', iconHtml, [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ].concat(rtlIconClasses), behaviours);
+};
 
 const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleOrSketchSpec =>
-  renderIcon(Icons.get(iconName, iconsProvider), []);
+  renderIcon(iconName, iconsProvider, []);
 
-const renderReplacableIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleOrSketchSpec => {
-  const icon = Icons.get(iconName, iconsProvider);
-  const behaviours = [ Replacing.config({ }) ];
-  return renderIcon(icon, behaviours);
-};
+const renderReplacableIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleOrSketchSpec =>
+  renderIcon(iconName, iconsProvider, [ Replacing.config({ }) ]);
 
 const renderLabel = (text: string, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
   dom: {

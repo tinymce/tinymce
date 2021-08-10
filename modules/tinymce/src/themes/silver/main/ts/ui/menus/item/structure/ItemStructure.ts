@@ -7,7 +7,7 @@
 
 import { AlloySpec, RawDomSchema } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+import { Fun, Obj, Optional } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
@@ -131,35 +131,13 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Optional<string>,
   return menuItem;
 };
 
-// TODO TINY-3598: Implement a permanent solution to render rtl icons
-// Icons that have `-rtl` equivalents
-const rtlIcon = [
-  'list-num-default',
-  'list-num-lower-alpha',
-  'list-num-lower-greek',
-  'list-num-lower-roman',
-  'list-num-upper-alpha',
-  'list-num-upper-roman',
-  'table-row-numbering'
-];
-
-// Icons that need to be transformed in RTL
-const rtlTransform = [
-  'list-bull-circle',
-  'list-bull-default',
-  'list-bull-square'
-];
-
 // TODO: Maybe need aria-label
 const renderItemStructure = (info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Optional<string> = Optional.none()): { dom: RawDomSchema; optComponents: Array<Optional<AlloySpec>> } => {
-  // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
-  // Use `-rtl` icon suffix for icons that do.
-  const getIconName = (iconName: Optional<string>): Optional<string> => iconName.map((name) => I18n.isRtl() && Arr.contains(rtlIcon, name) ? name + '-rtl' : name);
-
-  const needRtlClass = I18n.isRtl() && info.iconContent.exists((name) => Arr.contains(rtlTransform, name));
+  // If RTL, add the RTL icon class for icons that don't have a `-rtl` icon available.
+  const needsRtlClass = info.iconContent.exists(Icons.needsRtlTransform);
 
   // TODO: TINY-3036 Work out a better way of dealing with custom icons
-  const icon = getIconName(info.iconContent).map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));
+  const icon = info.iconContent.map((iconName) => Icons.getOr(iconName, providersBackstage.icons, fallbackIcon));
 
   // Style items and autocompleter both have meta. Need to branch on style
   // This could probably be more stable...
@@ -171,7 +149,7 @@ const renderItemStructure = (info: ItemStructureSpec, providersBackstage: UiFact
   if (info.presets === 'color') {
     return renderColorStructure(info.ariaLabel, info.value, icon, providersBackstage);
   } else {
-    return renderNormalItemStructure(info, icon, renderIcons, textRender, needRtlClass);
+    return renderNormalItemStructure(info, icon, renderIcons, textRender, needsRtlClass);
   }
 };
 
