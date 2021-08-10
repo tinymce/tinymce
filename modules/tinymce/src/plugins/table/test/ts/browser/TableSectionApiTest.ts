@@ -157,6 +157,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
 </tr>
 </tbody>
 </table>`;
+
   const multipleHeaderCellContent = `<table>
 <tbody>
 <tr id="one">
