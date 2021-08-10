@@ -101,15 +101,15 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     const textBlockElements = schema.getTextBlockElements();
     const specialElements = schema.getSpecialElements();
 
-    const unwrapInvalidNode = (node: AstNode, originalNodeParent: AstNode = node.parent): void => {
+    const removeOrUnwrapInvalidNode = (node: AstNode, originalNodeParent: AstNode = node.parent): void => {
       if (specialElements[node.name]) {
         node.empty().remove();
       } else if (!schema.isValidChild(originalNodeParent.name, node.name)) {
         // are the children of `node` valid children of the top level parent?
-        // if not, unwrap them too
+        // if not, remove or unwrap them too
         const children = node.children();
         for (const childNode of children) {
-          unwrapInvalidNode(childNode, originalNodeParent);
+          removeOrUnwrapInvalidNode(childNode, originalNodeParent);
         }
         node.unwrap();
       }
@@ -195,7 +195,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
             parent.empty().remove();
           }
         } else {
-          unwrapInvalidNode(node);
+          removeOrUnwrapInvalidNode(node);
         }
       } else if (node.parent) {
         // If it's an LI try to find a UL/OL for it or wrap it
@@ -220,8 +220,8 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
         if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
           node.wrap(filterNode(new AstNode('div', 1)));
         } else {
-          // We failed wrapping it, unwrap it
-          unwrapInvalidNode(node);
+          // We failed wrapping it, remove or unwrap it
+          removeOrUnwrapInvalidNode(node);
         }
       }
     }
