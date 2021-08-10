@@ -187,8 +187,7 @@ const opMakeCellsHeader = (initialGrid: Structs.RowCells[], details: Structs.Det
   const replacer = (currentGrid: Structs.RowCells[], detail: Structs.DetailExt) =>
     TransformOperations.replaceCell(currentGrid, detail.row, detail.column, comparator, genWrappers.replaceOrInit);
 
-  const columns = ColUtils.uniqueColumns(details);
-  const newGrid = Arr.foldl(columns, replacer, initialGrid);
+  const newGrid = Arr.foldl(details, replacer, initialGrid);
   return bundle(newGrid, details[0].row, details[0].column);
 };
 
@@ -215,8 +214,7 @@ const opUnmakeCellsHeader = (initialGrid: Structs.RowCells[], details: Structs.D
   const replacer = (currentGrid: Structs.RowCells[], detail: Structs.DetailExt) =>
     TransformOperations.replaceCell(currentGrid, detail.row, detail.column, comparator, genWrappers.replaceOrInit);
 
-  const columns = ColUtils.uniqueColumns(details);
-  const newGrid = Arr.foldl(columns, replacer, initialGrid);
+  const newGrid = Arr.foldl(details, replacer, initialGrid);
   return bundle(newGrid, details[0].row, details[0].column);
 };
 
