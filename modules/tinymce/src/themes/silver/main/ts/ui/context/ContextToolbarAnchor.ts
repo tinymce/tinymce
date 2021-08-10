@@ -61,7 +61,7 @@ const preservePosition = <T>(elem: SugarElement<HTMLElement>, position: string, 
  * placement is re-triggered (e.g. not triggered by a reposition) and the current editor selection overlaps with the contextbar,
  * then the anchoring should flip from the previous position to avoid conflicting with the selection.
  */
-const determineInsideLayout = (editor: Editor, contextbar: SugarElement<HTMLElement>, elem: SugarElement<HTMLElement>, data: PositionData) => {
+const determineInsetLayout = (editor: Editor, contextbar: SugarElement<HTMLElement>, elem: SugarElement<HTMLElement>, data: PositionData) => {
   const selectionBounds = getSelectionBounds(editor);
   const isSameAnchorElement = data.lastElement().exists((prev) => Compare.eq(elem, prev));
 
@@ -85,10 +85,10 @@ const determineInsideLayout = (editor: Editor, contextbar: SugarElement<HTMLElem
   }
 };
 
-const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData) => {
+const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData, position: InlineContent.ContextPosition) => {
   // IMPORTANT: We lazily determine the layout here so that we only do the calculations if absolutely necessary
-  const smartInsideLayout = (elem: SugarElement<HTMLElement>): Layout => (anchor, element, bubbles, placee) => {
-    const layout = determineInsideLayout(editor, placee, elem, data);
+  const smartInsetLayout = (elem: SugarElement<HTMLElement>): Layout => (anchor, element, bubbles, placee) => {
+    const layout = determineInsetLayout(editor, placee, elem, data);
     return {
       ...layout(anchor, element, bubbles, placee),
       // Ensure this is always the preferred option if no outside layouts fit
@@ -96,15 +96,19 @@ const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData) => {
     };
   };
 
+  // Don't use an inset layout when using a selection based anchor as it'll cover the content and can't be moved out the way
+  const getInsetLayouts = (elem: SugarElement<HTMLElement>): Layout[] =>
+    position === 'selection' ? [] : [ smartInsetLayout(elem) ];
+
   // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
   const desktopAnchorSpecLayouts = {
-    onLtr: (elem) => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest, smartInsideLayout(elem) ],
-    onRtl: (elem) => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast, smartInsideLayout(elem) ]
+    onLtr: (elem) => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest ].concat(getInsetLayouts(elem)),
+    onRtl: (elem) => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast ].concat(getInsetLayouts(elem))
   };
 
   const mobileAnchorSpecLayouts = {
-    onLtr: (elem) => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north, smartInsideLayout(elem) ],
-    onRtl: (elem) => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north, smartInsideLayout(elem) ]
+    onLtr: (elem) => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north ].concat(getInsetLayouts(elem)),
+    onRtl: (elem) => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north ].concat(getInsetLayouts(elem))
   };
 
   return mobile ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts;
@@ -124,7 +128,7 @@ const getAnchorLayout = (editor: Editor, position: InlineContent.ContextPosition
     return {
       // Ensure that insets use half the bubble size since we're hiding the bubble arrow
       bubble: Bubble.nu(0, bubbleSize, bubbleAlignments, 0.5),
-      layouts: getAnchorSpec(editor, isTouch, data),
+      layouts: getAnchorSpec(editor, isTouch, data, position),
       overrides: anchorOverrides
     };
   }

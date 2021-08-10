@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -9,6 +10,8 @@ import * as InsertContent from 'tinymce/core/content/InsertContent';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.InsertContentTest', () => {
+  const browser = PlatformDetection.detect().browser;
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -538,5 +541,85 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       '</span>' +
       '</span>' +
       '</p>');
+  });
+
+  it('TINY-7756: Content with nested elements that will be invalid if parent is unwrapped', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(
+      editor,
+      '<table>' +
+        '<button>' +
+          '<a>' +
+            '<meta>' +
+            '</meta>' +
+          '</a>' +
+        '</button>' +
+      '</table>'
+    );
+    TinyAssertions.assertContent(editor, '');
+
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(
+      editor,
+      '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>' +
+              '<meta>' +
+                '<button>' +
+                  '<img/>' +
+                  '<button>' +
+                    '<a>' +
+                      '<meta></meta>' +
+                    '</a>' +
+                  '</button>' +
+                  '<img/>' +
+                '</button>' +
+              '</meta>' +
+            '</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>'
+    );
+
+    if (browser.isIE()) {
+      // IE renders this verbatim and other browsers remove nested buttons
+      TinyAssertions.assertContent(
+        editor,
+        '<table>' +
+          '<tbody>' +
+            '<tr>' +
+              '<td>' +
+                '<button>' +
+                  '<img />' +
+                  '<button></button>' +
+                  '<img />' +
+                '</button>' +
+              '</td>' +
+            '</tr>' +
+          '</tbody>' +
+        '</table>'
+      );
+    } else {
+      TinyAssertions.assertContent(
+        editor,
+        '<table>' +
+          '<tbody>' +
+            '<tr>' +
+              '<td>' +
+                '<button>' +
+                  '<img />' +
+                '</button>' +
+                '<button></button>' +
+                '<img />' +
+              '</td>' +
+            '</tr>' +
+          '</tbody>' +
+        '</table>'
+      );
+    }
   });
 });

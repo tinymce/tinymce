@@ -74,7 +74,10 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
-  const performActionOnSelection = <T>(action: ExecuteAction<T>): Optional<T> => getSelectionStartCell(editor).bind((cell) => getTableFromCell(cell).map((table) => action(table, cell)));
+  const performActionOnSelection = <T>(action: ExecuteAction<T>): Optional<T> =>
+    getSelectionStartCell(editor).bind((cell) =>
+      getTableFromCell(cell).map((table) => action(table, cell))
+    );
 
   const toggleTableClass = (_ui: boolean, clazz: string) => {
     performActionOnSelection((table) => {
@@ -85,7 +88,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const toggleTableCellClass = (_ui: boolean, clazz: string) => {
     performActionOnSelection((table) => {
-      const selectedCells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections, Util.getIsRoot(editor));
+      const selectedCells = TableSelection.getCellsFromSelection(selections);
       const allHaveClass = Arr.forall(selectedCells, (cell) => editor.formatter.match('tablecellclass', { value: clazz }, cell.dom));
       const formatterAction = allHaveClass ? editor.formatter.remove : editor.formatter.apply;
 
@@ -235,7 +238,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     if (!Type.isObject(args)) {
       return;
     }
-    const cells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections, isRoot);
+    const cells = TableSelection.getCellsFromSelection(selections);
     if (cells.length === 0) {
       return;
     }

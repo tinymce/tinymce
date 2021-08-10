@@ -158,6 +158,17 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
 </tbody>
 </table>`;
 
+  const multipleHeaderCellContent = `<table>
+<tbody>
+<tr id="one">
+<th>text</th>
+</tr>
+<tr id="two">
+<th>text</th>
+</tr>
+</tbody>
+</table>`;
+
   let events = [];
   const logEvent = (event: EditorEvent<TableModifiedEvent>) => {
     events.push({
@@ -204,7 +215,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
     assert.match(editor.selection.getNode().nodeName, /^(TD|TH)$/, 'selection should be within a cell');
   };
 
-  const switchMultipleColumnsType = (editor: Editor, startContent: string, expectedContent: string, command: string, type: 'td' | 'th', expectedEvents: string[] = defaultEvents) => {
+  const switchMultipleItemsType = (editor: Editor, startContent: string, expectedContent: string, command: string, type: 'td' | 'th', expectedEvents: string[] = defaultEvents) => {
     editor.setContent(startContent);
     selectAllCells(editor, type);
     clearEvents();
@@ -314,7 +325,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
       );
 
       it('TINY-6326: Switch multiple body columns to header columns', () =>
-        switchMultipleColumnsType(hook.editor(), bodyMultipleChangesColumnContent, headerMultipleChangesColumnContent, 'mceTableColType', 'th', [ 'newcell', 'newcell', 'newcell', 'newcell', 'tablemodified' ])
+        switchMultipleItemsType(hook.editor(), bodyMultipleChangesColumnContent, headerMultipleChangesColumnContent, 'mceTableColType', 'th', [ 'newcell', 'newcell', 'newcell', 'newcell', 'tablemodified' ])
       );
 
       it('TINY-6150: Switch header column to body column', () =>
@@ -322,7 +333,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
       );
 
       it('TINY-6326: Switch multiple header columns to body columns', () =>
-        switchMultipleColumnsType(hook.editor(), headerMultipleChangesColumnContent, bodyMultipleChangesColumnContent, 'mceTableColType', 'td', [ 'newcell', 'newcell', 'newcell', 'newcell', 'tablemodified' ])
+        switchMultipleItemsType(hook.editor(), headerMultipleChangesColumnContent, bodyMultipleChangesColumnContent, 'mceTableColType', 'td', [ 'newcell', 'newcell', 'newcell', 'newcell', 'tablemodified' ])
       );
     });
 
@@ -333,6 +344,14 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
 
       it('TINY-6150: Switch header cell to body cell', () =>
         switchType(hook.editor(), headerCellContent, bodyContent, 'mceTableCellType', 'td', [ 'newcell', 'tablemodified' ], 'tr#one th')
+      );
+
+      it('TINY-6150: Switch multiple body cells to header cells', () =>
+        switchMultipleItemsType(hook.editor(), bodyContent, multipleHeaderCellContent, 'mceTableCellType', 'th', [ 'newcell', 'newcell', 'tablemodified' ])
+      );
+
+      it('TINY-6150: Switch multiple header cells to body cells', () =>
+        switchMultipleItemsType(hook.editor(), multipleHeaderCellContent, bodyContent, 'mceTableCellType', 'td', [ 'newcell', 'newcell', 'tablemodified' ])
       );
     });
 

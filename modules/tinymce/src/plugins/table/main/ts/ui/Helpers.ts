@@ -226,11 +226,19 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
 
   const dom = editor.dom;
 
+  const cellspacing = shouldStyleWithCss(editor) ?
+    dom.getStyle(elm, 'border-spacing') || dom.getAttrib(elm, 'cellspacing') :
+    dom.getAttrib(elm, 'cellspacing') || dom.getStyle(elm, 'border-spacing');
+
+  const cellpadding = shouldStyleWithCss(editor) ?
+    Styles.getTDTHOverallStyle(dom, elm, 'padding') || dom.getAttrib(elm, 'cellpadding') :
+    dom.getAttrib(elm, 'cellpadding') || Styles.getTDTHOverallStyle(dom, elm, 'padding');
+
   return {
     width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
-    cellspacing: dom.getStyle(elm, 'border-spacing') || dom.getAttrib(elm, 'cellspacing'),
-    cellpadding: dom.getAttrib(elm, 'cellpadding') || Styles.getTDTHOverallStyle(editor.dom, elm, 'padding'),
+    cellspacing,
+    cellpadding,
     border: getBorder(dom, elm),
     caption: !!dom.select('caption', elm)[0],
     class: dom.getAttrib(elm, 'class', ''),

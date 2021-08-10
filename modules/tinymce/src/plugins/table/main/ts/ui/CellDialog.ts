@@ -164,7 +164,7 @@ const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) =>
 };
 
 const open = (editor: Editor, selections: Selections) => {
-  const cells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections);
+  const cells = TableSelection.getCellsFromSelection(selections);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {
