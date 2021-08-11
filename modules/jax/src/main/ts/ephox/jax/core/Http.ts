@@ -1,7 +1,7 @@
 import { FutureResult, Global, Obj, Optional, Result, Strings, Type } from '@ephox/katamari';
 
 import { DataType } from './DataType';
-import { RequestBody, ResponseBodyDataTypes, ResponseTypeMap, textData } from './HttpData';
+import { RequestBody, ResponseBodyDataTypes, ResponseType, ResponseTypeMap, textData } from './HttpData';
 import { HttpError, HttpErrorCode } from './HttpError';
 import * as HttpTypes from './HttpTypes';
 import * as ResponseError from './ResponseError';
@@ -36,7 +36,7 @@ const getResponseType = (responseType: ResponseBodyDataTypes): Optional<'blob' |
   }
 };
 
-const createOptions = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => {
+const createOptions = <T extends ResponseType>(init: HttpTypes.HttpRequest<T>) => {
   const contentType = getContentType(init.body);
   const credentials: Optional<boolean> = init.credentials === true ? Optional.some<boolean>(true) : Optional.none<boolean>();
   const accept = getAccept(init.responseType) + ', */*; q=0.01';
@@ -84,7 +84,7 @@ const getData = (body: RequestBody): Optional<string | FormData | Blob> =>
     }
   });
 
-const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> => FutureResult.nu((callback) => {
+const send = <T extends ResponseType>(init: HttpTypes.HttpRequest<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> => FutureResult.nu((callback) => {
   const request = new XMLHttpRequest();
   request.open(init.method, buildUrl(init.url, Optional.from(init.query)), true); // enforced async! enforced type as String!
 
@@ -120,16 +120,16 @@ const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>): 
 
 const empty = () => textData('');
 
-const post = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
+const post = <T extends ResponseType>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
   send({ ...init, method: HttpTypes.HttpMethod.Post });
 
-const put = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
+const put = <T extends ResponseType>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
   send({ ...init, method: HttpTypes.HttpMethod.Put });
 
-const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
+const get = <T extends ResponseType>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
   send({ ...init, method: HttpTypes.HttpMethod.Get, body: empty() });
 
-const del = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
+const del = <T extends ResponseType>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
   send({ ...init, method: HttpTypes.HttpMethod.Delete, body: empty() });
 
 const sendProgress = (init: HttpTypes.DownloadHttpRequest, loaded: number) => {

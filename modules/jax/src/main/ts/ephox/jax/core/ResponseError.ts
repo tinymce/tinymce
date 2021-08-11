@@ -2,7 +2,7 @@ import { Future, Optional } from '@ephox/katamari';
 
 import { readBlobAsText } from './BlobReader';
 import { DataType } from './DataType';
-import { ResponseBodyDataTypes, ResponseTypeMap } from './HttpData';
+import { ResponseBodyDataTypes, ResponseType } from './HttpData';
 import { HttpError } from './HttpError';
 import * as JsonResponse from './JsonResponse';
 
@@ -22,7 +22,7 @@ const getResponseText = (responseType: ResponseBodyDataTypes, request: XMLHttpRe
   }
 };
 
-export const handle = <T extends keyof ResponseTypeMap>(url: string, responseType: ResponseBodyDataTypes, request: XMLHttpRequest): Future<HttpError<T>> => getResponseText(responseType, request).map((responseText) => {
+export const handle = <T extends ResponseType>(url: string, responseType: ResponseBodyDataTypes, request: XMLHttpRequest): Future<HttpError<T>> => getResponseText(responseType, request).map((responseText) => {
   const message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' : `Could not load url ${url}: ${request.statusText}`;
   return {
     message,

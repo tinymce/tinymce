@@ -6,6 +6,7 @@ export interface ResponseTypeMap {
   [DataType.Text]: string;
 }
 
+export type ResponseType = keyof ResponseTypeMap;
 export type RequestBody = JsonData | BlobData | TextData | FormData | MultipartFormData;
 export type ResponseBody = Exclude<RequestBody, FormData>;
 export type ResponseBodyDataTypes = Exclude<DataType, DataType.FormData>;
