@@ -8,3 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
+
+### Improved
+- Changed `HttpError.responseText` type from `string` to `ResponseTypeMap[T]`, `T extends keyof ResponseTypeMap`.
