@@ -174,21 +174,16 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, errId: Optional<string>, icon = name, label = name): SimpleOrSketchSpec => ({
-    dom: {
+  const makeIcon = (name, errId: Optional<string>, icon = name, label = name): SimpleOrSketchSpec =>
+    Icons.render(icon, {
       tag: 'div',
       classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],
-      innerHtml: Icons.get(icon, providersBackstage.icons),
       attributes: {
         'title': providersBackstage.translate(label),
         'aria-live': 'polite',
-        ...errId.fold(() => ({ }), (id) => ({ id }))
+        ...errId.fold(() => ({}), (id) => ({ id }))
       }
-    },
-    behaviours: Behaviour.derive([
-      Icons.addFocusableBehaviour()
-    ])
-  });
+    }, providersBackstage.icons);
 
   const memInvalidIcon = Memento.record(
     makeIcon('invalid', Optional.some(errorId), 'warning')

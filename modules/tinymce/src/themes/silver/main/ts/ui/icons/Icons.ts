@@ -13,6 +13,13 @@ import I18n from 'tinymce/core/api/util/I18n';
 
 export type IconProvider = () => Record<string, string>;
 
+interface IconSpec {
+  readonly tag: string;
+  readonly classes: string[];
+  readonly attributes?: Record<string, string>;
+  readonly behaviours?: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>;
+}
+
 // Icons that need to be transformed in RTL
 const rtlTransform: Record<string, boolean> = {
   'indent': true,
@@ -25,30 +32,42 @@ const rtlTransform: Record<string, boolean> = {
   'list-bull-square': true
 };
 
-const defaultIcon = (icons: IconProvider): string =>
-  Obj.get(icons(), 'temporary-placeholder').getOr('!not found!');
+const defaultIconName = 'temporary-placeholder';
 
-const lookupIcon = (name: string, icons: IconProvider): Optional<string> => {
-  const iconList = icons();
+const defaultIcon = (icons: Record<string, string>) => (): string =>
+  Obj.get(icons, defaultIconName).getOr('!not found!');
+
+const getIconName = (name: string, icons: Record<string, string>): string => {
   const lcName = name.toLowerCase();
-  const lookup = () => Obj.get(iconList, lcName);
   // If in rtl mode then try to see if we have a rtl icon to use instead
   if (I18n.isRtl()) {
     const rtlName = Strings.ensureTrailing(lcName, '-rtl');
-    return Obj.get(iconList, rtlName).orThunk(lookup);
+    return Obj.has(icons, rtlName) ? rtlName : lcName;
   } else {
-    return lookup();
+    return lcName;
   }
 };
 
-const get = (name: string, icons: IconProvider): string =>
-  lookupIcon(name, icons).getOrThunk(() => defaultIcon(icons));
+const lookupIcon = (name: string, icons: Record<string, string>): Optional<string> =>
+  Obj.get(icons, getIconName(name, icons));
 
-const getOr = (name: string, icons: IconProvider, fallback: Optional<string>): string =>
-  lookupIcon(name, icons).or(fallback).getOrThunk(() => defaultIcon(icons));
+const get = (name: string, iconProvider: IconProvider): string => {
+  const icons = iconProvider();
+  return lookupIcon(name, icons).getOrThunk(defaultIcon(icons));
+};
 
-const getFirst = (names: string[], icons: IconProvider): string =>
-  Arr.findMap(names, (name) => lookupIcon(name, icons)).getOrThunk(() => defaultIcon(icons));
+const getOr = (name: string, iconProvider: IconProvider, fallbackIcon: Optional<string>): string => {
+  const icons = iconProvider();
+  return lookupIcon(name, icons).or(fallbackIcon).getOrThunk(defaultIcon(icons));
+};
+
+const getFirst = (names: string[], iconProvider: IconProvider): string => {
+  const icons = iconProvider();
+  return Arr.findMap(names, (name) => lookupIcon(name, icons)).getOrThunk(defaultIcon(icons));
+};
+
+const needsRtlTransform = (iconName: string) =>
+  I18n.isRtl() ? Obj.has(rtlTransform, iconName) : false;
 
 const addFocusableBehaviour = () =>
   AddEventsBehaviour.config('add-focusable', [
@@ -58,28 +77,39 @@ const addFocusableBehaviour = () =>
     })
   ]);
 
-const render = (tagName: string, iconHtml: string, classes: string[], behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>> = []): SimpleOrSketchSpec => {
+const renderIcon = (spec: IconSpec, iconName: string, icons: Record<string, string>, fallbackIcon: Optional<string>): SimpleOrSketchSpec => {
+  // If RTL, add the flip icon class if the icon doesn't have a `-rtl` icon available.
+  const rtlIconClasses = needsRtlTransform(iconName) ? [ 'tox-icon--flip' ] : [];
+  const iconHtml = Obj.get(icons, getIconName(iconName, icons)).or(fallbackIcon).getOrThunk(defaultIcon(icons));
   return {
     dom: {
-      tag: tagName,
-      innerHtml: iconHtml,
-      classes
+      tag: spec.tag,
+      attributes: spec.attributes ?? {},
+      classes: spec.classes.concat(rtlIconClasses),
+      innerHtml: iconHtml
     },
     behaviours: Behaviour.derive([
-      ...behaviours,
+      ...spec.behaviours ?? [],
       addFocusableBehaviour()
     ])
   };
 };
 
-const needsRtlTransform = (iconName: string) =>
-  I18n.isRtl() ? Obj.has(rtlTransform, iconName) : false;
+const render = (iconName: string, spec: IconSpec, iconProvider: IconProvider, fallbackIcon: Optional<string> = Optional.none()): SimpleOrSketchSpec =>
+  renderIcon(spec, iconName, iconProvider(), fallbackIcon);
+
+const renderFirst = (iconNames: string[], spec: IconSpec, iconProvider: IconProvider): SimpleOrSketchSpec => {
+  const icons = iconProvider();
+  const iconName = Arr.find(iconNames, (name) => Obj.has(icons, getIconName(name, icons)));
+  return renderIcon(spec, iconName.getOr(defaultIconName), icons, Optional.none());
+};
 
 export {
+  get,
   getFirst,
   getOr,
-  get,
   render,
+  renderFirst,
   addFocusableBehaviour,
   needsRtlTransform
 };

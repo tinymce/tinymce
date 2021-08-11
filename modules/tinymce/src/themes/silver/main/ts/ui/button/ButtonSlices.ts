@@ -11,12 +11,12 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>): SimpleOrSketchSpec => {
-  // If RTL, add the RTL icon class for icons that don't have a `-rtl` icon available.
-  const rtlIconClasses = Icons.needsRtlTransform(iconName) ? [ ToolbarButtonClasses.IconRtl ] : [];
-  const iconHtml = Icons.get(iconName, iconsProvider);
-  return Icons.render('span', iconHtml, [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ].concat(rtlIconClasses), behaviours);
-};
+const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>): SimpleOrSketchSpec =>
+  Icons.render(iconName, {
+    tag: 'span',
+    classes: [ ToolbarButtonClasses.Icon, ToolbarButtonClasses.IconWrap ],
+    behaviours
+  }, iconsProvider);
 
 const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleOrSketchSpec =>
   renderIcon(iconName, iconsProvider, []);
