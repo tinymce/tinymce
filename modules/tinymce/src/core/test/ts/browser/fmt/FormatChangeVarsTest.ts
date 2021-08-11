@@ -1,6 +1,6 @@
 import { Waiter } from '@ephox/agar';
 import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Type } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -18,7 +18,7 @@ describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
     comicSans: [] as boolean[]
   };
 
-  let cleanup = null as null | (() => void);
+  const cleanup = Singleton.unbindable();
 
   const clearEvents = () => {
     events.general = [];
@@ -39,17 +39,17 @@ describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
       value: comicSansFont
     });
 
-    cleanup = () => {
-      general.unbind();
-      helvetica.unbind();
-      comicSans.unbind();
-    };
+    cleanup.set({
+      unbind: () => {
+        general.unbind();
+        helvetica.unbind();
+        comicSans.unbind();
+      }
+    });
   });
 
   after(() => {
-    if (Type.isNonNullable(cleanup)) {
-      cleanup();
-    }
+    cleanup.clear();
   });
 
   context('Simple cases', () => {

@@ -8,6 +8,7 @@
 import { Arr, Cell, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
+import * as NodeType from '../dom/NodeType';
 import { FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
@@ -35,7 +36,7 @@ interface CallbackGroup {
   readonly similarFalseState: Cell<boolean>;
   readonly similarFalseCallbacks: FormatChangeCallback[];
   // Then for callbacks that have variables, handle everything separately
-  readonly others: Array<CustomCallback>;
+  readonly others: CustomCallback[];
 }
 
 const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Editor) => {
@@ -70,16 +71,16 @@ const matchingNode = (editor: Editor, parents: Element[], format: string, simila
 const getParents = (editor: Editor, elm?: Element): Element[] => {
   const element = elm ?? editor.selection.getNode();
   return Arr.filter(FormatUtils.getParents(editor.dom, element), (node) =>
-    node.nodeType === 1 && !node.getAttribute('data-mce-bogus')
+    NodeType.isElement(node) && !node.getAttribute('data-mce-bogus')
   );
 };
 
 const hasChanged = (state: Cell<boolean>, newState: boolean): boolean => {
-  if (state.get() !== newState) {
+  if (state.get() === newState) {
+    return false;
+  } else {
     state.set(newState);
     return true;
-  } else {
-    return false;
   }
 };
 
@@ -91,7 +92,7 @@ const updateAndFireChangeCallbacks = (
   // Ignore bogus nodes like the <a> tag created by moveStart()
   const parents = getParents(editor, elm);
 
-  Obj.each(registeredCallbacks, (data: CallbackGroup, format: string) => {
+  Obj.each(registeredCallbacks, (data, format) => {
     if (data.similarCallbacks.length > 0) {
       const match = matchingNode(editor, parents, format, true);
       if (hasChanged(data.similarState, match.isSome())) {
