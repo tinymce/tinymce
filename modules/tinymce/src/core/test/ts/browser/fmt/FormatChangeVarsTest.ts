@@ -125,12 +125,13 @@ describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
       clearEvents();
     });
 
-    it('TINY-7713: Fires when editing styles without wrapping or unwrapping spans', () => {
+    it('TINY-7713: Fires when editing styles without wrapping or unwrapping spans', async () => {
       const editor = hook.editor();
       TinySelections.setCursor(editor, [ 0, 1 ], 0);
       clearEvents();
 
       editor.formatter.remove('fontname', { value: helveticaFont });
+      await Waiter.pWait(0);
       assert.deepEqual(events.general, [ false ], 'font-family has been turned off');
       assert.deepEqual(events.helvetica, [ false ], 'font-family helvetica has been turned off');
       clearEvents();
