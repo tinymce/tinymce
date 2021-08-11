@@ -84,7 +84,7 @@ const getData = (body: RequestBody): Optional<string | FormData | Blob> =>
     }
   });
 
-const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>): FutureResult<ResponseTypeMap[T], HttpError> => FutureResult.nu((callback) => {
+const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> => FutureResult.nu((callback) => {
   const request = new XMLHttpRequest();
   request.open(init.method, buildUrl(init.url, Optional.from(init.query)), true); // enforced async! enforced type as String!
 
@@ -92,7 +92,7 @@ const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>): 
   applyOptions(request, options);
 
   const onError = () => {
-    ResponseError.handle(init.url, init.responseType, request).get((err) => callback(Result.error(err)));
+    ResponseError.handle<T>(init.url, init.responseType, request).get((err) => callback(Result.error(err)));
   };
 
   const onLoad = () => {
@@ -103,7 +103,7 @@ const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>): 
     } else if (request.status < 100 || request.status >= 400) {
       onError();
     } else {
-      ResponseSuccess.validate(init.responseType, request).get(callback);
+      ResponseSuccess.validate<T>(init.responseType, request).get(callback);
     }
   };
 
@@ -120,16 +120,16 @@ const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>): 
 
 const empty = () => textData('');
 
-const post = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError> =>
+const post = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
   send({ ...init, method: HttpTypes.HttpMethod.Post });
 
-const put = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError> =>
+const put = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
   send({ ...init, method: HttpTypes.HttpMethod.Put });
 
-const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError> =>
+const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
   send({ ...init, method: HttpTypes.HttpMethod.Get, body: empty() });
 
-const del = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError> =>
+const del = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError<T>> =>
   send({ ...init, method: HttpTypes.HttpMethod.Delete, body: empty() });
 
 const sendProgress = (init: HttpTypes.DownloadHttpRequest, loaded: number) => {
@@ -140,12 +140,12 @@ const sendProgress = (init: HttpTypes.DownloadHttpRequest, loaded: number) => {
 
 const getMimeType = (headers: Headers) => Optional.from(headers.get('content-type')).map((value) => value.split(';')[0]);
 
-const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => FutureResult.nu((resolve) => {
+const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError<DataType.Blob>> => FutureResult.nu((resolve) => {
   const fail = (message: string, status: number) => {
-    resolve(Result.error({
+    resolve(Result.error<Blob, HttpError<DataType.Blob>>({
       message,
       status,
-      responseText: ''
+      responseText: new Blob()
     }));
   };
 
@@ -193,7 +193,7 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
   }).catch(failOnError);
 });
 
-const fallbackDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => {
+const fallbackDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError<DataType.Blob>> => {
   sendProgress(init, 0);
 
   return get({
@@ -206,7 +206,10 @@ const fallbackDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blo
   });
 };
 
-const download = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError> => Obj.get(Global, 'fetch').exists(Type.isFunction) ? fetchDownload(init) : fallbackDownload(init);
+const download = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, HttpError<DataType.Blob>> =>
+  Obj.get(Global, 'fetch').exists(Type.isFunction) ?
+    fetchDownload(init) :
+    fallbackDownload(init);
 
 export {
   send,

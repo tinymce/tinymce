@@ -8,7 +8,7 @@ import { HttpError } from 'ephox/jax/core/HttpError';
 
 /* eslint-disable no-console */
 
-const expectError = (label: string, response: FutureResult<any, HttpError>) => FutureResult.nu((callback) => {
+const expectError = (label: string, response: FutureResult<any, HttpError<DataType.JSON>>) => FutureResult.nu((callback) => {
   response.get((res) => {
     res.fold((_err) => {
       console.log(label, 'successfully failed');
@@ -19,7 +19,7 @@ const expectError = (label: string, response: FutureResult<any, HttpError>) => F
   });
 });
 
-const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>) => FutureResult.nu((callback) => {
+const expectValue = (label: string, value: any, response: FutureResult<any, HttpError<DataType.JSON>>) => FutureResult.nu((callback) => {
   response.get((res) => {
     res.fold((err) => {
       callback(Result.error(new Error(err.message)));
@@ -35,7 +35,7 @@ const expectValue = (label: string, value: any, response: FutureResult<any, Http
   });
 });
 
-const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError>) => FutureResult.nu((callback) => {
+const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError<DataType.Blob>>) => FutureResult.nu((callback) => {
   response.get((res) => {
     res.fold((err) => {
       callback(Result.error(new Error(err.message)));

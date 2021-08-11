@@ -1,5 +1,7 @@
 import { Result } from '@ephox/katamari';
 
+import { ResponseTypeMap } from './HttpData';
+
 export const enum HttpErrorCode {
   Created = 201,
   BadRequest = 400,
@@ -10,10 +12,10 @@ export const enum HttpErrorCode {
   InternalServerError = 500
 }
 
-export interface HttpError {
+export interface HttpError<T extends keyof ResponseTypeMap> {
   message: string;
   status: HttpErrorCode;
-  responseText: string;
+  responseText: ResponseTypeMap[T];
 }
 
-export const httpError = <T>(status: number, message: string, responseText: string): Result<T, HttpError> => Result.error<T>({ message, status, responseText });
+export const httpError = <T extends keyof ResponseTypeMap>(status: number, message: string, responseText: T): Result<T, HttpError<T>> => Result.error<T>({ message, status, responseText });
