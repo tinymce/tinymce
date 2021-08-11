@@ -7,7 +7,11 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getAutoLinkPattern = (editor: Editor) => editor.getParam('autolink_pattern', /^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.|(?:mailto:)?[A-Z0-9._%+\-]+@(?!.*@))(.+)$/i);
+const protocol = '[A-Za-z][A-Za-z\\d.+-]{0,14}:\\/\\/(?:[-.~*+=!&;:\'%@?^${}(),\\w]+@)?|www\\.|[-;:&=+$,.\\w]+@';
+const link = '[A-Za-z\\d-]+(?:\\.[A-Za-z\\d-]+)*(?::\\d+)?(?:\\/(?:[-+~=.,%()\\/\\w]*[-+~=%()\\/\\w])?)?(?:\\?(?:[-.~*+=!&;:\'%@?^${}(),\\/\\w]+))?(?:#(?:[-.~*+=!&;:\'%@?^${}(),\\/\\w]+))?';
+const defaultLinkPattern = () => new RegExp('^(' + protocol + ')(' + link + ')([-.~*+=!&;:\'%@?#^${}(),]*)$');
+
+const getAutoLinkPattern = (editor: Editor) => editor.getParam('autolink_pattern', defaultLinkPattern());
 
 const getDefaultLinkTarget = (editor: Editor) => {
   return editor.getParam('default_link_target', false);

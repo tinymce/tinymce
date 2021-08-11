@@ -291,6 +291,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed `imagetools` context menu icon for accessing the `image` dialog to use the `image` icon #TINY-4141
 - Changed the `editor.insertContent()` and `editor.selection.setContent()` APIs to retain leading and trailing whitespace #TINY-5966
 - Changed the `table` plugin `Column` menu to include the cut, copy and paste column menu items #TINY-6374
+- Changed the `autolink` plugin's link detection to permit custom protocols and reduce invalid link triggering #TINY-7714
 - Changed the default table styles in the content CSS files to better support the styling options available in the `table` dialog #TINY-6179
 
 ### Deprecated

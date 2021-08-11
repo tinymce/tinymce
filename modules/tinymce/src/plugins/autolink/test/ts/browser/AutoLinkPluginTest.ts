@@ -60,6 +60,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     const editor = hook.editor();
     assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
     assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com');
+    assertIsLink(editor, 'file://www.domain.com', 'file://www.domain.com');
+    assertIsLink(editor, 'customprotocol://www.domain.com', 'customprotocol://www.domain.com');
     assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
     assertIsLink(editor, 'ftp://www.domain.com', 'ftp://www.domain.com');
     assertIsLink(editor, 'www.domain.com', 'http://www.domain.com');
@@ -72,8 +74,6 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
   it('TINY-4773: AutoLink: Unexpected urls ended with space', () => {
     const editor = hook.editor();
     assertIsLink(editor, 'first-last@domain', 'mailto:first-last@domain'); // No .com or similar needed.
-    assertIsLink(editor, 'first-last@()', 'mailto:first-last@()'); // Anything goes after the @.
-    assertIsLink(editor, 'first-last@¶¶KJ', 'mailto:first-last@&para;&para;KJ', false, 'first-last@&para;&para;KJ'); // Anything goes after the @
   });
 
   it('TINY-4773: AutoLink: text which should not work', () => {
