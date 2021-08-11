@@ -171,7 +171,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]) => {
     const data = api.getData();
     findTemplate(templates, data.template).each((t) => {
       getTemplateContent(t).then((previewHtml) => {
-        Templates.insertTemplate(editor, false, previewHtml);
+        editor.execCommand('mceInsertTemplate', false, previewHtml);
         api.close();
       }).catch(() => {
         api.disable('save');
