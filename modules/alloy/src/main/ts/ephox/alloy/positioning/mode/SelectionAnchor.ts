@@ -36,10 +36,9 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
       const x = SugarElement.fromText(Unicode.zeroWidth);
       Insert.before(sel.start, x);
       // Certain things like <p><br/></p> with (p, 0) or <br>) as collapsed selection do not return a client rectangle
-      return WindowSelection.getFirstRect(win, SimSelection.exact(x, 0, x, 1)).map((rect) => {
-        Remove.remove(x);
-        return rect;
-      });
+      const rect = WindowSelection.getFirstRect(win, SimSelection.exact(x, 0, x, 1));
+      Remove.remove(x);
+      return rect;
     });
 
     return optRect.bind((rawRect) => ContentAnchorCommon.getBox(rawRect.left, rawRect.top, rawRect.width, rawRect.height));
