@@ -10,18 +10,17 @@ const headers = (headersInput: HttpRequest<ResponseBodyDataTypes>['headers'], to
   return headersInput ? { ...headersInput, ...authHeader } : authHeader;
 };
 
-type RunMethod<T, U extends ResponseType> = (token: JwtToken) => FutureResult<T, HttpError<U>>;
+type RunMethod<T extends ResponseType> = (token: JwtToken) => FutureResult<ResponseTypeMap[T], HttpError<T>>;
 
 const requestFreshToken = <T extends ResponseType>(tokenFactory: JwtTokenFactory): FutureResult<JwtToken, HttpError<T>> => tokenFactory(true);
 const requestCachedToken = <T extends ResponseType>(tokenFactory: JwtTokenFactory): FutureResult<JwtToken, HttpError<T>> => tokenFactory(false);
 
-const tryAgain = <T, U extends ResponseType>(tokenFactory: JwtTokenFactory, runMethod: RunMethod<T, U>) =>
+const tryAgain = <T extends ResponseType>(tokenFactory: JwtTokenFactory, runMethod: RunMethod<T>) =>
   (error: HttpError<U>) => error.status === HttpErrorCode.Unauthorized ? requestFreshToken<U>(tokenFactory).bindFuture(runMethod) : FutureResult.error(error);
 
-const runWithToken = <T extends ResponseType>(runMethod: RunMethod<ResponseTypeMap[T], T>, tokenFactory: JwtTokenFactory): FutureResult<T, HttpError<T>> =>
-  requestCachedToken<T>(tokenFactory)
-    .bindFuture<ResponseTypeMap[T]>(
-    (token) => runMethod(token).bind((result) => result.fold(tryAgain<T, T>(tokenFactory, runMethod), FutureResult.pure))
+const runWithToken = <T extends ResponseType>(runMethod: RunMethod<T>, tokenFactory: JwtTokenFactory): FutureResult<T, HttpError<T>> =>
+  requestCachedToken<T>(tokenFactory).bindFuture(
+    (token) => runMethod(token).bind((result) => result.fold(tryAgain<T>(tokenFactory, runMethod), FutureResult.pure))
   );
 
 export const post = <T extends ResponseType>(init: PostPutInit<T>, tokenFactory: JwtTokenFactory): FutureResult<T, HttpError<T>> =>
