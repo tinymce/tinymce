@@ -13,9 +13,9 @@ export const enum HttpErrorCode {
 }
 
 export interface HttpError<T extends ResponseType> {
-  message: string;
-  status: HttpErrorCode;
-  responseText: ResponseTypeMap[T];
+  readonly message: string;
+  readonly status: HttpErrorCode;
+  readonly responseText: ResponseTypeMap[T];
 }
 
 export const httpError = <T extends ResponseType>(status: number, message: string, responseText: T): Result<T, HttpError<T>> => Result.error<T>({ message, status, responseText });
