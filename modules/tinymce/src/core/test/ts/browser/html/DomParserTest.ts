@@ -764,4 +764,56 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     assert.equal(serializedHtml, html, 'Should be html with base64 uri retained');
   });
+
+  it('TINY-7756: Parsing invalid nested children', () => {
+    const parser = DomParser();
+    const html = '<table><button><a><meta></meta></a></button></table>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml, '<table></table>', 'Should remove all invalid children but keep empty table');
+  });
+
+  it('TINY-7756: Parsing invalid nested children with a valid child between', () => {
+    const parser = DomParser();
+    const html =
+      '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>' +
+              '<meta>' +
+                '<button>' +
+                  '<img/>' +
+                  '<button>' +
+                    '<a>' +
+                      '<meta></meta>' +
+                    '</a>' +
+                  '</button>' +
+                  '<img/>' +
+                '</button>' +
+              '</meta>' +
+            '</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(
+      serializedHtml,
+      '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>' +
+              '<button>' +
+                '<img />' +
+                '<button>' +
+                  '<a></a>' +
+                '</button>' +
+                '<img />' +
+              '</button>' +
+            '</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>'
+    );
+  });
 });

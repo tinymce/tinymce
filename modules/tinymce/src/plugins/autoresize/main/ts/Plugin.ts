@@ -19,7 +19,7 @@ import * as Resize from './core/Resize';
  * @private
  */
 
-export default () => {
+export default (): void => {
   PluginManager.add('autoresize', (editor) => {
     // If autoresize is enabled, disable resize if the user hasn't explicitly enabled it
     if (!Obj.has(editor.settings, 'resize')) {

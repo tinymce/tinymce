@@ -5,9 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
+
 import * as Storage from '../core/Storage';
 
-const get = (editor) => ({
+export interface Api {
+  readonly hasDraft: () => boolean;
+  readonly storeDraft: () => void;
+  readonly restoreDraft: () => void;
+  readonly removeDraft: (fire?: boolean) => void;
+  readonly isEmpty: () => boolean;
+}
+
+const get = (editor: Editor): Api => ({
   hasDraft: () => Storage.hasDraft(editor),
   storeDraft: () => Storage.storeDraft(editor),
   restoreDraft: () => Storage.restoreDraft(editor),

@@ -8,7 +8,7 @@ import { Selections } from '../selection/Selections';
 import * as SelectionTypes from '../selection/SelectionTypes';
 
 // Return an array of the selected elements
-const selection = (selections: Selections): SugarElement[] =>
+const selection = (selections: Selections): SugarElement<HTMLTableCellElement>[] =>
   SelectionTypes.cata(selections.get(),
     Fun.constant([]),
     Fun.identity,
@@ -27,7 +27,7 @@ const unmergable = (selections: Selections): Optional<SugarElement[]> => {
 const mergable = (table: SugarElement<HTMLTableElement>, selections: Selections, ephemera: Ephemera): Optional<RunOperation.ExtractMergable> =>
   SelectionTypes.cata<Optional<RunOperation.ExtractMergable>>(selections.get(),
     Optional.none,
-    (cells: SugarElement<Element>[]) => {
+    (cells) => {
       if (cells.length <= 1) {
         return Optional.none();
       } else {

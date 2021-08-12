@@ -16,7 +16,7 @@ export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
 
 // TODO Figure out if these properties should be on the ContentArgs types
 export type GetContentEvent = GetContentArgs & { source_view?: boolean; selection?: boolean; save?: boolean };
-export type SetContentEvent = SetContentArgs & { paste?: boolean; selection?: boolean };
+export type SetContentEvent = SetContentArgs & { source_view?: boolean; paste?: boolean; selection?: boolean };
 
 export interface NewBlockEvent { newBlock: Element }
 

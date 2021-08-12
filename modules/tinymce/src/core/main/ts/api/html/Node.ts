@@ -386,13 +386,13 @@ class AstNode {
   }
 
   /**
-   * Inserts a node at a specific position as a child of the current node.
+   * Inserts a node at a specific position as a child of this node.
    *
    * @example
    * parentNode.insert(newChildNode, oldChildNode);
    *
    * @method insert
-   * @param {tinymce.html.Node} node Node to insert as a child of the current node.
+   * @param {tinymce.html.Node} node Node to insert as a child of this node.
    * @param {tinymce.html.Node} refNode Reference node to set node before/after.
    * @param {Boolean} before Optional state to insert the node before the reference node.
    * @return {tinymce.html.Node} The node that got inserted.
@@ -433,11 +433,11 @@ class AstNode {
   }
 
   /**
-   * Get all children by name.
+   * Get all descendants by name.
    *
    * @method getAll
-   * @param {String} name Name of the child nodes to collect.
-   * @return {Array} Array with child nodes matchin the specified name.
+   * @param {String} name Name of the descendant nodes to collect.
+   * @return {Array} Array with descendant nodes matching the specified name.
    */
   public getAll(name: string): AstNode[] {
     const self = this;
@@ -447,6 +447,23 @@ class AstNode {
       if (node.name === name) {
         collection.push(node);
       }
+    }
+
+    return collection;
+  }
+
+  /**
+   * Get all children of this node.
+   *
+   * @method children
+   * @return {Array} Array containing child nodes.
+   */
+  public children(): AstNode[] {
+    const self = this;
+    const collection: AstNode[] = [];
+
+    for (let node = self.firstChild; node; node = node.next) {
+      collection.push(node);
     }
 
     return collection;

@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
 
   const onAction = () => editor.execCommand('mceCodeEditor');
 
