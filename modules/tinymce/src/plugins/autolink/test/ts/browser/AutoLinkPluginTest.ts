@@ -74,6 +74,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
   it('TINY-4773: AutoLink: Unexpected urls ended with space', () => {
     const editor = hook.editor();
     assertIsLink(editor, 'first-last@domain', 'mailto:first-last@domain'); // No .com or similar needed.
+    assertNoLink(editor, 'first-last@()', 'first-last@()');
+    assertNoLink(editor, 'first-last@¶¶KJ', 'first-last@&para;&para;KJ');
   });
 
   it('TINY-4773: AutoLink: text which should not work', () => {
