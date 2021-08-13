@@ -76,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The nested menu item chevron icon was not fading when the menu item was disabled #TINY-7700
 - The table dialog did not always respect the `table_style_with_css` option #TINY-4926
 - Pasting into a table with multiple cells selected could cause the content to be pasted in the wrong location #TINY-7485
+- `TableModified` event was not fired when pasting cells into table via `Ctrl+V` #TINY-6939
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260
