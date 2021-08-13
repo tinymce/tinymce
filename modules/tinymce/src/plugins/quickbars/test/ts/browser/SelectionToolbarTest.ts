@@ -25,14 +25,13 @@ describe('browser.tinymce.plugins.quickbars.SelectionToolbarTest', () => {
 
   const imgSrc = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
-  const pAssertButtonToggledState = async (name: string, state: boolean) => {
-    const button = await UiFinder.pWaitForVisible('Wait for button', SugarBody.body(), `.tox-toolbar button[aria-label="${name}"]`);
-    await Waiter.pTryUntil('Wait for toolbar button state', () => {
+  const pAssertButtonToggledState = (name: string, state: boolean) =>
+    Waiter.pTryUntil('Wait for toolbar button state', () => {
+      const button = UiFinder.findIn(SugarBody.body(), `.tox-toolbar button[aria-label="${name}"]`).getOrDie();
       return Assertions.assertStructure('', ApproxStructure.build((s, _str, arr) => s.element('button', {
         classes: [ state ? arr.has('tox-tbtn--enabled') : arr.not('tox-tbtn--enabled') ]
       })), button);
     });
-  };
 
   const pWaitForTextToolbarAndAssertState = async (bold: boolean, italic: boolean, heading2: boolean, heading3: boolean, link: boolean, blockquote: boolean) => {
     await pAssertButtonToggledState('Bold', bold);

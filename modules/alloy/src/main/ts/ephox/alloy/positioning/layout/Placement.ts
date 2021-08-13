@@ -21,7 +21,11 @@ const setPlacement = (element: SugarElement<HTMLElement>, placement: Placement):
 const getPlacement = (element: SugarElement<HTMLElement>): Optional<Placement> =>
   Attribute.getOpt(element, placementAttribute) as Optional<Placement>;
 
+const reset = (element: SugarElement<HTMLElement>): void =>
+  Attribute.remove(element, placementAttribute);
+
 export {
   setPlacement,
-  getPlacement
+  getPlacement,
+  reset
 };

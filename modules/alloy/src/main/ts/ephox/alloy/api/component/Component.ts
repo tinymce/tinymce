@@ -107,6 +107,7 @@ const build = (spec: ComponentDetail): AlloyComponent => {
   const readState = (behaviourName: string): any => bData[behaviourName]().map((b) => b.state.readState()).getOr('not enabled');
 
   const me: AlloyComponent = {
+    uid: spec.uid,
     getSystem: systemApi.get,
     config,
     hasConfigured,

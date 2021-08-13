@@ -72,6 +72,7 @@ const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void 
       'contextmenu',
       'change',
       'transitionend',
+      'transitioncancel',
       // Test the drag events
       'drag',
       'dragstart',

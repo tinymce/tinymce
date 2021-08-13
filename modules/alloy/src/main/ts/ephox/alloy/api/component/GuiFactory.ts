@@ -61,11 +61,11 @@ const external = (spec: ExternalElement): PremadeSpec => {
     systemApi.set(NoContextApi(() => me));
   };
 
-  extSpec.uid.each((uid) => {
-    Tagger.writeOnly(extSpec.element, uid);
-  });
+  const uid = extSpec.uid.getOrThunk(() => Tagger.generate('external'));
+  Tagger.writeOnly(extSpec.element, uid);
 
   const me: AlloyComponent = {
+    uid,
     getSystem: systemApi.get,
     config: Optional.none,
     hasConfigured: Fun.never,

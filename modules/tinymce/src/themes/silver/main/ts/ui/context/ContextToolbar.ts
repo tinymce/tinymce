@@ -6,13 +6,12 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Bounds, GuiFactory, InlineView, Keying,
-  Positioning
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, GuiFactory, InlineView, Keying, Positioning
 } from '@ephox/alloy';
 import { InlineContent, Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Id, Merger, Obj, Optional, Optionals, Singleton, Thunk } from '@ephox/katamari';
+import { Arr, Fun, Id, Merger, Obj, Optional, Optionals, Singleton, Throttler, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Focus, SugarElement } from '@ephox/sugar';
+import { Class, Compare, Css, Focus, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -45,6 +44,8 @@ const enum TriggerCause {
   NewAnchor
 }
 
+const transitionClass = 'tox-pop--transition';
+
 const register = (editor: Editor, registryContextToolbars: Record<string, ContextSpecType>, sink: AlloyComponent, extras: Extras) => {
   const backstage = extras.backstage;
   const sharedBackstage = backstage.shared;
@@ -52,7 +53,6 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
   const lastElement = Singleton.value<SugarElement<Element>>();
   const lastTrigger = Singleton.value<TriggerCause>();
-  const lastBounds = Singleton.value<Bounds>();
   const lastContextPosition = Singleton.value<InlineContent.ContextPosition>();
 
   const contextbar = GuiFactory.build(
@@ -67,15 +67,19 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
   const getBounds = () => {
     const position = lastContextPosition.get().getOr('node');
-    const bounds = ContextToolbarBounds.getContextToolbarBounds(editor, sharedBackstage, position);
-    lastBounds.set(bounds);
-    return bounds;
+    // Use a 1px margin for the bounds to keep the context toolbar from butting directly against
+    // the header, etc... when switching to inset layouts
+    const margin = ContextToolbarAnchor.shouldUseInsetLayouts(position) ? 1 : 0;
+    return ContextToolbarBounds.getContextToolbarBounds(editor, sharedBackstage, position, margin);
   };
 
   const canLaunchToolbar = () => {
     // If a mobile context menu is open, don't launch else they'll probably overlap. For android, specifically.
     return !editor.removed && !(isTouch() && backstage.isContextMenuOpen());
   };
+
+  const isSameLaunchElement = (elem: Optional<SugarElement<Element>>) =>
+    Optionals.is(Optionals.lift2(elem, lastElement.get(), Compare.eq), true);
 
   const shouldContextToolbarHide = (): boolean => {
     if (!canLaunchToolbar()) {
@@ -88,15 +92,13 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
         ContextToolbarBounds.getSelectionBounds(editor);
 
       // If the anchor bounds aren't overlapping with the context toolbar bounds, then the context toolbar should hide
-      // Note: We want to avoid showing with small difference such as 0.001px so we ensure at least 0.5px is visible
-      return !ContextToolbarBounds.isVerticalOverlap(anchorBounds, contextToolbarBounds, 0.5);
+      return contextToolbarBounds.height <= 0 || !ContextToolbarBounds.isVerticalOverlap(anchorBounds, contextToolbarBounds);
     }
   };
 
   const close = () => {
     lastElement.clear();
     lastTrigger.clear();
-    lastBounds.clear();
     lastContextPosition.clear();
     InlineView.hide(contextbar);
   };
@@ -177,14 +179,13 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     const anchorLayout = ContextToolbarAnchor.getAnchorLayout(editor, position, isTouch(), {
       lastElement: lastElement.get,
       isReposition: () => Optionals.is(lastTrigger.get(), TriggerCause.Reposition),
-      bounds: lastBounds.get,
       getMode: () => Positioning.getMode(sink)
     });
     return Merger.deepMerge(anchorage, anchorLayout);
   };
 
   const launchContext = (toolbarApi: Array<ContextType>, elem: Optional<SugarElement<Element>>) => {
-    launchContextToolbar.stop();
+    launchContextToolbar.cancel();
 
     // Don't launch if the editor has something else open that would conflict
     if (!canLaunchToolbar()) {
@@ -203,7 +204,21 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
     const contextBarEle = contextbar.element;
     Css.remove(contextBarEle, 'display');
-    InlineView.showWithinBounds(contextbar, anchor, wrapInPopDialog(toolbarSpec), () => Optional.some(getBounds()));
+
+    // Reset placement and transitions when moving to different elements
+    if (!isSameLaunchElement(elem)) {
+      Class.remove(contextBarEle, transitionClass);
+      Positioning.reset(sink, contextbar);
+    }
+
+    // Place the element
+    InlineView.showWithinBounds(contextbar, wrapInPopDialog(toolbarSpec), {
+      anchor,
+      transition: {
+        classes: [ transitionClass ],
+        mode: 'placement'
+      }
+    }, () => Optional.some(getBounds()));
 
     // IMPORTANT: This must be stored after the initial render, otherwise the lookup of the last element in the
     // anchor placement will be incorrect as it'll reuse the new element as the anchor point.
@@ -215,25 +230,32 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     }
   };
 
-  const launchContextToolbar = Delay.debounce(() => {
+  const launchContextToolbar = Throttler.last(() => {
     // Don't launch if the editor doesn't have focus or has been destroyed
     if (!editor.hasFocus() || editor.removed) {
       return;
     }
 
-    const scopes = getScopes();
-    ToolbarLookup.lookup(scopes, editor).fold(
-      close,
-      (info) => launchContext(info.toolbars, Optional.some(info.elem))
-    );
-  }, 0);
+    // If currently transitioning then throttle again so we don't interrupt the transition
+    if (Class.has(contextbar.element, transitionClass)) {
+      launchContextToolbar.throttle();
+    } else {
+      const scopes = getScopes();
+      ToolbarLookup.lookup(scopes, editor).fold(
+        close,
+        (info) => {
+          launchContext(info.toolbars, Optional.some(info.elem));
+        }
+      );
+    }
+  }, 17); // 17ms is used as that's about about 1 frame at 60fps
 
   editor.on('init', () => {
     editor.on('remove', close);
     editor.on('ScrollContent ScrollWindow ObjectResized ResizeEditor longpress', hideOrRepositionIfNecessary);
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
-    editor.on('click keyup focus SetContent', launchContextToolbar);
+    editor.on('click keyup focus SetContent', launchContextToolbar.throttle);
 
     editor.on(hideContextToolbarEvent, close);
     editor.on(showContextToolbarEvent, (e) => {
@@ -265,13 +287,13 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       if (event.state) {
         close();
       } else if (editor.hasFocus()) {
-        launchContextToolbar();
+        launchContextToolbar.throttle();
       }
     });
 
     editor.on('NodeChange', (_e) => {
       Focus.search(contextbar.element).fold(
-        launchContextToolbar,
+        launchContextToolbar.throttle,
         Fun.noop
       );
     });

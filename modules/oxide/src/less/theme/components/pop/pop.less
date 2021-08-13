@@ -13,6 +13,7 @@
 @pop-border-radius: @panel-border-radius;
 @pop-border-color: @border-color;
 @pop-box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
+@pop-transition-time: .15s;
 
 .tox {
   .tox-pop {
@@ -23,9 +24,21 @@
   .tox-pop--resizing {
     transition: width .1s ease;
 
-    .tox-toolbar {
+    .tox-toolbar,
+    .tox-toolbar__group {
       // When the toolbar is resizing, it won't fit into its container. Therefore, turn off wrapping
       flex-wrap: nowrap;
+    }
+  }
+
+  .tox-pop--transition {
+    transition: @pop-transition-time ease;
+    transition-property: left, right, top, bottom;
+
+    // Make the arrow transition in as the bubble arrow appears
+    &::before,
+    &::after {
+      transition: all @pop-transition-time, visibility 0s, opacity @pop-transition-time / 2 ease @pop-transition-time / 2;
     }
   }
 
@@ -60,14 +73,16 @@
     content: '';
     display: block;
     height: 0;
+    opacity: 1;
     position: absolute;
     width: 0;
   }
 
-  // Hide the arrows on inset layouts
+  // Hide the arrows on inset layouts and make the arrow transition as it disappears
   .tox-pop.tox-pop--inset::before,
   .tox-pop.tox-pop--inset::after {
     opacity: 0;
+    transition: all 0s @pop-transition-time, visibility 0s, opacity @pop-transition-time / 2 ease;
   }
 
   // Default (bottom) pointing arrow

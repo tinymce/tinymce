@@ -17,3 +17,8 @@ export const cycleBy = (value: number, delta: number, min: number, max: number):
 // ASSUMPTION: Max will always be larger than min
 export const clamp = (value: number, min: number, max: number): number =>
   Math.min(Math.max(value, min), max);
+
+export const toPrecision = (value: number, precision: number): number => {
+  const mul = Math.pow(10, precision);
+  return Math.round(value * mul) / mul;
+};
