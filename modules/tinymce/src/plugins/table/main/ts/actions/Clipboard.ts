@@ -68,6 +68,7 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
               editor.selection.setRng(data.rng);
               editor.focus();
               cellSelection.clear(table);
+              editor.fire('TableModified', { ...data, table });
             });
           }
         });
