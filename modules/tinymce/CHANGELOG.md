@@ -71,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `imagetools` buttons were incorrectly enabled for remote images without `imagetools_proxy` set #TINY-7772
 - Removing a table row or column could result in the cursor getting placed in an invalid location #TINY-7695
 - Pressing the Tab key to navigate through table cells did not skip noneditable cells #TINY-7705
+- Clicking on a noneditable table cell did not show a visual selection like other noneditable elements #TINY-7724
 - Some table operations would incorrectly cause table row attributes and styles to be lost #TINY-6666
 - The selection was incorrectly lost when using the `mceTableCellType` and `mceTableRowType` commands #TINY-6666
 - The `mceTableRowType` was reversing the order of the rows when converting multiple header rows back to body rows #TINY-6666

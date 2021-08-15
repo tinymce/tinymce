@@ -16,6 +16,7 @@ export interface WindowBridge {
   setSelection: (sel: SimRange) => void;
   setRelativeSelection: (start: Situ, finish: Situ) => void;
   selectContents: (element: SugarElement) => void;
+  selectNode: (element: SugarElement) => void;
   getInnerHeight: () => number;
   getScrollY: () => number;
   scrollBy: (x: number, y: number) => void;
@@ -71,7 +72,11 @@ export const WindowBridge = (win: Window): WindowBridge => {
     ));
   };
 
-  const selectContents = (element: SugarElement) => {
+  const selectNode = (element: SugarElement<Node>) => {
+    WindowSelection.setToElement(win, element, false);
+  };
+
+  const selectContents = (element: SugarElement<Node>) => {
     WindowSelection.setToElement(win, element);
   };
 
@@ -107,6 +112,7 @@ export const WindowBridge = (win: Window): WindowBridge => {
     collapseSelection,
     setSelection,
     setRelativeSelection,
+    selectNode,
     selectContents,
     getInnerHeight,
     getScrollY,

@@ -1,7 +1,7 @@
-import { Assertions } from '@ephox/agar';
+import { Assertions, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/mcagar';
 import { Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -109,5 +109,46 @@ describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
     const editor = hook.editor();
     editor.setContent('<table><tr><td data-mce-selected="1">a</td><td>b</td></tr><tr><td data-mce-selected="1">c</td><td>d</td></tr></table>', { format: 'raw' });
     assertSelectionContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>c</td></tr></tbody></table>');
+  });
+
+  it('TINY-7724: can select single CEF cell', () => {
+    const editor = hook.editor();
+    assertTableSelection(
+      editor,
+      '<table><tr><td contenteditable="false">1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>',
+      [ '1', '1' ],
+      [ '1' ]
+    );
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 1
+    });
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+  });
+
+  it('TINY-7724: can select CEF cell and normal cell', () => {
+    const editor = hook.editor();
+    assertTableSelection(
+      editor,
+      '<table><tr><td contenteditable="false">1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>',
+      [ '1', '3' ],
+      [ '1', '3' ]
+    );
+  });
+
+  it('TINY-7724: can select other cells from CEF cell selection', () => {
+    const editor = hook.editor();
+    assertTableSelection(
+      hook.editor(),
+      '<table><tr><td contenteditable="false">1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>',
+      [ '1', '1' ],
+      [ '1' ]
+    );
+
+    TinyContentActions.keystroke(editor, Keys.right(), { shiftKey: true });
+    assertSelectedCells(editor, [ '1', '2' ], Html.get);
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-first-selected="1"]:not([data-mce-last-selected="1"])': 1,
+      'td:not([contenteditable="false"][data-mce-first-selected="1"])[data-mce-last-selected="1"]': 1
+    });
   });
 });
