@@ -154,25 +154,21 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       tag: 'button',
       classes: [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
     },
-    components: [{
-      dom: {
+    components: [
+      Icons.render('close', {
         tag: 'div',
         classes: [ 'tox-icon' ],
-        innerHtml: Icons.get('close', detail.iconProvider),
         attributes: {
           'aria-label': detail.translationProvider('Close')
         }
-      },
-      behaviours: Behaviour.derive([
-        Icons.addFocusableBehaviour()
-      ])
-    }],
+      }, detail.iconProvider)
+    ],
     action: (comp) => {
       detail.onAction(comp);
     }
   }));
 
-  const notificationIconSpec = Icons.render('div', Icons.getFirst(iconChoices, detail.iconProvider), [ 'tox-notification__icon' ]);
+  const notificationIconSpec = Icons.renderFirst(iconChoices, { tag: 'div', classes: [ 'tox-notification__icon' ] }, detail.iconProvider);
   const notificationBodySpec = {
     dom: {
       tag: 'div',
