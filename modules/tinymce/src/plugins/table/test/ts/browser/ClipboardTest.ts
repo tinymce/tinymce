@@ -736,13 +736,17 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
 
   it('TINY-6939: Pasting into a table should fire TableModified event', () => {
     const editor = hook.editor();
+    let events: Array<TableEventData> = [];
 
-    let callbackCalled = false;
-    let event: TableEventData = { structure: false, style: false };
     const callback = (e: TableEventData) => {
-      callbackCalled = true;
-      event = e;
+      events.push({
+        structure: e.structure,
+        style: e.style,
+      });
     };
+
+    const clearEvents = () => events = [];
+    clearEvents();
 
     editor.on('TableModified', callback);
     editor.setContent(
@@ -758,8 +762,8 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
         '</tbody></table>'
     });
 
-    assert.isTrue(callbackCalled);
-    assert.isTrue(event.structure);
-    assert.isTrue(event.style);
+    assert.deepEqual(events, [{ structure: true, style: true }]);
+
+    clearEvents();
   });
 });
