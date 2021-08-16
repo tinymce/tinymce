@@ -48,6 +48,7 @@ const fireTableModified = (editor: Editor, table: HTMLTableElement, data: TableE
 
 const styleModified: TableEventData = { structure: false, style: true };
 const structureModified: TableEventData = { structure: true, style: false };
+const styleAndStructureModified: TableEventData = { structure: true, style: true };
 
 export {
   fireNewRow,
@@ -58,5 +59,6 @@ export {
   fireTableSelectionClear,
   fireTableModified,
   styleModified,
-  structureModified
+  structureModified,
+  styleAndStructureModified
 };

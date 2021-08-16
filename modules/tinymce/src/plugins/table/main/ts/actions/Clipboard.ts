@@ -12,6 +12,7 @@ import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
+import * as Events from '../api/Events';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
@@ -68,6 +69,7 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
               editor.selection.setRng(data.rng);
               editor.focus();
               cellSelection.clear(table);
+              Events.fireTableModified(editor, table.dom, data.effect);
             });
           }
         });

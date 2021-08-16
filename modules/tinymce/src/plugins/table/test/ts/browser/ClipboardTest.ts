@@ -6,6 +6,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import { TableEventData } from 'tinymce/plugins/table/api/Events';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -731,5 +732,35 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       '<tr><td>&nbsp;</td><td>C</td><td>D</td></tr>' +
       '</tbody></table>'
     );
+  });
+
+  it('TINY-6939: Pasting into a table should fire TableModified event', () => {
+    const editor = hook.editor();
+    const events: TableEventData[] = [];
+
+    const callback = (e: TableEventData) => {
+      events.push({
+        structure: e.structure,
+        style: e.style,
+      });
+    };
+
+    editor.on('TableModified', callback);
+    editor.setContent(
+      '<table><tbody>' +
+      '<tr><td>A</td><td>B</td></tr>' +
+      '</tbody></table>'
+    );
+
+    selectRangeXY(editor, 'table tr td:nth-child(1)', 'table tr td:nth-child(2)');
+    Clipboard.pasteItems(TinyDom.body(editor), {
+      'text/html': '<table><tbody>' +
+        '<tr><td>1</td><td>2</td></tr>' +
+        '</tbody></table>'
+    });
+
+    assert.deepEqual(events, [{ structure: true, style: true }]);
+
+    editor.off('TableModified', callback);
   });
 });

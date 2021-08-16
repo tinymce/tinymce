@@ -140,7 +140,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
 
   const pasteRowsAfter = execute(TableOperations.pasteRowsAfter, Fun.always, Fun.noop, lazyWire, Events.structureModified);
 
-  const pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, lazyWire, Events.styleAndStructureModified);
 
   const makeCellsHeader = execute(TableOperations.makeCellsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
   const unmakeCellsHeader = execute(TableOperations.unmakeCellsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
