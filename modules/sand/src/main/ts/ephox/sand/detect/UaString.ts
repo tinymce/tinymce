@@ -1,12 +1,8 @@
 import { Arr, Optional } from '@ephox/katamari';
 
 import { PlatformInfo } from '../info/PlatformInfo';
+import { UaInfo } from '../info/UaInfo';
 import { Version } from './Version';
-
-export interface UaString {
-  current: string | undefined;
-  version: Version;
-}
 
 const detect = (candidates: PlatformInfo[], userAgent: any): Optional<PlatformInfo> => {
   const agent = String(userAgent).toLowerCase();
@@ -17,8 +13,8 @@ const detect = (candidates: PlatformInfo[], userAgent: any): Optional<PlatformIn
 
 // They (browser and os) are the same at the moment, but they might
 // not stay that way.
-const detectBrowser = (browsers: PlatformInfo[], userAgent: any): Optional<UaString> => {
-  return detect(browsers, userAgent).map((browser): UaString => {
+const detectBrowser = (browsers: PlatformInfo[], userAgent: any): Optional<UaInfo> => {
+  return detect(browsers, userAgent).map((browser): UaInfo => {
     const version = Version.detect(browser.versionRegexes, userAgent);
     return {
       current: browser.name,
@@ -27,8 +23,8 @@ const detectBrowser = (browsers: PlatformInfo[], userAgent: any): Optional<UaStr
   });
 };
 
-const detectOs = (oses: PlatformInfo[], userAgent: any): Optional<UaString> => {
-  return detect(oses, userAgent).map((os): UaString => {
+const detectOs = (oses: PlatformInfo[], userAgent: any): Optional<UaInfo> => {
+  return detect(oses, userAgent).map((os): UaInfo => {
     const version = Version.detect(os.versionRegexes, userAgent);
     return {
       current: os.name,
