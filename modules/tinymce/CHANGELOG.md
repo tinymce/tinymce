@@ -76,7 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `mceTableRowType` was reversing the order of the rows when converting multiple header rows back to body rows #TINY-6666
 - The nested menu item chevron icon was not fading when the menu item was disabled #TINY-7700
 - The table dialog did not always respect the `table_style_with_css` option #TINY-4926
-- Pasting into a table with multiple cells selected could cause the content to be pasted in the wrong location #TINY-748
+- Pasting into a table with multiple cells selected could cause the content to be pasted in the wrong location #TINY-7485
 - The `TableModified` event was not fired when pasting cells into a table #TINY-6939
 - Base64 encoded images with spaces or line breaks in the data URI were not displayed correctly. Patch contributed by RoboBurned
 
