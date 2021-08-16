@@ -32,7 +32,7 @@ export interface HttpResponse<T extends ResponseBody> {
 }
 
 export type JwtToken = string;
-export type JwtTokenFactory = <T extends ResponseType>(fresh: boolean) => FutureResult<JwtToken, HttpError<T>>;
+export type JwtTokenFactory<T extends ResponseType> = (fresh: boolean) => FutureResult<JwtToken, HttpError<T>>;
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
