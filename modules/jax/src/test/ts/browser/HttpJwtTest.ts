@@ -42,7 +42,7 @@ const expectValue = (label: string, value: any, response: FutureResult<any, Http
 UnitTest.asynctest('HttpTest', (success, failure) => {
   const invalidCalls: string[] = [];
   const validCalls: string[] = [];
-  const fakeFactory = (calls: string[]): JwtTokenFactory => (fresh) => {
+  const fakeFactory = (calls: string[]): JwtTokenFactory<DataType.JSON> => (fresh) => {
     if (fresh) {
       calls.push('fresh');
       return FutureResult.value('token');
