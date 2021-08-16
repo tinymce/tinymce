@@ -16,7 +16,7 @@ const requestFreshToken = <T extends ResponseType>(tokenFactory: JwtTokenFactory
 const requestCachedToken = <T extends ResponseType>(tokenFactory: JwtTokenFactory): FutureResult<JwtToken, HttpError<T>> => tokenFactory(false);
 
 const tryAgain = <T extends ResponseType>(tokenFactory: JwtTokenFactory, runMethod: RunMethod<T>) =>
-  (error: HttpError<U>) => error.status === HttpErrorCode.Unauthorized ? requestFreshToken<U>(tokenFactory).bindFuture(runMethod) : FutureResult.error(error);
+  (error: HttpError<T>) => error.status === HttpErrorCode.Unauthorized ? requestFreshToken<T>(tokenFactory).bindFuture(runMethod) : FutureResult.error(error);
 
 const runWithToken = <T extends ResponseType>(runMethod: RunMethod<T>, tokenFactory: JwtTokenFactory): FutureResult<T, HttpError<T>> =>
   requestCachedToken<T>(tokenFactory).bindFuture(
