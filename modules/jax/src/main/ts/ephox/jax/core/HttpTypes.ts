@@ -1,6 +1,6 @@
 import { FutureResult } from '@ephox/katamari';
 
-import { RequestBody, ResponseBody, ResponseBodyDataTypes } from './HttpData';
+import { RequestBody, ResponseBody, ResponseBodyDataTypes, ResponseType } from './HttpData';
 import { HttpError } from './HttpError';
 
 export const enum HttpMethod {
@@ -32,7 +32,7 @@ export interface HttpResponse<T extends ResponseBody> {
 }
 
 export type JwtToken = string;
-export type JwtTokenFactory = (fresh: boolean) => FutureResult<JwtToken, HttpError>;
+export type JwtTokenFactory<T extends ResponseType> = (fresh: boolean) => FutureResult<JwtToken, HttpError<T>>;
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
