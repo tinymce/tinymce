@@ -87,6 +87,17 @@ describe('atomic.tinymce.core.html.Base64UrisTest', () => {
         }
       }
     );
+
+    testExtract(
+      'Should extract base64 encoded thing with spaces, tabs and line breaks in data',
+      '<img src="data:some/thing;base64,SGVsbG8sI\r\n  Hdv		cmxkIQ==">',
+      {
+        html: '<img src="$prefix_0">',
+        uris: {
+          $prefix_0: 'data:some/thing;base64,SGVsbG8sI\r\n  Hdv		cmxkIQ=='
+        }
+      }
+    );
   });
 
   const testRestoreDataUris = (label: string, inputResult: Base64Extract, inputHtml: string, expectedHtml: string) => {
@@ -121,5 +132,6 @@ describe('atomic.tinymce.core.html.Base64UrisTest', () => {
     KAssert.eqOptional('Mime with plus', Optional.some({ type: 'image/svg+xml', data: 'R2/yw==' }), parseDataUri('data:image/svg+xml;base64,R2/yw=='));
     KAssert.eqOptional('Data uri without mime', Optional.none(), parseDataUri('data:base64,R3/yw=='));
     KAssert.eqOptional('Data uri without base64', Optional.none(), parseDataUri('data:image/svg+xml,R4/yw=='));
+    KAssert.eqOptional('Data with spaces, tabs and line breaks', Optional.some({ type: 'image/png', data: 'SGVsbG8sI\r\n  Hdv		cmxkIQ==' }), parseDataUri('data:image/png;base64,SGVsbG8sI\r\n  Hdv		cmxkIQ=='));
   });
 });

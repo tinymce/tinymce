@@ -56,3 +56,11 @@
 button::-moz-focus-inner {
   border: 0;
 }
+
+// RTL
+.tox[dir=rtl] {
+  // Rotates configured icons 180 degrees when rendering in RTL
+  .tox-icon--flip svg {
+    transform: rotateY(180deg);
+  }
+}

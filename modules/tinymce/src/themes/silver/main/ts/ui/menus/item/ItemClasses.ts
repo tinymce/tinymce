@@ -26,7 +26,6 @@ const accessoryClass = 'tox-collection__item-accessory';
 const caretClass = 'tox-collection__item-caret';
 const checkmarkClass = 'tox-collection__item-checkmark';
 const activeClass = 'tox-collection__item--active';
-const iconClassRtl = 'tox-collection__item-icon-rtl';
 
 const containerClass = 'tox-collection__item-container';
 const containerColumnClass = 'tox-collection__item-container--column';
@@ -54,7 +53,6 @@ export {
   accessoryClass,
   caretClass,
   checkmarkClass,
-  iconClassRtl,
   containerClass,
   containerColumnClass,
   containerRowClass,

@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When scrolling, the context toolbar will stick to where it was previously for large elements, such as tables #TINY-7545
 - The context toolbar will now move out of the way when it overlaps with the selection, such as in table cells #TINY-7192
 - The `formatter.match` API can now take an optional `similar` parameter to check if the format partial matches #TINY-7712
+- Icons with a `-rtl` suffix in their name will now automatically be used when the UI is rendered in right-to-left mode #TINY-7782
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents #TINY-7249
@@ -75,8 +76,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `mceTableRowType` was reversing the order of the rows when converting multiple header rows back to body rows #TINY-6666
 - The nested menu item chevron icon was not fading when the menu item was disabled #TINY-7700
 - The table dialog did not always respect the `table_style_with_css` option #TINY-4926
-- Pasting into a table with multiple cells selected could cause the content to be pasted in the wrong location #TINY-7485
+- Pasting into a table with multiple cells selected could cause the content to be pasted in the wrong location #TINY-748
 - The `TableModified` event was not fired when pasting cells into a table #TINY-6939
+- Base64 encoded images with spaces or line breaks in the data URI were not displayed correctly. Patch contributed by RoboBurned
 
 ### Deprecated
 - The `bbcode`, `fullpage`, `legacyoutput` and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260
