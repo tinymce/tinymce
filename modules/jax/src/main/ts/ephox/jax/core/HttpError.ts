@@ -18,4 +18,4 @@ export interface HttpError<T extends ResponseType> {
   readonly responseText: ResponseTypeMap[T];
 }
 
-export const httpError = <T extends ResponseType>(status: number, message: string, responseText: T): Result<T, HttpError<T>> => Result.error<T>({ message, status, responseText });
+export const httpError = <T extends ResponseType>(status: number, message: string, responseText: ResponseTypeMap[T]): Result<T, HttpError<T>> => Result.error<T>({ message, status, responseText });
