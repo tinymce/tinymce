@@ -150,6 +150,7 @@ interface BaseEditorSettings {
   no_newline_selector?: string;
   nowrap?: boolean;
   object_resizing?: boolean | string;
+  padd_empty_with_br?: boolean;
   placeholder?: string;
   preserve_cdata?: boolean;
   preview_styles?: boolean | string;
@@ -196,6 +197,7 @@ interface BaseEditorSettings {
   valid_classes?: string | Record<string, string>;
   valid_elements?: string;
   valid_styles?: string | Record<string, string>;
+  verify_html?: boolean;
   visual?: boolean;
   visual_anchor_class?: string;
   visual_table_class?: string;
@@ -220,6 +222,7 @@ interface BaseEditorSettings {
   text_block_elements?: string;
   text_inline_elements?: string;
   whitespace_elements?: string;
+  special?: string;
 
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;

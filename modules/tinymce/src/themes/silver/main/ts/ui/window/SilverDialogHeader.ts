@@ -33,7 +33,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
     }
   },
   components: [
-    Icons.render('div', Icons.get('close', providersBackstage.icons), [ 'tox-icon' ])
+    Icons.render('close', { tag: 'div', classes: [ 'tox-icon' ] }, providersBackstage.icons)
   ],
   action: (comp) => {
     AlloyTriggers.emit(comp, formCancelEvent);

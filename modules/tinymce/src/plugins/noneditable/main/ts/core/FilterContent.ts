@@ -6,20 +6,19 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { SetContentEvent } from 'tinymce/core/api/EventTypes';
 import AstNode from 'tinymce/core/api/html/Node';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Settings from '../api/Settings';
 
-const hasClass = (checkClassName: string) => {
-  return (node: AstNode) => {
-    return (' ' + node.attr('class') + ' ').indexOf(checkClassName) !== -1;
-  };
-};
+const hasClass = (checkClassName: string) => (node: AstNode): boolean =>
+  (' ' + node.attr('class') + ' ').indexOf(checkClassName) !== -1;
 
 const replaceMatchWithSpan = (editor: Editor, content: string, cls: string) => {
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-  return function (match) {
+  return function (match: string): string {
     const args = arguments, index = args[args.length - 2];
     const prevChar = index > 0 ? content.charAt(index - 1) : '';
 
@@ -46,7 +45,7 @@ const replaceMatchWithSpan = (editor: Editor, content: string, cls: string) => {
   };
 };
 
-const convertRegExpsToNonEditable = (editor: Editor, nonEditableRegExps, e) => {
+const convertRegExpsToNonEditable = (editor: Editor, nonEditableRegExps: RegExp[], e: EditorEvent<SetContentEvent>): void => {
   let i = nonEditableRegExps.length, content = e.content;
 
   // Don't replace the variables when raw is used for example on undo/redo
@@ -61,7 +60,7 @@ const convertRegExpsToNonEditable = (editor: Editor, nonEditableRegExps, e) => {
   e.content = content;
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   const contentEditableAttrName = 'contenteditable';
 
   const editClass = ' ' + Tools.trim(Settings.getEditableClass(editor)) + ' ';

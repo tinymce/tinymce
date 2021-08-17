@@ -103,7 +103,10 @@ const renderCommonDropdown = <T>(
     }
   );
 
-  const iconSpec = Icons.render('div', Icons.get('chevron-down', sharedBackstage.providers.icons), [ `${prefix}__select-chevron` ]);
+  const iconSpec = Icons.render('chevron-down', {
+    tag: 'div',
+    classes: [ `${prefix}__select-chevron` ]
+  }, sharedBackstage.providers.icons);
 
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({

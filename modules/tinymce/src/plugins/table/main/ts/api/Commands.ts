@@ -29,11 +29,13 @@ import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Setti
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
 
-const getSelectionStartCellOrCaption = (editor: Editor) => TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>> =>
+  TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
 
-const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+const getSelectionStartCell = (editor: Editor): Optional<SugarElement<HTMLTableCellElement>> =>
+  TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
 
-const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
+const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard): void => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {

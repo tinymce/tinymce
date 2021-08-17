@@ -12,7 +12,10 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import { ListItem, UserListItem } from '../ui/DialogTypes';
 
-const getValue = (item: UserListItem): string => Type.isString(item.value) ? item.value : '';
+type ListExtractor = (item: UserListItem) => string;
+
+const getValue = (item: UserListItem): string =>
+  Type.isString(item.value) ? item.value : '';
 
 const getText = (item: UserListItem): string => {
   if (Type.isString(item.text)) {
@@ -24,7 +27,7 @@ const getText = (item: UserListItem): string => {
   }
 };
 
-const sanitizeList = (list: UserListItem[], extractValue: (item: UserListItem) => string): ListItem[] => {
+const sanitizeList = (list: UserListItem[], extractValue: ListExtractor): ListItem[] => {
   const out: ListItem[] = [];
   Tools.each(list, (item) => {
     const text = getText(item);
@@ -39,10 +42,11 @@ const sanitizeList = (list: UserListItem[], extractValue: (item: UserListItem) =
   return out;
 };
 
-const sanitizeWith = (extracter: (item: UserListItem) => string = getValue) => (list: UserListItem[]): Optional<ListItem[]> =>
+const sanitizeWith = (extracter: ListExtractor = getValue) => (list: UserListItem[] | undefined): Optional<ListItem[]> =>
   Optional.from(list).map((list) => sanitizeList(list, extracter));
 
-const sanitize = (list: UserListItem[]): Optional<ListItem[]> => sanitizeWith(getValue)(list);
+const sanitize = (list: UserListItem[]): Optional<ListItem[]> =>
+  sanitizeWith(getValue)(list);
 
 // NOTE: May need to care about flattening.
 const createUi = (name: string, label: string) => (items: ListItem[]): Dialog.ListBoxSpec => ({

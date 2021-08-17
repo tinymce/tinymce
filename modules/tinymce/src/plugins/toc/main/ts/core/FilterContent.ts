@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
+
 import * as Settings from '../api/Settings';
 
-const setup = (editor) => {
+const setup = (editor: Editor): void => {
   const $ = editor.$, tocClass = Settings.getTocClass(editor);
 
   editor.on('PreProcess', (e) => {

@@ -8,29 +8,43 @@
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-const shouldBlockDrop = (editor: Editor): boolean => editor.getParam('paste_block_drop', false);
+import { PastePreProcessEvent, PastePostProcessEvent } from './Events';
 
-const shouldPasteDataImages = (editor: Editor): boolean => editor.getParam('paste_data_images', false);
+const shouldBlockDrop = (editor: Editor): boolean =>
+  editor.getParam('paste_block_drop', false);
 
-const shouldFilterDrop = (editor: Editor): boolean => editor.getParam('paste_filter_drop', true);
+const shouldPasteDataImages = (editor: Editor): boolean =>
+  editor.getParam('paste_data_images', false);
 
-type ProcessFn = (plugin, args) => void;
+const shouldFilterDrop = (editor: Editor): boolean =>
+  editor.getParam('paste_filter_drop', true);
 
-const getPreProcess = (editor: Editor): ProcessFn => editor.getParam('paste_preprocess');
+type PreProcessFn = (plugin: Plugin, args: PastePreProcessEvent) => void;
+type PostProcessFn = (plugin: Plugin, args: PastePostProcessEvent) => void;
 
-const getPostProcess = (editor: Editor): ProcessFn => editor.getParam('paste_postprocess');
+const getPreProcess = (editor: Editor): PreProcessFn | undefined =>
+  editor.getParam('paste_preprocess');
 
-const getWebkitStyles = (editor: Editor): string => editor.getParam('paste_webkit_styles');
+const getPostProcess = (editor: Editor): PostProcessFn | undefined =>
+  editor.getParam('paste_postprocess');
 
-const shouldRemoveWebKitStyles = (editor: Editor): boolean => editor.getParam('paste_remove_styles_if_webkit', true);
+const getWebkitStyles = (editor: Editor): string | undefined =>
+  editor.getParam('paste_webkit_styles');
 
-const shouldMergeFormats = (editor: Editor): boolean => editor.getParam('paste_merge_formats', true);
+const shouldRemoveWebKitStyles = (editor: Editor): boolean =>
+  editor.getParam('paste_remove_styles_if_webkit', true);
 
-const isSmartPasteEnabled = (editor: Editor): boolean => editor.getParam('smart_paste', true);
+const shouldMergeFormats = (editor: Editor): boolean =>
+  editor.getParam('paste_merge_formats', true);
 
-const isPasteAsTextEnabled = (editor: Editor): boolean => editor.getParam('paste_as_text', false);
+const isSmartPasteEnabled = (editor: Editor): boolean =>
+  editor.getParam('smart_paste', true);
 
-const getRetainStyleProps = (editor: Editor): string => editor.getParam('paste_retain_style_properties');
+const isPasteAsTextEnabled = (editor: Editor): boolean =>
+  editor.getParam('paste_as_text', false);
+
+const getRetainStyleProps = (editor: Editor): string | undefined =>
+  editor.getParam('paste_retain_style_properties');
 
 const getWordValidElements = (editor: Editor): string => {
   const defaultValidElements = (
@@ -42,25 +56,35 @@ const getWordValidElements = (editor: Editor): string => {
   return editor.getParam('paste_word_valid_elements', defaultValidElements);
 };
 
-const shouldConvertWordFakeLists = (editor: Editor): boolean => editor.getParam('paste_convert_word_fake_lists', true);
+const shouldConvertWordFakeLists = (editor: Editor): boolean =>
+  editor.getParam('paste_convert_word_fake_lists', true);
 
-const shouldUseDefaultFilters = (editor: Editor): boolean => editor.getParam('paste_enable_default_filters', true);
+const shouldUseDefaultFilters = (editor: Editor): boolean =>
+  editor.getParam('paste_enable_default_filters', true);
 
-const getValidate = (editor: Editor) => editor.getParam('validate');
+const getValidate = (editor: Editor): boolean | undefined =>
+  editor.getParam('validate');
 
-const getAllowHtmlDataUrls = (editor: Editor): boolean => editor.getParam('allow_html_data_urls', false, 'boolean');
+const getAllowHtmlDataUrls = (editor: Editor): boolean =>
+  editor.getParam('allow_html_data_urls', false, 'boolean');
 
-const getPasteDataImages = (editor: Editor): boolean => editor.getParam('paste_data_images', false, 'boolean');
+const getPasteDataImages = (editor: Editor): boolean =>
+  editor.getParam('paste_data_images', false, 'boolean');
 
-const getImagesDataImgFilter = (editor: Editor) => editor.getParam('images_dataimg_filter');
+const getImagesDataImgFilter = (editor: Editor): ((imgElm: HTMLImageElement) => boolean) | undefined =>
+  editor.getParam('images_dataimg_filter');
 
-const getImagesReuseFilename = (editor: Editor) => editor.getParam('images_reuse_filename');
+const getImagesReuseFilename = (editor: Editor): boolean | undefined =>
+  editor.getParam('images_reuse_filename');
 
-const getForcedRootBlock = (editor: Editor) => editor.getParam('forced_root_block');
+const getForcedRootBlock = (editor: Editor): boolean | string | undefined =>
+  editor.getParam('forced_root_block');
 
-const getForcedRootBlockAttrs = (editor: Editor) => editor.getParam('forced_root_block_attrs');
+const getForcedRootBlockAttrs = (editor: Editor): Record<string, string> | undefined =>
+  editor.getParam('forced_root_block_attrs');
 
-const getTabSpaces = (editor: Editor) => editor.getParam('paste_tab_spaces', 4, 'number');
+const getTabSpaces = (editor: Editor): number =>
+  editor.getParam('paste_tab_spaces', 4, 'number');
 
 const getAllowedImageFileTypes = (editor: Editor): string[] => {
   const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';

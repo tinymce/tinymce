@@ -18,9 +18,10 @@ type AttrList = Array<{ name: string; value: string }> & { map: Record<string, s
 
 const DOM = DOMUtils.DOM;
 
-const addPx = (value: string) => /^[0-9.]+$/.test(value) ? (value + 'px') : value;
+const addPx = (value: string): string =>
+  /^[0-9.]+$/.test(value) ? (value + 'px') : value;
 
-const setAttributes = (attrs: AttrList, updatedAttrs: Record<string, any>) => {
+const setAttributes = (attrs: AttrList, updatedAttrs: Record<string, string>): void => {
   Obj.each(updatedAttrs, (val, name) => {
     const value = '' + val;
 
@@ -66,7 +67,7 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean)
   const writer = Writer();
   const isEphoxEmbed = Cell<boolean>(false);
   let sourceCount = 0;
-  let hasImage;
+  let hasImage: boolean;
 
   SaxParser({
     validate: false,

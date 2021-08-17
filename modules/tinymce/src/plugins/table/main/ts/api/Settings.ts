@@ -15,8 +15,8 @@ export interface StringMap {
   [key: string]: string;
 }
 
-export type ClassList = Array<{title: string; value: string}>;
-export type MenuItemList = Array<{text: string; value: string}>;
+export type ClassList = Array<{ title: string; value: string }>;
+export type MenuItemList = Array<{ text: string; value: string }>;
 
 type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
@@ -36,7 +36,7 @@ const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double',
   return { text: type, value: type.toLowerCase() };
 });
 
-const determineDefaultStyles = (editor: Editor) => {
+const determineDefaultStyles = (editor: Editor): Record<string, string> => {
   if (isPixelsForced(editor)) {
     const editorWidth = editor.getBody().offsetWidth;
     return { ...defaultStyles, width: editorWidth + 'px' };
@@ -53,32 +53,71 @@ const defaultAttributes = {
 
 const defaultColumnResizingBehaviour = 'preservetable';
 
-const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
-const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
+const getTableSizingMode = (editor: Editor): TableSizingMode =>
+  editor.getParam('table_sizing_mode', 'auto');
 
-const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', defaultCellBorderWidths, 'array');
+const getTableResponseWidth = (editor: Editor): boolean | undefined =>
+  editor.getParam('table_responsive_width');
 
-const getTableBorderStyles = (editor: Editor): MenuItemList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
+const getTableBorderWidths = (editor: Editor): ClassList =>
+  editor.getParam('table_border_widths', defaultCellBorderWidths, 'array');
 
-const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
-const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', determineDefaultStyles(editor), 'object');
-const hasTableResizeBars = (editor: Editor): boolean => editor.getParam('table_resize_bars', true, 'boolean');
-const hasTabNavigation = (editor: Editor): boolean => editor.getParam('table_tab_navigation', true, 'boolean');
-const hasAdvancedCellTab = (editor: Editor): boolean => editor.getParam('table_cell_advtab', true, 'boolean');
-const hasAdvancedRowTab = (editor: Editor): boolean => editor.getParam('table_row_advtab', true, 'boolean');
-const hasAdvancedTableTab = (editor: Editor): boolean => editor.getParam('table_advtab', true, 'boolean');
-const hasAppearanceOptions = (editor: Editor): boolean => editor.getParam('table_appearance_options', true, 'boolean');
-const hasTableGrid = (editor: Editor): boolean => editor.getParam('table_grid', true, 'boolean');
-const shouldStyleWithCss = (editor: Editor): boolean => editor.getParam('table_style_by_css', false, 'boolean');
-const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_cell_class_list', [], 'array');
-const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
-const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_class_list', [], 'array');
-const isPercentagesForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'relative' || getTableResponseWidth(editor) === true;
-const isPixelsForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'fixed' || getTableResponseWidth(editor) === false;
-const isResponsiveForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'responsive';
-const getToolbar = (editor: Editor): string => editor.getParam('table_toolbar', defaultTableToolbar);
+const getTableBorderStyles = (editor: Editor): MenuItemList =>
+  editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
 
-const useColumnGroup = (editor: Editor): boolean => editor.getParam('table_use_colgroups', false, 'boolean');
+const getDefaultAttributes = (editor: Editor): StringMap =>
+  editor.getParam('table_default_attributes', defaultAttributes, 'object');
+
+const getDefaultStyles = (editor: Editor): StringMap =>
+  editor.getParam('table_default_styles', determineDefaultStyles(editor), 'object');
+
+const hasTableResizeBars = (editor: Editor): boolean =>
+  editor.getParam('table_resize_bars', true, 'boolean');
+
+const hasTabNavigation = (editor: Editor): boolean =>
+  editor.getParam('table_tab_navigation', true, 'boolean');
+
+const hasAdvancedCellTab = (editor: Editor): boolean =>
+  editor.getParam('table_cell_advtab', true, 'boolean');
+
+const hasAdvancedRowTab = (editor: Editor): boolean =>
+  editor.getParam('table_row_advtab', true, 'boolean');
+
+const hasAdvancedTableTab = (editor: Editor): boolean =>
+  editor.getParam('table_advtab', true, 'boolean');
+
+const hasAppearanceOptions = (editor: Editor): boolean =>
+  editor.getParam('table_appearance_options', true, 'boolean');
+
+const hasTableGrid = (editor: Editor): boolean =>
+  editor.getParam('table_grid', true, 'boolean');
+
+const shouldStyleWithCss = (editor: Editor): boolean =>
+  editor.getParam('table_style_by_css', false, 'boolean');
+
+const getCellClassList = (editor: Editor): ClassList =>
+  editor.getParam('table_cell_class_list', [], 'array');
+
+const getRowClassList = (editor: Editor): ClassList =>
+  editor.getParam('table_row_class_list', [], 'array');
+
+const getTableClassList = (editor: Editor): ClassList =>
+  editor.getParam('table_class_list', [], 'array');
+
+const isPercentagesForced = (editor: Editor): boolean =>
+  getTableSizingMode(editor) === 'relative' || getTableResponseWidth(editor) === true;
+
+const isPixelsForced = (editor: Editor): boolean =>
+  getTableSizingMode(editor) === 'fixed' || getTableResponseWidth(editor) === false;
+
+const isResponsiveForced = (editor: Editor): boolean =>
+  getTableSizingMode(editor) === 'responsive';
+
+const getToolbar = (editor: Editor): string =>
+  editor.getParam('table_toolbar', defaultTableToolbar);
+
+const useColumnGroup = (editor: Editor): boolean =>
+  editor.getParam('table_use_colgroups', false, 'boolean');
 
 const getTableHeaderType = (editor: Editor): string => {
   const defaultValue = 'section';
@@ -97,8 +136,11 @@ const getColumnResizingBehaviour = (editor: Editor): 'preservetable' | 'resizeta
   return Arr.find(validModes, (mode) => mode === givenMode).getOr(defaultColumnResizingBehaviour);
 };
 
-const isPreserveTableColumnResizing = (editor: Editor) => getColumnResizingBehaviour(editor) === 'preservetable';
-const isResizeTableColumnResizing = (editor: Editor) => getColumnResizingBehaviour(editor) === 'resizetable';
+const isPreserveTableColumnResizing = (editor: Editor): boolean =>
+  getColumnResizingBehaviour(editor) === 'preservetable';
+
+const isResizeTableColumnResizing = (editor: Editor): boolean =>
+  getColumnResizingBehaviour(editor) === 'resizetable';
 
 const getCloneElements = (editor: Editor): Optional<string[]> => {
   const cloneElements = editor.getParam('table_clone_elements');

@@ -11,7 +11,7 @@ import * as Actions from './Actions';
 import * as Conversions from './Conversions';
 import * as Picker from './Picker';
 
-const setupButtons = (editor: Editor) => {
+const setupButtons = (editor: Editor): void => {
   editor.ui.registry.addButton('quickimage', {
     icon: 'image',
     tooltip: 'Insert image',
@@ -32,7 +32,6 @@ const setupButtons = (editor: Editor) => {
     icon: 'table',
     tooltip: 'Insert table',
     onAction: () => {
-      // panel.hide();
       Actions.insertTable(editor, 2, 2);
     }
   });

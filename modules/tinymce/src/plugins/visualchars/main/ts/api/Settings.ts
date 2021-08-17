@@ -7,9 +7,11 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const isEnabledByDefault = (editor: Editor) => editor.getParam('visualchars_default_state', false);
+const isEnabledByDefault = (editor: Editor): boolean =>
+  editor.getParam('visualchars_default_state', false);
 
-const hasForcedRootBlock = (editor: Editor): boolean => editor.getParam('forced_root_block') !== false;
+const hasForcedRootBlock = (editor: Editor): boolean =>
+  editor.getParam('forced_root_block') !== false;
 
 export {
   isEnabledByDefault,

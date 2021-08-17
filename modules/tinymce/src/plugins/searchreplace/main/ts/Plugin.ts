@@ -14,7 +14,7 @@ import * as Commands from './api/Commands';
 import { SearchState } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 
-export default () => {
+export default (): void => {
   PluginManager.add('searchreplace', (editor) => {
     const currentSearchState = Cell<SearchState>({
       index: -1,

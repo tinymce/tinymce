@@ -12,8 +12,8 @@ import { Entry } from './Entry';
 import { ListType } from './Util';
 
 interface Segment {
-  list: SugarElement;
-  item: SugarElement;
+  list: SugarElement<HTMLElement>;
+  item: SugarElement<HTMLElement>;
 }
 
 const joinSegment = (parent: Segment, child: Segment): void => {
@@ -98,8 +98,10 @@ const writeDeep = (scope: Document, cast: Segment[], entry: Entry): Segment[] =>
   return cast.concat(segments);
 };
 
-const composeList = (scope: Document, entries: Entry[]): Optional<SugarElement> => {
-  const cast: Segment[] = Arr.foldl(entries, (cast, entry) => entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry), []);
+const composeList = (scope: Document, entries: Entry[]): Optional<SugarElement<HTMLElement>> => {
+  const cast = Arr.foldl(entries, (cast, entry) => {
+    return entry.depth > cast.length ? writeDeep(scope, cast, entry) : writeShallow(scope, cast, entry);
+  }, [] as Segment[]);
 
   return Arr.head(cast).map((segment) => segment.list);
 };

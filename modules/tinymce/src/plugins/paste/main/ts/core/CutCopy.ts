@@ -14,15 +14,18 @@ import Delay from 'tinymce/core/api/util/Delay';
 import * as InternalHtml from './InternalHtml';
 
 interface SelectionContentData {
-  html: string;
-  text: string;
+  readonly html: string;
+  readonly text: string;
 }
+
+type DoneFn = () => void;
+type FallbackFn = (html: string, done: DoneFn) => void;
 
 const hasWorkingClipboardApi = (clipboardData: DataTransfer | null): clipboardData is DataTransfer =>
   // iOS supports the clipboardData API but it doesn't do anything for cut operations
   Env.iOS === false && typeof clipboardData?.setData === 'function';
 
-const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, text: string) => {
+const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, text: string): boolean => {
   if (hasWorkingClipboardApi(clipboardData)) {
     try {
       clipboardData.clearData();
@@ -38,10 +41,7 @@ const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, tex
   }
 };
 
-type DoneFn = () => void;
-type FallbackFn = (html: string, done: DoneFn) => void;
-
-const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallback: FallbackFn, done: DoneFn) => {
+const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallback: FallbackFn, done: DoneFn): void => {
   if (setHtml5Clipboard(evt.clipboardData, data.html, data.text)) {
     evt.preventDefault();
     done();
@@ -81,18 +81,18 @@ const fallback = (editor: Editor): FallbackFn => (html, done) => {
   }, 0);
 };
 
-const getData = (editor: Editor): SelectionContentData => (
-  {
-    html: editor.selection.getContent({ contextual: true }),
-    text: editor.selection.getContent({ format: 'text' })
-  }
-);
+const getData = (editor: Editor): SelectionContentData => ({
+  html: editor.selection.getContent({ contextual: true }),
+  text: editor.selection.getContent({ format: 'text' })
+});
 
-const isTableSelection = (editor: Editor): boolean => !!editor.dom.getParent(editor.selection.getStart(), 'td[data-mce-selected],th[data-mce-selected]', editor.getBody());
+const isTableSelection = (editor: Editor): boolean =>
+  !!editor.dom.getParent(editor.selection.getStart(), 'td[data-mce-selected],th[data-mce-selected]', editor.getBody());
 
-const hasSelectedContent = (editor: Editor): boolean => !editor.selection.isCollapsed() || isTableSelection(editor);
+const hasSelectedContent = (editor: Editor): boolean =>
+  !editor.selection.isCollapsed() || isTableSelection(editor);
 
-const cut = (editor: Editor) => (evt: ClipboardEvent) => {
+const cut = (editor: Editor) => (evt: ClipboardEvent): void => {
   if (hasSelectedContent(editor)) {
     setClipboardData(evt, getData(editor), fallback(editor), () => {
       if (Env.browser.isChrome() || Env.browser.isFirefox()) {
@@ -113,13 +113,13 @@ const cut = (editor: Editor) => (evt: ClipboardEvent) => {
   }
 };
 
-const copy = (editor: Editor) => (evt: ClipboardEvent) => {
+const copy = (editor: Editor) => (evt: ClipboardEvent): void => {
   if (hasSelectedContent(editor)) {
     setClipboardData(evt, getData(editor), fallback(editor), Fun.noop);
   }
 };
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   editor.on('cut', cut(editor));
   editor.on('copy', copy(editor));
 };

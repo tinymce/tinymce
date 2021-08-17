@@ -9,17 +9,14 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as EditorSettings from '../alien/EditorSettings';
 
-const getTextSelectionToolbarItems = (editor: Editor): string => {
-  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_selection_toolbar', 'bold italic | quicklink h2 h3 blockquote');
-};
+const getTextSelectionToolbarItems = (editor: Editor): string =>
+  EditorSettings.getToolbarItemsOr(editor, 'quickbars_selection_toolbar', 'bold italic | quicklink h2 h3 blockquote');
 
-const getInsertToolbarItems = (editor: Editor): string => {
-  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_insert_toolbar', 'quickimage quicktable');
-};
+const getInsertToolbarItems = (editor: Editor): string =>
+  EditorSettings.getToolbarItemsOr(editor, 'quickbars_insert_toolbar', 'quickimage quicktable');
 
-const getImageToolbarItems = (editor: Editor): string => {
-  return EditorSettings.getToolbarItemsOr(editor, 'quickbars_image_toolbar', 'alignleft aligncenter alignright');
-};
+const getImageToolbarItems = (editor: Editor): string =>
+  EditorSettings.getToolbarItemsOr(editor, 'quickbars_image_toolbar', 'alignleft aligncenter alignright');
 
 export {
   getTextSelectionToolbarItems,

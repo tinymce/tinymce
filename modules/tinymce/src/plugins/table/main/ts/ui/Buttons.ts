@@ -15,14 +15,14 @@ import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, generateColorSelector, generateItemsCallback } from './UiUtils';
 
-const addButtons = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
+const addButtons = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
     fetch: (callback) => callback('inserttable | cell row column | advtablesort | tableprops deletetable')
   });
 
-  const cmd = (command) => () => editor.execCommand(command);
+  const cmd = (command: string) => () => editor.execCommand(command);
 
   editor.ui.registry.addButton('tableprops', {
     tooltip: 'Table properties',
@@ -286,7 +286,7 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
   });
 };
 
-const addToolbars = (editor: Editor) => {
+const addToolbars = (editor: Editor): void => {
   const isTable = (table: Node) => editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
   const toolbar = getToolbar(editor);

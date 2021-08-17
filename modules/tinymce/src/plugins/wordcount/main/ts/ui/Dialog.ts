@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { WordCountApi } from '../api/Api';
 
-const open = (editor: Editor, api: WordCountApi) => {
+const open = (editor: Editor, api: WordCountApi): void => {
   editor.windowManager.open({
     title: 'Word Count',
     body: {

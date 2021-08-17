@@ -18,17 +18,22 @@ import * as Utils from '../utils/Utils';
 import { InlinePattern, InlinePatternMatch } from './PatternTypes';
 
 interface PatternDetails {
-  pattern: InlinePattern;
-  remainingPatterns: InlinePattern[];
-  position: Spot.SpotPoint<Text>;
+  readonly pattern: InlinePattern;
+  readonly remainingPatterns: InlinePattern[];
+  readonly position: Spot.SpotPoint<Text>;
 }
 
 interface SearchResults {
-  matches: InlinePatternMatch[];
-  position: Spot.SpotPoint<Text>;
+  readonly matches: InlinePatternMatch[];
+  readonly position: Spot.SpotPoint<Text>;
 }
 
-const matchesPattern = (dom: DOMUtils, block: Node, patternContent: string) => (element: Text, offset: number) => {
+interface InlinePatternMatchWithMarkers extends InlinePatternMatch {
+  readonly endMarker: Marker;
+  readonly startMarker: Marker;
+}
+
+const matchesPattern = (dom: DOMUtils, block: Node, patternContent: string) => (element: Text, offset: number): number => {
   const text = element.data;
   const searchText = text.substring(0, offset);
   const startEndIndex = searchText.lastIndexOf(patternContent.charAt(patternContent.length - 1));
@@ -186,7 +191,7 @@ const findPatternsRec = (editor: Editor, patterns: InlinePattern[], node: Node, 
   });
 };
 
-const applyPattern = (editor: Editor, pattern: InlinePattern, patternRange: Range) => {
+const applyPattern = (editor: Editor, pattern: InlinePattern, patternRange: Range): void => {
   editor.selection.setRng(patternRange);
   if (pattern.type === 'inline-format') {
     Arr.each(pattern.format, (format) => {
@@ -197,7 +202,7 @@ const applyPattern = (editor: Editor, pattern: InlinePattern, patternRange: Rang
   }
 };
 
-const applyReplacementPattern = (editor: Editor, pattern: InlinePattern, marker: Marker, isRoot: (e: Node) => boolean) => {
+const applyReplacementPattern = (editor: Editor, pattern: InlinePattern, marker: Marker, isRoot: (e: Node) => boolean): void => {
   // Remove the original text
   const markerRange = rangeFromMarker(editor.dom, marker);
   Utils.deleteRng(editor.dom, markerRange, isRoot);
@@ -206,7 +211,7 @@ const applyReplacementPattern = (editor: Editor, pattern: InlinePattern, marker:
   applyPattern(editor, pattern, markerRange);
 };
 
-const applyPatternWithContent = (editor: Editor, pattern: InlinePattern, startMarker: Marker, endMarker: Marker, isRoot: (e: Node) => boolean) => {
+const applyPatternWithContent = (editor: Editor, pattern: InlinePattern, startMarker: Marker, endMarker: Marker, isRoot: (e: Node) => boolean): void => {
   const dom = editor.dom;
 
   // Create the marker ranges for the patterns start/end content
@@ -223,7 +228,7 @@ const applyPatternWithContent = (editor: Editor, pattern: InlinePattern, startMa
   applyPattern(editor, pattern, patternRange);
 };
 
-const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): (InlinePatternMatch & { endMarker: Marker; startMarker: Marker })[] => {
+const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePatternMatchWithMarkers[] => {
   const markerPrefix = Id.generate('mce_textpattern');
 
   // Add end markers
@@ -258,7 +263,7 @@ const findPatterns = (editor: Editor, patterns: InlinePattern[], space: boolean)
   }).fold(() => [], (result) => result.matches);
 };
 
-const applyMatches = (editor: Editor, matches: InlinePatternMatch[]) => {
+const applyMatches = (editor: Editor, matches: InlinePatternMatch[]): void => {
   if (matches.length === 0) {
     return;
   }

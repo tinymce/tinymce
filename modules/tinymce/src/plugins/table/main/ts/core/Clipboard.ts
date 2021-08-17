@@ -9,22 +9,22 @@ import { Optional, Singleton } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 export interface Clipboard {
-  getRows: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;
-  setRows: (rows: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => void;
-  clearRows: () => void;
+  readonly getRows: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;
+  readonly setRows: (rows: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => void;
+  readonly clearRows: () => void;
 
-  getColumns: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;
-  setColumns: (columns: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => void;
-  clearColumns: () => void;
+  readonly getColumns: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;
+  readonly setColumns: (columns: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => void;
+  readonly clearColumns: () => void;
 }
 
 export const Clipboard = (): Clipboard => {
-  const rows = Singleton.value<SugarElement<HTMLTableRowElement>[]>();
+  const rows = Singleton.value<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>();
   const cols = Singleton.value<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>();
 
   return {
     getRows: rows.get,
-    setRows: (r: Optional<SugarElement<HTMLTableRowElement>[]>) => {
+    setRows: (r: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => {
       r.fold(rows.clear, rows.set);
       cols.clear();
     },

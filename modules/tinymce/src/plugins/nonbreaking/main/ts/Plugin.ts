@@ -18,7 +18,7 @@ import * as Buttons from './ui/Buttons';
  * @private
  */
 
-export default () => {
+export default (): void => {
   PluginManager.add('nonbreaking', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);

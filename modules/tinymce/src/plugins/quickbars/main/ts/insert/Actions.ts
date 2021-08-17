@@ -9,16 +9,14 @@ import { Id } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const createTableHtml = (cols: number, rows: number) => {
-  let x, y, html;
-
-  html = '<table data-mce-id="mce" style="width: 100%">';
+const createTableHtml = (cols: number, rows: number): string => {
+  let html = '<table data-mce-id="mce" style="width: 100%">';
   html += '<tbody>';
 
-  for (y = 0; y < rows; y++) {
+  for (let y = 0; y < rows; y++) {
     html += '<tr>';
 
-    for (x = 0; x < cols; x++) {
+    for (let x = 0; x < cols; x++) {
       html += '<td><br></td>';
     }
 
@@ -31,12 +29,12 @@ const createTableHtml = (cols: number, rows: number) => {
   return html;
 };
 
-const getInsertedElement = (editor: Editor) => {
+const getInsertedElement = (editor: Editor): HTMLElement => {
   const elms = editor.dom.select('*[data-mce-id]');
   return elms[0];
 };
 
-const insertTableHtml = (editor: Editor, cols: number, rows: number) => {
+const insertTableHtml = (editor: Editor, cols: number, rows: number): void => {
   editor.undoManager.transact(() => {
     editor.insertContent(createTableHtml(cols, rows));
 
@@ -47,11 +45,11 @@ const insertTableHtml = (editor: Editor, cols: number, rows: number) => {
   });
 };
 
-const insertTable = (editor: Editor, cols: number, rows: number) => {
+const insertTable = (editor: Editor, cols: number, rows: number): void => {
   editor.plugins.table ? editor.plugins.table.insertTable(cols, rows) : insertTableHtml(editor, cols, rows);
 };
 
-const insertBlob = (editor: Editor, base64: string, blob: Blob) => {
+const insertBlob = (editor: Editor, base64: string, blob: Blob): void => {
   const blobCache = editor.editorUpload.blobCache;
   const blobInfo = blobCache.create(Id.generate('mceu'), blob, base64);
   blobCache.add(blobInfo);

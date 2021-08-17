@@ -14,7 +14,7 @@ import * as ResolveName from './core/ResolveName';
 import * as Selection from './core/Selection';
 import * as Buttons from './ui/Buttons';
 
-export default () => {
+export default (): void => {
   PluginManager.add('media', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);

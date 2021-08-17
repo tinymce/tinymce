@@ -5,10 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
+import { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
+
 import * as ImportCss from '../core/ImportCss';
 
-const get = (editor) => {
-  const convertSelectorToFormat = (selectorText) => {
+export interface Api {
+  readonly convertSelectorToFormat: (selectorText: string) => StyleFormat | undefined;
+}
+
+const get = (editor: Editor): Api => {
+  const convertSelectorToFormat = (selectorText: string) => {
     return ImportCss.defaultConvertSelectorToFormat(editor, selectorText);
   };
 

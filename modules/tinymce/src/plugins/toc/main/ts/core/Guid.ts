@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const create = (prefix) => {
+const create = (prefix: string): () => string => {
   let counter = 0;
 
-  return () => {
+  return (): string => {
     const guid = new Date().getTime().toString(32);
     return prefix + guid + (counter++).toString(32);
   };

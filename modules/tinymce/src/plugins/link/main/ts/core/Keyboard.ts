@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const setup = (editor) => {
+import Editor from 'tinymce/core/api/Editor';
+
+const setup = (editor: Editor): void => {
   editor.addShortcut('Meta+K', '', () => {
     editor.execCommand('mceLink');
   });

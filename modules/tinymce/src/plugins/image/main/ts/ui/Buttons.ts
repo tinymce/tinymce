@@ -11,7 +11,7 @@ import { isFigure, isImage } from '../core/ImageData';
 import * as Utils from '../core/Utils';
 import { Dialog } from './Dialog';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   editor.ui.registry.addToggleButton('image', {
     icon: 'image',
     tooltip: 'Insert/edit image',

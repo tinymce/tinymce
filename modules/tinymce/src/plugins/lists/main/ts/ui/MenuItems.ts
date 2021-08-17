@@ -12,7 +12,7 @@ import { isOlNode } from '../core/NodeType';
 import { getParentList } from '../core/Selection';
 import * as Util from '../core/Util';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   const listProperties: Menu.MenuItemSpec = {
     text: 'List properties...',
     icon: 'ordered-list',

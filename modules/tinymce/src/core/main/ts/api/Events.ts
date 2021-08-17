@@ -6,10 +6,11 @@
  */
 
 import Editor from './Editor';
+import { ParserArgs } from './html/DomParser';
 
-const firePreProcess = (editor: Editor, args) => editor.fire('PreProcess', args);
+const firePreProcess = (editor: Editor, args: ParserArgs & { node: Element }) => editor.fire('PreProcess', args);
 
-const firePostProcess = (editor: Editor, args) => editor.fire('PostProcess', args);
+const firePostProcess = (editor: Editor, args: ParserArgs & { content: string }) => editor.fire('PostProcess', args);
 
 const fireRemove = (editor: Editor) => editor.fire('remove');
 

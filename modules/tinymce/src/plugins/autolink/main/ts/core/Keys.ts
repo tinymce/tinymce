@@ -10,29 +10,29 @@ import Env from 'tinymce/core/api/Env';
 
 import * as Settings from '../api/Settings';
 
-const rangeEqualsDelimiterOrSpace = (rangeString, delimiter) => {
+const rangeEqualsDelimiterOrSpace = (rangeString: string, delimiter: string): boolean => {
   return rangeString === delimiter || rangeString === ' ' || rangeString.charCodeAt(0) === 160;
 };
 
-const handleEclipse = (editor) => {
+const handleEclipse = (editor: Editor): void => {
   parseCurrentLine(editor, -1, '(');
 };
 
-const handleSpacebar = (editor) => {
+const handleSpacebar = (editor: Editor): void => {
   parseCurrentLine(editor, 0, '');
 };
 
-const handleEnter = (editor) => {
+const handleEnter = (editor: Editor): void => {
   parseCurrentLine(editor, -1, '');
 };
 
-const scopeIndex = (container, index) => {
+const scopeIndex = (container: Node, index: number): number => {
   if (index < 0) {
     index = 0;
   }
 
   if (container.nodeType === 3) {
-    const len = container.data.length;
+    const len = (container as Text).data.length;
 
     if (index > len) {
       index = len;
@@ -42,7 +42,7 @@ const scopeIndex = (container, index) => {
   return index;
 };
 
-const setStart = (rng, container, offset) => {
+const setStart = (rng: Range, container: Node, offset: number): void => {
   if (container.nodeType !== 1 || container.hasChildNodes()) {
     rng.setStart(container, scopeIndex(container, offset));
   } else {
@@ -50,7 +50,7 @@ const setStart = (rng, container, offset) => {
   }
 };
 
-const setEnd = (rng, container, offset) => {
+const setEnd = (rng: Range, container: Node, offset: number): void => {
   if (container.nodeType !== 1 || container.hasChildNodes()) {
     rng.setEnd(container, scopeIndex(container, offset));
   } else {
@@ -58,7 +58,7 @@ const setEnd = (rng, container, offset) => {
   }
 };
 
-const parseCurrentLine = (editor: Editor, endOffset, delimiter) => {
+const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string): void => {
   let end, endContainer, bookmark, text, prev, len, rngText;
   const autoLinkPattern = Settings.getAutoLinkPattern(editor);
   const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
@@ -172,8 +172,8 @@ const parseCurrentLine = (editor: Editor, endOffset, delimiter) => {
   }
 };
 
-const setup = (editor: Editor) => {
-  let autoUrlDetectState;
+const setup = (editor: Editor): void => {
+  let autoUrlDetectState: boolean | undefined;
 
   editor.on('keydown', (e) => {
     if (e.keyCode === 13) {

@@ -18,12 +18,12 @@ import * as Dialog from './ui/Dialog';
 export type TabSpecs = Record<string, DialogType.TabSpec>;
 export type CustomTabSpecs = Cell<TabSpecs>;
 
-export default () => {
+export default (): void => {
   PluginManager.add('help', (editor) => {
     const customTabs: CustomTabSpecs = Cell({});
     const api = Api.get(customTabs);
 
-    const dialogOpener: () => void = Dialog.init(editor, customTabs);
+    const dialogOpener = Dialog.init(editor, customTabs);
     Buttons.register(editor, dialogOpener);
     Commands.register(editor, dialogOpener);
     editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');

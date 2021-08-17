@@ -12,7 +12,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Settings from '../api/Settings';
 
-const get = (editor: Editor) => Global.Prism && Settings.useGlobalPrismJS(editor) ? Global.Prism : Prism;
+const get = (editor: Editor): Prism =>
+  Global.Prism && Settings.useGlobalPrismJS(editor) ? Global.Prism : Prism;
 
 export {
   get

@@ -197,6 +197,6 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     onSetupTableWithCaption,
     onSetupTableRowHeaders,
     onSetupTableColumnHeaders,
-    targets: () => targets.get()
+    targets: targets.get
   };
 };

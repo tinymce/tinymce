@@ -50,7 +50,7 @@ const cellFormats = {
   }
 };
 
-const registerFormats = (editor: Editor) => {
+const registerFormats = (editor: Editor): void => {
   editor.formatter.register(cellFormats);
 };
 

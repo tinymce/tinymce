@@ -12,7 +12,9 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Settings from '../api/Settings';
 
-const pasteHtml = (editor: Editor, html: string) => {
+type PasteFn = (editor: Editor, html: string) => boolean;
+
+const pasteHtml = (editor: Editor, html: string): boolean => {
   editor.insertContent(html, {
     merge: Settings.shouldMergeFormats(editor),
     paste: true
@@ -30,15 +32,16 @@ const pasteHtml = (editor: Editor, html: string) => {
  * @private
  */
 
-const isAbsoluteUrl = (url: string) => {
-  return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
+const isAbsoluteUrl = (url: string): boolean =>
+  /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
+
+const isImageUrl = (editor: Editor, url: string): boolean => {
+  return isAbsoluteUrl(url) && Arr.exists(Settings.getAllowedImageFileTypes(editor), (type) =>
+    Strings.endsWith(url.toLowerCase(), `.${type.toLowerCase()}`)
+  );
 };
 
-const isImageUrl = (editor: Editor, url: string) => {
-  return isAbsoluteUrl(url) && Arr.exists(Settings.getAllowedImageFileTypes(editor), (type) => Strings.endsWith(url.toLowerCase(), `.${type.toLowerCase()}`));
-};
-
-const createImage = (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) => {
+const createImage = (editor: Editor, url: string, pasteHtmlFn: PasteFn): boolean => {
   editor.undoManager.extra(() => {
     pasteHtmlFn(editor, url);
   }, () => {
@@ -48,7 +51,7 @@ const createImage = (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml)
   return true;
 };
 
-const createLink = (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) => {
+const createLink = (editor: Editor, url: string, pasteHtmlFn: PasteFn): boolean => {
   editor.undoManager.extra(() => {
     pasteHtmlFn(editor, url);
   }, () => {
@@ -58,15 +61,15 @@ const createLink = (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) 
   return true;
 };
 
-const linkSelection = (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) => {
+const linkSelection = (editor: Editor, html: string, pasteHtmlFn: PasteFn): boolean => {
   return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtmlFn) : false;
 };
 
-const insertImage = (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) => {
+const insertImage = (editor: Editor, html: string, pasteHtmlFn: PasteFn): boolean => {
   return isImageUrl(editor, html) ? createImage(editor, html, pasteHtmlFn) : false;
 };
 
-const smartInsertContent = (editor: Editor, html: string) => {
+const smartInsertContent = (editor: Editor, html: string): void => {
   Tools.each([
     linkSelection,
     insertImage,
@@ -76,7 +79,7 @@ const smartInsertContent = (editor: Editor, html: string) => {
   });
 };
 
-const insertContent = (editor: Editor, html: string, pasteAsText: boolean) => {
+const insertContent = (editor: Editor, html: string, pasteAsText: boolean): void => {
   if (pasteAsText || Settings.isSmartPasteEnabled(editor) === false) {
     pasteHtml(editor, html);
   } else {

@@ -12,15 +12,14 @@ import * as NodeType from './NodeType';
 
 const DOM = DOMUtils.DOM;
 
-const normalizeList = (dom, ul) => {
-  let sibling;
-  const parentNode = ul.parentNode;
+const normalizeList = (dom: DOMUtils, list: HTMLUListElement | HTMLOListElement): void => {
+  const parentNode = list.parentNode;
 
   // Move UL/OL to previous LI if it's the only child of a LI
-  if (parentNode.nodeName === 'LI' && parentNode.firstChild === ul) {
-    sibling = parentNode.previousSibling;
+  if (parentNode.nodeName === 'LI' && parentNode.firstChild === list) {
+    const sibling = parentNode.previousSibling;
     if (sibling && sibling.nodeName === 'LI') {
-      sibling.appendChild(ul);
+      sibling.appendChild(list);
 
       if (NodeType.isEmpty(dom, parentNode)) {
         DOM.remove(parentNode);
@@ -32,16 +31,17 @@ const normalizeList = (dom, ul) => {
 
   // Append OL/UL to previous LI if it's in a parent OL/UL i.e. old HTML4
   if (NodeType.isListNode(parentNode)) {
-    sibling = parentNode.previousSibling;
+    const sibling = parentNode.previousSibling;
     if (sibling && sibling.nodeName === 'LI') {
-      sibling.appendChild(ul);
+      sibling.appendChild(list);
     }
   }
 };
 
-const normalizeLists = (dom, element) => {
-  Tools.each(Tools.grep(dom.select('ol,ul', element)), (ul) => {
-    normalizeList(dom, ul);
+const normalizeLists = (dom: DOMUtils, element: Node): void => {
+  const lists = Tools.grep(dom.select<HTMLUListElement | HTMLOListElement>('ol,ul', element));
+  Tools.each(lists, (list) => {
+    normalizeList(dom, list);
   });
 };
 

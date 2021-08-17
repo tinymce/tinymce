@@ -17,7 +17,7 @@ import { LastSuggestion } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 import * as SuggestionsMenu from './ui/SuggestionsMenu';
 
-export default () => {
+export default (): void => {
   PluginManager.add('spellchecker', (editor, pluginUrl) => {
     if (DetectProPlugin.hasProPlugin(editor) === false) {
       // eslint-disable-next-line no-console
@@ -31,7 +31,7 @@ export default () => {
       SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState);
       Commands.register(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
 
-      return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, currentLanguageState, pluginUrl);
+      return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, currentLanguageState);
     }
   });
 };
