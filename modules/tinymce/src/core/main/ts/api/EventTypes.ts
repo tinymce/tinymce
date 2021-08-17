@@ -6,6 +6,7 @@
  */
 
 import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
+import { FormatVars } from '../fmt/FormatTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 import { ParserArgs } from './html/DomParser';
@@ -22,6 +23,8 @@ export type SetContentEvent = SetContentArgs & { source_view?: boolean; paste?: 
 export interface NewBlockEvent { newBlock: Element }
 
 export interface NodeChangeEvent { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean }
+
+export interface FormatEvent { format: string; vars: FormatVars }
 
 export interface ObjectResizeEvent { target: HTMLElement; width: number; height: number; origin: string }
 
@@ -76,6 +79,8 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'BeforeExecCommand': ExecCommandEvent;
   'ExecCommand': ExecCommandEvent;
   'NodeChange': NodeChangeEvent;
+  'FormatApply': FormatEvent;
+  'FormatRemove': FormatEvent;
   'ShowCaret': ShowCaretEvent;
   'SelectionChange': { };
   'ObjectSelected': ObjectSelectedEvent;

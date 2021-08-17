@@ -643,6 +643,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
       removeRngStyle(node);
     }
 
+    ed.fire('FormatRemove', { format: name, vars });
     return;
   }
 
@@ -656,6 +657,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
       }
     }
 
+    ed.fire('FormatRemove', { format: name, vars });
     return;
   }
 
@@ -675,6 +677,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   } else {
     CaretFormat.removeCaretFormat(ed, name, vars, similar);
   }
+  ed.fire('FormatRemove', { format: name, vars });
 };
 
 export {

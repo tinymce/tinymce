@@ -312,10 +312,12 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       const formatItem = formatList[i];
       if (formatItem.ceFalseOverride && FormatUtils.isSelectorFormat(formatItem) && dom.is(node, formatItem.selector)) {
         setElementFormat(node, formatItem);
+        ed.fire('FormatApply', { format: name, vars });
         return;
       }
     }
 
+    ed.fire('FormatApply', { format: name, vars });
     return;
   }
 
@@ -362,6 +364,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
     Hooks.postProcess(name, ed);
   }
+  ed.fire('FormatApply', { format: name, vars });
 };
 
 export {

@@ -8,6 +8,8 @@
 import { Arr, Cell, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
+import { FormatEvent } from '../api/EventTypes';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import * as NodeType from '../dom/NodeType';
 import { FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
@@ -45,28 +47,32 @@ const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Edito
   editor.on('NodeChange', (e) => {
     updateAndFireChangeCallbacks(editor, e.element, registeredFormatListeners.get());
   });
+
+  editor.on('FormatApply FormatRemove', (e: EditorEvent<FormatEvent>) => {
+    const element = editor.selection.getStart();
+    updateAndFireChangeCallbacks(editor, element, registeredFormatListeners.get());
+  });
 };
 
-const matchingNode = (editor: Editor, parents: Element[], format: string, similar: boolean, vars?: FormatVars): Optional<Element> =>
-  Arr.findUntil(
-    parents,
-    (node) => { // is this the node we want?
-      const matchingFormat = editor.formatter.matchNode(node, format, vars ?? {}, similar);
-      return !Type.isUndefined(matchingFormat);
-    },
-    (node) => { // Can we guarantee that no parent of this will be the node we want?
-      if (MatchFormat.matchesUnInheritedFormatSelector(editor, node, format)) {
-        return true;
+const matchingNode = (editor: Editor, parents: Element[], format: string, similar: boolean, vars?: FormatVars): Optional<Element> => {
+  const isMatchingNode = (node: Element) => {
+    const matchingFormat = editor.formatter.matchNode(node, format, vars ?? {}, similar);
+    return !Type.isUndefined(matchingFormat);
+  };
+  const isUnableToMatch = (node: Element) => {
+    if (MatchFormat.matchesUnInheritedFormatSelector(editor, node, format)) {
+      return true;
+    } else {
+      if (!similar) {
+        // If we want to find an exact match, then finding a similar match halfway up the parents tree is bad
+        return Type.isNonNullable(editor.formatter.matchNode(node, format, vars, true));
       } else {
-        if (!similar) {
-          // If we want to find an exact match, then finding a similar match halfway up the parents tree is bad
-          return Type.isNonNullable(editor.formatter.matchNode(node, format, vars, true));
-        } else {
-          return false;
-        }
+        return false;
       }
     }
-  );
+  };
+  return Arr.findUntil(parents, isMatchingNode, isUnableToMatch);
+};
 
 const getParents = (editor: Editor, elm?: Element): Element[] => {
   const element = elm ?? editor.selection.getNode();
@@ -93,21 +99,18 @@ const updateAndFireChangeCallbacks = (
   const parents = getParents(editor, elm);
 
   Obj.each(registeredCallbacks, (data, format) => {
-    if (data.similarCallbacks.length > 0) {
-      const match = matchingNode(editor, parents, format, true);
-      if (hasChanged(data.similarState, match.isSome())) {
-        const node = match.getOr(elm);
-        Arr.each(data.similarCallbacks, (callback) => callback(match.isSome(), { node, format, parents }));
+    Arr.each([
+      { callbacks: data.similarCallbacks, state: data.similarState, similar: true },
+      { callbacks: data.similarFalseCallbacks, state: data.similarFalseState, similar: false }
+    ], (spec) => {
+      if (spec.callbacks.length > 0) {
+        const match = matchingNode(editor, parents, format, spec.similar);
+        if (hasChanged(spec.state, match.isSome())) {
+          const node = match.getOr(elm);
+          Arr.each(spec.callbacks, (callback) => callback(match.isSome(), { node, format, parents }));
+        }
       }
-    }
-
-    if (data.similarFalseCallbacks.length > 0) {
-      const match = matchingNode(editor, parents, format, false);
-      if (hasChanged(data.similarFalseState, match.isSome())) {
-        const node = match.getOr(elm);
-        Arr.each(data.similarFalseCallbacks, (callback) => callback(match.isSome(), { node, format, parents }));
-      }
-    }
+    });
 
     Arr.each(data.others, (item) => {
       const match = matchingNode(editor, parents, format, item.similar, item.vars);
@@ -148,16 +151,12 @@ const addListeners = (
       return matchingNode(editor, parents, format, similar, vars).isSome();
     };
     if (Type.isUndefined(vars)) {
-      if (similar) {
-        group.similarCallbacks.push(callback);
-        if (group.similarCallbacks.length === 1) {
-          group.similarState.set(getCurrent());
-        }
-      } else {
-        group.similarFalseCallbacks.push(callback);
-        if (group.similarFalseCallbacks.length === 1) {
-          group.similarFalseState.set(getCurrent());
-        }
+      const callbacks = similar ? group.similarCallbacks : group.similarFalseCallbacks;
+      callbacks.push(callback);
+      if (callbacks.length === 1) {
+        const state = similar ? group.similarState : group.similarFalseState;
+        state.set(getCurrent());
+
       }
     } else {
       group.others.push({

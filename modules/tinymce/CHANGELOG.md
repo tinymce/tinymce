@@ -27,8 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482
 - Added a new `table-row-numbering` icon #TINY-7327
 - Added a new `iframe_aria_text` setting to set the iframe title attribute #TINY-1264
-- `editor.formatter.formatChanged` now supports listening for changes to formats with specific variables #TINY-7713
 - Added a new `AstNode.children()` method to return all the children of an `AstNode` #TINY-7756
+- Added new `FormatApply` and `FormatRemove` events #TINY-7713
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The context toolbar will now move out of the way when it overlaps with the selection, such as in table cells #TINY-7192
 - The `formatter.match` API can now take an optional `similar` parameter to check if the format partial matches #TINY-7712
 - Icons with a `-rtl` suffix in their name will now automatically be used when the UI is rendered in right-to-left mode #TINY-7782
+- `editor.formatter.formatChanged` now supports listening for changes to formats with specific variables #TINY-7713
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents #TINY-7249
