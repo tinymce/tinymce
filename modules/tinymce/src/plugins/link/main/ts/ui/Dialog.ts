@@ -18,7 +18,7 @@ import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
 import { LinkDialogData, LinkDialogInfo, LinkDialogKey } from './DialogTypes';
 
-const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>) => {
+const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>): void => {
   const data: LinkDialogData = api.getData();
 
   if (!data.url.value) {
@@ -53,7 +53,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
   api.close();
 };
 
-const collectData = (editor): Promise<LinkDialogInfo> => {
+const collectData = (editor: Editor): Promise<LinkDialogInfo> => {
   const anchorNode: HTMLAnchorElement = Utils.getAnchorElement(editor);
   return DialogInfo.collect(editor, anchorNode);
 };
@@ -81,7 +81,7 @@ const getInitialData = (info: LinkDialogInfo, defaultTarget: Optional<string>): 
   };
 };
 
-const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
+const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
 
   const urlInput: Dialog.UrlInputSpec[] = [
     {
@@ -156,7 +156,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Dialog.
   };
 };
 
-const open = (editor: Editor) => {
+const open = (editor: Editor): void => {
   const data = collectData(editor);
   data.then((info) => {
     const onSubmit = handleSubmit(editor, info);

@@ -12,7 +12,7 @@ import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Actions from '../core/Actions';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   let changeHandlers: Array<(isEditableImage: boolean) => void> = [];
 
   const cmd = (command: string) => () => editor.execCommand(command);

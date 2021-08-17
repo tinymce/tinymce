@@ -7,12 +7,12 @@
 
 import { Arr, Strings } from '@ephox/katamari';
 
-import { CharMap } from './CharMap';
+import { CharMap, Char } from './CharMap';
 
 export interface CharItem {
-  value: string;
-  icon: string;
-  text: string;
+  readonly value: string;
+  readonly icon: string;
+  readonly text: string;
 }
 
 const charMatches = (charCode: number, name: string, lowerCasePattern: string): boolean => {
@@ -24,7 +24,7 @@ const charMatches = (charCode: number, name: string, lowerCasePattern: string): 
 };
 
 const scan = (group: CharMap, pattern: string): CharItem[] => {
-  const matches: [number, string][] = [];
+  const matches: Char[] = [];
   const lowerCasePattern = pattern.toLowerCase();
   Arr.each(group.characters, (g) => {
     if (charMatches(g[0], g[1], lowerCasePattern)) {

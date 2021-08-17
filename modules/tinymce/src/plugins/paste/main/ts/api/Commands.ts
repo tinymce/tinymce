@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Actions from '../core/Actions';
 import { Clipboard } from './Clipboard';
 
-const register = (editor: Editor, clipboard: Clipboard) => {
+const register = (editor: Editor, clipboard: Clipboard): void => {
   editor.addCommand('mceTogglePlainTextPaste', () => {
     Actions.togglePlainTextPaste(editor, clipboard);
   });

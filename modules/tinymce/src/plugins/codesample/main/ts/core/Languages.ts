@@ -11,8 +11,8 @@ import * as Settings from '../api/Settings';
 import * as CodeSample from './CodeSample';
 
 export interface LanguageSpec {
-  text: string;
-  value: string;
+  readonly text: string;
+  readonly value: string;
 }
 
 const getLanguages = (editor: Editor): LanguageSpec[] => {

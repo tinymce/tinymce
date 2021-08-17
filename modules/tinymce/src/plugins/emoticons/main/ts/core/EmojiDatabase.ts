@@ -17,13 +17,21 @@ import * as Settings from '../api/Settings';
 const ALL_CATEGORY = 'All';
 
 interface RawEmojiEntry {
-  keywords: string[];
-  char: string;
-  category: string;
+  readonly keywords: string[];
+  readonly char: string;
+  readonly category: string;
 }
 
 export interface EmojiEntry extends RawEmojiEntry {
-  title: string;
+  readonly title: string;
+}
+
+export interface EmojiDatabase {
+  readonly listCategory: (category: string) => EmojiEntry[];
+  readonly hasLoaded: () => boolean;
+  readonly waitForLoad: () => Promise<boolean>;
+  readonly listAll: () => EmojiEntry[];
+  readonly listCategories: () => string[];
 }
 
 const categoryNameMap = {
@@ -38,19 +46,12 @@ const categoryNameMap = {
   user: 'User Defined'
 };
 
-export interface EmojiDatabase {
-  listCategory: (category: string) => EmojiEntry[];
-  hasLoaded: () => boolean;
-  waitForLoad: () => Promise<boolean>;
-  listAll: () => EmojiEntry[];
-  listCategories: () => string[];
-}
+const translateCategory = (categories: Record<string, string>, name: string): string =>
+  Obj.has(categories, name) ? categories[name] : name;
 
-const translateCategory = (categories: Record<string, string>, name: string) => Obj.has(categories, name) ? categories[name] : name;
-
-const getUserDefinedEmoticons = (editor: Editor) => {
+const getUserDefinedEmoticons = (editor: Editor): Record<string, RawEmojiEntry> => {
   const userDefinedEmoticons = Settings.getAppendedEmoticons(editor);
-  return Obj.map(userDefinedEmoticons, (value: RawEmojiEntry) =>
+  return Obj.map(userDefinedEmoticons, (value) =>
     // Set some sane defaults for the custom emoji entry
     ({ keywords: [], category: 'user', ...value })
   );
@@ -73,8 +74,8 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
   };
 
   const processEmojis = (emojis: Record<string, RawEmojiEntry>) => {
-    const cats = {};
-    const everything = [];
+    const cats: Record<string, EmojiEntry[]> = {};
+    const everything: EmojiEntry[] = [];
 
     Obj.each(emojis, (lib: RawEmojiEntry, title: string) => {
       const entry: EmojiEntry = {

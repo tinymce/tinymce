@@ -19,7 +19,7 @@ interface Item {
 }
 
 const onSetupToggle = (editor: Editor, selections: Selections, formatName: string, formatValue: string) => {
-  return (api: Toolbar.ToolbarMenuButtonInstanceApi) => {
+  return (api: Toolbar.ToolbarMenuButtonInstanceApi): () => void => {
     const boundCallback = Singleton.unbindable();
     const isNone = Strings.isEmpty(formatValue);
 
@@ -47,11 +47,11 @@ const onSetupToggle = (editor: Editor, selections: Selections, formatName: strin
   };
 };
 
-const applyTableCellStyle = <T extends Item>(editor: Editor, style: string) =>
-  (item: T) =>
-    editor.execCommand('mceTableApplyCellStyle', false, { [style]: item.value });
+const applyTableCellStyle = <T extends Item>(editor: Editor, style: string) => (item: T): void => {
+  editor.execCommand('mceTableApplyCellStyle', false, { [style]: item.value });
+};
 
-const filterNoneItem = <T extends Item>(list: T[]) =>
+const filterNoneItem = <T extends Item>(list: T[]): T[] =>
   Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
 
 const generateItem = <T extends Item>(editor: Editor, selections: Selections, item: T, format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec => ({
@@ -65,10 +65,10 @@ const generateItems = <T extends Item>(editor: Editor, selections: Selections, i
   Arr.map(items, (item) => generateItem(editor, selections, item, format, extractText, onAction));
 
 const generateItemsCallback = <T extends Item>(editor: Editor, selections: Selections, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void) =>
-  (callback: (items: Menu.ToggleMenuItemSpec[]) => void) =>
+  (callback: (items: Menu.ToggleMenuItemSpec[]) => void): void =>
     callback(generateItems(editor, selections, items, format, extractText, onAction));
 
-const fixColorValue = (value: string, setColor: (colorValue: string) => void) => {
+const fixColorValue = (value: string, setColor: (colorValue: string) => void): void => {
   if (value === 'remove') {
     setColor('');
   } else {
@@ -90,13 +90,13 @@ const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpe
   }
 }];
 
-const changeRowHeader = (editor: Editor) => () => {
+const changeRowHeader = (editor: Editor) => (): void => {
   const currentType = editor.queryCommandValue('mceTableRowType');
   const newType = currentType === 'header' ? 'body' : 'header';
   editor.execCommand('mceTableRowType', false, { type: newType });
 };
 
-const changeColumnHeader = (editor: Editor) => () => {
+const changeColumnHeader = (editor: Editor) => (): void => {
   const currentType = editor.queryCommandValue('mceTableColType');
   const newType = currentType === 'th' ? 'td' : 'th';
   editor.execCommand('mceTableColType', false, { type: newType });

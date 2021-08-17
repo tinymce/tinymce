@@ -52,7 +52,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
   });
 
   const chevron: Optional<AlloySpec> = spec.size > 1 ? Optional.none() :
-    Optional.some(Icons.render('div', Icons.get('chevron-down', providersBackstage.icons), [ 'tox-selectfield__icon-js' ]));
+    Optional.some(Icons.render('chevron-down', { tag: 'div', classes: [ 'tox-selectfield__icon-js' ] }, providersBackstage.icons));
 
   const selectWrap: SimpleSpec = {
     dom: {

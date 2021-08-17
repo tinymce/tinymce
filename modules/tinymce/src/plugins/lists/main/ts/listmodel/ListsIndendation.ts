@@ -21,7 +21,7 @@ import { normalizeEntries } from './NormalizeEntries';
 import { EntrySet, ItemSelection, parseLists } from './ParseLists';
 import { hasFirstChildList } from './Util';
 
-const outdentedComposer = (editor: Editor, entries: Entry[]): SugarElement[] => {
+const outdentedComposer = (editor: Editor, entries: Entry[]): SugarElement<DocumentFragment>[] => {
   const normalizedEntries = normalizeEntries(entries);
   return Arr.map(normalizedEntries, (entry) => {
     const content = SugarFragment.fromElements(entry.content);
@@ -29,15 +29,16 @@ const outdentedComposer = (editor: Editor, entries: Entry[]): SugarElement[] => 
   });
 };
 
-const indentedComposer = (editor: Editor, entries: Entry[]): SugarElement[] => {
+const indentedComposer = (editor: Editor, entries: Entry[]): SugarElement<HTMLElement>[] => {
   const normalizedEntries = normalizeEntries(entries);
   return composeList(editor.contentDocument, normalizedEntries).toArray();
 };
 
-const composeEntries = (editor, entries: Entry[]): SugarElement[] => Arr.bind(Arr.groupBy(entries, isIndented), (entries) => {
-  const groupIsIndented = Arr.head(entries).map(isIndented).getOr(false);
-  return groupIsIndented ? indentedComposer(editor, entries) : outdentedComposer(editor, entries);
-});
+const composeEntries = (editor: Editor, entries: Entry[]): SugarElement<Node>[] =>
+  Arr.bind(Arr.groupBy(entries, isIndented), (entries): SugarElement<Node>[] => {
+    const groupIsIndented = Arr.head(entries).exists(isIndented);
+    return groupIsIndented ? indentedComposer(editor, entries) : outdentedComposer(editor, entries);
+  });
 
 const indentSelectedEntries = (entries: Entry[], indentation: Indentation): void => {
   Arr.each(Arr.filter(entries, isSelected), (entry) => indentEntry(indentation, entry));
@@ -52,7 +53,7 @@ const getItemSelection = (editor: Editor): Optional<ItemSelection> => {
     (start, end) => ({ start, end }));
 };
 
-const listIndentation = (editor: Editor, lists: SugarElement[], indentation: Indentation) => {
+const listIndentation = (editor: Editor, lists: SugarElement<HTMLElement>[], indentation: Indentation): void => {
   const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
 
   Arr.each(entrySets, (entrySet) => {

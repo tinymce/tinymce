@@ -5,8 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
-import { GetContentEvent } from 'tinymce/core/api/EventTypes';
+import { GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Settings from '../api/Settings';
@@ -15,11 +18,11 @@ import * as Protect from './Protect';
 
 const each = Tools.each;
 
-const low = (s: string) =>
+const low = (s: string): string =>
   s.replace(/<\/?[A-Z]+/g, (a: string) => a.toLowerCase());
 
-const handleSetContent = (editor: Editor, headState, footState, evt) => {
-  let startPos, endPos, content, styles = '';
+const handleSetContent = (editor: Editor, headState: Cell<string>, footState: Cell<string>, evt: EditorEvent<SetContentEvent>): void => {
+  let startPos: number, endPos: number, content: string, styles = '';
   const dom = editor.dom;
 
   if (evt.selection) {
@@ -122,7 +125,7 @@ const handleSetContent = (editor: Editor, headState, footState, evt) => {
   });
 };
 
-const getDefaultHeader = (editor) => {
+const getDefaultHeader = (editor: Editor): string => {
   let header = '', value, styles = '';
 
   if (Settings.getDefaultXmlPi(editor)) {
@@ -158,13 +161,13 @@ const getDefaultHeader = (editor) => {
   return header;
 };
 
-const handleGetContent = (editor: Editor, head, foot, evt: GetContentEvent) => {
+const handleGetContent = (editor: Editor, head: string, foot: string, evt: EditorEvent<GetContentEvent>): void => {
   if (evt.format === 'html' && !evt.selection && (!evt.source_view || !Settings.shouldHideInSourceView(editor))) {
     evt.content = Protect.unprotectHtml(Tools.trim(head) + '\n' + Tools.trim(evt.content) + '\n' + Tools.trim(foot));
   }
 };
 
-const setup = (editor: Editor, headState, footState) => {
+const setup = (editor: Editor, headState: Cell<string>, footState: Cell<string>): void => {
   editor.on('BeforeSetContent', (evt) => {
     handleSetContent(editor, headState, footState, evt);
   });

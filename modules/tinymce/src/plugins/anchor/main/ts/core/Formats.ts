@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Utils from './Utils';
 
-const registerFormats = (editor: Editor) => {
+const registerFormats = (editor: Editor): void => {
   editor.formatter.register('namedAnchor', {
     inline: 'a',
     selector: Utils.namedAnchorSelector,

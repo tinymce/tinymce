@@ -7,6 +7,7 @@
 
 import { Optional, Type } from '@ephox/katamari';
 
+import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import XHR from 'tinymce/core/api/util/XHR';
 
@@ -23,8 +24,8 @@ const parseJson = (text: string): Optional<ListItem[]> => {
   }
 };
 
-const getLinks = (editor): Promise<Optional<ListItem[]>> => {
-  const extractor = (item) => editor.convertURL(item.value || item.url, 'href');
+const getLinks = (editor: Editor): Promise<Optional<ListItem[]>> => {
+  const extractor = (item: UserListItem) => editor.convertURL(item.value || item.url, 'href');
 
   const linkList = Settings.getLinkList(editor);
   return new Promise<Optional<UserListItem[]>>((callback) => {

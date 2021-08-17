@@ -11,20 +11,20 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { getTableBorderStyles } from '../api/Settings';
 
 interface ClassListValue {
-  title?: string;
-  text?: string;
-  value: string;
+  readonly title?: string;
+  readonly text?: string;
+  readonly value: string;
 }
 
 interface ClassListGroup {
-  title?: string;
-  text?: string;
-  menu: ClassListItem[];
+  readonly title?: string;
+  readonly text?: string;
+  readonly menu: ClassListItem[];
 }
 
 type ClassListItem = ClassListValue | ClassListGroup;
 
-const getAdvancedTab = (editor: Editor, dialogName: 'table' | 'row' | 'cell') => {
+const getAdvancedTab = (editor: Editor, dialogName: 'table' | 'row' | 'cell'): Dialog.TabSpec => {
   const advTabItems: Dialog.BodyComponentSpec[] = [
     {
       name: 'borderstyle',

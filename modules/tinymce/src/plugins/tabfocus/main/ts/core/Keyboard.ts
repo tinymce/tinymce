@@ -10,6 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 
@@ -17,31 +18,33 @@ import * as Settings from '../api/Settings';
 
 const DOM = DOMUtils.DOM;
 
-const tabCancel = (e) => {
+const tabCancel = (e: EditorEvent<KeyboardEvent>): void => {
   if (e.keyCode === VK.TAB && !e.ctrlKey && !e.altKey && !e.metaKey) {
     e.preventDefault();
   }
 };
 
-const setup = (editor: Editor) => {
-  const tabHandler = (e) => {
-    let x: number, i: number;
+const setup = (editor: Editor): void => {
+  const tabHandler = (e: EditorEvent<KeyboardEvent>) => {
+    let x: number;
 
     if (e.keyCode !== VK.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
       return;
     }
 
-    const find = (direction) => {
+    const find = (direction: number): HTMLElement | null => {
       const el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
 
-      const canSelectRecursive = (e) => {
-        return e.nodeName === 'BODY' || (e.type !== 'hidden' &&
-          e.style.display !== 'none' &&
-          e.style.visibility !== 'hidden' && canSelectRecursive(e.parentNode));
+      const canSelectRecursive = (e: Node): boolean => {
+        const castElem = (e as HTMLInputElement | HTMLTextAreaElement);
+        return e.nodeName === 'BODY' || (castElem.type !== 'hidden' &&
+          castElem.style.display !== 'none' &&
+          castElem.style.visibility !== 'hidden' && canSelectRecursive(e.parentNode));
       };
 
-      const canSelect = (el) => {
-        return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && EditorManager.get(e.id) && el.tabIndex !== -1 && canSelectRecursive(el);
+      const canSelect = (el: HTMLElement): boolean => {
+        // TODO: Is "e.id" correct here? It seems unlikely as "e" is the event so it likely should be "el.id"
+        return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && EditorManager.get((e as any).id) && el.tabIndex !== -1 && canSelectRecursive(el);
       };
 
       Tools.each(el, (e, i) => {
@@ -51,13 +54,13 @@ const setup = (editor: Editor) => {
         }
       });
       if (direction > 0) {
-        for (i = x + 1; i < el.length; i++) {
+        for (let i = x + 1; i < el.length; i++) {
           if (canSelect(el[i])) {
             return el[i];
           }
         }
       } else {
-        for (i = x - 1; i >= 0; i--) {
+        for (let i = x - 1; i >= 0; i--) {
           if (canSelect(el[i])) {
             return el[i];
           }

@@ -53,15 +53,22 @@ describe('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest', () =
       '</tbody></table>'
     );
     TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
+
+    // Hook up the editor to make the first cell in the row noneditable when a new row is created while tabbing
+    editor.once('NewCell', (e) => {
+      e.node.contentEditable = 'false';
+    });
+
     // Move to cell "c"
     TinyContentActions.keydown(editor, Keys.tab());
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 2, 0 ], 0);
     // Move to cell "e"
     TinyContentActions.keydown(editor, Keys.tab());
     TinyAssertions.assertCursor(editor, [ 0, 0, 1, 1, 0 ], 0);
-    // Inserts a new row and moves to it
+    // Inserts a new row and moves to it. It should be in the second column
+    // as we made the first cell noneditable above
     TinyContentActions.keydown(editor, Keys.tab());
-    TinyAssertions.assertCursor(editor, [ 0, 0, 2, 0 ], 0);
+    TinyAssertions.assertCursor(editor, [ 0, 0, 2, 1 ], 0);
   });
 
   it('TINY-7705: Tabbing backwards should ignore cef cells', () => {

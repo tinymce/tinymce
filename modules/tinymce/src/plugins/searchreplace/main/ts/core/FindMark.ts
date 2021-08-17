@@ -15,14 +15,15 @@ import * as TextCollect from './TextCollect';
 import * as TextPosition from './TextPosition';
 import { Pattern, TextMatch, TextSection } from './Types';
 
-const find = (pattern: Pattern, sections: TextSection[]) => Arr.bind(sections, (section) => {
-  const elements = section.elements;
-  const content = Arr.map(elements, SugarText.get).join('');
-  const positions = TextPosition.find(content, pattern, section.sOffset, content.length - section.fOffset);
-  return TextPosition.extract(elements, positions);
-});
+const find = (pattern: Pattern, sections: TextSection[]): TextMatch[][] =>
+  Arr.bind(sections, (section) => {
+    const elements = section.elements;
+    const content = Arr.map(elements, SugarText.get).join('');
+    const positions = TextPosition.find(content, pattern, section.sOffset, content.length - section.fOffset);
+    return TextPosition.extract(elements, positions);
+  });
 
-const mark = (matches: TextMatch[][], replacementNode: HTMLElement) => {
+const mark = (matches: TextMatch[][], replacementNode: HTMLElement): void => {
   // Walk backwards and mark the positions
   // Note: We need to walk backwards so the position indexes don't change
   Arr.eachr(matches, (match, idx) => {
@@ -43,14 +44,14 @@ const mark = (matches: TextMatch[][], replacementNode: HTMLElement) => {
   });
 };
 
-const findAndMark = (dom: DOMUtils, pattern: Pattern, node: Node, replacementNode: HTMLElement) => {
+const findAndMark = (dom: DOMUtils, pattern: Pattern, node: Node, replacementNode: HTMLElement): number => {
   const textSections = TextCollect.fromNode(dom, node);
   const matches = find(pattern, textSections);
   mark(matches, replacementNode);
   return matches.length;
 };
 
-const findAndMarkInSelection = (dom: DOMUtils, pattern: Pattern, selection: EditorSelection, replacementNode: HTMLElement) => {
+const findAndMarkInSelection = (dom: DOMUtils, pattern: Pattern, selection: EditorSelection, replacementNode: HTMLElement): number => {
   const bookmark = selection.getBookmark();
 
   // Handle table cell selection as the table plugin enables

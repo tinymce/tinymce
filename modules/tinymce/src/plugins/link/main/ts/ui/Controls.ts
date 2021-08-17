@@ -14,7 +14,7 @@ import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
 import * as Utils from '../core/Utils';
 
-const setupButtons = (editor: Editor) => {
+const setupButtons = (editor: Editor): void => {
   editor.ui.registry.addToggleButton('link', {
     icon: 'link',
     tooltip: 'Insert/edit link',
@@ -37,7 +37,7 @@ const setupButtons = (editor: Editor) => {
   });
 };
 
-const setupMenuItems = (editor: Editor) => {
+const setupMenuItems = (editor: Editor): void => {
   editor.ui.registry.addMenuItem('openlink', {
     text: 'Open link',
     icon: 'new-tab',
@@ -60,7 +60,7 @@ const setupMenuItems = (editor: Editor) => {
   });
 };
 
-const setupContextMenu = (editor: Editor) => {
+const setupContextMenu = (editor: Editor): void => {
   const inLink = 'link unlink openlink';
   const noLink = 'link';
   editor.ui.registry.addContextMenu('link', {
@@ -68,7 +68,7 @@ const setupContextMenu = (editor: Editor) => {
   });
 };
 
-const setupContextToolbars = (editor: Editor) => {
+const setupContextToolbars = (editor: Editor): void => {
   const collapseSelectionToEnd = (editor: Editor) => {
     editor.selection.collapse(false);
   };

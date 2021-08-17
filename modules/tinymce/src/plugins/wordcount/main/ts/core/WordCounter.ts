@@ -11,11 +11,11 @@ import Delay from 'tinymce/core/api/util/Delay';
 import { WordCountApi } from '../api/Api';
 import * as Events from '../api/Events';
 
-const updateCount = (editor: Editor, api: WordCountApi) => {
+const updateCount = (editor: Editor, api: WordCountApi): void => {
   Events.fireWordCountUpdate(editor, api);
 };
 
-const setup = (editor: Editor, api: WordCountApi, delay: number) => {
+const setup = (editor: Editor, api: WordCountApi, delay: number): void => {
   const debouncedUpdate = Delay.debounce(() => updateCount(editor, api), delay);
 
   editor.on('init', () => {

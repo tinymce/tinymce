@@ -13,7 +13,7 @@ export interface ImageSize {
 const getImageSize = (img: HTMLImageElement): ImageSize | null => {
   let width, height;
 
-  const isPxValue = (value) => {
+  const isPxValue = (value: string) => {
     return /^[0-9\.]+px$/.test(value);
   };
 
@@ -43,7 +43,7 @@ const getImageSize = (img: HTMLImageElement): ImageSize | null => {
   return null;
 };
 
-const setImageSize = (img: HTMLImageElement, size: ImageSize) => {
+const setImageSize = (img: HTMLImageElement, size: ImageSize | null): void => {
   let width, height;
 
   if (size) {
@@ -66,12 +66,10 @@ const setImageSize = (img: HTMLImageElement, size: ImageSize) => {
   }
 };
 
-const getNaturalImageSize = (img: HTMLImageElement) => {
-  return {
-    w: img.naturalWidth,
-    h: img.naturalHeight
-  };
-};
+const getNaturalImageSize = (img: HTMLImageElement): ImageSize => ({
+  w: img.naturalWidth,
+  h: img.naturalHeight
+});
 
 export {
   getImageSize,

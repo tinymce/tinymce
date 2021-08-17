@@ -7,25 +7,25 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
+type SpellcheckCallback = (method: string, text: string, success: () => void, failure: (message: string) => void) => void;
+
 const getLanguages = (editor: Editor): string => {
   const defaultLanguages = 'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,German=de,Italian=it,Polish=pl,Portuguese=pt_BR,Spanish=es,Swedish=sv';
   return editor.getParam('spellchecker_languages', defaultLanguages);
 };
 
-const getLanguage = (editor: Editor) => {
+const getLanguage = (editor: Editor): string => {
   const defaultLanguage = editor.getParam('language', 'en');
   return editor.getParam('spellchecker_language', defaultLanguage);
 };
 
-const getRpcUrl = (editor: Editor) => {
-  return editor.getParam('spellchecker_rpc_url');
-};
+const getRpcUrl = (editor: Editor): string =>
+  editor.getParam('spellchecker_rpc_url');
 
-const getSpellcheckerCallback = (editor: Editor) => {
-  return editor.getParam('spellchecker_callback');
-};
+const getSpellcheckerCallback = (editor: Editor): SpellcheckCallback =>
+  editor.getParam('spellchecker_callback');
 
-const getSpellcheckerWordcharPattern = (editor: Editor) => {
+const getSpellcheckerWordcharPattern = (editor: Editor): RegExp => {
   const defaultPattern = new RegExp('[^' +
   '\\s!"#$%&()*+,-./:;<=>?@[\\]^_{|}`' +
   '\u00a7\u00a9\u00ab\u00ae\u00b1\u00b6\u00b7\u00b8\u00bb' +

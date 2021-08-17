@@ -14,7 +14,7 @@ import * as Commands from './api/Commands';
 import { ScrollInfo } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 
-export default () => {
+export default (): void => {
   PluginManager.add('fullscreen', (editor) => {
     const fullscreenState = Cell<ScrollInfo | null>(null);
 

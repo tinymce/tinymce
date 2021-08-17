@@ -7,9 +7,11 @@
 
 import { Arr } from '@ephox/katamari';
 
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import { ImageDialogInfo, ListItem } from './DialogTypes';
 
-const makeItems = (info: ImageDialogInfo) => {
+const makeItems = (info: ImageDialogInfo): Dialog.BodyComponentSpec[] => {
   const imageUrl = {
     name: 'src',
     type: 'urlinput',
@@ -91,7 +93,7 @@ const makeItems = (info: ImageDialogInfo) => {
   ]);
 };
 
-const makeTab = (info: ImageDialogInfo) => ({
+const makeTab = (info: ImageDialogInfo): Dialog.TabSpec => ({
   title: 'General',
   name: 'general',
   items: makeItems(info)

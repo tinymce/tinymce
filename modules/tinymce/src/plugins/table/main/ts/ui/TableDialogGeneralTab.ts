@@ -10,7 +10,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import { hasAppearanceOptions } from '../api/Settings';
 
-const getItems = (editor: Editor, classes: Dialog.ListBoxItemSpec[], insertNewTable: boolean) => {
+const getItems = (editor: Editor, classes: Dialog.ListBoxItemSpec[], insertNewTable: boolean): Dialog.BodyComponentSpec[] => {
   const rowColCountItems: Dialog.BodyComponentSpec[] = !insertNewTable ? [] : [
     {
       type: 'input',

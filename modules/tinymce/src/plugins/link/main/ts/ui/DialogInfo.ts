@@ -24,7 +24,7 @@ const nonEmptyAttr = (dom: DOMUtils, elem: string | Element, name: string): Opti
   return val !== null && val.length > 0 ? Optional.some(val) : Optional.none();
 };
 
-const extractFromAnchor = (editor: Editor, anchor: HTMLAnchorElement) => {
+const extractFromAnchor = (editor: Editor, anchor: HTMLAnchorElement): LinkDialogInfo['anchor'] => {
   const dom = editor.dom;
   const onlyText = Utils.isOnlyTextSelected(editor);
   const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)) : Optional.none();
@@ -44,24 +44,25 @@ const extractFromAnchor = (editor: Editor, anchor: HTMLAnchorElement) => {
   };
 };
 
-const collect = (editor: Editor, linkNode: HTMLAnchorElement): Promise<LinkDialogInfo> => LinkListOptions.getLinks(editor).then((links) => {
-  const anchor = extractFromAnchor(editor, linkNode);
-  return {
-    anchor,
-    catalogs: {
-      targets: TargetOptions.getTargets(editor),
-      // This should be initial target. Is anchor.target that?
-      rels: RelOptions.getRels(editor, anchor.target),
-      classes: ClassListOptions.getClasses(editor),
-      anchor: AnchorListOptions.getAnchors(editor),
-      link: links
-    },
-    optNode: Optional.from(linkNode),
-    flags: {
-      titleEnabled: Settings.shouldShowLinkTitle(editor)
-    }
-  };
-});
+const collect = (editor: Editor, linkNode: HTMLAnchorElement): Promise<LinkDialogInfo> =>
+  LinkListOptions.getLinks(editor).then((links) => {
+    const anchor = extractFromAnchor(editor, linkNode);
+    return {
+      anchor,
+      catalogs: {
+        targets: TargetOptions.getTargets(editor),
+        // This should be initial target. Is anchor.target that?
+        rels: RelOptions.getRels(editor, anchor.target),
+        classes: ClassListOptions.getClasses(editor),
+        anchor: AnchorListOptions.getAnchors(editor),
+        link: links
+      },
+      optNode: Optional.from(linkNode),
+      flags: {
+        titleEnabled: Settings.shouldShowLinkTitle(editor)
+      }
+    };
+  });
 
 export const DialogInfo = {
   collect

@@ -16,7 +16,7 @@ import * as Bindings from './core/Bindings';
 import * as Keyboard from './core/Keyboard';
 import * as Buttons from './ui/Buttons';
 
-export default () => {
+export default (): void => {
   PluginManager.add('visualchars', (editor) => {
     const toggleState = Cell(Settings.isEnabledByDefault(editor));
 

@@ -13,6 +13,9 @@ import * as Settings from '../api/Settings';
 import * as Utils from './Utils';
 import * as WordFilter from './WordFilter';
 
+type PreProcessFilter = (editor: Editor, content: string, internal: boolean, wordContent: boolean) => string;
+type PostProcessFilter = (editor: Editor, node: HTMLElement) => void;
+
 /**
  * This class contains various fixes for browsers. These issues can not be feature
  * detected since we have no direct control over the clipboard. However we might be able
@@ -22,13 +25,13 @@ import * as WordFilter from './WordFilter';
  * @private
  */
 
-const addPreProcessFilter = (editor: Editor, filterFunc) => {
+const addPreProcessFilter = (editor: Editor, filterFunc: PreProcessFilter) => {
   editor.on('PastePreProcess', (e) => {
     e.content = filterFunc(editor, e.content, e.internal, e.wordContent);
   });
 };
 
-const addPostProcessFilter = (editor: Editor, filterFunc) => {
+const addPostProcessFilter = (editor: Editor, filterFunc: PostProcessFilter) => {
   editor.on('PastePostProcess', (e) => {
     filterFunc(editor, e.node);
   });
@@ -44,14 +47,14 @@ const addPostProcessFilter = (editor: Editor, filterFunc) => {
  * Becomes:
  *  <p>a</p><p>b</p>
  */
-const removeExplorerBrElementsAfterBlocks = (editor: Editor, html: string) => {
+const removeExplorerBrElementsAfterBlocks = (editor: Editor, html: string): string => {
   // Only filter word specific content
   if (!WordFilter.isWordContent(html)) {
     return html;
   }
 
   // Produce block regexp based on the block elements in schema
-  const blockElements = [];
+  const blockElements: string[] = [];
 
   Tools.each(editor.schema.getBlockElements(), (block: Element, blockName: string) => {
     blockElements.push(blockName);
@@ -86,7 +89,7 @@ const removeExplorerBrElementsAfterBlocks = (editor: Editor, html: string) => {
  *  paste_webkit_styles: "all", // Keep all of them
  *  paste_webkit_styles: "font-weight color" // Keep specific ones
  */
-const removeWebKitStyles = (editor: Editor, content: string, internal: boolean, isWordHtml: boolean) => {
+const removeWebKitStyles = (editor: Editor, content: string, internal: boolean, isWordHtml: boolean): string => {
   // WordFilter has already processed styles at this point and internal doesn't need any processing
   if (isWordHtml || internal) {
     return content;
@@ -110,7 +113,7 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean, 
 
     content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, (all, before, value, after) => {
       const inputStyles = dom.parseStyle(dom.decode(value));
-      let outputStyles = {};
+      const outputStyles: Record<string, string | number> = {};
 
       if (webKitStyles === 'none') {
         return before + after;
@@ -129,9 +132,9 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean, 
         }
       }
 
-      outputStyles = dom.serializeStyle(outputStyles, 'span');
-      if (outputStyles) {
-        return before + ' style="' + outputStyles + '"' + after;
+      const outputStyle = dom.serializeStyle(outputStyles, 'span');
+      if (outputStyle) {
+        return before + ' style="' + outputStyle + '"' + after;
       }
 
       return before + after;
@@ -149,13 +152,13 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean, 
   return content;
 };
 
-const removeUnderlineAndFontInAnchor = (editor: Editor, root: Element) => {
+const removeUnderlineAndFontInAnchor = (editor: Editor, root: Element): void => {
   editor.$('a', root).find('font,u').each((i, node) => {
     editor.dom.remove(node, true);
   });
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   if (Env.webkit) {
     addPreProcessFilter(editor, removeWebKitStyles);
   }

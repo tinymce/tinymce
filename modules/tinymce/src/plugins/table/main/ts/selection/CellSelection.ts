@@ -21,14 +21,15 @@ import * as Util from '../core/Util';
 import { ephemera } from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';
 
-const hasInternalTarget = (e: Event) => Class.has(SugarElement.fromDom(e.target as HTMLElement), 'ephox-snooker-resizer-bar') === false;
+const hasInternalTarget = (e: Event): boolean =>
+  Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
 
 export interface CellSelectionApi {
-  clear: (container: SugarElement) => void;
+  readonly clear: (container: SugarElement<Node>) => void;
 }
 
 export default (editor: Editor, lazyResize: () => Optional<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi => {
-  const onSelection = (cells: SugarElement[], start: SugarElement, finish: SugarElement) => {
+  const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     selectionTargets.targets().each((targets) => {
       const tableOpt = TableLookup.table(start);
       tableOpt.each((table) => {
@@ -62,7 +63,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
     const mouseHandlers = InputHandlers.mouse(win, body, isRoot, annotations);
     const keyHandlers = InputHandlers.keyboard(win, body, isRoot, annotations);
     const external = InputHandlers.external(win, body, isRoot, annotations);
-    const hasShiftKey = (event) => event.raw.shiftKey === true;
+    const hasShiftKey = (event: EventArgs<KeyboardEvent>) => event.raw.shiftKey === true;
 
     editor.on('TableSelectorChange', (e) => external(e.start, e.finish));
 

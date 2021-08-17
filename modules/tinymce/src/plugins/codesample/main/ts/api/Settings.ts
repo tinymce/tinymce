@@ -7,9 +7,13 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getLanguages = (editor: Editor) => editor.getParam('codesample_languages');
+import { LanguageSpec } from '../core/Languages';
 
-const useGlobalPrismJS = (editor: Editor) => editor.getParam('codesample_global_prismjs', false, 'boolean');
+const getLanguages = (editor: Editor): LanguageSpec[] | undefined =>
+  editor.getParam('codesample_languages');
+
+const useGlobalPrismJS = (editor: Editor): boolean =>
+  editor.getParam('codesample_global_prismjs', false, 'boolean');
 
 export {
   getLanguages,

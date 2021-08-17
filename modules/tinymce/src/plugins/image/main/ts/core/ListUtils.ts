@@ -40,29 +40,32 @@ const sanitizeList = (list: UserListItem[], extractValue: ListExtractor): ListIt
   return out;
 };
 
-const sanitizer = (extracter = getValue) => (list: UserListItem[]): Optional<ListItem[]> => {
+const sanitizer = (extractor: ListExtractor = getValue) => (list: UserListItem[] | undefined | false): Optional<ListItem[]> => {
   if (list) {
-    return Optional.from(list).map((list) => sanitizeList(list, extracter));
+    return Optional.from(list).map((list) => sanitizeList(list, extractor));
   } else {
     return Optional.none();
   }
 };
 
-const sanitize = (list: UserListItem[]) => sanitizer(getValue)(list);
+const sanitize = (list: UserListItem[] | undefined): Optional<ListItem[]> =>
+  sanitizer(getValue)(list);
 
-const isGroup = (item: ListItem): item is ListGroup => Obj.has(item as ListGroup, 'items');
+const isGroup = (item: ListItem): item is ListGroup =>
+  Obj.has(item as ListGroup, 'items');
 
-const findEntryDelegate = (list: ListItem[], value: string): Optional<ListValue> => Arr.findMap(list, (item) => {
-  if (isGroup(item)) {
-    return findEntryDelegate(item.items, value);
-  } else if (item.value === value) {
-    return Optional.some(item);
-  } else {
-    return Optional.none();
-  }
-});
+const findEntryDelegate = (list: ListItem[], value: string): Optional<ListValue> =>
+  Arr.findMap(list, (item) => {
+    if (isGroup(item)) {
+      return findEntryDelegate(item.items, value);
+    } else if (item.value === value) {
+      return Optional.some(item);
+    } else {
+      return Optional.none();
+    }
+  });
 
-const findEntry = (optList: Optional<ListItem[]>, value: string) =>
+const findEntry = (optList: Optional<ListItem[]>, value: string): Optional<ListValue> =>
   optList.bind((list) => findEntryDelegate(list, value));
 
 export const ListUtils = {

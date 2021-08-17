@@ -64,21 +64,24 @@ const handleInlineKey = (editor: Editor, patternSet: PatternSet): void => {
   }
 };
 
-const checkKeyEvent = (codes, event, predicate) => {
+const checkKeyEvent = <T>(codes: T[], event: KeyboardEvent, predicate: (code: T, event: KeyboardEvent) => boolean): boolean => {
   for (let i = 0; i < codes.length; i++) {
     if (predicate(codes[i], event)) {
       return true;
     }
   }
+  return false;
 };
 
-const checkKeyCode = (codes, event) => checkKeyEvent(codes, event, (code, event) => {
-  return code === event.keyCode && VK.modifierPressed(event) === false;
-});
+const checkKeyCode = (codes: number[], event: KeyboardEvent): boolean =>
+  checkKeyEvent(codes, event, (code, event) => {
+    return code === event.keyCode && VK.modifierPressed(event) === false;
+  });
 
-const checkCharCode = (chars, event) => checkKeyEvent(chars, event, (chr, event) => {
-  return chr.charCodeAt(0) === event.charCode;
-});
+const checkCharCode = (chars: string[], event: KeyboardEvent): boolean =>
+  checkKeyEvent(chars, event, (chr, event) => {
+    return chr.charCodeAt(0) === event.charCode;
+  });
 
 export {
   handleEnter,

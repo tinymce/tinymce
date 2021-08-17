@@ -7,32 +7,46 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getCreationDateClasses = (editor: Editor) => editor.getParam('template_cdate_classes', 'cdate');
+import { ExternalTemplate, TemplateValues } from '../core/Types';
 
-const getModificationDateClasses = (editor: Editor) => editor.getParam('template_mdate_classes', 'mdate');
+type TemplateCallback = (callback: (templates: ExternalTemplate[]) => void) => void;
 
-const getSelectedContentClasses = (editor: Editor) => editor.getParam('template_selected_content_classes', 'selcontent');
+const getCreationDateClasses = (editor: Editor): string =>
+  editor.getParam('template_cdate_classes', 'cdate');
 
-const getPreviewReplaceValues = (editor: Editor) => editor.getParam('template_preview_replace_values');
+const getModificationDateClasses = (editor: Editor): string =>
+  editor.getParam('template_mdate_classes', 'mdate');
 
-const getContentStyle = (editor: Editor): string => editor.getParam('content_style', '', 'string');
+const getSelectedContentClasses = (editor: Editor): string =>
+  editor.getParam('template_selected_content_classes', 'selcontent');
 
-const shouldUseContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors', false, 'boolean');
+const getPreviewReplaceValues = (editor: Editor): TemplateValues | undefined =>
+  editor.getParam('template_preview_replace_values');
 
-const getTemplateReplaceValues = (editor: Editor) => editor.getParam('template_replace_values');
+const getContentStyle = (editor: Editor): string =>
+  editor.getParam('content_style', '', 'string');
 
-const getTemplates = (editor: Editor) => editor.getParam('templates');
+const shouldUseContentCssCors = (editor: Editor): boolean =>
+  editor.getParam('content_css_cors', false, 'boolean');
 
-const getCdateFormat = (editor: Editor) => editor.getParam('template_cdate_format', editor.translate('%Y-%m-%d'));
+const getTemplateReplaceValues = (editor: Editor): TemplateValues | undefined =>
+  editor.getParam('template_replace_values');
 
-const getMdateFormat = (editor: Editor) => editor.getParam('template_mdate_format', editor.translate('%Y-%m-%d'));
+const getTemplates = (editor: Editor): string | ExternalTemplate[] | TemplateCallback | undefined =>
+  editor.getParam('templates');
 
-const getBodyClassFromHash = (editor: Editor) => {
+const getCdateFormat = (editor: Editor): string =>
+  editor.getParam('template_cdate_format', editor.translate('%Y-%m-%d'));
+
+const getMdateFormat = (editor: Editor): string =>
+  editor.getParam('template_mdate_format', editor.translate('%Y-%m-%d'));
+
+const getBodyClassFromHash = (editor: Editor): string => {
   const bodyClass = editor.getParam('body_class', '', 'hash');
   return bodyClass[editor.id] || '';
 };
 
-const getBodyClass = (editor: Editor) => {
+const getBodyClass = (editor: Editor): string => {
   const bodyClass = editor.getParam('body_class', '', 'string');
 
   if (bodyClass.indexOf('=') === -1) {

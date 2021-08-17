@@ -15,8 +15,8 @@ import * as Icons from '../../../icons/Icons';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ItemClasses from '../ItemClasses';
 
-const renderIcon = (iconHtml: string): AlloySpec =>
-  Icons.render('div', iconHtml, [ ItemClasses.iconClass ]);
+const renderIcon = (name: string, icons: Icons.IconProvider, classes: string[] = [ ItemClasses.iconClass ]) =>
+  Icons.render(name, { tag: 'div', classes }, icons);
 
 const renderText = (text: string): AlloySpec => ({
   dom: {
@@ -64,13 +64,13 @@ const renderShortcut = (shortcut: string): AlloySpec => ({
 });
 
 const renderCheckmark = (icons: Icons.IconProvider): AlloySpec =>
-  Icons.render('div', Icons.get('checkmark', icons), [ ItemClasses.checkmarkClass ]);
+  renderIcon('checkmark', icons, [ ItemClasses.checkmarkClass ]);
 
 const renderSubmenuCaret = (icons: Icons.IconProvider): AlloySpec =>
-  Icons.render('div', Icons.get('chevron-right', icons), [ ItemClasses.caretClass ]);
+  renderIcon('chevron-right', icons, [ ItemClasses.caretClass ]);
 
 const renderDownwardsCaret = (icons: Icons.IconProvider): AlloySpec =>
-  Icons.render('div', Icons.get('chevron-down', icons), [ ItemClasses.caretClass ]);
+  renderIcon('chevron-down', icons, [ ItemClasses.caretClass ]);
 
 const renderContainer = (container: Menu.CardContainer, components: Array<AlloySpec>): AlloySpec => {
   const directionClass = container.direction === 'vertical' ? ItemClasses.containerColumnClass : ItemClasses.containerRowClass;

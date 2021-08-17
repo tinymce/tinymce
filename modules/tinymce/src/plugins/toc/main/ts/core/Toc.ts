@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -13,9 +14,16 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Guid from './Guid';
 
+interface Header {
+  readonly id: string;
+  readonly level: number;
+  readonly title: string;
+  readonly element: HTMLHeadingElement;
+}
+
 const tocId = Guid.create('mcetoc_');
 
-const generateSelector = (depth: number) => {
+const generateSelector = (depth: number): string => {
   let i;
   const selector = [];
   for (i = 1; i <= depth; i++) {
@@ -24,15 +32,14 @@ const generateSelector = (depth: number) => {
   return selector.join(',');
 };
 
-const hasHeaders = (editor: Editor) => {
-  return readHeaders(editor).length > 0;
-};
+const hasHeaders = (editor: Editor): boolean =>
+  readHeaders(editor).length > 0;
 
-const readHeaders = (editor: Editor) => {
+const readHeaders = (editor: Editor): Header[] => {
   const tocClass = Settings.getTocClass(editor);
   const headerTag = Settings.getTocHeader(editor);
   const selector = generateSelector(Settings.getTocDepth(editor));
-  let headers = editor.$(selector);
+  let headers = editor.$<HTMLHeadingElement>(selector);
 
   // if headerTag is one of h1-9, we need to filter it out from the set
   if (headers.length && /^h[1-9]$/i.test(headerTag)) {
@@ -42,7 +49,7 @@ const readHeaders = (editor: Editor) => {
   }
 
   return Tools.map(headers, (h) => {
-    const id = (h as Element).id;
+    const id = h.id;
     return {
       id: id ? id : tocId(),
       level: parseInt(h.nodeName.replace(/^H/i, ''), 10),
@@ -52,10 +59,10 @@ const readHeaders = (editor: Editor) => {
   });
 };
 
-const getMinLevel = (headers) => {
-  let i, minLevel = 9;
+const getMinLevel = (headers: Header[]): number => {
+  let minLevel = 9;
 
-  for (i = 0; i < headers.length; i++) {
+  for (let i = 0; i < headers.length; i++) {
     if (headers[i].level < minLevel) {
       minLevel = headers[i].level;
     }
@@ -68,22 +75,21 @@ const getMinLevel = (headers) => {
   return minLevel;
 };
 
-const generateTitle = (tag, title) => {
+const generateTitle = (tag: string, title: string): string => {
   const openTag = '<' + tag + ' contenteditable="true">';
   const closeTag = '</' + tag + '>';
   return openTag + DOMUtils.DOM.encode(title) + closeTag;
 };
 
-const generateTocHtml = (editor) => {
+const generateTocHtml = (editor: Editor): string => {
   const html = generateTocContentHtml(editor);
   return '<div class="' + editor.dom.encode(Settings.getTocClass(editor)) + '" contenteditable="false">' + html + '</div>';
 };
 
-const generateTocContentHtml = (editor) => {
+const generateTocContentHtml = (editor: Editor): string => {
   let html = '';
   const headers = readHeaders(editor);
   let prevLevel = getMinLevel(headers) - 1;
-  let i, ii, h, nextLevel;
 
   if (!headers.length) {
     return '';
@@ -91,15 +97,15 @@ const generateTocContentHtml = (editor) => {
 
   html += generateTitle(Settings.getTocHeader(editor), I18n.translate('Table of Contents'));
 
-  for (i = 0; i < headers.length; i++) {
-    h = headers[i];
+  for (let i = 0; i < headers.length; i++) {
+    const h = headers[i];
     h.element.id = h.id;
-    nextLevel = headers[i + 1] && headers[i + 1].level;
+    const nextLevel = headers[i + 1] && headers[i + 1].level;
 
     if (prevLevel === h.level) {
       html += '<li>';
     } else {
-      for (ii = prevLevel; ii < h.level; ii++) {
+      for (let ii = prevLevel; ii < h.level; ii++) {
         html += '<ul><li>';
       }
     }
@@ -113,7 +119,7 @@ const generateTocContentHtml = (editor) => {
         html += '</ul>';
       }
     } else {
-      for (ii = h.level; ii > nextLevel; ii--) {
+      for (let ii = h.level; ii > nextLevel; ii--) {
         html += '</li></ul><li>';
       }
     }
@@ -124,22 +130,22 @@ const generateTocContentHtml = (editor) => {
   return html;
 };
 
-const isEmptyOrOffscren = (editor, nodes) => {
+const isEmptyOrOffscreen = (editor: Editor, nodes: DomQuery<Node>): boolean => {
   return !nodes.length || editor.dom.getParents(nodes[0], '.mce-offscreen-selection').length > 0;
 };
 
-const insertToc = (editor) => {
+const insertToc = (editor: Editor): void => {
   const tocClass = Settings.getTocClass(editor);
   const $tocElm = editor.$('.' + tocClass);
 
-  if (isEmptyOrOffscren(editor, $tocElm)) {
+  if (isEmptyOrOffscreen(editor, $tocElm)) {
     editor.insertContent(generateTocHtml(editor));
   } else {
     updateToc(editor);
   }
 };
 
-const updateToc = (editor) => {
+const updateToc = (editor: Editor): void => {
   const tocClass = Settings.getTocClass(editor);
   const $tocElm = editor.$('.' + tocClass);
 
