@@ -33,7 +33,7 @@ const detectOs = (oses: PlatformInfo[], userAgent: any): Optional<UaInfo> => {
   });
 };
 
-export const UaString = {
+export {
   detectBrowser,
   detectOs
 };

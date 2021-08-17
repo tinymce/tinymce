@@ -1,8 +1,8 @@
 import { Optional } from '@ephox/katamari';
 
 import { DeviceType } from '../detect/DeviceType';
-import { UaData, UserAgentData } from '../detect/UaData';
-import { UaString } from '../detect/UaString';
+import * as UaData from '../detect/UaData';
+import * as UaString from '../detect/UaString';
 import { PlatformInfo } from '../info/PlatformInfo';
 import { Browser } from './Browser';
 import { OperatingSystem } from './OperatingSystem';
@@ -13,7 +13,7 @@ export interface PlatformDetection {
   readonly deviceType: DeviceType;
 }
 
-const detect = (userAgent: string, userAgentDataOpt: Optional<UserAgentData>, mediaMatch: (query: string) => boolean): PlatformDetection => {
+const detect = (userAgent: string, userAgentDataOpt: Optional<UaData.UserAgentData>, mediaMatch: (query: string) => boolean): PlatformDetection => {
   const browsers = PlatformInfo.browsers();
   const oses = PlatformInfo.oses();
 

@@ -20,15 +20,13 @@ const detectBrowser = (browsers: PlatformInfo[], userAgentData: UserAgentData): 
   return Arr.findMap<UserAgentDataBrand, UaInfo>(userAgentData.brands, (uaBrand) => {
     const lcBrand = uaBrand.brand.toLowerCase();
     return Arr.find(browsers, (browser) => lcBrand === browser.brand?.toLowerCase())
-      .map((info) => {
-        return {
-          current: info.name,
-          version: Version.nu(parseInt(uaBrand.version, 10), 0)
-        };
-      });
+      .map((info) => ({
+        current: info.name,
+        version: Version.nu(parseInt(uaBrand.version, 10), 0)
+      }));
   });
 };
 
-export const UaData = {
+export {
   detectBrowser
 };
