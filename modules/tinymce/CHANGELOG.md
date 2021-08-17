@@ -78,6 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The table dialog did not always respect the `table_style_with_css` option #TINY-4926
 - Pasting into a table with multiple cells selected could cause the content to be pasted in the wrong location #TINY-7485
 - The `TableModified` event was not fired when pasting cells into a table #TINY-6939
+- The table paste column before and after icons were not flipped in RTL mode #TINY-7851
 - Base64 encoded images with spaces or line breaks in the data URI were not displayed correctly. Patch contributed by RoboBurned
 
 ### Deprecated
