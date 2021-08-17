@@ -18,7 +18,9 @@ describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
     comicSans: [] as boolean[]
   };
 
-  const cleanup = Singleton.unbindable();
+  const generalCleanup = Singleton.unbindable();
+  const helveticaCleanup = Singleton.unbindable();
+  const comicSansCleanup = Singleton.unbindable();
 
   const clearEvents = () => {
     events.general = [];
@@ -31,25 +33,19 @@ describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
 
   before(() => {
     const editor = hook.editor();
-    const general = editor.formatter.formatChanged('fontname', (evt) => events.general.push(evt), true);
-    const helvetica = editor.formatter.formatChanged('fontname', (evt) => events.helvetica.push(evt), false, {
+    generalCleanup.set(editor.formatter.formatChanged('fontname', (evt) => events.general.push(evt), true));
+    helveticaCleanup.set(editor.formatter.formatChanged('fontname', (evt) => events.helvetica.push(evt), false, {
       value: helveticaFont
-    });
-    const comicSans = editor.formatter.formatChanged('fontname', (evt) => events.comicSans.push(evt), false, {
+    }));
+    comicSansCleanup.set(editor.formatter.formatChanged('fontname', (evt) => events.comicSans.push(evt), false, {
       value: comicSansFont
-    });
-
-    cleanup.set({
-      unbind: () => {
-        general.unbind();
-        helvetica.unbind();
-        comicSans.unbind();
-      }
-    });
+    }));
   });
 
   after(() => {
-    cleanup.clear();
+    generalCleanup.clear();
+    helveticaCleanup.clear();
+    comicSansCleanup.clear();
   });
 
   context('Simple cases', () => {
