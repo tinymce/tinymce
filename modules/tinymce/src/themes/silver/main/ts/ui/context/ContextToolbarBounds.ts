@@ -7,7 +7,7 @@
 
 import { Bounds, Boxes } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Num, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Scroll, SelectorFind, SugarBody, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -16,8 +16,8 @@ import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 // Note: We want to avoid including with small difference such as 0.001px
-const isVerticalOverlap = (a: Bounds, b: Bounds, threshold: number = 0, precision: number = 2): boolean =>
-  Num.toPrecision(b.bottom - a.y, precision) >= threshold && Num.toPrecision(a.bottom - b.y, precision) >= threshold;
+const isVerticalOverlap = (a: Bounds, b: Bounds, threshold: number = 0.01): boolean =>
+  b.bottom - a.y >= threshold && a.bottom - b.y >= threshold;
 
 const getRangeRect = (rng: Range): DOMRect => {
   const rect = rng.getBoundingClientRect();

@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added static `Optionals.is` and `Optionals.equals` methods.
 - Added static `Results.is` method.
-- Added a new `precision` function to `Num` to round a number to a specific precision.
 
 ### Removed
 - Removed the `.is`, `.equals` and `.equals_` APIs from `Optional`.
