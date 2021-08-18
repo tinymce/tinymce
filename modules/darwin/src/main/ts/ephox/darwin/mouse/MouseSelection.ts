@@ -26,9 +26,10 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Nod
         CellSelection.identify(start, finish, isRoot).each((cellSel) => {
           const boxes = cellSel.boxes.getOr([]);
           if (boxes.length === 1) {
-            // If a single CEF cell is selected, make sure it is annotated
+            // If a single noneditable cell is selected and the actual selection target within the cell
+            // is also noneditable, make sure it is annotated
             const singleCell = boxes[0];
-            if (ContentEditable.getRaw(singleCell) === 'false') {
+            if (ContentEditable.getRaw(singleCell) === 'false' && !ContentEditable.isEditable(event.target)) {
               annotations.selectRange(container, boxes, singleCell, singleCell);
               bridge.selectNode(singleCell);
             }

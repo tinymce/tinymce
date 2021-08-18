@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ## Added
-- Added new `selectNode` method to `WindowBridge`.
+- Added new `selectNode` API to `WindowBridge`.
 
 ### Changed
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.

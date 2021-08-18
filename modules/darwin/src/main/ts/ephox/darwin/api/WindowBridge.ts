@@ -15,8 +15,8 @@ export interface WindowBridge {
   collapseSelection: (toStart?: boolean) => void;
   setSelection: (sel: SimRange) => void;
   setRelativeSelection: (start: Situ, finish: Situ) => void;
-  selectContents: (element: SugarElement) => void;
-  selectNode: (element: SugarElement) => void;
+  selectContents: (element: SugarElement<Node>) => void;
+  selectNode: (element: SugarElement<Node>) => void;
   getInnerHeight: () => number;
   getScrollY: () => number;
   scrollBy: (x: number, y: number) => void;

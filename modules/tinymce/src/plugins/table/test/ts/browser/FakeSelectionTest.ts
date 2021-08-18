@@ -1,7 +1,7 @@
 import { Assertions, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -133,6 +133,28 @@ describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
       [ '1', '3' ],
       [ '1', '3' ]
     );
+  });
+
+  it('TINY-7724: does not select CEF cell if contenteditable=true child is selected', () => {
+    const editor = hook.editor();
+    editor.setContent('<table><tr><td contenteditable="false"><p contenteditable="true">1</p></td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 0);
+
+    // Check the CEF cell is not annotated when the contenteditable="true" child is selected
+    const editablePara = SelectorFind.descendant(TinyDom.body(editor), 'p[contenteditable="true"]').getOrDie('Could not find paragraph');
+    selectWithMouse(editablePara, editablePara);
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 0
+    });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 0);
+
+    // Check the CEF cell is annotated if the cell itself is selected
+    const noneditableCell = SelectorFind.descendant(TinyDom.body(editor), 'td[contenteditable="false"]').getOrDie('Could not find cell');
+    selectWithMouse(noneditableCell, noneditableCell);
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 1
+    });
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
   });
 
   it('TINY-7724: can select other cells from CEF cell selection', () => {
