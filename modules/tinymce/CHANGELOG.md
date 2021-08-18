@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `formatter.match` API can now take an optional `similar` parameter to check if the format partial matches #TINY-7712
 - `Env.browser` now uses the User-Agent Client Hints API when it is available #TINY-7785
 - Icons with a `-rtl` suffix in their name will now automatically be used when the UI is rendered in right-to-left mode #TINY-7782
+- The `autolink` plugin link detection now permits custom protocols and improves valid link detection #TINY-7714
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents #TINY-7249

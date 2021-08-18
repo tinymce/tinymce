@@ -64,6 +64,10 @@ const setEnd = (rng: Range, container: Node, offset: number): void => {
 const hasProtocol = (url: string): boolean =>
   /^([A-Za-z][A-Za-z\d.+-]*:\/\/)|mailto:/.test(url);
 
+// A limited list of punctuation characters that might be used after a link
+const isPunctuation = (char: string) =>
+  /[?!,.;:]/.test(char);
+
 const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string): void => {
   let end, endContainer, bookmark, text, prev, len, rngText;
   const autoLinkPattern = Settings.getAutoLinkPattern(editor);
@@ -148,7 +152,7 @@ const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string):
 
   // Exclude last . from word like "www.site.com."
   text = rng.toString();
-  if (text.charAt(text.length - 1) === '.') {
+  if (isPunctuation(text.charAt(text.length - 1))) {
     setEnd(rng, endContainer, start - 1);
   }
 
