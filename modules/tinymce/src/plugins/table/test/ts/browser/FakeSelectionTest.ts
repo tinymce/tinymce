@@ -1,7 +1,7 @@
 import { Assertions, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/mcagar';
 import { Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -138,7 +138,6 @@ describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
   it('TINY-7724: does not select CEF cell if contenteditable=true child is selected', () => {
     const editor = hook.editor();
     editor.setContent('<table><tr><td contenteditable="false"><p contenteditable="true">1</p></td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>');
-    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 0);
 
     // Check the CEF cell is not annotated when the contenteditable="true" child is selected
     const editablePara = SelectorFind.descendant(TinyDom.body(editor), 'p[contenteditable="true"]').getOrDie('Could not find paragraph');
