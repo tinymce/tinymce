@@ -193,8 +193,7 @@ const selectWithMouse = (start: SugarElement<Element>, end: SugarElement<Element
 const selectWithKeyboard = (editor: Editor, cursorRange: Cursors.CursorPath, keyDirection: number): void => {
   const { startPath, soffset, finishPath, foffset } = cursorRange;
   TinySelections.setSelection(editor, startPath, soffset, finishPath, foffset);
-  TinyContentActions.keydown(editor, keyDirection, { shiftKey: true });
-  TinyContentActions.keyup(editor, keyDirection, { shiftKey: true });
+  TinyContentActions.keystroke(editor, keyDirection, { shiftKey: true });
 };
 
 const getSelectedCells = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
