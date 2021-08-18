@@ -197,7 +197,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
             'fixed'
           ),
           ChainUtils.cLogging(
-            'Relative, Selected: 5th-7th paragraph, assert below selection',
+            'Fixed, Selected: 5th-7th paragraph, assert below selection',
             [ cAssertBelowSelection ]
           )
         ])
