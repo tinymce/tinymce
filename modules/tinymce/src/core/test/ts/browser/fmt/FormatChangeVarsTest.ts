@@ -1,13 +1,16 @@
 import { Waiter } from '@ephox/agar';
 import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Singleton } from '@ephox/katamari';
+import { Arr, Fun, Singleton } from '@ephox/katamari';
 import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
+  const browser = PlatformDetection.detect().browser;
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ]);
@@ -85,7 +88,11 @@ describe('browser.tinymce.core.fmt.FormatChangeVarsTest', () => {
       // Change it
       editor.formatter.apply('fontname', { value: helveticaFont });
 
-      assert.deepEqual(events.general, [], 'font-family was not turned on or off');
+      if (browser.isIE) {
+        assert.isTrue(Arr.last(events.general).forall(Fun.identity), 'font-family was either unchanged, or ended up in the on state');
+      } else {
+        assert.deepEqual(events.general, [], 'font-family was not turned on or off');
+      }
       assert.deepEqual(events.comicSans, [ false ], 'font-family comic sans was turned off');
       assert.deepEqual(events.helvetica, [ true ], 'font-family helvetica was turned on');
     });
