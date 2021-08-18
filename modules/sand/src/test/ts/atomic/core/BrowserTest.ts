@@ -1,15 +1,24 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
+import { UserAgentData, UserAgentDataBrand } from 'ephox/sand/detect/UaData';
 import * as PlatformQuery from 'ephox/sand/test/PlatformQuery';
 
 type PlatformQuery = typeof PlatformQuery;
 
 describe('BrowserTest', () => {
-  const check = (expectedQuery: keyof PlatformQuery, expectedOs: string, expectedBrowser: string, expectedMajor: number, expectedMinor: number, userAgent: string) => {
-    const platform = PlatformDetection.detect(userAgent, Fun.never);
+  const check = (
+    expectedQuery: keyof PlatformQuery,
+    expectedOs: string,
+    expectedBrowser: string,
+    expectedMajor: number,
+    expectedMinor: number,
+    userAgent: string,
+    userAgentData?: UserAgentData
+  ) => {
+    const platform = PlatformDetection.detect(userAgent, Optional.from(userAgentData), Fun.never);
     assert.equal(expectedBrowser, platform.browser.current);
     assert.equal(expectedOs, platform.os.current);
 
@@ -20,11 +29,16 @@ describe('BrowserTest', () => {
     assert.isTrue(PlatformQuery[expectedQuery](platform), `The query ${expectedQuery} should match.\nUser Agent: ${userAgent}\nbrowser: ${expectedBrowser}`);
   };
 
-  const checkOSVersion = (expectedMajor: number, expectedMinor: number, userAgent: string) => {
-    const platform = PlatformDetection.detect(userAgent, Fun.never);
+  const checkOSVersion = (expectedMajor: number, expectedMinor: number, userAgent: string, userAgentData?: UserAgentData) => {
+    const platform = PlatformDetection.detect(userAgent, Optional.from(userAgentData), Fun.never);
     assert.equal(expectedMajor, platform.os.version.major, `Invalid major OS version ${platform.os.version.major} for agent: ${userAgent}`);
     assert.equal(expectedMinor, platform.os.version.minor, `Invalid minor OS version ${platform.os.version.minor} for agent: ${userAgent}`);
   };
+
+  const mockUserAgentData = (brands: UserAgentDataBrand[], isMobile: boolean = false): UserAgentData => ({
+    brands: [{ brand: ' Not A;Brand', version: '99' }].concat(brands),
+    mobile: isMobile
+  });
 
   // These tests are assuming there is no chromeframe activeX object active in the page.
   it('Edge', () => {
@@ -53,6 +67,8 @@ describe('BrowserTest', () => {
     check('isFirefox', 'Linux', 'Firefox', 3, 6, 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.7) Gecko/20100723 Fedora/3.6.7-1.fc13 Firefox/3.6');
     check('isFirefox', 'FreeBSD', 'Firefox', 3, 6, 'Mozilla/5.0 (X11; U; FreeBSD amd64; en-US; rv:1.9.2.20) Gecko/20110823 Firefox/3.6.20');
     check('isFirefox', 'OSX', 'Firefox', 3, 5, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.1.9) Gecko/20100315 Firefox/3.5.9 GTB7');
+    // Should fallback to userAgent string if browser cannot be found in userAgentData
+    check('isFirefox', 'Windows', 'Firefox', 3, 6, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2) Gecko/20100115 Firefox/3.6', mockUserAgentData([{ brand: 'Firefox', version: '10' }]));
   });
 
   it('Desktop Safari', () => {
@@ -73,6 +89,14 @@ describe('BrowserTest', () => {
     check('isChrome', 'Windows', 'Chrome', 6, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
     check('isChrome', 'Linux', 'Chrome', 5, 0, 'Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.127 Safari/533.4');
     check('isChrome', 'OSX', 'Chrome', 6, 0, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
+    // Should use browser info from userAgentData if available
+    check('isChrome', 'Windows', 'Chrome', 10, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3', mockUserAgentData([{ brand: 'Chromium', version: '10' }]));
+  });
+
+  it('Chromium Edge', () => {
+    check('isChrome', 'Windows', 'Chrome', 92, 0, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.73');
+    // Should use browser info from userAgentData if available
+    check('isChrome', 'Windows', 'Chrome', 93, 0, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.73', mockUserAgentData([{ brand: 'Chromium', version: '93' }]));
   });
 
   it('Mobile Browsers', () => {
