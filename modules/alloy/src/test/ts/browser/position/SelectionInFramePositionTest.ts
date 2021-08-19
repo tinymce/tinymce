@@ -14,8 +14,6 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
 
-type NamedData = Record<string, any>;
-
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
   const frame = SugarElement.fromTag('iframe');
@@ -76,11 +74,11 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       });
     };
 
-    const cAssertBelowSelection = NamedChain.bundle((data: any) => {
+    const cAssertBelowSelection = (pathLabel: string) => NamedChain.bundle((data: any) => {
       const frame = data.classic.element;
       const root = SugarElement.fromDom(frame.dom.contentWindow.document.body);
       const popup = data.popup;
-      const path = data.path3;
+      const path = data[pathLabel];
       const range = toDomRange(Cursors.calculate(root, path));
 
       const frameRect = frame.dom.getBoundingClientRect();
@@ -91,7 +89,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
       return Result.value(data);
     });
 
-    const cScrollIntoView = (rangeLabel: string, scrollLabel: string, errorMessage: string): Chain<NamedData, NamedData> => {
+    const cScrollIntoView = (rangeLabel: string, scrollLabel: string, errorMessage: string): NamedChain => {
       return NamedChain.direct(rangeLabel, Chain.binder((range: SimRange) => {
         const start = range.start;
         // NOTE: Safari likes to select the text node.
@@ -230,7 +228,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
           ),
           ChainUtils.cLogging(
             'Relative, Selected: 5th-7th paragraph, assert below selection',
-            [ cAssertBelowSelection ]
+            [ cAssertBelowSelection('path3') ]
           ),
           PositionTestUtils.cTestSink(
             'Fixed, Selected: 5th-7th paragraph, no scroll, some editor scroll',
@@ -238,7 +236,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
           ),
           ChainUtils.cLogging(
             'Fixed, Selected: 5th-7th paragraph, assert below selection',
-            [ cAssertBelowSelection ]
+            [ cAssertBelowSelection('path3') ]
           )
         ])
       ])
