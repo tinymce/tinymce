@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { BlobConversions } from '@ephox/imagetools';
 import { Singleton } from '@ephox/katamari';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

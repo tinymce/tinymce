@@ -2,8 +2,8 @@ import { Keys, RealKeys, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';

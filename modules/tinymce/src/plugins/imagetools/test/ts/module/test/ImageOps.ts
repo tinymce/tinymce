@@ -1,7 +1,7 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyUiActions } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';

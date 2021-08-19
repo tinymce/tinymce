@@ -1,8 +1,8 @@
 import { Keys, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { TinyContentActions, TinyDom, TinyHooks } from '@ephox/mcagar';
 import { SelectorFind } from '@ephox/sugar';
+import { TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';

@@ -1,7 +1,7 @@
 import { FocusTools, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

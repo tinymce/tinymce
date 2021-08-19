@@ -1,7 +1,7 @@
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

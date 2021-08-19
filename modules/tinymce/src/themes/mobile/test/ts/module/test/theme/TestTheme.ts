@@ -1,6 +1,6 @@
 import { AlloyComponent, Attachment, Behaviour, Gui, GuiFactory, Memento, Replacing } from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyLoader } from '@ephox/wrap-mcagar';
 
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import * as Features from 'tinymce/themes/mobile/features/Features';

@@ -2,8 +2,8 @@ import { ApproxStructure, Assertions, FocusTools, Keys, Mouse } from '@ephox/aga
 import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

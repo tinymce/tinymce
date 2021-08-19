@@ -2,8 +2,8 @@ import { ApproxStructure, Assertions, FocusTools, UiFinder, Waiter } from '@epho
 import { Boxes } from '@ephox/alloy';
 import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
-import { TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarDocument, SugarElement, Traverse } from '@ephox/sugar';
+import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

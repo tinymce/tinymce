@@ -1,5 +1,5 @@
 import { describe, it, before, after } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
