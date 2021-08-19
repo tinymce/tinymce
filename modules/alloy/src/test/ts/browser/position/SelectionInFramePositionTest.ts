@@ -1,5 +1,4 @@
 import { Chain, Cursors, Guard, NamedChain } from '@ephox/agar';
-import { NamedData } from '@ephox/agar/src/main/ts/ephox/agar/api/NamedChain';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Optional, Result } from '@ephox/katamari';
 import { Css, DomEvent, Scroll, SelectorFind, SimRange, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
@@ -14,6 +13,8 @@ import { toDomRange } from 'ephox/alloy/test/RangeUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 import * as Frames from '../../../../demo/ts/ephox/alloy/demo/frames/Frames';
+
+type NamedData = Record<string, any>;
 
 UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
 
