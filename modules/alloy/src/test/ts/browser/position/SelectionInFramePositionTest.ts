@@ -97,7 +97,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
         // NOTE: Safari likes to select the text node.
         const optElement = SugarNode.isText(start) ? Traverse.parentNode(start) : Optional.some(start);
         return optElement.filter(SugarNode.isHTMLElement).map((elem) => {
-          elem.dom.scrollIntoView();
+          Scroll.intoView(elem, true);
           return Scroll.get(Traverse.owner(elem));
         }).fold(() => Result.error(errorMessage), Result.value);
       }), scrollLabel);
