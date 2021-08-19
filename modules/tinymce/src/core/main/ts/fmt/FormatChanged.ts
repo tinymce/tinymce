@@ -85,7 +85,7 @@ const matchingNode = (editor: Editor, parents: Element[], format: string, simila
 const getParents = (editor: Editor, elm?: Element): Element[] => {
   const element = elm ?? editor.selection.getNode();
   return Arr.filter(FormatUtils.getParents(editor.dom, element), (node) =>
-    NodeType.isElement(node) && !node.getAttribute('data-mce-bogus')
+    NodeType.isElement(node) && !NodeType.isBogus(node)
   );
 };
 
