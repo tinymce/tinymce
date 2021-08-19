@@ -1,8 +1,9 @@
 import { TestLogs } from '@ephox/agar';
-import { Arr, Fun, Global, Id, Optional } from '@ephox/katamari';
-import { Attribute, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Arr, Fun, FutureResult, Global, Id, Optional, Result } from '@ephox/katamari';
+import { Attribute, DomEvent, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import { Editor } from '../alien/EditorTypes';
+import { detectTinymceBaseUrl } from './Urls';
 
 export type SuccessCallback = (v?: any, logs?: TestLogs) => void;
 export type FailureCallback = (err: Error | string, logs?: TestLogs) => void;
@@ -29,6 +30,25 @@ const removeTinymceElements = () => {
   Arr.each(elements, Remove.remove);
 };
 
+const loadScript = (url: string): FutureResult<string, Error> => FutureResult.nu((resolve) => {
+  const script = SugarElement.fromTag('script');
+
+  Attribute.set(script, 'referrerpolicy', 'origin');
+
+  Attribute.set(script, 'src', url);
+  const onLoad = DomEvent.bind(script, 'load', () => {
+    onLoad.unbind();
+    onError.unbind();
+    resolve(Result.value(url));
+  });
+  const onError = DomEvent.bind(script, 'error', () => {
+    onLoad.unbind();
+    onError.unbind();
+    resolve(Result.error(new Error('Failed to load script: ' + url)));
+  });
+  Insert.append(SugarBody.body(), script);
+});
+
 const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: Optional<SugarElement>): void => {
   const target = elementOpt.getOrThunk(() => createTarget(settings.inline));
   const randomId = Id.generate('tiny-loader');
@@ -39,7 +59,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
   }
 
   const teardown = () => {
-    tinymce.remove();
+    Global.tinymce.remove();
     Remove.remove(target);
     removeTinymceElements();
   };
@@ -62,10 +82,8 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
 
   const settingsSetup = settings.setup !== undefined ? settings.setup : Fun.noop;
 
-  const tinymce = Global.tinymce;
-  if (!tinymce) {
-    callbacks.failure('Failed to get global tinymce instance');
-  } else {
+  const run = () => {
+    const tinymce = Global.tinymce;
     callbacks.preInit(tinymce, settings);
 
     const targetSettings = SugarShadowDom.isInShadowRoot(target) ? ({ target: target.dom }) : ({ selector: '#' + randomId });
@@ -92,9 +110,19 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
         });
       }
     });
+  };
+
+  if (!Global.tinymce) {
+    // Attempt to load TinyMCE if it's not available
+    loadScript(detectTinymceBaseUrl(settings) + '/tinymce.js').get((result) => {
+      result.fold(() => callbacks.failure('Failed to find a global tinymce instance'), run);
+    });
+  } else {
+    run();
   }
 };
 
 export {
-  setup
+  setup,
+  loadScript
 };
