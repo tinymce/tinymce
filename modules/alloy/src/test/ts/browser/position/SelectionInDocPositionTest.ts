@@ -1,7 +1,7 @@
 import { Chain, Cursors, NamedChain } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Optional, Result } from '@ephox/katamari';
-import { Css, Html, Scroll, SugarElement, Traverse } from '@ephox/sugar';
+import { Css, Html, Scroll, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -9,6 +9,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
+import { toDomRange } from 'ephox/alloy/test/RangeUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
@@ -57,14 +58,6 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
         );
       }
     }));
-
-    const toDomRange = (cursorRange: Cursors.CursorRange): Range => {
-      const doc = Traverse.owner(cursorRange.start);
-      const range = doc.dom.createRange();
-      range.setStart(cursorRange.start.dom, cursorRange.soffset);
-      range.setEnd(cursorRange.finish.dom, cursorRange.foffset);
-      return range;
-    };
 
     const cAssertBelowSelection = NamedChain.bundle((data: any) => {
       const root = data.inline.element;
