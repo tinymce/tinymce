@@ -20,6 +20,7 @@ import * as Util from '../core/Util';
 import { getAdvancedTab } from './DialogAdvancedTab';
 import * as Helpers from './Helpers';
 import * as TableDialogGeneralTab from './TableDialogGeneralTab';
+import * as UiUtils from './UiUtils';
 
 type TableData = Helpers.TableData;
 
@@ -175,7 +176,7 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
     }
   }
 
-  const classes = Helpers.buildListItems(getTableClassList(editor));
+  const classes = UiUtils.buildListItems(getTableClassList(editor));
 
   if (classes.length > 0) {
     if (data.class) {

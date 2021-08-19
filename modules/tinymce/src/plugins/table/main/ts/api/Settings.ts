@@ -5,18 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Transformations } from '@ephox/acid';
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+
+import { UserListItem, UserListValue } from '../ui/UiUtils';
 
 export interface StringMap {
   [key: string]: string;
 }
-
-export type ClassList = Array<{ title: string; value: string }>;
-export type MenuItemList = Array<{ text: string; value: string }>;
 
 type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
@@ -33,7 +30,7 @@ const defaultCellBorderWidths = Arr.range(5, (i) => {
 });
 
 const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double', 'Groove', 'Ridge', 'Inset', 'Outset', 'None', 'Hidden' ], (type) => {
-  return { text: type, value: type.toLowerCase() };
+  return { title: type, value: type.toLowerCase() };
 });
 
 const determineDefaultStyles = (editor: Editor): Record<string, string> => {
@@ -59,10 +56,10 @@ const getTableSizingMode = (editor: Editor): TableSizingMode =>
 const getTableResponseWidth = (editor: Editor): boolean | undefined =>
   editor.getParam('table_responsive_width');
 
-const getTableBorderWidths = (editor: Editor): ClassList =>
+const getTableBorderWidths = (editor: Editor): UserListItem[] =>
   editor.getParam('table_border_widths', defaultCellBorderWidths, 'array');
 
-const getTableBorderStyles = (editor: Editor): MenuItemList =>
+const getTableBorderStyles = (editor: Editor): UserListValue[] =>
   editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
 
 const getDefaultAttributes = (editor: Editor): StringMap =>
@@ -95,13 +92,13 @@ const hasTableGrid = (editor: Editor): boolean =>
 const shouldStyleWithCss = (editor: Editor): boolean =>
   editor.getParam('table_style_by_css', false, 'boolean');
 
-const getCellClassList = (editor: Editor): ClassList =>
+const getCellClassList = (editor: Editor): UserListItem[] =>
   editor.getParam('table_cell_class_list', [], 'array');
 
-const getRowClassList = (editor: Editor): ClassList =>
+const getRowClassList = (editor: Editor): UserListItem[] =>
   editor.getParam('table_row_class_list', [], 'array');
 
-const getTableClassList = (editor: Editor): ClassList =>
+const getTableClassList = (editor: Editor): UserListItem[] =>
   editor.getParam('table_class_list', [], 'array');
 
 const isPercentagesForced = (editor: Editor): boolean =>
@@ -159,21 +156,11 @@ const hasObjectResizing = (editor: Editor): boolean => {
   return Type.isString(objectResizing) ? objectResizing === 'table' : objectResizing;
 };
 
-const generateColorMenuItems = (editor: Editor, setting: string): Menu.ChoiceMenuItemSpec[] => {
-  const colorMap: ClassList = editor.getParam(setting, [], 'array');
+const getTableCellBackgroundColors = (editor: Editor): UserListValue[] =>
+  editor.getParam('table_cell_background_color_map', [], 'array');
 
-  return Arr.map(colorMap, (entry): Menu.ChoiceMenuItemSpec => ({
-    text: entry.title,
-    value: '#' + Transformations.anyToHex(entry.value).value,
-    type: 'choiceitem'
-  }));
-};
-
-const getTableCellBackgroundColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] =>
-  generateColorMenuItems(editor, 'table_cell_background_color_map');
-
-const getTableCellBorderColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] =>
-  generateColorMenuItems(editor, 'table_cell_border_color_map');
+const getTableCellBorderColors = (editor: Editor): UserListValue[] =>
+  editor.getParam('table_cell_border_color_map', [], 'array');
 
 export {
   getDefaultAttributes,
