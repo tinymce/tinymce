@@ -1,8 +1,8 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { Css, Scroll, SugarBody, SugarLocation } from '@ephox/sugar';
+import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

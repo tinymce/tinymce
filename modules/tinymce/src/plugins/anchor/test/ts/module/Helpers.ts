@@ -1,6 +1,6 @@
 import { Waiter } from '@ephox/agar';
-import { TinyAssertions, TinyUiActions } from '@ephox/mcagar';
 import { SugarElement, Value } from '@ephox/sugar';
+import { TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 

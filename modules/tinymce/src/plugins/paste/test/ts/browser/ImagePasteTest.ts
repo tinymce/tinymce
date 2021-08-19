@@ -1,7 +1,7 @@
 import { Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell, Fun } from '@ephox/katamari';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

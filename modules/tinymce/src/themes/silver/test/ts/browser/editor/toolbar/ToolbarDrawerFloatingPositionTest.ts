@@ -1,8 +1,8 @@
 import { Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Insert, Remove, Scroll, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

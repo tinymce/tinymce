@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, StructAssert, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as DataToHtml from 'tinymce/plugins/media/core/DataToHtml';

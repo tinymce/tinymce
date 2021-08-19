@@ -1,6 +1,6 @@
 import { UiFinder } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyDom, TinySelections } from '@ephox/mcagar';
+import { McEditor, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
