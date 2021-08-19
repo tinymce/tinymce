@@ -41,7 +41,7 @@ interface Formatter extends FormatRegistry {
   matchAll: (names: string[], vars?: FormatVars) => string[];
   matchNode: (node: Node, name: string, vars?: FormatVars, similar?: boolean) => Format | undefined;
   canApply: (name: string) => boolean;
-  formatChanged: (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean, value?: FormatVars) => { unbind: () => void };
+  formatChanged: (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean, vars?: FormatVars) => { unbind: () => void };
   getCssText: (format: string | Format) => string;
 }
 

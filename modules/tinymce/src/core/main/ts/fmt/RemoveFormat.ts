@@ -11,6 +11,7 @@ import { Insert, InsertAll, SugarElement, Traverse } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
+import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
@@ -643,7 +644,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
       removeRngStyle(node);
     }
 
-    ed.fire('FormatRemove', { format: name, vars });
+    Events.fireFormatRemove(ed, name, node, vars);
     return;
   }
 
@@ -657,7 +658,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
       }
     }
 
-    ed.fire('FormatRemove', { format: name, vars });
+    Events.fireFormatRemove(ed, name, node, vars);
     return;
   }
 
@@ -677,7 +678,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   } else {
     CaretFormat.removeCaretFormat(ed, name, vars, similar);
   }
-  ed.fire('FormatRemove', { format: name, vars });
+  Events.fireFormatRemove(ed, name, node, vars);
 };
 
 export {

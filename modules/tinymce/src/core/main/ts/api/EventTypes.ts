@@ -7,6 +7,7 @@
 
 import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
+import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 import { ParserArgs } from './html/DomParser';
@@ -24,7 +25,7 @@ export interface NewBlockEvent { newBlock: Element }
 
 export interface NodeChangeEvent { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean }
 
-export interface FormatEvent { format: string; vars: FormatVars }
+export interface FormatEvent { format: string; vars?: FormatVars; node?: Node | RangeLikeObject }
 
 export interface ObjectResizeEvent { target: HTMLElement; width: number; height: number; origin: string }
 

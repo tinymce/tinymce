@@ -49,7 +49,7 @@ interface RtcRuntimeApi {
     apply: (format: string, vars: Record<string, string>) => void;
     remove: (format: string, vars: Record<string, string>) => void;
     toggle: (format: string, vars: Record<string, string>) => void;
-    formatChanged: (formats: string, callback: FormatChangeCallback, similar: boolean) => UnbindFormatChanged;
+    formatChanged: (formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
     getContent: (args: GetContentArgs) => Content;
@@ -192,7 +192,7 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
       apply: (name, vars, _node) => formatter.apply(name, defaultVars(vars)),
       remove: (name, vars, _node, _similar?) => formatter.remove(name, defaultVars(vars)),
       toggle: (name, vars, _node) => formatter.toggle(name, defaultVars(vars)),
-      formatChanged: (_rfl, formats, callback, similar) => formatter.formatChanged(formats, callback, similar)
+      formatChanged: (_rfl, formats, callback, similar, vars) => formatter.formatChanged(formats, callback, similar, vars)
     },
     editor: {
       getContent: (args, _format) => editor.getContent(args),
