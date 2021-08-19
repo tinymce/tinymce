@@ -74,8 +74,8 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
 
       const selectionBox = range.getBoundingClientRect();
       const popupBox = popup.element.dom.getBoundingClientRect();
-      assert.isAtLeast(popupBox.y, selectionBox.bottom);
-      assert.approximately(popupBox.y, selectionBox.bottom, 5);
+      assert.isAtLeast(popupBox.top, selectionBox.bottom);
+      assert.approximately(popupBox.top, selectionBox.bottom, 5);
       return Result.value(data);
     });
 
@@ -163,8 +163,8 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
               NamedChain.writeValue('path', Cursors.path({
                 startPath: [ 5 ],
                 soffset: 0,
-                finishPath: [ 8 ],
-                foffset: 0
+                finishPath: [ 7 ],
+                foffset: 1
               })),
               NamedChain.bundle((data: any) => {
                 const root = data.inline.element;
@@ -172,8 +172,8 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
                 const range = Cursors.calculate(root, Cursors.path({
                   startPath: [ 7 ],
                   soffset: 0,
-                  finishPath: [ 8 ],
-                  foffset: 0
+                  finishPath: [ 7 ],
+                  foffset: 1
                 }));
                 Scroll.intoView(range.start, true);
                 return Result.value(data);
