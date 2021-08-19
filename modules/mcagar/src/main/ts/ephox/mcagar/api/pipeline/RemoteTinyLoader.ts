@@ -1,6 +1,6 @@
 import { TestLogs } from '@ephox/agar';
-import { Arr, FutureResult, Optional, Result } from '@ephox/katamari';
-import { Attribute, DomEvent, Insert, SugarBody, SugarElement } from '@ephox/sugar';
+import { Arr, FutureResult, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import * as Loader from '../../loader/Loader';
 import { setTinymceBaseUrl } from '../../loader/Urls';
@@ -11,27 +11,8 @@ const setupBaseUrl = (tinymce: any, settings: Record<string, any>) => {
   }
 };
 
-const loadScript = (url: string): FutureResult<string, Error> => FutureResult.nu((resolve) => {
-  const script = SugarElement.fromTag('script');
-
-  Attribute.set(script, 'referrerpolicy', 'origin');
-
-  Attribute.set(script, 'src', url);
-  const onLoad = DomEvent.bind(script, 'load', () => {
-    onLoad.unbind();
-    onError.unbind();
-    resolve(Result.value(url));
-  });
-  const onError = DomEvent.bind(script, 'error', () => {
-    onLoad.unbind();
-    onError.unbind();
-    resolve(Result.error(new Error('Failed to load script: ' + url)));
-  });
-  Insert.append(SugarBody.body(), script);
-});
-
 const loadScripts = (urls: string[], success: () => void, failure: Loader.FailureCallback) => {
-  const result = Arr.foldl(urls, (acc, url) => acc.bindFuture(() => loadScript(url)), FutureResult.pure(''));
+  const result = Arr.foldl(urls, (acc, url) => acc.bindFuture(() => Loader.loadScript(url)), FutureResult.pure(''));
 
   result.get((res) => {
     res.fold((e) => failure(e, TestLogs.init()), success);

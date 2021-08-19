@@ -3,9 +3,9 @@ import { Global, Id, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Selectors, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import Promise from '@ephox/wrap-promise-polyfill';
 
-import 'tinymce';
 import { Editor as EditorType } from '../alien/EditorTypes';
-import { setupTinymceBaseUrl } from '../loader/Urls';
+import { loadScript } from '../loader/Loader';
+import { detectTinymceBaseUrl, setupTinymceBaseUrl } from '../loader/Urls';
 
 const errorMessageEditorRemoved = 'Editor Removed';
 
@@ -23,38 +23,48 @@ const pFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
       Insert.append(SugarBody.body(), element);
     }
 
-    const tinymce = Global.tinymce;
+    const run = () => {
+      const tinymce = Global.tinymce;
+      setupTinymceBaseUrl(tinymce, nuSettings);
 
-    setupTinymceBaseUrl(tinymce, nuSettings);
+      const targetSettings = SugarShadowDom.isInShadowRoot(element) ? ({ target: element.dom }) : ({ selector: '#' + randomId });
 
-    const targetSettings = SugarShadowDom.isInShadowRoot(element) ? ({ target: element.dom }) : ({ selector: '#' + randomId });
+      tinymce.init({
+        ...nuSettings,
+        ...targetSettings,
+        setup: (editor: T) => {
+          if (Type.isFunction(nuSettings.setup)) {
+            nuSettings.setup(editor);
+          }
+          const onRemove = () => {
+            Selectors.one('#' + randomId).each(Remove.remove);
+            reject(errorMessageEditorRemoved);
+          };
+          editor.once('remove', onRemove);
 
-    tinymce.init({
-      ...nuSettings,
-      ...targetSettings,
-      setup: (editor: T) => {
-        if (Type.isFunction(nuSettings.setup)) {
-          nuSettings.setup(editor);
+          editor.once('SkinLoaded', () => {
+            editor.off('remove', onRemove);
+            setTimeout(() => {
+              resolve(editor);
+            }, 0);
+          });
+
+          editor.once('SkinLoadError', (e) => {
+            editor.off('remove', onRemove);
+            reject(e.message);
+          });
         }
-        const onRemove = () => {
-          Selectors.one('#' + randomId).each(Remove.remove);
-          reject(errorMessageEditorRemoved);
-        };
-        editor.once('remove', onRemove);
+      });
+    };
 
-        editor.once('SkinLoaded', () => {
-          editor.off('remove', onRemove);
-          setTimeout(() => {
-            resolve(editor);
-          }, 0);
-        });
-
-        editor.once('SkinLoadError', (e) => {
-          editor.off('remove', onRemove);
-          reject(e.message);
-        });
-      }
-    });
+    if (!Global.tinymce) {
+      // Attempt to load TinyMCE if it's not available
+      loadScript(detectTinymceBaseUrl(settings) + '/tinymce.js').get((result) => {
+        result.fold(() => reject('Failed to find a global tinymce instance'), run);
+      });
+    } else {
+      run();
+    }
   });
 };
 

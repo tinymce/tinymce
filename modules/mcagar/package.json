@@ -31,6 +31,9 @@
     "@ephox/wrap-jsverify": "^2.0.1",
     "tslib": "^2.0.0"
   },
+  "peerDependencies": {
+    "tinymce": ">=4.0.0"
+  },
   "main": "./lib/main/ts/ephox/mcagar/api/Main.js",
   "module": "./lib/main/ts/ephox/mcagar/api/Main.js",
   "types": "./lib/main/ts/ephox/mcagar/api/Main.d.ts"
