@@ -11,7 +11,6 @@ import Editor from '../api/Editor';
 import { FormatEvent } from '../api/EventTypes';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as NodeType from '../dom/NodeType';
-import { RangeLikeObject } from '../selection/RangeTypes';
 import { FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
@@ -54,9 +53,9 @@ const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Edito
 
   editor.on('FormatApply FormatRemove', (e: EditorEvent<FormatEvent>) => {
     const element = Optional.from(e.node)
-      .map((nodeOrRange) => Obj.get(nodeOrRange as RangeLikeObject, 'startContainer').getOr(nodeOrRange as Node))
+      .map((nodeOrRange) => FormatUtils.isNode(nodeOrRange) ? nodeOrRange : nodeOrRange.startContainer)
       .bind((node) => NodeType.isElement(node) ? Optional.some(node) : Optional.from(node.parentElement))
-      .getOrThunk(() => editor.selection.getNode());
+      .getOrThunk(() => editor.selection.getStart());
 
     updateAndFireChangeCallbacks(editor, element, registeredFormatListeners.get());
   });
@@ -83,7 +82,7 @@ const matchingNode = (editor: Editor, parents: Element[], format: string, simila
 };
 
 const getParents = (editor: Editor, elm?: Element): Element[] => {
-  const element = elm ?? editor.selection.getNode();
+  const element = elm ?? editor.selection.getStart();
   return Arr.filter(FormatUtils.getParents(editor.dom, element), (node) =>
     NodeType.isElement(node) && !NodeType.isBogus(node)
   );
@@ -182,13 +181,11 @@ const removeListeners = (registeredFormatListeners: Cell<RegisteredFormats>, for
   Arr.each(formats.split(','), (format) => Obj.get(formatChangeItems, format).each((group) => {
     formatChangeItems[format] = {
       withSimilar: {
-        state: group.withSimilar.state,
-        similar: group.withSimilar.similar,
+        ...group.withSimilar,
         callbacks: Arr.filter(group.withSimilar.callbacks, (cb) => cb !== callback),
       },
       withoutSimilar: {
-        state: group.withoutSimilar.state,
-        similar: group.withoutSimilar.similar,
+        ...group.withoutSimilar,
         callbacks: Arr.filter(group.withoutSimilar.callbacks, (cb) => cb !== callback),
       },
       withVars: Arr.filter(group.withVars, (item) => item.callback !== callback),
