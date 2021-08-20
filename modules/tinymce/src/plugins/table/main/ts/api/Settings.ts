@@ -157,10 +157,10 @@ const hasObjectResizing = (editor: Editor): boolean => {
 };
 
 const getTableCellBackgroundColors = (editor: Editor): UserListValue[] =>
-  editor.getParam('table_cell_background_color_map', [], 'array');
+  editor.getParam('table_background_color_map', [], 'array');
 
 const getTableCellBorderColors = (editor: Editor): UserListValue[] =>
-  editor.getParam('table_cell_border_color_map', [], 'array');
+  editor.getParam('table_border_color_map', [], 'array');
 
 export {
   getDefaultAttributes,
