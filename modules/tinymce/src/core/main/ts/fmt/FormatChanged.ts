@@ -55,11 +55,14 @@ const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Edito
     const element = Optional.from(e.node)
       .map((nodeOrRange) => FormatUtils.isNode(nodeOrRange) ? nodeOrRange : nodeOrRange.startContainer)
       .bind((node) => NodeType.isElement(node) ? Optional.some(node) : Optional.from(node.parentElement))
-      .getOrThunk(() => editor.selection.getStart());
+      .getOrThunk(() => fallbackElement(editor));
 
     updateAndFireChangeCallbacks(editor, element, registeredFormatListeners.get());
   });
 };
+
+const fallbackElement = (editor: Editor): Element =>
+  editor.selection.getStart();
 
 const matchingNode = (editor: Editor, parents: Element[], format: string, similar: boolean, vars?: FormatVars): Optional<Element> => {
   const isMatchingNode = (node: Element) => {
@@ -82,7 +85,7 @@ const matchingNode = (editor: Editor, parents: Element[], format: string, simila
 };
 
 const getParents = (editor: Editor, elm?: Element): Element[] => {
-  const element = elm ?? editor.selection.getStart();
+  const element = elm ?? fallbackElement(editor);
   return Arr.filter(FormatUtils.getParents(editor.dom, element), (node) =>
     NodeType.isElement(node) && !NodeType.isBogus(node)
   );
