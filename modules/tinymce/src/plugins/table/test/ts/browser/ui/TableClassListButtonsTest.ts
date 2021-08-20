@@ -82,7 +82,8 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
 
     setEditorContentTableAndSelection(editor, 1, 1);
     await pAssertNoCheckmarksInMenu(editor, title, 2, sugarContainer, useMenuOrToolbar);
-    toggleClasses(editor, classList, type === 'table' ? 'mceTableToggleClass' : 'mceTableCellToggleClass');
+    const commandName = type === 'table' ? 'mceTableToggleClass' : 'mceTableCellToggleClass';
+    toggleClasses(editor, classList, commandName);
 
     const expected = {
       '.tox-menu': useMenuOrToolbar === 'toolbar' ? 1 : 2,
