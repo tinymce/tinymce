@@ -44,6 +44,9 @@ interface CallbackGroup {
   readonly withVars: CallbackWithVars[];
 }
 
+const hasVars = (value: CallbackWithVars | CallbackWithoutVars): value is CallbackWithVars =>
+  Obj.has(value as CallbackWithVars, 'vars');
+
 const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Editor) => {
   registeredFormatListeners.set({});
 
@@ -91,37 +94,27 @@ const getParents = (editor: Editor, elm?: Element): Element[] => {
   );
 };
 
-const hasChanged = (state: Cell<boolean>, newState: boolean): boolean => {
-  if (state.get() === newState) {
-    return false;
-  } else {
-    state.set(newState);
-    return true;
-  }
-};
-
 const updateAndFireChangeCallbacks = (editor: Editor, elm: Element, registeredCallbacks: RegisteredFormats) => {
   // Ignore bogus nodes like the <a> tag created by moveStart()
   const parents = getParents(editor, elm);
 
   Obj.each(registeredCallbacks, (data, format) => {
-    Arr.each([ data.withSimilar, data.withoutSimilar ], (spec) => {
-      if (spec.callbacks.length > 0) {
-        const match = matchingNode(editor, parents, format, spec.similar);
-        if (hasChanged(spec.state, match.isSome())) {
-          const node = match.getOr(elm);
-          Arr.each(spec.callbacks, (callback) => callback(match.isSome(), { node, format, parents }));
+    const runIfChanged = (spec: CallbackWithoutVars | CallbackWithVars) => {
+      const match = matchingNode(editor, parents, format, spec.similar, hasVars(spec) ? spec.vars : undefined);
+      const isSet = match.isSome();
+      if (spec.state.get() !== isSet) {
+        spec.state.set(isSet);
+        const node = match.getOr(elm);
+        if (hasVars(spec)) {
+          spec.callback(isSet, { node, format, parents });
+        } else {
+          Arr.each(spec.callbacks, (callback) => callback(isSet, { node, format, parents }));
         }
       }
-    });
+    };
 
-    Arr.each(data.withVars, (item) => {
-      const match = matchingNode(editor, parents, format, item.similar, item.vars);
-      if (hasChanged(item.state, match.isSome())) {
-        const node = match.getOr(elm);
-        item.callback(match.isSome(), { node, format, parents });
-      }
-    });
+    Arr.each([ data.withSimilar, data.withoutSimilar ], runIfChanged);
+    Arr.each(data.withVars, runIfChanged);
   });
 };
 
