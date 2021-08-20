@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Plugin from 'tinymce/plugins/directionality/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';

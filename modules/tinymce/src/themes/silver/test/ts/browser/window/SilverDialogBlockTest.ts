@@ -2,8 +2,8 @@ import { ApproxStructure, Assertions, Mouse, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optionals } from '@ephox/katamari';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, Height, SelectorFind, SugarBody, SugarDocument, SugarElement, SugarLocation, Width } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

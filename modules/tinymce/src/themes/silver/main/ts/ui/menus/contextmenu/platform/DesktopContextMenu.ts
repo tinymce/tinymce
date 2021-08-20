@@ -25,7 +25,7 @@ export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildM
     e.preventDefault();
 
     // show the context menu, with items set to close on click
-    InlineView.showMenuAt(contextmenu, anchorSpec, {
+    InlineView.showMenuAt(contextmenu, { anchor: anchorSpec }, {
       menu: {
         markers: MenuParts.markers('normal')
       },

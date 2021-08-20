@@ -2,7 +2,6 @@ import { after, afterEach, before } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import 'tinymce';
 import { Editor as EditorType } from '../../alien/EditorTypes';
 import * as Loader from '../../loader/Loader';
 import { setupTinymceBaseUrl } from '../../loader/Urls';

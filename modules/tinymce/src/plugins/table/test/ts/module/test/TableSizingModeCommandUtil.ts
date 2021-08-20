@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { TinySelections } from '@ephox/mcagar';
+import { TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

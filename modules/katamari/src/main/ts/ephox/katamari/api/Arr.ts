@@ -151,16 +151,16 @@ export const groupBy = <T>(xs: ArrayLike<T>, f: (a: T) => any): T[][] => {
   }
 };
 
-export const foldr = <T, U>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
-  eachr(xs, (x) => {
-    acc = f(acc, x);
+export const foldr = <T, U>(xs: ArrayLike<T>, f: (acc: U, x: T, i: number) => U, acc: U): U => {
+  eachr(xs, (x, i) => {
+    acc = f(acc, x, i);
   });
   return acc;
 };
 
-export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U, acc: U): U => {
-  each(xs, (x) => {
-    acc = f(acc, x);
+export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T, i: number) => U, acc: U): U => {
+  each(xs, (x, i) => {
+    acc = f(acc, x, i);
   });
   return acc;
 };

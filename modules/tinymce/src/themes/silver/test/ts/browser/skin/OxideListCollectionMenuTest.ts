@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, FocusTools, Keys } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarDocument } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

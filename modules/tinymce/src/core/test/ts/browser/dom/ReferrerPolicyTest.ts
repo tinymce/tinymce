@@ -1,6 +1,6 @@
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { McEditor } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

@@ -4,12 +4,20 @@ import { SimRange, SugarElement } from '@ephox/sugar';
 import { Bounds } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Bubble } from '../layout/Bubble';
-import { AnchorBox, AnchorLayout } from '../layout/LayoutTypes';
+import { AnchorBox, AnchorLayout, PlacerResult } from '../layout/LayoutTypes';
 import { OriginAdt } from '../layout/Origins';
+import { Transition } from '../view/Transitions';
 
-// doPlace(component, origin, anchoring, posConfig, placee);
-export type AnchorPlacement =
-  (comp: AlloyComponent, origin: OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent) => void;
+// doPlace(component, origin, anchoring, placeeState, posConfig, placee, lastPlacement, transition);
+export type AnchorPlacement = (
+  comp: AlloyComponent,
+  origin: OriginAdt,
+  anchoring: Anchoring,
+  getBounds: Optional<() => Bounds>,
+  placee: AlloyComponent,
+  lastPlacement: Optional<PlacerResult>,
+  transition: Optional<Transition>
+) => PlacerResult;
 
 export interface CommonAnchorSpec {
   type: string;

@@ -1,5 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Format } from 'tinymce/core/fmt/FormatTypes';

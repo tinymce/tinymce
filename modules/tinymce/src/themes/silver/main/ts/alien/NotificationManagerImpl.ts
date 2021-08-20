@@ -103,11 +103,13 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
     return {
       close,
       moveTo: (x: number, y: number) => {
-        InlineView.showAt(notificationWrapper, {
-          type: 'makeshift',
-          x,
-          y
-        }, GuiFactory.premade(notification));
+        InlineView.showAt(notificationWrapper, GuiFactory.premade(notification), {
+          anchor: {
+            type: 'makeshift',
+            x,
+            y
+          }
+        });
       },
       moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => {
         if (rel !== 'banner') {
@@ -121,9 +123,9 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
               onLtr: () => [ layoutDirection ]
             }
           };
-          InlineView.showAt(notificationWrapper, nodeAnchor, GuiFactory.premade(notification));
+          InlineView.showAt(notificationWrapper, GuiFactory.premade(notification), { anchor: nodeAnchor });
         } else {
-          InlineView.showAt(notificationWrapper, sharedBackstage.anchors.banner(), GuiFactory.premade(notification));
+          InlineView.showAt(notificationWrapper, GuiFactory.premade(notification), { anchor: sharedBackstage.anchors.banner() });
         }
       },
       text: (nuText: string) => {

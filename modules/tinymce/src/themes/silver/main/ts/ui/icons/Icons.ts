@@ -26,6 +26,8 @@ const rtlTransform: Record<string, boolean> = {
   'outdent': true,
   'table-insert-column-after': true,
   'table-insert-column-before': true,
+  'paste-column-after': true,
+  'paste-column-before': true,
   'unordered-list': true,
   'list-bull-circle': true,
   'list-bull-default': true,

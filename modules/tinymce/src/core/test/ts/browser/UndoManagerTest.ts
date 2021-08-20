@@ -1,7 +1,7 @@
 import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

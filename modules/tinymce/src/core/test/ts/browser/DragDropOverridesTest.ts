@@ -1,8 +1,8 @@
 import { Assertions, DragnDrop, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
 import { Hierarchy, SugarBody, SugarNode } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

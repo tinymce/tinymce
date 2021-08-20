@@ -1,11 +1,9 @@
 import { Fun } from '@ephox/katamari';
 
-import { UaString } from '../detect/UaString';
 import { Version } from '../detect/Version';
+import { UaInfo } from '../info/UaInfo';
 
-export interface OperatingSystem {
-  readonly current: string | undefined;
-  readonly version: Version;
+export interface OperatingSystem extends UaInfo {
   readonly isWindows: () => boolean;
   readonly isiOS: () => boolean;
   readonly isAndroid: () => boolean;
@@ -35,7 +33,7 @@ const unknown = (): OperatingSystem => {
   });
 };
 
-const nu = (info: UaString): OperatingSystem => {
+const nu = (info: UaInfo): OperatingSystem => {
   const current = info.current;
   const version = info.version;
 

@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';

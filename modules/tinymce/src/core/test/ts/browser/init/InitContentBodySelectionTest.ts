@@ -1,6 +1,6 @@
 import { before, context, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyAssertions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { McEditor, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

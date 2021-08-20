@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/textpattern/Plugin';

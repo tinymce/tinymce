@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

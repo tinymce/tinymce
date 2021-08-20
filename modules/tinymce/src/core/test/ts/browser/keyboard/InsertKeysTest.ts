@@ -1,9 +1,9 @@
 import { Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, Insert, SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

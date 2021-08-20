@@ -1,7 +1,7 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
@@ -47,14 +47,9 @@ describe('browser.tinymce.plugins.imagetools.ContextToolbarTest', () => {
     return dom.getAttrib(element, 'src');
   };
 
-  const pClickContextToolbarButton = async (editor: Editor, label: string) => {
-    const toolbar = await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog div');
-    await ImageOps.pClickContextToolbarButton(toolbar, label);
-  };
-
   const pAssertImageFlip = async (editor: Editor, label: string) => {
     const srcBeforeFlip = getImageSrc(editor);
-    await pClickContextToolbarButton(editor, label);
+    await ImageOps.pClickContextToolbarButton(editor, label);
     await Waiter.pTryUntilPredicate('Wait for image to flip', () => {
       const newSrc = getImageSrc(editor);
       return newSrc !== srcBeforeFlip;
@@ -89,13 +84,13 @@ describe('browser.tinymce.plugins.imagetools.ContextToolbarTest', () => {
     await Waiter.pTryUntil('Wait for image to be rotated', () => TinyAssertions.assertContentPresence(editor, { 'img[width="460"][height="598"]': 1 }));
     await pAssertImageFlip(editor, 'Flip horizontally');
     await pAssertImageFlip(editor, 'Flip vertically');
-    await pClickContextToolbarButton(editor, 'Edit image');
+    await ImageOps.pClickContextToolbarButton(editor, 'Edit image');
     /* Previously there was a fixed wait here, waiting for the dialog to display.
     Without this wait, you can't see the dialog if you're watching the test.
     However, the below DOM assertions insist that the dialog is, indeed, there.
     */
     await pWaitForDialogOpenThenCloseDialog(editor, 'div.tox-image-tools__image>img');
-    await pClickContextToolbarButton(editor, 'Image options');
+    await ImageOps.pClickContextToolbarButton(editor, 'Image options');
     await pWaitForDialogOpenThenCloseDialog(editor, 'div.tox-form');
   });
 });

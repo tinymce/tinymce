@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Cursors, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Obj } from '@ephox/katamari';
-import { TinyAssertions, TinyContentActions, TinyDom, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, Checked, Class, Html, SelectorFilter, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -193,8 +193,7 @@ const selectWithMouse = (start: SugarElement<Element>, end: SugarElement<Element
 const selectWithKeyboard = (editor: Editor, cursorRange: Cursors.CursorPath, keyDirection: number): void => {
   const { startPath, soffset, finishPath, foffset } = cursorRange;
   TinySelections.setSelection(editor, startPath, soffset, finishPath, foffset);
-  TinyContentActions.keydown(editor, keyDirection, { shiftKey: true });
-  TinyContentActions.keyup(editor, keyDirection, { shiftKey: true });
+  TinyContentActions.keystroke(editor, keyDirection, { shiftKey: true });
 };
 
 const getSelectedCells = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>

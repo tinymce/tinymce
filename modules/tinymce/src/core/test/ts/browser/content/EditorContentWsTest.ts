@@ -1,5 +1,5 @@
 import { before, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyAssertions } from '@ephox/mcagar';
+import { McEditor, TinyAssertions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

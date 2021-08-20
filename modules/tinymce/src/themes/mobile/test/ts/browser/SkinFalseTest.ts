@@ -1,6 +1,6 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from '@ephox/mcagar';
+import { TinyLoader } from '@ephox/wrap-mcagar';
 
 import Theme from 'tinymce/themes/mobile/Theme';
 

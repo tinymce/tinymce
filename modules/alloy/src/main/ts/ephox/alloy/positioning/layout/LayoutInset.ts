@@ -1,5 +1,3 @@
-import { SugarElement } from '@ephox/sugar';
-
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 import * as Direction from './Direction';
@@ -147,9 +145,9 @@ const lookupPreserveLayout = (lastPlacement: Placement) => {
   }
 };
 
-const preserve: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, placee: SugarElement<HTMLElement>) => {
+const preserve: AnchorLayout = (anchor, element, bubbles, placee, bounds) => {
   const layout = getPlacement(placee).map(lookupPreserveLayout).getOr(north);
-  return layout(anchor, element, bubbles, placee);
+  return layout(anchor, element, bubbles, placee, bounds);
 };
 
 const lookupFlippedLayout = (lastPlacement: Placement) => {
@@ -173,9 +171,9 @@ const lookupFlippedLayout = (lastPlacement: Placement) => {
   }
 };
 
-const flip: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, placee: SugarElement<HTMLElement>) => {
+const flip: AnchorLayout = (anchor, element, bubbles, placee, bounds) => {
   const layout = getPlacement(placee).map(lookupFlippedLayout).getOr(north);
-  return layout(anchor, element, bubbles, placee);
+  return layout(anchor, element, bubbles, placee, bounds);
 };
 
 export {

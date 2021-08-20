@@ -1,7 +1,7 @@
 import { ApproxStructure, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Zwsp from 'tinymce/core/text/Zwsp';

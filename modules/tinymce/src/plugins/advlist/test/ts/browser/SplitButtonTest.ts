@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SelectorFind, SugarDocument } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';

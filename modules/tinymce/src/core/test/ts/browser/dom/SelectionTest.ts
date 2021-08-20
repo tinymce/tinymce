@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';

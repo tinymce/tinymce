@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
 import { Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import DomQuery from 'tinymce/core/api/dom/DomQuery';

@@ -35,9 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the performance when rendering UI components #TINY-7572
 - When scrolling, the context toolbar will stick to where it was previously for large elements, such as tables #TINY-7545
 - The context toolbar will now move out of the way when it overlaps with the selection, such as in table cells #TINY-7192
+- The context toolbar will now use transition animations when changing placements #TINY-7740
 - The `formatter.match` API can now take an optional `similar` parameter to check if the format partial matches #TINY-7712
+- `Env.browser` now uses the User-Agent Client Hints API when it is available #TINY-7785
 - Icons with a `-rtl` suffix in their name will now automatically be used when the UI is rendered in right-to-left mode #TINY-7782
 - `editor.formatter.formatChanged` now supports listening for changes to formats with specific variables #TINY-7713
+- The `autolink` plugin link detection now permits custom protocols and improves valid link detection #TINY-7714
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents #TINY-7249
@@ -73,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `imagetools` buttons were incorrectly enabled for remote images without `imagetools_proxy` set #TINY-7772
 - Removing a table row or column could result in the cursor getting placed in an invalid location #TINY-7695
 - Pressing the Tab key to navigate through table cells did not skip noneditable cells #TINY-7705
+- Clicking on a noneditable table cell did not show a visual selection like other noneditable elements #TINY-7724
 - Some table operations would incorrectly cause table row attributes and styles to be lost #TINY-6666
 - The selection was incorrectly lost when using the `mceTableCellType` and `mceTableRowType` commands #TINY-6666
 - The `mceTableRowType` was reversing the order of the rows when converting multiple header rows back to body rows #TINY-6666
@@ -82,6 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `editor.formatter.formatChanged` would ignore the `similar` parameter if another callback had already been registered for the same format #TINY-7713
 - `editor.formatter.formatChanged` would sometimes not run the callback the first time the format was removed #TINY-7713
 - The `TableModified` event was not fired when pasting cells into a table #TINY-6939
+- The table paste column before and after icons were not flipped in RTL mode #TINY-7851
 - Base64 encoded images with spaces or line breaks in the data URI were not displayed correctly. Patch contributed by RoboBurned
 
 ### Deprecated

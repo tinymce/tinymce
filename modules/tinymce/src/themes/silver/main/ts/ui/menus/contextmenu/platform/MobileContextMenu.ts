@@ -112,7 +112,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
     e.preventDefault();
 
     // Show the context menu, with items set to close on click
-    InlineView.showMenuWithinBounds(contextmenu, anchorSpec, {
+    InlineView.showMenuWithinBounds(contextmenu, { anchor: anchorSpec }, {
       menu: {
         markers: MenuParts.markers('normal'),
         highlightImmediately

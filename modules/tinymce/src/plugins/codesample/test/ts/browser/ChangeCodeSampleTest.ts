@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/codesample/Plugin';
