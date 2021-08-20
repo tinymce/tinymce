@@ -32,7 +32,7 @@ const onSetupToggle = (editor: Editor, selections: Selections, formatName: strin
       // If value is empty (A None-entry in the list), check if the format is not set at all. Otherwise, check if the format is set to the correct value.
       if (isNone) {
         api.setActive(!Arr.exists(selectedCells, checkNode));
-        boundCallback.set(editor.formatter.formatChanged(formatName, api.setActive, true));
+        boundCallback.set(editor.formatter.formatChanged(formatName, (match) => api.setActive(!match), true));
       } else {
         api.setActive(Arr.forall(selectedCells, checkNode));
         boundCallback.set(editor.formatter.formatChanged(formatName, api.setActive, false, { value: formatValue }));
