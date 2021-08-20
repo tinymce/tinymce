@@ -10,6 +10,7 @@ import { PredicateExists, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
+import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
@@ -312,10 +313,11 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       const formatItem = formatList[i];
       if (formatItem.ceFalseOverride && FormatUtils.isSelectorFormat(formatItem) && dom.is(node, formatItem.selector)) {
         setElementFormat(node, formatItem);
-        return;
+        break;
       }
     }
 
+    Events.fireFormatApply(ed, name, node, vars);
     return;
   }
 
@@ -362,6 +364,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
     Hooks.postProcess(name, ed);
   }
+  Events.fireFormatApply(ed, name, node, vars);
 };
 
 export {

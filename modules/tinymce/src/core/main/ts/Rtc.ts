@@ -15,7 +15,7 @@ import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
-import { Format } from './fmt/FormatTypes';
+import { Format, FormatVars } from './fmt/FormatTypes';
 import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
@@ -49,7 +49,7 @@ interface RtcRuntimeApi {
     apply: (format: string, vars: Record<string, string>) => void;
     remove: (format: string, vars: Record<string, string>) => void;
     toggle: (format: string, vars: Record<string, string>) => void;
-    formatChanged: (formats: string, callback: FormatChangeCallback, similar: boolean) => UnbindFormatChanged;
+    formatChanged: (formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
     getContent: (args: GetContentArgs) => Content;
@@ -99,7 +99,7 @@ interface RtcAdaptor {
     apply: Formatter['apply'];
     remove: Formatter['remove'];
     toggle: Formatter['toggle'];
-    formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => UnbindFormatChanged;
+    formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
     getContent: (args: GetContentArgs, format: ContentFormat) => Content;
@@ -149,7 +149,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
     remove: (name, vars, node, similar?) => RemoveFormat.remove(editor, name, vars, node, similar),
     toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node),
-    formatChanged: (registeredFormatListeners, formats, callback, similar) => formatChangedInternal(editor, registeredFormatListeners, formats, callback, similar)
+    formatChanged: (registeredFormatListeners, formats, callback, similar, vars) => formatChangedInternal(editor, registeredFormatListeners, formats, callback, similar, vars)
   },
   editor: {
     getContent: (args, format) => getContentInternal(editor, args, format),
@@ -192,7 +192,7 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
       apply: (name, vars, _node) => formatter.apply(name, defaultVars(vars)),
       remove: (name, vars, _node, _similar?) => formatter.remove(name, defaultVars(vars)),
       toggle: (name, vars, _node) => formatter.toggle(name, defaultVars(vars)),
-      formatChanged: (_rfl, formats, callback, similar) => formatter.formatChanged(formats, callback, similar)
+      formatChanged: (_rfl, formats, callback, similar, vars) => formatter.formatChanged(formats, callback, similar, vars)
     },
     editor: {
       getContent: (args, _format) => editor.getContent(args),
@@ -393,8 +393,8 @@ export const toggleFormat = (editor: Editor, name: string, vars: Record<string, 
   getRtcInstanceWithError(editor).formatter.toggle(name, vars, node);
 };
 
-export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar: boolean = false): UnbindFormatChanged =>
-  getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar);
+export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars): UnbindFormatChanged =>
+  getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar, vars);
 
 export const getContent = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content =>
   getRtcInstanceWithFallback(editor).editor.getContent(args, format);

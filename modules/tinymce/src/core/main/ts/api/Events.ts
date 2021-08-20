@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { FormatVars } from '../fmt/FormatTypes';
+import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
 import { ParserArgs } from './html/DomParser';
 
@@ -36,6 +38,12 @@ const firePlaceholderToggle = (editor: Editor, state: boolean) => editor.fire('P
 
 const fireError = (editor: Editor, errorType: string, error: { message: string }) => editor.fire(errorType, error);
 
+const fireFormatApply = (editor: Editor, format: string, node: Node | RangeLikeObject, vars: FormatVars | undefined) =>
+  editor.fire('FormatApply', { format, node, vars });
+
+const fireFormatRemove = (editor: Editor, format: string, node: Node | RangeLikeObject, vars: FormatVars | undefined) =>
+  editor.fire('FormatRemove', { format, node, vars });
+
 export {
   firePreProcess,
   firePostProcess,
@@ -48,5 +56,7 @@ export {
   firePostRender,
   fireInit,
   firePlaceholderToggle,
-  fireError
+  fireError,
+  fireFormatApply,
+  fireFormatRemove
 };

@@ -32,12 +32,11 @@ const onSetupToggle = (editor: Editor, selections: Selections, formatName: strin
       // If value is empty (A None-entry in the list), check if the format is not set at all. Otherwise, check if the format is set to the correct value.
       if (isNone) {
         api.setActive(!Arr.exists(selectedCells, checkNode));
+        boundCallback.set(editor.formatter.formatChanged(formatName, (match) => api.setActive(!match), true));
       } else {
         api.setActive(Arr.forall(selectedCells, checkNode));
+        boundCallback.set(editor.formatter.formatChanged(formatName, api.setActive, false, { value: formatValue }));
       }
-      // TODO: TINY-7713: formatChanged doesn't currently handle formats with dynamic values so this will currently cause all items to show as active
-      // const binding = editor.formatter.formatChanged(formatName, setActive, isNone);
-      // boundCallback.set(binding);
     };
 
     // The editor may or may not have been setup yet, so check for that

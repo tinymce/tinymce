@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `table-row-numbering` icon #TINY-7327
 - Added a new `iframe_aria_text` setting to set the iframe title attribute #TINY-1264
 - Added a new `AstNode.children()` method to return all the children of an `AstNode` #TINY-7756
+- Added new `FormatApply` and `FormatRemove` events #TINY-7713
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
@@ -38,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `formatter.match` API can now take an optional `similar` parameter to check if the format partial matches #TINY-7712
 - `Env.browser` now uses the User-Agent Client Hints API when it is available #TINY-7785
 - Icons with a `-rtl` suffix in their name will now automatically be used when the UI is rendered in right-to-left mode #TINY-7782
+- `editor.formatter.formatChanged` now supports listening for changes to formats with specific variables #TINY-7713
 - The `autolink` plugin link detection now permits custom protocols and improves valid link detection #TINY-7714
 
 ### Changed
@@ -81,6 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The nested menu item chevron icon was not fading when the menu item was disabled #TINY-7700
 - The table dialog did not always respect the `table_style_with_css` option #TINY-4926
 - Pasting into a table with multiple cells selected could cause the content to be pasted in the wrong location #TINY-7485
+- `editor.formatter.formatChanged` would ignore the `similar` parameter if another callback had already been registered for the same format #TINY-7713
+- `editor.formatter.formatChanged` would sometimes not run the callback the first time the format was removed #TINY-7713
 - The `TableModified` event was not fired when pasting cells into a table #TINY-6939
 - The table paste column before and after icons were not flipped in RTL mode #TINY-7851
 - Base64 encoded images with spaces or line breaks in the data URI were not displayed correctly. Patch contributed by RoboBurned
