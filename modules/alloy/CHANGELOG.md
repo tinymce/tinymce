@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `LayoutInset` bubble classes were applied incorrectly, causing the bubble arrows to show on the opposite side.
 - `MakeshiftAnchorSpec` did not extend `HasLayoutAnchorSpec` which meant layouts couldn't be used for makeshift anchors.
 - `TieredMenu` child menus were incorrectly opened when the parent menu item was disabled.
+- Fixed selection box creation in `SelectionAnchor` to avoid context menu covering text when multiple lines are selected.
 
 ## 8.2.0 - 2021-05-06
 
