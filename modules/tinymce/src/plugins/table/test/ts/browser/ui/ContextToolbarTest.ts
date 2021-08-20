@@ -40,8 +40,9 @@ describe('browser.tinymce.plugins.table.ContextToolbarTest', () => {
     TinyUiActions.pWaitForUi(editor, `.tox-pop__dialog ${selector}.tox-tbtn--disabled`);
 
   const pClickOnContextToolbarButton = async (editor: Editor, selector: string) => {
-    const toolbar = await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog div');
-    Mouse.clickOn(toolbar, selector);
+    await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog .tox-toolbar');
+    const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog ${selector}`).getOrDie();
+    Mouse.click(button);
   };
 
   const assertHtmlStructure = (label: string, editor: Editor, expectedHtml: string) => {

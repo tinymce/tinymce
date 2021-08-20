@@ -9,9 +9,9 @@ export interface RepositionDecision {
   readonly direction: DirectionAdt;
   readonly placement: Placement;
   readonly classes: {
-    off: string[];
-    on: string[];
+    readonly off: string[];
+    readonly on: string[];
   };
-  readonly label: string;
+  readonly layout: string;
   readonly testY: number;
 }

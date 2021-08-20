@@ -60,10 +60,12 @@ export default (): void => {
       action: (comp) => {
         if (Toggling.isOn(comp)) {
           Attachment.attach(sink, popup);
-          Positioning.position(sink, {
-            type: 'hotspot',
-            hotspot: comp
-          }, popup);
+          Positioning.position(sink, popup, {
+            anchor: {
+              type: 'hotspot',
+              hotspot: comp
+            }
+          });
         } else {
           Attachment.detach(popup);
         }
@@ -103,10 +105,12 @@ export default (): void => {
           events: AlloyEvents.derive([
             AlloyEvents.run(NativeEvents.mouseover(), (item) => {
               Attachment.attach(sink, popup);
-              Positioning.position(sink, {
-                type: 'submenu',
-                item
-              }, popup);
+              Positioning.position(sink, popup, {
+                anchor: {
+                  type: 'submenu',
+                  item
+                }
+              });
             })
           ])
         })
@@ -145,10 +149,12 @@ export default (): void => {
           },
           action: (button) => {
             Attachment.attach(sink, popup);
-            Positioning.position(sink, {
-              type: 'selection',
-              root: button.getSystem().getByUid('text-editor').getOrDie().element
-            }, popup);
+            Positioning.position(sink, popup, {
+              anchor: {
+                type: 'selection',
+                root: button.getSystem().getByUid('text-editor').getOrDie().element
+              }
+            });
           }
         })
       ]
@@ -180,10 +186,12 @@ export default (): void => {
           },
           action: (_button) => {
             Attachment.attach(sink, popup);
-            Positioning.position(sink, {
-              type: 'selection',
-              root: SugarElement.fromDom(Traverse.defaultView(frame).dom.document.body)
-            }, popup);
+            Positioning.position(sink, popup, {
+              anchor: {
+                type: 'selection',
+                root: SugarElement.fromDom(Traverse.defaultView(frame).dom.document.body)
+              }
+            });
           }
         })
       ]

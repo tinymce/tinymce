@@ -52,9 +52,11 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
 
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
-        AlloyEvents.runOnSource<EventArgs>(NativeEvents.transitionend(), (comp, _se) => {
-          Class.remove(comp.element, resizingClass);
-          Css.remove(comp.element, 'width');
+        AlloyEvents.runOnSource<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), (comp, se) => {
+          if (se.event.raw.propertyName === 'width') {
+            Class.remove(comp.element, resizingClass);
+            Css.remove(comp.element, 'width');
+          }
         }),
 
         AlloyEvents.run<ChangeSlideEvent>(changeSlideEvent, (comp, se) => {

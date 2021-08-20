@@ -4,9 +4,9 @@ import { SugarElement } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as ComponentStructure from '../../alien/ComponentStructure';
+import { PlacementSpec } from '../../behaviour/positioning/PositioningTypes';
 import * as Fields from '../../data/Fields';
 import * as Layout from '../../positioning/layout/Layout';
-import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
 import * as Reposition from '../../sandbox/Reposition';
 import { InlineMenuSpec, InlineViewApis, InlineViewDetail, InlineViewSketcher, InlineViewSpec } from '../../ui/types/InlineViewTypes';
@@ -25,7 +25,7 @@ import { SingleSketchFactory } from './UiSketcher';
 
 interface InlineViewPositionState {
   mode: 'position';
-  anchor: AnchorSpec;
+  config: PlacementSpec;
   getBounds: () => Optional<Boxes.Bounds>;
 }
 
@@ -36,7 +36,7 @@ interface InlineViewMenuState {
 
 type InlineViewState = InlineViewMenuState | InlineViewPositionState;
 
-const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Optional<Boxes.Bounds>) => {
+const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, placementSpec: PlacementSpec, menuSpec: InlineMenuSpec, getBounds: () => Optional<Boxes.Bounds>) => {
   const lazySink: () => ReturnType<LazySink> = () => detail.lazySink(menuSandbox);
 
   const layouts = menuSpec.type === 'horizontal' ? { layouts: {
@@ -68,28 +68,28 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
     },
 
     onOpenMenu: (tmenu, menu) => {
-      Positioning.positionWithinBounds(lazySink().getOrDie(), anchor, menu, getBounds());
+      Positioning.positionWithinBounds(lazySink().getOrDie(), menu, placementSpec, getBounds());
     },
 
     onOpenSubmenu: (tmenu, item, submenu, triggeringPaths) => {
       const sink = lazySink().getOrDie();
-      Positioning.position(sink, {
-        type: 'submenu',
-        item,
-        ...getSubmenuLayouts(triggeringPaths)
-      }, submenu);
+      Positioning.position(sink, submenu, {
+        anchor: {
+          type: 'submenu',
+          item,
+          ...getSubmenuLayouts(triggeringPaths)
+        }
+      });
     },
 
     onRepositionMenu: (tmenu, primaryMenu, submenuTriggers) => {
       const sink = lazySink().getOrDie();
-      Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds());
+      Positioning.positionWithinBounds(sink, primaryMenu, placementSpec, getBounds());
       Arr.each(submenuTriggers, (st) => {
         const submenuLayouts = getSubmenuLayouts(st.triggeringPath);
-        Positioning.position(sink, {
-          type: 'submenu',
-          item: st.triggeringItem,
-          ...submenuLayouts
-        }, st.triggeredMenu);
+        Positioning.position(sink, st.triggeredMenu, {
+          anchor: { type: 'submenu', item: st.triggeringItem, ...submenuLayouts }
+        });
       });
     }
   });
@@ -106,28 +106,31 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     Sandboxing.setContent(sandbox, thing);
   };
 
-  const showAt = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec) =>
-    showWithin(sandbox, anchor, thing, Optional.none());
+  const showAt = (sandbox: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec) => {
+    showWithin(sandbox, thing, placementSpec, Optional.none());
+  };
 
-  const showWithin = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, boxElement: Optional<SugarElement>) =>
-    showWithinBounds(sandbox, anchor, thing, () => boxElement.map((elem) => Boxes.box(elem)));
+  const showWithin = (sandbox: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, boxElement: Optional<SugarElement>) => {
+    showWithinBounds(sandbox, thing, placementSpec, () => boxElement.map((elem) => Boxes.box(elem)));
+  };
 
-  const showWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Optional<Boxes.Bounds>) => {
+  const showWithinBounds = (sandbox: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, getBounds: () => Optional<Boxes.Bounds>) => {
     const sink = detail.lazySink(sandbox).getOrDie();
-    Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithinBounds(sink, anchor, sandbox, getBounds()));
+    Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithinBounds(sink, sandbox, placementSpec, getBounds()));
     Representing.setValue(sandbox, Optional.some({
       mode: 'position',
-      anchor,
+      config: placementSpec,
       getBounds
     }));
   };
 
   // TODO AP-191 write a test for showMenuAt
-  const showMenuAt = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec) =>
-    showMenuWithinBounds(sandbox, anchor, menuSpec, Optional.none);
+  const showMenuAt = (sandbox: AlloyComponent, placementSpec: PlacementSpec, menuSpec: InlineMenuSpec) => {
+    showMenuWithinBounds(sandbox, placementSpec, menuSpec, Optional.none);
+  };
 
-  const showMenuWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, menuSpec: InlineMenuSpec, getBounds: () => Optional<Boxes.Bounds>) => {
-    const menu = makeMenu(detail, sandbox, anchor, menuSpec, getBounds);
+  const showMenuWithinBounds = (sandbox: AlloyComponent, placementSpec: PlacementSpec, menuSpec: InlineMenuSpec, getBounds: () => Optional<Boxes.Bounds>) => {
+    const menu = makeMenu(detail, sandbox, placementSpec, menuSpec, getBounds);
     Sandboxing.open(sandbox, menu);
     Representing.setValue(sandbox, Optional.some({
       mode: 'menu',
@@ -153,7 +156,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
             break;
           case 'position':
             const sink = detail.lazySink(sandbox).getOrDie();
-            Positioning.positionWithinBounds(sink, state.anchor, sandbox, state.getBounds());
+            Positioning.positionWithinBounds(sink, sandbox, state.config, state.getBounds());
             break;
         }
       });

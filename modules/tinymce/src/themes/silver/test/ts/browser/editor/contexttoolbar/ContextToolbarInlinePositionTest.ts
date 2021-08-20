@@ -9,7 +9,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 interface Scenario {
-  readonly label: string;
   readonly content: string;
   readonly contentStyles?: string;
   readonly cursor: {
@@ -20,10 +19,10 @@ interface Scenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInlinePositionTest', () => {
-  const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset)';
-  const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset)';
-  const topInsetSelector = '.tox-pop.tox-pop--top.tox-pop--inset';
-  const bottomInsetSelector = '.tox-pop.tox-pop--bottom.tox-pop--inset';
+  const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset):not(.tox-pop--transition)';
+  const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset):not(.tox-pop--transition)';
+  const topInsetSelector = '.tox-pop.tox-pop--top.tox-pop--inset:not(.tox-pop--transition)';
+  const bottomInsetSelector = '.tox-pop.tox-pop--bottom.tox-pop--inset:not(.tox-pop--transition)';
 
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,
@@ -67,34 +66,32 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
     assert.approximately(dirStyle, value, diff, `Assert toolbar position - ${direction} ${dirStyle}px ~= ${value}px`);
   });
 
-  const testPositionWhileScrolling = (scenario: Scenario) => {
-    it(scenario.label, async () => {
-      const editor = hook.editor();
-      const offset = 100;
-      editor.setContent(`<p style="height: ${offset}px"></p><p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p><p style="height: 100px"></p>`);
-      scrollTo(editor, 0, -250, offset);
-      TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
-      await pAssertPosition('absolute', 'bottom', 1637);
+  const pTestPositionWhileScrolling = (scenario: Scenario) => async () => {
+    const editor = hook.editor();
+    const offset = 100;
+    editor.setContent(`<p style="height: ${offset}px"></p><p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p><p style="height: 100px"></p>`);
+    scrollTo(editor, 0, -250, offset);
+    TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
+    await pAssertPosition('absolute', 'bottom', 1637);
 
-      // Position the link at the top of the viewport, just below the toolbar
-      scrollTo(editor, 0, -80, offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector + scenario.classes);
-      await pAssertPosition('fixed', 'top', 109);
+    // Position the link at the top of the viewport, just below the toolbar
+    scrollTo(editor, 0, -80, offset);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector + scenario.classes);
+    await pAssertPosition('fixed', 'top', 109);
 
-      // Position the element offscreen and check the toolbar is hidden
-      scrollTo(editor, 0, 100, offset);
-      await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
+    // Position the element offscreen and check the toolbar is hidden
+    scrollTo(editor, 0, 100, offset);
+    await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
 
-      // Position the element back into view
-      scrollTo(editor, 0, -250, offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
-      await pAssertPosition('absolute', 'bottom', 1637);
+    // Position the element back into view
+    scrollTo(editor, 0, -250, offset);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
+    await pAssertPosition('absolute', 'bottom', 1637);
 
-      // Position the element behind the docked toolbar and check the toolbar is hidden
-      scrollTo(editor, 0, -10, offset);
-      await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
-    });
+    // Position the element behind the docked toolbar and check the toolbar is hidden
+    scrollTo(editor, 0, -10, offset);
+    await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
   };
 
   it('TBA: Context toolbar position', async () => {
@@ -108,30 +105,27 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
 
   context('TBA: Context toolbar position while scrolling', () => {
     // north/south
-    testPositionWhileScrolling({
-      label: 'north to south to hidden',
+    it('north to south to hidden', pTestPositionWhileScrolling({
       content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit <a href="http://tiny.cloud">link</a>',
       cursor: {
         elementPath: [ 1, 1, 0 ],
         offset: 1
       },
       classes: ''
-    });
+    }));
 
     // northeast/southeast
-    testPositionWhileScrolling({
-      label: 'northeast to southeast to hidden',
+    it('northeast to southeast to hidden', pTestPositionWhileScrolling({
       content: '<a href="http://tiny.cloud">link</a> Lorem ipsum dolor sit amet, consectetur adipiscing elit',
       cursor: {
         elementPath: [ 1, 0, 0 ],
         offset: 1
       },
       classes: '.tox-pop--align-left'
-    });
+    }));
 
     // northeast/southeast
-    testPositionWhileScrolling({
-      label: 'northwest to southwest to hidden',
+    it('northwest to southwest to hidden', pTestPositionWhileScrolling({
       content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit <a href="http://tiny.cloud">link</a>',
       contentStyles: 'text-align: right',
       cursor: {
@@ -139,7 +133,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
         offset: 4
       },
       classes: '.tox-pop--align-right'
-    });
+    }));
   });
 
   it('TINY-7192: Toolbar should flip to the opposite position when the selection overlaps', async () => {
