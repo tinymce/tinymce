@@ -78,24 +78,28 @@ const openF = (
 
     onOpenMenu: (tmenu, menu) => {
       const sink = getLazySink().getOrDie();
-      Positioning.position(sink, anchor, menu);
+      Positioning.position(sink, menu, { anchor });
       Sandboxing.decloak(sandbox);
     },
 
     onOpenSubmenu: (tmenu, item, submenu) => {
       const sink = getLazySink().getOrDie();
-      Positioning.position(sink, {
-        type: 'submenu',
-        item
-      }, submenu);
+      Positioning.position(sink, submenu, {
+        anchor: {
+          type: 'submenu',
+          item
+        }
+      });
       Sandboxing.decloak(sandbox);
     },
 
     onRepositionMenu: (tmenu, primaryMenu, submenuTriggers) => {
       const sink = getLazySink().getOrDie();
-      Positioning.position(sink, anchor, primaryMenu);
+      Positioning.position(sink, primaryMenu, { anchor });
       Arr.each(submenuTriggers, (st) => {
-        Positioning.position(sink, { type: 'submenu', item: st.triggeringItem }, st.triggeredMenu);
+        Positioning.position(sink, st.triggeredMenu, {
+          anchor: { type: 'submenu', item: st.triggeringItem }
+        });
       });
     },
 

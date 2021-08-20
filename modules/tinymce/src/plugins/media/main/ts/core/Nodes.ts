@@ -18,7 +18,7 @@ import * as VideoScript from './VideoScript';
 
 declare let escape: any;
 
-const isLiveEmbedNode = (node: AstNode) => {
+const isLiveEmbedNode = (node: AstNode): boolean => {
   const name = node.name;
   return name === 'iframe' || name === 'video' || name === 'audio';
 };
@@ -34,7 +34,7 @@ const getDimension = (node: AstNode, styles: Record<string, string>, dimension: 
   }
 };
 
-const setDimensions = (node: AstNode, previewNode: AstNode, styles: Record<string, string>) => {
+const setDimensions = (node: AstNode, previewNode: AstNode, styles: Record<string, string>): void => {
   // Apply dimensions for video elements to maintain legacy behaviour
   const useDefaults = previewNode.name === 'img' || node.name === 'video';
 
@@ -49,14 +49,14 @@ const setDimensions = (node: AstNode, previewNode: AstNode, styles: Record<strin
   });
 };
 
-const appendNodeContent = (editor: Editor, nodeName: string, previewNode: AstNode, html: string) => {
+const appendNodeContent = (editor: Editor, nodeName: string, previewNode: AstNode, html: string): void => {
   const newNode = DomParser({ forced_root_block: false, validate: false }, editor.schema).parse(html, { context: nodeName });
   while (newNode.firstChild) {
     previewNode.append(newNode.firstChild);
   }
 };
 
-const createPlaceholderNode = (editor: Editor, node: AstNode) => {
+const createPlaceholderNode = (editor: Editor, node: AstNode): AstNode => {
   const name = node.name;
 
   const placeHolder = new AstNode('img', 1);
@@ -75,7 +75,7 @@ const createPlaceholderNode = (editor: Editor, node: AstNode) => {
   return placeHolder;
 };
 
-const createPreviewNode = (editor: Editor, node: AstNode) => {
+const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
   const name = node.name;
 
   const previewWrapper = new AstNode('span', 1);
@@ -125,7 +125,7 @@ const createPreviewNode = (editor: Editor, node: AstNode) => {
   return previewWrapper;
 };
 
-const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targetNode: AstNode) => {
+const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targetNode: AstNode): void => {
   // Prefix all attributes except width, height and style since we
   // will add these to the placeholder
   const attribs = sourceNode.attributes;
@@ -152,12 +152,12 @@ const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targe
   }
 };
 
-const isPageEmbedWrapper = (node: AstNode) => {
+const isPageEmbedWrapper = (node: AstNode): boolean => {
   const nodeClass = node.attr('class');
   return nodeClass && /\btiny-pageembed\b/.test(nodeClass);
 };
 
-const isWithinEmbedWrapper = (node: AstNode) => {
+const isWithinEmbedWrapper = (node: AstNode): boolean => {
   while ((node = node.parent)) {
     if (node.attr('data-ephox-embed-iri') || isPageEmbedWrapper(node)) {
       return true;
@@ -167,50 +167,48 @@ const isWithinEmbedWrapper = (node: AstNode) => {
   return false;
 };
 
-const placeHolderConverter = (editor: Editor) => {
-  return (nodes) => {
-    let i = nodes.length;
-    let node;
-    let videoScript;
+const placeHolderConverter = (editor: Editor) => (nodes: AstNode[]): void => {
+  let i = nodes.length;
+  let node: AstNode;
+  let videoScript: VideoScript.VideoScript | undefined;
 
-    while (i--) {
-      node = nodes[i];
-      if (!node.parent) {
+  while (i--) {
+    node = nodes[i];
+    if (!node.parent) {
+      continue;
+    }
+
+    if (node.parent.attr('data-mce-object')) {
+      continue;
+    }
+
+    if (node.name === 'script') {
+      videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), node.attr('src'));
+      if (!videoScript) {
         continue;
-      }
-
-      if (node.parent.attr('data-mce-object')) {
-        continue;
-      }
-
-      if (node.name === 'script') {
-        videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), node.attr('src'));
-        if (!videoScript) {
-          continue;
-        }
-      }
-
-      if (videoScript) {
-        if (videoScript.width) {
-          node.attr('width', videoScript.width.toString());
-        }
-
-        if (videoScript.height) {
-          node.attr('height', videoScript.height.toString());
-        }
-      }
-
-      if (isLiveEmbedNode(node) && Settings.hasLiveEmbeds(editor) && Env.ceFalse) {
-        if (!isWithinEmbedWrapper(node)) {
-          node.replace(createPreviewNode(editor, node));
-        }
-      } else {
-        if (!isWithinEmbedWrapper(node)) {
-          node.replace(createPlaceholderNode(editor, node));
-        }
       }
     }
-  };
+
+    if (videoScript) {
+      if (videoScript.width) {
+        node.attr('width', videoScript.width.toString());
+      }
+
+      if (videoScript.height) {
+        node.attr('height', videoScript.height.toString());
+      }
+    }
+
+    if (isLiveEmbedNode(node) && Settings.hasLiveEmbeds(editor) && Env.ceFalse) {
+      if (!isWithinEmbedWrapper(node)) {
+        node.replace(createPreviewNode(editor, node));
+      }
+    } else {
+      if (!isWithinEmbedWrapper(node)) {
+        node.replace(createPlaceholderNode(editor, node));
+      }
+    }
+  }
 };
 
 export {

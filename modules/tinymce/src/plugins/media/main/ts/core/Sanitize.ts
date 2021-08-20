@@ -12,13 +12,13 @@ import Writer from 'tinymce/core/api/html/Writer';
 
 import * as Settings from '../api/Settings';
 
-const sanitize = (editor: Editor, html: string) => {
+const sanitize = (editor: Editor, html: string): string => {
   if (Settings.shouldFilterHtml(editor) === false) {
     return html;
   }
 
   const writer = Writer();
-  let blocked;
+  let blocked: boolean;
 
   SaxParser({
     validate: false,

@@ -6,27 +6,42 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
 
-const shouldMergeClasses = (editor: Editor) => editor.getParam('importcss_merge_classes');
+import { UserDefinedGroup } from '../core/ImportCss';
 
-const shouldImportExclusive = (editor: Editor) => editor.getParam('importcss_exclusive');
+type SelectorConvertor = () => StyleFormat | undefined;
+type FileFilter = string | RegExp | ((value: string, imported?: boolean) => boolean) | undefined;
+type SelectorFilter = string | RegExp | ((value: string) => boolean) | undefined;
 
-const getSelectorConverter = (editor: Editor) => editor.getParam('importcss_selector_converter');
+const shouldMergeClasses = (editor: Editor): boolean | undefined =>
+  editor.getParam('importcss_merge_classes');
 
-const getSelectorFilter = (editor: Editor) => editor.getParam('importcss_selector_filter');
+const shouldImportExclusive = (editor: Editor): boolean | undefined =>
+  editor.getParam('importcss_exclusive');
 
-const getCssGroups = (editor: Editor) => editor.getParam('importcss_groups');
+const getSelectorConverter = (editor: Editor): SelectorConvertor | undefined =>
+  editor.getParam('importcss_selector_converter');
 
-const shouldAppend = (editor: Editor) => editor.getParam('importcss_append');
+const getSelectorFilter = (editor: Editor): SelectorFilter =>
+  editor.getParam('importcss_selector_filter');
 
-const getFileFilter = (editor: Editor) => editor.getParam('importcss_file_filter');
+const getCssGroups = (editor: Editor): UserDefinedGroup[] | undefined =>
+  editor.getParam('importcss_groups');
 
-const getSkin = (editor: Editor) => {
+const shouldAppend = (editor: Editor): boolean | undefined =>
+  editor.getParam('importcss_append');
+
+const getFileFilter = (editor: Editor): FileFilter =>
+  editor.getParam('importcss_file_filter');
+
+const getSkin = (editor: Editor): string | boolean => {
   const skin = editor.getParam('skin');
   return skin !== false ? skin || 'oxide' : false;
 };
 
-const getSkinUrl = (editor: Editor) => editor.getParam('skin_url');
+const getSkinUrl = (editor: Editor): string | undefined =>
+  editor.getParam('skin_url');
 
 export {
   shouldMergeClasses,

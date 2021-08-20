@@ -8,8 +8,14 @@
 import { Unicode } from '@ephox/katamari';
 
 import DomParser from 'tinymce/core/api/html/DomParser';
+import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
+
+type RegExpFilter = RegExp | [ RegExp, string ] | [ RegExp, (match: string, ...args: any[]) => string ];
+
+const isRegExp = (val: unknown): val is RegExp =>
+  val.constructor === RegExp;
 
 /**
  * This class contails various utility functions for the paste plugin.
@@ -17,12 +23,12 @@ import Tools from 'tinymce/core/api/util/Tools';
  * @class tinymce.pasteplugin.Utils
  */
 
-const filter = (content, items) => {
+const filter = (content: string, items: RegExpFilter[]): string => {
   Tools.each(items, (v) => {
-    if (v.constructor === RegExp) {
+    if (isRegExp(v)) {
       content = content.replace(v, '');
     } else {
-      content = content.replace(v[0], v[1]);
+      content = content.replace(v[0], v[1] as any);
     }
   });
 
@@ -36,7 +42,7 @@ const filter = (content, items) => {
  * @param {String} html HTML string to get text from.
  * @return {String} String of text with line feeds.
  */
-const innerText = (html: string) => {
+const innerText = (html: string): string => {
   const schema = Schema();
   const domParser = DomParser({}, schema);
   let text = '';
@@ -44,7 +50,7 @@ const innerText = (html: string) => {
   const ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
   const blockElements = schema.getBlockElements();
 
-  const walk = (node) => {
+  const walk = (node: AstNode): void => {
     const name = node.name, currentNode = node;
 
     if (name === 'br') {
@@ -106,8 +112,8 @@ const innerText = (html: string) => {
  * @param {String} html Html string to trim contents on.
  * @return {String} Html contents that got trimmed.
  */
-const trimHtml = (html: string) => {
-  const trimSpaces = (all, s1, s2) => {
+const trimHtml = (html: string): string => {
+  const trimSpaces = (all: string, s1?: string, s2?: string) => {
     // WebKit &nbsp; meant to preserve multiple spaces but instead inserted around all inline tags,
     // including the spans with inline styles created on paste
     if (!s1 && !s2) {
@@ -129,7 +135,7 @@ const trimHtml = (html: string) => {
 };
 
 // TODO: Should be in some global class
-const createIdGenerator = (prefix: string) => {
+const createIdGenerator = (prefix: string): () => string => {
   let count = 0;
 
   return () => {
@@ -139,7 +145,7 @@ const createIdGenerator = (prefix: string) => {
 
 const getImageMimeType = (ext: string): string => {
   const lowerExt = ext.toLowerCase();
-  const mimeOverrides = {
+  const mimeOverrides: Record<string, string> = {
     jpg: 'jpeg',
     jpe: 'jpeg',
     jfi: 'jpeg',

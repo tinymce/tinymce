@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
 import { Fun } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
 
@@ -17,7 +18,7 @@ import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, generateColorSelector, generateItems } from './UiUtils';
 
-const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
+const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
   const insertTableAction = (data: { numRows: number; numColumns: number }) => {
@@ -223,6 +224,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       text: 'Table styles',
       getSubmenuItems: () => generateItems(
         editor,
+        selections,
         tableClassList,
         'tableclass',
         (item) => item.title,
@@ -239,6 +241,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       text: 'Cell styles',
       getSubmenuItems: () => generateItems(
         editor,
+        selections,
         tableCellClassList,
         'tablecellclass',
         (item) => item.title,
@@ -253,6 +256,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     text: 'Vertical align',
     getSubmenuItems: () => generateItems(
       editor,
+      selections,
       verticalAlignValues,
       'tablecellverticalalign',
       (item) => item.text,
@@ -267,6 +271,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     text: 'Border width',
     getSubmenuItems: () => generateItems(
       editor,
+      selections,
       tableCellBorderWidthsList,
       'tablecellborderwidth',
       (item) => item.title,
@@ -281,6 +286,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     text: 'Border style',
     getSubmenuItems: () => generateItems(
       editor,
+      selections,
       tableCellBorderStylesList,
       'tablecellborderstyle',
       (item) => item.text,

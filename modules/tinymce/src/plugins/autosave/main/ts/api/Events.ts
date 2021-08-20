@@ -5,11 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireRestoreDraft = (editor) => editor.fire('RestoreDraft');
+import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-const fireStoreDraft = (editor) => editor.fire('StoreDraft');
+const fireRestoreDraft = (editor: Editor): EditorEvent<{}> =>
+  editor.fire('RestoreDraft');
 
-const fireRemoveDraft = (editor) => editor.fire('RemoveDraft');
+const fireStoreDraft = (editor: Editor): EditorEvent<{}> =>
+  editor.fire('StoreDraft');
+
+const fireRemoveDraft = (editor: Editor): EditorEvent<{}> =>
+  editor.fire('RemoveDraft');
 
 export {
   fireRestoreDraft,

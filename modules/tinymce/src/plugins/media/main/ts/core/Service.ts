@@ -14,11 +14,22 @@ import * as Settings from '../api/Settings';
 import * as DataToHtml from './DataToHtml';
 import { MediaData } from './Types';
 
-const cache: Record<string, unknown> = {};
+export interface EmbedResult {
+  readonly url: string;
+  readonly html: string;
+}
 
-const embedPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback, handler) => {
-  return new Promise<{url: string; html: string}>((res, rej) => {
-    const wrappedResolve = (response) => {
+interface EmbedResponse {
+  readonly html?: string;
+}
+
+export type MediaResolver = (data: { url: string }, resolve: (response: EmbedResponse) => void, reject: (reason?: any) => void) => void;
+
+const cache: Record<string, EmbedResponse> = {};
+
+const embedPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback, handler: MediaResolver): Promise<EmbedResult> => {
+  return new Promise((res, rej) => {
+    const wrappedResolve = (response: EmbedResponse) => {
       if (response.html) {
         cache[data.source] = response;
       }
@@ -35,19 +46,13 @@ const embedPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback
   });
 };
 
-const defaultPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback) => {
-  return new Promise<{url: string; html: string}>((res) => {
-    res({ html: dataToHtml(data), url: data.source });
-  });
-};
+const defaultPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback): Promise<EmbedResult> =>
+  Promise.resolve({ html: dataToHtml(data), url: data.source });
 
-const loadedData = (editor: Editor) => {
-  return (data: MediaData) => {
-    return DataToHtml.dataToHtml(editor, data);
-  };
-};
+const loadedData = (editor: Editor) => (data: MediaData): string =>
+  DataToHtml.dataToHtml(editor, data);
 
-const getEmbedHtml = (editor: Editor, data: MediaData) => {
+const getEmbedHtml = (editor: Editor, data: MediaData): Promise<EmbedResult> => {
   const embedHandler = Settings.getUrlResolver(editor);
 
   return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));

@@ -9,9 +9,11 @@ import { Arr, Result, Type } from '@ephox/katamari';
 
 import { BlockPattern, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawPattern } from '../core/PatternTypes';
 
-const isInlinePattern = (pattern: Pattern): pattern is InlinePattern => pattern.type === 'inline-command' || pattern.type === 'inline-format';
+const isInlinePattern = (pattern: Pattern): pattern is InlinePattern =>
+  pattern.type === 'inline-command' || pattern.type === 'inline-format';
 
-const isBlockPattern = (pattern: Pattern): pattern is BlockPattern => pattern.type === 'block-command' || pattern.type === 'block-format';
+const isBlockPattern = (pattern: Pattern): pattern is BlockPattern =>
+  pattern.type === 'block-command' || pattern.type === 'block-format';
 
 const sortPatterns = <T extends Pattern>(patterns: T[]): T[] => Arr.sort(patterns, (a, b) => {
   if (a.start.length === b.start.length) {

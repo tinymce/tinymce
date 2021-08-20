@@ -12,6 +12,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { UserListItem } from '../ui/DialogTypes';
 import { AssumeExternalTargets } from './Types';
 
+type UserLinkListCallback = (callback: (items: UserListItem[]) => void) => void;
+
 const assumeExternalTargets = (editor: Editor): AssumeExternalTargets => {
   const externalTargets = editor.getParam('link_assume_external_targets', false);
   if (Type.isBoolean(externalTargets) && externalTargets) {
@@ -24,25 +26,35 @@ const assumeExternalTargets = (editor: Editor): AssumeExternalTargets => {
   return AssumeExternalTargets.OFF;
 };
 
-const hasContextToolbar = (editor: Editor) => editor.getParam('link_context_toolbar', false, 'boolean');
+const hasContextToolbar = (editor: Editor): boolean =>
+  editor.getParam('link_context_toolbar', false, 'boolean');
 
-const getLinkList = (editor: Editor): string | UserListItem[] | ((success: (val: any) => void) => void) => editor.getParam('link_list');
+const getLinkList = (editor: Editor): string | UserListItem[] | UserLinkListCallback | undefined =>
+  editor.getParam('link_list');
 
-const getDefaultLinkTarget = (editor: Editor) => editor.getParam('default_link_target');
+const getDefaultLinkTarget = (editor: Editor): string | undefined =>
+  editor.getParam('default_link_target');
 
-const getTargetList = (editor: Editor): boolean | UserListItem[] => editor.getParam('target_list', true);
+const getTargetList = (editor: Editor): boolean | UserListItem[] =>
+  editor.getParam('target_list', true);
 
-const getRelList = (editor: Editor): UserListItem[] => editor.getParam('rel_list', [], 'array');
+const getRelList = (editor: Editor): UserListItem[] =>
+  editor.getParam('rel_list', [], 'array');
 
-const getLinkClassList = (editor: Editor): UserListItem[] => editor.getParam('link_class_list', [], 'array');
+const getLinkClassList = (editor: Editor): UserListItem[] =>
+  editor.getParam('link_class_list', [], 'array');
 
-const shouldShowLinkTitle = (editor: Editor) => editor.getParam('link_title', true, 'boolean');
+const shouldShowLinkTitle = (editor: Editor): boolean =>
+  editor.getParam('link_title', true, 'boolean');
 
-const allowUnsafeLinkTarget = (editor: Editor) => editor.getParam('allow_unsafe_link_target', false, 'boolean');
+const allowUnsafeLinkTarget = (editor: Editor): boolean =>
+  editor.getParam('allow_unsafe_link_target', false, 'boolean');
 
-const useQuickLink = (editor: Editor) => editor.getParam('link_quicklink', false, 'boolean');
+const useQuickLink = (editor: Editor): boolean =>
+  editor.getParam('link_quicklink', false, 'boolean');
 
-const getDefaultLinkProtocol = (editor: Editor): string => editor.getParam('link_default_protocol', 'http', 'string');
+const getDefaultLinkProtocol = (editor: Editor): string =>
+  editor.getParam('link_default_protocol', 'http', 'string');
 
 export {
   assumeExternalTargets,

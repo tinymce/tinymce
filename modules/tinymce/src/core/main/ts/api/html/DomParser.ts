@@ -70,6 +70,7 @@ export interface DomParserSettings {
   validate?: boolean;
   inline_styles?: boolean;
   blob_cache?: BlobCache;
+  document?: Document;
   images_dataimg_filter?: (img: HTMLImageElement) => boolean;
 }
 
@@ -99,6 +100,22 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     const whitespaceElements = schema.getWhiteSpaceElements();
     const textBlockElements = schema.getTextBlockElements();
     const specialElements = schema.getSpecialElements();
+
+    const removeOrUnwrapInvalidNode = (node: AstNode, originalNodeParent: AstNode = node.parent): void => {
+      if (specialElements[node.name]) {
+        node.empty().remove();
+      } else {
+        // are the children of `node` valid children of the top level parent?
+        // if not, remove or unwrap them too
+        const children = node.children();
+        for (const childNode of children) {
+          if (!schema.isValidChild(originalNodeParent.name, childNode.name)) {
+            removeOrUnwrapInvalidNode(childNode, originalNodeParent);
+          }
+        }
+        node.unwrap();
+      }
+    };
 
     for (let ni = 0; ni < nodes.length; ni++) {
       const node = nodes[ni];
@@ -140,42 +157,47 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
       // Found a suitable parent
       if (parent && parents.length > 1) {
-        // Reverse the array since it makes looping easier
-        parents.reverse();
+        // If the node is a valid child of the parent, then try to move it. Otherwise unwrap it
+        if (schema.isValidChild(parent.name, node.name)) {
+          // Reverse the array since it makes looping easier
+          parents.reverse();
 
-        // Clone the related parent and insert that after the moved node
-        newParent = filterNode(parents[0].clone());
+          // Clone the related parent and insert that after the moved node
+          newParent = filterNode(parents[0].clone());
 
-        // Start cloning and moving children on the left side of the target node
-        let currentNode = newParent;
-        for (let i = 0; i < parents.length - 1; i++) {
-          if (schema.isValidChild(currentNode.name, parents[i].name)) {
-            tempNode = filterNode(parents[i].clone());
-            currentNode.append(tempNode);
+          // Start cloning and moving children on the left side of the target node
+          let currentNode = newParent;
+          for (let i = 0; i < parents.length - 1; i++) {
+            if (schema.isValidChild(currentNode.name, parents[i].name)) {
+              tempNode = filterNode(parents[i].clone());
+              currentNode.append(tempNode);
+            } else {
+              tempNode = currentNode;
+            }
+
+            for (let childNode = parents[i].firstChild; childNode && childNode !== parents[i + 1];) {
+              const nextNode = childNode.next;
+              tempNode.append(childNode);
+              childNode = nextNode;
+            }
+
+            currentNode = tempNode;
+          }
+
+          if (!isEmpty(schema, nonEmptyElements, whitespaceElements, newParent)) {
+            parent.insert(newParent, parents[0], true);
+            parent.insert(node, newParent);
           } else {
-            tempNode = currentNode;
+            parent.insert(node, parents[0], true);
           }
 
-          for (let childNode = parents[i].firstChild; childNode && childNode !== parents[i + 1];) {
-            const nextNode = childNode.next;
-            tempNode.append(childNode);
-            childNode = nextNode;
+          // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
+          parent = parents[0];
+          if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent) || hasOnlyChild(parent, 'br')) {
+            parent.empty().remove();
           }
-
-          currentNode = tempNode;
-        }
-
-        if (!isEmpty(schema, nonEmptyElements, whitespaceElements, newParent)) {
-          parent.insert(newParent, parents[0], true);
-          parent.insert(node, newParent);
         } else {
-          parent.insert(node, parents[0], true);
-        }
-
-        // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
-        parent = parents[0];
-        if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent) || hasOnlyChild(parent, 'br')) {
-          parent.empty().remove();
+          removeOrUnwrapInvalidNode(node);
         }
       } else if (node.parent) {
         // If it's an LI try to find a UL/OL for it or wrap it
@@ -200,12 +222,8 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
         if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
           node.wrap(filterNode(new AstNode('div', 1)));
         } else {
-          // We failed wrapping it, then remove or unwrap it
-          if (specialElements[node.name]) {
-            node.empty().remove();
-          } else {
-            node.unwrap();
-          }
+          // We failed wrapping it, remove or unwrap it
+          removeOrUnwrapInvalidNode(node);
         }
       }
     }
@@ -475,6 +493,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
     const parser = SaxParser({
       validate,
+      document: settings.document,
       allow_html_data_urls: settings.allow_html_data_urls,
       allow_svg_data_urls: settings.allow_svg_data_urls,
       allow_script_urls: settings.allow_script_urls,

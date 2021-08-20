@@ -1,12 +1,12 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 
 describe('DeviceTypeTest', () => {
   const getPlatform = (userAgent: string) => {
-    return PlatformDetection.detect(userAgent, Fun.never);
+    return PlatformDetection.detect(userAgent, Optional.none(), Fun.never);
   };
 
   const checkTablet = (expected: boolean, userAgent: string) => {

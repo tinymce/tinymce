@@ -9,7 +9,7 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 
 import * as Convert from './core/Convert';
 
-export default () => {
+export default (): void => {
   PluginManager.add('bbcode', (editor) => {
     // eslint-disable-next-line no-console
     console.warn('The bbcode plugin has been deprecated and marked for removal in TinyMCE 6.0');

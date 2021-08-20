@@ -15,7 +15,6 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import { hasAdvancedRowTab } from '../api/Settings';
-import { switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import { ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
@@ -26,46 +25,58 @@ import * as RowDialogGeneralTab from './RowDialogGeneralTab';
 
 type RowData = Helpers.RowData;
 
-const updateSimpleProps = (modifier: DomModifier, data: RowData) => {
+const updateSimpleProps = (modifier: DomModifier, data: RowData): void => {
   modifier.setAttrib('class', data.class);
   modifier.setStyle('height', Util.addPxSuffix(data.height));
 };
 
-const updateAdvancedProps = (modifier: DomModifier, data: RowData) => {
+const updateAdvancedProps = (modifier: DomModifier, data: RowData): void => {
   modifier.setStyle('background-color', data.backgroundcolor);
   modifier.setStyle('border-color', data.bordercolor);
   modifier.setStyle('border-style', data.borderstyle);
 };
 
-const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, data: RowData) => {
+const applyStyleData = (editor: Editor, rows: HTMLTableRowElement[], data: RowData, oldData: RowData): void => {
   const isSingleRow = rows.length === 1;
+  Arr.each(rows, (rowElm) => {
+    const modifier = isSingleRow ? DomModifier.normal(editor, rowElm) : DomModifier.ifTruthy(editor, rowElm);
 
+    updateSimpleProps(modifier, data);
+
+    if (hasAdvancedRowTab(editor)) {
+      updateAdvancedProps(modifier, data);
+    }
+
+    if (data.align !== oldData.align) {
+      Styles.unApplyAlign(editor, rowElm);
+      Styles.applyAlign(editor, rowElm, data.align);
+    }
+  });
+};
+
+const applyStructureData = (editor: Editor, data: RowData): void => {
+  // Switch cell type if applicable. Note that we specifically tell the command to not fire events
+  // as we'll batch the events and fire a `TableModified` event at the end of the updates.
+  editor.execCommand('mceTableRowType', false, { type: data.type, no_events: true });
+};
+
+const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, data: RowData): void => {
   const modifiedData = Obj.filter(data, (value, key) => oldData[key] !== value);
 
   if (Obj.size(modifiedData) > 0) {
-    Arr.each(rows, (rowElm) => {
-      // Switch row type
-      if (data.type !== Util.getNodeName(rowElm.parentNode)) {
-        switchSectionType(editor, rowElm, data.type);
-      }
-
-      const modifier = isSingleRow ? DomModifier.normal(editor, rowElm) : DomModifier.ifTruthy(editor, rowElm);
-
-      updateSimpleProps(modifier, data);
-
-      if (hasAdvancedRowTab(editor)) {
-        updateAdvancedProps(modifier, data);
-      }
-
-      if (data.align !== oldData.align) {
-        Styles.unApplyAlign(editor, rowElm);
-        Styles.applyAlign(editor, rowElm, data.align);
-      }
-    });
-
     const typeModified = Obj.has(modifiedData, 'type');
     // style modified if there's at least one other change apart from 'type'
     const styleModified = typeModified ? Obj.size(modifiedData) > 1 : true;
+
+    // Update the rows styling using the dialog data
+    if (styleModified) {
+      applyStyleData(editor, rows, data, oldData);
+    }
+
+    // Update the rows structure using the dialog data
+    if (typeModified) {
+      applyStructureData(editor, data);
+    }
 
     TableLookup.table(SugarElement.fromDom(rows[0])).each(
       (table) => Events.fireTableModified(editor, table.dom, {
@@ -76,8 +87,8 @@ const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowD
   }
 };
 
-const onSubmitRowForm = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, api) => {
-  const data: RowData = api.getData();
+const onSubmitRowForm = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, api: Dialog.DialogInstanceApi<RowData>): void => {
+  const data = api.getData();
   api.close();
 
   editor.undoManager.transact(() => {
@@ -86,7 +97,7 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLTableRowElement[], oldData: R
   });
 };
 
-const open = (editor: Editor) => {
+const open = (editor: Editor): void => {
   const rows = TableSelection.getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
 
   // Check if there are any rows to operate on
@@ -95,7 +106,7 @@ const open = (editor: Editor) => {
   }
 
   // Get current data and find shared values between rows
-  const rowsData: RowData[] = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm.dom, hasAdvancedRowTab(editor)));
+  const rowsData = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm.dom, hasAdvancedRowTab(editor)));
   const data = Helpers.getSharedValues<RowData>(rowsData);
 
   const dialogTabPanel: Dialog.TabPanelSpec = {

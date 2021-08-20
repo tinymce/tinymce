@@ -32,6 +32,10 @@ export default () => {
   const settings: RawEditorSettings = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
+    content_langs: [
+      { title: 'English (US)', code: 'en_us' },
+      { title: 'Spanish', code: 'es' }
+    ],
     images_upload_url: 'd',
     selector: 'textarea',
     // rtl_ui: true,

@@ -10,6 +10,8 @@ import { Arr, Cell, Singleton, Strings, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import { ParserArgs } from 'tinymce/core/api/html/DomParser';
+import AstNode from 'tinymce/core/api/html/Node';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -32,7 +34,16 @@ interface FileResult {
   readonly uri: string;
 }
 
-const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean) => {
+interface DataUriResult {
+  readonly type: string | null;
+  readonly data: string | null;
+}
+
+export interface ClipboardContents {
+  [key: string]: string;
+}
+
+const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean): void => {
   const args = ProcessFilters.process(editor, content, internal);
 
   if (args.cancelled === false) {
@@ -48,7 +59,7 @@ const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText
  * @param {String} html HTML code to paste into the current selection.
  * @param {Boolean?} internalFlag Optional true/false flag if the contents is internal or external.
  */
-const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
+const pasteHtml = (editor: Editor, html: string, internalFlag: boolean): void => {
   const internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
   doPaste(editor, InternalHtml.unmark(html), internal, false);
 };
@@ -59,16 +70,12 @@ const pasteHtml = (editor: Editor, html: string, internalFlag: boolean) => {
  *
  * @param {String} text Text to paste as the current selection location.
  */
-const pasteText = (editor: Editor, text: string) => {
+const pasteText = (editor: Editor, text: string): void => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalizeWhitespace(editor, encodedText);
   const html = Newlines.convert(normalizedText, Settings.getForcedRootBlock(editor), Settings.getForcedRootBlockAttrs(editor));
   doPaste(editor, html, false, true);
 };
-
-export interface ClipboardContents {
-  [key: string]: string;
-}
 
 /**
  * Gets various content types out of a datatransfer object.
@@ -76,8 +83,8 @@ export interface ClipboardContents {
  * @param {DataTransfer} dataTransfer Event fired on paste.
  * @return {Object} Object with mime types and data for those mime types.
  */
-const getDataTransferItems = (dataTransfer: DataTransfer): ClipboardContents => {
-  const items = {};
+const getDataTransferItems = (dataTransfer: DataTransfer | undefined): ClipboardContents => {
+  const items: ClipboardContents = {};
   const mceInternalUrlPrefix = 'data:text/mce-internal,';
 
   if (dataTransfer) {
@@ -113,14 +120,16 @@ const getDataTransferItems = (dataTransfer: DataTransfer): ClipboardContents => 
  * @param {ClipboardEvent} clipboardEvent Event fired on paste.
  * @return {Object} Object with mime types and data for those mime types.
  */
-const getClipboardContent = (editor: Editor, clipboardEvent: ClipboardEvent) =>
+const getClipboardContent = (editor: Editor, clipboardEvent: ClipboardEvent): ClipboardContents =>
   getDataTransferItems(clipboardEvent.clipboardData || (editor.getDoc() as any).dataTransfer);
 
-const hasContentType = (clipboardContent: ClipboardContents, mimeType: string) => mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
+const hasContentType = (clipboardContent: ClipboardContents, mimeType: string): boolean =>
+  mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
 
-const hasHtmlOrText = (content: ClipboardContents) => hasContentType(content, 'text/html') || hasContentType(content, 'text/plain');
+const hasHtmlOrText = (content: ClipboardContents): boolean =>
+  hasContentType(content, 'text/html') || hasContentType(content, 'text/plain');
 
-const parseDataUri = (uri: string) => {
+const parseDataUri = (uri: string): DataUriResult => {
   const matches = /data:([^;]+);base64,([a-z0-9\+\/=]+)/i.exec(uri);
   if (matches) {
     return { type: matches[1], data: decodeURIComponent(matches[2]) };
@@ -129,19 +138,19 @@ const parseDataUri = (uri: string) => {
   }
 };
 
-const isValidDataUriImage = (editor: Editor, imgElm: HTMLImageElement) => {
+const isValidDataUriImage = (editor: Editor, imgElm: HTMLImageElement): boolean => {
   const filter = Settings.getImagesDataImgFilter(editor);
   return filter ? filter(imgElm) : true;
 };
 
-const extractFilename = (editor: Editor, str: string) => {
+const extractFilename = (editor: Editor, str: string): string | null => {
   const m = str.match(/([\s\S]+?)(?:\.[a-z0-9.]+)$/i);
   return Type.isNonNullable(m) ? editor.dom.encode(m[1]) : null;
 };
 
 const uniqueId = Utils.createIdGenerator('mceclip');
 
-const pasteImage = (editor: Editor, imageItem: FileResult) => {
+const pasteImage = (editor: Editor, imageItem: FileResult): void => {
   const { data: base64, type } = parseDataUri(imageItem.uri);
   const id = uniqueId();
   const file = imageItem.blob;
@@ -178,22 +187,23 @@ const isDataTransferItem = (item: DataTransferItem | File): item is DataTransfer
   // eslint-disable-next-line @typescript-eslint/unbound-method
   Type.isNonNullable((item as DataTransferItem).getAsFile);
 
-const readFilesAsDataUris = (items: Array<File | DataTransferItem>) => Promise.all(Arr.map(items, (item) => new Promise<FileResult>((resolve) => {
-  const blob = isDataTransferItem(item) ? item.getAsFile() : item;
+const readFilesAsDataUris = (items: Array<File | DataTransferItem>) =>
+  Promise.all(Arr.map(items, (item) => new Promise<FileResult>((resolve) => {
+    const blob = isDataTransferItem(item) ? item.getAsFile() : item;
 
-  const reader = new window.FileReader();
-  reader.onload = () => {
-    resolve({
-      blob,
-      uri: reader.result
-    });
-  };
-  reader.readAsDataURL(blob);
-})));
+    const reader = new window.FileReader();
+    reader.onload = () => {
+      resolve({
+        blob,
+        uri: reader.result
+      });
+    };
+    reader.readAsDataURL(blob);
+  })));
 
 const isImage = (editor: Editor) => {
   const allowedExtensions = Settings.getAllowedImageFileTypes(editor);
-  return (file: File) => Strings.startsWith(file.type, 'image/') && Arr.exists(allowedExtensions, (extension) => {
+  return (file: File): boolean => Strings.startsWith(file.type, 'image/') && Arr.exists(allowedExtensions, (extension) => {
     return Utils.getImageMimeType(extension) === file.type;
   });
 };
@@ -212,7 +222,7 @@ const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): 
  * @param  {DOMRange} rng Rng object to move selection to.
  * @return {Boolean} true/false if the image data was found or not.
  */
-const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Range) => {
+const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Range): boolean => {
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
   if (Settings.getPasteDataImages(editor) && dataTransfer) {
@@ -244,18 +254,19 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
  * @param {Event} e Paste event object to check if it contains any data.
  * @return {Boolean} true/false if the clipboard is empty or not.
  */
-const isBrokenAndroidClipboardEvent = (e: ClipboardEvent) => {
+const isBrokenAndroidClipboardEvent = (e: ClipboardEvent): boolean => {
   const clipboardData = e.clipboardData;
 
   return navigator.userAgent.indexOf('Android') !== -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
 };
 
-const isKeyboardPasteEvent = (e: KeyboardEvent) => (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
+const isKeyboardPasteEvent = (e: KeyboardEvent): boolean =>
+  (VK.metaKeyPressed(e) && e.keyCode === 86) || (e.shiftKey && e.keyCode === 45);
 
-const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
+const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>): void => {
   const keyboardPasteEvent = Singleton.value();
   const keyboardPastePressed = Singleton.value();
-  let keyboardPastePlainTextState;
+  let keyboardPastePlainTextState: boolean;
 
   editor.on('keyup', keyboardPastePressed.clear);
 
@@ -306,8 +317,8 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
   });
 
-  const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) => {
-    let content;
+  const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean): void => {
+    let content: string;
 
     // Grab HTML from Clipboard API or paste bin as a fallback
     if (hasContentType(clipboardContent, 'text/html')) {
@@ -364,7 +375,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
   };
 
-  const getLastRng = () => {
+  const getLastRng = (): Range => {
     return pasteBin.getLastRng() || editor.selection.getRng();
   };
 
@@ -445,24 +456,24 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
  * @private
  */
 
-const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>) => {
+const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>): void => {
   registerEventHandlers(editor, pasteBin, pasteFormat);
-  let src;
+  let src: string | undefined;
 
   // Remove all data images from paste for example from Gecko
   // except internal images like video elements
   editor.parser.addNodeFilter('img', (nodes, name, args) => {
-    const isPasteInsert = (args) => args.data && args.data.paste === true;
+    const isPasteInsert = (args: ParserArgs): boolean => args.data && args.data.paste === true;
 
-    const remove = (node) => {
+    const remove = (node: AstNode): void => {
       if (!node.attr('data-mce-object') && src !== Env.transparentSrc) {
         node.remove();
       }
     };
 
-    const isWebKitFakeUrl = (src) => src.indexOf('webkit-fake-url') === 0;
+    const isWebKitFakeUrl = (src: string): boolean => src.indexOf('webkit-fake-url') === 0;
 
-    const isDataUri = (src: string) => src.indexOf('data:') === 0;
+    const isDataUri = (src: string): boolean => src.indexOf('data:') === 0;
 
     if (!Settings.getPasteDataImages(editor) && isPasteInsert(args)) {
       let i = nodes.length;

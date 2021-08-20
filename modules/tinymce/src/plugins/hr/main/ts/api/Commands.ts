@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const register = (editor) => {
+import Editor from 'tinymce/core/api/Editor';
+
+const register = (editor: Editor): void => {
   editor.addCommand('InsertHorizontalRule', () => {
     editor.execCommand('mceInsertContent', false, '<hr />');
   });

@@ -17,7 +17,7 @@ import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
 import { BlockPattern, BlockPatternMatch, Pattern } from './PatternTypes';
 
-const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => {
+const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): void => {
   // The pattern could be across fragmented text nodes, so we need to find the end
   // of the pattern and then remove all elements between the start/end range
   const firstTextNode = TextSearch.textAfter(block, 0, block);
@@ -90,7 +90,7 @@ const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMat
   }).getOr([]);
 };
 
-const applyMatches = (editor: Editor, matches: BlockPatternMatch[]) => {
+const applyMatches = (editor: Editor, matches: BlockPatternMatch[]): void => {
   if (matches.length === 0) {
     return;
   }

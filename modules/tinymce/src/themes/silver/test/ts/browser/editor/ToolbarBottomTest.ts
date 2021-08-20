@@ -2,8 +2,8 @@ import { Mouse, UiFinder } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { McEditor } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

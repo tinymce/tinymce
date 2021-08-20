@@ -10,7 +10,12 @@ import { Arr, Cell, Results } from '@ephox/katamari';
 import { PatternSet, RawPattern } from '../core/PatternTypes';
 import { createPatternSet, denormalizePattern, normalizePattern } from './Pattern';
 
-const get = (patternsState: Cell<PatternSet>) => {
+export interface Api {
+  readonly setPatterns: (newPatterns: RawPattern[]) => void;
+  readonly getPatterns: () => RawPattern[];
+}
+
+const get = (patternsState: Cell<PatternSet>): Api => {
   const setPatterns = (newPatterns: RawPattern[]) => {
     const normalized = Results.partition(Arr.map(newPatterns, normalizePattern));
     if (normalized.errors.length > 0) {

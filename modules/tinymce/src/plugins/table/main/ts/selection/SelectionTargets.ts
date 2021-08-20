@@ -6,9 +6,9 @@
  */
 
 import { Selections } from '@ephox/darwin';
-import { Arr, Cell, Fun, Optional, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Optionals, Thunk } from '@ephox/katamari';
 import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
-import { SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
+import { Compare, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -62,18 +62,25 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
 
   const isCaption = SugarNode.isTag('caption');
   const isDisabledForSelection = (key: keyof ExtractedSelectionDetails) => selectionDetails.forall((details) => !details[key]);
+  const getStart = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+  const getEnd = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionEnd(editor), Util.getIsRoot(editor));
 
-  const findTargets = (): Optional<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor))
-    .bind((cellOrCaption) => {
-      const table = TableLookup.table(cellOrCaption);
-      return table.map((table) => {
-        if (isCaption(cellOrCaption)) {
-          return TableTargets.noMenu(cellOrCaption);
-        } else {
-          return TableTargets.forMenu(selections, table, cellOrCaption);
-        }
-      });
-    });
+  const findTargets = (): Optional<RunOperation.CombinedTargets> =>
+    getStart().bind((startCellOrCaption) =>
+      Optionals.flatten(
+        Optionals.lift2(TableLookup.table(startCellOrCaption), getEnd().bind(TableLookup.table), (startTable, endTable) => {
+          if (Compare.eq(startTable, endTable)) {
+            if (isCaption(startCellOrCaption)) {
+              return Optional.some(TableTargets.noMenu(startCellOrCaption));
+            } else {
+              return Optional.some(TableTargets.forMenu(selections, startTable, startCellOrCaption));
+            }
+          }
+
+          return Optional.none();
+        })
+      )
+    );
 
   const getExtractedDetails = (targets: RunOperation.CombinedTargets): Optional<ExtractedSelectionDetails> => {
     const tableOpt = TableLookup.table(targets.element);
@@ -190,6 +197,6 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     onSetupTableWithCaption,
     onSetupTableRowHeaders,
     onSetupTableColumnHeaders,
-    targets: () => targets.get()
+    targets: targets.get
   };
 };

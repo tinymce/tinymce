@@ -13,7 +13,7 @@ import * as Commands from './api/Commands';
 import * as FilterContent from './core/FilterContent';
 import * as Buttons from './ui/Buttons';
 
-export default () => {
+export default (): void => {
   PluginManager.add('fullpage', (editor) => {
     // eslint-disable-next-line no-console
     console.warn('The fullpage plugin has been deprecated and marked for removal in TinyMCE 6.0');

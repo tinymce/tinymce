@@ -55,7 +55,8 @@ const formChildren: Dialog.BodyComponentSpec[] = [
   }
 ];
 
-const getItems = (editor: Editor) => formChildren.concat(getClassList(editor).toArray());
+const getItems = (editor: Editor): Dialog.BodyComponentSpec[] =>
+  formChildren.concat(getClassList(editor).toArray());
 
 export {
   getItems

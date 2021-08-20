@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
+
 import Editor from 'tinymce/core/api/Editor';
 
 import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableCellBackgroundColors, getTableCellBorderColors, getTableClassList, getToolbar } from '../api/Settings';
@@ -13,14 +15,14 @@ import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, generateColorSelector, generateItemsCallback } from './UiUtils';
 
-const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
+const addButtons = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
     fetch: (callback) => callback('inserttable | cell row column | advtablesort | tableprops deletetable')
   });
 
-  const cmd = (command) => () => editor.execCommand(command);
+  const cmd = (command: string) => () => editor.execCommand(command);
 
   editor.ui.registry.addButton('tableprops', {
     tooltip: 'Table properties',
@@ -175,6 +177,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
       tooltip: 'Table styles',
       fetch: generateItemsCallback(
         editor,
+        selections,
         tableClassList,
         'tableclass',
         (item) => item.title,
@@ -191,6 +194,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
       tooltip: 'Cell styles',
       fetch: generateItemsCallback(
         editor,
+        selections,
         tableCellClassList,
         'tablecellclass',
         (item) => item.title,
@@ -205,6 +209,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Vertical align',
     fetch: generateItemsCallback(
       editor,
+      selections,
       verticalAlignValues,
       'tablecellverticalalign',
       (item) => item.text,
@@ -219,6 +224,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Border width',
     fetch: generateItemsCallback(
       editor,
+      selections,
       tableCellBorderWidthsList,
       'tablecellborderwidth',
       (item) => item.title,
@@ -233,6 +239,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Border style',
     fetch: generateItemsCallback(
       editor,
+      selections,
       tableCellBorderStylesList,
       'tablecellborderstyle',
       (item) => item.text,
@@ -279,7 +286,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
   });
 };
 
-const addToolbars = (editor: Editor) => {
+const addToolbars = (editor: Editor): void => {
   const isTable = (table: Node) => editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
   const toolbar = getToolbar(editor);

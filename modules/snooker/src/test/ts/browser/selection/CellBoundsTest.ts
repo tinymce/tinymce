@@ -13,7 +13,7 @@ UnitTest.test('CellBounds.isWithin Test', () => {
     return elem;
   };
   const s = (elemText: string, rowspan: number, colspan: number) => Structs.detail(createCell(elemText), rowspan, colspan);
-  const f = (cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(SugarElement.fromTag('tr'), cells, section);
+  const f = (cells: Structs.Detail[], section: 'tbody') => Structs.rowdetail(SugarElement.fromTag('tr'), cells, section);
 
   const testTableA = [
     f([ s('a', 1, 1), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1) ], 'tbody'),

@@ -1,6 +1,6 @@
 import { Assertions, GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyDom, TinyLoader } from '@ephox/wrap-mcagar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';

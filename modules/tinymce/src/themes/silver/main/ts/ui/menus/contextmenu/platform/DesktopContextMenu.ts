@@ -15,17 +15,17 @@ import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
 import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
-import { getNodeAnchor, getPointAnchor } from '../Coords';
+import { AnchorType, getAnchorSpec } from '../Coords';
 
-export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemSpec>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, useNodeAnchor: boolean) => {
+export const initAndShow = (editor: Editor, e: EditorEvent<PointerEvent>, buildMenu: () => string | Array<string | SingleMenuItemSpec>, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: AnchorType) => {
   const items = buildMenu();
-  const anchorSpec = useNodeAnchor ? getNodeAnchor(editor) : getPointAnchor(editor, e);
+  const anchorSpec = getAnchorSpec(editor, e, anchorType);
 
   NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false).map((menuData) => {
     e.preventDefault();
 
     // show the context menu, with items set to close on click
-    InlineView.showMenuAt(contextmenu, anchorSpec, {
+    InlineView.showMenuAt(contextmenu, { anchor: anchorSpec }, {
       menu: {
         markers: MenuParts.markers('normal')
       },

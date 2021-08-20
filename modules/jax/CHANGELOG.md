@@ -6,5 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Improved
+- Improved the `HttpError.responseText` type to track the actual `ResponseType`, instead of just `string`. This means that `HttpError` now requires a generic type that extends `keyof ResponseTypeMap`.
+
 ### Changed
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
+

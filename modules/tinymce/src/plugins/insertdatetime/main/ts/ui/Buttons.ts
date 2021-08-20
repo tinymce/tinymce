@@ -14,7 +14,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   const formats = Settings.getFormats(editor);
   const defaultFormat = Cell(Settings.getDefaultDateTime(editor));
 
@@ -36,7 +36,7 @@ const register = (editor: Editor) => {
     }
   });
 
-  const makeMenuItemHandler = (format) => () => {
+  const makeMenuItemHandler = (format: string) => (): void => {
     defaultFormat.set(format);
     Actions.insertDateTime(editor, format);
   };

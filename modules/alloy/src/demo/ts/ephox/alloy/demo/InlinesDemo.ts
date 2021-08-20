@@ -114,10 +114,12 @@ export default (): void => {
 
     onOpenSubmenu: (sandbox, item, submenu) => {
       const sink = lazySink(sandbox).getOrDie();
-      Positioning.position(sink, {
-        type: 'submenu',
-        item
-      }, submenu);
+      Positioning.position(sink, submenu, {
+        anchor: {
+          type: 'submenu',
+          item
+        }
+      });
 
     },
 
@@ -166,11 +168,13 @@ export default (): void => {
       events: AlloyEvents.derive([
         AlloyEvents.run<EventArgs>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
           simulatedEvent.event.kill();
-          InlineView.showAt(inlineComp, {
-            type: 'makeshift',
-            x: simulatedEvent.event.x,
-            y: simulatedEvent.event.y
-          }, inlineMenu);
+          InlineView.showAt(inlineComp, inlineMenu, {
+            anchor: {
+              type: 'makeshift',
+              x: simulatedEvent.event.x,
+              y: simulatedEvent.event.y
+            }
+          });
         })
       ])
     })
@@ -209,7 +213,7 @@ export default (): void => {
                 };
 
                 const anchor: AnchorSpec = Value.get(input.element).length > 0 ? nonEmptyAnchor : emptyAnchor;
-                InlineView.showAt(inlineComp, anchor, Container.sketch({
+                InlineView.showAt(inlineComp, Container.sketch({
                   containerBehaviours: Behaviour.derive([
                     Keying.config({
                       mode: 'flow',
@@ -246,7 +250,7 @@ export default (): void => {
                     })
                   ]
 
-                }));
+                }), { anchor });
               })
             ])
           ])

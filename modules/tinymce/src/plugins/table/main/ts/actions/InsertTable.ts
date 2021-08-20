@@ -7,7 +7,7 @@
 
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { TableRender } from '@ephox/snooker';
-import { Attribute, Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Attribute, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -16,26 +16,27 @@ import { getDefaultAttributes, getDefaultStyles, getTableHeaderType, isPercentag
 import * as Util from '../core/Util';
 import { enforceNone, enforcePercentage, enforcePixels } from './EnforceUnit';
 
-const placeCaretInCell = (editor: Editor, cell) => {
+const placeCaretInCell = (editor: Editor, cell: SugarElement<HTMLTableCellElement>): void => {
   editor.selection.select(cell.dom, true);
   editor.selection.collapse(true);
 };
 
-const selectFirstCellInTable = (editor: Editor, tableElm) => {
-  SelectorFind.descendant<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(tableElm, 'td,th').each(Fun.curry(placeCaretInCell, editor));
+const selectFirstCellInTable = (editor: Editor, tableElm: SugarElement<HTMLTableElement>): void => {
+  SelectorFind.descendant<HTMLTableCellElement>(tableElm, 'td,th').each(Fun.curry(placeCaretInCell, editor));
 };
 
-const fireEvents = (editor: Editor, table) => {
+const fireEvents = (editor: Editor, table: SugarElement<HTMLTableElement>): void => {
   Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr'), (row) => {
     fireNewRow(editor, row.dom);
 
-    Arr.each(SelectorFilter.descendants<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(row, 'th,td'), (cell) => {
+    Arr.each(SelectorFilter.descendants<HTMLTableDataCellElement>(row, 'th,td'), (cell) => {
       fireNewCell(editor, cell.dom);
     });
   });
 };
 
-const isPercentage = (width: string) => Type.isString(width) && width.indexOf('%') !== -1;
+const isPercentage = (width: string): boolean =>
+  Type.isString(width) && width.indexOf('%') !== -1;
 
 const insert = (editor: Editor, columns: number, rows: number, colHeaders: number, rowHeaders: number): HTMLTableElement => {
   const defaultStyles = getDefaultStyles(editor);
@@ -72,7 +73,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   }).getOr(null);
 };
 
-const insertTableWithDataValidation = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}, errorMsg: string) => {
+const insertTableWithDataValidation = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}, errorMsg: string): HTMLTableElement | null => {
   const checkInput = (val: any) => Type.isNumber(val) && val > 0;
 
   if (checkInput(rows) && checkInput(columns)) {

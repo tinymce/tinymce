@@ -11,12 +11,13 @@ import { PathRange, resolvePathRange } from './PathRange';
 import * as Utils from './Utils';
 
 export interface Marker {
-  prefix: string;
-  start: Node;
-  end: Node;
+  readonly prefix: string;
+  readonly start: Node;
+  readonly end: Node;
 }
 
-const newMarker = (dom: DOMUtils, id: string) => dom.create('span', { 'data-mce-type': 'bookmark', id });
+const newMarker = (dom: DOMUtils, id: string): HTMLSpanElement =>
+  dom.create('span', { 'data-mce-type': 'bookmark', id });
 
 const rangeFromMarker = (dom: DOMUtils, marker: Marker): Range => {
   const rng = dom.createRng();
@@ -41,7 +42,7 @@ const createMarker = (dom: DOMUtils, markerPrefix: string, pathRange: PathRange)
   };
 };
 
-const removeMarker = (dom: DOMUtils, marker: Marker, isRoot: (node: Node) => boolean) => {
+const removeMarker = (dom: DOMUtils, marker: Marker, isRoot: (node: Node) => boolean): void => {
   // Note: Use dom.get() here instead of marker.end/start, as applying the format/command can
   // clone the nodes meaning the old reference isn't usable
   Utils.cleanEmptyNodes(dom, dom.get(marker.prefix + '-end'), isRoot);

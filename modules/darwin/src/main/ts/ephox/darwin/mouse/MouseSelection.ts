@@ -1,5 +1,5 @@
 import { Optional, Singleton } from '@ephox/katamari';
-import { EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
+import { ContentEditable, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
@@ -25,8 +25,16 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Nod
       findCell(event.target, isRoot).each((finish) => {
         CellSelection.identify(start, finish, isRoot).each((cellSel) => {
           const boxes = cellSel.boxes.getOr([]);
-          // Wait until we have more than one, otherwise you can't do text selection inside a cell.
-          if (boxes.length > 1) {
+          if (boxes.length === 1) {
+            // If a single noneditable cell is selected and the actual selection target within the cell
+            // is also noneditable, make sure it is annotated
+            const singleCell = boxes[0];
+            if (ContentEditable.getRaw(singleCell) === 'false' && !ContentEditable.isEditable(event.target)) {
+              annotations.selectRange(container, boxes, singleCell, singleCell);
+              bridge.selectNode(singleCell);
+            }
+          } else if (boxes.length > 1) {
+            // Wait until we have more than one, otherwise you can't do text selection inside a cell.
             annotations.selectRange(container, boxes, cellSel.start, cellSel.finish);
 
             // stop the browser from creating a big text selection, select the cell where the cursor is

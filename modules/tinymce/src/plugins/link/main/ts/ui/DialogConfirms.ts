@@ -16,8 +16,13 @@ import { AssumeExternalTargets } from '../api/Types';
 import * as Utils from '../core/Utils';
 import { LinkDialogOutput } from './DialogTypes';
 
+interface Transformer {
+  readonly message: string;
+  readonly preprocess: (d: LinkDialogOutput) => LinkDialogOutput;
+}
+
 // Delay confirm since onSubmit will move focus
-const delayedConfirm = (editor: Editor, message: string, callback: (state: boolean) => void) => {
+const delayedConfirm = (editor: Editor, message: string, callback: (state: boolean) => void): void => {
   const rng = editor.selection.getRng();
 
   Delay.setEditorTimeout(editor, () => {
@@ -27,11 +32,6 @@ const delayedConfirm = (editor: Editor, message: string, callback: (state: boole
     });
   });
 };
-
-interface Transformer {
-  message: string;
-  preprocess: (d: LinkDialogOutput) => LinkDialogOutput;
-}
 
 const tryEmailTransform = (data: LinkDialogOutput): Optional<Transformer> => {
   const url = data.href;

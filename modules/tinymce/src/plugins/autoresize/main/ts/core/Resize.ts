@@ -22,13 +22,14 @@ import * as Settings from '../api/Settings';
  * @private
  */
 
-const isFullscreen = (editor: Editor) => editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
+const isFullscreen = (editor: Editor): boolean =>
+  editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 
 /**
  * Calls the resize x times in 100ms intervals. We can't wait for load events since
  * the CSS files might load async.
  */
-const wait = (editor: Editor, oldSize: Cell<number>, times: number, interval: number, callback?: Function) => {
+const wait = (editor: Editor, oldSize: Cell<number>, times: number, interval: number, callback?: () => void): void => {
   Delay.setEditorTimeout(editor, () => {
     resize(editor, oldSize);
 
@@ -40,7 +41,7 @@ const wait = (editor: Editor, oldSize: Cell<number>, times: number, interval: nu
   }, interval);
 };
 
-const toggleScrolling = (editor: Editor, state: boolean) => {
+const toggleScrolling = (editor: Editor, state: boolean): void => {
   const body = editor.getBody();
   if (body) {
     body.style.overflowY = state ? '' : 'hidden';
@@ -59,7 +60,7 @@ const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed:
 /**
  * This method gets executed each time the editor needs to resize.
  */
-const resize = (editor: Editor, oldSize: Cell<number>) => {
+const resize = (editor: Editor, oldSize: Cell<number>): void => {
   const dom = editor.dom;
 
   const doc = editor.getDoc();
@@ -134,7 +135,7 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
   }
 };
 
-const setup = (editor: Editor, oldSize: Cell<number>) => {
+const setup = (editor: Editor, oldSize: Cell<number>): void => {
   editor.on('init', () => {
     const overflowPadding = Settings.getAutoResizeOverflowPadding(editor);
     const dom = editor.dom;

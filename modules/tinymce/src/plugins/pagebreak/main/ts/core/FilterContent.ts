@@ -12,12 +12,12 @@ import * as Settings from '../api/Settings';
 
 const pageBreakClass = 'mce-pagebreak';
 
-const getPlaceholderHtml = (shouldSplitBlock: boolean) => {
+const getPlaceholderHtml = (shouldSplitBlock: boolean): string => {
   const html = `<img src="${Env.transparentSrc}" class="${pageBreakClass}" data-mce-resize="false" data-mce-placeholder />`;
   return shouldSplitBlock ? `<p>${html}</p>` : html;
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   const separatorHtml = Settings.getSeparatorHtml(editor);
   const shouldSplitBlock = () => Settings.shouldSplitBlock(editor);
 

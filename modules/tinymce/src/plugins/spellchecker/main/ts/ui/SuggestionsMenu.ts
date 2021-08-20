@@ -8,6 +8,7 @@
 import { Cell } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Actions from '../core/Actions';
@@ -18,8 +19,8 @@ type LastSuggestion = Actions.LastSuggestion;
 const ignoreAll = true;
 
 const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>,
-                        textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: HTMLSpanElement[]) => {
-  const items = [];
+                        textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: HTMLSpanElement[]): Menu.ContextMenuContents[] => {
+  const items: Menu.ContextMenuContents[] = [];
   const suggestions = lastSuggestionsState.get().suggestions[word];
 
   Tools.each(suggestions, (suggestion) => {
@@ -66,8 +67,8 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState:
 };
 
 const setup = (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>,
-               textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) => {
-  const update = (element: HTMLElement) => {
+               textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>): void => {
+  const update = (element: HTMLElement): Menu.ContextMenuContents[] => {
     const target = element;
     if (target.className === 'mce-spellchecker-word') {
       const spans = Actions.findSpansByIndex(editor, Actions.getElmIndex(target));

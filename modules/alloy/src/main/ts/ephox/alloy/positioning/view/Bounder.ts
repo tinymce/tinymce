@@ -157,7 +157,7 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
       on: bubble.classesOn,
       off: bubble.classesOff
     },
-    label: candidate.label,
+    layout: candidate.label,
     testY: newY
   };
 
@@ -202,7 +202,7 @@ const attempts = (element: SugarElement<HTMLElement>, candidates: AnchorLayout[]
   const panelWidth = elementBox.width;
   const panelHeight = elementBox.height;
   const attemptBestFit = (layout: AnchorLayout, reposition: RepositionDecision, visibleW: number, visibleH: number, isVisible: boolean) => {
-    const next: SpotInfo = layout(anchorBox, elementBox, bubbles, element);
+    const next: SpotInfo = layout(anchorBox, elementBox, bubbles, element, bounds);
     const attemptLayout = attempt(next, panelWidth, panelHeight, bounds);
 
     return attemptLayout.fold(Fun.constant(attemptLayout), (newReposition, newVisibleW, newVisibleH, newIsVisible) => {
@@ -230,7 +230,7 @@ const attempts = (element: SugarElement<HTMLElement>, candidates: AnchorLayout[]
         on: [],
         off: []
       },
-      label: 'none',
+      layout: 'none',
       testY: anchorBox.y
     }, -1, -1, false)
   );

@@ -1,8 +1,8 @@
 import { Bounds, Boxes } from '@ephox/alloy';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { InlineContent } from '@ephox/bridge';
-import { McEditor, TinyDom } from '@ephox/mcagar';
 import { Css, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -20,7 +20,6 @@ interface TestBounds {
 }
 
 interface Scenario {
-  readonly label: string;
   readonly settings: Record<string, any>;
   readonly position: InlineContent.ContextPosition;
   readonly scroll?: {
@@ -37,6 +36,7 @@ interface Scenario {
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoundsTest', () => {
   const backstage = TestBackstage();
+  const expectedMargin = 1;
 
   before(() => {
     Theme();
@@ -83,7 +83,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
     };
 
     const asserted = scenario.assertBounds(getBounds(editor));
-    const actual = getContextToolbarBounds(editor, backstage.shared, scenario.position);
+    const actual = getContextToolbarBounds(editor, backstage.shared, scenario.position, expectedMargin);
 
     assertBounds('x');
     assertBounds('y');
@@ -91,139 +91,128 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
     assertBounds('bottom');
   };
 
-  const testScenario = (scenario: Scenario) => {
-    it(scenario.label, async () => {
-      const editor = await McEditor.pFromSettings<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        ...scenario.settings
-      });
-      backstage.shared.header.setDockingMode(editor.settings.toolbar_location);
-      editor.focus();
-      await UiUtils.pWaitForEditorToRender();
-      scrollRelativeEditorContainer(editor, scenario.scroll.relativeTop, scenario.scroll.delta);
-      assertToolbarBounds(editor, scenario);
-      McEditor.remove(editor);
+  const pTestScenario = (scenario: Scenario) => async () => {
+    const editor = await McEditor.pFromSettings<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      ...scenario.settings
     });
+    backstage.shared.header.setDockingMode(editor.settings.toolbar_location);
+    editor.focus();
+    await UiUtils.pWaitForEditorToRender();
+    scrollRelativeEditorContainer(editor, scenario.scroll.relativeTop, scenario.scroll.delta);
+    assertToolbarBounds(editor, scenario);
+    McEditor.remove(editor);
   };
 
   context('Context toolbar bounds with toolbar top', () => {
-    testScenario({
-      label: 'Inline(full view): bottom of the header -> Bottom of the viewport',
+    it('Inline(full view): bottom of the header -> Bottom of the viewport', pTestScenario({
       settings: { inline: true },
       position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x,
-        y: bounds.header.bottom,
-        right: bounds.content.right,
+        x: bounds.content.x + expectedMargin,
+        y: bounds.header.bottom + expectedMargin,
+        right: bounds.content.right - expectedMargin,
         bottom: bounds.viewport.bottom
       })
-    });
+    }));
 
-    testScenario({
-      label: 'Distraction Free(full view): Top of the viewport -> Bottom of the viewport',
+    it('Distraction Free(full view): Top of the viewport -> Bottom of the viewport', pTestScenario({
       settings: { menubar: false, inline: true, toolbar: false },
       position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x,
+        x: bounds.content.x + expectedMargin,
         y: bounds.viewport.y,
-        right: bounds.content.right,
+        right: bounds.content.right - expectedMargin,
         bottom: bounds.viewport.bottom
       })
-    });
+    }));
 
-    testScenario({
-      label: 'Iframe(full view) selection toolbar: Bottom of the header -> Bottom of the content area',
+    it('Iframe(full view) selection toolbar: Bottom of the header -> Bottom of the content area', pTestScenario({
       settings: { },
       position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x,
-        y: bounds.header.bottom,
-        right: bounds.content.right,
-        bottom: bounds.content.bottom
+        x: bounds.content.x + expectedMargin,
+        y: bounds.header.bottom + expectedMargin,
+        right: bounds.content.right - expectedMargin,
+        bottom: bounds.content.bottom - expectedMargin
       })
-    });
+    }));
 
-    testScenario({
-      label: 'Iframe(full view) node toolbar: Bottom of the header -> Bottom of the content area',
+    it('Iframe(full view) node toolbar: Bottom of the header -> Bottom of the content area', pTestScenario({
       settings: { },
       position: 'node',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x,
-        y: bounds.header.bottom,
-        right: bounds.content.right,
-        bottom: bounds.content.bottom
+        x: bounds.content.x + expectedMargin,
+        y: bounds.header.bottom + expectedMargin,
+        right: bounds.content.right - expectedMargin,
+        bottom: bounds.content.bottom - expectedMargin
       })
-    });
+    }));
 
-    testScenario({
-      label: 'Iframe(full view) line toolbar: Bottom of the header -> Bottom of the editor container',
+    it('Iframe(full view) line toolbar: Bottom of the header -> Bottom of the editor container', pTestScenario({
       settings: { },
       position: 'line',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x,
-        y: bounds.header.bottom,
-        right: bounds.content.right,
-        bottom: bounds.container.bottom
+        x: bounds.content.x + expectedMargin,
+        y: bounds.header.bottom + expectedMargin,
+        right: bounds.content.right - expectedMargin,
+        bottom: bounds.container.bottom - expectedMargin
       })
-    });
+    }));
 
-    testScenario({
-      label: 'Iframe(editor partly in view): Top of viewport -> Bottom of the content area',
+    it('Iframe(editor partly in view): Top of viewport -> Bottom of the content area', pTestScenario({
       settings: { height: 400 },
       position: 'selection',
       scroll: { relativeTop: true, delta: 200 },
       assertBounds: (bounds) => ({
-        x: bounds.content.x,
+        x: bounds.content.x + expectedMargin,
         y: bounds.viewport.y,
-        right: bounds.content.right,
-        bottom: bounds.content.bottom
+        right: bounds.content.right - expectedMargin,
+        bottom: bounds.content.bottom - expectedMargin
       })
-    });
+    }));
 
-    testScenario({
-      label: 'Iframe(editor partly in view): Bottom of viewport -> Top of the content area',
+    it('Iframe(editor partly in view): Bottom of viewport -> Top of the content area', pTestScenario({
       settings: { height: 400 },
       position: 'selection',
       scroll: { relativeTop: false, delta: -200 },
       assertBounds: (bounds: TestBounds) => ({
-        x: bounds.content.x,
-        y: bounds.content.y,
-        right: bounds.content.right,
+        x: bounds.content.x + expectedMargin,
+        y: bounds.content.y + expectedMargin,
+        right: bounds.content.right - expectedMargin,
         bottom: bounds.viewport.bottom
       })
-    });
+    }));
   });
 
   context('Context toolbar bounds with toolbar bottom', () => {
-    testScenario({
-      label: 'Iframe(full view): Top of the content area -> Top of the header',
+    it('Iframe(full view): Top of the content area -> Top of the header', pTestScenario({
       settings: { toolbar_location: 'bottom' },
       position: 'node',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds: TestBounds) => ({
-        x: bounds.content.x,
-        y: bounds.content.y,
-        right: bounds.content.right,
-        bottom: bounds.header.y
+        x: bounds.content.x + expectedMargin,
+        y: bounds.content.y + expectedMargin,
+        right: bounds.content.right - expectedMargin,
+        bottom: bounds.header.y - expectedMargin
       })
-    });
+    }));
 
-    testScenario({
-      label: 'Inline(full view): Top of the viewport -> Top of the header',
+    it('Inline(full view): Top of the viewport -> Top of the header', pTestScenario({
       settings: { inline: true, toolbar_location: 'bottom' },
       position: 'selection',
       scroll: { relativeTop: true, delta: -10 },
       assertBounds: (bounds: TestBounds) => ({
-        x: bounds.content.x,
+        x: bounds.content.x + expectedMargin,
         y: bounds.viewport.y,
-        right: bounds.content.right,
-        bottom: bounds.header.y
+        right: bounds.content.right - expectedMargin,
+        bottom: bounds.header.y - expectedMargin
       })
-    });
+    }));
   });
 });

@@ -8,7 +8,7 @@
 import { AnchorSpec, Bounds, Boxes, Bubble, Layout, LayoutInset, MaxHeight, MaxWidth } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
-import { Compare, Css, Height, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Css, Height, Scroll, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -18,7 +18,6 @@ type Layout = typeof LayoutInset.north;
 
 export interface PositionData {
   readonly lastElement: () => Optional<SugarElement<Element>>;
-  readonly bounds: () => Optional<Bounds>;
   readonly isReposition: () => boolean;
   readonly getMode: () => string;
 }
@@ -55,13 +54,17 @@ const preservePosition = <T>(elem: SugarElement<HTMLElement>, position: string, 
   return result;
 };
 
+// Don't use an inset layout when using a selection/line based anchors as it'll cover the content and can't be moved out the way
+const shouldUseInsetLayouts = (position: InlineContent.ContextPosition): boolean =>
+  position === 'node';
+
 /**
  * This function is designed to attempt to intelligently detect where the contextbar should be anchored when using an inside
  * layout. It will attempt to preserve the previous outside placement when anchoring to the same element. However, when the
  * placement is re-triggered (e.g. not triggered by a reposition) and the current editor selection overlaps with the contextbar,
  * then the anchoring should flip from the previous position to avoid conflicting with the selection.
  */
-const determineInsideLayout = (editor: Editor, contextbar: SugarElement<HTMLElement>, elem: SugarElement<HTMLElement>, data: PositionData) => {
+const determineInsetLayout = (editor: Editor, contextbar: SugarElement<HTMLElement>, elem: SugarElement<HTMLElement>, data: PositionData, bounds: Bounds) => {
   const selectionBounds = getSelectionBounds(editor);
   const isSameAnchorElement = data.lastElement().exists((prev) => Compare.eq(elem, prev));
 
@@ -78,33 +81,42 @@ const determineInsideLayout = (editor: Editor, contextbar: SugarElement<HTMLElem
     });
   } else {
     // Attempt to find the best layout to use that won't cause an overlap for the new anchor element
-    return data.bounds().map((bounds) => {
-      const contextbarHeight = Height.get(contextbar) + bubbleSize;
-      return bounds.y + contextbarHeight <= selectionBounds.y ? LayoutInset.north : LayoutInset.south;
-    }).getOr(LayoutInset.north);
+    // Note: In fixed positioning mode we need to translate by adding the scroll pos to get the absolute position
+    const yBounds = data.getMode() === 'fixed' ? bounds.y + Scroll.get().top : bounds.y;
+    const contextbarHeight = Height.get(contextbar) + bubbleSize;
+    return yBounds + contextbarHeight <= selectionBounds.y ? LayoutInset.north : LayoutInset.south;
   }
 };
 
-const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData) => {
+const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData, position: InlineContent.ContextPosition) => {
   // IMPORTANT: We lazily determine the layout here so that we only do the calculations if absolutely necessary
-  const smartInsideLayout = (elem: SugarElement<HTMLElement>): Layout => (anchor, element, bubbles, placee) => {
-    const layout = determineInsideLayout(editor, placee, elem, data);
+  const smartInsetLayout = (elem: SugarElement<HTMLElement>): Layout => (anchor, element, bubbles, placee, bounds) => {
+    const layout = determineInsetLayout(editor, placee, elem, data, bounds);
+    // Adjust the anchor box to use the passed y bound coords so that we simulate a "docking" type of behaviour
+    const newAnchor = {
+      ...anchor,
+      y: bounds.y,
+      height: bounds.height
+    };
     return {
-      ...layout(anchor, element, bubbles, placee),
+      ...layout(newAnchor, element, bubbles, placee, bounds),
       // Ensure this is always the preferred option if no outside layouts fit
       alwaysFit: true
     };
   };
 
+  const getInsetLayouts = (elem: SugarElement<HTMLElement>): Layout[] =>
+    shouldUseInsetLayouts(position) ? [ smartInsetLayout(elem) ] : [];
+
   // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
   const desktopAnchorSpecLayouts = {
-    onLtr: (elem) => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest, smartInsideLayout(elem) ],
-    onRtl: (elem) => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast, smartInsideLayout(elem) ]
+    onLtr: (elem) => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest ].concat(getInsetLayouts(elem)),
+    onRtl: (elem) => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast ].concat(getInsetLayouts(elem))
   };
 
   const mobileAnchorSpecLayouts = {
-    onLtr: (elem) => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north, smartInsideLayout(elem) ],
-    onRtl: (elem) => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north, smartInsideLayout(elem) ]
+    onLtr: (elem) => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north ].concat(getInsetLayouts(elem)),
+    onRtl: (elem) => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north ].concat(getInsetLayouts(elem))
   };
 
   return mobile ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts;
@@ -122,14 +134,15 @@ const getAnchorLayout = (editor: Editor, position: InlineContent.ContextPosition
     };
   } else {
     return {
-      // Ensure that insets use half the bubble size since we're hiding the bubble arrow
-      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments, 0.5),
-      layouts: getAnchorSpec(editor, isTouch, data),
+      // Ensure that inset layouts use a 1px bubble since we're hiding the bubble arrow
+      bubble: Bubble.nu(0, bubbleSize, bubbleAlignments, 1 / bubbleSize),
+      layouts: getAnchorSpec(editor, isTouch, data, position),
       overrides: anchorOverrides
     };
   }
 };
 
 export {
-  getAnchorLayout
+  getAnchorLayout,
+  shouldUseInsetLayouts
 };

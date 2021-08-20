@@ -12,22 +12,29 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added a new `flip` option to `LayoutInset` which will swap the previous placement to the opposite direction inside the component.
 - Added the `alwaysFit` layout property which allows for the layout to specify if it should always claim to fit, no matter what.
 - `Bubble` can include an optional `inset` class to be added when using an inset layout.
+- The `Positioning` behaviour now supports transitioning when changing the position of a component.
+- Added a new `reset` API to the `Positioning` behaviour to reset the component back to it's original position.
+- The `transitioncancel` event can now be listened to by the alloy event system.
 
 ### Improved
 - Improved the performance of constructing event handlers and components.
 - Improved the performance of split toolbars when there were no groups to render.
 
 ### Changed
+- All components now expose their `uid`.
 - Changed disconnected components to log a warning instead of throwing an error when triggering or broadcasting events.
 - Renamed `LayoutInside` to `LayoutInset` to better reflect what it does.
 - Changed `LayoutInset` rendering behaviour, as it was inconsistent with other layouts. It will now mirror the `Layout` logic for each direction.
 - Renamed the `anchor` property in anchor specs to `type`.
+- Changed the `Positioning` behaviour APIs to require a `PlacementSpec` instead of an `AnchorSpec`.
+- Changed the `Positioning` behaviour to store the last placement state of each placee component. This is used for determining how a component should transition.
 - Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
 
 ### Fixed
 - Fixed a number of positioning bugs when using an "inset" layout, especially any that renders at the bottom.
 - `LayoutInset` bubble classes were applied incorrectly, causing the bubble arrows to show on the opposite side.
 - `MakeshiftAnchorSpec` did not extend `HasLayoutAnchorSpec` which meant layouts couldn't be used for makeshift anchors.
+- `TieredMenu` child menus were incorrectly opened when the parent menu item was disabled.
 
 ## 8.2.0 - 2021-05-06
 

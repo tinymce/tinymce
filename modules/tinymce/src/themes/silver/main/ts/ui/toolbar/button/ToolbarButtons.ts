@@ -14,7 +14,6 @@ import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
-import I18n from 'tinymce/core/api/util/I18n';
 import { ToolbarGroupSetting } from 'tinymce/themes/silver/api/Settings';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -71,22 +70,6 @@ interface GeneralToolbarButton<T> {
 
 const focusButtonEvent = Id.generate('focus-button');
 
-// TODO TINY-3598: Implement a permanent solution to render rtl icons
-// Icons that have `-rtl` equivalents
-const rtlIcon = [
-  'checklist',
-  'ordered-list'
-];
-
-// Icons that need to be transformed in RTL
-const rtlTransform = [
-  'indent',
-  'outdent',
-  'table-insert-column-after',
-  'table-insert-column-before',
-  'unordered-list'
-];
-
 type Behaviours = Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[];
 const renderCommonStructure = (
   icon: Optional<string>,
@@ -96,21 +79,14 @@ const renderCommonStructure = (
   behaviours: Optional<Behaviours>,
   providersBackstage: UiFactoryBackstageProviders
 ) => {
-
-  // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
-  // Use `-rtl` icon suffix for icons that do.
-
-  const getIconName = (iconName: string): string => I18n.isRtl() && Arr.contains(rtlIcon, iconName) ? iconName + '-rtl' : iconName;
-  const needsRtlClass = I18n.isRtl() && icon.exists((name) => Arr.contains(rtlTransform, name));
-
   return {
     dom: {
       tag: 'button',
-      classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []).concat(needsRtlClass ? [ ToolbarButtonClasses.IconRtl ] : []),
+      classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
       attributes: getTooltipAttributes(tooltip, providersBackstage)
     },
     components: componentRenderPipeline([
-      icon.map((iconName) => renderIconFromPack(getIconName(iconName), providersBackstage.icons)),
+      icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
       text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
     ]),
 
@@ -137,7 +113,7 @@ const renderCommonStructure = (
           channel: r,
           initialData: { icon, text },
           renderComponents: (data, _state) => componentRenderPipeline([
-            data.icon.map((iconName) => renderIconFromPack(getIconName(iconName), providersBackstage.icons)),
+            data.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
             data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
           ])
         })).toArray()

@@ -15,27 +15,27 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as Actions from '../core/Actions';
 
 export interface DialogData {
-  findtext: string;
-  replacetext: string;
-  matchcase: boolean;
-  wholewords: boolean;
-  inselection: boolean;
+  readonly findtext: string;
+  readonly replacetext: string;
+  readonly matchcase: boolean;
+  readonly wholewords: boolean;
+  readonly inselection: boolean;
 }
 
-const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>) => {
+const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): void => {
   const dialogApi = Singleton.value<Dialog.DialogInstanceApi<DialogData>>();
   editor.undoManager.add();
 
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
-  const updateButtonStates = (api: Dialog.DialogInstanceApi<DialogData>) => {
+  const updateButtonStates = (api: Dialog.DialogInstanceApi<DialogData>): void => {
     const updateNext = Actions.hasNext(editor, currentSearchState) ? api.enable : api.disable;
     updateNext('next');
     const updatePrev = Actions.hasPrev(editor, currentSearchState) ? api.enable : api.disable;
     updatePrev('prev');
   };
 
-  const updateSearchState = (api: Dialog.DialogInstanceApi<DialogData>) => {
+  const updateSearchState = (api: Dialog.DialogInstanceApi<DialogData>): void => {
     const data = api.getData();
     const current = currentSearchState.get();
 
@@ -47,13 +47,13 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>) => 
     });
   };
 
-  const disableAll = (api: Dialog.DialogInstanceApi<DialogData>, disable: boolean) => {
+  const disableAll = (api: Dialog.DialogInstanceApi<DialogData>, disable: boolean): void => {
     const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
     const toggle = disable ? api.disable : api.enable;
     Arr.each(buttons, toggle);
   };
 
-  const notFoundAlert = (api: Dialog.DialogInstanceApi<DialogData>) => {
+  const notFoundAlert = (api: Dialog.DialogInstanceApi<DialogData>): void => {
     editor.windowManager.alert('Could not find the specified string.', () => {
       api.focus('findtext');
     });
@@ -61,13 +61,13 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>) => 
 
   // Temporarily workaround for iOS/iPadOS dialog placement to hide the keyboard
   // TODO: Remove in 5.2 once iOS fixed positioning is fixed. See TINY-4441
-  const focusButtonIfRequired = (api: Dialog.DialogInstanceApi<DialogData>, name: string) => {
+  const focusButtonIfRequired = (api: Dialog.DialogInstanceApi<DialogData>, name: string): void => {
     if (Env.browser.isSafari() && Env.deviceType.isTouch() && (name === 'find' || name === 'replace' || name === 'replaceall')) {
       api.focus(name);
     }
   };
 
-  const reset = (api: Dialog.DialogInstanceApi<DialogData>) => {
+  const reset = (api: Dialog.DialogInstanceApi<DialogData>): void => {
     // Clean up the markers if required
     Actions.done(editor, currentSearchState, false);
 
@@ -76,7 +76,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>) => 
     updateButtonStates(api);
   };
 
-  const doFind = (api: Dialog.DialogInstanceApi<DialogData>) => {
+  const doFind = (api: Dialog.DialogInstanceApi<DialogData>): void => {
     const data = api.getData();
     const last = currentSearchState.get();
 

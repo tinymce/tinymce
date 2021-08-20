@@ -32,12 +32,12 @@
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
-    "@ephox/bedrock-client": "^11.3.0",
-    "@ephox/bedrock-server": "^11.3.0",
+    "@ephox/bedrock-client": "^11.3.2",
+    "@ephox/bedrock-server": "^11.3.3",
     "@ephox/oxide-icons-tools": "^2.2.2",
     "@ephox/swag": "^4.4.0",
     "@ephox/wrap-jsverify": "^2.0.1",
-    "@ephox/wrap-prismjs": "^1.23.0",
+    "@ephox/wrap-prismjs": "^1.24.0",
     "@tinymce/eslint-plugin": "^1.9.1",
     "@types/chai": "^4.2.15",
     "awesome-typescript-loader": "^5.2.0",

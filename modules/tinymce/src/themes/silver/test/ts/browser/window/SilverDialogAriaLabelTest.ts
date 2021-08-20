@@ -2,8 +2,8 @@ import { UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';

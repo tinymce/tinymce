@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -57,12 +57,12 @@ describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
     '<table>' +
       '<tbody>' +
         '<tr>' +
-          makeCell('td', '1-0', 'none') +
-          makeCell('td', '1-1', 'none') +
-        '</tr>' +
-        '<tr>' +
           makeCell('td', '0-0', 'none') +
           makeCell('td', '0-1', 'none') +
+        '</tr>' +
+        '<tr>' +
+          makeCell('td', '1-0', 'none') +
+          makeCell('td', '1-1', 'none') +
         '</tr>' +
       '</tbody>' +
     '</table>'

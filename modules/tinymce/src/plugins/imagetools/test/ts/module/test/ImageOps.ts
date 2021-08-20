@@ -1,7 +1,7 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyUiActions } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
@@ -9,7 +9,7 @@ import PromisePolyfill from 'tinymce/core/api/util/Promise';
 export interface ImageOps {
   readonly pExecToolbar: (editor: Editor, label: string) => Promise<void>;
   readonly pExecDialog: (editor: Editor, label: string) => Promise<void>;
-  readonly pClickContextToolbarButton: (toolbar: SugarElement<Node>, label: string) => Promise<void>;
+  readonly pClickContextToolbarButton: (editor: Editor, label: string) => Promise<void>;
 }
 
 const orientationActions = [
@@ -36,9 +36,9 @@ const doDragDrop = (dialog: SugarElement<Node>) => {
   Mouse.mouseUpTo(handle, 5, 0);
 };
 
-const pAction = (dialog: SugarElement<Node>, action: string): Promise<void> => {
+const pAction = (editor: Editor, dialog: SugarElement<Node>, action: string): Promise<void> => {
   if (isOrientationAction(action)) {
-    return pClickContextToolbarButton(dialog, action);
+    return pClickContextToolbarButton(editor, action);
   } else if (isAdjustmentAction(action)) {
     return new PromisePolyfill((resolve) => {
       doDragDrop(dialog);
@@ -49,13 +49,13 @@ const pAction = (dialog: SugarElement<Node>, action: string): Promise<void> => {
   }
 };
 
-const pExecCommandFromDialog = async (editor: Editor, toolbar: SugarElement<Node>, action: string) => {
-  await pClickContextToolbarButton(toolbar, 'Edit image');
+const pExecCommandFromDialog = async (editor: Editor, action: string) => {
+  await pClickContextToolbarButton(editor, 'Edit image');
   const dialog = await TinyUiActions.pWaitForDialog(editor);
   await Waiter.pWait(200);
   const buttonLabel = isOrientationAction(action) ? 'Orientation' : action;
-  await pClickContextToolbarButton(dialog, buttonLabel);
-  await pAction(dialog, action);
+  await pClickContextToolbarButton(editor, buttonLabel);
+  await pAction(editor, dialog, action);
   await Waiter.pWait(200);
   await pClickButton(dialog, 'Apply');
   await pClickButton(dialog, 'Save');
@@ -70,8 +70,9 @@ const pClickButton = async (dialog: SugarElement<Node>, text: string) => {
   Mouse.click(button);
 };
 
-const pClickContextToolbarButton = async (toolbar: SugarElement<Node>, label: string) => {
-  const button = await UiFinder.pWaitFor('Wait for toolbar button to be enabled', toolbar, 'button[aria-label="' + label + '"]:not(:disabled)');
+const pClickContextToolbarButton = async (editor: Editor, label: string) => {
+  await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog .tox-toolbar');
+  const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog button[aria-label="${label}"]:not(:disabled)`).getOrDie();
   Mouse.click(button);
 };
 
@@ -83,12 +84,12 @@ const pExec = async (execFromToolbar: boolean, editor: Editor, label: string) =>
   const origUrl = Attribute.get(imgEl, 'src');
 
   Mouse.click(imgEl);
-  const toolbar = await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog div');
+  await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog div');
 
   if (execFromToolbar) {
-    await pClickContextToolbarButton(toolbar, label);
+    await pClickContextToolbarButton(editor, label);
   } else {
-    await pExecCommandFromDialog(editor, toolbar, label);
+    await pExecCommandFromDialog(editor, label);
   }
 
   await pWaitForUrlChange(imgEl, origUrl);

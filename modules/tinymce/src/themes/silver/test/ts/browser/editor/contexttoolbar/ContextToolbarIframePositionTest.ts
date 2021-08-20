@@ -1,8 +1,9 @@
 import { Keys, UiFinder, Waiter } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { Css, Scroll, SugarBody } from '@ephox/sugar';
+import { TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -12,7 +13,6 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { getGreenImageDataUrl } from '../../../module/Assets';
 
 interface Scenario {
-  readonly label: string;
   readonly content: string;
   readonly contentStyles?: string;
   readonly cursor: {
@@ -23,11 +23,12 @@ interface Scenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFramePosition test', () => {
-  const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset)';
-  const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset)';
-  const rightSelector = '.tox-pop.tox-pop--left:not(.tox-pop--inset)';
-  const topInsetSelector = '.tox-pop.tox-pop--top.tox-pop--inset';
-  const bottomInsetSelector = '.tox-pop.tox-pop--bottom.tox-pop--inset';
+  const browser = PlatformDetection.detect().browser;
+  const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset):not(.tox-pop--transition)';
+  const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset):not(.tox-pop--transition)';
+  const rightSelector = '.tox-pop.tox-pop--left:not(.tox-pop--inset):not(.tox-pop--transition)';
+  const topInsetSelector = '.tox-pop.tox-pop--top.tox-pop--inset:not(.tox-pop--transition)';
+  const bottomInsetSelector = '.tox-pop.tox-pop--bottom.tox-pop--inset:not(.tox-pop--transition)';
 
   const fullscreenSelector = '.tox.tox-fullscreen';
   const fullscreenButtonSelector = 'button[aria-label="Fullscreen"]';
@@ -37,7 +38,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     toolbar: 'fullscreen',
     height: 400,
     base_url: '/project/tinymce/js/tinymce',
-    content_style: 'body, p { margin: 0; } tr { height: 36px; }',
+    // Note: We provide overrides to keep consistent positions across all browsers/os's
+    content_style: 'body, p { margin: 0; line-height: 22px; font-family: Arial,sans-serif; } tr { height: 36px; }',
     setup: (ed: Editor) => {
       ed.ui.registry.addButton('alpha', {
         text: 'Alpha',
@@ -46,6 +48,11 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
       ed.ui.registry.addContextToolbar('test-selection-toolbar', {
         predicate: (node) => node.nodeName.toLowerCase() === 'a',
         items: 'alpha'
+      });
+      ed.ui.registry.addContextToolbar('test-selection-toolbar-2', {
+        predicate: (node) => node.nodeName.toLowerCase() === 'p' && !ed.selection.isCollapsed(),
+        items: 'alpha',
+        position: 'selection'
       });
       ed.ui.registry.addContextToolbar('test-node-toolbar', {
         predicate: (node) => node.nodeName.toLowerCase() === 'img',
@@ -64,6 +71,11 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
       });
     }
   }, [ FullscreenPlugin, Theme ], true);
+
+  beforeEach(() => {
+    // Reset scroll position for each test
+    scrollTo(hook.editor(), 0, 0);
+  });
 
   const scrollTo = (editor: Editor, x: number, y: number) =>
     Scroll.to(x, y, TinyDom.document(editor));
@@ -89,70 +101,73 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     await UiFinder.pWaitForVisible('Ensure the context toolbar has not flipped', SugarBody.body(), selector);
   };
 
-  const testPositionWhileScrolling = (scenario: Scenario) => {
-    it(scenario.label, async () => {
-      const editor = hook.editor();
-      editor.setContent(
-        '<p style="height: 100px"></p>' +
-        '<p style="height: 100px"></p>' +
-        '<p style="height: 100px"></p>' +
-        `<p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p>` +
-        '<p style="height: 100px"></p>' +
-        '<p style="height: 100px"></p>' +
-        '<p style="height: 100px"></p>'
-      );
-      editor.focus();
-      scrollTo(editor, 0, 200);
-      TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
-      await pAssertPosition('bottom', 232);
+  const pAssertToolbarIsTransitioning = () => Waiter.pTryUntil('Wait for toolbar to include the transition class', () => {
+    UiFinder.exists(SugarBody.body(), '.tox-pop.tox-pop--transition');
+  });
 
-      // Position the link at the top of the viewport, just below the toolbar
-      scrollTo(editor, 0, 300);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector + scenario.classes);
-      await pAssertPosition('top', -289);
+  const assertToolbarIsNotTransitioning = () => {
+    UiFinder.notExists(SugarBody.body(), '.tox-pop.tox-pop--transition');
+  };
 
-      // Position the behind the menu/toolbar and check the context toolbar is hidden
-      scrollTo(editor, 0, 400);
-      await pWaitForToolbarHidden();
+  const pTestPositionWhileScrolling = (scenario: Scenario) => async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<p style="height: 100px"></p>' +
+      '<p style="height: 100px"></p>' +
+      '<p style="height: 100px"></p>' +
+      `<p style="height: 25px;${scenario.contentStyles || ''}">${scenario.content}</p>` +
+      '<p style="height: 100px"></p>' +
+      '<p style="height: 100px"></p>' +
+      '<p style="height: 100px"></p>'
+    );
+    editor.focus();
+    scrollTo(editor, 0, 200);
+    TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
+    await pAssertPosition('bottom', 232);
 
-      // Position the element back into view
-      scrollTo(editor, 0, 200);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
-      await pAssertPosition('bottom', 232);
+    // Position the link at the top of the viewport, just below the toolbar
+    scrollTo(editor, 0, 300);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector + scenario.classes);
+    await pAssertPosition('top', -289);
 
-      // Position the element off the top of the screen and check the context toolbar is hidden
-      scrollTo(editor, 0, 600);
-      await pWaitForToolbarHidden();
-    });
+    // Position the behind the menu/toolbar and check the context toolbar is hidden
+    scrollTo(editor, 0, 400);
+    await pWaitForToolbarHidden();
+
+    // Position the element back into view
+    scrollTo(editor, 0, 200);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
+    await pAssertPosition('bottom', 232);
+
+    // Position the element off the top of the screen and check the context toolbar is hidden
+    scrollTo(editor, 0, 600);
+    await pWaitForToolbarHidden();
   };
 
   context('Context toolbar selection position while scrolling', () => {
     // north/south
-    testPositionWhileScrolling({
-      label: 'north to south to hidden',
+    it('north to south to hidden', pTestPositionWhileScrolling({
       content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit <a href="http://tiny.cloud">link</a>',
       cursor: {
         elementPath: [ 3, 1, 0 ],
         offset: 1
       },
       classes: ''
-    });
+    }));
 
     // northeast/southeast
-    testPositionWhileScrolling({
-      label: 'northeast to southeast to hidden',
+    it('northeast to southeast to hidden', pTestPositionWhileScrolling({
       content: '<a href="http://tiny.cloud">link</a> Lorem ipsum dolor sit amet, consectetur adipiscing elit',
       cursor: {
         elementPath: [ 3, 0, 0 ],
         offset: 1
       },
       classes: '.tox-pop--align-left'
-    });
+    }));
 
     // northeast/southeast
-    testPositionWhileScrolling({
-      label: 'northwest to southwest to hidden',
+    it('northwest to southwest to hidden', pTestPositionWhileScrolling({
       content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit <a href="http://tiny.cloud">link</a>',
       contentStyles: 'text-align: right',
       cursor: {
@@ -160,7 +175,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
         offset: 4
       },
       classes: '.tox-pop--align-right'
-    });
+    }));
   });
 
   it('TBA: Context toolbar falls back to positioning inside the content', async () => {
@@ -198,7 +213,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     await pWaitForToolbarHidden();
 
     // Bottom
-    scrollTo(editor, 0, 100);
+    scrollTo(editor, 0, 105);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear', SugarBody.body(), rightSelector);
     await pAssertPosition('top', -40);
 
@@ -207,7 +222,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     await pWaitForToolbarHidden();
 
     // Top
-    scrollTo(editor, 0, 420);
+    scrollTo(editor, 0, 400);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear', SugarBody.body(), rightSelector);
     await pAssertPosition('top', -321);
   });
@@ -237,6 +252,19 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     Css.remove(TinyDom.container(editor), 'margin-bottom');
   });
 
+  it('TINY-7739: Selection context toolbar should not escape the bounds or use an inset layout', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p>text</p>');
+    TinySelections.setSelection(editor, [ 3, 0 ], 1, [ 3, 0 ], 3);
+    // Place the selected text right at the bottom of the editor so only ~1px of the selection is visible
+    // Note: IE 11 uses a different selection height (22px vs 17px)
+    scrollTo(editor, 0, browser.isIE() ? 65 : 67);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear above the content', SugarBody.body(), topSelector);
+    // Moving 2px more the selected text is now offscreen so the context toolbar should hide
+    scrollTo(editor, 0, browser.isIE() ? 63 : 65);
+    await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
+  });
+
   it('TINY-7545: Context toolbar preserves the previous position when scrolling top to bottom and back', async () => {
     const editor = hook.editor();
     editor.setContent(
@@ -249,18 +277,22 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     await pAssertPosition('bottom', 111);
 
     scrollTo(editor, 0, 400);
+    assertToolbarIsNotTransitioning();
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), topInsetSelector);
     await pAssertPosition('top', -315);
 
     scrollTo(editor, 0, 700);
+    await pAssertToolbarIsTransitioning();
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom outside content', SugarBody.body(), bottomSelector);
     await pAssertPosition('top', -234);
 
     scrollTo(editor, 0, 400);
+    assertToolbarIsNotTransitioning();
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), bottomInsetSelector);
     await pAssertPosition('bottom', 24);
 
     scrollTo(editor, 0, 0);
+    await pAssertToolbarIsTransitioning();
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), topSelector);
     await pAssertPosition('bottom', 111);
   });

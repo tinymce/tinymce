@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { isPercentagesForced, isPixelsForced } from '../api/Settings';
 import * as Util from '../core/Util';
 
-export const get = (editor: Editor, table: SugarElement<HTMLTableElement>) => {
+export const get = (editor: Editor, table: SugarElement<HTMLTableElement>): TableSize => {
   // Note: We can't enforce none (responsive), as if someone manually resizes a table
   // then it must switch to either pixel (fixed) or percentage (relative) sizing
   if (isPercentagesForced(editor)) {

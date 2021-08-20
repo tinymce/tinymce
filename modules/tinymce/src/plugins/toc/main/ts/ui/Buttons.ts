@@ -19,13 +19,16 @@ const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) 
   return () => editor.on('LoadContent SetContent change', toggleDisabledState);
 };
 
-const isToc = (editor: Editor) => (elm) => elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
+const isToc = (editor: Editor) => (elm: Element | null) =>
+  elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
+  const insertTocAction = () => editor.execCommand('mceInsertToc');
+
   editor.ui.registry.addButton('toc', {
     icon: 'toc',
     tooltip: 'Table of contents',
-    onAction: () => editor.execCommand('mceInsertToc'),
+    onAction: insertTocAction,
     onSetup: toggleState(editor)
   });
 
@@ -38,7 +41,7 @@ const register = (editor: Editor) => {
   editor.ui.registry.addMenuItem('toc', {
     icon: 'toc',
     text: 'Table of contents',
-    onAction: () => editor.execCommand('mceInsertToc'),
+    onAction: insertTocAction,
     onSetup: toggleState(editor)
   });
 

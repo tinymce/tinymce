@@ -18,39 +18,34 @@ import * as Settings from '../api/Settings';
 import { exitFullscreen, getFullscreenchangeEventName, getFullscreenRoot, isFullscreenElement, requestFullscreen } from './NativeFullscreen';
 import * as Thor from './Thor';
 
+interface ScrollPos {
+  readonly x: number;
+  readonly y: number;
+}
+
 export interface ScrollInfo {
-  scrollPos: {
-    x: number;
-    y: number;
-  };
-  containerWidth: string;
-  containerHeight: string;
-  containerTop: string;
-  containerLeft: string;
-  iframeWidth: string;
-  iframeHeight: string;
-  fullscreenChangeHandler: EventUnbinder;
+  readonly scrollPos: ScrollPos;
+  readonly containerWidth: string;
+  readonly containerHeight: string;
+  readonly containerTop: string;
+  readonly containerLeft: string;
+  readonly iframeWidth: string;
+  readonly iframeHeight: string;
+  readonly fullscreenChangeHandler: EventUnbinder;
 }
 
 const DOM = DOMUtils.DOM;
 
-const getScrollPos = () => {
-  const vp = WindowVisualViewport.getBounds(window);
+const getScrollPos = (): ScrollPos =>
+  WindowVisualViewport.getBounds(window);
 
-  return {
-    x: vp.x,
-    y: vp.y
-  };
-};
-
-const setScrollPos = (pos) => {
+const setScrollPos = (pos: ScrollPos): void =>
   window.scrollTo(pos.x, pos.y);
-};
 
 const viewportUpdate = WindowVisualViewport.get().fold(
   () => ({ bind: Fun.noop, unbind: Fun.noop }),
   (visualViewport) => {
-    const editorContainer = Singleton.value<SugarElement>();
+    const editorContainer = Singleton.value<SugarElement<HTMLElement>>();
     const resizeBinder = Singleton.unbindable();
     const scrollBinder = Singleton.unbindable();
 
@@ -75,7 +70,7 @@ const viewportUpdate = WindowVisualViewport.get().fold(
       refreshVisualViewport();
     }, 50);
 
-    const bind = (element) => {
+    const bind = (element: SugarElement<HTMLElement>) => {
       editorContainer.set(element);
       update();
       resizeBinder.set(WindowVisualViewport.bind('resize', update));
@@ -97,7 +92,7 @@ const viewportUpdate = WindowVisualViewport.get().fold(
   }
 );
 
-const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | null>) => {
+const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | null>): void => {
   const body = document.body;
   const documentElement = document.documentElement;
   const editorContainer = editor.getContainer();

@@ -12,7 +12,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Util from '../core/Util';
 
-const createContainer = () => {
+const createContainer = (): SugarElement<HTMLDivElement> => {
   const container = SugarElement.fromTag('div');
 
   Css.setAll(container, {
@@ -29,11 +29,11 @@ const createContainer = () => {
   return container;
 };
 
-const get = (editor: Editor, isResizable: (elm: SugarElement<Element>) => boolean) => {
+const get = (editor: Editor, isResizable: (elm: SugarElement<Element>) => boolean): ResizeWire => {
   return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer(), isResizable) : ResizeWire.only(SugarElement.fromDom(editor.getDoc()), isResizable);
 };
 
-const remove = (editor: Editor, wire: ResizeWire) => {
+const remove = (editor: Editor, wire: ResizeWire): void => {
   if (editor.inline) {
     Remove.remove(wire.parent());
   }

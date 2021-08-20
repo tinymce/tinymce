@@ -7,13 +7,11 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getPreviewDialogWidth = (editor: Editor): number => parseInt(editor.getParam('plugin_preview_width', '650'), 10);
+const getContentStyle = (editor: Editor): string =>
+  editor.getParam('content_style', '', 'string');
 
-const getPreviewDialogHeight = (editor: Editor): number => parseInt(editor.getParam('plugin_preview_height', '500'), 10);
-
-const getContentStyle = (editor: Editor): string => editor.getParam('content_style', '', 'string');
-
-const shouldUseContentCssCors = (editor: Editor): boolean => editor.getParam('content_css_cors', false, 'boolean');
+const shouldUseContentCssCors = (editor: Editor): boolean =>
+  editor.getParam('content_css_cors', false, 'boolean');
 
 const getBodyClassByHash = (editor: Editor): string => {
   const bodyClass = editor.getParam('body_class', '', 'hash');
@@ -47,8 +45,6 @@ const getBodyId = (editor: Editor): string => {
 };
 
 export {
-  getPreviewDialogWidth,
-  getPreviewDialogHeight,
   getContentStyle,
   shouldUseContentCssCors,
   getBodyClass,

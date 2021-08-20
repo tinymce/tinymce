@@ -1,7 +1,7 @@
 import { Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Type } from '@ephox/katamari';
-import { TinyAssertions, TinyUiActions } from '@ephox/mcagar';
 import { Focus, SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
