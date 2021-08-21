@@ -28,7 +28,7 @@ const expectValue = (label: string, value: any, response: FutureResult<any, Http
         assert.eq(value, val);
         console.log(label, 'passed with ', val);
         callback(Result.value({}));
-      } catch (err) {
+      } catch (err: any) {
         callback(Result.error(new Error(err)));
       }
     });
@@ -45,7 +45,7 @@ const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, 
           assert.eq(JSON.stringify(value, null, '  '), text);
           console.log(label, 'passed with ', text);
           callback(Result.value({}));
-        } catch (err) {
+        } catch (err: any) {
           callback(Result.error(new Error(err)));
         }
       });

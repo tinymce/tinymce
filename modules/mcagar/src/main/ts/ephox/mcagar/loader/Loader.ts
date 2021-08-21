@@ -99,7 +99,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
           setTimeout(() => {
             try {
               callbacks.run(editor, onSuccess, onFailure);
-            } catch (e) {
+            } catch (e: any) {
               onFailure(e);
             }
           }, 0);

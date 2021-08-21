@@ -48,7 +48,7 @@ const extractFrom = (blob: Blob): Promise<JPEGMeta> => {
       }
       return Promise.reject('Image was not a jpeg');
     } catch (ex) {
-      return Promise.reject(`Unsupported format or not an image: ${blob.type} (Exception: ${ex.message})`);
+      return Promise.reject(`Unsupported format or not an image: ${blob.type} (Exception: ${(ex as Error).message})`);
     }
   });
 };

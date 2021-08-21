@@ -32,7 +32,7 @@ UnitTest.test('SelectorTest', () => {
     // http://jsfiddle.net/spyder/fv9ptr5L/
     const empty = Div();
     Selectors.all('img:not([data-ephox-polish-blob])', empty);
-  } catch (e) {
+  } catch (e: any) {
     assert.fail(e);
   }
 

@@ -18,7 +18,7 @@ UnitTest.asynctest('CssReflowTest', (success, failure) => {
     try {
       checks();
       success();
-    } catch (e) {
+    } catch (e: any) {
       failure(e);
     } finally {
       Remove.remove(iframe);

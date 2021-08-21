@@ -83,7 +83,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
         checks(doc);
         Remove.remove(iframe);
         next();
-      } catch (e) {
+      } catch (e: any) {
         // Remove.remove(iframe);
         failure(e);
       }
