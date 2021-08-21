@@ -15,7 +15,9 @@ import CaretPosition from './CaretPosition';
 import * as CaretUtils from './CaretUtils';
 import { CaretWalker } from './CaretWalker';
 
-interface LineClientRect extends ClientRect.ClientRect {
+type GeomClientRect = ClientRect.ClientRect;
+
+interface LineClientRect extends GeomClientRect {
   line: number;
 }
 
@@ -30,8 +32,8 @@ export enum VDirection {
   Down = 1
 }
 
-type PosPredicate = (rect1: ClientRect.ClientRect, rect2: ClientRect.ClientRect) => boolean;
-type RectPredicate = (rect: ClientRect.ClientRect) => boolean;
+type PosPredicate = (rect1: GeomClientRect, rect2: GeomClientRect) => boolean;
+type RectPredicate = (rect: GeomClientRect) => boolean;
 
 const findUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) => boolean, node: Node): void => {
   while ((node = CaretUtils.findNode(node, direction, CaretCandidate.isEditableCaretCandidate, root))) {

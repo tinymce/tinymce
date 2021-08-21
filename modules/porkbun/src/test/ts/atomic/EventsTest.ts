@@ -75,13 +75,7 @@ UnitTest.test('Events', () => {
     });
 
     assert.throws(
-      () => {
-        try {
-          eb.trigger.quack('hay', 'bee', 'quee');
-        } catch (ex) {
-          throw ex.message;
-        }
-      },
+      () => eb.trigger.quack('hay', 'bee', 'quee'),
       'Cannot trigger a source event.'
     );
 
