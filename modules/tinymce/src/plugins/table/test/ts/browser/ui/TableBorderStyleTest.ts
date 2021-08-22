@@ -5,13 +5,14 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { pAssertStyleCanBeToggledOnAndOff } from '../../module/test/TableModifiersTestUtils';
+import { pAssertStyleCanBeToggledOnAndOff, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 describe('browser.tinymce.plugins.table.ui.TableBorderStyleTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     indent: false,
-    toolbar: 'tablecellborderstyle',
+    toolbar: 'tableprops tablecellborderstyle',
     base_url: '/project/tinymce/js/tinymce',
     menu: {
       table: { title: 'Table', items: 'tablecellborderstyle' },
@@ -19,11 +20,11 @@ describe('browser.tinymce.plugins.table.ui.TableBorderStyleTest', () => {
     menubar: 'table',
     table_border_styles: [
       {
-        text: 'Solid',
+        title: 'Solid',
         value: 'solid'
       },
       {
-        text: 'None',
+        title: 'None',
         value: ''
       },
     ]
@@ -52,4 +53,21 @@ describe('browser.tinymce.plugins.table.ui.TableBorderStyleTest', () => {
       customStyle: 'border-style: solid'
     })
   );
+
+  it('TINY-7853: Table properties dialog can be updated with custom border styles', async () => {
+    const editor = hook.editor();
+    setEditorContentTableAndSelection(editor, 2, 2);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues({
+      borderstyle: '',
+      backgroundcolor: '',
+      bordercolor: ''
+    }, true, {});
+    TableTestUtils.setDialogValues({
+      borderstyle: 'dashed',
+      bordercolor: '',
+      backgroundcolor: 'red'
+    }, true, {});
+    await TableTestUtils.pClickDialogButton(editor, false);
+  });
 });

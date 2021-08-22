@@ -13,7 +13,7 @@ import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableC
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
-import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, generateColorSelector, generateItemsCallback } from './UiUtils';
+import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, generateMenuItemsCallback } from './UiUtils';
 
 const addButtons = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
   editor.ui.registry.addMenuButton('table', {
@@ -175,13 +175,12 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
     editor.ui.registry.addMenuButton('tableclass', {
       icon: 'table-classes',
       tooltip: 'Table styles',
-      fetch: generateItemsCallback(
+      fetch: generateMenuItemsCallback(
         editor,
         selections,
         tableClassList,
         'tableclass',
-        (item) => item.title,
-        (item) => editor.execCommand('mceTableToggleClass', false, item.value)
+        (value) => editor.execCommand('mceTableToggleClass', false, value)
       ),
       onSetup: selectionTargets.onSetupTable
     });
@@ -192,13 +191,12 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
     editor.ui.registry.addMenuButton('tablecellclass', {
       icon: 'table-cell-classes',
       tooltip: 'Cell styles',
-      fetch: generateItemsCallback(
+      fetch: generateMenuItemsCallback(
         editor,
         selections,
         tableCellClassList,
         'tablecellclass',
-        (item) => item.title,
-        (item) => editor.execCommand('mceTableCellToggleClass', false, item.value)
+        (value) => editor.execCommand('mceTableCellToggleClass', false, value)
       ),
       onSetup: selectionTargets.onSetupCellOrRow
     });
@@ -207,42 +205,37 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
   editor.ui.registry.addMenuButton('tablecellvalign', {
     icon: 'vertical-align',
     tooltip: 'Vertical align',
-    fetch: generateItemsCallback(
+    fetch: generateMenuItemsCallback(
       editor,
       selections,
       verticalAlignValues,
       'tablecellverticalalign',
-      (item) => item.text,
       applyTableCellStyle(editor, 'vertical-align')
     ),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  const tableCellBorderWidthsList = getTableBorderWidths(editor);
   editor.ui.registry.addMenuButton('tablecellborderwidth', {
     icon: 'border-width',
     tooltip: 'Border width',
-    fetch: generateItemsCallback(
+    fetch: generateMenuItemsCallback(
       editor,
       selections,
-      tableCellBorderWidthsList,
+      getTableBorderWidths(editor),
       'tablecellborderwidth',
-      (item) => item.title,
       applyTableCellStyle(editor, 'border-width')
     ),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  const tableCellBorderStylesList = getTableBorderStyles(editor);
   editor.ui.registry.addMenuButton('tablecellborderstyle', {
     icon: 'border-style',
     tooltip: 'Border style',
-    fetch: generateItemsCallback(
+    fetch: generateMenuItemsCallback(
       editor,
       selections,
-      tableCellBorderStylesList,
+      getTableBorderStyles(editor),
       'tablecellborderstyle',
-      (item) => item.text,
       applyTableCellStyle(editor, 'border-style')
     ),
     onSetup: selectionTargets.onSetupCellOrRow
@@ -255,19 +248,17 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
     onSetup: selectionTargets.onSetupTableWithCaption
   });
 
-  const tableCellBackgroundColors = getTableCellBackgroundColors(editor);
   editor.ui.registry.addMenuButton('tablecellbackgroundcolor', {
     icon: 'cell-background-color',
     tooltip: 'Background color',
-    fetch: (callback) => callback(generateColorSelector(editor, tableCellBackgroundColors, 'background-color')),
+    fetch: (callback) => callback(buildColorMenu(editor, getTableCellBackgroundColors(editor), 'background-color')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  const tableCellBorderColors = getTableCellBorderColors(editor);
   editor.ui.registry.addMenuButton('tablecellbordercolor', {
     icon: 'cell-border-color',
     tooltip: 'Border color',
-    fetch: (callback) => callback(generateColorSelector(editor, tableCellBorderColors, 'border-color')),
+    fetch: (callback) => callback(buildColorMenu(editor, getTableCellBorderColors(editor), 'border-color')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 

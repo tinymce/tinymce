@@ -11,7 +11,6 @@ import { Css, SugarElement, SugarElements } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Styles from '../actions/Styles';
 import { getDefaultAttributes, getDefaultStyles, shouldStyleWithCss } from '../api/Settings';
@@ -71,50 +70,6 @@ export type CellData = {
   readonly borderstyle?: string;
   readonly bordercolor?: string;
   readonly backgroundcolor?: string;
-};
-
-interface ClassListValue {
-  readonly title?: string;
-  readonly text?: string;
-  readonly value: string;
-}
-
-interface ClassListGroup {
-  readonly title?: string;
-  readonly text?: string;
-  readonly menu: ClassListItem[];
-}
-
-type ClassListItem = ClassListValue | ClassListGroup;
-
-type InternalClassListItem = Dialog.ListBoxItemSpec;
-
-const isListGroup = (item: ClassListItem): item is ClassListGroup =>
-  Obj.hasNonNullableKey(item as Record<string, any>, 'menu');
-
-const buildListItems = (inputList: ClassListItem[], startItems?: InternalClassListItem[]): InternalClassListItem[] => {
-  // Used to also take a callback (that in all instances applied an item.textStyles property using Formatter)
-  // to each item but seems to have been an undocumented TinyMCE 4 or even 3 feature and doesn't work with
-  // TinyMCE 5 selectboxes so deleted
-  const appendItems = (values: ClassListItem[], acc: InternalClassListItem[]) =>
-    // item.text is not documented - maybe deprecated option we can delete??
-    acc.concat(Arr.map(values, (item) => {
-      const text = item.text || item.title;
-
-      if (isListGroup(item)) {
-        return {
-          text,
-          items: buildListItems(item.menu)
-        };
-      } else {
-        return {
-          text,
-          value: item.value
-        };
-      }
-    }));
-
-  return appendItems(inputList, startItems || []);
 };
 
 const rgbToHex = (dom: DOMUtils) => (value: string): string =>
@@ -286,7 +241,6 @@ const extractDataFromCellElement = (editor: Editor, cell: HTMLTableCellElement, 
 };
 
 export {
-  buildListItems,
   extractAdvancedStyles,
   getSharedValues,
   extractDataFromTableElement,

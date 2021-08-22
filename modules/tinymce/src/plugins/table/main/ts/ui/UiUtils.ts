@@ -5,18 +5,29 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
 import { Selections } from '@ephox/darwin';
-import { Arr, Singleton, Strings } from '@ephox/katamari';
+import { Arr, Obj, Singleton, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as TableSelection from '../selection/TableSelection';
 
-interface Item {
+export interface UserListValue {
+  readonly title?: string;
+  readonly text?: string;
   readonly value: string;
 }
+
+export interface UserListGroup {
+  readonly title?: string;
+  readonly text?: string;
+  readonly menu: UserListItem[];
+}
+
+export type UserListItem = UserListValue | UserListGroup;
 
 const onSetupToggle = (editor: Editor, selections: Selections, formatName: string, formatValue: string) => {
   return (api: Toolbar.ToolbarMenuButtonInstanceApi): () => void => {
@@ -46,48 +57,89 @@ const onSetupToggle = (editor: Editor, selections: Selections, formatName: strin
   };
 };
 
-const applyTableCellStyle = <T extends Item>(editor: Editor, style: string) => (item: T): void => {
-  editor.execCommand('mceTableApplyCellStyle', false, { [style]: item.value });
+export const isListGroup = (item: UserListItem): item is UserListGroup =>
+  Obj.hasNonNullableKey(item as Record<string, any>, 'menu');
+
+const buildListItems = (items: UserListItem[]): Dialog.ListBoxItemSpec[] =>
+  Arr.map(items, (item) => {
+    // item.text is not documented - maybe deprecated option we can delete??
+    const text = item.text || item.title;
+    if (isListGroup(item)) {
+      return {
+        text,
+        items: buildListItems(item.menu)
+      };
+    } else {
+      return {
+        text,
+        value: item.value
+      };
+    }
+  });
+
+const buildMenuItems = (
+  editor: Editor,
+  selections: Selections,
+  items: UserListItem[],
+  format: string,
+  onAction: (value: string) => void
+): Menu.NestedMenuItemContents[] =>
+  Arr.map(items, (item): Menu.NestedMenuItemContents => {
+    // item.text is not documented - maybe deprecated option we can delete??
+    const text = item.text || item.title;
+    if (isListGroup(item)) {
+      return {
+        type: 'nestedmenuitem',
+        text,
+        getSubmenuItems: () => buildMenuItems(editor, selections, item.menu, format, onAction)
+      };
+    } else {
+      return {
+        text,
+        type: 'togglemenuitem',
+        onAction: () => onAction(item.value),
+        onSetup: onSetupToggle(editor, selections, format, item.value)
+      };
+    }
+  });
+
+const applyTableCellStyle = (editor: Editor, style: string) => (value: string): void => {
+  editor.execCommand('mceTableApplyCellStyle', false, { [style]: value });
 };
 
-const filterNoneItem = <T extends Item>(list: T[]): T[] =>
-  Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
+const filterNoneItem = (list: UserListItem[]): UserListItem[] =>
+  Arr.bind(list, (item): UserListItem[] => {
+    if (isListGroup(item)) {
+      return [{ ...item, menu: filterNoneItem(item.menu) }];
+    } else {
+      return Strings.isNotEmpty(item.value) ? [ item ] : [];
+    }
+  });
 
-const generateItem = <T extends Item>(editor: Editor, selections: Selections, item: T, format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec => ({
-  text: extractText(item),
-  type: 'togglemenuitem',
-  onAction: () => onAction(item),
-  onSetup: onSetupToggle(editor, selections, format, item.value)
-});
+const generateMenuItemsCallback = (editor: Editor, selections: Selections, items: UserListItem[], format: string, onAction: (value: string) => void) =>
+  (callback: (items: Menu.NestedMenuItemContents[]) => void): void =>
+    callback(buildMenuItems(editor, selections, items, format, onAction));
 
-const generateItems = <T extends Item>(editor: Editor, selections: Selections, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec[] =>
-  Arr.map(items, (item) => generateItem(editor, selections, item, format, extractText, onAction));
+const buildColorMenu = (editor: Editor, colorList: UserListValue[], style: string): Menu.FancyMenuItemSpec[] => {
+  const colorMap = Arr.map(colorList, (entry): Menu.ChoiceMenuItemSpec => ({
+    text: entry.title,
+    value: '#' + Transformations.anyToHex(entry.value).value,
+    type: 'choiceitem'
+  }));
 
-const generateItemsCallback = <T extends Item>(editor: Editor, selections: Selections, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void) =>
-  (callback: (items: Menu.ToggleMenuItemSpec[]) => void): void =>
-    callback(generateItems(editor, selections, items, format, extractText, onAction));
-
-const fixColorValue = (value: string, setColor: (colorValue: string) => void): void => {
-  if (value === 'remove') {
-    setColor('');
-  } else {
-    setColor(value);
-  }
-};
-
-const generateColorSelector = (editor: Editor, colorList: Menu.ChoiceMenuItemSpec[], style: string): Menu.FancyMenuItemSpec[] => [{
-  type: 'fancymenuitem',
-  fancytype: 'colorswatch',
-  initData: {
-    colors: colorList.length > 0 ? colorList : undefined,
-    allowCustomColors: false
-  },
-  onAction: (data) => {
-    fixColorValue(data.value, (value) => {
+  return [{
+    type: 'fancymenuitem',
+    fancytype: 'colorswatch',
+    initData: {
+      colors: colorMap.length > 0 ? colorMap : undefined,
+      allowCustomColors: false
+    },
+    onAction: (data) => {
+      const value = data.value === 'remove' ? '' : data.value;
       editor.execCommand('mceTableApplyCellStyle', false, { [style]: value });
-    });
-  }
-}];
+    }
+  }];
+};
 
 const changeRowHeader = (editor: Editor) => (): void => {
   const currentType = editor.queryCommandValue('mceTableRowType');
@@ -103,10 +155,11 @@ const changeColumnHeader = (editor: Editor) => (): void => {
 
 export {
   onSetupToggle,
-  generateItems,
-  generateItemsCallback,
+  buildMenuItems,
+  buildListItems,
+  buildColorMenu,
+  generateMenuItemsCallback,
   filterNoneItem,
-  generateColorSelector,
   changeRowHeader,
   changeColumnHeader,
   applyTableCellStyle
