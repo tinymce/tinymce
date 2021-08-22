@@ -69,12 +69,14 @@ export default (): void => {
         },
         action: (button) => {
           Attachment.attach(sink, popup);
-          Positioning.position(sink, {
-            type: 'node',
-            root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element,
-            node: Optional.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element),
-            layouts
-          }, popup);
+          Positioning.position(sink, popup, {
+            anchor: {
+              type: 'node',
+              root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element,
+              node: Optional.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element),
+              layouts
+            }
+          });
         }
       })
     ]

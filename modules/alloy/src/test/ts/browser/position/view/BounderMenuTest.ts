@@ -9,7 +9,7 @@ import * as LinkedLayout from 'ephox/alloy/positioning/layout/LinkedLayout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 
 interface TestDecisionSpec {
-  readonly label: string;
+  readonly layout: string;
   readonly x: number;
   readonly y: number;
   readonly candidateY?: number;
@@ -19,7 +19,7 @@ describe('BounderMenuTest', () => {
   const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble.Bubble, bounds: Bounds) => {
     const placee = SugarElement.fromTag('div');
     const actual = Bounder.attempts(placee, preference, anchor, panel, bubbles, bounds);
-    assert.equal(actual.label, expected.label, 'label');
+    assert.equal(actual.layout, expected.layout, 'layout');
     assert.equal(actual.rect.x, expected.x, 'X');
     assert.equal(actual.rect.y, expected.y, 'Y');
     if (expected.candidateY !== undefined) {
@@ -37,13 +37,13 @@ describe('BounderMenuTest', () => {
 
   it('an empty input array is invalid and just returns anchor coordinates', () => {
     check({
-      label: 'none',
+      layout: 'none',
       x: 0,
       y: 0
     }, [], bounds(0, 0, 10, 10), bounds(0, 0, 50, 50), Bubble.fallback(), bounds(0, 0, 1000, 1000));
 
     check({
-      label: 'none',
+      layout: 'none',
       x: 100,
       y: 0
     }, [], bounds(100, 0, 200, 50), bounds(0, 0, 150, 25), Bubble.nu(10, 0, {}), bounds(0, 0, 1000, 1000));
@@ -56,7 +56,7 @@ describe('BounderMenuTest', () => {
   it('southeast', () => {
     const anchor = bounds(100, 55, 2, 2);
     check({
-      label: 'link-layout-southeast',
+      layout: 'link-layout-southeast',
       x: anchor.right,                            // 102
       y: anchor.y,                                // 55
     }, four, anchor, panelBox, bubb, view);
@@ -65,7 +65,7 @@ describe('BounderMenuTest', () => {
   it('southwest', () => {
     const anchor = bounds(320, 55, 2, 2);
     check({
-      label: 'link-layout-southwest',
+      layout: 'link-layout-southwest',
       x: anchor.x - panelBox.width,               // 220
       y: anchor.y,                                // 55
     }, four, anchor, panelBox, bubb, view);
@@ -74,7 +74,7 @@ describe('BounderMenuTest', () => {
   it('northeast', () => {
     const anchor = bounds(140, 235, 2, 2);
     check({
-      label: 'link-layout-northeast',
+      layout: 'link-layout-northeast',
       x: anchor.right,                            // 142
       y: anchor.bottom - panelBox.height,         // 162
     }, four, anchor, panelBox, bubb, view);
@@ -83,7 +83,7 @@ describe('BounderMenuTest', () => {
   it('northwest', () => {
     const anchor = bounds(320, 235, 2, 2);
     check({
-      label: 'link-layout-northwest',
+      layout: 'link-layout-northwest',
       x: anchor.x - panelBox.width,               // 220
       y: anchor.bottom - panelBox.height,         // 162
     }, four, anchor, panelBox, bubb, view);
@@ -92,7 +92,7 @@ describe('BounderMenuTest', () => {
   it('all fit -> southeast because of order of preference', () => {
     const anchor = bounds(270, 100, 2, 2);
     check({
-      label: 'link-layout-southeast',
+      layout: 'link-layout-southeast',
       x: anchor.right,                            // 272
       y: anchor.y,                                // 100
     }, four, anchor, panelBox, bubb, view);
@@ -101,7 +101,7 @@ describe('BounderMenuTest', () => {
   it('none near top left -> best fit is southeast', () => {
     const anchor = bounds(55, 55, 2, 2);
     check({
-      label: 'link-layout-southeast',
+      layout: 'link-layout-southeast',
       x: anchor.right,                            // 57
       y: anchor.y,                                // 55
     }, four, anchor, bigPanel, bubb, view);
@@ -110,7 +110,7 @@ describe('BounderMenuTest', () => {
   it('none near top right -> best fit is southwest', () => {
     const anchor = bounds(350, 55, 2, 2);
     check({
-      label: 'link-layout-southwest',
+      layout: 'link-layout-southwest',
       x: anchor.x - bigPanel.width,               // 275
       y: anchor.y,                                // 55
     }, four, anchor, bigPanel, bubb, view);
@@ -119,7 +119,7 @@ describe('BounderMenuTest', () => {
   it('none near bottom left -> best fit is northeast', () => {
     const anchor = bounds(55, 200, 2, 2);
     check({
-      label: 'link-layout-northeast',
+      layout: 'link-layout-northeast',
       x: anchor.right,                            // 57
       y: view.y,                                  // 50 - constrained within viewport
       candidateY: anchor.bottom - bigPanel.height // -298
@@ -129,7 +129,7 @@ describe('BounderMenuTest', () => {
   it('none near bottom right -> best fit is northwest', () => {
     const anchor = bounds(350, 200, 2, 2);
     check({
-      label: 'link-layout-northwest',
+      layout: 'link-layout-northwest',
       x: anchor.x - bigPanel.width,               // 275
       y: view.y,                                  // 50 - constrained within viewport
       candidateY: anchor.bottom - bigPanel.height // -298
@@ -139,7 +139,7 @@ describe('BounderMenuTest', () => {
   it('southeast (1px short on x and y)', () => {
     const anchor = bounds(view.right - panelBox.width - 2 - 1, view.bottom - panelBox.height - 1, 2, 2);
     check({
-      label: 'link-layout-southeast',
+      layout: 'link-layout-southeast',
       x: anchor.right,                            // 299
       y: anchor.y,                                // 194
     }, four, anchor, panelBox, bubb, view);
@@ -148,7 +148,7 @@ describe('BounderMenuTest', () => {
   it('southeast (exactly for x and y)', () => {
     const anchor = bounds(view.right - panelBox.width - 2, view.bottom - panelBox.height, 2, 2);
     check({
-      label: 'link-layout-southeast',
+      layout: 'link-layout-southeast',
       x: anchor.right,                            // 300
       y: anchor.y,                                // 195
     }, four, anchor, panelBox, bubb, view);
@@ -157,7 +157,7 @@ describe('BounderMenuTest', () => {
   it('southeast -> southwest (1px too far on x)', () => {
     const anchor = bounds(view.right - panelBox.width - 2 + 1, view.bottom - panelBox.height, 2, 2);
     check({
-      label: 'link-layout-southwest',
+      layout: 'link-layout-southwest',
       x: anchor.x - panelBox.width,               // 199
       y: anchor.y,                                // 195
     }, four, anchor, panelBox, bubb, view);
@@ -166,7 +166,7 @@ describe('BounderMenuTest', () => {
   it('southeast -> northeast (1px too far on y)', () => {
     const anchor = bounds(view.right - panelBox.width - 2, view.bottom - panelBox.height + 1, 2, 2);
     check({
-      label: 'link-layout-northeast',
+      layout: 'link-layout-northeast',
       x: anchor.right,                            // 300
       y: anchor.bottom - panelBox.height          // 123
     }, four, anchor, panelBox, bubb, view);
@@ -175,7 +175,7 @@ describe('BounderMenuTest', () => {
   it('southeast -> northwest (1px too far on x and y)', () => {
     const anchor = bounds(view.right - panelBox.width - 2 + 1, view.bottom - panelBox.height + 1, 2, 2);
     check({
-      label: 'link-layout-northwest',
+      layout: 'link-layout-northwest',
       x: anchor.x - panelBox.width,               // 199
       y: anchor.bottom - panelBox.height          // 123
     }, four, anchor, panelBox, bubb, view);

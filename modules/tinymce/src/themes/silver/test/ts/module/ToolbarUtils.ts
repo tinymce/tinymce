@@ -1,7 +1,7 @@
 import { Waiter } from '@ephox/agar';
 import { Type } from '@ephox/katamari';
-import { TinyUiActions } from '@ephox/mcagar';
 import { Height, SugarElement, SugarLocation, Width } from '@ephox/sugar';
+import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

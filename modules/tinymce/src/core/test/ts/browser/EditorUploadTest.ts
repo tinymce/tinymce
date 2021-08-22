@@ -1,6 +1,6 @@
 import { afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';

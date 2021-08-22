@@ -1,6 +1,6 @@
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { TinyUiActions } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
+import { TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 

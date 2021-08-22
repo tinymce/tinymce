@@ -139,11 +139,6 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     const columns: InlineContent.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
     InlineView.showAt(
       autocompleter,
-      {
-        type: 'node',
-        root: SugarElement.fromDom(editor.getBody()),
-        node: Optional.from(ac.element)
-      },
       Menu.sketch(
         createMenuFrom(
           createPartialMenuWithAlloyItems('autocompleter-value', true, items, columns, 'normal'),
@@ -152,7 +147,14 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
           // Use the constant.
           'normal'
         )
-      )
+      ),
+      {
+        anchor: {
+          type: 'node',
+          root: SugarElement.fromDom(editor.getBody()),
+          node: Optional.from(ac.element)
+        }
+      }
     );
 
     InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);

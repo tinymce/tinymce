@@ -1,7 +1,7 @@
 import { Keys, Mouse, RealKeys, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import { Editor } from 'tinymce/core/api/PublicApi';
 import Theme from 'tinymce/themes/silver/Theme';

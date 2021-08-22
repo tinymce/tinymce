@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Strings } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
@@ -57,6 +59,14 @@ const setEnd = (rng: Range, container: Node, offset: number): void => {
     rng.setEndAfter(container);
   }
 };
+
+// Note: This is similar to the Polaris protocol detection, except it also handles `mailto` and any length scheme
+const hasProtocol = (url: string): boolean =>
+  /^([A-Za-z][A-Za-z\d.+-]*:\/\/)|mailto:/.test(url);
+
+// A limited list of punctuation characters that might be used after a link
+const isPunctuation = (char: string) =>
+  /[?!,.;:]/.test(char);
 
 const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string): void => {
   let end, endContainer, bookmark, text, prev, len, rngText;
@@ -142,7 +152,7 @@ const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string):
 
   // Exclude last . from word like "www.site.com."
   text = rng.toString();
-  if (text.charAt(text.length - 1) === '.') {
+  if (isPunctuation(text.charAt(text.length - 1))) {
     setEnd(rng, endContainer, start - 1);
   }
 
@@ -152,16 +162,17 @@ const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string):
   const protocol = Settings.getDefaultLinkProtocol(editor);
 
   if (matches) {
-    if (matches[1] === 'www.') {
-      matches[1] = protocol + '://www.';
-    } else if (/@$/.test(matches[1]) && !/^mailto:/.test(matches[1])) {
-      matches[1] = 'mailto:' + matches[1];
+    let url = matches[0];
+    if (Strings.startsWith(url, 'www.')) {
+      url = protocol + '://' + url;
+    } else if (Strings.contains(url, '@') && !hasProtocol(url)) {
+      url = 'mailto:' + url;
     }
 
     bookmark = editor.selection.getBookmark();
 
     editor.selection.setRng(rng);
-    editor.execCommand('createlink', false, matches[1] + matches[2]);
+    editor.execCommand('createlink', false, url);
 
     if (defaultLinkTarget !== false) {
       editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);

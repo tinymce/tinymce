@@ -1,8 +1,8 @@
 import { Assertions, FocusTools, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { Html, Remove, Replication, SelectorFilter, SugarBody, SugarDocument } from '@ephox/sugar';
+import { TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -40,8 +40,9 @@ describe('browser.tinymce.plugins.table.ContextToolbarTest', () => {
     TinyUiActions.pWaitForUi(editor, `.tox-pop__dialog ${selector}.tox-tbtn--disabled`);
 
   const pClickOnContextToolbarButton = async (editor: Editor, selector: string) => {
-    const toolbar = await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog div');
-    Mouse.clickOn(toolbar, selector);
+    await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog .tox-toolbar');
+    const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog ${selector}`).getOrDie();
+    Mouse.click(button);
   };
 
   const assertHtmlStructure = (label: string, editor: Editor, expectedHtml: string) => {

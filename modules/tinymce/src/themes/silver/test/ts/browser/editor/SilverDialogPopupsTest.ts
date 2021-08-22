@@ -1,9 +1,9 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it, TestLabel } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorExists, SugarBody, SugarDocument, SugarElement, WindowSelection } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

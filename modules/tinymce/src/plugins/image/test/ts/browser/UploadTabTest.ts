@@ -1,8 +1,8 @@
 import { Assertions, FileInput, Files, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, Value } from '@ephox/sugar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

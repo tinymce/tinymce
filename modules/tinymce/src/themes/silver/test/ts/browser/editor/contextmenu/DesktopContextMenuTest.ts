@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { SugarDocument } from '@ephox/sugar';
+import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';

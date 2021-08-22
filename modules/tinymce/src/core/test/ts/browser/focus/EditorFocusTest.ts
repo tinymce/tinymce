@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/mcagar';
 import { Focus, Hierarchy, SugarBody, SugarNode } from '@ephox/sugar';
+import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

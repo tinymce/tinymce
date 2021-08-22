@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -82,7 +82,8 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
 
     setEditorContentTableAndSelection(editor, 1, 1);
     await pAssertNoCheckmarksInMenu(editor, title, 2, sugarContainer, useMenuOrToolbar);
-    toggleClasses(editor, classList, type === 'table' ? 'mceTableToggleClass' : 'mceTableCellToggleClass');
+    const commandName = type === 'table' ? 'mceTableToggleClass' : 'mceTableCellToggleClass';
+    toggleClasses(editor, classList, commandName);
 
     const expected = {
       '.tox-menu': useMenuOrToolbar === 'toolbar' ? 1 : 2,

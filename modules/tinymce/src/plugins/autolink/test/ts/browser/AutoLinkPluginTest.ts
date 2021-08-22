@@ -1,5 +1,6 @@
 import { before, describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { Type } from '@ephox/katamari';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 import fc from 'fast-check';
 
@@ -51,8 +52,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     assert.equal(typeUrl(editor, input), `<p>${text || input}&nbsp;</p>`, 'Should not convert to link');
   };
 
-  const assertIsLink = (editor: Editor, input: string, link: string, withDotAtTheEnd?: boolean, text?: string): void => {
-    const dot = withDotAtTheEnd ? '.' : '';
+  const assertIsLink = (editor: Editor, input: string, link: string, punctuation?: string, text?: string): void => {
+    const dot = Type.isString(punctuation) ? punctuation : '';
     assert.equal(typeUrl(editor, (input + dot)), `<p><a href="${link}">${text || input}</a>${dot}&nbsp;</p>`, 'Should be convert to link');
   };
 
@@ -60,20 +61,23 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     const editor = hook.editor();
     assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
     assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com');
+    assertIsLink(editor, 'file://www.domain.com', 'file://www.domain.com');
+    assertIsLink(editor, 'customprotocol://www.domain.com', 'customprotocol://www.domain.com');
     assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
     assertIsLink(editor, 'ftp://www.domain.com', 'ftp://www.domain.com');
     assertIsLink(editor, 'www.domain.com', 'http://www.domain.com');
-    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', true);
+    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', '.');
     assertIsLink(editor, 'user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'mailto:user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'first-last@domain.com', 'mailto:first-last@domain.com');
+    assertIsLink(editor, 'http://user:password@www.domain.com', 'http://user:password@www.domain.com');
   });
 
   it('TINY-4773: AutoLink: Unexpected urls ended with space', () => {
     const editor = hook.editor();
     assertIsLink(editor, 'first-last@domain', 'mailto:first-last@domain'); // No .com or similar needed.
-    assertIsLink(editor, 'first-last@()', 'mailto:first-last@()'); // Anything goes after the @.
-    assertIsLink(editor, 'first-last@¶¶KJ', 'mailto:first-last@&para;&para;KJ', false, 'first-last@&para;&para;KJ'); // Anything goes after the @
+    assertNoLink(editor, 'first-last@()', 'first-last@()');
+    assertNoLink(editor, 'first-last@¶¶KJ', 'first-last@&para;&para;KJ');
   });
 
   it('TINY-4773: AutoLink: text which should not work', () => {
@@ -148,7 +152,7 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
     assertIsLink(editor, 'ftp://www.domain.com', 'ftp://www.domain.com');
     assertIsLink(editor, 'www.domain.com', 'https://www.domain.com');
-    assertIsLink(editor, 'www.domain.com', 'https://www.domain.com', true);
+    assertIsLink(editor, 'www.domain.com', 'https://www.domain.com', '.');
     assertIsLink(editor, 'user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'mailto:user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'first-last@domain.com', 'mailto:first-last@domain.com');
@@ -159,7 +163,17 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     const editor = hook.editor();
     editor.settings.link_default_protocol = 'http';
     assertIsLink(editor, 'www.domain.com', 'http://www.domain.com');
-    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', true);
+    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', '.');
     delete editor.settings.link_default_protocol;
+  });
+
+  it('TINY-7714: should trigger with trailing punctuation', () => {
+    const editor = hook.editor();
+    assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com', '.');
+    assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com', ',');
+    assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com', '?');
+    assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com', '!');
+    assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com', ';');
+    assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com', ':');
   });
 });
