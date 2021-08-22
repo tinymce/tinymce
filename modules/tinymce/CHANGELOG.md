@@ -16,8 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `tablecellborderstyle` toolbar button and menu item to change table cell border style #TINY-7478
 - Added a new `tablecaption` toolbar button and menu item to toggle captions on tables #TINY-7479
 - Added a new `mceTableToggleCaption` command that toggles captions on a selected table #TINY-7479
-- Added a new `tablecellbordercolor` toolbar button and menu item to select table cell border colors, with an accompanying setting `table_cell_border_color_map` to customize the available values #TINY-7480
-- Added a new `tablecellbackgroundcolor` toolbar button and menu item to select table cell background colors, with an accompanying setting `table_cell_background_color_map` to customize the available values #TINY-7480
+- Added a new `tablecellbordercolor` toolbar button and menu item to select table cell border colors, with an accompanying setting `table_border_color_map` to customize the available values #TINY-7480
+- Added a new `tablecellbackgroundcolor` toolbar button and menu item to select table cell background colors, with an accompanying setting `table_background_color_map` to customize the available values #TINY-7480
 - Added a new `initData` property to `fancymenuitem` to allow custom initialization data #TINY-7480
 - Added a new `language` menu item and toolbar button to add `lang` attributes to content, with an accompanying `content_langs` setting to specify the languages available #TINY-6149
 - A new `lang` format is now available that can be used with `editor.formatter`, or applied with the `Lang` editor command #TINY-6149

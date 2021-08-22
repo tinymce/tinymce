@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
       table: { title: 'Table', items: 'tablecellbackgroundcolor' },
     },
     menubar: 'table',
-    table_cell_background_color_map: [
+    table_background_color_map: [
       {
         title: 'Color',
         value: '#51a951',

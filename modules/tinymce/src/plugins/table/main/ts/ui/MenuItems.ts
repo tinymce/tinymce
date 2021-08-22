@@ -12,7 +12,7 @@ import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 
-import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableCellBackgroundColors, getTableCellBorderColors, getTableClassList, hasTableGrid } from '../api/Settings';
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableBackgroundColorMap, getTableBorderColorMap, getTableClassList, hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
@@ -298,14 +298,14 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
   editor.ui.registry.addNestedMenuItem('tablecellbackgroundcolor', {
     icon: 'cell-background-color',
     text: 'Background color',
-    getSubmenuItems: () => buildColorMenu(editor, getTableCellBackgroundColors(editor), 'background-color'),
+    getSubmenuItems: () => buildColorMenu(editor, getTableBackgroundColorMap(editor), 'background-color'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   editor.ui.registry.addNestedMenuItem('tablecellbordercolor', {
     icon: 'cell-border-color',
     text: 'Border color',
-    getSubmenuItems: () => buildColorMenu(editor, getTableCellBorderColors(editor), 'border-color'),
+    getSubmenuItems: () => buildColorMenu(editor, getTableBorderColorMap(editor), 'border-color'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 

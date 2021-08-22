@@ -9,7 +9,7 @@ import { Selections } from '@ephox/darwin';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableCellBackgroundColors, getTableCellBorderColors, getTableClassList, getToolbar } from '../api/Settings';
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableBackgroundColorMap, getTableBorderColorMap, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
@@ -251,14 +251,14 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
   editor.ui.registry.addMenuButton('tablecellbackgroundcolor', {
     icon: 'cell-background-color',
     tooltip: 'Background color',
-    fetch: (callback) => callback(buildColorMenu(editor, getTableCellBackgroundColors(editor), 'background-color')),
+    fetch: (callback) => callback(buildColorMenu(editor, getTableBackgroundColorMap(editor), 'background-color')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   editor.ui.registry.addMenuButton('tablecellbordercolor', {
     icon: 'cell-border-color',
     tooltip: 'Border color',
-    fetch: (callback) => callback(buildColorMenu(editor, getTableCellBorderColors(editor), 'border-color')),
+    fetch: (callback) => callback(buildColorMenu(editor, getTableBorderColorMap(editor), 'border-color')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
