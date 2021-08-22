@@ -156,10 +156,10 @@ const hasObjectResizing = (editor: Editor): boolean => {
   return Type.isString(objectResizing) ? objectResizing === 'table' : objectResizing;
 };
 
-const getTableCellBackgroundColors = (editor: Editor): UserListValue[] =>
+const getTableBackgroundColorMap = (editor: Editor): UserListValue[] =>
   editor.getParam('table_background_color_map', [], 'array');
 
-const getTableCellBorderColors = (editor: Editor): UserListValue[] =>
+const getTableBorderColorMap = (editor: Editor): UserListValue[] =>
   editor.getParam('table_border_color_map', [], 'array');
 
 export {
@@ -188,7 +188,7 @@ export {
   isResizeTableColumnResizing,
   getTableBorderWidths,
   getTableBorderStyles,
-  getTableCellBackgroundColors,
-  getTableCellBorderColors,
+  getTableBackgroundColorMap,
+  getTableBorderColorMap,
   useColumnGroup
 };
