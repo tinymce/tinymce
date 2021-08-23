@@ -37,14 +37,23 @@ const registerController = <T>(editor: Editor, spec: ControlSpec<T>) => {
     const options = spec.getOptions(editor);
     const initial = spec.getCurrent(editor).map(spec.hash);
 
+    const current = Singleton.destroyable();
+
     return Arr.map(
       options,
-      (value, i) => ({
+      (value) => ({
         type: 'togglemenuitem',
         text: spec.display(value),
         onSetup: (api) => {
-          api.setActive(Optionals.is(initial, spec.hash(value)));
-          return spec.watcher(editor, value, api.setActive);
+          const setActive = (active: boolean) => {
+            api.setActive(active);
+            if (active) {
+              current.set({ destroy: () => api.setActive(false) });
+            }
+          };
+
+          setActive(Optionals.is(initial, spec.hash(value)));
+          return spec.watcher(editor, value, setActive);
         },
         onAction: () => spec.setCurrent(editor, value)
       })

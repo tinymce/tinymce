@@ -108,6 +108,18 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           await pAssertOptions(editor, spec.menuSelector, [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.1'));
           spec.close(editor, 'Line height');
         });
+
+        it(`TINY-7713: ${spec.name} updates if computed line height changes`, async () => {
+          const editor = hook.editor();
+          editor.setContent('');
+          TinySelections.setCursor(editor, [ 0 ], 0);
+          await spec.pOpen(editor, 'Line height');
+          // Our content-css will apply a default line-height of 1.4
+          await pAssertOptions(editor, spec.menuSelector, [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.4'));
+          editor.execCommand('LineHeight', false, '1.1');
+          await pAssertOptions(editor, spec.menuSelector, [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.1'));
+          spec.close(editor, 'Line height');
+        });
       });
     });
 
