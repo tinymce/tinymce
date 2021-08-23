@@ -149,7 +149,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<p>Line 1</p><p><video height="400" width="200" src="custom/video.mp4" contenteditable="false"></video> Line 2</p><p>Line 3 with some more text</p>');
     await pMediaWait();
     scrollTo(editor, 0, 400);
-    TinySelections.setCursor(editor, [ 2, 0 ], 26);
+    TinySelections.setCursor(editor, [ 2, 0 ], 22);
     resetScrollCount();
     TinyContentActions.keystroke(editor, Keys.up());
     assertScrollCount(1);
