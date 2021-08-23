@@ -58,7 +58,7 @@ UnitTest.asynctest('TinyLoader.setupInBodyAndShadowRoot passes logs through', (s
         Assert.eq('Logs should just be from the first call', TestLogs.single('log1'), logs);
       }
       success();
-    } catch (e) {
+    } catch (e: any) {
       failure(e);
     }
   }, failure);

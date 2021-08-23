@@ -72,7 +72,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
         runTests(doc);
         Remove.remove(iframe);
         next();
-      } catch (e) {
+      } catch (e: any) {
         // Remove.remove(iframe);
         failure(e);
       }

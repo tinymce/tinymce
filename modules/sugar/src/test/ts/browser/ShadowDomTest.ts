@@ -176,7 +176,7 @@ const checkOriginalEventTarget = (mode: 'open' | 'closed', success: UnitTest.Suc
       Remove.remove(i1);
       Remove.remove(shadowHost);
       success();
-    } catch (e) {
+    } catch (e: any) {
       failure(e);
     }
   });

@@ -29,7 +29,7 @@ const fireEvents = (editor: Editor, table: SugarElement<HTMLTableElement>): void
   Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr'), (row) => {
     fireNewRow(editor, row.dom);
 
-    Arr.each(SelectorFilter.descendants<HTMLTableDataCellElement>(row, 'th,td'), (cell) => {
+    Arr.each(SelectorFilter.descendants<HTMLTableCellElement>(row, 'th,td'), (cell) => {
       fireNewCell(editor, cell.dom);
     });
   });

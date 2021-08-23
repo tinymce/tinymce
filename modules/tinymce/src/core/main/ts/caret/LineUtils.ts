@@ -9,12 +9,14 @@ import { Arr, Fun } from '@ephox/katamari';
 
 import { getClientRects, NodeClientRect } from '../dom/Dimensions';
 import * as NodeType from '../dom/NodeType';
-import * as GeomClientRect from '../geom/ClientRect';
+import * as ClientRect from '../geom/ClientRect';
 import * as ArrUtils from '../util/ArrUtils';
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretUtils from './CaretUtils';
 import { isFakeCaretTarget } from './FakeCaret';
 import { VDirection } from './LineWalker';
+
+type GeomClientRect = ClientRect.ClientRect;
 
 export interface CaretInfo {
   node: Node;
@@ -23,35 +25,36 @@ export interface CaretInfo {
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const findNode = CaretUtils.findNode;
-const distanceToRectLeft = (clientRect: ClientRect, clientX: number) => Math.abs(clientRect.left - clientX);
-const distanceToRectRight = (clientRect: ClientRect, clientX: number) => Math.abs(clientRect.right - clientX);
-const isInsideX = (clientX: number, clientRect: ClientRect): boolean => clientX >= clientRect.left && clientX <= clientRect.right;
-const isInsideY = (clientY: number, clientRect: ClientRect): boolean => clientY >= clientRect.top && clientY <= clientRect.bottom;
+const distanceToRectLeft = (clientRect: GeomClientRect, clientX: number) => Math.abs(clientRect.left - clientX);
+const distanceToRectRight = (clientRect: GeomClientRect, clientX: number) => Math.abs(clientRect.right - clientX);
+const isInsideX = (clientX: number, clientRect: GeomClientRect): boolean => clientX >= clientRect.left && clientX <= clientRect.right;
+const isInsideY = (clientY: number, clientRect: GeomClientRect): boolean => clientY >= clientRect.top && clientY <= clientRect.bottom;
 
-const findClosestClientRect = <T extends ClientRect>(clientRects: T[], clientX: number): T => ArrUtils.reduce(clientRects, (oldClientRect, clientRect) => {
-  const oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
-  const newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
+const findClosestClientRect = <T extends GeomClientRect>(clientRects: T[], clientX: number): T =>
+  ArrUtils.reduce(clientRects, (oldClientRect, clientRect) => {
+    const oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
+    const newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
 
-  if (isInsideX(clientX, clientRect)) {
-    return clientRect;
-  }
+    if (isInsideX(clientX, clientRect)) {
+      return clientRect;
+    }
 
-  if (isInsideX(clientX, oldClientRect)) {
+    if (isInsideX(clientX, oldClientRect)) {
+      return oldClientRect;
+    }
+
+    // cE=false has higher priority
+    // TODO check the types or add a guard as node may not exist
+    if (newDistance === oldDistance && isContentEditableFalse((clientRect as any).node)) {
+      return clientRect;
+    }
+
+    if (newDistance < oldDistance) {
+      return clientRect;
+    }
+
     return oldClientRect;
-  }
-
-  // cE=false has higher priority
-  // TODO check the types or add a guard as node may not exist
-  if (newDistance === oldDistance && isContentEditableFalse((clientRect as any).node)) {
-    return clientRect;
-  }
-
-  if (newDistance < oldDistance) {
-    return clientRect;
-  }
-
-  return oldClientRect;
-});
+  });
 
 const walkUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) => boolean, startNode: Node, includeChildren: boolean): void => {
   let node = findNode(startNode, direction, CaretCandidate.isEditableCaretCandidate, root, !includeChildren);
@@ -65,7 +68,7 @@ const walkUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) 
 const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect, includeChildren: boolean = true): NodeClientRect[] => {
   let clientRects: NodeClientRect[] = [];
 
-  const collect = (checkPosFn: (clientRect: GeomClientRect.ClientRect, targetRect: NodeClientRect) => boolean, node: Node) => {
+  const collect = (checkPosFn: (clientRect: GeomClientRect, targetRect: NodeClientRect) => boolean, node: Node) => {
     const lineRects = Arr.filter(getClientRects([ node ]), (clientRect) => {
       return !checkPosFn(clientRect, targetNodeRect);
     });
@@ -76,8 +79,8 @@ const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect, includeCh
   };
 
   clientRects.push(targetNodeRect);
-  walkUntil(VDirection.Up, root, Fun.curry(collect, GeomClientRect.isAbove), targetNodeRect.node, includeChildren);
-  walkUntil(VDirection.Down, root, Fun.curry(collect, GeomClientRect.isBelow), targetNodeRect.node, includeChildren);
+  walkUntil(VDirection.Up, root, Fun.curry(collect, ClientRect.isAbove), targetNodeRect.node, includeChildren);
+  walkUntil(VDirection.Down, root, Fun.curry(collect, ClientRect.isBelow), targetNodeRect.node, includeChildren);
 
   return clientRects;
 };

@@ -19,12 +19,7 @@ UnitTest.test('SizeTest', () => {
 
   const checker = (cssProp: string, api: SizeApi) => {
     const checkExc = (expected: string, f: () => void) => {
-      try {
-        f();
-        assert.fail('Expected exception not thrown.');
-      } catch (e) {
-        assert.eq(expected, e.message);
-      }
+      assert.throwsError(f, expected);
     };
 
     const exact = () => Css.getRaw(c, cssProp).getOrDie('value was not set');

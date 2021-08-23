@@ -15,7 +15,7 @@ const collapsedRect = (rect: RawRect): RawRect => ({
   width: COLLAPSED_WIDTH
 });
 
-const toRect = (rawRect: ClientRect): RawRect => ({
+const toRect = (rawRect: DOMRect): RawRect => ({
   left: rawRect.left,
   top: rawRect.top,
   right: rawRect.right,

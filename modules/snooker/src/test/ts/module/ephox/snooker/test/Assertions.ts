@@ -199,7 +199,7 @@ const checkStructure = (
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
   const rows = SelectorFilter.descendants(table, 'tr');
   const actual = Arr.map(rows, (r) => {
-    const cells = SelectorFilter.descendants<HTMLTableDataCellElement | HTMLTableHeaderCellElement>(r, 'td,th');
+    const cells = SelectorFilter.descendants<HTMLTableCellElement>(r, 'td,th');
     return Arr.map(cells, Html.get);
   });
   assert.eq(expected, actual);

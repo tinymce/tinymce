@@ -9,11 +9,13 @@ import { Arr, Fun, Optionals, Unicode } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
-import * as GeomClientRect from '../geom/ClientRect';
+import * as ClientRect from '../geom/ClientRect';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';
 import * as Predicate from '../util/Predicate';
 import * as CaretCandidate from './CaretCandidate';
+
+type GeomClientRect = ClientRect.ClientRect;
 
 /**
  * This module contains logic for creating caret positions within a document a caretposition
@@ -58,7 +60,7 @@ const isHiddenWhiteSpaceRange = (range: Range): boolean => {
 
 // Hack for older WebKit versions that doesn't
 // support getBoundingClientRect on BR elements
-const getBrClientRect = (brNode: Element): ClientRect => {
+const getBrClientRect = (brNode: Element): GeomClientRect => {
   const doc = brNode.ownerDocument;
   const rng = createRange(doc);
   const nbsp = doc.createTextNode(Unicode.nbsp);
@@ -67,14 +69,14 @@ const getBrClientRect = (brNode: Element): ClientRect => {
   parentNode.insertBefore(nbsp, brNode);
   rng.setStart(nbsp, 0);
   rng.setEnd(nbsp, 1);
-  const clientRect = GeomClientRect.clone(rng.getBoundingClientRect());
+  const clientRect = ClientRect.clone(rng.getBoundingClientRect());
   parentNode.removeChild(nbsp);
 
   return clientRect;
 };
 
 // Safari will not return a rect for <p>a<br>|b</p> for some odd reason
-const getBoundingClientRectWebKitText = (rng: Range): GeomClientRect.ClientRect | null => {
+const getBoundingClientRectWebKitText = (rng: Range): GeomClientRect | null => {
   const sc = rng.startContainer;
   const ec = rng.endContainer;
   const so = rng.startOffset;
@@ -88,17 +90,17 @@ const getBoundingClientRectWebKitText = (rng: Range): GeomClientRect.ClientRect 
   }
 };
 
-const isZeroRect = (r: GeomClientRect.ClientRect): boolean =>
+const isZeroRect = (r: GeomClientRect): boolean =>
   r.left === 0 && r.right === 0 && r.top === 0 && r.bottom === 0;
 
-const getBoundingClientRect = (item: Element | Range): GeomClientRect.ClientRect => {
-  let clientRect: ClientRect;
+const getBoundingClientRect = (item: Element | Range): GeomClientRect => {
+  let clientRect: GeomClientRect;
 
   const clientRects = item.getClientRects();
   if (clientRects.length > 0) {
-    clientRect = GeomClientRect.clone(clientRects[0]);
+    clientRect = ClientRect.clone(clientRects[0]);
   } else {
-    clientRect = GeomClientRect.clone(item.getBoundingClientRect());
+    clientRect = ClientRect.clone(item.getBoundingClientRect());
   }
 
   if (!isRange(item) && isBr(item) && isZeroRect(clientRect)) {
@@ -112,24 +114,24 @@ const getBoundingClientRect = (item: Element | Range): GeomClientRect.ClientRect
   return clientRect;
 };
 
-const collapseAndInflateWidth = (clientRect: ClientRect, toStart: boolean): GeomClientRect.ClientRect => {
-  const newClientRect = GeomClientRect.collapse(clientRect, toStart);
+const collapseAndInflateWidth = (clientRect: GeomClientRect, toStart: boolean): GeomClientRect => {
+  const newClientRect = ClientRect.collapse(clientRect, toStart);
   newClientRect.width = 1;
   newClientRect.right = newClientRect.left + 1;
 
   return newClientRect;
 };
 
-const getCaretPositionClientRects = (caretPosition: CaretPosition): GeomClientRect.ClientRect[] => {
-  const clientRects: GeomClientRect.ClientRect[] = [];
+const getCaretPositionClientRects = (caretPosition: CaretPosition): GeomClientRect[] => {
+  const clientRects: GeomClientRect[] = [];
 
-  const addUniqueAndValidRect = (clientRect: GeomClientRect.ClientRect) => {
+  const addUniqueAndValidRect = (clientRect: GeomClientRect) => {
     if (clientRect.height === 0) {
       return;
     }
 
     if (clientRects.length > 0) {
-      if (GeomClientRect.isEqual(clientRect, clientRects[clientRects.length - 1])) {
+      if (ClientRect.isEqual(clientRect, clientRects[clientRects.length - 1])) {
         return;
       }
     }
@@ -225,7 +227,7 @@ export interface CaretPosition {
   container: () => Node;
   offset: () => number;
   toRange: () => Range;
-  getClientRects: () => ClientRect[];
+  getClientRects: () => GeomClientRect[];
   isVisible: () => boolean;
   isAtStart: () => boolean;
   isAtEnd: () => boolean;
@@ -241,7 +243,7 @@ export interface CaretPosition {
  * @param {Number} offset Offset within that container node.
  * @param {Array} clientRects Optional client rects array for the position.
  */
-export const CaretPosition = (container: Node, offset: number, clientRects?: ClientRect[]): CaretPosition => {
+export const CaretPosition = (container: Node, offset: number, clientRects?: GeomClientRect[]): CaretPosition => {
   const isAtStart = () => {
     if (isText(container)) {
       return offset === 0;
@@ -266,7 +268,7 @@ export const CaretPosition = (container: Node, offset: number, clientRects?: Cli
     return range;
   };
 
-  const getClientRects = (): ClientRect[] => {
+  const getClientRects = (): GeomClientRect[] => {
     if (!clientRects) {
       clientRects = getCaretPositionClientRects(CaretPosition(container, offset));
     }
@@ -397,10 +399,10 @@ CaretPosition.after = (node: Node) => CaretPosition(node.parentNode, nodeIndex(n
 CaretPosition.before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
 
 CaretPosition.isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean =>
-  Optionals.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), GeomClientRect.isAbove).getOr(false);
+  Optionals.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), ClientRect.isAbove).getOr(false);
 
 CaretPosition.isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean =>
-  Optionals.lift2(Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects()), GeomClientRect.isBelow).getOr(false);
+  Optionals.lift2(Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects()), ClientRect.isBelow).getOr(false);
 
 CaretPosition.isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
 CaretPosition.isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;
