@@ -1,5 +1,5 @@
 import { Optional, Singleton } from '@ephox/katamari';
-import { ContentEditable, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Compare, ContentEditable, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
@@ -29,9 +29,13 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Nod
             // If a single noneditable cell is selected and the actual selection target within the cell
             // is also noneditable, make sure it is annotated
             const singleCell = boxes[0];
-            if (ContentEditable.getRaw(singleCell) === 'false' && !ContentEditable.isEditable(event.target)) {
+            const isNonEditableCell = ContentEditable.getRaw(singleCell) === 'false';
+            // Check if the target, which may be a child of the cell, needs to be explicitly selected instead of the whole cell
+            const isSelectableTarget = !Compare.eq(event.target, singleCell) && (ContentEditable.isEditable(event.target) || ContentEditable.getRaw(event.target) === 'false');
+            if (isNonEditableCell && !isSelectableTarget) {
               annotations.selectRange(container, boxes, singleCell, singleCell);
-              bridge.selectNode(singleCell);
+              // TODO: TINY-7874 Potentially change back to bridge.selectNode when offscreen cursor issues are solved
+              bridge.selectContents(singleCell);
             }
           } else if (boxes.length > 1) {
             // Wait until we have more than one, otherwise you can't do text selection inside a cell.
