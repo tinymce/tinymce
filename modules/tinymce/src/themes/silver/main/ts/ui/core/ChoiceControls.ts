@@ -37,27 +37,25 @@ const registerController = <T>(editor: Editor, spec: ControlSpec<T>) => {
     const options = spec.getOptions(editor);
     const initial = spec.getCurrent(editor).map(spec.hash);
 
-    const current = Singleton.destroyable();
+    const current = Singleton.value<Menu.ToggleMenuItemInstanceApi>();
 
-    return Arr.map(
-      options,
-      (value) => ({
-        type: 'togglemenuitem',
-        text: spec.display(value),
-        onSetup: (api) => {
-          const setActive = (active: boolean) => {
-            api.setActive(active);
-            if (active) {
-              current.set({ destroy: () => api.setActive(false) });
-            }
-          };
+    return Arr.map(options, (value) => ({
+      type: 'togglemenuitem',
+      text: spec.display(value),
+      onSetup: (api) => {
+        const setActive = (active: boolean) => {
+          api.setActive(active);
+          if (active) {
+            current.on((oldApi) => oldApi.setActive(false));
+            current.set(api);
+          }
+        };
 
-          setActive(Optionals.is(initial, spec.hash(value)));
-          return spec.watcher(editor, value, setActive);
-        },
-        onAction: () => spec.setCurrent(editor, value)
-      })
-    );
+        setActive(Optionals.is(initial, spec.hash(value)));
+        return spec.watcher(editor, value, setActive);
+      },
+      onAction: () => spec.setCurrent(editor, value)
+    }));
   };
 
   editor.ui.registry.addMenuButton(spec.name, {

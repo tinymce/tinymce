@@ -1,6 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -16,6 +17,7 @@ interface ToolbarOrMenuSpec {
 }
 
 describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
+  const platform = PlatformDetection.detect();
 
   const toolbarSpec: ToolbarOrMenuSpec = {
     name: 'Toolbar',
@@ -109,7 +111,11 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           spec.close(editor, 'Line height');
         });
 
-        it(`TINY-7713: ${spec.name} updates if computed line height changes`, async () => {
+        it(`TINY-7713: ${spec.name} updates if computed line height changes`, async function () {
+          // TODO: TINY-7895
+          if (platform.browser.isSafari()) {
+            this.skip();
+          }
           const editor = hook.editor();
           editor.setContent('');
           TinySelections.setCursor(editor, [ 0 ], 0);
