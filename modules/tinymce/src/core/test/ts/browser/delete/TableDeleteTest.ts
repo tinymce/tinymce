@@ -124,6 +124,40 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
       keyboardBackspace(editor);
       assertRawNormalizedContent(editor, '<table class="mce-item-table"><tbody><tr><td><br data-mce-bogus="1"></td><td><br data-mce-bogus="1"></td><td><p>cc</p></td></tr></tbody></table>');
     });
+
+    it('TINY-7891: Delete a single contenteditable=false cell', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody>' +
+        '<tr><td contenteditable="false" data-mce-selected="1">a</td><td>b</td><td>c</td></tr>' +
+        '<tr><td>d</td><td>e</td><td>f</td></tr>' +
+        '</tbody></table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+      // Note: This uses the command to ensure it works with CefDelete
+      editor.execCommand('Delete');
+      TinyAssertions.assertContentPresence(editor, {
+        'td[data-mce-selected="1"]': 0
+      });
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td><td>b</td><td>c</td></tr><tr><td>d</td><td>e</td><td>f</td></tr></tbody></table>');
+    });
+
+    it('TINY-7891: Delete a contenteditable=false cell in a range selection', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody>' +
+        '<tr><td contenteditable="false" data-mce-selected="1">a</td><td>b</td><td>c</td></tr>' +
+        '<tr><td data-mce-selected="1">d</td><td>e</td><td>f</td></tr>' +
+        '</tbody></table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1);
+      // Note: This uses the command to ensure it works with CefDelete
+      editor.execCommand('Delete');
+      TinyAssertions.assertContentPresence(editor, {
+        'td[data-mce-selected="1"]': 2
+      });
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td><td>b</td><td>c</td></tr><tr><td>&nbsp;</td><td>e</td><td>f</td></tr></tbody></table>');
+    });
   });
 
   context('Delete all single cell content', () => {
