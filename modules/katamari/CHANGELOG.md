@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - In particular, this means that if all `Cat`s are `Animal`s, then all `Optional<Cat>`s are now `Optional<Animal>`s.
 - The `Result` type is now covariant with respect to its type argument.
 - All singletons now have a `get` function that returns an `Optional` value.
+- `Arr.foldl` and `Arr.foldr` now pass the item index in the callback function.
 
 ### Fixed
 - `Throttler.adaptable` could not re-throttle from within the callback function.

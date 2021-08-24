@@ -12,10 +12,10 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import { getCellClassList } from '../api/Settings';
 import { verticalAlignValues } from './CellAlignValues';
-import * as Helpers from './Helpers';
+import * as UiUtils from './UiUtils';
 
 const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
-  const classes = Helpers.buildListItems(getCellClassList(editor));
+  const classes = UiUtils.buildListItems(getCellClassList(editor));
   if (classes.length > 0) {
     return Optional.some({
       name: 'class',

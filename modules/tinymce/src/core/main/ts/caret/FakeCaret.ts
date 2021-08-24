@@ -14,9 +14,11 @@ import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import Delay from '../api/util/Delay';
 import * as NodeType from '../dom/NodeType';
-import * as GeomClientRect from '../geom/ClientRect';
+import * as ClientRect from '../geom/ClientRect';
 import * as CaretContainer from './CaretContainer';
 import * as CaretContainerRemove from './CaretContainerRemove';
+
+type GeomClientRect = ClientRect.ClientRect;
 
 export interface FakeCaret {
   show: (before: boolean, element: Element) => Range | null;
@@ -39,8 +41,8 @@ const isMedia = NodeType.isMedia;
 const isTableCell = NodeType.isTableCell;
 const inlineFakeCaretSelector = '*[contentEditable=false],video,audio,embed,object';
 
-const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): GeomClientRect.ClientRect => {
-  const clientRect = GeomClientRect.collapse(element.getBoundingClientRect(), before);
+const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): GeomClientRect => {
+  const clientRect = ClientRect.collapse(element.getBoundingClientRect(), before);
   let scrollX: number;
   let scrollY: number;
 

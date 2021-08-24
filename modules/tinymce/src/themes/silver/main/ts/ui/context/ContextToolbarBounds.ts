@@ -15,7 +15,8 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
-const isVerticalOverlap = (a: Bounds, b: Bounds, threshold: number = 0): boolean =>
+// Note: We want to avoid including with small difference such as 0.001px
+const isVerticalOverlap = (a: Bounds, b: Bounds, threshold: number = 0.01): boolean =>
   b.bottom - a.y >= threshold && a.bottom - b.y >= threshold;
 
 const getRangeRect = (rng: Range): DOMRect => {
@@ -52,12 +53,10 @@ const getAnchorElementBounds = (editor: Editor, lastElement: Optional<SugarEleme
     .map(Boxes.absolute)
     .getOrThunk(() => getSelectionBounds(editor));
 
-const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { x: number; width: number } => {
-  const x = Math.max(viewportBounds.x, contentAreaBox.x);
-  const contentBoxWidth = contentAreaBox.right - x;
-  const maxViewportWidth = viewportBounds.width - (x - viewportBounds.x);
-  const width = Math.min(contentBoxWidth, maxViewportWidth);
-  return { x, width };
+const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds, margin: number): { x: number; width: number } => {
+  const x = Math.max(contentAreaBox.x + margin, viewportBounds.x);
+  const right = Math.min(contentAreaBox.right - margin, viewportBounds.right);
+  return { x, width: right - x };
 };
 
 const getVerticalBounds = (
@@ -65,7 +64,8 @@ const getVerticalBounds = (
   contentAreaBox: Bounds,
   viewportBounds: Bounds,
   isToolbarLocationTop: boolean,
-  toolbarType: InlineContent.ContextPosition
+  toolbarType: InlineContent.ContextPosition,
+  margin: number
 ): { y: number; bottom: number } => {
   const container = SugarElement.fromDom(editor.getContainer());
   const header = SelectorFind.descendant<HTMLElement>(container, '.tox-editor-header').getOr(container);
@@ -76,7 +76,7 @@ const getVerticalBounds = (
   // Scenario toolbar top & inline: Bottom of the header -> Bottom of the viewport
   if (editor.inline && isToolbarAbove) {
     return {
-      y: Math.max(headerBox.bottom, viewportBounds.y),
+      y: Math.max(headerBox.bottom + margin, viewportBounds.y),
       bottom: viewportBounds.bottom
     };
   }
@@ -85,7 +85,7 @@ const getVerticalBounds = (
   if (editor.inline && !isToolbarAbove) {
     return {
       y: viewportBounds.y,
-      bottom: Math.min(headerBox.y, viewportBounds.bottom)
+      bottom: Math.min(headerBox.y - margin, viewportBounds.bottom)
     };
   }
 
@@ -95,31 +95,36 @@ const getVerticalBounds = (
   // Scenario toolbar bottom & Iframe: Bottom of the header -> Bottom of the editor container
   if (isToolbarAbove) {
     return {
-      y: Math.max(headerBox.bottom, viewportBounds.y),
-      bottom: Math.min(containerBounds.bottom, viewportBounds.bottom)
+      y: Math.max(headerBox.bottom + margin, viewportBounds.y),
+      bottom: Math.min(containerBounds.bottom - margin, viewportBounds.bottom)
     };
   }
 
   // Scenario toolbar bottom & Iframe: Top of the editor container -> Top of the header
   return {
-    y: Math.max(containerBounds.y, viewportBounds.y),
-    bottom: Math.min(headerBox.y, viewportBounds.bottom)
+    y: Math.max(containerBounds.y + margin, viewportBounds.y),
+    bottom: Math.min(headerBox.y - margin, viewportBounds.bottom)
   };
 };
 
-const getContextToolbarBounds = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, toolbarType: InlineContent.ContextPosition): Bounds => {
+const getContextToolbarBounds = (
+  editor: Editor,
+  sharedBackstage: UiFactoryBackstageShared,
+  toolbarType: InlineContent.ContextPosition,
+  margin: number = 0
+): Bounds => {
   const viewportBounds = WindowVisualViewport.getBounds(window);
   const contentAreaBox = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
   const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
 
-  const { x, width } = getHorizontalBounds(contentAreaBox, viewportBounds);
+  const { x, width } = getHorizontalBounds(contentAreaBox, viewportBounds, margin);
 
   // Create bounds that lets the context toolbar overflow outside the content area, but remains in the viewport
   if (editor.inline && !toolbarOrMenubarEnabled) {
     return Boxes.bounds(x, viewportBounds.y, width, viewportBounds.height);
   } else {
     const isToolbarTop = sharedBackstage.header.isPositionedAtTop();
-    const { y, bottom } = getVerticalBounds(editor, contentAreaBox, viewportBounds, isToolbarTop, toolbarType);
+    const { y, bottom } = getVerticalBounds(editor, contentAreaBox, viewportBounds, isToolbarTop, toolbarType, margin);
     return Boxes.bounds(x, y, width, bottom - y);
   }
 };

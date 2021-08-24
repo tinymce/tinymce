@@ -66,11 +66,12 @@ const backspaceDeleteRange = (editor: Editor, forward: boolean): boolean => {
   const selectedNode = editor.selection.getNode(); // is the cef node if cef is selected
 
   // Cases:
-  // 1. CEF selectedNode
+  // 1. Table cell -> return false, as this is handled by `TableDelete` instead
+  // 2. CEF selectedNode
   //    a. no ancestor CET/CEF || CET ancestor -> run delete code and return true
   //    b. CEF ancestor -> return true
-  // 2. non-CEF selectedNode -> return false
-  if (NodeType.isContentEditableFalse(selectedNode)) {
+  // 3. non-CEF selectedNode -> return false
+  if (NodeType.isContentEditableFalse(selectedNode) && !NodeType.isTableCell(selectedNode)) {
     const hasCefAncestor = getAncestorCe(editor, selectedNode.parentNode).filter(NodeType.isContentEditableFalse);
     return hasCefAncestor.fold(
       () => {

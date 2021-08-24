@@ -32,7 +32,7 @@ UnitTest.asynctest('Browser Test: SimSelection.getAtPoint', (success, failure) =
       try {
         checks();
         success();
-      } catch (e) {
+      } catch (e: any) {
         failure(e);
       } finally {
         Remove.remove(iframe);

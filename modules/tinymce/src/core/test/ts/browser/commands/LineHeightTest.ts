@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -25,7 +25,7 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
   });
 
   it('TINY-4843: Unspecified line-height can be read from element', function () {
-    // https://bugs.webkit.org/show_bug.cgi?id=216601
+    // TODO: TINY-7895
     if (platform.browser.isSafari()) {
       this.skip();
     }

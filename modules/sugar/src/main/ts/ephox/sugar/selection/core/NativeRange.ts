@@ -4,6 +4,12 @@ import { SugarElement } from '../../api/node/SugarElement';
 import { RawRect } from '../../api/selection/Rect';
 import { Situ } from '../../api/selection/Situ';
 
+const selectNode = (win: Window, element: SugarElement<Node>): Range => {
+  const rng = win.document.createRange();
+  rng.selectNode(element.dom);
+  return rng;
+};
+
 const selectNodeContents = (win: Window, element: SugarElement<Node>): Range => {
   const rng = win.document.createRange();
   selectNodeContentsUsing(rng, element);
@@ -96,6 +102,7 @@ const toString = (rng: Range): string => rng.toString();
 export {
   create,
   replaceWith,
+  selectNode,
   selectNodeContents,
   selectNodeContentsUsing,
   relativeToNative,

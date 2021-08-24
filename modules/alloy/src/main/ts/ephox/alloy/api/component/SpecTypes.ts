@@ -32,6 +32,7 @@ export interface RawDomSchema extends OptionalDomSchema {
 }
 
 export interface ComponentDetail {
+  uid: string;
   dom: RawDomSchema;
   components: AlloyComponent[];
   events: {

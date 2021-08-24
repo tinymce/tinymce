@@ -74,14 +74,8 @@ UnitTest.test('Events', () => {
       quack: SourceEvent([ 'a', 'b', 'c' ], ea.registry.chook)
     });
 
-    assert.throws(
-      () => {
-        try {
-          eb.trigger.quack('hay', 'bee', 'quee');
-        } catch (ex) {
-          throw ex.message;
-        }
-      },
+    assert.throwsError(
+      () => eb.trigger.quack('hay', 'bee', 'quee'),
       'Cannot trigger a source event.'
     );
 

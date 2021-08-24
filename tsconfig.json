@@ -80,6 +80,8 @@
       "tinymce/plugins/visualchars/*": ["modules/tinymce/src/plugins/visualchars/main/ts/*"],
       "tinymce/plugins/wordcount/*": ["modules/tinymce/src/plugins/wordcount/main/ts/*"],
 
+      "@ephox/wrap-mcagar": ["modules/tinymce/src/core/test/ts/module/McAgar"],
+
       "@ephox/oxide-icons-default": ["modules/oxide-icons-default/dist/js/Main.d.js"],
 
       "ephox/acid/test/*": ["modules/acid/src/test/ts/module/ephox/acid/test/*"],

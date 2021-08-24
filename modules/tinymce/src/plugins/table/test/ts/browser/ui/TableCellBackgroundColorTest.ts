@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
       table: { title: 'Table', items: 'tablecellbackgroundcolor' },
     },
     menubar: 'table',
-    table_cell_background_color_map: [
+    table_background_color_map: [
       {
         title: 'Color',
         value: '#51a951',

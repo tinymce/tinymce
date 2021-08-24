@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
 import { Css, Dimension, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

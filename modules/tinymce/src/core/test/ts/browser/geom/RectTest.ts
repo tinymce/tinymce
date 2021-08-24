@@ -88,6 +88,7 @@ describe('browser.tinymce.core.geom.RectTest', () => {
   });
 
   it('fromClientRect', () => {
-    assert.deepEqual(Rect.fromClientRect({ left: 10, top: 20, width: 30, height: 40, bottom: 60, right: 40 }), { x: 10, y: 20, w: 30, h: 40 });
+    const clientRect = { left: 10, top: 20, width: 30, height: 40, bottom: 60, right: 40 } as DOMRect;
+    assert.deepEqual(Rect.fromClientRect(clientRect), { x: 10, y: 20, w: 30, h: 40 });
   });
 });

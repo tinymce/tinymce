@@ -9,30 +9,17 @@ import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import { getTableBorderStyles } from '../api/Settings';
-
-interface ClassListValue {
-  readonly title?: string;
-  readonly text?: string;
-  readonly value: string;
-}
-
-interface ClassListGroup {
-  readonly title?: string;
-  readonly text?: string;
-  readonly menu: ClassListItem[];
-}
-
-type ClassListItem = ClassListValue | ClassListGroup;
+import { buildListItems } from './UiUtils';
 
 const getAdvancedTab = (editor: Editor, dialogName: 'table' | 'row' | 'cell'): Dialog.TabSpec => {
+  const emptyBorderStyle: Dialog.ListBoxItemSpec[] = [{ text: 'Select...', value: '' }];
+
   const advTabItems: Dialog.BodyComponentSpec[] = [
     {
       name: 'borderstyle',
       type: 'listbox',
       label: 'Border style',
-      items: [
-        { text: 'Select...', value: '' },
-      ].concat(getTableBorderStyles(editor))
+      items: emptyBorderStyle.concat(buildListItems(getTableBorderStyles(editor)))
     },
     {
       name: 'bordercolor',

@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -27,8 +27,12 @@ const freefallRtl = (root: SugarElement<Node>): Optional<SugarElement<Node>> => 
   return child.bind(freefallRtl).orThunk(() => Optional.some(root));
 };
 
-const removeContentFromCells = (cells: SugarElement<HTMLTableCellElement>[]): void =>
-  Arr.each(cells, PaddingBr.fillWithPaddingBr);
+// Reset the contenteditable state and fill the content with a padding br
+const cleanCells = (cells: SugarElement<HTMLTableCellElement>[]): void =>
+  Arr.each(cells, (cell) => {
+    Attribute.remove(cell, 'contenteditable');
+    PaddingBr.fillWithPaddingBr(cell);
+  });
 
 const getOutsideBlock = (editor: Editor, container: Node): Optional<SugarElement<HTMLElement>> =>
   Optional.from(editor.dom.getParent(container, editor.dom.isBlock) as HTMLElement).map(SugarElement.fromDom);
@@ -46,6 +50,16 @@ const handleEmptyBlock = (editor: Editor, startInTable: boolean, emptyBlock: Opt
   });
 };
 
+const setCursorInCell = (editor: Editor, cell: SugarElement<HTMLTableCellElement>) => {
+  const selectedCells = TableCellSelection.getCellsFromEditor(editor);
+  editor.selection.setCursorLocation(cell.dom, 0);
+  // Restore the data-mce-selected attribute if multiple cells were selected, as if it was a cef element
+  // then selection overrides would remove it as it was using an offscreen selection clone.
+  if (selectedCells.length > 1) {
+    Attribute.set(cell, 'data-mce-selected', '1');
+  }
+};
+
 /*
  * Runs when
  * - the start and end of the selection is contained within the same table (called directly from deleteRange)
@@ -53,7 +67,7 @@ const handleEmptyBlock = (editor: Editor, startInTable: boolean, emptyBlock: Opt
  */
 const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], outsideDetails: Optional<OutsideTableDetails>): boolean => {
   // Remove content from selected cells
-  removeContentFromCells(cells);
+  cleanCells(cells);
 
   // Delete all content outside of the table that is in the selection
   outsideDetails.map(({ rng, isStartInTable }) => {
@@ -67,11 +81,10 @@ const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCell
   // Set the selection:
   // - to the first emptied cell if the start of the previous selection was inside a table
   // - otherwise just collapse the previous selection that started in the outside block
-  const selection = editor.selection;
   if (outsideDetails.forall((details) => details.isStartInTable)) {
-    selection.setCursorLocation(cells[0].dom, 0);
+    setCursorInCell(editor, cells[0]);
   } else {
-    selection.collapse(true);
+    editor.selection.collapse(true);
   }
 
   return true;
@@ -86,11 +99,11 @@ const emptyMultiTableCells = (
   endTableCells: SugarElement<HTMLTableCellElement>[],
   betweenRng: Range
 ): boolean => {
-  removeContentFromCells(startTableCells.concat(endTableCells));
+  cleanCells(startTableCells.concat(endTableCells));
   // Delete all content in between the start table and end table
   betweenRng.deleteContents();
   // Set the cursor back to the start of the original selection
-  editor.selection.setCursorLocation(startTableCells[0].dom, 0);
+  setCursorInCell(editor, startTableCells[0]);
   return true;
 };
 
@@ -139,10 +152,9 @@ const deleteTableRange = (editor: Editor, rootElm: SugarElement<Node>, rng: Rang
     (caption) => deleteCaptionRange(editor, caption)
   ).getOr(false);
 
-const deleteRange = (editor: Editor, startElm: SugarElement<Node>): boolean => {
+const deleteRange = (editor: Editor, startElm: SugarElement<Node>, selectedCells: SugarElement<HTMLTableCellElement>[]): boolean => {
   const rootNode = SugarElement.fromDom(editor.getBody());
   const rng = editor.selection.getRng();
-  const selectedCells = TableCellSelection.getCellsFromEditor(editor);
   return selectedCells.length !== 0 ?
     emptySingleTableCells(editor, selectedCells, Optional.none()) :
     deleteTableRange(editor, rootNode, rng, startElm);
@@ -248,7 +260,7 @@ const backspaceDelete = (editor: Editor, forward?: boolean): boolean => {
 
   return editor.selection.isCollapsed() && cells.length === 0 ?
     deleteCaret(editor, forward, startElm) :
-    deleteRange(editor, startElm);
+    deleteRange(editor, startElm, cells);
 };
 
 export {

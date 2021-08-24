@@ -23,7 +23,7 @@ const getClientHeight = Fun.curry(getProp, 'clientHeight' as 'clientHeight');
 const getMarginTop = Fun.curry(getComputedSizeProp, 'margin-top');
 const getMarginLeft = Fun.curry(getComputedSizeProp, 'margin-left');
 
-const getBoundingClientRect = (elm: SugarElement<Element>): ClientRect =>
+const getBoundingClientRect = (elm: SugarElement<Element>): DOMRect =>
   elm.dom.getBoundingClientRect();
 
 const isInsideElementContentArea = (bodyElm: SugarElement<Element>, clientX: number, clientY: number): boolean => {

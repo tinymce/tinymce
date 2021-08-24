@@ -1,5 +1,5 @@
 import { Obj } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 

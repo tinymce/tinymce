@@ -10,7 +10,9 @@ import { Arr } from '@ephox/katamari';
 import * as ClientRect from '../geom/ClientRect';
 import * as NodeType from './NodeType';
 
-export interface NodeClientRect extends ClientRect.ClientRect {
+type GeomClientRect = ClientRect.ClientRect;
+
+export interface NodeClientRect extends GeomClientRect {
   node: Node;
 }
 

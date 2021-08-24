@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
-import { UaString } from '../detect/UaString';
 import { Version } from '../detect/Version';
+import { UaInfo } from '../info/UaInfo';
 
 const edge = 'Edge';
 const chrome = 'Chrome';
@@ -10,9 +10,7 @@ const opera = 'Opera';
 const firefox = 'Firefox';
 const safari = 'Safari';
 
-export interface Browser {
-  readonly current: string | undefined;
-  readonly version: Version;
+export interface Browser extends UaInfo {
   readonly isEdge: () => boolean;
   readonly isChrome: () => boolean;
   readonly isIE: () => boolean;
@@ -28,7 +26,7 @@ const unknown = (): Browser => {
   });
 };
 
-const nu = (info: UaString): Browser => {
+const nu = (info: UaInfo): Browser => {
   const current = info.current;
   const version = info.version;
 

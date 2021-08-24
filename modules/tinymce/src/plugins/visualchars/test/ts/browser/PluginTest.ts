@@ -1,7 +1,7 @@
 import { ApproxStructure, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

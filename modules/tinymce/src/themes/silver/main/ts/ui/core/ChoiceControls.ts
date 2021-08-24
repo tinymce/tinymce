@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional, Singleton, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals, Singleton, Type } from '@ephox/katamari';
 import { Attribute, Dimension, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -24,6 +24,7 @@ interface ControlSpec<T> {
   readonly hash: (item: T) => string;
   readonly display: (item: T) => string;
 
+  readonly watcher: (editor: Editor, item: T, callback: (isActive: boolean) => void) => () => void;
   readonly getCurrent: (editor: Editor) => Optional<T>;
   readonly setCurrent: (editor: Editor, value: T) => void;
 
@@ -34,54 +35,27 @@ interface ControlSpec<T> {
 const registerController = <T>(editor: Editor, spec: ControlSpec<T>) => {
   const getMenuItems = (): Menu.ToggleMenuItemSpec[] => {
     const options = spec.getOptions(editor);
+    const initial = spec.getCurrent(editor).map(spec.hash);
 
-    // All of the API objects (one for each option)
-    const apis: Record<string, Menu.ToggleMenuItemInstanceApi> = {};
-    // The currently active API object (in a destroyable so that it automatically cleans itself up)
-    const lastApi = Singleton.destroyable();
+    const current = Singleton.value<Menu.ToggleMenuItemInstanceApi>();
 
-    const callback = () => {
-      const current = spec.getCurrent(editor);
-      const apiOpt = current.map(spec.hash).bind((key) => Obj.get(apis, key));
-      apiOpt.fold(
-        // If we don't have a menu item for the current state, make sure we're not highlighting anything
-        lastApi.clear,
-        // If we do have a menu item for the current state, highlight it
-        (api) => {
-          lastApi.set({
-            destroy: () => api.setActive(false)
-          });
-          api.setActive(true);
-        }
-      );
-    };
-
-    editor.on('NodeChange', callback);
-
-    return Arr.map(
-      options,
-      (value, i) => ({
-        type: 'togglemenuitem',
-        text: spec.display(value),
-        onSetup: (api) => {
-          apis[spec.hash(value)] = api;
-
-          if (i + 1 === options.length) {
-            // run the callback once on startup (on the last option so that we know the apis map has been set up)
-            callback();
+    return Arr.map(options, (value) => ({
+      type: 'togglemenuitem',
+      text: spec.display(value),
+      onSetup: (api) => {
+        const setActive = (active: boolean) => {
+          api.setActive(active);
+          if (active) {
+            current.on((oldApi) => oldApi.setActive(false));
+            current.set(api);
           }
+        };
 
-          return () => {
-            // only clean up global things once
-            if (i === 0) {
-              editor.off('NodeChange', callback);
-              lastApi.clear();
-            }
-          };
-        },
-        onAction: () => spec.setCurrent(editor, value)
-      })
-    );
+        setActive(Optionals.is(initial, spec.hash(value)));
+        return spec.watcher(editor, value, setActive);
+      },
+      onAction: () => spec.setCurrent(editor, value)
+    }));
   };
 
   editor.ui.registry.addMenuButton(spec.name, {
@@ -108,6 +82,8 @@ const lineHeightSpec: ControlSpec<string> = {
   hash: (input) => Dimension.normalise(input, [ 'fixed', 'relative', 'empty' ]).getOr(input),
   display: Fun.identity,
 
+  watcher: (editor, value, callback) =>
+    editor.formatter.formatChanged('lineheight', callback, false, { value }).unbind,
   getCurrent: (editor) => Optional.from(editor.queryCommandValue('LineHeight')),
   setCurrent: (editor, value) => editor.execCommand('LineHeight', false, value)
 };
@@ -123,6 +99,8 @@ const languageSpec = (editor: Editor): Optional<ControlSpec<ContentLanguage>> =>
     hash: (input) => Type.isUndefined(input.customCode) ? input.code : `${input.code}/${input.customCode}`,
     display: (input) => input.title,
 
+    watcher: (editor, value, callback) =>
+      editor.formatter.formatChanged('lang', callback, false, { value: value.code, customValue: value.customCode }).unbind,
     getCurrent: (editor) => {
       const node = SugarElement.fromDom(editor.selection.getNode());
       return TransformFind.closest(node, (n) =>

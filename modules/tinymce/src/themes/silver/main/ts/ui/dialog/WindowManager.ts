@@ -186,8 +186,8 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
       // Position the inline dialog
       InlineView.showWithin(
         inlineDialogComp,
-        anchor,
         GuiFactory.premade(dialogUi.dialog),
+        { anchor },
         Optional.some(SugarBody.body())
       );
 
