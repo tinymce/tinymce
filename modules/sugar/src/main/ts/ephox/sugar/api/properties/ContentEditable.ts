@@ -5,7 +5,7 @@ import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
 import * as SelectorFind from '../search/SelectorFind';
 
-const findClosestContentEditable = (target: SugarElement<HTMLElement>): Optional<SugarElement<HTMLElement>> =>
+const closest = (target: SugarElement<HTMLElement>): Optional<SugarElement<HTMLElement>> =>
   SelectorFind.closest(target, '[contenteditable]');
 
 const isEditable = (element: SugarElement<HTMLElement>, assumeEditable: boolean = false): boolean => {
@@ -14,7 +14,7 @@ const isEditable = (element: SugarElement<HTMLElement>, assumeEditable: boolean 
     return element.dom.isContentEditable;
   } else {
     // Find the closest contenteditable element and check if it's editable
-    return findClosestContentEditable(element).fold(
+    return closest(element).fold(
       Fun.constant(assumeEditable),
       (editable) => getRaw(editable) === 'true'
     );
@@ -34,6 +34,7 @@ const set = (element: SugarElement<HTMLElement>, editable: boolean): void => {
 export {
   get,
   getRaw,
+  closest,
   isEditable,
   set
 };

@@ -143,7 +143,8 @@ describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
     const editablePara = SelectorFind.descendant(TinyDom.body(editor), 'p[contenteditable="true"]').getOrDie('Could not find paragraph');
     selectWithMouse(editablePara, editablePara);
     TinyAssertions.assertContentPresence(editor, {
-      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 0
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 0,
+      'p[data-mce-selected="1"]': 0
     });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 0);
 
@@ -151,7 +152,40 @@ describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
     const noneditableCell = SelectorFind.descendant(TinyDom.body(editor), 'td[contenteditable="false"]').getOrDie('Could not find cell');
     selectWithMouse(noneditableCell, noneditableCell);
     TinyAssertions.assertContentPresence(editor, {
-      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 1
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 1,
+      'p[data-mce-selected="1"]': 0
+    });
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+  });
+
+  it('TINY-7724: does not select CEF cell if contenteditable=false child is selected', () => {
+    const editor = hook.editor();
+    editor.setContent('<table><tr><td contenteditable="false"><p contenteditable="false"><strong>1</strong></p></td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>');
+
+    // Check the CEF cell is not annotated when the contenteditable="false" child is selected
+    const noneditablePara = SelectorFind.descendant(TinyDom.body(editor), 'p[contenteditable="false"]').getOrDie('Could not find paragraph');
+    selectWithMouse(noneditablePara, noneditablePara);
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 0,
+      'p[data-mce-selected="1"]': 1
+    });
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1);
+
+    // Check the CEF cell is not annotated when the strong child of contenteditable="false" paragraph is selected
+    const strongElm = SelectorFind.descendant(TinyDom.body(editor), 'strong').getOrDie('Could not find strong element');
+    selectWithMouse(strongElm, strongElm);
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 0,
+      'p[data-mce-selected="1"]': 1
+    });
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1);
+
+    // Check the CEF cell is annotated if the cell itself is selected
+    const noneditableCell = SelectorFind.descendant(TinyDom.body(editor), 'td[contenteditable="false"]').getOrDie('Could not find cell');
+    selectWithMouse(noneditableCell, noneditableCell);
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 1,
+      'p[data-mce-selected="1"]': 0
     });
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
   });
