@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `autolink` plugin link detection now permits custom protocols and improves valid link detection #TINY-7714
 
 ### Changed
-- Changed the load order so that the content CSS is loaded before the editor gets populated with contents #TINY-7249
+- Changed the load order so that the content CSS is loaded before the editor gets populated with content #TINY-7249
 - Changed `emoticons`, `wordcount`, `code`, `codesample`, and `template` plugins to open dialogs using commands #TINY-7619
 - The context toolbar will no longer show an arrow when it overlaps the content, such as in table cells #TINY-7665
 - The context toolbar will no longer overlap the statusbar for toolbars using `node` or `selection` positions #TINY-7666
