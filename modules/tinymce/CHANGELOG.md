@@ -50,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The context toolbar will no longer overlap the statusbar for toolbars using `node` or `selection` positions #TINY-7666
 
 ### Fixed
-- `editor.fire` was incorrectly mutating the original `args` provided #TINY-3254
+- The `editor.fire` API was incorrectly mutating the original `args` provided #TINY-3254
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
@@ -86,9 +86,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `dir` attribute was being incorrectly applied to list items #TINY-4589
 - Applying selector formats would sometimes not apply the format correctly to elements in a list #TINY-7393
 - For formats that specify an attribute or style that should be removed, the formatter `match` API incorrectly returned `false` #TINY-6149
-- The type signature on `editor.formatter.matchNode` had the wrong return type (was `boolean` but should have been `Formatter | undefined`) #TINY-6149
-- `editor.formatter.formatChanged` would ignore the `similar` parameter if another callback had already been registered for the same format #TINY-7713
-- `editor.formatter.formatChanged` would sometimes not run the callback the first time the format was removed #TINY-7713
+- The type signature on the `formatter.matchNode` API had the wrong return type (was `boolean` but should have been `Formatter | undefined`) #TINY-6149
+- The `formatter.formatChanged` API would ignore the `similar` parameter if another callback had already been registered for the same format #TINY-7713
+- The `formatter.formatChanged` API would sometimes not run the callback the first time the format was removed #TINY-7713
 - Base64 encoded images with spaces or line breaks in the data URI were not displayed correctly. Patch contributed by RoboBurned
 
 ### Deprecated
