@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fancy menu items now accept an `initData` property to allow custom initialization data #TINY-7480
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
 - Improved the performance when UI components are rendered #TINY-7572
-- When scrolling, the context toolbar will remain where it was previously for large elements, such as tables #TINY-7545
+- The context toolbar no longer unnecessarily repositions to the top of large elements when scrolling #TINY-7545
 - The context toolbar will now move out of the way when it overlaps with the selection, such as in table cells #TINY-7192
 - The context toolbar now uses a short animation when transitioning between different locations #TINY-7740
 - `Env.browser` now uses the User-Agent Client Hints API where it is available #TINY-7785
@@ -56,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
 - The `SetContent` event contained the incorrect `content` when using the `editor.selection.setContent()` API #TINY-3254
 - The editor content could be edited after calling `setProgressState(true)` in iframe mode #TINY-7373
-- Tabbing out of the editor after calling `setProgressState(true)` was inconsistent in iframe mode #TINY-7373
+- Tabbing out of the editor after calling `setProgressState(true)` behaved inconsistently in iframe mode #TINY-7373
 - Flash of unstyled content while loading the editor because the content CSS was loaded after the editor content was rendered #TINY-7249
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
 - HTML comments with mismatched quotes were parsed incorrectly under certain circumstances #TINY-7589
