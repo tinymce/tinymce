@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 9.0.0 - 2021-08-26
+
 ### Added
 - Added new `focus` property to the `Blocking` behaviour config.
 - Added a new `preserve` option to `LayoutInset` which will preserve the previous placement inside the component.

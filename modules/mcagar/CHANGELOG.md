@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 7.0.0 - 2021-08-26
+
 ### Added
 - Added optional `args` parameter to `TinyAssertions.assertContent` to be passed to `editor.getContent()` #TINY-3388
 - Added two functions to click into the editor: `TinyContentActions.trueClick` and `TinyContentActions.trueClickOn` #TINY-7399
