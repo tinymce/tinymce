@@ -130,8 +130,9 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
 
       it('TINY-7707: The nested menu should be resilient to opening multiple times', async () => {
         const editor = hook.editor();
-        editor.setContent('<p>Hello world</p>');
+        editor.setContent('<p style="line-height: 1.4;">Hello world</p>');
         TinySelections.setCursor(editor, [ 0 ], 0);
+
 
         TinyUiActions.clickOnMenu(editor, 'button:contains("Format")');
         await TinyUiActions.pWaitForUi(editor, '[role="menu"]');
