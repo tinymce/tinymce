@@ -127,6 +127,24 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           spec.close(editor, 'Line height');
         });
       });
+
+      it('TINY-7707: The nested menu should be resilient to opening multiple times', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p>Hello world</p>');
+        TinySelections.setCursor(editor, [ 0 ], 0);
+
+        TinyUiActions.clickOnMenu(editor, 'button:contains("Format")');
+        await TinyUiActions.pWaitForUi(editor, '[role="menu"]');
+        // Open line height
+        TinyUiActions.clickOnUi(editor, `[role="menu"] [title="Line height"]`);
+        // Close line height
+        TinyUiActions.clickOnUi(editor, `[role="menu"] [title="Align"]`);
+        // Open line height a second time, to make sure the state has been reset properly
+        TinyUiActions.clickOnUi(editor, `[role="menu"] [title="Line height"]`);
+
+        await pAssertOptions(editor, menuSpec.menuSelector, [ '1', '1.1', '1.2', '1.3', '1.4', '1.5', '2' ], Optional.some('1.4'));
+        menuSpec.close(editor, 'Line height');
+      });
     });
 
     context('Float line height detection', () => {
