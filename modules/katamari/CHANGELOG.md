@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 8.0.0 - 2021-08-26
+
 ### Added
 - Added static `Optionals.is` and `Optionals.equals` methods.
 - Added static `Results.is` method.

@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 6.0.0 - 2021-08-26
+
 ### Improved
 - Improved the `HttpError.responseText` type to track the actual `ResponseType`, instead of just `string`. This means that `HttpError` now requires a generic type that extends `keyof ResponseTypeMap`.
 

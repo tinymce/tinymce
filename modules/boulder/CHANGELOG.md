@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.0.0 - 2021-08-26
+
 ### Improved
 - Improved the performance of the `StructureProcessor.objOf` and `StructureProcessor.objOfOnly` functions #TINY-7572
 
