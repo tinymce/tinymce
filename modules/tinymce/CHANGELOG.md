@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Added a new `toolbar_sticky_offset` setting to allow the toolbar to be offset from the top of the page #TINY-7337
 - Added a new `mceFocus` command that focuses the editor. Equivalent to using `editor.focus()` #TINY-7373
 - Added a new `mceTableToggleClass` command which toggles the provided class on the currently selected table #TINY-7476
 - Added a new `mceTableCellToggleClass` command which toggles the provided class on the currently selected table cells #TINY-7476
@@ -20,31 +19,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482
 - Added a new `tablecellbordercolor` toolbar button and menu item to select table cell border colors, with an accompanying setting `table_border_color_map` to customize the available values #TINY-7480
 - Added a new `tablecellbackgroundcolor` toolbar button and menu item to select table cell background colors, with an accompanying setting `table_background_color_map` to customize the available values #TINY-7480
-- Added a new `initData` property to `fancymenuitem` to allow custom initialization data #TINY-7480
 - Added a new `language` menu item and toolbar button to add `lang` attributes to content, with an accompanying `content_langs` setting to specify the languages available #TINY-6149
 - A new `lang` format is now available that can be used with `editor.formatter`, or applied with the `Lang` editor command #TINY-6149
 - Added a new `language` icon for the `language` toolbar button #TINY-7670
 - Added a new `table-row-numbering` icon #TINY-7327
-- Added new plugin commands: `mceEmoticons` (emoticons), `mceWordCount` (wordcount), and `mceTemplate` (template) #TINY-7619
+- Added new plugin commands: `mceEmoticons` (Emoticons), `mceWordCount` (Word Count), and `mceTemplate` (Template) #TINY-7619
 - Added a new `iframe_aria_text` setting to set the iframe title attribute #TINY-1264
 - Added a new DomParser `Node.children()` API to return all the children of a `Node` #TINY-7756
-- Added new `FormatApply` and `FormatRemove` events #TINY-7713
 
 ### Improved
+- Sticky toolbars can now be offset from the top of the page using the new `toolbar_sticky_offset` setting #TINY-7337
+- Fancy menu items now accept an `initData` property to allow custom initialization data #TINY-7480
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
-- Improved the performance when rendering UI components #TINY-7572
-- When scrolling, the context toolbar will stick to where it was previously for large elements, such as tables #TINY-7545
+- Improved the performance when UI components are rendered #TINY-7572
+- When scrolling, the context toolbar will remain where it was previously for large elements, such as tables #TINY-7545
 - The context toolbar will now move out of the way when it overlaps with the selection, such as in table cells #TINY-7192
-- The context toolbar will now use transition animations when changing placements #TINY-7740
-- The `formatter.match` API can now take an optional `similar` parameter to check if the format partially matches #TINY-7712
-- `Env.browser` now uses the User-Agent Client Hints API when it is available #TINY-7785
+- The context toolbar now uses a short animation when transitioning between different locations #TINY-7740
+- `Env.browser` now uses the User-Agent Client Hints API where it is available #TINY-7785
 - Icons with a `-rtl` suffix in their name will now automatically be used when the UI is rendered in right-to-left mode #TINY-7782
-- `editor.formatter.formatChanged` now supports listening for changes to formats with specific variables #TINY-7713
-- The `autolink` plugin link detection now permits custom protocols and improves valid link detection #TINY-7714
+- The `formatter.match` API now accepts an optional `similar` parameter to check if the format partially matches #TINY-7712
+- The `formatter.formatChanged` API now supports providing format variables when listening for changes #TINY-7713
+- The formatter will now fire `FormatApply` and `FormatRemove` events for the relevant actions #TINY-7713
+- The `autolink` plugin link detection now permits custom protocols #TINY-7714
+- The `autolink` plugin valid link detection has been improved #TINY-7714
 
 ### Changed
-- Changed the load order so that the content CSS is loaded before the editor gets populated with content #TINY-7249
-- Changed `emoticons`, `wordcount`, `code`, `codesample`, and `template` plugins to open dialogs using commands #TINY-7619
+- Changed the load order so content CSS is loaded before the editor is populated with content #TINY-7249
+- Changed the `emoticons`, `wordcount`, `code`, `codesample`, and `template` plugins to open dialogs using commands #TINY-7619
 - The context toolbar will no longer show an arrow when it overlaps the content, such as in table cells #TINY-7665
 - The context toolbar will no longer overlap the statusbar for toolbars using `node` or `selection` positions #TINY-7666
 
