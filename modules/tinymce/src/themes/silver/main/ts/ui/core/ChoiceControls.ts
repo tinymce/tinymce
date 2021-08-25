@@ -44,15 +44,19 @@ const registerController = <T>(editor: Editor, spec: ControlSpec<T>) => {
       text: spec.display(value),
       onSetup: (api) => {
         const setActive = (active: boolean) => {
-          api.setActive(active);
           if (active) {
             current.on((oldApi) => oldApi.setActive(false));
             current.set(api);
           }
+          api.setActive(active);
         };
 
         setActive(Optionals.is(initial, spec.hash(value)));
-        return spec.watcher(editor, value, setActive);
+        const unbindWatcher = spec.watcher(editor, value, setActive);
+        return () => {
+          current.clear();
+          unbindWatcher();
+        };
       },
       onAction: () => spec.setCurrent(editor, value)
     }));
