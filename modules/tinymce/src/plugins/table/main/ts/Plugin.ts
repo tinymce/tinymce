@@ -33,7 +33,7 @@ const Plugin = (editor: Editor): Api => {
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
-  const actions = TableActions(editor, resizeHandler.lazyWire);
+  const actions = TableActions(editor, cellSelection, resizeHandler.lazyWire);
   const clipboard = FakeClipboard();
 
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboard);
