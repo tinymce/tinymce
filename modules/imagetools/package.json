@@ -1,6 +1,6 @@
 {
   "name": "@ephox/imagetools",
-  "version": "4.0.7",
+  "version": "5.0.0",
   "description": "Image tools for tinymce and textbox.io",
   "keywords": [
     "image",
