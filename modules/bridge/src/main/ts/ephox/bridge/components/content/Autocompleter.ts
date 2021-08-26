@@ -34,7 +34,7 @@ export interface AutocompleterSpec {
   columns?: ColumnTypes;
   matches?: (rng: Range, text: string, pattern: string) => boolean;
   fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
-  onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
+  onAction: (autocompleterApi: AutocompleterInstanceApi, rng: Range, value: string, meta: Record<string, any>) => void;
   maxResults?: number;
   highlightOn?: string[];
 }
@@ -51,7 +51,7 @@ export interface Autocompleter {
   columns: ColumnTypes;
   matches: Optional<(rng: Range, text: string, pattern: string) => boolean>;
   fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
-  onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
+  onAction: (autocompleterApi: AutocompleterInstanceApi, rng: Range, value: string, meta: Record<string, any>) => void;
   maxResults: number;
   highlightOn: string[];
 }

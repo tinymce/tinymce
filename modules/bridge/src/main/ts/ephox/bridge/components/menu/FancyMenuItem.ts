@@ -12,7 +12,6 @@ interface BaseFancyMenuItemSpec {
   type: 'fancymenuitem';
   fancytype: string;
   initData?: Record<string, unknown>;
-  onAction?: (data: Record<string, unknown>) => void;
 }
 
 export interface InsertTableMenuItemSpec extends BaseFancyMenuItemSpec {
@@ -35,7 +34,6 @@ interface BaseFancyMenuItem {
   type: 'fancymenuitem';
   fancytype: string;
   initData: Record<string, unknown>;
-  onAction: (data: Record<string, unknown>) => void;
 }
 
 export interface InsertTableMenuItem extends BaseFancyMenuItem {
