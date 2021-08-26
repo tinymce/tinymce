@@ -8,47 +8,46 @@ export interface FancyActionArgsMap {
   'colorswatch': { value: string };
 }
 
-interface BaseFancyMenuItemSpec {
+interface BaseFancyMenuItemSpec<T extends keyof FancyActionArgsMap> {
   type: 'fancymenuitem';
-  fancytype: string;
+  fancytype: T;
   initData?: Record<string, unknown>;
+  onAction?: (data: FancyActionArgsMap[T]) => void;
 }
 
-export interface InsertTableMenuItemSpec extends BaseFancyMenuItemSpec {
+export interface InsertTableMenuItemSpec extends BaseFancyMenuItemSpec<'inserttable'> {
   fancytype: 'inserttable';
-  onAction?: (data: FancyActionArgsMap['inserttable']) => void;
+  initData?: {};
 }
 
-export interface ColorSwatchMenuItemSpec extends BaseFancyMenuItemSpec {
+export interface ColorSwatchMenuItemSpec extends BaseFancyMenuItemSpec<'colorswatch'> {
   fancytype: 'colorswatch';
   initData?: {
     allowCustomColors?: boolean;
     colors: ChoiceMenuItemSpec[];
   };
-  onAction?: (data: FancyActionArgsMap['colorswatch']) => void;
 }
 
 export type FancyMenuItemSpec = InsertTableMenuItemSpec | ColorSwatchMenuItemSpec;
 
-interface BaseFancyMenuItem {
+interface BaseFancyMenuItem<T extends keyof FancyActionArgsMap> {
   type: 'fancymenuitem';
-  fancytype: string;
+  fancytype: T;
   initData: Record<string, unknown>;
+  onAction: (data: FancyActionArgsMap[T]) => void;
 }
 
-export interface InsertTableMenuItem extends BaseFancyMenuItem {
+export interface InsertTableMenuItem extends BaseFancyMenuItem<'inserttable'> {
   fancytype: 'inserttable';
   initData: {};
-  onAction: (data: FancyActionArgsMap['inserttable']) => void;
 }
 
-export interface ColorSwatchMenuItem extends BaseFancyMenuItem {
+export interface ColorSwatchMenuItem extends BaseFancyMenuItem<'colorswatch'> {
   fancytype: 'colorswatch';
   initData: {
     allowCustomColors: boolean;
     colors: Optional<ChoiceMenuItemSpec[]>;
   };
-  onAction: (data: FancyActionArgsMap['colorswatch']) => void;
 }
 
 export type FancyMenuItem = InsertTableMenuItem | ColorSwatchMenuItem;
