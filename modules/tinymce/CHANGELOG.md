@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.9.0 - 2021-08-26
+
 ### Added
 - Added a new `mceFocus` command that focuses the editor. Equivalent to using `editor.focus()` #TINY-7373
 - Added a new `mceTableToggleClass` command which toggles the provided class on the currently selected table #TINY-7476
