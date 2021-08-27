@@ -126,20 +126,14 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     });
   };
 
-  const postExecute = (table: SugarElement<HTMLTableElement>, noEvents: boolean = false) => (data: TableActionResult): void => {
-    editor.selection.setRng(data.rng);
+  const postExecute = (_data: TableActionResult): void => {
     editor.focus();
-    cellSelection.clear(table);
-    Util.removeDataStyle(table);
-    if (!noEvents) {
-      Events.fireTableModified(editor, table.dom, data.effect);
-    }
   };
 
   const actOnSelection = (execute: CombinedTargetsTableAction, noEvents: boolean = false) =>
     performActionOnSelection((table, startCell) => {
       const targets = TableTargets.forMenu(selections, table, startCell);
-      execute(table, targets).each(postExecute(table, noEvents));
+      execute(table, targets, noEvents).each(postExecute);
     });
 
   const copyRowSelection = () =>
@@ -162,7 +156,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       performActionOnSelection((table, startCell) => {
         const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
         const targets = TableTargets.pasteRows(selections, startCell, clonedRows, generators);
-        execute(table, targets).each(postExecute(table));
+        execute(table, targets).each(postExecute);
       });
     });
 

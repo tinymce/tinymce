@@ -7,8 +7,10 @@
 
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
-import { CellMutations, ResizeBehaviour, ResizeWire, RunOperation, TableFill, TableGridSize, TableSection, TableOperations } from '@ephox/snooker';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import {
+  CellMutations, ResizeBehaviour, ResizeWire, RunOperation, TableFill, TableGridSize, TableSection, TableOperations, TableLookup
+} from '@ephox/snooker';
+import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -16,8 +18,9 @@ import * as Events from '../api/Events';
 import { getCloneElements, isResizeTableColumnResizing, getTableHeaderType } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
+import { CellSelectionApi } from '../selection/CellSelection';
 
-type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<TableActionResult>;
+type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T, noEvents?: boolean) => Optional<TableActionResult>;
 export interface TableActionResult {
   readonly rng: Range;
   readonly effect: Events.TableEventData;
@@ -56,7 +59,7 @@ export interface TableActions {
   readonly getTableColType: LookupAction;
 }
 
-export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
+export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, lazyWire: () => ResizeWire): TableActions => {
   const isTableBody = (editor: Editor): boolean =>
     SugarNode.name(Util.getBody(editor)) === 'table';
 
@@ -86,8 +89,31 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
     }
   };
 
+  const setSelectionFromAction = (table: SugarElement<HTMLTableElement>, result: RunOperation.RunOperationOutput) =>
+    result.cursor.fold(() => {
+      // Snooker has reported we don't have a good cursor position. However, we may have a locked column
+      // with noneditable cells, so lets check if we have a noneditable cell and if so place the selection
+      const cells = TableLookup.cells(table);
+      return Arr.head(cells).filter(SugarBody.inBody).map((firstCell) => {
+        cellSelection.clear(table);
+        const rng = editor.dom.createRng();
+        rng.selectNode(firstCell.dom);
+        editor.selection.setRng(rng);
+        Attribute.set(firstCell, 'data-mce-selected', '1');
+        return rng;
+      });
+    }, (cell) => {
+      const des = DomDescent.freefallRtl(cell);
+      const rng = editor.dom.createRng();
+      rng.setStart(des.element.dom, des.offset);
+      rng.setEnd(des.element.dom, des.offset);
+      editor.selection.setRng(rng);
+      cellSelection.clear(table);
+      return Optional.some(rng);
+    });
+
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, lazyWire: () => ResizeWire, effect: Events.TableEventData) =>
-    (table: SugarElement<HTMLTableElement>, target: T): Optional<TableActionResult> => {
+    (table: SugarElement<HTMLTableElement>, target: T, noEvents: boolean = false): Optional<TableActionResult> => {
       Util.removeDataStyle(table);
       const wire = lazyWire();
       const doc = SugarElement.fromDom(editor.getDoc());
@@ -98,22 +124,27 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableA
         section: getTableSectionType(table)
       };
       return guard(table) ? operation(wire, table, target, generators, behaviours).bind((result) => {
+        // INVESTIGATE: Should "noEvents" prevent these from firing as well?
         Arr.each(result.newRows, (row) => {
           Events.fireNewRow(editor, row.dom);
         });
         Arr.each(result.newCells, (cell) => {
           Events.fireNewCell(editor, cell.dom);
         });
-        return result.cursor.map((cell) => {
-          const des = DomDescent.freefallRtl(cell);
-          const rng = editor.dom.createRng();
-          rng.setStart(des.element.dom, des.offset);
-          rng.setEnd(des.element.dom, des.offset);
-          return {
-            rng,
-            effect
-          };
-        });
+
+        const range = setSelectionFromAction(table, result);
+
+        if (SugarBody.inBody(table)) {
+          Util.removeDataStyle(table);
+          if (!noEvents) {
+            Events.fireTableModified(editor, table.dom, effect);
+          }
+        }
+
+        return range.map((rng) => ({
+          rng,
+          effect
+        }));
       }) : Optional.none<TableActionResult>();
     };
 
