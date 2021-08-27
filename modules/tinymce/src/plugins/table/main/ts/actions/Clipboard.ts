@@ -12,7 +12,6 @@ import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Events from '../api/Events';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
@@ -68,11 +67,8 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
             const doc = SugarElement.fromDom(editor.getDoc());
             const generators = TableFill.paste(doc);
             const targets = TableTargets.paste(cell, elements[0], generators);
-            actions.pasteCells(table, targets).each((data) => {
-              editor.selection.setRng(data.rng);
+            actions.pasteCells(table, targets).each(() => {
               editor.focus();
-              cellSelection.clear(table);
-              Events.fireTableModified(editor, table.dom, data.effect);
             });
           }
         });

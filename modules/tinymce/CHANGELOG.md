@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Published TinyMCE types failed to compile in strict mode #TINY-7915
+- The `TableModified` event sometimes didn't fire when performing certain table actions #TINY-7916
 
 ## 5.9.0 - 2021-08-26
 
