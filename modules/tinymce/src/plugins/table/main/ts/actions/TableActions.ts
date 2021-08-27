@@ -94,7 +94,7 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
       // Snooker has reported we don't have a good cursor position. However, we may have a locked column
       // with noneditable cells, so lets check if we have a noneditable cell and if so place the selection
       const cells = TableLookup.cells(table);
-      return Arr.head(cells).map((firstCell) => {
+      return Arr.head(cells).filter(SugarBody.inBody).map((firstCell) => {
         cellSelection.clear(table);
         const rng = editor.dom.createRng();
         rng.selectNode(firstCell.dom);
