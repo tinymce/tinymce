@@ -11,7 +11,6 @@ import {
   CellMutations, ResizeBehaviour, ResizeWire, RunOperation, TableFill, TableGridSize, TableSection, TableOperations, TableLookup
 } from '@ephox/snooker';
 import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
-import { CellSelectionApi } from 'src/plugins/table/main/ts/selection/CellSelection';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -19,6 +18,7 @@ import * as Events from '../api/Events';
 import { getCloneElements, isResizeTableColumnResizing, getTableHeaderType } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
+import { CellSelectionApi } from '../selection/CellSelection';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T, noEvents?: boolean) => Optional<TableActionResult>;
 export interface TableActionResult {
