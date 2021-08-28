@@ -1,17 +1,17 @@
 const LiveReloadPlugin = require('webpack-livereload-plugin');
-let { TsConfigPathsPlugin } = require('awesome-typescript-loader');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const path = require('path');
 const swag = require('@ephox/swag');
 
-
-
-let create = (inFile, outFile) => {
+const create = (inFile, outFile) => {
   const tsConfig = "tsconfig.json";
 
   return {
     entry: inFile,
-    mode: 'development',
     devtool: 'source-map',
+    mode: 'development',
+    target: ['web', 'es5'],
     optimization: {
       removeAvailableModules: false,
       removeEmptyChunks: false,
@@ -21,40 +21,43 @@ let create = (inFile, outFile) => {
       symlinks: false,
       extensions: ['.ts', '.js'],
       plugins: [
-        // We need to use the awesome typescript loader config paths since the one for ts-loader doesn't resolve aliases correctly
         new TsConfigPathsPlugin({
-          baseUrl: '.',
-          compiler: 'typescript',
-          configFileName: tsConfig
-        })
+          configFile: tsConfig,
+          extensions: ['.ts', '.js']
+        }),
       ]
     },
     module: {
       rules: [
+        {
+          test: /\.js$/,
+          resolve: {
+            fullySpecified: false
+          }
+        },
         {
           test: /\.js|\.ts$/,
           use: ['@ephox/swag/webpack/remapper']
         },
         {
           test: /\.ts$/,
-          use: [
-            {
-              loader: 'ts-loader',
-              options: {
-                transpileOnly: true,
-                compilerOptions: {
-                  declarationMap: false
-                },
-                configFile: tsConfig,
-                experimentalWatchApi: true
+          use: [{
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+              projectReferences: true,
+              configFile: tsConfig,
+              compilerOptions: {
+                declarationMap: false
               }
             }
-          ]
+          }]
         }
       ]
     },
     plugins: [
-      new LiveReloadPlugin()
+      new LiveReloadPlugin(),
+      new ForkTsCheckerWebpackPlugin({ async: true })
     ],
     output: {
       filename: path.basename(outFile),
@@ -65,8 +68,8 @@ let create = (inFile, outFile) => {
 };
 
 
-module.exports = function (grunt) {
-  var packageData = grunt.file.readJSON('package.json');
+module.exports = (grunt) => {
+  const packageData = grunt.file.readJSON('package.json');
 
   grunt.initConfig({
     pkg: packageData,
