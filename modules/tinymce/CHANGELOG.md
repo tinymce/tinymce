@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Resizing table columns in some scenarios would resize the column to an incorrect position #TINY-7731
+
 ## 5.9.1 - 2021-08-27
 
 ### Fixed

@@ -1,6 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
 import { TableSize } from 'ephox/snooker/api/TableSize';
@@ -18,8 +17,6 @@ const pixelTableMissingWidthsHtml = `<table style="width: 400px; border-collapse
 </table>`;
 const tableWithSpansHtml = '<table style="width: 400px; border-collapse: collapse"><tbody><tr><td style="width: 400px;" colspan="2">A</td></tr></tbody></table>';
 const noneTableWithColsHtml = '<table><colgroup><col><col></colgroup><tbody><tr><td>A</td><td>A</td></tr></tbody></table>';
-const browser = PlatformDetection.detect().browser;
-const isChrome92 = browser.isChrome() && browser.version.major >= 92;
 
 UnitTest.test('ColumnSizes.getPixelWidths', () => {
   const sTest = (label: string, html: string, getExpectedWidths: (cellWidth: number) => number[]) => {
@@ -39,16 +36,11 @@ UnitTest.test('ColumnSizes.getPixelWidths', () => {
     Remove.remove(table);
   };
 
-  sTest('Pixel Table - Column widths should be the raw size of the cell', pixelTableHtml, () => [ 200, 200 ]);
-  sTest('Pixel Table - Column widths with missing widths on some cells should be the raw size of the cell', pixelTableMissingWidthsHtml, () => [ 200, 200 ]);
+  sTest('Pixel Table - Column widths should be the raw size of the cell', pixelTableHtml, () => [ 198, 198 ]);
+  sTest('Pixel Table - Column widths with missing widths on some cells should be the raw size of the cell', pixelTableMissingWidthsHtml, () => [ 198, 198 ]);
   sTest('Pixel Table - Column width should be the size of the table when using colspans', tableWithSpansHtml, () => [ 0, 400 ]);
   sTest('None Table - Column widths should be the computed size of the cell', noneTableHtml, (width) => [ width, width ]);
-  if (isChrome92) {
-    // TODO: Remove this once the cell width bug introduced in Chrome 92 is fixed (see TINY-7758 for more details)
-    sTest('None Table - Column widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 1 ]);
-  } else {
-    sTest('None Table - Column widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 2 ]); // Add 2 to account for the borders
-  }
+  sTest('None Table - Column widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 2 ]); // Add 2 to account for the borders
 });
 
 UnitTest.test('ColumnSizes.getPixelHeights', () => {

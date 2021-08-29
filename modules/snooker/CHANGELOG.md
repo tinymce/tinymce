@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- The `pixelSize` and `percentSize` functions in `TableSize` no longer require the initial width to be passed.
+
+### Fixed
+- Resizing table cells caused incorrect widths where the content had caused the cell to grow.
+- Resizing percent tables caused widths to be offset by a few pixels due to an incorrect pixel -> percent conversion.
+
 ## 9.0.0 - 2021-08-26
 
 ### Added

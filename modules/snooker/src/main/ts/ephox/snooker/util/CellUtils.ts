@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Attribute, Css, SugarElement } from '@ephox/sugar';
+import { Attribute, Css, SugarElement, SugarNode } from '@ephox/sugar';
 
 export const getAttrValue = (cell: SugarElement<Element>, name: string, fallback: number = 0): number =>
   Attribute.getOpt(cell, name).map((value) => parseInt(value, 10)).getOr(fallback);
@@ -7,8 +7,13 @@ export const getAttrValue = (cell: SugarElement<Element>, name: string, fallback
 export const getSpan = (cell: SugarElement<HTMLTableCellElement>, type: 'colspan' | 'rowspan'): number =>
   getAttrValue(cell, type, 1);
 
-export const hasColspan = (cell: SugarElement<HTMLTableCellElement>): boolean =>
-  getSpan(cell, 'colspan') > 1;
+export const hasColspan = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>): boolean => {
+  if (SugarNode.isTag('col')(cell)) {
+    return getAttrValue(cell, 'span', 1) > 1;
+  } else {
+    return getSpan(cell as SugarElement<HTMLTableCellElement>, 'colspan') > 1;
+  }
+};
 
 export const hasRowspan = (cell: SugarElement<HTMLTableCellElement>): boolean =>
   getSpan(cell, 'rowspan') > 1;
