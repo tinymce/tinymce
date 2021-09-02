@@ -324,7 +324,10 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
           startScrollWidth = rootElement.scrollWidth;
           startScrollHeight = rootElement.scrollHeight;
 
-          resizeBackdrop = dom.add(rootElement, 'div', { class: 'mce-resize-backdrop' });
+          resizeBackdrop = dom.add(rootElement, 'div', {
+            'class': 'mce-resize-backdrop',
+            'data-mce-bogus': 'all'
+          });
           dom.setStyles(resizeBackdrop, {
             position: 'fixed',
             left: '0',

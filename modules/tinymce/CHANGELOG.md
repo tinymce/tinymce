@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Image resize backdrop element did not have `data-mce-bogus=all` set #TINY-7854
+
 ## 5.9.1 - 2021-08-27
 
 ### Fixed
