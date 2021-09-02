@@ -15,7 +15,23 @@ import Tools from '../api/util/Tools';
 import { isWsPreserveElement } from '../dom/ElementType';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Zwsp from '../text/Zwsp';
-import { Content, ContentFormat, GetContentArgs } from './ContentTypes';
+import { Content, GetContentArgs, GetContentFormatter } from './ContentTypes';
+
+const defaultFormat = 'html';
+
+const defaultContentFormatter = (editor: Editor, args: GetContentArgs): Content =>
+  Optional.from(editor.getBody())
+    .fold(
+      Fun.constant(args.format === 'tree' ? new AstNode('body', 11) : ''),
+      (body) => getContentFromBody(editor, args, body)
+    );
+
+const contentFormatters: Record<string, GetContentFormatter> = {
+  raw: defaultContentFormatter,
+  text: defaultContentFormatter,
+  html: defaultContentFormatter,
+  tree: defaultContentFormatter,
+};
 
 const trimEmptyContents = (editor: Editor, html: string): string => {
   const blockName = Settings.getForcedRootBlock(editor);
@@ -23,15 +39,9 @@ const trimEmptyContents = (editor: Editor, html: string): string => {
   return html.replace(emptyRegExp, '');
 };
 
-const getContentFromBody = (editor: Editor, args: GetContentArgs, format: ContentFormat, body: HTMLElement): Content => {
-  const updatedArgs = args.no_events ? args : editor.fire('BeforeGetContent', {
-    ...args,
-    format,
-    get: true,
-    getInner: true
-  });
-
+const getContentFromBody = (editor: Editor, updatedArgs: GetContentArgs, body: HTMLElement): Content => {
   let content: string;
+
   if (updatedArgs.format === 'raw') {
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
   } else if (updatedArgs.format === 'text') {
@@ -49,15 +59,45 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
     updatedArgs.content = content;
   }
 
-  if (updatedArgs.no_events) {
-    return updatedArgs.content;
-  } else {
-    return editor.fire('GetContent', updatedArgs).content;
-  }
+  return updatedArgs.content;
 };
 
-export const getContentInternal = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content => Optional.from(editor.getBody())
-  .fold(
-    Fun.constant(args.format === 'tree' ? new AstNode('body', 11) : ''),
-    (body) => getContentFromBody(editor, args, format, body)
+const getFormatter = (format: string) => {
+  return Optional.from(contentFormatters[format]).fold(
+    () => {
+      // eslint-disable-next-line no-console
+      console.error(`Content formatter ${format} not recognized, defaulting to ${defaultFormat}.`);
+      return getFormatter(defaultFormat);
+    },
+    Fun.identity
   );
+};
+
+const getContentInternal = (editor: Editor, args: GetContentArgs, format: string): Content => {
+  const formatter = getFormatter(format);
+
+  const updatedArgs = args.no_events ? args : editor.fire('BeforeGetContent', {
+    ...args,
+    format,
+    get: true,
+    getInner: true
+  });
+
+  const result = formatter(editor, updatedArgs, format);
+
+  if (!args.no_events) {
+    args.content = result;
+    return editor.fire('GetContent', args).content;
+  }
+
+  return result;
+};
+
+const addGetContentFormatter = (format: string, formatter: GetContentFormatter) => {
+  contentFormatters[format] = formatter;
+};
+
+export {
+  getContentInternal,
+  addGetContentFormatter
+};

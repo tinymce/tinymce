@@ -18,9 +18,27 @@ import { isWsPreserveElement } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as FilterNode from '../html/FilterNode';
-import { Content, SetContentArgs } from './ContentTypes';
+import { Content, SetContentArgs, SetContentFormatter } from './ContentTypes';
 
 const defaultFormat = 'html';
+
+const defaultContentFormatter = (editor: Editor, content: Content, updatedArgs: SetContentArgs) => {
+  if (!isTreeNode(content)) {
+    content = updatedArgs.content;
+  }
+
+  return Optional.from(editor.getBody()).fold(
+    Fun.constant(content),
+    (body) => isTreeNode(content) ? setContentTree(editor, body, content, updatedArgs) : setContentString(editor, body, content, updatedArgs)
+  );
+};
+
+const contentFormatters: Record<string, SetContentFormatter> = {
+  raw: defaultContentFormatter,
+  text: defaultContentFormatter,
+  html: defaultContentFormatter,
+  tree: defaultContentFormatter,
+};
 
 const isTreeNode = (content: unknown): content is AstNode =>
   content instanceof AstNode;
@@ -68,8 +86,6 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
     }
 
     setEditorHtml(editor, content, args.no_selection);
-
-    editor.fire('SetContent', args);
   } else {
     if (args.format !== 'raw') {
       content = HtmlSerializer({
@@ -81,10 +97,6 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
 
     args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? content : Tools.trim(content);
     setEditorHtml(editor, args.content, args.no_selection);
-
-    if (!args.no_events) {
-      editor.fire('SetContent', args);
-    }
   }
 
   return args.content;
@@ -98,14 +110,23 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, arg
   args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html);
   setEditorHtml(editor, args.content, args.no_selection);
 
-  if (!args.no_events) {
-    editor.fire('SetContent', args);
-  }
-
   return content;
 };
 
-export const setContentInternal = (editor: Editor, content: Content, args: SetContentArgs): Content => {
+const getFormatter = (format: string) => {
+  return Optional.from(contentFormatters[format]).fold(
+    () => {
+      // eslint-disable-next-line no-console
+      console.error(`Content formatter ${format} not recognized, defaulting to ${defaultFormat}.`);
+      return getFormatter(defaultFormat);
+    },
+    Fun.identity
+  );
+};
+
+const setContentInternal = (editor: Editor, content: Content, args: SetContentArgs): Content => {
+  const formatter = getFormatter(args.format || defaultFormat);
+
   const updatedArgs = args.no_events ? args : editor.fire('BeforeSetContent', {
     format: defaultFormat,
     ...args,
@@ -113,12 +134,21 @@ export const setContentInternal = (editor: Editor, content: Content, args: SetCo
     content: isTreeNode(content) ? '' : content
   });
 
-  if (!isTreeNode(content)) {
-    content = updatedArgs.content;
+  const result = formatter(editor, content, updatedArgs);
+
+  if (!args.no_events) {
+    args.content = result;
+    editor.fire('SetContent', args);
   }
 
-  return Optional.from(editor.getBody()).fold(
-    Fun.constant(content),
-    (body) => isTreeNode(content) ? setContentTree(editor, body, content, updatedArgs) : setContentString(editor, body, content, updatedArgs)
-  );
+  return result;
+};
+
+const addSetContentFormatter = (format: string, formatter: any) => {
+  contentFormatters[format] = formatter;
+};
+
+export {
+  setContentInternal,
+  addSetContentFormatter
 };

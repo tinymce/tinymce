@@ -198,6 +198,40 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(editor.getContent(), '<!-- x --><p>\u00a0</p>', 'setContent with comment bug #4409');
   });
 
+  it('TINY-7875: addContentFormatter', () => {
+    const editor = hook.editor();
+    let setCount = 0;
+    let getCount = 0;
+
+    const setFormatter = () => {
+      editor.setContent('set');
+      setCount++;
+      return 'set';
+    };
+
+    const getFormatter = () => {
+      getCount++;
+      return 'get';
+    };
+
+    editor.addContentFormatter('test', getFormatter, setFormatter);
+
+    editor.setContent('<p>test1</p>');
+    assert.equal(editor.getContent(), '<p>test1</p>', 'html setContent, html getcontent, getContent');
+    assert.equal(setCount, 0, 'html setContent, html getcontent, check setCount');
+    assert.equal(getCount, 0, 'html setContent, html getcontent, check getCount');
+
+    editor.setContent('<p>test2</p>', { format: 'test' });
+    assert.equal(editor.getContent(), '<p>set</p>', 'test setContent, html getcontent, getContent');
+    assert.equal(setCount, 1, 'test setContent, html getcontent, check setCount');
+    assert.equal(getCount, 0, 'test setContent, html getcontent, check getCount');
+
+    editor.setContent('<p>test3</p>');
+    assert.equal(editor.getContent({ format: 'test' }), 'get', 'html setContent, test getcontent, getContent');
+    assert.equal(setCount, 1, 'html setContent, test getcontent, check setCount');
+    assert.equal(getCount, 1, 'html setContent, test getcontent, check getCount');
+  });
+
   it('TBA: custom elements', () => {
     const editor = hook.editor();
     editor.setContent('<custom1>c1</custom1><custom2>c1</custom2>');

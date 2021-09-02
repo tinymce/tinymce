@@ -10,7 +10,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import { Content, ContentFormat, GetContentArgs } from '../content/ContentTypes';
+import { Content, GetContentArgs } from '../content/ContentTypes';
 import * as CharType from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
 import * as EventProcessRanges from './EventProcessRanges';
@@ -86,7 +86,7 @@ const getSerializedContent = (editor: Editor, args: GetSelectionContentArgs): Co
   return editor.selection.serializer.serialize(tmpElm, args);
 };
 
-export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs = {}): Content => {
+export const getSelectedContentInternal = (editor: Editor, format: string, args: GetSelectionContentArgs = {}): Content => {
   const updatedArgs = editor.fire('BeforeGetContent', {
     ...args,
     format,

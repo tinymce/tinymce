@@ -7,6 +7,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 
+import { GetContentFormatter, SetContentFormatter } from '../content/ContentTypes';
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
@@ -867,6 +868,10 @@ class Editor implements EditorObservable {
   public getContent(args?: EditorContent.GetContentArgs): string;
   public getContent(args?: EditorContent.GetContentArgs): EditorContent.Content {
     return EditorContent.getContent(this, args);
+  }
+
+  public addContentFormatter(format: string, formatGetter: GetContentFormatter, formatSetter: SetContentFormatter): void {
+    return EditorContent.addContentFormatter(this, format, formatGetter, formatSetter);
   }
 
   /**

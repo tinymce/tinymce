@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Added a new `addContentFormatter` api function to add additional formats to `getContent` and `setContent` #TINY-7875
+
+### Fixed
+- Added types to `setContent` optional argument #TINY-7875
+
 ## 5.9.1 - 2021-08-27
 
 ### Fixed

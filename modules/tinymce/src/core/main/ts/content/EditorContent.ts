@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { addContentFormatter } from './AddContentFormatter';
 import { Content, GetContentArgs, SetContentArgs } from './ContentTypes';
 import { getContent } from './GetContent';
 import { setContent } from './SetContent';
@@ -13,6 +14,7 @@ export {
   Content,
   GetContentArgs,
   SetContentArgs,
+  addContentFormatter,
   setContent,
   getContent
 };

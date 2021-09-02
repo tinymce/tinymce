@@ -1,5 +1,8 @@
 type EventCallback = (event: any) => void;
 
+export type GetContentFormatter = (editor: Editor, args: GetContentArgs) => string;
+export type SetContentFormatter = (editor: Editor, content: any, args: SetContentArgs) => string;
+
 export interface Selection {
   win: Window;
 
@@ -10,15 +13,21 @@ export interface Selection {
   isCollapsed: () => boolean;
 }
 
-export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';
-
 export interface GetContentArgs {
-  format?: ContentFormat;
+  format?: string;
   get?: boolean;
   content?: string;
   getInner?: boolean;
   no_events?: boolean;
   [key: string]: any;
+}
+
+export interface SetContentArgs {
+  format?: string;
+  set?: boolean;
+  content?: string;
+  no_events?: boolean;
+  no_selection?: boolean;
 }
 
 export interface Editor {
@@ -42,7 +51,8 @@ export interface Editor {
   getElement: () => HTMLElement;
 
   getContent: (args?: GetContentArgs) => string;
-  setContent: (content: string) => void;
+  setContent: (content: string, args?: SetContentArgs) => void;
+  addContentFormatter: (format: string, formatGetter: GetContentFormatter, formatSetter: SetContentFormatter) => void;
 
   execCommand: (command: string, ui?: boolean, value?: any, args?: any) => boolean;
 
