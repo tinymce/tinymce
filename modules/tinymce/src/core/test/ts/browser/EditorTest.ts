@@ -232,6 +232,30 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(getCount, 1, 'html setContent, test getcontent, check getCount');
   });
 
+  it('TINY-7875: getContent events updates properly', () => {
+    const editor = hook.editor();
+    let count = 0;
+
+    const beforeGetContent = (args) => {
+      count++;
+      args.testProperty = 'test';
+    };
+
+    const afterGetContent = (args) => {
+      count++;
+      assert.equal(args.testProperty, 'test');
+    };
+
+    editor.on('GetContent', afterGetContent);
+    editor.on('BeforeGetContent', beforeGetContent);
+
+    editor.getContent();
+    assert.equal(count, 2);
+
+    editor.off('GetContent', afterGetContent);
+    editor.off('BeforeGetContent', beforeGetContent);
+  });
+
   it('TBA: custom elements', () => {
     const editor = hook.editor();
     editor.setContent('<custom1>c1</custom1><custom2>c1</custom2>');

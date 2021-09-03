@@ -85,9 +85,9 @@ const getContentInternal = (editor: Editor, args: GetContentArgs, format: string
 
   const result = formatter(editor, updatedArgs, format);
 
-  if (!args.no_events) {
-    args.content = result;
-    return editor.fire('GetContent', args).content;
+  if (!updatedArgs.no_events) {
+    updatedArgs.content = result;
+    return editor.fire('GetContent', updatedArgs).content;
   }
 
   return result;
