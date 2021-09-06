@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Compare, Remove, SelectorExists, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -71,18 +71,17 @@ const deleteContentInsideCell = (cell: SugarElement<HTMLTableCellElement>, rng: 
  */
 const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], outsideDetails: Optional<OutsideTableDetails>): boolean => {
   const rng = editor.selection.getRng();
-  const startInTable = SelectorExists.ancestor(SugarElement.fromDom(rng.startContainer), 'table');
 
   let cellsToClean = cells;
   // The only time we can have only part of the cell contents selected is when part of the selection
   // is outside the table (otherwise we use the Darwin fake selection, which always selects entire cells),
   // in which case we need to delete the contents inside and check if the entire contents of the cell have been deleted.
-  outsideDetails.each(() => {
+  outsideDetails.each(({ isStartInTable }) => {
     // The endPointCell is the only cell which may have only part of its contents selected.
-    const endPointCell = startInTable ? cells[0] : cells[cells.length - 1];
-    deleteContentInsideCell(endPointCell, rng, startInTable);
+    const endPointCell = isStartInTable ? cells[0] : cells[cells.length - 1];
+    deleteContentInsideCell(endPointCell, rng, isStartInTable);
     if (!editor.dom.isEmpty(endPointCell.dom)) {
-      cellsToClean = startInTable ? cellsToClean.slice(1) : cellsToClean.slice(0, cellsToClean.length - 1);
+      cellsToClean = isStartInTable ? cellsToClean.slice(1) : cellsToClean.slice(0, cellsToClean.length - 1);
     }
   });
 
@@ -123,12 +122,8 @@ const emptyMultiTableCells = (
   // The cursor is always collapsed back into the start cell, so we never need to clean it
   const startTableCellsToClean = startTableCells.slice(1);
 
-  let endTableCellsToClean = endTableCells;
-  const lastCell = endTableCells[endTableCells.length - 1];
   // Only clean empty cells, and the last cell has the potential to still have content
-  if (!editor.dom.isEmpty(lastCell.dom)) {
-    endTableCellsToClean = endTableCells.slice(0, endTableCells.length - 1);
-  }
+  const endTableCellsToClean = editor.dom.isEmpty(endCell.dom) ? endTableCells : endTableCells.slice(0, -1);
 
   cleanCells(startTableCellsToClean.concat(endTableCellsToClean));
   // Delete all content in between the start table and end table
