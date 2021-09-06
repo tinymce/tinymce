@@ -123,10 +123,8 @@ const emptyMultiTableCells = (
   deleteContentInsideCell(startCell, rng, true);
   deleteContentInsideCell(endCell, rng, false);
 
-  // The cursor is always collapsed back into the start cell, so we never need to clean it
-  const startTableCellsToClean = startTableCells.slice(1);
-
-  // Only clean empty cells, and the last cell has the potential to still have content
+  // Only clean empty cells, the first and last cells have the potential to still have content
+  const startTableCellsToClean = editor.dom.isEmpty(startCell.dom) ? startTableCells : startTableCells.slice(1);
   const endTableCellsToClean = editor.dom.isEmpty(endCell.dom) ? endTableCells : endTableCells.slice(0, -1);
 
   cleanCells(startTableCellsToClean.concat(endTableCellsToClean));

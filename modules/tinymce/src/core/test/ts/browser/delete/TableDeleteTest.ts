@@ -158,6 +158,23 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
       });
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td><td>b</td><td>c</td></tr><tr><td>&nbsp;</td><td>e</td><td>f</td></tr></tbody></table>');
     });
+
+    it('TINY-7891: Delete multiple contenteditable=false cells in a range selection', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody>' +
+        '<tr><td contenteditable="false" data-mce-selected="1">a</td><td contenteditable="false" data-mce-selected="1">b</td><td>c</td></tr>' +
+        '<tr><td contenteditable="false" data-mce-selected="1">d</td><td contenteditable="false" data-mce-selected="1">e</td><td>f</td></tr>' +
+        '</tbody></table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1);
+      // Note: This uses the command to ensure it works with CefDelete
+      editor.execCommand('Delete');
+      TinyAssertions.assertContentPresence(editor, {
+        'td[data-mce-selected="1"]': 4
+      });
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>c</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>f</td></tr></tbody></table>');
+    });
   });
 
   context('Delete all single cell content', () => {
@@ -437,7 +454,7 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
       );
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 1, 0, 1, 1, 0 ], 1);
       doDelete(editor);
-      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
       TinyAssertions.assertContent(
         editor,
         '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>' +
