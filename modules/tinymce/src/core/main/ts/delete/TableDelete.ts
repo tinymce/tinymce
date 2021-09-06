@@ -70,32 +70,36 @@ const deleteContentInsideCell = (cell: SugarElement<HTMLTableCellElement>, rng: 
  * - part of a table and content outside is selected
  */
 const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], outsideDetails: Optional<OutsideTableDetails>): boolean => {
-  const rng = editor.selection.getRng();
+  const editorRng = editor.selection.getRng();
+  const cellsToClean = outsideDetails.bind(({ rng, isStartInTable }) => {
+    /**
+     * Delete all content outside of the table that is in the selection
+     */
 
-  let cellsToClean = cells;
-  // The only time we can have only part of the cell contents selected is when part of the selection
-  // is outside the table (otherwise we use the Darwin fake selection, which always selects entire cells),
-  // in which case we need to delete the contents inside and check if the entire contents of the cell have been deleted.
-  outsideDetails.each(({ isStartInTable }) => {
-    // The endPointCell is the only cell which may have only part of its contents selected.
-    const endPointCell = isStartInTable ? cells[0] : cells[cells.length - 1];
-    deleteContentInsideCell(endPointCell, rng, isStartInTable);
-    if (!editor.dom.isEmpty(endPointCell.dom)) {
-      cellsToClean = isStartInTable ? cellsToClean.slice(1) : cellsToClean.slice(0, cellsToClean.length - 1);
-    }
-  });
-
-  // Remove content from cells we need to clean
-  cleanCells(cellsToClean);
-
-  // Delete all content outside of the table that is in the selection
-  outsideDetails.map(({ rng, isStartInTable }) => {
     // Get the outside block before deleting the contents
     const outsideBlock = getOutsideBlock(editor, isStartInTable ? rng.endContainer : rng.startContainer);
     rng.deleteContents();
     // Handle block outside the table if it is empty since rng.deleteContents leaves it
     handleEmptyBlock(editor, isStartInTable, outsideBlock.filter(Empty.isEmpty));
-  });
+
+    /**
+     * The only time we can have only part of the cell contents selected is when part of the selection
+     * is outside the table (otherwise we use the Darwin fake selection, which always selects entire cells),
+     * in which case we need to delete the contents inside and check if the entire contents of the cell have been deleted.
+     */
+
+    // The endPointCell is the only cell which may have only part of its contents selected.
+    const endPointCell = isStartInTable ? cells[0] : cells[cells.length - 1];
+    deleteContentInsideCell(endPointCell, editorRng, isStartInTable);
+    if (!editor.dom.isEmpty(endPointCell.dom)) {
+      return Optional.some(isStartInTable ? cells.slice(1) : cells.slice(0, -1));
+    } else {
+      return Optional.none();
+    }
+  }).getOr(cells);
+
+  // Remove content from cells we need to clean
+  cleanCells(cellsToClean);
 
   // Collapse the original selection after deleting everything
   editor.selection.collapse(true);
