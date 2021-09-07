@@ -23,13 +23,16 @@ const trimEmptyContents = (editor: Editor, html: string): string => {
   return html.replace(emptyRegExp, '');
 };
 
+const setupArgs = (args: Partial<GetContentArgs>, format: ContentFormat): GetContentArgs => ({
+  ...args,
+  format,
+  get: true,
+  getInner: true
+});
+
 const getContentFromBody = (editor: Editor, args: GetContentArgs, format: ContentFormat, body: HTMLElement): Content => {
-  const updatedArgs = args.no_events ? args : editor.fire('BeforeGetContent', {
-    ...args,
-    format,
-    get: true,
-    getInner: true
-  });
+  const defaultedArgs = setupArgs(args, format);
+  const updatedArgs = args.no_events ? defaultedArgs : editor.fire('BeforeGetContent', defaultedArgs);
 
   let content: string;
   if (updatedArgs.format === 'raw') {
