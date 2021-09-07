@@ -64,6 +64,17 @@ const deleteContentInsideCell = (cell: SugarElement<HTMLTableCellElement>, rng: 
   insideTableRng.deleteContents();
 };
 
+const collapseAndRestoreCellSelection = (editor: Editor) => {
+  const selectedCells = TableCellSelection.getCellsFromEditor(editor);
+  editor.selection.collapse(true);
+  // Restore the data-mce-selected attribute if multiple cells were selected, as if it was a cef element
+  // then selection overrides would remove it as it was using an offscreen selection clone.
+  if (selectedCells.length > 1) {
+    const firstCell = Arr.find(selectedCells, (cell) => Attribute.has(cell, 'data-mce-first-selected')).getOr(selectedCells[0]);
+    Attribute.set(firstCell, 'data-mce-selected', '1');
+  }
+};
+
 /*
  * Runs when
  * - the start and end of the selection is contained within the same table (called directly from deleteRange)
@@ -102,7 +113,7 @@ const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCell
   cleanCells(cellsToClean);
 
   // Collapse the original selection after deleting everything
-  editor.selection.collapse(true);
+  collapseAndRestoreCellSelection(editor);
   return true;
 };
 
@@ -132,7 +143,7 @@ const emptyMultiTableCells = (
   betweenRng.deleteContents();
 
   // This will collapse the selection into the cell of the start table
-  editor.selection.collapse(true);
+  collapseAndRestoreCellSelection(editor);
   return true;
 };
 

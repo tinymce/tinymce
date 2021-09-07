@@ -1,7 +1,7 @@
 import { Assertions, Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Attribute, Html, Remove, Replication, SelectorFilter } from '@ephox/sugar';
+import { Attribute, Html, Remove, Replication, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -150,7 +150,9 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
         '<tr><td data-mce-selected="1">d</td><td>e</td><td>f</td></tr>' +
         '</tbody></table>'
       );
-      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1);
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+      // When we set the selection, SelectionOverrides removes our data-mce-selected attributes. So we need to put it back
+      SelectorFind.descendant(TinyDom.body(editor), 'tr:nth-child(2) td').each((elm) => Attribute.set(elm, 'data-mce-selected', '1'));
       // Note: This uses the command to ensure it works with CefDelete
       editor.execCommand('Delete');
       TinyAssertions.assertContentPresence(editor, {
