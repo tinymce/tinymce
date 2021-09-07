@@ -214,7 +214,7 @@ describe('ResizeTest', () => {
     Remove.remove(table);
   });
 
-  it('TINY-7731: should handle resizing a table where a cell overflows it\'s specified size', () => {
+  it('TINY-7731: should handle resizing a table where a cell overflows its specified size', () => {
     const delta = 200;
 
     const table = SugarElement.fromHtml<HTMLTableElement>(`<table style="border-collapse: collapse; width: 800px;">
@@ -244,6 +244,7 @@ describe('ResizeTest', () => {
     const warehouse = Warehouse.fromTable(table);
     const widths = tableSize.getWidths(warehouse, tableSize);
 
+    // This is the width of "thisisareallylongsentencewithoutspacesthatcausescontenttooverflow" which can vary marginally between browsers
     assert.approximately(widths[0], 483, 1, 'First column width');
     assert.approximately(widths[1], 313, 1, 'Second column width');
 
