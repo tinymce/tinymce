@@ -7,7 +7,6 @@ import * as Redistribution from '../resize/Redistribution';
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
 import { DetailExt, RowDetail, Column, Detail } from './Structs';
-import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 
 const redistributeToW = (newWidths: string[], cells: DetailExt[], unit: string): void => {
@@ -43,7 +42,7 @@ const getUnit = (newSize: string): 'px' | '%' => {
 
 // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
 // Updates CSS of the table, rows, and cells.
-const redistribute = (table: SugarElement<HTMLTableElement>, optWidth: Optional<string>, optHeight: Optional<string>, _tableSize: TableSize): void => {
+const redistribute = (table: SugarElement<HTMLTableElement>, optWidth: Optional<string>, optHeight: Optional<string>): void => {
   const warehouse = Warehouse.fromTable(table);
   const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);

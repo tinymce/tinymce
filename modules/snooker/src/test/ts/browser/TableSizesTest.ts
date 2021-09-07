@@ -3,7 +3,6 @@ import { Arr, Optional } from '@ephox/katamari';
 import { Css, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as Sizes from 'ephox/snooker/api/Sizes';
-import { TableSize } from 'ephox/snooker/api/TableSize';
 
 import { addStyles, readHeight, readWidth } from '../module/ephox/snooker/test/SizeUtils';
 
@@ -108,7 +107,7 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
 
   const checkWidth = (expected: string[][], table: SugarElement, newWidth: string) => {
     Insert.append(SugarBody.body(), table);
-    Sizes.redistribute(table, Optional.some(newWidth), Optional.none(), TableSize.getTableSize(table));
+    Sizes.redistribute(table, Optional.some(newWidth), Optional.none());
     assert.eq(expected, readWidth(table));
     Remove.remove(table);
   };
@@ -120,7 +119,7 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
 
   const checkHeight = (expected: string[][], table: SugarElement, newHeight: string) => {
     Insert.append(SugarBody.body(), table);
-    Sizes.redistribute(table, Optional.none(), Optional.some(newHeight), TableSize.getTableSize(table));
+    Sizes.redistribute(table, Optional.none(), Optional.some(newHeight));
     assert.eq(expected, readHeight(table));
     Remove.remove(table);
   };

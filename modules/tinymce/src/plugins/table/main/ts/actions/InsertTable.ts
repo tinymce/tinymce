@@ -59,11 +59,11 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   // Enforce the sizing mode of the table
   return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
     if (isPixelsForced(editor)) {
-      enforcePixels(editor, table);
+      enforcePixels(table);
     } else if (isResponsiveForced(editor)) {
       enforceNone(table);
     } else if (isPercentagesForced(editor) || isPercentage(defaultStyles.width)) {
-      enforcePercentage(editor, table);
+      enforcePercentage(table);
     }
     Util.removeDataStyle(table);
     Attribute.remove(table, 'data-mce-id');

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - The `pixelSize` and `percentSize` functions in `TableSize` no longer require the initial width to be passed.
+- `ColumnSizes` will now use `col` elements to calculate the column width where appropriate.
+- `Sizes.redistribute` no longer requires a `TableSize` instance to be provided.
 
 ### Fixed
 - Resizing table cells caused incorrect widths in cases where those cells had grown to fit extra content.

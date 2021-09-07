@@ -62,11 +62,8 @@ const get = (cell: SugarElement<HTMLTableCellElement>, type: 'rowspan' | 'colspa
 
 const getRaw = (element: SugarElement<HTMLElement>, prop: 'height' | 'width'): Optional<string> => {
   // Try to use the style first, otherwise attempt to get the value from an attribute
-  const cssWidth = Css.getRaw(element, prop);
-  return cssWidth.fold(() => {
+  return Css.getRaw(element, prop).orThunk(() => {
     return Attribute.getOpt(element, prop).map((val) => val + 'px');
-  }, (width) => {
-    return Optional.some(width);
   });
 };
 
