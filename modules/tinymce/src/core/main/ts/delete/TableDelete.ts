@@ -51,7 +51,7 @@ const handleEmptyBlock = (editor: Editor, startInTable: boolean, emptyBlock: Opt
   });
 };
 
-const deleteContentInsideCell = (cell: SugarElement<HTMLTableCellElement>, rng: Range, isFirstCellInSelection: boolean) => {
+const deleteContentInsideCell = (editor: Editor, cell: SugarElement<HTMLTableCellElement>, rng: Range, isFirstCellInSelection: boolean) => {
   const insideTableRng = rng.cloneRange();
 
   if (isFirstCellInSelection) {
@@ -62,7 +62,7 @@ const deleteContentInsideCell = (cell: SugarElement<HTMLTableCellElement>, rng: 
     insideTableRng.setEnd(rng.endContainer, rng.endOffset);
   }
 
-  insideTableRng.deleteContents();
+  deleteCellContents(editor, insideTableRng, cell, false);
 };
 
 const collapseAndRestoreCellSelection = (editor: Editor) => {
@@ -108,7 +108,7 @@ const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCell
      * Note: The endPointCell is the only cell which may have only part of its contents selected.
      */
     const endPointCell = isStartInTable ? cells[0] : cells[cells.length - 1];
-    deleteContentInsideCell(endPointCell, editorRng, isStartInTable);
+    deleteContentInsideCell(editor, endPointCell, editorRng, isStartInTable);
     if (!Empty.isEmpty(endPointCell)) {
       return Optional.some(isStartInTable ? cells.slice(1) : cells.slice(0, -1));
     } else {
@@ -138,8 +138,8 @@ const emptyMultiTableCells = (
   const startCell = startTableCells[0];
   const endCell = endTableCells[endTableCells.length - 1];
 
-  deleteContentInsideCell(startCell, rng, true);
-  deleteContentInsideCell(endCell, rng, false);
+  deleteContentInsideCell(editor, startCell, rng, true);
+  deleteContentInsideCell(editor, endCell, rng, false);
 
   // Only clean empty cells, the first and last cells have the potential to still have content
   const startTableCellsToClean = Empty.isEmpty(startCell) ? startTableCells : startTableCells.slice(1);
@@ -155,14 +155,16 @@ const emptyMultiTableCells = (
 };
 
 // Runs on a single cell table that has all of its content selected
-const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLTableCellElement>): boolean => {
+const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLTableCellElement>, moveSelection: boolean = true): boolean => {
   rng.deleteContents();
   // Pad the last block node
   const lastNode = freefallRtl(cell).getOr(cell);
   const lastBlock = SugarElement.fromDom(editor.dom.getParent(lastNode.dom, editor.dom.isBlock));
   if (Empty.isEmpty(lastBlock)) {
     PaddingBr.fillWithPaddingBr(lastBlock);
-    editor.selection.setCursorLocation(lastBlock.dom, 0);
+    if (moveSelection) {
+      editor.selection.setCursorLocation(lastBlock.dom, 0);
+    }
   }
   // Clean up any additional leftover nodes. If the last block wasn't a direct child, then we also need to clean up siblings
   if (!Compare.eq(cell, lastBlock)) {
