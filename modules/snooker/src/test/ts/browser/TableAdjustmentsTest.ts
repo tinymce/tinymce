@@ -196,7 +196,7 @@ describe('TableAdjustmentsTest', () => {
       it('preserveTable cells (1)', testAdjustWidth(50, [ 25, 12.5, 37.5, 25 ], relativeTable(), percentageToStep(-12.5, 400), 1, preserveTable, false));
       it('preserveTable cols (1)', testAdjustWidth(50, [ 25, 12.5, 37.5, 25 ], relativeTableWithColGroup(), percentageToStep(-12.5, 400), 1, preserveTable, true));
       it('preserveTable overflow (1)', testAdjustWidth(50, [ 30.83, 10.56, 35.56, 23.06 ], relativeTableWithOverflow(), percentageToStep(-12.5, 400), 1, preserveTable, false));
-      it(' preserveTable cells (2)', testAdjustWidth(50, [ 25, 25, 12.5, 37.5 ], relativeTable(), percentageToStep(-12.5, 400), 2, preserveTable, false));
+      it('preserveTable cells (2)', testAdjustWidth(50, [ 25, 25, 12.5, 37.5 ], relativeTable(), percentageToStep(-12.5, 400), 2, preserveTable, false));
       it('preserveTable cols (2)', testAdjustWidth(50, [ 25, 25, 12.5, 37.5 ], relativeTableWithColGroup(), percentageToStep(-12.5, 400), 2, preserveTable, true));
       it('preserveTable overflow (2)', testAdjustWidth(50, [ 30.83, 23.06, 10.56, 35.56 ], relativeTableWithOverflow(), percentageToStep(-12.5, 400), 2, preserveTable, false));
       it('preserveTable cells (3)', testAdjustWidth(43.75, [ 25, 25, 25, 25 ], relativeTable(), percentageToStep(-12.5, 400), 3, preserveTable, false));
@@ -238,8 +238,8 @@ describe('TableAdjustmentsTest', () => {
       it('preserveTable cols (1)', testAdjustWidth(400, [ 100, 190, 10, 100 ], pixelTableWithColGroup(), 200, 1, preserveTable, true));
       it('preserveTable cells (2)', testAdjustWidth(400, [ 96.75, 96.75, 183.5, 10 ], pixelTable(), 200, 2, preserveTable, false));
       it('preserveTable cols (2)', testAdjustWidth(400, [ 100, 100, 190, 10 ], pixelTableWithColGroup(), 200, 2, preserveTable, true));
-      it('preserveTable cells (3)', testAdjustWidth( 600, [ 146.75, 146.75, 146.75, 146.75 ], pixelTable(), 200, 3, preserveTable, false));
-      it('preserveTable cols (3)', testAdjustWidth( 600, [ 150, 150, 150, 150 ], pixelTableWithColGroup(), 200, 3, preserveTable, true));
+      it('preserveTable cells (3)', testAdjustWidth(600, [ 146.75, 146.75, 146.75, 146.75 ], pixelTable(), 200, 3, preserveTable, false));
+      it('preserveTable cols (3)', testAdjustWidth(600, [ 150, 150, 150, 150 ], pixelTableWithColGroup(), 200, 3, preserveTable, true));
     });
 
     context('rtl step (px)', () => {
@@ -253,10 +253,10 @@ describe('TableAdjustmentsTest', () => {
       it('preserveTable cells (2)', testAdjustWidth(400, [ 96.75, 96.75, 46.75, 146.75 ], pixelTable(), -50, 2, preserveTable, false));
       it('preserveTable cols (2)', testAdjustWidth(400, [ 100, 100, 50, 150 ], pixelTableWithColGroup(), -50, 2, preserveTable, true));
       it('preserveTable overflow (2)', testAdjustWidth(400, [ 120, 89, 39, 139 ], pixelTableWithOverflow(), -50, 2, preserveTable, false));
-      it('preserveTable cells (3)', testAdjustWidth( 350, [ 84.25, 84.25, 84.25, 84.25 ], pixelTable(), -50, 3, preserveTable, false));
-      it('preserveTable cols (3)', testAdjustWidth( 350, [ 87.5, 87.5, 87.5, 87.5 ], pixelTableWithColGroup(), -50, 3, preserveTable, true));
+      it('preserveTable cells (3)', testAdjustWidth(350, [ 84.25, 84.25, 84.25, 84.25 ], pixelTable(), -50, 3, preserveTable, false));
+      it('preserveTable cols (3)', testAdjustWidth(350, [ 87.5, 87.5, 87.5, 87.5 ], pixelTableWithColGroup(), -50, 3, preserveTable, true));
       // TODO: TINY-7942: This needs design input as the first cell ideally shouldn't shrink
-      it('preserveTable overflow (3)', testAdjustWidth( 350, [ 107.5, 76.5, 76.5, 76.5 ], pixelTableWithOverflow(), -50, 3, preserveTable, false));
+      it('preserveTable overflow (3)', testAdjustWidth(350, [ 107.5, 76.5, 76.5, 76.5 ], pixelTableWithOverflow(), -50, 3, preserveTable, false));
     });
 
     context('rtl large step (px)', () => {
@@ -271,8 +271,8 @@ describe('TableAdjustmentsTest', () => {
     });
 
     context('rtl extra large step (px)', () => {
-      it('preserveTable cells (3)', testAdjustWidth( 53, [ 10, 10, 10, 10 ], pixelTable(), -400, 3, preserveTable, false));
-      it('preserveTable cols (3)', testAdjustWidth( 40, [ 10, 10, 10, 10 ], pixelTableWithColGroup(), -400, 3, preserveTable, true));
+      it('preserveTable cells (3)', testAdjustWidth(53, [ 10, 10, 10, 10 ], pixelTable(), -400, 3, preserveTable, false));
+      it('preserveTable cols (3)', testAdjustWidth(40, [ 10, 10, 10, 10 ], pixelTableWithColGroup(), -400, 3, preserveTable, true));
     });
   });
 
@@ -287,9 +287,9 @@ describe('TableAdjustmentsTest', () => {
       it('resizeTable cells (2)', testAdjustWidth(56.25, [ 22.22, 22.22, 33.33, 22.22 ], relativeTable(), percentageToStep(12.5, 400), 2, resizeTable, false));
       it('resizeTable cols (2)', testAdjustWidth(56.25, [ 22.22, 22.22, 33.33, 22.22 ], relativeTableWithColGroup(), percentageToStep(12.5, 400), 2, resizeTable, true));
       it('resizeTable overflow (2)', testAdjustWidth(56.25, [ 27.40, 20.50, 31.61, 20.50 ], relativeTableWithOverflow(), percentageToStep(12.5, 400), 2, resizeTable, false));
-      it('resizeTable cells (3)', testAdjustWidth( 56.25, [ 22.22, 22.22, 22.22, 33.33 ], relativeTable(), percentageToStep(12.5, 400), 3, resizeTable, false));
-      it('resizeTable cols (3)', testAdjustWidth( 56.25, [ 22.22, 22.22, 22.22, 33.33 ], relativeTableWithColGroup(), percentageToStep(12.5, 400), 3, resizeTable, true));
-      it('resizeTable overflow (3)', testAdjustWidth( 56.25, [ 27.40, 20.50, 20.50, 31.61 ], relativeTableWithOverflow(), percentageToStep(12.5, 400), 3, resizeTable, false));
+      it('resizeTable cells (3)', testAdjustWidth(56.25, [ 22.22, 22.22, 22.22, 33.33 ], relativeTable(), percentageToStep(12.5, 400), 3, resizeTable, false));
+      it('resizeTable cols (3)', testAdjustWidth(56.25, [ 22.22, 22.22, 22.22, 33.33 ], relativeTableWithColGroup(), percentageToStep(12.5, 400), 3, resizeTable, true));
+      it('resizeTable overflow (3)', testAdjustWidth(56.25, [ 27.40, 20.50, 20.50, 31.61 ], relativeTableWithOverflow(), percentageToStep(12.5, 400), 3, resizeTable, false));
     });
 
     context('ltr large step (%)', () => {
@@ -299,8 +299,8 @@ describe('TableAdjustmentsTest', () => {
       it('resizeTable cols (1)', testAdjustWidth(75, [ 16.67, 50, 16.67, 16.67 ], relativeTableWithColGroup(), percentageToStep(50, 400), 1, resizeTable, true));
       it('resizeTable cells (2)', testAdjustWidth(75, [ 16.67, 16.67, 50, 16.67 ], relativeTable(), percentageToStep(50, 400), 2, resizeTable, false));
       it('resizeTable cols (2)', testAdjustWidth(75, [ 16.67, 16.67, 50, 16.67 ], relativeTableWithColGroup(), percentageToStep(50, 400), 2, resizeTable, true));
-      it('resizeTable cells (3)', testAdjustWidth( 75, [ 16.67, 16.67, 16.67, 50 ], relativeTable(), percentageToStep(50, 400), 3, resizeTable, false));
-      it('resizeTable cols (3)', testAdjustWidth( 75, [ 16.67, 16.67, 16.67, 50 ], relativeTableWithColGroup(), percentageToStep(50, 400), 3, resizeTable, true));
+      it('resizeTable cells (3)', testAdjustWidth(75, [ 16.67, 16.67, 16.67, 50 ], relativeTable(), percentageToStep(50, 400), 3, resizeTable, false));
+      it('resizeTable cols (3)', testAdjustWidth(75, [ 16.67, 16.67, 16.67, 50 ], relativeTableWithColGroup(), percentageToStep(50, 400), 3, resizeTable, true));
     });
 
     context('rtl step (%)', () => {
@@ -314,9 +314,9 @@ describe('TableAdjustmentsTest', () => {
       it('resizeTable cells (2)', testAdjustWidth(43.75, [ 28.57, 28.57, 14.29, 28.57 ], relativeTable(), percentageToStep(-12.5, 400), 2, resizeTable, false));
       it('resizeTable cols (2)', testAdjustWidth(43.75, [ 28.57, 28.57, 14.29, 28.57 ], relativeTableWithColGroup(), percentageToStep(-12.5, 400), 2, resizeTable, true));
       it('resizeTable overflow (2)', testAdjustWidth(43.75, [ 35.23, 26.35, 12.07, 26.35 ], relativeTableWithOverflow(), percentageToStep(-12.5, 400), 2, resizeTable, false));
-      it('resizeTable cells (3)', testAdjustWidth( 43.75, [ 28.57, 28.57, 28.57, 14.29 ], relativeTable(), percentageToStep(-12.5, 400), 3, resizeTable, false));
-      it('resizeTable cols (3)', testAdjustWidth( 43.75, [ 28.57, 28.57, 28.57, 14.29 ], relativeTableWithColGroup(), percentageToStep(-12.5, 400), 3, resizeTable, true));
-      it('resizeTable overflow (3)', testAdjustWidth( 43.75, [ 35.23, 26.35, 26.35, 12.07 ], relativeTableWithOverflow(), percentageToStep(-12.5, 400), 3, resizeTable, false));
+      it('resizeTable cells (3)', testAdjustWidth(43.75, [ 28.57, 28.57, 28.57, 14.29 ], relativeTable(), percentageToStep(-12.5, 400), 3, resizeTable, false));
+      it('resizeTable cols (3)', testAdjustWidth(43.75, [ 28.57, 28.57, 28.57, 14.29 ], relativeTableWithColGroup(), percentageToStep(-12.5, 400), 3, resizeTable, true));
+      it('resizeTable overflow (3)', testAdjustWidth(43.75, [ 35.23, 26.35, 26.35, 12.07 ], relativeTableWithOverflow(), percentageToStep(-12.5, 400), 3, resizeTable, false));
     });
 
     context('rtl large step (%)', () => {
@@ -326,8 +326,8 @@ describe('TableAdjustmentsTest', () => {
       it('resizeTable cols (1)', testAdjustWidth(38.75, [ 32.26, 3.23, 32.26, 32.26 ], relativeTableWithColGroup(), percentageToStep(-50, 400), 1, resizeTable, true));
       it('resizeTable cells (2)', testAdjustWidth(38.75, [ 32.26, 32.26, 3.23, 32.26 ], relativeTable(), percentageToStep(-50, 400), 2, resizeTable, false));
       it('resizeTable cols (2)', testAdjustWidth(38.75, [ 32.26, 32.26, 3.23, 32.26 ], relativeTableWithColGroup(), percentageToStep(-50, 400), 2, resizeTable, true));
-      it('resizeTable cells (3)', testAdjustWidth( 38.75, [ 32.26, 32.26, 32.26, 3.23 ], relativeTable(), percentageToStep(-50, 400), 3, resizeTable, false));
-      it('resizeTable cols (3)', testAdjustWidth( 38.75, [ 32.26, 32.26, 32.26, 3.23 ], relativeTableWithColGroup(), percentageToStep(-50, 400), 3, resizeTable, true));
+      it('resizeTable cells (3)', testAdjustWidth(38.75, [ 32.26, 32.26, 32.26, 3.23 ], relativeTable(), percentageToStep(-50, 400), 3, resizeTable, false));
+      it('resizeTable cols (3)', testAdjustWidth(38.75, [ 32.26, 32.26, 32.26, 3.23 ], relativeTableWithColGroup(), percentageToStep(-50, 400), 3, resizeTable, true));
     });
 
     context('ltr step (px)', () => {
@@ -340,9 +340,9 @@ describe('TableAdjustmentsTest', () => {
       it('resizeTable cells (2)', testAdjustWidth(450, [ 96.75, 96.75, 146.75, 96.75 ], pixelTable(), 50, 2, resizeTable, false));
       it('resizeTable cols (2)', testAdjustWidth(450, [ 100, 100, 150, 100 ], pixelTableWithColGroup(), 50, 2, resizeTable, true));
       it('resizeTable overflow (2)', testAdjustWidth(450, [ 120, 89, 139, 89 ], pixelTableWithOverflow(), 50, 2, resizeTable, false));
-      it('resizeTable cells (3)', testAdjustWidth( 450, [ 96.75, 96.75, 96.75, 146.75 ], pixelTable(), 50, 3, resizeTable, false));
-      it('resizeTable cols (3)', testAdjustWidth( 450, [ 100, 100, 100, 150 ], pixelTableWithColGroup(), 50, 3, resizeTable, true));
-      it('resizeTable overflow (3)', testAdjustWidth( 450, [ 120, 89, 89, 139 ], pixelTableWithOverflow(), 50, 3, resizeTable, false));
+      it('resizeTable cells (3)', testAdjustWidth(450, [ 96.75, 96.75, 96.75, 146.75 ], pixelTable(), 50, 3, resizeTable, false));
+      it('resizeTable cols (3)', testAdjustWidth(450, [ 100, 100, 100, 150 ], pixelTableWithColGroup(), 50, 3, resizeTable, true));
+      it('resizeTable overflow (3)', testAdjustWidth(450, [ 120, 89, 89, 139 ], pixelTableWithOverflow(), 50, 3, resizeTable, false));
     });
 
     context('ltr large step (px)', () => {
@@ -352,8 +352,8 @@ describe('TableAdjustmentsTest', () => {
       it('resizeTable cols (1)', testAdjustWidth(600, [ 100, 300, 100, 100 ], pixelTableWithColGroup(), 200, 1, resizeTable, true));
       it('resizeTable cells (2)', testAdjustWidth(600, [ 96.75, 96.75, 296.75, 96.75 ], pixelTable(), 200, 2, resizeTable, false));
       it('resizeTable cols (2)', testAdjustWidth(600, [ 100, 100, 300, 100 ], pixelTableWithColGroup(), 200, 2, resizeTable, true));
-      it('resizeTable cells (3)', testAdjustWidth( 600, [ 96.75, 96.75, 96.75, 296.75 ], pixelTable(), 200, 3, resizeTable, false));
-      it('resizeTable cols (3)', testAdjustWidth( 600, [ 100, 100, 100, 300 ], pixelTableWithColGroup(), 200, 3, resizeTable, true));
+      it('resizeTable cells (3)', testAdjustWidth(600, [ 96.75, 96.75, 96.75, 296.75 ], pixelTable(), 200, 3, resizeTable, false));
+      it('resizeTable cols (3)', testAdjustWidth(600, [ 100, 100, 100, 300 ], pixelTableWithColGroup(), 200, 3, resizeTable, true));
     });
 
     context('rtl step (px)', () => {
@@ -367,9 +367,9 @@ describe('TableAdjustmentsTest', () => {
       it('resizeTable cells (2)', testAdjustWidth(350, [ 96.75, 96.75, 46.75, 96.75 ], pixelTable(), -50, 2, resizeTable, false));
       it('resizeTable cols (2)', testAdjustWidth(350, [ 100, 100, 50, 100 ], pixelTableWithColGroup(), -50, 2, resizeTable, true));
       it('resizeTable overflow (2)', testAdjustWidth(350, [ 120, 89, 39, 89 ], pixelTableWithOverflow(), -50, 2, resizeTable, false));
-      it('resizeTable cells (3)', testAdjustWidth( 350, [ 96.75, 96.75, 96.75, 46.75 ], pixelTable(), -50, 3, resizeTable, false));
-      it('resizeTable cols (3)', testAdjustWidth( 350, [ 100, 100, 100, 50 ], pixelTableWithColGroup(), -50, 3, resizeTable, true));
-      it('resizeTable overflow (3)', testAdjustWidth( 350, [ 120, 89, 89, 39 ], pixelTableWithOverflow(), -50, 3, resizeTable, false));
+      it('resizeTable cells (3)', testAdjustWidth(350, [ 96.75, 96.75, 96.75, 46.75 ], pixelTable(), -50, 3, resizeTable, false));
+      it('resizeTable cols (3)', testAdjustWidth(350, [ 100, 100, 100, 50 ], pixelTableWithColGroup(), -50, 3, resizeTable, true));
+      it('resizeTable overflow (3)', testAdjustWidth(350, [ 120, 89, 89, 39 ], pixelTableWithOverflow(), -50, 3, resizeTable, false));
     });
 
     context('rtl large step (px)', () => {
@@ -379,8 +379,8 @@ describe('TableAdjustmentsTest', () => {
       it('resizeTable cols (1)', testAdjustWidth(310, [ 100, 10, 100, 100 ], pixelTableWithColGroup(), -200, 1, resizeTable, true));
       it('resizeTable cells (2)', testAdjustWidth(313.25, [ 96.75, 96.75, 10, 96.75 ], pixelTable(), -200, 2, resizeTable, false));
       it('resizeTable cols (2)', testAdjustWidth(310, [ 100, 100, 10, 100 ], pixelTableWithColGroup(), -200, 2, resizeTable, true));
-      it('resizeTable cells (3)', testAdjustWidth( 313.25, [ 96.75, 96.75, 96.75, 10 ], pixelTable(), -200, 3, resizeTable, false));
-      it('resizeTable cols (3)', testAdjustWidth( 310, [ 100, 100, 100, 10 ], pixelTableWithColGroup(), -200, 3, resizeTable, true));
+      it('resizeTable cells (3)', testAdjustWidth(313.25, [ 96.75, 96.75, 96.75, 10 ], pixelTable(), -200, 3, resizeTable, false));
+      it('resizeTable cols (3)', testAdjustWidth(310, [ 100, 100, 100, 10 ], pixelTableWithColGroup(), -200, 3, resizeTable, true));
     });
   });
 });
