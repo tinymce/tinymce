@@ -14,7 +14,6 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
-import { CellSelectionApi } from '../selection/CellSelection';
 import * as Ephemera from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
 import { TableActions } from './TableActions';
@@ -36,7 +35,7 @@ const serializeElements = (editor: Editor, elements: SugarElement[]): string =>
 const getTextContent = (elements: SugarElement[]): string =>
   Arr.map(elements, (element) => element.dom.innerText).join('');
 
-const registerEvents = (editor: Editor, selections: Selections, actions: TableActions, cellSelection: CellSelectionApi): void => {
+const registerEvents = (editor: Editor, selections: Selections, actions: TableActions): void => {
   editor.on('BeforeGetContent', (e) => {
     const multiCellContext = (cells: SugarElement<HTMLTableCellElement>[]) => {
       e.preventDefault();
