@@ -57,7 +57,7 @@ const deleteContentInsideCell = (cell: SugarElement<HTMLTableCellElement>, rng: 
     insideTableRng.setStart(rng.startContainer, rng.startOffset);
     insideTableRng.setEndAfter(cell.dom.lastChild);
   } else {
-    insideTableRng.setStart(cell.dom.firstChild, 0);
+    insideTableRng.setStartBefore(cell.dom.firstChild);
     insideTableRng.setEnd(rng.endContainer, rng.endOffset);
   }
 

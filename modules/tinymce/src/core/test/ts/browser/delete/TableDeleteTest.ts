@@ -496,6 +496,39 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
       );
     });
 
+    it('TINY-7596: Delete partial selection across cells, with entire row selected in both tables in between', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody><tr><td>a123</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>' +
+        '<table><tbody><tr><td>e</td><td>f</td></tr><tr><td>g</td><td>456h</td></tr></tbody></table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 1, [ 1, 0, 1, 1, 0 ], 3);
+      doDelete(editor);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
+      TinyAssertions.assertContent(
+        editor,
+        '<table><tbody><tr><td>a</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>' +
+        '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>h</td></tr></tbody></table>'
+      );
+    });
+
+    it('TINY-7596: Delete partial selection across cells, with entire row selected in both tables in between (with content in between)', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody><tr><td>a123</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>' +
+        '<p>aa</p>' +
+        '<table><tbody><tr><td>e</td><td>f</td></tr><tr><td>g</td><td>456h</td></tr></tbody></table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 1, [ 2, 0, 1, 1, 0 ], 3);
+      doDelete(editor);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
+      TinyAssertions.assertContent(
+        editor,
+        '<table><tbody><tr><td>a</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>' +
+        '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>h</td></tr></tbody></table>'
+      );
+    });
+
     it('TINY-7596: Delete from one table into another with partial selections in both tables and content between', () => {
       const editor = hook.editor();
       editor.setContent(
