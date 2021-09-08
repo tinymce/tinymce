@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed an exception getting thrown when disabling events and setting content #TINY-7956
+- Delete operations could behave incorrectly if the selection crossed a table boundary #TINY-7596
 
 ## 5.9.1 - 2021-08-27
 
