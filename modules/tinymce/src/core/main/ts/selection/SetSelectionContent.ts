@@ -113,11 +113,11 @@ const cleanContent = (editor: Editor, args: SelectionSetContentArgs) => {
 };
 
 const setContent = (editor: Editor, content: string, args: SelectionSetContentArgs = {}) => {
-  const contentArgs = setupArgs(args, content);
+  const defaultedArgs = setupArgs(args, content);
 
-  let updatedArgs = contentArgs;
-  if (!contentArgs.no_events) {
-    const eventArgs = editor.fire('BeforeSetContent', contentArgs);
+  let updatedArgs = defaultedArgs;
+  if (!defaultedArgs.no_events) {
+    const eventArgs = editor.fire('BeforeSetContent', defaultedArgs);
     if (eventArgs.isDefaultPrevented()) {
       editor.fire('SetContent', eventArgs);
       return;

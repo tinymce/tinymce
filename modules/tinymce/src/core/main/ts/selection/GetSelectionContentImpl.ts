@@ -86,13 +86,16 @@ const getSerializedContent = (editor: Editor, args: GetSelectionContentArgs): Co
   return editor.selection.serializer.serialize(tmpElm, args);
 };
 
+const setupArgs = (args: Partial<GetSelectionContentArgs>, format: ContentFormat): GetSelectionContentArgs => ({
+  ...args,
+  format,
+  get: true,
+  selection: true
+});
+
 export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs = {}): Content => {
-  const updatedArgs = editor.fire('BeforeGetContent', {
-    ...args,
-    format,
-    get: true,
-    selection: true
-  });
+  const defaultedArgs = setupArgs(args, format);
+  const updatedArgs = editor.fire('BeforeGetContent', defaultedArgs);
 
   if (updatedArgs.isDefaultPrevented()) {
     editor.fire('GetContent', updatedArgs);
