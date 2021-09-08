@@ -38,7 +38,7 @@ const Plugin = (editor: Editor): Api => {
 
   Commands.registerCommands(editor, actions, cellSelection, selections, clipboard);
   QueryCommands.registerQueryCommands(editor, actions, selections);
-  Clipboard.registerEvents(editor, selections, actions, cellSelection);
+  Clipboard.registerEvents(editor, selections, actions);
 
   MenuItems.addMenuItems(editor, selections, selectionTargets, clipboard);
   Buttons.addButtons(editor, selections, selectionTargets, clipboard);
