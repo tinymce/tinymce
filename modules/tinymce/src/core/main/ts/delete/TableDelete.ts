@@ -14,6 +14,7 @@ import CaretPosition from '../caret/CaretPosition';
 import { isAfterTable, isBeforeTable } from '../caret/CaretPositionPredicates';
 import * as ElementType from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
+import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 import * as TableCellSelection from '../selection/TableCellSelection';
@@ -66,12 +67,18 @@ const deleteContentInsideCell = (cell: SugarElement<HTMLTableCellElement>, rng: 
 
 const collapseAndRestoreCellSelection = (editor: Editor) => {
   const selectedCells = TableCellSelection.getCellsFromEditor(editor);
-  editor.selection.collapse(true);
+  const selectedNode = SugarElement.fromDom(editor.selection.getNode());
+
+  if (NodeType.isTableCell(selectedNode.dom) && Empty.isEmpty(selectedNode)) {
+    editor.selection.setCursorLocation(selectedNode.dom, 0);
+  } else {
+    editor.selection.collapse(true);
+  }
+
   // Restore the data-mce-selected attribute if multiple cells were selected, as if it was a cef element
   // then selection overrides would remove it as it was using an offscreen selection clone.
-  if (selectedCells.length > 1) {
-    const firstCell = Arr.find(selectedCells, (cell) => Attribute.has(cell, 'data-mce-first-selected')).getOr(selectedCells[0]);
-    Attribute.set(firstCell, 'data-mce-selected', '1');
+  if (selectedCells.length > 1 && Arr.exists(selectedCells, (cell) => Compare.eq(cell, selectedNode))) {
+    Attribute.set(selectedNode, 'data-mce-selected', '1');
   }
 };
 
@@ -83,7 +90,7 @@ const collapseAndRestoreCellSelection = (editor: Editor) => {
 const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], outsideDetails: Optional<OutsideTableDetails>): boolean => {
   const editorRng = editor.selection.getRng();
   const cellsToClean = outsideDetails.bind(({ rng, isStartInTable }) => {
-    /**
+    /*
      * Delete all content outside of the table that is in the selection
      */
 
@@ -93,7 +100,7 @@ const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCell
     // Handle block outside the table if it is empty since rng.deleteContents leaves it
     handleEmptyBlock(editor, isStartInTable, outsideBlock.filter(Empty.isEmpty));
 
-    /**
+    /*
      * The only time we can have only part of the cell contents selected is when part of the selection
      * is outside the table (otherwise we use the Darwin fake selection, which always selects entire cells),
      * in which case we need to delete the contents inside and check if the entire contents of the cell have been deleted.
@@ -102,7 +109,7 @@ const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCell
     // The endPointCell is the only cell which may have only part of its contents selected.
     const endPointCell = isStartInTable ? cells[0] : cells[cells.length - 1];
     deleteContentInsideCell(endPointCell, editorRng, isStartInTable);
-    if (!editor.dom.isEmpty(endPointCell.dom)) {
+    if (!Empty.isEmpty(endPointCell)) {
       return Optional.some(isStartInTable ? cells.slice(1) : cells.slice(0, -1));
     } else {
       return Optional.none();
@@ -135,8 +142,8 @@ const emptyMultiTableCells = (
   deleteContentInsideCell(endCell, rng, false);
 
   // Only clean empty cells, the first and last cells have the potential to still have content
-  const startTableCellsToClean = editor.dom.isEmpty(startCell.dom) ? startTableCells : startTableCells.slice(1);
-  const endTableCellsToClean = editor.dom.isEmpty(endCell.dom) ? endTableCells : endTableCells.slice(0, -1);
+  const startTableCellsToClean = Empty.isEmpty(startCell) ? startTableCells : startTableCells.slice(1);
+  const endTableCellsToClean = Empty.isEmpty(endCell) ? endTableCells : endTableCells.slice(0, -1);
 
   cleanCells(startTableCellsToClean.concat(endTableCellsToClean));
   // Delete all content in between the start table and end table
