@@ -92,21 +92,21 @@ const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCell
   const cellsToClean = outsideDetails.bind(({ rng, isStartInTable }) => {
     /*
      * Delete all content outside of the table that is in the selection
+     * - Get the outside block before deleting the contents
+     * - Delete the contents outside
+     * - Handle the block outside the table if it is empty since rng.deleteContents leaves it
      */
-
-    // Get the outside block before deleting the contents
     const outsideBlock = getOutsideBlock(editor, isStartInTable ? rng.endContainer : rng.startContainer);
     rng.deleteContents();
-    // Handle block outside the table if it is empty since rng.deleteContents leaves it
     handleEmptyBlock(editor, isStartInTable, outsideBlock.filter(Empty.isEmpty));
 
     /*
      * The only time we can have only part of the cell contents selected is when part of the selection
      * is outside the table (otherwise we use the Darwin fake selection, which always selects entire cells),
      * in which case we need to delete the contents inside and check if the entire contents of the cell have been deleted.
+     *
+     * Note: The endPointCell is the only cell which may have only part of its contents selected.
      */
-
-    // The endPointCell is the only cell which may have only part of its contents selected.
     const endPointCell = isStartInTable ? cells[0] : cells[cells.length - 1];
     deleteContentInsideCell(endPointCell, editorRng, isStartInTable);
     if (!Empty.isEmpty(endPointCell)) {
