@@ -35,10 +35,12 @@ const setupHooks = <T extends EditorType = EditorType>(
   before(function (done) {
     // TINY-7039: Double the timeout as sometimes 2s wasn't enough for more complex editor loads
     this.timeout(4000);
-    Arr.each(setupModules, Fun.call);
     setup = setupElement();
     Loader.setup({
-      preInit: setupTinymceBaseUrl,
+      preInit: (tinymce, settings) => {
+        setupTinymceBaseUrl(tinymce, settings);
+        Arr.each(setupModules, Fun.call);
+      },
       run: (ed, success) => {
         lazyEditor = Fun.constant(ed);
         teardownEditor = success;

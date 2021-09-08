@@ -105,13 +105,16 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, arg
   return content;
 };
 
+const setupArgs = (args: Partial<SetContentArgs>, content: Content): SetContentArgs => ({
+  format: defaultFormat,
+  ...args,
+  set: true,
+  content: isTreeNode(content) ? '' : content
+});
+
 export const setContentInternal = (editor: Editor, content: Content, args: SetContentArgs): Content => {
-  const updatedArgs = args.no_events ? args : editor.fire('BeforeSetContent', {
-    format: defaultFormat,
-    ...args,
-    set: true,
-    content: isTreeNode(content) ? '' : content
-  });
+  const defaultedArgs = setupArgs(args, content);
+  const updatedArgs = args.no_events ? defaultedArgs : editor.fire('BeforeSetContent', defaultedArgs);
 
   if (!isTreeNode(content)) {
     content = updatedArgs.content;
