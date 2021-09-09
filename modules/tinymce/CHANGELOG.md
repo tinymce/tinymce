@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Image resize backdrop element did not have `data-mce-bogus="all"` set #TINY-7854
+- Clicking beside a non-editable element could cause the editor to incorrectly scroll to the top of the document #TINY-7062
 
 ## 5.9.2 - 2021-09-08
 
