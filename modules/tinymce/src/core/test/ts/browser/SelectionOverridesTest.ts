@@ -29,18 +29,20 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     assert.equal(selectedNode.getAttribute('data-mce-caret'), caretValue);
   };
 
-  const selectBesideContentEditable = (editor: Editor, contentEditableElm: HTMLElement, clickBefore: boolean) => {
+  const selectBesideContentEditable = (editor: Editor, contentEditableElm: HTMLElement, clickPoint: 'before' | 'after') => {
     editor.selection.scrollIntoView(contentEditableElm);
 
     const scrollTop = getScrollTop(editor);
-    const bodyPaddingOffset = 8; // Default is 16 so divide by 2
+    const bodyMarginOffset = 8; // Default is 16 so divide by 2
     const rect = contentEditableElm.getBoundingClientRect();
-    const clientX = clickBefore ? rect.left - bodyPaddingOffset : rect.right + bodyPaddingOffset;
+    const clientX = clickPoint === 'before' ? rect.left - bodyMarginOffset : rect.right + bodyMarginOffset;
     const clientY = rect.top + (rect.height / 2);
 
     Mouse.point('mousedown', 0, TinyDom.documentElement(editor), clientX, clientY);
     // Check the scoll position has not changed
     assert.equal(getScrollTop(editor), scrollTop);
+    // Check fake caret has been added
+    assertSelectionIsCaretBlock(editor, clickPoint);
   };
 
   it('click on link in cE=false', () => {
@@ -272,12 +274,9 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
 
     editor.setContent(content);
     TinySelections.setCursor(editor, [ 1, 0, 0 ], 1);
-
     // Click to the left of the ce=false element
     const noneditableDiv = editor.dom.select('div[contenteditable=false]')[0];
-    selectBesideContentEditable(editor, noneditableDiv, true);
-    // Check fake caret has been added before
-    assertSelectionIsCaretBlock(editor, 'before');
+    selectBesideContentEditable(editor, noneditableDiv, 'before');
 
     TinyAssertions.assertContent(editor, content);
   });
@@ -291,9 +290,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
 
     // Click to the right of the ce=false element
     const noneditableDiv = editor.dom.select('div[contenteditable=false]')[0];
-    selectBesideContentEditable(editor, noneditableDiv, false);
-    // Check fake caret has been added after
-    assertSelectionIsCaretBlock(editor, 'after');
+    selectBesideContentEditable(editor, noneditableDiv, 'after');
 
     TinyAssertions.assertContent(editor, content);
   });
