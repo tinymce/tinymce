@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
+- Resizing table columns in some scenarios would resize the column to an incorrect position #TINY-7731
 - Image resize backdrop element did not have `data-mce-bogus="all"` set #TINY-7854
 
 ## 5.9.2 - 2021-09-08

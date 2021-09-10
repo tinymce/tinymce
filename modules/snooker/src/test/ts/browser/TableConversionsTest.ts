@@ -3,7 +3,6 @@ import { Optional, OptionalInstances } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarBody, SugarElement, Width } from '@ephox/sugar';
 
 import * as TableConversions from 'ephox/snooker/api/TableConversions';
-import { TableSize } from 'ephox/snooker/api/TableSize';
 import { addStyles, assertApproxCellSizes, readWidth } from 'ephox/snooker/test/SizeUtils';
 
 const tOptional = OptionalInstances.tOptional;
@@ -52,7 +51,7 @@ UnitTest.test('TableConversions.convertToPixelSize', () => {
 
   const check = (expectedTableWidth: string, expected: string[][], table: SugarElement<HTMLTableElement>, approx: boolean) => {
     Insert.append(container, table);
-    TableConversions.convertToPixelSize(table, TableSize.getTableSize(table));
+    TableConversions.convertToPixelSize(table);
     if (approx) {
       Assert.eq('Assert table width', true, Math.abs(parseFloat(expectedTableWidth) - Width.get(table)) <= 2);
       assertApproxCellSizes(expected, readWidth(table), 2);
@@ -96,7 +95,7 @@ UnitTest.test('TableConversions.convertToPercentSize', () => {
 
   const check = (expectedTableWidth: string, expected: string[][], table: SugarElement<HTMLTableElement>, approx: boolean) => {
     Insert.append(container, table);
-    TableConversions.convertToPercentSize(table, TableSize.getTableSize(table));
+    TableConversions.convertToPercentSize(table);
     if (approx) {
       const delta = parseFloat(expectedTableWidth) - parseFloat(Css.getRaw(table, 'width').getOrDie());
       Assert.eq('Assert table width', true, Math.abs(delta) <= 2);
