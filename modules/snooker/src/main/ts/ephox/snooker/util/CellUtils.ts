@@ -7,11 +7,11 @@ export const getAttrValue = (cell: SugarElement<Element>, name: string, fallback
 export const getSpan = (cell: SugarElement<HTMLTableCellElement>, type: 'colspan' | 'rowspan'): number =>
   getAttrValue(cell, type, 1);
 
-export const hasColspan = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>): boolean => {
-  if (SugarNode.isTag('col')(cell)) {
-    return getAttrValue(cell, 'span', 1) > 1;
+export const hasColspan = (cellOrCol: SugarElement<HTMLTableCellElement | HTMLTableColElement>): boolean => {
+  if (SugarNode.isTag('col')(cellOrCol)) {
+    return getAttrValue(cellOrCol, 'span', 1) > 1;
   } else {
-    return getSpan(cell as SugarElement<HTMLTableCellElement>, 'colspan') > 1;
+    return getSpan(cellOrCol as SugarElement<HTMLTableCellElement>, 'colspan') > 1;
   }
 };
 
