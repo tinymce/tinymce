@@ -92,7 +92,7 @@ describe('browser.tinymce.plugins.table.TwoCellsSelectionTest', () => {
     TinyAssertions.assertContent(editor,
       '<table>' +
       '<thead>' +
-      '<tr><td scope="col">A2</td><td scope="col">B2</td><td scope="col">C2</td></tr>' +
+      '<tr><td>A2</td><td>B2</td><td>C2</td></tr>' +
       '</thead>' +
       '<tbody>' +
       '<tr><td>A1</td><td>B1</td><td>C1</td></tr>' +

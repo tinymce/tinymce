@@ -1,5 +1,5 @@
 import { Arr, Optional, Optionals } from '@ephox/katamari';
-import { SugarNode } from '@ephox/sugar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
@@ -12,7 +12,19 @@ interface RowDetails {
   readonly subType?: string;
 }
 
-const isTableHeaderCell = SugarNode.isTag('th');
+interface CommonCellDetails {
+  readonly element: SugarElement;
+}
+
+interface CommonRowDetails {
+  readonly cells: CommonCellDetails[];
+  readonly section: Structs.Section;
+}
+
+const isHeaderCell = SugarNode.isTag('th');
+
+const isHeaderCells = (cells: CommonCellDetails[]): boolean =>
+  Arr.forall(cells, (cell) => isHeaderCell(cell.element));
 
 const getRowHeaderType = (isHeaderRow: boolean, isHeaderCells: boolean): RowHeaderType => {
   if (isHeaderRow && isHeaderCells) {
@@ -24,7 +36,7 @@ const getRowHeaderType = (isHeaderRow: boolean, isHeaderCells: boolean): RowHead
   }
 };
 
-const getRowType = (row: Structs.RowDetail<Structs.DetailExt>): RowDetails => {
+const getRowType = (row: CommonRowDetails): RowDetails => {
   // Header rows can use a combination of theads and ths - want to detect the different combinations
   const isHeaderRow = row.section === 'thead';
   const isHeaderCells = Optionals.is(findCommonCellType(row.cells), 'th');
@@ -37,8 +49,8 @@ const getRowType = (row: Structs.RowDetail<Structs.DetailExt>): RowDetails => {
   }
 };
 
-const findCommonCellType = (cells: Structs.DetailExt[]): Optional<'td' | 'th'> => {
-  const headerCells = Arr.filter(cells, (cell) => isTableHeaderCell(cell.element));
+const findCommonCellType = (cells: CommonCellDetails[]): Optional<'td' | 'th'> => {
+  const headerCells = Arr.filter(cells, (cell) => isHeaderCell(cell.element));
   if (headerCells.length === 0) {
     return Optional.some('td');
   } else if (headerCells.length === cells.length) {
@@ -48,7 +60,7 @@ const findCommonCellType = (cells: Structs.DetailExt[]): Optional<'td' | 'th'> =
   }
 };
 
-const findCommonRowType = (rows: Structs.RowDetail<Structs.DetailExt>[]): Optional<RowType> => {
+const findCommonRowType = (rows: CommonRowDetails[]): Optional<RowType> => {
   const rowTypes = Arr.map(rows, (row) => getRowType(row).type);
   const hasHeader = Arr.contains(rowTypes, 'header');
   const hasFooter = Arr.contains(rowTypes, 'footer');
@@ -75,5 +87,7 @@ const findTableRowHeaderType = (warehouse: Warehouse): Optional<RowHeaderType> =
 export {
   findCommonCellType,
   findCommonRowType,
-  findTableRowHeaderType
+  findTableRowHeaderType,
+  isHeaderCell,
+  isHeaderCells
 };

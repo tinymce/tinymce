@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { getAttrValue } from '../util/CellUtils';
@@ -105,7 +105,7 @@ const modification = (generators: Generators, toData = elementToData): Generator
   };
 };
 
-const transform = <K extends keyof HTMLElementTagNameMap> (tag: K, scope?: string | null) => {
+const transform = <K extends keyof HTMLElementTagNameMap> (tag: K) => {
   return (generators: Generators): GeneratorsTransform => {
     const list: Item[] = [];
 
@@ -116,7 +116,8 @@ const transform = <K extends keyof HTMLElementTagNameMap> (tag: K, scope?: strin
     };
 
     const makeNew = (element: SugarElement) => {
-      const attrs: Record<string, string | number | null> = Type.isUndefined(scope) ? {} : { scope };
+      // Ensure scope is never set on a td element as it's a deprecated attribute
+      const attrs: Record<string, string | number | null> = tag === 'td' ? { scope: null } : {};
       const cell = generators.replace(element, tag, attrs);
       list.push({
         item: element,
@@ -145,9 +146,9 @@ const transform = <K extends keyof HTMLElementTagNameMap> (tag: K, scope?: strin
 
 const getScopeAttribute = (cell: SugarElement) =>
   Attribute.getOpt(cell, 'scope').map(
-    (attribute) => attribute.substr(0, 3)
     // Attribute can be col, colgroup, row, and rowgroup.
     // As col and colgroup are to be treated as if they are the same, lob off everything after the first three characters and there is no difference.
+    (attribute) => attribute.substr(0, 3)
   );
 
 const merging = (generators: Generators): GeneratorsMerging => {

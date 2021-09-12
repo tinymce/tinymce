@@ -33,7 +33,7 @@ UnitTest.test('TransformOperationsTest', () => {
   const mapToStructGrid = (grid: Structs.ElementNew[][]) => {
     return Arr.map(grid, (row) => {
       const hasCol = Arr.exists(row, (elementNew) => SugarNode.isTag('col')(elementNew.element));
-      return Structs.rowcells('tr' as any, row, hasCol ? 'colgroup' : 'tbody', false);
+      return Structs.rowcells(SugarElement.fromTag('tr'), row, hasCol ? 'colgroup' : 'tbody', false);
     });
   };
 
@@ -56,7 +56,8 @@ UnitTest.test('TransformOperationsTest', () => {
     const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const actual = TransformOperations.replaceColumn(structGrid, index, comparator, Generators.transform('td', 'scope')(TestGenerator()).replaceOrInit);
+      const substitution = Generators.transform('td')(TestGenerator()).replaceOrInit;
+      const actual = TransformOperations.replaceColumn(structGrid, index, true, comparator, substitution);
       assertGrids(actual, structExpected);
       clearElements();
     };
@@ -117,6 +118,16 @@ UnitTest.test('TransformOperationsTest', () => {
       [ enO('b', false), enO('c', false), enO('d', false) ],
       [ enO('f', false), enO('f', false), enO('f', false) ]
     ], 0);
+
+    check([
+      [ enE('a', false, 'th'), enE('a', false, 'th'), enE('b', false, 'th') ],
+      [ enE('h(c)_0', true), enE('d', false), enE('e', false) ],
+      [ enE('h(f)_1', true), enE('h(f)_1', true), enE('h(f)_1', true) ]
+    ], [
+      [ enO('a', false, 'th'), enO('a', false, 'th'), enO('b', false, 'th') ],
+      [ enO('c', false), enO('d', false), enO('e', false) ],
+      [ enO('f', false), enO('f', false), enO('f', false) ]
+    ], 0);
   })();
 
   // Test basic changing to header (row)
@@ -124,8 +135,8 @@ UnitTest.test('TransformOperationsTest', () => {
     const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const substitution = Generators.transform('td', 'scope')(TestGenerator()).replaceOrInit;
-      const actual = TransformOperations.replaceRow(structGrid, index, 'tbody', comparator, substitution, TableSection.fallback());
+      const substitution = Generators.transform('td')(TestGenerator()).replaceOrInit;
+      const actual = TransformOperations.replaceRow(structGrid, index, 'tbody', true, comparator, substitution, TableSection.fallback());
       assertGrids(actual, structExpected);
       clearElements();
     };
@@ -177,6 +188,16 @@ UnitTest.test('TransformOperationsTest', () => {
       [ enO('a', false), enO('a', false), enO('c', false), enO('f', false) ],
       [ enO('a', false), enO('a', false), enO('d', false), enO('f', false) ]
     ], 0);
+
+    check([
+      [ enE('h(a)_0', true), enE('h(a)_0', true), enE('h(b)_1', true), enE('f', false, 'th') ],
+      [ enE('h(a)_0', true), enE('h(a)_0', true), enE('c', false), enE('f', false, 'th') ],
+      [ enE('h(a)_0', true), enE('h(a)_0', true), enE('d', false), enE('f', false, 'th') ]
+    ], [
+      [ enO('a', false), enO('a', false), enO('b', false), enO('f', false, 'th') ],
+      [ enO('a', false), enO('a', false), enO('c', false), enO('f', false, 'th') ],
+      [ enO('a', false), enO('a', false), enO('d', false), enO('f', false, 'th') ]
+    ], 0);
   })();
 
   // Test basic changing to header (cell)
@@ -184,7 +205,8 @@ UnitTest.test('TransformOperationsTest', () => {
     const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], rowIndex: number, colIndex: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const actual = TransformOperations.replaceCell(structGrid, rowIndex, colIndex, comparator, Generators.transform('td')(TestGenerator()).replaceOrInit);
+      const detail = { row: rowIndex, column: colIndex } as Structs.DetailExt;
+      const actual = TransformOperations.replaceCell(structGrid, detail, comparator, Generators.transform('td')(TestGenerator()).replaceOrInit);
       assertGrids(actual, structExpected);
       clearElements();
     };
