@@ -36,20 +36,26 @@ const filterItems = (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: 
   return Arr.filter(all, predicate);
 };
 
-const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowDetail<T>): Record<number, Structs.ColumnExt> => {
+const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowDetail<T>, maxColumns: number): Record<number, Structs.ColumnExt> => {
   const columnsGroup: Record<number, Structs.ColumnExt> = {};
   let index = 0;
 
-  Arr.each(rowData.cells, (column: T) => {
+  for (const column of rowData.cells) {
+    if (index >= maxColumns) {
+      break;
+    }
+
     const colspan = column.colspan;
 
     Arr.range(colspan, (columnIndex) => {
       const colIndex = index + columnIndex;
-      columnsGroup[colIndex] = Structs.columnext(column.element, colspan, colIndex);
+      if (colIndex < maxColumns) {
+        columnsGroup[colIndex] = Structs.columnext(column.element, colspan, colIndex);
+      }
     });
 
     index += colspan;
-  });
+  }
 
   return columnsGroup;
 };
@@ -71,7 +77,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
   const access: Record<string, Structs.DetailExt> = {};
   const cells: Structs.RowDetail<Structs.DetailExt>[] = [];
   let columns: Record<number, Structs.ColumnExt> = {};
-  let colgroups: Structs.Colgroup<Structs.ColumnExt>[] = [];
+  const colgroups: Structs.Colgroup<Structs.ColumnExt>[] = [];
 
   const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
   const lockedColumns: Record<string, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
@@ -80,42 +86,47 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
   let maxColumns = 0;
   let rowCount = 0;
 
-  Arr.each(list, (rowData) => {
-    if (rowData.section === 'colgroup') {
-      // Note: Currently only a single colgroup is supported so just override
-      columns = generateColumns<T>(rowData);
-      colgroups = [ Structs.colgroup(rowData.element as SugarElement<HTMLTableColElement>, Obj.values(columns)) ];
-    } else {
-      const currentRow: Structs.DetailExt[] = [];
-      Arr.each(rowData.cells, (rowCell) => {
-        let start = 0;
+  const { pass: colgroupRows, fail: rows } = Arr.partition(list, (rowData) => rowData.section === 'colgroup');
 
-        // If this spot has been taken by a previous rowspan, skip it.
-        while (access[key(rowCount, start)] !== undefined) {
-          start++;
+  // Handle rows first
+  Arr.each(rows, (rowData) => {
+    const currentRow: Structs.DetailExt[] = [];
+    Arr.each(rowData.cells, (rowCell) => {
+      let start = 0;
+
+      // If this spot has been taken by a previous rowspan, skip it.
+      while (access[key(rowCount, start)] !== undefined) {
+        start++;
+      }
+
+      const isLocked = Obj.hasNonNullableKey(lockedColumns, start.toString());
+      const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowCount, start, isLocked);
+
+      // Occupy all the (row, column) positions that this cell spans for.
+      for (let occupiedColumnPosition = 0; occupiedColumnPosition < rowCell.colspan; occupiedColumnPosition++) {
+        for (let occupiedRowPosition = 0; occupiedRowPosition < rowCell.rowspan; occupiedRowPosition++) {
+          const rowPosition = rowCount + occupiedRowPosition;
+          const columnPosition = start + occupiedColumnPosition;
+          const newpos = key(rowPosition, columnPosition);
+          access[newpos] = current;
+          maxColumns = Math.max(maxColumns, columnPosition + 1);
         }
+      }
 
-        const isLocked = Obj.hasNonNullableKey(lockedColumns, start.toString());
-        const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowCount, start, isLocked);
+      currentRow.push(current);
+    });
 
-        // Occupy all the (row, column) positions that this cell spans for.
-        for (let occupiedColumnPosition = 0; occupiedColumnPosition < rowCell.colspan; occupiedColumnPosition++) {
-          for (let occupiedRowPosition = 0; occupiedRowPosition < rowCell.rowspan; occupiedRowPosition++) {
-            const rowPosition = rowCount + occupiedRowPosition;
-            const columnPosition = start + occupiedColumnPosition;
-            const newpos = key(rowPosition, columnPosition);
-            access[newpos] = current;
-            maxColumns = Math.max(maxColumns, columnPosition + 1);
-          }
-        }
+    maxRows++;
+    cells.push(Structs.rowdetail(rowData.element, currentRow, rowData.section));
+    rowCount++;
+  });
 
-        currentRow.push(current);
-      });
-
-      maxRows++;
-      cells.push(Structs.rowdetail(rowData.element, currentRow, rowData.section));
-      rowCount++;
-    }
+  // Handle colgroups
+  // Note: Currently only a single colgroup is supported so just use the last one
+  Arr.last(colgroupRows).each((rowData) => {
+    columns = generateColumns<T>(rowData, maxColumns);
+    const colgroup = Structs.colgroup(rowData.element as SugarElement<HTMLTableColElement>, Obj.values(columns));
+    colgroups.push(colgroup);
   });
 
   const grid = Structs.grid(maxRows, maxColumns);

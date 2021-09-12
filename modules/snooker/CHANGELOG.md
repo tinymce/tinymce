@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Resizing table cells caused incorrect widths in cases where those cells had grown to fit extra content.
 - Resizing percent tables caused widths to be offset by a few pixels due to an incorrect pixel -> percent conversion.
 - Converting rows or columns to regular cells would in some cases incorrectly convert a cell that was still part of a header.
+- `Warehouse` included `col` elements that did not have an associated cell column.
 
 ## 9.0.0 - 2021-08-26
 
