@@ -39,7 +39,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     const clientY = rect.top + (rect.height / 2);
 
     Mouse.point('mousedown', 0, TinyDom.documentElement(editor), clientX, clientY);
-    // Check the scoll position has not changed
+    // Check the scroll position has not changed
     assert.equal(getScrollTop(editor), scrollTop);
     // Check fake caret has been added
     assertSelectionIsCaretBlock(editor, clickPoint);
