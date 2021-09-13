@@ -235,7 +235,10 @@ const value = <T, E = never>(value: T): Result<T, E> => {
     getOrThunk: constHelper,
     orThunk: (_thunk) => output as Result<T, E>,
     getOrDie: constHelper,
-    each: applyHelper,
+    each: (fn) => {
+      // Can't write the function inline because we don't want to return something by mistake
+      fn(value);
+    },
     toOptional: () => Optional.some(value),
   };
 
