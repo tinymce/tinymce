@@ -33,7 +33,19 @@ export const isPlainObject = (value: unknown): value is Object => {
     return false;
   }
 
-  return getPrototypeOf(value) === Object.prototype;
+  const constructor = value.constructor?.name;
+  if (constructor === 'Object') {
+    return true;
+  } else if (isUndefined(constructor)) { // IE doesn't support .constructor
+    const proto = getPrototypeOf(value);
+    if (proto === Object.prototype) {
+      return true;
+    } else {
+      return proto.toString() === '[object Object]';
+    }
+  } else {
+    return false;
+  }
 };
 
 export const isArray: (value: any) => value is Array<unknown> =

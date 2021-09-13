@@ -22,30 +22,35 @@ describe('browser.katamari.TypeBrowserTest', () => {
       check(false, 'isString', '[]');
       check(false, 'isFunction', '[]');
       check(false, 'isNumber', '[]');
+      check(false, 'isPlainObject', '[]');
 
       check(false, 'isArray', '({})');
       check(true, 'isObject', '({})');
       check(false, 'isString', '({})');
       check(false, 'isFunction', '({})');
       check(false, 'isNumber', '({})');
+      check(true, 'isPlainObject', '({})');
 
       check(false, 'isArray', '"hi"');
       check(false, 'isObject', '"hi"');
       check(true, 'isString', '"hi"');
       check(false, 'isFunction', '"hi"');
       check(false, 'isNumber', '"hi"');
+      check(false, 'isPlainObject', '"hi"');
 
       check(false, 'isArray', 'new Function()');
       check(false, 'isObject', 'new Function()');
       check(false, 'isString', 'new Function()');
       check(true, 'isFunction', 'new Function()');
       check(false, 'isNumber', 'new Function()');
+      check(false, 'isPlainObject', 'new Function()');
 
       check(false, 'isArray', '5');
       check(false, 'isObject', '5');
       check(false, 'isString', '5');
       check(false, 'isFunction', '5');
       check(true, 'isNumber', '5');
+      check(false, 'isPlainObject', '5');
     };
 
     // no sugar, because sugar depends on katamari
