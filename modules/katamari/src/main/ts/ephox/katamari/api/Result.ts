@@ -216,6 +216,7 @@ const value = <T, E = never>(value: T): Result<T, E> => {
 
   const applyHelper = <U>(fn: (value: T) => U): U => fn(value);
   const constHelper = Fun.constant(value);
+  const outputHelper = <E2 = E>() => output as unknown as Result<T, E2>;
 
   const output: DebugResult<T, E> = {
     // Debug info
@@ -226,14 +227,14 @@ const value = <T, E = never>(value: T): Result<T, E> => {
     isValue: Fun.always,
     isError: Fun.never,
     map: (mapper) => Result.value(mapper(value)),
-    mapError: <F>(_mapper) => output as unknown as Result<T, F>,
+    mapError: outputHelper,
     bind: applyHelper,
     exists: applyHelper,
     forall: applyHelper,
     getOr: constHelper,
-    or: (_replacement) => output as Result<T, E>,
+    or: outputHelper,
     getOrThunk: constHelper,
-    orThunk: (_thunk) => output as Result<T, E>,
+    orThunk: outputHelper,
     getOrDie: constHelper,
     each: (fn) => {
       // Can't write the function inline because we don't want to return something by mistake
