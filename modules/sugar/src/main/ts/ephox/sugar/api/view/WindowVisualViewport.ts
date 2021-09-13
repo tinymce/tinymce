@@ -1,4 +1,5 @@
 import { Fun, Optional } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 
 import { fromRawEvent } from '../../impl/FilteredEvent';
 import { EventHandler, EventUnbinder } from '../events/Types';
@@ -31,8 +32,13 @@ interface WindowVisualViewport {
 
 const get = (_win?: Window): Optional<WindowVisualViewport> => {
   const win = _win === undefined ? window : _win;
-  // eslint-disable-next-line dot-notation
-  return Optional.from((win as any)['visualViewport']);
+  if (PlatformDetection.detect().browser.isFirefox()) {
+    // TINY-7984: Firefox 91 is returning incorrect values for visualViewport.pageTop, so disable it for now
+    return Optional.none();
+  } else {
+    // eslint-disable-next-line dot-notation
+    return Optional.from((win as any)['visualViewport']);
+  }
 };
 
 const bounds = (x: number, y: number, width: number, height: number): Bounds => ({
