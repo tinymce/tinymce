@@ -20,11 +20,21 @@ const isSimpleType = <Yolo>(type: string) => (value: any): value is Yolo =>
 const eq = <T> (t: T) => (a: any): a is T =>
   t === a;
 
+const getPrototypeOf = Object.getPrototypeOf;
+
 export const isString: (value: any) => value is string =
   isType('string');
 
 export const isObject: (value: any) => value is Object =
   isType('object');
+
+export const isPlainObject = (value: unknown): value is Object => {
+  if (!isObject(value)) {
+    return false;
+  }
+
+  return getPrototypeOf(value) === Object.prototype;
+};
 
 export const isArray: (value: any) => value is Array<unknown> =
   isType('array');
