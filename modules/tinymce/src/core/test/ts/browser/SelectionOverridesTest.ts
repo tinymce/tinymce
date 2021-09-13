@@ -1,10 +1,12 @@
-import { PhantomSkipper } from '@ephox/agar';
+import { Mouse, PhantomSkipper } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { Scroll } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { isCaretContainerBlock } from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -15,8 +17,33 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     disable_nodechange: true,
     entities: 'raw',
     indent: false,
+    content_style: 'body { margin: 16px; }',
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ]);
+
+  const getScrollTop = (editor: Editor) => Scroll.get(TinyDom.document(editor)).top;
+
+  const assertSelectionIsCaretBlock = (editor: Editor, caretValue: 'before' | 'after') => {
+    const selectedNode = editor.selection.getNode();
+    assert.isTrue(isCaretContainerBlock(selectedNode));
+    assert.equal(selectedNode.getAttribute('data-mce-caret'), caretValue);
+  };
+
+  const selectBesideContentEditable = (editor: Editor, contentEditableElm: HTMLElement, clickPoint: 'before' | 'after') => {
+    editor.selection.scrollIntoView(contentEditableElm);
+
+    const scrollTop = getScrollTop(editor);
+    const bodyMarginOffset = 8; // Default is 16 so divide by 2
+    const rect = contentEditableElm.getBoundingClientRect();
+    const clientX = clickPoint === 'before' ? rect.left - bodyMarginOffset : rect.right + bodyMarginOffset;
+    const clientY = rect.top + (rect.height / 2);
+
+    Mouse.point('mousedown', 0, TinyDom.documentElement(editor), clientX, clientY);
+    // Check the scroll position has not changed
+    assert.equal(getScrollTop(editor), scrollTop);
+    // Check fake caret has been added
+    assertSelectionIsCaretBlock(editor, clickPoint);
+  };
 
   it('click on link in cE=false', () => {
     const editor = hook.editor();
@@ -239,5 +266,32 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
       assert.equal(newRng.endContainer, paraElem, `End container should be before ${elmName}`);
       assert.equal(newRng.endOffset, 0, `End offset should be before ${elmName}`);
     });
+  });
+
+  it('TINY-7062: place cursor in ce=true element, click to left of ce=false parent element', () => {
+    const editor = hook.editor();
+    const content = '<p style="padding-bottom: 2000px;">Normal paragraph with padding</p><div contenteditable="false"><p contenteditable="true">abc</p></div>';
+
+    editor.setContent(content);
+    TinySelections.setCursor(editor, [ 1, 0, 0 ], 1);
+    // Click to the left of the ce=false element
+    const noneditableDiv = editor.dom.select('div[contenteditable=false]')[0];
+    selectBesideContentEditable(editor, noneditableDiv, 'before');
+
+    TinyAssertions.assertContent(editor, content);
+  });
+
+  it('TINY-7062: place cursor in ce=true element, click to right of ce=false parent element', () => {
+    const editor = hook.editor();
+    const content = '<p style="padding-bottom: 2000px;">Normal paragraph with padding</p><div contenteditable="false"><p contenteditable="true">abc</p></div>';
+
+    editor.setContent(content);
+    TinySelections.setCursor(editor, [ 1, 0, 0 ], 1);
+
+    // Click to the right of the ce=false element
+    const noneditableDiv = editor.dom.select('div[contenteditable=false]')[0];
+    selectBesideContentEditable(editor, noneditableDiv, 'after');
+
+    TinyAssertions.assertContent(editor, content);
   });
 });
