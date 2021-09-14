@@ -154,7 +154,7 @@ const emptyMultiTableCells = (
   return true;
 };
 
-// Delete the contents of a range inside a cell. Runs on tables that are a single cell as well as partial selections that need to be cleaned up.
+// Delete the contents of a range inside a cell. Runs on tables that are a single cell or partial selections that need to be cleaned up.
 const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLTableCellElement>, moveSelection: boolean = true): boolean => {
   rng.deleteContents();
   // Pad the last block node
@@ -170,12 +170,8 @@ const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLT
   if (!Compare.eq(cell, lastBlock)) {
     const additionalCleanupNodes = Optionals.is(Traverse.parent(lastBlock), cell) ? [] : Traverse.siblings(lastBlock);
     Arr.each(additionalCleanupNodes.concat(Traverse.children(cell)), (node) => {
-      if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock)) {
-        // Don't clear any nodes that still have content in their descendants
-        const hasNonEmptyDescendant = PredicateExists.descendant(node, Fun.not(Empty.isEmpty));
-        if (!hasNonEmptyDescendant) {
-          Remove.remove(node);
-        }
+      if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock) && !Empty.isEmpty(node)) { // Don't clear any nodes that still have content
+        Remove.remove(node);
       }
     });
   }
