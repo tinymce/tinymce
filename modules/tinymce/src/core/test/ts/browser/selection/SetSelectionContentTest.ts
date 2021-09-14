@@ -6,6 +6,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { SetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import { SelectionSetContentArgs } from 'tinymce/core/content/ContentTypes';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -15,7 +16,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ]);
 
-  const setContentOverride = (editor: Editor, content: string, overrideContent: string, args: SetSelectionContent.SelectionSetContentArgs) => {
+  const setContentOverride = (editor: Editor, content: string, overrideContent: string, args: Partial<SelectionSetContentArgs>) => {
     const handler = (e: EditorEvent<SetContentEvent>) => {
       if (e.selection === true) {
         e.preventDefault();

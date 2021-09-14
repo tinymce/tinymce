@@ -42,7 +42,7 @@ const setEditorHtml = (editor: Editor, html: string, noSelection: boolean | unde
   }
 };
 
-const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
+const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): Content => {
   // Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
   // It will also be impossible to place the caret in the editor unless there is a BR element present
   if (content.length === 0 || /^\s+$/.test(content)) {
@@ -112,7 +112,7 @@ const setupArgs = (args: Partial<SetContentArgs>, content: Content): SetContentA
   content: isTreeNode(content) ? '' : content
 });
 
-export const setContentInternal = (editor: Editor, content: Content, args: SetContentArgs): Content => {
+export const setContentInternal = (editor: Editor, content: Content, args: Partial<SetContentArgs>): Content => {
   const defaultedArgs = setupArgs(args, content);
   const updatedArgs = args.no_events ? defaultedArgs : editor.fire('BeforeSetContent', defaultedArgs);
 

@@ -10,7 +10,7 @@ import * as Rtc from '../Rtc';
 import { Content, GetContentArgs } from './ContentTypes';
 
 const defaultFormat = 'html';
-export const getContent = (editor: Editor, args: GetContentArgs = {}): Content => {
+export const getContent = (editor: Editor, args: Partial<GetContentArgs> = {}): Content => {
   const format = args.format ? args.format : defaultFormat;
 
   return Rtc.getContent(editor, args, format);

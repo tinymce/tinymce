@@ -350,11 +350,15 @@ const preInit = (editor: Editor) => {
 
   if (settings.protect) {
     editor.on('BeforeSetContent', (e) => {
-      Tools.each(settings.protect, (pattern) => {
-        e.content = e.content.replace(pattern, (str) => {
-          return '<!--mce:protected ' + escape(str) + '-->';
+      if (Type.isString(e.content)) {
+        let content = e.content;
+        Tools.each(settings.protect, (pattern) => {
+          content = content.replace(pattern, (str) => {
+            return '<!--mce:protected ' + escape(str) + '-->';
+          });
         });
-      });
+        e.content = content;
+      }
     });
   }
 

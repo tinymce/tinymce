@@ -27,10 +27,11 @@ const setupArgs = (args: Partial<GetContentArgs>, format: ContentFormat): GetCon
   ...args,
   format,
   get: true,
-  getInner: true
+  getInner: true,
+  content: ''
 });
 
-const getContentFromBody = (editor: Editor, args: GetContentArgs, format: ContentFormat, body: HTMLElement): Content => {
+const getContentFromBody = (editor: Editor, args: Partial<GetContentArgs>, format: ContentFormat, body: HTMLElement): Content => {
   const defaultedArgs = setupArgs(args, format);
   const updatedArgs = args.no_events ? defaultedArgs : editor.fire('BeforeGetContent', defaultedArgs);
 
@@ -59,7 +60,7 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, format: Conten
   }
 };
 
-export const getContentInternal = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content => Optional.from(editor.getBody())
+export const getContentInternal = (editor: Editor, args: Partial<GetContentArgs>, format: ContentFormat): Content => Optional.from(editor.getBody())
   .fold(
     Fun.constant(args.format === 'tree' ? new AstNode('body', 11) : ''),
     (body) => getContentFromBody(editor, args, format, body)
