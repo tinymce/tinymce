@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `pixelSize` and `percentSize` functions in `TableSize` no longer require the initial width to be provided.
 - `ColumnSizes` will now use `col` elements to calculate the column width where appropriate.
 - `Sizes.redistribute` no longer requires a `TableSize` instance to be provided.
-- `TableOperations.makeRowHeader` and `TableOperations.makeRowsHeader` no longer adds the deprecated `scope` attribute to `td` elements.
+- `TableOperations.makeRowHeader` and `TableOperations.makeRowsHeader` no longer add the deprecated `scope` attribute to `td` elements.
 - `Generators.transform` no longer accepts a scope, as `TransformOperations` now calculates the appropriate scope.
 
 ### Fixed

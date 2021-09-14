@@ -24,7 +24,7 @@ const alreadyProcessed = (grid: Structs.RowCells[], rowIndex: number, colIndex: 
 
 const rowReplacerPredicate = (targetRow: Structs.RowCells, columnHeaders: boolean[]): ReplacePredicate => {
   const entireTableIsHeader = Arr.forall(columnHeaders, Fun.identity) && isHeaderCells(targetRow.cells);
-  return entireTableIsHeader ? Fun.always : (cell, rowIndex, colIndex) => {
+  return entireTableIsHeader ? Fun.always : (cell, _rowIndex, colIndex) => {
     const type = SugarNode.name(cell.element);
     return !(type === 'th' && columnHeaders[colIndex]);
   };
@@ -43,7 +43,6 @@ const determineScope = (applyScope: boolean, element: SugarElement<HTMLTableCell
   const getScope = (scope: string) => hasSpan(scope) ? `${scope}group` : scope;
 
   if (applyScope) {
-    // Add the scope depending on if there is a merged cell
     return isHeaderCell(element) ? getScope(newScope) : null;
   } else if (isInHeader && isHeaderCell(element)) {
     // The cell is still in a header row/column so ensure the right scope is reverted to
