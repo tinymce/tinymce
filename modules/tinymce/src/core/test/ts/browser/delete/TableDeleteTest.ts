@@ -413,6 +413,15 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
       TinyAssertions.assertContent(editor, '<p>a1</p><table><tbody><tr><td><p>56</p></td><td>b</td></tr></tbody></table>');
     });
 
+    it('TINY-7596: Partially select and delete from before table into table multiple paragraphs within cell', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a123</p><table><tbody><tr><td><p>456</p><p>789</p></td><td>b</td></tr></tbody></table>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 1, 0, 0, 0, 0, 0 ], 2);
+      doDelete(editor);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 2);
+      TinyAssertions.assertContent(editor, '<p>a1</p><table><tbody><tr><td><p>6</p><p>789</p></td><td>b</td></tr></tbody></table>');
+    });
+
     it('TINY-6044: Partially select and delete from after table into table', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>abcd</p>');

@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Compare, PredicateExists, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -154,7 +154,7 @@ const emptyMultiTableCells = (
   return true;
 };
 
-// Runs on a single cell table that has all of its content selected
+// Delete the contents of a range inside a cell. Runs on tables that are a single cell as well as partial selections that need to be cleaned up.
 const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLTableCellElement>, moveSelection: boolean = true): boolean => {
   rng.deleteContents();
   // Pad the last block node
@@ -171,7 +171,11 @@ const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLT
     const additionalCleanupNodes = Optionals.is(Traverse.parent(lastBlock), cell) ? [] : Traverse.siblings(lastBlock);
     Arr.each(additionalCleanupNodes.concat(Traverse.children(cell)), (node) => {
       if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock)) {
-        Remove.remove(node);
+        // Don't clear any nodes that still have content in their descendants
+        const hasNonEmptyDescendant = PredicateExists.descendant(node, Fun.not(Empty.isEmpty));
+        if (!hasNonEmptyDescendant) {
+          Remove.remove(node);
+        }
       }
     });
   }
