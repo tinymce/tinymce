@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Compare, PredicateExists, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -170,7 +170,7 @@ const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLT
   if (!Compare.eq(cell, lastBlock)) {
     const additionalCleanupNodes = Optionals.is(Traverse.parent(lastBlock), cell) ? [] : Traverse.siblings(lastBlock);
     Arr.each(additionalCleanupNodes.concat(Traverse.children(cell)), (node) => {
-      if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock) && !Empty.isEmpty(node)) { // Don't clear any nodes that still have content
+      if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock) && Empty.isEmpty(node)) {
         Remove.remove(node);
       }
     });
