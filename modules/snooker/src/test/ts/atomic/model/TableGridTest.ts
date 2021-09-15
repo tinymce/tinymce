@@ -6,7 +6,7 @@ import { assert } from 'chai';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableGrid from 'ephox/snooker/model/TableGrid';
 
-describe('TableGrid.subgrid test', () => {
+describe('TableGridTest', () => {
   const r = Structs.rowcells;
   const re = () => 'row' as unknown as SugarElement;
   const ce = () => 'colgroup' as unknown as SugarElement;
@@ -24,7 +24,7 @@ describe('TableGrid.subgrid test', () => {
     r(re(), [ en('d', false), en('e', false), en('c', false) ], 'tfoot', false)
   ];
 
-  it('TINY-7041: check cols', () => {
+  it('check cols', () => {
     check({ colspan: 1, rowspan: 1 }, 0, 0, world);
     check({ colspan: 2, rowspan: 1 }, 0, 1, world);
   });

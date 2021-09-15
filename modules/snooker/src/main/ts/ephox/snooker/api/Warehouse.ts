@@ -36,23 +36,20 @@ const filterItems = (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: 
   return Arr.filter(all, predicate);
 };
 
-const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowDetail<T>, maxColumns: number): Record<number, Structs.ColumnExt> => {
+const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowDetail<T>): Record<number, Structs.ColumnExt> => {
   const columnsGroup: Record<number, Structs.ColumnExt> = {};
   let index = 0;
 
-  for (const column of rowData.cells) {
-    if (index >= maxColumns) {
-      break;
-    }
+  Arr.each(rowData.cells, (column: T) => {
+    const colspan = column.colspan;
 
-    const colspan = Math.min(column.colspan, maxColumns - index);
     Arr.range(colspan, (columnIndex) => {
       const colIndex = index + columnIndex;
       columnsGroup[colIndex] = Structs.columnext(column.element, colspan, colIndex);
     });
 
     index += colspan;
-  }
+  });
 
   return columnsGroup;
 };
@@ -121,7 +118,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
   // Handle colgroups
   // Note: Currently only a single colgroup is supported so just use the last one
   Arr.last(colgroupRows).each((rowData) => {
-    columns = generateColumns<T>(rowData, maxColumns);
+    columns = generateColumns<T>(rowData);
     const colgroup = Structs.colgroup(rowData.element as SugarElement<HTMLTableColElement>, Obj.values(columns));
     colgroups.push(colgroup);
   });
