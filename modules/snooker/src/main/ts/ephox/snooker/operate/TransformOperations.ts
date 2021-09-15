@@ -13,14 +13,17 @@ type CellReplacer = (cell: Structs.ElementNew, comparator: CompElm, substitute: 
 type ScopeGenerator = (cell: Structs.ElementNew, rowIndex: number, colIndex: number) => Optional<null | string>;
 type ReplacePredicate = (cell: Structs.ElementNew, rowIndex: number, colIndex: number) => boolean;
 
-const notStartRow = (grid: Structs.RowCells[], rowIndex: number, colIndex: number, comparator: CompElm): boolean =>
+const notInStartRow = (grid: Structs.RowCells[], rowIndex: number, colIndex: number, comparator: CompElm): boolean =>
   GridRow.getCellElement(grid[rowIndex], colIndex) !== undefined && (rowIndex > 0 && comparator(GridRow.getCellElement(grid[rowIndex - 1], colIndex), GridRow.getCellElement(grid[rowIndex], colIndex)));
 
-const notStartColumn = (row: Structs.RowCells, index: number, comparator: CompElm): boolean =>
+const notInStartColumn = (row: Structs.RowCells, index: number, comparator: CompElm): boolean =>
   index > 0 && comparator(GridRow.getCellElement(row, index - 1), GridRow.getCellElement(row, index));
 
-const alreadyProcessed = (grid: Structs.RowCells[], rowIndex: number, colIndex: number, comparator: CompElm): boolean =>
-  notStartRow(grid, rowIndex, colIndex, comparator) || notStartColumn(grid[rowIndex], colIndex, comparator);
+// This checks for cells that aren't in the "start" position as the model will create duplicate element references for
+// each column/row that the cell spans. As an example, for a merged cell with rowspan="2", the cell in the second row is a duplicate
+// of the cell in the first row.
+const isDuplicatedCell = (grid: Structs.RowCells[], rowIndex: number, colIndex: number, comparator: CompElm): boolean =>
+  notInStartRow(grid, rowIndex, colIndex, comparator) || notInStartColumn(grid[rowIndex], colIndex, comparator);
 
 const rowReplacerPredicate = (targetRow: Structs.RowCells, columnHeaders: boolean[]): ReplacePredicate => {
   const entireTableIsHeader = Arr.forall(columnHeaders, Fun.identity) && isHeaderCells(targetRow.cells);
@@ -38,7 +41,7 @@ const columnReplacePredicate = (targetColumn: Structs.ElementNew[], rowHeaders: 
   };
 };
 
-const determineScope = (applyScope: boolean, element: SugarElement<HTMLTableCellElement>, newScope: 'row' | 'col', isInHeader: boolean) => {
+const determineScope = (applyScope: boolean, element: SugarElement<HTMLTableCellElement>, newScope: 'row' | 'col', isInHeader: boolean): string | null => {
   const hasSpan = (scope: string) => scope === 'row' ? CellUtils.hasRowspan(element) : CellUtils.hasColspan(element);
   const getScope = (scope: string) => hasSpan(scope) ? `${scope}group` : scope;
 
@@ -97,14 +100,14 @@ const replaceIn = (
 const getColumnCells = (rows: Structs.RowCells[], columnIndex: number, comparator: CompElm) =>
   Arr.bind(rows, (row, i) => {
     // check if already added.
-    return alreadyProcessed(rows, i, columnIndex, comparator) ? [] : [ GridRow.getCell(row, columnIndex) ];
+    return isDuplicatedCell(rows, i, columnIndex, comparator) ? [] : [ GridRow.getCell(row, columnIndex) ];
   });
 
 const getRowCells = (rows: Structs.RowCells[], rowIndex: number, comparator: CompElm) => {
   const targetRow = rows[rowIndex];
   return Arr.bind(targetRow.cells, (item, i) => {
     // Check that we haven't already added this one.
-    return alreadyProcessed(rows, rowIndex, i, comparator) ? [] : [ item ];
+    return isDuplicatedCell(rows, rowIndex, i, comparator) ? [] : [ item ];
   });
 };
 
