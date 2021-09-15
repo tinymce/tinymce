@@ -10,10 +10,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `pixelSize` and `percentSize` functions in `TableSize` no longer require the initial width to be provided.
 - `ColumnSizes` will now use `col` elements to calculate the column width where appropriate.
 - `Sizes.redistribute` no longer requires a `TableSize` instance to be provided.
+- `TableOperations.makeRowHeader` and `TableOperations.makeRowsHeader` no longer add the deprecated `scope` attribute to `td` elements.
+- `Generators.transform` no longer accepts a scope, as `TransformOperations` now calculates the appropriate scope.
 
 ### Fixed
 - Resizing table cells caused incorrect widths in cases where those cells had grown to fit extra content.
 - Resizing percent tables caused widths to be offset by a few pixels due to an incorrect pixel -> percent conversion.
+- Converting rows or columns to regular cells would in some cases incorrectly convert a cell that was still part of a header.
 
 ## 9.0.0 - 2021-08-26
 

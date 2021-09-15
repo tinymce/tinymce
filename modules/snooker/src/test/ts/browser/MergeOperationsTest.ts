@@ -87,7 +87,7 @@ UnitTest.test('MergeOperationsTest', () => {
     '<table style="border-collapse: collapse;">' +
       '<tbody>' +
         '<tr>' +
-          '<td scope="rowgroup" rowspan="2">A1<br>A2<br></td>' +
+          '<th scope="rowgroup" rowspan="2">A1<br>A2<br></th>' +
           '<td>B1</td>' +
           '<td>C1</td>' +
         '</tr>' +
@@ -101,7 +101,7 @@ UnitTest.test('MergeOperationsTest', () => {
     '<table border="1" style="border-collapse: collapse;">' +
       '<tbody>' +
         '<tr>' +
-          '<td scope="row">A1</td>' +
+          '<th scope="row">A1</th>' +
           '<td>B1</td>' +
           '<td>C1</td>' +
         '</tr>' +
@@ -125,7 +125,7 @@ UnitTest.test('MergeOperationsTest', () => {
     '<table style="border-collapse: collapse;">' +
       '<tbody>' +
         '<tr>' +
-          '<td scope="colgroup" colspan="2">A1<br>B1<br></td>' +
+          '<th scope="colgroup" colspan="2">A1<br>B1<br></th>' +
           '<td>C1</td>' +
         '</tr>' +
         '<tr>' +
@@ -139,7 +139,7 @@ UnitTest.test('MergeOperationsTest', () => {
     '<table border="1" style="border-collapse: collapse;">' +
       '<tbody>' +
         '<tr>' +
-          '<td scope="col">A1</td>' +
+          '<th scope="col">A1</th>' +
           '<td>B1</td>' +
           '<td>C1</td>' +
         '</tr>' +
@@ -163,7 +163,7 @@ UnitTest.test('MergeOperationsTest', () => {
     '<table style="border-collapse: collapse;">' +
       '<tbody>' +
         '<tr>' +
-          '<td rowspan="2">A1<br>A2<br></td>' +
+          '<th rowspan="2">A1<br>A2<br></th>' +
           '<td>B1</td>' +
           '<td>C1</td>' +
         '</tr>' +
@@ -177,12 +177,12 @@ UnitTest.test('MergeOperationsTest', () => {
     '<table border="1" style="border-collapse: collapse;">' +
       '<tbody>' +
         '<tr>' +
-          '<td scope="row">A1</td>' +
+          '<th scope="row">A1</th>' +
           '<td>B1</td>' +
           '<td>C1</td>' +
         '</tr>' +
         '<tr>' +
-          '<td scope="col">A2</td>' +
+          '<th scope="col">A2</th>' +
           '<td>B2</td>' +
           '<td>C2</td>' +
         '</tr>' +
@@ -201,7 +201,7 @@ UnitTest.test('MergeOperationsTest', () => {
     '<table style="border-collapse: collapse;">' +
       '<tbody>' +
         '<tr>' +
-          '<td rowspan="2">A1<br>A2<br></td>' +
+          '<th rowspan="2">A1<br>A2<br></th>' +
           '<td>B1</td>' +
           '<td>C1</td>' +
         '</tr>' +
@@ -215,12 +215,12 @@ UnitTest.test('MergeOperationsTest', () => {
     '<table border="1" style="border-collapse: collapse;">' +
       '<tbody>' +
         '<tr>' +
-          '<td scope="col">A1</td>' +
+          '<th scope="col">A1</th>' +
           '<td>B1</td>' +
           '<td>C1</td>' +
         '</tr>' +
         '<tr>' +
-          '<td scope="row">A2</td>' +
+          '<th scope="row">A2</th>' +
           '<td>B2</td>' +
           '<td>C2</td>' +
         '</tr>' +

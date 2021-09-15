@@ -1,4 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
@@ -81,4 +82,11 @@ UnitTest.test('AttributeTest', () => {
 
   Attribute.set(c, 'tabindex', -1);
   Assert.eq('get', '-1', Attribute.get(c, 'tabindex'));
+
+  Attribute.setOptions(c, {
+    tabindex: Optional.none(),
+    src: Optional.some('custom')
+  });
+  Assert.eq('setOptions - none', false, Attribute.has(c, 'tabindex'));
+  Assert.eq('setOptions - some', 'custom', Attribute.get(c, 'src'));
 });
