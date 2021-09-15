@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- Swapped `Optional` to be a class, instead of an object with function fields
+
+### Improved
+- `Optional` objects should now be much faster to construct and work with
+- The `Result` and `Optional` APIs are now thoroughly documented
+- Added private `.tag` and `.value` fields to `Result`, to make them more friendly to view in the debugger or console
+
 ## 8.0.0 - 2021-08-26
 
 ### Added
