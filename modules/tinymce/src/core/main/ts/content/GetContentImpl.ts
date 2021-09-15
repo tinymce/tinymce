@@ -27,8 +27,7 @@ const setupArgs = (args: Partial<GetContentArgs>, format: ContentFormat): GetCon
   ...args,
   format,
   get: true,
-  getInner: true,
-  content: ''
+  getInner: true
 });
 
 const getContentFromBody = (editor: Editor, args: Partial<GetContentArgs>, format: ContentFormat, body: HTMLElement): Content => {

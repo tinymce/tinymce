@@ -27,7 +27,7 @@ interface SetContentArgsBase {
 }
 
 export interface GetContentArgs extends GetContentArgsBase {
-  content: Content;
+  content?: Content;
 }
 
 export interface SetContentArgs extends SetContentArgsBase {
@@ -36,12 +36,12 @@ export interface SetContentArgs extends SetContentArgsBase {
 
 export interface SelectionSetContentArgs extends SetContentArgsBase {
   content: string;
-  selection?: boolean;
+  selection: boolean;
   contextual?: boolean;
 }
 
 export interface GetSelectionContentArgs extends GetContentArgsBase {
-  selection?: boolean;
+  selection: boolean;
   contextual?: boolean;
   content: string;
 }
