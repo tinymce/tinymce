@@ -45,13 +45,10 @@ const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowDetail<T>
       break;
     }
 
-    const colspan = column.colspan;
-
+    const colspan = Math.min(column.colspan, maxColumns - index);
     Arr.range(colspan, (columnIndex) => {
       const colIndex = index + columnIndex;
-      if (colIndex < maxColumns) {
-        columnsGroup[colIndex] = Structs.columnext(column.element, colspan, colIndex);
-      }
+      columnsGroup[colIndex] = Structs.columnext(column.element, colspan, colIndex);
     });
 
     index += colspan;
