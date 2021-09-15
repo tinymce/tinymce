@@ -29,6 +29,16 @@ const setAll = (element: SugarElement<Element>, attrs: Record<string, string | b
   });
 };
 
+const setOptions = (element: SugarElement<Element>, attrs: Record<string, Optional<string | boolean | number>>): void => {
+  Obj.each(attrs, (v, k) => {
+    v.fold(() => {
+      remove(element, k);
+    }, (value) => {
+      rawSet(element.dom, k, value);
+    });
+  });
+};
+
 const get = (element: SugarElement<Element>, key: string): undefined | string => {
   const v = element.dom.getAttribute(key);
 
@@ -78,4 +88,4 @@ const transfer = (source: SugarElement<Element>, destination: SugarElement<Eleme
   });
 };
 
-export { clone, set, setAll, get, getOpt, has, remove, hasNone, transfer };
+export { clone, set, setAll, setOptions, get, getOpt, has, remove, hasNone, transfer };

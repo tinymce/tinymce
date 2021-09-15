@@ -102,7 +102,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
       type: 'header'
     }, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td scope="col">X</td></tr></thead></table>');
+    TinyAssertions.assertContent(editor, '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>');
     assertEvents([{ type: 'tablemodified', structure: true, style: true }]);
   });
 
@@ -118,7 +118,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
       type: 'header'
     }, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table><caption>CAPTION</caption><thead><tr><td scope="col">X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>');
     assertEvents([{ type: 'tablemodified', structure: true, style: false }]);
   });
 

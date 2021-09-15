@@ -1,6 +1,5 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { after, before, context, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -18,7 +17,6 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
   const isToolbarTop = toolbarLocation === ToolbarLocation.top;
 
   context('Test editor with toolbar_mode: ' + toolbarMode, () => {
-    const browser = PlatformDetection.detect().browser;
     const hook = TinyHooks.bddSetup<Editor>({
       plugins: 'fullscreen',
       base_url: '/project/tinymce/js/tinymce',
@@ -140,11 +138,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       });
     });
 
-    it('Toggle fullscreen mode and ensure header moves from docked -> undocked -> docked', async function () {
-      // TINY-7873: On Firefox 91 the header/toolbar isn't showing when toggling fullscreen mode, so we need to investigate
-      if (browser.isFirefox() && browser.version.major >= 91) {
-        this.skip();
-      }
+    it('Toggle fullscreen mode and ensure header moves from docked -> undocked -> docked', async () => {
       const editor = hook.editor();
       await StickyUtils.pScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView);
       editor.execCommand('mceFullscreen');

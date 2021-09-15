@@ -155,12 +155,12 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
       '<table style="width: 25.4582%;">' +
         '<tbody>' +
           '<tr>' +
-            '<td style="width: 42.7414%;" data-mce-selected="1" data-mce-first-selected="1"></td>' +
-            '<td style="width: 51.8049%;" data-mce-selected="1" data-mce-last-selected="1"></td>' +
+            '<td style="width: 44.9721%;" data-mce-selected="1" data-mce-first-selected="1"></td>' +
+            '<td style="width: 54.7486%;" data-mce-selected="1" data-mce-last-selected="1"></td>' +
           '</tr>' +
           '<tr>' +
-            '<td style="width: 42.7414%;"></td>' +
-            '<td style="width: 51.8049%;"></td>' +
+            '<td style="width: 44.9721%;"></td>' +
+            '<td style="width: 54.7486%;"></td>' +
           '</tr>' +
         '</tbody>' +
       '</table>'
@@ -173,7 +173,7 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
     editor.selection.collapse(true);
     editor.execCommand('mceTableMergeCells');
     const colspan = SelectorFind.descendant(TinyDom.body(editor), 'td[colspan="2"]').getOrDie();
-    assert.closeTo(getWidth(colspan), totalColsWidth, 2, 'Check new cell is similar width the the two cells that were merged');
+    assert.approximately(getWidth(colspan), totalColsWidth, 2, 'Check new cell is similar width the the two cells that were merged');
   });
 
   /*
