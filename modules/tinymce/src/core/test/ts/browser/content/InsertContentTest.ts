@@ -622,4 +622,30 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       );
     }
   });
+
+  it('TINY-7842: Inserting content into a contenteditable=true block within a contenteditable=false parent', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<p>some content to stop the fake caret rendering before the CEF element</p>' +
+      '<div contenteditable="false">' +
+        '<p>Non editable content</p>' +
+        '<div contenteditable="true">' +
+          '<p>Editablecontent</p>' +
+        '</div>' +
+      '</div>'
+    );
+    TinySelections.setCursor(editor, [ 1, 1, 0, 0 ], 8);
+    InsertContent.insertAtCaret(editor, ' pasted ');
+    TinyAssertions.assertContent(
+      editor,
+      '<p>some content to stop the fake caret rendering before the CEF element</p>' +
+      '<div contenteditable="false">' +
+        '<p>Non editable content</p>' +
+        '<div contenteditable="true">' +
+          '<p>Editable pasted content</p>' +
+        '</div>' +
+      '</div>'
+    );
+    TinyAssertions.assertCursor(editor, [ 1, 1, 0, 0 ], 16);
+  });
 });
