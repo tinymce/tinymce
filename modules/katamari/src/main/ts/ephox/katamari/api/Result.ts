@@ -6,9 +6,7 @@ import { Optional } from './Optional';
  * error (of any type). Any `Result<T, E>` can either be a `Value<T>` (which
  * contains a value of type `T`) or an `Error<E>` (which contains an error of
  * type `E`). This file defines a whole lot of FP-inspired utility functions for
- * dealing with `Result` objects. Note: Functions are grouped on, primarily,
- * their Haskell roots. That said, I'm not a Haskell programmer so it might
- * be imperfect.
+ * dealing with `Result` objects.
  *
  * Comparison with exceptions:
  * - Each function's type signature says whether it returns a `Result` or not
@@ -60,7 +58,7 @@ export interface Result<T, E> {
    */
   readonly isError: () => boolean;
 
-  // --- Functor ---
+  // --- Functor (name stolen from Haskell / maths) ---
 
   /**
    * Perform a transform on a `Result` object, **if** there is a value. If you
@@ -83,7 +81,7 @@ export interface Result<T, E> {
    */
   readonly mapError: <F>(mapper: (error: E) => F) => Result<T, F>;
 
-  // --- Monad ---
+  // --- Monad (name stolen from Haskell / maths) ---
 
   /**
    * Perform a transform on a `Result` object, **if** there is a value. If you
@@ -96,7 +94,7 @@ export interface Result<T, E> {
    */
   readonly bind: <U>(binder: (value: T) => Result<U, E>) => Result<U, E>;
 
-  // --- Traversable ---
+  // --- Traversable (name stolen from Haskell / maths) ---
 
   /**
    * For a given predicate, this function finds out if there **exists** a value
@@ -179,7 +177,7 @@ export interface Result<T, E> {
    * anything in the case where the `Result` doesn't have a value inside it. If
    * you're not sure whether your use-case fits into transforming **into**
    * something or **doing** something, check whether it has a return value. If
-   * it does, you're looking at a transform.
+   * it does, you should be performing a transform.
    */
   readonly each: (worker: (value: T) => void) => void;
 

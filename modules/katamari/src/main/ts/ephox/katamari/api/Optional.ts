@@ -5,9 +5,7 @@ import * as Type from './Type';
  * not exist. Any `Optional<T>` can either be a `Some<T>` (in which case the
  * value does exist) or a `None` (in which case the value does not exist). This
  * file defines a whole lot of FP-inspired utility functions for dealing with
- * `Optional` objects. Note: Functions are grouped based on, primarily, their
- * Haskell roots. That said, I'm not a Haskell programmer so it might be
- * imperfect.
+ * `Optional` objects.
  *
  * Comparison with null or undefined:
  * - We don't get fancy null coalescing operators with `Optional`
@@ -18,7 +16,6 @@ import * as Type from './Type';
  * strict-null-checks
  * - Try to use `Optional` instead of null or undefined where you can
  */
-
 export class Optional<T> {
   private readonly tag: boolean;
   private readonly value?: T;
@@ -84,7 +81,7 @@ export class Optional<T> {
     return !this.tag;
   }
 
-  // --- Functor ---
+  // --- Functor (name stolen from Haskell / maths) ---
 
   /**
    * Perform a transform on an `Optional` object, **if** there is a value. If
@@ -102,7 +99,7 @@ export class Optional<T> {
     }
   }
 
-  // --- Monad ---
+  // --- Monad (name stolen from Haskell / maths) ---
 
   /**
    * Perform a transform on an `Optional` object, **if** there is a value.
@@ -117,7 +114,7 @@ export class Optional<T> {
     }
   }
 
-  // --- Traversable ---
+  // --- Traversable (name stolen from Haskell / maths) ---
 
   /**
    * For a given predicate, this function finds out if there **exists** a value
@@ -195,8 +192,8 @@ export class Optional<T> {
    * value.
    *
    * Unlike `or`, in this method the `replacement` value is "thunked" - that is
-   * to say that you don't pass a value to `getOrThunk`, you pass a function
-   * which (if called) will **return** the `value` you want to use.
+   * to say that you don't pass a value to `orThunk`, you pass a function which
+   * (if called) will **return** the `value` you want to use.
    *
    * Unlike `getOrThunk`, in this method the `replacement` value is also
    * `Optional`, meaning that this method will always return an `Optional`.
@@ -238,17 +235,19 @@ export class Optional<T> {
   }
 
   /**
-   * Converts an `Optional` to a nullable type.
+   * Converts an `Optional` to a nullable type, by getting the value if it
+   * exists, or returning `null` if it does not.
    */
   public getOrNull(): T | null {
     return this.tag ? this.value as T : null;
   }
 
   /**
-   * Converts an `Optional` to an undefined-able type.
+   * Converts an `Optional` to an undefined-able type, by getting the value if
+   * it exists, or returning `undefined` if it does not.
    */
   public getOrUndefined(): T | undefined {
-    return this.tag ? this.value as T : undefined;
+    return this.value;
   }
 
   // --- Utilities ---
@@ -262,7 +261,7 @@ export class Optional<T> {
    * doing anything in the case where the `Optional` doesn't have a value inside
    * it. If you're not sure whether your use-case fits into transforming
    * **into** something or **doing** something, check whether it has a return
-   * value. If it does, you're looking at a transform.
+   * value. If it does, you should be performing a transform.
    */
   public each(worker: (value: T) => void): void {
     if (this.tag) {

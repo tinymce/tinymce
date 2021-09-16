@@ -1,10 +1,12 @@
+const getPrototypeOf = Object.getPrototypeOf;
+
 const typeOf = (x: any): string => {
   const t = typeof x;
   if (x === null) {
     return 'null';
-  } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
+  } else if (t === 'object' && Array.prototype.isPrototypeOf(x)) {
     return 'array';
-  } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
+  } else if (t === 'object' && String.prototype.isPrototypeOf(x)) {
     return 'string';
   } else {
     return t;
@@ -20,8 +22,6 @@ const isSimpleType = <Yolo>(type: string) => (value: any): value is Yolo =>
 const eq = <T> (t: T) => (a: any): a is T =>
   t === a;
 
-const getPrototypeOf = Object.getPrototypeOf;
-
 export const isString: (value: any) => value is string =
   isType('string');
 
@@ -33,18 +33,11 @@ export const isPlainObject = (value: unknown): value is Object => {
     return false;
   }
 
-  const constructor = value.constructor?.name;
-  if (constructor === 'Object') {
-    return true;
-  } else if (isUndefined(constructor)) { // IE doesn't support .constructor
-    const proto = getPrototypeOf(value);
-    if (proto === Object.prototype) {
-      return true;
-    } else {
-      return proto.toString() === '[object Object]';
-    }
+  const constructor = value.constructor;
+  if (isUndefined(constructor)) { // IE doesn't support this
+    return getPrototypeOf(value) === Object.prototype;
   } else {
-    return false;
+    return constructor.name === 'Object';
   }
 };
 
