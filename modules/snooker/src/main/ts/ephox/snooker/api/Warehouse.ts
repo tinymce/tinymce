@@ -70,8 +70,6 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
   //          rowspan (merge cols)
   const access: Record<string, Structs.DetailExt> = {};
   const cells: Structs.RowDetail<Structs.DetailExt>[] = [];
-  let columns: Record<number, Structs.ColumnExt> = {};
-  let colgroups: Structs.Colgroup<Structs.ColumnExt>[] = [];
 
   const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
   const lockedColumns: Record<string, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
@@ -117,11 +115,17 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
 
   // Handle colgroups
   // Note: Currently only a single colgroup is supported so just use the last one
-  Arr.last(colgroupRows).each((rowData) => {
-    columns = generateColumns<T>(rowData);
+  const { columns, colgroups } = Arr.last(colgroupRows).map((rowData) => {
+    const columns = generateColumns<T>(rowData);
     const colgroup = Structs.colgroup(rowData.element as SugarElement<HTMLTableColElement>, Obj.values(columns));
-    colgroups = [ colgroup ];
-  });
+    return {
+      colgroups: [ colgroup ],
+      columns
+    };
+  }).getOrThunk(() => ({
+    colgroups: [],
+    columns: {}
+  }));
 
   const grid = Structs.grid(maxRows, maxColumns);
 
