@@ -23,27 +23,27 @@ describe('browser.tinymce.plugins.table.ExcessColsTest', () => {
   Arr.each([
     {
       label: 'more cols',
-      tableHTML: '<table><colgroup><col /><col /><col /><col /></colgroup><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>',
+      tableHtml: '<table><colgroup><col /><col /><col /><col /></colgroup><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>',
     },
     {
       label: 'more cols with span at beginning',
-      tableHTML: '<table><colgroup><col span="2" /><col /></colgroup><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>',
+      tableHtml: '<table><colgroup><col span="2" /><col /></colgroup><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>',
     },
     {
       label: 'more cols with span at end',
-      tableHTML: '<table><colgroup><col /><col span="2" /></colgroup><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>',
+      tableHtml: '<table><colgroup><col /><col span="2" /></colgroup><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>',
     },
     {
       label: 'single col with span greater than cells',
-      tableHTML: '<table><colgroup><col span="3" /></colgroup><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>',
+      tableHtml: '<table><colgroup><col span="3" /></colgroup><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>',
     }
   ], (scenario) => {
     context(scenario.label, () => {
-      const tableHTML = scenario.tableHTML;
+      const tableHtml = scenario.tableHtml;
 
       it('TINY-7041: insert new column at the start of the table', () => {
         const editor = hook.editor();
-        editor.setContent(tableHTML);
+        editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
         editor.execCommand('mceTableInsertColBefore');
         assertBasicTablePresence(editor, 6);
@@ -51,7 +51,7 @@ describe('browser.tinymce.plugins.table.ExcessColsTest', () => {
 
       it('TINY-7041: insert new column in the middle of the table', () => {
         const editor = hook.editor();
-        editor.setContent(tableHTML);
+        editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
         editor.execCommand('mceTableInsertColAfter');
         assertBasicTablePresence(editor, 6);
@@ -59,7 +59,7 @@ describe('browser.tinymce.plugins.table.ExcessColsTest', () => {
 
       it('TINY-7041: insert new column at the emd of the table', () => {
         const editor = hook.editor();
-        editor.setContent(tableHTML);
+        editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 1, 0 ], 0);
         editor.execCommand('mceTableInsertColAfter');
         assertBasicTablePresence(editor, 6);
@@ -67,7 +67,7 @@ describe('browser.tinymce.plugins.table.ExcessColsTest', () => {
 
       it('TINY-7041: insert new row', () => {
         const editor = hook.editor();
-        editor.setContent(tableHTML);
+        editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
         editor.execCommand('mceTableInsertRowAfter');
         assertBasicTablePresence(editor, 6);
@@ -75,7 +75,7 @@ describe('browser.tinymce.plugins.table.ExcessColsTest', () => {
 
       it('TINY-7041: delete first column in the table', () => {
         const editor = hook.editor();
-        editor.setContent(tableHTML);
+        editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
         editor.execCommand('mceTableDeleteCol');
         assertBasicTablePresence(editor, 2);
@@ -83,7 +83,7 @@ describe('browser.tinymce.plugins.table.ExcessColsTest', () => {
 
       it('TINY-7041: delete last column in the table', () => {
         const editor = hook.editor();
-        editor.setContent(tableHTML);
+        editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 1, 0 ], 0);
         editor.execCommand('mceTableDeleteCol');
         assertBasicTablePresence(editor, 2);

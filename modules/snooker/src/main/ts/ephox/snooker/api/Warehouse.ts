@@ -71,7 +71,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
   const access: Record<string, Structs.DetailExt> = {};
   const cells: Structs.RowDetail<Structs.DetailExt>[] = [];
   let columns: Record<number, Structs.ColumnExt> = {};
-  const colgroups: Structs.Colgroup<Structs.ColumnExt>[] = [];
+  let colgroups: Structs.Colgroup<Structs.ColumnExt>[] = [];
 
   const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
   const lockedColumns: Record<string, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
@@ -120,7 +120,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
   Arr.last(colgroupRows).each((rowData) => {
     columns = generateColumns<T>(rowData);
     const colgroup = Structs.colgroup(rowData.element as SugarElement<HTMLTableColElement>, Obj.values(columns));
-    colgroups.push(colgroup);
+    colgroups = [ colgroup ];
   });
 
   const grid = Structs.grid(maxRows, maxColumns);

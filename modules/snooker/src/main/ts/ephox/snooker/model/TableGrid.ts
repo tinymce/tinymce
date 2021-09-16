@@ -37,11 +37,9 @@ const findDiff = (xs: ElementNew[], comp: (a: SugarElement, b: SugarElement) => 
 const subgrid = (grid: RowCells[], row: number, column: number, comparator: (a: SugarElement, b: SugarElement) => boolean): { colspan: number; rowspan: number } => {
   const gridRow = getRow(grid, row);
   const isColRow = gridRow.section === 'colgroup';
-  const { rows, cols } = GridRow.extractGridDetails(grid);
-  const numColRows = cols.length;
 
   const colspan = findDiff(gridRow.cells.slice(column), comparator);
-  const rowspan = isColRow ? 1 : findDiff(getColumn(rows, column).slice(row - numColRows), comparator);
+  const rowspan = isColRow ? 1 : findDiff(getColumn(grid, column).slice(row), comparator);
 
   return {
     colspan,
