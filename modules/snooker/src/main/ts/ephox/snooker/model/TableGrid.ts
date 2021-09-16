@@ -39,7 +39,7 @@ const subgrid = (grid: RowCells[], row: number, column: number, comparator: (a: 
   const isColRow = gridRow.section === 'colgroup';
 
   const colspan = findDiff(gridRow.cells.slice(column), comparator);
-  const rowspan = isColRow ? 1 : findDiff(getColumn(grid, column).slice(row), comparator);
+  const rowspan = isColRow ? 1 : findDiff(getColumn(grid.slice(row), column), comparator);
 
   return {
     colspan,
