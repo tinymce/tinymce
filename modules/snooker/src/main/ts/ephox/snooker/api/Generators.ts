@@ -18,6 +18,7 @@ export interface Generators {
   readonly row: (rowData: RowData) => SugarElement<HTMLTableRowElement>;
   readonly replace: <K extends keyof HTMLElementTagNameMap>(cell: SugarElement<HTMLTableCellElement>, tag: K, attrs: Record<string, string | number | boolean | null>) => SugarElement<HTMLElementTagNameMap[K]>;
   readonly gap: () => SugarElement<HTMLTableCellElement>;
+  readonly colGap: () => SugarElement<HTMLTableColElement>;
   readonly col: (prev: CellData) => SugarElement<HTMLTableColElement>;
   readonly colgroup: (prev: RowData) => SugarElement<HTMLTableColElement>;
 }

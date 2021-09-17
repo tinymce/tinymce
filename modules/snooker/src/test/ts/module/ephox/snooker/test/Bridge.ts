@@ -51,6 +51,7 @@ const generators: Generators = {
     Insert.append(tag, SugarElement.fromText('?'));
     return tag;
   },
+  colGap: () => SugarElement.fromTag('col'),
   col: () => SugarElement.fromTag('col'),
   colgroup: () => SugarElement.fromTag('colgroup')
 };
@@ -71,6 +72,7 @@ const pasteGenerators: SimpleGenerators = {
   row: () => SugarElement.fromTag('tr'),
   cell: createCell,
   replace,
+  colGap: () => SugarElement.fromTag('col'),
   gap: createCell
 };
 
