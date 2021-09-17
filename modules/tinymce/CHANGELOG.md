@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Table cells that were both row and column headers would not retain the correct state when converting back to a regular row or column #TINY-7709
 - Clicking beside a non-editable element could cause the editor to incorrectly scroll to the top of the document #TINY-7062
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
+- Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
 
 ## 5.9.2 - 2021-09-08
 
