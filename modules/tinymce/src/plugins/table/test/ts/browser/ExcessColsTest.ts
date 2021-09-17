@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.table.ExcessColsTest', () => {
     });
   };
 
-  // Note: THe goal of these tests is to make sure an exception is not thrown and each table operation works
+  // Note: The goal of these tests is to make sure an exception is not thrown and each table operation works
   // when there are more col elements than actual columns
   Arr.each([
     {
@@ -57,7 +57,7 @@ describe('browser.tinymce.plugins.table.ExcessColsTest', () => {
         assertBasicTablePresence(editor, 6);
       });
 
-      it('TINY-7041: insert new column at the emd of the table', () => {
+      it('TINY-7041: insert new column at the end of the table', () => {
         const editor = hook.editor();
         editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 1, 0 ], 0);
