@@ -35,15 +35,15 @@ const findDiff = (xs: ElementNew[], comp: (a: SugarElement, b: SugarElement) => 
  *   rowspan: row span of the cell at (row, column)
  */
 const subgrid = (grid: RowCells[], row: number, column: number, comparator: (a: SugarElement, b: SugarElement) => boolean): { colspan: number; rowspan: number } => {
-  const restOfRow = getRow(grid, row).cells.slice(column);
-  const endColIndex = findDiff(restOfRow, comparator);
+  const gridRow = getRow(grid, row);
+  const isColRow = gridRow.section === 'colgroup';
 
-  const restOfColumn = getColumn(grid, column).slice(row);
-  const endRowIndex = findDiff(restOfColumn, comparator);
+  const colspan = findDiff(gridRow.cells.slice(column), comparator);
+  const rowspan = isColRow ? 1 : findDiff(getColumn(grid.slice(row), column), comparator);
 
   return {
-    colspan: endColIndex,
-    rowspan: endRowIndex
+    colspan,
+    rowspan
   };
 };
 
