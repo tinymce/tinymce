@@ -1,12 +1,26 @@
 const getPrototypeOf = Object.getPrototypeOf;
 
+const hasProto = (v: Object, predicate: (v: Object) => boolean, name: string): boolean => {
+  if (predicate(v)) {
+    return true;
+  } else {
+    // String-based fallback time
+    const constructor = v.constructor;
+    if (isNonNullable(constructor)) {
+      return constructor.name === name;
+    } else {
+      return getPrototypeOf(v).toString() === `[object ${name}]`;
+    }
+  }
+};
+
 const typeOf = (x: any): string => {
   const t = typeof x;
   if (x === null) {
     return 'null';
-  } else if (t === 'object' && Array.prototype.isPrototypeOf(x)) {
+  } else if (t === 'object' && hasProto(x, (v) => Array.prototype.isPrototypeOf(v), 'Array')) {
     return 'array';
-  } else if (t === 'object' && String.prototype.isPrototypeOf(x)) {
+  } else if (t === 'object' && hasProto(x, (v) => String.prototype.isPrototypeOf(v), 'String')) {
     return 'string';
   } else {
     return t;
@@ -28,19 +42,8 @@ export const isString: (value: any) => value is string =
 export const isObject: (value: any) => value is Object =
   isType('object');
 
-export const isPlainObject = (value: unknown): value is Object => {
-  if (!isObject(value)) {
-    return false;
-  }
-
-  const constructor = value.constructor;
-  if (isUndefined(constructor)) { // IE doesn't support this
-    const proto = getPrototypeOf(value);
-    return proto === Object.prototype || proto.toString() === '[object Object]';
-  } else {
-    return constructor.name === 'Object';
-  }
-};
+export const isPlainObject = (value: unknown): value is Object =>
+  isObject(value) && hasProto(value, (v) => getPrototypeOf(v) === Object.prototype, 'Object');
 
 export const isArray: (value: any) => value is Array<unknown> =
   isType('array');
