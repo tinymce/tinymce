@@ -167,7 +167,7 @@ const monitorEvent = (eventName: string, initialTarget: SugarElement, f: EventPr
 
 const inspectorInfo = (comp: AlloyComponent) => {
   const go = (c: AlloyComponent): InspectorInfo => {
-    const cSpec = c.spec();
+    const cSpec = c.spec;
 
     return {
       '(original.spec)': cSpec,
