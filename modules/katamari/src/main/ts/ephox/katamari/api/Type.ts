@@ -35,7 +35,8 @@ export const isPlainObject = (value: unknown): value is Object => {
 
   const constructor = value.constructor;
   if (isUndefined(constructor)) { // IE doesn't support this
-    return getPrototypeOf(value) === Object.prototype;
+    const proto = getPrototypeOf(value);
+    return proto === Object.prototype || proto.toString() === '[object Object]';
   } else {
     return constructor.name === 'Object';
   }
