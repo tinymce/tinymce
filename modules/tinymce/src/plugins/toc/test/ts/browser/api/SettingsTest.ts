@@ -1,20 +1,26 @@
-import { Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import * as Settings from 'tinymce/plugins/toc/api/Settings';
 
-UnitTest.test('browser.tinymce.plugins.toc.api.SettingsTest', () => {
-  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be default toc class', 'mce-toc', Settings.getTocClass(new Editor('x', {}, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be specified toc class', 'c', Settings.getTocClass(new Editor('x', { toc_class: 'c' }, EditorManager)));
+describe('browser.tinymce.plugins.toc.api.SettingsTest', () => {
+  it('getTocClass setting', () => {
+    assert.equal(Settings.getTocClass(new Editor('x', {}, EditorManager)), 'mce-toc', 'Should be default toc class');
+    assert.equal(Settings.getTocClass(new Editor('x', { toc_class: 'c' }, EditorManager)), 'c', 'Should be specified toc class');
+  });
 
-  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be default h2', 'h2', Settings.getTocHeader(new Editor('x', {}, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be h3', 'h3', Settings.getTocHeader(new Editor('x', { toc_header: 'h3' }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be h2 since h75 is invalid', 'h2', Settings.getTocHeader(new Editor('x', { toc_header: 'h75' }, EditorManager)));
+  it('getTocHeader setting', () => {
+    assert.equal(Settings.getTocHeader(new Editor('x', {}, EditorManager)), 'h2', 'Should be default h2');
+    assert.equal(Settings.getTocHeader(new Editor('x', { toc_header: 'h3' }, EditorManager)), 'h3', 'Should be h3');
+    assert.equal(Settings.getTocHeader(new Editor('x', { toc_header: 'h75' }, EditorManager)), 'h2', 'Should be h2 since h75 is invalid');
+  });
 
-  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be default 3', 3, Settings.getTocDepth(new Editor('x', {}, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be specified toc depth (string)', 5, Settings.getTocDepth(new Editor('x', { toc_depth: '5' }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be specified toc depth', 5, Settings.getTocDepth(new Editor('x', { toc_depth: 5 }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: TableOfContents: Should be default toc depth for invalid', 3, Settings.getTocDepth(new Editor('x', { toc_depth: '53' }, EditorManager)));
+  it('getTocDepth setting', () => {
+    assert.equal(Settings.getTocDepth(new Editor('x', {}, EditorManager)), 3, 'Should be default 3');
+    assert.equal(Settings.getTocDepth(new Editor('x', { toc_depth: '5' }, EditorManager)), 5, 'Should be specified toc depth (string)');
+    assert.equal(Settings.getTocDepth(new Editor('x', { toc_depth: 5 }, EditorManager)), 5, 'Should be specified toc depth');
+    assert.equal(Settings.getTocDepth(new Editor('x', { toc_depth: '53' }, EditorManager)), 3, 'Should be default toc depth for invalid');
+  });
 });
