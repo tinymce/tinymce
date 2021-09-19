@@ -1,97 +1,59 @@
-import { Assertions, GeneralSteps, Keyboard, Keys, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyDom, TinyLoader } from '@ephox/wrap-mcagar';
+import { Waiter } from '@ephox/agar';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, failure) => {
-
-  Plugin(2);
-  Theme();
-
-  const sReset = (tinyApis: TinyApis) => {
-    return Logger.t('Reset content', GeneralSteps.sequence([
-      tinyApis.sSetContent(''),
-      sWaitForWordcount(0)
-    ]));
-  };
-
-  const sAssertWordcount = (num: number) => {
-    return Logger.t(`Assert word count ${num}`, Step.sync(() => {
-      const countEl = DOMUtils.DOM.select('.tox-statusbar__wordcount')[0];
-      const value = countEl ? countEl.innerText : '';
-      Assertions.assertEq('wordcount', num + ' WORDS', value.toUpperCase());
-    }));
-  };
-
-  const sAssertContent = (tinyApis: TinyApis, expected: string) => GeneralSteps.sequence(Log.steps('TBA', 'asserting contents after undo', [
-    tinyApis.sAssertContent(expected)
-  ]));
-
-  const sWaitForWordcount = (num: number) => {
-    return Waiter.sTryUntil('wordcount did not change', sAssertWordcount(num));
-  };
-
-  const sFakeTyping = (editor: Editor, str: string) => {
-    return Logger.t(`Fake typing ${str}`, Step.sync(() => {
-      editor.getBody().innerHTML = '<p>' + str + '</p>';
-      Keyboard.keystroke(Keys.space(), {}, TinyDom.fromDom(editor.getBody()));
-    }));
-  };
-
-  const sTestSetContent = (tinyApis: TinyApis) => {
-    return GeneralSteps.sequence(Log.steps('TBA', 'WordCount: Set test content and assert word count', [
-      sReset(tinyApis),
-      tinyApis.sSetContent('<p>hello world</p>'),
-      sWaitForWordcount(2)
-    ]));
-  };
-
-  const sTestKeystroke = (editor: Editor, tinyApis: TinyApis) => {
-    return GeneralSteps.sequence(Log.steps('TBA', 'WordCount: Test keystroke and assert word count', [
-      sReset(tinyApis),
-      sFakeTyping(editor, 'a b c'),
-      sWaitForWordcount(3)
-    ]));
-  };
-
-  const sExecCommand = (editor: Editor, command: string) => {
-    return Logger.t(`Execute ${command}`, Step.sync(() => {
-      editor.execCommand(command);
-    }));
-  };
-
-  const sTestUndoRedo = (editor: Editor, tinyApis: TinyApis) => {
-    return GeneralSteps.sequence(Log.steps('TBA', 'WordCount: Test undo and redo', [
-      sReset(tinyApis),
-      tinyApis.sSetContent('<p>a b c</p>'),
-      sWaitForWordcount(3),
-      sExecCommand(editor, 'undo'),
-      sAssertContent(tinyApis, ''),
-      sWaitForWordcount(0),
-      sExecCommand(editor, 'redo'),
-      sAssertContent(tinyApis, '<p>a b c</p>'),
-      sWaitForWordcount(3),
-      tinyApis.sSetRawContent('<p>hello world</p>'),
-      sExecCommand(editor, 'mceAddUndoLevel'),
-      sWaitForWordcount(2)
-    ]));
-  };
-
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      sTestSetContent(tinyApis),
-      sTestKeystroke(editor, tinyApis),
-      sTestUndoRedo(editor, tinyApis)
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'wordcount',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ () => Plugin(2), Theme ], true);
+
+  beforeEach(() => {
+    hook.editor().setContent('');
+  });
+
+  const assertWordcount = (num: number) => {
+    const countEl = DOMUtils.DOM.select('.tox-statusbar__wordcount')[0];
+    const value = countEl ? countEl.innerText : '';
+    assert.equal(value.toUpperCase(), num + ' WORDS', 'wordcount');
+  };
+
+  const pWaitForWordcount = (num: number) =>
+    Waiter.pTryUntil('Wait for wordcount to change', () => assertWordcount(num));
+
+  it('Set test content and assert word count', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    editor.setContent('<p>hello world</p>');
+    await pWaitForWordcount(2);
+  });
+
+  it('Test keystroke and assert word count', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    TinyContentActions.type(editor, 'a b c');
+    await pWaitForWordcount(3);
+  });
+
+  it('Test undo and redo', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    editor.setContent('<p>a b c</p>');
+    await pWaitForWordcount(3);
+    editor.execCommand('undo');
+    TinyAssertions.assertContent(editor, '');
+    await pWaitForWordcount(0);
+    editor.execCommand('redo');
+    TinyAssertions.assertContent(editor, '<p>a b c</p>');
+    await pWaitForWordcount(3);
+    editor.setContent('<p>hello world</p>', { format: 'raw' });
+    editor.execCommand('mceAddUndoLevel');
+    await pWaitForWordcount(2);
+  });
 });
