@@ -50,13 +50,13 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
   });
 
   editor.on('BeforeSetContent', (e) => {
-    const content = e.content;
-    if (e.selection === true && e.paste === true && Type.isString(content)) {
+    const eventContent = e.content;
+    if (e.selection === true && e.paste === true && Type.isString(eventContent)) {
       const selectedCells = TableSelection.getCellsFromSelection(selections);
       Arr.head(selectedCells).each((cell) => {
         TableLookup.table(cell).each((table) => {
 
-          const elements = Arr.filter(SugarElements.fromHtml(content), (content) => {
+          const elements = Arr.filter(SugarElements.fromHtml(eventContent), (content) => {
             return SugarNode.name(content) !== 'meta';
           });
 
