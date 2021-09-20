@@ -10,7 +10,7 @@ import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 
 export type BehaviourApiFunc<D extends BehaviourConfigDetail, S extends BehaviourState> = (component: AlloyComponent, bConfig: D, bState: S, ...rest: any[]) => any;
 
-export type BehaviourRecord = Record<string, ConfiguredBehaviour<any, any, any>>;
+export type BehaviourRecord = Record<string, ConfiguredBehaviour<any, any, any> | undefined>;
 export interface BehaviourApisRecord<D extends BehaviourConfigDetail, S extends BehaviourState> { [key: string]: BehaviourApiFunc<D, S> }
 export type BehaviourExtraRecord<E> = { [K in keyof E]: Function };
 
@@ -25,7 +25,7 @@ export interface BehaviourActiveSpec<D extends BehaviourConfigDetail, S extends 
 }
 export interface NamedConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
   key: string;
-  value: ConfiguredBehaviour<C, D, S>;
+  value: ConfiguredBehaviour<C, D, S> | undefined;
 }
 
 export interface AlloyBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {

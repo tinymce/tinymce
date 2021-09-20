@@ -18,8 +18,8 @@ const field = (name: string, forbidden: Array<{ name: () => string }>): FieldPro
 const get = (data: SketchBehaviours): AlloyBehaviourRecord => data.dump;
 
 const augment = (data: SketchBehaviours, original: Array<NamedConfiguredBehaviour<any, any, any>>): AlloyBehaviourRecord => ({
-  ...data.dump,
-  ...derive(original)
+  ...derive(original),
+  ...data.dump
 });
 
 // Is this used?
