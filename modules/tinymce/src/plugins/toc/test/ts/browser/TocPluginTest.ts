@@ -1,7 +1,8 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/wrap-mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
+import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/toc/Plugin';
@@ -9,13 +10,19 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'toc',
+    toolbar: 'toc',
+    add_unload_trigger: false,
+    indent: false,
+    toc_class: 'tst-toc',
+    toc_depth: 2,
+    toc_header: 'h3',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ]);
 
-  Plugin();
-  Theme();
-
-  const stripAttribs = ($el, attr) => {
+  const stripAttribs = ($el: DomQuery, attr: string[] | string): void => {
     if (Tools.isArray(attr)) {
       Tools.each(attr, (attr) => {
         stripAttribs($el, attr);
@@ -27,11 +34,11 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     $el.find('[' + attr + ']').removeAttr(attr);
   };
 
-  const trimBr = (html) => {
-    return html.replace(/<br data-mce-bogus="1" \/>/g, '');
-  };
+  const trimBr = (html: string): string =>
+    html.replace(/<br data-mce-bogus="1" \/>/g, '');
 
-  suite.test('TestCase-TBA: TableOfContents: mceInsertToc', (editor) => {
+  it('mceInsertToc', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -47,14 +54,14 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
 
     const $toc = editor.$<Element>('.tst-toc');
 
-    LegacyUnit.equal($toc.length, 2, 'ToC inserted');
-    LegacyUnit.equal($toc.attr('contentEditable'), 'false', 'cE=false');
+    assert.lengthOf($toc, 2, 'ToC inserted');
+    assert.equal($toc.attr('contentEditable'), 'false', 'cE=false');
 
-    LegacyUnit.equal($toc.find('ul ul ul').length, 0, 'no levels beyond 2 are included');
+    assert.lengthOf($toc.find('ul ul ul'), 0, 'no levels beyond 2 are included');
 
     stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
 
-    LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].outerHTML)),
+    assert.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].outerHTML)),
       '<div class="tst-toc" contenteditable="false">' +
       '<h3 contenteditable="true">Table of Contents</h3>' +
       '<ul>' +
@@ -73,7 +80,8 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     );
   });
 
-  suite.test('TestCase-TBA: TableOfContents: mceInsertToc - flat structure', (editor) => {
+  it('mceInsertToc - flat structure', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -111,7 +119,8 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     );
   });
 
-  suite.test('TestCase-TBA: TableOfContents: mceUpdateToc', (editor) => {
+  it('mceUpdateToc', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -131,11 +140,11 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.execCommand('mceUpdateToc');
 
-    LegacyUnit.equal(editor.$('.tst-toc > ul a[href="#h5"]').length, 1,
-      'ToC has been successfully updated');
+    assert.lengthOf(editor.$('.tst-toc > ul a[href="#h5"]'), 1, 'ToC has been successfully updated');
   });
 
-  suite.test('TestCase-TBA: TableOfContents: Misc.', (editor) => {
+  it('Misc', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML =
       '<h2 id="h1">H2</h2>' +
       '<p>This is some text.</p><br />' +
@@ -148,18 +157,17 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     editor.execCommand('mceInsertToc');
 
     const contents = editor.getContent();
-    LegacyUnit.equal(/contenteditable/i.test(contents), false, 'cE stripped for getContent()');
+    assert.notMatch(contents, /contenteditable/i, 'cE stripped for getContent()');
 
     editor.setContent(contents);
 
     const $toc = editor.$<Element>('.tst-toc');
-    LegacyUnit.deepEqual($toc.attr('contentEditable'), 'false', 'cE added back after setContent()');
-    LegacyUnit.deepEqual($toc.find(':first-child').attr('contentEditable'), 'true',
-      'cE added back to title after setContent()');
+    assert.equal($toc.attr('contentEditable'), 'false', 'cE added back after setContent()');
+    assert.equal($toc.find(':first-child').attr('contentEditable'), 'true', 'cE added back to title after setContent()');
 
     stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
 
-    LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].innerHTML)),
+    assert.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].innerHTML)),
       '<h3 contenteditable="true">Table of Contents</h3>' +
       '<ul>' +
       '<li>' +
@@ -172,17 +180,4 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       'the largest available header becomes first ToC level'
     );
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, Log.steps('TBA', 'TableOfContents: Api insert, update and test table of contents', suite.toSteps(editor)), onSuccess, onFailure);
-  }, {
-    plugins: 'toc',
-    toolbar: 'toc',
-    add_unload_trigger: false,
-    indent: false,
-    toc_class: 'tst-toc',
-    toc_depth: 2,
-    toc_header: 'h3',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });
