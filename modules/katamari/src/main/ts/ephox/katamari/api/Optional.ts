@@ -4,7 +4,7 @@ import * as Type from './Type';
  * The `Optional` type represents a value (of any type) that potentially does
  * not exist. Any `Optional<T>` can either be a `Some<T>` (in which case the
  * value does exist) or a `None` (in which case the value does not exist). This
- * file defines a whole lot of FP-inspired utility functions for dealing with
+ * module defines a whole lot of FP-inspired utility functions for dealing with
  * `Optional` objects.
  *
  * Comparison with null or undefined:
@@ -24,7 +24,7 @@ export class Optional<T> {
   // reuse the same object
   private static singletonNone = new Optional<any>(false);
 
-  // The internal representation has an `tag` and a `value`, but both are
+  // The internal representation has a `tag` and a `value`, but both are
   // private: able to be console.logged, but not able to be accessed by code
   private constructor(tag: boolean, value?: T) {
     this.tag = tag;
@@ -103,8 +103,7 @@ export class Optional<T> {
 
   /**
    * Perform a transform on an `Optional` object, **if** there is a value.
-   * Unlike the map function earlier in the piece, here the transform itself
-   * also returns an `Optional`.
+   * Unlike `map`, here the transform itself also returns an `Optional`.
    */
   public bind<U>(binder: (value: T) => Optional<U>): Optional<U> {
     if (this.tag) {
@@ -119,8 +118,8 @@ export class Optional<T> {
   /**
    * For a given predicate, this function finds out if there **exists** a value
    * inside this `Optional` object that meets the predicate. In practice, this
-   * means that for empty `Optional`s it returns false (as no predicate-
-   * meeting value exists).
+   * means that for `Optional`s that do not contain a value it returns false (as
+   * no predicate-meeting value exists).
    */
   public exists(predicate: (value: T) => boolean): boolean {
     return this.tag && predicate(this.value as T);
@@ -129,8 +128,8 @@ export class Optional<T> {
   /**
    * For a given predicate, this function finds out if **all** the values inside
    * this `Optional` object meet the predicate. In practice, this means that
-   * for empty `Optional`s it returns true (as all 0 objects do meet the
-   * predicate).
+   * for `Optional`s that do not contain a value it returns true (as all 0
+   * objects do meet the predicate).
    */
   public forall(predicate: (value: T) => boolean): boolean {
     return !this.tag || predicate(this.value as T);

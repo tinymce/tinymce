@@ -5,8 +5,8 @@ import { Optional } from './Optional';
  * The `Result` type represents a value (of any type) that may instead be an
  * error (of any type). Any `Result<T, E>` can either be a `Value<T>` (which
  * contains a value of type `T`) or an `Error<E>` (which contains an error of
- * type `E`). This file defines a whole lot of FP-inspired utility functions for
- * dealing with `Result` objects.
+ * type `E`). This module defines a whole lot of FP-inspired utility functions
+ * for dealing with `Result` objects.
  *
  * Comparison with exceptions:
  * - Each function's type signature says whether it returns a `Result` or not
@@ -85,12 +85,12 @@ export interface Result<T, E> {
 
   /**
    * Perform a transform on a `Result` object, **if** there is a value. If you
-   * have a function that attempts to transform a `T` into a `U` (ie a function
-   * that turns `T` into `Result<U, E>`) then this function will transform a
-   * `Result<T, E>` into a `Result<U, E>`. If this `Result` **does** contain a
-   * value, then the output will be `binder(this.value)`, and if this **does
-   * not** contain a value then neither will the output (and the error will
-   * remain the same).
+   * have a function that attempts to transform a `T` into a `U` (i.e. a
+   * function that turns `T` into `Result<U, E>`) then this function will
+   * transform a `Result<T, E>` into a `Result<U, E>`. If this `Result` **does**
+   * contain a value, then the output will be `binder(this.value)`, and if this
+   * **does not** contain a value then neither will the output (and the error
+   * will remain the same).
    */
   readonly bind: <U>(binder: (value: T) => Result<U, E>) => Result<U, E>;
 
@@ -189,8 +189,7 @@ export interface Result<T, E> {
   readonly toOptional: () => Optional<T>;
 }
 
-/**
- * Debugging information. This is deliberately not included in the exported
+/* Debugging information. This is deliberately not included in the exported
  * types, because we don't want production code to use it, but it's very useful
  * to have this information included in the objects themselves for when you're
  * looking at them in the console or debugger.
@@ -249,6 +248,7 @@ const value = <T, E = never>(value: T): Result<T, E> => {
  * contains an error.
  */
 const error = <T = never, E = any>(error: E): Result<T, E> => {
+  const outputHelper = <U = T>() => output as unknown as Result<U, E>;
 
   const output: DebugResult<T, E> = {
     // Debug info
@@ -258,9 +258,9 @@ const error = <T = never, E = any>(error: E): Result<T, E> => {
     fold: (onError, _onValue) => onError(error),
     isValue: Fun.never,
     isError: Fun.always,
-    map: <U>(_mapper) => output as unknown as Result<U, E>,
+    map: outputHelper,
     mapError: (mapper) => Result.error(mapper(error)),
-    bind: <U>(_binder) => output as unknown as Result<U, E>,
+    bind: outputHelper,
     exists: Fun.never,
     forall: Fun.always,
     getOr: Fun.identity,
@@ -281,8 +281,8 @@ const error = <T = never, E = any>(error: E): Result<T, E> => {
  * the outputted `Result` will contain an error (and that error will be the
  * error passed in).
  */
-const fromOption = <T, E>(optional: Optional<T>, error: E): Result<T, E> =>
-  optional.fold(() => Result.error(error), Result.value);
+const fromOption = <T, E>(optional: Optional<T>, err: E): Result<T, E> =>
+  optional.fold(() => error(err), value);
 
 export const Result = {
   value,
