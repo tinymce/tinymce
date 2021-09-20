@@ -14,7 +14,6 @@ import * as Type from './Type';
  * another `Optional`)
  * - There is no option to turn off strict-optional-checks like there is for
  * strict-null-checks
- * - Try to use `Optional` instead of null or undefined where you can
  */
 export class Optional<T> {
   private readonly tag: boolean;

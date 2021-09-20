@@ -14,7 +14,6 @@ import { Optional } from './Optional';
  * - The type of the error in a result can be checked by TypeScript.
  * - You can't forget to catch errors from inside a `Result`, you need to handle
  * them to access the value.
- * - Try to use `Result` instead of exceptions where you can (outside of tests)
  *
  * Comparison with optionals:
  * - Both `Optional` and `Result` are a typesafe way to store data that might
