@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "5.10.0",
+  "version": "6.0.0",
   "private": true,
   "repository": {
     "type": "git",
