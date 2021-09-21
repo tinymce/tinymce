@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an exception getting thrown when there were more `col` elements than columns in a table #TINY-7041
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
 - Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
+- Unable to paste a screenshot taken from gnome-software on Chrome
 
 ## 5.9.2 - 2021-09-08
 
