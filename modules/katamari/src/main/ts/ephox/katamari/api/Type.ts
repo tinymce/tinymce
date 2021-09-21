@@ -4,11 +4,12 @@ const hasProto = (v: Object, predicate: (v: Object) => boolean, name: string): b
   if (predicate(v)) {
     return true;
   } else {
-    // String-based fallback time (only needed for IE)
+    // String-based fallback time
     const constructor = v.constructor;
     if (isNonNullable(constructor)) {
       return constructor.name === name;
     } else {
+      // IE doesn't support the constructor API
       return getPrototypeOf(v).toString() === `[object ${name}]`;
     }
   }
