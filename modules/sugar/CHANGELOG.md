@@ -6,12 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+
+## 8.1.0 - TBD
+
 ### Added
 - Added new `parentElement` function to the `Traverse` API.
 - Added new `setOptions` function to the `Attribute` API.
-
-### Changed
-- Upgraded to Katamari 9.0, which is incompatible with Katamari 8.0 if used in the same bundle.
 
 ### Fixed
 - Disabled `window.visualViewport` in Mozilla Firefox as it was returning an incorrect value for `pageTop` when using `position: 'fixed'`.

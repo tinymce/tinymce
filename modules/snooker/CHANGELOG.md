@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Changed
-- Upgraded to Katamari 9.0, which is incompatible with Katamari 8.0 if used in the same bundle.
+- Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+
+## 10.0.0 - TBD
+
+### Changed
 - The `pixelSize` and `percentSize` functions in `TableSize` no longer require the initial width to be provided.
 - `ColumnSizes` will now use `col` elements to calculate the column width where appropriate.
 - `Sizes.redistribute` no longer requires a `TableSize` instance to be provided.
@@ -18,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Resizing table cells caused incorrect widths in cases where those cells had grown to fit extra content.
 - Resizing percent tables caused widths to be offset by a few pixels due to an incorrect pixel -> percent conversion.
 - Converting rows or columns to regular cells would in some cases incorrectly convert a cell that was still part of a header.
+- An exception was thrown in `TableGrid` when there were more `col` elements than columns in a table.
 
 ## 9.0.0 - 2021-08-26
 

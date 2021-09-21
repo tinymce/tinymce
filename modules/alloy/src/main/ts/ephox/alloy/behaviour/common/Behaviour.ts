@@ -11,7 +11,7 @@ import { BehaviourConfigAndState } from './BehaviourBlob';
 import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 import {
   AlloyBehaviour, BehaviourActiveSpec, BehaviourApiFunc, BehaviourApisRecord, BehaviourConfigDetail, BehaviourConfigSpec, BehaviourExtraRecord,
-  BehaviourInfo, ConfiguredBehaviour, NamedConfiguredBehaviour
+  BehaviourInfo, NamedConfiguredBehaviour
 } from './BehaviourTypes';
 
 export type WrappedApiFunc<T extends (comp: AlloyComponent, config: any, state: any, ...args: any[]) => any> = T extends (comp: AlloyComponent, config: any, state: any, ...args: infer P) => infer R ? (comp: AlloyComponent, ...args: P) => R : never;
@@ -82,7 +82,7 @@ const wrapApi = <D extends BehaviourConfigDetail, S extends BehaviourState>(bNam
 // I think the "revoke" idea is fragile at best.
 const revokeBehaviour = (name: string): NamedConfiguredBehaviour<any, any, any> => ({
   key: name,
-  value: undefined as unknown as ConfiguredBehaviour<any, any, any>
+  value: undefined
 });
 
 const doCreate = <

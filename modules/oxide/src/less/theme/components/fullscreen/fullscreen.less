@@ -27,16 +27,16 @@
   display: none;
 }
 
-.tox.tox-tinymce.tox-fullscreen {
-  background-color: @fullscreen-container-background-color;
+.tox.tox-tinymce.tox-fullscreen,
+.tox-shadowhost.tox-fullscreen {
   left: 0;
   position: fixed;
   top: 0;
   z-index: @z-index-fullscreen;
 }
 
-.tox-shadowhost.tox-fullscreen {
-  z-index: @z-index-fullscreen;
+.tox.tox-tinymce.tox-fullscreen {
+  background-color: @fullscreen-container-background-color;
 }
 
 // Body and ShadowDom support
