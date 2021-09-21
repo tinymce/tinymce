@@ -11,6 +11,7 @@
 
 @resize-handle-color: #4099ff;
 @resize-handle-size: 10px;
+@resize-clone-z-index: 10000;
 
 .mce-content-body {
   div.mce-resizehandle {
@@ -24,7 +25,7 @@
     height: @resize-handle-size;
     position: absolute;
     width: @resize-handle-size;
-    z-index: 10000;
+    z-index: @z-index-resize-handle;
 
     &:hover {
       background-color: @resize-handle-color;
@@ -48,7 +49,7 @@
   }
 
   .mce-resize-backdrop {
-    z-index: 10000;
+    z-index: @resize-clone-z-index;
   }
 
   .mce-clonedresizable {
@@ -56,7 +57,7 @@
     opacity: .5;
     outline: 1px dashed black;
     position: absolute;
-    z-index: 10001;
+    z-index: @resize-clone-z-index + 1;
 
     // Hide table borders when using table_column_resizing: 'resizetable'
     &.mce-resizetable-columns th,
@@ -79,6 +80,6 @@
     padding: 5px;
     position: absolute;
     white-space: nowrap;
-    z-index: 10002;
+    z-index: @resize-clone-z-index + 2;
   }
 }
