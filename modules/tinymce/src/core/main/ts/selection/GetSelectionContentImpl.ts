@@ -86,7 +86,6 @@ const setupArgs = (args: Partial<GetSelectionContentArgs>, format: ContentFormat
   format,
   get: true,
   selection: true,
-  content: '',
   getInner: false
 });
 

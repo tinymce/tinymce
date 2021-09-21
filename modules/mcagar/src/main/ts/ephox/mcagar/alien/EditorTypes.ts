@@ -15,7 +15,7 @@ export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';
 export interface GetContentArgs {
   format: ContentFormat;
   get: boolean;
-  content: any;
+  content?: any;
   getInner?: boolean;
   no_events?: boolean;
   [key: string]: any;

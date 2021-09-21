@@ -43,7 +43,7 @@ export interface SelectionSetContentArgs extends SetContentArgsBase {
 export interface GetSelectionContentArgs extends GetContentArgsBase {
   selection: boolean;
   contextual?: boolean;
-  content: string;
+  content?: string;
 }
 
 export interface InsertContentDetails {
