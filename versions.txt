@@ -1,3 +1,5 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
 
+snooker@10.0.0
+sugar@8.1.0

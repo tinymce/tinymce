@@ -6,7 +6,7 @@
  */
 
 import { Selections, SelectionTypes } from '@ephox/darwin';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
@@ -14,7 +14,6 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
-import { CellSelectionApi } from '../selection/CellSelection';
 import * as Ephemera from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
 import { TableActions } from './TableActions';
@@ -36,7 +35,7 @@ const serializeElements = (editor: Editor, elements: SugarElement[]): string =>
 const getTextContent = (elements: SugarElement[]): string =>
   Arr.map(elements, (element) => element.dom.innerText).join('');
 
-const registerEvents = (editor: Editor, selections: Selections, actions: TableActions, cellSelection: CellSelectionApi): void => {
+const registerEvents = (editor: Editor, selections: Selections, actions: TableActions): void => {
   editor.on('BeforeGetContent', (e) => {
     const multiCellContext = (cells: SugarElement<HTMLTableCellElement>[]) => {
       e.preventDefault();
@@ -51,12 +50,13 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
   });
 
   editor.on('BeforeSetContent', (e) => {
-    if (e.selection === true && e.paste === true) {
+    const eventContent = e.content;
+    if (e.selection === true && e.paste === true && Type.isString(eventContent)) {
       const selectedCells = TableSelection.getCellsFromSelection(selections);
       Arr.head(selectedCells).each((cell) => {
         TableLookup.table(cell).each((table) => {
 
-          const elements = Arr.filter(SugarElements.fromHtml(e.content), (content) => {
+          const elements = Arr.filter(SugarElements.fromHtml(eventContent), (content) => {
             return SugarNode.name(content) !== 'meta';
           });
 

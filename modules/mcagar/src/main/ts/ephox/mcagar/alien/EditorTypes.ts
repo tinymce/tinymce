@@ -14,18 +14,18 @@ export interface Selection {
 }
 
 export interface GetContentArgs {
-  format?: string;
-  get?: boolean;
-  content?: string;
+  format: string;
+  get: boolean;
+  content?: any;
   getInner?: boolean;
   no_events?: boolean;
   [key: string]: any;
 }
 
 export interface SetContentArgs {
-  format?: string;
-  set?: boolean;
-  content?: string;
+  format: string;
+  set: boolean;
+  content: any;
   no_events?: boolean;
   no_selection?: boolean;
 }
@@ -50,8 +50,8 @@ export interface Editor {
   getContentAreaContainer: () => HTMLElement;
   getElement: () => HTMLElement;
 
-  getContent: (args?: GetContentArgs) => string;
-  setContent: (content: string, args?: SetContentArgs) => void;
+  getContent: (args?: Partial<GetContentArgs>) => string;
+  setContent: (content: string, args?: Partial<SetContentArgs>) => void;
   addContentFormatter: (format: string, formatGetter: GetContentFormatter, formatSetter: SetContentFormatter) => void;
 
   execCommand: (command: string, ui?: boolean, value?: any, args?: any) => boolean;

@@ -26,7 +26,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
   const theadContent = `<table>
 <thead>
 <tr id="one">
-<td scope="col">text</td>
+<td>text</td>
 </tr>
 </thead>
 <tbody>

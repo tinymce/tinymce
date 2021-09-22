@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added new `parentElement` function to the `Traverse` API.
+- Added new `setOptions` function to the `Attribute` API.
+
+### Fixed
+- Disabled `window.visualViewport` in Mozilla Firefox as it was returning an incorrect value for `pageTop` when using `position: 'fixed'`.
+
 ## 8.0.0 - 2021-08-26
 
 ### Added

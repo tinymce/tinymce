@@ -62,9 +62,9 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     if (!isForcedSizing) {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
         if (sizing === 'relative' && !Sizes.isPercentSizing(table)) {
-          enforcePercentage(editor, table);
+          enforcePercentage(table);
         } else if (sizing === 'fixed' && !Sizes.isPixelSizing(table)) {
-          enforcePixels(editor, table);
+          enforcePixels(table);
         } else if (sizing === 'responsive' && !Sizes.isNoneSizing(table)) {
           enforceNone(table);
         }

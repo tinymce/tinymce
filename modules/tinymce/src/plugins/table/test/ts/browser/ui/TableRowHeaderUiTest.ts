@@ -42,12 +42,12 @@ describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
     '<table>' +
       '<thead>' +
         '<tr>' +
-          makeCell('td', '0-0', 'col') +
-          makeCell('td', '0-1', 'col') +
+          makeCell('td', '0-0', 'none') +
+          makeCell('td', '0-1', 'none') +
         '</tr>' +
         '<tr>' +
-          makeCell('td', '1-0', 'col') +
-          makeCell('td', '1-1', 'col') +
+          makeCell('td', '1-0', 'none') +
+          makeCell('td', '1-1', 'none') +
         '</tr>' +
       '</thead>' +
     '</table>'

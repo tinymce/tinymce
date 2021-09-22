@@ -4,22 +4,21 @@ import { Attribute, Css, SugarElement } from '@ephox/sugar';
 import * as Sizes from '../resize/Sizes';
 import { redistribute } from './Sizes';
 import * as TableLookup from './TableLookup';
-import { TableSize } from './TableSize';
 
 // Remove legacy sizing attributes such as "width"
 const cleanupLegacyAttributes = (element: SugarElement<HTMLElement>): void => {
   Attribute.remove(element, 'width');
 };
 
-const convertToPercentSize = (table: SugarElement<HTMLTableElement>, tableSize: TableSize): void => {
+const convertToPercentSize = (table: SugarElement<HTMLTableElement>): void => {
   const newWidth = Sizes.getPercentTableWidth(table);
-  redistribute(table, Optional.some(newWidth), Optional.none(), tableSize);
+  redistribute(table, Optional.some(newWidth), Optional.none());
   cleanupLegacyAttributes(table);
 };
 
-const convertToPixelSize = (table: SugarElement<HTMLTableElement>, tableSize: TableSize): void => {
+const convertToPixelSize = (table: SugarElement<HTMLTableElement>): void => {
   const newWidth = Sizes.getPixelTableWidth(table);
-  redistribute(table, Optional.some(newWidth), Optional.none(), tableSize);
+  redistribute(table, Optional.some(newWidth), Optional.none());
   cleanupLegacyAttributes(table);
 };
 

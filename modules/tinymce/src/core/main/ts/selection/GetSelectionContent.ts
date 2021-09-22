@@ -6,14 +6,13 @@
  */
 
 import Editor from '../api/Editor';
-import { Content } from '../content/ContentTypes';
+import { Content, GetSelectionContentArgs } from '../content/ContentTypes';
 import * as Rtc from '../Rtc';
-import { GetSelectionContentArgs } from './GetSelectionContentImpl';
 
-const getContent = (editor: Editor, args: GetSelectionContentArgs = {}): Content => {
+const getContent = (editor: Editor, args: Partial<GetSelectionContentArgs> = {}): Content => {
   const format: string = args.format ? args.format : 'html';
 
   return Rtc.getSelectedContent(editor, format, args);
 };
 
-export { getContent, GetSelectionContentArgs };
+export { getContent };

@@ -39,27 +39,34 @@ const trimEmptyContents = (editor: Editor, html: string): string => {
   return html.replace(emptyRegExp, '');
 };
 
-const getContentFromBody = (editor: Editor, updatedArgs: GetContentArgs, body: HTMLElement): Content => {
+const setupArgs = (args: Partial<GetContentArgs>, format: string): GetContentArgs => ({
+  ...args,
+  format,
+  get: true,
+  getInner: true
+});
+
+const getContentFromBody = (editor: Editor, args: Partial<GetContentArgs>, body: HTMLElement): Content => {
   let content: string;
 
-  if (updatedArgs.format === 'raw') {
+  if (args.format === 'raw') {
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
-  } else if (updatedArgs.format === 'text') {
+  } else if (args.format === 'text') {
     // return empty string for text format when editor is empty to avoid bogus elements being returned in content
     content = editor.dom.isEmpty(body) ? '' : Zwsp.trim(body.innerText || body.textContent);
-  } else if (updatedArgs.format === 'tree') {
-    content = editor.serializer.serialize(body, updatedArgs);
+  } else if (args.format === 'tree') {
+    content = editor.serializer.serialize(body, args);
   } else {
-    content = trimEmptyContents(editor, editor.serializer.serialize(body, updatedArgs));
+    content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
   }
 
-  if (!Arr.contains([ 'text', 'tree' ], updatedArgs.format) && !isWsPreserveElement(SugarElement.fromDom(body))) {
-    updatedArgs.content = Tools.trim(content);
+  if (!Arr.contains([ 'text', 'tree' ], args.format) && !isWsPreserveElement(SugarElement.fromDom(body))) {
+    args.content = Tools.trim(content);
   } else {
-    updatedArgs.content = content;
+    args.content = content;
   }
 
-  return updatedArgs.content;
+  return args.content;
 };
 
 const getFormatter = (format: string) => {
@@ -73,15 +80,11 @@ const getFormatter = (format: string) => {
   );
 };
 
-const getContentInternal = (editor: Editor, args: GetContentArgs, format: string): Content => {
+const getContentInternal = (editor: Editor, args: Partial<GetContentArgs>, format: string): Content => {
   const formatter = getFormatter(format);
 
-  const updatedArgs = args.no_events ? args : editor.fire('BeforeGetContent', {
-    ...args,
-    format,
-    get: true,
-    getInner: true
-  });
+  const defaultedArgs = setupArgs(args, format);
+  const updatedArgs = args.no_events ? defaultedArgs : editor.fire('BeforeGetContent', defaultedArgs);
 
   const result = formatter(editor, updatedArgs, format);
 

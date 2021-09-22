@@ -9,20 +9,8 @@ import { Arr } from '@ephox/katamari';
 import { TableConversions, TableLookup, Warehouse } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-
-import * as TableSize from '../queries/TableSize';
-
-const enforcePercentage = (editor: Editor, table: SugarElement<HTMLTableElement>): void => {
-  const tableSizing = TableSize.get(editor, table);
-  TableConversions.convertToPercentSize(table, tableSizing);
-};
-
-const enforcePixels = (editor: Editor, table: SugarElement<HTMLTableElement>): void => {
-  const tableSizing = TableSize.get(editor, table);
-  TableConversions.convertToPixelSize(table, tableSizing);
-};
-
+const enforcePercentage = TableConversions.convertToPercentSize;
+const enforcePixels = TableConversions.convertToPixelSize;
 const enforceNone = TableConversions.convertToNoneSize;
 
 const syncPixels = (table: SugarElement<HTMLTableElement>): void => {

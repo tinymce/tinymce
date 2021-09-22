@@ -236,9 +236,9 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;</span>';
 
   // Run beforeSetContent handlers on the HTML to be inserted
-  const args = editor.fire('BeforeSetContent', { content: value, format: 'html', selection: true, paste: details.paste });
+  const args = editor.fire('BeforeSetContent', { content: value, format: 'html', selection: true, paste: details.paste, set: false });
   if (args.isDefaultPrevented()) {
-    editor.fire('SetContent', { content: args.content, format: 'html', selection: true, paste: details.paste });
+    editor.fire('SetContent', { content: args.content, format: 'html', selection: true, paste: details.paste, set: false });
     return;
   }
 

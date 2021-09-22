@@ -611,7 +611,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
       it('TINY-6711: should resize table when inserting multiple columns', () => {
         const editor = hook.editor();
         const content = (`
-          <table width: 33.3433%; border="1">
+          <table style="width: 33.3433%;" border="1">
             <tbody>
               <tr>
                 <td data-mce-selected="1" data-mce-first-selected="1" style="width: 47.0386%;"></td>

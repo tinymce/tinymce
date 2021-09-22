@@ -60,7 +60,7 @@ const setEditorHtml = (editor: Editor, html: string, noSelection: boolean | unde
   }
 };
 
-const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
+const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): Content => {
   // Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
   // It will also be impossible to place the caret in the editor unless there is a BR element present
   if (content.length === 0 || /^\s+$/.test(content)) {
@@ -124,21 +124,25 @@ const getFormatter = (format: string) => {
   );
 };
 
-const setContentInternal = (editor: Editor, content: Content, args: SetContentArgs): Content => {
+const setupArgs = (args: Partial<SetContentArgs>, content: Content): SetContentArgs => ({
+  format: defaultFormat,
+  ...args,
+  set: true,
+  content: isTreeNode(content) ? '' : content
+});
+
+const setContentInternal = (editor: Editor, content: Content, args: Partial<SetContentArgs>): Content => {
   const formatter = getFormatter(args.format || defaultFormat);
 
-  const updatedArgs = args.no_events ? args : editor.fire('BeforeSetContent', {
-    format: defaultFormat,
-    ...args,
-    set: true,
-    content: isTreeNode(content) ? '' : content
-  });
+  const defaultedArgs = setupArgs(args, content);
+
+  const updatedArgs = args.no_events ? defaultedArgs : editor.fire('BeforeSetContent', defaultedArgs);
 
   const result = formatter(editor, content, updatedArgs);
 
   if (!args.no_events) {
     args.content = result;
-    editor.fire('SetContent', args);
+    editor.fire('SetContent', updatedArgs);
   }
 
   return result;

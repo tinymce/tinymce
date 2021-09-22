@@ -9,7 +9,7 @@ import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import { Content, GetContentArgs, GetContentFormatter, SetContentArgs, SetContentFormatter } from './content/ContentTypes';
+import { Content, GetContentArgs, GetContentFormatter, GetSelectionContentArgs, SetContentArgs, SetContentFormatter } from './content/ContentTypes';
 import { addGetContentFormatter, getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { addSetContentFormatter, setContentInternal } from './content/SetContentImpl';
@@ -19,7 +19,7 @@ import { Format, FormatVars } from './fmt/FormatTypes';
 import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
-import { getSelectedContentInternal, GetSelectionContentArgs } from './selection/GetSelectionContentImpl';
+import { getSelectedContentInternal } from './selection/GetSelectionContentImpl';
 import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
@@ -52,14 +52,14 @@ interface RtcRuntimeApi {
     formatChanged: (formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
-    getContent: (args: GetContentArgs) => Content;
-    setContent: (content: Content, args: SetContentArgs) => Content;
     addContentFormatter: (format: string, formatGetter: GetContentFormatter, formatSetter: SetContentFormatter) => void;
+    getContent: (args: Partial<GetContentArgs>) => Content;
+    setContent: (content: Content, args: Partial<SetContentArgs>) => Content;
     insertContent: (content: Content) => void;
     addVisual: () => void;
   };
   selection: {
-    getContent: (args: GetSelectionContentArgs) => Content;
+    getContent: (args: Partial<GetSelectionContentArgs>) => Content;
   };
   raw: {
     getRawModel: () => any;
@@ -103,14 +103,14 @@ interface RtcAdaptor {
     formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
-    getContent: (args: GetContentArgs, format: string) => Content;
-    setContent: (content: Content, args: SetContentArgs) => Content;
     addContentFormatter: (format: string, formatGetter: GetContentFormatter, formatSetter: SetContentFormatter) => void;
+    getContent: (args: Partial<GetContentArgs>, format: string) => Content;
+    setContent: (content: Content, args: Partial<SetContentArgs>) => Content;
     insertContent: (value: string, details) => void;
     addVisual: (elm?: HTMLElement) => void;
   };
   selection: {
-    getContent: (format: string, args: GetSelectionContentArgs) => Content;
+    getContent: (format: string, args: Partial<GetSelectionContentArgs>) => Content;
   };
   raw: {
     getModel: () => Optional<any>;
@@ -404,10 +404,10 @@ export const toggleFormat = (editor: Editor, name: string, vars: Record<string, 
 export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars): UnbindFormatChanged =>
   getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar, vars);
 
-export const getContent = (editor: Editor, args: GetContentArgs, format: string): Content =>
+export const getContent = (editor: Editor, args: Partial<GetContentArgs>, format: string): Content =>
   getRtcInstanceWithFallback(editor).editor.getContent(args, format);
 
-export const setContent = (editor: Editor, content: Content, args: SetContentArgs): Content =>
+export const setContent = (editor: Editor, content: Content, args: Partial<SetContentArgs>): Content =>
   getRtcInstanceWithFallback(editor).editor.setContent(content, args);
 
 export const addContentFormatter = (editor: Editor, format: string, formatGetter: GetContentFormatter, formatSetter: SetContentFormatter): void =>
@@ -416,7 +416,7 @@ export const addContentFormatter = (editor: Editor, format: string, formatGetter
 export const insertContent = (editor: Editor, value: string, details): void =>
   getRtcInstanceWithFallback(editor).editor.insertContent(value, details);
 
-export const getSelectedContent = (editor: Editor, format: string, args: GetSelectionContentArgs): Content =>
+export const getSelectedContent = (editor: Editor, format: string, args: Partial<GetSelectionContentArgs>): Content =>
   getRtcInstanceWithError(editor).selection.getContent(format, args);
 
 export const addVisual = (editor: Editor, elm: HTMLElement): void =>

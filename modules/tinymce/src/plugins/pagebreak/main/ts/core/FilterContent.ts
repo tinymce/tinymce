@@ -1,3 +1,4 @@
+import { Type } from '@ephox/katamari';
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -26,7 +27,9 @@ const setup = (editor: Editor): void => {
   }), 'gi');
 
   editor.on('BeforeSetContent', (e) => {
-    e.content = e.content.replace(pageBreakSeparatorRegExp, getPlaceholderHtml(shouldSplitBlock()));
+    if (Type.isString(e.content)) {
+      e.content = e.content.replace(pageBreakSeparatorRegExp, getPlaceholderHtml(shouldSplitBlock()));
+    }
   });
 
   editor.on('PreInit', () => {

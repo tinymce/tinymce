@@ -13,21 +13,40 @@ export type Content = string | AstNode;
 export type GetContentFormatter = (editor: Editor, args: GetContentArgs) => Content;
 export type SetContentFormatter = (editor: Editor, content: Content, args: SetContentArgs) => Content;
 
-export interface GetContentArgs {
-  format?: string;
-  get?: boolean;
-  content?: string;
-  getInner?: boolean;
+interface GetContentArgsBase {
+  format: string;
+  get: boolean;
+  getInner: boolean;
   no_events?: boolean;
   [key: string]: any;
 }
 
-export interface SetContentArgs {
-  format?: string;
-  set?: boolean;
-  content?: string;
+interface SetContentArgsBase {
+  format: string;
+  set: boolean;
+  content: Content;
   no_events?: boolean;
   no_selection?: boolean;
+}
+
+export interface GetContentArgs extends GetContentArgsBase {
+  content?: Content;
+}
+
+export interface SetContentArgs extends SetContentArgsBase {
+  content: Content;
+}
+
+export interface SelectionSetContentArgs extends SetContentArgsBase {
+  content: string;
+  selection: boolean;
+  contextual?: boolean;
+}
+
+export interface GetSelectionContentArgs extends GetContentArgsBase {
+  selection: boolean;
+  contextual?: boolean;
+  content?: string;
 }
 
 export interface InsertContentDetails {

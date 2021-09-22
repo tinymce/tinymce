@@ -24,7 +24,6 @@ const section = (): TableSection => ({
   transformCell: (cell: Structs.ElementNew, comparator: CompElm, substitution: Subst) => {
     const newCell = substitution(cell.element, comparator);
     // Convert the cell to a td element as "section" should always use td element
-    // TODO: TINY-7709: This should actually preserve the th element when the cell is in a header column
     const fixedCell = SugarNode.name(newCell) !== 'td' ? Replication.mutate(newCell, 'td') : newCell;
     return Structs.elementnew(fixedCell, cell.isNew, cell.isLocked);
   }
