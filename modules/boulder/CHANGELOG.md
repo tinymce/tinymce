@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+
 ## 6.0. 1 - TBD
 
 ## 6.0.0 - 2021-08-26
@@ -21,10 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `ValueSchema` to `StructureSchema` #TINY-7549
 - Renamed `Processor` type to `StructureProcessor` #TINY-7549
 - Renamed `FieldSchema.state` to `FieldSchema.customField` #TINY-7549
+- Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.
 
 ### Removed
 - Removed `asStruct` and `asStructOrDie` from `ValueSchema` as they were unused #TINY-7549
 - Removed the Strength concept #TINY-7549
 - Removed `indexOnKey` from the `Objects` API #TINY-7549
 - Removed Map and Set from `postMessageable` because they are not IE compatible #TINY-7549
-- Upgraded to Katamari 8.0, which includes breaking changes to the `Optional` API used in this module.

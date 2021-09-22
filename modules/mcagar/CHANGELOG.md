@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- Upgraded to Katamari 9.0, which is incompatible with Katamari 8.0 if used in the same bundle.
+
 ## 7.0.3 - TBD
 
 ## 7.0.2 - 2021-09-08
