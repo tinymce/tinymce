@@ -6,7 +6,7 @@
  */
 
 import { Selections, SelectionTypes } from '@ephox/darwin';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
@@ -50,12 +50,13 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
   });
 
   editor.on('BeforeSetContent', (e) => {
-    if (e.selection === true && e.paste === true) {
+    const eventContent = e.content;
+    if (e.selection === true && e.paste === true && Type.isString(eventContent)) {
       const selectedCells = TableSelection.getCellsFromSelection(selections);
       Arr.head(selectedCells).each((cell) => {
         TableLookup.table(cell).each((table) => {
 
-          const elements = Arr.filter(SugarElements.fromHtml(e.content), (content) => {
+          const elements = Arr.filter(SugarElements.fromHtml(eventContent), (content) => {
             return SugarNode.name(content) !== 'meta';
           });
 

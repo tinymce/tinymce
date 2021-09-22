@@ -1,3 +1,4 @@
+import { Type } from '@ephox/katamari';
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -14,7 +15,9 @@ export default (): void => {
     // eslint-disable-next-line no-console
     console.warn('The bbcode plugin has been deprecated and marked for removal in TinyMCE 6.0');
     editor.on('BeforeSetContent', (e) => {
-      e.content = Convert.bbcode2html(e.content);
+      if (Type.isString(e.content)) {
+        e.content = Convert.bbcode2html(e.content);
+      }
     });
 
     editor.on('PostProcess', (e) => {

@@ -1,3 +1,4 @@
+import { Type } from '@ephox/katamari';
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -49,7 +50,7 @@ const convertRegExpsToNonEditable = (editor: Editor, nonEditableRegExps: RegExp[
   let i = nonEditableRegExps.length, content = e.content;
 
   // Don't replace the variables when raw is used for example on undo/redo
-  if (e.format === 'raw') {
+  if (e.format === 'raw' || !Type.isString(content)) {
     return;
   }
 

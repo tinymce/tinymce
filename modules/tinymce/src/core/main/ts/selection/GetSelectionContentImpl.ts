@@ -10,17 +10,12 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import { Content, ContentFormat, GetContentArgs } from '../content/ContentTypes';
+import { Content, ContentFormat, GetSelectionContentArgs } from '../content/ContentTypes';
 import * as CharType from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
 import * as EventProcessRanges from './EventProcessRanges';
 import * as FragmentReader from './FragmentReader';
 import * as MultiRange from './MultiRange';
-
-export interface GetSelectionContentArgs extends GetContentArgs {
-  selection?: boolean;
-  contextual?: boolean;
-}
 
 const trimLeadingCollapsibleText = (text: string) => text.replace(/^[ \f\n\r\t\v]+/, '');
 const isCollapsibleWhitespace = (text: string, index: number) => index >= 0 && index < text.length && CharType.isWhiteSpace(text.charAt(index));
@@ -90,10 +85,11 @@ const setupArgs = (args: Partial<GetSelectionContentArgs>, format: ContentFormat
   ...args,
   format,
   get: true,
-  selection: true
+  selection: true,
+  getInner: false
 });
 
-export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs = {}): Content => {
+export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: Partial<GetSelectionContentArgs> = {}): Content => {
   const defaultedArgs = setupArgs(args, format);
   const updatedArgs = editor.fire('BeforeGetContent', defaultedArgs);
 

@@ -13,12 +13,20 @@ export interface Selection {
 export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';
 
 export interface GetContentArgs {
-  format?: ContentFormat;
-  get?: boolean;
-  content?: string;
+  format: ContentFormat;
+  get: boolean;
+  content?: any;
   getInner?: boolean;
   no_events?: boolean;
   [key: string]: any;
+}
+
+export interface SetContentArgs {
+  format: string;
+  set: boolean;
+  content: any;
+  no_events?: boolean;
+  no_selection?: boolean;
 }
 
 export interface Editor {
@@ -41,8 +49,8 @@ export interface Editor {
   getContentAreaContainer: () => HTMLElement;
   getElement: () => HTMLElement;
 
-  getContent: (args?: GetContentArgs) => string;
-  setContent: (content: string) => void;
+  getContent: (args?: Partial<GetContentArgs>) => string;
+  setContent: (content: string, args?: Partial<SetContentArgs>) => void;
 
   execCommand: (command: string, ui?: boolean, value?: any, args?: any) => boolean;
 

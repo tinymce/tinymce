@@ -12,14 +12,10 @@ import BookmarkManager from '../api/dom/BookmarkManager';
 import Editor from '../api/Editor';
 import HtmlSerializer from '../api/html/Serializer';
 import CaretPosition from '../caret/CaretPosition';
-import { SetContentArgs } from '../content/ContentTypes';
+import { SelectionSetContentArgs } from '../content/ContentTypes';
 import * as MergeText from '../delete/MergeText';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import { needsToBeNbspLeft, needsToBeNbspRight } from '../keyboard/Nbsps';
-
-export interface SelectionSetContentArgs extends SetContentArgs {
-  selection?: boolean;
-}
 
 const removeEmpty = (text: SugarElement<Text>): Optional<SugarElement<Text>> => {
   if (text.dom.length === 0) {
@@ -112,7 +108,7 @@ const cleanContent = (editor: Editor, args: SelectionSetContentArgs) => {
   }
 };
 
-const setContent = (editor: Editor, content: string, args: SelectionSetContentArgs = {}) => {
+const setContent = (editor: Editor, content: string, args: Partial<SelectionSetContentArgs> = {}) => {
   const defaultedArgs = setupArgs(args, content);
 
   let updatedArgs = defaultedArgs;
