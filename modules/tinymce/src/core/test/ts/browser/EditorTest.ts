@@ -214,7 +214,7 @@ describe('browser.tinymce.core.EditorTest', () => {
       return 'get';
     };
 
-    editor.addContentFormatter('test', getFormatter, setFormatter);
+    editor.content.addFormat('test', getFormatter, setFormatter);
 
     editor.setContent('<p>test1</p>');
     assert.equal(editor.getContent(), '<p>test1</p>', 'html setContent, html getcontent, getContent');

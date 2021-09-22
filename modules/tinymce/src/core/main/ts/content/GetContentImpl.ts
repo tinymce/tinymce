@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -15,9 +15,8 @@ import Tools from '../api/util/Tools';
 import { isWsPreserveElement } from '../dom/ElementType';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Zwsp from '../text/Zwsp';
-import { Content, GetContentArgs, GetContentFormatter } from './ContentTypes';
-
-const defaultFormat = 'html';
+import { Content, GetContentArgs } from './ContentTypes';
+import { GetContentFormatter } from './EditorContent';
 
 const defaultContentFormatter = (editor: Editor, args: GetContentArgs): Content =>
   Optional.from(editor.getBody())
@@ -26,11 +25,11 @@ const defaultContentFormatter = (editor: Editor, args: GetContentArgs): Content 
       (body) => getContentFromBody(editor, args, body)
     );
 
-const contentFormatters: Record<string, GetContentFormatter> = {
-  raw: defaultContentFormatter,
-  text: defaultContentFormatter,
-  html: defaultContentFormatter,
-  tree: defaultContentFormatter,
+const addDefaultGetFormats = (formatCell: Cell<Record<string, GetContentFormatter>>) => {
+  addGetContentFormatter('raw', defaultContentFormatter, formatCell);
+  addGetContentFormatter('text', defaultContentFormatter, formatCell);
+  addGetContentFormatter('html', defaultContentFormatter, formatCell);
+  addGetContentFormatter('tree', defaultContentFormatter, formatCell);
 };
 
 const trimEmptyContents = (editor: Editor, html: string): string => {
@@ -69,24 +68,23 @@ const getContentFromBody = (editor: Editor, args: Partial<GetContentArgs>, body:
   return args.content;
 };
 
-const getFormatter = (format: string) => {
-  return Optional.from(contentFormatters[format]).fold(
+const getFormatter = (format: string, getCell: Cell<Record<string, GetContentFormatter>>) => {
+  return Optional.from(getCell.get()[format]).fold(
     () => {
       // eslint-disable-next-line no-console
-      console.error(`Content formatter ${format} not recognized, defaulting to ${defaultFormat}.`);
-      return getFormatter(defaultFormat);
+      throw new Error(`Content formatter ${format} not recognized.`);
     },
     Fun.identity
   );
 };
 
-const getContentInternal = (editor: Editor, args: Partial<GetContentArgs>, format: string): Content => {
-  const formatter = getFormatter(format);
+const getContentInternal = (editor: Editor, args: Partial<GetContentArgs>, format: string, getCell: Cell<Record<string, GetContentFormatter>>): Content => {
+  const formatter = getFormatter(format, getCell);
 
   const defaultedArgs = setupArgs(args, format);
   const updatedArgs = args.no_events ? defaultedArgs : editor.fire('BeforeGetContent', defaultedArgs);
 
-  const result = formatter(editor, updatedArgs, format);
+  const result = formatter(editor, updatedArgs);
 
   if (!updatedArgs.no_events) {
     updatedArgs.content = result;
@@ -96,11 +94,12 @@ const getContentInternal = (editor: Editor, args: Partial<GetContentArgs>, forma
   return result;
 };
 
-const addGetContentFormatter = (format: string, formatter: GetContentFormatter) => {
-  contentFormatters[format] = formatter;
+const addGetContentFormatter = (format: string, formatter: GetContentFormatter, getCell: Cell<Record<string, GetContentFormatter>>) => {
+  getCell.get()[format] = formatter;
 };
 
 export {
   getContentInternal,
-  addGetContentFormatter
+  addGetContentFormatter,
+  addDefaultGetFormats
 };

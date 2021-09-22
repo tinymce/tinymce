@@ -1,7 +1,7 @@
 type EventCallback = (event: any) => void;
 
-export type GetContentFormatter = (editor: Editor, args: GetContentArgs) => string;
-export type SetContentFormatter = (editor: Editor, content: any, args: SetContentArgs) => string;
+export type GetContentFormatter = (editor: Editor, args: GetContentArgs) => any;
+export type SetContentFormatter = (editor: Editor, content: any, args: SetContentArgs) => any;
 
 export interface Selection {
   win: Window;
@@ -30,6 +30,10 @@ export interface SetContentArgs {
   no_selection?: boolean;
 }
 
+export interface Content {
+  addFormat: (format: string, formatGetter: GetContentFormatter, formatSetter: SetContentFormatter) => void;
+}
+
 export interface Editor {
   id: string;
   settings: Record<string, any>;
@@ -52,7 +56,7 @@ export interface Editor {
 
   getContent: (args?: Partial<GetContentArgs>) => string;
   setContent: (content: string, args?: Partial<SetContentArgs>) => void;
-  addContentFormatter: (format: string, formatGetter: GetContentFormatter, formatSetter: SetContentFormatter) => void;
+  content: Content;
 
   execCommand: (command: string, ui?: boolean, value?: any, args?: any) => boolean;
 

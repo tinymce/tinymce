@@ -5,13 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
 
 export type Content = string | AstNode;
-
-export type GetContentFormatter = (editor: Editor, args: GetContentArgs) => Content;
-export type SetContentFormatter = (editor: Editor, content: Content, args: SetContentArgs) => Content;
 
 interface GetContentArgsBase {
   format: string;

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Added a new `addContentFormatter` api function to add additional formats to `getContent` and `setContent` #TINY-7875
+- Added a new `editor.content.addFormat` api function to add additional formats to `getContent` and `setContent` #TINY-7875
 
 ### Changed
 - The deprecated `scope` attribute is no longer added to `td` cells when converting a row to a header row #TINY-7731
