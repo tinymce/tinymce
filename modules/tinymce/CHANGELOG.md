@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
 - Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
 
+### Deprecated
+- Several APIs have been deprecated, see the release notes for information #TINY-8023
+
 ## 5.9.2 - 2021-09-08
 
 ### Fixed

@@ -11,7 +11,10 @@ import XHR, { XHRSettings } from './XHR';
 
 /**
  * This class enables you to use JSON-RPC to call backend methods.
+ * <br>
+ * <em>`tinymce.util.JSONRequest` has been deprecated and marked for removal in TinyMCE 6.0.</em>
  *
+ * @deprecated
  * @class tinymce.util.JSONRequest
  * @example
  * var json = new tinymce.util.JSONRequest({
