@@ -1,6 +1,8 @@
 import { ApproxStructure, Assertions, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Focus, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
+import { TinyDom } from '@ephox/mcagar';
+import { Focus, Scroll, SugarBody, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -8,6 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi } from 'tinymce/core/api/NotificationManager';
 import Theme from 'tinymce/themes/silver/Theme';
 
+import * as PageScroll from '../../module/PageScroll';
 import { resizeToPos } from '../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () => {
@@ -151,6 +154,41 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       notification.progressBar.value(100);
       assertStructure('Check notification structure with 100% progress', notification, 'success', 'Message', 100);
       notification.close();
+    });
+
+    it('TINY-7894: Should always render below the top of the header and within the content area', () => {
+      const editor = hook.editor();
+      const cleanup = PageScroll.setup(editor, 2000);
+
+      // Scroll so the editor is below the bottom of the window
+      Scroll.to(0, 0);
+      const notification1 = openNotification(editor, 'success', 'Message');
+      assertPosition('Below window notification', notification1, 226, -2200);
+      notification1.close();
+
+      // Scroll so the header is above the top of the window, but the bottom of the editor is in view
+      const topOfEditor = SugarLocation.absolute(TinyDom.container(editor)).top;
+      Scroll.to(0, topOfEditor + 100);
+      const notification2 = openNotification(editor, 'success', 'Message');
+      assertPosition('Partial editor view notification', notification2, 226, -2100);
+      notification2.close();
+
+      // Scroll so the editor is above the top of the window
+      Scroll.to(0, 4000);
+      const notification3 = openNotification(editor, 'success', 'Message');
+      assertPosition('Above window notification', notification3, 226, -2000);
+      notification3.close();
+
+      cleanup();
+    });
+
+    it('TINY-7894: Opening multiple notifications should be able to expand past the bottom of the content area', () => {
+      const editor = hook.editor();
+
+      const notifications = Arr.range(9, (i) => openNotification(editor, 'success', `Message ${i + 1}`));
+      assertPosition('Last notification is outside the content area', notifications[notifications.length - 1], 220, 185);
+
+      Arr.each(notifications, (notification) => notification.close());
     });
   });
 
