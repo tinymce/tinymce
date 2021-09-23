@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -602,5 +602,13 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
     editor.formatter.remove('formatA', { value: 'a' });
     assert.equal(getContent(editor), '<p class="b">test</p>');
+  });
+
+  it('TINY-8036: Remove blockquote format with multiple words and collapsed selection', () => {
+    const editor = hook.editor();
+    editor.setContent('<blockquote><p>test test</p></blockquote>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 5);
+    editor.formatter.remove('blockquote');
+    TinyAssertions.assertContent(editor, '<p>test test</p>');
   });
 });
