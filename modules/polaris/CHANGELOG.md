@@ -6,8 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 5.0.1 - 2021-09-24
+
 ### Fixed
-- `Pattern.chars` and `Pattern.wordbreak` now accept soft hyphen (SHY) entities
+- `Pattern.chars` and `Pattern.wordbreak` now accept soft hyphen (SHY) entities #TINY-7908
 
 ## 5.0.0 - 2021-08-26
 

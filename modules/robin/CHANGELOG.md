@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 9.0.1 - 2021-09-24
+
+### Fixed
+- TextZone methods no longer treat soft hyphens (shy entities) as word breaks #TINY-7908
+
 ## 9.0.0 - 2021-08-26
 
 ### Added
