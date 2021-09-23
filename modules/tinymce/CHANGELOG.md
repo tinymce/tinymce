@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The deprecated `scope` attribute is no longer added to `td` cells when converting a row to a header row #TINY-7731
+- The number of `col` elements is normalised to match the number of columns in a table after a table action #TINY-8011
 
 ### Fixed
 - Resizing table columns in some scenarios would resize the column to an incorrect position #TINY-7731
@@ -16,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Table cells that were both row and column headers would not retain the correct state when converting back to a regular row or column #TINY-7709
 - Clicking beside a non-editable element could cause the editor to incorrectly scroll to the top of the document #TINY-7062
 - Split toolbar buttons incorrectly had nested `tabindex="-1"` attributes #TINY-7879
-- Fixed an exception getting thrown when there were more `col` elements than columns in a table #TINY-7041
+- Fixed an exception getting thrown when the number of `col` elements didn't match the number of columns in a table #TINY-7041 #TINY-8011
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
 - Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
 

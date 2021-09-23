@@ -113,6 +113,7 @@ const cellOperations = (mutate: (e1: SugarElement, e2: SugarElement) => void, do
     row: createRow(doc),
     cell: newCell,
     replace,
+    colGap: createCol(doc),
     gap: createCell(doc)
   };
 };
@@ -124,6 +125,7 @@ const paste = (doc: SugarElement<Document>): SimpleGenerators => {
     row: createRow(doc),
     cell: createCell(doc),
     replace: pasteReplace,
+    colGap: createCol(doc),
     gap: createCell(doc)
   };
 };

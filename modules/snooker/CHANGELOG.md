@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `Sizes.redistribute` no longer requires a `TableSize` instance to be provided.
 - `TableOperations.makeRowHeader` and `TableOperations.makeRowsHeader` no longer add the deprecated `scope` attribute to `td` elements.
 - `Generators.transform` no longer accepts a scope, as `TransformOperations` now calculates the appropriate scope.
+- `Transitions.toGrid` will now add and remove `col` elements to ensure the number of `col` elements matches the number of columns in a table.
 
 ### Fixed
 - Resizing table cells caused incorrect widths in cases where those cells had grown to fit extra content.
