@@ -1,6 +1,6 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -14,15 +14,15 @@ describe('browser.tinymce.plugins.table.InvalidColCountTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   }, [ Plugin, Theme ], true);
 
-  const assertBasicTablePresence = (editor: Editor, tdCount: number, colCount?: number) => {
+  const assertBasicTablePresence = (editor: Editor, tdCount: number, colCountOpt: Optional<number>) => {
     TinyAssertions.assertContentPresence(editor, {
       td: tdCount,
     });
 
-    if (Type.isNonNullable(colCount)) {
+    colCountOpt.each((colCount) => {
       const cols = UiFinder.findAllIn(TinyDom.body(editor), 'col');
       assert.lengthOf(cols, colCount);
-    }
+    });
   };
 
   // Note: The goal of these tests is to make sure an exception is not thrown and each table operation works
@@ -64,17 +64,17 @@ describe('browser.tinymce.plugins.table.InvalidColCountTest', () => {
         '</tbody>' +
         '</table>';
 
-      const assertCount = scenario.assertColCount === true;
-      const countAfterInsertColumn = assertCount ? 4 : undefined;
-      const countAfterDeleteColumn = assertCount ? 2 : undefined;
-      const countAfterNonColumnAction = assertCount ? 3 : undefined;
+      const assertColCount = scenario.assertColCount === true;
+      const colCountAfterInsertColumn = Optionals.someIf(assertColCount, 4);
+      const colCountAfterDeleteColumn = Optionals.someIf(assertColCount, 2);
+      const colCountAfterNonColumnAction = Optionals.someIf(assertColCount, 3);
 
       it('TINY-7041: insert new column at the start of the table', () => {
         const editor = hook.editor();
         editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
         editor.execCommand('mceTableInsertColBefore');
-        assertBasicTablePresence(editor, 8, countAfterInsertColumn);
+        assertBasicTablePresence(editor, 8, colCountAfterInsertColumn);
       });
 
       it('TINY-7041: insert new column in the middle of the table from first column', () => {
@@ -82,7 +82,7 @@ describe('browser.tinymce.plugins.table.InvalidColCountTest', () => {
         editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
         editor.execCommand('mceTableInsertColAfter');
-        assertBasicTablePresence(editor, 8, countAfterInsertColumn);
+        assertBasicTablePresence(editor, 8, colCountAfterInsertColumn);
       });
 
       it('TINY-7041: insert new column in the middle of the table from last column', () => {
@@ -90,7 +90,7 @@ describe('browser.tinymce.plugins.table.InvalidColCountTest', () => {
         editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 2, 0 ], 0);
         editor.execCommand('mceTableInsertColBefore');
-        assertBasicTablePresence(editor, 8, countAfterInsertColumn);
+        assertBasicTablePresence(editor, 8, colCountAfterInsertColumn);
       });
 
       it('TINY-7041: insert new column at the end of the table', () => {
@@ -98,7 +98,7 @@ describe('browser.tinymce.plugins.table.InvalidColCountTest', () => {
         editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 2, 0 ], 0);
         editor.execCommand('mceTableInsertColAfter');
-        assertBasicTablePresence(editor, 8, countAfterInsertColumn);
+        assertBasicTablePresence(editor, 8, colCountAfterInsertColumn);
       });
 
       it('TINY-7041: insert new row', () => {
@@ -106,7 +106,7 @@ describe('browser.tinymce.plugins.table.InvalidColCountTest', () => {
         editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
         editor.execCommand('mceTableInsertRowAfter');
-        assertBasicTablePresence(editor, 9, countAfterNonColumnAction);
+        assertBasicTablePresence(editor, 9, colCountAfterNonColumnAction);
       });
 
       it('TINY-7041: delete first column in the table', () => {
@@ -114,7 +114,7 @@ describe('browser.tinymce.plugins.table.InvalidColCountTest', () => {
         editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
         editor.execCommand('mceTableDeleteCol');
-        assertBasicTablePresence(editor, 4, countAfterDeleteColumn);
+        assertBasicTablePresence(editor, 4, colCountAfterDeleteColumn);
       });
 
       it('TINY-7041: delete last column in the table', () => {
@@ -122,7 +122,7 @@ describe('browser.tinymce.plugins.table.InvalidColCountTest', () => {
         editor.setContent(tableHtml);
         TinySelections.setCursor(editor, [ 0, 1, 0, 2, 0 ], 0);
         editor.execCommand('mceTableDeleteCol');
-        assertBasicTablePresence(editor, 4, countAfterDeleteColumn);
+        assertBasicTablePresence(editor, 4, colCountAfterDeleteColumn);
       });
     });
   });
