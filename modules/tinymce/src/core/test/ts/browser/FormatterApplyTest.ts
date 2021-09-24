@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
-import { LegacyUnit, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -2527,5 +2527,13 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('formatA', { value: 'a' });
     editor.formatter.apply('formatA', { value: 'b' });
     assert.equal(getContent(editor), '<p class="a b">test</p>');
+  });
+
+  it('TINY-8036: Apply blockquote with multiple words and collapsed selection', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>test test</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 7);
+    editor.formatter.apply('blockquote');
+    TinyAssertions.assertContent(editor, '<blockquote><p>test test</p></blockquote>');
   });
 });
