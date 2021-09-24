@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Gui, GuiFactory, InlineView, Layout, LayoutInset, NodeAnchorSpec } from '@ephox/alloy';
-import { Arr, Optional } from '@ephox/katamari';
+import { Boxes, Gui, GuiFactory, InlineView, Layout, LayoutInset, MaxHeight, NodeAnchorSpec } from '@ephox/alloy';
+import { Arr, Num, Optional, Type } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -20,10 +20,12 @@ interface Extras {
   readonly backstage: UiFactoryBackstage;
 }
 
+type Location = 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc';
+
 export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl => {
   const sharedBackstage = extras.backstage.shared;
 
-  const getLayoutDirection = (rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc') => {
+  const getLayoutDirection = (rel: Location) => {
     switch (rel) {
       case 'bc-bc':
         return LayoutInset.south;
@@ -37,26 +39,16 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
     }
   };
 
-  // Since the viewport will change based on the present notifications, we need to move them all to the
-  // top left of the viewport to give an accurate size measurement so we can position them later.
-  const prePositionNotifications = (notifications: NotificationApi[]) => {
-    Arr.each(notifications, (notification) => notification.moveTo(0, 0));
-  };
-
-  const positionNotifications = (notifications: NotificationApi[]) => {
+  const reposition = (notifications: NotificationApi[]) => {
     if (notifications.length > 0) {
-      Arr.head(notifications).each((firstItem) => firstItem.moveRel(null, 'banner'));
       Arr.each(notifications, (notification, index) => {
-        if (index > 0) {
+        if (index === 0) {
+          notification.moveRel(null, 'banner');
+        } else {
           notification.moveRel(notifications[index - 1].getEl(), 'bc-tc');
         }
       });
     }
-  };
-
-  const reposition = (notifications: NotificationApi[]) => {
-    prePositionNotifications(notifications);
-    positionNotifications(notifications);
   };
 
   const open = (settings: NotificationSpec, closeCallback: () => void): NotificationApi => {
@@ -100,6 +92,23 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
       }, settings.timeout);
     }
 
+    const getBounds = () => {
+      /* Attempt to ensure that the notifications render below the top of the header and between
+       * whichever is the larger between the bottom of the content area and the bottom of the viewport
+       *
+       * Note: This isn't perfect, but without being able to use docking and associate the notifications
+       * together due to the `moveTo` and `moveRel` APIs then we're a bit stuck and a proper solution
+       * will have to be done in TinyMCE 6.
+       */
+      const contentArea = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
+      const win = Boxes.win();
+      const x = Num.clamp(win.x, contentArea.x, contentArea.right);
+      const y = Num.clamp(win.y, contentArea.y, contentArea.bottom);
+      const right = Math.max(contentArea.right, win.right);
+      const bottom = Math.max(contentArea.bottom, win.bottom);
+      return Optional.some(Boxes.bounds(x, y, right - x, bottom - y));
+    };
+
     return {
       close,
       moveTo: (x: number, y: number) => {
@@ -111,21 +120,30 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
           }
         });
       },
-      moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => {
-        if (rel !== 'banner') {
+      moveRel: (element: HTMLElement | null, rel: Location | 'banner') => {
+        const notificationSpec = GuiFactory.premade(notification);
+        const anchorOverrides = {
+          maxHeightFunction: MaxHeight.expandable()
+        };
+        if (rel !== 'banner' && Type.isNonNullable(element)) {
           const layoutDirection = getLayoutDirection(rel);
           const nodeAnchor: NodeAnchorSpec = {
             type: 'node',
             root: SugarBody.body(),
             node: Optional.some(SugarElement.fromDom(element)),
+            overrides: anchorOverrides,
             layouts: {
               onRtl: () => [ layoutDirection ],
               onLtr: () => [ layoutDirection ]
             }
           };
-          InlineView.showAt(notificationWrapper, GuiFactory.premade(notification), { anchor: nodeAnchor });
+          InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor: nodeAnchor }, getBounds);
         } else {
-          InlineView.showAt(notificationWrapper, GuiFactory.premade(notification), { anchor: sharedBackstage.anchors.banner() });
+          const anchor = {
+            ...sharedBackstage.anchors.banner(),
+            overrides: anchorOverrides
+          };
+          InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor }, getBounds);
         }
       },
       text: (nuText: string) => {
