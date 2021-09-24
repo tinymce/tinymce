@@ -13,7 +13,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
-describe('browser.tinymce.core.UndoManager', () => {
+describe('browser.tinymce.core.UndoManagerTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -569,8 +569,8 @@ describe('browser.tinymce.core.UndoManager', () => {
   context('Undo when first element is contenteditable="false"', () => {
     beforeEach(() => {
       const editor = hook.editor();
-      editor.resetContent('<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>');
       editor.focus();
+      editor.resetContent('<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>');
     });
 
     it('TINY-7663: No fake caret - should restore correct cursor location', () => {
