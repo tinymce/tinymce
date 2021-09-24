@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 
 import { getClientRects, NodeClientRect } from '../dom/Dimensions';
 import * as NodeType from '../dom/NodeType';
@@ -29,23 +29,25 @@ const distanceToRectLeft = (clientRect: GeomClientRect, clientX: number) => Math
 const distanceToRectRight = (clientRect: GeomClientRect, clientX: number) => Math.abs(clientRect.right - clientX);
 const isInsideX = (clientX: number, clientRect: GeomClientRect): boolean => clientX >= clientRect.left && clientX <= clientRect.right;
 const isInsideY = (clientY: number, clientRect: GeomClientRect): boolean => clientY >= clientRect.top && clientY <= clientRect.bottom;
+const isNodeClientRect = (rect: GeomClientRect): rect is NodeClientRect => Obj.hasNonNullableKey((rect as any), 'node');
 
-const findClosestClientRect = <T extends GeomClientRect>(clientRects: T[], clientX: number): T =>
+const findClosestClientRect = <T extends GeomClientRect>(clientRects: T[], clientX: number, allowInside: (rect: T) => boolean = Fun.always): T =>
   ArrUtils.reduce(clientRects, (oldClientRect, clientRect) => {
+    // Ignore the current rect if it's inside for certain node types
+    if (isInsideX(clientX, clientRect)) {
+      return allowInside(clientRect) ? clientRect : oldClientRect;
+    }
+
+    // Ignore the previous rect if it's inside for certain node types and just use the new rect
+    if (isInsideX(clientX, oldClientRect)) {
+      return allowInside(oldClientRect) ? oldClientRect : clientRect;
+    }
+
     const oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
     const newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
 
-    if (isInsideX(clientX, clientRect)) {
-      return clientRect;
-    }
-
-    if (isInsideX(clientX, oldClientRect)) {
-      return oldClientRect;
-    }
-
     // cE=false has higher priority
-    // TODO check the types or add a guard as node may not exist
-    if (newDistance === oldDistance && isContentEditableFalse((clientRect as any).node)) {
+    if (newDistance === oldDistance && isNodeClientRect(clientRect) && isContentEditableFalse(clientRect.node)) {
       return clientRect;
     }
 
@@ -97,13 +99,15 @@ const closestFakeCaret = (root: HTMLElement, clientX: number, clientY: number): 
   const fakeTargetNodeRects = getClientRects(getFakeCaretTargets(root));
   const targetNodeRects = Arr.filter<NodeClientRect>(fakeTargetNodeRects, Fun.curry(isInsideY, clientY));
 
-  let closestNodeRect = findClosestClientRect(targetNodeRects, clientX);
+  // TINY-6057: Don't include children nodes within a table when finding the line
+  // rects, as that will never be a valid position for a table fake caret and can
+  // lead to performance issues with large tables.
+  const checkInside = (clientRect: NodeClientRect) => !NodeType.isTable(clientRect.node) && !NodeType.isMedia(clientRect.node);
+
+  let closestNodeRect = findClosestClientRect(targetNodeRects, clientX, checkInside);
   if (closestNodeRect) {
-    // TINY-6057: Don't include children nodes within a table when finding the line
-    // rects, as that will never be a valid position for a table fake caret and can
-    // lead to performance issues with large tables.
-    const includeChildren = !NodeType.isTable(closestNodeRect.node) && !NodeType.isMedia(closestNodeRect.node);
-    closestNodeRect = findClosestClientRect(findLineNodeRects(root, closestNodeRect, includeChildren), clientX);
+    const includeChildren = checkInside(closestNodeRect);
+    closestNodeRect = findClosestClientRect(findLineNodeRects(root, closestNodeRect, includeChildren), clientX, checkInside);
     if (closestNodeRect && isFakeCaretTarget(closestNodeRect.node)) {
       return caretInfo(closestNodeRect, clientX);
     }
