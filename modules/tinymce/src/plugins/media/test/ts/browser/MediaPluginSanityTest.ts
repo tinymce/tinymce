@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -11,8 +11,14 @@ describe('browser.tinymce.plugins.media.MediaPluginSanityTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: [ 'media' ],
     toolbar: 'media',
-    base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (editor) => {
+      editor.ui.registry.addContextToolbar('test-media', {
+        predicate: (node) => editor.dom.is(node, 'span[data-mce-object]'),
+        items: 'media'
+      });
+    }
+  }, [ Plugin, Theme ], true);
 
   it('TBA: Embed content, open dialog, set size and assert constrained and unconstrained size recalculation', async () => {
     const editor = hook.editor();
@@ -61,5 +67,17 @@ describe('browser.tinymce.plugins.media.MediaPluginSanityTest', () => {
     await Utils.pPasteTextareaValue(editor, '<video controls="controls" width="300" height="150"><source src="a" onerror="alert(1)" /></video>');
     TinyUiActions.submitDialog(editor);
     await Utils.pAssertEditorContent(editor, '<p><video controls="controls" width="300" height="150"><source src="a" /></video></p>');
+  });
+
+  it('TINY-3463: Ensure initial toolbar button state shows correctly', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Content</p><p><iframe src="https://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe></p>');
+
+    TinySelections.setCursor(editor, [ 0, 0 ], 4);
+    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn:not(.tox-tbtn--enabled)');
+
+    TinySelections.setSelection(editor, [ 1 ], 0, [ 1 ], 1);
+    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn.tox-tbtn--enabled');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn.tox-tbtn--enabled');
   });
 });
