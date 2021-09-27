@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resize handles appeared on top of dialogs and menus when using an inline editor #TINY-3263
 - Table cells that were both row and column headers would not retain the correct state when converting back to a regular row or column #TINY-7709
 - Clicking beside a non-editable element could cause the editor to incorrectly scroll to the top of the document #TINY-7062
+- Clicking in a table cell, with a non-editable element in an adjacent cell, incorrectly caused the non-editable element to be selected #TINY-7736
 - Split toolbar buttons incorrectly had nested `tabindex="-1"` attributes #TINY-7879
 - Fixed notifications rendering in the wrong place initially and when the page was scrolled #TINY-7894
 - Fixed an exception getting thrown when the number of `col` elements didn't match the number of columns in a table #TINY-7041 #TINY-8011
