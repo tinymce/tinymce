@@ -29,7 +29,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     assert.equal(selectedNode.getAttribute('data-mce-caret'), caretValue);
   };
 
-  const selectBesideContentEditable = (editor: Editor, contentEditableElm: HTMLElement, clickPoint: 'before' | 'after', offset: number = 8) => {
+  const selectBesideContentEditable = (editor: Editor, contentEditableElm: HTMLElement, clickPoint: 'before' | 'after', offset: number) => {
     editor.selection.scrollIntoView(contentEditableElm);
 
     const scrollTop = getScrollTop(editor);
@@ -305,7 +305,8 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     TinySelections.setCursor(editor, [ 1, 0, 0 ], 1);
     // Click to the left of the ce=false element
     const noneditableDiv = editor.dom.select('div[contenteditable=false]')[0];
-    selectBesideContentEditable(editor, noneditableDiv, 'before');
+    // The default body margin is 16 so divide by 2 for the offset to get 8
+    selectBesideContentEditable(editor, noneditableDiv, 'before', 8);
 
     TinyAssertions.assertContent(editor, content);
   });
@@ -319,7 +320,8 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
 
     // Click to the right of the ce=false element
     const noneditableDiv = editor.dom.select('div[contenteditable=false]')[0];
-    selectBesideContentEditable(editor, noneditableDiv, 'after');
+    // The default body margin is 16 so divide by 2 for the offset to get 8
+    selectBesideContentEditable(editor, noneditableDiv, 'after', 8);
 
     TinyAssertions.assertContent(editor, content);
   });

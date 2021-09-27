@@ -150,7 +150,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     const isInSameBlock = (node1: Node, node2: Node) => {
       const block1 = dom.getParent(node1, isBlock);
       const block2 = dom.getParent(node2, isBlock);
-      return block1 === block2 || dom.isChildOf(block2, block1);
+      return block1 === block2;
     };
 
     // Checks if the target node is in a block and if that block has a caret position better than the
@@ -169,7 +169,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
         return true;
       }
 
-      return !isInSameBlock(targetBlock, caretBlock) && hasNormalCaretPosition(targetBlock);
+      return !dom.isChildOf(caretBlock, targetBlock) && !isInSameBlock(targetBlock, caretBlock) && hasNormalCaretPosition(targetBlock);
     };
 
     editor.on('tap', (e) => {
