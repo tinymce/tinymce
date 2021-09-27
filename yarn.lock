@@ -305,15 +305,15 @@
   resolved "https://registry.yarnpkg.com/@ephox/wrap-jsverify/-/wrap-jsverify-2.0.1.tgz#8984b292eeab3bd570eab773541650d257793d4d"
   integrity sha512-RSSsUFBV9uVUPzmCRvYXZBEZhVahYXs/j0JVgCy0CrbS98nV60BeYd97QB37sr05Lv7haLWzKf9XAcVAO7M8Ng==
 
-"@ephox/wrap-prismjs@^1.24.0":
-  version "1.24.0"
-  resolved "https://registry.yarnpkg.com/@ephox/wrap-prismjs/-/wrap-prismjs-1.24.0.tgz#ef3d65244f886a41e576c495e002811bc763b70f"
-  integrity sha512-3uBUo5QwfOjnNSeM04TbyUEdKmbsfATkmRt05BoTUIYdogxHaOoIQ67qpAEPQzUfdoYhpcC8Bm93KtIR+SbpTA==
+"@ephox/wrap-prismjs@^1.25.0":
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/@ephox/wrap-prismjs/-/wrap-prismjs-1.25.0.tgz#a77f94d6a04346e42c1bd318622ae06fd84528b6"
+  integrity sha512-o0c0kPF0iejJbVFgmHp4U3sCpmRmFEhHvuEpf57eFscuhtKaOEHpaAyBVcwPbnPKeGEJ6dH1q/kMVLhQANh06A==
 
 "@ephox/wrap-promise-polyfill@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@ephox/wrap-promise-polyfill/-/wrap-promise-polyfill-2.2.0.tgz#ea11e0a88320b5096dfed6249e169621c9853f7d"
-  integrity sha512-bTvZa0VEBPtCbcl05lYDjMre1WruTRXReCo8Yp2JrOnkf2PK8jgzBrOYPplbjgXvh6ToPqK2wiaeeBApYYgUSQ==
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@ephox/wrap-promise-polyfill/-/wrap-promise-polyfill-2.2.1.tgz#afaabe10bc4c44d167e2f8fa6e722cbd7817d386"
+  integrity sha512-hg2IKjR3E8awv6ZPUZtHVLa+ZQkaN1ksVacw40Jq2gg6uMU9GkBTcSOl+9PswBzva2Jg0lxX0r0ipMAWemDwsA==
 
 "@ephox/wrap-sizzle@^4.0.0":
   version "4.0.1"
