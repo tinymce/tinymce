@@ -56,4 +56,11 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     editor.execCommand('mceAddUndoLevel');
     await pWaitForWordcount(2);
   });
+
+  it('TINY-7908: Does not treat soft hyphens as a word break', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    editor.setContent('<p>Soft hy&shy;phen</p>');
+    await pWaitForWordcount(2);
+  });
 });
