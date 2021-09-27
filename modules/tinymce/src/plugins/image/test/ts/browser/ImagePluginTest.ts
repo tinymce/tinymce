@@ -231,10 +231,10 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('<p>Content</p><p><img src="image.png"></p>');
 
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
-    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn:not(.tox-tbtn--enabled)');
+    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn[title="Insert/edit image"]:not(.tox-tbtn--enabled)');
 
     TinySelections.setSelection(editor, [ 1 ], 0, [ 1 ], 1);
-    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn.tox-tbtn--enabled');
-    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn.tox-tbtn--enabled');
+    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn.tox-tbtn--enabled[title="Insert/edit image"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn.tox-tbtn--enabled[title="Insert/edit image"]');
   });
 });

@@ -74,10 +74,10 @@ describe('browser.tinymce.plugins.media.MediaPluginSanityTest', () => {
     editor.setContent('<p>Content</p><p><iframe src="https://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe></p>');
 
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
-    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn:not(.tox-tbtn--enabled)');
+    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn[title="Insert/edit media"]:not(.tox-tbtn--enabled)');
 
     TinySelections.setSelection(editor, [ 1 ], 0, [ 1 ], 1);
-    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn.tox-tbtn--enabled');
-    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn.tox-tbtn--enabled');
+    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn.tox-tbtn--enabled[title="Insert/edit media"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn.tox-tbtn--enabled[title="Insert/edit media"]');
   });
 });
