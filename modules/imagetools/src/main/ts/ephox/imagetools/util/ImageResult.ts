@@ -1,8 +1,8 @@
 import { Fun } from '@ephox/katamari';
+import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as Canvas from './Canvas';
 import * as Conversions from './Conversions';
-import { Promise } from './Promise';
 
 export interface ImageResult {
   getType (): string;
