@@ -310,7 +310,7 @@
   resolved "https://registry.yarnpkg.com/@ephox/wrap-prismjs/-/wrap-prismjs-1.25.0.tgz#a77f94d6a04346e42c1bd318622ae06fd84528b6"
   integrity sha512-o0c0kPF0iejJbVFgmHp4U3sCpmRmFEhHvuEpf57eFscuhtKaOEHpaAyBVcwPbnPKeGEJ6dH1q/kMVLhQANh06A==
 
-"@ephox/wrap-promise-polyfill@^2.2.0":
+"@ephox/wrap-promise-polyfill@^2.2.0", "@ephox/wrap-promise-polyfill@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@ephox/wrap-promise-polyfill/-/wrap-promise-polyfill-2.2.1.tgz#afaabe10bc4c44d167e2f8fa6e722cbd7817d386"
   integrity sha512-hg2IKjR3E8awv6ZPUZtHVLa+ZQkaN1ksVacw40Jq2gg6uMU9GkBTcSOl+9PswBzva2Jg0lxX0r0ipMAWemDwsA==
