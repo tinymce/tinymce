@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -7,7 +6,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.commands.LineHeightTest', () => {
-  const platform = PlatformDetection.detect();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ]);
@@ -25,10 +23,6 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
   });
 
   it('TINY-4843: Unspecified line-height can be read from element', function () {
-    // TODO: TINY-7895
-    if (platform.browser.isSafari()) {
-      this.skip();
-    }
     const editor = hook.editor();
     editor.setContent('<p>Hello</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
