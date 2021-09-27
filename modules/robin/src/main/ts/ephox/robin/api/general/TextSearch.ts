@@ -82,7 +82,6 @@ const expandRight = <E, D>(universe: Universe<E, D>, item: E, offset: number, ra
 // through until the offset left is 0. This is designed to find text node positions that
 // have been fragmented.
 const scanRight = <E, D>(universe: Universe<E, D>, item: E, originalOffset: number): Optional<SpotPoint<E>> => {
-  // MAKE THIS A LOOP
   const isRoot = Fun.never;
   if (!universe.property().isText(item)) {
     return Optional.none();
