@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Improved
-- The `editor.selection.scrollIntoView()` API now accepts no element to instead scroll the current selection into view #TINY-7291
+- The `element` argument of the `editor.selection.scrollIntoView()` API is now optional, and if it is not provided the current selection will be scrolled into view #TINY-7291
 
 ### Changed
 - The deprecated `scope` attribute is no longer added to `td` cells when converting a row to a header row #TINY-7731
