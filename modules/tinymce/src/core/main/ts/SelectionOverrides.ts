@@ -137,7 +137,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       }
 
       const startPos = CaretPosition.before(start);
-      // If the element has a single br as a child (e.g. is empty), then the start position is a valid cursor position
+      // If the element has a single br as a child (i.e. is empty), then the start position is a valid cursor position
       if (NodeType.isBr(startPos.getNode()) && elm.childNodes.length === 1) {
         return !isNearFakeSelectionElement(startPos);
       } else {
