@@ -84,7 +84,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
     /**
      * Parses the specified RGB color value and returns a hex version of that color.
      * <br>
-     * <em>`toHex` has been deprecated and marked for removal in TinyMCE 6.0.</em>
+     * <em><code>toHex</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
      *
      * @deprecated
      * @method toHex

@@ -10,7 +10,7 @@ import { Type } from '@ephox/katamari';
 /**
  * JSON parser and serializer class.
  * <br>
- * <em>`tinymce.util.JSON` has been deprecated and marked for removal in TinyMCE 6.0.</em>
+ * <em><code>JSON</code> has been deprecated and marked for removal in TinyMCE 6.0. Use the native browser <code>JSON</code> API instead.</em>
  *
  * @deprecated
  * @class tinymce.util.JSON

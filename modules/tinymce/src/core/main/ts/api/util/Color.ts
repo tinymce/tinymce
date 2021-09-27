@@ -8,7 +8,7 @@
 /**
  * This class lets you parse/serialize colors and convert rgb/hsb.
  * <br>
- * <em>`tinymce.util.Color` has been deprecated and marked for removal in TinyMCE 6.0.</em>
+ * <em><code>Color</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
  *
  * @deprecated
  * @class tinymce.util.Color

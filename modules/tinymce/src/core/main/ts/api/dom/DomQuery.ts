@@ -12,7 +12,7 @@ import Sizzle from './Sizzle';
 /**
  * This class mimics most of the jQuery API:
  * <br>
- * <em>`tinymce.dom.DomQuery` has been deprecated and marked for removal in TinyMCE 6.0.</em>
+ * <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
  *
  * This is whats currently implemented:
  * - Utility functions

@@ -124,7 +124,7 @@ const hasOwnProperty = Obj.has;
 /**
  * Creates a class, subclass or static singleton.
  * <br>
- * <em>`create` has been deprecated and marked for removal in TinyMCE 6.0.</em>
+ * <em><code>create</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
  *
  * @deprecated
  * @method create
@@ -302,7 +302,7 @@ const walk = function (o, f, n?, s?) {
 /**
  * Creates a namespace on a specific object.
  * <br>
- * <em>`createNS` has been deprecated and marked for removal in TinyMCE 6.0.</em>
+ * <em><code>createNS</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
  *
  * @deprecated
  * @method createNS
