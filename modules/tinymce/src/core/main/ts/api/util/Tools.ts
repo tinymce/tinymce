@@ -113,11 +113,13 @@ const makeMap = (items, delim?, map?) => {
 
 /**
  * JavaScript does not protect hasOwnProperty method, so it is possible to overwrite it. This is
- * object independent version.
+ * an object independent version.
+ * Checks if the input object "<code>obj</code>" has the property "<code>prop</code>".
  *
- * @param {Object} obj
- * @param {String} prop
- * @returns {Boolean}
+ * @method hasOwnProperty
+ * @param {Object} obj Object to test.
+ * @param {String} prop Property to test <code>obj</code> for.
+ * @returns {Boolean} true if the object "<code>obj</code>" has the property "<code>prop</code>".
  */
 const hasOwnProperty = Obj.has;
 
