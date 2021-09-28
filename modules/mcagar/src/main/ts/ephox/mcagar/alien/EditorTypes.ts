@@ -30,10 +30,6 @@ export interface SetContentArgs {
   no_selection?: boolean;
 }
 
-export interface Content {
-  addFormat: (format: string, formatGetter: GetContentFormatter, formatSetter: SetContentFormatter) => void;
-}
-
 export interface Editor {
   id: string;
   settings: Record<string, any>;
@@ -56,7 +52,6 @@ export interface Editor {
 
   getContent: (args?: Partial<GetContentArgs>) => string;
   setContent: (content: string, args?: Partial<SetContentArgs>) => void;
-  content: Content;
 
   execCommand: (command: string, ui?: boolean, value?: any, args?: any) => boolean;
 

@@ -7,7 +7,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 
-import * as EditorContent from '../content/EditorContent';
+import * as EditorContent from '../api/content/EditorContent';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
 import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
@@ -343,8 +343,7 @@ class Editor implements EditorObservable {
     this.mode = modeInstance;
     this.setMode = modeInstance.set;
 
-    const content = EditorContent.EditorContent(self);
-    this.content = content;
+    this.content = EditorContent.EditorContent(self);
 
     // Call setup
     editorManager.fire('SetupEditor', { editor: this });

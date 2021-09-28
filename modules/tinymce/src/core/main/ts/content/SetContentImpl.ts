@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Fun, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
+import { SetContentCallback, SetContentRegistry } from '../api/content/EditorContent';
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
 import HtmlSerializer from '../api/html/Serializer';
@@ -19,7 +20,6 @@ import * as NodeType from '../dom/NodeType';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as FilterNode from '../html/FilterNode';
 import { Content, SetContentArgs } from './ContentTypes';
-import { SetContentFormatter } from './EditorContent';
 
 const defaultFormat = 'html';
 
@@ -34,7 +34,7 @@ const defaultContentFormatter = (editor: Editor, content: Content, updatedArgs: 
   );
 };
 
-const addDefaultSetFormats = (formatCell: Cell<Record<string, SetContentFormatter>>) => {
+const addDefaultSetFormats = (formatCell: SetContentRegistry) => {
   addSetContentFormatter('raw', defaultContentFormatter, formatCell);
   addSetContentFormatter('text', defaultContentFormatter, formatCell);
   addSetContentFormatter('html', defaultContentFormatter, formatCell);
@@ -114,14 +114,8 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, arg
   return content;
 };
 
-const getFormatter = (format: string, formatCell: Cell<Record<string, SetContentFormatter>>) => {
-  return Optional.from(formatCell.get()[format]).fold(
-    () => {
-      throw new Error(`Content formatter ${format} not recognized.`);
-    },
-    Fun.identity
-  );
-};
+const getFormatter = (format: string, formatCell: SetContentRegistry) =>
+  Obj.get(formatCell.get(), format).getOrDie(`Content formatter ${format} not recognized.`);
 
 const setupArgs = (args: Partial<SetContentArgs>, content: Content): SetContentArgs => ({
   format: defaultFormat,
@@ -130,8 +124,8 @@ const setupArgs = (args: Partial<SetContentArgs>, content: Content): SetContentA
   content: isTreeNode(content) ? '' : content
 });
 
-const setContentInternal = (editor: Editor, content: Content, args: Partial<SetContentArgs>, formatCell: Cell<Record<string, SetContentFormatter>>): Content => {
-  const formatter = getFormatter(args.format || defaultFormat, formatCell);
+const setContentInternal = (editor: Editor, content: Content, args: Partial<SetContentArgs>, formatCell: SetContentRegistry): Content => {
+  const formatter = getFormatter(args.format ?? defaultFormat, formatCell);
 
   const defaultedArgs = setupArgs(args, content);
 
@@ -147,7 +141,7 @@ const setContentInternal = (editor: Editor, content: Content, args: Partial<SetC
   return result;
 };
 
-const addSetContentFormatter = (format: string, formatter: SetContentFormatter, setCell: Cell<Record<string, SetContentFormatter>>) => {
+const addSetContentFormatter = (format: string, formatter: SetContentCallback, setCell: SetContentRegistry) => {
   setCell.get()[format] = formatter;
 };
 

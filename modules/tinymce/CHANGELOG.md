@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Added a new `editor.content.addFormat` api function to add additional formats to `getContent` and `setContent` #TINY-7875
+- Added a new `editor.content.registerFormat` API to add additional formats to `getContent` and `setContent` #TINY-7875
 
 ### Changed
 - The deprecated `scope` attribute is no longer added to `td` cells when converting a row to a header row #TINY-7731
@@ -24,7 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed an exception getting thrown when disabling events and setting content #TINY-7956
 - Delete operations could behave incorrectly if the selection crossed a table boundary #TINY-7596
-- Added types to `setContent` optional argument #TINY-7875
 
 ## 5.9.1 - 2021-08-27
 

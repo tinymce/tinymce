@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
+import { GetContentCallback, GetContentRegistry } from '../api/content/EditorContent';
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
 import * as Settings from '../api/Settings';
@@ -16,16 +17,14 @@ import { isWsPreserveElement } from '../dom/ElementType';
 import * as TrimHtml from '../dom/TrimHtml';
 import * as Zwsp from '../text/Zwsp';
 import { Content, GetContentArgs } from './ContentTypes';
-import { GetContentFormatter } from './EditorContent';
 
 const defaultContentFormatter = (editor: Editor, args: GetContentArgs): Content =>
-  Optional.from(editor.getBody())
-    .fold(
-      Fun.constant(args.format === 'tree' ? new AstNode('body', 11) : ''),
-      (body) => getContentFromBody(editor, args, body)
-    );
+  Optional.from(editor.getBody()).fold(
+    Fun.constant(args.format === 'tree' ? new AstNode('body', 11) : ''),
+    (body) => getContentFromBody(editor, args, body)
+  );
 
-const addDefaultGetFormats = (formatCell: Cell<Record<string, GetContentFormatter>>) => {
+const addDefaultGetFormats = (formatCell: GetContentRegistry) => {
   addGetContentFormatter('raw', defaultContentFormatter, formatCell);
   addGetContentFormatter('text', defaultContentFormatter, formatCell);
   addGetContentFormatter('html', defaultContentFormatter, formatCell);
@@ -68,17 +67,10 @@ const getContentFromBody = (editor: Editor, args: Partial<GetContentArgs>, body:
   return args.content;
 };
 
-const getFormatter = (format: string, getCell: Cell<Record<string, GetContentFormatter>>) => {
-  return Optional.from(getCell.get()[format]).fold(
-    () => {
-      // eslint-disable-next-line no-console
-      throw new Error(`Content formatter ${format} not recognized.`);
-    },
-    Fun.identity
-  );
-};
+const getFormatter = (format: string, getCell: GetContentRegistry) =>
+  Obj.get(getCell.get(), format).getOrDie(`Content formatter ${format} not recognized.`);
 
-const getContentInternal = (editor: Editor, args: Partial<GetContentArgs>, format: string, getCell: Cell<Record<string, GetContentFormatter>>): Content => {
+const getContentInternal = (editor: Editor, args: Partial<GetContentArgs>, format: string, getCell: GetContentRegistry): Content => {
   const formatter = getFormatter(format, getCell);
 
   const defaultedArgs = setupArgs(args, format);
@@ -94,7 +86,7 @@ const getContentInternal = (editor: Editor, args: Partial<GetContentArgs>, forma
   return result;
 };
 
-const addGetContentFormatter = (format: string, formatter: GetContentFormatter, getCell: Cell<Record<string, GetContentFormatter>>) => {
+const addGetContentFormatter = (format: string, formatter: GetContentCallback, getCell: GetContentRegistry) => {
   getCell.get()[format] = formatter;
 };
 

@@ -2,7 +2,7 @@ import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Attribute, Class, SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -214,35 +214,36 @@ describe('browser.tinymce.core.EditorTest', () => {
       return 'get';
     };
 
-    editor.content.addFormat('test', getFormatter, setFormatter);
+    editor.content.registerFormat('test', getFormatter, setFormatter);
 
     editor.setContent('<p>test1</p>');
-    assert.equal(editor.getContent(), '<p>test1</p>', 'html setContent, html getcontent, getContent');
-    assert.equal(setCount, 0, 'html setContent, html getcontent, check setCount');
-    assert.equal(getCount, 0, 'html setContent, html getcontent, check getCount');
+    TinyAssertions.assertContent(editor, '<p>test1</p>');
+    assert.equal(setCount, 0, 'Normal set and get content, set-formatter was not called');
+    assert.equal(getCount, 0, 'Normal set and get content, get-formatter was not called');
 
     editor.setContent('<p>test2</p>', { format: 'test' });
-    assert.equal(editor.getContent(), '<p>set</p>', 'test setContent, html getcontent, getContent');
-    assert.equal(setCount, 1, 'test setContent, html getcontent, check setCount');
-    assert.equal(getCount, 0, 'test setContent, html getcontent, check getCount');
+    TinyAssertions.assertContent(editor, '<p>set</p>');
+    assert.equal(setCount, 1, 'custom set and normal get, set-formatter was called once');
+    assert.equal(getCount, 0, 'custom set and normal get, get-formatter was not called');
 
     editor.setContent('<p>test3</p>');
-    assert.equal(editor.getContent({ format: 'test' }), 'get', 'html setContent, test getcontent, getContent');
-    assert.equal(setCount, 1, 'html setContent, test getcontent, check setCount');
-    assert.equal(getCount, 1, 'html setContent, test getcontent, check getCount');
+    TinyAssertions.assertContent(editor, 'get', { format: 'test' });
+    assert.equal(setCount, 1, 'normal set and custom get, set-formatter was not called again');
+    assert.equal(getCount, 1, 'normal set and custom get, get-formatter was called once');
   });
 
   it('TINY-7875: getContent events updates properly', () => {
     const editor = hook.editor();
-    let count = 0;
+    let beforeCount = 0;
+    let afterCount = 0;
 
     const beforeGetContent = (args) => {
-      count++;
+      beforeCount++;
       args.testProperty = 'test';
     };
 
     const afterGetContent = (args) => {
-      count++;
+      afterCount++;
       assert.equal(args.testProperty, 'test');
     };
 
@@ -250,7 +251,8 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.on('BeforeGetContent', beforeGetContent);
 
     editor.getContent();
-    assert.equal(count, 2);
+    assert.equal(beforeCount, 1);
+    assert.equal(afterCount, 1);
 
     editor.off('GetContent', afterGetContent);
     editor.off('BeforeGetContent', beforeGetContent);

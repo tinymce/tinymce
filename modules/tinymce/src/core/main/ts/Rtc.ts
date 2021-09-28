@@ -7,10 +7,10 @@
 
 import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
+import { GetContentCallback, GetContentRegistry, SetContentCallback, SetContentRegistry } from './api/content/EditorContent';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
 import { Content, GetContentArgs, GetSelectionContentArgs, SetContentArgs } from './content/ContentTypes';
-import { GetContentFormatter, SetContentFormatter } from './content/EditorContent';
 import { addGetContentFormatter, getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { addSetContentFormatter, setContentInternal } from './content/SetContentImpl';
@@ -55,7 +55,7 @@ interface RtcRuntimeApi {
   editor: {
     getContent: (args: Partial<GetContentArgs>) => Content;
     setContent: (content: Content, args: Partial<SetContentArgs>) => Content;
-    addContentFormat: (format: string, formatGetter: GetContentFormatter, getCell: Cell<Record<string, GetContentFormatter>>, formatSetter: SetContentFormatter, setCell: Cell<Record<string, SetContentFormatter>>) => void;
+    addContentFormat: (format: string, formatGetter: GetContentCallback, getCell: GetContentRegistry, formatSetter: SetContentCallback, setCell: SetContentRegistry) => void;
     insertContent: (content: Content) => void;
     addVisual: () => void;
   };
@@ -104,9 +104,9 @@ interface RtcAdaptor {
     formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
-    getContent: (args: Partial<GetContentArgs>, format: string, getCell: Cell<Record<string, GetContentFormatter>>) => Content;
-    setContent: (content: Content, args: Partial<SetContentArgs>, setCell: Cell<Record<string, SetContentFormatter>>) => Content;
-    addContentFormat: (format: string, formatGetter: GetContentFormatter, getCell: Cell<Record<string, GetContentFormatter>>, formatSetter: SetContentFormatter, setCell: Cell<Record<string, SetContentFormatter>>) => void;
+    getContent: (args: Partial<GetContentArgs>, format: string, getCell: GetContentRegistry) => Content;
+    setContent: (content: Content, args: Partial<SetContentArgs>, setCell: SetContentRegistry) => Content;
+    addContentFormat: (format: string, formatGetter: GetContentCallback, getCell: GetContentRegistry, formatSetter: SetContentCallback, setCell: SetContentRegistry) => void;
     insertContent: (value: string, details) => void;
     addVisual: (elm?: HTMLElement) => void;
   };
@@ -405,20 +405,20 @@ export const toggleFormat = (editor: Editor, name: string, vars: Record<string, 
 export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars): UnbindFormatChanged =>
   getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar, vars);
 
-export const getContent = (editor: Editor, args: Partial<GetContentArgs>, format: string, getCell: Cell<Record<string, GetContentFormatter>>): Content =>
+export const getContent = (editor: Editor, args: Partial<GetContentArgs>, format: string, getCell: GetContentRegistry): Content =>
   getRtcInstanceWithFallback(editor).editor.getContent(args, format, getCell);
 
-export const setContent = (editor: Editor, content: Content, args: Partial<SetContentArgs>, setCell: Cell<Record<string, SetContentFormatter>>): Content =>
+export const setContent = (editor: Editor, content: Content, args: Partial<SetContentArgs>, setCell: SetContentRegistry): Content =>
   getRtcInstanceWithFallback(editor).editor.setContent(content, args, setCell);
 
 export const addContentFormat = (
   editor: Editor,
   format: string,
-  formatGetter: GetContentFormatter,
-  getCell: Cell<Record<string, GetContentFormatter>>,
-  formatSetter: SetContentFormatter,
+  formatGetter: GetContentCallback,
+  getCell: GetContentRegistry,
+  formatSetter: SetContentCallback,
   setCell: Cell<Record<string,
-  SetContentFormatter>>
+  SetContentCallback>>
 ): void =>
   getRtcInstanceWithFallback(editor).editor.addContentFormat(format, formatGetter, getCell, formatSetter, setCell);
 
