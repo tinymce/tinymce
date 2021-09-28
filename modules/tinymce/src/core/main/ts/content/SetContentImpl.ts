@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { SetContentCallback, SetContentRegistry } from '../api/content/EditorContent';
@@ -23,22 +23,27 @@ import { Content, SetContentArgs } from './ContentTypes';
 
 const defaultFormat = 'html';
 
-const defaultContentFormatter = (editor: Editor, content: Content, updatedArgs: SetContentArgs) => {
-  if (!isTreeNode(content)) {
-    content = updatedArgs.content;
-  }
+const defaultContentFormatter = (editor: Editor, content: string, updatedArgs: SetContentArgs) => {
+  content = updatedArgs.content as string;
 
   return Optional.from(editor.getBody()).fold(
     Fun.constant(content),
-    (body) => isTreeNode(content) ? setContentTree(editor, body, content, updatedArgs) : setContentString(editor, body, content, updatedArgs)
+    (body) => setContentString(editor, body, content, updatedArgs)
+  );
+};
+
+const treeContentFormatter = (editor: Editor, content: AstNode, updatedArgs: SetContentArgs) => {
+  return Optional.from(editor.getBody()).fold(
+    Fun.constant(content),
+    (body) => setContentTree(editor, body, content, updatedArgs)
   );
 };
 
 const addDefaultSetFormats = (formatCell: SetContentRegistry) => {
-  addSetContentFormatter('raw', defaultContentFormatter, formatCell);
-  addSetContentFormatter('text', defaultContentFormatter, formatCell);
-  addSetContentFormatter('html', defaultContentFormatter, formatCell);
-  addSetContentFormatter('tree', defaultContentFormatter, formatCell);
+  Arr.each([ 'raw', 'text', 'html' ], (format) => {
+    addSetContentFormatter(format, defaultContentFormatter, formatCell);
+  });
+  addSetContentFormatter('tree', treeContentFormatter, formatCell);
 };
 
 const isTreeNode = (content: unknown): content is AstNode =>

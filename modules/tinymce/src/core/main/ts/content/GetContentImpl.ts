@@ -24,11 +24,21 @@ const defaultContentFormatter = (editor: Editor, args: GetContentArgs): Content 
     (body) => getContentFromBody(editor, args, body)
   );
 
+const treeContentFormatter = (editor: Editor, args: GetContentArgs): Content =>
+  Optional.from(editor.getBody()).fold(
+    Fun.constant<Content>(new AstNode('body', 11)),
+    (body) => {
+      const content = editor.serializer.serialize(body, args);
+      args.content = content;
+      return content;
+    }
+  );
+
 const addDefaultGetFormats = (formatCell: GetContentRegistry) => {
-  addGetContentFormatter('raw', defaultContentFormatter, formatCell);
-  addGetContentFormatter('text', defaultContentFormatter, formatCell);
-  addGetContentFormatter('html', defaultContentFormatter, formatCell);
-  addGetContentFormatter('tree', defaultContentFormatter, formatCell);
+  Arr.each([ 'raw', 'text', 'html' ], (format) => {
+    addGetContentFormatter(format, defaultContentFormatter, formatCell);
+  });
+  addGetContentFormatter('tree', treeContentFormatter, formatCell);
 };
 
 const trimEmptyContents = (editor: Editor, html: string): string => {
@@ -52,13 +62,11 @@ const getContentFromBody = (editor: Editor, args: Partial<GetContentArgs>, body:
   } else if (args.format === 'text') {
     // return empty string for text format when editor is empty to avoid bogus elements being returned in content
     content = editor.dom.isEmpty(body) ? '' : Zwsp.trim(body.innerText || body.textContent);
-  } else if (args.format === 'tree') {
-    content = editor.serializer.serialize(body, args);
   } else {
     content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
   }
 
-  if (!Arr.contains([ 'text', 'tree' ], args.format) && !isWsPreserveElement(SugarElement.fromDom(body))) {
+  if ('text' !== args.format && !isWsPreserveElement(SugarElement.fromDom(body))) {
     args.content = Tools.trim(content);
   } else {
     args.content = content;
