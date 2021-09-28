@@ -108,7 +108,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           spec.close(editor, 'Line height');
         });
 
-        it(`TINY-7713: ${spec.name} updates if computed line height changes`, async function () {
+        it(`TINY-7713: ${spec.name} updates if computed line height changes`, async () => {
           const editor = hook.editor();
           editor.setContent('');
           TinySelections.setCursor(editor, [ 0 ], 0);

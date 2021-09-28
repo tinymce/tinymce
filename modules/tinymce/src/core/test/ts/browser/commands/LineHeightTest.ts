@@ -22,7 +22,7 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
     assertHeight(editor, '1.5');
   });
 
-  it('TINY-4843: Unspecified line-height can be read from element', function () {
+  it('TINY-4843: Unspecified line-height can be read from element', () => {
     const editor = hook.editor();
     editor.setContent('<p>Hello</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
