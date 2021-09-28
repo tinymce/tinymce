@@ -39,6 +39,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     const target = event.target;
     const targetValue = SugarNode.isText(target) ? 'text(' + SugarText.get(target) + ')' : Attribute.get(target, 'class');
     store.adder({ eventName, target: targetValue })();
+    return false;
   };
 
   const sTestFocusInput = GeneralSteps.sequence([

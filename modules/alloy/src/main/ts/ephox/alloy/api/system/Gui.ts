@@ -58,7 +58,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   const lookup = (eventName: string, target: SugarElement) => registry.find(isAboveRoot, eventName, target);
 
   const domEvents = GuiEvents.setup(root.element, {
-    triggerEvent: (eventName: string, event: EventArgs) => {
+    triggerEvent: (eventName, event) => {
       return Debugging.monitorEvent(eventName, event.target, (logger: Debugging.DebuggerLogger) => Triggers.triggerUntilStopped(lookup, eventName, event, logger));
     }
   });
