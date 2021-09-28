@@ -16,7 +16,7 @@ import * as OuterPosition from '../frames/OuterPosition';
 import * as Zwsp from '../text/Zwsp';
 
 interface MarkerInfo {
-  readonly element: SugarElement;
+  readonly element: SugarElement<HTMLElement>;
   readonly bottom: number;
   readonly height: number;
   readonly pos: SugarPosition;
@@ -58,7 +58,7 @@ const descend = (element: SugarElement, offset: number): { element: SugarElement
   }
 };
 
-const markerInfo = (element: SugarElement, cleanupFun: () => void): MarkerInfo => {
+const markerInfo = (element: SugarElement<HTMLElement>, cleanupFun: () => void): MarkerInfo => {
   const pos = SugarLocation.absolute(element);
   const height = Height.get(element);
   return {
@@ -72,7 +72,7 @@ const markerInfo = (element: SugarElement, cleanupFun: () => void): MarkerInfo =
 
 const createMarker = (element: SugarElement, offset: number): MarkerInfo => {
   const startPoint = descend(element, offset);
-  const span = SugarElement.fromHtml('<span data-mce-bogus="all">' + Zwsp.ZWSP + '</span>');
+  const span = SugarElement.fromHtml<HTMLSpanElement>('<span data-mce-bogus="all" style="display: inline-block;">' + Zwsp.ZWSP + '</span>');
   Insert.before(startPoint.element, span);
 
   return markerInfo(span, () => Remove.remove(span));

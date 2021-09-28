@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Improved
+- The `element` argument of the `editor.selection.scrollIntoView()` API is now optional, and if it is not provided the current selection will be scrolled into view #TINY-7291
+
 ### Changed
 - The deprecated `scope` attribute is no longer added to `td` cells when converting a row to a header row #TINY-7731
 - The number of `col` elements is normalised to match the number of columns in a table after a table action #TINY-8011
@@ -15,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resizing table columns in some scenarios would resize the column to an incorrect position #TINY-7731
 - Image resize backdrop element did not have `data-mce-bogus="all"` set #TINY-7854
 - Resize handles appeared on top of dialogs and menus when using an inline editor #TINY-3263
+- Fixed the `autoresize` plugin incorrectly scrolling to the top of the editor in some cases when changing content #TINY-7291
+- Fixed the `editor.selection.scrollIntoView()`  type signature, as it incorrectly required an `Element` instead of `HTMLElement` #TINY-7291
 - Table cells that were both row and column headers would not retain the correct state when converting back to a regular row or column #TINY-7709
 - Clicking beside a non-editable element could cause the editor to incorrectly scroll to the top of the document #TINY-7062
 - Clicking in a table cell, with a non-editable element in an adjacent cell, incorrectly caused the non-editable element to be selected #TINY-7736

@@ -71,7 +71,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
   const getRange = selection.getRng;
 
-  const showCaret = (direction: number, node: Element, before: boolean, scrollIntoView: boolean = true): Range => {
+  const showCaret = (direction: number, node: HTMLElement, before: boolean, scrollIntoView: boolean = true): Range => {
     const e = editor.fire('ShowCaret', {
       target: node,
       direction,
@@ -89,7 +89,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     return fakeCaret.show(before, node);
   };
 
-  const showBlockCaretContainer = (blockCaretContainer: Element) => {
+  const showBlockCaretContainer = (blockCaretContainer: HTMLElement) => {
     if (blockCaretContainer.hasAttribute('data-mce-caret')) {
       CaretContainer.showCaretContainerBlock(blockCaretContainer);
       setRange(getRange()); // Removes control rect on IE
