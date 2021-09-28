@@ -7,7 +7,7 @@
 
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
-import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
+import { DomEvent, EventArgs, SugarDocument, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
@@ -29,13 +29,14 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target });
 
   // Document touch events
-  const onTouchstart = DomEvent.bind(SugarElement.fromDom(document), 'touchstart', fireDismissPopups);
-  const onTouchmove = DomEvent.bind(SugarElement.fromDom(document), 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
-  const onTouchend = DomEvent.bind(SugarElement.fromDom(document), 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
+  const doc = SugarDocument.getDocument();
+  const onTouchstart = DomEvent.bind(doc, 'touchstart', fireDismissPopups);
+  const onTouchmove = DomEvent.bind(doc, 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
+  const onTouchend = DomEvent.bind(doc, 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
 
   // Document mouse events
-  const onMousedown = DomEvent.bind(SugarElement.fromDom(document), 'mousedown', fireDismissPopups);
-  const onMouseup = DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
+  const onMousedown = DomEvent.bind(doc, 'mousedown', fireDismissPopups);
+  const onMouseup = DomEvent.bind(doc, 'mouseup', (evt) => {
     if (evt.raw.button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: evt.target });
     }
