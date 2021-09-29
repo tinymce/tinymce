@@ -91,15 +91,12 @@ const add = (code: string, items: Record<string, string>) => {
  */
 const translate = (text: Untranslated): TranslatedString => {
   const langData: Record<string, string> = getLanguageData().getOr({});
-  /**
+  /*
    * number - string
    * null, undefined and empty string - empty string
    * array - comma-delimited string
    * object - in [object Object]
    * function - in [object Function]
-   *
-   * @param obj
-   * @returns {string}
    */
   const toString = (obj: Untranslated) => {
     if (Type.isFunction(obj)) {

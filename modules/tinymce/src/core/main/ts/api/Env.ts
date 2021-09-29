@@ -251,6 +251,8 @@ const Env: Env = {
   /**
    * <em>Deprecated in TinyMCE 5.5</em> - if you need the original target of an event, please use `event.composedPath()`
    *
+   * @property experimentalShadowDom
+   * @type Boolean
    * @deprecated
    */
   experimentalShadowDom: false,
@@ -263,6 +265,8 @@ const Env: Env = {
   /**
    * <em>Deprecated in TinyMCE 5.1</em> - Use <code>deviceType.isDesktop()</code> instead.
    *
+   * @property desktop
+   * @type Boolean
    * @deprecated
    */
   desktop: deviceType.isDesktop(),

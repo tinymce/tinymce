@@ -11,6 +11,8 @@ import Sizzle from './Sizzle';
 
 /**
  * This class mimics most of the jQuery API:
+ * <br>
+ * <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
  *
  * This is whats currently implemented:
  * - Utility functions
@@ -28,6 +30,7 @@ import Sizzle from './Sizzle';
  * var $ = tinymce.dom.DomQuery;
  * $('p').attr('attr', 'value').addClass('class');
  *
+ * @deprecated
  * @class tinymce.dom.DomQuery
  */
 
