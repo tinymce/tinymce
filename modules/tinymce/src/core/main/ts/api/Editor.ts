@@ -385,7 +385,10 @@ class Editor implements EditorObservable {
   /**
    * Executes a legacy callback. This method is useful to call old 2.x option callbacks.
    * There new event model is a better way to add callback so this method might be removed in the future.
+   * <br>
+   * <em><code>execCallback</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
    *
+   * @deprecated
    * @method execCallback
    * @param {String} name Name of the callback to execute.
    * @return {Object} Return value passed from callback function.
