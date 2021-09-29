@@ -19,6 +19,8 @@ import Editor from './Editor';
 
 export interface EditorMode {
   /**
+   * Checks if the editor is in a readonly state.
+   *
    * @method isReadOnly
    * @return {Boolean} true if the editor is in a readonly state.
    */
@@ -33,6 +35,8 @@ export interface EditorMode {
   set: (mode: string) => void;
 
   /**
+   * Returns the active editor mode, such as "design" or "readonly".
+   *
    * @method get
    * @return {String} The active editor mode.
    */
