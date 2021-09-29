@@ -40,7 +40,7 @@ interface XHR extends Observable<XHREventMap> {
  * @class tinymce.util.XHR
  * @mixes tinymce.util.Observable
  * @static
- * @summary <em><code>XHR</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+ * @summary XHR has been deprecated and marked for removal in TinyMCE 6.0.
  * @example
  * // Sends a low level Ajax request
  * tinymce.util.XHR.send({

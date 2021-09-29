@@ -30,7 +30,7 @@ import Sizzle from './Sizzle';
  *
  * @deprecated
  * @class tinymce.dom.DomQuery
- * @summary <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+ * @summary DomQuery has been deprecated and marked for removal in TinyMCE 6.0.
  */
 
 type DomQuerySelector<T extends Node> = string | T | T[] | DomQuery<T>;

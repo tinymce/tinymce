@@ -14,7 +14,7 @@ import XHR, { XHRSettings } from './XHR';
  *
  * @deprecated
  * @class tinymce.util.JSONRequest
- * @summary <em><code>JSONRequest</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+ * @summary JSONRequest has been deprecated and marked for removal in TinyMCE 6.0.
  * @example
  * var json = new tinymce.util.JSONRequest({
  *     url: 'somebackend.php'
