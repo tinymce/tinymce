@@ -1,6 +1,6 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
+import Promise from '@ephox/wrap-promise-polyfill';
 
-import { Promise } from '../util/Promise';
 import * as Utils from './Utils';
 
 const friendlyHttpErrors = [

@@ -100,7 +100,7 @@ interface EditorSelection {
     parents: Element[];
   }) => void) => { unbind: () => void };
   getScrollContainer: () => HTMLElement;
-  scrollIntoView: (elm: Element, alignToTop?: boolean) => void;
+  scrollIntoView: (elm?: HTMLElement, alignToTop?: boolean) => void;
   placeCaretAt: (clientX: number, clientY: number) => void;
   getBoundingClientRect: () => ClientRect | DOMRect;
   destroy: () => void;
@@ -541,7 +541,14 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     return scrollContainer;
   };
 
-  const scrollIntoView = (elm: HTMLElement, alignToTop?: boolean) => ScrollIntoView.scrollElementIntoView(editor, elm, alignToTop);
+  const scrollIntoView = (elm?: HTMLElement, alignToTop?: boolean) => {
+    if (Type.isNonNullable(elm)) {
+      ScrollIntoView.scrollElementIntoView(editor, elm, alignToTop);
+    } else {
+      ScrollIntoView.scrollRangeIntoView(editor, getRng(), alignToTop);
+    }
+  };
+
   const placeCaretAt = (clientX: number, clientY: number) => setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
 
   const getBoundingClientRect = (): ClientRect | DOMRect => {

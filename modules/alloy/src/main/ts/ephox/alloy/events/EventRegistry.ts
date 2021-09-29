@@ -55,12 +55,10 @@ export const EventRegistry = (): EventRegistry => {
     });
   };
 
-  const findHandler = (handlers: Optional<Record<Uid, CurriedHandler>>, elem: SugarElement): Optional<ElementAndHandler> =>
-    Tagger.read(elem).fold(
-      () => Optional.none(),
-      (id) => handlers.bind((h) => Obj.get(h, id))
-        .map((descHandler: CurriedHandler) => eventHandler(elem, descHandler))
-    );
+  const findHandler = (handlers: Record<Uid, CurriedHandler>, elem: SugarElement): Optional<ElementAndHandler> =>
+    Tagger.read(elem)
+      .bind((id) => Obj.get(handlers, id))
+      .map((descHandler) => eventHandler(elem, descHandler));
 
   // Given just the event type, find all handlers regardless of element
   const filterByType = (type: string): UidAndHandler[] =>
@@ -69,14 +67,13 @@ export const EventRegistry = (): EventRegistry => {
       .getOr([ ]);
 
   // Given event type, and element, find the handler.
-  const find = (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement): Optional<ElementAndHandler> => {
-    const handlers = Obj.get(registry, type);
-    return TransformFind.closest(target, (elem: SugarElement) => findHandler(handlers, elem), isAboveRoot);
-  };
+  const find = (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement): Optional<ElementAndHandler> =>
+    Obj.get(registry, type)
+      .bind((handlers) => TransformFind.closest(target, (elem) => findHandler(handlers, elem), isAboveRoot));
 
   const unregisterId = (id: string): void => {
     // INVESTIGATE: Find a better way than mutation if we can.
-    Obj.each(registry, (handlersById: Record<string, CurriedHandler>, _eventName) => {
+    Obj.each(registry, (handlersById, _eventName) => {
       if (Obj.has(handlersById, id)) {
         delete handlersById[id];
       }

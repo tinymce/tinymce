@@ -239,6 +239,7 @@ Ready.execute(() => {
     replace,
     gap,
     col,
+    colGap: col as Generators['colGap'],
     colgroup
   };
 
