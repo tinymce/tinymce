@@ -417,8 +417,7 @@ export const addContentFormat = (
   formatGetter: GetContentCallback,
   getCell: GetContentRegistry,
   formatSetter: SetContentCallback,
-  setCell: Cell<Record<string,
-  SetContentCallback>>
+  setCell: SetContentRegistry
 ): void =>
   getRtcInstanceWithFallback(editor).editor.addContentFormat(format, formatGetter, getCell, formatSetter, setCell);
 
