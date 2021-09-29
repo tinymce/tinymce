@@ -117,9 +117,9 @@ const makeMap = (items, delim?, map?) => {
  * Checks if the input object "<code>obj</code>" has the property "<code>prop</code>".
  *
  * @method hasOwnProperty
- * @param {Object} obj Object to test.
- * @param {String} prop Property to test <code>obj</code> for.
- * @returns {Boolean} true if the object "<code>obj</code>" has the property "<code>prop</code>".
+ * @param {Object} obj Object to check if the property exists.
+ * @param {String} prop Name of a property on the object.
+ * @returns {Boolean} true if the object has the specified property.
  */
 const hasOwnProperty = Obj.has;
 
