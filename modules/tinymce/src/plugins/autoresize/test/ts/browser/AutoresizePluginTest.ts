@@ -1,7 +1,7 @@
 import { PhantomSkipper, Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -137,6 +137,28 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
     editor.insertContent('<div style="height: 5000px;">a</div><div style="height: 50px">b</div>');
     await Waiter.pTryUntil('wait for editor content height', () => assertEditorContentApproxHeight(editor, 5100), 10, 3000);
     await Waiter.pTryUntil('wait for editor height', () => assertEditorHeightAbove(editor, 5100), 10, 3000);
+    assertScrollPositionGreaterThan(window, 3500);
+  });
+
+  it('TINY-7291: Editor does not scroll to the top when changing font size over multiple paragraphs (NodeChange trigger)', () => {
+    const editor = hook.editor();
+    editor.setContent('<div style="height: 5000px;">a</div><p>Paragraph 1</p><p>Paragraph 2</p>');
+    window.scrollTo(0, 5000);
+    TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 2, 0 ], 11);
+    editor.execCommand('FontSize', false, '20pt');
+    assertScrollPositionGreaterThan(window, 3500);
+  });
+
+  it('TINY-7291: Editor does not scroll to the top on undo/redo (SetContent & NodeChange trigger)', () => {
+    const editor = hook.editor();
+    editor.resetContent('<div style="height: 5000px;">a</div><p>Some content</p>');
+    TinySelections.setCursor(editor, [ 1, 0 ], 12);
+    TinyContentActions.type(editor, '. More content...');
+    editor.undoManager.add();
+    assertScrollPositionGreaterThan(window, 3500);
+    editor.execCommand('Undo');
+    assertScrollPositionGreaterThan(window, 3500);
+    editor.execCommand('Redo');
     assertScrollPositionGreaterThan(window, 3500);
   });
 });

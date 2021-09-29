@@ -1,11 +1,9 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, EventArgs, EventUnbinder, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
-import { EventFormat } from './SimulatedEvent';
 import * as TapEvent from './TapEvent';
 
 const isDangerous = (event: EventArgs<KeyboardEvent>): boolean => {
@@ -17,15 +15,9 @@ const isDangerous = (event: EventArgs<KeyboardEvent>): boolean => {
 const isFirefox = (): boolean => PlatformDetection.detect().browser.isFirefox();
 
 export interface GuiEventSettings {
-  triggerEvent: (eventName: string, event: EventFormat) => boolean;
-  stopBackspace?: boolean;
+  readonly triggerEvent: (eventName: string, event: EventArgs) => boolean;
+  readonly stopBackspace?: boolean;
 }
-
-const settingsSchema = StructureSchema.objOfOnly([
-  // triggerEvent(eventName, event)
-  FieldSchema.requiredFunction('triggerEvent'),
-  FieldSchema.defaulted('stopBackspace', true)
-]);
 
 const bindFocus = (container: SugarElement, handler: (evt: EventArgs) => void): EventUnbinder => {
   if (isFirefox()) {
@@ -45,8 +37,11 @@ const bindBlur = (container: SugarElement, handler: (evt: EventArgs) => void): E
   }
 };
 
-const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void } => {
-  const settings: GuiEventSettings = StructureSchema.asRawOrDie('Getting GUI events settings', settingsSchema, rawSettings);
+const setup = (container: SugarElement, rawSettings: GuiEventSettings): { unbind: () => void } => {
+  const settings: Required<GuiEventSettings> = {
+    stopBackspace: true,
+    ...rawSettings
+  };
 
   const pointerEvents = [
     'touchstart',
@@ -118,7 +113,7 @@ const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void 
     const stopped = settings.triggerEvent('keydown', event);
     if (stopped) {
       event.kill();
-    } else if (settings.stopBackspace === true && isDangerous(event)) {
+    } else if (settings.stopBackspace && isDangerous(event)) {
       event.prevent();
     }
   });

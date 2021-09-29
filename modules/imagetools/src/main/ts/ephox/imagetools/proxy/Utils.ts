@@ -1,6 +1,5 @@
 import { Obj, Optional } from '@ephox/katamari';
-
-import { Promise } from '../util/Promise';
+import Promise from '@ephox/wrap-promise-polyfill';
 
 const sendRequest = (url: string, headers: Record<string, string>, withCredentials: boolean = false): Promise<{ status: number; blob: Blob }> =>
   new Promise((resolve) => {

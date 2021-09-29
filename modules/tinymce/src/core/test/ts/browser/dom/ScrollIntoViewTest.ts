@@ -2,7 +2,7 @@ import { Assertions, Cursors, PhantomSkipper, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -133,6 +133,14 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>');
       scrollIntoView(editor, 'div:nth-child(3)');
       assertScrollPosition(editor, 0, 1050);
+    });
+
+    it('TINY-7291: Scroll current selection into view', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>');
+      TinySelections.setCursor(editor, [ 2, 0 ], 0);
+      editor.selection.scrollIntoView();
+      assertScrollPosition(editor, 0, 670);
     });
   });
 

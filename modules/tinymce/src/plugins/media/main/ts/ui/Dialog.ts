@@ -13,6 +13,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Settings from '../api/Settings';
 import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
+import { isMediaElement } from '../core/Selection';
 import * as Service from '../core/Service';
 import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
 import * as UpdateHtml from '../core/UpdateHtml';
@@ -93,9 +94,6 @@ const handleError = (editor: Editor) => (error?: { msg: string }): void => {
 
 const snippetToData = (editor: Editor, embedSnippet: string): MediaData =>
   HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet);
-
-const isMediaElement = (element: Element): boolean =>
-  element.hasAttribute('data-mce-object') || element.hasAttribute('data-ephox-embed-iri');
 
 const getEditorData = (editor: Editor): MediaData => {
   const element = editor.selection.getNode();

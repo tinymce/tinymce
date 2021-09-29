@@ -1,7 +1,7 @@
 import { Optionals, Results } from '@ephox/katamari';
+import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as Conversions from '../util/Conversions';
-import { Promise } from '../util/Promise';
 import { BinaryReader } from './BinaryReader';
 import { readShort } from './BinaryReaderUtils';
 import { ExifTags, GPSTags, readMetaData, TiffTags } from './ExifReader';

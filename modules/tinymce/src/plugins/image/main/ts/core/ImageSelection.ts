@@ -131,6 +131,7 @@ const insertOrUpdateImage = (editor: Editor, partialData: Partial<ImageData>): v
 
 export {
   normalizeCss,
+  getSelectedImage,
   readImageDataFromSelection,
   insertOrUpdateImage
 };

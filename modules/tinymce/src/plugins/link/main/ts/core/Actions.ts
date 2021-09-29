@@ -28,7 +28,7 @@ const gotoLink = (editor: Editor, a: HTMLAnchorElement | null): void => {
   if (a) {
     const href = Utils.getHref(a);
     if (/^#/.test(href)) {
-      const targetEl = editor.$<Element>(href);
+      const targetEl = editor.$<HTMLElement>(href);
       if (targetEl.length) {
         editor.selection.scrollIntoView(targetEl[0], true);
       }
