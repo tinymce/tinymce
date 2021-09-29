@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 
+import Entities from '../html/Entities';
 import Tools from './Tools';
 
 /**
@@ -36,6 +37,34 @@ export interface URIConstructor {
   parseDataUri: (uri: string) => { type: string; data: string };
 }
 
+interface SafeUriOptions {
+  readonly allow_html_data_urls?: boolean;
+  readonly allow_script_urls?: boolean;
+  readonly allow_svg_data_urls?: boolean;
+}
+
+const safeSvgDataUrlElements = [ 'img', 'video' ];
+
+const blockSvgDataUris = (allowSvgDataUrls: boolean | undefined, tagName?: string) => {
+  // Only allow SVGs by default on images/videos since the browser won't execute scripts on those elements
+  if (Type.isNullable(tagName)) {
+    return true;
+  } else {
+    const allowed = Type.isNullable(allowSvgDataUrls) ? Arr.contains(safeSvgDataUrlElements, tagName) : allowSvgDataUrls;
+    return !allowed;
+  }
+};
+
+const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: string) => {
+  if (settings.allow_html_data_urls) {
+    return false;
+  } else if (/^data:image\//i.test(uri)) {
+    return blockSvgDataUris(settings.allow_svg_data_urls, tagName) && /^data:image\/svg\+xml/i.test(uri);
+  } else {
+    return /^data:/i.test(uri);
+  }
+};
+
 class URI {
 
   public static parseDataUri(uri: string): { type: string; data: string} {
@@ -52,6 +81,40 @@ class URI {
       type,
       data: uriComponents[1]
     };
+  }
+
+  /**
+   * Check to see if a URI is safe to use in the Document Object Model (DOM). This will return
+   * true if the URI can be used in the DOM without potentially triggering a security issue.
+   *
+   * @method isDomSafe
+   * @static
+   * @param {String} uri The URI to be validated.
+   * @param {Object} context An optional HTML tag name where the element is being used.
+   * @param {Object} options An optional set of options to use when determining if the URI is safe.
+   * @return {Boolean} True if the URI is safe, otherwise false.
+   */
+  public static isDomSafe(uri: string, context?: string, options: SafeUriOptions = {}): boolean {
+    if (options.allow_script_urls) {
+      return true;
+    } else {
+      let decodedUri = Entities.decode(uri).replace(/[\s\u0000-\u001F]+/g, '');
+
+      try {
+        // Might throw malformed URI sequence
+        decodedUri = decodeURIComponent(decodedUri);
+      } catch (ex) {
+        // Fallback to non UTF-8 decoder
+        decodedUri = unescape(decodedUri);
+      }
+
+      // Ensure we don't have a javascript URI, as that is not safe since it allows arbitrary JavaScript execution
+      if (/((java|vb)script|mhtml):/i.test(decodedUri)) {
+        return false;
+      }
+
+      return !isInvalidUri(options, decodedUri, context);
+    }
   }
 
   public static getDocumentBaseUrl(loc: { protocol: string; host?: string; href?: string; pathname?: string }): string {
