@@ -6,7 +6,7 @@
  */
 
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { SugarElement, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -36,8 +36,11 @@ const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double',
 
 const determineDefaultStyles = (editor: Editor): Record<string, string> => {
   if (isPixelsForced(editor)) {
-    const editorWidth = Css.get(SugarElement.fromDom(editor.getBody()), 'width');
-    return { ...defaultStyles, width: editorWidth };
+    // Determine the inner size of the parent block element where the table will be inserted
+    const dom = editor.dom;
+    const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
+    const contentWidth = Width.getInner(SugarElement.fromDom(parentBlock));
+    return { ...defaultStyles, width: contentWidth + 'px' };
   } else if (isResponsiveForced(editor)) {
     return Obj.filter(defaultStyles, (_value, key) => key !== 'width');
   } else {

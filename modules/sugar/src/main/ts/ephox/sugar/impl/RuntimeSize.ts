@@ -1,15 +1,16 @@
+import { Strings } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Height, SugarElement, Width } from '@ephox/sugar';
+
+import { SugarElement } from '../api/node/SugarElement';
+import * as Css from '../api/properties/Css';
 
 const needManualCalc = (): boolean => {
   const browser = PlatformDetection.detect().browser;
   return browser.isIE() || browser.isEdge();
 };
 
-const toNumber = (px: string, fallback: number): number => {
-  const num = parseFloat(px); // parseFloat removes suffixes like px
-  return isNaN(num) ? fallback : num;
-};
+const toNumber = (px: string, fallback: number): number =>
+  Strings.toFloat(px).getOr(fallback);
 
 const getProp = (element: SugarElement<HTMLElement>, name: string, fallback: number): number =>
   toNumber(Css.get(element, name), fallback);
@@ -27,20 +28,22 @@ const calcContentBoxSize = (element: SugarElement<HTMLElement>, size: number, up
 };
 
 const getCalculatedHeight = (element: SugarElement<HTMLElement>, boxSizing: string): number => {
-  const height = element.dom.getBoundingClientRect().height;
+  const dom = element.dom;
+  const height = dom.getBoundingClientRect().height || dom.offsetHeight;
   return boxSizing === 'border-box' ? height : calcContentBoxSize(element, height, 'top', 'bottom');
 };
 
 const getCalculatedWidth = (element: SugarElement<HTMLElement>, boxSizing: string): number => {
-  const width = element.dom.getBoundingClientRect().width;
+  const dom = element.dom;
+  const width = dom.getBoundingClientRect().width || dom.offsetWidth;
   return boxSizing === 'border-box' ? width : calcContentBoxSize(element, width, 'left', 'right');
 };
 
 const getHeight = (element: SugarElement<HTMLElement>): number =>
-  needManualCalc() ? getCalculatedHeight(element, getBoxSizing(element)) : getProp(element, 'height', Height.get(element));
+  needManualCalc() ? getCalculatedHeight(element, getBoxSizing(element)) : getProp(element, 'height', element.dom.offsetHeight);
 
 const getWidth = (element: SugarElement<HTMLElement>): number =>
-  needManualCalc() ? getCalculatedWidth(element, getBoxSizing(element)) : getProp(element, 'width', Width.get(element));
+  needManualCalc() ? getCalculatedWidth(element, getBoxSizing(element)) : getProp(element, 'width', element.dom.offsetWidth);
 
 const getInnerHeight = (element: SugarElement<HTMLElement>): number =>
   getCalculatedHeight(element, 'content-box');
