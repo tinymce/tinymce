@@ -11,10 +11,10 @@ import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
 import EditorSelection from './api/dom/Selection';
 import Editor from './api/Editor';
-import { VK } from './api/PublicApi';
 import * as Settings from './api/Settings';
 import Delay from './api/util/Delay';
 import { EditorEvent } from './api/util/EventDispatcher';
+import VK from './api/util/VK';
 import * as MousePosition from './dom/MousePosition';
 import * as NodeType from './dom/NodeType';
 import * as ErrorReporter from './ErrorReporter';
@@ -273,7 +273,7 @@ const bindFakeDragEvents = (editor: Editor) => {
 
   editor.on('keydown', (e) => {
     // Fire 'dragend' when the escape key is pressed
-    if (e.keyCode === VK.ESCAPE) {
+    if (e.keyCode === VK.ESC) {
       dragEndHandler();
     }
   });
