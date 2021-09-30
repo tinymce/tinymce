@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
 - The `wordcount` plugin was incorrectly treating soft hyphens (`&shy;` entities) as word breaks #TINY-7908
 - Dragging and dropping `contenteditable="false"` elements could result in the element being placed in an unexpected location #TINY-7917
-- Pressing the Escape key would not cancel a drag action that started within the editor #TINY-7917
+- Pressing the Escape key would not cancel a drag action that started on a `contenteditable="false"` element within the editor #TINY-7917
 
 ### Deprecated
 - Several APIs have been deprecated. See the release notes for information #TINY-8023
