@@ -46,12 +46,11 @@ interface SafeUriOptions {
 const safeSvgDataUrlElements = [ 'img', 'video' ];
 
 const blockSvgDataUris = (allowSvgDataUrls: boolean | undefined, tagName?: string) => {
-  // Only allow SVGs by default on images/videos since the browser won't execute scripts on those elements
-  if (Type.isNullable(tagName)) {
-    return true;
+  if (Type.isNonNullable(allowSvgDataUrls)) {
+    return !allowSvgDataUrls;
   } else {
-    const allowed = Type.isNullable(allowSvgDataUrls) ? Arr.contains(safeSvgDataUrlElements, tagName) : allowSvgDataUrls;
-    return !allowed;
+    // Only allow SVGs by default on images/videos since the browser won't execute scripts on those elements
+    return Type.isNonNullable(tagName) ? !Arr.contains(safeSvgDataUrlElements, tagName) : true;
   }
 };
 
