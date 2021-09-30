@@ -35,13 +35,12 @@ interface XHR extends Observable<XHREventMap> {
 
 /**
  * This API allows you to send XMLHTTPRequests cross browser. Extends the Observable class.
- * <br>
- * <em><code>XHR</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
  *
  * @deprecated
  * @class tinymce.util.XHR
  * @mixes tinymce.util.Observable
  * @static
+ * @summary XHR has been deprecated and marked for removal in TinyMCE 6.0.
  * @example
  * // Sends a low level Ajax request
  * tinymce.util.XHR.send({
