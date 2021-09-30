@@ -1,7 +1,7 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { SugarBody } from '@ephox/sugar';
+import { SugarBody, SugarLocation } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -64,11 +64,11 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     const editor = hook.editor();
     editor.setContent('<p contenteditable="false">a</p><p>bc123</p>');
     const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("a")').getOrDie();
-    const targetRect = target.dom.getBoundingClientRect();
+    const targetPosition = SugarLocation.viewport(target);
 
     const dest = UiFinder.findIn(TinyDom.body(editor), 'p:contains("bc123")').getOrDie();
-    const destRect = dest.dom.getBoundingClientRect();
-    const yDelta = destRect.top - targetRect.top;
+    const destPosition = SugarLocation.viewport(dest);
+    const yDelta = destPosition.top - targetPosition.top;
 
     Mouse.mouseDown(target);
     // Drag CE=F paragraph roughly into other paragraph in order to trigger a valid drop on mouseup
@@ -82,11 +82,11 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     const editor = hook.editor();
     editor.setContent('<p contenteditable="false">a</p><p>bc123</p>');
     const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("a")').getOrDie();
-    const targetRect = target.dom.getBoundingClientRect();
+    const targetPosition = SugarLocation.viewport(target);
 
     const dest = UiFinder.findIn(TinyDom.body(editor), 'p:contains("bc123")').getOrDie();
-    const destRect = dest.dom.getBoundingClientRect();
-    const yDelta = destRect.top - targetRect.top;
+    const destPosition = SugarLocation.viewport(dest);
+    const yDelta = destPosition.top - targetPosition.top;
 
     Mouse.mouseDown(target);
     // Where we drag to here is largely irrelevant

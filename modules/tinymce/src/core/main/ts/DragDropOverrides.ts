@@ -11,6 +11,7 @@ import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
 import EditorSelection from './api/dom/Selection';
 import Editor from './api/Editor';
+import { VK } from './api/PublicApi';
 import * as Settings from './api/Settings';
 import Delay from './api/util/Delay';
 import { EditorEvent } from './api/util/EventDispatcher';
@@ -272,7 +273,7 @@ const bindFakeDragEvents = (editor: Editor) => {
 
   editor.on('keydown', (e) => {
     // Fire 'dragend' when the escape key is pressed
-    if (e.keyCode === 27) {
+    if (e.keyCode === VK.ESCAPE) {
       dragEndHandler();
     }
   });

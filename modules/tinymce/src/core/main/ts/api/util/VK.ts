@@ -19,6 +19,7 @@ interface VK {
   DELETE: number;
   DOWN: number;
   ENTER: number;
+  ESCAPE: number;
   LEFT: number;
   RIGHT: number;
   SPACEBAR: number;
@@ -42,6 +43,7 @@ const VK: VK = {
   DELETE: 46,
   DOWN: 40,
   ENTER: 13,
+  ESCAPE: 27,
   LEFT: 37,
   RIGHT: 39,
   SPACEBAR: 32,
