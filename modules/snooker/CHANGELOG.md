@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Resizing percent tables caused widths to be offset by a few pixels due to an incorrect pixel -> percent conversion.
 - Converting rows or columns to regular cells would in some cases incorrectly convert a cell that was still part of a header.
 - An exception was thrown in `TableGrid` when there were more `col` elements than columns in a table.
+- Table percent sizes were incorrectly calculated when the parent element had padding.
 
 ## 9.0.0 - 2021-08-26
 

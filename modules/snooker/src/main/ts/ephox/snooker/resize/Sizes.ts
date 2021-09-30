@@ -12,9 +12,9 @@ const rPercentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
 const rPixelBasedSizeRegex = /(\d+(\.\d+)?)px|em/;
 const isCol = SugarNode.isTag('col');
 
-const getPercentSize = (elm: SugarElement<HTMLElement>, getter: SizeGetter): number => {
+const getPercentSize = (elm: SugarElement<HTMLElement>, outerGetter: SizeGetter, innerGetter: SizeGetter): number => {
   const relativeParent = Traverse.parentElement(elm).getOrThunk(() => SugarBody.getBody(Traverse.owner(elm)));
-  return getter(elm) / getter(relativeParent) * 100;
+  return outerGetter(elm) / innerGetter(relativeParent) * 100;
 };
 
 export const setPixelWidth = (cell: SugarElement<HTMLElement>, amount: number): void => {
@@ -75,7 +75,7 @@ export const getRawHeight = (element: SugarElement<HTMLElement>): Optional<strin
 
 // Get a percentage size for a percentage parent table
 export const getPercentageWidth = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>): number =>
-  getPercentSize(cell, Width.get);
+  getPercentSize(cell, Width.get, RuntimeSize.getInnerWidth);
 
 export const getPixelWidth = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>): number =>
   // For col elements use the computed width as col elements aren't affected by borders, padding, etc...
@@ -97,8 +97,8 @@ export const setGenericWidth = (cell: SugarElement<HTMLElement>, amount: number,
 export const getPixelTableWidth = (table: SugarElement<HTMLTableElement>): string => Width.get(table) + 'px';
 export const getPixelTableHeight = (table: SugarElement<HTMLTableElement>): string => Height.get(table) + 'px';
 
-export const getPercentTableWidth = (table: SugarElement<HTMLTableElement>): string => getPercentSize(table, Width.get) + '%';
-export const getPercentTableHeight = (table: SugarElement<HTMLTableElement>): string => getPercentSize(table, Height.get) + '%';
+export const getPercentTableWidth = (table: SugarElement<HTMLTableElement>): string => getPercentSize(table, Width.get, RuntimeSize.getInnerWidth) + '%';
+export const getPercentTableHeight = (table: SugarElement<HTMLTableElement>): string => getPercentSize(table, Height.get, RuntimeSize.getInnerHeight) + '%';
 
 export const isPercentSizing = (table: SugarElement<HTMLTableElement>): boolean => getRawWidth(table).exists((size) => rPercentageBasedSizeRegex.test(size));
 export const isPixelSizing = (table: SugarElement<HTMLTableElement>): boolean => getRawWidth(table).exists((size) => rPixelBasedSizeRegex.test(size));

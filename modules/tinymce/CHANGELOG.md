@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed a regression that caused block wrapper formats to apply and remove incorrectly when using a collapsed selection with multiple words #TINY-8036
 - Resizing table columns in some scenarios would resize the column to an incorrect position #TINY-7731
+- Inserting a table where the parent element had padding would cause the table width to be incorrect #TINY-7991
 - Image resize backdrop element did not have `data-mce-bogus="all"` set #TINY-7854
 - Resize handles appeared on top of dialogs and menus when using an inline editor #TINY-3263
 - Fixed the `autoresize` plugin incorrectly scrolling to the top of the editor in some cases when changing content #TINY-7291

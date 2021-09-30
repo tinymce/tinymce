@@ -11,48 +11,46 @@ const toNumber = (px: string, fallback: number): number => {
   return isNaN(num) ? fallback : num;
 };
 
-const getProp = (elm: SugarElement, name: string, fallback: number): number =>
-  toNumber(Css.get(elm, name), fallback);
+const getProp = (element: SugarElement<HTMLElement>, name: string, fallback: number): number =>
+  toNumber(Css.get(element, name), fallback);
 
-const getCalculatedHeight = (cell: SugarElement<HTMLElement>): number => {
-  const height = cell.dom.getBoundingClientRect().height;
-  const boxSizing = Css.get(cell, 'box-sizing');
-  if (boxSizing === 'border-box') {
-    return height;
-  } else {
-    const paddingTop = getProp(cell, 'padding-top', 0);
-    const paddingBottom = getProp(cell, 'padding-bottom', 0);
-    const borderTop = getProp(cell, 'border-top-width', 0);
-    const borderBottom = getProp(cell, 'border-bottom-width', 0);
-    const borders = borderTop + borderBottom;
+const getBoxSizing = (element: SugarElement<HTMLElement>): string =>
+  Css.get(element, 'box-sizing');
 
-    return height - paddingTop - paddingBottom - borders;
-  }
+const calcContentBoxSize = (element: SugarElement<HTMLElement>, size: number, upper: 'top' | 'left', lower: 'bottom' | 'right') => {
+  const paddingUpper = getProp(element, `padding-${upper}`, 0);
+  const paddingLower = getProp(element, `padding-${lower}`, 0);
+  const borderUpper = getProp(element, `border-${upper}-width`, 0);
+  const borderLower = getProp(element, `border-${lower}-width`, 0);
+
+  return size - paddingUpper - paddingLower - borderUpper - borderLower;
 };
 
-const getCalculatedWidth = (cell: SugarElement<HTMLElement>): number => {
-  const width = cell.dom.getBoundingClientRect().width;
-  const boxSizing = Css.get(cell, 'box-sizing');
-  if (boxSizing === 'border-box') {
-    return width;
-  } else {
-    const paddingLeft = getProp(cell, 'padding-left', 0);
-    const paddingRight = getProp(cell, 'padding-right', 0);
-    const borderLeft = getProp(cell, 'border-left-width', 0);
-    const borderRight = getProp(cell, 'border-right-width', 0);
-    const borders = borderLeft + borderRight;
-
-    return width - paddingLeft - paddingRight - borders;
-  }
+const getCalculatedHeight = (element: SugarElement<HTMLElement>, boxSizing: string): number => {
+  const height = element.dom.getBoundingClientRect().height;
+  return boxSizing === 'border-box' ? height : calcContentBoxSize(element, height, 'top', 'bottom');
 };
 
-const getHeight = (cell: SugarElement<HTMLElement>): number =>
-  needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
+const getCalculatedWidth = (element: SugarElement<HTMLElement>, boxSizing: string): number => {
+  const width = element.dom.getBoundingClientRect().width;
+  return boxSizing === 'border-box' ? width : calcContentBoxSize(element, width, 'left', 'right');
+};
 
-const getWidth = (cell: SugarElement<HTMLElement>): number =>
-  needManualCalc() ? getCalculatedWidth(cell) : getProp(cell, 'width', Width.get(cell));
+const getHeight = (element: SugarElement<HTMLElement>): number =>
+  needManualCalc() ? getCalculatedHeight(element, getBoxSizing(element)) : getProp(element, 'height', Height.get(element));
+
+const getWidth = (element: SugarElement<HTMLElement>): number =>
+  needManualCalc() ? getCalculatedWidth(element, getBoxSizing(element)) : getProp(element, 'width', Width.get(element));
+
+const getInnerHeight = (element: SugarElement<HTMLElement>): number =>
+  getCalculatedHeight(element, 'content-box');
+
+const getInnerWidth = (element: SugarElement<HTMLElement>): number =>
+  getCalculatedWidth(element, 'content-box');
 
 export {
+  getInnerHeight,
+  getInnerWidth,
   getHeight,
   getWidth
 };

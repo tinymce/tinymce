@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import { Css, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -35,8 +36,8 @@ const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double',
 
 const determineDefaultStyles = (editor: Editor): Record<string, string> => {
   if (isPixelsForced(editor)) {
-    const editorWidth = editor.getBody().offsetWidth;
-    return { ...defaultStyles, width: editorWidth + 'px' };
+    const editorWidth = Css.get(SugarElement.fromDom(editor.getBody()), 'width');
+    return { ...defaultStyles, width: editorWidth };
   } else if (isResponsiveForced(editor)) {
     return Obj.filter(defaultStyles, (_value, key) => key !== 'width');
   } else {
