@@ -223,6 +223,8 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
             editor._selectionOverrides.hideFakeCaret();
           });
         }
+
+        editor.fire('dragend');
       }
     }
   });
@@ -266,6 +268,13 @@ const bindFakeDragEvents = (editor: Editor) => {
   editor.on('remove', () => {
     pageDom.unbind(rootDocument, 'mousemove', dragHandler);
     pageDom.unbind(rootDocument, 'mouseup', dragEndHandler);
+  });
+
+  editor.on('keydown', (e) => {
+    // Fire 'dragend' when the escape key is pressed
+    if (e.keyCode === 27) {
+      dragEndHandler();
+    }
   });
 };
 
