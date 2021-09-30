@@ -224,9 +224,9 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
             editor._selectionOverrides.hideFakeCaret();
           });
         }
-
-        editor.fire('dragend');
       }
+
+      editor.fire('dragend');
     }
   });
 
