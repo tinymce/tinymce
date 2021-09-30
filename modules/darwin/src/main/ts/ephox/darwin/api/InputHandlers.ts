@@ -53,6 +53,11 @@ const keyboard = (win: Window, container: SugarElement, isRoot: (e: SugarElement
     const shiftKey = realEvent.shiftKey === true;
 
     const handler = CellSelection.retrieve(container, annotations.selectedSelector).fold(() => {
+      // Make sure any possible lingering annotations are cleared
+      if (SelectionKeys.isNavigation(keycode) && shiftKey === false) {
+        annotations.clearBeforeUpdate(container);
+      }
+
       // Shift down should predict the movement and set the selection.
       if (SelectionKeys.isDown(keycode) && shiftKey) {
         return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, finish, start, annotations.selectRange);
