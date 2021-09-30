@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an exception getting thrown when the number of `col` elements didn't match the number of columns in a table #TINY-7041 #TINY-8011
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
 - Fixed the `image` and `media` toolbar buttons showing the incorrect active state in some cases #TINY-3463
+- Fixed the `selection.selectorChanged` API not firing correctly if the selector matched the current selection when registered #TINY-3463
 - Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
 - The `wordcount` plugin was incorrectly treating soft hyphens (`&shy;` entities) as word breaks #TINY-7908
 
