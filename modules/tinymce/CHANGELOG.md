@@ -30,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rounding errors were causing the line height dropdowns and the `LineHeight` query command to be inaccurate on Safari #TINY-7895
 - Fixed the `image` and `media` toolbar buttons showing the incorrect active state in some cases #TINY-3463
 - Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
-- The `wordcount` plugin was incorrectly treating soft hyphens (`&shy;` entities) as word breaks #TINY-7908
 
 ### Deprecated
 - Several APIs have been deprecated. See the release notes for information #TINY-8023
