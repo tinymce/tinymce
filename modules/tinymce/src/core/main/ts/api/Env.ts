@@ -228,8 +228,11 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the browser has a modern file API.
    *
+   * <br>
+   * <em><code>fileApi</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
    * @property fileApi
    * @type Boolean
+   * @deprecated
    */
   fileApi,
 
