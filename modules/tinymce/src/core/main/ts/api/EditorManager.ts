@@ -164,6 +164,10 @@ const EditorManager: EditorManager = {
   /**
    * Dom query instance.
    *
+   * <br>
+   * <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+   *
+   * @deprecated
    * @property $
    * @type tinymce.dom.DomQuery
    */

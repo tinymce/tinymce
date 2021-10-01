@@ -1242,7 +1242,23 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     schema,
     events,
     isBlock,
+
+    /**
+     * <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+     *
+     * @deprecated
+     * @property $
+     * @type tinymce.dom.DomQuery
+     */
     $,
+
+    /**
+     * <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+     *
+     * @deprecated
+     * @property $$
+     * @type tinymce.dom.DomQuery
+     */
     $$,
 
     root: null,

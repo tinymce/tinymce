@@ -196,6 +196,10 @@ class Editor implements EditorObservable {
   /**
    * Dom query instance with default scope to the editor document and default element is the body of the editor.
    *
+   * <br>
+   * <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+   *
+   * @deprecated
    * @property $
    * @type tinymce.dom.DomQuery
    * @example
