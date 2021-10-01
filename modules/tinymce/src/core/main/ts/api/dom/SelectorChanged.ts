@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 
 import Editor from '../Editor';
 import Tools from '../util/Tools';
@@ -29,8 +29,8 @@ export default (dom: DOMUtils, editor: Editor) => {
   let selectorChangedData: Record<string, SelectorChangedCallback[]>;
   let currentSelectors: Record<string, SelectorChangedCallback[]>;
 
-  const matches = (selector: string, nodes: Node[]): boolean =>
-    Arr.exists(nodes, (node) => dom.is(node, selector));
+  const matches = (selector: string, nodes: Node[]): Optional<Node> =>
+    Arr.find(nodes, (node) => dom.is(node, selector));
 
   const getParents = (elem: Element): Element[] =>
     dom.getParents(elem, null, dom.getRoot());
@@ -48,7 +48,7 @@ export default (dom: DOMUtils, editor: Editor) => {
 
           // Check for new matching selectors
           Tools.each(selectorChangedData, (callbacks, selector) => {
-            if (matches(selector, parents)) {
+            matches(selector, parents).each((node) => {
               if (!currentSelectors[selector]) {
                 // Execute callbacks
                 Arr.each(callbacks, (callback) => {
@@ -59,7 +59,7 @@ export default (dom: DOMUtils, editor: Editor) => {
               }
 
               matchedSelectors[selector] = callbacks;
-            }
+            });
           });
 
           // Check if current selectors still match
@@ -83,9 +83,9 @@ export default (dom: DOMUtils, editor: Editor) => {
       selectorChangedData[selector].push(callback);
 
       // Setup the initial state if selected already
-      if (matches(selector, getParents(editor.selection.getStart()))) {
+      matches(selector, getParents(editor.selection.getStart())).each(() => {
         currentSelectors[selector] = selectorChangedData[selector];
-      }
+      });
 
       return {
         unbind: () => {
