@@ -54,7 +54,7 @@ const keyboard = (win: Window, container: SugarElement, isRoot: (e: SugarElement
 
     const handler = CellSelection.retrieve(container, annotations.selectedSelector).fold(() => {
       // Make sure any possible lingering annotations are cleared
-      if (SelectionKeys.isNavigation(keycode) && shiftKey === false) {
+      if (SelectionKeys.isNavigation(keycode) && !shiftKey) {
         annotations.clearBeforeUpdate(container);
       }
 
@@ -102,7 +102,7 @@ const keyboard = (win: Window, container: SugarElement, isRoot: (e: SugarElement
         return update([ rc(0, -1), rc(-1, 0) ]);
       } else if (direction.isForward(keycode) && shiftKey) {
         return update([ rc(0, +1), rc(+1, 0) ]);
-      } else if (SelectionKeys.isNavigation(keycode) && shiftKey === false) { // Clear the selection on normal arrow keys.
+      } else if (SelectionKeys.isNavigation(keycode) && !shiftKey) { // Clear the selection on normal arrow keys.
         return clearToNavigate;
       } else {
         return Optional.none;
@@ -117,7 +117,7 @@ const keyboard = (win: Window, container: SugarElement, isRoot: (e: SugarElement
       const realEvent = event.raw;
       const keycode = realEvent.which;
       const shiftKey = realEvent.shiftKey === true;
-      if (shiftKey === false) {
+      if (!shiftKey) {
         return Optional.none<Response>();
       }
       if (SelectionKeys.isNavigation(keycode)) {
