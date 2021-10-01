@@ -18,6 +18,8 @@ const register = (editor: Editor): void => {
   const formats = Settings.getFormats(editor);
   const defaultFormat = Cell(Settings.getDefaultDateTime(editor));
 
+  const insertDateTime = (format: string) => editor.execCommand('mceInsertDate', false, format);
+
   editor.ui.registry.addSplitButton('insertdatetime', {
     icon: 'insert-time',
     tooltip: 'Insert date/time',
@@ -28,17 +30,17 @@ const register = (editor: Editor): void => {
       ));
     },
     onAction: (_api) => {
-      editor.execCommand('mceInsertDate', false, defaultFormat.get());
+      insertDateTime(defaultFormat.get());
     },
     onItemAction: (_api, value) => {
       defaultFormat.set(value);
-      editor.execCommand('mceInsertDate', false, value);
+      insertDateTime(value);
     }
   });
 
   const makeMenuItemHandler = (format: string) => (): void => {
     defaultFormat.set(format);
-    editor.execCommand('mceInsertDate', false, format);
+    insertDateTime(format);
   };
 
   editor.ui.registry.addNestedMenuItem('insertdatetime', {
