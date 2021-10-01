@@ -17,7 +17,9 @@ export const lineHeightQuery = (editor: Editor): string => mapRange(editor, (elm
   const specifiedStyle = TransformFind.closest(elm, (elm) => Css.getRaw(elm, 'line-height'), Fun.curry(Compare.eq, root));
   const computedStyle = () => {
     // Css.get returns computed values (in px), and parseFloat will strip any non-number suffix
-    const lineHeight = parseFloat(Css.get(elm, 'line-height'));
+    const lineHeightRaw = parseFloat(Css.get(elm, 'line-height'));
+    // TINY-7895: Safari sometimes gives us 22.39999999999 and things like that
+    const lineHeight = parseFloat(lineHeightRaw.toFixed(3));
     const fontSize = parseFloat(Css.get(elm, 'font-size'));
     return String(lineHeight / fontSize);
   };

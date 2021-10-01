@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Added a new `URI.isDomSafe(uri)` API to be able to check if a URI is considered safe to be inserted into the DOM #TINY-7998
 - Added the `ESC` key code constant to the `VK` API #TINY-7917
 
 ### Improved
@@ -30,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed notifications rendering in the wrong place initially and when the page was scrolled #TINY-7894
 - Fixed an exception getting thrown when the number of `col` elements didn't match the number of columns in a table #TINY-7041 #TINY-8011
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
+- Fixed urls not cleaned correctly in some cases in the `link` and `image` plugin #TINY-7998
+- Rounding errors were causing the line height dropdowns and the `LineHeight` query command to be inaccurate on Safari #TINY-7895
 - Fixed the `image` and `media` toolbar buttons showing the incorrect active state in some cases #TINY-3463
 - Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
 - The `wordcount` plugin was incorrectly treating soft hyphens (`&shy;` entities) as word breaks #TINY-7908
