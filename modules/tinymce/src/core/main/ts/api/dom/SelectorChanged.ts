@@ -29,7 +29,7 @@ export default (dom: DOMUtils, editor: Editor) => {
   let selectorChangedData: Record<string, SelectorChangedCallback[]>;
   let currentSelectors: Record<string, SelectorChangedCallback[]>;
 
-  const matches = (selector: string, nodes: Node[]): Optional<Node> =>
+  const findMatchingNode = (selector: string, nodes: Node[]): Optional<Node> =>
     Arr.find(nodes, (node) => dom.is(node, selector));
 
   const getParents = (elem: Element): Element[] =>
@@ -48,7 +48,7 @@ export default (dom: DOMUtils, editor: Editor) => {
 
           // Check for new matching selectors
           Tools.each(selectorChangedData, (callbacks, selector) => {
-            matches(selector, parents).each((node) => {
+            findMatchingNode(selector, parents).each((node) => {
               if (!currentSelectors[selector]) {
                 // Execute callbacks
                 Arr.each(callbacks, (callback) => {
@@ -83,7 +83,7 @@ export default (dom: DOMUtils, editor: Editor) => {
       selectorChangedData[selector].push(callback);
 
       // Setup the initial state if selected already
-      matches(selector, getParents(editor.selection.getStart())).each(() => {
+      findMatchingNode(selector, getParents(editor.selection.getStart())).each(() => {
         currentSelectors[selector] = selectorChangedData[selector];
       });
 
