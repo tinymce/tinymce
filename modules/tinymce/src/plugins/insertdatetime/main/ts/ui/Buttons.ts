@@ -28,17 +28,17 @@ const register = (editor: Editor): void => {
       ));
     },
     onAction: (_api) => {
-      Actions.insertDateTime(editor, defaultFormat.get());
+      editor.execCommand('mceInsertDate', false, defaultFormat.get());
     },
     onItemAction: (_api, value) => {
       defaultFormat.set(value);
-      Actions.insertDateTime(editor, value);
+      editor.execCommand('mceInsertDate', false, value);
     }
   });
 
   const makeMenuItemHandler = (format: string) => (): void => {
     defaultFormat.set(format);
-    Actions.insertDateTime(editor, format);
+    editor.execCommand('mceInsertDate', false, format);
   };
 
   editor.ui.registry.addNestedMenuItem('insertdatetime', {
