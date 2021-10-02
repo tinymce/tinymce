@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a new `URI.isDomSafe(uri)` API to be able to check if a URI is considered safe to be inserted into the DOM #TINY-7998
 - Added the `ESC` key code constant to the `VK` API #TINY-7917
+- Added a new `deprecation_warnings` setting to be able to turn off deprecation console warning messages #TINY-8049
 
 ### Improved
 - The `element` argument of the `editor.selection.scrollIntoView()` API is now optional, and if it is not provided the current selection will be scrolled into view #TINY-7291

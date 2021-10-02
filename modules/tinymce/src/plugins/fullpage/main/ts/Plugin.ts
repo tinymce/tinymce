@@ -15,8 +15,6 @@ import * as Buttons from './ui/Buttons';
 
 export default (): void => {
   PluginManager.add('fullpage', (editor) => {
-    // eslint-disable-next-line no-console
-    console.warn('The fullpage plugin has been deprecated and marked for removal in TinyMCE 6.0');
     const headState = Cell(''), footState = Cell('');
 
     Commands.register(editor, headState);

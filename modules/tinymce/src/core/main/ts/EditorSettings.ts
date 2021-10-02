@@ -12,6 +12,7 @@ import Editor from './api/Editor';
 import Env from './api/Env';
 import { EditorSettings, RawEditorSettings, ToolbarMode } from './api/SettingsTypes';
 import Tools from './api/util/Tools';
+import { logDeprecationsWarning } from './Deprecations';
 
 export interface ParamTypeMap {
   'hash': Record<string, string>;
@@ -228,7 +229,11 @@ const combineSettings = (isMobileDevice: boolean, isPhone: boolean, defaultSetti
 
 const getEditorSettings = (editor: Editor, id: string, documentBaseUrl: string, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
   const defaultSettings = getDefaultSettings(settings, id, documentBaseUrl, isTouch, editor);
-  return combineSettings(isPhone || isTablet, isPhone, defaultSettings, defaultOverrideSettings, settings);
+  const finalSettings = combineSettings(isPhone || isTablet, isPhone, defaultSettings, defaultOverrideSettings, settings);
+  if (finalSettings.deprecation_warnings !== false) {
+    logDeprecationsWarning(settings, finalSettings);
+  }
+  return finalSettings;
 };
 
 const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<EditorSettings[K]> => Optional.from(editor.settings[name]).filter(predicate);
