@@ -112,7 +112,7 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
     // Recreate the child nodes using the sanitized inner HTML
     const sanitizedHtml = previewWrapper.attr('data-mce-html');
     if (Type.isNonNullable(sanitizedHtml)) {
-      appendNodeContent(editor, name, previewNode, sanitizedHtml);
+      appendNodeContent(editor, name, previewNode, unescape(sanitizedHtml));
     }
   }
 
