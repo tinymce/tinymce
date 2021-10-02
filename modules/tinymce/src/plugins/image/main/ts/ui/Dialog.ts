@@ -393,11 +393,17 @@ const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API):
   api.close();
 };
 
-const imageSize = (editor: Editor) => (url: string): Promise<Size> =>
-  Utils.getImageSize(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => ({
-    width: String(dimensions.width),
-    height: String(dimensions.height)
-  }));
+const imageSize = (editor: Editor) => (url: string): Promise<Size> => {
+  // If the URL isn't safe then don't attempt to load it to get the sizes
+  if (!Utils.isSafeImageUrl(editor, url)) {
+    return Promise.resolve({ width: '', height: '' });
+  } else {
+    return Utils.getImageSize(editor.documentBaseURI.toAbsolute(url)).then((dimensions) => ({
+      width: String(dimensions.width),
+      height: String(dimensions.height)
+    }));
+  }
+};
 
 const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUrl: string): BlobInfo =>
   editor.editorUpload.blobCache.create({

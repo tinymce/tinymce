@@ -8,8 +8,10 @@
 /**
  * This class lets you parse/serialize colors and convert rgb/hsb.
  *
+ * @deprecated
  * @class tinymce.util.Color
  * @private
+ * @summary Color has been deprecated and marked for removal in TinyMCE 6.0.
  * @example
  * var white = new tinymce.util.Color({r: 255, g: 255, b: 255});
  * var red = new tinymce.util.Color('#FF0000');

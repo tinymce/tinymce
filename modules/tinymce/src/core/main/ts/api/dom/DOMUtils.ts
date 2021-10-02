@@ -67,8 +67,8 @@ interface AttrHooks {
 const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext): AttrHooks => {
   const keepValues: boolean = settings.keep_values;
   const keepUrlHook = {
-    set: ($elm, value: string, name: string) => {
-      if (settings.url_converter) {
+    set: ($elm, value: string | null, name: string) => {
+      if (settings.url_converter && value !== null) {
         value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, $elm[0]);
       }
 
@@ -82,7 +82,7 @@ const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, get
 
   const attrHooks: AttrHooks = {
     style: {
-      set: ($elm, value: string | {}) => {
+      set: ($elm, value: string | {} | null) => {
         if (value !== null && typeof value === 'object') {
           $elm.css(value);
           return;

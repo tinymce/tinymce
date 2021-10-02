@@ -113,17 +113,22 @@ const makeMap = (items, delim?, map?) => {
 
 /**
  * JavaScript does not protect hasOwnProperty method, so it is possible to overwrite it. This is
- * object independent version.
+ * an object independent version.
+ * Checks if the input object "<code>obj</code>" has the property "<code>prop</code>".
  *
- * @param {Object} obj
- * @param {String} prop
- * @returns {Boolean}
+ * @method hasOwnProperty
+ * @param {Object} obj Object to check if the property exists.
+ * @param {String} prop Name of a property on the object.
+ * @returns {Boolean} true if the object has the specified property.
  */
 const hasOwnProperty = Obj.has;
 
 /**
  * Creates a class, subclass or static singleton.
+ * <br>
+ * <em><code>create</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
  *
+ * @deprecated
  * @method create
  * @param {String} s Class name, inheritance and prefix.
  * @param {Object} p Collection of methods to add to the class.
@@ -298,7 +303,10 @@ const walk = function (o, f, n?, s?) {
 
 /**
  * Creates a namespace on a specific object.
+ * <br>
+ * <em><code>createNS</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
  *
+ * @deprecated
  * @method createNS
  * @param {String} n Namespace to create for example a.b.c.d.
  * @param {Object} o Optional object to add namespace to, defaults to window.

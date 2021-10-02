@@ -28,7 +28,9 @@ import Sizzle from './Sizzle';
  * var $ = tinymce.dom.DomQuery;
  * $('p').attr('attr', 'value').addClass('class');
  *
+ * @deprecated
  * @class tinymce.dom.DomQuery
+ * @summary DomQuery has been deprecated and marked for removal in TinyMCE 6.0.
  */
 
 type DomQuerySelector<T extends Node> = string | T | T[] | DomQuery<T>;

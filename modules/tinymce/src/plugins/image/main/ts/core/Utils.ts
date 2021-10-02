@@ -10,6 +10,7 @@ import { Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import Promise from 'tinymce/core/api/util/Promise';
+import URI from 'tinymce/core/api/util/URI';
 import XHR from 'tinymce/core/api/util/XHR';
 
 import * as Settings from '../api/Settings';
@@ -165,6 +166,9 @@ const blobToDataUri = (blob: Blob): Promise<string> => new Promise((resolve, rej
 const isPlaceholderImage = (imgElm: Element): imgElm is HTMLImageElement =>
   imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
 
+const isSafeImageUrl = (editor: Editor, src: string): boolean =>
+  URI.isDomSafe(src, 'img', editor.settings);
+
 export {
   getImageSize,
   removePixelSuffix,
@@ -173,5 +177,6 @@ export {
   createImageList,
   waitLoadImage,
   blobToDataUri,
-  isPlaceholderImage
+  isPlaceholderImage,
+  isSafeImageUrl
 };
