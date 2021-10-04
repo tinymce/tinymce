@@ -21,8 +21,10 @@ import { Arr } from '@ephox/katamari';
  *
  * Date: @DATE
  *
+ * @deprecated
  * @private
  * @class tinymce.dom.sizzle
+ * @summary Sizzle has been deprecated and marked for removal in TinyMCE 6.0.
  */
 
 /* eslint-enable */
