@@ -267,6 +267,14 @@ const AddOnManager = <T>(): AddOnManager<T> => {
      */
     get,
 
+    /**
+     * <em>Deprecated in TinyMCE 5.7 and has been marked for removal in TinyMCE 6.0.</em>
+     *
+     * @method dependencies
+     * @param {String} pluginName Name of the plugin to lookup dependencies for.
+     * @return {Array} An array of dependencies for the specified plugin.
+     * @deprecated
+     */
     dependencies,
 
     /**
@@ -315,7 +323,7 @@ const AddOnManager = <T>(): AddOnManager<T> => {
      * This should be used in development mode.  A new compressor/javascript munger process will ensure that the
      * components are put together into the plugin.js file and compressed correctly.
      * <br>
-     * <em>Deprecated in TinyMCE 5.7</em>
+     * <em>Deprecated in TinyMCE 5.7 and has been marked for removal in TinyMCE 6.0.</em>
      *
      * @method addComponents
      * @param {String} pluginName name of the plugin to load scripts from (will be used to get the base url for the plugins).

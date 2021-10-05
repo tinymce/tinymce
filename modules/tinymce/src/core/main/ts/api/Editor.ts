@@ -185,7 +185,7 @@ class Editor implements EditorObservable {
   /**
    * Sets the editor mode. For example: "design", "code" or "readonly".
    * <br>
-   * <em>Deprecated in TinyMCE 5.0.4</em> - Use <code>editor.mode.set(mode)</code> instead.
+   * <em>Deprecated in TinyMCE 5.0.4 and has been marked for removal in TinyMCE 6.0</em> - Use <code>editor.mode.set(mode)</code> instead.
    *
    * @method setMode
    * @param {String} mode Mode to set the editor in.
@@ -195,9 +195,8 @@ class Editor implements EditorObservable {
 
   /**
    * Dom query instance with default scope to the editor document and default element is the body of the editor.
-   *
    * <br>
-   * <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
    *
    * @deprecated
    * @property $
@@ -390,7 +389,7 @@ class Editor implements EditorObservable {
    * Executes a legacy callback. This method is useful to call old 2.x option callbacks.
    * There new event model is a better way to add callback so this method might be removed in the future.
    * <br>
-   * <em><code>execCallback</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em>
    *
    * @deprecated
    * @method execCallback

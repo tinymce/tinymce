@@ -1244,7 +1244,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     isBlock,
 
     /**
-     * <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+     * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
      *
      * @deprecated
      * @property $
@@ -1253,7 +1253,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     $,
 
     /**
-     * <em><code>DomQuery</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+     * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
      *
      * @deprecated
      * @property $$

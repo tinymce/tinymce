@@ -90,7 +90,7 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the browser is Opera.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>browser.isOpera()</code> instead.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>browser.isOpera()</code> instead.
    *
    * @property opera
    * @type Boolean
@@ -102,7 +102,7 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the browser is WebKit (Safari/Chrome).
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>browser.isSafari()</code> or <code>browser.isChrome()</code> instead.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>browser.isSafari()</code> or <code>browser.isChrome()</code> instead.
    *
    * @property webKit
    * @type Boolean
@@ -114,7 +114,7 @@ const Env: Env = {
   /**
    * Constant that is greater than zero if the browser is IE.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>browser.version.major</code> and <code>browser.isIE()</code> or <code>browser.isEdge()</code> instead.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>browser.version.major</code> and <code>browser.isIE()</code> or <code>browser.isEdge()</code> instead.
    *
    * @property ie
    * @type Number
@@ -126,7 +126,7 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the browser is Gecko.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>browser.isFirefox()</code> instead.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>browser.isFirefox()</code> instead.
    *
    * @property gecko
    * @type Boolean
@@ -138,7 +138,7 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the operating system is Mac OS.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>os.isOSX()</code> or <code>os.isiOS()</code> instead.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>os.isOSX()</code> or <code>os.isiOS()</code> instead.
    *
    * @property mac
    * @type Boolean
@@ -150,7 +150,7 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the operating system is iOS.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>os.isiOS()</code> instead.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>os.isiOS()</code> instead.
    *
    * @property iOS
    * @type Boolean
@@ -162,7 +162,7 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the operating system is android.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>os.isAndroid()</code> instead.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>os.isAndroid()</code> instead.
    *
    * @property android
    * @type Boolean
@@ -174,7 +174,7 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the browser supports editing.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - All supported browsers now support content editable elements.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support content editable elements.
    *
    * @property contentEditable
    * @type Boolean
@@ -196,7 +196,7 @@ const Env: Env = {
   /**
    * Returns <code>true</code>/<code>false</code> if the browser can or can't place the caret after a inline block like an image.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - All supported browsers now support placing carets after inline blocks.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support placing carets after inline blocks.
    *
    * @property caretAfter
    * @type Boolean
@@ -209,7 +209,7 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the browser supports native DOM Ranges. IE 9+.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - All supported browsers now support native DOM ranges.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support native DOM ranges.
    *
    * @property range
    * @type Boolean
@@ -229,7 +229,7 @@ const Env: Env = {
    * Constant that is <code>true</code> if the browser has a modern file API.
    *
    * <br>
-   * <em><code>fileApi</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support modern file APIs.
    * @property fileApi
    * @type Boolean
    * @deprecated
@@ -239,7 +239,7 @@ const Env: Env = {
   /**
    * Constant that is <code>true</code> if the browser supports <code>contentEditable=false</code> regions.
    * <br>
-   * <em>Deprecated in TinyMCE 5.1</em> - All supported browsers now support <code>contentEditable=false</code> regions.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support <code>contentEditable=false</code> regions.
    *
    * @property ceFalse
    * @type Boolean
@@ -252,7 +252,7 @@ const Env: Env = {
   container: null,
 
   /**
-   * <em>Deprecated in TinyMCE 5.5</em> - if you need the original target of an event, please use `event.composedPath()`
+   * <em>Deprecated in TinyMCE 5.5 and has been marked for removal in TinyMCE 6.0</em> - if you need the original target of an event, please use `event.composedPath()`.
    *
    * @property experimentalShadowDom
    * @type Boolean
@@ -266,7 +266,7 @@ const Env: Env = {
   canHaveCSP: !browser.isIE(),
 
   /**
-   * <em>Deprecated in TinyMCE 5.1</em> - Use <code>deviceType.isDesktop()</code> instead.
+   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>deviceType.isDesktop()</code> instead.
    *
    * @property desktop
    * @type Boolean
