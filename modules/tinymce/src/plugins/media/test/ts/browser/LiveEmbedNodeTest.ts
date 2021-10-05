@@ -1,6 +1,6 @@
-import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, StructAssert, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,7 +14,14 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  const assertStructure = (editor: Editor, tag: string, classes: string[], attrs: Record<string, string>, styles: Record<string, string>) => {
+  const assertStructure = (
+    editor: Editor,
+    tag: string,
+    classes: string[],
+    attrs: Record<string, string>,
+    styles: Record<string, string>,
+    getChildren: ApproxStructure.Builder<StructAssert[]> = Fun.constant([])
+  ) => {
     const object = UiFinder.findIn(TinyDom.body(editor), 'span.mce-preview-object').getOrDie();
     Assertions.assertStructure('should have all attributes', ApproxStructure.build((s, str, arr) => s.element('span', {
       classes: [ arr.has('mce-object-' + tag) ],
@@ -36,7 +43,8 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
             height: str.none('should not have height style'),
             width: str.none('should not have width style'),
             ...Obj.map(styles, (value) => str.is(value))
-          }
+          },
+          children: getChildren(s, str, arr)
         }),
         s.zeroOrOne(s.element('span', {
           classes: [ arr.has('mce-shim') ]
@@ -97,5 +105,31 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
     const editor = hook.editor();
     editor.setContent('<div style="width: 100%; height: 0; padding-top: 50%;"><iframe style="width: 100%; height: 100%;"></iframe></div>');
     assertStructure(editor, 'iframe', [ ], { }, { width: '100%', height: '100%' });
+  });
+
+  it('TINY-7674: video with source child elements', () => {
+    const editor = hook.editor();
+    editor.setContent('<video class="test-class" style="height: 250px; width: 500px;"><source src="about:blank" type="video/mp4" /></video>');
+    assertStructure(editor, 'video', [ 'test-class' ], { }, { width: '500px', height: '250px' }, (s, str) => [
+      s.element('source', {
+        attrs: {
+          src: str.is('about:blank'),
+          type: str.is('video/mp4')
+        }
+      })
+    ]);
+  });
+
+  it('TINY-7674: audio with source child elements', () => {
+    const editor = hook.editor();
+    editor.setContent('<audio controls="controls"><source src="about:blank" type="audio/mp3"></audio>');
+    assertStructure(editor, 'audio', [ ], { controls: 'controls' }, { }, (s, str) => [
+      s.element('source', {
+        attrs: {
+          src: str.is('about:blank'),
+          type: str.is('audio/mp3')
+        }
+      })
+    ]);
   });
 });
