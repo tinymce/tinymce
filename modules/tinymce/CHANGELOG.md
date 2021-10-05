@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pressing the Escape key would not cancel a drag action that started on a `contenteditable="false"` element within the editor #TINY-7917
 
 ### Deprecated
-- Several APIs have been deprecated. See the release notes for information #TINY-8023
+- Several APIs have been deprecated. See the release notes for information #TINY-8023 #TINY-8063
 
 ## 5.9.2 - 2021-09-08
 
