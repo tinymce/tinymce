@@ -36,7 +36,7 @@ UnitTest.test('ColumnSizes.getPixelWidths', () => {
     const roundedPixelWidths = Arr.map(pixelWidths, Math.round);
     Assert.eq(label, getExpectedWidths(cellWidth), roundedPixelWidths);
 
-    Remove.remove(table);
+    Remove.remove(container);
   };
 
   sTest('Pixel Table - Column widths should be the raw size of the cell', pixelTableHtml, () => [ 198, 198 ]);
@@ -60,7 +60,7 @@ UnitTest.test('ColumnSizes.getPercentageWidths', () => {
     const roundedPercentWidths = Arr.map(percentWidths, (width) => parseFloat(width.toFixed(1)));
     Assert.eq(label, expectedWidths, roundedPercentWidths);
 
-    Remove.remove(table);
+    Remove.remove(container);
   };
 
   sTest('Pixel Table - Column widths should be the raw size of the cell', pixelTableHtml, [ 50, 50 ]);
