@@ -16,6 +16,7 @@ import MathElement from 'ephox/sugar/test/MathElement';
 interface DimensionApi {
   get: (element: SugarElement<HTMLElement>) => number;
   getOuter: (element: SugarElement<HTMLElement>) => number;
+  getInner: (element: SugarElement<HTMLElement>) => number;
   set: (element: SugarElement<HTMLElement>, value: number | string) => void;
 }
 
@@ -35,6 +36,7 @@ UnitTest.test('DimensionTest', () => {
     // disconnected tests
     assert.eq(0, dimension.get(c));
     assert.eq(0, dimension.getOuter(c));
+    assert.eq(0, dimension.getInner(c));
 
     Insert.append(SugarBody.body(), c);
     Insert.append(SugarBody.body(), m);
@@ -45,6 +47,7 @@ UnitTest.test('DimensionTest', () => {
 
     assert.eq(true, dimension.get(c) > 0);
     assert.eq(true, dimension.getOuter(c) > 0);
+    assert.eq(true, dimension.getInner(c) > 0);
 
     dimension.set(c, 0);
 
@@ -54,16 +57,19 @@ UnitTest.test('DimensionTest', () => {
     // padding only
     assert.eq(40, dimension.get(c));        // jQuery === 0
     assert.eq(40, dimension.getOuter(c));
+    assert.eq(0, dimension.getInner(c));
 
     Css.set(c, 'border', '2px solid #fff');
     // border + padding
     assert.eq(44, dimension.get(c));        // jQuery === 0
     assert.eq(44, dimension.getOuter(c));
+    assert.eq(0, dimension.getInner(c));
 
     Css.set(c, 'margin', '3px');
     // border + padding + margin
     assert.eq(44, dimension.get(c));        // jQuery === 0
     assert.eq(44, dimension.getOuter(c));
+    assert.eq(0, dimension.getInner(c));
 
     // COMPLETE MADNESS: With border-sizing: border-box JQuery does WEIRD SHIT when you set width.
     // This is all so that when you request a width, it gives the same value.
@@ -71,35 +77,42 @@ UnitTest.test('DimensionTest', () => {
     dimension.set(c, 20);
     // border + padding + width + margin
     const bpwm = borderBox ? 44 : 64;
+    const innerBpwm = borderBox ? 0 : 20;
     assert.eq(bpwm, dimension.get(c));      // jQuery === 20 in both cases
     assert.eq(bpwm, dimension.getOuter(c)); // jQuery === 64 in both cases
+    assert.eq(innerBpwm, dimension.getInner(c));
 
     Css.remove(c, 'padding');
     // border + mad JQuery width + margin
     const bwmSize = borderBox ? 16 : 20;
     assert.eq(bwmSize + 4, dimension.get(c)); // jQuery === +0
     assert.eq(bwmSize + 4, dimension.getOuter(c));
+    assert.eq(bwmSize, dimension.getInner(c));
 
     dimension.set(c, 20);
     // border + width + margin
     assert.eq(bwmSize + 4, dimension.get(c));          // jQuery === 20
     assert.eq(bwmSize + 4, dimension.getOuter(c));
+    assert.eq(bwmSize, dimension.getInner(c));
 
     Css.remove(c, 'border');
     // width + margin
     assert.eq(20, dimension.get(c));            // jQuery === 24 in border-box mode
     assert.eq(20, dimension.getOuter(c));       // jQuery === 24 in border-box mode
+    assert.eq(20, dimension.getInner(c));
 
     dimension.set(c, 20);
     // width + margin
     assert.eq(20, dimension.get(c));
     assert.eq(20, dimension.getOuter(c));
+    assert.eq(20, dimension.getInner(c));
 
     Css.remove(c, 'margin');
 
     // just width
     assert.eq(20, dimension.get(c));
     assert.eq(20, dimension.getOuter(c));
+    assert.eq(20, dimension.getInner(c));
 
     // generally dupe with above, but replicates a JQuery test
     Css.setAll(c, {
@@ -110,12 +123,16 @@ UnitTest.test('DimensionTest', () => {
     });
 
     const allSize = borderBox ? 30 : 34;        // jQuery === 26 : 30
+    const innerAllSize = borderBox ? 26 : 30;
     assert.eq(allSize, dimension.get(c));
     assert.eq(allSize, dimension.getOuter(c));
+    assert.eq(innerAllSize, dimension.getInner(c));
     Css.set(c, 'padding', '20px');
     const allSizePlusPadding = borderBox ? 44 : 74; // jQuery === 40 : 70
+    const innerAllSizePlusPadding = borderBox ? 0 : 30;
     assert.eq(allSizePlusPadding, dimension.get(c));
     assert.eq(allSizePlusPadding, dimension.getOuter(c));
+    assert.eq(innerAllSizePlusPadding, dimension.getInner(c));
 
     // TODO: Far more extensive tests involving combinations of border, margin and padding.
 
@@ -126,11 +143,14 @@ UnitTest.test('DimensionTest', () => {
     Css.set(c, 'visibility', 'hidden');
     assert.eq(50, dimension.get(c));
     assert.eq(50, dimension.getOuter(c));
+    assert.eq(50, dimension.getInner(c));
 
     Css.set(c, 'border', '5px solid black');
     assert.eq(60, dimension.get(c));
     assert.eq(60, dimension.getOuter(c)); // 5 + 50 + 5
+    assert.eq(50, dimension.getInner(c));
     Remove.remove(c);
+    Remove.remove(m);
   };
 
   runChecks(Width, false); // content-box

@@ -1,4 +1,5 @@
 import * as StrAppend from '../str/StrAppend';
+import { Optional } from './Optional';
 
 const nativeFromCodePoint = String.fromCodePoint;
 
@@ -120,4 +121,14 @@ export const fromCodePoint = (...codePoints: number[]): string => {
     }
     return result + String.fromCharCode.apply(null, codeUnits);
   }
+};
+
+export const toInt = (value: string, radix: number = 10): Optional<number> => {
+  const num = parseInt(value, radix);
+  return isNaN(num) ? Optional.none() : Optional.some(num);
+};
+
+export const toFloat = (value: string): Optional<number> => {
+  const num = parseFloat(value);
+  return isNaN(num) ? Optional.none() : Optional.some(num);
 };
