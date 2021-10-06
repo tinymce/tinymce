@@ -13,7 +13,7 @@ import { Type } from '@ephox/katamari';
  * @deprecated
  * @class tinymce.util.JSON
  * @static
- * @summary JSON has been deprecated and marked for removal in TinyMCE 6.0. Use the native browser JSON API instead.
+ * @summary JSON has been deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0. Use the native browser JSON API instead.
  * @example
  * // JSON parse a string into an object
  * var obj = tinymce.util.JSON.parse(somestring);
