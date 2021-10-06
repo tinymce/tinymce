@@ -13,6 +13,7 @@ imagetools@6.0.0
 jax@7.0.0
 katamari@9.0.0
 katamari-assertions@4.0.0
+oxide@2.0.0
 mcagar@8.0.0
 phoenix@8.0.0
 polaris@6.0.0
