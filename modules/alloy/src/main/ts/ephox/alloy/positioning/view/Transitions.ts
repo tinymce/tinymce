@@ -31,7 +31,7 @@ const shouldApplyTransitionCss = (transition: Transition, decision: RepositionDe
 
 const hasChanges = (position: PositionCss, intermediate: Record<TransitionProp, Optional<string>>): boolean => {
   // Round to 3 decimal points
-  const round = (value: string) => parseFloat(value).toFixed(3);
+  const round = (value: string) => parseFloat(value).toPrecision(3);
 
   return Obj.find(intermediate, (value, key) => {
     const newValue = position[key as TransitionProp].map(round);

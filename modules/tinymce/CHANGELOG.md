@@ -35,7 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The table selection state could become incorrect after selecting a noneditable table cell #TINY-8053
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
 - Fixed urls not cleaned correctly in some cases in the `link` and `image` plugin #TINY-7998
-- Rounding errors were causing the line height dropdowns and the `LineHeight` query command to be inaccurate on Safari #TINY-7895
 - Fixed the `image` and `media` toolbar buttons showing the incorrect active state in some cases #TINY-3463
 - Fixed the `selection.selectorChanged` API not firing correctly if the selector matched the current selection when registered #TINY-3463
 - Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
