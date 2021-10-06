@@ -55,7 +55,7 @@ const byAttr = (ephemera: Ephemera, onSelection: (cells: SugarElement[], start: 
   };
 
   const clearBeforeUpdate = (container: SugarElement) => {
-    const sels = SelectorFilter.descendants(container, ephemera.selectedSelector);
+    const sels = SelectorFilter.descendants(container, `${ephemera.selectedSelector},${ephemera.firstSelectedSelector},${ephemera.lastSelectedSelector}`);
     Arr.each(sels, removeSelectionAttributes);
   };
 

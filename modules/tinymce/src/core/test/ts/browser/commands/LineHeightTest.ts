@@ -25,7 +25,8 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
   });
 
   it('TINY-4843: Unspecified line-height can be read from element', function () {
-    if (platform.browser.isSafari() && platform.browser.version.major < 15) {
+    // TODO: TINY-7895
+    if (platform.browser.isSafari()) {
       this.skip();
     }
     const editor = hook.editor();

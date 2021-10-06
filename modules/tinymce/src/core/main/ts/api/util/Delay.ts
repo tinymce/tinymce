@@ -98,7 +98,7 @@ const Delay: Delay = {
   /**
    * Requests an animation frame and fallbacks to a timeout on older browsers.
    * <br>
-   * <em><code>requestAnimationFrame</code> has been deprecated and marked for removal in TinyMCE 6.0. Use the native browser <code>requestAnimationFrame</code> API instead.</em>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>requestAnimationFrame</code> API instead.
    *
    * @deprecated
    * @method requestAnimationFrame
@@ -123,7 +123,7 @@ const Delay: Delay = {
   /**
    * Sets a timer in ms and executes the specified callback when the timer runs out.
    * <br>
-   * <em><code>setTimeout</code> has been deprecated and marked for removal in TinyMCE 6.0. Use the native browser <code>setTimeout</code> API instead.</em>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>setTimeout</code> API instead.
    *
    * @deprecated
    * @method setTimeout
@@ -136,7 +136,7 @@ const Delay: Delay = {
   /**
    * Sets an interval timer in ms and executes the specified callback at every interval of that time.
    * <br>
-   * <em><code>setInterval</code> has been deprecated and marked for removal in TinyMCE 6.0. Use the native browser <code>setInterval</code> API instead.</em>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>setInterval</code> API instead.
    *
    * @deprecated
    * @method setInterval
@@ -188,7 +188,7 @@ const Delay: Delay = {
   /**
    * Creates debounced callback function that only gets executed once within the specified time.
    * <br>
-   * <em><code>debounce</code> has been deprecated and marked for removal in TinyMCE 6.0.</em>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
    *
    * @deprecated
    * @method debounce
@@ -204,7 +204,7 @@ const Delay: Delay = {
   /**
    * Clears an interval timer so it won't execute.
    * <br>
-   * <em><code>clearInterval</code> has been deprecated and marked for removal in TinyMCE 6.0. Use the native browser <code>clearInterval</code> API instead.</em>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>clearInterval</code> API instead.
    *
    * @deprecated
    * @method clearInterval
@@ -215,7 +215,7 @@ const Delay: Delay = {
   /**
    * Clears an timeout timer so it won't execute.
    * <br>
-   * <em><code>clearTimeout</code> has been deprecated and marked for removal in TinyMCE 6.0. Use the native browser <code>clearTimeout</code> API instead.</em>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>clearTimeout</code> API instead.
    *
    * @deprecated
    * @method clearTimeout

@@ -73,6 +73,7 @@ interface BaseEditorSettings {
   content_css_cors?: boolean;
   content_security_policy?: string;
   content_style?: string;
+  deprecation_warnings?: boolean;
   font_css?: string | string[];
   content_langs?: ContentLanguage[];
   contextmenu?: string | false;

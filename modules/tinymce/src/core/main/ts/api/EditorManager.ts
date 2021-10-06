@@ -163,7 +163,10 @@ const EditorManager: EditorManager = {
 
   /**
    * Dom query instance.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
    *
+   * @deprecated
    * @property $
    * @type tinymce.dom.DomQuery
    */
@@ -194,10 +197,13 @@ const EditorManager: EditorManager = {
   releaseDate: '@@releaseDate@@',
 
   /**
-   * Collection of editor instances. Deprecated use tinymce.get() instead.
+   * Collection of editor instances.
+   * <br>
+   * <em>Deprecated in TinyMCE 4.7 and has been marked for removal in TinyMCE 6.0</em> - Use tinymce.get() instead.
    *
    * @property editors
    * @type Object
+   * @deprecated
    */
   editors: legacyEditors,
 

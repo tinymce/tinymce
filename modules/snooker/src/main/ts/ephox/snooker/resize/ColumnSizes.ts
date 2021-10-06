@@ -26,7 +26,8 @@ const justCols = (warehouse: Warehouse): Optional<SugarElement<HTMLTableColEleme
 // Col elements don't have valid computed widths/positions in all browsers, so treat them as invalid in that case
 const isValidColumn = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>): boolean => {
   const browser = PlatformDetection.detect().browser;
-  return !isCol(cell) || !(browser.isIE() || browser.isEdge());
+  const supportsColWidths = browser.isChrome() || browser.isFirefox();
+  return isCol(cell) ? supportsColWidths : true;
 };
 
 const getDimension = <T extends HTMLElement, U>(

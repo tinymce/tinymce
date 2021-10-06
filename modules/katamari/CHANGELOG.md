@@ -14,7 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `Result` and `Optional` APIs are now thoroughly documented.
 - Added private `.tag` and `.value` properties to `Result`, to make them friendlier to view in the debugger or console.
 
-## 8.0.1 - TBD
+## 8.1.0 - TBD
+
+### Added
+- Added new `Strings.toInt` and `Strings.toFloat` APIs to be able to parse a string and convert it to a number.
 
 ## 8.0.0 - 2021-08-26
 
