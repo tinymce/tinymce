@@ -18,6 +18,7 @@ interface ToolbarOrMenuSpec {
 
 describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
   const platform = PlatformDetection.detect();
+
   const toolbarSpec: ToolbarOrMenuSpec = {
     name: 'Toolbar',
     pOpen: async (editor, title) => {
@@ -111,7 +112,8 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
         });
 
         it(`TINY-7713: ${spec.name} updates if computed line height changes`, async function () {
-          if (platform.browser.isSafari() && platform.browser.version.major < 15) {
+          // TODO: TINY-7895
+          if (platform.browser.isSafari()) {
             this.skip();
           }
           const editor = hook.editor();
