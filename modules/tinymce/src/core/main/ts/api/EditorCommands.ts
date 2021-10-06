@@ -27,6 +27,7 @@ import Tools from './util/Tools';
  * This class enables you to add custom editor commands and it contains
  * overrides for native browser commands to address various bugs and issues.
  *
+ * @private
  * @class tinymce.EditorCommands
  */
 
