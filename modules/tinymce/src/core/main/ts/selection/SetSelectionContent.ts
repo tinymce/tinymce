@@ -106,7 +106,7 @@ const cleanContent = (editor: Editor, args: SelectionSetContentArgs) => {
     const contextArgs = contextBlock ? { context: contextBlock.nodeName.toLowerCase() } : { };
 
     const node = editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...contextArgs, ...args });
-    return HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(node);
+    return HtmlSerializer({ validate: false }, editor.schema).serialize(node);
   } else {
     return args.content;
   }

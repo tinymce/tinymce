@@ -213,27 +213,11 @@ interface BaseEditorSettings {
   mode?: 'exact' | 'textareas' | 'specific_textareas';
   types?: Record<string, any>[];
 
-  // Considered for deprecation (Schema settings)
-  block_elements?: string;
-  boolean_attributes?: string;
-  move_caret_before_on_enter_elements?: string;
-  non_empty_elements?: string;
-  self_closing_elements?: string;
-  short_ended_elements?: string;
-  text_block_elements?: string;
-  text_inline_elements?: string;
-  whitespace_elements?: string;
-  special?: string;
-
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;
   forced_plugins?: string | string[];
   plugin_base_urls?: Record<string, string>;
   service_message?: string;
-
-  // Special always forced on setting
-  // TODO: Get rid of this one
-  validate?: boolean;
 
   // Allow additional dynamic settings
   [key: string]: any;

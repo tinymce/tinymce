@@ -345,50 +345,6 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     assert.isString(schema.getCustomElements().block);
   });
 
-  it('whitespaceElements', () => {
-    let schema = Schema({ whitespace_elements: 'pre,p' });
-    assert.isObject(schema.getWhiteSpaceElements().pre);
-    assert.isUndefined(schema.getWhiteSpaceElements().span);
-
-    schema = Schema({ whitespace_elements: 'code' });
-    assert.isObject(schema.getWhiteSpaceElements().code);
-  });
-
-  it('selfClosingElements', () => {
-    const schema = Schema({ self_closing_elements: 'pre,p' });
-    assert.isObject(schema.getSelfClosingElements().pre);
-    assert.isObject(schema.getSelfClosingElements().p);
-    assert.isUndefined(schema.getSelfClosingElements().li);
-  });
-
-  it('shortEndedElements', () => {
-    const schema = Schema({ short_ended_elements: 'pre,p' });
-    assert.isObject(schema.getShortEndedElements().pre);
-    assert.isObject(schema.getShortEndedElements().p);
-    assert.isUndefined(schema.getShortEndedElements().img);
-  });
-
-  it('booleanAttributes', () => {
-    const schema = Schema({ boolean_attributes: 'href,alt' });
-    assert.isObject(schema.getBoolAttrs().href);
-    assert.isObject(schema.getBoolAttrs().alt);
-    assert.isUndefined(schema.getBoolAttrs().checked);
-  });
-
-  it('nonEmptyElements', () => {
-    const schema = Schema({ non_empty_elements: 'pre,p' });
-    assert.isObject(schema.getNonEmptyElements().pre);
-    assert.isObject(schema.getNonEmptyElements().p);
-    assert.isUndefined(schema.getNonEmptyElements().img);
-  });
-
-  it('blockElements', () => {
-    const schema = Schema({ block_elements: 'pre,p' });
-    assert.isObject(schema.getBlockElements().pre);
-    assert.isObject(schema.getBlockElements().p);
-    assert.isUndefined(schema.getBlockElements().h1);
-  });
-
   it('isValid', () => {
     const schema = Schema({ valid_elements: 'a[href],i[*]' });
 
