@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Split toolbar buttons incorrectly had nested `tabindex="-1"` attributes #TINY-7879
 - Fixed notifications rendering in the wrong place initially and when the page was scrolled #TINY-7894
 - Fixed an exception getting thrown when the number of `col` elements didn't match the number of columns in a table #TINY-7041 #TINY-8011
+- The table selection state could become incorrect after selecting a noneditable table cell #TINY-8053
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
 - Fixed urls not cleaned correctly in some cases in the `link` and `image` plugin #TINY-7998
 - Rounding errors were causing the line height dropdowns and the `LineHeight` query command to be inaccurate on Safari #TINY-7895

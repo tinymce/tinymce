@@ -29,15 +29,18 @@ describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
   const getCells = (table: SugarElement<HTMLTableElement>, selector: string = 'td,th'): SugarElement<HTMLTableCellElement>[] =>
     SelectorFilter.descendants(table, selector);
 
-  const assertTableSelection = (editor: Editor, tableHtml: string, selectCells: [ string, string ], cellContents: string[]) => {
-    editor.setContent(tableHtml);
-
+  const selectCellsWithMouse = (editor: Editor, selectCells: [ string, string ]) => {
     const table = SelectorFind.descendant<HTMLTableElement>(TinyDom.body(editor), 'table').getOrDie('Could not find table');
     const cells = getCells(table);
     const startTd = Arr.find(cells, (elm) => Html.get(elm) === selectCells[0]).getOrDie('Could not find start TD');
     const endTd = Arr.find(cells, (elm) => Html.get(elm) === selectCells[1]).getOrDie('Could not find end TD');
 
     selectWithMouse(startTd, endTd);
+  };
+
+  const assertTableSelection = (editor: Editor, tableHtml: string, selectCells: [ string, string ], cellContents: string[]) => {
+    editor.setContent(tableHtml);
+    selectCellsWithMouse(editor, selectCells);
     assertSelectedCells(editor, cellContents, Html.get);
   };
 
@@ -204,6 +207,50 @@ describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
     TinyAssertions.assertContentPresence(editor, {
       'td[contenteditable="false"][data-mce-first-selected="1"]:not([data-mce-last-selected="1"])': 1,
       'td:not([contenteditable="false"][data-mce-first-selected="1"])[data-mce-last-selected="1"]': 1
+    });
+  });
+
+  it('TINY-8053: "selected" attributes are removed from CEF cell when unselected via mouse', () => {
+    const editor = hook.editor();
+
+    assertTableSelection(
+      editor,
+      '<table><tr><td contenteditable="false">1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>',
+      [ '1', '1' ],
+      [ '1' ]
+    );
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 1
+    });
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+
+    selectCellsWithMouse(editor, [ '2', '4' ]);
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"]': 0,
+      'td[contenteditable="false"][data-mce-first-selected="1"]': 0,
+      'td[contenteditable="false"][data-mce-last-selected="1"]': 0
+    });
+  });
+
+  it('TINY-8053: "selected" attributes are removed from CEF cell when unselected via keyboard', () => {
+    const editor = hook.editor();
+
+    assertTableSelection(
+      editor,
+      '<table><tr><td contenteditable="false">1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>',
+      [ '1', '1' ],
+      [ '1' ]
+    );
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 1
+    });
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+
+    TinyContentActions.keystroke(editor, Keys.down());
+    TinyAssertions.assertContentPresence(editor, {
+      'td[contenteditable="false"][data-mce-selected="1"]': 0,
+      'td[contenteditable="false"][data-mce-first-selected="1"]': 0,
+      'td[contenteditable="false"][data-mce-last-selected="1"]': 0
     });
   });
 });
