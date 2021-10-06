@@ -209,8 +209,9 @@ const isImage = (editor: Editor) => {
 };
 
 const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): File[] => {
-  let items = dataTransfer.items ? Arr.map(Arr.from(dataTransfer.items), (item) => item.getAsFile()) : [];
-  items = items.filter((item) => item !== null);
+  const items = dataTransfer.items ? Arr.bind(Arr.from(dataTransfer.items), (item) => {
+    return item.kind === 'file' ? [ item.getAsFile() ] : [];
+  }) : [];
   const files = dataTransfer.files ? Arr.from(dataTransfer.files) : [];
   return Arr.filter(items.length > 0 ? items : files, isImage(editor));
 };
