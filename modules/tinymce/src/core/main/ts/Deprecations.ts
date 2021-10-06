@@ -27,12 +27,12 @@ const getDeprecatedSettings = (settings: RawEditorSettings): string[] => {
   if (forcedRootBlock === false || forcedRootBlock === '') {
     settingNames.push('forced_root_block (false only)');
   }
-  return settingNames;
+  return Arr.sort(settingNames);
 };
 
 const getDeprecatedPlugins = (settings: EditorSettings): string[] => {
   const plugins = Tools.makeMap(settings.plugins, ' ');
-  return Arr.filter(deprecatedPlugins, (plugin) => Obj.has(plugins, plugin));
+  return Arr.sort(Arr.filter(deprecatedPlugins, (plugin) => Obj.has(plugins, plugin)));
 };
 
 const logDeprecationsWarning = (rawSettings: RawEditorSettings, finalSettings: EditorSettings): void => {
@@ -51,7 +51,7 @@ const logDeprecationsWarning = (rawSettings: RawEditorSettings, finalSettings: E
     // eslint-disable-next-line no-console
     console.warn(
       'The following deprecated features are currently enabled, these will be removed in TinyMCE 6.0. ' +
-      'See https://www.tiny.cloud/docs/release-notes/6.0-upcoming-changes for more information.' +
+      'See https://www.tiny.cloud/docs/release-notes/6.0-upcoming-changes/ for more information.' +
       themesMessage +
       pluginsMessage +
       settingsMessage
