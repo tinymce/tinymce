@@ -83,7 +83,7 @@ const Annotator = (editor: Editor): Annotator => {
      * Removes any annotations from the current selection that match
      * the name
      *
-     * @param remove
+     * @method remove
      * @param {String} name the name of the annotation to remove
      */
     remove: (name: string): void => {

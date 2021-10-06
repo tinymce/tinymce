@@ -15,8 +15,8 @@ import * as CaretContainer from './CaretContainer';
  * This module shows the invisible block that the caret is currently in when contents is added to that block.
  */
 
-const findBlockCaretContainer = (editor: Editor): Element | null =>
-  SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), '*[data-mce-caret]')
+const findBlockCaretContainer = (editor: Editor): HTMLElement | null =>
+  SelectorFind.descendant<HTMLElement>(SugarElement.fromDom(editor.getBody()), '*[data-mce-caret]')
     .map((elm) => elm.dom)
     .getOrNull();
 
@@ -24,7 +24,7 @@ const removeIeControlRect = (editor: Editor): void => {
   editor.selection.setRng(editor.selection.getRng());
 };
 
-const showBlockCaretContainer = (editor: Editor, blockCaretContainer: Element): void => {
+const showBlockCaretContainer = (editor: Editor, blockCaretContainer: HTMLElement): void => {
   if (blockCaretContainer.hasAttribute('data-mce-caret')) {
     CaretContainer.showCaretContainerBlock(blockCaretContainer);
     removeIeControlRect(editor);

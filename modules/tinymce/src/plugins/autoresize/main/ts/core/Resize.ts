@@ -10,7 +10,9 @@ import { Cell } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import { SetContentEvent } from 'tinymce/core/api/EventTypes';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
@@ -57,10 +59,22 @@ const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed:
   return isNaN(value) ? 0 : value;
 };
 
+const shouldScrollIntoView = (trigger: EditorEvent<unknown> | undefined) => {
+  // Only scroll the selection into view when we're inserting content. Any other
+  // triggers the selection should already be in view and resizing would only
+  // extend the content area.
+  if (trigger?.type.toLowerCase() === 'setcontent') {
+    const setContentEvent = (trigger as EditorEvent<SetContentEvent>);
+    return setContentEvent.selection === true || setContentEvent.paste === true;
+  } else {
+    return false;
+  }
+};
+
 /**
  * This method gets executed each time the editor needs to resize.
  */
-const resize = (editor: Editor, oldSize: Cell<number>): void => {
+const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unknown>): void => {
   const dom = editor.dom;
 
   const doc = editor.getDoc();
@@ -122,15 +136,15 @@ const resize = (editor: Editor, oldSize: Cell<number>): void => {
       win.scrollTo(win.pageXOffset, win.pageYOffset);
     }
 
-    // Ensure the selected node is in view, as it's potentially out of view after resizing the editor
-    if (editor.hasFocus()) {
-      editor.selection.scrollIntoView(editor.selection.getNode());
+    // Ensure the selection is in view, as it's potentially out of view after inserting content into the editor
+    if (editor.hasFocus() && shouldScrollIntoView(trigger)) {
+      editor.selection.scrollIntoView();
     }
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
     // So we need to continue to resize the iframe down until the size gets fixed
     if (Env.webkit && deltaSize < 0) {
-      resize(editor, oldSize);
+      resize(editor, oldSize, trigger);
     }
   }
 };
@@ -153,8 +167,8 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
     });
   });
 
-  editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', () => {
-    resize(editor, oldSize);
+  editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {
+    resize(editor, oldSize, e);
   });
 
   if (Settings.shouldAutoResizeOnInit(editor)) {

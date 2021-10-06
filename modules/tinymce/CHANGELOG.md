@@ -6,20 +6,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Added a new `URI.isDomSafe(uri)` API to check if a URI is considered safe to be inserted into the DOM #TINY-7998
+- Added the `ESC` key code constant to the `VK` API #TINY-7917
+- Added a new `deprecation_warnings` setting for turning off deprecation console warning messages #TINY-8049
+
+### Improved
+- The `element` argument of the `editor.selection.scrollIntoView()` API is now optional, and if it is not provided the current selection will be scrolled into view #TINY-7291
+
 ### Changed
 - The deprecated `scope` attribute is no longer added to `td` cells when converting a row to a header row #TINY-7731
+- The number of `col` elements is normalized to match the number of columns in a table after a table action #TINY-8011
 
 ### Fixed
+- Fixed a regression that caused block wrapper formats to apply and remove incorrectly when using a collapsed selection with multiple words #TINY-8036
 - Resizing table columns in some scenarios would resize the column to an incorrect position #TINY-7731
-- Image resize backdrop element did not have `data-mce-bogus="all"` set #TINY-7854
+- Inserting a table where the parent element had padding would cause the table width to be incorrect #TINY-7991
+- The resize backdrop element did not have the `data-mce-bogus="all"` attribute set to prevent it being included in output #TINY-7854
 - Resize handles appeared on top of dialogs and menus when using an inline editor #TINY-3263
-- Table cells that were both row and column headers would not retain the correct state when converting back to a regular row or column #TINY-7709
-- Clicking beside a non-editable element could cause the editor to incorrectly scroll to the top of the document #TINY-7062
+- Fixed the `autoresize` plugin incorrectly scrolling to the top of the editor content in some cases when changing content #TINY-7291
+- Fixed the `editor.selection.scrollIntoView()` type signature, as it incorrectly required an `Element` instead of `HTMLElement` #TINY-7291
+- Table cells that were both row and column headers did not retain the correct state when converting back to a regular row or column #TINY-7709
+- Clicking beside a non-editable element could cause the editor to incorrectly scroll to the top of the content #TINY-7062
+- Clicking in a table cell, with a non-editable element in an adjacent cell, incorrectly caused the non-editable element to be selected #TINY-7736
 - Split toolbar buttons incorrectly had nested `tabindex="-1"` attributes #TINY-7879
-- Fixed an exception getting thrown when there were more `col` elements than columns in a table #TINY-7041
+- Fixed notifications rendering in the wrong place initially and when the page was scrolled #TINY-7894
+- Fixed an exception getting thrown when the number of `col` elements didn't match the number of columns in a table #TINY-7041 #TINY-8011
+- The table selection state could become incorrect after selecting a noneditable table cell #TINY-8053
 - As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
+- Fixed URLs not cleaned correctly in some cases in the `link` and `image` plugins #TINY-7998
+- Fixed the `image` and `media` toolbar buttons incorrectly appearing to be in an inactive state in some cases #TINY-3463
+- Fixed the `editor.selection.selectorChanged` API not firing if the selector matched the current selection when registered in some cases #TINY-3463
 - Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
+- Dragging and dropping `contenteditable="false"` elements could result in the element being placed in an unexpected location #TINY-7917
+- Pressing the Escape key would not cancel a drag action that started on a `contenteditable="false"` element within the editor #TINY-7917
+- `video` and `audio` elements were unable to be played when the `media` plugin live embeds were enabled in some cases #TINY-7674
 - Pasting images would throw an exception if the clipboard `items` were not files (for example, screenshots taken from gnome-software). Patch contributed by @cedric-anne 
+
+### Deprecated
+- Several APIs have been deprecated. See the release notes section for information #TINY-8023 #TINY-8063
 
 ## 5.9.2 - 2021-09-08
 

@@ -113,14 +113,24 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
   }
 };
 
+const sanitizeImageData = (editor: Editor, data: ImageData): ImageData => {
+  // Sanitize the URL
+  const src = data.src;
+  return {
+    ...data,
+    src: Utils.isSafeImageUrl(editor, src) ? src : ''
+  };
+};
+
 const insertOrUpdateImage = (editor: Editor, partialData: Partial<ImageData>): void => {
   const image = getSelectedImage(editor);
   if (image) {
     const selectedImageData = read((css) => normalizeCss(editor, css), image);
     const data = { ...selectedImageData, ...partialData };
+    const sanitizedData = sanitizeImageData(editor, data);
 
     if (data.src) {
-      writeImageDataToSelection(editor, data);
+      writeImageDataToSelection(editor, sanitizedData);
     } else {
       deleteImage(editor, image);
     }
@@ -131,6 +141,7 @@ const insertOrUpdateImage = (editor: Editor, partialData: Partial<ImageData>): v
 
 export {
   normalizeCss,
+  getSelectedImage,
   readImageDataFromSelection,
   insertOrUpdateImage
 };

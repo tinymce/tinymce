@@ -38,10 +38,16 @@ const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean): S
   const grid: Structs.RowCells[] = [];
 
   Arr.each(warehouse.colgroups, (colgroup) => {
-    const cols = Arr.map(colgroup.columns, (column): Structs.ElementNew =>
-      Structs.elementnew(column.element, isNew, false)
-    );
-    grid.push(Structs.rowcells(colgroup.element, cols, 'colgroup', isNew));
+    const colgroupCols: Structs.ElementNew[] = [];
+    // This will add missing cols as well as clamp the number of cols to the max number of actual columns
+    // Note: Spans on cols are unsupported so clamping cols may result in a span on a col element being incorrect
+    for (let columnIndex = 0; columnIndex < warehouse.grid.columns; columnIndex++) {
+      const element = Warehouse.getColumnAt(warehouse, columnIndex)
+        .map((column) => Structs.elementnew(column.element, isNew, false))
+        .getOrThunk(() => Structs.elementnew(generators.colGap(), true, false));
+      colgroupCols.push(element);
+    }
+    grid.push(Structs.rowcells(colgroup.element, colgroupCols, 'colgroup', isNew));
   });
 
   for (let rowIndex = 0; rowIndex < warehouse.grid.rows; rowIndex++) {

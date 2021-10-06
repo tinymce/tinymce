@@ -11,6 +11,7 @@ import EditorSelection from 'tinymce/core/api/dom/Selection';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+import URI from 'tinymce/core/api/util/URI';
 
 import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
@@ -245,8 +246,18 @@ const unwrapOptions = (data: LinkDialogOutput) => {
   }, (v, _k) => Type.isNull(v) === false);
 };
 
+const sanitizeData = (editor: Editor, data: LinkDialogOutput): LinkDialogOutput => {
+  // Sanitize the URL
+  const href = data.href;
+  return {
+    ...data,
+    href: URI.isDomSafe(href, 'a', editor.settings) ? href : ''
+  };
+};
+
 const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput): void => {
-  editor.hasPlugin('rtc', true) ? editor.execCommand('createlink', false, unwrapOptions(data)) : linkDomMutation(editor, attachState, data);
+  const sanitizedData = sanitizeData(editor, data);
+  editor.hasPlugin('rtc', true) ? editor.execCommand('createlink', false, unwrapOptions(sanitizedData)) : linkDomMutation(editor, attachState, sanitizedData);
 };
 
 const unlink = (editor: Editor): void => {

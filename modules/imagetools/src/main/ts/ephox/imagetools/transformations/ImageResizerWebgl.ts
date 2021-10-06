@@ -1,8 +1,8 @@
 import { Obj, Optional } from '@ephox/katamari';
+import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as Canvas from '../util/Canvas';
 import * as ImageSize from '../util/ImageSize';
-import { Promise } from '../util/Promise';
 
 /**
  * @method scale

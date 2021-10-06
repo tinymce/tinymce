@@ -1,15 +1,24 @@
-import { assert, TestLabel, UnitTest } from '@ephox/bedrock-client';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Css, Html, Insert, InsertAll, Remove, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
-import * as RuntimeSize from 'ephox/snooker/resize/RuntimeSize';
+import * as Insert from 'ephox/sugar/api/dom/Insert';
+import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
+import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as Attribute from 'ephox/sugar/api/properties/Attribute';
+import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Html from 'ephox/sugar/api/properties/Html';
+import * as SelectorFilter from 'ephox/sugar/api/search/SelectorFilter';
+import * as RuntimeSize from 'ephox/sugar/impl/RuntimeSize';
 
 interface TableModel {
-  total: number;
-  rows: number;
-  cols: number;
-  cells: number[];
+  readonly total: number;
+  readonly rows: number;
+  readonly cols: number;
+  readonly cells: number[];
 }
 
 UnitTest.test('Runtime Size Test', () => {
@@ -37,20 +46,21 @@ UnitTest.test('Runtime Size Test', () => {
     });
   };
 
-  const fuzzyAssertEq = (a: number, b: number, msg: TestLabel) => {
-    // Sometimes the widths of the cells are 1 px off due to rounding but the total table width is never off
-    assert.eq(true, Math.abs(a - b) <= 1, msg);
-  };
-
   const assertSize = (s1: { total: number; cells: number[] }, table: SugarElement, getOuterSize: (e: SugarElement) => number, message: string) => {
     const s2 = measureTable(table, getOuterSize);
-    const cellAssertEq = platform.browser.isIE() || platform.browser.isEdge() ? fuzzyAssertEq : assert.eq;
+    const tableHtml = Html.getOuter(table);
 
-    assert.eq(s1.total, s2.total, () => message + ', expected table size: ' + s1.total + ', actual: ' + s2.total + ', table: ' + Html.getOuter(table));
+    assert.equal(s1.total, s2.total, `${message}, expected table size: ${s1.total}, actual: ${s2.total}, table: ${tableHtml}`);
 
     Arr.each(s1.cells, (cz1, i) => {
       const cz2 = s2.cells[i];
-      cellAssertEq(cz1, cz2, () => message + ', expected cell size: ' + cz1 + ', actual: ' + cz2 + ', table: ' + Html.getOuter(table));
+      // Sometimes the widths of the cells are 1 px off due to rounding but the total table width is never off
+      const assertMessage = `${message}, expected cell size: ${cz1}, actual: ${cz2}, table: ${tableHtml}`;
+      if (platform.browser.isIE() || platform.browser.isEdge()) {
+        assert.approximately(cz1, cz2, 1, assertMessage);
+      } else {
+        assert.equal(cz1, cz2, assertMessage);
+      }
     });
   };
 

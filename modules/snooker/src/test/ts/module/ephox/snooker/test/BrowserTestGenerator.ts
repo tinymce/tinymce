@@ -41,6 +41,7 @@ export default (): SimpleGenerators => {
     row: () => makeElem('tr', ''),
     colgroup: () => makeElem('colgroup', ''),
     col,
+    colGap: col,
     replace
   };
 };

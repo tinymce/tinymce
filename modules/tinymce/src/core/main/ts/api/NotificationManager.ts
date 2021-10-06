@@ -154,11 +154,15 @@ const NotificationManager = (editor: Editor): NotificationManager => {
           timeout: 0
         }, false);
       }
+
+      // Ensure the notifications are repositioned once the skin has loaded, as otherwise
+      // any notifications rendered before then may have wrapped and been in the wrong place
+      reposition();
     });
 
     // NodeChange is needed for inline mode and autoresize as the positioning is done
     // from the bottom up, which changes when the content in the editor changes.
-    editor.on('ResizeEditor ResizeWindow NodeChange', () => {
+    editor.on('show ResizeEditor ResizeWindow NodeChange', () => {
       Delay.requestAnimationFrame(reposition);
     });
 

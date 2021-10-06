@@ -1,9 +1,9 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
+import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as JPEGMeta from 'ephox/imagetools/meta/JPEGMeta';
 import * as Assertion from 'ephox/imagetools/test/Assertion';
-import { Promise } from 'ephox/imagetools/util/Promise';
 
 const problematiJPEGs: Record<string, any>[] = [
   {

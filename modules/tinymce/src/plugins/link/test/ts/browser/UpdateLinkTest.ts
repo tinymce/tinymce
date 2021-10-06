@@ -66,4 +66,19 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
       'a[title="shouldnotbekept"]': 0
     });
   });
+
+  it('TINY-7998: Updating a link with a dangerous URL should remove the href attribute', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="https://tinymce.com" title="shouldbekept">tiny</a></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
+    editor.execCommand('mceLink');
+    await TinyUiActions.pWaitForDialog(editor);
+    FocusTools.setActiveValue(SugarDocument.getDocument(), 'javascript:alert(1)');
+    TinyUiActions.submitDialog(editor);
+    await TestLinkUi.pAssertContentPresence(editor, {
+      'a[href]': 0,
+      'a[title="shouldbekept"]': 1,
+      'a:contains("tiny")': 1
+    });
+  });
 });

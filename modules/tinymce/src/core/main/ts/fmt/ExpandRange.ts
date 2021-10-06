@@ -121,14 +121,14 @@ const findSelectorEndPoint = (dom: DOMUtils, formatList: Format[], rng: Range, c
 };
 
 const findBlockEndPoint = (editor: Editor, formatList: Format[], container: Node, siblingName: Sibling) => {
-  let node = container;
+  let node: Node | null = container;
   const dom = editor.dom;
   const root = dom.getRoot();
   const format = formatList[0];
 
   // Expand to block of similar type
-  if (FormatUtils.isBlockFormat(format) && !format.wrapper) {
-    node = dom.getParent(container, format.block, root);
+  if (FormatUtils.isBlockFormat(format)) {
+    node = format.wrapper ? null : dom.getParent(container, format.block, root);
   }
 
   // Expand to first wrappable block element or any block element

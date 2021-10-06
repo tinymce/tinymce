@@ -7,14 +7,17 @@ import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCs
 import * as Dockables from './Dockables';
 import { DockingConfig, DockingMode, DockingState } from './DockingTypes';
 
-const morphToStatic = (component: AlloyComponent, config: DockingConfig): void => {
+const morphToStatic = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
+  state.setDocked(false);
   Arr.each([ 'left', 'right', 'top', 'bottom', 'position' ], (prop) => Css.remove(component.element, prop));
   config.onUndocked(component);
 };
 
-const morphToCoord = (component: AlloyComponent, config: DockingConfig, position: PositionCss): void => {
+const morphToCoord = (component: AlloyComponent, config: DockingConfig, state: DockingState, position: PositionCss): void => {
+  const isDocked = position.position === 'fixed';
+  state.setDocked(isDocked);
   applyPositionCss(component.element, position);
-  const method = position.position === 'fixed' ? config.onDocked : config.onUndocked;
+  const method = isDocked ? config.onDocked : config.onUndocked;
   method(component);
 };
 
@@ -51,15 +54,13 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
   }
 
   Dockables.getMorph(component, viewport, state).each((morph) => {
-    // Toggle the docked state
-    state.setDocked(!isDocked);
     // Apply the morph result
     morph.fold(
-      () => morphToStatic(component, config),
-      (position) => morphToCoord(component, config, position),
+      () => morphToStatic(component, config, state),
+      (position) => morphToCoord(component, config, state, position),
       (position) => {
         updateVisibility(component, config, state, viewport, true);
-        morphToCoord(component, config, position);
+        morphToCoord(component, config, state, position);
       }
     );
   });
@@ -71,8 +72,8 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   state.setDocked(false);
   Dockables.getMorphToOriginal(component, state).each((morph) => {
     morph.fold(
-      () => morphToStatic(component, config),
-      (position) => morphToCoord(component, config, position),
+      () => morphToStatic(component, config, state),
+      (position) => morphToCoord(component, config, state, position),
       Fun.noop
     );
   });

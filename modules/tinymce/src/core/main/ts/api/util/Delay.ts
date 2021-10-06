@@ -97,7 +97,10 @@ const debounce = <T extends (...args: any[]) => any>(callback: T, time?: number)
 const Delay: Delay = {
   /**
    * Requests an animation frame and fallbacks to a timeout on older browsers.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>requestAnimationFrame</code> API instead.
    *
+   * @deprecated
    * @method requestAnimationFrame
    * @param {function} callback Callback to execute when a new frame is available.
    * @param {DOMElement} element Optional element to scope it to.
@@ -119,7 +122,10 @@ const Delay: Delay = {
 
   /**
    * Sets a timer in ms and executes the specified callback when the timer runs out.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>setTimeout</code> API instead.
    *
+   * @deprecated
    * @method setTimeout
    * @param {function} callback Callback to execute when timer runs out.
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
@@ -129,7 +135,10 @@ const Delay: Delay = {
 
   /**
    * Sets an interval timer in ms and executes the specified callback at every interval of that time.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>setInterval</code> API instead.
    *
+   * @deprecated
    * @method setInterval
    * @param {function} callback Callback to execute when interval time runs out.
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
@@ -178,7 +187,10 @@ const Delay: Delay = {
 
   /**
    * Creates debounced callback function that only gets executed once within the specified time.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
    *
+   * @deprecated
    * @method debounce
    * @param {function} callback Callback to execute when timer finishes.
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
@@ -191,7 +203,10 @@ const Delay: Delay = {
 
   /**
    * Clears an interval timer so it won't execute.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>clearInterval</code> API instead.
    *
+   * @deprecated
    * @method clearInterval
    * @param {Number} Interval timer id number.
    */
@@ -199,7 +214,10 @@ const Delay: Delay = {
 
   /**
    * Clears an timeout timer so it won't execute.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - use the native browser <code>clearTimeout</code> API instead.
    *
+   * @deprecated
    * @method clearTimeout
    * @param {Number} Timeout timer id number.
    */

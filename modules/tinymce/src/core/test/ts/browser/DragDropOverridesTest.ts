@@ -1,7 +1,7 @@
-import { Assertions, DragnDrop, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { Hierarchy, SugarBody, SugarNode } from '@ephox/sugar';
+import { SugarBody, SugarLocation } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -14,12 +14,16 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     indent: false,
     menubar: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, [ Theme ], true);
 
   before(() => {
     hook.editor().on('dragend', () => {
       fired.set(true);
     });
+  });
+
+  beforeEach(() => {
+    fired.set(false);
   });
 
   const createFile = (name: string, lastModified: number, blob: Blob): File => {
@@ -43,7 +47,7 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
   it('drop draggable element outside of editor', () => {
     const editor = hook.editor();
     editor.setContent('<p contenteditable="false">a</p>');
-    const target = Hierarchy.follow(TinyDom.body(editor), [ 0 ]).filter(SugarNode.isElement).getOrDie().dom;
+    const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("a")').getOrDie().dom;
     const rect = target.getBoundingClientRect();
     const button = 0;
     const screenX = rect.left + rect.width / 2;
@@ -52,6 +56,42 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     editor.fire('mousedown', { button, screenX, screenY, target } as unknown as MouseEvent);
     editor.fire('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, clientX: 0, clientY: 0, target } as unknown as MouseEvent);
     editor.dom.fire(document.body, 'mouseup');
+
+    assert.isTrue(fired.get(), 'Should fire dragend event');
+  });
+
+  it('TINY-7917: Dropping draggable element inside editor fires dragend event', () => {
+    const editor = hook.editor();
+    editor.setContent('<p contenteditable="false">a</p><p>bc123</p>');
+    const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("a")').getOrDie();
+    const targetPosition = SugarLocation.viewport(target);
+
+    const dest = UiFinder.findIn(TinyDom.body(editor), 'p:contains("bc123")').getOrDie();
+    const destPosition = SugarLocation.viewport(dest);
+    const yDelta = destPosition.top - targetPosition.top;
+
+    Mouse.mouseDown(target);
+    // Drag CE=F paragraph roughly into other paragraph in order to trigger a valid drop on mouseup
+    Mouse.mouseMoveTo(target, 15, yDelta + 5);
+    Mouse.mouseUp(target);
+
+    assert.isTrue(fired.get(), 'Should fire dragend event');
+  });
+
+  it('TINY-7917: Pressing escape during drag fires dragend event', () => {
+    const editor = hook.editor();
+    editor.setContent('<p contenteditable="false">a</p><p>bc123</p>');
+    const target = UiFinder.findIn(TinyDom.body(editor), 'p:contains("a")').getOrDie();
+    const targetPosition = SugarLocation.viewport(target);
+
+    const dest = UiFinder.findIn(TinyDom.body(editor), 'p:contains("bc123")').getOrDie();
+    const destPosition = SugarLocation.viewport(dest);
+    const yDelta = destPosition.top - targetPosition.top;
+
+    Mouse.mouseDown(target);
+    // Where we drag to here is largely irrelevant
+    Mouse.mouseMoveTo(target, 15, yDelta + 5);
+    Keyboard.activeKeydown(TinyDom.document(editor), Keys.escape());
 
     assert.isTrue(fired.get(), 'Should fire dragend event');
   });

@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -1128,21 +1129,21 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
       newArgs = args;
     });
 
-    editor.getBody().innerHTML = '<p><a href="#">text</a></p>';
+    editor.setContent('<p><a href="#">text</a></p>');
     LegacyUnit.setSelection(editor, 'a', 0, 'a', 4);
     editor.nodeChanged();
 
-    LegacyUnit.equal(newState, true);
-    LegacyUnit.equal(newArgs.selector, 'a[href]');
+    assert.isTrue(newState);
+    assert.equal(newArgs.selector, 'a[href]');
     LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild.firstChild);
-    LegacyUnit.equal(newArgs.parents.length, 2);
+    assert.lengthOf(newArgs.parents, 2);
 
-    editor.getBody().innerHTML = '<p>text</p>';
+    editor.setContent('<p>text</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
     editor.nodeChanged();
-    LegacyUnit.equal(newArgs.selector, 'a[href]');
+    assert.equal(newArgs.selector, 'a[href]');
     LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild);
-    LegacyUnit.equal(newArgs.parents.length, 1);
+    assert.lengthOf(newArgs.parents, 1);
   });
 
   it('selectorChangedWithUnbind', () => {
@@ -1155,23 +1156,43 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
       calls++;
     });
 
-    editor.getBody().innerHTML = '<p><a href="#">text</a></p>';
+    editor.setContent('<p><a href="#">text</a></p>');
     LegacyUnit.setSelection(editor, 'a', 0, 'a', 4);
     editor.nodeChanged();
 
-    LegacyUnit.equal(newState, true);
-    LegacyUnit.equal(newArgs.selector, 'a[href]');
+    assert.isTrue(newState);
+    assert.equal(newArgs.selector, 'a[href]');
     LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild.firstChild);
-    LegacyUnit.equal(newArgs.parents.length, 2);
-    LegacyUnit.equal(calls, 1, 'selectorChangedWithUnbind callback is only called once');
+    assert.lengthOf(newArgs.parents, 2);
+    assert.equal(calls, 1, 'selectorChangedWithUnbind callback is only called once');
 
     unbind();
 
-    editor.getBody().innerHTML = '<p>text</p>';
+    editor.setContent('<p>text</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
     editor.nodeChanged();
 
-    LegacyUnit.equal(calls, 1, 'selectorChangedWithUnbind callback is only called once');
+    assert.equal(calls, 1, 'selectorChangedWithUnbind callback is only called once');
+  });
+
+  it('TINY-3463: selectorChanged should setup the active state if already selected', () => {
+    const editor = hook.editor();
+    let newState, newArgs;
+
+    editor.setContent('<p>some <a href="#">text</a></p>');
+    LegacyUnit.setSelection(editor, 'a', 0, 'a', 4);
+
+    editor.selection.selectorChanged('a[href]', (state, args) => {
+      newState = state;
+      newArgs = args;
+    });
+
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
+    editor.nodeChanged();
+
+    assert.isFalse(newState);
+    assert.equal(newArgs.selector, 'a[href]');
+    assert.lengthOf(newArgs.parents, 1);
   });
 
   it('setRng', () => {

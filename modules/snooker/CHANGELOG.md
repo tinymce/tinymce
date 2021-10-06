@@ -12,12 +12,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `Sizes.redistribute` no longer requires a `TableSize` instance to be provided.
 - `TableOperations.makeRowHeader` and `TableOperations.makeRowsHeader` no longer add the deprecated `scope` attribute to `td` elements.
 - `Generators.transform` no longer accepts a scope, as `TransformOperations` now calculates the appropriate scope.
+- `Transitions.toGrid` will now add and remove `col` elements to ensure the number of `col` elements matches the number of columns in a table.
 
 ### Fixed
 - Resizing table cells caused incorrect widths in cases where those cells had grown to fit extra content.
 - Resizing percent tables caused widths to be offset by a few pixels due to an incorrect pixel -> percent conversion.
 - Converting rows or columns to regular cells would in some cases incorrectly convert a cell that was still part of a header.
 - An exception was thrown in `TableGrid` when there were more `col` elements than columns in a table.
+- Table percent sizes were incorrectly calculated when the parent element had padding.
 
 ## 9.0.0 - 2021-08-26
 

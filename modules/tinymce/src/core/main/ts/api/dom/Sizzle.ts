@@ -20,6 +20,11 @@ import { Arr } from '@ephox/katamari';
  * http://jquery.org/license
  *
  * Date: @DATE
+ *
+ * @deprecated
+ * @private
+ * @class tinymce.dom.sizzle
+ * @summary Sizzle has been deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.
  */
 
 /* eslint-enable */
@@ -309,6 +314,7 @@ const Sizzle: any = function (selector, context, results, seed) {
 
 /**
  * Create key-value caches of limited size
+ * @private
  * @returns {Function(string, Object)} Returns the Object data after storing it on itself with
  * property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
  * deleting the oldest entry
@@ -329,6 +335,7 @@ function createCache() {
 
 /**
  * Mark a function for special use by Sizzle
+ * @private
  * @param {Function} fn The function to mark
  */
 function markFunction(fn) {
@@ -338,6 +345,7 @@ function markFunction(fn) {
 
 /**
  * Support testing using an element
+ * @private
  * @param {Function} fn Passed the created div and expects a boolean result
  */
 /* function assert(fn) {
@@ -373,6 +381,7 @@ function markFunction(fn) {
 
 /**
  * Checks document order of two siblings
+ * @private
  * @param {Element} a
  * @param {Element} b
  * @returns {Number} Returns less than 0 if a precedes b, greater than 0 if a follows b
@@ -402,6 +411,7 @@ function siblingCheck(a, b) {
 
 /**
  * Returns a function to use in pseudos for input types
+ * @private
  * @param {String} type
  */
 function createInputPseudo(type) {
@@ -413,6 +423,7 @@ function createInputPseudo(type) {
 
 /**
  * Returns a function to use in pseudos for buttons
+ * @private
  * @param {String} type
  */
 function createButtonPseudo(type) {
@@ -424,6 +435,7 @@ function createButtonPseudo(type) {
 
 /**
  * Returns a function to use in pseudos for positionals
+ * @private
  * @param {Function} fn
  */
 function createPositionalPseudo(fn) {
@@ -446,6 +458,7 @@ function createPositionalPseudo(fn) {
 
 /**
  * Checks a node for validity as a Sizzle context
+ * @private
  * @param {Element|Object=} context
  * @returns {Element|Object|Boolean} The input node if acceptable, otherwise a falsy value
  */
@@ -458,6 +471,7 @@ support = Sizzle.support = {};
 
 /**
  * Detects XML nodes
+ * @private
  * @param {Element|Object} elem An element or a document
  * @returns {Boolean} True iff elem is a non-HTML XML node
  */
@@ -470,6 +484,7 @@ isXML = Sizzle.isXML = function (elem) {
 
 /**
  * Sets document-related variables once based on the current document
+ * @private
  * @param {Element|Object} [doc] An element or document object to use to set the document
  * @returns {Object} Returns the current document
  */
@@ -902,6 +917,7 @@ Sizzle.error = function (msg) {
 
 /**
  * Document sorting and removing duplicates
+ * @private
  * @param {ArrayLike} results
  */
 Sizzle.uniqueSort = function (results) {
@@ -935,6 +951,7 @@ Sizzle.uniqueSort = function (results) {
 
 /**
  * Utility function for retrieving the text value of an array of DOM nodes
+ * @private
  * @param {Array|Element} elem
  */
 getText = Sizzle.getText = function (elem) {
@@ -1915,6 +1932,7 @@ compile = Sizzle.compile = function (selector, match /* Internal Use Only */) {
 /**
  * A low-level selection function that works with Sizzle's compiled
  *  selector functions
+ * @private
  * @param {String|Function} selector A selector or a pre-compiled
  *  selector function built with Sizzle.compile
  * @param {Element} context

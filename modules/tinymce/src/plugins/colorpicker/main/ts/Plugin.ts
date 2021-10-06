@@ -8,8 +8,6 @@
 import PluginManager from 'tinymce/core/api/PluginManager';
 
 export default () => {
-  PluginManager.add('colorpicker', () => {
-    // eslint-disable-next-line no-console
-    console.warn('Color picker plugin is now built in to the core editor, please remove it from your editor configuration');
-  });
+  // eslint-disable-next-line @tinymce/prefer-fun
+  PluginManager.add('colorpicker', () => {});
 };

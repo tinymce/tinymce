@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Fixed sketcher behaviours augmenting in the wrong order, which prevented behaviours being revoked.
 - Fixed debugging throwing errors.
+- `Docking` state could end up incorrect internally, which caused `Docking.refresh()` to not work.
 
 ## 9.0.0 - 2021-08-26
 

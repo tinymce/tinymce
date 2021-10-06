@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added new `Strings.toInt` and `Strings.toFloat` APIs to be able to parse a string and convert it to a number.
+
 ## 8.0.0 - 2021-08-26
 
 ### Added
