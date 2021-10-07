@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dragging and dropping `contenteditable="false"` elements could result in the element being placed in an unexpected location #TINY-7917
 - Pressing the Escape key would not cancel a drag action that started on a `contenteditable="false"` element within the editor #TINY-7917
 - `video` and `audio` elements were unable to be played when the `media` plugin live embeds were enabled in some cases #TINY-7674
+- Pasting images would throw an exception if the clipboard `items` were not files (for example, screenshots taken from gnome-software). Patch contributed by @cedric-anne 
 
 ### Deprecated
 - Several APIs have been deprecated. See the release notes section for information #TINY-8023 #TINY-8063
