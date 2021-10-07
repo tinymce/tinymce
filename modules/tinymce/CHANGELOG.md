@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Removed
+- The legacy `mobile` theme has been removed #TINY-7832
+
 ## 5.10.0 - TBD
 
 ### Added
