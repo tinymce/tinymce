@@ -114,26 +114,16 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
       indent_before: settings.indent_before,
 
       // Schema settings
-      block_elements: settings.block_elements,
-      boolean_attributes: settings.boolean_attributes,
       custom_elements: settings.custom_elements,
       extended_valid_elements: settings.extended_valid_elements,
       invalid_elements: settings.invalid_elements,
       invalid_styles: settings.invalid_styles,
-      move_caret_before_on_enter_elements: settings.move_caret_before_on_enter_elements,
-      non_empty_elements: settings.non_empty_elements,
       schema: settings.schema,
-      self_closing_elements: settings.self_closing_elements,
-      short_ended_elements: settings.short_ended_elements,
-      special: settings.special,
-      text_block_elements: settings.text_block_elements,
-      text_inline_elements: settings.text_inline_elements,
       valid_children: settings.valid_children,
       valid_classes: settings.valid_classes,
       valid_elements: settings.valid_elements,
       valid_styles: settings.valid_styles,
-      verify_html: settings.verify_html,
-      whitespace_elements: settings.whitespace_elements
+      verify_html: settings.verify_html
     })
   };
 };

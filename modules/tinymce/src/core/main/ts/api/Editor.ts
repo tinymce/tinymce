@@ -258,7 +258,6 @@ class Editor implements EditorObservable {
   public targetElm: HTMLElement;
   public theme: Theme;
   public undoManager: UndoManager;
-  public validate: boolean;
   public windowManager: WindowManager;
   public _beforeUnload: () => void;
   public _eventDispatcher: EventDispatcher<NativeEventMap>;

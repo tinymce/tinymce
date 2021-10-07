@@ -72,9 +72,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
     editor.fire('SetContent', args);
   } else {
     if (args.format !== 'raw') {
-      content = HtmlSerializer({
-        validate: editor.validate
-      }, editor.schema).serialize(
+      content = HtmlSerializer({ validate: false }, editor.schema).serialize(
         editor.parser.parse(content, { isRootContent: true, insert: true })
       );
     }
@@ -93,7 +91,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
 const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, args: SetContentArgs): AstNode => {
   FilterNode.filter(editor.parser.getNodeFilters(), editor.parser.getAttributeFilters(), content);
 
-  const html = HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(content);
+  const html = HtmlSerializer({ validate: false }, editor.schema).serialize(content);
 
   args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html);
   setEditorHtml(editor, args.content, args.no_selection);
