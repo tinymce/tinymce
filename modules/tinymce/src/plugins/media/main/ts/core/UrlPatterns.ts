@@ -36,6 +36,12 @@ const urlPatterns: UrlPattern[] = [
     allowFullscreen: true
   },
   {
+    regex: /vimeo\.com\/([0-9]+)\/([a-z0-9]+)/,
+    type: 'iframe', w: 425, h: 350,
+    url: 'player.vimeo.com/video/$1?h=$2&title=0&byline=0',
+    allowFullscreen: true
+  },
+  {
     regex: /vimeo\.com\/([0-9]+)/,
     type: 'iframe', w: 425, h: 350,
     url: 'player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc',
