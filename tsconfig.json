@@ -32,7 +32,6 @@
       // once there is a webpack path plugin that supports project references this can be deleted
       "tinymce": ["modules/tinymce/src/core/main/ts/api/Main"],
       "tinymce/core/*": ["modules/tinymce/src/core/main/ts/*"],
-      "tinymce/themes/mobile/*": ["modules/tinymce/src/themes/mobile/main/ts/*"],
       "tinymce/themes/silver/demo/*": ["modules/tinymce/src/themes/silver/demo/ts/*"],
       "tinymce/themes/silver/*": ["modules/tinymce/src/themes/silver/main/ts/*"],
       "tinymce/plugins/advlist/*": ["modules/tinymce/src/plugins/advlist/main/ts/*"],

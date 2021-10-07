@@ -15,8 +15,6 @@ let plugins = [
 ];
 
 let themes = [
-  'mobile',
-  // 'modern', 'mobile', 'inlite', 'silver'
   'silver'
 ];
 

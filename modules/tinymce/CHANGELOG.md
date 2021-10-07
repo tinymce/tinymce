@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed deprecated `Schema` settings #TINY-7821
+- The legacy `mobile` theme has been removed #TINY-7832
 
 ## 5.10.0 - TBD
 
