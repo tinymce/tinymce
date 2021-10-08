@@ -45,6 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 - Several APIs have been deprecated. See the release notes section for information #TINY-8023 #TINY-8063
+- Several Editor settings have been deprecated. See the release notes section for information #TINY-8086
+- The Table of Contents and Image Tools plugins will be classified as Premium plugins in the next major release #TINY-8087
+- Word support in the `paste` plugin has been deprecated and will be removed in the next major release #TINY-8087
 
 ## 5.9.2 - 2021-09-08
 
