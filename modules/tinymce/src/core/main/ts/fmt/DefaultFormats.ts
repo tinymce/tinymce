@@ -58,7 +58,7 @@ const get = (dom: DOMUtils) => {
         },
         onformat: (table: Element) => {
           // Remove conflicting float style
-          dom.setStyle(table, 'float', '');
+          dom.setStyle(table, 'float', null);
         },
         preview: 'font-family font-size'
       }
@@ -136,7 +136,7 @@ const get = (dom: DOMUtils) => {
         },
         onformat: (table: Element) => {
           // Remove conflicting float style
-          dom.setStyle(table, 'float', '');
+          dom.setStyle(table, 'float', null);
         },
         preview: 'font-family font-size'
       }
