@@ -155,48 +155,6 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     delete editor.settings.images_file_types;
   });
 
-  it('TBA: dropImages - images_dataimg_filter', async () => {
-    const editor = hook.editor();
-    const clipboard = Clipboard(editor, Cell('html'));
-
-    editor.settings.images_dataimg_filter = (img: HTMLImageElement) => {
-      assert.strictEqual(img.src, 'data:image/gif;base64,' + base64ImgSrc);
-      return false;
-    };
-
-    const event = mockEvent('drop', [
-      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
-    ]);
-    clipboard.pasteImageData(event, editor.selection.getRng());
-
-    await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
-    assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
-
-    delete editor.settings.images_dataimg_filter;
-  });
-
-  it('TBA: pasteImages - images_dataimg_filter', async () => {
-    const editor = hook.editor();
-    const clipboard = Clipboard(editor, Cell('html'));
-
-    editor.settings.images_dataimg_filter = (img: HTMLImageElement) => {
-      assert.strictEqual(img.src, 'data:image/gif;base64,' + base64ImgSrc);
-      return false;
-    };
-
-    const event = mockEvent('paste', [
-      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
-    ]);
-    clipboard.pasteImageData(event, editor.selection.getRng());
-
-    await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
-    assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
-
-    delete editor.settings.images_dataimg_filter;
-  });
-
   it('TINY-8079: Should filter items that are not files when pasting images', async () => {
     const editor = hook.editor();
 

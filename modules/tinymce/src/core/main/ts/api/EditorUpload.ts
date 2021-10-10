@@ -210,18 +210,8 @@ const EditorUpload = (editor: Editor): EditorUpload => {
     }
   };
 
-  const isValidDataUriImage = (imgElm: HTMLImageElement) => {
-    if (Arr.forall(urlFilters, (filter) => filter(imgElm)) === false) {
-      return false;
-    }
-
-    if (imgElm.getAttribute('src').indexOf('data:') === 0) {
-      const dataImgFilter = Settings.getImagesDataImgFilter(editor);
-      return dataImgFilter(imgElm);
-    }
-
-    return true;
-  };
+  const isValidDataUriImage = (imgElm: HTMLImageElement) =>
+    Arr.forall(urlFilters, (filter) => filter(imgElm));
 
   const addFilter = (filter: (img: HTMLImageElement) => boolean) => {
     urlFilters.push(filter);

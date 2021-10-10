@@ -88,10 +88,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     root_name: getRootName(editor),
     validate: true,
     blob_cache: blobCache,
-    document: editor.getDoc(),
-
-    // Deprecated
-    images_dataimg_filter: settings.images_dataimg_filter
+    document: editor.getDoc()
   });
 };
 
@@ -422,7 +419,6 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     url_converter: editor.convertURL,
     url_converter_scope: editor,
-    hex_colors: settings.force_hex_style_colors,
     update_styles: true,
     root_element: editor.inline ? editor.getBody() : null,
     collect: () => editor.inline,

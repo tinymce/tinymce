@@ -106,7 +106,6 @@ interface BaseEditorSettings {
   font_size_legacy_values?: string;
   font_size_style_values?: string;
   fontsize_formats?: string;
-  force_hex_style_colors?: boolean;
   forced_root_block?: boolean | string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
@@ -117,7 +116,6 @@ interface BaseEditorSettings {
   icons_url?: string;
   id?: string;
   iframe_aria_text?: string;
-  images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
   images_file_types?: string;
   images_replace_blob_uris?: boolean;
   images_reuse_filename?: boolean;
