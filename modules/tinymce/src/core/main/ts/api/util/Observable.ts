@@ -55,7 +55,7 @@ const Observable: Observable<any> = {
 
     // Prevent all events except the remove/detach event after the instance has been removed
     if (self.removed && name !== 'remove' && name !== 'detach') {
-      return EventUtils.normalize<U>(name.toLowerCase(), args || {} as U, self);
+      return EventUtils.normalize<U>(name.toLowerCase(), args ?? {} as U, self);
     }
 
     const dispatcherArgs = getEventDispatcher(self).fire(name, args);
