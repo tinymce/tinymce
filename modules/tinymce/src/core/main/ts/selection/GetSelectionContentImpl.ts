@@ -91,8 +91,7 @@ const extractSelectedContent = (editor: Editor, args: GetSelectionContentArgs): 
     if (args.format === 'tree') {
       return content;
     } else {
-      args.content = editor.selection.isCollapsed() ? '' : content as string;
-      return args.content;
+      return editor.selection.isCollapsed() ? '' : content as string;
     }
   }
 };
