@@ -844,10 +844,10 @@ class Editor implements EditorObservable {
    * // Sets the content of the activeEditor editor using the specified format
    * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
    */
-  public setContent(content: string, args?: EditorContent.SetContentArgs): string;
-  public setContent(content: AstNode, args?: EditorContent.SetContentArgs): AstNode;
-  public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content;
-  public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
+  public setContent(content: string, args?: Partial<EditorContent.SetContentArgs>): string;
+  public setContent(content: AstNode, args?: Partial<EditorContent.SetContentArgs>): AstNode;
+  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content;
+  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content {
     return EditorContent.setContent(this, content, args);
   }
 
@@ -868,9 +868,9 @@ class Editor implements EditorObservable {
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()
    */
-  public getContent(args: { format: 'tree' } & EditorContent.GetContentArgs): AstNode;
-  public getContent(args?: EditorContent.GetContentArgs): string;
-  public getContent(args?: EditorContent.GetContentArgs): EditorContent.Content {
+  public getContent(args: { format: 'tree' } & Partial<EditorContent.GetContentArgs>): AstNode;
+  public getContent(args?: Partial<EditorContent.GetContentArgs>): string;
+  public getContent(args?: Partial<EditorContent.GetContentArgs>): EditorContent.Content {
     return EditorContent.getContent(this, args);
   }
 

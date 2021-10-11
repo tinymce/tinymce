@@ -6,7 +6,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-describe('browser.tinymce.core.EditorApiTest', () => {
+describe('browser.tinymce.core.EditorRemovedApiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     test_callback: Fun.noop
@@ -36,6 +36,7 @@ describe('browser.tinymce.core.EditorApiTest', () => {
     editor.queryCommandSupported('bold');
     editor.uploadImages(Fun.noop);
     editor.setContent('a');
+    editor.insertContent('a');
     editor.execCommand('bold');
     editor.focus();
     editor.nodeChanged();

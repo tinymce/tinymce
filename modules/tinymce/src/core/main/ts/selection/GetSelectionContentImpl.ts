@@ -5,22 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import { Content, ContentFormat, GetContentArgs } from '../content/ContentTypes';
+import { Content, ContentFormat, GetSelectionContentArgs } from '../content/ContentTypes';
+import { postProcessGetContent, preProcessGetContent } from '../content/PrePostProcess';
 import * as CharType from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
 import * as EventProcessRanges from './EventProcessRanges';
 import * as FragmentReader from './FragmentReader';
 import * as MultiRange from './MultiRange';
-
-export interface GetSelectionContentArgs extends GetContentArgs {
-  selection?: boolean;
-  contextual?: boolean;
-}
 
 const trimLeadingCollapsibleText = (text: string) => text.replace(/^[ \f\n\r\t\v]+/, '');
 const isCollapsibleWhitespace = (text: string, index: number) => index >= 0 && index < text.length && CharType.isWhiteSpace(text.charAt(index));
@@ -86,34 +82,32 @@ const getSerializedContent = (editor: Editor, args: GetSelectionContentArgs): Co
   return editor.selection.serializer.serialize(tmpElm, args);
 };
 
+const extractSelectedContent = (editor: Editor, args: GetSelectionContentArgs): Content => {
+  if (args.format === 'text') {
+    return getTextContent(editor);
+  } else {
+    const content = getSerializedContent(editor, args);
+
+    if (args.format === 'tree') {
+      return content;
+    } else {
+      return editor.selection.isCollapsed() ? '' : content as string;
+    }
+  }
+};
+
 const setupArgs = (args: Partial<GetSelectionContentArgs>, format: ContentFormat): GetSelectionContentArgs => ({
   ...args,
   format,
   get: true,
-  selection: true
+  selection: true,
+  getInner: true
 });
 
-export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs = {}): Content => {
+export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: Partial<GetSelectionContentArgs> = {}): Content => {
   const defaultedArgs = setupArgs(args, format);
-  const updatedArgs = editor.fire('BeforeGetContent', defaultedArgs);
-
-  if (updatedArgs.isDefaultPrevented()) {
-    editor.fire('GetContent', updatedArgs);
-    return updatedArgs.content;
-  }
-
-  if (updatedArgs.format === 'text') {
-    return getTextContent(editor);
-  } else {
-    updatedArgs.getInner = true;
-    const content = getSerializedContent(editor, updatedArgs);
-
-    if (updatedArgs.format === 'tree') {
-      return content;
-    } else {
-      updatedArgs.content = editor.selection.isCollapsed() ? '' : content as string;
-      editor.fire('GetContent', updatedArgs);
-      return updatedArgs.content;
-    }
-  }
+  return preProcessGetContent(editor, defaultedArgs).fold(Fun.identity, (updatedArgs) => {
+    const content = extractSelectedContent(editor, updatedArgs);
+    return postProcessGetContent(editor, content, updatedArgs);
+  });
 };
