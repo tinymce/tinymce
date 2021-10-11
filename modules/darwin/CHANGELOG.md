@@ -6,12 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-## Fixed
+## 7.0.2 - 2021-10-11
+
+### Fixed
 - Some of the selection annotation attributes were not cleared if the `Ephemera.selectedSelector` attribute was not present.
 
 ## 7.0.0 - 2021-08-26
 
-## Added
+### Added
 - Added new `selectNode` API to `WindowBridge`.
 
 ### Changed
