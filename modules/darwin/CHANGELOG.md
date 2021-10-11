@@ -9,14 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
 
-## 7.0.1 - TBD
+## 7.0.2 - 2021-10-11
 
-## Fixed
+### Fixed
 - Some of the selection annotation attributes were not cleared if the `Ephemera.selectedSelector` attribute was not present.
 
 ## 7.0.0 - 2021-08-26
 
-## Added
+### Added
 - Added new `selectNode` API to `WindowBridge`.
 
 ### Changed

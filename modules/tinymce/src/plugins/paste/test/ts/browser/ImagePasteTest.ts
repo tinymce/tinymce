@@ -1,7 +1,7 @@
-import { Waiter } from '@ephox/agar';
+import { Clipboard as AgarClipboard, Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell, Fun } from '@ephox/katamari';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -195,5 +195,17 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
     delete editor.settings.images_dataimg_filter;
+  });
+
+  it('TINY-8079: Should filter items that are not files when pasting images', async () => {
+    const editor = hook.editor();
+
+    AgarClipboard.pasteDataTransfer(TinyDom.body(editor), (dataTransfer) => {
+      dataTransfer.items.add('anything', 'text/ico');
+      dataTransfer.items.add(base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif'));
+    });
+
+    await pWaitForSelector(editor, 'img');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
   });
 });

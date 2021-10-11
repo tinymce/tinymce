@@ -6,14 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## Changed
+### Changed
+- The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
+- The `editor.setContent()` API can now be prevented using the `BeforeSetContent` event. This makes it consistent with the `editor.selection.setContent()` API #TINY-8018
 - Aligning a table to the left or right will now use margin styling instead of float styling #TINY-6558
+
+### Fixed
+- The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
+- The `editor.selection.getContent()` API did not respect the `no_events` argument #TINY-8018
+- The `GetContent` event was not fired when getting `tree` or `text` formats using the `editor.selection.getContent()` API #TINY-8018
 
 ### Removed
 - Removed deprecated `Schema` settings #TINY-7821
 - The legacy `mobile` theme has been removed #TINY-7832
 
-## 5.10.0 - TBD
+## 5.10.0 - 2021-10-11
 
 ### Added
 - Added a new `URI.isDomSafe(uri)` API to check if a URI is considered safe to be inserted into the DOM #TINY-7998
@@ -50,9 +57,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dragging and dropping `contenteditable="false"` elements could result in the element being placed in an unexpected location #TINY-7917
 - Pressing the Escape key would not cancel a drag action that started on a `contenteditable="false"` element within the editor #TINY-7917
 - `video` and `audio` elements were unable to be played when the `media` plugin live embeds were enabled in some cases #TINY-7674
+- Pasting images would throw an exception if the clipboard `items` were not files (for example, screenshots taken from gnome-software). Patch contributed by cedric-anne #TINY-8079
 
 ### Deprecated
 - Several APIs have been deprecated. See the release notes section for information #TINY-8023 #TINY-8063
+- Several Editor settings have been deprecated. See the release notes section for information #TINY-8086
+- The Table of Contents and Image Tools plugins will be classified as Premium plugins in the next major release #TINY-8087
+- Word support in the `paste` plugin has been deprecated and will be removed in the next major release #TINY-8087
 
 ## 5.9.2 - 2021-09-08
 

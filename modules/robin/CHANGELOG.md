@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Upgraded to Katamari 9.0, which is incompatible with Katamari 8.0 if used in the same bundle.
 
-## 9.0.1 - TBD
+## 9.0.2 - 2021-10-11
 
 ### Fixed
 - `TextZone` functions no longer treat soft hyphens (`&shy;` entities) as word breaks #TINY-7908

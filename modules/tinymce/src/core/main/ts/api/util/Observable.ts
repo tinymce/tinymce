@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import * as EventUtils from '../../events/EventUtils';
 import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
 
 interface Observable<T> {
@@ -49,13 +50,12 @@ const Observable: Observable<any> = {
    * @example
    * instance.fire('event', {...});
    */
-  fire(name, args?, bubble?) {
+  fire<K extends string, U extends MappedEvent<any, K>>(name: K, args?: U, bubble?: boolean) {
     const self = this;
 
     // Prevent all events except the remove/detach event after the instance has been removed
     if (self.removed && name !== 'remove' && name !== 'detach') {
-      // TODO should we be patching the EventArgs here like EventDispatcher?
-      return args;
+      return EventUtils.normalize<U>(name.toLowerCase(), args ?? {} as U, self);
     }
 
     const dispatcherArgs = getEventDispatcher(self).fire(name, args);

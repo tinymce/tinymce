@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell } from '@ephox/katamari';
+import { Cell, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
@@ -162,7 +162,7 @@ const getDefaultHeader = (editor: Editor): string => {
 };
 
 const handleGetContent = (editor: Editor, head: string, foot: string, evt: EditorEvent<GetContentEvent>): void => {
-  if (evt.format === 'html' && !evt.selection && (!evt.source_view || !Settings.shouldHideInSourceView(editor))) {
+  if (evt.format === 'html' && Type.isString(evt.content) && !evt.selection && (!evt.source_view || !Settings.shouldHideInSourceView(editor))) {
     evt.content = Protect.unprotectHtml(Tools.trim(head) + '\n' + Tools.trim(evt.content) + '\n' + Tools.trim(foot));
   }
 };
