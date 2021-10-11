@@ -612,22 +612,8 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     delete editor.settings.keep_styles;
   });
 
-  it('Enter when forced_root_block: false and force_p_newlines: true', () => {
-    const editor = hook.editor();
-    editor.settings.forced_root_block = false;
-    editor.settings.force_p_newlines = true;
-    editor.getBody().innerHTML = 'text';
-    LegacyUnit.setSelection(editor, 'body', 2);
-    pressEnter(editor);
-    assert.equal(editor.getContent(), '<p>te</p><p>xt</p>');
-    editor.settings.forced_root_block = 'p';
-    delete editor.settings.force_p_newlines;
-  });
-
   it('Enter at end of br line', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
-    editor.settings.force_p_newlines = true;
     editor.getBody().innerHTML = '<p>a<br>b</p>';
     LegacyUnit.setSelection(editor, 'p', 1);
     pressEnter(editor);
@@ -636,8 +622,6 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     const rng = editor.selection.getRng();
     assert.equal(rng.startContainer.nodeName, 'P');
     assert.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'BR');
-    editor.settings.forced_root_block = 'p';
-    delete editor.settings.force_p_newlines;
   });
 
   it('Enter before BR between DIVs', () => {

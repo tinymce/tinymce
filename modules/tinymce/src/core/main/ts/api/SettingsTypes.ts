@@ -109,7 +109,6 @@ interface BaseEditorSettings {
   forced_root_block?: boolean | string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
-  gecko_spellcheck?: boolean;
   height?: number | string;
   hidden_input?: boolean;
   icons?: string;
@@ -203,11 +202,9 @@ interface BaseEditorSettings {
   width?: number | string;
 
   // Deprecated settings
-  toolbar_drawer?: false | 'floating' | 'sliding' | 'scrolling';
   editor_deselector?: string;
   editor_selector?: string;
   elements?: string;
-  filepicker_validator_handler?: FilePickerValidationCallback;
   mode?: 'exact' | 'textareas' | 'specific_textareas';
   types?: Record<string, any>[];
 

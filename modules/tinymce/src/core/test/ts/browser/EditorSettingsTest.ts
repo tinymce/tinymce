@@ -58,18 +58,6 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
     });
   });
 
-  it('when unset, toolbar_mode should fall back to the value of toolbar_drawer', () => {
-    const toolbarSettings: RawEditorSettings = {
-      toolbar_drawer: 'sliding'
-    };
-
-    const defaultSettings = EditorSettings.getDefaultSettings(toolbarSettings, 'id', 'documentBaseUrl', true, hook.editor());
-    assert.propertyVal(defaultSettings, 'toolbar_mode', 'sliding', 'Should fall back to value of toolbar_drawer (desktop)');
-
-    const mobileDefaultSettings = EditorSettings.getDefaultMobileSettings(toolbarSettings, false);
-    assert.propertyVal(mobileDefaultSettings, 'toolbar_mode', 'sliding', 'Should fall back to value of toolbar_drawer (mobile)');
-  });
-
   it('default tablet settings', () => {
     const defaultSettings = EditorSettings.getDefaultMobileSettings({}, false);
     Obj.each(expectedTabletDefaultSettings, (value, key) => {

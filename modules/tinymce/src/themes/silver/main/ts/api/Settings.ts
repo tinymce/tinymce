@@ -183,15 +183,7 @@ const getAnchorTop = (editor: Editor): string | false =>
 const getAnchorBottom = (editor: Editor): string | false =>
   editor.getParam('anchor_bottom', '#bottom');
 
-const getFilePickerValidatorHandler = (editor: Editor) => {
-  const handler = editor.getParam('file_picker_validator_handler', undefined, 'function');
-  if (handler === undefined) {
-    // Fallback to legacy/deprecated setting
-    return editor.getParam('filepicker_validator_handler', undefined, 'function');
-  } else {
-    return handler;
-  }
-};
+const getFilePickerValidatorHandler = (editor: Editor) => editor.getParam('file_picker_validator_handler', undefined, 'function');
 
 export {
   getSkinUrl,

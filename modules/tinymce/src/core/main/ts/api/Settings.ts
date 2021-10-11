@@ -44,11 +44,6 @@ const getContentSecurityPolicy = (editor: Editor): string => editor.getParam('co
 const shouldPutBrInPre = (editor: Editor): boolean => editor.getParam('br_in_pre', true);
 
 const getForcedRootBlock = (editor: Editor): string => {
-  // Legacy option
-  if (editor.getParam('force_p_newlines', false)) {
-    return 'p';
-  }
-
   const block = editor.getParam('forced_root_block', 'p');
   if (block === false) {
     return '';

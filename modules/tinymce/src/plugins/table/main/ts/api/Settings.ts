@@ -57,9 +57,6 @@ const defaultColumnResizingBehaviour = 'preservetable';
 const getTableSizingMode = (editor: Editor): TableSizingMode =>
   editor.getParam('table_sizing_mode', 'auto');
 
-const getTableResponseWidth = (editor: Editor): boolean | undefined =>
-  editor.getParam('table_responsive_width');
-
 const getTableBorderWidths = (editor: Editor): UserListItem[] =>
   editor.getParam('table_border_widths', defaultCellBorderWidths, 'array');
 
@@ -106,10 +103,10 @@ const getTableClassList = (editor: Editor): UserListItem[] =>
   editor.getParam('table_class_list', [], 'array');
 
 const isPercentagesForced = (editor: Editor): boolean =>
-  getTableSizingMode(editor) === 'relative' || getTableResponseWidth(editor) === true;
+  getTableSizingMode(editor) === 'relative';
 
 const isPixelsForced = (editor: Editor): boolean =>
-  getTableSizingMode(editor) === 'fixed' || getTableResponseWidth(editor) === false;
+  getTableSizingMode(editor) === 'fixed';
 
 const isResponsiveForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'responsive';

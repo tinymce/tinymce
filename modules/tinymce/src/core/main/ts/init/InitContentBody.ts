@@ -321,7 +321,7 @@ const preInit = (editor: Editor) => {
 
   Events.firePreInit(editor);
 
-  if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
+  if (!settings.browser_spellcheck) {
     doc.body.spellcheck = false; // Gecko
     DOM.setAttrib(body, 'spellcheck', 'false');
   }
