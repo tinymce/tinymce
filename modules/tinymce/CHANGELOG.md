@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed deprecated `Schema` settings #TINY-7821
 - The legacy `mobile` theme has been removed #TINY-7832
 
-## 5.10.0 - TBD
+## 5.10.0 - 2021-10-11
 
 ### Added
 - Added a new `URI.isDomSafe(uri)` API to check if a URI is considered safe to be inserted into the DOM #TINY-7998

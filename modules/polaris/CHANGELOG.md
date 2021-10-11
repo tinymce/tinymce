@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Upgraded to Katamari 9.0, which is incompatible with Katamari 8.0 if used in the same bundle.
 
-## 5.0.1 - TBD
+## 5.0.2 - 2021-10-11
 
 ### Fixed
 - `Pattern.chars` and `Pattern.wordbreak` now treat soft hyphen characters (`&shy;` entities) as part of a word #TINY-7908
