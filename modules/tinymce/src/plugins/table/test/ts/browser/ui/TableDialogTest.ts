@@ -15,7 +15,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     indent: false,
     valid_styles: {
-      '*': 'width,height,vertical-align,text-align,float,border-color,border-width,background-color,border,padding,border-spacing,border-collapse,border-style'
+      '*': 'width,height,vertical-align,text-align,float,margin-left,margin-right,border-color,border-width,background-color,border,padding,border-spacing,border-collapse,border-style'
     },
     table_advtab: false,
     statusbar: false
@@ -69,9 +69,10 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
           cellspacing: str.is('5')
         },
         styles: {
-          height: str.is('500px'),
-          width: str.is('500px'),
-          float: str.is('left')
+          'height': str.is('500px'),
+          'width': str.is('500px'),
+          'margin-left': str.is('0px'),
+          'margin-right': str.is('auto')
         },
         children: [
           s.element('caption', { }),
@@ -116,7 +117,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
   });
 
   it('TBA: Table properties dialog all ui off fill ok', async () => {
-    const htmlFilledAllOffTable = '<table style="height: 500px; width: 500px; float: left;"><tbody><tr><td>X</td></tr></tbody></table>';
+    const htmlFilledAllOffTable = '<table style="height: 500px; width: 500px; margin-left: auto; margin-right: 0px;"><tbody><tr><td>X</td></tr></tbody></table>';
 
     const emptyAllOffData = {
       width: '',
@@ -127,7 +128,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     const fullAllOffData = {
       width: '500px',
       height: '500px',
-      align: 'left'
+      align: 'right'
     };
 
     const editor = hook.editor();
@@ -151,7 +152,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
         styles: {
           'height': str.is('500px'),
           'width': str.is('500px'),
-          'float': str.is('left'),
+          'margin-left': str.is('0px'),
+          'margin-right': str.is('auto'),
           'border-width': str.is('1px'),
           'border-spacing': str.is('5px'),
           'background-color': str.startsWith(''), // need to check presence but it can be #ff0000 or rgb(255, 0, 0)
@@ -231,7 +233,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     const baseHtml =
     '<table style="height: 500px; width: 500px; border-width: 1px; ' +
     'border-spacing: 5px; background-color: rgb(0, 0, 255); ' +
-    'border-color: rgb(255, 0, 0); border-style: dotted; float: left;">' +
+    'border-color: rgb(255, 0, 0); border-style: dotted; ' +
+    'margin-left: 0px; margin-right: auto;">' +
     '<caption><br></caption>' +
     '<tbody><tr><td>X</td></tr></tbody>' +
     '</table>';
@@ -277,7 +280,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     };
 
     const newHtml =
-    '<table class="dog" style="width: 500px; height: 500px; float: left; ' +
+    '<table class="dog" style="width: 500px; height: 500px; margin-left: 0px; margin-right: auto; ' +
     'background-color: #0000ff; border: 1px dotted #ff0000; ' +
     'border-spacing: 5px; border-collapse: collapse;" border="1">' +
     '<caption>Caption</caption>' +
@@ -324,5 +327,36 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(newData, true, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
+  });
+
+  it('TINY-6558: float style should not be recognised as a valid table alignment and is cleared when setting an alignment', async () => {
+    const floatTableHtml = '<table style="height: 500px; width: 500px; float: right;"><tbody><tr><td>X</td></tr></tbody></table>';
+    const marginTableHtml = '<table style="height: 500px; width: 500px; margin-left: auto; margin-right: 0px;"><tbody><tr><td>X</td></tr></tbody></table>';
+
+    const initialData = {
+      width: '500px',
+      height: '500px',
+      align: ''
+    };
+
+    const newData = {
+      width: '500px',
+      height: '500px',
+      align: 'right'
+    };
+
+    const editor = hook.editor();
+    editor.settings.table_appearance_options = false;
+    editor.setContent(floatTableHtml);
+    setCursor(editor);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(initialData, false, generalSelectors);
+    TableTestUtils.setDialogValues(newData, false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TableTestUtils.assertElementStructure(editor, 'table', marginTableHtml);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(newData, false, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, false);
+    delete editor.settings.table_appearance_options;
   });
 });
