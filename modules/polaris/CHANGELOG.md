@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-## 5.0.1 - 2021-10-11
+## 5.0.2 - 2021-10-11
 
 ### Fixed
 - `Pattern.chars` and `Pattern.wordbreak` now treat soft hyphen characters (`&shy;` entities) as part of a word #TINY-7908
