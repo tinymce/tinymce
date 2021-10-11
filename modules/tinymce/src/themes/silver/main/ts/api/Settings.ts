@@ -12,7 +12,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
-import { ContentLanguage, FilePickerCallback } from 'tinymce/core/api/SettingsTypes';
+import { ContentLanguage, FilePickerCallback, FilePickerValidationCallback } from 'tinymce/core/api/SettingsTypes';
 
 export interface ToolbarGroupSetting {
   name?: string;
@@ -183,7 +183,8 @@ const getAnchorTop = (editor: Editor): string | false =>
 const getAnchorBottom = (editor: Editor): string | false =>
   editor.getParam('anchor_bottom', '#bottom');
 
-const getFilePickerValidatorHandler = (editor: Editor) => editor.getParam('file_picker_validator_handler', undefined, 'function');
+const getFilePickerValidatorHandler = (editor: Editor): FilePickerValidationCallback | undefined =>
+  editor.getParam('file_picker_validator_handler', undefined, 'function');
 
 export {
   getSkinUrl,

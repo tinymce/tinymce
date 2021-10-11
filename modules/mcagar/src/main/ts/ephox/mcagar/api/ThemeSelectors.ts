@@ -1,4 +1,4 @@
-import { Fun, Global, Obj } from '@ephox/katamari';
+import { Arr, Fun, Global, Obj } from '@ephox/katamari';
 
 import { Editor } from '../alien/EditorTypes';
 
@@ -31,10 +31,7 @@ const ModernThemeSelectors: ThemeSelectors = {
 };
 
 const SilverThemeSelectors: ThemeSelectors = {
-  toolBarSelector: (editor: Editor) => {
-    const mode = editor.getParam('toolbar_mode');
-    return mode === 'floating' || mode === 'sliding' ? '.tox-toolbar-overlord' : '.tox-toolbar';
-  },
+  toolBarSelector: (editor: Editor) => Arr.exists([ editor.getParam('toolbar_mode'), editor.getParam('toolbar_drawer') ], (s) => s === 'floating' || s === 'sliding') ? '.tox-toolbar-overlord' : '.tox-toolbar',
   menuBarSelector: '.tox-menubar',
   dialogSelector: 'div[role="dialog"]',
   dialogCancelSelector: '.tox-button:contains("Cancel")',
