@@ -1,6 +1,6 @@
 {
   "name": "@ephox/imagetools",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "Image tools for tinymce and textbox.io",
   "keywords": [
     "image",
@@ -8,8 +8,8 @@
     "ephox"
   ],
   "dependencies": {
-    "tslib": "^2.0.0",
-    "@ephox/wrap-promise-polyfill": "^2.2.0"
+    "@ephox/wrap-promise-polyfill": "^2.2.0",
+    "tslib": "^2.0.0"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
