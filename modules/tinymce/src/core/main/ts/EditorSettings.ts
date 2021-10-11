@@ -106,6 +106,7 @@ const getDefaultSettings = (settings: RawEditorSettings, id: string, documentBas
     object_resizing: true,
     doctype: '<!DOCTYPE html>',
     visual: true,
+    element_format: 'html',
 
     // See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
     font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
