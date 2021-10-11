@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 10.0.0 - 2021-10-11
+
 ### Changed
 - The `pixelSize` and `percentSize` functions in `TableSize` no longer require the initial width to be provided.
 - `ColumnSizes` will now use `col` elements to calculate the column width where appropriate.
