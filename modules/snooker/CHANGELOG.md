@@ -6,12 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-## 10.0.0 - 2021-10-11
-
 ### Changed
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
 
-## 10.0.0 - TBD
+## 10.0.0 - 2021-10-11
 
 ### Changed
 - The `pixelSize` and `percentSize` functions in `TableSize` no longer require the initial width to be provided.
