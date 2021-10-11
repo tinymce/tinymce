@@ -158,7 +158,6 @@ export interface DOMUtilsSettings {
   url_converter_scope: any;
   ownEvents: boolean;
   keep_values: boolean;
-  hex_colors: boolean;
   update_styles: boolean;
   root_element: HTMLElement;
   collect: Function;

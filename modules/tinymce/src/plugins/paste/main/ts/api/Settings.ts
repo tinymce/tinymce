@@ -71,9 +71,6 @@ const getAllowHtmlDataUrls = (editor: Editor): boolean =>
 const getPasteDataImages = (editor: Editor): boolean =>
   editor.getParam('paste_data_images', false, 'boolean');
 
-const getImagesDataImgFilter = (editor: Editor): ((imgElm: HTMLImageElement) => boolean) | undefined =>
-  editor.getParam('images_dataimg_filter');
-
 const getImagesReuseFilename = (editor: Editor): boolean | undefined =>
   editor.getParam('images_reuse_filename');
 
@@ -109,7 +106,6 @@ export {
   getValidate,
   getAllowHtmlDataUrls,
   getPasteDataImages,
-  getImagesDataImgFilter,
   getImagesReuseFilename,
   getForcedRootBlock,
   getForcedRootBlockAttrs,
