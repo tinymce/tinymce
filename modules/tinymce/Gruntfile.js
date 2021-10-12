@@ -49,7 +49,7 @@ module.exports = function (grunt) {
 
     shell: {
       tsc: { command: 'tsc -b' },
-      moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext -o "../../scratch/tinymce-api-reference.zip"' }
+      moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' }
     },
 
     eslint: {

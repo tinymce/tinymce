@@ -141,12 +141,12 @@ node("primary") {
       }
     }
 
-    stage ("Moxiedoc check") {
-      exec("yarn tinymce-grunt shell:moxiedoc")
-    }
-
     stage ("Type check") {
       exec("yarn ci-all")
+    }
+
+    stage ("Moxiedoc check") {
+      exec("yarn tinymce-grunt shell:moxiedoc")
     }
 
     stage ("Run Tests") {
