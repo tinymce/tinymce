@@ -40,6 +40,7 @@
     "@ephox/wrap-prismjs": "^1.25.0",
     "@ephox/wrap-promise-polyfill": "^2.2.1",
     "@tinymce/eslint-plugin": "^1.9.1",
+    "@tinymce/moxiedoc": "^0.1.0",
     "@types/chai": "^4.2.15",
     "awesome-typescript-loader": "^5.2.0",
     "chai": "^4.3.3",

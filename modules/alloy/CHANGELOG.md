@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 9.0.2 - 2021-10-11
+
 ### Fixed
 - Fixed sketcher behaviours augmenting in the wrong order, which prevented behaviours being revoked.
 - Fixed debugging throwing errors.

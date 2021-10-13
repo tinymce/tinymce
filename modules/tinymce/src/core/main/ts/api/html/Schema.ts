@@ -963,8 +963,11 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * Returns a map with special elements. These are elements that needs to be parsed
    * in a special way such as script, style, textarea etc. The map object values
    * are regexps used to find the end of the element.
+   * <br>
+   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em>.
    *
    * @method getSpecialElements
+   * @deprecated
    * @return {Object} Name/value lookup map for special elements.
    */
   const getSpecialElements = Fun.constant(specialElements);

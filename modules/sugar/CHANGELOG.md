@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 8.1.0 - 2021-10-11
+
 ### Added
 - Added new `parentElement` function to the `Traverse` API.
 - Added new `setOptions` function to the `Attribute` API.
