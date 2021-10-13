@@ -207,13 +207,13 @@ describe('browser.tinymce.core.selection.NormalizeRangeTest', () => {
     });
 
     it('Should not normalize into inline elements if target inline pos is a br', () => {
-      setHtml('<p><i><b><br /></b></i><br /></p>');
+      setHtml('<p><i><b><br></b></i><br></p>');
       const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
       assertRangeNone(range);
     });
 
     it('Should not normalize from after double br', () => {
-      setHtml('<p>a<br /><br /></p>');
+      setHtml('<p>a<br><br></p>');
       const range = normalizeRange([ 0 ], 3, [ 0 ], 3);
       assertRangeNone(range);
     });
@@ -263,13 +263,13 @@ describe('browser.tinymce.core.selection.NormalizeRangeTest', () => {
     });
 
     it('Should normalize from after br to before br when only child', () => {
-      setHtml('<p><br /></p>');
+      setHtml('<p><br></p>');
       const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
       assertRange(viewBlock.get(), range, [ 0 ], 0, [ 0 ], 0);
     });
 
     it('Should normalize from after br to before br', () => {
-      setHtml('<p>a<br /></p>');
+      setHtml('<p>a<br></p>');
       const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
       assertRange(viewBlock.get(), range, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
@@ -287,13 +287,13 @@ describe('browser.tinymce.core.selection.NormalizeRangeTest', () => {
     });
 
     it('Should normalize into caret container', () => {
-      setHtml('<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>');
+      setHtml('<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br></p>');
       const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
       assertRange(viewBlock.get(), range, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
     });
 
     it('Should normalize into empty inline element before', () => {
-      setHtml('<p><i><b></b></i><br /></p>');
+      setHtml('<p><i><b></b></i><br></p>');
       const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
       assertRange(viewBlock.get(), range, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
     });

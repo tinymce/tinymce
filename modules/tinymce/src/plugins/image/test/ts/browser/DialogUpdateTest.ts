@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
 
   it('TBA: Update an image by setting title to empty should remove the existing title attribute', async () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="#1" title="title" /></p>');
+    editor.setContent('<p><img src="#1" title="title"></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
@@ -34,7 +34,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
       title: ''
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="#2" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="#2"></p>');
   });
 
   it('TINY-6611: Setting src to empty should remove the existing dimensions settings', async () => {
@@ -63,6 +63,6 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     Mouse.clickOn(SugarBody.body(), 'button[title="Source"]');
     await Waiter.pTryUntil('Wait for width to be populated', () => assertInputValue(generalTabSelectors.width, '200'));
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="https://www.google.com/logos/google.jpg" alt="" width="200" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="https://www.google.com/logos/google.jpg" alt="" width="200"></p>');
   });
 });

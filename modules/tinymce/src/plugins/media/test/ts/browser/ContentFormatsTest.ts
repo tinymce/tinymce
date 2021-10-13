@@ -26,15 +26,15 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
       '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355">' +
       '<param name="movie" value="someurl">' +
       '<param name="wmode" value="transparent">' +
-      '<embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355" />' +
+      '<embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355">' +
       '</object>'
     );
 
     TinyAssertions.assertContent(editor,
       '<p><object width="425" height="355" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">' +
-      '<param name="movie" value="someurl" />' +
-      '<param name="wmode" value="transparent" />' +
-      '<embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355" />' +
+      '<param name="movie" value="someurl">' +
+      '<param name="wmode" value="transparent">' +
+      '<embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355">' +
       '</object></p>'
     );
   });
@@ -85,8 +85,8 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     TinyAssertions.assertContent(editor,
       '<p>' +
       '<audio src="sound.mp3">' +
-      '<track kind="captions" src="foo.en.vtt" srclang="en" label="English" />' +
-      '<track kind="captions" src="foo.sv.vtt" srclang="sv" label="Svenska" />' +
+      '<track kind="captions" src="foo.en.vtt" srclang="en" label="English">' +
+      '<track kind="captions" src="foo.sv.vtt" srclang="sv" label="Svenska">' +
       'text<a href="#">link</a>' +
       '</audio>' +
       '</p>'
@@ -98,12 +98,12 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     editor.settings.media_live_embeds = false;
     editor.setContent(
       '<video width="300" height="150" controls="controls">' +
-      '<source src="s" />' +
+      '<source src="s">' +
       '<object type="application/x-shockwave-flash" data="../../js/tinymce/plugins/media/moxieplayer.swf" width="300" height="150">' +
-      '<param name="allowfullscreen" value="true" />' +
-      '<param name="allowscriptaccess" value="always" />' +
-      '<param name="flashvars" value="video_src=s" />' +
-      '<!--[if IE]><param name="movie" value="../../js/tinymce/plugins/media/moxieplayer.swf" /><![endif]-->' +
+      '<param name="allowfullscreen" value="true">' +
+      '<param name="allowscriptaccess" value="always">' +
+      '<param name="flashvars" value="video_src=s">' +
+      '<!--[if IE]><param name="movie" value="../../js/tinymce/plugins/media/moxieplayer.swf"><![endif]-->' +
       '</object>' +
       '</video>'
     );
@@ -117,13 +117,13 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     TinyAssertions.assertContent(editor,
       '<p>' +
       '<video controls="controls" width="100" height="200">' +
-      '<source src="s" />' +
+      '<source src="s">' +
       '<object type="application/x-shockwave-flash" data="../../js/tinymce/plugins/media/moxieplayer.swf" width="100" height="200">' +
-      '<param name="allowfullscreen" value="true" />' +
-      '<param name="allowscriptaccess" value="always" />' +
-      '<param name="flashvars" value="video_src=s" />' +
+      '<param name="allowfullscreen" value="true">' +
+      '<param name="allowscriptaccess" value="always">' +
+      '<param name="flashvars" value="video_src=s">' +
       '<!-- [if IE]>' +
-      '<param name="movie" value="../../js/tinymce/plugins/media/moxieplayer.swf" />' +
+      '<param name="movie" value="../../js/tinymce/plugins/media/moxieplayer.swf">' +
       '<![endif]-->' +
       '</object>' +
       '</video>' +
@@ -165,13 +165,13 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     };
 
     testXss('<video><a href="javascript:alert(1);">a</a></video>', '<p><video width="300" height="150"><a>a</a></video></p>');
-    testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"><img src="x" /></video></p>');
-    testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x" /></video></p>');
+    testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"><img src="x"></video></p>');
+    testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x"></video></p>');
     testXss('<video><!--[if IE]><img src="x"><![endif]--></video>', '<p><video width="300" height="150"><!-- [if IE]><img src="x"><![endif]--></video></p>');
     testXss('<p><p><audio src=x onerror=alert(1)></audio>', '<p><audio src="x"></audio></p>');
-    testXss('<p><html><audio><br /><audio src=x onerror=alert(1)></p>', '');
-    testXss('<p><audio><img src="javascript:alert(1)"></audio>', '<p><audio><img /></audio></p>');
-    testXss('<p><audio><img src="x" style="behavior:url(x); width: 1px"></audio>', '<p><audio><img src="x" style="width: 1px;" /></audio></p>');
+    testXss('<p><html><audio><br><audio src=x onerror=alert(1)></p>', '');
+    testXss('<p><audio><img src="javascript:alert(1)"></audio>', '<p><audio><img></audio></p>');
+    testXss('<p><audio><img src="x" style="behavior:url(x); width: 1px"></audio>', '<p><audio><img src="x" style="width: 1px;"></audio></p>');
     testXss(
       '<p><video><noscript><svg onload="javascript:alert(1)"></svg></noscript></video>',
       '<p><video width="300" height="150"></video></p>'

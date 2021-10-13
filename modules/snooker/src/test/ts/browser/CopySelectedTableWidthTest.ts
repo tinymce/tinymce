@@ -346,10 +346,10 @@ const testCases: TestCase[] = [
     table: (
       `<table style="border-collapse: collapse; width: 100%;" border="1">
         <colgroup>
-          <col style="width: 24.9564%;" />
-          <col style="width: 25%;" />
-          <col style="width: 25%;" />
-          <col style="width: 25%;" />
+          <col style="width: 24.9564%;">
+          <col style="width: 25%;">
+          <col style="width: 25%;">
+          <col style="width: 25%;">
         </colgroup>
         <tbody>
           <tr>

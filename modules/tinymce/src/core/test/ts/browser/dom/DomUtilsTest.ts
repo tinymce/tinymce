@@ -657,10 +657,10 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
 
     assert.isTrue(DOM.isEmpty(DOM.get('test')));
 
-    DOM.setHTML('test', '<br />');
+    DOM.setHTML('test', '<br>');
     assert.isTrue(DOM.isEmpty(DOM.get('test')));
 
-    DOM.setHTML('test', '<br /><br />');
+    DOM.setHTML('test', '<br><br>');
     assert.isFalse(DOM.isEmpty(DOM.get('test')));
 
     DOM.setHTML('test', 'text');

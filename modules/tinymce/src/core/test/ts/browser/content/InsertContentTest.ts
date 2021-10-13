@@ -289,13 +289,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, ' c ');
-    TinyAssertions.assertContent(editor, '<p>a c\u00a0<br />b</p>');
+    TinyAssertions.assertContent(editor, '<p>a c\u00a0<br>b</p>');
 
     editor.setContent('<p>a&nbsp;<br>&nbsp;b</p>');
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, 'c');
-    TinyAssertions.assertContent(editor, '<p>a c<br />\u00a0b</p>');
+    TinyAssertions.assertContent(editor, '<p>a c<br>\u00a0b</p>');
   });
 
   it('TINY-5966:  insertAtCaret - html content at a text node before br', () => {
@@ -304,7 +304,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, '<em>c</em>');
-    TinyAssertions.assertContent(editor, '<p>a <em>c</em><br />\u00a0b</p>');
+    TinyAssertions.assertContent(editor, '<p>a <em>c</em><br>\u00a0b</p>');
   });
 
   it('TINY-5966:  insertAtCaret - text content at a text node after br', () => {
@@ -313,13 +313,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     InsertContent.insertAtCaret(editor, ' c ');
-    TinyAssertions.assertContent(editor, '<p>a<br />\u00a0c b</p>');
+    TinyAssertions.assertContent(editor, '<p>a<br>\u00a0c b</p>');
 
     editor.setContent('<p>a&nbsp;<br>&nbsp;b</p>');
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     InsertContent.insertAtCaret(editor, 'c');
-    TinyAssertions.assertContent(editor, '<p>a\u00a0<br />c b</p>');
+    TinyAssertions.assertContent(editor, '<p>a\u00a0<br>c b</p>');
   });
 
   it('TINY-5966:  insertAtCaret - html content at a text node after br', () => {
@@ -328,7 +328,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     InsertContent.insertAtCaret(editor, '<em>c</em>');
-    TinyAssertions.assertContent(editor, '<p>a\u00a0<br /><em>c</em> b</p>');
+    TinyAssertions.assertContent(editor, '<p>a\u00a0<br><em>c</em> b</p>');
   });
 
   it('TINY-5966:  insertAtCaret - text content with spaces in pre', () => {
@@ -594,9 +594,9 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
             '<tr>' +
               '<td>' +
                 '<button>' +
-                  '<img />' +
+                  '<img>' +
                   '<button></button>' +
-                  '<img />' +
+                  '<img>' +
                 '</button>' +
               '</td>' +
             '</tr>' +
@@ -611,10 +611,10 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
             '<tr>' +
               '<td>' +
                 '<button>' +
-                  '<img />' +
+                  '<img>' +
                 '</button>' +
                 '<button></button>' +
-                '<img />' +
+                '<img>' +
               '</td>' +
             '</tr>' +
           '</tbody>' +

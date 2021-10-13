@@ -19,7 +19,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', () 
       editor.setContent('<figure><figcaption>a</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
       TinyContentActions.keystroke(editor, Keys.up());
-      TinyAssertions.assertContent(editor, '<br /><figure><figcaption>a</figcaption></figure>');
+      TinyAssertions.assertContent(editor, '<br><figure><figcaption>a</figcaption></figure>');
       TinyAssertions.assertSelection(editor, [], 0, [], 0);
     });
 

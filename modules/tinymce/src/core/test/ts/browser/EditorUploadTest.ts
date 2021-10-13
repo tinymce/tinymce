@@ -27,7 +27,7 @@ const assertResult = (editor: Editor, title: string, uploadUri: string, uploaded
   assert.equal(uploadedBlobInfo.base64(), firstResult.blobInfo.base64(), title);
   assert.equal(uploadedBlobInfo.blobUri(), firstResult.blobInfo.blobUri(), title);
   assert.equal(uploadedBlobInfo.uri(), firstResult.blobInfo.uri(), title);
-  assert.equal(editor.getContent(), '<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', title);
+  assert.equal(editor.getContent(), '<p><img src="' + uploadedBlobInfo.filename() + '"></p>', title);
 
   return result;
 };
@@ -105,7 +105,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       assert.equal(editor.getBody().innerHTML, '<p><img src="' + blobInfo.blobUri() + '"></p>', '_scanForImages');
       assert.equal(
         editor.getContent(),
-        '<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '" /></p>',
+        '<p><img src="data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64() + '"></p>',
         '_scanForImages'
       );
       assert.deepEqual(blobInfo, editor.editorUpload.blobCache.get(blobInfo.id()), '_scanForImages');
@@ -128,7 +128,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       return editor.uploadImages(() => {
         editor.setContent(imageHtml(blobUri));
         assert.isFalse(hasBlobAsSource(editor.$<HTMLImageElement>('img')[0]), 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
-        assert.equal(editor.getContent(), '<p><img src="file.png" /></p>', 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
+        assert.equal(editor.getContent(), '<p><img src="file.png"></p>', 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
         assertEventsLength(1);
       });
     });
@@ -151,7 +151,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         assertEventsLength(0);
         editor.setContent(imageHtml(blobUri));
         assert.isTrue(hasBlobAsSource(editor.$<HTMLImageElement>('img')[0]), 'Has blob');
-        assert.equal(editor.getContent(), '<p><img src="file.png" /></p>', 'contains image');
+        assert.equal(editor.getContent(), '<p><img src="file.png"></p>', 'contains image');
       });
     });
   });
@@ -210,7 +210,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     const assertResultRetainsUrl = (result) => {
       assert.isTrue(result[0].status, 'uploadImages retain blob urls after upload');
       assert.isTrue(hasBlobAsSource(result[0].element), 'Not a blob url');
-      assert.equal(editor.getContent(), '<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', 'uploadImages retain blob urls after upload');
+      assert.equal(editor.getContent(), '<p><img src="' + uploadedBlobInfo.filename() + '"></p>', 'uploadImages retain blob urls after upload');
 
       return result;
     };
@@ -250,7 +250,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     const assertResultReusesFilename = (editor: Editor, _uploadedBlobInfo: BlobInfo, result: UploadResult[]) => {
       assert.lengthOf(result, 1, 'uploadImages reuse filename');
       assert.isTrue(result[0].status, 'uploadImages reuse filename');
-      assert.equal(editor.getContent(), '<p><img src="custom.png?size=small" /></p>', 'uploadImages reuse filename');
+      assert.equal(editor.getContent(), '<p><img src="custom.png?size=small"></p>', 'uploadImages reuse filename');
 
       return result;
     };
@@ -264,7 +264,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         assertEventsLength(1);
         assert.isFalse(hasBlobAsSource(img), 'uploadImages reuse filename');
         assert.include(img.src, 'custom.png?size=small&', 'Check the cache invalidation string was added');
-        assert.equal(editor.getContent(), '<p><img src="custom.png?size=small" /></p>', 'uploadImages reuse filename');
+        assert.equal(editor.getContent(), '<p><img src="custom.png?size=small"></p>', 'uploadImages reuse filename');
         delete editor.settings.images_reuse_filename;
       });
     });
@@ -282,7 +282,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         assert.equal(uploadCount, 1, 'Should only be one upload.');
       }
 
-      assert.equal(editor.getContent(), '<p><img src="myimage.png" /></p>', 'uploadConcurrentImages');
+      assert.equal(editor.getContent(), '<p><img src="myimage.png"></p>', 'uploadConcurrentImages');
       LegacyUnit.equalDom(result[0].element, editor.$('img')[0]);
       assert.isTrue(result[0].status, 'uploadConcurrentImages');
     };
@@ -472,6 +472,6 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
   it('TBA: Retain blobs not in blob cache', () => {
     const editor = hook.editor();
     editor.setContent('<img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6">');
-    assert.equal(editor.getContent(), '<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" /></p>', 'Retain blobs not in blob cache');
+    assert.equal(editor.getContent(), '<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6"></p>', 'Retain blobs not in blob cache');
   });
 });

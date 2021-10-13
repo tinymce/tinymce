@@ -39,7 +39,7 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
 
   const insertRemoteImage = (editor: Editor) => {
     const remoteImageSrc = 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png';
-    editor.setContent(`<p><img src="${remoteImageSrc}" width="50" height="50" /></p>`);
+    editor.setContent(`<p><img src="${remoteImageSrc}" width="50" height="50"></p>`);
   };
 
   it('TINY-7772: Edit, flip and rotate should be disabled for remote images without imagetools_proxy set', async () => {

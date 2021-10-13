@@ -132,7 +132,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     it('TBA: Set and assert video placeholder structure', () => pTestPlaceholder(hook.editor(),
       '/custom/video.mp4',
       '<p><video controls="controls" width="300" height="150">\n' +
-      '<source src="custom/video.mp4" type="video/mp4" /></video></p>',
+      '<source src="custom/video.mp4" type="video/mp4"></video></p>',
       placeholderStructure
     ));
 

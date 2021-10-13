@@ -17,7 +17,7 @@ describe('atomic.tinymce.plugins.paste.NewlinesTest', () => {
       },
       {
         label: 'Support all BR types',
-        content: '<br><br />',
+        content: '<br><br>',
       },
       {
         label: 'Basic IE markup',

@@ -11,7 +11,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const page = SugarElement.fromHtml<HTMLDivElement>(
     `<div class="gui-events-test-container">
-      <input class="test-input" />
+      <input class="test-input">
       <div class="test-contenteditable"  contenteditable="true"></div>
       <div class="test-inner-div">
         <span class="focusable-span" tabindex="-1" style="width: 200px; height: 200px; border: 1px solid blue; display: inline-block;"></span>

@@ -16,7 +16,7 @@ describe('browser.tinymce.plugins.media.core.EphoxEmbedTest', () => {
     media_url_resolver: (data, resolve) => {
       resolve({
         html: '<video width="300" height="150" ' +
-          'controls="controls">\n<source src="' + data.url + '" />\n</video>'
+          'controls="controls">\n<source src="' + data.url + '">\n</video>'
       });
     },
     base_url: '/project/tinymce/js/tinymce'

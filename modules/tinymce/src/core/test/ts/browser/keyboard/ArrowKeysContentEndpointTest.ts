@@ -51,19 +51,19 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', () => {
 
     it('Arrow up at line 2 in figcaption should not insert new block', () => {
       const editor = hook.editor();
-      editor.setContent('<figure><figcaption>a<br />b</figcaption></figure>');
+      editor.setContent('<figure><figcaption>a<br>b</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 2 ], 0);
       TinyContentActions.keystroke(editor, Keys.up());
-      TinyAssertions.assertContent(editor, '<figure><figcaption>a<br />b</figcaption></figure>');
+      TinyAssertions.assertContent(editor, '<figure><figcaption>a<br>b</figcaption></figure>');
       TinyAssertions.assertSelection(editor, [ 0, 0, 2 ], 0, [ 0, 0, 2 ], 0);
     });
 
     it('Arrow down at line 1 in figcaption should not insert new block', () => {
       const editor = hook.editor();
-      editor.setContent('<figure><figcaption>a<br />b</figcaption></figure>');
+      editor.setContent('<figure><figcaption>a<br>b</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.down());
-      TinyAssertions.assertContent(editor, '<figure><figcaption>a<br />b</figcaption></figure>');
+      TinyAssertions.assertContent(editor, '<figure><figcaption>a<br>b</figcaption></figure>');
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
     });
 

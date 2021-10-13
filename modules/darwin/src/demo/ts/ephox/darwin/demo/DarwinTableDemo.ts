@@ -43,26 +43,26 @@ const table = SugarElement.fromHtml<HTMLTableElement>(
 //     '<tbody>' +
 //       '<tr>' +
 //         '<td style="min-width: 100px;">A1</td>' +
-//         '<td style="min-width: 100px;">B1<br /></td>' +
-//         '<td style="min-width: 100px;" colspan=2>C1<br /><br /><br /></td>' +
+//         '<td style="min-width: 100px;">B1<br></td>' +
+//         '<td style="min-width: 100px;" colspan=2>C1<br><br><br></td>' +
 //         // '<td style="min-width: 100px;">D1</td>' +
 //       '</tr>' +
 //       '<tr>' +
 //         '<td style="min-width: 100px;">A2</td>' +
-//         '<td style="min-width: 100px;">B2<br /><br /></td>' +
+//         '<td style="min-width: 100px;">B2<br><br></td>' +
 //         '<td style="min-width: 100px;"><p>C2</p><p>More</p></td>' +
-//         '<td style="min-width: 100px;"><br />D2</td>' +
+//         '<td style="min-width: 100px;"><br>D2</td>' +
 //       '</tr>' +
 //       '<tr>' +
 //         '<td style="min-width: 100px;">A3</td>' +
-//         '<td style="min-width: 100px;"><br /></td>' +
-//         '<td style="min-width: 100px;"><br /></td>' +
+//         '<td style="min-width: 100px;"><br></td>' +
+//         '<td style="min-width: 100px;"><br></td>' +
 //         '<td style="min-width: 100px;">D3</td>' +
 //       '</tr>' +
 //       '<tr>' +
 //         '<td style="padding-top: 100px;" style="min-width: 100px;">A4</td>' +
-//         '<td style="padding-top: 100px;" style="min-width: 100px;"><br /></td>' +
-//         '<td style="padding-top: 100px;" style="min-width: 100px;"><br /></td>' +
+//         '<td style="padding-top: 100px;" style="min-width: 100px;"><br></td>' +
+//         '<td style="padding-top: 100px;" style="min-width: 100px;"><br></td>' +
 //         '<td style="padding-top: 100px;" style="min-width: 100px;">D4</td>' +
 //       '</tr>' +
 //     '</tbody>' +

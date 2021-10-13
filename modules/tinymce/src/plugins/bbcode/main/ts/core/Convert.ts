@@ -64,7 +64,7 @@ const bbcode2html = (s: string): string => {
   };
 
   // example: [b] to <strong>
-  rep(/\n/gi, '<br />');
+  rep(/\n/gi, '<br>');
   rep(/\[b\]/gi, '<strong>');
   rep(/\[\/b\]/gi, '</strong>');
   rep(/\[i\]/gi, '<em>');
@@ -73,7 +73,7 @@ const bbcode2html = (s: string): string => {
   rep(/\[\/u\]/gi, '</u>');
   rep(/\[url=([^\]]+)\](.*?)\[\/url\]/gi, '<a href="$1">$2</a>');
   rep(/\[url\](.*?)\[\/url\]/gi, '<a href="$1">$1</a>');
-  rep(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" />');
+  rep(/\[img\](.*?)\[\/img\]/gi, '<img src="$1">');
   rep(/\[color=(.*?)\](.*?)\[\/color\]/gi, '<font color="$1">$2</font>');
   rep(/\[code\](.*?)\[\/code\]/gi, '<span class="codeStyle">$1</span>&nbsp;');
   rep(/\[quote.*?\](.*?)\[\/quote\]/gi, '<span class="quoteStyle">$1</span>&nbsp;');

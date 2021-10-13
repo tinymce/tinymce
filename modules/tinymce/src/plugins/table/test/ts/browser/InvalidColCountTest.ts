@@ -30,29 +30,29 @@ describe('browser.tinymce.plugins.table.InvalidColCountTest', () => {
   Arr.each([
     {
       label: 'less cols',
-      colgroupHtml: '<colgroup><col /></colgroup>',
+      colgroupHtml: '<colgroup><col></colgroup>',
       assertColCount: true
     },
     {
       label: 'less cols with span',
-      colgroupHtml: '<colgroup><col span="2" /></colgroup>',
+      colgroupHtml: '<colgroup><col span="2"></colgroup>',
     },
     {
       label: 'more cols',
-      colgroupHtml: '<colgroup><col /><col /><col /><col /></colgroup>',
+      colgroupHtml: '<colgroup><col /><col /><col /><col></colgroup>',
       assertColCount: true
     },
     {
       label: 'more cols with span at beginning',
-      colgroupHtml: '<colgroup><col span="3" /><col /></colgroup>',
+      colgroupHtml: '<colgroup><col span="3" /><col></colgroup>',
     },
     {
       label: 'more cols with span at end',
-      colgroupHtml: '<colgroup><col /><col span="3" /></colgroup>',
+      colgroupHtml: '<colgroup><col /><col span="3"></colgroup>',
     },
     {
       label: 'single col with span greater than cells',
-      colgroupHtml: '<colgroup><col span="4" /></colgroup>',
+      colgroupHtml: '<colgroup><col span="4"></colgroup>',
     }
   ], (scenario) => {
     context(scenario.label, () => {

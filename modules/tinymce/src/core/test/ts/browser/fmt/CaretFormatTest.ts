@@ -423,7 +423,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
   });
 
   it('replaceWithCaretFormat', () => {
-    const body = SugarElement.fromHtml('<div><br /></div>');
+    const body = SugarElement.fromHtml('<div><br></div>');
     const formats = [
       SugarElement.fromTag('b').dom,
       SugarElement.fromTag('i').dom

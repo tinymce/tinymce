@@ -96,7 +96,7 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       insertNewline(editor, { });
       editor.nodeChanged();
-      TinyAssertions.assertContent(editor, '<p>a<br />b</p>');
+      TinyAssertions.assertContent(editor, '<p>a<br>b</p>');
     });
 
     it('Insert newline where br is forced (div)', () => {
@@ -105,7 +105,7 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       insertNewline(editor, { });
       editor.nodeChanged();
-      TinyAssertions.assertContent(editor, '<div class="test">a<br />b</div>');
+      TinyAssertions.assertContent(editor, '<div class="test">a<br>b</div>');
     });
 
     it('Insert newline where br is not forced', () => {
@@ -157,10 +157,10 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
 
   it('Insert newline before image in link', () => {
     const editor = hook.editor();
-    editor.setContent('<p><a href="#">a<img src="about:blank" /></a></p>');
+    editor.setContent('<p><a href="#">a<img src="about:blank"></a></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     insertNewline(editor, { });
-    TinyAssertions.assertContent(editor, '<p><a href="#">a</a></p><p><a href="#"><img src="about:blank" /></a></p>');
+    TinyAssertions.assertContent(editor, '<p><a href="#">a</a></p><p><a href="#"><img src="about:blank"></a></p>');
     TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
   });
 });

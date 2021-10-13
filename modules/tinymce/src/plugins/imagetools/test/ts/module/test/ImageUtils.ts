@@ -20,7 +20,7 @@ const pLoadImage = (editor: Editor, url: string, size?: { width: number; height:
     const img = new Image();
 
     img.onload = () => {
-      editor.setContent(`<p><img src="${url}" ${size ? `width="${size.width}" height="${size.height}"` : ''} /></p>`);
+      editor.setContent(`<p><img src="${url}" ${size ? `width="${size.width}" height="${size.height}"` : ''}></p>`);
       editor.focus();
       resolve();
     };

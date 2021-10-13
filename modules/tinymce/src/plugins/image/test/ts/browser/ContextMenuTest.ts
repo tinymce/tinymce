@@ -50,7 +50,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
 
   it('TBA: Opening context menus on a selected image', async () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="image.png" /></p><p>Second paragraph</p>', { format: 'raw' });
+    editor.setContent('<p><img src="image.png"></p><p>Second paragraph</p>', { format: 'raw' });
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     await pOpenContextMenu(editor, 'img');
     TinyUiActions.keydown(editor, Keys.enter());
@@ -60,7 +60,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
 
   it('TBA: Opening context menus on an unselected image', async () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="image.png" /></p><p>Second paragraph</p>', { format: 'raw' });
+    editor.setContent('<p><img src="image.png"></p><p>Second paragraph</p>', { format: 'raw' });
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
     await pOpenContextMenu(editor, 'img');
     TinyUiActions.keydown(editor, Keys.enter());

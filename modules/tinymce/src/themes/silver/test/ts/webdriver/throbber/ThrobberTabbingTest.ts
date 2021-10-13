@@ -19,8 +19,8 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
   before(() => {
     const editor = hook.editor();
     const target = SugarElement.fromDom(editor.getElement());
-    const inputBefore = SugarElement.fromHtml('<div><input id="beforeInput" /></div>');
-    const inputAfter = SugarElement.fromHtml('<div><input id="afterInput" /></div>');
+    const inputBefore = SugarElement.fromHtml('<div><input id="beforeInput"></div>');
+    const inputAfter = SugarElement.fromHtml('<div><input id="afterInput"></div>');
     Insert.before(target, inputBefore);
     Insert.append(SugarBody.body(), inputAfter);
   });

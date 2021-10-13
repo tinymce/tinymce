@@ -54,14 +54,14 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
 
   it('TBA: Upload tab should not be present without images_upload_url or images_upload_handler', async () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="' + src + '" /></p>');
+    editor.setContent('<p><img src="' + src + '"></p>');
     TinySelections.select(editor, 'img', []);
     await pAssertImageTab(editor, 'Upload', false);
   });
 
   it('TBA: Upload tab should be present when images_upload_url is set to some truthy value', async () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="' + src + '" /></p>');
+    editor.setContent('<p><img src="' + src + '"></p>');
     TinySelections.select(editor, 'img', []);
     editor.settings.image_advtab = false; // make sure that Advanced tab appears separately
     editor.settings.images_upload_url = 'postAcceptor.php';
@@ -75,7 +75,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
 
   it('TBA: Upload tab should be not be present when images_upload_url is set to some truthy value and image_uploadtab is set to false', async () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="' + src + '" /></p>');
+    editor.setContent('<p><img src="' + src + '"></p>');
     TinySelections.select(editor, 'img', []);
     editor.settings.image_uploadtab = false;
     editor.settings.images_upload_handler = (blobInfo, success) => success('file.jpg');
@@ -87,7 +87,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
 
   it('TBA: Upload tab should be present when images_upload_handler is set to some truthy value', async () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="' + src + '" /></p>');
+    editor.setContent('<p><img src="' + src + '"></p>');
     TinySelections.select(editor, 'img', []);
     editor.settings.image_advtab = false; // make sure that Advanced tab appears separately
     editor.settings.images_upload_handler = (blobInfo, success) => success('file.jpg');

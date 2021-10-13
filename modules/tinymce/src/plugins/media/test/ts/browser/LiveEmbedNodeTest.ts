@@ -109,7 +109,7 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
 
   it('TINY-7674: video with source child elements', () => {
     const editor = hook.editor();
-    editor.setContent('<video class="test-class" style="height: 250px; width: 500px;"><source src="about:blank" type="video/mp4" /></video>');
+    editor.setContent('<video class="test-class" style="height: 250px; width: 500px;"><source src="about:blank" type="video/mp4"></video>');
     assertStructure(editor, 'video', [ 'test-class' ], { }, { width: '500px', height: '250px' }, (s, str) => [
       s.element('source', {
         attrs: {

@@ -65,13 +65,13 @@ const XHR: XHR = {
    * @method send
    * @param {Object} settings An object containing the target URL,
    * callbacks, and other information needed to make the request.
-   * For information on valid settings, see the table below.<br /><br />
+   * For information on valid settings, see the table below.<br><br>
    * <div>
    * <table>
    * <thead>
    * <tr style="text-align: center;">
    * <th>Setting</th>
-   * <th>Required/<br />Optional</th>
+   * <th>Required/<br>Optional</th>
    * <th>Type</th>
    * <th>Description</th>
    * </tr>
@@ -89,7 +89,7 @@ const XHR: XHR = {
    * </tr>
    * <tr>
    * <td>
-   * <p><code>async<br /></code></p>
+   * <p><code>async<br></code></p>
    * </td>
    * <td>Optional</td>
    * <td>
@@ -103,7 +103,7 @@ const XHR: XHR = {
    * </tr>
    * <tr>
    * <td>
-   * <p><code>content_type<br /></code></p>
+   * <p><code>content_type<br></code></p>
    * </td>
    * <td>Optional</td>
    * <td>
@@ -115,7 +115,7 @@ const XHR: XHR = {
    * </tr>
    * <tr>
    * <td>
-   * <p><code>crossDomain<br /></code></p>
+   * <p><code>crossDomain<br></code></p>
    * </td>
    * <td>Optional</td>
    * <td>
@@ -128,7 +128,7 @@ const XHR: XHR = {
    * </tr>
    * <tr>
    * <td>
-   * <p><code>data<br /></code></p>
+   * <p><code>data<br></code></p>
    * </td>
    * <td>Optional</td>
    * <td>
@@ -181,7 +181,7 @@ const XHR: XHR = {
    * </tr>
    * <tr>
    * <td>
-   * <p><code>success_scope<br /></code></p>
+   * <p><code>success_scope<br></code></p>
    * </td>
    * <td>Optional</td>
    * <td>
@@ -192,7 +192,7 @@ const XHR: XHR = {
    * </tr>
    * <tr>
    * <td>
-   * <p><code>error<br /></code></p>
+   * <p><code>error<br></code></p>
    * </td>
    * <td>Optional</td>
    * <td>

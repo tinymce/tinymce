@@ -20,7 +20,7 @@ UnitTest.test('DragDrop.isDraggable', () => {
   check(true, '<ol draggable="true" />');
   check(false, '<ol draggable="" />');
   check(false, '<ol draggable="false" />');
-  check(true, '<img />');
+  check(true, '<img>');
 });
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {

@@ -13,7 +13,7 @@ import * as Settings from '../api/Settings';
 const pageBreakClass = 'mce-pagebreak';
 
 const getPlaceholderHtml = (shouldSplitBlock: boolean): string => {
-  const html = `<img src="${Env.transparentSrc}" class="${pageBreakClass}" data-mce-resize="false" data-mce-placeholder />`;
+  const html = `<img src="${Env.transparentSrc}" class="${pageBreakClass}" data-mce-resize="false" data-mce-placeholder>`;
   return shouldSplitBlock ? `<p>${html}</p>` : html;
 };
 

@@ -174,7 +174,7 @@ describe('browser.tinymce.core.keyboard.BoundaryLocationTest', () => {
     testPrevLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [ 1 ], 0, 'end', 'p:nth-child(1) a');
     testPrevLocation('<p><a href="a">a</a></p><p><a href="b">b</a></p>', [ 1, 0, 0 ], 0, 'before', 'p:nth-child(2) a');
     testPrevLocation('<p><a href="a">a</a>b</p><p><a href="c">c</a></p>', [ 1, 0, 0 ], 0, 'before', 'p:nth-child(2) a');
-    testPrevLocation('<p><a href="a">a</a><br /></p><p><a href="c">c</a></p>', [ 1 ], 0, 'after', 'p:nth-child(1) a');
+    testPrevLocation('<p><a href="a">a</a><br></p><p><a href="c">c</a></p>', [ 1 ], 0, 'after', 'p:nth-child(1) a');
     testPrevLocationInvalid('<p><a href="a">a</a></p><p>b<a href="c">c</a></p>', [ 1, 0 ], 1);
     testPrevLocationInvalid('<p><a href="a">a</a>b</p><p><a href="c">c</a></p>', [ 1 ], 0);
   });

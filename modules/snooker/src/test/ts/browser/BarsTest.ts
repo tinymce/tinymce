@@ -9,7 +9,7 @@ const resizeAttribute = 'data-snooker-resize';
 const isResizable = (elm: SugarElement<Element>) => Attribute.get(elm, resizeAttribute) !== 'false';
 
 const tableHtml = '<table style="width: 400px"><tbody><tr><td style="width: 200px"></td><td style="width: 200px"></td></tr></tbody></table>';
-const colgroupTableHtml = '<table style="width: 400px"><colgroup><col style="width: 200px" /><col style="width: 200px" /></colgroup><tbody><tr><td></td><td></td></tr></tbody></table>';
+const colgroupTableHtml = '<table style="width: 400px"><colgroup><col style="width: 200px" /><col style="width: 200px"></colgroup><tbody><tr><td></td><td></td></tr></tbody></table>';
 
 const assertdBarCounts = (scope: SugarElement, rows: number, cols: number) => {
   const rowBars = SelectorFilter.descendants(scope, 'div[data-row]');

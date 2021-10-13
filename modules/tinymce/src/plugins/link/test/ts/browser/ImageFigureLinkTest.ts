@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.link.ImageFigureLinkTest', () => {
     const editor = hook.editor();
     editor.setContent(
       '<figure class="image">' +
-        '<img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png" />' +
+        '<img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png">' +
         '<figcaption>TinyMCE</figcaption>' +
       '</figure>'
     );
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.link.ImageFigureLinkTest', () => {
     const editor = hook.editor();
     editor.setContent(
       '<figure class="image">' +
-        '<a href="http://google.com"><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png" /></a>' +
+        '<a href="http://google.com"><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png"></a>' +
         '<figcaption>TinyMCE</figcaption>' +
       '</figure>'
     );

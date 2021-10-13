@@ -18,7 +18,7 @@ export const demo = (): void => {
 
         const labelName = SugarElement.fromTag('label');
         Html.set(labelName, 'Name');
-        const fieldName = SugarElement.fromHtml<HTMLInputElement>('<input type="text" />');
+        const fieldName = SugarElement.fromHtml<HTMLInputElement>('<input type="text">');
 
         const submit = SugarElement.fromTag('button');
         Attribute.set(submit, 'type', 'button');

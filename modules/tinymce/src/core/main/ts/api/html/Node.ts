@@ -527,7 +527,7 @@ class AstNode {
             continue;
           }
 
-          // Keep empty elements like <img />
+          // Keep empty elements like <img>
           if (elements[node.name]) {
             return false;
           }

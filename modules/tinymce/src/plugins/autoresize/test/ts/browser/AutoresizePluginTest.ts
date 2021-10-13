@@ -96,7 +96,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
   it('TBA: Editor size increase with async loaded content', async () => {
     const editor = hook.editor();
     // Note: Use a min-height here to account for different browsers rendering broken images differently
-    editor.setContent('<div style="min-height: 35px;"><img src="#" /></div><div style="height: 5500px;"></div>');
+    editor.setContent('<div style="min-height: 35px;"><img src="#"></div><div style="height: 5500px;"></div>');
     await Waiter.pTryUntil('wait for editor content height', () => assertEditorContentApproxHeight(editor, 5585), 10, 3000);
     // Update the img element to load an image
     editor.$('img').attr('src', 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');

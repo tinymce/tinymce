@@ -26,6 +26,6 @@ describe('browser.tinymce.core.FormatterRemoveForcedRootBlockFalseTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1>b';
     LegacyUnit.setSelection(editor, 'h1', 0, 'h1', 1);
     editor.formatter.remove('format');
-    assert.equal(getContent(editor), 'a<br />b', 'Lines should be separated with br');
+    assert.equal(getContent(editor), 'a<br>b', 'Lines should be separated with br');
   });
 });

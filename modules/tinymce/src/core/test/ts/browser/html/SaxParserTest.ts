@@ -148,21 +148,21 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<img src="test">');
-    assert.equal(writer.getContent(), '<img src="test" />', 'Parse empty element.');
+    assert.equal(writer.getContent(), '<img src="test">', 'Parse empty element.');
     assert.deepEqual(counter.counts, { start: 1 }, 'Parse empty element counts.');
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<img\nsrc="test"\ntitle="row1\nrow2">');
-    assert.equal(writer.getContent(), '<img src="test" title="row1\nrow2" />', 'Parse attributes with linebreak.');
+    assert.equal(writer.getContent(), '<img src="test" title="row1\nrow2">', 'Parse attributes with linebreak.');
     assert.deepEqual(counter.counts, { start: 1 }, 'Parse attributes with linebreak counts.');
 
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
     parser.parse('<img     \t  \t   src="test"     \t  \t   title="\t    row1\t     row2">');
-    assert.equal(writer.getContent(), '<img src="test" title="\t    row1\t     row2" />', 'Parse attributes with whitespace.');
+    assert.equal(writer.getContent(), '<img src="test" title="\t    row1\t     row2">', 'Parse attributes with whitespace.');
     assert.deepEqual(counter.counts, { start: 1 }, 'Parse attributes with whitespace counts.');
 
     counter = createCounter(writer);
@@ -267,8 +267,8 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     counter = createCounter(writer);
     parser = SaxParser(counter, schema);
     writer.reset();
-    parser.parse('<br><br /><br/>');
-    assert.equal(writer.getContent(), '<br /><br /><br />', 'Parse short ended elements.');
+    parser.parse('<br><br><br>');
+    assert.equal(writer.getContent(), '<br><br><br>', 'Parse short ended elements.');
     assert.deepEqual(counter.counts, { start: 3 }, 'Parse short ended elements counts.');
 
     counter = createCounter(writer);
@@ -786,7 +786,7 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     assert.equal(
       writer.getContent(),
       '<a>1</a>' +
-      '<img />'
+      '<img>'
     );
   });
 
@@ -833,7 +833,7 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
       '<table><tr></tr><tr>13</tr></table>' +
       '<a>14</a>' +
       '<a>15</a>' +
-      '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />' +
+      '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">' +
       '<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
     );
   });
@@ -855,7 +855,7 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
       '<iframe></iframe>' +
       '<a>1</a>' +
       '<object></object>' +
-      '<img src="data:image/svg+xml;base64,x" />' +
+      '<img src="data:image/svg+xml;base64,x">' +
       '<video poster="data:image/svg+xml;base64,x"></video>'
     );
   });
@@ -878,7 +878,7 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
       '<iframe src="data:image/svg+xml;base64,x"></iframe>' +
       '<a href="data:image/svg+xml;base64,x">1</a>' +
       '<object data="data:image/svg+xml;base64,x"></object>' +
-      '<img src="data:image/svg+xml;base64,x" />' +
+      '<img src="data:image/svg+xml;base64,x">' +
       '<video poster="data:image/svg+xml;base64,x"></video>'
     );
   });
@@ -901,7 +901,7 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
       '<iframe></iframe>' +
       '<a>1</a>' +
       '<object></object>' +
-      '<img />' +
+      '<img>' +
       '<video></video>'
     );
   });
@@ -1091,18 +1091,18 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
     writer.reset();
     parser.parse(
       'a' +
-      '<img src="data:image/gif;base64,R0/yw==" />' +
-      '<img src="data:image/jpeg;base64,R1/yw==" />' +
+      '<img src="data:image/gif;base64,R0/yw==">' +
+      '<img src="data:image/jpeg;base64,R1/yw==">' +
       '<div style="background-image: url(\'data:image/png;base64,R2/yw==\')">b</div>' +
-      '<!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->' +
+      '<!-- <img src="data:image/jpeg;base64,R1/yw=="> -->' +
       'c'
     );
     assert.equal(writer.getContent(),
       'a' +
-      '<img src="data:image/gif;base64,R0/yw==" />' +
-      '<img src="data:image/jpeg;base64,R1/yw==" />' +
+      '<img src="data:image/gif;base64,R0/yw==">' +
+      '<img src="data:image/jpeg;base64,R1/yw==">' +
       '<div style="background-image: url(\'data:image/png;base64,R2/yw==\')">b</div>' +
-      '<!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->' +
+      '<!-- <img src="data:image/jpeg;base64,R1/yw=="> -->' +
       'c'
     );
   });
@@ -1128,9 +1128,9 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
 
     writer.reset();
     parser.parse(
-      '<img src="x" name="getElementById" />' +
+      '<img src="x" name="getElementById">' +
       '<form>' +
-      '<input id="attributes" />' +
+      '<input id="attributes">' +
       '<output id="style"></output>' +
       '<button name="action"></button>' +
       '<select name="getElementsByName"></select>' +
@@ -1139,9 +1139,9 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
       '</form>'
     );
     assert.equal(writer.getContent(),
-      '<img src="x" />' +
+      '<img src="x">' +
       '<form>' +
-        '<input />' +
+        '<input>' +
         '<output></output>' +
         '<button></button>' +
         '<select></select>' +

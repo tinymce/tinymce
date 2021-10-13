@@ -29,7 +29,7 @@ describe('browser.tinymce.core.LineUtilsTest', () => {
     const table = SugarElement.fromHtml('<table border="1"><tbody><tr><td>Cell 1</td><td>Cell 2</td></tr></tbody></table>');
     const paraWithCef = SugarElement.fromHtml('<p>Before <span contenteditable="false">Noneditable</span> After</p>');
     const cef = SelectorFind.descendant(paraWithCef, 'span').getOrDie();
-    const paraWithVideo = SugarElement.fromHtml('<p>Before <video controls="controls"><source src="custom/video.mp4" /></video> After</p>');
+    const paraWithVideo = SugarElement.fromHtml('<p>Before <video controls="controls"><source src="custom/video.mp4"></video> After</p>');
     const video = SelectorFind.descendant(paraWithVideo, 'video').getOrDie();
     InsertAll.append(container, [ para, multiLinePara, table, paraWithCef, paraWithVideo ]);
     Insert.append(SugarBody.body(), container);

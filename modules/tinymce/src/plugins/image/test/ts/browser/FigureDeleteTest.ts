@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
 
   it('TBA: removing src in dialog should remove figure element', async () => {
     const editor = hook.editor();
-    editor.setContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>');
+    editor.setContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""><figcaption>x</figcaption></figure>');
     TinySelections.setSelection(editor, [], 1, [], 2);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
@@ -29,7 +29,7 @@ describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
 
   it('TBA: clicking caption textbox removes figure and adds image only', async () => {
     const editor = hook.editor();
-    editor.setContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>');
+    editor.setContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""><figcaption>x</figcaption></figure>');
     TinySelections.setSelection(editor, [], 1, [], 2);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     const dialog = await TinyUiActions.pWaitForDialog(editor);

@@ -34,7 +34,7 @@ export default (): void => {
     Optionals.someIf(SugarNode.name(elem) === name, elem);
 
   const contents = '<div><strong>drag1</strong> and <code>click1</code> and <strong>drag2</strong> ' +
-    'and <code>click2</code> and <img style="width: 140px; height: 130px;" /></div>';
+    'and <code>click2</code> and <img style="width: 140px; height: 130px;"></div>';
 
   const frame = SugarElement.fromTag('iframe');
   Css.set(frame, 'min-width', '80%');

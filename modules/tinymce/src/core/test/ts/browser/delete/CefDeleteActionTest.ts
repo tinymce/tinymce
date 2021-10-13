@@ -219,13 +219,13 @@ describe('browser.tinymce.core.delete.CefDeleteActionTest', () => {
     });
 
     it('Should be removeElement since caret positioned before BR', () => {
-      setHtml('<p><span contenteditable="false">A</span>\ufeff<br /><span contenteditable="false">B</span></p>');
+      setHtml('<p><span contenteditable="false">A</span>\ufeff<br><span contenteditable="false">B</span></p>');
       const actionOpt = readAction(true, [ 0 ], 1);
       assertRemoveElementAction(actionOpt, [ 0, 2 ]);
     });
 
     it('Should be removeElement since caret positioned after BR', () => {
-      setHtml('<p><span contenteditable="false">A</span><br />\ufeff<span contenteditable="false">B</span></p>');
+      setHtml('<p><span contenteditable="false">A</span><br>\ufeff<span contenteditable="false">B</span></p>');
       const actionOpt = readAction(false, [ 0 ], 3);
       assertRemoveElementAction(actionOpt, [ 0, 1 ]);
     });

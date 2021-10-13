@@ -352,7 +352,7 @@ const EditorManager: EditorManager = {
 
   /**
    * Initializes a set of editors. This method will create editors based on various settings.
-   * <br /><br />
+   * <br><br>
    * For information on basic usage of <code>init</code>, see: <a href="https://www.tiny.cloud/docs/general-configuration-guide/basic-setup/">Basic setup</a>.
    *
    * @method init

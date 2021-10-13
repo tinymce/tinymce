@@ -13,7 +13,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
   }, [ Theme ], true);
 
   before(() => {
-    const input = SugarElement.fromHtml('<input id="tempInput" />');
+    const input = SugarElement.fromHtml('<input id="tempInput">');
     Insert.append(SugarBody.body(), input);
   });
 

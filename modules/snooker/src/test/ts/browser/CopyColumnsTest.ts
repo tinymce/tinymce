@@ -27,7 +27,7 @@ UnitTest.test('CopyColumnsTest', () => {
 
   const defaultTable = (hasColgroup: boolean = false, lockedColumns: number[] = []) =>
     `<table ${lockedColumns.length > 0 ? `data-snooker-locked-cols="${lockedColumns.join(',')}"` : ''}>` +
-    `${hasColgroup ? '<colgroup><col /><col /></colgroup>' : ''}` +
+    `${hasColgroup ? '<colgroup><col /><col></colgroup>' : ''}` +
     '<thead>' +
     '<tr><td scope="col">H1</td><td scope="col">H2</td></tr>' +
     '</thead>' +
@@ -42,7 +42,7 @@ UnitTest.test('CopyColumnsTest', () => {
 
   const colspanTable = (hasColgroup: boolean = false, lockedColumns: number[] = []) =>
     `<table ${lockedColumns.length > 0 ? `data-snooker-locked-cols="${lockedColumns.join(',')}"` : ''}>` +
-  `${hasColgroup ? '<colgroup><col /><col /></colgroup>' : ''}` +
+  `${hasColgroup ? '<colgroup><col /><col></colgroup>' : ''}` +
   '<thead>' +
   '<tr><td>H1</td><td>H2</td><td>H3</td></tr>' +
   '</thead>' +
@@ -58,7 +58,7 @@ UnitTest.test('CopyColumnsTest', () => {
 
   const rowspanTable = (hasColgroup: boolean = false, lockedColumns: number[] = []) =>
     `<table ${lockedColumns.length > 0 ? `data-snooker-locked-cols="${lockedColumns.join(',')}"` : ''}>` +
-  `${hasColgroup ? '<colgroup><col /><col /></colgroup>' : ''}` +
+  `${hasColgroup ? '<colgroup><col /><col></colgroup>' : ''}` +
   '<thead>' +
   '<tr><td>H1</td><td>H2</td></tr>' +
   '</thead>' +

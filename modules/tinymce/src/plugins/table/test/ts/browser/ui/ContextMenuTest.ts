@@ -154,10 +154,10 @@ describe('browser.tinymce.plugins.table.ContextMenuTest', () => {
     const editor = hook.editor();
     editor.setContent(mergeTableHtml);
     await pSelectCellContextMenu('Merge Cells', editor, '.tox-collection__item:contains("Merge cells")', 1);
-    assertHtmlStructure('Assert Merge Cells', editor, '<table><tbody><tr><td>a1<br />b1<br /></td><td>a2</td></tr><tr><td>b2</td></tr></tbody></table>');
+    assertHtmlStructure('Assert Merge Cells', editor, '<table><tbody><tr><td>a1<br>b1<br></td><td>a2</td></tr><tr><td>b2</td></tr></tbody></table>');
 
     await pSelectCellContextMenu('Split Cell', editor, '.tox-collection__item:contains("Split cell")', 2);
-    assertHtmlStructure('Assert Split Cell', editor, '<table><tbody><tr><td>a1<br />b1<br /></td><td>a2</td></tr><tr><td><br /></td><td>b2</td></tr></tbody></table>');
+    assertHtmlStructure('Assert Split Cell', editor, '<table><tbody><tr><td>a1<br>b1<br></td><td>a2</td></tr><tr><td><br></td><td>b2</td></tr></tbody></table>');
   });
 
   it('TBA: Test row context menus on a table', async () => {

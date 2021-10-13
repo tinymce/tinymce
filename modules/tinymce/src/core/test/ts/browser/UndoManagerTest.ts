@@ -324,7 +324,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     editor.getBody().innerHTML = (
       'test' +
-      '<img src="about:blank" data-mce-selected="1" />' +
+      '<img src="about:blank" data-mce-selected="1">' +
       '<table data-mce-selected="1"><tr><td>x</td></tr></table>'
     );
 
@@ -345,7 +345,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       '<br data-mce-bogus="1">' +
       'test' +
       '\u200B' +
-      '<img src="about:blank" />' +
+      '<img src="about:blank">' +
       '<table><tr><td>x</td></tr></table>'
     );
 

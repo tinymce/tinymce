@@ -55,8 +55,8 @@ UnitTest.test('FamilyGroupTest', () => {
     [ '"-- Ghostbusters"' ]
   ], [
     SugarElement.fromHtml('<p>Dogs and cats</p>'),
-    SugarElement.fromHtml('<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'),
-    SugarElement.fromHtml('<hr />'),
+    SugarElement.fromHtml('<p>Living tog<img>ether <span>Mass hyste<br>ria</span>.</p>'),
+    SugarElement.fromHtml('<hr>'),
     SugarElement.fromText('-- Ghostbusters')
   ]);
 
@@ -73,7 +73,7 @@ UnitTest.test('FamilyGroupTest', () => {
     [ '"Three"' ]
   ], [
     SugarElement.fromHtml('<p>Dogs and cats</p>'),
-    SugarElement.fromHtml('<p>Living tog<img />ether <span>Mass hyste<br />ria</span>.</p>'),
+    SugarElement.fromHtml('<p>Living tog<img>ether <span>Mass hyste<br>ria</span>.</p>'),
     SugarElement.fromText('-- Ghostbusters'),
     SugarElement.fromHtml('<div><p>One</p><p>Two</p><p>Three</p></div>')
   ]);

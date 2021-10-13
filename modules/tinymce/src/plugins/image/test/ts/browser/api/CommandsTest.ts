@@ -68,7 +68,7 @@ describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
 
   it('TBA: Update image with all data specified except caption and isDecorative', () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="#1" /></p>');
+    editor.setContent('<p><img src="#1"></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     updateImage(editor, {
       src: '#2',
@@ -116,43 +116,43 @@ describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
 
   it('TBA: Update image with null alt value', () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="#1" alt="alt1" /></p>');
+    editor.setContent('<p><img src="#1" alt="alt1"></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     updateImage(editor, {
       alt: null
     });
-    TinyAssertions.assertContent(editor, '<p><img src="#1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1"></p>');
   });
 
   it('TBA: Update image with empty alt value', () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="#1" alt="alt1" /></p>');
+    editor.setContent('<p><img src="#1" alt="alt1"></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     updateImage(editor, {
       alt: ''
     });
-    TinyAssertions.assertContent(editor, '<p><img src="#1" alt="" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1" alt=""></p>');
   });
 
   it('TBA: Update image with empty title, width, height should not produce empty attributes', () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="#1" title="title" width="100" height="200" /></p>');
+    editor.setContent('<p><img src="#1" title="title" width="100" height="200"></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     updateImage(editor, {
       title: '',
       width: '',
       height: ''
     });
-    TinyAssertions.assertContent(editor, '<p><img src="#1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1"></p>');
   });
 
   it('TINY-7998: Update image with dangerous URL should remove the src attribute', () => {
     const editor = hook.editor();
-    editor.setContent('<p><img src="#1" alt="alt1" /></p>');
+    editor.setContent('<p><img src="#1" alt="alt1"></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     updateImage(editor, {
       src: 'javascript:alert(1)'
     });
-    TinyAssertions.assertContent(editor, '<p><img alt="alt1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img alt="alt1"></p>');
   });
 });

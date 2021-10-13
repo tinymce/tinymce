@@ -581,7 +581,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       cleanTableHtml(editor.getContent()),
 
       '<table>' +
-      '<colgroup><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>2</td><td>1</td><td>2</td></tr>' +
       '<tr><td>3</td><td>2</td><td>3</td></tr>' +
@@ -611,7 +611,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       cleanTableHtml(editor.getContent()),
 
       '<table>' +
-      '<colgroup><col /><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>1</td><td>2</td><td>1</td><td>3</td></tr>' +
       '<tr><td>2</td><td>3</td><td>2</td><td>4</td></tr>' +
@@ -642,7 +642,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       cleanTableHtml(editor.getContent()),
 
       '<table data-snooker-locked-cols="0">' +
-      '<colgroup><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>1</td><td>2</td><td>2</td></tr>' +
       '<tr><td>2</td><td>3</td><td>3</td></tr>' +
@@ -673,7 +673,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       cleanTableHtml(editor.getContent()),
 
       '<table data-snooker-locked-cols="2">' +
-      '<colgroup><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>1</td><td>1</td><td>2</td></tr>' +
       '<tr><td>2</td><td>2</td><td>3</td></tr>' +

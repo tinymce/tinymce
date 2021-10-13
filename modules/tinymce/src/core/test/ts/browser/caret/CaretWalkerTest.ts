@@ -220,12 +220,12 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
   */
 
   it('from after to last element', () => {
-    setupHtml('<input />');
+    setupHtml('<input>');
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), CaretPosition(getRoot(), 1));
   });
 
   it('from after to last element with br', () => {
-    setupHtml('<input /><br>');
+    setupHtml('<input><br>');
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), CaretPosition(getRoot(), 1));
   });
 

@@ -932,7 +932,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.register('format', {
       block: 'div'
     });
-    editor.getBody().innerHTML = '1234<br />4567<br />8910';
+    editor.getBody().innerHTML = '1234<br>4567<br>8910';
     const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 0);
     rng.setEnd(editor.getBody().lastChild, 4);
@@ -946,7 +946,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.register('format', {
       block: 'div'
     });
-    editor.getBody().innerHTML = '<br />1234<br /><br />4567<br />8910<br />';
+    editor.getBody().innerHTML = '<br>1234<br><br>4567<br>8910<br>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 7);
@@ -991,7 +991,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       block: 'blockquote',
       wrapper: true
     });
-    editor.getBody().innerHTML = '<br /><h1>1234</h1><br />';
+    editor.getBody().innerHTML = '<br><h1>1234</h1><br>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 3);
@@ -1258,7 +1258,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
   it('Applying formats on a list including child nodes', () => {
     const editor = hook.editor();
     editor.formatter.register('format', { inline: 'strong' });
-    editor.setContent('<ol><li>a</li><li>b<ul><li>c</li><li>d<br /><ol><li>e</li><li>f</li></ol></li></ul></li><li>g</li></ol>');
+    editor.setContent('<ol><li>a</li><li>b<ul><li>c</li><li>d<br><ol><li>e</li><li>f</li></ol></li></ul></li><li>g</li></ol>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('li')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('li')[6].firstChild, 1);
@@ -1267,7 +1267,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(
       editor.getContent(),
       '<ol><li><strong>a</strong></li><li><strong>b</strong><ul><li><strong>c</strong></li><li><strong>d</strong>' +
-      '<br /><ol><li><strong>e</strong></li><li><strong>f</strong></li></ol></li></ul></li><li><strong>g</strong>' +
+      '<br><ol><li><strong>e</strong></li><li><strong>f</strong></li></ol></li></ul></li><li><strong>g</strong>' +
       '</li></ol>',
       'should be applied to all sublists'
     );
@@ -1921,7 +1921,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
   it('Bug #5453 - TD contents with BR gets wrapped in block format', () => {
     const editor = hook.editor();
-    editor.setContent('<table><tr><td>abc<br />123</td></tr></table>');
+    editor.setContent('<table><tr><td>abc<br>123</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 1, 'td', 1);
     editor.formatter.register('format', {
       block: 'h1'
@@ -2315,7 +2315,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.setContent(
       '<ul>' +
         '<li>a</li>' +
-        '<li>b<br />' +
+        '<li>b<br>' +
           '<ul>' +
             '<li>c</li>' +
             '<li>d</li>' +
@@ -2328,7 +2328,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<ul>' +
         '<li style="text-align: center;">a</li>' +
-        '<li style="text-align: center;">b<br />' +
+        '<li style="text-align: center;">b<br>' +
           '<ul>' +
             '<li style="text-align: center;">c</li>' +
             '<li style="text-align: center;">d</li>' +
@@ -2343,7 +2343,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.setContent(
       '<ol>' +
         '<li>a</li>' +
-        '<li>b<br />' +
+        '<li>b<br>' +
           '<ol>' +
             '<li>c</li>' +
             '<li>d</li>' +
@@ -2356,7 +2356,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<ol>' +
         '<li style="text-align: center;">a</li>' +
-        '<li style="text-align: center;">b<br />' +
+        '<li style="text-align: center;">b<br>' +
           '<ol>' +
             '<li style="text-align: center;">c</li>' +
             '<li>d</li>' +
@@ -2371,7 +2371,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.setContent(
       '<ul>' +
         '<li>a</li>' +
-        '<li><strong>b</strong><br />' +
+        '<li><strong>b</strong><br>' +
           '<ul>' +
             '<li>c</li>' +
             '<li>d</li>' +
@@ -2384,7 +2384,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<ul>' +
         '<li style="text-align: center;">a</li>' +
-        '<li style="text-align: center;"><strong>b</strong><br />' +
+        '<li style="text-align: center;"><strong>b</strong><br>' +
           '<ul>' +
             '<li style="text-align: center;">c</li>' +
             '<li style="text-align: center;">d</li>' +
@@ -2399,7 +2399,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.setContent(
       '<ul>' +
         '<li>a</li>' +
-        '<li>b<br />' +
+        '<li>b<br>' +
           '<ul>' +
             '<li>c</li>' +
           '</ul>' +
@@ -2411,7 +2411,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<ul>' +
         '<li style="text-align: right;">a</li>' +
-        '<li style="text-align: right;">b<br />' +
+        '<li style="text-align: right;">b<br>' +
           '<ul>' +
             '<li>c</li>' +
           '</ul>' +
@@ -2463,7 +2463,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.setContent(
       '<div>' +
         '<div>a</div>' +
-        '<div><br />b' +
+        '<div><br>b' +
           '<div>1</div>' +
         '</div>' +
         '<div>c</div>' +
@@ -2475,7 +2475,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<div>' +
         '<div style="text-align: center;">a</div>' +
-        '<div style="text-align: center;"><br />b' +
+        '<div style="text-align: center;"><br>b' +
           '<div style="text-align: center;">1</div>' +
         '</div>' +
         '<div>c</div>' +

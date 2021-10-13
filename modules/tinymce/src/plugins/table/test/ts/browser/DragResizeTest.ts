@@ -87,7 +87,7 @@ describe('browser.tinymce.plugins.table.DragResizeTest', () => {
     '</table>';
 
   const colGroupTableHtml = '<table style="border-collapse: collapse; width: 367px; height: 190px;" border="1">' +
-    `<colgroup><col style="width: 180px;" /><col style="width: 180px;" /></colgroup>` +
+    `<colgroup><col style="width: 180px;" /><col style="width: 180px;"></colgroup>` +
     '<tbody>' +
     '<tr>' +
     '<td>a</td>' +

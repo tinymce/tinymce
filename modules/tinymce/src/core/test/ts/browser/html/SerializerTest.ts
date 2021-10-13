@@ -12,7 +12,7 @@ describe('browser.tinymce.core.html.SerializerTest', () => {
     assert.equal(serializer.serialize(DomParser().parse('text<text&')), 'text&lt;text&amp;');
     assert.equal(
       serializer.serialize(DomParser().parse('<B>text</B><IMG src="1.gif">')),
-      '<strong>text</strong><img src="1.gif" />'
+      '<strong>text</strong><img src="1.gif">'
     );
     assert.equal(serializer.serialize(DomParser().parse('<!-- comment -->')), '<!-- comment -->');
     assert.equal(serializer.serialize(DomParser().parse('<![CDATA[cdata]]>', { format: 'xml' })), '<![CDATA[cdata]]>');

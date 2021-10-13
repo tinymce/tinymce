@@ -188,12 +188,12 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceInSelectionTest', (
   }));
 
   it('TINY-4549: Find and replace all in multiple matches with nbsp', testInSelection({
-    content: 'a&nbsp; &nbsp;b<br/><br/>ab&nbsp;c',
+    content: 'a&nbsp; &nbsp;b<br><br>ab&nbsp;c',
     find: ' ',
     matches: 2,
     replace: 'x',
     replaceAll: true,
-    expectedContent: '<p>a&nbsp; xb<br /><br />abxc</p>',
+    expectedContent: '<p>a&nbsp; xb<br><br>abxc</p>',
     moreMatches: false,
     sel: { sPath: [ 0, 0 ], sOffset: 3, fPath: [ 0, 3 ], fOffset: 4 }
   }));

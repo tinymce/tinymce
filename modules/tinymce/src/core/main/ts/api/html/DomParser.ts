@@ -191,7 +191,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
             parent.insert(node, parents[0], true);
           }
 
-          // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
+          // Check if the element is empty by looking through it's contents and special treatment for <p><br></p>
           parent = parents[0];
           if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent) || hasOnlyChild(parent, 'br')) {
             parent.empty().remove();
@@ -578,7 +578,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
             removeWhitespaceBefore(newNode);
           }
 
-          // Change current node if the element wasn't empty i.e not <br /> or <img />
+          // Change current node if the element wasn't empty i.e not <br> or <img>
           if (!empty) {
             node = newNode;
           }

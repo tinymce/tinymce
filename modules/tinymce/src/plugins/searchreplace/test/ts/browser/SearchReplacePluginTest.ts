@@ -118,10 +118,10 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePluginTest', () => 
 
   it('TBA: SearchReplace: Find and replace all spaces with new lines', () => {
     const editor = hook.editor();
-    editor.setContent('a&nbsp; &nbsp;b<br/><br/>ab&nbsp;c');
+    editor.setContent('a&nbsp; &nbsp;b<br><br>ab&nbsp;c');
     editor.plugins.searchreplace.find(' ');
     assert.isFalse(editor.plugins.searchreplace.replace('x', true, true));
-    TinyAssertions.assertContent(editor, '<p>axxxb<br /><br />abxc</p>');
+    TinyAssertions.assertContent(editor, '<p>axxxb<br><br>abxc</p>');
   });
 
   it('TBA: SearchReplace: Find multiple matches, move to next and replace', () => {

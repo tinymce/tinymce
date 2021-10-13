@@ -12,7 +12,7 @@ const create = (): Sherif => {
     textAlign: 'center'
   });
 
-  const img = $('<img src="images/chuck-norris.jpg" />');
+  const img = $('<img src="images/chuck-norris.jpg">');
   img.height('200px');
 
   const caption = $('<p>Sheriff</p>');

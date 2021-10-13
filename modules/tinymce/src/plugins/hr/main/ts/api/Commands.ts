@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 const register = (editor: Editor): void => {
   editor.addCommand('InsertHorizontalRule', () => {
-    editor.execCommand('mceInsertContent', false, '<hr />');
+    editor.execCommand('mceInsertContent', false, '<hr>');
   });
 };
 

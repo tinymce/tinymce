@@ -41,9 +41,9 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
-      '<p>This is some text.</p><br />' +
+      '<p>This is some text.</p><br>' +
       '<h2 id="h2">H2</h2>' +
-      '<p>This is some text.</p><hr />' +
+      '<p>This is some text.</p><hr>' +
       '<h1 id="h3">H1</h1>' +
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
@@ -84,9 +84,9 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
-      '<p>This is some text.</p><br />' +
+      '<p>This is some text.</p><br>' +
       '<h1 id="h2">H1</h1>' +
-      '<p>This is some text.</p><hr />' +
+      '<p>This is some text.</p><hr>' +
       '<h1 id="h3">H1</h1>' +
       '<p>This is some text.</p>' +
       '<h2 id="h4">H2</h2>' +
@@ -123,9 +123,9 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
-      '<p>This is some text.</p><br />' +
+      '<p>This is some text.</p><br>' +
       '<h2 id="h2">H2</h2>' +
-      '<p>This is some text.</p><hr />' +
+      '<p>This is some text.</p><hr>' +
       '<h1 id="h3">H1</h1>' +
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +
@@ -147,7 +147,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML =
       '<h2 id="h1">H2</h2>' +
-      '<p>This is some text.</p><br />' +
+      '<p>This is some text.</p><br>' +
       '<h2 id="h2">H2</h2>' +
       '<p>This is some text.</p>' +
       '<h3 id="h4">H3</h3>' +

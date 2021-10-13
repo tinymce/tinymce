@@ -55,7 +55,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,
-      'a<br />' +
+      'a<br>' +
       'b'
     );
     assert.equal(editor.selection.getStart().nodeName, 'BODY');
@@ -77,7 +77,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
 
     TinyAssertions.assertContent(editor,
       '<div>a</div>' +
-      '<br />' +
+      '<br>' +
       '<div>b</div>'
     );
     assert.equal(editor.selection.getStart().nodeName, 'BR');

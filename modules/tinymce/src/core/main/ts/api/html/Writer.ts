@@ -64,7 +64,7 @@ const Writer = (settings?: WriterSettings): Writer => {
      * @method start
      * @param {String} name Name of the element.
      * @param {Array} attrs Optional attribute array or undefined if it hasn't any.
-     * @param {Boolean} empty Optional empty state if the tag should end like <br />.
+     * @param {Boolean} empty Optional empty state if the tag should end like <br>.
      */
     start: (name: string, attrs?: Attributes, empty?: boolean) => {
       let i, l, attr, value;

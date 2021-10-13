@@ -126,7 +126,7 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
       // svg detected as image
       editor.settings.images_file_types = 'svg';
       editor.execCommand('mceInsertClipboardContent', false, { content: 'http://www.site.com/my.svg' });
-      TinyAssertions.assertContent(editor, '<p><img src="http://www.site.com/my.svg" /></p>');
+      TinyAssertions.assertContent(editor, '<p><img src="http://www.site.com/my.svg"></p>');
 
       delete editor.settings.images_file_types;
     });
@@ -149,7 +149,7 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
       editor.undoManager.add();
 
       editor.execCommand('mceInsertClipboardContent', false, { content: 'http://www.site.com/my.jpg' });
-      TinyAssertions.assertContent(editor, '<p>a<img src="http://www.site.com/my.jpg" />bc</p>');
+      TinyAssertions.assertContent(editor, '<p>a<img src="http://www.site.com/my.jpg">bc</p>');
       assert.lengthOf(editor.undoManager.data, 3);
     });
 
@@ -170,8 +170,8 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
       LegacyUnit.setSelection(editor, 'p', 1);
       editor.undoManager.add();
 
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="http://www.site.com/my.jpg" />' });
-      TinyAssertions.assertContent(editor, '<p>a<img src="http://www.site.com/my.jpg" />bc</p>');
+      editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="http://www.site.com/my.jpg">' });
+      TinyAssertions.assertContent(editor, '<p>a<img src="http://www.site.com/my.jpg">bc</p>');
       assert.lengthOf(editor.undoManager.data, 2);
     });
 
@@ -181,8 +181,8 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
       LegacyUnit.setSelection(editor, 'p', 1);
       editor.undoManager.add();
 
-      editor.execCommand('mceInsertClipboardContent', false, { text: '<img src="http://www.site.com/my.jpg" />' });
-      TinyAssertions.assertContent(editor, '<p>a&lt;img src=\"http://www.site.com/my.jpg\" /&gt;bc</p>');
+      editor.execCommand('mceInsertClipboardContent', false, { text: '<img src="http://www.site.com/my.jpg">' });
+      TinyAssertions.assertContent(editor, '<p>a&lt;img src=\"http://www.site.com/my.jpg\"&gt;bc</p>');
       assert.lengthOf(editor.undoManager.data, 2);
     });
   });
@@ -222,8 +222,8 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
       LegacyUnit.setSelection(editor, 'p', 1);
       editor.undoManager.add();
 
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="http://www.site.com/my.jpg" />' });
-      TinyAssertions.assertContent(editor, '<p>a<img src="http://www.site.com/my.jpg" />bc</p>');
+      editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="http://www.site.com/my.jpg">' });
+      TinyAssertions.assertContent(editor, '<p>a<img src="http://www.site.com/my.jpg">bc</p>');
       assert.lengthOf(editor.undoManager.data, 2);
     });
 
@@ -233,8 +233,8 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
       LegacyUnit.setSelection(editor, 'p', 1);
       editor.undoManager.add();
 
-      editor.execCommand('mceInsertClipboardContent', false, { text: '<img src="http://www.site.com/my.jpg" />' });
-      TinyAssertions.assertContent(editor, '<p>a&lt;img src=\"http://www.site.com/my.jpg\" /&gt;bc</p>');
+      editor.execCommand('mceInsertClipboardContent', false, { text: '<img src="http://www.site.com/my.jpg">' });
+      TinyAssertions.assertContent(editor, '<p>a&lt;img src=\"http://www.site.com/my.jpg\"&gt;bc</p>');
       assert.lengthOf(editor.undoManager.data, 2);
     });
   });

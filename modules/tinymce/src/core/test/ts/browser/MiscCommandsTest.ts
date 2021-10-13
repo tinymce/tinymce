@@ -53,7 +53,7 @@ describe('browser.tinymce.core.MiscCommandsTest', () => {
     rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
     editor.selection.setRng(rng);
     editor.execCommand('InsertHorizontalRule');
-    assert.equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
+    assert.equal(editor.getContent(), '<p>1</p><hr><p>3</p>');
     rng = normalizeRng(editor.selection.getRng());
     assert.isTrue(rng.collapsed);
     Assertions.assertDomEq('Nodes are not equal', SugarElement.fromDom(editor.getBody().lastChild), SugarElement.fromDom(rng.startContainer));
@@ -78,12 +78,12 @@ describe('browser.tinymce.core.MiscCommandsTest', () => {
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 2);
     editor.execCommand('InsertLineBreak');
-    assert.equal(editor.getContent(), '<p>12<br />3</p>');
+    assert.equal(editor.getContent(), '<p>12<br>3</p>');
 
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertLineBreak');
-    assert.equal(editor.getContent(), '<p><br />123</p>');
+    assert.equal(editor.getContent(), '<p><br>123</p>');
 
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 3);

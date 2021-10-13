@@ -132,12 +132,12 @@ describe('browser.tinymce.plugins.image.ImageAlignTest', () => {
         TinyAssertions.assertContentStructure(editor, isFigure ? figureImageApproxStructure(alignment) : imageApproxStructure(alignment));
       }), PromisePolyfill.resolve());
 
-      editor.setContent('<p><img src="image.png" /></p>');
+      editor.setContent('<p><img src="image.png"></p>');
       TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
       await pAlignmentSteps(false);
 
       editor.focus();
-      editor.setContent('<figure class="image"><img src="image.png" /><figcaption>Caption</figcaption></figure>');
+      editor.setContent('<figure class="image"><img src="image.png"><figcaption>Caption</figcaption></figure>');
       TinySelections.setSelection(editor, [], 1, [], 2);
       await pAlignmentSteps(true);
     });

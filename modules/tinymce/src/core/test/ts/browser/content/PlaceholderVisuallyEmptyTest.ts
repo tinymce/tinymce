@@ -36,7 +36,7 @@ describe('browser.tinymce.core.content.PlaceholderVisuallyEmptyTest', () => {
   it('TINY-3917: Check content is visually empty - forced_root_block: "p"', () => {
     const editor = hook.editor();
     testEmpty(editor, '<p></p>');
-    testEmpty(editor, '<p><br /></p>');
+    testEmpty(editor, '<p><br></p>');
     testEmpty(editor, '<p><br data-mce-bogus="1" /></p>');
     testEmpty(editor, '<p>' + Unicode.zeroWidth + '</p>');
     testEmpty(editor, '<p><span data-mce-bogus="1" data-mce-type="format-caret"><strong></strong></span><br data-mce-bogus="1" /></p>');
@@ -45,7 +45,7 @@ describe('browser.tinymce.core.content.PlaceholderVisuallyEmptyTest', () => {
   it('TINY-3917: Check content is visually empty - forced_root_block: false', () => {
     const editor = hook.editor();
     testEmpty(editor, '', true);
-    testEmpty(editor, '<br />', true);
+    testEmpty(editor, '<br>', true);
     testEmpty(editor, '<br data-mce-bogus="1" />', true);
     testEmpty(editor, Unicode.zeroWidth);
     testEmpty(editor, '<span data-mce-bogus="1" data-mce-type="format-caret"><strong></strong></span><br data-mce-bogus="1" />', true);
@@ -55,14 +55,14 @@ describe('browser.tinymce.core.content.PlaceholderVisuallyEmptyTest', () => {
     const editor = hook.editor();
     testNotEmpty(editor, '<p>Text</p>');
     testNotEmpty(editor, '<p>' + Unicode.nbsp + '</p>');
-    testNotEmpty(editor, '<p><br data-mce-bogus="1" /><br /></p>');
+    testNotEmpty(editor, '<p><br data-mce-bogus="1" /><br></p>');
     testNotEmpty(editor, '<ol><li></li></ol>');
-    testNotEmpty(editor, '<hr />');
+    testNotEmpty(editor, '<hr>');
     testNotEmpty(editor, '<p style="padding-left: 40px"><br data-mce-bogus="1" /></p>');
     testNotEmpty(editor, '<p><a href="#id">Link</a></p>');
     testNotEmpty(editor, '<p><span data-mce-bogus="all"><a href="#id">Link</a></span></p>');
-    testNotEmpty(editor, '<figure><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" /></figure>');
-    testNotEmpty(editor, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" /></p>');
+    testNotEmpty(editor, '<figure><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg=="></figure>');
+    testNotEmpty(editor, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg=="></p>');
     testNotEmpty(editor, '<table><tbody><tr><td></td><td></td></tr></tbody></table>');
     testNotEmpty(editor, '<pre class="language-markup"><code>test</code></pre>');
     testNotEmpty(editor, '<blockquote><p>' + Unicode.nbsp + '</p></blockquote>');
@@ -72,14 +72,14 @@ describe('browser.tinymce.core.content.PlaceholderVisuallyEmptyTest', () => {
     const editor = hook.editor();
     testNotEmpty(editor, 'Text', true);
     testNotEmpty(editor, Unicode.nbsp, true);
-    testNotEmpty(editor, '<br data-mce-bogus="1" /><br />');
+    testNotEmpty(editor, '<br data-mce-bogus="1" /><br>');
     testNotEmpty(editor, '<ol><li></li></ol>', true);
-    testNotEmpty(editor, '<hr />', true);
+    testNotEmpty(editor, '<hr>', true);
     testNotEmpty(editor, '<div style="padding-left: 40px"><br data-mce-bogus="1" /></div>', true);
     testNotEmpty(editor, '<a href="#id">Link</a>', true);
     testNotEmpty(editor, '<span data-mce-bogus="all"><a href="#id">Link</a></span>', true);
-    testNotEmpty(editor, '<figure><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" /></figure>', true);
-    testNotEmpty(editor, '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==" />', true);
+    testNotEmpty(editor, '<figure><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg=="></figure>', true);
+    testNotEmpty(editor, '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==">', true);
     testNotEmpty(editor, '<table><tbody><tr><td></td><td></td></tr></tbody></table>', true);
     testNotEmpty(editor, '<pre class="language-markup"><code>test</code></pre>', true);
     testNotEmpty(editor, '<blockquote><p>' + Unicode.nbsp + '</p></blockquote>', true);

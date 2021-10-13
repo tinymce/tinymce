@@ -167,10 +167,10 @@ const find = (dom: DOMUtils, node: Node, next: boolean, inc?: boolean): boolean 
  *  text<div>text</div>text
  *
  * Output becomes:
- *  text<div><br />text<br /></div>text
+ *  text<div><br>text<br></div>text
  *
  * So when the div is removed the result is:
- *  text<br />text<br />text
+ *  text<br>text<br>text
  *
  * @private
  * @param {Node} node Node to remove + apply BR/P elements to.

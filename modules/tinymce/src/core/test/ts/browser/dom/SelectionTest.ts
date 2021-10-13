@@ -102,8 +102,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<img src="a" onerror="alert(1)" />');
-    LegacyUnit.equal(editor.getContent(), '<img src="a" />', 'Set XSS at selection');
+    editor.selection.setContent('<img src="a" onerror="alert(1)">');
+    LegacyUnit.equal(editor.getContent(), '<img src="a">', 'Set XSS at selection');
 
     // Set contents at selection (collapsed)
     editor.setContent('<p>text</p>');
@@ -120,8 +120,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody().firstChild.firstChild, 'before'.length);
     rng.setEnd(editor.getBody().firstChild.firstChild, 'before'.length);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<br />');
-    LegacyUnit.equal(editor.getContent(), '<p>before<br />after</p>', 'Set contents at selection (inside paragraph)');
+    editor.selection.setContent('<br>');
+    LegacyUnit.equal(editor.getContent(), '<p>before<br>after</p>', 'Set contents at selection (inside paragraph)');
 
     // Check the caret is left in the correct position.
     rng = editor.selection.getRng();
@@ -370,7 +370,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.setContent('<p><img src="about:blank" /></p>');
+    editor.setContent('<p><img src="about:blank"></p>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 0);
     rng.setEnd(editor.getBody().firstChild, 0);
@@ -389,7 +389,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.setContent('<p><img src="about:blank" /></p>');
+    editor.setContent('<p><img src="about:blank"></p>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 0);
     rng.setEnd(editor.getBody().firstChild, 1);
@@ -408,7 +408,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.setContent('<p><img src="about:blank" /></p>');
+    editor.setContent('<p><img src="about:blank"></p>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 1);
     rng.setEnd(editor.getBody().firstChild, 1);
@@ -590,7 +590,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
 
   it('select table text 2', () => {
     const editor = hook.editor();
-    editor.setContent('<table><tbody><tr><td id="a"><br /></td><td id="b"><br /></td></tr></tbody></table>');
+    editor.setContent('<table><tbody><tr><td id="a"><br></td><td id="b"><br></td></tr></tbody></table>');
     editor.selection.select(editor.dom.select('table')[0], true);
     LegacyUnit.equal(editor.dom.getParent(editor.selection.getStart(), 'td').id, 'a', 'Expand to text content 2 (start)');
     LegacyUnit.equal(editor.dom.getParent(editor.selection.getEnd(), 'td').id, 'b', 'Expand to text content 2 (end)');
@@ -674,7 +674,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     //  return;
     // }
 
-    editor.setContent('<p><br /></p>');
+    editor.setContent('<p><br></p>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getDoc(), 0);
     rng.setEnd(editor.getDoc(), 0);
@@ -758,7 +758,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.setContent('<p><br /></p>');
+    editor.setContent('<p><br></p>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 0);
@@ -777,7 +777,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.getBody().innerHTML = '<img src="about:blank " />';
+    editor.getBody().innerHTML = '<img src="about:blank ">';
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
@@ -797,7 +797,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.getBody().innerHTML = '<p><img src="about:blank " /></p>';
+    editor.getBody().innerHTML = '<p><img src="about:blank "></p>';
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
@@ -918,7 +918,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.getBody().innerHTML = '<p><i><b></b></i><br /></p>';
+    editor.getBody().innerHTML = '<p><i><b></b></i><br></p>';
     rng = editor.dom.createRng();
     rng.setStartBefore(editor.getBody().firstChild.lastChild);
     rng.setEndBefore(editor.getBody().firstChild.lastChild);
@@ -934,7 +934,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.getBody().innerHTML = '<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>';
+    editor.getBody().innerHTML = '<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br></p>';
     rng = editor.dom.createRng();
     rng.setStartBefore(editor.getBody().firstChild.lastChild);
     rng.setEndBefore(editor.getBody().firstChild.lastChild);
@@ -950,7 +950,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.getBody().innerHTML = '<p><i><b></b></i><br /><br /></p>';
+    editor.getBody().innerHTML = '<p><i><b></b></i><br><br></p>';
     rng = editor.dom.createRng();
     rng.setStartBefore(editor.getBody().firstChild.lastChild);
     rng.setEndBefore(editor.getBody().firstChild.lastChild);
@@ -966,7 +966,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.getBody().innerHTML = '<p><i><b><br /></b></i><br /></p>';
+    editor.getBody().innerHTML = '<p><i><b><br></b></i><br></p>';
     rng = editor.dom.createRng();
     rng.setStartBefore(editor.getBody().firstChild.lastChild);
     rng.setEndBefore(editor.getBody().firstChild.lastChild);
@@ -1018,7 +1018,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.getBody().innerHTML = '<p>a<br /></p>';
+    editor.getBody().innerHTML = '<p>a<br></p>';
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 2);
     rng.setEnd(editor.getBody().firstChild, 2);
@@ -1036,7 +1036,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.setContent('<p><br /></p>');
+    editor.setContent('<p><br></p>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 1);
     rng.setEnd(editor.getBody().firstChild, 1);
@@ -1075,7 +1075,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     suite.test('normalize caret after last BR in block', function(editor) {
       var rng;
 
-      editor.setContent('<p><br /><br /></p>');
+      editor.setContent('<p><br><br></p>');
       rng = editor.dom.createRng();
       rng.setStart(editor.getBody().firstChild, 2);
       rng.setEnd(editor.getBody().firstChild, 2);
@@ -1094,7 +1094,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    editor.setContent('<p>a<br /><br /></p>');
+    editor.setContent('<p>a<br><br></p>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 3);
     rng.setEnd(editor.getBody().firstChild, 3);

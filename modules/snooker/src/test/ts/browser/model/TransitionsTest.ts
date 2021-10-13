@@ -104,7 +104,7 @@ describe('TransitionsTest', () => {
     it('basic colgroup table', () => {
       const table = SugarElement.fromHtml<HTMLTableElement>(
         `<table>
-        <colgroup><col data-id="1" /><col data-id="2" /></colgroup>
+        <colgroup><col data-id="1" /><col data-id="2"></colgroup>
         <thead>
         <tr><td>one</td><td>two</td></tr>
         </thead>
@@ -164,7 +164,7 @@ describe('TransitionsTest', () => {
     it('TINY-8011: missing cols in colgroup table are added to the grid', () => {
       const table = SugarElement.fromHtml<HTMLTableElement>(
         `<table>
-        <colgroup><col data-id="1" /></colgroup>
+        <colgroup><col data-id="1"></colgroup>
         <tbody>
         <tr><td>one</td><td>two</td><td>three</td></tr>
         <tr><td>four</td><td>five</td><td>six</td></tr>
@@ -182,7 +182,7 @@ describe('TransitionsTest', () => {
     it('TINY-8011: excess cols in colgroup table are not included in the grid', () => {
       const table = SugarElement.fromHtml<HTMLTableElement>(
         `<table>
-        <colgroup><col data-id="1" /><col data-id="2" /><col data-id="3" /><col data-id="4" /><col data-id="5" /></colgroup>
+        <colgroup><col data-id="1" /><col data-id="2" /><col data-id="3" /><col data-id="4" /><col data-id="5"></colgroup>
         <tbody>
         <tr><td>one</td><td>two</td><td>three</td></tr>
         <tr><td>four</td><td>five</td><td>six</td></tr>

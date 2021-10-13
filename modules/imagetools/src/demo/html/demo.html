@@ -23,7 +23,7 @@
   <body>
     <h2>ImageTools Demo Page</h2>
 
-    <input type="file" onchange="loadImage(this.files[0])" />
+    <input type="file" onchange="loadImage(this.files[0])">
 
     <div class="toolbar">
       <select id="selector" onchange="showOptions(this.options[this.selectedIndex].value)">
@@ -49,30 +49,30 @@
       </form>
 
       <form id="resize" class="options">
-        w: <input type="text" name="width" />
-        h: <input type="text" name="height" />
+        w: <input type="text" name="width">
+        h: <input type="text" name="height">
         <button type="submit">Go</button>
       </form>
 
       <form id="crop" class="options">
-        x: <input type="text" name="x" />
-        y: <input type="text" name="y" />
-        w: <input type="text" name="width" />
-        h: <input type="text" name="height" />
+        x: <input type="text" name="x">
+        y: <input type="text" name="y">
+        w: <input type="text" name="width">
+        h: <input type="text" name="height">
         <button type="submit">Go</button>
       </form>
 
       <form id="rotate" class="options">
-        deg: <input type="text" name="deg" />
+        deg: <input type="text" name="deg">
         <button type="submit">Go</button>
       </form>
 
       <button onclick="window.location.reload()">Reset</button>
     </div>
 
-    <br />
+    <br>
 
-    <img id="editor" src="../images/test.jpeg" />
+    <img id="editor" src="../images/test.jpeg">
 
 
     <script type="text/javascript" src="../../../scratch/compiled/demo.js"></script>

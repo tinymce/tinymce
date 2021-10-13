@@ -22,7 +22,7 @@ describe('browser.tinymce.core.content.InsertContentForcedRootBlockFalseTest', (
 
   it('insertAtCaret - selected image with bogus div', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<img src="about:blank" /><div data-mce-bogus="all">x</div>';
+    editor.getBody().innerHTML = '<img src="about:blank"><div data-mce-bogus="all">x</div>';
     editor.focus();
     // editor.selection.setCursorLocation(editor.getBody(), 0);
     editor.selection.select(editor.dom.select('img')[0]);

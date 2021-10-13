@@ -100,7 +100,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     clipboard.pasteImageData(event, editor.selection.getRng());
 
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
   });
 
@@ -114,7 +114,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     clipboard.pasteImageData(event, editor.selection.getRng());
 
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
   });
 
@@ -129,7 +129,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     clipboard.pasteImageData(event, editor.selection.getRng());
 
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src="data:image/jpeg;base64,' + base64ImgSrc + '" />a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src="data:image/jpeg;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
     const blobInfo = editor.editorUpload.blobCache.getByData(base64ImgSrc, 'image/jpeg');
@@ -149,7 +149,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     clipboard.pasteImageData(event, editor.selection.getRng());
 
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/tiff;base64,' + base64ImgSrc + '" />a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/tiff;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
     delete editor.settings.images_file_types;
@@ -170,7 +170,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     clipboard.pasteImageData(event, editor.selection.getRng());
 
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
     delete editor.settings.images_dataimg_filter;
@@ -191,7 +191,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     clipboard.pasteImageData(event, editor.selection.getRng());
 
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
     delete editor.settings.images_dataimg_filter;
@@ -206,6 +206,6 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     });
 
     await pWaitForSelector(editor, 'img');
-    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
+    TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
   });
 });

@@ -36,7 +36,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<p>a</p><p><br></p><p><br></p><p>b</p>';
     LegacyUnit.setSelection(editor, 'p:last', 0);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br /></p><p>b</p>');
+    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br></p><p>b</p>');
     assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
@@ -57,7 +57,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a<input type="text"></h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(editor.getContent(), '<h1>a<input type="text" />b<span style="color: red;">c</span></h1>');
+    assert.equal(editor.getContent(), '<h1>a<input type="text">b<span style="color: red;">c</span></h1>');
     assert.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
@@ -111,7 +111,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b<br>c</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<br />c</h1>');
+    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<br>c</h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -123,7 +123,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     rng.setEndAfter(editor.dom.select('img')[0]);
     editor.selection.setRng(rng);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br /></p>');
+    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br></p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -159,7 +159,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p><input type="text"><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    assert.equal(editor.getContent(), '<h1>a<input type="text" /><span style="color: red;">b</span></h1>');
+    assert.equal(editor.getContent(), '<h1>a<input type="text"><span style="color: red;">b</span></h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -173,7 +173,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.selection.setRng(rng);
 
     editor.execCommand('ForwardDelete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<br />bc</h1>');
+    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<br>bc</h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 

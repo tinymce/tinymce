@@ -1019,10 +1019,10 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
             continue;
           }
 
-          // Keep empty elements like <img />
+          // Keep empty elements like <img>
           name = node.nodeName.toLowerCase();
           if (elements && elements[name]) {
-            // Ignore single BR elements in blocks like <p><br /></p> or <p><span><br /></span></p>
+            // Ignore single BR elements in blocks like <p><br></p> or <p><span><br></span></p>
             if (name === 'br') {
               brCount++;
               node = walker.next();

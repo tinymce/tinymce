@@ -42,8 +42,8 @@ describe('browser.tinymce.core.fmt.MediaAlignTest', () => {
   };
 
   Arr.each([
-    { type: 'video', content: '<p><video controls="controls"><source src="custom/video.mp4" /></video></p>' },
-    { type: 'audio', content: '<p><audio controls="controls"><source src="custom/audio.mp3" /></audio></p>' },
+    { type: 'video', content: '<p><video controls="controls"><source src="custom/video.mp4"></video></p>' },
+    { type: 'audio', content: '<p><audio controls="controls"><source src="custom/audio.mp3"></audio></p>' },
   ], (test) => {
     const { type, content } = test;
 

@@ -20,7 +20,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyInlineTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0 ], 1);
     TinyContentActions.keystroke(editor, Keys.enter(), { shift: true });
-    TinyAssertions.assertContent(editor, 'a<br />b');
+    TinyAssertions.assertContent(editor, 'a<br>b');
     McEditor.remove(editor);
   });
 });

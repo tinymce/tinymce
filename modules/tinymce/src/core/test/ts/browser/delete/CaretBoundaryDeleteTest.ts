@@ -100,7 +100,7 @@ describe('browser.tinymce.core.delete.CaretBoundaryDeleteTest', () => {
 
   it('TINY-4211: Should add fake caret if we type and then delete content beside media elements', () => {
     const editor = hook.editor();
-    editor.setContent('<p><video controls="controls"><source src="custom/video.mp4" /></video></p>');
+    editor.setContent('<p><video controls="controls"><source src="custom/video.mp4"></video></p>');
     TinySelections.select(editor, 'video', []);
     // Pressing right will add a fake caret, which will be removed when we press backspace
     TinyContentActions.keystroke(editor, Keys.right());

@@ -37,8 +37,8 @@ describe('browser.tinymce.plugins.table.TableNoWidthTest', () => {
     editor.setContent('<table><tbody><tr><td data-mce-selected="1" data-mce-first-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1" data-mce-last-selected="1">3</td><td>4</td></tr></tbody></table>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
     editor.execCommand('mceTableMergeCells');
-    TinyAssertions.assertContent(editor, '<table><tbody><tr><td rowspan="2">1<br />3</td><td>2</td></tr><tr><td>4</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table><tbody><tr><td rowspan="2">1<br>3</td><td>2</td></tr><tr><td>4</td></tr></tbody></table>');
     editor.execCommand('mceTableSplitCells');
-    TinyAssertions.assertContent(editor, '<table><tbody><tr><td>1<br />3</td><td>2</td></tr><tr><td>&nbsp;</td><td>4</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table><tbody><tr><td>1<br>3</td><td>2</td></tr><tr><td>&nbsp;</td><td>4</td></tr></tbody></table>');
   });
 });

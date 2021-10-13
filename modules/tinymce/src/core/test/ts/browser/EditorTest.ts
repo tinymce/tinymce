@@ -432,7 +432,7 @@ describe('browser.tinymce.core.EditorTest', () => {
 
   it('TBA: Treat some paragraphs as empty contents', () => {
     const editor = hook.editor();
-    editor.setContent('<p><br /></p>');
+    editor.setContent('<p><br></p>');
     assert.equal(editor.getContent(), '', 'Treat some paragraphs as empty contents');
 
     editor.setContent('<p>\u00a0</p>');

@@ -14,7 +14,7 @@ describe('browser.tinymce.plugins.media.core.MediaEmbedTest', () => {
     media_url_resolver: (data, resolve) => {
       resolve({
         html: '<video width="300" height="150" ' +
-          'controls="controls">\n<source src="' + data.url + '" />\n</video>'
+          'controls="controls">\n<source src="' + data.url + '">\n</video>'
       });
     },
     base_url: '/project/tinymce/js/tinymce'
@@ -25,12 +25,12 @@ describe('browser.tinymce.plugins.media.core.MediaEmbedTest', () => {
     await Utils.pTestEmbedContentFromUrl(editor,
       'https://www.youtube.com/watch?v=b3XFjWInBog',
       '<video width="300" height="150" controls="controls">\n' +
-      '<source src="https://www.youtube.com/watch?v=b3XFjWInBog" />\n</video>'
+      '<source src="https://www.youtube.com/watch?v=b3XFjWInBog">\n</video>'
     );
     await Utils.pTestEmbedContentFromUrl(editor,
       'https://www.google.com',
       '<video width="300" height="150" controls="controls">\n' +
-      '<source src="https://www.google.com" />\n</video>'
+      '<source src="https://www.google.com">\n</video>'
     );
     await Utils.pAssertSizeRecalcConstrained(editor);
     await Utils.pAssertSizeRecalcUnconstrained(editor);

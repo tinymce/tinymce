@@ -449,7 +449,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<ol><li><p><br />abcd</p></li></ol>');
+    assert.equal(editor.getContent(), '<ol><li><p><br>abcd</p></li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -458,7 +458,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<ol><li><p>ab<br />cd</p></li></ol>');
+    assert.equal(editor.getContent(), '<ol><li><p>ab<br>cd</p></li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -469,7 +469,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     pressEnter(editor, { shiftKey: true });
     assert.equal(
       editor.getContent(),
-      '<ol><li><p>abcd<br /><br /></p></li></ol>'
+      '<ol><li><p>abcd<br><br></p></li></ol>'
     );
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
@@ -507,7 +507,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ul><li>text</li></ul>';
     LegacyUnit.setSelection(editor, 'li', 2);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<ul><li>te<br />xt</li></ul>');
+    assert.equal(editor.getContent(), '<ul><li>te<br>xt</li></ul>');
     editor.settings.forced_root_block = 'p';
   });
 

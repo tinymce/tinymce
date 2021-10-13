@@ -59,20 +59,20 @@ describe('browser.tinymce.core.keyboard.InsertKeysBrModeTest', () => {
 
       it('Insert at beginning of text node with leading nbsp after a br', () => {
         const editor = hook.editor();
-        editor.setContent('a<br />&nbsp;b', { format: 'raw' });
+        editor.setContent('a<br>&nbsp;b', { format: 'raw' });
         TinySelections.setCursor(editor, [ 2 ], 0);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 2 ], 0, [ 2 ], 0);
-        TinyAssertions.assertContent(editor, 'a<br />&nbsp;b');
+        TinyAssertions.assertContent(editor, 'a<br>&nbsp;b');
       });
 
       it('Insert at beginning of text node with leading nbsp within inline element followed by br', () => {
         const editor = hook.editor();
-        editor.setContent('a<br /><em>&nbsp;b</em>', { format: 'raw' });
+        editor.setContent('a<br><em>&nbsp;b</em>', { format: 'raw' });
         TinySelections.setCursor(editor, [ 2, 0 ], 0);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 2, 0 ], 0, [ 2, 0 ], 0);
-        TinyAssertions.assertContent(editor, 'a<br /><em>&nbsp;b</em>');
+        TinyAssertions.assertContent(editor, 'a<br><em>&nbsp;b</em>');
       });
     });
 

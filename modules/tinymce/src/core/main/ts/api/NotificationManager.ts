@@ -181,7 +181,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
      *
      * @method open
      * @param {Object} args A <code>name: value</code> collection containing settings such as: <code>timeout</code>, <code>type</code>, and message (<code>text</code>).
-     * <br /><br />
+     * <br><br>
      * For information on the available settings, see: <a href="https://www.tiny.cloud/docs/advanced/creating-custom-notifications/">Create custom notifications</a>.
      */
     open,

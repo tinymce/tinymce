@@ -35,6 +35,6 @@ describe('browser.tinymce.plugins.image.plugin.DefaultEmptyTest', () => {
       }
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="src" alt="alt" width="200" height="100" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="src" alt="alt" width="200" height="100"></p>');
   });
 });

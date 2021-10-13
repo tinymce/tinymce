@@ -229,7 +229,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
     TinySelections.setCursor(editor, [ 0 ], 0);
     editor.execCommand('mceInsertClipboardContent', false, { content: Strings.wordList1 });
 
-    TinyAssertions.assertContent(editor, '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul><p><br />a</p>');
+    TinyAssertions.assertContent(editor, '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul><p><br>a</p>');
   });
 
   it('TBA: Paste Word fake lists interrupted by header', () => {
@@ -567,7 +567,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     editor.execCommand('mceInsertClipboardContent', false, { text: 'a\nb\nc ' });
-    TinyAssertions.assertContent(editor, '<p>ta<br />b<br />c&nbsp;xt</p>');
+    TinyAssertions.assertContent(editor, '<p>ta<br>b<br>c&nbsp;xt</p>');
   });
 
   it('TBA: paste plain text with double linefeeds', () => {
@@ -594,7 +594,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
 
     editor.execCommand('mceInsertClipboardContent', false, { text: 'a\n<b>b</b>\n\nc' });
-    TinyAssertions.assertContent(editor, '<p>t</p><p>a<br />&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
+    TinyAssertions.assertContent(editor, '<p>t</p><p>a<br>&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
   });
 
   it('TBA: paste data image with paste_data_images: false', () => {
@@ -611,14 +611,14 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
     editor.settings.paste_data_images = true;
 
     editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
-    TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="></p>');
   });
 
   it('TBA: paste data with script', () => {
     const editor = hook.editor();
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: `<p><img src="non-existent.png" onerror="alert('!')" /></p>` });
-    TinyAssertions.assertContent(editor, '<p><img src="non-existent.png" /></p>');
+    editor.execCommand('mceInsertClipboardContent', false, { content: `<p><img src="non-existent.png" onerror="alert('!')"></p>` });
+    TinyAssertions.assertContent(editor, '<p><img src="non-existent.png"></p>');
   });
 
   it('TBA: paste pre process text (event)', () => {
@@ -631,7 +631,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     editor.on('PastePreProcess', callback);
     editor.execCommand('mceInsertClipboardContent', false, { text: 'b\n2' });
-    TinyAssertions.assertContent(editor, '<p>PRE:b<br />2</p>');
+    TinyAssertions.assertContent(editor, '<p>PRE:b<br>2</p>');
 
     editor.setContent('<p>a</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);

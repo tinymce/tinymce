@@ -31,7 +31,7 @@ describe('browser.tinymce.plugins.autosave.AutoSavePluginTest', () => {
     checkIfEmpty(editor, '<p>\t</p>', true);
 
     checkIfEmpty(editor, '<p><br></p>', true);
-    checkIfEmpty(editor, '<p><br /></p>', true);
+    checkIfEmpty(editor, '<p><br></p>', true);
     checkIfEmpty(editor, '<p><br data-mce-bogus="true" /></p>', true);
     checkIfEmpty(editor, '<p><br data-mce-bogus="true" /></p>', true);
 
@@ -50,16 +50,16 @@ describe('browser.tinymce.plugins.autosave.AutoSavePluginTest', () => {
     checkIfEmpty(editor, '<p>\tX</p>', false);
 
     checkIfEmpty(editor, '<p><br>X</p>', false);
-    checkIfEmpty(editor, '<p><br />X</p>', false);
+    checkIfEmpty(editor, '<p><br>X</p>', false);
     checkIfEmpty(editor, '<p><br data-mce-bogus="true" />X</p>', false);
 
     checkIfEmpty(editor, '<p><br><br></p>', false);
-    checkIfEmpty(editor, '<p><br /><br /></p>', false);
+    checkIfEmpty(editor, '<p><br><br></p>', false);
     checkIfEmpty(editor, '<p><br><br>X</p>', false);
-    checkIfEmpty(editor, '<p><br /><br />X</p>', false);
+    checkIfEmpty(editor, '<p><br><br>X</p>', false);
     checkIfEmpty(editor, '<p><br data-mce-bogus="true" /><br data-mce-bogus="true" />X</p>', false);
 
-    checkIfEmpty(editor, '<img src="x" />', false);
+    checkIfEmpty(editor, '<img src="x">', false);
   });
 
   it('TBA: hasDraft/storeDraft/restoreDraft', () => {

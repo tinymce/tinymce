@@ -90,7 +90,7 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
 
   it('TBA: Should be text content with newline', () => {
     const editor = hook.editor();
-    editor.setContent('<p>ab<br/>cd</p>');
+    editor.setContent('<p>ab<br>cd</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 2 ], 2);
     assertGetContent('Should be some content', editor, 'ab\ncd', { format: 'text' });
   });

@@ -8,7 +8,7 @@ describe('phantom.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', () 
   context('Presentation', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
-        html: '<br /><br /><hr />',
+        html: '<br><br><hr>',
         presets: 'presentation'
       })
     ));
@@ -34,7 +34,7 @@ describe('phantom.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', () 
   context('Document', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
-        html: '<br /><hr />',
+        html: '<br><hr>',
         presets: 'document'
       })
     ));

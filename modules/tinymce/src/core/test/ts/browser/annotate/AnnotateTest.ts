@@ -41,12 +41,12 @@ describe('browser.tinymce.core.annotate.AnnotateTest', () => {
 
   it('should be able to annotate a direct parent of the body (e.g. an empty paragraph)', () => {
     const editor = hook.editor();
-    editor.setContent('<p>First</p><p><br/></p><p>Third</p>');
+    editor.setContent('<p>First</p><p><br></p><p>Third</p>');
     TinySelections.setSelection(editor, [ 1 ], 0, [ 1 ], 0);
     annotate(editor, 'test-annotation', 'test-uid', { anything: 'empty-paragraph' });
     assertHtmlContent(editor, [
       '<p>First</p>',
-      '<p><span data-test-anything="empty-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation"><br /></span></p>',
+      '<p><span data-test-anything="empty-paragraph" data-mce-annotation="test-annotation" data-mce-annotation-uid="test-uid" class="mce-annotation"><br></span></p>',
       '<p>Third</p>'
     ]);
   });

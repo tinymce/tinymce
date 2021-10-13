@@ -488,7 +488,7 @@ class EditorCommands {
       'mceRepaint': Fun.noop,
 
       'InsertHorizontalRule': () => {
-        editor.execCommand('mceInsertContent', false, '<hr />');
+        editor.execCommand('mceInsertContent', false, '<hr>');
       },
 
       'mceToggleVisualAid': () => {
