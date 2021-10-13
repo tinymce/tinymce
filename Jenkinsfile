@@ -145,6 +145,10 @@ node("primary") {
       exec("yarn ci-all")
     }
 
+    stage ("Moxiedoc check") {
+      exec("yarn tinymce-grunt shell:moxiedoc")
+    }
+
     stage ("Run Tests") {
       grunt("list-changed-phantom list-changed-browser")
       // Run all the tests in parallel
