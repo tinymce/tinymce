@@ -46,7 +46,8 @@ module.exports = function (grunt) {
     pkg: packageData,
 
     shell: {
-      tsc: { command: 'tsc -b' }
+      tsc: { command: 'tsc -b' },
+      moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' }
     },
 
     eslint: {

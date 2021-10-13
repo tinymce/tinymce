@@ -1,7 +1,7 @@
 {
   "name": "@ephox/darwin",
   "description": "This project's purpose is to handle selection and cursor navigation.",
-  "version": "7.0.3",
+  "version": "7.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git",
