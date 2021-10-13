@@ -35,7 +35,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
   };
 
   const trimBr = (html: string): string =>
-    html.replace(/<br data-mce-bogus="1" \/>/g, '');
+    html.replace(/<br data-mce-bogus="1">/g, '');
 
   it('mceInsertToc', () => {
     const editor = hook.editor();
