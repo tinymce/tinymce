@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -19,6 +19,12 @@ import * as NodeType from '../dom/NodeType';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as FilterNode from '../html/FilterNode';
 import { Content, SetContentArgs } from './ContentTypes';
+import { postProcessSetContent, preProcessSetContent } from './PrePostProcess';
+
+interface SetContentResult {
+  readonly content: Content;
+  readonly html: string;
+}
 
 const defaultFormat = 'html';
 
@@ -42,7 +48,7 @@ const setEditorHtml = (editor: Editor, html: string, noSelection: boolean | unde
   }
 };
 
-const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
+const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): SetContentResult => {
   // Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
   // It will also be impossible to place the caret in the editor unless there is a BR element present
   if (content.length === 0 || /^\s+$/.test(content)) {
@@ -69,40 +75,30 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
 
     setEditorHtml(editor, content, args.no_selection);
 
-    editor.fire('SetContent', args);
+    return { content, html: content };
   } else {
     if (args.format !== 'raw') {
-      content = HtmlSerializer({
-        validate: editor.validate
-      }, editor.schema).serialize(
+      content = HtmlSerializer({ validate: false }, editor.schema).serialize(
         editor.parser.parse(content, { isRootContent: true, insert: true })
       );
     }
 
-    args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? content : Tools.trim(content);
-    setEditorHtml(editor, args.content, args.no_selection);
+    const trimmedHtml = isWsPreserveElement(SugarElement.fromDom(body)) ? content : Tools.trim(content);
+    setEditorHtml(editor, trimmedHtml, args.no_selection);
 
-    if (!args.no_events) {
-      editor.fire('SetContent', args);
-    }
+    return { content: trimmedHtml, html: trimmedHtml };
   }
-
-  return args.content;
 };
 
-const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, args: SetContentArgs): AstNode => {
+const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, args: SetContentArgs): SetContentResult => {
   FilterNode.filter(editor.parser.getNodeFilters(), editor.parser.getAttributeFilters(), content);
 
-  const html = HtmlSerializer({ validate: editor.validate }, editor.schema).serialize(content);
+  const html = HtmlSerializer({ validate: false }, editor.schema).serialize(content);
 
-  args.content = isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html);
-  setEditorHtml(editor, args.content, args.no_selection);
+  const trimmedHtml = isWsPreserveElement(SugarElement.fromDom(body)) ? html : Tools.trim(html);
+  setEditorHtml(editor, trimmedHtml, args.no_selection);
 
-  if (!args.no_events) {
-    editor.fire('SetContent', args);
-  }
-
-  return content;
+  return { content, html: trimmedHtml };
 };
 
 const setupArgs = (args: Partial<SetContentArgs>, content: Content): SetContentArgs => ({
@@ -112,16 +108,21 @@ const setupArgs = (args: Partial<SetContentArgs>, content: Content): SetContentA
   content: isTreeNode(content) ? '' : content
 });
 
-export const setContentInternal = (editor: Editor, content: Content, args: SetContentArgs): Content => {
+export const setContentInternal = (editor: Editor, content: Content, args: Partial<SetContentArgs>): Content => {
   const defaultedArgs = setupArgs(args, content);
-  const updatedArgs = args.no_events ? defaultedArgs : editor.fire('BeforeSetContent', defaultedArgs);
+  return preProcessSetContent(editor, defaultedArgs).map((updatedArgs) => {
+    // Don't use the content from the args for tree, as it'll be an empty string
+    const updatedContent = isTreeNode(content) ? content : updatedArgs.content;
 
-  if (!isTreeNode(content)) {
-    content = updatedArgs.content;
-  }
+    const result = Optional.from(editor.getBody()).map((body) => {
+      if (isTreeNode(updatedContent)) {
+        return setContentTree(editor, body, updatedContent, updatedArgs);
+      } else {
+        return setContentString(editor, body, updatedContent, updatedArgs);
+      }
+    }).getOr({ content, html: updatedArgs.content });
 
-  return Optional.from(editor.getBody()).fold(
-    Fun.constant(content),
-    (body) => isTreeNode(content) ? setContentTree(editor, body, content, updatedArgs) : setContentString(editor, body, content, updatedArgs)
-  );
+    postProcessSetContent(editor, result.html, updatedArgs);
+    return result.content;
+  }).getOr(content);
 };

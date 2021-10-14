@@ -20,6 +20,7 @@ import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
+import { postProcessSetContent, preProcessSetContent } from '../content/PrePostProcess';
 import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
 import * as NodeType from '../dom/NodeType';
@@ -53,7 +54,7 @@ const validInsertion = (editor: Editor, value: string, parentNode: Element): voi
     if (!node || (node === node2 && node.nodeName === 'BR')) {
       editor.dom.setHTML(parentNode, value);
     } else {
-      editor.selection.setContent(value);
+      editor.selection.setContent(value, { no_events: true });
     }
   }
 };
@@ -225,123 +226,119 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;</span>';
 
   // Run beforeSetContent handlers on the HTML to be inserted
-  const args = editor.fire('BeforeSetContent', { content: value, format: 'html', selection: true, paste: details.paste });
-  if (args.isDefaultPrevented()) {
-    editor.fire('SetContent', { content: args.content, format: 'html', selection: true, paste: details.paste });
-    return;
-  }
+  preProcessSetContent(editor, { content: value, format: 'html', set: false, selection: true, paste: details.paste }).each((args) => {
+    value = args.content;
 
-  value = args.content;
-
-  // Add caret at end of contents if it's missing
-  if (value.indexOf('{$caret}') === -1) {
-    value += '{$caret}';
-  }
-
-  // Replace the caret marker with a span bookmark element
-  value = value.replace(/\{\$caret\}/, bookmarkHtml);
-
-  // If selection is at <body>|<p></p> then move it into <body><p>|</p>
-  rng = selection.getRng();
-  const caretElement = rng.startContainer || (rng.parentElement ? rng.parentElement() : null);
-  const body = editor.getBody();
-  if (caretElement === body && selection.isCollapsed()) {
-    if (dom.isBlock(body.firstChild) && canHaveChildren(editor, body.firstChild) && dom.isEmpty(body.firstChild)) {
-      rng = dom.createRng();
-      rng.setStart(body.firstChild, 0);
-      rng.setEnd(body.firstChild, 0);
-      selection.setRng(rng);
+    // Add caret at end of contents if it's missing
+    if (value.indexOf('{$caret}') === -1) {
+      value += '{$caret}';
     }
-  }
 
-  // Insert node maker where we will insert the new HTML and get it's parent
-  if (!selection.isCollapsed()) {
-    deleteSelectedContent(editor);
-  }
+    // Replace the caret marker with a span bookmark element
+    value = value.replace(/\{\$caret\}/, bookmarkHtml);
 
-  parentNode = selection.getNode();
-
-  // Parse the fragment within the context of the parent node
-  const parserArgs: ParserArgs = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
-  const fragment = parser.parse(value, parserArgs);
-
-  // Custom handling of lists
-  if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
-    rng = InsertList.insertAtCaret(serializer, dom, selection.getRng(), fragment);
-    selection.setRng(rng);
-    editor.fire('SetContent', args);
-    return;
-  }
-
-  markFragmentElements(fragment);
-
-  // Move the caret to a more suitable location
-  node = fragment.lastChild;
-  if (node.attr('id') === 'mce_marker') {
-    const marker = node;
-
-    for (node = node.prev; node; node = node.walk(true)) {
-      if (node.type === 3 || !dom.isBlock(node.name)) {
-        if (editor.schema.isValidChild(node.parent.name, 'span')) {
-          node.parent.insert(marker, node, node.name === 'br');
-        }
-        break;
+    // If selection is at <body>|<p></p> then move it into <body><p>|</p>
+    rng = selection.getRng();
+    const caretElement = rng.startContainer || (rng.parentElement ? rng.parentElement() : null);
+    const body = editor.getBody();
+    if (caretElement === body && selection.isCollapsed()) {
+      if (dom.isBlock(body.firstChild) && canHaveChildren(editor, body.firstChild) && dom.isEmpty(body.firstChild)) {
+        rng = dom.createRng();
+        rng.setStart(body.firstChild, 0);
+        rng.setEnd(body.firstChild, 0);
+        selection.setRng(rng);
       }
     }
-  }
 
-  editor._selectionOverrides.showBlockCaretContainer(parentNode);
+    // Insert node maker where we will insert the new HTML and get it's parent
+    if (!selection.isCollapsed()) {
+      deleteSelectedContent(editor);
+    }
 
-  // If parser says valid we can insert the contents into that parent
-  if (!parserArgs.invalid) {
-    value = serializer.serialize(fragment);
-    validInsertion(editor, value, parentNode);
-  } else {
-    // If the fragment was invalid within that context then we need
-    // to parse and process the parent it's inserted into
-
-    // Insert bookmark node and get the parent
-    editor.selection.setContent(bookmarkHtml);
     parentNode = selection.getNode();
-    const rootNode = editor.getBody();
 
-    // Opera will return the document node when selection is in root
-    if (parentNode.nodeType === 9) {
-      parentNode = node = rootNode;
+    // Parse the fragment within the context of the parent node
+    const parserArgs: ParserArgs = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
+    const fragment = parser.parse(value, parserArgs);
+
+    // Custom handling of lists
+    if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
+      rng = InsertList.insertAtCaret(serializer, dom, selection.getRng(), fragment);
+      selection.setRng(rng);
+      editor.fire('SetContent', args);
+      return;
+    }
+
+    markFragmentElements(fragment);
+
+    // Move the caret to a more suitable location
+    node = fragment.lastChild;
+    if (node.attr('id') === 'mce_marker') {
+      const marker = node;
+
+      for (node = node.prev; node; node = node.walk(true)) {
+        if (node.type === 3 || !dom.isBlock(node.name)) {
+          if (editor.schema.isValidChild(node.parent.name, 'span')) {
+            node.parent.insert(marker, node, node.name === 'br');
+          }
+          break;
+        }
+      }
+    }
+
+    editor._selectionOverrides.showBlockCaretContainer(parentNode);
+
+    // If parser says valid we can insert the contents into that parent
+    if (!parserArgs.invalid) {
+      value = serializer.serialize(fragment);
+      validInsertion(editor, value, parentNode);
     } else {
-      node = parentNode;
+      // If the fragment was invalid within that context then we need
+      // to parse and process the parent it's inserted into
+
+      // Insert bookmark node and get the parent
+      editor.selection.setContent(bookmarkHtml);
+      parentNode = selection.getNode();
+      const rootNode = editor.getBody();
+
+      // Opera will return the document node when selection is in root
+      if (parentNode.nodeType === 9) {
+        parentNode = node = rootNode;
+      } else {
+        node = parentNode;
+      }
+
+      // Find the ancestor just before the root element
+      while (node !== rootNode) {
+        parentNode = node;
+        node = node.parentNode;
+      }
+
+      // Get the outer/inner HTML depending on if we are in the root and parser and serialize that
+      value = parentNode === rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
+      value = serializer.serialize(
+        parser.parse(
+          // Need to replace by using a function since $ in the contents would otherwise be a problem
+          value.replace(/<span (id="mce_marker"|id=mce_marker).+?<\/span>/i, () => {
+            return serializer.serialize(fragment);
+          })
+        )
+      );
+
+      // Set the inner/outer HTML depending on if we are in the root or not
+      if (parentNode === rootNode) {
+        dom.setHTML(rootNode, value);
+      } else {
+        dom.setOuterHTML(parentNode, value);
+      }
     }
 
-    // Find the ancestor just before the root element
-    while (node !== rootNode) {
-      parentNode = node;
-      node = node.parentNode;
-    }
+    reduceInlineTextElements(editor, merge);
+    moveSelectionToMarker(editor, dom.get('mce_marker'));
+    unmarkFragmentElements(editor.getBody());
+    trimBrsFromTableCell(dom, selection.getStart());
 
-    // Get the outer/inner HTML depending on if we are in the root and parser and serialize that
-    value = parentNode === rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
-    value = serializer.serialize(
-      parser.parse(
-        // Need to replace by using a function since $ in the contents would otherwise be a problem
-        value.replace(/<span (id="mce_marker"|id=mce_marker).+?<\/span>/i, () => {
-          return serializer.serialize(fragment);
-        })
-      )
-    );
-
-    // Set the inner/outer HTML depending on if we are in the root or not
-    if (parentNode === rootNode) {
-      dom.setHTML(rootNode, value);
-    } else {
-      dom.setOuterHTML(parentNode, value);
-    }
-  }
-
-  reduceInlineTextElements(editor, merge);
-  moveSelectionToMarker(editor, dom.get('mce_marker'));
-  unmarkFragmentElements(editor.getBody());
-  trimBrsFromTableCell(dom, selection.getStart());
-
-  editor.fire('SetContent', args);
-  editor.addVisual();
+    postProcessSetContent(editor, value, args);
+    editor.addVisual();
+  });
 };

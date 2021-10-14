@@ -41,7 +41,6 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
   }
 
   let testBlobDataUri: string;
-  let dataImgFilter: (img: HTMLImageElement) => boolean;
   let changeEvents: Array<EditorEvent<{}>> = [];
 
   const appendEvent = (event: EditorEvent<{}>) => changeEvents.push(event);
@@ -81,7 +80,6 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    images_dataimg_filter: (img) => dataImgFilter ? dataImgFilter(img) : true,
     setup: (ed: Editor) => ed.on('change', appendEvent)
   }, [ Theme ]);
 
@@ -90,7 +88,6 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     editor.editorUpload.destroy();
     editor.settings.automatic_uploads = false;
     delete editor.settings.images_replace_blob_uris;
-    dataImgFilter = undefined;
     clearEvents();
   });
 
@@ -419,28 +416,6 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     return editor.uploadImages(uploadDone);
   });
 
-  it(`TBA: Don't upload filtered image`, () => {
-    const editor = hook.editor();
-    let uploadCount = 0;
-
-    assertEventsLength(0);
-    const uploadDone = () => {
-      assertEventsLength(0);
-      assert.equal(uploadCount, 0, 'Should not upload.');
-    };
-
-    dataImgFilter = (img) => !img.hasAttribute('data-skip');
-
-    editor.setContent('<img src="' + testBlobDataUri + '" data-skip="1">');
-
-    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
-      uploadCount++;
-      success('url');
-    };
-
-    return editor.uploadImages(uploadDone);
-  });
-
   it(`TBA: Don't upload api filtered image`, () => {
     const editor = hook.editor();
     let uploadCount = 0, filterCount = 0;
@@ -452,7 +427,6 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       assert.equal(filterCount, 1, 'Should have filtered one item.');
     };
 
-    dataImgFilter = Fun.always;
     editor.editorUpload.addFilter((img) => {
       filterCount++;
       return !img.hasAttribute('data-skip');

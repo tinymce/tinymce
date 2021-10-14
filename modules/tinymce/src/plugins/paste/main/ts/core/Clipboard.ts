@@ -138,11 +138,6 @@ const parseDataUri = (uri: string): DataUriResult => {
   }
 };
 
-const isValidDataUriImage = (editor: Editor, imgElm: HTMLImageElement): boolean => {
-  const filter = Settings.getImagesDataImgFilter(editor);
-  return filter ? filter(imgElm) : true;
-};
-
 const extractFilename = (editor: Editor, str: string): string | null => {
   const m = str.match(/([\s\S]+?)(?:\.[a-z0-9.]+)$/i);
   return Type.isNonNullable(m) ? editor.dom.encode(m[1]) : null;
@@ -159,26 +154,22 @@ const pasteImage = (editor: Editor, imageItem: FileResult): void => {
   img.src = imageItem.uri;
 
   // TODO: Move the bulk of the cache logic to EditorUpload
-  if (isValidDataUriImage(editor, img)) {
-    const blobCache = editor.editorUpload.blobCache;
-    let blobInfo: BlobInfo;
+  const blobCache = editor.editorUpload.blobCache;
+  let blobInfo: BlobInfo;
 
-    const existingBlobInfo = blobCache.getByData(base64, type);
-    if (!existingBlobInfo) {
-      const useFileName = Settings.getImagesReuseFilename(editor) && Type.isNonNullable(file.name);
-      const name = useFileName ? extractFilename(editor, file.name) : id;
-      const filename = useFileName ? file.name : undefined;
+  const existingBlobInfo = blobCache.getByData(base64, type);
+  if (!existingBlobInfo) {
+    const useFileName = Settings.getImagesReuseFilename(editor) && Type.isNonNullable(file.name);
+    const name = useFileName ? extractFilename(editor, file.name) : id;
+    const filename = useFileName ? file.name : undefined;
 
-      blobInfo = blobCache.create(id, file, base64, name, filename);
-      blobCache.add(blobInfo);
-    } else {
-      blobInfo = existingBlobInfo;
-    }
-
-    pasteHtml(editor, '<img src="' + blobInfo.blobUri() + '">', false);
+    blobInfo = blobCache.create(id, file, base64, name, filename);
+    blobCache.add(blobInfo);
   } else {
-    pasteHtml(editor, '<img src="' + imageItem.uri + '">', false);
+    blobInfo = existingBlobInfo;
   }
+
+  pasteHtml(editor, '<img src="' + blobInfo.blobUri() + '">', false);
 };
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent => event.type === 'paste';

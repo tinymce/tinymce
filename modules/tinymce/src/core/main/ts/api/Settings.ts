@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 
 import { UploadHandler } from '../file/Uploader';
 import DOMUtils from './dom/DOMUtils';
@@ -44,11 +44,6 @@ const getContentSecurityPolicy = (editor: Editor): string => editor.getParam('co
 const shouldPutBrInPre = (editor: Editor): boolean => editor.getParam('br_in_pre', true);
 
 const getForcedRootBlock = (editor: Editor): string => {
-  // Legacy option
-  if (editor.getParam('force_p_newlines', false)) {
-    return 'p';
-  }
-
   const block = editor.getParam('forced_root_block', 'p');
   if (block === false) {
     return '';
@@ -72,8 +67,6 @@ const shouldEndContainerOnEmptyBlock = (editor: Editor): boolean => editor.getPa
 const getFontStyleValues = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_style_values', 'xx-small,x-small,small,medium,large,x-large,xx-large'));
 
 const getFontSizeClasses = (editor: Editor): string[] => Tools.explode(editor.getParam('font_size_classes', ''));
-
-const getImagesDataImgFilter = (editor: Editor): (imgElm: HTMLImageElement) => boolean => editor.getParam('images_dataimg_filter', Fun.always, 'function');
 
 const isAutomaticUploadsEnabled = (editor: Editor): boolean => editor.getParam('automatic_uploads', true, 'boolean');
 
@@ -226,7 +219,6 @@ export {
   getFontSizeClasses,
   getIconPackName,
   getIconsUrl,
-  getImagesDataImgFilter,
   isAutomaticUploadsEnabled,
   shouldReuseFileName,
   shouldReplaceBlobUris,

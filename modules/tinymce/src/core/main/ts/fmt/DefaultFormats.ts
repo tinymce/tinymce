@@ -42,10 +42,23 @@ const get = (dom: DOMUtils) => {
         defaultBlock: 'div'
       },
       {
-        selector: 'img,table,audio,video',
+        selector: 'img,audio,video',
         collapsed: false,
         styles: {
           float: 'left'
+        },
+        preview: 'font-family font-size'
+      },
+      {
+        selector: 'table',
+        collapsed: false,
+        styles: {
+          marginLeft: '0px',
+          marginRight: 'auto',
+        },
+        onformat: (table: Element) => {
+          // Remove conflicting float style
+          dom.setStyle(table, 'float', null);
         },
         preview: 'font-family font-size'
       }
@@ -107,10 +120,23 @@ const get = (dom: DOMUtils) => {
         defaultBlock: 'div'
       },
       {
-        selector: 'img,table,audio,video',
+        selector: 'img,audio,video',
         collapsed: false,
         styles: {
           float: 'right'
+        },
+        preview: 'font-family font-size'
+      },
+      {
+        selector: 'table',
+        collapsed: false,
+        styles: {
+          marginRight: '0px',
+          marginLeft: 'auto',
+        },
+        onformat: (table: Element) => {
+          // Remove conflicting float style
+          dom.setStyle(table, 'float', null);
         },
         preview: 'font-family font-size'
       }

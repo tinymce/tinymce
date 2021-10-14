@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Type } from '@ephox/katamari';
 
 import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
@@ -210,18 +210,8 @@ const EditorUpload = (editor: Editor): EditorUpload => {
     }
   };
 
-  const isValidDataUriImage = (imgElm: HTMLImageElement) => {
-    if (Arr.forall(urlFilters, (filter) => filter(imgElm)) === false) {
-      return false;
-    }
-
-    if (imgElm.getAttribute('src').indexOf('data:') === 0) {
-      const dataImgFilter = Settings.getImagesDataImgFilter(editor);
-      return dataImgFilter(imgElm);
-    }
-
-    return true;
-  };
+  const isValidDataUriImage = (imgElm: HTMLImageElement) =>
+    Arr.forall(urlFilters, (filter) => filter(imgElm));
 
   const addFilter = (filter: (img: HTMLImageElement) => boolean) => {
     urlFilters.push(filter);
@@ -302,7 +292,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
 
   editor.on('GetContent', (e) => {
     // if the content is not a string, we can't process it
-    if (e.source_view || e.format === 'raw' || e.format === 'tree') {
+    if (e.source_view || e.format === 'raw' || e.format === 'tree' || !Type.isString(e.content)) {
       return;
     }
 

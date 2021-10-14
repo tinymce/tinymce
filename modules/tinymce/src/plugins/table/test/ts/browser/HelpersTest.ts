@@ -191,7 +191,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
   it('TBA: extractDataFromTableElement 2 - right alignment', () => {
     const editor = hook.editor();
     editor.setContent(
-      '<table class="foo" style="float: right;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
+      '<table class="foo" style="margin-left: auto; margin-right: 0px"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
     );
     const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
@@ -202,7 +202,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
   it('TBA: extractDataFromTableElement 2 - left alignment', () => {
     const editor = hook.editor();
     editor.setContent(
-      '<table class="foo" style="float: left;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
+      '<table class="foo" style="margin-left: 0px; margin-right: auto;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
     );
     const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);

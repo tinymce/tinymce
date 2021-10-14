@@ -12,7 +12,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
-import { ContentLanguage } from 'tinymce/core/api/SettingsTypes';
+import { ContentLanguage, FilePickerCallback, FilePickerValidationCallback } from 'tinymce/core/api/SettingsTypes';
 
 export interface ToolbarGroupSetting {
   name?: string;
@@ -162,31 +162,29 @@ const getMenus = (editor: Editor) => {
   }
 };
 
-const getMenubar = (editor: Editor) => editor.getParam('menubar');
+const getMenubar = (editor: Editor): string | boolean | undefined =>
+  editor.getParam('menubar');
 
-const getToolbar = (editor: Editor): Array<string | ToolbarGroupSetting> | string | boolean => editor.getParam('toolbar', true);
+const getToolbar = (editor: Editor): Array<string | ToolbarGroupSetting> | string | boolean =>
+  editor.getParam('toolbar', true);
 
-const getFilePickerCallback = (editor: Editor) => editor.getParam('file_picker_callback');
+const getFilePickerCallback = (editor: Editor): FilePickerCallback | undefined =>
+  editor.getParam('file_picker_callback', undefined, 'function');
 
-const getFilePickerTypes = (editor: Editor) => editor.getParam('file_picker_types');
+const getFilePickerTypes = (editor: Editor): string | undefined =>
+  editor.getParam('file_picker_types', undefined, 'string');
 
-const getFileBrowserCallbackTypes = (editor: Editor) => editor.getParam('file_browser_callback_types');
+const noTypeaheadUrls = (editor: Editor): boolean =>
+  editor.getParam('typeahead_urls') === false;
 
-const noTypeaheadUrls = (editor: Editor) => editor.getParam('typeahead_urls') === false;
+const getAnchorTop = (editor: Editor): string | false =>
+  editor.getParam('anchor_top', '#top');
 
-const getAnchorTop = (editor: Editor): string | false => editor.getParam('anchor_top', '#top');
+const getAnchorBottom = (editor: Editor): string | false =>
+  editor.getParam('anchor_bottom', '#bottom');
 
-const getAnchorBottom = (editor: Editor): string | false => editor.getParam('anchor_bottom', '#bottom');
-
-const getFilePickerValidatorHandler = (editor: Editor) => {
-  const handler = editor.getParam('file_picker_validator_handler', undefined, 'function');
-  if (handler === undefined) {
-    // Fallback to legacy/deprecated setting
-    return editor.getParam('filepicker_validator_handler', undefined, 'function');
-  } else {
-    return handler;
-  }
-};
+const getFilePickerValidatorHandler = (editor: Editor): FilePickerValidationCallback | undefined =>
+  editor.getParam('file_picker_validator_handler', undefined, 'function');
 
 export {
   getSkinUrl,
@@ -223,7 +221,6 @@ export {
   getToolbar,
   getFilePickerCallback,
   getFilePickerTypes,
-  getFileBrowserCallbackTypes,
   noTypeaheadUrls,
   getAnchorTop,
   getAnchorBottom,

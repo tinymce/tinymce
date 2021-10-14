@@ -6,7 +6,8 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { GetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { getContent, GetSelectionContentArgs } from 'tinymce/core/selection/GetSelectionContent';
+import { GetSelectionContentArgs } from 'tinymce/core/content/ContentTypes';
+import { getContent } from 'tinymce/core/selection/GetSelectionContent';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.selection.GetSelectionContentTest', () => {
@@ -35,15 +36,15 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
     document.body.appendChild(div);
   };
 
-  const getSelectionContent = (editor: Editor, args: GetSelectionContentArgs) =>
+  const getSelectionContent = (editor: Editor, args: Partial<GetSelectionContentArgs>) =>
     getContent(editor, args).toString().replace(/[\r]+/g, '');
 
-  const assertGetContent = (label: string, editor: Editor, expectedContent: string, args: GetSelectionContentArgs = {}) => {
+  const assertGetContent = (label: string, editor: Editor, expectedContent: string, args: Partial<GetSelectionContentArgs> = {}) => {
     const content = getSelectionContent(editor, args);
     assert.equal(content, expectedContent, label + ': Should be expected contents');
   };
 
-  const assertGetContentOverrideBeforeGetContent = (label: string, editor: Editor, expectedContent: string, args: GetSelectionContentArgs = {}) => {
+  const assertGetContentOverrideBeforeGetContent = (label: string, editor: Editor, expectedContent: string, args: Partial<GetSelectionContentArgs> = {}) => {
     const handler = (e: EditorEvent<GetContentEvent>) => {
       if (e.selection === true) {
         e.preventDefault();

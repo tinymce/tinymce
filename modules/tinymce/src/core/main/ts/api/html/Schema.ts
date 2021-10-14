@@ -12,26 +12,16 @@ import Tools from '../util/Tools';
 export type SchemaType = 'html4' | 'html5' | 'html5-strict';
 
 export interface SchemaSettings {
-  block_elements?: string;
-  boolean_attributes?: string;
   custom_elements?: string;
   extended_valid_elements?: string;
   invalid_elements?: string;
   invalid_styles?: string | Record<string, string>;
-  move_caret_before_on_enter_elements?: string;
-  non_empty_elements?: string;
   schema?: SchemaType;
-  self_closing_elements?: string;
-  short_ended_elements?: string;
-  special?: string;
-  text_block_elements?: string;
-  text_inline_elements?: string;
   valid_children?: string;
   valid_classes?: string | Record<string, string>;
   valid_elements?: string;
   valid_styles?: string | Record<string, string>;
   verify_html?: boolean;
-  whitespace_elements?: string;
 }
 
 export interface Attribute {
@@ -491,12 +481,12 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
     'dfn code mark q sup sub samp');
 
-  each((settings.special || 'script noscript iframe noframes noembed title style textarea xmp').split(' '), (name) => {
+  each(('script noscript iframe noframes noembed title style textarea xmp').split(' '), (name) => {
     specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
   });
 
   // Converts a wildcard expression string to a regexp for example *a will become /.*a/.
-  const patternToRegExp = (str) => new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
+  const patternToRegExp = (str: string) => new RegExp('^' + str.replace(/([?+*])/g, '.$1') + '$');
 
   // Parses the specified valid_elements string and adds to the current rules
   // This function is a bit hard to read since it's heavily optimized for speed

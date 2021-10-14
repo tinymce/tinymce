@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
@@ -44,6 +45,18 @@ const fireFormatApply = (editor: Editor, format: string, node: Node | RangeLikeO
 const fireFormatRemove = (editor: Editor, format: string, node: Node | RangeLikeObject, vars: FormatVars | undefined) =>
   editor.fire('FormatRemove', { format, node, vars });
 
+const fireBeforeSetContent = <T extends SetContentArgs>(editor: Editor, args: T) =>
+  editor.fire('BeforeSetContent', args);
+
+const fireSetContent = <T extends SetContentArgs>(editor: Editor, args: T) =>
+  editor.fire('SetContent', args);
+
+const fireBeforeGetContent = <T extends GetContentArgs>(editor: Editor, args: T) =>
+  editor.fire('BeforeGetContent', args);
+
+const fireGetContent = <T extends GetContentArgs & { content: Content }>(editor: Editor, args: T) =>
+  editor.fire('GetContent', args);
+
 export {
   firePreProcess,
   firePostProcess,
@@ -58,5 +71,9 @@ export {
   firePlaceholderToggle,
   fireError,
   fireFormatApply,
-  fireFormatRemove
+  fireFormatRemove,
+  fireBeforeSetContent,
+  fireSetContent,
+  fireBeforeGetContent,
+  fireGetContent
 };

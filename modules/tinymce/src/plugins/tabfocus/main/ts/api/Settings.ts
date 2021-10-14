@@ -10,9 +10,6 @@ import Editor from 'tinymce/core/api/Editor';
 const getTabFocusElements = (editor: Editor): string =>
   editor.getParam('tabfocus_elements', ':prev,:next');
 
-const getTabFocus = (editor: Editor): string =>
-  editor.getParam('tab_focus', getTabFocusElements(editor));
-
 export {
-  getTabFocus
+  getTabFocusElements
 };

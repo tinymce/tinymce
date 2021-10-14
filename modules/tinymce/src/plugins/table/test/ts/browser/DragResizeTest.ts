@@ -15,7 +15,7 @@ describe('browser.tinymce.plugins.table.DragResizeTest', () => {
     content_style: 'table {border: 0;padding:0;} td {border: 0;padding:0;}',
     height: 400,
     base_url: '/project/tinymce/js/tinymce',
-    table_responsive_width: false
+    table_sizing_mode: 'fixed'
   }, [ Plugin, Theme ], true);
 
   const dragDrop = (container: SugarElement<HTMLElement>, selector: string, dx: number, dy: number) => {

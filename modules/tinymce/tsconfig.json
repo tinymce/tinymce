@@ -10,7 +10,6 @@
     "paths": {
       "tinymce": ["src/core/main/ts/api/Main"],
       "tinymce/core/*": ["src/core/main/ts/*"],
-      "tinymce/themes/mobile/*": ["src/themes/mobile/main/ts/*"],
       "tinymce/themes/silver/demo/*": ["src/themes/silver/demo/ts/*"],
       "tinymce/themes/silver/*": ["src/themes/silver/main/ts/*"],
       "tinymce/plugins/advlist/*": ["src/plugins/advlist/main/ts/*"],

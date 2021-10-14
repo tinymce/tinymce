@@ -15,7 +15,8 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     DOM.add(document.body, 'div', { id: 'test' });
 
     const dom = DOMUtils(document, {
-      hex_colors: true, keep_values: true, url_converter: (u) => {
+      keep_values: true,
+      url_converter: (u) => {
         return 'X' + u + 'Y';
       }
     });

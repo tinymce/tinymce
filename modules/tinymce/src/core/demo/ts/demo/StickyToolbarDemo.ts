@@ -85,11 +85,6 @@ export default () => {
     template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
     image_caption: true,
     theme: 'silver',
-    mobile: {
-      plugins: [
-        'autosave lists'
-      ]
-    },
     setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },

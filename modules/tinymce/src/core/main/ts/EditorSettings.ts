@@ -37,7 +37,6 @@ const deviceDetection = PlatformDetection.detect().deviceType;
 const isTouch = deviceDetection.isTouch();
 const isPhone = deviceDetection.isPhone();
 const isTablet = deviceDetection.isTablet();
-const legacyMobilePlugins = [ 'lists', 'autolink', 'autosave' ];
 const defaultTouchSettings: RawEditorSettings = {
   table_grid: false,          // Table grid relies on hover, which isn't available so use the dialog instead
   object_resizing: false,     // No nice way to do object resizing at this stage
@@ -50,11 +49,6 @@ const normalizePlugins = (plugins: string | string[]) => {
   return Arr.filter(trimmedPlugins, (item) => {
     return item.length > 0;
   });
-};
-
-// Filter out plugins for the legacy mobile theme
-const filterLegacyMobilePlugins = (plugins: string[]) => {
-  return Arr.filter(plugins, Fun.curry(Arr.contains, legacyMobilePlugins));
 };
 
 const extractSections = (keys, settings) => {
@@ -75,20 +69,13 @@ const hasSection = (sectionResult: SectionResult, name: string) => {
   return Obj.has(sectionResult.sections(), name);
 };
 
-const isSectionTheme = (sectionResult: SectionResult, name: string, theme: string) => {
-  const section = sectionResult.sections();
-  return hasSection(sectionResult, name) && section[name].theme === theme;
-};
-
 const getSectionConfig = (sectionResult: SectionResult, name: string) => {
   return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
 };
 
 const getToolbarMode = (settings: RawEditorSettings, defaultVal: ToolbarMode) =>
   // If toolbar_mode is unset by the user, fall back to:
-  Obj.get(settings, 'toolbar_mode')
-    .orThunk(() => Obj.get(settings, 'toolbar_drawer').map((val) => val === false ? 'wrap' : val))     // #1 toolbar_drawer
-    .getOr(defaultVal);                                // #2 defaultVal
+  Obj.get(settings, 'toolbar_mode').getOr(defaultVal);
 
 const getDefaultSettings = (settings: RawEditorSettings, id: string, documentBaseUrl: string, isTouch: boolean, editor: Editor): RawEditorSettings => {
   const baseDefaults: RawEditorSettings = {
@@ -164,11 +151,8 @@ const combinePlugins = (forcedPlugins: string[], plugins: string[]): string[] =>
 };
 
 const getPlatformPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, desktopPlugins: string[], mobilePlugins: string[]): string[] => {
-  // is a mobile device with mobile theme
-  if (isMobileDevice && isSectionTheme(sectionResult, 'mobile', 'mobile')) {
-    return filterLegacyMobilePlugins(mobilePlugins);
   // is a mobile device with any mobile settings
-  } else if (isMobileDevice && hasSection(sectionResult, 'mobile')) {
+  if (isMobileDevice && hasSection(sectionResult, 'mobile')) {
     return mobilePlugins;
   // is desktop
   } else {

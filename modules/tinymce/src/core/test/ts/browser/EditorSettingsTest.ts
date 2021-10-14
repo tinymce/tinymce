@@ -58,18 +58,6 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
     });
   });
 
-  it('when unset, toolbar_mode should fall back to the value of toolbar_drawer', () => {
-    const toolbarSettings: RawEditorSettings = {
-      toolbar_drawer: 'sliding'
-    };
-
-    const defaultSettings = EditorSettings.getDefaultSettings(toolbarSettings, 'id', 'documentBaseUrl', true, hook.editor());
-    assert.propertyVal(defaultSettings, 'toolbar_mode', 'sliding', 'Should fall back to value of toolbar_drawer (desktop)');
-
-    const mobileDefaultSettings = EditorSettings.getDefaultMobileSettings(toolbarSettings, false);
-    assert.propertyVal(mobileDefaultSettings, 'toolbar_mode', 'sliding', 'Should fall back to value of toolbar_drawer (mobile)');
-  });
-
   it('default tablet settings', () => {
     const defaultSettings = EditorSettings.getDefaultMobileSettings({}, false);
     Obj.each(expectedTabletDefaultSettings, (value, key) => {
@@ -306,25 +294,6 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
       );
     });
 
-    it('Merged settings when theme is mobile, forced_plugins in default override settings with user mobile settings (mobile)', () => {
-      assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, { forced_plugins: [ 'a' ] }, {
-          plugins: [ 'b' ],
-          mobile: { plugins: [ 'lists custom' ], theme: 'mobile', toolbar_sticky: true }
-        }),
-        {
-          ...expectedPhoneDefaultSettings,
-          validate: true,
-          external_plugins: {},
-          forced_plugins: [ 'a' ],
-          plugins: 'a lists',
-          theme: 'mobile',
-          toolbar_sticky: true
-        },
-        'Should have forced_plugins merged with mobile plugins but only whitelisted user plugins'
-      );
-    });
-
     it('Merged settings when theme is silver, forced_plugins in default override settings with user mobile settings (mobile)', () => {
       assert.deepEqual(
         EditorSettings.combineSettings(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] }}),
@@ -341,27 +310,11 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
       );
     });
 
-    it('Merged settings when theme is mobile, on a mobile device', () => {
-      assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, {}, { mobile: { theme: 'mobile' }, plugins: [ 'lists', 'b', 'autolink' ] }),
-        { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
-        'Should fallback to filtered white listed. settings.plugins'
-      );
-    });
-
     it('Merged settings when mobile.plugins is undefined, on a mobile device', () => {
       assert.deepEqual(
         EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {}}),
         { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists b autolink', theme: 'silver' },
         'Should use settings.plugins when mobile theme is not set'
-      );
-    });
-
-    it('Merged settings when mobile.plugins is undefined, legacy mobile theme and on a mobile device', () => {
-      assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: { theme: 'mobile' }}),
-        { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
-        'Should fallback to filtered white listed. settings.plugins'
       );
     });
 
@@ -378,14 +331,6 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }}),
         { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink foo bar' },
         'Should allow all plugins'
-      );
-    });
-
-    it('Merged settings with defined mobile.plugins and legacy mobile theme', () => {
-      assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, {}, { mobile: { theme: 'mobile', plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }}),
-        { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
-        'Should fallback to filtered white listed'
       );
     });
 

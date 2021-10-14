@@ -70,7 +70,7 @@ const setup = (editor: Editor): void => {
       return null;
     };
 
-    const v = Tools.explode(Settings.getTabFocus(editor));
+    const v = Tools.explode(Settings.getTabFocusElements(editor));
 
     if (v.length === 1) {
       v[1] = v[0];

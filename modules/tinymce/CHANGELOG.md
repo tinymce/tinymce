@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
+- The `editor.setContent()` API can now be prevented using the `BeforeSetContent` event. This makes it consistent with the `editor.selection.setContent()` API #TINY-8018
+- Aligning a table to the left or right will now use margin styling instead of float styling #TINY-6558
+
+### Fixed
+- The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
+- The `editor.selection.getContent()` API did not respect the `no_events` argument #TINY-8018
+- The `GetContent` event was not fired when getting `tree` or `text` formats using the `editor.selection.getContent()` API #TINY-8018
+
+### Removed
+- Removed deprecated `Schema` settings #TINY-7821
+- Removed deprecated `file_browser_callback_types`, `force_hex_style_colors` and `images_dataimg_filter` settings #TINY-7823
+- Removed deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
+- The legacy `mobile` theme has been removed #TINY-7832
+
 ## 5.10.0 - 2021-10-11
 
 ### Added

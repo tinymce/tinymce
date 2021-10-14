@@ -106,18 +106,15 @@ interface BaseEditorSettings {
   font_size_legacy_values?: string;
   font_size_style_values?: string;
   fontsize_formats?: string;
-  force_hex_style_colors?: boolean;
   forced_root_block?: boolean | string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
-  gecko_spellcheck?: boolean;
   height?: number | string;
   hidden_input?: boolean;
   icons?: string;
   icons_url?: string;
   id?: string;
   iframe_aria_text?: string;
-  images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
   images_file_types?: string;
   images_replace_blob_uris?: boolean;
   images_reuse_filename?: boolean;
@@ -205,35 +202,17 @@ interface BaseEditorSettings {
   width?: number | string;
 
   // Deprecated settings
-  toolbar_drawer?: false | 'floating' | 'sliding' | 'scrolling';
   editor_deselector?: string;
   editor_selector?: string;
   elements?: string;
-  filepicker_validator_handler?: FilePickerValidationCallback;
   mode?: 'exact' | 'textareas' | 'specific_textareas';
   types?: Record<string, any>[];
-
-  // Considered for deprecation (Schema settings)
-  block_elements?: string;
-  boolean_attributes?: string;
-  move_caret_before_on_enter_elements?: string;
-  non_empty_elements?: string;
-  self_closing_elements?: string;
-  short_ended_elements?: string;
-  text_block_elements?: string;
-  text_inline_elements?: string;
-  whitespace_elements?: string;
-  special?: string;
 
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;
   forced_plugins?: string | string[];
   plugin_base_urls?: Record<string, string>;
   service_message?: string;
-
-  // Special always forced on setting
-  // TODO: Get rid of this one
-  validate?: boolean;
 
   // Allow additional dynamic settings
   [key: string]: any;
