@@ -144,9 +144,6 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
         ApproxStructure.build((s, str, arr) => s.element('div', {
           children: [
             s.element('div', {
-              attrs: {
-                id: str.contains('aria-owns')
-              },
               children: [
                 s.element('div', {
                   classes: [ arr.has('test-toolbar-overflow') ],
