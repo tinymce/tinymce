@@ -102,7 +102,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'li li:last', 1);
+    LegacyUnit.setSelection(editor, 'li li:last-of-type', 1);
     editor.execCommand('Outdent');
 
     TinyAssertions.assertContent(editor,
@@ -228,7 +228,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'ol ol li:first', 0);
+    LegacyUnit.setSelection(editor, 'ol ol li:first-of-type', 0);
     editor.execCommand('Outdent');
 
     TinyAssertions.assertContent(editor,
@@ -257,7 +257,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'ol ol li:last', 1);
+    LegacyUnit.setSelection(editor, 'ol ol li:last-of-type', 1);
     editor.execCommand('Outdent');
 
     TinyAssertions.assertContent(editor,

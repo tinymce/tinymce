@@ -68,7 +68,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
   const dom = ed.dom;
   const selection = ed.selection;
 
-  const setElementFormat = (elm: Node, fmt: ApplyFormat = format) => {
+  const setElementFormat = (elm: Element, fmt: ApplyFormat = format) => {
     if (Type.isFunction(fmt.onformat)) {
       fmt.onformat(elm, fmt as any, vars, node);
     }
@@ -115,7 +115,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       }
 
       if (dom.is(node, format.selector) && !isCaretNode(node)) {
-        setElementFormat(node, format);
+        setElementFormat(node as Element, format);
         found = true;
         return false;
       }
@@ -243,7 +243,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       Arr.each(newWrappers, (node) => {
         const process = (node: Node) => {
           if (node.nodeName === 'A') {
-            setElementFormat(node, format);
+            setElementFormat(node as HTMLAnchorElement, format);
           }
 
           Arr.each(Arr.from(node.childNodes), process);
@@ -312,7 +312,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     for (let i = 0, l = formatList.length; i < l; i++) {
       const formatItem = formatList[i];
       if (formatItem.ceFalseOverride && FormatUtils.isSelectorFormat(formatItem) && dom.is(node, formatItem.selector)) {
-        setElementFormat(node, formatItem);
+        setElementFormat(node as Element, formatItem);
         break;
       }
     }

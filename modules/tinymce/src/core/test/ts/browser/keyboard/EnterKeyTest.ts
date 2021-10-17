@@ -371,7 +371,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     const editor = hook.editor();
     editor.settings.end_container_on_empty_block = true;
     editor.getBody().innerHTML = '<blockquote><p>abc</p><p><br></p></blockquote>';
-    LegacyUnit.setSelection(editor, 'p:last', 0);
+    LegacyUnit.setSelection(editor, 'p:last-of-type', 0);
     pressEnter(editor);
     assert.equal(editor.getContent(), '<blockquote><p>abc</p></blockquote><p>\u00a0</p>');
     editor.settings.forced_root_block = 'p';

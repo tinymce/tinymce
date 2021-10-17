@@ -8,7 +8,8 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-describe('browser.tinymce.core.dom.DOMUtils', () => {
+describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
+  const isIE = Env.ie && Env.ie < 12;
   const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
   it('parseStyle', () => {
@@ -89,7 +90,8 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     );
     DOM.removeClass(DOM.select('span', 'test'), 'test1');
     assert.equal(DOM.get('test2').className, '', 'incorrect classname');
-    assert.equal(DOM.get('test3').className, 'test test', 'incorrect classname');
+    // Note: IE 11 is different here, as modern browsers will re-generate the class list and remove duplicates when making changes
+    assert.equal(DOM.get('test3').className, isIE ? 'test test' : 'test', 'incorrect classname');
     assert.equal(DOM.get('test4').className, 'test', 'incorrect classname');
 
     DOM.get('test').innerHTML = '<span id="test2" class="test"></span>';
@@ -164,7 +166,7 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     assert.equal(DOM.createHTML('span', { id: 'id1', class: 'abc 123' }), '<span id="id1" class="abc 123" />');
     assert.equal(DOM.createHTML('span', { id: null, class: undefined }), '<span />');
     assert.equal(DOM.createHTML('span'), '<span />');
-    assert.equal(DOM.createHTML('span', null, 'content <b>abc</b>'), '<span>content <b>abc</b></span>');
+    assert.equal(DOM.createHTML('span', {}, 'content <b>abc</b>'), '<span>content <b>abc</b></span>');
   });
 
   it('uniqueId', () => {
@@ -199,10 +201,6 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
 
     DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
     assert.equal(DOM.select('div.test2', 'test').length, 2);
-
-    DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
-    assert.equal(DOM.select('div div', 'test').length, 1, ''); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461
-    // alert(DOM.select('div div', 'test').length +","+DOM.get('test').querySelectorAll('div div').length);
 
     DOM.remove('test');
   });
@@ -464,7 +462,7 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     let c = 0;
 
     // The crossorigin attribute isn't supported in IE11
-    if (Env.ie && Env.ie < 12) {
+    if (isIE) {
       this.skip();
     }
 
@@ -725,29 +723,29 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
   });
 
   it('isEmpty with list of elements considered non-empty', () => {
-    const elm = DOM.create('p', null, '<img>');
+    const elm = DOM.create('p', {}, '<img>');
     assert.isFalse(DOM.isEmpty(elm, { img: true }));
   });
 
   it('isEmpty on pre', () => {
-    const elm = DOM.create('pre', null, '  ');
+    const elm = DOM.create('pre', {}, '  ');
     assert.isFalse(DOM.isEmpty(elm));
   });
 
   it('isEmpty with list of elements considered non-empty without schema', () => {
     const domWithoutSchema = DOMUtils(document, { keep_values: true });
 
-    const elm = domWithoutSchema.create('p', null, '<img>');
+    const elm = domWithoutSchema.create('p', {}, '<img>');
     assert.isFalse(domWithoutSchema.isEmpty(elm, { img: true }));
   });
 
   it('isEmpty on P with BR in EM', () => {
-    const elm = DOM.create('p', null, '<em><br></em>');
+    const elm = DOM.create('p', {}, '<em><br></em>');
     assert.isTrue(DOM.isEmpty(elm));
   });
 
   it('isEmpty on P with two BR in EM', () => {
-    const elm = DOM.create('p', null, '<em><br><br></em>');
+    const elm = DOM.create('p', {}, '<em><br><br></em>');
     assert.equal(false, DOM.isEmpty(elm));
   });
 

@@ -50,7 +50,7 @@ const updateListWithDetails = (dom: DOMUtils, el: Element, detail: ListDetail): 
 };
 
 const removeStyles = (dom: DOMUtils, element: HTMLElement, styles: string[]): void => {
-  Tools.each(styles, (style) => dom.setStyle(element, { [style]: '' }));
+  Tools.each(styles, (style) => dom.setStyle(element, style, ''));
 };
 
 const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node): Node => {

@@ -112,7 +112,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li:last-of-type', 0);
     editor.execCommand('Indent');
 
     TinyAssertions.assertContent(editor,
@@ -173,7 +173,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'li:last', 1);
+    LegacyUnit.setSelection(editor, 'li:nth-child(2)', 1);
     editor.execCommand('Indent');
 
     TinyAssertions.assertContent(editor,
@@ -297,7 +297,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ul>'
     );
 
-    LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0, 'li:last-of-type', 0);
     editor.execCommand('Indent');
 
     TinyAssertions.assertContent(editor,

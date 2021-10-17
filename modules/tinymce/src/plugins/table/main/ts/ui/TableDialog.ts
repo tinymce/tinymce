@@ -30,7 +30,7 @@ const styleTDTH = (dom: DOMUtils, elm: Element, name: string | StyleMap, value?:
     if (Type.isString(name)) {
       dom.setStyle(elm, name, value);
     } else {
-      dom.setStyle(elm, name);
+      dom.setStyles(elm, name);
     }
   } else {
     if (elm.children) {

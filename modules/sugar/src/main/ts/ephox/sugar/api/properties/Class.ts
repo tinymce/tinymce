@@ -39,8 +39,11 @@ const remove = (element: SugarElement<Element>, clazz: string): void => {
   cleanClass(element);
 };
 
-const toggle = (element: SugarElement<Element>, clazz: string): boolean =>
-  ClassList.supports(element) ? element.dom.classList.toggle(clazz) : ClassList.toggle(element, clazz);
+const toggle = (element: SugarElement<Element>, clazz: string): boolean => {
+  const result = ClassList.supports(element) ? element.dom.classList.toggle(clazz) : ClassList.toggle(element, clazz);
+  cleanClass(element);
+  return result;
+};
 
 const toggler = (element: SugarElement<Element>, clazz: string): Toggler => {
   const hasClasslist = ClassList.supports(element);
@@ -51,6 +54,7 @@ const toggler = (element: SugarElement<Element>, clazz: string): Toggler => {
     } else {
       ClassList.remove(element, clazz);
     }
+    cleanClass(element);
   };
   const on = () => {
     if (hasClasslist) {

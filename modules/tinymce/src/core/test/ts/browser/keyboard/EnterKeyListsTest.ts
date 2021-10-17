@@ -45,7 +45,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
   it('Enter inside empty li at the end of ol', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
-    LegacyUnit.setSelection(editor, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li:last-of-type', 0);
     pressEnter(editor);
     assert.equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
@@ -202,7 +202,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'li li:last', 0);
+    LegacyUnit.setSelection(editor, 'li li:last-of-type', 0);
     editor.focus();
     pressEnter(editor);
 
@@ -328,7 +328,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'ol ol li:last', 0);
+    LegacyUnit.setSelection(editor, 'ol ol li:last-of-type', 0);
     editor.focus();
     pressEnter(editor);
 

@@ -5,8 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Type } from '@ephox/katamari';
-import { SugarElement, WindowVisualViewport } from '@ephox/sugar';
+import { Arr, Fun, Obj, Optionals, Type } from '@ephox/katamari';
+import {
+  Attribute, Class, Css, Html, Insert, InsertAll, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport
+} from '@ephox/sugar';
 
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
@@ -23,7 +25,6 @@ import { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
-import Sizzle from './Sizzle';
 import StyleSheetLoader from './StyleSheetLoader';
 import DomTreeWalker from './TreeWalker';
 
@@ -43,71 +44,81 @@ import DomTreeWalker from './TreeWalker';
 const each = Tools.each;
 const grep = Tools.grep;
 const isIE = Env.ie;
-const simpleSelectorRe = /^([a-z0-9],?)+$/i;
 
 interface AttrHooks {
   style: {
-    set ($elm: DomQuery, value: string | {} | null): void;
-    get ($elm: DomQuery): string;
+    set (elm: Element, value: string | {} | null): void;
+    get (elm: Element): string;
   };
   href?: {
-    set ($elm: DomQuery, value: string | null, name: string): void;
-    get ($elm: DomQuery, name: string): string;
+    set (elm: Element, value: string | null, name: string): void;
+    get (elm: Element, name: string): string;
   };
   src?: {
-    set ($elm: DomQuery, value: string | null, name: string): void;
-    get ($elm: DomQuery, name: string): string;
+    set (elm: Element, value: string | null, name: string): void;
+    get (elm: Element, name: string): string;
   };
   [key: string]: {
-    set ($elm: DomQuery, value: string | {} | null, name: string): void;
-    get: ($elm: DomQuery, name: string) => string;
+    set (elm: Element, value: string | {} | null, name: string): void;
+    get: (elm: Element, name: string) => string;
   };
 }
+
+const internalStyleName = 'data-mce-style';
+
+const legacySetAttribute = (elm: SugarElement<Element>, name: string, value: string | number | boolean | null) => {
+  if (Type.isNullable(value) || value === '') {
+    Attribute.remove(elm, name);
+  } else {
+    Attribute.set(elm, name, value);
+  }
+};
 
 const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext): AttrHooks => {
   const keepValues: boolean = settings.keep_values;
   const keepUrlHook = {
-    set: ($elm, value: string | null, name: string) => {
-      if (settings.url_converter && value !== null) {
-        value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, $elm[0]);
+    set: (elm: Element, value: string | null, name: string) => {
+      const sugarElm = SugarElement.fromDom(elm);
+      if (Type.isFunction(settings.url_converter) && Type.isNonNullable(value)) {
+        value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, elm[0]);
       }
 
-      $elm.attr('data-mce-' + name, value).attr(name, value);
+      const internalName = 'data-mce-' + name;
+      legacySetAttribute(sugarElm, internalName, value);
+      legacySetAttribute(sugarElm, name, value);
     },
 
-    get: ($elm, name: string) => {
-      return $elm.attr('data-mce-' + name) || $elm.attr(name);
+    get: (elm: Element, name: string) => {
+      const sugarElm = SugarElement.fromDom(elm);
+      return Attribute.get(sugarElm, 'data-mce-' + name) || Attribute.get(sugarElm, name);
     }
   };
 
   const attrHooks: AttrHooks = {
     style: {
-      set: ($elm, value: string | {} | null) => {
-        if (value !== null && typeof value === 'object') {
-          $elm.css(value);
+      set: (elm, value: string | {} | null) => {
+        const sugarElm = SugarElement.fromDom(elm);
+        if (Type.isObject(value)) {
+          Css.setAll(sugarElm, value as Record<string, string>);
           return;
         }
 
         if (keepValues) {
-          $elm.attr('data-mce-style', value as string);
+          legacySetAttribute(sugarElm, internalStyleName, value);
         }
 
+        Attribute.remove(sugarElm, 'style');
         // If setting a style then delegate to the css api, otherwise
         // this will cause issues when using a content security policy
-        if (value !== null && typeof value === 'string') {
-          $elm.removeAttr('style');
-          $elm.css(styles.parse(value));
-        } else {
-          $elm.attr('style', value as null);
+        if (Type.isString(value)) {
+          Css.setAll(sugarElm, styles.parse(value));
         }
       },
 
-      get: ($elm) => {
-        let value = $elm.attr('data-mce-style') || $elm.attr('style');
-
-        value = styles.serialize(styles.parse(value), $elm[0].nodeName);
-
-        return value;
+      get: (elm) => {
+        const sugarElm = SugarElement.fromDom(elm);
+        const value = Attribute.get(sugarElm, internalStyleName) || Attribute.get(sugarElm, 'style');
+        return styles.serialize(styles.parse(value), SugarNode.name(sugarElm));
       }
     }
   };
@@ -119,16 +130,12 @@ const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, get
   return attrHooks;
 };
 
-const updateInternalStyleAttr = (styles: Styles, $elm) => {
-  const rawValue = $elm.attr('style');
+const updateInternalStyleAttr = (styles: Styles, elm: SugarElement<Element>) => {
+  const rawValue = Attribute.get(elm, 'style');
 
-  let value = styles.serialize(styles.parse(rawValue), $elm[0].nodeName);
+  const value = styles.serialize(styles.parse(rawValue), SugarNode.name(elm));
 
-  if (!value) {
-    value = null;
-  }
-
-  $elm.attr('data-mce-style', value);
+  legacySetAttribute(elm, internalStyleName, value);
 };
 
 const findNodeIndex = (node: Node, normalized?: boolean) => {
@@ -170,6 +177,7 @@ export type Target = Node | Window;
 export type RunArguments<T extends Node = Node> = string | T | Array<string | T>;
 export type BoundEvent = [ Target, string, EventUtilsCallback<any>, any ];
 type Callback<K extends string> = EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>;
+type RunResult<T, R> = T extends Array<any> ? false | R[] : false | R;
 
 interface DOMUtils {
   doc: Document;
@@ -224,12 +232,9 @@ interface DOMUtils {
   };
   createHTML: (name: string, attrs?: Record<string, string>, html?: string) => string;
   createFragment: (html?: string) => DocumentFragment;
-  remove: <T extends Node>(node: string | T | T[] | DomQuery<T>, keepChildren?: boolean) => T | T[];
-  setStyle: {
-    (elm: string | Node | Node[], name: string, value: string | number | null): void;
-    (elm: string | Node | Node[], styles: StyleMap): void;
-  };
-  getStyle: (elm: string | Node, name: string, computed?: boolean) => string;
+  remove: <T extends Node>(node: string | T | T[], keepChildren?: boolean) => RunResult<typeof node, T>;
+  setStyle: (elm: string | Node | Node[], name: string, value: string | number | null) => void;
+  getStyle: (elm: string | Node, name: string, computed?: boolean) => string | undefined;
   setStyles: (elm: string | Node | Node[], stylesArg: StyleMap) => void;
   removeAllAttribs: (e: RunArguments<Element>) => void;
   setAttrib: (elm: string | Node | Node[], name: string, value: string | boolean | number | null) => void;
@@ -258,7 +263,7 @@ interface DOMUtils {
   encode: (text: string) => string;
   insertAfter: {
     <T extends Node>(node: T | T[], reference: string | Node): T;
-    <T extends Node>(node: RunArguments<T>, reference: string | Node): false | T;
+    <T extends Node>(node: RunArguments<T>, reference: string | Node): RunResult<typeof node, T>;
   };
   replace: {
     <T extends Node>(newElm: Node, oldElm: T | T[], keepChildren?: boolean): T;
@@ -270,8 +275,8 @@ interface DOMUtils {
   };
   findCommonAncestor: (a: Node, b: Node) => Node;
   toHex: (rgbVal: string) => string;
-  run <R, T extends Node>(this: DOMUtils, elm: T | T[], func: (node: T) => R, scope?: any): R;
-  run <R, T extends Node>(this: DOMUtils, elm: RunArguments<T>, func: (node: T) => R, scope?: any): false | R;
+  run <R, T extends Node>(this: DOMUtils, elm: T | T[], func: (node: T) => R, scope?: any): typeof elm extends Array<any> ? R[] : R;
+  run <R, T extends Node>(this: DOMUtils, elm: RunArguments<T>, func: (node: T) => R, scope?: any): RunResult<typeof elm, R>;
   getAttribs: (elm: string | Node) => NamedNodeMap | Attr[];
   isEmpty: (node: Node, elements?: Record<string, any>) => boolean;
   createRng: () => Range;
@@ -295,6 +300,12 @@ interface DOMUtils {
   isChildOf: (node: Node, parent: Node) => boolean;
   dumpRng: (r: Range) => string;
 }
+
+const numericalCssMap = Tools.makeMap('fill-opacity font-weight line-height opacity orphans widows z-index zoom', ' ');
+
+// Convert camel cased names back to hyphenated names
+const camelCaseToHyphens = (name: string): string =>
+  name.replace(/[A-Z]/g, (v) => '-' + v.toLowerCase());
 
 /**
  * Constructs a new DOMUtils instance. Consult the TinyMCE Documentation for more details on settings etc for this class.
@@ -342,19 +353,11 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
    * @return {Boolean} True/False state if the node is a block element or not.
    */
   const isBlock = (node: string | Node) => {
-    if (typeof node === 'string') {
-      return !!blockElementsMap[node];
-    } else if (node) {
-      // This function is called in module pattern style since it might be executed with the wrong this scope
-      const type = node.nodeType;
-
-      // If it's a node then check the type and use the nodeName
-      if (type) {
-        return !!(type === 1 && blockElementsMap[node.nodeName]);
-      }
+    if (Type.isString(node)) {
+      return Obj.has(blockElementsMap, node);
+    } else {
+      return NodeType.isElement(node) && Obj.has(blockElementsMap, node.nodeName);
     }
-
-    return false;
   };
 
   const get = (elm: string | Node): HTMLElement | null =>
@@ -362,78 +365,73 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       ? doc.getElementById(elm)
       : elm as HTMLElement;
 
-  const $$ = <T extends Node>(elm: string | T | T[] | DomQuery<T>): DomQuery<T | Node> => $(typeof elm === 'string' ? get(elm) : elm);
+  const $$ = <T extends Node>(elm: string | T | T[] | DomQuery<T>): DomQuery<T | Node> => $(Type.isString(elm) ? get(elm) : elm);
+
+  const _get = (elm: string | Node): SugarElement<HTMLElement> | null => {
+    const value = get(elm);
+    return Type.isNonNullable(elm) ? SugarElement.fromDom(value) : null;
+  };
 
   const getAttrib = (elm: string | Node, name: string, defaultVal?: string): string => {
-    let hook, value;
+    let value: string | undefined;
 
-    const $elm = $$(elm);
+    const $elm = _get(elm);
 
-    if ($elm.length) {
-      hook = attrHooks[name];
+    if (Type.isNonNullable($elm) && SugarNode.isElement($elm)) {
+      const hook = attrHooks[name];
 
       if (hook && hook.get) {
-        value = hook.get($elm, name);
+        value = hook.get($elm.dom, name);
       } else {
-        value = $elm.attr(name);
+        value = Attribute.get($elm, name);
       }
     }
 
-    if (typeof value === 'undefined') {
-      value = defaultVal || '';
-    }
-
-    return value;
+    return Type.isNonNullable(value) ? value : defaultVal ?? '';
   };
 
-  const getAttribs = (elm: string | Node): NamedNodeMap | Attr[] => {
+  const getAttribs = (elm: string | Element): NamedNodeMap | Attr[] => {
     const node = get(elm);
-
-    if (!node) {
-      return [];
-    }
-
-    return node.attributes;
+    return Type.isNullable(node) ? [] : node.attributes;
   };
 
   const setAttrib = (elm: string | Node | Node[], name: string, value: string | boolean | number) => {
-    if (value === '') {
-      value = null;
-    }
+    run(elm, (e) => {
+      if (NodeType.isElement(e)) {
+        const $elm = SugarElement.fromDom(e);
+        if (value === '') {
+          value = null;
+        }
 
-    const $elm = $$(elm);
-    const originalValue = $elm.attr(name);
+        const originalValue = Attribute.get($elm, name);
+        const hook = attrHooks[name];
+        if (hook && hook.set) {
+          hook.set($elm.dom, value, name);
+        } else {
+          legacySetAttribute($elm, name, value);
+        }
 
-    if (!$elm.length) {
-      return;
-    }
-
-    const hook = attrHooks[name];
-    if (hook && hook.set) {
-      hook.set($elm, value, name);
-    } else {
-      $elm.attr(name, value);
-    }
-
-    if (originalValue !== value && settings.onSetAttrib) {
-      settings.onSetAttrib({
-        attrElm: $elm,
-        attrName: name,
-        attrValue: value
-      });
-    }
+        if (originalValue !== value && settings.onSetAttrib) {
+          settings.onSetAttrib({
+            attrElm: $elm,
+            attrName: name,
+            attrValue: value
+          });
+        }
+      }
+    });
   };
 
   const clone = (node: Node, deep: boolean) => {
     // TODO: Add feature detection here in the future
-    if (!isIE || node.nodeType !== 1 || deep) {
+    if (!isIE || !NodeType.isElement(node) || deep) {
       return node.cloneNode(deep);
     } else {
       // Make a HTML5 safe shallow copy
       const clone = doc.createElement(node.nodeName);
 
       // Copy attribs
-      each(getAttribs(node), (attr: Attr) => {
+      each(getAttribs(node), (attr) => {
         setAttrib(clone, attr.nodeName, getAttrib(node, attr.nodeName));
       });
 
@@ -457,46 +455,71 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const getPos = (elm: string | Node, rootElm?: Node) => Position.getPos(doc.body, get(elm), rootElm);
 
-  const setStyle = (elm: string | Node | Node[], name: string | StyleMap, value?: string | number) => {
-    const $elm = Type.isString(name) ? $$(elm).css(name, value) : $$(elm).css(name);
+  const setStyle = (elm: string | Element | Element[], name: string | StyleMap, value?: string | number) => {
+    const convertStyleToString = (cssValue: string | number | StyleMap, cssName?: string) => {
+      if (Type.isString(cssValue)) {
+        return cssValue;
+      } else if (Type.isNumber(cssValue)) {
+        return Obj.has(numericalCssMap, cssName) ? cssValue + '' : cssValue + 'px';
+      } else {
+        return Obj.map(cssValue, convertStyleToString);
+      }
+    };
 
-    if (settings.update_styles) {
-      updateInternalStyleAttr(styles, $elm);
-    }
+    const applyStyle = ($elm: SugarElement<Element>, cssName: string, cssValue: string | number | null) => {
+      const normalizedName = camelCaseToHyphens(cssName);
+      if (Type.isNullable(cssValue) || cssValue === '') {
+        Css.remove($elm, normalizedName);
+      } else {
+        Css.set($elm, normalizedName, convertStyleToString(cssValue, normalizedName));
+      }
+    };
+
+    run(elm, (e) => {
+      const $elm = SugarElement.fromDom(e);
+      if (Type.isString(name)) {
+        applyStyle($elm, name, value);
+      } else {
+        Obj.each(name, (v, n) => {
+          applyStyle($elm, n, v);
+        });
+      }
+
+      if (settings.update_styles) {
+        updateInternalStyleAttr(styles, $elm);
+      }
+    });
   };
 
-  const setStyles = (elm: string | Node | Node[], stylesArg: StyleMap) => {
-    const $elm = $$(elm).css(stylesArg);
-
-    if (settings.update_styles) {
-      updateInternalStyleAttr(styles, $elm);
-    }
+  const setStyles = (elm: string | Element | Element[], stylesArg: StyleMap) => {
+    setStyle(elm, stylesArg);
   };
 
-  const getStyle = (elm: string | Node, name: string, computed?: boolean): string => {
-    const $elm = $$(elm);
+  const getStyle = (elm: string | Node, name: string, computed?: boolean): string | undefined => {
+    const $elm = get(elm);
+
+    if (Type.isNullable($elm) || !NodeType.isElement($elm)) {
+      return undefined;
+    }
 
     if (computed) {
-      return $elm.css(name);
+      return Css.get(SugarElement.fromDom($elm), camelCaseToHyphens(name));
+    } else {
+      // Camelcase it, if needed
+      name = name.replace(/-(\D)/g, (a, b) => b.toUpperCase());
+
+      if (name === 'float') {
+        name = Env.browser.isIE() ? 'styleFloat' : 'cssFloat';
+      }
+
+      return $elm.style ? $elm.style[name] : undefined;
     }
-
-    // Camelcase it, if needed
-    name = name.replace(/-(\D)/g, (a, b) => {
-      return b.toUpperCase();
-    });
-
-    if (name === 'float') {
-      name = Env.browser.isIE() ? 'styleFloat' : 'cssFloat';
-    }
-
-    // TODO Add a type guard here instead of casting as any
-    return $elm[0] && ($elm[0] as any).style ? ($elm[0] as any).style[name] : undefined;
   };
 
-  const getSize = (elm: HTMLElement | string): {w: number; h: number} => {
+  const getSize = (elm: HTMLElement | string): { w: number; h: number } => {
     let w, h;
 
-    elm = get(elm);
+    const $elm = get(elm);
     w = getStyle(elm, 'width');
     h = getStyle(elm, 'height');
 
@@ -511,15 +534,15 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     return {
-      w: parseInt(w, 10) || elm.offsetWidth || elm.clientWidth,
-      h: parseInt(h, 10) || elm.offsetHeight || elm.clientHeight
+      w: parseInt(w, 10) || $elm.offsetWidth || $elm.clientWidth,
+      h: parseInt(h, 10) || $elm.offsetHeight || $elm.clientHeight
     };
   };
 
   const getRect = (elm: string | HTMLElement): GeomRect => {
-    elm = get(elm);
-    const pos = getPos(elm);
-    const size = getSize(elm);
+    const $elm = get(elm);
+    const pos = getPos($elm);
+    const size = getSize($elm);
 
     return {
       x: pos.x, y: pos.y,
@@ -527,68 +550,36 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     };
   };
 
-  const is = (elm: Node | Node[], selector: string) => {
-    let i;
-
+  const is = (elm: Node | Node[], selector: string): boolean => {
     if (!elm) {
       return false;
     }
 
-    // If it isn't an array then try to do some simple selectors instead of Sizzle for to boost performance
-    if (!Array.isArray(elm)) {
-      // Simple all selector
-      if (selector === '*') {
-        return elm.nodeType === 1;
-      }
+    const elms = Type.isArray(elm) ? elm : [ elm ];
 
-      // Simple selector just elements
-      if (simpleSelectorRe.test(selector)) {
-        const selectors = selector.toLowerCase().split(/,/);
-        const elmName = elm.nodeName.toLowerCase();
-
-        for (i = selectors.length - 1; i >= 0; i--) {
-          if (selectors[i] === elmName) {
-            return true;
-          }
-        }
-
-        return false;
-      }
-
-      // Is non element
-      if (elm.nodeType && elm.nodeType !== 1) {
-        return false;
-      }
-    }
-
-    const elms = !Array.isArray(elm) ? [ elm ] : elm;
-
-    /* eslint new-cap:0 */
-    return Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;
+    return Arr.exists(elms, (e) => {
+      return Selectors.is(SugarElement.fromDom(e), selector);
+    });
   };
 
   const getParents = (elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): Element[] => {
-    const result = [];
+    const result: Element[] = [];
     let selectorVal;
 
-    let node: HTMLElement = get(elm);
+    let node = get(elm);
     collect = collect === undefined;
 
     // Default root on inline mode
     root = root || (getRoot().nodeName !== 'BODY' ? getRoot().parentNode : null);
 
     // Wrap node name as func
-    if (Tools.is(selector, 'string')) {
+    if (Type.isString(selector)) {
       selectorVal = selector;
 
       if (selector === '*') {
-        selector = (node) => {
-          return node.nodeType === 1;
-        };
+        selector = NodeType.isElement;
       } else {
-        selector = (node) => {
-          return is(node, selectorVal);
-        };
+        selector = (node) => is(node, selectorVal);
       }
     }
 
@@ -598,7 +589,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         break;
       }
 
-      if (!selector || (typeof selector === 'function' && selector(node))) {
+      if (!selector || selector(node)) {
         if (collect) {
           result.push(node);
         } else {
@@ -622,7 +613,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
     if (node) {
       // If expression make a function of it using is
-      if (typeof selector === 'string') {
+      if (Type.isString(selector)) {
         func = (node) => {
           return is(node, selector);
         };
@@ -630,7 +621,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
       // Loop all siblings
       for (node = node[name]; node; node = node[name]) {
-        if (typeof func === 'function' && func(node)) {
+        if (Type.isFunction(func) && func(node)) {
           return node;
         }
       }
@@ -643,46 +634,48 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const getPrev = (node: Node, selector: string | ((node: Node) => boolean)) => _findSib(node, selector, 'previousSibling');
 
-  const select = (selector: string, scope?: Node | string) => Sizzle(selector, get(scope) || settings.root_element || doc, []);
+  const select = (selector: string, scope?: Node | string): Element[] => {
+    const elm = get(scope) ?? settings.root_element ?? doc;
+    return Arr.from(elm.querySelectorAll(selector));
+  };
 
-  const run = function <R, T extends Node> (elm: RunArguments<T>, func: (node: T) => R, scope?): false | R {
-    let result;
-    const node = typeof elm === 'string' ? get(elm) : elm;
+  const run = function <R, T extends Node> (elm: RunArguments<T>, func: (node: T) => R, scope?): RunResult<typeof elm, R> {
+    const context = scope ?? this;
+    const node = Type.isString(elm) ? get(elm) : elm;
 
     if (!node) {
       return false;
     }
 
-    if (Tools.isArray(node) && (node.length || node.length === 0)) {
-      result = [];
+    if (Type.isArray(node) && (node.length || node.length === 0)) {
+      const result: R[] = [];
 
       each(node, (elm, i) => {
         if (elm) {
-          result.push(func.call(scope, typeof elm === 'string' ? get(elm) : elm, i));
+          result.push(func.call(context, Type.isString(elm) ? get(elm) : elm, i));
         }
       });
 
       return result;
+    } else {
+      return func.call(context, node);
     }
-
-    const context = scope ? scope : this;
-
-    return func.call(context, node);
   };
 
   const setAttribs = (elm: string | Node | Node[], attrs: Record<string, string | boolean | number>) => {
-    $$(elm).each((i, node) => {
-      each(attrs, (value, name) => {
-        setAttrib(node, name, value);
+    run(elm, ($elm) => {
+      Obj.each(attrs, (value, name) => {
+        setAttrib($elm, name, value);
       });
     });
   };
 
   const setHTML = (elm: string | Node | Node[], html: string) => {
-    const $elm = $$(elm);
+    run(elm, (e) => {
+      const $elm = SugarElement.fromDom(e);
 
-    if (isIE) {
-      $elm.each((i, target: Element) => {
+      if (isIE) {
+        const target = e;
         if ((target as any).canHaveHTML === false) {
           return;
         }
@@ -695,29 +688,34 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
         try {
           // IE will remove comments from the beginning
           // unless you padd the contents with something
-          target.innerHTML = '<br>' + html;
+          (target as Element).innerHTML = '<br>' + html;
           target.removeChild(target.firstChild);
         } catch (ex) {
           // IE sometimes produces an unknown runtime error on innerHTML if it's a div inside a p
-          DomQuery('<div></div>').html('<br>' + html).contents().slice(1).appendTo(target);
+          const wrapper = SugarElement.fromTag('div');
+          Html.set(wrapper, '<br>' + html);
+          InsertAll.append($elm, Traverse.children(wrapper).slice(1));
         }
 
         return html;
-      });
-    } else {
-      $elm.html(html);
-    }
+      } else {
+        Html.set($elm, html);
+      }
+    });
   };
 
   const add = (parentElm: RunArguments, name: string | Node, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean): HTMLElement =>
     run(parentElm, (parentElm) => {
-      const newElm = typeof name === 'string' ? doc.createElement(name) : name;
-      setAttribs(newElm, attrs);
+      const newElm = Type.isString(name) ? doc.createElement(name) : name;
+
+      if (Type.isNonNullable(attrs)) {
+        setAttribs(newElm, attrs);
+      }
 
       if (html) {
-        if (typeof html !== 'string' && html.nodeType) {
+        if (!Type.isString(html) && html.nodeType) {
           newElm.appendChild(html);
-        } else if (typeof html === 'string') {
+        } else if (Type.isString(html)) {
           setHTML(newElm, html);
         }
       }
@@ -725,7 +723,8 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       return !create ? parentElm.appendChild(newElm) : newElm;
     }) as HTMLElement;
 
-  const create = (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement => add(doc.createElement(name), name, attrs, html, true);
+  const create = (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement =>
+    add(doc.createElement(name), name, attrs, html, true);
 
   const decode = Entities.decode;
   const encode = Entities.encodeAllRaw;
@@ -742,7 +741,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     // A call to tinymce.is doesn't work for some odd reason on IE9 possible bug inside their JS runtime
-    if (typeof html !== 'undefined') {
+    if (!Type.isUndefined(html)) {
       return outHtml + '>' + html + '</' + name + '>';
     }
 
@@ -773,32 +772,30 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return frag;
   };
 
-  const remove = <T extends Node>(node: string | T | T[] | DomQuery<T>, keepChildren?: boolean): T | T[] => {
-    const $node = $$(node) as DomQuery<T>;
+  const remove = <T extends Node>(node: string | T | T[], keepChildren?: boolean): RunResult<typeof node, T> => {
+    return run(node, (n) => {
+      const $node = SugarElement.fromDom(n);
 
-    if (keepChildren) {
-      $node.each(function () {
-        let child;
-
-        while ((child = this.firstChild)) {
-          if (child.nodeType === 3 && child.data.length === 0) {
-            this.removeChild(child);
+      if (keepChildren) {
+        // Unwrap but don't keep any empty text nodes
+        Arr.each(Traverse.children($node), (child) => {
+          if (SugarNode.isText(child) && child.dom.length === 0) {
+            Remove.remove(child);
           } else {
-            this.parentNode.insertBefore(child, this);
+            Insert.before($node, child);
           }
-        }
-      }).remove();
-    } else {
-      $node.remove();
-    }
+        });
+      }
 
-    return $node.length > 1 ? $node.toArray() : $node[0];
+      Remove.remove($node);
+
+      return $node.dom;
+    });
   };
 
   const removeAllAttribs = (e: RunArguments<Element>) => run(e, (e) => {
-    let i;
     const attrs = e.attributes;
-    for (i = attrs.length - 1; i >= 0; i--) {
+    for (let i = attrs.length - 1; i >= 0; i--) {
       e.removeAttributeNode(attrs.item(i));
     }
   });
@@ -854,59 +851,70 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const toggleClass = (elm: string | Node | Node[], cls: string, state?: boolean) => {
-    $$(elm).toggleClass(cls, state).each(function () {
-      if (this.className === '') {
-        DomQuery(this).attr('class', null);
+    run(elm, (e) => {
+      if (NodeType.isElement(e)) {
+        const $elm = SugarElement.fromDom(e);
+        // TINY-4520: DomQuery used to handle specifying multiple classes and the
+        // formatter relies on it due to the changes made for TINY-7227
+        const classes = cls.split(' ');
+        Arr.each(classes, (c) => {
+          if (Type.isNonNullable(state)) {
+            const fn = state ? Class.add : Class.remove;
+            fn($elm, c);
+          } else {
+            Class.toggle($elm, c);
+          }
+        });
       }
     });
   };
 
   const addClass = (elm: string | Node | Node[], cls: string) => {
-    $$(elm).addClass(cls);
+    toggleClass(elm, cls, true);
   };
 
   const removeClass = (elm: string | Node, cls: string) => {
     toggleClass(elm, cls, false);
   };
 
-  const hasClass = (elm: string | Node, cls: string) => $$(elm).hasClass(cls);
+  const hasClass = (elm: string | Node, cls: string) => {
+    const $elm = _get(elm);
+    // TINY-4520: DomQuery used to handle specifying multiple classes and the
+    // formatter relies on it due to the changes made for TINY-7227
+    const classes = cls.split(' ');
+    return Arr.forall(classes, (c) => Class.has($elm, c));
+  };
 
   const show = (elm: string | Node | Node[]) => {
-    $$(elm).show();
+    run(elm, (e) => Css.remove(SugarElement.fromDom(e), 'display'));
   };
 
   const hide = (elm: string | Node | Node[]) => {
-    $$(elm).hide();
+    run(elm, (e) => Css.set(SugarElement.fromDom(e), 'display', 'none'));
   };
 
-  const isHidden = (elm: string | Node) => $$(elm).css('display') === 'none';
+  const isHidden = (elm: string | Node) => {
+    const $elm = _get(elm);
+    return Optionals.is(Css.getRaw($elm, 'display'), 'none');
+  };
 
   const uniqueId = (prefix?: string) => (!prefix ? 'mce_' : prefix) + (counter++);
 
   const getOuterHTML = (elm: string | Node): string => {
-    const node = typeof elm === 'string' ? get(elm) : elm;
+    const $elm = _get(elm);
 
-    return NodeType.isElement(node) ? node.outerHTML : DomQuery('<div></div>').append(DomQuery(node).clone()).html();
+    return NodeType.isElement($elm.dom) ? $elm.dom.outerHTML : Html.getOuter($elm);
   };
 
   const setOuterHTML = (elm: string | Node | Node[], html: string) => {
-    $$(elm).each(function () {
-      try {
-        // Older FF doesn't have outerHTML 3.6 is still used by some organizations
-        if ('outerHTML' in this) {
-          this.outerHTML = html;
-          return;
-        }
-      } catch (ex) {
-        // Ignore
+    run(elm, ($elm) => {
+      if (NodeType.isElement($elm)) {
+        $elm.outerHTML = html;
       }
-
-      // OuterHTML for IE it sometimes produces an "unknown runtime error"
-      remove(DomQuery(this).html(html), true);
     });
   };
 
-  const insertAfter = <T extends Node>(node: RunArguments<T>, reference: string | Node): false | T => {
+  const insertAfter = <T extends Node>(node: RunArguments<T>, reference: string | Node): RunResult<typeof node, T> => {
     const referenceNode = get(reference);
 
     return run(node, (node) => {
@@ -924,7 +932,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const replace = <T extends Node>(newElm: Node, oldElm: RunArguments<T>, keepChildren?: boolean) => run<T, T>(oldElm, (oldElm) => {
-    if (Tools.is(oldElm, 'array')) {
+    if (Type.isArray(oldElm)) {
       newElm = newElm.cloneNode(true);
     }
 
@@ -1100,7 +1108,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const bind = <K extends string>(target: Target | Target[], name: K, func: Callback<K>, scope?: any): Callback<K> | Callback<K>[] => {
-    if (Tools.isArray<Target>(target)) {
+    if (Type.isArray(target)) {
       let i = target.length;
       const rv: Callback<K>[] = [];
 
@@ -1109,19 +1117,18 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       }
 
       return rv;
-    }
+    } else {
+      // Collect all window/document events bound by editor instance
+      if (settings.collect && (target === doc || target === win)) {
+        boundEvents.push([ target, name, func, scope ]);
+      }
 
-    // Collect all window/document events bound by editor instance
-    if (settings.collect && (target === doc || target === win)) {
-      boundEvents.push([ target, name, func, scope ]);
+      return events.bind(target, name, func, scope || self);
     }
-
-    const output: Callback<K> = events.bind(target, name, func, scope || self);
-    return output as (typeof target) extends [] ? Callback<K>[] : Callback<K>;
   };
 
   const unbind = <K extends string>(target: Target | Target[], name: K, func: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils | EventUtils[] => {
-    if (Tools.isArray<Target>(target)) {
+    if (Type.isArray(target)) {
       let i = target.length;
       const rv = [] as EventUtils[];
 
@@ -1195,12 +1202,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       styleSheetLoader.unload(url);
       delete files[url];
     });
-
-    // Restore sizzle document to window.document
-    // Since the current document might be removed producing "Permission denied" on IE see #6325
-    if (Sizzle.setDocument) {
-      Sizzle.setDocument();
-    }
   };
 
   const isChildOf = (node: Node, parent: Node) => {

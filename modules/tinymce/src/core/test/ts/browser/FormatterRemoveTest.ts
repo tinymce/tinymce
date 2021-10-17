@@ -375,7 +375,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     const editor = hook.editor();
     editor.formatter.register('format', { inline: 'b' });
     editor.setContent('<p>abc</p><p><b>def</b></p><p contenteditable="false"><b>ghj</b></p>');
-    LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last b', 3);
+    LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last-of-type b', 3);
     editor.formatter.remove('format');
     assert.equal(editor.getContent(), '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>', 'Text in first paragraph is not bold');
   });
