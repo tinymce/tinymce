@@ -124,7 +124,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       assertEventsLength(0);
       return editor.uploadImages(() => {
         editor.setContent(imageHtml(blobUri));
-        assert.isFalse(hasBlobAsSource(editor.$<HTMLImageElement>('img')[0]), 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
+        assert.isFalse(hasBlobAsSource(editor.dom.select('img')[0]), 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
         assert.equal(editor.getContent(), '<p><img src="file.png" /></p>', 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
         assertEventsLength(1);
       });
@@ -147,7 +147,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       return editor.uploadImages(() => {
         assertEventsLength(0);
         editor.setContent(imageHtml(blobUri));
-        assert.isTrue(hasBlobAsSource(editor.$<HTMLImageElement>('img')[0]), 'Has blob');
+        assert.isTrue(hasBlobAsSource(editor.dom.select('img')[0]), 'Has blob');
         assert.equal(editor.getContent(), '<p><img src="file.png" /></p>', 'contains image');
       });
     });
@@ -257,7 +257,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       assertResultReusesFilename(editor, uploadedBlobInfo, result);
 
       editor.uploadImages((_result) => {
-        const img = editor.$<HTMLImageElement>('img')[0];
+        const img = editor.dom.select('img')[0];
         assertEventsLength(1);
         assert.isFalse(hasBlobAsSource(img), 'uploadImages reuse filename');
         assert.include(img.src, 'custom.png?size=small&', 'Check the cache invalidation string was added');
@@ -280,7 +280,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       }
 
       assert.equal(editor.getContent(), '<p><img src="myimage.png" /></p>', 'uploadConcurrentImages');
-      LegacyUnit.equalDom(result[0].element, editor.$('img')[0]);
+      LegacyUnit.equalDom(result[0].element, editor.dom.select('img')[0]);
       assert.isTrue(result[0].status, 'uploadConcurrentImages');
     };
 
@@ -314,7 +314,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         assert.isAtLeast(uploadCount, 1, 'Should at least be one.');
       }
 
-      LegacyUnit.equalDom(result[0].element, editor.$<HTMLImageElement>('img')[0]);
+      LegacyUnit.equalDom(result[0].element, editor.dom.select('img')[0]);
       assert.isFalse(result[0].status, 'uploadConcurrentImages (fail)');
       assert.isEmpty(result[0].uploadUri, 'uploadConcurrentImages (fail)');
     };
@@ -352,7 +352,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         assert.isAtLeast(uploadCount, 1, 'Should at least be one.');
       }
 
-      assert.isUndefined(editor.$('img')[0], 'No element in the editor');
+      assert.isUndefined(editor.dom.select('img')[0], 'No element in the editor');
       assert.isFalse(result[0].status, 'Status is false');
       assert.isEmpty(result[0].uploadUri, 'Uri is empty');
       assert.equal(editor.undoManager.data[0].content, '<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-mce-placeholder="1"></p>', 'content is correct');

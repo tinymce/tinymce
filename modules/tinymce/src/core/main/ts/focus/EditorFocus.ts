@@ -96,7 +96,7 @@ const focusEditor = (editor: Editor) => {
 
   // Move focus to contentEditable=true child if needed
   const contentEditableHost = getContentEditableHost(editor, selection.getNode());
-  if (editor.$.contains(body, contentEditableHost)) {
+  if (editor.dom.isChildOf(contentEditableHost, body)) {
     focusBody(contentEditableHost);
     normalizeSelection(editor, rng);
     activateEditor(editor);

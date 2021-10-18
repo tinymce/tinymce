@@ -165,7 +165,7 @@ const updateSelectedImage = (editor: Editor, origBlob: Blob, ir: ImageResult, up
 
     editor.undoManager.transact(() => {
       const imageLoadedHandler = () => {
-        editor.$(selectedImage).off('load', imageLoadedHandler);
+        editor.dom.unbind(selectedImage, 'load', imageLoadedHandler);
         editor.nodeChanged();
 
         if (uploadImmediately) {
@@ -176,17 +176,18 @@ const updateSelectedImage = (editor: Editor, origBlob: Blob, ir: ImageResult, up
         }
       };
 
-      editor.$(selectedImage).on('load', imageLoadedHandler);
+      editor.dom.bind(selectedImage, 'load', imageLoadedHandler);
       if (size) {
-        editor.$(selectedImage).attr({
+        editor.dom.setAttribs(selectedImage, {
           width: size.w,
           height: size.h
         });
       }
 
-      editor.$(selectedImage).attr({
+      editor.dom.setAttribs(selectedImage, {
         src: blobInfo.blobUri()
-      }).removeAttr('data-mce-src');
+      });
+      selectedImage.removeAttribute('data-mce-src');
     });
 
     return blobInfo;

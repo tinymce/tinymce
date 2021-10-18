@@ -340,7 +340,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     const editor = hook.editor();
     editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.$('td')[1].firstChild, 0);
+    rng.setStart(editor.dom.select('td')[1].firstChild, 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertLink', false, { href: 'x' });

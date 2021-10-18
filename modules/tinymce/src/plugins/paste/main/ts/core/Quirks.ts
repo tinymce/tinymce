@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -153,8 +155,10 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean, 
 };
 
 const removeUnderlineAndFontInAnchor = (editor: Editor, root: Element): void => {
-  editor.$('a', root).find('font,u').each((i, node) => {
-    editor.dom.remove(node, true);
+  Arr.each(editor.dom.select('a', root), (anchor) => {
+    Arr.each(editor.dom.select('font,u', anchor), (node) => {
+      editor.dom.remove(node, true);
+    });
   });
 };
 

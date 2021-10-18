@@ -8,8 +8,8 @@ export default () => {
 
   const paintClientRect = (rect, color, id) => {
     const editor: Editor = tinymce.activeEditor;
-    const $ = editor.$;
-    let rectDiv;
+    const dom = editor.dom;
+    let rectDiv: HTMLElement;
     const viewPort = editor.dom.getViewPort();
 
     if (!rect) {
@@ -18,13 +18,14 @@ export default () => {
 
     color = color || 'red';
     id = id || color;
-    rectDiv = $('#' + id);
+    rectDiv = dom.get(id);
 
-    if (!rectDiv[0]) {
-      rectDiv = $('<div></div>').appendTo(editor.getBody());
+    if (!rectDiv) {
+      rectDiv = dom.add(editor.getBody(), 'div');
     }
 
-    rectDiv.attr('id', id).css({
+    dom.setAttrib(rectDiv, 'id', id);
+    dom.setStyles(rectDiv, {
       position: 'absolute',
       left: (rect.left + viewPort.x) + 'px',
       top: (rect.top + viewPort.y) + 'px',

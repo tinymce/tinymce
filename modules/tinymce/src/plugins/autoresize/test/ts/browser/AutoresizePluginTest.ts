@@ -99,7 +99,8 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
     editor.setContent('<div style="min-height: 35px;"><img src="#" /></div><div style="height: 5500px;"></div>');
     await Waiter.pTryUntil('wait for editor content height', () => assertEditorContentApproxHeight(editor, 5585), 10, 3000);
     // Update the img element to load an image
-    editor.$('img').attr('src', 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
+    const image = editor.dom.select('img')[0];
+    editor.dom.setAttrib(image, 'src', 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
     // Content height + div image height (84px) + bottom margin = 5634
     await Waiter.pTryUntil('wait for editor content height', () => assertEditorContentApproxHeight(editor, 5634), 10, 3000);
     await Waiter.pTryUntil('wait for editor height', () => assertEditorHeightAbove(editor, 5634), 10, 3000);

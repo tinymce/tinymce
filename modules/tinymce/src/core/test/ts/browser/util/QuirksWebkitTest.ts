@@ -168,8 +168,8 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a<br>b</h1><p>c</p>';
 
     const rng = editor.selection.getRng();
-    rng.setStart(editor.$('h1')[0].lastChild, 1);
-    rng.setEnd(editor.$('h1')[0].lastChild, 1);
+    rng.setStart(editor.dom.select('h1')[0].lastChild, 1);
+    rng.setEnd(editor.dom.select('h1')[0].lastChild, 1);
     editor.selection.setRng(rng);
 
     editor.execCommand('ForwardDelete');

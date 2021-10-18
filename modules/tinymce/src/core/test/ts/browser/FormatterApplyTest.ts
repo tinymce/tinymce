@@ -1851,7 +1851,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       }
     });
 
-    editor.formatter.apply('format', {}, editor.$('td td')[0]);
+    editor.formatter.apply('format', {}, editor.dom.select('td td')[0]);
 
     assert.equal(
       getContent(editor),

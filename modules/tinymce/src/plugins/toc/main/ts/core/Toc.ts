@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -39,11 +38,11 @@ const readHeaders = (editor: Editor): Header[] => {
   const tocClass = Settings.getTocClass(editor);
   const headerTag = Settings.getTocHeader(editor);
   const selector = generateSelector(Settings.getTocDepth(editor));
-  let headers = editor.$<HTMLHeadingElement>(selector);
+  let headers = editor.dom.select<HTMLHeadingElement>(selector);
 
   // if headerTag is one of h1-9, we need to filter it out from the set
   if (headers.length && /^h[1-9]$/i.test(headerTag)) {
-    headers = headers.filter((i, el) => {
+    headers = Tools.grep(headers, (el) => {
       return !editor.dom.hasClass(el.parentNode, tocClass);
     });
   }
@@ -53,7 +52,7 @@ const readHeaders = (editor: Editor): Header[] => {
     return {
       id: id ? id : tocId(),
       level: parseInt(h.nodeName.replace(/^H/i, ''), 10),
-      title: editor.$.text(h),
+      title: h.innerText,
       element: h
     };
   });
@@ -130,15 +129,15 @@ const generateTocContentHtml = (editor: Editor): string => {
   return html;
 };
 
-const isEmptyOrOffscreen = (editor: Editor, nodes: DomQuery<Node>): boolean => {
+const isEmptyOrOffscreen = (editor: Editor, nodes: Node[]): boolean => {
   return !nodes.length || editor.dom.getParents(nodes[0], '.mce-offscreen-selection').length > 0;
 };
 
 const insertToc = (editor: Editor): void => {
   const tocClass = Settings.getTocClass(editor);
-  const $tocElm = editor.$('.' + tocClass);
+  const tocElms = editor.dom.select('.' + tocClass);
 
-  if (isEmptyOrOffscreen(editor, $tocElm)) {
+  if (isEmptyOrOffscreen(editor, tocElms)) {
     editor.insertContent(generateTocHtml(editor));
   } else {
     updateToc(editor);
@@ -147,11 +146,11 @@ const insertToc = (editor: Editor): void => {
 
 const updateToc = (editor: Editor): void => {
   const tocClass = Settings.getTocClass(editor);
-  const $tocElm = editor.$('.' + tocClass);
+  const tocElms = editor.dom.select('.' + tocClass);
 
-  if ($tocElm.length) {
+  if (tocElms.length) {
     editor.undoManager.transact(() => {
-      $tocElm.html(generateTocContentHtml(editor));
+      editor.dom.setHTML(tocElms, generateTocContentHtml(editor));
     });
   }
 };

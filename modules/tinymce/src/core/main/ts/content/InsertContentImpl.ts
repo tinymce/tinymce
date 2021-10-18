@@ -6,7 +6,7 @@
  */
 
 import { Optional, Type } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Remove, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
@@ -173,7 +173,7 @@ const moveSelectionToMarker = (editor: Editor, marker: HTMLElement | null): void
   dom.remove(marker);
 
   if (parentBlock && dom.isEmpty(parentBlock)) {
-    editor.$(parentBlock).empty();
+    Remove.empty(SugarElement.fromDom(parentBlock));
 
     rng.setStart(parentBlock, 0);
     rng.setEnd(parentBlock, 0);

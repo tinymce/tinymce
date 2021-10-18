@@ -21,7 +21,6 @@ import Quirks from '../util/Quirks';
 import * as VisualAids from '../view/VisualAids';
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
-import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
@@ -193,20 +192,6 @@ class Editor implements EditorObservable {
    */
   public setMode: (mode: string) => void;
 
-  /**
-   * Dom query instance with default scope to the editor document and default element is the body of the editor.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-   *
-   * @deprecated
-   * @property $
-   * @type tinymce.dom.DomQuery
-   * @example
-   * tinymce.activeEditor.$('p').css('color', 'red');
-   * tinymce.activeEditor.$().append('<p>new</p>');
-   */
-  public $: DomQueryConstructor;
-
   public shortcuts: Shortcuts;
   public loadedCSS: Record<string, any> = {};
   public editorCommands: EditorCommands;
@@ -347,11 +332,6 @@ class Editor implements EditorObservable {
     // Call setup
     editorManager.fire('SetupEditor', { editor: this });
     this.execCallback('setup', this);
-
-    this.$ = DomQuery.overrideDefaults(() => ({
-      context: this.inline ? this.getBody() : this.getDoc(),
-      element: this.getBody()
-    }));
   }
 
   /**

@@ -6,6 +6,7 @@
  */
 
 import { Arr, Cell, Type } from '@ephox/katamari';
+import { Attribute, SugarElement } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
@@ -132,7 +133,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
 
     replaceUrlInUndoStack(image.src, resultUri);
 
-    editor.$(image).attr({
+    Attribute.setAll(SugarElement.fromDom(image), {
       'src': Settings.shouldReuseFileName(editor) ? cacheInvalidator(resultUri) : resultUri,
       'data-mce-src': src
     });
