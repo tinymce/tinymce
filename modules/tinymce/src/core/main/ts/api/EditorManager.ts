@@ -545,7 +545,6 @@ const EditorManager: EditorManager = {
       }
     };
 
-    self.settings = settings;
     DOM.bind(window, 'ready', initEditors);
 
     return new Promise((resolve) => {

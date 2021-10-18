@@ -97,7 +97,7 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
   const setTableCaptionStructureAndSelection = (editor: Editor, structure: string, indexOftbody: number) => {
     editor.setContent(structure);
 
-    TinySelections.setSelection(editor, [ 0, indexOftbody, 0, 0 ], 0, [ 0, indexOftbody, 0, 0 ], 1);
+    TinySelections.setSelection(editor, [ 0, indexOftbody, 0 ], 0, [ 0, indexOftbody, 0 ], 1);
   };
 
   const pAssertTableCaption = async (toolbar: boolean, addCaption: boolean) => {
