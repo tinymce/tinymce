@@ -520,8 +520,8 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     let w, h;
 
     const $elm = get(elm);
-    w = getStyle(elm, 'width');
-    h = getStyle(elm, 'height');
+    w = getStyle($elm, 'width');
+    h = getStyle($elm, 'height');
 
     // Non pixel value, then force offset/clientWidth
     if (w.indexOf('px') === -1) {
