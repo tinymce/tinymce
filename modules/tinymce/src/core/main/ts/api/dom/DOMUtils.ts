@@ -369,7 +369,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const _get = (elm: string | Node): SugarElement<HTMLElement> | null => {
     const value = get(elm);
-    return Type.isNonNullable(elm) ? SugarElement.fromDom(value) : null;
+    return Type.isNonNullable(value) ? SugarElement.fromDom(value) : null;
   };
 
   const getAttrib = (elm: string | Node, name: string, defaultVal?: string): string => {
