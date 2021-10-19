@@ -952,9 +952,20 @@ class AstNode {
         case NodeTypes.DOCUMENT_FRAGMENT:
           node = doc.createDocumentFragment();
           break;
-        default:
-          // TODO support more node types
-          throw new Error('Not implemented');
+        case NodeTypes.CDATA_SECTION:
+          node = doc.createCDATASection(this.internals.value);
+          break;
+        case NodeTypes.COMMENT:
+          node = doc.createComment(this.internals.value);
+          break;
+        case NodeTypes.ATTRIBUTE: // only produced by Element.getAttribute()
+        case NodeTypes.DOCUMENT: // should't be passed to parser
+        case NodeTypes.DOCUMENT_TYPE: // shouldn't be passed to parser
+        case NodeTypes.ENTITY: // depreciated
+        case NodeTypes.ENTITY_REFERENCE: // depreciated
+        case NodeTypes.NOTATION: // depreciated
+        case NodeTypes.PROCESSING_INSTRUCTION: // unsure how to support target as not in synthetic node
+          throw new Error('Not supported');
       }
       // add children
       switch (this.internals.type) {
