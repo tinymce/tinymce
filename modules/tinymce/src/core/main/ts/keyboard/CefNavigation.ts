@@ -6,6 +6,7 @@
  */
 
 import { Fun, Optional } from '@ephox/katamari';
+import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -51,15 +52,15 @@ const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void
 
     const caretPos = getVisualCaretPosition(CaretPosition.fromRangeStart(range));
     if (!caretPos) {
-      const newBlock = createTextBlock(editor);
+      const newBlock = SugarElement.fromDom(createTextBlock(editor));
 
       if (direction === 1) {
-        editor.$(pre).after(newBlock);
+        Insert.after(SugarElement.fromDom(pre), newBlock);
       } else {
-        editor.$(pre).before(newBlock);
+        Insert.before(SugarElement.fromDom(pre), newBlock);
       }
 
-      editor.selection.select(newBlock, true);
+      editor.selection.select(newBlock.dom, true);
       editor.selection.collapse();
     }
   }

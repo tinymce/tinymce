@@ -7,7 +7,6 @@
 
 import { Arr, Obj } from '@ephox/katamari';
 
-import { DomQueryConstructor } from './dom/DomQuery';
 import ScriptLoader from './dom/ScriptLoader';
 import Editor from './Editor';
 import I18n from './util/I18n';
@@ -104,8 +103,8 @@ type WaitState = 'added' | 'loaded';
 
 // This is a work around as constructors will only work with classes,
 // but our plugins are all functions.
-type AddOnCallback<T> = (editor: Editor, url: string, $?: DomQueryConstructor) => void | T;
-export type AddOnConstructor<T> = new (editor: Editor, url: string, $?: DomQueryConstructor) => T;
+type AddOnCallback<T> = (editor: Editor, url: string) => void | T;
+export type AddOnConstructor<T> = new (editor: Editor, url: string) => T;
 
 interface AddOnManager<T> {
   items: AddOnConstructor<T>[];

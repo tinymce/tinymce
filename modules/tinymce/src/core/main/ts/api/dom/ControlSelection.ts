@@ -6,7 +6,7 @@
  */
 
 import { Arr, Obj, Type } from '@ephox/katamari';
-import { Selectors, SugarElement } from '@ephox/sugar';
+import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 
 import * as CefUtils from '../../dom/CefUtils';
 import * as NodeType from '../../dom/NodeType';
@@ -450,7 +450,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     });
 
     controlElm = e.type === 'mousedown' ? e.target : selection.getNode();
-    controlElm = dom.$(controlElm).closest('table,img,figure.image,hr,video,span.mce-preview-object')[0];
+    controlElm = SelectorFind.closest(SugarElement.fromDom(controlElm), 'table,img,figure.image,hr,video,span.mce-preview-object').getOrUndefined()?.dom;
 
     if (isChildOrEqual(controlElm, rootElement)) {
       disableGeckoResize();

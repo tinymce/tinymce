@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomQuery from './api/dom/DomQuery';
+import { Arr, Fun } from '@ephox/katamari';
+
 import Editor from './api/Editor';
 import Env from './api/Env';
 import * as Settings from './api/Settings';
@@ -22,7 +23,7 @@ import { hasAnyRanges } from './selection/SelectionUtils';
 
 class NodeChange {
   private readonly editor: Editor;
-  private lastPath: DomQuery | [] = [];
+  private lastPath: Node[] = [];
 
   public constructor(editor: Editor) {
     this.editor = editor;
@@ -136,10 +137,11 @@ class NodeChange {
    * @private
    * @return {Boolean} True if the element path is the same false if it's not.
    */
-  private isSameElementPath(startElm) {
+  private isSameElementPath(startElm: Node) {
     let i;
+    const editor = this.editor;
 
-    const currentPath = this.editor.$(startElm).parentsUntil(this.editor.getBody()).add(startElm);
+    const currentPath = Arr.reverse(editor.dom.getParents(startElm, Fun.always, editor.getBody()));
     if (currentPath.length === this.lastPath.length) {
       for (i = currentPath.length; i >= 0; i--) {
         if (currentPath[i] !== this.lastPath[i]) {

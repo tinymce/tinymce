@@ -10,7 +10,7 @@ import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 const isChildOfBody = (editor: Editor, elm: Node): boolean => {
-  return editor.$.contains(editor.getBody(), elm);
+  return editor.dom.isChildOf(elm, editor.getBody());
 };
 
 const isTableCellNode = (node: Node | null): boolean => {

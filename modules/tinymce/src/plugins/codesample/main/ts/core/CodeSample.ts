@@ -19,6 +19,7 @@ const getSelectedCodeSample = (editor: Editor): Optional<Element> => {
 };
 
 const insertCodeSample = (editor: Editor, language: string, code: string): void => {
+  const dom = editor.dom;
   editor.undoManager.transact(() => {
     const node = getSelectedCodeSample(editor);
 
@@ -26,9 +27,11 @@ const insertCodeSample = (editor: Editor, language: string, code: string): void 
 
     return node.fold(() => {
       editor.insertContent('<pre id="__new" class="language-' + language + '">' + code + '</pre>');
-      editor.selection.select(editor.$('#__new').removeAttr('id')[0]);
+      const newPre = dom.select('#__new')[0];
+      dom.setAttrib(newPre, 'id', null);
+      editor.selection.select(newPre);
     }, (n) => {
-      editor.dom.setAttrib(n, 'class', 'language-' + language);
+      dom.setAttrib(n, 'class', 'language-' + language);
       n.innerHTML = code;
       Prism.get(editor).highlightElement(n);
       editor.selection.select(n);

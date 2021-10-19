@@ -23,7 +23,6 @@ import Styles, { StyleMap } from '../html/Styles';
 import { URLConverter } from '../SettingsTypes';
 import { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
-import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import StyleSheetLoader from './StyleSheetLoader';
 import DomTreeWalker from './TreeWalker';
@@ -192,12 +191,7 @@ interface DOMUtils {
   schema: Schema;
   events: EventUtils;
   root: Node;
-  $: DomQueryConstructor;
 
-  $$: {
-    <T extends Node>(elm: T | T[] | DomQuery<T>): DomQuery<T>;
-    (elm: string): DomQuery<Node>;
-  };
   isBlock: (node: string | Node) => boolean;
   clone: (node: Node, deep: boolean) => Node;
   getRoot: () => HTMLElement;
@@ -338,13 +332,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const events = settings.ownEvents ? new EventUtils() : EventUtils.Event;
   const blockElementsMap = schema.getBlockElements();
 
-  const $ = DomQuery.overrideDefaults(() => {
-    return {
-      context: doc,
-      element: self.getRoot()
-    };
-  });
-
   /**
    * Returns true/false if the specified element is a block element or not.
    *
@@ -364,8 +351,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     elm && doc && Type.isString(elm)
       ? doc.getElementById(elm)
       : elm as HTMLElement;
-
-  const $$ = <T extends Node>(elm: string | T | T[] | DomQuery<T>): DomQuery<T | Node> => $(Type.isString(elm) ? get(elm) : elm);
 
   const _get = (elm: string | Node): SugarElement<HTMLElement> | null => {
     const value = get(elm);
@@ -1242,24 +1227,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     schema,
     events,
     isBlock,
-
-    /**
-     * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-     *
-     * @deprecated
-     * @property $
-     * @type tinymce.dom.DomQuery
-     */
-    $,
-
-    /**
-     * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-     *
-     * @deprecated
-     * @property $$
-     * @type tinymce.dom.DomQuery
-     */
-    $$,
 
     root: null,
 

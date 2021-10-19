@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   const cleanTableHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 
   const selectOne = (editor: Editor, start: string) => {
-    const startElm = editor.$(start)[0];
+    const startElm = editor.dom.select(start)[0];
 
     editor.fire('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
     editor.fire('mouseup', { target: startElm, button: 0 } as unknown as MouseEvent);
@@ -32,8 +32,8 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   };
 
   const selectRangeXY = (editor: Editor, start: string, end: string) => {
-    const startElm = editor.$(start)[0];
-    const endElm = editor.$(end)[0];
+    const startElm = editor.dom.select(start)[0];
+    const endElm = editor.dom.select(end)[0];
 
     editor.fire('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
     editor.fire('mouseover', { target: endElm, button: 0 } as unknown as MouseEvent);

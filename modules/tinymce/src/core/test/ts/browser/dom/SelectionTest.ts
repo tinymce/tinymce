@@ -518,39 +518,39 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('getBookmark/setBookmark on cE=false', () => {
     const editor = hook.editor();
     editor.setContent('text<span contentEditable="false">1</span>');
-    editor.selection.select(editor.$('span')[0]);
+    editor.selection.select(editor.dom.select('span')[0]);
     const bookmark = editor.selection.getBookmark(2);
     editor.setContent('text<span contentEditable="false">1</span>');
     editor.selection.moveToBookmark(bookmark);
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.dom.select('span')[0]);
   });
 
   it('getBookmark/setBookmark before cE=false', () => {
     const editor = hook.editor();
     editor.setContent('<p><input><span contentEditable="false">1</span></p>');
-    CaretContainer.insertInline(editor.$('span')[0], true);
+    CaretContainer.insertInline(editor.dom.select('span')[0], true);
     const rng = editor.dom.createRng();
-    rng.setStart(editor.$('span')[0].previousSibling, 0);
-    rng.setEnd(editor.$('span')[0].previousSibling, 0);
+    rng.setStart(editor.dom.select('span')[0].previousSibling, 0);
+    rng.setEnd(editor.dom.select('span')[0].previousSibling, 0);
     editor.selection.setRng(rng);
     const bookmark = editor.selection.getBookmark(2);
     editor.setContent('<p><input><span contentEditable="false">1</span></p>');
     editor.selection.moveToBookmark(bookmark);
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.dom.select('span')[0]);
   });
 
   it('getBookmark/setBookmark before cE=false block', () => {
     const editor = hook.editor();
     editor.setContent('<p contentEditable="false">1</p>');
-    CaretContainer.insertBlock('p', editor.$('p')[0], true);
+    CaretContainer.insertBlock('p', editor.dom.select('p')[0], true);
     const rng = editor.dom.createRng();
-    rng.setStart(editor.$('p')[0], 0);
-    rng.setEnd(editor.$('p')[0], 0);
+    rng.setStart(editor.dom.select('p')[0], 0);
+    rng.setEnd(editor.dom.select('p')[0], 0);
     editor.selection.setRng(rng);
     const bookmark = editor.selection.getBookmark(2);
     editor.setContent('<p contentEditable="false">1</p>');
     editor.selection.moveToBookmark(bookmark);
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('p')[0]);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.dom.select('p')[0]);
   });
 
   it('select empty TD', () => {
@@ -1200,8 +1200,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     let rng = editor.dom.createRng();
 
     editor.setContent('<p>x</p>');
-    rng.setStart(editor.$('p')[0].firstChild, 0);
-    rng.setEnd(editor.$('p')[0].firstChild, 1);
+    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 
     editor.selection.setRng(rng);
     editor.selection.setRng(null);
@@ -1219,8 +1219,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
 
     editor.setContent('<p>x</p>');
 
-    rng.setStart(editor.$('p')[0].firstChild, 0);
-    rng.setEnd(editor.$('p')[0].firstChild, 1);
+    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
     editor.selection.setRng(rng);
 
     const tmpNode = document.createTextNode('y');
@@ -1240,7 +1240,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('setRng invalid range removed parent context', () => {
     const editor = hook.editor();
     editor.setContent('<p><strong><em>x</em></strong></p>');
-    const textNode = editor.$('em')[0].firstChild;
+    const textNode = editor.dom.select('em')[0].firstChild;
 
     editor.setContent('');
 
@@ -1264,8 +1264,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
 
     editor.setContent('<p>x</p>');
 
-    rng.setStart(editor.$('p')[0].firstChild, 0);
-    rng.setEnd(editor.$('p')[0].firstChild, 1);
+    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 
     editor.selection.setRng(rng);
     editor.selection.setRng(null);

@@ -10,7 +10,7 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
 import AddOnManager from './AddOnManager';
-import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
+import DomQuery from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import Env from './Env';
@@ -64,12 +64,15 @@ const globalEventDelegate = (e) => {
   });
 };
 
-const toggleGlobalEvents = (state) => {
+const toggleGlobalEvents = (state: boolean) => {
   if (state !== boundGlobalEvents) {
+    const DOM = DOMUtils.DOM;
     if (state) {
-      DomQuery(window).on('resize scroll', globalEventDelegate);
+      DOM.bind(window, 'resize', globalEventDelegate);
+      DOM.bind(window, 'scroll', globalEventDelegate);
     } else {
-      DomQuery(window).off('resize scroll', globalEventDelegate);
+      DOM.unbind(window, 'resize', globalEventDelegate);
+      DOM.unbind(window, 'scroll', globalEventDelegate);
     }
 
     boundGlobalEvents = state;
@@ -118,7 +121,6 @@ const purgeDestroyedEditor = (editor) => {
 };
 
 interface EditorManager extends Observable<EditorManagerEventMap> {
-  $: DomQueryConstructor;
   defaultSettings: RawEditorSettings;
   majorVersion: string;
   minorVersion: string;
@@ -160,17 +162,6 @@ const EditorManager: EditorManager = {
   defaultSettings: {},
   documentBaseURL: null,
   suffix: null,
-
-  /**
-   * Dom query instance.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-   *
-   * @deprecated
-   * @property $
-   * @type tinymce.dom.DomQuery
-   */
-  $: DomQuery,
 
   /**
    * Major version of TinyMCE build.

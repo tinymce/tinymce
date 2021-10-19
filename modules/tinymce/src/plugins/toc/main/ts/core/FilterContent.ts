@@ -6,25 +6,30 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Settings from '../api/Settings';
 
 const setup = (editor: Editor): void => {
-  const $ = editor.$, tocClass = Settings.getTocClass(editor);
+  const tocClass = Settings.getTocClass(editor);
 
   editor.on('PreProcess', (e) => {
-    const $tocElm = $('.' + tocClass, e.node);
-    if ($tocElm.length) {
-      $tocElm.removeAttr('contentEditable');
-      $tocElm.find('[contenteditable]').removeAttr('contentEditable');
+    const dom = editor.dom;
+    const tocElm = dom.select('.' + tocClass, e.node)[0];
+    if (tocElm) {
+      const ceElems = [ tocElm ].concat(dom.select('[contenteditable]', tocElm));
+      Tools.each(ceElems, (ceElem) => {
+        dom.setAttrib(ceElem, 'contentEditable', null);
+      });
     }
   });
 
   editor.on('SetContent', () => {
-    const $tocElm = $('.' + tocClass);
-    if ($tocElm.length) {
-      $tocElm.attr('contentEditable', false);
-      $tocElm.children(':first-child').attr('contentEditable', true);
+    const dom = editor.dom;
+    const tocElm = dom.select('.' + tocClass)[0];
+    if (tocElm) {
+      dom.setAttrib(tocElm, 'contentEditable', false);
+      dom.setAttrib(tocElm.firstElementChild, 'contentEditable', true);
     }
   });
 };

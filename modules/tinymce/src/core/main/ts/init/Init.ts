@@ -38,7 +38,7 @@ const initPlugin = (editor: Editor, initializedPlugins: string[], plugin: string
     }
 
     try {
-      const pluginInstance = new Plugin(editor, pluginUrl, editor.$);
+      const pluginInstance = new Plugin(editor, pluginUrl);
 
       editor.plugins[plugin] = pluginInstance;
 
@@ -92,7 +92,7 @@ const initTheme = (editor: Editor) => {
     editor.theme = new Theme(editor, ThemeManager.urls[theme]);
 
     if (editor.theme.init) {
-      editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''), editor.$);
+      editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''));
     }
   } else {
     // Theme set to false or null doesn't produce a theme api

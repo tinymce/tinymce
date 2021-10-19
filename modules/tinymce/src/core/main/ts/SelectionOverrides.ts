@@ -6,7 +6,7 @@
  */
 
 import { Arr, Obj, Type, Unicode } from '@ephox/katamari';
-import { Attribute, Compare, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, Css, Focus, Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import Env from './api/Env';
@@ -343,19 +343,14 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   };
 
   const setupOffscreenSelection = (node: Element, targetClone: Node, origTargetClone: Node) => {
-    const $ = editor.$;
-    let $realSelectionContainer = SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), '#' + realSelectionId).fold(
-      () => $([]),
-      (elm) => $([ elm.dom ])
-    );
-
-    if ($realSelectionContainer.length === 0) {
-      $realSelectionContainer = $(
-        '<div data-mce-bogus="all" class="mce-offscreen-selection"></div>'
-      ).attr('id', realSelectionId);
-
-      $realSelectionContainer.appendTo(editor.getBody());
-    }
+    const body = SugarElement.fromDom(editor.getBody());
+    const doc = editor.getDoc();
+    const realSelectionContainer = SelectorFind.descendant<HTMLElement>(body, '#' + realSelectionId).getOrThunk(() => {
+      const newContainer = SugarElement.fromHtml<HTMLDivElement>('<div data-mce-bogus="all" class="mce-offscreen-selection"></div>', doc);
+      Attribute.set(newContainer, 'id', realSelectionId);
+      Insert.append(body, newContainer);
+      return newContainer;
+    });
 
     const newRange = dom.createRng();
 
@@ -363,20 +358,29 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     // This is a ridiculous hack where we place the selection from a block over the inline element
     // so that just the inline element is copied as is and not converted.
     if (targetClone === origTargetClone && Env.ie) {
-      $realSelectionContainer.empty().append('<p style="font-size: 0" data-mce-bogus="all">\u00a0</p>').append(targetClone);
-      newRange.setStartAfter($realSelectionContainer[0].firstChild.firstChild);
+      Remove.empty(realSelectionContainer);
+      InsertAll.append(realSelectionContainer, [
+        SugarElement.fromHtml('<p style="font-size: 0" data-mce-bogus="all">\u00a0</p>', doc),
+        SugarElement.fromDom(targetClone)
+      ]);
+      newRange.setStartAfter(realSelectionContainer.dom.firstChild.firstChild);
       newRange.setEndAfter(targetClone);
     } else {
-      $realSelectionContainer.empty().append(Unicode.nbsp).append(targetClone).append(Unicode.nbsp);
-      newRange.setStart($realSelectionContainer[0].firstChild, 1);
-      newRange.setEnd($realSelectionContainer[0].lastChild, 0);
+      Remove.empty(realSelectionContainer);
+      InsertAll.append(realSelectionContainer, [
+        SugarElement.fromText(Unicode.nbsp, doc),
+        SugarElement.fromDom(targetClone),
+        SugarElement.fromText(Unicode.nbsp, doc)
+      ]);
+      newRange.setStart(realSelectionContainer.dom.firstChild, 1);
+      newRange.setEnd(realSelectionContainer.dom.lastChild, 0);
     }
 
-    $realSelectionContainer.css({
-      top: dom.getPos(node, editor.getBody()).y
+    Css.setAll(realSelectionContainer, {
+      top: dom.getPos(node, editor.getBody()).y + 'px'
     });
 
-    $realSelectionContainer[0].focus();
+    Focus.focus(realSelectionContainer);
     const sel = selection.getSel();
     sel.removeAllRanges();
     sel.addRange(newRange);
