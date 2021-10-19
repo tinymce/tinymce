@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomQuery from '../api/dom/DomQuery';
+import { InsertAll, Remove, SugarElement, Traverse } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as ArrUtils from '../util/ArrUtils';
@@ -46,8 +47,14 @@ addPostProcessHook('pre', (editor: Editor) => {
   };
 
   const joinPre = (pre1, pre2) => {
-    DomQuery(pre2).remove();
-    DomQuery(pre1).append('<br><br>').append(pre2.childNodes);
+    const sPre2 = SugarElement.fromDom(pre2);
+    const doc = Traverse.documentOrOwner(sPre2).dom;
+    Remove.remove(sPre2);
+    InsertAll.append(SugarElement.fromDom(pre1), [
+      SugarElement.fromTag('br', doc),
+      SugarElement.fromTag('br', doc),
+      ...Traverse.children(sPre2)
+    ]);
   };
 
   const isPre = NodeType.matchNodeNames([ 'pre' ]);

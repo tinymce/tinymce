@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added a new `unique` API to the `Arr` module to remove duplicate elements in an array.
+
 ### Changed
 - Swapped `Optional` to be a class, instead of an object with function fields.
 

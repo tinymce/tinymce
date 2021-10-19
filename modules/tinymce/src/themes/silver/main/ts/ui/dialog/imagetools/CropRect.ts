@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import { Arr } from '@ephox/katamari';
+import { Attribute, Classes, Css, DomEvent, EventArgs, EventUnbinder, Insert, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+
 import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
 import Observable from 'tinymce/core/api/util/Observable';
-import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 
 import DragHelper from './DragHelper';
@@ -25,12 +26,25 @@ export interface CropRect extends Observable<any> {
   destroy: () => void;
 }
 
-const create = (currentRect, viewPortRect, clampRect, containerElm, action): CropRect => {
+interface Handle {
+  readonly name: string;
+  readonly xMul: -1 | 0 | 1;
+  readonly yMul: -1 | 0 | 1;
+  readonly deltaX: -1 | 0 | 1;
+  readonly deltaY: -1 | 0 | 1;
+  readonly deltaW: -1 | 0 | 1;
+  readonly deltaH: -1 | 0 | 1;
+  readonly label: string;
+}
+
+const create = (currentRect: GeomRect, viewPortRect: GeomRect, clampRect: GeomRect, containerElm: HTMLElement, action: () => void): CropRect => {
   let dragHelpers: any[];
+  let events: EventUnbinder[] = [];
   const prefix = 'tox-';
   const id = prefix + 'crid-' + count++;
+  const container = SugarElement.fromDom(containerElm);
 
-  const handles = [
+  const handles: Handle[] = [
     { name: 'move', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: 0, deltaH: 0, label: 'Crop Mask' },
     { name: 'nw', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: -1, deltaH: -1, label: 'Top Left Crop Handle' },
     { name: 'ne', xMul: 1, yMul: 0, deltaX: 0, deltaY: 1, deltaW: 1, deltaH: -1, label: 'Top Right Crop Handle' },
@@ -40,7 +54,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
   const blockers = [ 'top', 'right', 'bottom', 'left' ];
 
-  const getAbsoluteRect = (outerRect, relativeRect) => ({
+  const getAbsoluteRect = (outerRect: GeomRect, relativeRect: GeomRect): GeomRect => ({
     x: relativeRect.x + outerRect.x,
     y: relativeRect.y + outerRect.y,
     w: relativeRect.w,
@@ -56,28 +70,13 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
   const getInnerRect = () => getRelativeRect(clampRect, currentRect);
 
-  const moveRect = (handle, startRect, deltaX, deltaY) => {
-    let x, y, w, h, rect;
+  const moveRect = (handle, startRect: GeomRect, deltaX: number, deltaY: number) => {
+    const x = startRect.x + deltaX * handle.deltaX;
+    const y = startRect.y + deltaY * handle.deltaY;
+    const w = Math.max(20, startRect.w + deltaX * handle.deltaW);
+    const h = Math.max(20, startRect.h + deltaY * handle.deltaH);
 
-    x = startRect.x;
-    y = startRect.y;
-    w = startRect.w;
-    h = startRect.h;
-
-    x += deltaX * handle.deltaX;
-    y += deltaY * handle.deltaY;
-    w += deltaX * handle.deltaW;
-    h += deltaY * handle.deltaH;
-
-    if (w < 20) {
-      w = 20;
-    }
-
-    if (h < 20) {
-      h = 20;
-    }
-
-    rect = currentRect = Rect.clamp({ x, y, w, h }, clampRect, handle.name === 'move');
+    let rect = currentRect = Rect.clamp({ x, y, w, h }, clampRect, handle.name === 'move');
     rect = getRelativeRect(clampRect, rect);
 
     instance.fire('updateRect', { rect });
@@ -86,7 +85,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
   const render = () => {
     const createDragHelper = (handle) => {
-      let startRect;
+      let startRect: GeomRect;
       return DragHelper(id, {
         document: containerElm.ownerDocument,
         handle: id + '-' + handle.name,
@@ -101,39 +100,51 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
       });
     };
 
-    DomQuery(
-      '<div id="' + id + '" class="' + prefix + 'croprect-container"' +
-      ' role="grid" aria-dropeffect="execute">'
-    ).appendTo(containerElm);
+    const cropContainer = SugarElement.fromHtml<HTMLDivElement>('<div role="grid" aria-dropeffect="execute">');
+    Attribute.setAll(cropContainer, {
+      id,
+      class: prefix + 'croprect-container'
+    });
+    Insert.append(container, cropContainer);
 
-    Tools.each(blockers, (blocker) => {
-      DomQuery('#' + id, containerElm).append(
-        '<div id="' + id + '-' + blocker + '"class="' + prefix + 'croprect-block" style="display: none" data-mce-bogus="all">'
-      );
+    Arr.each(blockers, (blocker) => {
+      SelectorFind.descendant(container, '#' + id).each((blockerElm) => {
+        const cropBlocker = SugarElement.fromHtml<HTMLDivElement>('<div style="display: none" data-mce-bogus="all">');
+        Attribute.setAll(cropBlocker, {
+          id: id + '-' + blocker,
+          class: prefix + 'croprect-block'
+        });
+        Insert.append(blockerElm, cropBlocker);
+      });
     });
 
-    Tools.each(handles, (handle) => {
-      DomQuery('#' + id, containerElm).append(
-        '<div id="' + id + '-' + handle.name + '" class="' + prefix +
-        'croprect-handle ' + prefix + 'croprect-handle-' + handle.name + '"' +
-        'style="display: none" data-mce-bogus="all" role="gridcell" tabindex="-1"' +
-        ' aria-label="' + handle.label + '" aria-grabbed="false" title="' + handle.label + '">' // TODO: tooltips AP-213
-      );
+    Arr.each(handles, (handle) => {
+      SelectorFind.descendant(container, '#' + id).each((handleElm) => {
+        const cropHandle = SugarElement.fromHtml<HTMLDivElement>('<div style="display: none" data-mce-bogus="all" role="gridcell" tabindex="-1">');
+        Attribute.setAll(cropHandle, {
+          'id': id + '-' + handle.name,
+          'aria-label': handle.label,
+          'aria-grabbed': 'false',
+          'title': handle.label // TODO: tooltips AP-213
+        });
+        Classes.add(cropHandle, [ prefix + 'croprect-handle', prefix + 'croprect-handle-' + handle.name ]);
+        Insert.append(handleElm, cropHandle);
+      });
     });
 
-    dragHelpers = Tools.map(handles, createDragHelper);
+    dragHelpers = Arr.map(handles, createDragHelper);
 
     repaint(currentRect);
 
-    DomQuery(containerElm).on('focusin focusout', (e) => {
-      DomQuery(e.target).attr('aria-grabbed', e.type === 'focus' ? 'true' : 'false');
-    });
+    const handleFocus = (e: EventArgs<FocusEvent>) => {
+      Attribute.set(e.target, 'aria-grabbed', e.raw.type === 'focus' ? 'true' : 'false');
+    };
 
-    DomQuery(containerElm).on('keydown', (e) => {
-      let activeHandle;
+    const handleKeydown = (e: EventArgs<KeyboardEvent>) => {
+      let activeHandle: Handle;
 
-      Tools.each(handles, (handle) => {
-        if (e.target.id === id + '-' + handle.name) {
+      Arr.each(handles, (handle) => {
+        if (Attribute.get(e.target, 'id') === id + '-' + handle.name) {
           activeHandle = handle;
           return false;
         }
@@ -146,7 +157,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
         moveRect(activeHandle, startRect, deltaX, deltaY);
       };
 
-      switch (e.keyCode) {
+      switch (e.raw.keyCode) {
         case VK.LEFT:
           moveAndBlock(e, activeHandle, currentRect, -10, 0);
           break;
@@ -165,49 +176,51 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
         case VK.ENTER:
         case VK.SPACEBAR:
-          e.preventDefault();
+          e.prevent();
           action();
           break;
       }
-    });
+    };
+
+    events.push(
+      DomEvent.bind(container, 'focusin', handleFocus),
+      DomEvent.bind(container, 'focusout', handleFocus),
+      DomEvent.bind(container, 'keydown', handleKeydown)
+    );
   };
 
   const toggleVisibility = (state: boolean) => {
-    const selectors = Tools.map(handles, (handle) => {
-      return '#' + id + '-' + handle.name;
-    }).concat(Tools.map(blockers, (blocker) => {
-      return '#' + id + '-' + blocker;
-    })).join(',');
+    const selectors = [
+      ...Arr.map(handles, (handle) => '#' + id + '-' + handle.name),
+      ...Arr.map(blockers, (blocker) => '#' + id + '-' + blocker)
+    ].join(',');
 
+    const elems = SelectorFilter.descendants(container, selectors);
     if (state) {
-      DomQuery(selectors, containerElm).show();
+      Arr.each(elems, (elm) => Css.remove(elm, 'display'));
     } else {
-      DomQuery(selectors, containerElm).hide();
+      Arr.each(elems, (elm) => Css.set(elm, 'display', 'none'));
     }
   };
 
-  const repaint = (rect) => {
-    const updateElementRect = (name, rect) => {
-      if (rect.h < 0) {
-        rect.h = 0;
-      }
-
-      if (rect.w < 0) {
-        rect.w = 0;
-      }
-
-      DomQuery('#' + id + '-' + name, containerElm).css({
-        left: rect.x,
-        top: rect.y,
-        width: rect.w,
-        height: rect.h
+  const repaint = (rect: GeomRect) => {
+    const updateElementRect = (name: string, newRect: GeomRect) => {
+      SelectorFind.descendant(container, '#' + id + '-' + name).each((elm) => {
+        Css.setAll(elm, {
+          left: newRect.x + 'px',
+          top: newRect.y + 'px',
+          width: Math.max(0, newRect.w) + 'px',
+          height: Math.max(0, newRect.h) + 'px'
+        });
       });
     };
 
-    Tools.each(handles, (handle) => {
-      DomQuery('#' + id + '-' + handle.name, containerElm).css({
-        left: rect.w * handle.xMul + rect.x,
-        top: rect.h * handle.yMul + rect.y
+    Arr.each(handles, (handle) => {
+      SelectorFind.descendant(container, '#' + id + '-' + handle.name).each((elm) => {
+        Css.setAll(elm, {
+          left: (rect.w * handle.xMul + rect.x) + 'px',
+          top: (rect.h * handle.yMul + rect.y) + 'px'
+        });
       });
     });
 
@@ -243,16 +256,17 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
   };
 
   const destroy = () => {
-    Tools.each(dragHelpers, (helper) => {
-      helper.destroy();
-    });
-
+    Arr.each(dragHelpers, (helper) => helper.destroy());
     dragHelpers = [];
+
+    Arr.each(events, (e) => e.unbind());
+    events = [];
   };
 
   render();
 
-  const instance = Tools.extend({
+  const instance = {
+    ...Observable,
     toggleVisibility,
     setClampRect,
     setRect,
@@ -260,7 +274,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
     setInnerRect,
     setViewPortRect,
     destroy
-  }, Observable);
+  };
 
   return instance;
 };

@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import $ from 'tinymce/core/api/dom/DomQuery';
 import * as NodeType from 'tinymce/core/dom/NodeType';
 
 describe('browser.tinymce.core.dom.NodeTypeTest', () => {
@@ -34,11 +34,11 @@ describe('browser.tinymce.core.dom.NodeTypeTest', () => {
     assert.isFalse(NodeType.isContentEditableTrue(document.createComment('x')));
     assert.isFalse(NodeType.isContentEditableTrue(document.createTextNode('x')));
     assert.isFalse(NodeType.isContentEditableTrue(document.createElement('div')));
-    assert.isTrue(NodeType.isContentEditableTrue($('<div contentEditable="true"></div>')[0]));
-    assert.isTrue(NodeType.isContentEditableTrue($('<div contentEditable="trUe"></div>')[0]));
-    assert.isFalse(NodeType.isContentEditableTrue($('<div contentEditable="false"></div>')[0]));
-    assert.isFalse(NodeType.isContentEditableTrue($('<div contentEditable="fAlse"></div>')[0]));
-    assert.isFalse(NodeType.isContentEditableTrue($('<div contentEditable="inherit"></div>')[0]));
+    assert.isTrue(NodeType.isContentEditableTrue(SugarElement.fromHtml('<div contentEditable="true"></div>').dom));
+    assert.isTrue(NodeType.isContentEditableTrue(SugarElement.fromHtml('<div contentEditable="trUe"></div>').dom));
+    assert.isFalse(NodeType.isContentEditableTrue(SugarElement.fromHtml('<div contentEditable="false"></div>').dom));
+    assert.isFalse(NodeType.isContentEditableTrue(SugarElement.fromHtml('<div contentEditable="fAlse"></div>').dom));
+    assert.isFalse(NodeType.isContentEditableTrue(SugarElement.fromHtml('<div contentEditable="inherit"></div>').dom));
   });
 
   it('isContentEditableFalse', () => {
@@ -46,11 +46,11 @@ describe('browser.tinymce.core.dom.NodeTypeTest', () => {
     assert.isFalse(NodeType.isContentEditableFalse(document.createComment('x')));
     assert.isFalse(NodeType.isContentEditableFalse(document.createTextNode('x')));
     assert.isFalse(NodeType.isContentEditableFalse(document.createElement('div')));
-    assert.isFalse(NodeType.isContentEditableFalse($('<div contentEditable="true"></div>')[0]));
-    assert.isFalse(NodeType.isContentEditableFalse($('<div contentEditable="trUe"></div>')[0]));
-    assert.isTrue(NodeType.isContentEditableFalse($('<div contentEditable="false"></div>')[0]));
-    assert.isTrue(NodeType.isContentEditableFalse($('<div contentEditable="fAlse"></div>')[0]));
-    assert.isFalse(NodeType.isContentEditableFalse($('<div contentEditable="inherit"></div>')[0]));
+    assert.isFalse(NodeType.isContentEditableFalse(SugarElement.fromHtml('<div contentEditable="true"></div>').dom));
+    assert.isFalse(NodeType.isContentEditableFalse(SugarElement.fromHtml('<div contentEditable="trUe"></div>').dom));
+    assert.isTrue(NodeType.isContentEditableFalse(SugarElement.fromHtml('<div contentEditable="false"></div>').dom));
+    assert.isTrue(NodeType.isContentEditableFalse(SugarElement.fromHtml('<div contentEditable="fAlse"></div>').dom));
+    assert.isFalse(NodeType.isContentEditableFalse(SugarElement.fromHtml('<div contentEditable="inherit"></div>').dom));
   });
 
   it('matchNodeNames', () => {
@@ -67,35 +67,35 @@ describe('browser.tinymce.core.dom.NodeTypeTest', () => {
     const hasTabIndex3 = NodeType.hasPropValue('tabIndex', 3);
 
     assert.isFalse(hasTabIndex3(null));
-    assert.isTrue(hasTabIndex3($('<div tabIndex="3"></div>')[0]));
+    assert.isTrue(hasTabIndex3(SugarElement.fromHtml('<div tabIndex="3"></div>').dom));
     assert.isFalse(hasTabIndex3(document.createElement('div')));
     assert.isFalse(hasTabIndex3(document.createElement('b')));
   });
 
   it('isBogus', () => {
-    assert.isTrue(NodeType.isBogus($('<div data-mce-bogus="1"></div>')[0]));
-    assert.isTrue(NodeType.isBogus($('<div data-mce-bogus="all"></div>')[0]));
-    assert.isFalse(NodeType.isBogus($('<div></div>')[0]));
+    assert.isTrue(NodeType.isBogus(SugarElement.fromHtml('<div data-mce-bogus="1"></div>').dom));
+    assert.isTrue(NodeType.isBogus(SugarElement.fromHtml('<div data-mce-bogus="all"></div>').dom));
+    assert.isFalse(NodeType.isBogus(SugarElement.fromHtml('<div></div>').dom));
     assert.isFalse(NodeType.isBogus(document.createTextNode('test')));
     assert.isFalse(NodeType.isBogus(null));
   });
 
   it('isBogusAll', () => {
-    assert.isFalse(NodeType.isBogusAll($('<div data-mce-bogus="1"></div>')[0]));
-    assert.isTrue(NodeType.isBogusAll($('<div data-mce-bogus="all"></div>')[0]));
-    assert.isFalse(NodeType.isBogusAll($('<div></div>')[0]));
+    assert.isFalse(NodeType.isBogusAll(SugarElement.fromHtml('<div data-mce-bogus="1"></div>').dom));
+    assert.isTrue(NodeType.isBogusAll(SugarElement.fromHtml('<div data-mce-bogus="all"></div>').dom));
+    assert.isFalse(NodeType.isBogusAll(SugarElement.fromHtml('<div></div>').dom));
     assert.isFalse(NodeType.isBogusAll(document.createTextNode('test')));
     assert.isFalse(NodeType.isBogusAll(null));
   });
 
   it('hasAttribute', () => {
-    assert.isTrue(NodeType.hasAttribute('x')($('<div x="1"></div>')[0]));
-    assert.isFalse(NodeType.hasAttribute('y')($('<div x="1"></div>')[0]));
+    assert.isTrue(NodeType.hasAttribute('x')(SugarElement.fromHtml('<div x="1"></div>').dom));
+    assert.isFalse(NodeType.hasAttribute('y')(SugarElement.fromHtml('<div x="1"></div>').dom));
   });
 
   it('isTable', () => {
-    assert.isTrue(NodeType.isTable($('<table><tr><td></td></tr></table>')[0]));
-    assert.isFalse(NodeType.isTable($('<div></div>')[0]));
+    assert.isTrue(NodeType.isTable(SugarElement.fromHtml('<table><tr><td></td></tr></table>').dom));
+    assert.isFalse(NodeType.isTable(SugarElement.fromHtml('<div></div>').dom));
     assert.isFalse(NodeType.isTable(document.createTextNode('test')));
     assert.isFalse(NodeType.isTable(null));
   });

@@ -1,8 +1,8 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { SugarElement } from '@ephox/sugar';
 import { LegacyUnit } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
@@ -17,25 +17,25 @@ describe('browser.tinymce.core.CaretContainerTest', () => {
 
   it('isCaretContainer', () => {
     assert.isFalse(CaretContainer.isCaretContainer(document.createTextNode('text')));
-    assert.isFalse(CaretContainer.isCaretContainer(DomQuery('<span></span>')[0]));
-    assert.isTrue(CaretContainer.isCaretContainer(DomQuery('<span data-mce-caret="1"></span>')[0]));
-    assert.isTrue(CaretContainer.isCaretContainer(DomQuery('<span data-mce-caret="1">x</span>')[0].firstChild));
+    assert.isFalse(CaretContainer.isCaretContainer(SugarElement.fromHtml('<span></span>').dom));
+    assert.isTrue(CaretContainer.isCaretContainer(SugarElement.fromHtml('<span data-mce-caret="1"></span>').dom));
+    assert.isTrue(CaretContainer.isCaretContainer(SugarElement.fromHtml('<span data-mce-caret="1">x</span>').dom.firstChild));
     assert.isTrue(CaretContainer.isCaretContainer(document.createTextNode(Zwsp.ZWSP)));
   });
 
   it('isCaretContainerBlock', () => {
     assert.isFalse(CaretContainer.isCaretContainerBlock(document.createTextNode('text')));
-    assert.isFalse(CaretContainer.isCaretContainerBlock(DomQuery('<span></span>')[0]));
-    assert.isTrue(CaretContainer.isCaretContainerBlock(DomQuery('<span data-mce-caret="1"></span>')[0]));
-    assert.isTrue(CaretContainer.isCaretContainerBlock(DomQuery('<span data-mce-caret="1">a</span>')[0].firstChild));
+    assert.isFalse(CaretContainer.isCaretContainerBlock(SugarElement.fromHtml('<span></span>').dom));
+    assert.isTrue(CaretContainer.isCaretContainerBlock(SugarElement.fromHtml('<span data-mce-caret="1"></span>').dom));
+    assert.isTrue(CaretContainer.isCaretContainerBlock(SugarElement.fromHtml('<span data-mce-caret="1">a</span>').dom.firstChild));
     assert.isFalse(CaretContainer.isCaretContainerBlock(document.createTextNode(Zwsp.ZWSP)));
   });
 
   it('isCaretContainerInline', () => {
     assert.isFalse(CaretContainer.isCaretContainerInline(document.createTextNode('text')));
-    assert.isFalse(CaretContainer.isCaretContainerInline(DomQuery('<span></span>')[0]));
-    assert.isFalse(CaretContainer.isCaretContainerInline(DomQuery('<span data-mce-caret="1"></span>')[0]));
-    assert.isFalse(CaretContainer.isCaretContainerInline(DomQuery('<span data-mce-caret="1">a</span>')[0].firstChild));
+    assert.isFalse(CaretContainer.isCaretContainerInline(SugarElement.fromHtml('<span></span>').dom));
+    assert.isFalse(CaretContainer.isCaretContainerInline(SugarElement.fromHtml('<span data-mce-caret="1"></span>').dom));
+    assert.isFalse(CaretContainer.isCaretContainerInline(SugarElement.fromHtml('<span data-mce-caret="1">a</span>').dom.firstChild));
     assert.isTrue(CaretContainer.isCaretContainerInline(document.createTextNode(Zwsp.ZWSP)));
   });
 

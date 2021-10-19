@@ -272,3 +272,20 @@ export const findMap = <A, B>(arr: ArrayLike<A>, f: (a: A, index: number) => Opt
   }
   return Optional.none<B>();
 };
+
+export const unique = <T>(xs: ArrayLike<T>, comparator?: (a: T, b: T) => boolean): T[] => {
+  const r: T[] = [];
+
+  const isDuplicated = Type.isFunction(comparator) ?
+    (x: T) => exists(r, (i) => comparator(i, x)) :
+    (x: T) => contains(r, x);
+
+  for (let i = 0, len = xs.length; i < len; i++) {
+    const x = xs[i];
+    if (!isDuplicated(x)) {
+      r.push(x);
+    }
+  }
+
+  return r;
+};
