@@ -179,7 +179,7 @@ const find = (dom: DOMUtils, node: Node, next: boolean, inc?: boolean): boolean 
  */
 const removeNode = (ed: Editor, node: Node, format: Format) => {
   const parentNode = node.parentNode;
-  let rootBlockElm: Node | null;
+  let rootBlockElm: Element | null;
   const dom = ed.dom, forcedRootBlock = Settings.getForcedRootBlock(ed);
 
   if (FormatUtils.isBlockFormat(format)) {
@@ -202,7 +202,7 @@ const removeNode = (ed: Editor, node: Node, format: Format) => {
             if (FormatUtils.isValid(ed, forcedRootBlock, node.nodeName.toLowerCase())) {
               if (!rootBlockElm) {
                 rootBlockElm = wrap(dom, node, forcedRootBlock);
-                dom.setAttribs(rootBlockElm, ed.settings.forced_root_block_attrs);
+                dom.setAttribs(rootBlockElm, Settings.getForcedRootBlockAttrs(ed));
               } else {
                 rootBlockElm.appendChild(node);
               }

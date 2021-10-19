@@ -34,7 +34,7 @@ describe('browser.tinymce.plugins.lists.ApplyDlTest', () => {
     );
     editor.focus();
 
-    LegacyUnit.setSelection(editor, 'p', 0, 'p:last', 0);
+    LegacyUnit.setSelection(editor, 'p', 0, 'p:last-of-type', 0);
     editor.execCommand('InsertDefinitionList');
 
     TinyAssertions.assertContent(

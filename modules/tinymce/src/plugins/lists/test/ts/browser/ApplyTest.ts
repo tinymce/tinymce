@@ -55,7 +55,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<p>c</p>'
     );
 
-    LegacyUnit.setSelection(editor, 'p', 0, 'p:last', 0);
+    LegacyUnit.setSelection(editor, 'p', 0, 'p:last-of-type', 0);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,
@@ -98,7 +98,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<p>c</p>'
     );
 
-    LegacyUnit.setSelection(editor, 'p', 0, 'p:last', 0);
+    LegacyUnit.setSelection(editor, 'p', 0, 'p:last-of-type', 0);
     editor.execCommand('InsertOrderedList');
 
     TinyAssertions.assertContent(
@@ -122,7 +122,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ul>'
     );
 
-    LegacyUnit.setSelection(editor, 'li', 0, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li', 0, 'li:last-of-type', 0);
     editor.execCommand('InsertOrderedList');
 
     TinyAssertions.assertContent(
@@ -170,7 +170,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'li', 0, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li', 0, 'li:last-of-type', 0);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(
@@ -784,7 +784,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     );
 
     editor.execCommand('SelectAll');
-    LegacyUnit.setSelection(editor, 'li:first', 0, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li:first-of-type', 0, 'li:last-of-type', 0);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertRawContent(
@@ -810,7 +810,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ul>'
     );
 
-    LegacyUnit.setSelection(editor, 'li:first', 0, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li:first-of-type', 0, 'li:last-of-type', 0);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertRawContent(
@@ -837,7 +837,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     );
 
     editor.execCommand('SelectAll');
-    LegacyUnit.setSelection(editor, 'li:first', 0, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li:first-of-type', 0, 'li:last-of-type', 0);
     editor.execCommand('InsertOrderedList');
 
     TinyAssertions.assertRawContent(
@@ -863,7 +863,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'li:first', 0, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li:first-of-type', 0, 'li:last-of-type', 0);
     editor.execCommand('InsertOrderedList');
 
     TinyAssertions.assertRawContent(

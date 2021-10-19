@@ -409,13 +409,13 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(clickCount, 1, 'setMode');
 
     editor.setMode('readonly');
-    assert.isTrue(isDisabled('.tox-editor-container button:last'), 'setMode');
+    assert.isTrue(isDisabled('.tox-editor-container button:last-of-type'), 'setMode');
     editor.dom.fire(editor.getBody(), 'click');
     assert.equal(clickCount, 1, 'setMode');
 
     editor.setMode('design');
     editor.dom.fire(editor.getBody(), 'click');
-    assert.isFalse(isDisabled('.tox-editor-container button:last'), 'setMode');
+    assert.isFalse(isDisabled('.tox-editor-container button:last-of-type'), 'setMode');
     assert.equal(clickCount, 2, 'setMode');
   });
 

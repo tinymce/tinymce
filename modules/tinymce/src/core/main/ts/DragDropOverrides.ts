@@ -64,7 +64,7 @@ const cloneElement = (elm: HTMLElement) => {
 
 const createGhost = (editor: Editor, elm: HTMLElement, width: number, height: number) => {
   const dom = editor.dom;
-  const clonedElm = elm.cloneNode(true);
+  const clonedElm = elm.cloneNode(true) as HTMLElement;
 
   dom.setStyles(clonedElm, { width, height });
   dom.setAttrib(clonedElm, 'data-mce-selected', null);

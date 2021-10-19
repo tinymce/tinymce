@@ -145,7 +145,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    LegacyUnit.setSelection(editor, 'li:last', 1);
+    LegacyUnit.setSelection(editor, 'li:last-of-type', 1);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,
@@ -168,7 +168,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    LegacyUnit.setSelection(editor, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li:last-of-type', 0);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,
@@ -326,7 +326,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '<div>b</div>'
     );
 
-    LegacyUnit.setSelection(editor, 'li:first', 0);
+    LegacyUnit.setSelection(editor, 'li:first-of-type', 0);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,
@@ -379,7 +379,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    LegacyUnit.setSelection(editor, 'li li:first', 0, 'li li:last', 1);
+    LegacyUnit.setSelection(editor, 'li li:first-of-type', 0, 'li li:last-of-type', 1);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,

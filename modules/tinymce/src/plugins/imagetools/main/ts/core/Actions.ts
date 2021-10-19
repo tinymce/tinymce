@@ -33,7 +33,7 @@ const isFigure = (editor: Editor, elem: Node): elem is HTMLElement =>
   editor.dom.is(elem, 'figure');
 
 const isImage = (editor: Editor, imgNode: Node): imgNode is HTMLImageElement =>
-  editor.dom.is(imgNode, 'img:not([data-mce-object],[data-mce-placeholder])');
+  editor.dom.is(imgNode, 'img:not([data-mce-object]):not([data-mce-placeholder])');
 
 const getEditableImage = (editor: Editor, node: Node): Optional<HTMLImageElement> => {
   const isEditable = (imgNode: Node): imgNode is HTMLImageElement =>

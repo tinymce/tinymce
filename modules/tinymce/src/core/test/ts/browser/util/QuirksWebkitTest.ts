@@ -34,7 +34,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
   it('Delete between empty paragraphs', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a</p><p><br></p><p><br></p><p>b</p>';
-    LegacyUnit.setSelection(editor, 'p:last', 0);
+    LegacyUnit.setSelection(editor, 'p:last-of-type', 0);
     editor.execCommand('Delete');
     assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br /></p><p>b</p>');
     assert.equal(editor.selection.getStart().nodeName, 'P');

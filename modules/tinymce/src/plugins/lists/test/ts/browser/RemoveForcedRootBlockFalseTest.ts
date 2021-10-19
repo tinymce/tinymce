@@ -51,7 +51,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     );
 
     editor.focus();
-    LegacyUnit.setSelection(editor, 'li:first', 1, 'li:last', 1);
+    LegacyUnit.setSelection(editor, 'li:first-of-type', 1, 'li:last-of-type', 1);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,
@@ -72,7 +72,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     );
 
     editor.focus();
-    LegacyUnit.setSelection(editor, 'li:first', 0);
+    LegacyUnit.setSelection(editor, 'li:first-of-type', 0);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,

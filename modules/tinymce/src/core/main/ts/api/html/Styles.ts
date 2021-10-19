@@ -29,7 +29,7 @@ import { Obj, Unicode } from '@ephox/katamari';
 import { URLConverter } from '../SettingsTypes';
 import Schema from './Schema';
 
-export interface StyleMap { [s: string]: string | number }
+export type StyleMap = Record<string, string | number>;
 
 export interface StylesSettings {
   allow_script_urls?: boolean;
