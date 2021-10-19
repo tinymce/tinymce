@@ -28,6 +28,7 @@ import { Css, DomEvent, EventArgs, EventUnbinder, Insert, Remove, SugarBody, Sug
 
 interface DragHelperSettings {
   document?: Document;
+  root?: Document | ShadowRoot;
   handle?: string;
   start: (e: MouseEvent | TouchEvent) => void;
   drag: (e: (MouseEvent | TouchEvent) & { deltaX: number; deltaY: number }) => void;
@@ -71,12 +72,13 @@ export default (id: string, settings: DragHelperSettings) => {
   let handleEvents: EventUnbinder[] = [];
   let overlayEvents: EventUnbinder[] = [];
   const doc = settings.document ?? document;
+  const root = settings.root ?? doc;
   const sugarDoc = SugarElement.fromDom(doc);
   let downButton: number;
   let startX: number;
   let startY: number;
 
-  const handleElement = SugarElement.fromDom(doc.getElementById(settings.handle ?? id));
+  const handleElement = SugarElement.fromDom(root.getElementById(settings.handle ?? id));
 
   const start = (e: EventArgs<MouseEvent | TouchEvent>) => {
     const rawEvent = e.raw as MouseEvent;
