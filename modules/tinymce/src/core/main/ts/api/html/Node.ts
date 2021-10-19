@@ -224,7 +224,9 @@ class AstNode {
     if (this.internals.isSynthetic === true) {
       this.internals.value = val;
     } else {
-      throw new Error('Not implemented');
+      if (this.internals.node.nodeType === NodeTypes.TEXT) {
+        this.internals.node.textContent = val;
+      }
     }
   }
 
