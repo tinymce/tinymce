@@ -959,12 +959,12 @@ class AstNode {
           node = doc.createComment(this.internals.value);
           break;
         case NodeTypes.ATTRIBUTE: // only produced by Element.getAttribute()
-        case NodeTypes.DOCUMENT: // should't be passed to parser
+        case NodeTypes.DOCUMENT: // shouldn't be passed to parser
         case NodeTypes.DOCUMENT_TYPE: // shouldn't be passed to parser
         case NodeTypes.ENTITY: // depreciated
         case NodeTypes.ENTITY_REFERENCE: // depreciated
         case NodeTypes.NOTATION: // depreciated
-        case NodeTypes.PROCESSING_INSTRUCTION: // unsure how to support target as not in synthetic node
+        case NodeTypes.PROCESSING_INSTRUCTION: // unsure how to support as target not in synthetic node
           throw new Error('Not supported');
       }
       // add children
