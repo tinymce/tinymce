@@ -22,14 +22,14 @@ describe('atomic.katamari.api.arr.ArrUniqueTest', () => {
   });
 
   it('custom comparator', () => {
-    const startsWithTh = (a: string, b: string) => a.slice(0, 2) === b.slice(0, 2);
+    const startsWithTh = (left: string, right: string) => left.slice(0, 2) === right.slice(0, 2);
     assert.deepEqual(Arr.unique([ 'one', 'three', 'there', 'their' ], startsWithTh), [ 'one', 'three' ]);
 
     assert.deepEqual(Arr.unique([
       { a: 1, b: 2 },
       { a: 1, b: 2 },
       { a: 2, b: 4 }
-    ], (a, b) => a.a === b.a), [
+    ], (left, right) => left.a === right.a), [
       { a: 1, b: 2 },
       { a: 2, b: 4 }
     ]);
@@ -46,7 +46,7 @@ describe('atomic.katamari.api.arr.ArrUniqueTest', () => {
     fc.assert(fc.property(fc.array(fc.anything()), (arr) => {
       const once = Arr.unique(arr);
       const twice = Arr.unique(once);
-      assert.deepEqual(Arr.sort(twice), Arr.sort(once));
+      assert.deepEqual(twice, once);
     }));
   });
 });
