@@ -6,7 +6,9 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Attribute, Classes, Css, DomEvent, EventArgs, EventUnbinder, Insert, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import {
+  Attribute, Classes, Css, DomEvent, EventArgs, EventUnbinder, Insert, SelectorFilter, SelectorFind, SugarElement, SugarShadowDom
+} from '@ephox/sugar';
 
 import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
 import Observable from 'tinymce/core/api/util/Observable';
@@ -88,6 +90,7 @@ const create = (currentRect: GeomRect, viewPortRect: GeomRect, clampRect: GeomRe
       let startRect: GeomRect;
       return DragHelper(id, {
         document: containerElm.ownerDocument,
+        root: SugarShadowDom.getRootNode(container).dom,
         handle: id + '-' + handle.name,
 
         start: () => {
