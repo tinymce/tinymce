@@ -11,7 +11,6 @@ import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import BookmarkManager from './dom/BookmarkManager';
 import ControlSelection from './dom/ControlSelection';
-import DomQuery from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
 import EventUtils from './dom/EventUtils';
 import RangeUtils from './dom/RangeUtils';
@@ -73,7 +72,6 @@ export {
   GeomRect,
 
   // dom
-  DomQuery,
   DomTreeWalker,
   TextSeeker,
   DOMUtils,

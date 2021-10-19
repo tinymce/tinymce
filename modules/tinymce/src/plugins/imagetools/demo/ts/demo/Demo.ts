@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
+import { DomEvent, Html, Insert, InsertAll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
-import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Delay from 'tinymce/core/api/util/Delay';
 
 declare let tinymce: any;
 
-const $ = DomQuery;
 const imgSrc = '../img/dogleft.jpg';
 
-$(
+const ephoxUi = SelectorFind.descendant(SugarBody.body(), '#ephox-ui').getOrDie();
+const demo = SugarElement.fromHtml(
   '<textarea class="tinymce">' +
   '<p><img src="' + imgSrc + '" width="160" height="100">' +
   '<p><img src="' + imgSrc + '" style="width: 160px; height: 100px">' +
@@ -16,7 +16,8 @@ $(
   '<p><img src="' + imgSrc + '">' +
   '<p><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png">' +
   '</textarea>'
-).appendTo('#ephox-ui');
+);
+Insert.append(ephoxUi, demo);
 
 tinymce.init({
   // imagetools_cors_hosts: ["moxiecode.cachefly.net"],
@@ -72,12 +73,19 @@ const upload = () => {
 const dump = () => {
   const content = tinymce.activeEditor.getContent();
 
-  $('#view').html(content);
+  const view = SelectorFind.descendant(SugarBody.body(), '#view').getOrDie();
+  Html.set(view, content);
   console.log(content);
 };
 
-$('<button>send()</button>').appendTo('#ephox-ui').on('click', send);
-$('<button>upload()</button>').appendTo('#ephox-ui').on('click', upload);
-$('<button>dump()</button>').appendTo('#ephox-ui').on('click', dump);
+const sendBtn = SugarElement.fromHtml('<button>send()</button>');
+const uploadBtn = SugarElement.fromHtml('<button>upload()</button>');
+const dumpBtn = SugarElement.fromHtml('<button>dump()</button>');
+
+DomEvent.bind(sendBtn, 'click', send);
+DomEvent.bind(uploadBtn, 'click', upload);
+DomEvent.bind(dumpBtn, 'click', dump);
+
+InsertAll.append(ephoxUi, [ sendBtn, uploadBtn, dumpBtn ]);
 
 export {};

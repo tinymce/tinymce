@@ -10,7 +10,6 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
 import AddOnManager from './AddOnManager';
-import DomQuery from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import Env from './Env';
@@ -497,7 +496,7 @@ const EditorManager: EditorManager = {
       DOM.unbind(window, 'ready', initEditors);
       execCallback('onpageload');
 
-      targets = DomQuery.unique(findTargets(settings));
+      targets = Arr.unique(findTargets(settings));
 
       // TODO: Deprecate this one
       if (settings.types) {

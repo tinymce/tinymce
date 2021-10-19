@@ -1,6 +1,5 @@
 import { before, describe, it } from '@ephox/bedrock-client';
 
-import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import { CaretWalker } from 'tinymce/core/caret/CaretWalker';
 
@@ -16,15 +15,15 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
   const getChildNode = (childIndex: number) => getRoot().childNodes[childIndex];
 
   const findElm = (selector: string) => {
-    return DomQuery(selector, getRoot())[0];
+    return getRoot().querySelector(selector);
   };
 
   const findElmPos = (selector: string, offset: number) => {
-    return CaretPosition(DomQuery(selector, getRoot())[0], offset);
+    return CaretPosition(getRoot().querySelector(selector), offset);
   };
 
   const findTextPos = (selector: string, offset: number) => {
-    return CaretPosition(DomQuery(selector, getRoot())[0].firstChild, offset);
+    return CaretPosition(getRoot().querySelector(selector).firstChild, offset);
   };
 
   let logicalCaret: CaretWalker;
@@ -76,14 +75,14 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
 
   it('from text to text across elements', () => {
     setupHtml('<p>abc</p><p>def</p>');
-    CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), findTextPos('p:last', 0));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(findTextPos('p:last', 0)), findTextPos('p:first', 3));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p:first-of-type', 3)), findTextPos('p:last-of-type', 0));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(findTextPos('p:last-of-type', 0)), findTextPos('p:first-of-type', 3));
   });
 
   it('from text to text across elements with siblings', () => {
     setupHtml('<p>abc<b><!-- x --></b></p><p><b><!-- x --></b></p><p><b><!-- x --></b>def</p>');
-    CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), CaretPosition(findElm('p:last').lastChild, 0));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last').lastChild, 0)), findTextPos('p:first', 3));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p:first-of-type', 3)), CaretPosition(findElm('p:last-of-type').lastChild, 0));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last-of-type').lastChild, 0)), findTextPos('p:first-of-type', 3));
   });
 
   it('from input to text', () => {
@@ -94,13 +93,13 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
 
   it('from input to input across elements', () => {
     setupHtml('<p><input></p><p><input></p>');
-    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 1)), CaretPosition(findElm('p:last'), 0));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 1));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first-of-type'), 1)), CaretPosition(findElm('p:last-of-type'), 0));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last-of-type'), 0)), CaretPosition(findElm('p:first-of-type'), 1));
   });
 
   it('next br to br across elements', () => {
     setupHtml('<p><br></p><p><br></p>');
-    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 0)), CaretPosition(findElm('p:last'), 0));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first-of-type'), 0)), CaretPosition(findElm('p:last-of-type'), 0));
   });
 
   it('from text node to before cef span over br', () => {
@@ -110,7 +109,7 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
 
   it('prev br to br across elements', () => {
     setupHtml('<p><br></p><p><br></p>');
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 0));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last-of-type'), 0)), CaretPosition(findElm('p:first-of-type'), 0));
   });
 
   it('from before/after br to text', () => {
@@ -182,16 +181,16 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
   it('around tables', () => {
     setupHtml('a<table><tr><td>A</td></tr></table><table><tr><td>B</td></tr></table>b');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 1)), CaretPosition(getRoot(), 1));
-    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), findTextPos('td:first', 0));
-    CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('td:first', 1)), CaretPosition(getRoot(), 2));
-    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), findTextPos('td:last', 0));
-    CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('table:last td', 1)), CaretPosition(getRoot(), 3));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), findTextPos('td:first-of-type', 0));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('td:first-of-type', 1)), CaretPosition(getRoot(), 2));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), findTextPos('table:last-of-type td', 0));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('table:last-of-type td', 1)), CaretPosition(getRoot(), 3));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 3)), CaretPosition(getRoot().lastChild, 0));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().lastChild, 0)), CaretPosition(getRoot(), 3));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 3)), findTextPos('td:last', 1));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(findTextPos('td:last', 0)), CaretPosition(getRoot(), 2));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), findTextPos('td:first', 1));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(findTextPos('td:first', 0)), CaretPosition(getRoot(), 1));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 3)), findTextPos('table:last-of-type td', 1));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(findTextPos('table:last-of-type td', 0)), CaretPosition(getRoot(), 2));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), findTextPos('td:first-of-type', 1));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(findTextPos('td:first-of-type', 0)), CaretPosition(getRoot(), 1));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 1)), CaretPosition(getRoot().firstChild, 1));
   });
 
@@ -273,8 +272,8 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
       '<p><b><input></b></p>'
     );
 
-    CaretAsserts.assertCaretPosition(logicalCaret.next(findElmPos('p:first', 1)), CaretPosition(getRoot(), 1));
-    CaretAsserts.assertCaretPosition(logicalCaret.next(findElmPos('p:last', 1)), null);
+    CaretAsserts.assertCaretPosition(logicalCaret.next(findElmPos('p:first-of-type', 1)), CaretPosition(getRoot(), 1));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(findElmPos('p:last-of-type', 1)), null);
   });
 
   it('left/right between cE=false inlines in different blocks', () => {
@@ -287,8 +286,8 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
       '</p>'
     );
 
-    CaretAsserts.assertCaretPosition(logicalCaret.next(findElmPos('p:first', 1)), findElmPos('p:last', 0));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(findElmPos('p:last', 0)), findElmPos('p:first', 1));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(findElmPos('p:first-of-type', 1)), findElmPos('p:last-of-type', 0));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(findElmPos('p:last-of-type', 0)), findElmPos('p:first-of-type', 1));
   });
 
   it('from before/after root', () => {
@@ -297,8 +296,8 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
       '<p>b</p>'
     );
 
-    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition.before(getRoot())), findTextPos('p:first', 0));
-    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), findTextPos('p:last', 1));
+    CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition.before(getRoot())), findTextPos('p:first-of-type', 0));
+    CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), findTextPos('p:last-of-type', 1));
   });
 
   it('never into caret containers', () => {

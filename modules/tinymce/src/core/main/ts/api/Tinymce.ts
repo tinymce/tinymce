@@ -11,14 +11,12 @@ import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import BookmarkManager from './dom/BookmarkManager';
 import ControlSelection from './dom/ControlSelection';
-import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils, { DOMUtilsSettings } from './dom/DOMUtils';
 import EventUtils, { EventUtilsConstructor } from './dom/EventUtils';
 import RangeUtils from './dom/RangeUtils';
 import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer, { DomSerializerSettings } from './dom/Serializer';
-import Sizzle from './dom/Sizzle';
 import StyleSheetLoader, { StyleSheetLoaderSettings } from './dom/StyleSheetLoader';
 import TextSeeker from './dom/TextSeeker';
 import DomTreeWalker, { DomTreeWalkerConstructor } from './dom/TreeWalker';
@@ -128,8 +126,6 @@ interface TinyMCE extends EditorManager {
 
   dom: {
     EventUtils: EventUtilsConstructor;
-    Sizzle: any;
-    DomQuery: DomQueryConstructor;
     TreeWalker: DomTreeWalkerConstructor;
     TextSeeker: new (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
     DOMUtils: DOMUtilsNamespace;
@@ -240,8 +236,6 @@ const publicApi = {
 
   dom: {
     EventUtils,
-    Sizzle,
-    DomQuery,
     TreeWalker: DomTreeWalker,
     TextSeeker,
     DOMUtils,
