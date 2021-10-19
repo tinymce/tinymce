@@ -224,8 +224,14 @@ class AstNode {
     if (this.internals.isSynthetic === true) {
       this.internals.value = val;
     } else {
-      if (this.internals.node.nodeType === NodeTypes.TEXT) {
-        this.internals.node.textContent = val;
+      switch (this.internals.node.nodeType) {
+        case NodeTypes.TEXT:
+        case NodeTypes.COMMENT:
+        case NodeTypes.CDATA_SECTION:
+        case NodeTypes.PROCESSING_INSTRUCTION:
+          this.internals.node.nodeValue = val;
+          break;
+        default:
       }
     }
   }
