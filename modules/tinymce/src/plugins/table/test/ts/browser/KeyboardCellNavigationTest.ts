@@ -1,17 +1,18 @@
 import { Keys, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest', () => {
   before(function () {
-    if (!Env.webkit) {
+    const browser = PlatformDetection.detect().browser;
+    if (!browser.isChrome() && !browser.isSafari()) {
       this.skip();
     }
   });

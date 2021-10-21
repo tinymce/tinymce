@@ -1,13 +1,14 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.ShortcutsTest', () => {
+  const os = PlatformDetection.detect().os;
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -44,7 +45,7 @@ describe('browser.tinymce.core.ShortcutsTest', () => {
     assertShortcut('ctrl+d', { ctrlKey: true, keyCode: 68 }, true);
     assertShortcut('ctrl+d', { altKey: true, keyCode: 68 }, false);
 
-    if (Env.mac) {
+    if (os.isOSX() || os.isiOS()) {
       assertShortcut('meta+d', { metaKey: true, keyCode: 68 }, true);
       assertShortcut('access+d', { ctrlKey: true, altKey: true, keyCode: 68 }, true);
       assertShortcut('meta+d', { ctrlKey: true, keyCode: 68 }, false);

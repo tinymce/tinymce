@@ -22,8 +22,6 @@ const browser = platform.browser;
 const os = platform.os;
 const deviceType = platform.deviceType;
 
-const webkit = /WebKit/.test(userAgent) && !browser.isEdge();
-const fileApi = 'FormData' in window && 'FileReader' in window && 'URL' in window && !!URL.createObjectURL;
 const windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
 
 interface Version {
@@ -32,25 +30,11 @@ interface Version {
 }
 
 interface Env {
-  opera: boolean;
-  webkit: boolean;
-  ie: false | number;
-  gecko: boolean;
-  mac: boolean;
-  iOS: boolean;
-  android: boolean;
-  contentEditable: boolean;
   transparentSrc: string;
-  caretAfter: boolean;
-  range: boolean;
   documentMode: number;
-  fileApi: boolean;
-  ceFalse: boolean;
   cacheSuffix: any;
   container: any;
-  experimentalShadowDom: boolean;
   canHaveCSP: boolean;
-  desktop: boolean;
   windowsPhone: boolean;
 
   browser: {
@@ -88,103 +72,6 @@ interface Env {
 
 const Env: Env = {
   /**
-   * Constant that is <code>true</code> if the browser is Opera.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>browser.isOpera()</code> instead.
-   *
-   * @property opera
-   * @type Boolean
-   * @final
-   * @deprecated
-   */
-  opera: browser.isOpera(),
-
-  /**
-   * Constant that is <code>true</code> if the browser is WebKit (Safari/Chrome).
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>browser.isSafari()</code> or <code>browser.isChrome()</code> instead.
-   *
-   * @property webKit
-   * @type Boolean
-   * @final
-   * @deprecated
-   */
-  webkit,
-
-  /**
-   * Constant that is greater than zero if the browser is IE.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>browser.version.major</code> and <code>browser.isIE()</code> or <code>browser.isEdge()</code> instead.
-   *
-   * @property ie
-   * @type Number
-   * @final
-   * @deprecated
-   */
-  ie: browser.isIE() || browser.isEdge() ? browser.version.major : false,
-
-  /**
-   * Constant that is <code>true</code> if the browser is Gecko.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>browser.isFirefox()</code> instead.
-   *
-   * @property gecko
-   * @type Boolean
-   * @final
-   * @deprecated
-   */
-  gecko: browser.isFirefox(),
-
-  /**
-   * Constant that is <code>true</code> if the operating system is Mac OS.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>os.isOSX()</code> or <code>os.isiOS()</code> instead.
-   *
-   * @property mac
-   * @type Boolean
-   * @final
-   * @deprecated
-   */
-  mac: os.isOSX() || os.isiOS(),
-
-  /**
-   * Constant that is <code>true</code> if the operating system is iOS.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>os.isiOS()</code> instead.
-   *
-   * @property iOS
-   * @type Boolean
-   * @final
-   * @deprecated
-   */
-  iOS: deviceType.isiPad() || deviceType.isiPhone(),
-
-  /**
-   * Constant that is <code>true</code> if the operating system is android.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>os.isAndroid()</code> instead.
-   *
-   * @property android
-   * @type Boolean
-   * @final
-   * @deprecated
-   */
-  android: os.isAndroid(),
-
-  /**
-   * Constant that is <code>true</code> if the browser supports editing.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support content editable elements.
-   *
-   * @property contentEditable
-   * @type Boolean
-   * @final
-   * @deprecated
-   */
-  // All supported browsers support contentEditable now
-  contentEditable: true,
-
-  /**
    * Transparent image data url.
    *
    * @property transparentSrc
@@ -194,30 +81,6 @@ const Env: Env = {
   transparentSrc: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
 
   /**
-   * Returns <code>true</code>/<code>false</code> if the browser can or can't place the caret after a inline block like an image.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support placing carets after inline blocks.
-   *
-   * @property caretAfter
-   * @type Boolean
-   * @final
-   * @deprecated
-   */
-  // All supported browsers support carets after an inline block now
-  caretAfter: true,
-
-  /**
-   * Constant that is <code>true</code> if the browser supports native DOM Ranges. IE 9+.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support native DOM ranges.
-   *
-   * @property range
-   * @type Boolean
-   * @deprecated
-   */
-  range: window.getSelection && 'Range' in window,
-
-  /**
    * Returns the IE document mode. For non IE browsers, this will fake IE 10 document mode.
    *
    * @property documentMode
@@ -225,54 +88,14 @@ const Env: Env = {
    */
   documentMode: browser.isIE() ? ((document as any).documentMode || 7) : 10,
 
-  /**
-   * Constant that is <code>true</code> if the browser has a modern file API.
-   *
-   * <br>
-   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support modern file APIs.
-   * @property fileApi
-   * @type Boolean
-   * @deprecated
-   */
-  fileApi,
-
-  /**
-   * Constant that is <code>true</code> if the browser supports <code>contentEditable=false</code> regions.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - All supported browsers now support <code>contentEditable=false</code> regions.
-   *
-   * @property ceFalse
-   * @type Boolean
-   * @deprecated
-   */
-  // All supported browsers support contenteditable=false now
-  ceFalse: true,
-
   cacheSuffix: null,
   container: null,
-
-  /**
-   * <em>Deprecated in TinyMCE 5.5 and has been marked for removal in TinyMCE 6.0</em> - if you need the original target of an event, please use `event.composedPath()`.
-   *
-   * @property experimentalShadowDom
-   * @type Boolean
-   * @deprecated
-   */
-  experimentalShadowDom: false,
 
   /**
    * Constant if CSP mode is possible or not. Meaning we can't use script urls for the iframe.
    */
   canHaveCSP: !browser.isIE(),
 
-  /**
-   * <em>Deprecated in TinyMCE 5.1 and has been marked for removal in TinyMCE 6.0</em> - Use <code>deviceType.isDesktop()</code> instead.
-   *
-   * @property desktop
-   * @type Boolean
-   * @deprecated
-   */
-  desktop: deviceType.isDesktop(),
   windowsPhone,
 
   /**

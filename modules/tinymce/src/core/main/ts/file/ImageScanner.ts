@@ -105,10 +105,6 @@ export const ImageScanner = (uploadStatus: UploadStatus, blobCache: BlobCache): 
     const images = Arr.filter(getAllImages(elm), (img) => {
       const src = img.src;
 
-      if (!Env.fileApi) {
-        return false;
-      }
-
       if (img.hasAttribute('data-mce-bogus')) {
         return false;
       }

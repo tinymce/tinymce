@@ -277,7 +277,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
 
       // Edge case on Safari on Mac where it doesn't handle Cmd+Shift+V correctly
       // it fires the keydown but no paste or keyup so we are left with a paste bin
-      if (keyboardPastePlainTextState && Env.webkit && navigator.userAgent.indexOf('Version/') !== -1) {
+      if (keyboardPastePlainTextState && Env.browser.isSafari() && navigator.userAgent.indexOf('Version/') !== -1) {
         return;
       }
 
@@ -292,7 +292,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
 
       // IE doesn't support Ctrl+Shift+V and it doesn't even produce a paste event
       // so lets fake a paste event and let IE use the execCommand/dataTransfer methods
-      if (Env.ie && keyboardPastePlainTextState) {
+      if ((Env.browser.isIE() || Env.browser.isEdge()) && keyboardPastePlainTextState) {
         e.preventDefault();
         Events.firePaste(editor, true);
         return;
@@ -400,7 +400,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
 
     // Try IE only method if paste isn't a keyboard paste
-    if (Env.ie && (!isKeyboardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
+    if ((Env.browser.isIE() || Env.browser.isEdge()) && (!isKeyboardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
       pasteBin.create();
 
       editor.dom.bind(pasteBin.getEl(), 'paste', (e) => {

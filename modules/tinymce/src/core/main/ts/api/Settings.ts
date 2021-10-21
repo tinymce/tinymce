@@ -124,7 +124,7 @@ const getInlineBoundarySelector = (editor: Editor): string => editor.getParam('i
 
 const getObjectResizing = (editor: Editor): string | false => {
   const selector = editor.getParam('object_resizing');
-  if (selector === false || Env.iOS) {
+  if (selector === false || Env.deviceType.isiPhone() || Env.deviceType.isiPad()) {
     return false;
   } else {
     return Type.isString(selector) ? selector : 'table,img,figure.image,div,video,iframe';

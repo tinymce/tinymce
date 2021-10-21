@@ -2,17 +2,18 @@
 import { ApproxStructure, Assertions, Keys, UiFinder } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell, Fun } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Css, SugarBody } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import * as UiUtils from '../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
+  const os = PlatformDetection.detect().os;
   const store = Cell([ ]);
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,
@@ -348,7 +349,7 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
           }),
           s.element('div', {
             classes: [ arr.has('tox-collection__item-accessory') ],
-            html: str.is(Env.mac ? '\u2318' + 'M' : 'Ctrl' + '+M')
+            html: str.is(os.isOSX() || os.isiOS() ? '\u2318' + 'M' : 'Ctrl' + '+M')
           })
         ]
       })),

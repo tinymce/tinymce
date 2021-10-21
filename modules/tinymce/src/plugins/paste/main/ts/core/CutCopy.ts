@@ -23,7 +23,7 @@ type FallbackFn = (html: string, done: DoneFn) => void;
 
 const hasWorkingClipboardApi = (clipboardData: DataTransfer | null): clipboardData is DataTransfer =>
   // iOS supports the clipboardData API but it doesn't do anything for cut operations
-  Env.iOS === false && typeof clipboardData?.setData === 'function';
+  !Env.os.isiOS() && typeof clipboardData?.setData === 'function';
 
 const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, text: string): boolean => {
   if (hasWorkingClipboardApi(clipboardData)) {

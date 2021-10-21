@@ -1,9 +1,9 @@
 import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import * as Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -11,6 +11,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import * as Strings from '../module/test/Strings';
 
 describe('browser.tinymce.plugins.paste.PasteTest', () => {
+  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     indent: false,
@@ -750,7 +751,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
   context('IE only', () => {
     before(function () {
-      if (!Env.ie) {
+      if (!browser.isIE()) {
         this.skip();
       }
     });
@@ -776,7 +777,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
   context('paste_webkit_styles', () => {
     before(function () {
-      if (!Env.webkit) {
+      if (!browser.isChrome() && !browser.isSafari()) {
         this.skip();
       }
     });

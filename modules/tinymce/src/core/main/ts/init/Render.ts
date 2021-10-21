@@ -14,7 +14,6 @@ import EventUtils from '../api/dom/EventUtils';
 import ScriptLoader from '../api/dom/ScriptLoader';
 import StyleSheetLoader from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
-import Env from '../api/Env';
 import IconManager from '../api/IconManager';
 import NotificationManager from '../api/NotificationManager';
 import PluginManager from '../api/PluginManager';
@@ -189,11 +188,6 @@ const render = (editor: Editor) => {
 
   // Element not found, then skip initialization
   if (!editor.getElement()) {
-    return;
-  }
-
-  // No editable support old iOS versions etc
-  if (!Env.contentEditable) {
     return;
   }
 

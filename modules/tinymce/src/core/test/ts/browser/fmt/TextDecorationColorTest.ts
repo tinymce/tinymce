@@ -1,10 +1,10 @@
 import { ApproxStructure } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
 interface Selection {
@@ -56,7 +56,8 @@ describe('browser.tinymce.core.fmt.TextDecorationColorTest', () => {
     }));
     // IE11 and approx structure do not work properly with colors
     // Cannot just use sAssertContent for other browsers as style properties can be in a different order
-    return Env.ie === 11 ? TinyAssertions.assertContent(editor, content) : TinyAssertions.assertContentStructure(editor, contentStructure);
+    const browser = PlatformDetection.detect().browser;
+    return browser.isIE() && browser.version.major === 11 ? TinyAssertions.assertContent(editor, content) : TinyAssertions.assertContentStructure(editor, contentStructure);
   };
 
   const mergeForecolorAndTextDecoration = (toolbarLabel: string, textDecoration: string, text: Text, selection: Selection) => {

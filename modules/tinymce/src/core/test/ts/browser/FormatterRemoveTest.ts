@@ -1,15 +1,16 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.FormatterRemoveTest', () => {
+  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     extended_valid_elements: 'b[style],i,span[style|contenteditable|class]',
@@ -355,7 +356,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
   });
 
   it('contentEditable: false on start and contentEditable: true on end', function () {
-    if (Env.ie) {
+    if (browser.isIE() || browser.isEdge()) {
       // Skipped since IE doesn't support selection of parts of a cE=false element
       this.skip();
     }

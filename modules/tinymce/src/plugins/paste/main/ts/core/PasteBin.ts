@@ -24,7 +24,7 @@ interface PasteBin {
 // We can't attach the pastebin to a H1 inline element on IE since it won't allow H1 or other
 // non valid parents to be pasted into the pastebin so we need to attach it to the body
 const getPasteBinParent = (editor: Editor): Element =>
-  Env.ie && editor.inline ? document.body : editor.getBody();
+  (Env.browser.isIE() || Env.browser.isEdge()) && editor.inline ? document.body : editor.getBody();
 
 const isExternalPasteBin = (editor: Editor): boolean =>
   getPasteBinParent(editor) !== editor.getBody();
@@ -59,7 +59,8 @@ const create = (editor: Editor, lastRngCell: Cell<Range | null>, pasteBinDefault
   }, pasteBinDefaultContent);
 
   // Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE and Gecko
-  if (Env.ie || Env.gecko) {
+  const browser = Env.browser;
+  if (browser.isIE() || browser.isEdge() || browser.isFirefox()) {
     dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) === 'rtl' ? 0xFFFF : -0xFFFF);
   }
 

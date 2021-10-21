@@ -1,15 +1,16 @@
 import { Clipboard } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.paste.PasteFormatToggleTest', () => {
   before(function () {
-    if (!Env.webkit) {
+    const browser = PlatformDetection.detect().browser;
+    if (!browser.isChrome() && !browser.isSafari()) {
       this.skip();
     }
   });

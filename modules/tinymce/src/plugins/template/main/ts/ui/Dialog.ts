@@ -42,7 +42,7 @@ const getPreviewContent = (editor: Editor, html: string): string => {
 
     const encode = editor.dom.encode;
 
-    const isMetaKeyPressed = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
+    const isMetaKeyPressed = Env.os.isOSX() || Env.os.isiOS() ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
 
     const preventClicksOnLinksScript = (
       '<script>' +

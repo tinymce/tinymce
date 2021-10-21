@@ -10,7 +10,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import { Settings } from '../module/Settings';
 
-const metaKey = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
+const metaKey = Env.os.isOSX() || Env.os.isiOS() ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
 
 const noCorsNoStyle = '<!DOCTYPE html><html><head>' +
   '<base href="http://localhost:8000/">' +

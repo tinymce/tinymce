@@ -2,9 +2,9 @@ import { FocusTools, RealKeys, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Class, Focus, SugarDocument } from '@ephox/sugar';
 
-import Env from 'tinymce/core/api/Env';
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
@@ -15,7 +15,8 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
   let windowManager: WindowManagerImpl;
   before(function () {
     // TODO: TINY-2308 Get this test working on everything!
-    if (Env.ie > 0 || Env.webkit || Env.gecko) {
+    const browser = PlatformDetection.detect().browser;
+    if (browser.isIE() || browser.isEdge() || browser.isChrome() || browser.isSafari() || browser.isFirefox()) {
       this.skip();
     }
 

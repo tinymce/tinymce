@@ -298,14 +298,7 @@ const publicApi = {
   createNS: Tools.createNS,
   resolve: Tools.resolve,
   explode: Tools.explode,
-  _addCacheSuffix: Tools._addCacheSuffix,
-
-  // Legacy browser detection
-  isOpera: Env.opera,
-  isWebKit: Env.webkit,
-  isIE: Env.ie,
-  isGecko: Env.gecko,
-  isMac: Env.mac
+  _addCacheSuffix: Tools._addCacheSuffix
 };
 
 const tinymce: TinyMCE = Tools.extend(EditorManager, publicApi);

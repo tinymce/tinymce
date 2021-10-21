@@ -79,7 +79,7 @@ export interface EditorConstructor {
 const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
 const resolve = Tools.resolve;
-const ie = Env.ie;
+const ie = Env.browser.isIE() || Env.browser.isEdge();
 
 /**
  * Include Editor API docs.

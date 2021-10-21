@@ -1,15 +1,15 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Env from 'tinymce/core/api/Env';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
-  const isIE = Env.ie && Env.ie < 12;
+  const isIE = PlatformDetection.detect().browser.isIE();
   const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
   it('parseStyle', () => {

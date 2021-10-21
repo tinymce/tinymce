@@ -1,11 +1,11 @@
 import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import { AddUndoEvent } from 'tinymce/core/api/EventTypes';
 import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -14,6 +14,8 @@ import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.UndoManagerTest', () => {
+  const os = PlatformDetection.detect().os;
+  const isMac = os.isOSX() || os.isiOS();
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -103,7 +105,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     const selectAllFlags: Record<string, any> = { keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false };
 
-    if (Env.mac) {
+    if (isMac) {
       selectAllFlags.metaKey = true;
     } else {
       selectAllFlags.ctrlKey = true;
@@ -180,8 +182,8 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     const evt = {
       keyCode: 90,
-      metaKey: Env.mac,
-      ctrlKey: !Env.mac,
+      metaKey: isMac,
+      ctrlKey: !isMac,
       shiftKey: false,
       altKey: false
     };

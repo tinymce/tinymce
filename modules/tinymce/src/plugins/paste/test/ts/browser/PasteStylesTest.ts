@@ -9,7 +9,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
   before(function () {
-    if (!Env.webkit) {
+    if (!Env.browser.isChrome() && !Env.browser.isSafari()) {
       this.skip();
     }
   });

@@ -145,7 +145,7 @@ const moveSelectionToMarker = (editor: Editor, marker: HTMLElement | null): void
     rng.setStart(node, node.nodeValue.length);
 
     // TODO: Why can't we normalize on IE
-    if (!Env.ie) {
+    if (!(Env.browser.isIE() || Env.browser.isEdge())) {
       const node2 = marker.nextSibling;
       if (NodeType.isText(node2)) {
         node.appendData(node2.data);
