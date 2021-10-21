@@ -324,7 +324,7 @@ class EditorCommands {
             'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
           );
 
-          if (Env.mac) {
+          if (Env.os.isOSX() || Env.os.isiOS()) {
             msg = msg.replace(/Ctrl\+/g, '\u2318+');
           }
 

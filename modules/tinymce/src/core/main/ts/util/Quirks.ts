@@ -32,7 +32,12 @@ interface Quirks {
 const Quirks = (editor: Editor): Quirks => {
   const each = Tools.each;
   const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, parser = editor.parser;
-  const isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;
+  const browser = Env.browser;
+  const isGecko = browser.isFirefox();
+  const isIE = browser.isIE() || browser.isEdge();
+  const isWebKit = browser.isChrome() || browser.isSafari();
+  const isiOS = Env.deviceType.isiPhone() || Env.deviceType.isiPad();
+  const isMac = Env.os.isOSX() || Env.os.isiOS();
   const mceInternalUrlPrefix = 'data:text/mce-internal,';
   const mceInternalDataType = isIE ? 'Text' : 'URL';
 
@@ -579,7 +584,7 @@ const Quirks = (editor: Editor): Quirks => {
         if (e.target.nodeName === 'HTML') {
           // Edge seems to only need focus if we set the range
           // the caret will become invisible and moved out of the iframe!!
-          if (Env.ie > 11) {
+          if (browser.isEdge()) {
             editor.getBody().focus();
             return;
           }
@@ -600,7 +605,7 @@ const Quirks = (editor: Editor): Quirks => {
    * You might then loose all your work so we need to block that behavior and replace it with our own.
    */
   const blockCmdArrowNavigation = () => {
-    if (Env.mac) {
+    if (isMac) {
       editor.on('keydown', (e) => {
         if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode === 37 || e.keyCode === 39)) {
           e.preventDefault();
@@ -772,7 +777,7 @@ const Quirks = (editor: Editor): Quirks => {
       blockFormSubmitInsideEditor();
       selectAll();
 
-      if (Env.iOS) {
+      if (isiOS) {
         restoreFocusOnKeyDown();
         bodyHeight();
         tapLinksAndImages();
@@ -810,7 +815,7 @@ const Quirks = (editor: Editor): Quirks => {
       // touchClickEvent();
 
       // iOS
-      if (Env.iOS) {
+      if (isiOS) {
         restoreFocusOnKeyDown();
         bodyHeight();
         tapLinksAndImages();
@@ -819,12 +824,9 @@ const Quirks = (editor: Editor): Quirks => {
       }
     }
 
-    if (Env.ie >= 11) {
+    if (isIE) {
       bodyHeight();
       disableBackspaceIntoATable();
-    }
-
-    if (Env.ie) {
       selectAll();
       disableAutoUrlDetect();
       ieInternalDragAndDrop();

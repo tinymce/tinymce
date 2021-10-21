@@ -24,7 +24,7 @@ import * as CaretBookmark from './CaretBookmark';
 
 const addBogus = (dom: DOMUtils, node: Node): Node => {
   // Adds a bogus BR element for empty block elements
-  if (NodeType.isElement(node) && dom.isBlock(node) && !node.innerHTML && !Env.ie) {
+  if (NodeType.isElement(node) && dom.isBlock(node) && !node.innerHTML && !(Env.browser.isIE() || Env.browser.isEdge())) {
     node.innerHTML = '<br data-mce-bogus="1" />';
   }
 
@@ -194,7 +194,7 @@ const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): O
       // If siblings are text nodes then merge them unless it's Opera since it some how removes the node
       // and we are sniffing since adding a lot of detection code for a browser with 3% of the market
       // isn't worth the effort. Sorry, Opera but it's just a fact
-      if (prev && next && prev.nodeType === next.nodeType && NodeType.isText(prev) && !Env.opera) {
+      if (prev && next && prev.nodeType === next.nodeType && NodeType.isText(prev) && !Env.browser.isOpera()) {
         idx = prev.nodeValue.length;
         prev.appendData(next.nodeValue);
         dom.remove(next);

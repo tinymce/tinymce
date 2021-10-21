@@ -36,10 +36,6 @@ const hasBlobAsSource = (elm: HTMLImageElement) => elm.src.indexOf('blob:') === 
 const imageHtml = (uri: string) => DOMUtils.DOM.createHTML('img', { src: uri });
 
 describe('browser.tinymce.core.EditorUploadTest', () => {
-  if (!Env.fileApi) {
-    return;
-  }
-
   let testBlobDataUri: string;
   let changeEvents: Array<EditorEvent<{}>> = [];
 

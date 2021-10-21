@@ -42,6 +42,7 @@ interface SelectionOverrides {
 const getContentEditableRoot = (editor: Editor, node: Node) => CefUtils.getContentEditableRoot(editor.getBody(), node);
 
 const SelectionOverrides = (editor: Editor): SelectionOverrides => {
+  const isIE = Env.browser.isIE() || Env.browser.isEdge();
   const selection = editor.selection, dom = editor.dom;
   const isBlock = dom.isBlock as (node: Node) => node is HTMLElement;
 
@@ -285,7 +286,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
       // Make sure we get proper html/text for the fake cE=false selection
       // Doesn't work at all on Edge since it doesn't have proper clipboardData support
-      if (!e.isDefaultPrevented() && e.clipboardData && !Env.ie) {
+      if (!e.isDefaultPrevented() && e.clipboardData && !isIE) {
         const realSelectionElement = getRealSelectionElement();
         if (realSelectionElement) {
           e.preventDefault();
@@ -357,7 +358,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     // WHY is IE making things so hard! Copy on <i contentEditable="false">x</i> produces: <em>x</em>
     // This is a ridiculous hack where we place the selection from a block over the inline element
     // so that just the inline element is copied as is and not converted.
-    if (targetClone === origTargetClone && Env.ie) {
+    if (targetClone === origTargetClone && isIE) {
       Remove.empty(realSelectionContainer);
       InsertAll.append(realSelectionContainer, [
         SugarElement.fromHtml('<p style="font-size: 0" data-mce-bogus="all">\u00a0</p>', doc),
@@ -484,7 +485,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     fakeCaret.hide();
   };
 
-  if (Env.ceFalse && !Rtc.isRtc(editor)) {
+  if (!Rtc.isRtc(editor)) {
     registerEvents();
   }
 

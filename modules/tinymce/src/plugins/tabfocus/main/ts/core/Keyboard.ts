@@ -100,7 +100,7 @@ const setup = (editor: Editor): void => {
         focusEditor.focus();
       } else {
         Delay.setTimeout(() => {
-          if (!Env.webkit) {
+          if (!Env.browser.isChrome() && !Env.browser.isSafari()) {
             window.focus();
           }
 
@@ -120,7 +120,7 @@ const setup = (editor: Editor): void => {
 
     editor.on('keyup', tabCancel);
 
-    if (Env.gecko) {
+    if (Env.browser.isFirefox()) {
       editor.on('keypress keydown', tabHandler);
     } else {
       editor.on('keydown', tabHandler);

@@ -42,7 +42,7 @@ import DomTreeWalker from './TreeWalker';
 // Shorten names
 const each = Tools.each;
 const grep = Tools.grep;
-const isIE = Env.ie;
+const isIE = Env.browser.isIE() || Env.browser.isEdge();
 
 interface AttrHooks {
   style: {

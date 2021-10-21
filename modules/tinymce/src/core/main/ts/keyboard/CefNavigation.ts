@@ -9,7 +9,6 @@ import { Fun, Optional } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import Env from '../api/Env';
 import * as Settings from '../api/Settings';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterContentEditableFalse, isAfterTable, isBeforeContentEditableFalse, isBeforeTable } from '../caret/CaretPositionPredicates';
@@ -32,11 +31,7 @@ const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Edito
 
 const createTextBlock = (editor: Editor): Element => {
   const textBlock = editor.dom.create(Settings.getForcedRootBlock(editor));
-
-  if (!Env.ie || Env.ie >= 11) {
-    textBlock.innerHTML = '<br data-mce-bogus="1">';
-  }
-
+  textBlock.innerHTML = '<br data-mce-bogus="1">';
   return textBlock;
 };
 

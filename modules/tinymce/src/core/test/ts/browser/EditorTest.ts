@@ -1,13 +1,13 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import Env from 'tinymce/core/api/Env';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -15,6 +15,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.EditorTest', () => {
+  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetup<Editor>({
     selector: 'textarea',
     add_unload_trigger: false,
@@ -135,16 +136,18 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
   });
 
-  it('TBA: WebKit Serialization range bug', () => {
-    if (Env.webkit) {
-      const editor = hook.editor();
-      // Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
-      // wind up testing the serialization functionality we were aiming for and the test fails.
-      const p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
-      editor.dom.replace(p, editor.getBody().firstChild);
-
-      assert.equal(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>', 'WebKit Serialization range bug');
+  it('TBA: WebKit Serialization range bug', function () {
+    if (!(browser.isChrome() || browser.isSafari())) {
+      this.skip();
     }
+
+    const editor = hook.editor();
+    // Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
+    // wind up testing the serialization functionality we were aiming for and the test fails.
+    const p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
+    editor.dom.replace(p, editor.getBody().firstChild);
+
+    assert.equal(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>', 'WebKit Serialization range bug');
   });
 
   it('TBA: editor_methods - getParam', () => {

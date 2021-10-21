@@ -77,6 +77,7 @@ type CommandFunc = string | [string, boolean, any] | (() => void);
 const parseShortcut = (pattern: string): Shortcut => {
   let key;
   const shortcut: any = {};
+  const isMac = Env.os.isOSX() || Env.os.isiOS();
 
   // Parse modifiers and keys ctrl+alt+b for example
   each(explode(pattern.toLowerCase(), '+'), (value) => {
@@ -108,7 +109,7 @@ const parseShortcut = (pattern: string): Shortcut => {
   if (shortcut.access) {
     shortcut.alt = true;
 
-    if (Env.mac) {
+    if (isMac) {
       shortcut.ctrl = true;
     } else {
       shortcut.shift = true;
@@ -117,7 +118,7 @@ const parseShortcut = (pattern: string): Shortcut => {
 
   // Handle special meta modifier differently depending on Mac/Win
   if (shortcut.meta) {
-    if (Env.mac) {
+    if (isMac) {
       shortcut.meta = true;
     } else {
       shortcut.ctrl = true;

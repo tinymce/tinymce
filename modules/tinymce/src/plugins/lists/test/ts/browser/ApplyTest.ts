@@ -3,7 +3,6 @@ import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -615,8 +614,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     );
 
     assert.equal(editor.selection.getStart().nodeName, 'STRONG');
-    // Old IE will return the end LI not a big deal
-    assert.equal(editor.selection.getEnd().nodeName, Env.ie && Env.ie < 9 ? 'LI' : 'EM');
+    assert.equal(editor.selection.getEnd().nodeName, 'EM');
   });
 
   it('TBA: Apply UL list to br line and text block line', () => {

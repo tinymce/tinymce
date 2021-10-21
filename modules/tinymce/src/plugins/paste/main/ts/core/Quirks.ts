@@ -163,11 +163,11 @@ const removeUnderlineAndFontInAnchor = (editor: Editor, root: Element): void => 
 };
 
 const setup = (editor: Editor): void => {
-  if (Env.webkit) {
+  if (Env.browser.isChrome() || Env.browser.isSafari()) {
     addPreProcessFilter(editor, removeWebKitStyles);
   }
 
-  if (Env.ie) {
+  if (Env.browser.isIE() || Env.browser.isEdge()) {
     addPreProcessFilter(editor, removeExplorerBrElementsAfterBlocks);
     addPostProcessFilter(editor, removeUnderlineAndFontInAnchor);
   }

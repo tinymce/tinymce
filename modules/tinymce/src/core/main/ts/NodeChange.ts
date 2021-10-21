@@ -8,7 +8,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 
 import Editor from './api/Editor';
-import Env from './api/Env';
 import * as Settings from './api/Settings';
 import Delay from './api/util/Delay';
 import * as RangeCompare from './selection/RangeCompare';
@@ -63,10 +62,8 @@ class NodeChange {
     editor.on('SelectionChange', () => {
       const startElm = editor.selection.getStart(true);
 
-      // When focusout from after cef element to other input element the startelm can be undefined.
-      // IE 8 will fire a selectionchange event with an incorrect selection
-      // when focusing out of table cells. Click inside cell -> toolbar = Invalid SelectionChange event
-      if (!startElm || (!Env.range && editor.selection.isCollapsed())) {
+      // When focusout from after cef element to other input element the startelm can be undefined
+      if (!startElm) {
         return;
       }
 

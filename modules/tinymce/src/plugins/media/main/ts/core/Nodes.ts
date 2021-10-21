@@ -199,7 +199,7 @@ const placeHolderConverter = (editor: Editor) => (nodes: AstNode[]): void => {
       }
     }
 
-    if (isLiveEmbedNode(node) && Settings.hasLiveEmbeds(editor) && Env.ceFalse) {
+    if (isLiveEmbedNode(node) && Settings.hasLiveEmbeds(editor)) {
       if (!isWithinEmbedWrapper(node)) {
         node.replace(createPreviewNode(editor, node));
       }
