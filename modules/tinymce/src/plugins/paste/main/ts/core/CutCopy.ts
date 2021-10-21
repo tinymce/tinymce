@@ -74,7 +74,7 @@ const fallback = (editor: Editor): FallbackFn => (html, done) => {
   offscreenRange.selectNodeContents(inner);
   editor.selection.setRng(offscreenRange);
 
-  Delay.setTimeout(() => {
+  Delay.setEditorTimeout(editor, () => {
     editor.selection.setRng(range);
     outer.parentNode.removeChild(outer);
     done();

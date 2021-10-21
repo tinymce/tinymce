@@ -1,5 +1,3 @@
-import Delay from 'tinymce/core/api/util/Delay';
-
 declare let tinymce: any;
 
 tinymce.init({
@@ -24,7 +22,7 @@ tinymce.init({
   images_upload_handler: (blobInfo, success, _failure, _progress) => {
     // eslint-disable-next-line no-console
     console.log(blobInfo);
-    Delay.setTimeout(() => {
+    setTimeout(() => {
       success('https://www.google.com/logos/google.jpg');
     }, 5000);
   },

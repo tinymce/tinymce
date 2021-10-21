@@ -125,7 +125,7 @@ const startTimedUpload = (editor: Editor, imageUploadTimerState: Cell<number>): 
 };
 
 const cancelTimedUpload = (imageUploadTimerState: Cell<number>): void => {
-  Delay.clearTimeout(imageUploadTimerState.get());
+  clearTimeout(imageUploadTimerState.get());
 };
 
 const updateSelectedImage = (editor: Editor, origBlob: Blob, ir: ImageResult, uploadImmediately: boolean, imageUploadTimerState: Cell<number>,

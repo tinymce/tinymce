@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
+import { Cell, Fun, Optional, Singleton, Throttler } from '@ephox/katamari';
 import { Css, DomEvent, EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Delay from 'tinymce/core/api/util/Delay';
 
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
@@ -65,16 +64,16 @@ const viewportUpdate = WindowVisualViewport.get().fold(
       });
     };
 
-    const update = Delay.throttle(() => {
+    const update = Throttler.first(() => {
       refreshScroll();
       refreshVisualViewport();
     }, 50);
 
     const bind = (element: SugarElement<HTMLElement>) => {
       editorContainer.set(element);
-      update();
-      resizeBinder.set(WindowVisualViewport.bind('resize', update));
-      scrollBinder.set(WindowVisualViewport.bind('scroll', update));
+      update.throttle();
+      resizeBinder.set(WindowVisualViewport.bind('resize', update.throttle));
+      scrollBinder.set(WindowVisualViewport.bind('scroll', update.throttle));
     };
 
     const unbind = () => {

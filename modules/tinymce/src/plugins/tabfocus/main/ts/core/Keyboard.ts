@@ -9,7 +9,6 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
-import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
@@ -99,7 +98,7 @@ const setup = (editor: Editor): void => {
       if (el.id && focusEditor) {
         focusEditor.focus();
       } else {
-        Delay.setTimeout(() => {
+        setTimeout(() => {
           if (!Env.browser.isChrome() && !Env.browser.isSafari()) {
             window.focus();
           }

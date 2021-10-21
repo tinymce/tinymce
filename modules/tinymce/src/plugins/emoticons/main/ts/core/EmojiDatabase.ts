@@ -9,7 +9,6 @@ import { Merger, Obj, Optional, Singleton, Strings } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
-import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
 
 import * as Settings from '../api/Settings';
@@ -125,16 +124,16 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
     } else {
       return new Promise((resolve, reject) => {
         let numRetries = 15;
-        const interval = Delay.setInterval(() => {
+        const interval = setInterval(() => {
           if (hasLoaded()) {
-            Delay.clearInterval(interval);
+            clearInterval(interval);
             resolve(true);
           } else {
             numRetries--;
             if (numRetries < 0) {
               // eslint-disable-next-line no-console
               console.log('Could not load emojis from url: ' + databaseUrl);
-              Delay.clearInterval(interval);
+              clearInterval(interval);
               reject(false);
             }
           }

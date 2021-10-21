@@ -64,7 +64,7 @@ const setupEvents = (editor: Editor, targetElm: SugarElement, ui: InlineHeader, 
   editor.on('SkinLoaded ResizeWindow', () => ui.update(true));
 
   editor.on('NodeChange keydown', (e) => {
-    Delay.requestAnimationFrame(() => resizeContent(e));
+    requestAnimationFrame(() => resizeContent(e));
   });
 
   editor.on('ScrollWindow', () => ui.updateMode());

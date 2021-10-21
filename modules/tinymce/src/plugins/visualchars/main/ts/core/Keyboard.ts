@@ -5,28 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell } from '@ephox/katamari';
+import { Cell, Throttler } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import Delay from 'tinymce/core/api/util/Delay';
 
 import * as Settings from '../api/Settings';
 import * as VisualChars from './VisualChars';
 
 const setup = (editor: Editor, toggleState: Cell<boolean>): void => {
-  const debouncedToggle = Delay.debounce(() => {
+  const debouncedToggle = Throttler.first(() => {
     VisualChars.toggle(editor);
   }, 300);
 
   if (Settings.hasForcedRootBlock(editor)) {
     editor.on('keydown', (e) => {
       if (toggleState.get() === true) {
-        e.keyCode === 13 ? VisualChars.toggle(editor) : debouncedToggle();
+        e.keyCode === 13 ? VisualChars.toggle(editor) : debouncedToggle.throttle();
       }
     });
   }
 
-  editor.on('remove', debouncedToggle.stop);
+  editor.on('remove', debouncedToggle.cancel);
 };
 
 export {

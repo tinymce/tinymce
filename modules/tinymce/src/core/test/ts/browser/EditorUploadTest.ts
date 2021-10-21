@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { UploadResult } from 'tinymce/core/api/EditorUpload';
 import Env from 'tinymce/core/api/Env';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Promise from 'tinymce/core/api/util/Promise';
 import * as Conversions from 'tinymce/core/file/Conversions';
@@ -285,7 +284,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
       uploadCount++;
 
-      Delay.setTimeout(() => {
+      setTimeout(() => {
         success('myimage.png');
       }, 0);
     };
@@ -320,7 +319,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     editor.settings.images_upload_handler = (_data: BlobInfo, _success, failure) => {
       uploadCount++;
 
-      Delay.setTimeout(() => {
+      setTimeout(() => {
         failure('Error');
       }, 0);
     };
@@ -360,7 +359,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     editor.settings.images_upload_handler = (_data: BlobInfo, _success, failure) => {
       uploadCount++;
 
-      Delay.setTimeout(() => {
+      setTimeout(() => {
         failure('Error', { remove: true });
       }, 0);
     };

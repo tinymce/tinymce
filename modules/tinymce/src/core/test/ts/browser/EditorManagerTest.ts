@@ -6,7 +6,6 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -25,7 +24,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
   });
 
   afterEach((done) => {
-    Delay.setTimeout(() => {
+    setTimeout(() => {
       EditorManager.remove();
       done();
     }, 0);
@@ -106,7 +105,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     EditorManager.init({
       selector: 'textarea',
       init_instance_callback: (editor1) => {
-        Delay.setTimeout(() => {
+        setTimeout(() => {
           // Destroy the editor by setting innerHTML common ajax pattern
           viewBlock.update('<textarea id="' + editor1.id + '"></textarea>');
 

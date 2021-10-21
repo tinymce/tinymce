@@ -10,8 +10,6 @@ import { Arr, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Focus, Height, SelectorFind, SugarElement, SugarShadowDom, Traverse, Width } from '@ephox/sugar';
 
-import Delay from 'tinymce/core/api/util/Delay';
-
 import { formResizeEvent } from '../general/FormEvents';
 
 const measureHeights = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, tabview: SugarElement, tabviewComp: AlloyComponent): number[] => Arr.map(allTabs, (_tab, i) => {
@@ -119,7 +117,7 @@ const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => 
 
           // Use a delay here and recalculate the height, as we need all the components attached
           // to be able to properly calculate the max height
-          Delay.requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
             updateTabviewHeight(dialog, tabview, maxTabHeight);
           });
         });
