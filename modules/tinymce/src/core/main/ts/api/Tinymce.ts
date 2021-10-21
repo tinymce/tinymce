@@ -48,9 +48,6 @@ import Delay from './util/Delay';
 import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
 import ImageUploader from './util/ImageUploader';
-import JSON from './util/JSON';
-import JSONP from './util/JSONP';
-import JSONRequest, { JSONRequestConstructor } from './util/JSONRequest';
 import LocalStorage from './util/LocalStorage';
 import Observable from './util/Observable';
 import Promise from './util/Promise';
@@ -115,9 +112,6 @@ interface TinyMCE extends EditorManager {
     Observable: Observable<any>;
     I18n: I18n;
     XHR: XHR;
-    JSON: JSON;
-    JSONRequest: JSONRequestConstructor;
-    JSONP: JSONP;
     LocalStorage: Storage;
     ImageUploader: ImageUploader;
   };
@@ -224,9 +218,6 @@ const publicApi = {
     Observable,
     I18n,
     XHR,
-    JSON,
-    JSONRequest,
-    JSONP,
     LocalStorage,
     ImageUploader
   },

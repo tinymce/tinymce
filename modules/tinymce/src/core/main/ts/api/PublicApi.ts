@@ -52,9 +52,6 @@ import Class from './util/Class';
 import Delay from './util/Delay';
 import EventDispatcher, { EditorEvent } from './util/EventDispatcher';
 import I18n from './util/I18n';
-import JSON from './util/JSON';
-import JSONP from './util/JSONP';
-import JSONRequest, { JSONRequestArgs, JSONRequestSettings } from './util/JSONRequest';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
 import URI from './util/URI';
@@ -98,9 +95,6 @@ export {
   Delay,
   EventDispatcher,
   I18n,
-  JSONRequest,
-  JSON,
-  JSONP,
   Observable,
   Tools,
   URI,
@@ -137,8 +131,6 @@ export {
   Bookmark,
   Events,
   Formats,
-  JSONRequestSettings,
-  JSONRequestArgs,
   NotificationApi,
   NotificationSpec,
   SaxParserSettings,
