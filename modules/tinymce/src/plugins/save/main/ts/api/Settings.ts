@@ -10,14 +10,14 @@ import Editor from 'tinymce/core/api/Editor';
 const enableWhenDirty = (editor: Editor): boolean =>
   editor.getParam('save_enablewhendirty', true);
 
-const hasOnSaveCallback = (editor: Editor): boolean =>
-  !!editor.getParam('save_onsavecallback');
+const getOnSaveCallback = (editor: Editor): (editor: Editor) => void | undefined =>
+  editor.getParam('save_onsavecallback');
 
-const hasOnCancelCallback = (editor: Editor): boolean =>
-  !!editor.getParam('save_oncancelcallback');
+const getOnCancelCallback = (editor: Editor): (editor: Editor) => void | undefined =>
+  editor.getParam('save_oncancelcallback');
 
 export {
   enableWhenDirty,
-  hasOnSaveCallback,
-  hasOnCancelCallback
+  getOnSaveCallback,
+  getOnCancelCallback
 };

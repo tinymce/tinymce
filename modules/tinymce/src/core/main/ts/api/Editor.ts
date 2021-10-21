@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
 
 import * as EditorContent from '../content/EditorContent';
 import * as NodeType from '../dom/NodeType';
@@ -78,7 +78,6 @@ export interface EditorConstructor {
 // Shorten these names
 const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
-const resolve = Tools.resolve;
 const ie = Env.browser.isIE() || Env.browser.isEdge();
 
 /**
@@ -181,17 +180,6 @@ class Editor implements EditorObservable {
    */
   public mode: EditorMode;
 
-  /**
-   * Sets the editor mode. For example: "design", "code" or "readonly".
-   * <br>
-   * <em>Deprecated in TinyMCE 5.0.4 and has been marked for removal in TinyMCE 6.0</em> - Use <code>editor.mode.set(mode)</code> instead.
-   *
-   * @method setMode
-   * @param {String} mode Mode to set the editor in.
-   * @deprecated now an alias for editor.mode.set()
-   */
-  public setMode: (mode: string) => void;
-
   public shortcuts: Shortcuts;
   public loadedCSS: Record<string, any> = {};
   public editorCommands: EditorCommands;
@@ -200,11 +188,6 @@ class Editor implements EditorObservable {
   public inline: boolean;
 
   public isNotDirty: boolean = false;
-
-  // TODO type these properties
-  public callbackLookup: any;
-  public _nodeChangeDispatcher: NodeChange;
-  public editorUpload: EditorUpload;
 
   // Arguments set later, for example by InitContentBody.ts
   public annotator: Annotator;
@@ -219,6 +202,7 @@ class Editor implements EditorObservable {
   public destroyed: boolean;
   public dom: DOMUtils;
   public editorContainer: HTMLElement;
+  public editorUpload: EditorUpload;
   public eventRoot?: Element;
   public formatter: Formatter;
   public formElement: HTMLElement;
@@ -246,7 +230,7 @@ class Editor implements EditorObservable {
   public windowManager: WindowManager;
   public _beforeUnload: () => void;
   public _eventDispatcher: EventDispatcher<NativeEventMap>;
-  public _mceOldSubmit: any;
+  public _nodeChangeDispatcher: NodeChange;
   public _pendingNativeEvents: string[];
   public _selectionOverrides: SelectionOverrides;
   public _skinLoaded: boolean;
@@ -325,13 +309,14 @@ class Editor implements EditorObservable {
     };
 
     const self = this;
-    const modeInstance = create(self);
-    this.mode = modeInstance;
-    this.setMode = modeInstance.set;
+    this.mode = create(self);
 
     // Call setup
     editorManager.fire('SetupEditor', { editor: this });
-    this.execCallback('setup', this);
+    const setupCallback = Settings.getSetupCallback(self);
+    if (Type.isFunction(setupCallback)) {
+      setupCallback.call(self, self);
+    }
   }
 
   /**
@@ -362,42 +347,6 @@ class Editor implements EditorObservable {
    */
   public hasFocus(): boolean {
     return EditorFocus.hasFocus(this);
-  }
-
-  /**
-   * Executes a legacy callback. This method is useful to call old 2.x option callbacks.
-   * There new event model is a better way to add callback so this method might be removed in the future.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-   *
-   * @deprecated
-   * @method execCallback
-   * @param {String} name Name of the callback to execute.
-   * @return {Object} Return value passed from callback function.
-   */
-  public execCallback(name: string, ...x: any[]): any {
-    const self = this;
-    let callback = self.settings[name], scope;
-
-    if (!callback) {
-      return;
-    }
-
-    // Look through lookup
-    if (self.callbackLookup && (scope = self.callbackLookup[name])) {
-      callback = scope.func;
-      scope = scope.scope;
-    }
-
-    if (typeof callback === 'string') {
-      scope = callback.replace(/\.\w+$/, '');
-      scope = scope ? resolve(scope) : 0;
-      callback = resolve(callback);
-      self.callbackLookup = self.callbackLookup || {};
-      self.callbackLookup[name] = { func: callback, scope };
-    }
-
-    return callback.apply(scope || self, x);
   }
 
   /**
@@ -1046,8 +995,9 @@ class Editor implements EditorObservable {
     const self = this, settings = self.settings;
 
     // Use callback instead
-    if (settings.urlconverter_callback) {
-      return self.execCallback('urlconverter_callback', url, elm, true, name);
+    const urlConverterCallback = Settings.getUrlConverterCallback(self);
+    if (Type.isFunction(urlConverterCallback)) {
+      return urlConverterCallback.call(self, url, elm, true, name);
     }
 
     // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs

@@ -252,7 +252,10 @@ const initEditor = (editor: Editor) => {
   editor.focus(true);
   moveSelectionToFirstCaretPosition(editor);
   editor.nodeChanged({ initial: true });
-  editor.execCallback('init_instance_callback', editor);
+  const initInstanceCallback = Settings.getInitInstanceCallback(editor);
+  if (Type.isFunction(initInstanceCallback)) {
+    initInstanceCallback.call(editor, editor);
+  }
   autoFocus(editor);
 };
 

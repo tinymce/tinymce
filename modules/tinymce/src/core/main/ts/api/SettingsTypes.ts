@@ -35,7 +35,7 @@ export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none
 export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string}) => void) => void;
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
-export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => void;
+export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => string;
 
 interface ToolbarGroup {
   name?: string;
@@ -190,7 +190,7 @@ interface BaseEditorSettings {
   typeahead_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: any;
-  urlconverter_callback?: string | URLConverterCallback;
+  urlconverter_callback?: URLConverterCallback;
   valid_children?: string;
   valid_classes?: string | Record<string, string>;
   valid_elements?: string;

@@ -47,7 +47,7 @@ const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponent
   editor.on('SwitchMode', () => broadcastReadonly(uiComponents, editor.mode.isReadOnly()));
 
   if (Settings.isReadOnly(editor)) {
-    editor.setMode('readonly');
+    editor.mode.set('readonly');
   }
 };
 
