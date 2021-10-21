@@ -10,6 +10,7 @@ import { Pattern as PolarisPattern } from '@ephox/polaris';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as FindMark from './FindMark';
@@ -132,13 +133,21 @@ const escapeSearchText = (text: string, wholeWord: boolean): string => {
 };
 
 const find = (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean): number => {
+  const selection = editor.selection;
   const escapedText = escapeSearchText(text, wholeWord);
+  const isForwardSelection = selection.isForward();
 
   const pattern = {
     regex: new RegExp(escapedText, matchCase ? 'g' : 'gi'),
     matchIndex: 1
   };
   const count = markAllMatches(editor, currentSearchState, pattern, inSelection);
+
+  // Safari has a bug whereby splitting text nodes breaks the selection (which is done when marking matches).
+  // As such we need to manually reset it after doing a find action. See https://bugs.webkit.org/show_bug.cgi?id=230594
+  if (Env.browser.isSafari()) {
+    selection.setRng(selection.getRng(), isForwardSelection);
+  }
 
   if (count) {
     const newIndex = moveSelection(editor, currentSearchState, true);
