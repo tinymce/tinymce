@@ -11,7 +11,6 @@ import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
-import Delay from '../api/util/Delay';
 import * as NodeType from '../dom/NodeType';
 import * as ClientRect from '../geom/ClientRect';
 import * as CaretContainer from './CaretContainer';
@@ -173,13 +172,13 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
     });
 
     if (cursorInterval) {
-      Delay.clearInterval(cursorInterval);
+      clearInterval(cursorInterval);
       cursorInterval = undefined;
     }
   };
 
   const startBlink = () => {
-    cursorInterval = Delay.setInterval(() => {
+    cursorInterval = setInterval(() => {
       lastVisualCaret.on((caretState) => {
         if (hasFocus()) {
           dom.toggleClass(caretState.caret, 'mce-visual-caret-hidden');
@@ -197,7 +196,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
     });
   };
 
-  const destroy = () => Delay.clearInterval(cursorInterval);
+  const destroy = () => clearInterval(cursorInterval);
 
   const getCss = () => (
     '.mce-visual-caret {' +

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Throttler, Type } from '@ephox/katamari';
 import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 
 import * as CefUtils from '../../dom/CefUtils';
@@ -535,19 +535,19 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       editor.on('remove', () => dom.unbind(rootElement, 'mscontrolselect', handleMSControlSelect));
     }
 
-    const throttledUpdateResizeRect = Delay.throttle((e) => {
+    const throttledUpdateResizeRect = Throttler.first((e) => {
       if (!editor.composing) {
         updateResizeRect(e);
       }
-    });
+    }, 0);
 
-    editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect);
+    editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect.throttle);
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', (e) => {
       // Don't update the resize rect while composing since it blows away the IME see: #2710
       if (selectedElm && selectedElm.nodeName === 'TABLE') {
-        throttledUpdateResizeRect(e);
+        throttledUpdateResizeRect.throttle(e);
       }
     });
 

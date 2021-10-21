@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed the deprecated `$`, `DomQuery` and `Sizzle` APIs #TINY-4520
+- Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
+- Removed the legacy browser detection properties from `Env` #TINY-8162
+- Removed the deprecated `editors` property from `EditorManager` #TINY-8162
+- Removed the deprecated `execCallback` and `setMode` APIs from `Editor` #TINY-8162
+- Removed the deprecated `addComponents` and `dependencies` APIs from `AddOnManager` #TINY-8162
+- Removed the deprecated `clearInterval`, `clearTimeout`, `debounce`, `requestAnimationFrame`, `setInterval`, `setTimeout` and `throttle` APIs from `Delay` #TINY-8162
 - Removed the deprecated `Schema` settings #TINY-7821
 - Removed the deprecated `file_browser_callback_types`, `force_hex_style_colors` and `images_dataimg_filter` settings #TINY-7823
 - Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820

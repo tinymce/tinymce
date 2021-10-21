@@ -2,7 +2,6 @@ import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Delay from 'tinymce/core/api/util/Delay';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -16,7 +15,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
   }, [ Plugin, Theme ]);
 
   const mediaUrlResolver = (data: { url: string }, resolve: (data: { html: string }) => void) => {
-    Delay.setTimeout(() => {
+    setTimeout(() => {
       resolve({
         html: '<span id="fake">' + data.url + '</span>'
       });

@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
-import Delay from 'tinymce/core/api/util/Delay';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.NotificationManagerTest', () => {
@@ -123,7 +122,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
         assert.lengthOf(notifications, 2, 'Duplicate should be added for timeout message.');
 
-        Delay.setTimeout(() => {
+        setTimeout(() => {
           checkClosed();
         }, 100);
       });

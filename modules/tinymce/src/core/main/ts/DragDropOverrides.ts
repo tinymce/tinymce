@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Singleton } from '@ephox/katamari';
+import { Arr, Singleton, Throttler } from '@ephox/katamari';
 
 import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
@@ -169,11 +169,11 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
 
 const move = (state: Singleton.Value<State>, editor: Editor) => {
   // Reduces laggy drag behavior on Gecko
-  const throttledPlaceCaretAt = Delay.throttle((clientX: number, clientY: number) => {
+  const throttledPlaceCaretAt = Throttler.first((clientX: number, clientY: number) => {
     editor._selectionOverrides.hideFakeCaret();
     editor.selection.placeCaretAt(clientX, clientY);
   }, 0);
-  editor.on('remove', throttledPlaceCaretAt.stop);
+  editor.on('remove', throttledPlaceCaretAt.cancel);
 
   return (e: EditorEvent<MouseEvent>) => state.on((state) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
@@ -194,7 +194,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
       appendGhostToBody(state.ghost, editor.getBody());
       moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY);
 
-      throttledPlaceCaretAt(e.clientX, e.clientY);
+      throttledPlaceCaretAt.throttle(e.clientX, e.clientY);
     }
   });
 };

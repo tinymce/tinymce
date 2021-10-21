@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
 import { DomEvent, Html, Insert, InsertAll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
-import Delay from 'tinymce/core/api/util/Delay';
-
 declare let tinymce: any;
 
 const imgSrc = '../img/dogleft.jpg';
@@ -48,7 +46,7 @@ tinymce.init({
     console.log('blob upload [started]', 'id:', data.id(), 'filename:', data.filename());
     progress(0);
 
-    Delay.setTimeout(() => {
+    setTimeout(() => {
       console.log('blob upload [ended]', data.id());
       success(data.id() + '.png');
       progress(100);

@@ -12,7 +12,6 @@ import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
 import * as Settings from './Settings';
-import Delay from './util/Delay';
 
 export interface NotificationManagerImpl {
   open: (spec: NotificationSpec, closeCallback?: () => void) => NotificationApi;
@@ -163,7 +162,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
     // NodeChange is needed for inline mode and autoresize as the positioning is done
     // from the bottom up, which changes when the content in the editor changes.
     editor.on('show ResizeEditor ResizeWindow NodeChange', () => {
-      Delay.requestAnimationFrame(reposition);
+      requestAnimationFrame(reposition);
     });
 
     editor.on('remove', () => {

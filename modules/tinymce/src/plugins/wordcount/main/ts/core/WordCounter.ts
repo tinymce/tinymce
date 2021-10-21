@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Throttler } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 
@@ -16,13 +18,14 @@ const updateCount = (editor: Editor, api: WordCountApi): void => {
 };
 
 const setup = (editor: Editor, api: WordCountApi, delay: number): void => {
-  const debouncedUpdate = Delay.debounce(() => updateCount(editor, api), delay);
+  const debouncedUpdate = Throttler.first(() => updateCount(editor, api), delay);
 
   editor.on('init', () => {
     updateCount(editor, api);
     Delay.setEditorTimeout(editor, () => {
-      editor.on('SetContent BeforeAddUndo Undo Redo ViewUpdate keyup', debouncedUpdate);
+      editor.on('SetContent BeforeAddUndo Undo Redo ViewUpdate keyup', debouncedUpdate.throttle);
     }, 0);
+    editor.on('remove', debouncedUpdate.cancel);
   });
 };
 
