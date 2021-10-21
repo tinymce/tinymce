@@ -250,12 +250,6 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         Attribute.set(underlinePath, 'fill', value);
       });
     },
-    // Deprecated as of TinyMCE 5.8 (see TINY-3551)
-    setIconStroke: (id, value) => {
-      SelectorFind.descendant(comp.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
-        Attribute.set(underlinePath, 'stroke', value);
-      });
-    },
     setActive: (state) => {
       // Toggle the pressed aria state component
       Attribute.set(comp.element, 'aria-pressed', state);
