@@ -111,24 +111,7 @@ const loadPlugins = (editor: Editor, suffix: string) => {
     plugin = Tools.trim(plugin);
 
     if (plugin && !PluginManager.urls[plugin]) {
-      if (hasSkipLoadPrefix(plugin)) {
-        plugin = plugin.substr(1, plugin.length);
-
-        const dependencies = PluginManager.dependencies(plugin);
-
-        Tools.each(dependencies, (depPlugin) => {
-          const defaultSettings = {
-            prefix: 'plugins/',
-            resource: depPlugin,
-            suffix: '/plugin' + suffix + '.js'
-          };
-
-          const dep = PluginManager.createUrl(defaultSettings, depPlugin);
-          PluginManager.load(dep.resource, dep, Fun.noop, undefined, () => {
-            ErrorReporter.pluginLoadError(editor, dep.prefix + dep.resource + dep.suffix, dep.resource);
-          });
-        });
-      } else {
+      if (!hasSkipLoadPrefix(plugin)) {
         const url: UrlObject = {
           prefix: 'plugins/',
           resource: plugin,
