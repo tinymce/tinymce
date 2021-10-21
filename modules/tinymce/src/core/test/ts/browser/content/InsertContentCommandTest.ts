@@ -3,7 +3,6 @@ import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import JSON from 'tinymce/core/api/util/JSON';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
@@ -423,7 +422,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.setContent('<p>a b c</p>');
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
     editor.execCommand('mceInsertContent', false, 'X');
-    assert.equal(JSON.serialize(editor.getContent()), '"<p>a X c</p>"');
+    assert.equal(JSON.stringify(editor.getContent()), '"<p>a X c</p>"');
   });
 
   it('mceInsertRawHTML - insert p at start', () => {
@@ -446,6 +445,6 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.setContent('<p>a b c</p>');
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
     editor.execCommand('mceInsertRawHTML', false, '<strong>X</strong>');
-    assert.equal(JSON.serialize(editor.getContent()), '"<p>a <strong>X</strong> c</p>"');
+    assert.equal(JSON.stringify(editor.getContent()), '"<p>a <strong>X</strong> c</p>"');
   });
 });
