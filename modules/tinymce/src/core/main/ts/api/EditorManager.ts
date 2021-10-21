@@ -40,14 +40,7 @@ const DOM = DOMUtils.DOM;
 const each = Tools.each;
 let boundGlobalEvents = false;
 let beforeUnloadDelegate: (e: BeforeUnloadEvent) => any;
-const legacyEditors = [];
 let editors = [];
-
-const isValidLegacyKey = (id) => {
-  // In theory we could filter out any editor id:s that clash
-  // with array prototype items but that could break existing integrations
-  return id !== 'length';
-};
 
 const globalEventDelegate = (e) => {
   const type = e.type;
@@ -80,14 +73,6 @@ const toggleGlobalEvents = (state: boolean) => {
 
 const removeEditorFromList = (targetEditor: Editor) => {
   const oldEditors = editors;
-
-  delete legacyEditors[targetEditor.id];
-  for (let i = 0; i < legacyEditors.length; i++) {
-    if (legacyEditors[i] === targetEditor) {
-      legacyEditors.splice(i, 1);
-      break;
-    }
-  }
 
   editors = Arr.filter(editors, (editor) => {
     return targetEditor !== editor;
@@ -124,7 +109,6 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   majorVersion: string;
   minorVersion: string;
   releaseDate: string;
-  editors: Editor[];
   activeEditor: Editor;
   focusedEditor: Editor;
   settings: RawEditorSettings;
@@ -185,17 +169,6 @@ const EditorManager: EditorManager = {
    * @type String
    */
   releaseDate: '@@releaseDate@@',
-
-  /**
-   * Collection of editor instances.
-   * <br>
-   * <em>Deprecated in TinyMCE 4.7 and has been marked for removal in TinyMCE 6.0</em> - Use tinymce.get() instead.
-   *
-   * @property editors
-   * @type Object
-   * @deprecated
-   */
-  editors: legacyEditors,
 
   /**
    * Collection of language pack data.
@@ -527,20 +500,12 @@ const EditorManager: EditorManager = {
 
     // Prevent existing editors from being added again this could happen
     // if a user calls createEditor then render or add multiple times.
-    const existingEditor = legacyEditors[editor.id];
+    const existingEditor = self.get(editor.id);
     if (existingEditor === editor) {
       return editor;
     }
 
-    if (self.get(editor.id) === null) {
-      // Add to legacy editors array, this is what breaks in HTML5 where ID:s with numbers are valid
-      // We can't get rid of this strange object and array at the same time since it seems to be used all over the web
-      if (isValidLegacyKey(editor.id)) {
-        legacyEditors[editor.id] = editor;
-      }
-
-      legacyEditors.push(editor);
-
+    if (existingEditor === null) {
       editors.push(editor);
     }
 
