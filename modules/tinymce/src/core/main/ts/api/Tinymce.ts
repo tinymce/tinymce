@@ -175,9 +175,7 @@ interface TinyMCE extends EditorManager {
   grep: Tools['grep'];
   inArray: Tools['inArray'];
   extend: Tools['extend'];
-  create: Tools['create'];
   walk: Tools['walk'];
-  createNS: Tools['createNS'];
   resolve: Tools['resolve'];
   explode: Tools['explode'];
   _addCacheSuffix: Tools['_addCacheSuffix'];
@@ -281,9 +279,7 @@ const publicApi = {
   grep: Tools.grep,
   inArray: Tools.inArray,
   extend: Tools.extend,
-  create: Tools.create,
   walk: Tools.walk,
-  createNS: Tools.createNS,
   resolve: Tools.resolve,
   explode: Tools.explode,
   _addCacheSuffix: Tools._addCacheSuffix
