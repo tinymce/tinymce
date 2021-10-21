@@ -44,7 +44,6 @@ import Shortcuts, { ShortcutsConstructor } from './Shortcuts';
 import ThemeManager from './ThemeManager';
 import UndoManager from './UndoManager';
 import Class from './util/Class';
-import Color, { ColorConstructor } from './util/Color';
 import Delay from './util/Delay';
 import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
@@ -120,7 +119,6 @@ interface TinyMCE extends EditorManager {
     JSONRequest: JSONRequestConstructor;
     JSONP: JSONP;
     LocalStorage: Storage;
-    Color: ColorConstructor;
     ImageUploader: ImageUploader;
   };
 
@@ -230,7 +228,6 @@ const publicApi = {
     JSONRequest,
     JSONP,
     LocalStorage,
-    Color,
     ImageUploader
   },
 
