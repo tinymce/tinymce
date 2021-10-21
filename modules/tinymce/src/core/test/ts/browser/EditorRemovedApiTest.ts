@@ -40,6 +40,5 @@ describe('browser.tinymce.core.EditorRemovedApiTest', () => {
     editor.execCommand('bold');
     editor.focus();
     editor.nodeChanged();
-    editor.execCallback('test_callback', 1);
   });
 });

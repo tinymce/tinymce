@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -28,8 +30,9 @@ const save = (editor: Editor): void => {
   editor.save();
 
   // Use callback instead
-  if (Settings.hasOnSaveCallback(editor)) {
-    editor.execCallback('save_onsavecallback', editor);
+  const onSaveCallback = Settings.getOnSaveCallback(editor);
+  if (Type.isFunction(onSaveCallback)) {
+    onSaveCallback.call(editor, editor);
     editor.nodeChanged();
     return;
   }
@@ -57,8 +60,9 @@ const cancel = (editor: Editor): void => {
   const h = Tools.trim(editor.startContent);
 
   // Use callback instead
-  if (Settings.hasOnCancelCallback(editor)) {
-    editor.execCallback('save_oncancelcallback', editor);
+  const onCancelCallback = Settings.getOnCancelCallback(editor);
+  if (Type.isFunction(onCancelCallback)) {
+    onCancelCallback.call(editor, editor);
     return;
   }
 

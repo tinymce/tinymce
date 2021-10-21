@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 
+import { URLConverterCallback } from '../api/SettingsTypes';
 import { UploadHandler } from '../file/Uploader';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
@@ -201,6 +202,15 @@ const getVisualAidsAnchorClass = (editor: Editor) => editor.getParam('visual_anc
 
 const getIframeTitle = (editor: Editor) => editor.getParam('iframe_aria_text', 'Rich Text Area. Press ALT-0 for help.', 'string');
 
+const getSetupCallback = (editor: Editor): (editor: Editor) => void | undefined =>
+  editor.getParam('setup');
+
+const getInitInstanceCallback = (editor: Editor): (editor: Editor) => void | undefined =>
+  editor.getParam('init_instance_callback');
+
+const getUrlConverterCallback = (editor: Editor): URLConverterCallback | undefined =>
+  editor.getParam('urlconverter_callback');
+
 export {
   getIframeAttrs,
   getDocType,
@@ -266,5 +276,8 @@ export {
   getVisualAidsTableClass,
   getFontCss,
   getVisualAidsAnchorClass,
-  getIframeTitle
+  getIframeTitle,
+  getSetupCallback,
+  getInitInstanceCallback,
+  getUrlConverterCallback
 };
