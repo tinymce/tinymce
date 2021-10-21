@@ -201,13 +201,6 @@ interface BaseEditorSettings {
   visual_table_class?: string;
   width?: number | string;
 
-  // Deprecated settings
-  editor_deselector?: string;
-  editor_selector?: string;
-  elements?: string;
-  mode?: 'exact' | 'textareas' | 'specific_textareas';
-  types?: Record<string, any>[];
-
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;
   forced_plugins?: string | string[];

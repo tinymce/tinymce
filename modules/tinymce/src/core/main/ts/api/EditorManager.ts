@@ -37,8 +37,8 @@ declare const window: Window & { tinymce: any; tinyMCEPreInit: any };
  */
 
 const DOM = DOMUtils.DOM;
-const explode = Tools.explode, each = Tools.each, extend = Tools.extend;
-let instanceCounter = 0, boundGlobalEvents = false;
+const each = Tools.each;
+let boundGlobalEvents = false;
 let beforeUnloadDelegate: (e: BeforeUnloadEvent) => any;
 const legacyEditors = [];
 let editors = [];
@@ -106,7 +106,7 @@ const removeEditorFromList = (targetEditor: Editor) => {
   return oldEditors.length !== editors.length;
 };
 
-const purgeDestroyedEditor = (editor) => {
+const purgeDestroyedEditor = (editor: Editor) => {
   // User has manually destroyed the editor lets clean up the mess
   if (editor && editor.initialized && !(editor.getContainer() || editor.getBody()).parentNode) {
     removeEditorFromList(editor);
@@ -394,13 +394,7 @@ const EditorManager: EditorManager = {
       return callback.apply(self, []);
     };
 
-    const hasClass = (elm, className) => {
-      return className.constructor === RegExp ? className.test(elm.className) : DOM.hasClass(elm, className);
-    };
-
     const findTargets = (settings: RawEditorSettings): HTMLElement[] => {
-      let targets: HTMLElement[] = [];
-
       if (Env.browser.isIE() && Env.browser.version.major < 11) {
         ErrorReporter.initError(
           'TinyMCE does not support the browser you are using. For a list of supported' +
@@ -415,59 +409,13 @@ const EditorManager: EditorManager = {
         return [];
       }
 
-      if (settings.types) {
-        each(settings.types, (type) => {
-          targets = targets.concat(DOM.select(type.selector));
-        });
-
-        return targets;
-      } else if (settings.selector) {
+      if (settings.selector) {
         return DOM.select(settings.selector);
       } else if (settings.target) {
         return [ settings.target ];
       }
 
-      // Fallback to old setting
-      switch (settings.mode) {
-        case 'exact':
-          const l = settings.elements || '';
-
-          if (l.length > 0) {
-            each(explode(l), (id) => {
-              const elm = DOM.get(id);
-
-              if (elm) {
-                targets.push(elm);
-              } else {
-                each(document.forms, (f: HTMLFormElement) => {
-                  each(f.elements, (e: HTMLFormElement) => {
-                    if (e.name === id) {
-                      id = 'mce_editor_' + instanceCounter++;
-                      DOM.setAttrib(e, 'id', id);
-                      targets.push(e);
-                    }
-                  });
-                });
-              }
-            });
-          }
-          break;
-
-        case 'textareas':
-        case 'specific_textareas':
-          each(DOM.select('textarea'), (elm) => {
-            if (settings.editor_deselector && hasClass(elm, settings.editor_deselector)) {
-              return;
-            }
-
-            if (!settings.editor_selector || hasClass(elm, settings.editor_selector)) {
-              targets.push(elm);
-            }
-          });
-          break;
-      }
-
-      return targets;
+      return [];
     };
 
     let provideResults = (editors) => {
@@ -497,22 +445,6 @@ const EditorManager: EditorManager = {
       execCallback('onpageload');
 
       targets = Arr.unique(findTargets(settings));
-
-      // TODO: Deprecate this one
-      if (settings.types) {
-        each(settings.types, (type) => {
-          Tools.each(targets, (elm: HTMLElement) => {
-            if (DOM.is(elm, type.selector)) {
-              createEditor(createId(elm), extend({}, settings, type), elm);
-              return false;
-            }
-
-            return true;
-          });
-        });
-
-        return;
-      }
 
       Tools.each(targets, (elm) => {
         purgeDestroyedEditor(self.get(elm.id));
