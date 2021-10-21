@@ -44,11 +44,11 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', () => {
   };
 
   it('TBA: Incorrect service url no api key', () =>
-    pTestImageToolsError('http://0.0.0.0.0.0/', undefined, 'ImageProxy HTTP error: Incorrect Image Proxy URL')
+    pTestImageToolsError('http://nonexistant.tiny.cloud/', undefined, 'ImageProxy HTTP error: Incorrect Image Proxy URL')
   );
 
   it('TBA: Incorrect service url with api key', () =>
-    pTestImageToolsError('http://0.0.0.0.0.0/', 'fake_key', 'ImageProxy HTTP error: Incorrect Image Proxy URL')
+    pTestImageToolsError('http://nonexistant.tiny.cloud/', 'fake_key', 'ImageProxy HTTP error: Incorrect Image Proxy URL')
   );
 
   it('TBA: 403 no api key', () =>
