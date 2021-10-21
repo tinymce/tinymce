@@ -407,15 +407,13 @@ const EditorManager: EditorManager = {
           'TinyMCE requires standards mode.'
         );
         return [];
-      }
-
-      if (settings.selector) {
+      } else if (Type.isString(settings.selector)) {
         return DOM.select(settings.selector);
-      } else if (settings.target) {
+      } else if (Type.isNonNullable(settings.target)) {
         return [ settings.target ];
+      } else {
+        return [];
       }
-
-      return [];
     };
 
     let provideResults = (editors) => {
