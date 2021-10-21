@@ -44,7 +44,6 @@ export interface ToolbarSplitButtonInstanceApi {
   isDisabled: () => boolean;
   setDisabled: (state: boolean) => void;
   setIconFill: (id: string, value: string) => void;
-  setIconStroke: (id: string, value: string) => void; // Deprecated as of TinyMCE 5.8 (see TINY-3551)
   isActive: () => boolean;
   setActive: (state: boolean) => void;
 }
