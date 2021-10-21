@@ -49,7 +49,6 @@ import ThemeManager, { Theme } from './ThemeManager';
 import { tinymce, TinyMCE } from './Tinymce';
 import * as Ui from './ui/Ui';
 import Class from './util/Class';
-import Color from './util/Color';
 import Delay from './util/Delay';
 import EventDispatcher, { EditorEvent } from './util/EventDispatcher';
 import I18n from './util/I18n';
@@ -96,7 +95,6 @@ export {
 
   // utils
   Class,
-  Color,
   Delay,
   EventDispatcher,
   I18n,
