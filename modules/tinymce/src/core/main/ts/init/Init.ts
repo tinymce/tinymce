@@ -29,10 +29,6 @@ const initPlugin = (editor: Editor, initializedPlugins: string[], plugin: string
   const pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
   plugin = Tools.trim(plugin);
   if (Plugin && Tools.inArray(initializedPlugins, plugin) === -1) {
-    Tools.each(PluginManager.dependencies(plugin), (dep) => {
-      initPlugin(editor, initializedPlugins, dep);
-    });
-
     if (editor.plugins[plugin]) {
       return;
     }
