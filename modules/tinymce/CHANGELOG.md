@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
 - The legacy `mobile` theme has been removed #TINY-7832
 
+## 5.10.1 - TBD
+
+### Fixed
+- Fixed an exception thrown on Safari when closing the `searchreplace` plugin dialog #TINY-8166
+
 ## 5.10.0 - 2021-10-11
 
 ### Added
