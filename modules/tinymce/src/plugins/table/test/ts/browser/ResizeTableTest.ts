@@ -1,6 +1,7 @@
 import { Mouse } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
+import { TinyAssertions } from '@ephox/mcagar';
 import { TableGridSize } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
@@ -34,11 +35,14 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
   const percentTable = '<table style="width: 100%;"><tbody><tr><td style="width: 50%;"></td><td style="width: 50%;"></td></tr></tbody></table>';
   const responsiveTable = '<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>';
   const responsiveTableWithContent = '<table><colgroup><col><col></colgroup><tbody><tr><td>Content</td><td><br></td></tr></tbody></table>';
+  const pixelTableWithRowHeights = '<table style="width: 200px; height: 100px;"><tbody><tr style="height: 100px;"><td style="height: 100px;"></td><td style="height: 100px;"></td></tr></tbody></table>';
 
   const defaultSettings = {
     plugins: 'table',
     width: 400,
+    height: 300,
     base_url: '/project/tinymce/js/tinymce',
+    indent: false,
     table_toolbar: ''
   };
 
@@ -167,6 +171,19 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
       assertUnitAfterResize('px', widths);
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
+    });
+
+    it('TINY-7699: resize a row and verify the output has the correct heights', async () => {
+      const editor = hook.editor();
+      editor.setContent('');
+      const widths = await pInsertResizeMeasure(editor,
+        () => TableTestUtils.pDragResizeBar(editor, 'row', 0, 0, 50),
+        () => TableTestUtils.insertRaw(editor, pixelTableWithRowHeights)
+      );
+      assertUnitAfterResize('px', widths);
+      assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
+      assertEventData(lastObjectResizedEvent, 'objectresized');
+      TinyAssertions.assertContent(editor, '<table style="width: 200px; height: 150px;"><tbody><tr style="height: 150px;"><td style="height: 150px;">&nbsp;</td><td style="height: 150px;">&nbsp;</td></tr></tbody></table>');
     });
   });
 

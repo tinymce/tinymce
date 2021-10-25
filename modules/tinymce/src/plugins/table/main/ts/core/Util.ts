@@ -39,6 +39,7 @@ const removeDataStyle = (table: SugarElement<HTMLTableElement>): void => {
 
   Arr.each(TableLookup.cells(table), removeStyleAttribute);
   Arr.each(TableLookup.columns(table), removeStyleAttribute);
+  Arr.each(TableLookup.rows(table), removeStyleAttribute);
 };
 
 const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
