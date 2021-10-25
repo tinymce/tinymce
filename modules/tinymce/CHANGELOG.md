@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
+- Clicking the `forecolor` or `backcolor` toolbar buttons would do nothing until selecting a color #TINY-7836
 - Fixed an exception thrown on Safari when closing the `searchreplace` plugin dialog #TINY-8166
 
 ## 5.10.0 - 2021-10-11
