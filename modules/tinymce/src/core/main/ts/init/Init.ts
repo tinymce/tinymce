@@ -18,6 +18,7 @@ import ThemeManager from '../api/ThemeManager';
 import { EditorUiApi } from '../api/ui/Ui';
 import Tools from '../api/util/Tools';
 import * as ErrorReporter from '../ErrorReporter';
+import * as Rtc from '../Rtc';
 import { appendContentCssFromSettings } from './ContentCss';
 import * as InitContentBody from './InitContentBody';
 import * as InitIframe from './InitIframe';
@@ -187,7 +188,9 @@ const init = (editor: Editor) => {
 
   initIcons(editor);
   initTheme(editor);
-  initModel(editor);
+  if (!Rtc.isRtc(editor)) {
+    initModel(editor);
+  }
   initPlugins(editor);
   const renderInfo = renderThemeUi(editor);
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));
