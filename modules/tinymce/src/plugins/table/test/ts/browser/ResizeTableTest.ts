@@ -2,6 +2,7 @@ import { Mouse } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
 import { TinyAssertions } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { TableGridSize } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
@@ -25,6 +26,7 @@ interface WidthMeasurements {
 }
 
 describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
+  const browser = PlatformDetection.detect().browser;
   const lastObjectResizeStartEvent = Cell<EditorEvent<ObjectResizeEvent> | null>(null);
   const lastObjectResizedEvent = Cell<EditorEvent<ObjectResizeEvent> | null>(null);
   const pixelDiffThreshold = 3;
@@ -183,7 +185,15 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
       assertUnitAfterResize('px', widths);
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
-      TinyAssertions.assertContent(editor, '<table style="width: 200px; height: 150px;"><tbody><tr style="height: 150px;"><td style="height: 150px;">&nbsp;</td><td style="height: 150px;">&nbsp;</td></tr></tbody></table>');
+      // IE has some precision loss that causes the size to be off by 1px
+      const height = (browser.isIE() ? 149 : 150) + 'px';
+      TinyAssertions.assertContent(editor,
+        `<table style="width: 200px; height: ${height};">` +
+        '<tbody>' +
+        `<tr style="height: ${height};"><td style="height: ${height};">&nbsp;</td><td style="height: ${height};">&nbsp;</td></tr>` +
+        '</tbody>' +
+        '</table>'
+      );
     });
   });
 
