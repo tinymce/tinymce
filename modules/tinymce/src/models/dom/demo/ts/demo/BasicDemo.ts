@@ -10,7 +10,6 @@ export default () => {
       ed.on('init', () => {
         const runtimeModel = ed.model;
         console.log('demo model created', runtimeModel);
-        console.log('demo model getNodes', runtimeModel.getNodes());
       })
     }
   });
