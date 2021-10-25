@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed an exception thrown on Safari when closing the `searchreplace` plugin dialog #TINY-8166
+- Tables could have an incorrect height set on rows when rendered outside of the editor #TINY-7699
 
 ## 5.10.0 - 2021-10-11
 
