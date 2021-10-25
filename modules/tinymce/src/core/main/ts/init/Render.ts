@@ -26,6 +26,7 @@ import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
+import * as Rtc from '../Rtc';
 import * as Init from './Init';
 
 interface UrlMeta {
@@ -50,8 +51,28 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   }
 };
 
-const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string, callback: () => void) => {
+/**
+ * Initiate the download of both theme and model in parallel, then wait for both.
+ *
+ * Each has their own special case where nothing needs to be waited for.
+ */
+const loadThemeAndModel = (scriptLoader: ScriptLoader, editor: Editor, suffix: string, callback: () => void) => {
   const theme = Settings.getTheme(editor);
+
+  // Special case the 'wait for model' code if RTC is loading, as it will provide a model instead
+  let waitForModel: () => void;
+  if (!Rtc.isRtc(editor)) {
+    const model = Settings.getModel(editor);
+    const modelUrl = Settings.getModelUrl(editor);
+    const url = Type.isString(modelUrl) ? editor.documentBaseURI.toAbsolute(modelUrl) : `models/${model}/model${suffix}.js`;
+    ModelManager.load(model, url, Fun.noop, undefined, () => {
+      ErrorReporter.modelLoadError(editor, url, model);
+    });
+
+    waitForModel = () => ModelManager.waitFor(model, callback);
+  } else {
+    waitForModel = callback;
+  }
 
   if (Type.isString(theme)) {
     if (!hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
@@ -63,26 +84,12 @@ const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string, c
         ThemeManager.load(theme, 'themes/' + theme + '/theme' + suffix + '.js');
       }
     }
-
     scriptLoader.loadQueue(() => {
-      ThemeManager.waitFor(theme, callback);
+      ThemeManager.waitFor(theme, waitForModel);
     });
   } else {
-    callback();
+    waitForModel();
   }
-};
-
-const loadModel = (scriptLoader: ScriptLoader, editor: Editor, suffix: string, callback: () => void) => {
-  const model = Settings.getModel(editor);
-  const modelUrl = Settings.getModelUrl(editor);
-  const url = Type.isString(modelUrl) ? editor.documentBaseURI.toAbsolute(modelUrl) : `models/${model}/model${suffix}.js`;
-  ModelManager.load(model, url);
-
-  scriptLoader.loadQueue(() => {
-    ModelManager.waitFor(model, callback);
-  }, undefined, () => {
-    ErrorReporter.modelLoadError(editor, url, model);
-  });
 };
 
 const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.from(Settings.getIconsUrl(editor))
@@ -141,23 +148,19 @@ const loadPlugins = (editor: Editor, suffix: string) => {
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
-  // TODO: Need to look at optimising the load sequence for theme and model
-  // Only want the editor to initialise if both the theme and model can be sucessfully loaded
-  loadTheme(scriptLoader, editor, suffix, () => {
-    loadModel(scriptLoader, editor, suffix, () => {
-      loadLanguage(scriptLoader, editor);
-      loadIcons(scriptLoader, editor, suffix);
-      loadPlugins(editor, suffix);
+  loadThemeAndModel(scriptLoader, editor, suffix, () => {
+    loadLanguage(scriptLoader, editor);
+    loadIcons(scriptLoader, editor, suffix);
+    loadPlugins(editor, suffix);
 
-      scriptLoader.loadQueue(() => {
-        if (!editor.removed) {
-          Init.init(editor);
-        }
-      }, editor, () => {
-        if (!editor.removed) {
-          Init.init(editor);
-        }
-      });
+    scriptLoader.loadQueue(() => {
+      if (!editor.removed) {
+        Init.init(editor);
+      }
+    }, editor, () => {
+      if (!editor.removed) {
+        Init.init(editor);
+      }
     });
   });
 };
