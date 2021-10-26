@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Clicking the `forecolor` or `backcolor` toolbar buttons would do nothing until selecting a color #TINY-7836
-- Crop functionality did not work in the `imagetools` plugin when the editor is rendered in a shadow root #TINY-6387
+- Crop functionality did not work in the `imagetools` plugin when the editor was rendered in a shadow root #TINY-6387
 - Fixed an exception thrown on Safari when closing the `searchreplace` plugin dialog #TINY-8166
 - Tables could have an incorrect height set on rows when rendered outside of the editor #TINY-7699
 
