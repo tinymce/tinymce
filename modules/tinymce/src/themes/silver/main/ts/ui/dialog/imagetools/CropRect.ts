@@ -103,34 +103,42 @@ const create = (currentRect: GeomRect, viewPortRect: GeomRect, clampRect: GeomRe
       });
     };
 
-    const cropContainer = SugarElement.fromHtml<HTMLDivElement>('<div role="grid" aria-dropeffect="execute">');
+    const cropContainer = SugarElement.fromTag('div');
     Attribute.setAll(cropContainer, {
       id,
-      class: prefix + 'croprect-container'
+      'class': prefix + 'croprect-container',
+      'role': 'grid',
+      'aria-dropeffect': 'execute'
     });
     Insert.append(container, cropContainer);
 
     Arr.each(blockers, (blocker) => {
       SelectorFind.descendant(container, '#' + id).each((blockerElm) => {
-        const cropBlocker = SugarElement.fromHtml<HTMLDivElement>('<div style="display: none" data-mce-bogus="all">');
+        const cropBlocker = SugarElement.fromTag('div');
         Attribute.setAll(cropBlocker, {
-          id: id + '-' + blocker,
-          class: prefix + 'croprect-block'
+          'id': id + '-' + blocker,
+          'class': prefix + 'croprect-block',
+          'data-mce-bogus': 'all'
         });
+        Css.set(cropBlocker, 'display', 'none');
         Insert.append(blockerElm, cropBlocker);
       });
     });
 
     Arr.each(handles, (handle) => {
       SelectorFind.descendant(container, '#' + id).each((handleElm) => {
-        const cropHandle = SugarElement.fromHtml<HTMLDivElement>('<div style="display: none" data-mce-bogus="all" role="gridcell" tabindex="-1">');
+        const cropHandle = SugarElement.fromTag('div');
         Attribute.setAll(cropHandle, {
           'id': id + '-' + handle.name,
           'aria-label': handle.label,
           'aria-grabbed': 'false',
+          'data-mce-bogus': 'all',
+          'role': 'gridcell',
+          'tabindex': '-1',
           'title': handle.label // TODO: tooltips AP-213
         });
         Classes.add(cropHandle, [ prefix + 'croprect-handle', prefix + 'croprect-handle-' + handle.name ]);
+        Css.set(cropHandle, 'display', 'none');
         Insert.append(handleElm, cropHandle);
       });
     });
