@@ -56,7 +56,7 @@ const getDocumentSize = (doc: Document) => {
 };
 
 const isTouchEvent = (e: MouseEvent | TouchEvent): e is TouchEvent =>
-  Type.isArray((e as any).changedTouches);
+  Type.isNonNullable((e as TouchEvent).changedTouches);
 
 const updateWithTouchData = (e: MouseEvent | TouchEvent) => {
   if (isTouchEvent(e)) {
@@ -68,7 +68,7 @@ const updateWithTouchData = (e: MouseEvent | TouchEvent) => {
 };
 
 export default (id: string, settings: DragHelperSettings) => {
-  let eventOverlay: SugarElement<HTMLDivElement>;
+  let eventOverlay: SugarElement<HTMLDivElement> | undefined;
   let handleEvents: EventUnbinder[] = [];
   let overlayEvents: EventUnbinder[] = [];
   const doc = settings.document ?? document;
@@ -151,8 +151,13 @@ export default (id: string, settings: DragHelperSettings) => {
    * @method destroy
    */
   const destroy = () => {
-    Arr.each(handleEvents, (e) => e.unbind());
+    Arr.each(overlayEvents.concat(handleEvents), (e) => e.unbind());
+    overlayEvents = [];
     handleEvents = [];
+
+    if (Type.isNonNullable(eventOverlay)) {
+      Remove.remove(eventOverlay);
+    }
   };
 
   handleEvents.push(

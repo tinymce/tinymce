@@ -20,8 +20,8 @@ describe('browser.tinymce.themes.silver.editor.color.GetCurrentColorTest', () =>
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ], true);
 
-  const assertCurrentColor = (editor: Editor, format: string, label: string, expected: string) => {
-    const actual = ColorSwatch.getCurrentColor(editor, format);
+  const assertCurrentColor = (editor: Editor, format: 'forecolor' | 'hilitecolor', label: string, expected: string) => {
+    const actual = ColorSwatch.getCurrentColor(editor, format).getOrDie('No current color found');
     assert.equal(actual, expected, label);
   };
 
@@ -36,6 +36,6 @@ describe('browser.tinymce.themes.silver.editor.color.GetCurrentColorTest', () =>
     const editor = hook.editor();
     editor.setContent('<p style="background-color: red;">hello <span style="background-color: blue;">world</span></p>');
     TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
-    assertCurrentColor(editor, 'backcolor', 'should return blue', 'blue');
+    assertCurrentColor(editor, 'hilitecolor', 'should return blue', 'blue');
   });
 });
