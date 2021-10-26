@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `autolink` plugin did not convert URLs to links when starting with a bracket #TINY-8091
 - The `autolink` plugin incorrectly created nested links in some cases #TINY-8091
 - Tables could have an incorrect height set on rows when rendered outside of the editor #TINY-7699
+- The insert table grid menu displayed an incorrect size when re-opening the grid #TINY-6532
 
 ## 5.10.0 - 2021-10-11
 
