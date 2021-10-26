@@ -14,7 +14,7 @@ import Promise from 'tinymce/core/api/util/Promise';
 
 import { CropRect } from './CropRect';
 
-const loadImage = (image): Promise<SugarElement> => new Promise((resolve) => {
+const loadImage = (image: HTMLImageElement): Promise<HTMLImageElement> => new Promise((resolve) => {
   const loaded = () => {
     image.removeEventListener('load', loaded);
     resolve(image);
@@ -41,7 +41,7 @@ const renderImagePanel = (initialUrl: string) => {
   );
 
   const zoomState = Cell(1);
-  const cropRect = Singleton.value<CropRect>();
+  const cropRect = Singleton.api<CropRect>();
   const rectState = Cell({
     x: 0,
     y: 0,
@@ -79,7 +79,7 @@ const renderImagePanel = (initialUrl: string) => {
         Css.setAll(bg.element, css);
       });
 
-      cropRect.on((cRect) => {
+      cropRect.run((cRect) => {
         const rect = rectState.get();
         cRect.setRect({
           x: rect.x * zoom + left,
@@ -166,13 +166,13 @@ const renderImagePanel = (initialUrl: string) => {
   };
 
   const showCrop = (): void => {
-    cropRect.on((cRect) => {
+    cropRect.run((cRect) => {
       cRect.toggleVisibility(true);
     });
   };
 
   const hideCrop = (): void => {
-    cropRect.on((cRect) => {
+    cropRect.run((cRect) => {
       cRect.toggleVisibility(false);
     });
   };
@@ -224,6 +224,9 @@ const renderImagePanel = (initialUrl: string) => {
                 });
                 cropRect.set(cRect);
               });
+            }),
+            AlloyEvents.runOnDetached(() => {
+              cropRect.clear();
             })
           ])
         ])
