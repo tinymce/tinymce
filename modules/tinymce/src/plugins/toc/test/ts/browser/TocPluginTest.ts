@@ -39,6 +39,8 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
 
   it('mceInsertToc', () => {
     const editor = hook.editor();
+    editor.settings.toc_depth = 2;
+
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -82,6 +84,8 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
 
   it('mceInsertToc - flat structure', () => {
     const editor = hook.editor();
+    editor.settings.toc_depth = 2;
+
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -119,8 +123,154 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
     );
   });
 
+  it('mceInsertToc - two tiers with final item', () => {
+    const editor = hook.editor();
+    editor.settings.toc_depth = 3;
+
+    editor.getBody().innerHTML =
+      '<h1 id="h1">H1</h1>' +
+      '<p>This is some text.</p>' +
+      '<h2 id="h2">H2</h2>' +
+      '<p>This is some text.</p>' +
+      '<h3 id="h3">H3</h3>' +
+      '<p>This is some text.</p>' +
+      '<h1 id="h4">H1 - 2</h1>' +
+      '<p>This is some text.</p>';
+
+    LegacyUnit.setSelection(editor, 'h1', 0);
+    editor.execCommand('mceInsertToc');
+
+    const $toc = editor.$<Element>('.tst-toc');
+
+    stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
+
+    LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].innerHTML)),
+      '<h3 contenteditable="true">Table of Contents</h3>' +
+      '<ul>' +
+        '<li>' +
+          '<a href="#h1">H1</a>' +
+          '<ul>' +
+            '<li>' +
+              '<a href="#h2">H2</a>' +
+              '<ul>' +
+                '<li>' +
+                  '<a href="#h3">H3</a>' +
+                '</li>' +
+              '</ul>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+        '<li>' +
+          '<a href="#h4">H1 - 2</a>' +
+        '</li>' +
+      '</ul>',
+      'no surprises in ToC structure'
+    );
+  });
+
+  it('mceInsertToc - three tiers with final item', () => {
+    const editor = hook.editor();
+    editor.settings.toc_depth = 4;
+
+    editor.getBody().innerHTML =
+      '<h1 id="h1">H1</h1>' +
+      '<p>This is some text.</p>' +
+      '<h2 id="h2">H2</h2>' +
+      '<p>This is some text.</p>' +
+      '<h3 id="h3">H3</h3>' +
+      '<p>This is some text.</p>' +
+      '<h4 id="h4">H4</h3>' +
+      '<p>This is some text.</p>' +
+      '<h1 id="h5">H1 - 2</h1>' +
+      '<p>This is some text.</p>';
+
+    LegacyUnit.setSelection(editor, 'h1', 0);
+    editor.execCommand('mceInsertToc');
+
+    const $toc = editor.$<Element>('.tst-toc');
+
+    stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
+
+    LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].innerHTML)),
+      '<h3 contenteditable="true">Table of Contents</h3>' +
+      '<ul>' +
+        '<li>' +
+          '<a href="#h1">H1</a>' +
+          '<ul>' +
+            '<li>' +
+              '<a href="#h2">H2</a>' +
+              '<ul>' +
+                '<li>' +
+                  '<a href="#h3">H3</a>' +
+                  '<ul>' +
+                    '<li>' +
+                      '<a href="#h4">H4</a>' +
+                    '</li>' +
+                  '</ul>' +
+                '</li>' +
+              '</ul>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+        '<li>' +
+          '<a href="#h5">H1 - 2</a>' +
+        '</li>' +
+      '</ul>',
+      'no surprises in ToC structure'
+    );
+  });
+
+  it('mceInsertToc - three tiers with no final item', () => {
+    const editor = hook.editor();
+    editor.settings.toc_depth = 4;
+
+    editor.getBody().innerHTML =
+      '<h1 id="h1">H1</h1>' +
+      '<p>This is some text.</p>' +
+      '<h2 id="h2">H2</h2>' +
+      '<p>This is some text.</p>' +
+      '<h3 id="h3">H3</h3>' +
+      '<p>This is some text.</p>' +
+      '<h4 id="h4">H4</h3>' +
+      '<p>This is some text.</p>' +
+
+    LegacyUnit.setSelection(editor, 'h1', 0);
+    editor.execCommand('mceInsertToc');
+
+    const $toc = editor.$<Element>('.tst-toc');
+
+    stripAttribs($toc, [ 'data-mce-href', 'data-mce-selected' ]);
+
+    LegacyUnit.equal(trimBr(HtmlUtils.normalizeHtml($toc[0].innerHTML)),
+      '<h3 contenteditable="true">Table of Contents</h3>' +
+      '<ul>' +
+        '<li>' +
+          '<a href="#h1">H1</a>' +
+          '<ul>' +
+            '<li>' +
+              '<a href="#h2">H2</a>' +
+              '<ul>' +
+                '<li>' +
+                  '<a href="#h3">H3</a>' +
+                  '<ul>' +
+                    '<li>' +
+                      '<a href="#h4">H4</a>' +
+                    '</li>' +
+                  '</ul>' +
+                '</li>' +
+              '</ul>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>',
+      'no surprises in ToC structure'
+    );
+  });
+
   it('mceUpdateToc', () => {
     const editor = hook.editor();
+    editor.settings.toc_depth = 2;
+
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -145,6 +295,8 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
 
   it('Misc', () => {
     const editor = hook.editor();
+    editor.settings.toc_depth = 2;
+
     editor.getBody().innerHTML =
       '<h2 id="h1">H2</h2>' +
       '<p>This is some text.</p><br />' +

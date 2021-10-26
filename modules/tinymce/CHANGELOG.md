@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clicking the `forecolor` or `backcolor` toolbar buttons would do nothing until selecting a color #TINY-7836
 - Fixed an exception thrown on Safari when closing the `searchreplace` plugin dialog #TINY-8166
 - Tables could have an incorrect height set on rows when rendered outside of the editor #TINY-7699
+- In certain circumstances, the table of contents plugin would incorrectly add an extra empty list item #TINY-4636
 
 ## 5.10.0 - 2021-10-11
 
