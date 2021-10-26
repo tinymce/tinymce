@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomQuery from 'tinymce/core/api/dom/DomQuery';
+import { Arr, Type } from '@ephox/katamari';
+import { Css, DomEvent, EventArgs, EventUnbinder, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 /**
  * Drag/drop helper class.
@@ -27,6 +28,7 @@ import DomQuery from 'tinymce/core/api/dom/DomQuery';
 
 interface DragHelperSettings {
   document?: Document;
+  root?: Document | ShadowRoot;
   handle?: string;
   start: (e: MouseEvent | TouchEvent) => void;
   drag: (e: (MouseEvent | TouchEvent) & { deltaX: number; deltaY: number }) => void;
@@ -53,83 +55,93 @@ const getDocumentSize = (doc: Document) => {
   };
 };
 
-const updateWithTouchData = (e) => {
-  let keys, i;
+const isTouchEvent = (e: MouseEvent | TouchEvent): e is TouchEvent =>
+  Type.isNonNullable((e as TouchEvent).changedTouches);
 
-  if (e.changedTouches) {
-    keys = 'screenX screenY pageX pageY clientX clientY'.split(' ');
-    for (i = 0; i < keys.length; i++) {
+const updateWithTouchData = (e: MouseEvent | TouchEvent) => {
+  if (isTouchEvent(e)) {
+    const keys = 'screenX screenY pageX pageY clientX clientY'.split(' ');
+    for (let i = 0; i < keys.length; i++) {
       e[keys[i]] = e.changedTouches[0][keys[i]];
     }
   }
 };
 
 export default (id: string, settings: DragHelperSettings) => {
-  let $eventOverlay;
-  const doc = settings.document || document;
-  let downButton;
-  let startX, startY;
+  let eventOverlay: SugarElement<HTMLDivElement> | undefined;
+  let handleEvents: EventUnbinder[] = [];
+  let overlayEvents: EventUnbinder[] = [];
+  const doc = settings.document ?? document;
+  const root = settings.root ?? doc;
+  const sugarDoc = SugarElement.fromDom(doc);
+  let downButton: number;
+  let startX: number;
+  let startY: number;
 
-  const handleElement = doc.getElementById(settings.handle || id);
+  const handleElement = SugarElement.fromDom(root.getElementById(settings.handle ?? id));
 
-  const start = (e) => {
+  const start = (e: EventArgs<MouseEvent | TouchEvent>) => {
+    const rawEvent = e.raw as MouseEvent;
     const docSize = getDocumentSize(doc);
-    let cursor;
 
-    updateWithTouchData(e);
+    updateWithTouchData(rawEvent);
 
-    e.preventDefault();
-    downButton = e.button;
-    const handleElm = handleElement;
-    startX = e.screenX;
-    startY = e.screenY;
+    e.prevent();
+    downButton = rawEvent.button;
+    startX = rawEvent.screenX;
+    startY = rawEvent.screenY;
 
     // Grab cursor from handle so we can place it on overlay
-    if (window.getComputedStyle) {
-      cursor = window.getComputedStyle(handleElm, null).getPropertyValue('cursor');
-    } else {
-      // Old IE styles
-      cursor = (handleElm as any).runtimeStyle.cursor;
-    }
+    const cursor = Css.get(handleElement, 'cursor');
 
-    $eventOverlay = DomQuery('<div></div>').css({
-      position: 'absolute',
-      top: 0, left: 0,
-      width: docSize.width,
-      height: docSize.height,
-      zIndex: 0x7FFFFFFF,
-      opacity: 0.0001,
+    eventOverlay = SugarElement.fromTag('div', doc);
+    Css.setAll(eventOverlay, {
+      'position': 'absolute',
+      'top': '0',
+      'left': '0',
+      'width': docSize.width + 'px',
+      'height': docSize.height + 'px',
+      'z-index': 0x7FFFFFFF + '',
+      'opacity': '0.0001',
       cursor
-    }).appendTo(doc.body);
+    });
+    Insert.append(SugarBody.getBody(sugarDoc), eventOverlay);
 
-    DomQuery(doc).on('mousemove touchmove', drag).on('mouseup touchend', stop);
+    overlayEvents.push(
+      DomEvent.bind(sugarDoc, 'mousemove', drag),
+      DomEvent.bind(sugarDoc, 'touchmove', drag),
+      DomEvent.bind(sugarDoc, 'mouseup', stop),
+      DomEvent.bind(sugarDoc, 'touchend', stop)
+    );
 
-    settings.start(e);
+    settings.start(rawEvent);
   };
 
-  const drag = (e) => {
-    updateWithTouchData(e);
+  const drag = (e: EventArgs<MouseEvent | TouchEvent>) => {
+    const rawEvent = e.raw as MouseEvent & { deltaX: number; deltaY: number };
+    updateWithTouchData(rawEvent);
 
-    if (e.button !== downButton) {
+    if (rawEvent.button !== downButton) {
       return stop(e);
     }
 
-    e.deltaX = e.screenX - startX;
-    e.deltaY = e.screenY - startY;
+    rawEvent.deltaX = rawEvent.screenX - startX;
+    rawEvent.deltaY = rawEvent.screenY - startY;
 
-    e.preventDefault();
-    settings.drag(e);
+    e.prevent();
+    settings.drag(rawEvent);
   };
 
-  const stop = (e) => {
-    updateWithTouchData(e);
+  const stop = (e: EventArgs<MouseEvent | TouchEvent>) => {
+    updateWithTouchData(e.raw);
 
-    DomQuery(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);
+    Arr.each(overlayEvents, (e) => e.unbind());
+    overlayEvents = [];
 
-    $eventOverlay.remove();
+    Remove.remove(eventOverlay);
 
     if (settings.stop) {
-      settings.stop(e);
+      settings.stop(e.raw);
     }
   };
 
@@ -139,10 +151,19 @@ export default (id: string, settings: DragHelperSettings) => {
    * @method destroy
    */
   const destroy = () => {
-    DomQuery(handleElement).off();
+    Arr.each(overlayEvents.concat(handleEvents), (e) => e.unbind());
+    overlayEvents = [];
+    handleEvents = [];
+
+    if (Type.isNonNullable(eventOverlay)) {
+      Remove.remove(eventOverlay);
+    }
   };
 
-  DomQuery(handleElement).on('mousedown touchstart', start);
+  handleEvents.push(
+    DomEvent.bind(handleElement, 'mousedown', start),
+    DomEvent.bind(handleElement, 'touchstart', start)
+  );
 
   return {
     destroy
