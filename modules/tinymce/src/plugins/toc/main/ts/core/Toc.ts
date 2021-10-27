@@ -122,7 +122,7 @@ const generateTocContentHtml = (editor: Editor): string => {
       for (let ii = h.level; ii > nextLevel; ii--) {
         // When traversing backwards through the heading levels,
         // only add a trailing `<li>` when the next level is exactly one below the current one
-        if (ii - nextLevel === 1) {
+        if (ii === nextLevel + 1) {
           html += '</li></ul><li>';
         } else {
           html += '</li></ul>';
