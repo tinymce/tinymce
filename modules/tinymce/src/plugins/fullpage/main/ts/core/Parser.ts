@@ -36,7 +36,7 @@ const parseHeader = (editor: Editor, head: string): AstNode => {
     validate: false,
     root_name: '#document'
   // Parse as XHTML to allow for inclusion of the XML processing instruction
-  }, editor.schema).parse(head, { format: 'xhtml' });
+  }, editor.schema).parse(head, { format: 'xhtml' }) as any;
 };
 
 const htmlToData = (editor: Editor, head: string): Data => {

@@ -10,7 +10,6 @@ import { Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import BookmarkManager from '../api/dom/BookmarkManager';
 import Editor from '../api/Editor';
-import HtmlSerializer from '../api/html/Serializer';
 import CaretPosition from '../caret/CaretPosition';
 import { SetSelectionContentArgs } from '../content/ContentTypes';
 import { postProcessSetContent, preProcessSetContent } from '../content/PrePostProcess';
@@ -70,7 +69,7 @@ const mergeAndNormalizeText = (outerNode: Optional<SugarElement<Text>>, innerNod
   });
 };
 
-const rngSetContent = (rng: Range, fragment: DocumentFragment): void => {
+const rngSetContent = (rng: Range, fragment: Node): void => {
   const firstChild = Optional.from(fragment.firstChild).map(SugarElement.fromDom);
   const lastChild = Optional.from(fragment.lastChild).map(SugarElement.fromDom);
 
@@ -102,10 +101,9 @@ const cleanContent = (editor: Editor, args: SetSelectionContentArgs) => {
     const contextBlock = editor.dom.getParent(rng.commonAncestorContainer, editor.dom.isBlock);
     const contextArgs = contextBlock ? { context: contextBlock.nodeName.toLowerCase() } : { };
 
-    const node = editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...contextArgs, ...args });
-    return HtmlSerializer({ validate: false }, editor.schema).serialize(node);
+    return editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...contextArgs, ...args });
   } else {
-    return args.content;
+    throw new Error('TODO: handle raw content');
   }
 };
 
@@ -116,12 +114,12 @@ const setContent = (editor: Editor, content: string, args: Partial<SetSelectionC
     const cleanedContent = cleanContent(editor, updatedArgs);
 
     const rng = editor.selection.getRng();
-    rngSetContent(rng, rng.createContextualFragment(cleanedContent));
+    rngSetContent(rng, cleanedContent);
     editor.selection.setRng(rng);
 
     ScrollIntoView.scrollRangeIntoView(editor, rng);
 
-    postProcessSetContent(editor, cleanedContent, updatedArgs);
+    postProcessSetContent(editor, (cleanedContent as Element).innerHTML, updatedArgs);
   });
 };
 

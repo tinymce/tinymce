@@ -52,7 +52,7 @@ const setDimensions = (node: AstNode, previewNode: AstNode, styles: Record<strin
 const appendNodeContent = (editor: Editor, nodeName: string, previewNode: AstNode, html: string): void => {
   const newNode = DomParser({ forced_root_block: false, validate: false }, editor.schema).parse(html, { context: nodeName });
   while (newNode.firstChild) {
-    previewNode.append(newNode.firstChild);
+    // previewNode.append(newNode.firstChild);
   }
 };
 

@@ -7,11 +7,9 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
-import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
 import * as WordFilter from './WordFilter';
 
 interface ProcessResult {
@@ -30,7 +28,7 @@ const preProcess = (editor: Editor, html: string): string => {
   });
 
   const fragment = parser.parse(html, { forced_root_block: false, isRootContent: true });
-  return HtmlSerializer({ validate: Settings.getValidate(editor) }, editor.schema).serialize(fragment);
+  return (fragment as Element).outerHTML;
 };
 
 const processResult = (content: string, cancelled: boolean): ProcessResult => ({ content, cancelled });

@@ -7,9 +7,6 @@
 
 import { Unicode } from '@ephox/katamari';
 
-import DomParser from 'tinymce/core/api/html/DomParser';
-import AstNode from 'tinymce/core/api/html/Node';
-import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 
 type RegExpFilter = RegExp | [ RegExp, string ] | [ RegExp, (match: string, ...args: any[]) => string ];
@@ -42,66 +39,65 @@ const filter = (content: string, items: RegExpFilter[]): string => {
  * @param {String} html HTML string to get text from.
  * @return {String} String of text with line feeds.
  */
-const innerText = (html: string): string => {
-  const schema = Schema();
-  const domParser = DomParser({}, schema);
-  let text = '';
-  const shortEndedElements = schema.getShortEndedElements();
-  const ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
-  const blockElements = schema.getBlockElements();
+const innerText = (_html: string): string => {
+  // const schema = Schema();
+  const text = '';
+  // const shortEndedElements = schema.getShortEndedElements();
+  // const ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
+  // const blockElements = schema.getBlockElements();
 
-  const walk = (node: AstNode): void => {
-    const name = node.name, currentNode = node;
+  // const walk = (node: AstNode): void => {
+  //   const name = node.name, currentNode = node;
+  //
+  //   if (name === 'br') {
+  //     text += '\n';
+  //     return;
+  //   }
+  //
+  //   // Ignore wbr, to replicate innerText on Chrome/Firefox
+  //   if (name === 'wbr') {
+  //     return;
+  //   }
+  //
+  //   // img/input/hr but ignore wbr as it's just a potential word break
+  //   if (shortEndedElements[name]) {
+  //     text += ' ';
+  //   }
+  //
+  //   // Ignore script, video contents
+  //   if (ignoreElements[name]) {
+  //     text += ' ';
+  //     return;
+  //   }
+  //
+  //   if (node.type === 3) {
+  //     text += node.value;
+  //   }
+  //
+  //   // Walk all children
+  //   if (!node.shortEnded) {
+  //     if ((node = node.firstChild)) {
+  //       do {
+  //         walk(node);
+  //       } while ((node = node.next));
+  //     }
+  //   }
+  //
+  //   // Add \n or \n\n for blocks or P
+  //   if (blockElements[name] && currentNode.next) {
+  //     text += '\n';
+  //
+  //     if (name === 'p') {
+  //       text += '\n';
+  //     }
+  //   }
+  // };
 
-    if (name === 'br') {
-      text += '\n';
-      return;
-    }
+  // html = filter(html, [
+  //   /<!\[[^\]]+\]>/g // Conditional comments
+  // ]);
 
-    // Ignore wbr, to replicate innerText on Chrome/Firefox
-    if (name === 'wbr') {
-      return;
-    }
-
-    // img/input/hr but ignore wbr as it's just a potential word break
-    if (shortEndedElements[name]) {
-      text += ' ';
-    }
-
-    // Ignore script, video contents
-    if (ignoreElements[name]) {
-      text += ' ';
-      return;
-    }
-
-    if (node.type === 3) {
-      text += node.value;
-    }
-
-    // Walk all children
-    if (!node.shortEnded) {
-      if ((node = node.firstChild)) {
-        do {
-          walk(node);
-        } while ((node = node.next));
-      }
-    }
-
-    // Add \n or \n\n for blocks or P
-    if (blockElements[name] && currentNode.next) {
-      text += '\n';
-
-      if (name === 'p') {
-        text += '\n';
-      }
-    }
-  };
-
-  html = filter(html, [
-    /<!\[[^\]]+\]>/g // Conditional comments
-  ]);
-
-  walk(domParser.parse(html));
+  // walk(domParser.parse(html));
 
   return text;
 };

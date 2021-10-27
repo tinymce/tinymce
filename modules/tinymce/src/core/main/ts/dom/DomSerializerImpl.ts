@@ -14,7 +14,7 @@ import * as Events from '../api/Events';
 import DomParser, { DomParserSettings, ParserArgs, ParserFilter } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
-import HtmlSerializer, { HtmlSerializerSettings } from '../api/html/Serializer';
+import { HtmlSerializerSettings } from '../api/html/Serializer';
 import { WriterSettings } from '../api/html/Writer';
 import { URLConverter } from '../api/SettingsTypes';
 import Tools from '../api/util/Tools';
@@ -76,16 +76,17 @@ const getHtmlFromNode = (dom: DOMUtils, node: Node, args: ParserArgs): string =>
 const parseHtml = (htmlParser: DomParser, html: string, args: ParserArgs) => {
   const parserArgs = args.selection ? { forced_root_block: false, ...args } : args;
   const rootNode = htmlParser.parse(html, parserArgs);
-  DomSerializerFilters.trimTrailingBr(rootNode);
+  // DomSerializerFilters.trimTrailingBr(rootNode);
   return rootNode;
 };
 
-const serializeNode = (settings: HtmlSerializerSettings, schema: Schema, node: AstNode): string => {
-  const htmlSerializer = HtmlSerializer(settings, schema);
-  return htmlSerializer.serialize(node);
+const serializeNode = (settings: HtmlSerializerSettings, schema: Schema, node: Node): string => {
+  return (node as Element).innerHTML;
+  // const htmlSerializer = HtmlSerializer(settings, schema);
+  // return htmlSerializer.serialize(node);
 };
 
-const toHtml = (editor: Editor, settings: HtmlSerializerSettings, schema: Schema, rootNode: AstNode, args: ParserArgs): string => {
+const toHtml = (editor: Editor, settings: HtmlSerializerSettings, schema: Schema, rootNode: Node, args: ParserArgs): string => {
   const content = serializeNode(settings, schema, rootNode);
   return postProcess(editor, args, content);
 };
@@ -106,7 +107,13 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor: Editor): Dom
     const targetNode = DomSerializerPreProcess.process(editor, node, args);
     const html = getHtmlFromNode(dom, targetNode, args);
     const rootNode = parseHtml(htmlParser, html, args);
-    return args.format === 'tree' ? rootNode : toHtml(editor, settings, schema, rootNode, args);
+    if (args.format === 'tree') {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore need to figure out how to fake the tree format
+      return rootNode;
+    } else {
+      return toHtml(editor, settings, schema, rootNode, args);
+    }
   };
 
   return {

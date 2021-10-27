@@ -11,7 +11,6 @@ import Editor from 'tinymce/core/api/Editor';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
-import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Settings from '../api/Settings';
@@ -38,198 +37,6 @@ const isWordContent = (content: string): boolean => {
     (/class="OutlineElement/).test(content) ||
     (/id="?docs\-internal\-guid\-/.test(content))
   );
-};
-
-/**
- * Checks if the specified text starts with "1. " or "a. " etc.
- */
-const isNumericList = (text: string): boolean => {
-  let found = false;
-
-  const patterns = [
-    /^[IVXLMCD]+\.[ \u00a0]/,  // Roman upper case
-    /^[ivxlmcd]+\.[ \u00a0]/,  // Roman lower case
-    /^[a-z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical a-z
-    /^[A-Z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical A-Z
-    /^[0-9]+\.[ \u00a0]/,          // Numeric lists
-    /^[\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d]+\.[ \u00a0]/, // Japanese
-    /^[\u58f1\u5f10\u53c2\u56db\u4f0d\u516d\u4e03\u516b\u4e5d\u62fe]+\.[ \u00a0]/  // Chinese
-  ];
-
-  text = text.replace(/^[\u00a0 ]+/, '');
-
-  Tools.each(patterns, (pattern) => {
-    if (pattern.test(text)) {
-      found = true;
-      return false;
-    }
-  });
-
-  return found;
-};
-
-const isBulletList = (text: string): boolean =>
-  /^[\s\u00a0]*[\u2022\u00b7\u00a7\u25CF]\s*/.test(text);
-
-/**
- * Converts fake bullet and numbered lists to real semantic OL/UL.
- *
- * @param {tinymce.html.Node} node Root node to convert children of.
- */
-const convertFakeListsToProperLists = (node: WordAstNode) => {
-  let currentListNode: WordAstNode, prevListNode: WordAstNode, lastLevel = 1;
-
-  const getText = (node: WordAstNode): string => {
-    let txt = '';
-
-    if (node.type === 3) {
-      return node.value;
-    }
-
-    if ((node = node.firstChild)) {
-      do {
-        txt += getText(node);
-      } while ((node = node.next));
-    }
-
-    return txt;
-  };
-
-  const trimListStart = (node: WordAstNode, regExp: RegExp): boolean => {
-    if (node.type === 3) {
-      if (regExp.test(node.value)) {
-        node.value = node.value.replace(regExp, '');
-        return false;
-      }
-    }
-
-    if ((node = node.firstChild)) {
-      do {
-        if (!trimListStart(node, regExp)) {
-          return false;
-        }
-      } while ((node = node.next));
-    }
-
-    return true;
-  };
-
-  const removeIgnoredNodes = (node: WordAstNode): void => {
-    if (node._listIgnore) {
-      node.remove();
-      return;
-    }
-
-    if ((node = node.firstChild)) {
-      do {
-        removeIgnoredNodes(node);
-      } while ((node = node.next));
-    }
-  };
-
-  const convertParagraphToLi = (paragraphNode: WordAstNode, listName: string, start?: number): void => {
-    const level = paragraphNode._listLevel || lastLevel;
-
-    // Handle list nesting
-    if (level !== lastLevel) {
-      if (level < lastLevel) {
-        // Move to parent list
-        if (currentListNode) {
-          currentListNode = currentListNode.parent.parent;
-        }
-      } else {
-        // Create new list
-        prevListNode = currentListNode;
-        currentListNode = null;
-      }
-    }
-
-    if (!currentListNode || currentListNode.name !== listName) {
-      prevListNode = prevListNode || currentListNode;
-      currentListNode = new AstNode(listName, 1);
-
-      if (start > 1) {
-        currentListNode.attr('start', '' + start);
-      }
-
-      paragraphNode.wrap(currentListNode);
-    } else {
-      currentListNode.append(paragraphNode);
-    }
-
-    paragraphNode.name = 'li';
-
-    // Append list to previous list if it exists
-    if (level > lastLevel && prevListNode) {
-      prevListNode.lastChild.append(currentListNode);
-    }
-
-    lastLevel = level;
-
-    // Remove start of list item "1. " or "&middot; " etc
-    removeIgnoredNodes(paragraphNode);
-    trimListStart(paragraphNode, /^\u00a0+/);
-    trimListStart(paragraphNode, /^\s*([\u2022\u00b7\u00a7\u25CF]|\w+\.)/);
-    trimListStart(paragraphNode, /^\u00a0+/);
-  };
-
-  // Build a list of all root level elements before we start
-  // altering them in the loop below.
-  const elements = [];
-  let child = node.firstChild;
-  while (typeof child !== 'undefined' && child !== null) {
-    elements.push(child);
-
-    child = child.walk();
-    if (child !== null) {
-      while (typeof child !== 'undefined' && child.parent !== node) {
-        child = child.walk();
-      }
-    }
-  }
-
-  for (let i = 0; i < elements.length; i++) {
-    node = elements[i];
-
-    if (node.name === 'p' && node.firstChild) {
-      // Find first text node in paragraph
-      const nodeText = getText(node);
-
-      // Detect unordered lists look for bullets
-      if (isBulletList(nodeText)) {
-        convertParagraphToLi(node, 'ul');
-        continue;
-      }
-
-      // Detect ordered lists 1., a. or ixv.
-      if (isNumericList(nodeText)) {
-        // Parse OL start number
-        const matches = /([0-9]+)\./.exec(nodeText);
-        let start = 1;
-        if (matches) {
-          start = parseInt(matches[1], 10);
-        }
-
-        convertParagraphToLi(node, 'ol', start);
-        continue;
-      }
-
-      // Convert paragraphs marked as lists but doesn't look like anything
-      if (node._listLevel) {
-        convertParagraphToLi(node, 'ul', 1);
-        continue;
-      }
-
-      currentListNode = null;
-    } else {
-      // If the root level element isn't a p tag which can be
-      // processed by convertParagraphToLi, it interrupts the
-      // lists, causing a new list to start instead of having
-      // elements from the next list inserted above this tag.
-      prevListNode = currentListNode;
-      currentListNode = null;
-    }
-  }
 };
 
 const filterStyles = (editor: Editor, validStyles: Record<string, string> | undefined, node: WordAstNode, styleValue: string): string | null => {
@@ -471,17 +278,17 @@ const filterWordContent = (editor: Editor, content: string): string => {
   });
 
   // Parse into DOM structure
-  const rootNode = domParser.parse(content);
+  // const rootNode = domParser.parse(content);
 
   // Process DOM
   if (Settings.shouldConvertWordFakeLists(editor)) {
-    convertFakeListsToProperLists(rootNode);
+    // convertFakeListsToProperLists(rootNode);
   }
 
   // Serialize DOM back to HTML
-  content = HtmlSerializer({
-    validate: Settings.getValidate(editor)
-  }, schema).serialize(rootNode);
+  // content = HtmlSerializer({
+  //   validate: Settings.getValidate(editor)
+  // }, schema).serialize(rootNode);
 
   return content;
 };

@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Optional, Type } from '@ephox/katamari';
+import { Remove, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
@@ -41,8 +41,13 @@ const moveSelection = (editor: Editor): void => {
   }
 };
 
-const setEditorHtml = (editor: Editor, html: string, noSelection: boolean | undefined): void => {
-  editor.dom.setHTML(editor.getBody(), html);
+const setEditorHtml = (editor: Editor, html: string | Node, noSelection: boolean | undefined): void => {
+  if (Type.isString(html)) {
+    editor.dom.setHTML(editor.getBody(), html);
+  } else {
+    Remove.empty(SugarElement.fromDom(editor.getBody()));
+    editor.getBody().appendChild(html);
+  }
   if (noSelection !== true) {
     moveSelection(editor);
   }
@@ -77,16 +82,12 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
 
     return { content, html: content };
   } else {
-    if (args.format !== 'raw') {
-      content = HtmlSerializer({ validate: false }, editor.schema).serialize(
-        editor.parser.parse(content, { isRootContent: true, insert: true })
-      );
-    }
+    // TODO: bring back `raw` handling
+    const fragment = editor.parser.parse(content, { isRootContent: true, insert: true });
 
-    const trimmedHtml = isWsPreserveElement(SugarElement.fromDom(body)) ? content : Tools.trim(content);
-    setEditorHtml(editor, trimmedHtml, args.no_selection);
+    setEditorHtml(editor, fragment, args.no_selection);
 
-    return { content: trimmedHtml, html: trimmedHtml };
+    return { content, html: content };
   }
 };
 
