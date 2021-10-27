@@ -129,7 +129,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
       );
     });
 
-    it('TINY-4636: two tiers with final item', () => {
+    it('TINY-4636: three tiers with final item', () => {
       const editor = hook.editor();
       editor.settings.toc_depth = 3;
 
@@ -175,7 +175,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
       );
     });
 
-    it('TINY-4636: three tiers with final item', () => {
+    it('TINY-4636: four tiers with final item', () => {
       const editor = hook.editor();
       editor.settings.toc_depth = 4;
 
@@ -228,7 +228,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
       );
     });
 
-    it('TINY-4636: three tiers with no final item', () => {
+    it('TINY-4636: four tiers with no final item', () => {
       const editor = hook.editor();
       editor.settings.toc_depth = 4;
 
