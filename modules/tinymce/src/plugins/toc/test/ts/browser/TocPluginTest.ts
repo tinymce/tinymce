@@ -43,7 +43,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
   });
 
   context('mceInsertToc', () => {
-    it('mceInsertToc sanity test', () => {
+    it('sanity test', () => {
       const editor = hook.editor();
 
       editor.setContent(
@@ -88,7 +88,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
       );
     });
 
-    it('mceInsertToc - flat structure', () => {
+    it('flat structure', () => {
       const editor = hook.editor();
 
       editor.setContent(
