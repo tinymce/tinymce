@@ -33,6 +33,7 @@ export interface UploadResult {
   status: boolean;
   blobInfo: BlobInfo;
   uploadUri: string;
+  removed: boolean;
 }
 
 export type UploadCallback = (results: UploadResult[]) => void;
