@@ -31,6 +31,18 @@ const assertResult = (editor: Editor, title: string, uploadUri: string, uploaded
   return result;
 };
 
+const random = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
+
+const randBlobDataUri = (width, height) => {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const imageData = new window.ImageData(width, height);
+  imageData.data.set(imageData.data.map(() => random(0, 255)));
+  canvas.getContext('2d').putImageData(imageData, 0, 0);
+  return canvas.toDataURL();
+};
+
 const hasBlobAsSource = (elm: HTMLImageElement) => elm.src.indexOf('blob:') === 0;
 const imageHtml = (uri: string) => DOMUtils.DOM.createHTML('img', { src: uri });
 
@@ -442,5 +454,48 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     const editor = hook.editor();
     editor.setContent('<img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6">');
     assert.equal(editor.getContent(), '<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" /></p>', 'Retain blobs not in blob cache');
+  });
+
+  it('TINY-7735: UploadResult should contain removed flag if {remove: true} option passed to failure callback', () => {
+    const editor = hook.editor();
+    let uploadCount = 0;
+
+    const uploadDone = (result: UploadResult[]) => {
+
+      assert.isTrue(result[0].status, 'first image upload is successful');
+      assert.isFalse(result[0].removed, 'removed flag is false');
+      assert.isFalse(result[1].status, 'second image upload is failed');
+      assert.isFalse(result[1].removed, 'removed flag is false');
+      assert.isFalse(result[2].status, 'third image upload is failed');
+      assert.isTrue(result[2].removed, 'removed flag is true');
+    };
+
+    const imgHtml1 = imageHtml(randBlobDataUri(10, 10));
+    const imgHtml2 = imageHtml(randBlobDataUri(10, 10));
+    const imgHtml3 = imageHtml(randBlobDataUri(10, 10));
+
+    setInitialContent(editor, imgHtml1 + imgHtml2 + imgHtml3);
+
+    editor.settings.images_upload_handler = (_data: BlobInfo, success, failure) => {
+      uploadCount++;
+
+      if (uploadCount === 1 ) {
+        Delay.setTimeout(() => {
+          success('file.png');
+        }, 0);
+      }
+      if (uploadCount === 2 ) {
+        Delay.setTimeout(() => {
+          failure('Error');
+        }, 0);
+      }
+      if (uploadCount === 3 ) {
+        Delay.setTimeout(() => {
+          failure('Error', { remove: true });
+        }, 0);
+      }
+    };
+
+    editor.uploadImages(uploadDone);
   });
 });
