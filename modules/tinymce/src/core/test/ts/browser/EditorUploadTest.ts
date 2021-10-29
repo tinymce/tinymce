@@ -457,7 +457,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     assert.equal(editor.getContent(), '<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" /></p>', 'Retain blobs not in blob cache');
   });
 
-  it('TINY-7735: UploadResult should contain removed flag if {remove: true} option passed to failure callback', () => {
+  it('TINY-7735: UploadResult should contain the removed flag if the {remove: true} option was passed to the failure callback', () => {
     const editor = hook.editor();
     let uploadCount = 0;
 
