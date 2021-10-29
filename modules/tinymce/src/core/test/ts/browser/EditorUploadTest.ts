@@ -482,15 +482,15 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       uploadCount++;
 
       if (uploadCount === 1 ) {
-        Delay.setTimeout(() => {
+        setTimeout(() => {
           success('file.png');
         }, 0);
       } else if (uploadCount === 2 ) {
-        Delay.setTimeout(() => {
+        setTimeout(() => {
           failure('Error');
         }, 0);
       } else if (uploadCount === 3 ) {
-        Delay.setTimeout(() => {
+        setTimeout(() => {
           failure('Error', { remove: true });
         }, 0);
       }
