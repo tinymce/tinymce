@@ -34,7 +34,7 @@ const assertResult = (editor: Editor, title: string, uploadUri: string, uploaded
 const random = (min: number, max: number) =>
   Math.round(Math.random() * (max - min) + min);
 
-const randBlobDataUri = (width, height) => {
+const randBlobDataUri = (width: number, height: number) => {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
