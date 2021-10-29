@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Improved
+- The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
+
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
 - The `editor.setContent()` API can now be prevented using the `BeforeSetContent` event. This makes it consistent with the `editor.selection.setContent()` API #TINY-8018
@@ -49,7 +52,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `URI.isDomSafe(uri)` API to check if a URI is considered safe to be inserted into the DOM #TINY-7998
 - Added the `ESC` key code constant to the `VK` API #TINY-7917
 - Added a new `deprecation_warnings` setting for turning off deprecation console warning messages #TINY-8049
-- The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
 
 ### Improved
 - The `element` argument of the `editor.selection.scrollIntoView()` API is now optional, and if it is not provided the current selection will be scrolled into view #TINY-7291
