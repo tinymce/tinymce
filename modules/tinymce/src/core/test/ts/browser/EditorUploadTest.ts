@@ -1,5 +1,5 @@
 import { afterEach, before, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Fun, Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -38,9 +38,10 @@ const randBlobDataUri = (width: number, height: number) => {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
-  const imageData = new window.ImageData(width, height);
-  imageData.data.set(imageData.data.map(() => random(0, 255)));
-  canvas.getContext('2d').putImageData(imageData, 0, 0);
+  const ctx = canvas.getContext('2d');
+  const imageData = ctx.createImageData(width, height);
+  imageData.data.set(Arr.range(imageData.data.length, () => random(0, 255)));
+  ctx.putImageData(imageData, 0, 0);
   return canvas.toDataURL();
 };
 
