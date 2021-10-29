@@ -497,6 +497,6 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       }
     };
 
-    editor.uploadImages(uploadDone);
+    return editor.uploadImages(uploadDone);
   });
 });
