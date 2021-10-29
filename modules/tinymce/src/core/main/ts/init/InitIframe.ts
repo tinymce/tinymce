@@ -70,21 +70,23 @@ const getIframeHtml = (editor: Editor) => {
 
   const bodyId = Settings.getBodyId(editor);
   const bodyClass = Settings.getBodyClass(editor);
+  const translatedAriaText = editor.translate(Settings.getIframeAriaText(editor));
 
   if (Settings.getContentSecurityPolicy(editor)) {
     iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + Settings.getContentSecurityPolicy(editor) + '" />';
   }
 
-  iframeHTML += '</head><body id="' + bodyId +
-    '" class="mce-content-body ' + bodyClass +
-    '" data-id="' + editor.id + '"><br></body></html>';
+  iframeHTML += '</head>' +
+    `<body id=${bodyId}" class="mce-content-body ${bodyClass}" data-id="${editor.id}" aria-label="${translatedAriaText}">` +
+    '<br>' +
+    '</body></html>';
 
   return iframeHTML;
 };
 
 const createIframe = (editor: Editor, o) => {
-  const iframeTranslatedTitle = editor.translate(Settings.getIframeTitle(editor));
-  const ifr = createIframeElement(editor.id, iframeTranslatedTitle, o.height, Settings.getIframeAttrs(editor)).dom;
+  const iframeTitle = editor.translate('Rich Text Area');
+  const ifr = createIframeElement(editor.id, iframeTitle, o.height, Settings.getIframeAttrs(editor)).dom;
 
   ifr.onload = () => {
     ifr.onload = null;
