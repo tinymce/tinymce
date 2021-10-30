@@ -1,5 +1,12 @@
 # TinyMCE
 
+_______
+
+This was forked from the https://github.com/tinymce/tinymce.&nbsp;
+Intended use is as a ButtonNet feature.
+
+_______
+
 The world's #1 open source rich text editor.
 
 Used and trusted by millions of developers, TinyMCE is the world’s most customizable, scalable, and flexible rich text editor. We’ve helped launch the likes of Atlassian, Medium, Evernote (and lots more that we can’t tell you), by empowering them to create exceptional content and experiences for their users.
