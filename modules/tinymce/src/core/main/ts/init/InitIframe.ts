@@ -77,7 +77,7 @@ const getIframeHtml = (editor: Editor) => {
   }
 
   iframeHTML += '</head>' +
-    `<body id=${bodyId}" class="mce-content-body ${bodyClass}" data-id="${editor.id}" aria-label="${translatedAriaText}">` +
+    `<body id="${bodyId}" class="mce-content-body ${bodyClass}" data-id="${editor.id}" aria-label="${translatedAriaText}">` +
     '<br>' +
     '</body></html>';
 
