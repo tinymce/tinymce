@@ -33,6 +33,7 @@ export interface UploadResult {
   status: boolean;
   blobInfo: BlobInfo;
   uploadUri: string;
+  removed: boolean;
 }
 
 export type UploadCallback = (results: UploadResult[]) => void;
@@ -153,6 +154,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
           const blobInfo = imageInfos[index].blobInfo;
           const image = imageInfos[index].image;
+          let removed = false;
 
           if (uploadInfo.status && Settings.shouldReplaceBlobUris(editor)) {
             blobCache.removeByUri(image.src);
@@ -165,6 +167,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
             if (uploadInfo.error.options.remove) {
               replaceUrlInUndoStack(image.getAttribute('src'), Env.transparentSrc);
               imagesToRemove.push(image);
+              removed = true;
             }
 
             ErrorReporter.uploadError(editor, uploadInfo.error.message);
@@ -174,7 +177,8 @@ const EditorUpload = (editor: Editor): EditorUpload => {
             element: image,
             status: uploadInfo.status,
             uploadUri: uploadInfo.url,
-            blobInfo
+            blobInfo,
+            removed
           };
         });
 
@@ -182,18 +186,13 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           changeHandler.fireIfChanged();
         }
 
-        if (imagesToRemove.length > 0) {
-          if (Rtc.isRtc(editor)) {
-            // TODO TINY-7735 replace with RTC API to remove images
-            console.error('Removing images on failed uploads is currently unsupported for RTC'); // eslint-disable-line no-console
-          } else {
-            editor.undoManager.transact(() => {
-              Arr.each(imagesToRemove, (element) => {
-                editor.dom.remove(element);
-                blobCache.removeByUri(element.src);
-              });
+        if (imagesToRemove.length > 0 && !Rtc.isRtc(editor)) {
+          editor.undoManager.transact(() => {
+            Arr.each(imagesToRemove, (element) => {
+              editor.dom.remove(element);
+              blobCache.removeByUri(element.src);
             });
-          }
+          });
         }
 
         if (callback) {
