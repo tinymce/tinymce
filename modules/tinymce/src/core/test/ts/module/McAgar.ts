@@ -5,5 +5,6 @@
   files in node_modules and is always the latest version.
  */
 import 'tinymce';
+import 'tinymce/models/dom/Main';
 import 'tinymce/themes/silver/Main';
 export * from '@ephox/mcagar';
