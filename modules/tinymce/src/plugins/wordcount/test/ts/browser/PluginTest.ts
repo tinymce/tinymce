@@ -63,4 +63,26 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     editor.setContent('<p>Soft hy&shy;phen</p>');
     await pWaitForWordcount(2);
   });
+
+  it('TINY-7484: Does not treat zwsp character as splitting a word', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    editor.setContent('<p><span>wo&#8203;rd</span></p>');
+    await pWaitForWordcount(1);
+  });
+
+  it('TINY-7484: Does not treat zwsp character as a word', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span>word&#8203;</span></p>');
+    await pWaitForWordcount(1);
+    editor.setContent('<p><span>&#8203;</span></p>');
+    await pWaitForWordcount(0);
+  });
+
+  it('TINY-7484: Multiple zwsp characters', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    editor.setContent('<p><span>&#8203;&#8203;&#8203;wo&#8203;rd&#8203;&#8203;&#8203;</span></p>');
+    await pWaitForWordcount(1);
+  });
 });
