@@ -78,4 +78,11 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     editor.setContent('<p><span>&#8203;</span></p>');
     await pWaitForWordcount(0);
   });
+
+  it('TINY-7484: Multiple zwsp characters', async () => {
+    const editor = hook.editor();
+    await pWaitForWordcount(0);
+    editor.setContent('<p><span>&#8203;&#8203;&#8203;wo&#8203;rd&#8203;&#8203;&#8203;</span></p>');
+    await pWaitForWordcount(1);
+  });
 });
