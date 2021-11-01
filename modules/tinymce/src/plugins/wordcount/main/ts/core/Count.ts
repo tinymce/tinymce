@@ -14,11 +14,14 @@ import { getText } from './GetText';
 
 export type Counter = (node: Node, schema: Schema) => number;
 
+const removeZwsp = (text: string) =>
+  text.replace('\u200B', '');
+
 const strLen = (str: string): number =>
   str.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '_').length;
 
 const countWords: Counter = (node: Node, schema: Schema): number => {
-  const text = getText(node, schema).join('\n');
+  const text = removeZwsp(getText(node, schema).join('\n'));
   return Words.getWords(text.split(''), Fun.identity).length;
 };
 

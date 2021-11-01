@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tables could have an incorrect height set on rows when rendered outside of the editor #TINY-7699
 - In certain circumstances, the table of contents plugin would incorrectly add an extra empty list item #TINY-4636
 - The insert table grid menu displayed an incorrect size when re-opening the grid #TINY-6532
+- The word count plugin was treating the zero width space character (`&#8203;`) as a word #TINY-7484
 
 ## 5.10.0 - 2021-10-11
 
