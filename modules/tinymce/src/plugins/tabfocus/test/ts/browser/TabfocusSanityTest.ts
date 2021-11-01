@@ -5,14 +5,13 @@ import { TinyContentActions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/tabfocus/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'tabfocus',
     tabfocus_elements: 'tempinput1',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ], true);
+  }, [ Plugin ], true);
 
   before(() => {
     const editor = hook.editor();

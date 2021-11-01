@@ -4,7 +4,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, fillActiveDialog } from '../../module/Helpers';
 
@@ -23,7 +22,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
       { title: 'class1', value: 'class1' },
       { title: 'class2', value: 'class2' }
     ]
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: all image dialog ui options on empty editor', async () => {
     const editor = hook.editor();

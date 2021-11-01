@@ -1,17 +1,13 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as StickyUtils from '../../../module/StickyHeaderUtils';
 
 describe('browser.tinymce.themes.silver.editor.header.StickyHeaderInitialPlacementTest ', () => {
-  before(() => {
-    Theme();
-  });
 
   Arr.each([
     { location: ToolbarLocation.top, height: 2000, expectDocked: false },

@@ -9,14 +9,13 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/textpattern/Plugin';
 import * as TextSearch from 'tinymce/plugins/textpattern/text/TextSearch';
 import { SpotPoint } from 'tinymce/plugins/textpattern/utils/Spot';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.textpattern.TextSearchTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'textpattern',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   beforeEach(() => {
     const editor = hook.editor();

@@ -5,7 +5,6 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface Selection {
   readonly startPath: number[];
@@ -27,7 +26,7 @@ describe('browser.tinymce.core.fmt.TextDecorationColorTest', () => {
       custom_format: { inline: 'span', classes: 'abc', styles: { textDecoration: 'underline' }}
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const pApplyForecolor = async (editor: Editor) => {
     TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');

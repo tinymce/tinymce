@@ -7,7 +7,6 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import FocusManager from 'tinymce/core/api/FocusManager';
 import * as FocusController from 'tinymce/core/focus/FocusController';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.focus.FocusControllerTest', () => {
   Arr.each([
@@ -22,7 +21,7 @@ describe('browser.tinymce.core.focus.FocusControllerTest', () => {
         entities: 'raw',
         indent: false,
         base_url: '/project/tinymce/js/tinymce'
-      }, [ Theme ]);
+      }, []);
 
       it('isEditorUIElement on valid element', () => {
         const uiElm = DOMUtils.DOM.create('div', { class: 'mce-abc' }, null);

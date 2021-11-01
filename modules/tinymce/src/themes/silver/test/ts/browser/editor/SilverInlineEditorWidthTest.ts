@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { Css, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
@@ -7,14 +7,10 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pOpenMore } from '../../module/MenuUtils';
 
 describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const structureTest = (editor: Editor, container: SugarElement<Node>, maxWidth: number) =>
     Assertions.assertStructure(

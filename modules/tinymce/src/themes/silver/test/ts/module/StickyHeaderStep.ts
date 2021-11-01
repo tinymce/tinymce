@@ -7,7 +7,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import { ToolbarLocation, ToolbarMode } from 'tinymce/themes/silver/api/Settings';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as MenuUtils from './MenuUtils';
 import * as PageScroll from './PageScroll';
@@ -31,7 +30,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       toolbar_mode: toolbarMode,
       toolbar_location: toolbarLocation,
       toolbar_sticky: true,
-    }, [ FullscreenPlugin, Theme ], true);
+    }, [ FullscreenPlugin ], true);
 
     PageScroll.bddSetup(hook.editor, 5000);
 

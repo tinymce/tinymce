@@ -5,7 +5,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.sizing.ResizeNotInRootTest', () => {
   const expectedWidth = 300;
@@ -23,7 +22,7 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeNotInRootTest', () =
     base_url: '/project/tinymce/js/tinymce',
     fixed_toolbar_container: '#toolbar',
     inline: true,
-  }, [ Theme ]);
+  }, []);
 
   it('TINY-6683: Should not resize the sink to the body width', async () => {
     const editor = hook.editor();

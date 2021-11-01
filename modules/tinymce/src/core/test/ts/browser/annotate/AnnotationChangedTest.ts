@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { annotate, assertHtmlContent, assertMarker } from '../../module/test/AnnotationAsserts';
 
@@ -79,7 +78,7 @@ describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {
         ed.annotator.annotationChanged('delta', listener);
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const changes: Cell<Array<{state: boolean; name: string; uid: string}>> = Cell([ ]);
 

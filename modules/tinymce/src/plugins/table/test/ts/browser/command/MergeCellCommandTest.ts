@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableEventData } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 type TableModifiedEvent = EditorEvent<TableEventData>;
 
@@ -24,7 +23,7 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     indent: false,
     setup: (ed: Editor) => ed.on('TableModified', logModifiedEvent),
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   let modifiedEvents = [];
   const logModifiedEvent = (event: TableModifiedEvent) => {

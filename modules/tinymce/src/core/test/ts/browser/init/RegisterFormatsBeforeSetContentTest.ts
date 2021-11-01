@@ -4,7 +4,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.RegisterFormatsBeforeSetContentTest', () => {
   const customFormatNames = Singleton.value<string[]>();
@@ -21,7 +20,7 @@ describe('browser.tinymce.core.init.RegisterFormatsBeforeSetContentTest', () => 
         customFormatNames.set(names);
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   it('Register formats before setContent test', () => {
     const formats = customFormatNames.get().getOrDie('Should be format names');

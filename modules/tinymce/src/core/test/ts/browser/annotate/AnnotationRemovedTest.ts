@@ -3,7 +3,6 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { annotate, assertGetAll, assertHtmlContent } from '../../module/test/AnnotationAsserts';
 
@@ -31,7 +30,7 @@ describe('browser.tinymce.core.annotate.AnnotationRemovedTest', () => {
         });
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   before(() => {
     const editor = hook.editor();

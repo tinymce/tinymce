@@ -7,7 +7,6 @@ import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   const platform = PlatformDetection.detect();
@@ -95,7 +94,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
         items: 'form:test-form'
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const openToolbar = (editor: Editor, toolbarKey: string) => {
     editor.fire('contexttoolbar-show', {

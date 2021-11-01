@@ -7,7 +7,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { fakeEvent } from '../module/test/Utils';
 
@@ -25,7 +24,7 @@ describe('browser.tinymce.plugins.emoticons.SearchTest', () => {
     toolbar: 'emoticons',
     base_url: '/project/tinymce/js/tinymce',
     emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojis.js'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: Open dialog, Search for "rainbow", Rainbow should be first option', async () => {
     const editor = hook.editor();

@@ -6,7 +6,6 @@ import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/w
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertSelectedCells, selectWithMouse } from '../module/test/TableTestUtils';
 
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.table.FakeSelectionTest', () => {
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const simpleTable =
   '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';

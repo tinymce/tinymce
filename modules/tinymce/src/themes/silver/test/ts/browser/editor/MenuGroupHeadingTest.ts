@@ -3,7 +3,6 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.MenuGroupHeadingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,7 +13,7 @@ describe('browser.tinymce.themes.silver.editor.MenuGroupHeadingTest', () => {
       { title: 'Table styles' },
       { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
     ]
-  }, [ Theme ]);
+  }, []);
 
   it('TINY-2226: Menu should contain a group heading with the correct classes and text', async () => {
     const editor = hook.editor();

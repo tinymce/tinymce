@@ -3,7 +3,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.EditorForcedSettingsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -12,7 +11,7 @@ describe('browser.tinymce.core.EditorForcedSettingsTest', () => {
     inline: true,
     // Settings that are to be forced
     validate: false
-  }, [ Theme ]);
+  }, []);
 
   it('Validate forced settings', () => {
     const editor = hook.editor();

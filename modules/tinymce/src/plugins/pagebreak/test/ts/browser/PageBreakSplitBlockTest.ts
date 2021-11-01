@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/pagebreak/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
     toolbar: 'pagebreak',
     pagebreak_split_block: false, // default
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   const clickPageBreak = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Page break"]');
 

@@ -5,13 +5,12 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { isVisuallyEmpty } from 'tinymce/core/content/Placeholder';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.PlaceholderVisuallyEmptyTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     forced_root_block: false
-  }, [ Theme ]);
+  }, []);
 
   const assertEmpty = (label: string, editor: Editor, expected: boolean, forcedRootBlockFalse: boolean) => {
     const body = editor.getBody();

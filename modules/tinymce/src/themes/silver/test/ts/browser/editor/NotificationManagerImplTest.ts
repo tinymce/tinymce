@@ -8,7 +8,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi } from 'tinymce/core/api/NotificationManager';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as PageScroll from '../../module/PageScroll';
 import { resizeToPos } from '../../module/UiUtils';
@@ -36,7 +35,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       width: 600
-    }, [ Theme ]);
+    }, []);
 
     const assertStructure = (label: string, notification: NotificationApi, type: string, message: string, progress?: number) => {
       Assertions.assertStructure(label, ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -198,7 +197,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       toolbar_location: 'bottom',
       width: 600,
       height: 400
-    }, [ Theme ]);
+    }, []);
 
     it('Check notification stacking and structure', async () => {
       const editor = hook.editor();

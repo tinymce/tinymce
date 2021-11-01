@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertTableStructureWithSizes, insertTable } from '../../module/test/TableTestUtils';
 
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.table.command.InsertTableCommandTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     statusbar: false,
     table_header_type: 'cells'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const assertNumNewUndoLevels = (editor: Editor, expected: number) => {
     // Add one to expected to account for the initial undo level

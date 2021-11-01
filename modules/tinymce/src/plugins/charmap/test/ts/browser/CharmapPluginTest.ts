@@ -5,14 +5,13 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.charmap.CharMapPluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'charmap',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Replace characters by array', () => {
     const editor = hook.editor();

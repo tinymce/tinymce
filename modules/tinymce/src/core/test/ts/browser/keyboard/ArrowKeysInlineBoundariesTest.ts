@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as NodeType from 'tinymce/core/dom/NodeType';
 import * as WordSelection from 'tinymce/core/selection/WordSelection';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
   const detect = PlatformDetection.detect();
@@ -17,7 +16,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const assertCaretAtZwsp = (editor: Editor) => {
     const rng = editor.selection.getRng();

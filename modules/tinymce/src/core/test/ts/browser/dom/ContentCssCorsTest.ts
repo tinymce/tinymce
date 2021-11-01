@@ -4,7 +4,6 @@ import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.dom.ContentCssCorsTest', () => {
   before(function () {
@@ -12,7 +11,6 @@ describe('browser.tinymce.core.dom.ContentCssCorsTest', () => {
     if (PlatformDetection.detect().browser.isIE()) {
       this.skip();
     }
-    Theme();
   });
 
   const settings = {

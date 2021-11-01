@@ -3,7 +3,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/template/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pInsertTemplate } from '../module/InsertTemplate';
 import { Settings } from '../module/Settings';
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.template.SelectedContentTest', () => {
     plugins: 'template',
     toolbar: 'template',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const { addSettings, cleanupSettings } = Settings(hook);
 

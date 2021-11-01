@@ -8,7 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { AddUndoEvent } from 'tinymce/core/api/EventTypes';
 import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
@@ -22,7 +21,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     indent: false,
     entities: 'raw',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('Initial states', () => {
     const editor = hook.editor();

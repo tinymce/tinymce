@@ -6,7 +6,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertStructureIsRestoredToDefault, clickOnButton, pClickOnMenuItem, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
 
@@ -23,7 +22,7 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
       table: { title: 'Table', items: 'tablecaption' },
     },
     menubar: 'table',
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   let events: Array<EditorEvent<TableModifiedEvent>> = [];
   const logEvent = (event: EditorEvent<TableModifiedEvent>) => {

@@ -5,14 +5,13 @@ import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/nonbreaking/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.nonbreaking.NonbreakingSanityTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'nonbreaking',
     toolbar: 'nonbreaking',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   it('TBA: Click on the nbsp button and assert nonbreaking space is inserted', () => {
     const editor = hook.editor();

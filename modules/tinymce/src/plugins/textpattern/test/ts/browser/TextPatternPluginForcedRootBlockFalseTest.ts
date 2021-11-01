@@ -4,7 +4,6 @@ import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.textpattern.TextPatternPluginForcedRootBlockFa
     plugins: 'textpattern lists',
     base_url: '/project/tinymce/js/tinymce',
     forced_root_block: false
-  }, [ ListsPlugin, TextPatternPlugin, Theme ]);
+  }, [ ListsPlugin, TextPatternPlugin ]);
 
   beforeEach(() => {
     const editor = hook.editor();

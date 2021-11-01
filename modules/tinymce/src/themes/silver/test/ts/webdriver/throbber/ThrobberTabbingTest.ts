@@ -7,14 +7,13 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as UiUtils from '../../module/UiUtils';
 
 describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   before(() => {
     const editor = hook.editor();

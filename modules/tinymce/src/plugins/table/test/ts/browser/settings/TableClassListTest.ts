@@ -3,7 +3,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -11,7 +10,7 @@ describe('browser.tinymce.plugins.table.TableClassListTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 

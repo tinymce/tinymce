@@ -7,7 +7,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import AutoresizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
   PhantomSkipper.bddSetup();
@@ -26,7 +25,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
         resizeEventsCount.set(resizeEventsCount.get() + 1);
       });
     }
-  }, [ AutoresizePlugin, FullscreenPlugin, Theme ], true);
+  }, [ AutoresizePlugin, FullscreenPlugin ], true);
 
   const assertEditorHeightAbove = (editor: Editor, minHeight: number) => {
     const editorHeight = editor.getContainer().offsetHeight;

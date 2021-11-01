@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
       { filter: 'http://media1.tinymce.com' },
       { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
     ]
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Object retained as is', () => {
     const editor = hook.editor();

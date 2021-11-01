@@ -4,13 +4,12 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { Format } from 'tinymce/core/fmt/FormatTypes';
 import * as RemoveFormat from 'tinymce/core/fmt/RemoveFormat';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const removeFormat: Format[] = [{
     selector: 'strong, em',

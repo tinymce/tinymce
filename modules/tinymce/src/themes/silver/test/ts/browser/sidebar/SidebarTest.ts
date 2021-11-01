@@ -7,7 +7,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Sidebar } from 'tinymce/core/api/ui/Ui';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface EventLog {
   readonly name: string;
@@ -54,7 +53,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
         onHide: logEvent('mysidebar3:hide')
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   const pClickAndAssertEvents = async (editor: Editor, tooltip: string, expected: EventLog[]) => {
     store.clear();

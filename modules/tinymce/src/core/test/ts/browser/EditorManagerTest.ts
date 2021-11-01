@@ -7,7 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Tools from 'tinymce/core/api/util/Tools';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as ViewBlock from '../module/test/ViewBlock';
 
@@ -15,7 +14,6 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
   const viewBlock = ViewBlock.bddSetup();
 
   before(() => {
-    Theme();
     EditorManager._setBaseUrl('/project/tinymce/js/tinymce');
   });
 

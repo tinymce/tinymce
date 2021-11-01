@@ -7,7 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableEventData, TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -27,7 +26,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       });
       editor.on('newcell', logEventTypes);
     }
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const generalSelectors = {
     width: 'label.tox-label:contains(Width) + input.tox-textfield',

@@ -1,17 +1,13 @@
 import { Assertions } from '@ephox/agar';
-import { before, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Focus, Hierarchy, SugarBody, SugarNode } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as EditorFocus from 'tinymce/core/focus/EditorFocus';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.focus.EditorFocusTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const pCreateInlineEditor = (html: string) => McEditor.pFromHtml<Editor>(html, {
     menubar: false,

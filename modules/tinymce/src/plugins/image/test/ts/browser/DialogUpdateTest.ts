@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, assertInputValue, fakeEvent, fillActiveDialog, generalTabSelectors, setInputValue } from '../module/Helpers';
 
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     file_picker_callback: (callback, _value, _meta) => {
       callback('https://www.google.com/logos/google.jpg', { width: '200' });
     }
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Update an image by setting title to empty should remove the existing title attribute', async () => {
     const editor = hook.editor();

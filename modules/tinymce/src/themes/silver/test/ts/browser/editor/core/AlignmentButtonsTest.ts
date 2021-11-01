@@ -4,7 +4,6 @@ import { SugarBody } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { extractOnlyOne } from '../../../module/UiUtils';
 
@@ -13,7 +12,7 @@ describe('browser.tinymce.themes.silver.editor.core.AlignmentButtonsTest', () =>
     toolbar: 'alignleft aligncenter alignright alignjustify alignnone',
     toolbar_mode: 'wrap',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('TBA: Toolbar alignment buttons structure', () => {
     const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');

@@ -4,14 +4,13 @@ import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.DragSelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'table',
     height: 300
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TINY-5950: Drag and drop should not select', () => {
     const editor = hook.editor();

@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -23,7 +22,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     },
     base_url: '/project/tinymce/js/tinymce',
     forced_root_block: false
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Remove UL with single LI in BR mode', () => {
     const editor = hook.editor();

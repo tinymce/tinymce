@@ -7,14 +7,13 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as DialogUtils from '../../module/DialogUtils';
 
 describe('browser.tinymce.themes.silver.window.SilverDialogAriaLabelTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'

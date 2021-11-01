@@ -6,7 +6,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/toc/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
     toc_depth: 2,
     toc_header: 'h3',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const stripAttribs = (el: Element, attr: string[] | string): void => {
     if (Tools.isArray(attr)) {
