@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () => {
   before(function () {
@@ -19,7 +18,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () 
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   before(() => {
     const editor = hook.editor();

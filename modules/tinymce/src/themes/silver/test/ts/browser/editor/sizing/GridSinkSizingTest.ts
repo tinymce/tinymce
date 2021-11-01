@@ -5,7 +5,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.sizing.GridSinkSizingTest', () => {
   let style: SugarElement<HTMLStyleElement>;
@@ -26,7 +25,7 @@ body {
 
   TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('TINY-6783:  Sink width matches body width when in display grid', () => {
     const bodyWidth = Width.get(SugarBody.body());

@@ -3,7 +3,6 @@ import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.InitContentBodyFiltersTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -19,7 +18,7 @@ describe('browser.tinymce.core.init.InitContentBodyFiltersTest', () => {
         });
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   it('TINY-4742: Insert content to activate node filters, check content is in editor', () => {
     const editor = hook.editor();

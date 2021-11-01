@@ -3,13 +3,12 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.delete.OutdentForcedRootBlockFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     forced_root_block: false
-  }, [ Theme ], true);
+  }, [], true);
 
   const testDeleteOrBackspaceKey = (key: number) => (
     setupHtml: string,

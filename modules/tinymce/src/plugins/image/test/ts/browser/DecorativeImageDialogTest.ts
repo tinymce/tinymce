@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, assertInputCheckbox, assertInputValue, fillActiveDialog, generalTabSelectors } from '../module/Helpers';
 
@@ -16,7 +15,7 @@ describe('browser.tinymce.plugins.image.DescriptiveImageDialogTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     a11y_advanced_options: true
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pressTab = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
   const pressEsc = (editor: Editor) => TinyUiActions.keydown(editor, Keys.escape());

@@ -6,7 +6,6 @@ import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections,
 
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pWaitForAutocompleteToClose } from '../../../module/AutocompleterUtils';
 
@@ -43,7 +42,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
         }
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const expectedSimplePara = (content: string) => (s, str): StructAssert => s.element('p', {
     children: [ s.text(str.is(content), true) ]

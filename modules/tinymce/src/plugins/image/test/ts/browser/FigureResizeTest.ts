@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { fillActiveDialog } from '../module/Helpers';
 
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.image.FigureResizeTest', () => {
     image_caption: true,
     height: 400,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const getElementSize = (elm: SugarElement<HTMLImageElement>) => {
     const width = Css.get(elm, 'width');

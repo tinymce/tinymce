@@ -5,7 +5,6 @@ import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wr
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
@@ -22,7 +21,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const getContent = (editor: Editor) => {
     return editor.getContent().toLowerCase().replace(/[\r]+/g, '');

@@ -5,7 +5,6 @@ import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-m
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/codesample/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TestUtils from '../module/CodeSampleTestUtils';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.codesample.CodeSampleSelectionTest', () => {
     plugins: 'codesample',
     toolbar: 'codesample',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const dialogSelector = 'div.tox-dialog';
   const markupContent = '<p>hello world</p>';

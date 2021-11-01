@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver//Theme';
 
 describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -23,7 +22,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     },
     content_style: '.mce-content-body { line-height: normal; }', // Breaks tests in phantomjs unless we have this
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Backspace at beginning of single LI in UL', () => {
     const editor = hook.editor();

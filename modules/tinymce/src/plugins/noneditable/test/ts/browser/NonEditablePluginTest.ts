@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/noneditable/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.noneditable.NonEditablePluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.noneditable.NonEditablePluginTest', () => {
     plugins: 'noneditable',
     entities: 'raw',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   it('TBA: noneditable class', () => {
     const editor = hook.editor();

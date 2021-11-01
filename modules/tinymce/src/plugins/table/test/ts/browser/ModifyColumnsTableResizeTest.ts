@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface TableCommandMap {
   readonly mceTableInsertColBefore: number;
@@ -59,7 +58,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'responsive',
         table_column_resizing: 'preservetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: will resize table because responsive tables cannot honour this setting', () => {
         const editor = hook.editor();
@@ -162,7 +161,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'responsive',
         table_column_resizing: 'resizetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should resize table when inserting a column', () => {
         const editor = hook.editor();
@@ -271,7 +270,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'fixed',
         table_column_resizing: 'preservetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should preserve table width when inserting a column', () => {
         const editor = hook.editor();
@@ -374,7 +373,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'fixed',
         table_column_resizing: 'resizetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should resize table when inserting a column', () => {
         const editor = hook.editor();
@@ -480,7 +479,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'relative',
         table_column_resizing: 'preservetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should preserve table width when inserting a column', () => {
         const editor = hook.editor();
@@ -583,7 +582,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'relative',
         table_column_resizing: 'resizetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should resize table when inserting a column', () => {
         const editor = hook.editor();

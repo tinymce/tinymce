@@ -4,7 +4,6 @@ import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } fro
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.TableInListTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -12,7 +11,7 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
     toolbar: 'bullist numlist indent outdent',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: unlist table in list then add list inside table', () => {
     const editor = hook.editor();

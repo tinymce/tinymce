@@ -4,14 +4,13 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, [ Theme ], true);
+  }, [], true);
   const platform = PlatformDetection.detect();
   const supportsPageUpDown = !(platform.os.isOSX() || platform.os.isWindows() && platform.browser.isFirefox());
 

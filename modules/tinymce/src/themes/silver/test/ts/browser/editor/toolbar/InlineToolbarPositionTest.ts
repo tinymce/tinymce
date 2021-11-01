@@ -7,7 +7,6 @@ import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as PageScroll from '../../../module/PageScroll';
 
@@ -207,7 +206,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
     const hook = TinyHooks.bddSetup<Editor>({
       ...settings,
       toolbar_location: 'top'
-    }, [ Theme ]);
+    }, []);
 
     setupInitialContent(hook);
     getTopPositionTests(hook);
@@ -217,7 +216,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
     const hook = TinyHooks.bddSetup<Editor>({
       ...settings,
       toolbar_location: 'bottom'
-    }, [ Theme ]);
+    }, []);
 
     setupInitialContent(hook);
     getBottomPositionTests(hook);
@@ -229,7 +228,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
     const hook = TinyHooks.bddSetup<Editor>({
       ...settings,
       toolbar_location: 'auto'
-    }, [ Theme ]);
+    }, []);
 
     setupInitialContent(hook);
     getTopPositionTests(hook);
@@ -269,7 +268,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
     const hook = TinyHooks.bddSetup<Editor>({
       ...settings,
       fixed_toolbar_container: '#toolbar'
-    }, [ Theme ]);
+    }, []);
 
     setupInitialContent(hook);
 

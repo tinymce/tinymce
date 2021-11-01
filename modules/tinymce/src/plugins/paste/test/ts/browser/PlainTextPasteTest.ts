@@ -7,11 +7,9 @@ import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.paste.PlainTextPaste', () => {
   before(() => {
-    Theme();
     Plugin();
   });
 

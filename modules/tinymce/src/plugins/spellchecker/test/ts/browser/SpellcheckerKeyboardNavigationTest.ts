@@ -6,11 +6,9 @@ import { TinyLoader } from '@ephox/wrap-mcagar';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from 'tinymce/plugins/spellchecker/api/Settings';
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', (success, failure) => {
 
-  SilverTheme();
   SpellcheckerPlugin();
 
   const sTestDefaultLanguage = (editor) => {

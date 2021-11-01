@@ -4,7 +4,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 describe('browser.tinymce.themes.silver.editor.color.GetCurrentColorTest', () => {
@@ -18,7 +17,7 @@ describe('browser.tinymce.themes.silver.editor.color.GetCurrentColorTest', () =>
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const assertCurrentColor = (editor: Editor, format: 'forecolor' | 'hilitecolor', label: string, expected: string) => {
     const actual = ColorSwatch.getCurrentColor(editor, format).getOrDie('No current color found');

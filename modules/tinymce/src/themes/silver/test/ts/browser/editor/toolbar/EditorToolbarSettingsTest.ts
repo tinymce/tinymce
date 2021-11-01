@@ -1,19 +1,15 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { countNumber, extractOnlyOne } from '../../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.EditorToolbarSettingsTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const pCreateEditorWithToolbar = (
     toolbarVal: boolean | string | string[] | Record<string, any> | undefined,

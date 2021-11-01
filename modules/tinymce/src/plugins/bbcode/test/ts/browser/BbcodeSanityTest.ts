@@ -3,7 +3,6 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Plugin from 'tinymce/plugins/bbcode/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.bbcode.BbcodeSanityTest', () => {
   const hook = TinyHooks.bddSetupLight({
@@ -11,7 +10,7 @@ describe('browser.tinymce.plugins.bbcode.BbcodeSanityTest', () => {
     toolbar: 'bbcode',
     base_url: '/project/tinymce/js/tinymce',
     bbcode_dialect: 'punbb'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Set bbcode content and assert the equivalent html structure is present', () => {
     const editor = hook.editor();

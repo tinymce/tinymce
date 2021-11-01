@@ -3,7 +3,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.help.IgnoreForcedPluginsTest', () => {
     toolbar: 'help',
     forced_plugins: [ 'link' ],
     base_url: '/project/tinymce/js/tinymce'
-  }, [ HelpPlugin, LinkPlugin, Theme ]);
+  }, [ HelpPlugin, LinkPlugin ]);
 
   it('TBA: Hide forced plugins from Help plugin list', async () => {
     const editor = hook.editor();

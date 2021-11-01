@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     toolbar: false,
     menubar: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ], true);
+  }, [ Plugin ], true);
 
   const pAssertToolbarVisible = () => Waiter.pTryUntil('toolbar should exist', () => UiFinder.exists(SugarBody.body(), '.tox-toolbar'));
 

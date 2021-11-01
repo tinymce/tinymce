@@ -7,13 +7,12 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as TableDelete from 'tinymce/core/delete/TableDelete';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.delete.TableDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const assertRawNormalizedContent = (editor: Editor, expectedContent: string) => {
     const element = Replication.deep(TinyDom.body(editor));

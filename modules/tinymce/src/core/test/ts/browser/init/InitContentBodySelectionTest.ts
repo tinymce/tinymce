@@ -1,16 +1,12 @@
-import { before, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { McEditor, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.InitContentBodySelectionTest', () => {
   const isIE = PlatformDetection.detect().browser.isIE();
-  before(() => {
-    Theme();
-  });
 
   const initAndAssertContent = (label: string, html: string, path: number[], offset = 0, extraSettings = {}) => {
     it(label, async () => {

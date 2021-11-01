@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { fillActiveDialog, generalTabSelectors, ImageDialogData } from '../module/Helpers';
 
@@ -16,7 +15,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     a11y_advanced_options: true
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pInitAndOpenDialog = async (editor: Editor, content: string, cursorPos: Cursors.RangeSpec | Cursors.CursorSpec) => {
     editor.settings.image_advtab = true;

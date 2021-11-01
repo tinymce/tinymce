@@ -9,7 +9,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
   const bodyContent = `<table>
@@ -246,7 +245,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       ...defaultSettings,
       table_header_type: 'section'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6150: Switch from body to header row', () =>
       switchType(hook.editor(), bodyContent, theadContent, 'mceTableRowType', 'header')
@@ -261,7 +260,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       ...defaultSettings,
       table_header_type: 'cells'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6150: Switch from body to header row', () =>
       switchType(hook.editor(), bodyContent, thsContent, 'mceTableRowType', 'header', [ 'newcell', 'tablemodified' ])
@@ -276,7 +275,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       ...defaultSettings,
       table_header_type: 'sectionCells'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6150: Switch from body to header row', () =>
       switchType(hook.editor(), bodyContent, theadThsContent, 'mceTableRowType', 'header', [ 'newcell', 'tablemodified' ])
@@ -291,7 +290,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       ...defaultSettings,
       table_header_type: 'foo'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6150: Switch from body to header row', () =>
       switchType(hook.editor(), bodyContent, theadContent, 'mceTableRowType', 'header')
@@ -299,7 +298,7 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
   });
 
   context('Basic tests', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>(defaultSettings, [ Plugin, Theme ]);
+    const hook = TinyHooks.bddSetupLight<Editor>(defaultSettings, [ Plugin ]);
 
     context('Switch row types', () => {
       it('TINY-6150: Switch header row to body row', () =>

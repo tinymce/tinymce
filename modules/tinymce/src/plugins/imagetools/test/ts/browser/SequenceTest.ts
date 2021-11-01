@@ -3,7 +3,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { ImageOps } from '../module/test/ImageOps';
 import * as ImageUtils from '../module/test/ImageUtils';
@@ -23,7 +22,7 @@ describe('browser.tinymce.plugins.imagetools.SequenceTest', () => {
     imagetools_cors_hosts: [ 'moxiecode.cachefly.net' ],
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'editimage'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Test image operations on an image from the same domain', async () => {
     const editor = hook.editor();

@@ -7,13 +7,12 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as InsertBr from 'tinymce/core/newline/InsertBr';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.newline.InsertBrTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   beforeEach(() => {
     hook.editor().focus();

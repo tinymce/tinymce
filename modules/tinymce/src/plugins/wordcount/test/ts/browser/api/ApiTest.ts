@@ -6,7 +6,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { WordCountApi } from 'tinymce/plugins/wordcount/api/Api';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface Sel {
   readonly startPath: number[];
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.wordcount.ApiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'wordcount',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const createTest = (getCount: (api: WordCountApi) => number) => (content: string, expectedLength: number, sel?: Sel) => () => {
     const editor = hook.editor();

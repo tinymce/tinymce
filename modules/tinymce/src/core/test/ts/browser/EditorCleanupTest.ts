@@ -7,7 +7,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const assertPageLinkPresence = (url: string, exists: boolean): void => {
   const links = document.head.querySelectorAll(`link[href="${url}"]`);
@@ -33,7 +32,6 @@ const testCleanup = (comment: string, settings: RawEditorSettings, html: string 
 
 describe('browser.tinymce.core.EditorCleanupTest', () => {
   before(() => {
-    Theme();
     VisualBlocksPlugin();
   });
 

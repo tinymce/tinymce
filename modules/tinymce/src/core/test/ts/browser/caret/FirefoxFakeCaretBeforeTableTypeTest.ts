@@ -5,7 +5,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as KeyUtils from '../../module/test/KeyUtils';
 
@@ -23,7 +22,7 @@ describe('browser.tinymce.core.FirefoxFakeCaretBeforeTableTypeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'table'
-  }, [ Theme, TablePlugin ]);
+  }, [ TablePlugin ]);
 
   it('cursor before table type', () => {
     const editor = hook.editor();

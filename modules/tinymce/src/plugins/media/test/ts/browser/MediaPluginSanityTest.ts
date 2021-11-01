@@ -3,7 +3,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.media.MediaPluginSanityTest', () => {
         items: 'media'
       });
     }
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: Embed content, open dialog, set size and assert constrained and unconstrained size recalculation', async () => {
     const editor = hook.editor();

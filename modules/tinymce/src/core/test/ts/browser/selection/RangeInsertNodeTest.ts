@@ -5,13 +5,12 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { rangeInsertNode } from 'tinymce/core/selection/RangeInsertNode';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.selection.RangeInsertNode', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const insertNode = (editor: Editor, node: Node | DocumentFragment) => {
     rangeInsertNode(editor.dom, editor.selection.getRng(), node);

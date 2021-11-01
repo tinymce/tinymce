@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.plugins.media.core.EphoxEmbedTest', () => {
       });
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const ephoxEmbedStructure = ApproxStructure.build((s, str/* , arr*/) => {
     return s.element('div', {

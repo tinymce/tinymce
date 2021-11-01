@@ -8,14 +8,13 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as NodeType from 'tinymce/core/dom/NodeType';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.keyboard.MediaNavigationTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     height: 400,
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const assertStartContainer = (editor: Editor, f: (node: Node) => boolean) => {
     const startContainer = editor.selection.getRng().startContainer;

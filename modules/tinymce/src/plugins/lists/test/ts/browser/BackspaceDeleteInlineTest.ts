@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', () => {
   const setupElement = () => {
@@ -38,7 +37,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', () => {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
       'margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
     }
-  }, setupElement, [ Plugin, Theme ], true);
+  }, setupElement, [ Plugin ], true);
 
   it('TBA: Backspace at beginning of LI on body UL', () => {
     const editor = hook.editor();

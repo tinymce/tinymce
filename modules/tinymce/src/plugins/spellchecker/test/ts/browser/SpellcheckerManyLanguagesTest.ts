@@ -3,12 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/wrap-mcagar';
 
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', (success, failure) => {
 
   SpellcheckerPlugin();
-  SilverTheme();
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);

@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.paste.InternalClipboardTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -30,7 +29,7 @@ describe('browser.tinymce.plugins.paste.InternalClipboardTest', () => {
       });
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ PastePlugin, TablePlugin, Theme ]);
+  }, [ PastePlugin, TablePlugin ]);
 
   const resetProcessEvents = () => {
     lastPreProcessEvent = null;

@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ContentFormat } from 'tinymce/core/content/ContentTypes';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
   const initialContent = '<p>Some initial content</p>';
@@ -19,7 +18,7 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
         events.push(e.type);
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   beforeEach(() => {
     const editor = hook.editor();

@@ -6,13 +6,12 @@ import { assert } from 'chai';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'wordcount',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ () => Plugin(2), Theme ], true);
+  }, [ () => Plugin(2) ], true);
 
   beforeEach(() => {
     hook.editor().setContent('');

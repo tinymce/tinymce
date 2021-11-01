@@ -6,12 +6,11 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.util.ImageUploaderTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
   let image1: BlobInfo;
   let image2: BlobInfo;
 

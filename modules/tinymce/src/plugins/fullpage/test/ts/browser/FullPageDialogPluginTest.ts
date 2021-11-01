@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/fullpage/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', () => {
     fullpage_default_xml_pi: true,
     fullpage_default_text_color: 'blue',
     fullpage_default_font_family: '"Times New Roman", Georgia, Serif'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const selectors = {
     titleInput: 'label.tox-label:contains(Title) + input.tox-textfield',

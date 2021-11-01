@@ -4,14 +4,13 @@ import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 type Alignment = 'left' | 'center' | 'right' | 'justify';
 
 describe('browser.tinymce.core.fmt.MediaAlignTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const mediaApproxStructure = (tag: string, alignment: Alignment) => {
     const alignStyles = (str: ApproxStructure.StringApi) => {

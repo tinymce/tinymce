@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/legacyoutput/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', () => {
   const formatsCell = Cell<any>({});
@@ -20,7 +19,7 @@ describe('browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', () => {
         formatsCell.set({ ...editor.formatter.get() });
       });
     }
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: Setting overrides', () => {
     const editor = hook.editor();

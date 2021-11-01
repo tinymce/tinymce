@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/fullpage/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.fullpage.FullPagePluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -16,7 +15,7 @@ describe('browser.tinymce.plugins.fullpage.FullPagePluginTest', () => {
     protect: [
       /<!--([\s\S]*?)-->/g
     ]
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   afterEach(() => {
     const editor = hook.editor();

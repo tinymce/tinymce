@@ -10,7 +10,6 @@ import { findPatterns } from 'tinymce/plugins/textpattern/core/InlinePattern';
 import { InlinePattern, InlinePatternMatch } from 'tinymce/plugins/textpattern/core/PatternTypes';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import { PathRange } from 'tinymce/plugins/textpattern/utils/PathRange';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface ExpectedPatternMatch {
   readonly pattern: Partial<InlinePattern>;
@@ -23,7 +22,7 @@ describe('browser.tinymce.plugins.textpattern.FindInlinePatternTest', () => {
     forced_root_block: false,
     plugins: 'textpattern lists',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ ListsPlugin, TextPatternPlugin, Theme ]);
+  }, [ ListsPlugin, TextPatternPlugin ]);
 
   const mockEditor = {
     getParam: () =>
