@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.10.1 - 2021-11-03
+
 ### Fixed
 - The iframe aria help text was not read by some screen readers #TINY-8171
 - Clicking the `forecolor` or `backcolor` toolbar buttons would do nothing until selecting a color #TINY-7836
