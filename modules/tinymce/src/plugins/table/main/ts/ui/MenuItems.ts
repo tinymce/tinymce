@@ -11,10 +11,11 @@ import { SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
+import { SelectionTargets, LockedDisable } from 'tinymce/models/dom/table/main/ts/selection/SelectionTargets';
 
 import * as Options from '../api/Options';
 import { Clipboard } from '../core/Clipboard';
-import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+// import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, buildMenuItems } from './UiUtils';
 

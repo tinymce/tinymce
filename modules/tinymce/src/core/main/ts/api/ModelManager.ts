@@ -5,9 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Api } from 'tinymce/models/dom/table/main/ts/api/Api';
+
 import AddOnManager from './AddOnManager';
 
 export interface Model {
+  table: Api;
 }
 
 type ModelManager = AddOnManager<Model>;
