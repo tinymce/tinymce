@@ -245,6 +245,7 @@ export const insertHtmlAtCaret = (editor: Editor, input: string, details: Insert
     const fragment = parser.parse(withBookmark, parserArgs);
 
     // Custom handling of lists
+    // TODO: TINY-8902 restore this
     // if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
     //   rng = InsertList.insertAtCaret(serializer, dom, selection.getRng(), fragment);
     //   selection.setRng(rng);
@@ -256,6 +257,7 @@ export const insertHtmlAtCaret = (editor: Editor, input: string, details: Insert
 
     // Move the caret to a more suitable location
     let node: Node = fragment.lastChild;
+    // TODO: TINY-8902 restore this
     // if (node.attr('id') === 'mce_marker') {
     //   const marker = node;
     //
@@ -297,7 +299,7 @@ export const insertHtmlAtCaret = (editor: Editor, input: string, details: Insert
       }
 
       // Replace the marker element with the fragment
-      // TODO: what if parentNode *is* the #mce_marker??
+      // TODO: TINY-8204 what if parentNode *is* the #mce_marker??
       const marker = dom.select('#mce_marker', parentNode)[0];
       if (Type.isNonNullable(marker)) {
         marker.parentNode?.insertBefore(fragment, marker);
@@ -310,6 +312,7 @@ export const insertHtmlAtCaret = (editor: Editor, input: string, details: Insert
     unmarkFragmentElements(editor.getBody());
     trimBrsFromTableCell(dom, selection.getStart());
 
+    // TODO: TINY-8902 bring this back
     // postProcessSetContent(editor, value, args);
     editor.addVisual();
   });

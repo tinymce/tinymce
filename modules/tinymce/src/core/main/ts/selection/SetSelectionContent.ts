@@ -103,6 +103,7 @@ const cleanContent = (editor: Editor, args: SetSelectionContentArgs) => {
 
     return editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...contextArgs, ...args });
   } else {
+    // TODO: TINY-8202 let people set raw content somehow
     throw new Error('TODO: handle raw content');
   }
 };
@@ -119,6 +120,7 @@ const setContent = (editor: Editor, content: string, args: Partial<SetSelectionC
 
     ScrollIntoView.scrollRangeIntoView(editor, rng);
 
+    // TODO: TINY-8202 re-serialize content appropriately
     postProcessSetContent(editor, (cleanedContent as Element).innerHTML, updatedArgs);
   });
 };
