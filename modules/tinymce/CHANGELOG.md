@@ -36,16 +36,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The legacy `mobile` theme has been removed #TINY-7832
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194
 
-## 5.10.1 - TBD
+## 5.10.1 - 2021-11-03
 
 ### Fixed
+- The iframe aria help text was not read by some screen readers #TINY-8171
 - Clicking the `forecolor` or `backcolor` toolbar buttons would do nothing until selecting a color #TINY-7836
 - Crop functionality did not work in the `imagetools` plugin when the editor was rendered in a shadow root #TINY-6387
 - Fixed an exception thrown on Safari when closing the `searchreplace` plugin dialog #TINY-8166
 - The `autolink` plugin did not convert URLs to links when starting with a bracket #TINY-8091
 - The `autolink` plugin incorrectly created nested links in some cases #TINY-8091
 - Tables could have an incorrect height set on rows when rendered outside of the editor #TINY-7699
+- In certain circumstances, the table of contents plugin would incorrectly add an extra empty list item #TINY-4636
 - The insert table grid menu displayed an incorrect size when re-opening the grid #TINY-6532
+- The word count plugin was treating the zero width space character (`&#8203;`) as a word #TINY-7484
 
 ## 5.10.0 - 2021-10-11
 
