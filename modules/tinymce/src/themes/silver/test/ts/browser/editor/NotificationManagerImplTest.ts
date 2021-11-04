@@ -215,11 +215,10 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       resizeToPos(600, 400, 600, 300);
 
       // Add a wait to allow the resize event to be processed and notifications to be rerendered
-      await Waiter.pWait(0);
-
-      // Check items are positioned so that they are stacked
-      assertPosition('Error notification', nError, 220, -299);
-      assertPosition('Warning notification', nWarn, 220, -251);
+      await Waiter.pTryUntil('Check items are positioned so that they are stacked', () => {
+        assertPosition('Error notification', nError, 220, -299);
+        assertPosition('Warning notification', nWarn, 220, -251);
+      });
 
       // Check the notification can be focused
       assertFocusable(nError);
