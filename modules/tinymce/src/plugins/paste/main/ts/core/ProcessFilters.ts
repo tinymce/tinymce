@@ -28,7 +28,7 @@ const preProcess = (editor: Editor, html: string): string => {
   });
 
   const fragment = parser.parse(html, { forced_root_block: false, isRootContent: true });
-  // TODO: TINY-8202 revert this back to using a serializer
+  // TODO: TINY-4627 (TINY-8202) revert this back to using a serializer
   return (fragment as Element).outerHTML;
 };
 

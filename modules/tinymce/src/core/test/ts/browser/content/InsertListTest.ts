@@ -13,7 +13,7 @@ describe.skip('browser.tinymce.core.content.InsertListTest', () => {
   const createFragment = (html: string): AstNode => {
     const parser = DomParser({ validate: false });
     const fragment = parser.parse(html);
-    // TODO: TINY-8202 fix this test up
+    // TODO: TINY-4627 (TINY-8202) fix this test up
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return fragment;

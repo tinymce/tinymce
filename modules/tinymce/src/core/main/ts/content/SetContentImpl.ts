@@ -82,7 +82,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
 
     return { content, html: content };
   } else {
-    // TODO: TINY-8902 bring back `raw` handling (and figure out what raw handling would mean here)
+    // TODO: TINY-4627 (TINY-8202) bring back `raw` handling (and figure out what raw handling would mean here)
     const fragment = editor.parser.parse(content, { isRootContent: true, insert: true });
 
     setEditorHtml(editor, fragment, args.no_selection);

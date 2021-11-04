@@ -277,7 +277,7 @@ const filterWordContent = (editor: Editor, content: string): string => {
     }
   });
 
-  // TODO: TINY-8202 bring back this code, look in commit
+  // TODO: TINY-4627 (TINY-8202) bring back this code, look in commit
   // b2a9c1484e3ccde90b5585c5fd532d6eb7de69cf for deleted code that might need
   // to come back
 

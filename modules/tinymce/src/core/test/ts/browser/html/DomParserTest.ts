@@ -9,12 +9,12 @@ import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
-// TODO: TINY-8205 get this test passing again
+// TODO: TINY-4627 (TINY-8205) get this test passing again
 describe.skip('browser.tinymce.core.html.DomParserTest', () => {
   const schema = Schema({ valid_elements: '*[class|title]' });
   const serializer = HtmlSerializer({}, schema);
   let parser: DomParser;
-  // TODO: TINY-8202 this used to be AstNode - fix that and make the tests compile again
+  // TODO: TINY-4627 (TINY-8202) this used to be AstNode - fix that and make the tests compile again
   // See also, many tests have `const root: any` and should be changed back to just `const root = ...`
   let root: any;
 
@@ -649,7 +649,7 @@ describe.skip('browser.tinymce.core.html.DomParserTest', () => {
     const serializer = HtmlSerializer();
 
     assert.equal(
-      // TODO: TINY-8202 fix this
+      // TODO: TINY-4627 (TINY-8202) fix this
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       serializer.serialize(DomParser().parse(
@@ -663,7 +663,7 @@ describe.skip('browser.tinymce.core.html.DomParserTest', () => {
     const serializer = HtmlSerializer();
 
     assert.equal(
-      // TODO: TINY-8202 fix this
+      // TODO: TINY-4627 (TINY-8202) fix this
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       serializer.serialize(DomParser().parse(
@@ -677,7 +677,7 @@ describe.skip('browser.tinymce.core.html.DomParserTest', () => {
     const serializer = HtmlSerializer();
 
     assert.equal(
-      // TODO: TINY-8202 fix this
+      // TODO: TINY-4627 (TINY-8202) fix this
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       serializer.serialize(DomParser().parse('<p>a<br />\nb</p>')),
@@ -689,7 +689,7 @@ describe.skip('browser.tinymce.core.html.DomParserTest', () => {
     const serializer = HtmlSerializer();
 
     assert.equal(
-      // TODO: TINY-8202 fix this
+      // TODO: TINY-4627 (TINY-8202) fix this
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       serializer.serialize(DomParser().parse('<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')),
@@ -717,7 +717,7 @@ describe.skip('browser.tinymce.core.html.DomParserTest', () => {
     const parser = DomParser({ blob_cache: blobCache });
     const base64 = 'R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==';
     const base64Uri = `data:image/gif;base64,${base64}`;
-    // TODO: TINY-8202 fix this
+    // TODO: TINY-4627 (TINY-8202) fix this
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const serializedHtml = serializer.serialize(parser.parse(`<p><img src="${base64Uri}" /></p>`));
@@ -740,7 +740,7 @@ describe.skip('browser.tinymce.core.html.DomParserTest', () => {
     const gifBase64Uri = `data:image/gif;base64,${base64}`;
     const pngBase64Uri = `data:image/png;base64,${base64}`;
     const images = `<img src="${gifBase64Uri}" /><img src="${pngBase64Uri}" />`;
-    // TODO: TINY-8202 fix this
+    // TODO: TINY-4627 (TINY-8202) fix this
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const serializedHtml = serializer.serialize(parser.parse(`<p>${images}</p><p>${images}</p>`));
@@ -781,7 +781,7 @@ describe.skip('browser.tinymce.core.html.DomParserTest', () => {
   it('do not extract base64 uris if blob cache is not provided', () => {
     const parser = DomParser();
     const html = '<p><img src="data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==" /></p>';
-    // TODO: TINY-8202 fix this
+    // TODO: TINY-4627 (TINY-8202) fix this
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const serializedHtml = serializer.serialize(parser.parse(html));
@@ -792,7 +792,7 @@ describe.skip('browser.tinymce.core.html.DomParserTest', () => {
   it('TINY-7756: Parsing invalid nested children', () => {
     const parser = DomParser();
     const html = '<table><button><a><meta></meta></a></button></table>';
-    // TODO: TINY-8202 fix this
+    // TODO: TINY-4627 (TINY-8202) fix this
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const serializedHtml = serializer.serialize(parser.parse(html));
@@ -822,7 +822,7 @@ describe.skip('browser.tinymce.core.html.DomParserTest', () => {
           '</tr>' +
         '</tbody>' +
       '</table>';
-    // TODO: TINY-8202 fix this
+    // TODO: TINY-4627 (TINY-8202) fix this
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const serializedHtml = serializer.serialize(parser.parse(html));

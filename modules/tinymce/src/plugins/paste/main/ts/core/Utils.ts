@@ -46,7 +46,7 @@ const innerText = (_html: string): string => {
   // const ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
   // const blockElements = schema.getBlockElements();
 
-  // TODO: TINY-8202 uncomment this and make it work again
+  // TODO: TINY-4627 (TINY-8202) uncomment this and make it work again
   // const walk = (node: AstNode): void => {
   //   const name = node.name, currentNode = node;
   //

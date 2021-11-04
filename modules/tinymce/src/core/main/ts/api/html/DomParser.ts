@@ -80,7 +80,7 @@ interface DomParser {
   addNodeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
   getNodeFilters: () => ParserFilter[];
   filterNode: (node: AstNode) => AstNode;
-  // TODO: TINY-8190 make this back into an AstNode, but in a good way
+  // TODO: TINY-4627 (TINY-8190) make this back into an AstNode, but in a good way
   parse: (html: string, args?: ParserArgs) => Node;
 }
 
@@ -357,10 +357,11 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     return output.body;
   };
 
-  // TODO: TINY-8214, this is the old dom parser logic. Some of this logic is for
-  // parsing, or sanitising HTML (and thus will be obsoleted by TINY-8205) but some
-  // is for handling the actual parser settings. Port whatever needs to be ported
-  // into the new parse method (above) and then delete this.
+  // TODO: TINY-4627 (TINY-8214), this is the old dom parser logic. Some of this
+  // logic is for parsing, or sanitising HTML (and thus will be obsoleted by
+  // TINY-8205) but some is for handling the actual parser settings. Port
+  // whatever needs to be ported into the new parse method (above) and then
+  // delete this.
   const oldParse = (html: string, args?: ParserArgs): AstNode => {
     let nodes, i, l, fi, fl, list, name;
     const invalidChildren: AstNode[] = [];
@@ -777,9 +778,9 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
   };
 
   if (false) {
-    // TODO: TINY-8214 (see above comment) - this is just here to get rid of the
-    // "unused code" warnings until we have extracted everything necessary and can
-    // delete the old method.
+    // TODO: TINY-4627 (TINY-8214) (see above comment) - this is just here to get
+    // rid of the "unused code" warnings until we have extracted everything
+    // necessary and can delete the old method.
     oldParse('', {});
   }
 

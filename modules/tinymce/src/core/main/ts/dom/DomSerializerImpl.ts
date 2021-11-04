@@ -76,13 +76,13 @@ const getHtmlFromNode = (dom: DOMUtils, node: Node, args: ParserArgs): string =>
 const parseHtml = (htmlParser: DomParser, html: string, args: ParserArgs) => {
   const parserArgs = args.selection ? { forced_root_block: false, ...args } : args;
   const rootNode = htmlParser.parse(html, parserArgs);
-  // TODO: TINY-8202 bring this back
+  // TODO: TINY-4627 (TINY-8202) bring this back
   // DomSerializerFilters.trimTrailingBr(rootNode);
   return rootNode;
 };
 
 const serializeNode = (settings: HtmlSerializerSettings, schema: Schema, node: Node): string => {
-  // TODO: TINY-8202 swap back to actually serializing this
+  // TODO: TINY-4627 (TINY-8202) swap back to actually serializing this
   return (node as Element).innerHTML;
   // const htmlSerializer = HtmlSerializer(settings, schema);
   // return htmlSerializer.serialize(node);
@@ -110,7 +110,7 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor: Editor): Dom
     const html = getHtmlFromNode(dom, targetNode, args);
     const rootNode = parseHtml(htmlParser, html, args);
     if (args.format === 'tree') {
-      // TODO: TINY-8902: fix this
+      // TODO: TINY-4627 (TINY-8202): fix this
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore need to figure out how to fake the tree format
       return rootNode;
