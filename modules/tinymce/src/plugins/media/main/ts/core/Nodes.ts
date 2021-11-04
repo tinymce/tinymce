@@ -52,6 +52,7 @@ const setDimensions = (node: AstNode, previewNode: AstNode, styles: Record<strin
 const appendNodeContent = (editor: Editor, nodeName: string, previewNode: AstNode, html: string): void => {
   const newNode = DomParser({ forced_root_block: false, validate: false }, editor.schema).parse(html, { context: nodeName });
   while (newNode.firstChild) {
+    // TODO: TINY-4627 (TINY-8202) restore this
     // previewNode.append(newNode.firstChild);
   }
 };

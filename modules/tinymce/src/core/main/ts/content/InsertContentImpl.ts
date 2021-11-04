@@ -52,6 +52,7 @@ const validInsertion = (editor: Editor, value: Node, parentNode: Element): void 
       Remove.empty(sugarParent);
       Insert.append(sugarParent, SugarElement.fromDom(value));
     } else {
+      // TODO: TINY-4627 (TINY-8202) serialize this properly, or find a way to pass the node through directly
       editor.selection.setContent((value as Element).innerHTML, { no_events: true });
     }
   }

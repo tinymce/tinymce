@@ -353,7 +353,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     const parser = lazyParser ?? new DOMParser();
     const output = parser.parseFromString(html, 'text/html');
     lazyParser = parser;
-    // TODO: handle settings
+    // TODO: TINY-4627 (TINY-8214) handle settings
     return output.body;
   };
 
