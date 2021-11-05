@@ -35,7 +35,6 @@ export default () => {
       'charmap',
       'emoticons',
       'imagetools',
-      'textcolor',
       'media'
     ],
     // statusbar: false,

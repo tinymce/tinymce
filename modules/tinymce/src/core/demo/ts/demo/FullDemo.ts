@@ -76,23 +76,6 @@ export default () => {
         callback('movie.mp4', { embed: '<p>test</p>' });
       }
     },
-    spellchecker_callback(method, text, success, _failure) {
-      const words = text.match(this.getWordCharPattern());
-
-      if (method === 'spellcheck') {
-        const suggestions = {};
-
-        for (let i = 0; i < words.length; i++) {
-          suggestions[words[i]] = [ 'First', 'Second' ];
-        }
-
-        success(suggestions);
-      }
-
-      if (method === 'addToDictionary') {
-        success();
-      }
-    },
     templates: [
       { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
       { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
@@ -105,26 +88,26 @@ export default () => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
-      'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
-      'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
+      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak toc',
+      'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+      'save table directionality emoticons template paste importcss textpattern',
       'codesample help noneditable print'
     ],
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
     toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
-    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code language | ltr rtl',
-    contextmenu: 'link linkchecker image imagetools table lists spellchecker configurepermanentpen',
+    'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
+    contextmenu: 'link linkchecker image imagetools table lists configurepermanentpen',
 
     // Multiple toolbar array
     // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
-    // 'alignleft aligncenter alignright alignjustify | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    // 'alignleft aligncenter alignright alignjustify | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     // 'bullist numlist outdent indent | link image'],
 
     // Toolbar<n>
     // toolbar1: 'undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
-    // toolbar2: 'alignleft aligncenter alignright alignjustify | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    // toolbar2: 'alignleft aligncenter alignright alignjustify | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     // toolbar3: 'bullist numlist outdent indent | link image',
 
     // Toolbar with group names

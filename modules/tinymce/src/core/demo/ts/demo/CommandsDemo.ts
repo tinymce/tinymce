@@ -50,7 +50,6 @@ export default () => {
     cmd('mceCodeEditor'),
     cmd('mceDirectionLTR'),
     cmd('mceDirectionRTL'),
-    cmd('mceFullPageProperties'),
     cmd('mceFullscreen'),
     cmd('mceImage'),
     cmd('mceInsertDate'),
@@ -101,9 +100,9 @@ export default () => {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'textarea.tinymce',
     plugins: [
-      'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
+      'advlist autolink link image lists charmap print preview hr anchor pagebreak toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-      'save table directionality emoticons template paste textcolor importcss colorpicker textpattern codesample'
+      'save table directionality emoticons template paste importcss textpattern codesample'
     ],
     toolbar1: 'bold italic',
     menubar: false
