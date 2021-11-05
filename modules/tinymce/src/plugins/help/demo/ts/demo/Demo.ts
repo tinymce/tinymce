@@ -2,7 +2,7 @@ declare let tinymce: any;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  plugins: 'help link table paste code emoticons fullpage print fullscreen advlist anchor bbcode colorpicker textcolor',
+  plugins: 'help link table paste code emoticons print fullscreen advlist anchor colorpicker textcolor',
   toolbar: 'help',
   height: 300,
   menubar: 'view insert tools help'
@@ -10,7 +10,7 @@ tinymce.init({
 
 tinymce.init({
   selector: 'textarea.tinymce2',
-  plugins: 'help link table paste code emoticons fullpage print fullscreen advlist anchor bbcode colorpicker textcolor',
+  plugins: 'help link table paste code emoticons print fullscreen advlist anchor colorpicker textcolor',
   toolbar: 'help',
   height: 300,
   menubar: 'view insert tools help',
@@ -38,7 +38,7 @@ tinymce.init({
 
 tinymce.init({
   selector: 'textarea.tinymce3',
-  plugins: 'help link table paste code emoticons fullpage print fullscreen advlist anchor bbcode colorpicker textcolor',
+  plugins: 'help link table paste code emoticons print fullscreen advlist anchor colorpicker textcolor',
   toolbar: 'help addTab',
   height: 300,
   menubar: 'view insert tools help',
@@ -72,7 +72,7 @@ tinymce.init({
 
 tinymce.init({
   selector: 'textarea.tinymce4',
-  plugins: 'help link table paste code emoticons fullpage print fullscreen advlist anchor bbcode colorpicker textcolor',
+  plugins: 'help link table paste code emoticons print fullscreen advlist anchor colorpicker textcolor',
   toolbar: 'help addTab',
   height: 300,
   menubar: 'view insert tools help',

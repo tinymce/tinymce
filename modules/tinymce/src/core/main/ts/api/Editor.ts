@@ -261,6 +261,10 @@ class Editor implements EditorObservable {
     // Patch in the EditorObservable functions
     extend(this, EditorObservable);
 
+    this.on('init', () => {
+      if (Obj.has(this.plugins, ''))
+    })
+
     this.settings = getEditorSettings(this, id, this.documentBaseUrl, editorManager.defaultSettings, settings);
 
     if (this.settings.suffix) {
