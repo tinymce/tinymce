@@ -215,7 +215,7 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
     editor.ui.registry.addNestedMenuItem('column', {
       type: 'nestedmenuitem',
       text: 'Column',
-      getSubmenuItems: Fun.constant('')
+      getSubmenuItems: Fun.constant('tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter')
     });
   }
 
