@@ -31,7 +31,7 @@ export type AdvancedPasteTableAction = TableAction<RunOperation.TargetPasteRows>
 export type LookupAction = (table: SugarElement<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
 
 type GuardFn = (table: SugarElement<HTMLTableElement>) => boolean;
-type MutateFn = (e1: SugarElement<any>, e2: SugarElement<any>) => void;
+type MutateFn = <T>(e1: SugarElement<T>, e2: SugarElement<T>) => void;
 
 export interface TableActions {
   readonly deleteRow: CombinedTargetsTableAction;

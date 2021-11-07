@@ -9,6 +9,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement, SugarElements } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { Api as TableModelApi } from 'tinymce/models/dom/table/main/ts/api/Api';
 
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { ResizeHandler } from '../actions/ResizeHandler';
@@ -42,14 +43,14 @@ const insertTable = (editor: Editor) => (columns: number, rows: number, options:
   return table;
 };
 
-const getApi = (editor: Editor, clipboard: Clipboard, resizeHandler: ResizeHandler, selectionTargets: SelectionTargets): Api => ({
+const getApi = (editor: Editor, clipboard: Clipboard, selectionTargets: SelectionTargets, tableModelApi: TableModelApi): Api => ({
   insertTable: insertTable(editor),
   setClipboardRows: setClipboardElements(clipboard.setRows),
   getClipboardRows: getClipboardElements(clipboard.getRows),
   setClipboardCols: setClipboardElements(clipboard.setColumns),
   getClipboardCols: getClipboardElements(clipboard.getColumns),
-  resizeHandler,
-  selectionTargets
+  resizeHandler: tableModelApi.resizeHandler,
+  selectionTargets,
 });
 
 export { getApi };

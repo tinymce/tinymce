@@ -5,45 +5,45 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 
 import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 
-import * as Clipboard from './actions/Clipboard';
+// import * as Clipboard from './actions/Clipboard';
 // import { getResizeHandler } from './actions/ResizeHandler';
-import { TableActions } from './actions/TableActions';
-// import { Api, getApi } from './api/Api';
+import { Api, getApi } from './api/Api';
 import * as Commands from './api/Commands';
 import * as Options from './api/Options';
 // import * as QueryCommands from './api/QueryCommands';
 import { Clipboard as FakeClipboard } from './core/Clipboard';
 // import * as TableFormats from './core/TableFormats';
-import * as Util from './core/Util';
+// import * as Util from './core/Util';
 // import * as TabContext from './queries/TabContext';
-import CellSelection from './selection/CellSelection';
-import { ephemera } from './selection/Ephemera';
+// import CellSelection from './selection/CellSelection';
+// import { ephemera } from './selection/Ephemera';
 import { getSelectionTargets } from './selection/SelectionTargets';
-import { getSelectionCell } from './selection/TableSelection';
+// import { getSelectionCell } from './selection/TableSelection';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 
-const Plugin = (editor: Editor): void => {
+const Plugin = (editor: Editor): Api => {
   Options.register(editor);
 
-  const selections = Selections(() => Util.getBody(editor), () => getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor)), ephemera.selectedSelector);
-  const selectionTargets = getSelectionTargets(editor, selections);
+  // const selections = Selections(() => Util.getBody(editor), () => getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor)), ephemera.selectedSelector);
   // const resizeHandler = getResizeHandler(editor);
-  // const selectionTargets = editor.model.table.selectionTargets;
-  const resizeHandler = editor.model.table.resizeHandler;
-  const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
-  const actions = TableActions(editor, cellSelection, resizeHandler.lazyWire);
+
+  const tableModel = editor.model.table;
+  const selections = tableModel.selections;
+  const modelSelectionTargets = tableModel.selectionTargets;
+  // const resizeHandler = editor.model.table.resizeHandler;
+  // const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
+
+  const selectionTargets = getSelectionTargets(editor, modelSelectionTargets);
   const clipboard = FakeClipboard();
 
   Commands.registerCommands(editor, selections);
-  // Commands.registerCommands(editor, actions, cellSelection, selections, clipboard);
-  // QueryCommands.registerQueryCommands(editor, actions, selections);
-  Clipboard.registerEvents(editor, selections, actions);
+  // Clipboard.registerEvents(editor, selections, actions);
 
   MenuItems.addMenuItems(editor, selections, selectionTargets, clipboard);
   Buttons.addButtons(editor, selections, selectionTargets, clipboard);
@@ -65,7 +65,8 @@ const Plugin = (editor: Editor): void => {
   //   resizeHandler.destroy();
   // });
 
-  // return getApi(editor, clipboard, resizeHandler, selectionTargets);
+  // return getApi(editor, clipboard, resizeHandler, selectionTargets, cellSelection);
+  return getApi(editor, clipboard, selectionTargets, tableModel);
 };
 
 export default (): void => {

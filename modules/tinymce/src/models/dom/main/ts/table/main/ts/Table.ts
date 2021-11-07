@@ -11,7 +11,7 @@ import { Selections } from '@ephox/darwin';
 
 import Editor from 'tinymce/core/api/Editor';
 
-// import * as Clipboard from './actions/Clipboard';
+import * as Clipboard from './actions/Clipboard';
 import { getResizeHandler } from './actions/ResizeHandler';
 import { TableActions } from './actions/TableActions';
 import { Api, getApi } from './api/Api';
@@ -24,20 +24,22 @@ import * as Util from './core/Util';
 import * as TabContext from './queries/TabContext';
 import CellSelection from './selection/CellSelection';
 import { ephemera } from './selection/Ephemera';
-// import { getSelectionTargets } from './selection/SelectionTargets';
+import { getSelectionTargets } from './selection/SelectionTargets';
 import { getSelectionCell } from './selection/TableSelection';
 
 const setupTable = (editor: Editor): Api => {
   const selections = Selections(() => Util.getBody(editor), () => getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor)), ephemera.selectedSelector);
-  // const selectionTargets = getSelectionTargets(editor, selections);
+  // TODO: Need to figure out how to properly share selectionTargets - maybe just expose the targets cell and work off that - might need a register API of some sort?
+  const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
+  // TODO: I don't think we want CellSelection here as the selection should be in core but leave here for now
   const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
   const actions = TableActions(editor, cellSelection, resizeHandler.lazyWire);
   // const clipboard = FakeClipboard();
 
   Commands.registerCommands(editor, actions, selections);
   QueryCommands.registerQueryCommands(editor, actions, selections);
-  // Clipboard.registerEvents(editor, selections, actions);
+  Clipboard.registerEvents(editor, selections, actions);
 
   editor.on('PreInit', () => {
     editor.serializer.addTempAttr(ephemera.firstSelected);
@@ -55,7 +57,9 @@ const setupTable = (editor: Editor): Api => {
     resizeHandler.destroy();
   });
 
-  return getApi(editor, clipboard, resizeHandler, selectionTargets);
+  // TODO: Attempt making the API just in the internal APIs
+  // Maybe add ephemera to the API as well
+  return getApi(resizeHandler, selectionTargets, selections, cellSelection);
 };
 
 export {

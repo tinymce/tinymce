@@ -13,13 +13,13 @@ import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, 
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { SelectionTargets } from 'tinymce/models/dom/table/main/ts/selection/SelectionTargets';
+// import { SelectionTargets } from 'tinymce/models/dom/table/main/ts/selection/SelectionTargets';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import * as Util from '../core/Util';
 import { ephemera } from './Ephemera';
-// import { SelectionTargets } from './SelectionTargets';
+import { SelectionTargets } from './SelectionTargets';
 
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
