@@ -9,10 +9,9 @@ import { Selections } from '@ephox/darwin';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
-// import { SelectionTargets, LockedDisable } from 'tinymce/models/dom/table/main/ts/selection/SelectionTargets';
+import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/main/ts/core/Clipboard';
 
 import * as Options from '../api/Options';
-import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, generateMenuItemsCallback } from './UiUtils';
@@ -24,7 +23,7 @@ interface AddButtonSpec {
   onSetup?: (api: Toolbar.ToolbarButtonInstanceApi) => () => void;
 }
 
-const addButtons = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
+const addButtons = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: FakeClipboard): void => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',

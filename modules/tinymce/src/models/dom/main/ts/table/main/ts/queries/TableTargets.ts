@@ -26,7 +26,7 @@ const forMenu = (selections: Selections, table: SugarElement<HTMLTableElement>, 
   selection: CellOpSelection.selection(selections)
 });
 
-const paste = (element: SugarElement<Element>, clipboard: SugarElement<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
+const paste = (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>, clipboard: SugarElement<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
   element,
   clipboard,
   generators

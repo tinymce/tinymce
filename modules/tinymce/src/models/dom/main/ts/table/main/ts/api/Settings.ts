@@ -9,8 +9,6 @@ import { Arr, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-// import { UserListItem, UserListValue } from '../ui/UiUtils';
-
 export interface StringMap {
   [key: string]: string;
 }

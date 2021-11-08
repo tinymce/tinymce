@@ -9,11 +9,11 @@ import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement, SugarElements } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ResizeHandler } from 'tinymce/models/dom/table/main/ts/actions/ResizeHandler';
 import { Api as TableModelApi } from 'tinymce/models/dom/table/main/ts/api/Api';
+import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/main/ts/core/Clipboard';
 
 import { insertTableWithDataValidation } from '../actions/InsertTable';
-import { ResizeHandler } from '../actions/ResizeHandler';
-import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
 export interface Api {
@@ -43,7 +43,7 @@ const insertTable = (editor: Editor) => (columns: number, rows: number, options:
   return table;
 };
 
-const getApi = (editor: Editor, clipboard: Clipboard, selectionTargets: SelectionTargets, tableModelApi: TableModelApi): Api => ({
+const getApi = (editor: Editor, clipboard: FakeClipboard, selectionTargets: SelectionTargets, tableModelApi: TableModelApi): Api => ({
   insertTable: insertTable(editor),
   setClipboardRows: setClipboardElements(clipboard.setRows),
   getClipboardRows: getClipboardElements(clipboard.getRows),

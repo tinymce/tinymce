@@ -11,10 +11,9 @@ import { SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-// import { SelectionTargets, LockedDisable } from 'tinymce/models/dom/table/main/ts/selection/SelectionTargets';
+import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/main/ts/core/Clipboard';
 
 import * as Options from '../api/Options';
-import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, buildMenuItems } from './UiUtils';
@@ -26,7 +25,7 @@ interface AddMenuSpec {
   onSetup: (api: Menu.MenuItemInstanceApi) => () => void;
 }
 
-const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
+const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: FakeClipboard): void => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
   // TODO TINY-8172: unwind this before merging the feature branch
