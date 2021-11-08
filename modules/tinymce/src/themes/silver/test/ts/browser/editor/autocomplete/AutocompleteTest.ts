@@ -7,7 +7,6 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiAc
 
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { getGreenImageDataUrl } from '../../../module/Assets';
 import {
@@ -255,7 +254,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         }
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   beforeEach(() => {
     store.clear();

@@ -1,6 +1,6 @@
 import { Mouse, UiFinder } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
-import { before, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
@@ -9,7 +9,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface Scenario {
   readonly settings: RawEditorSettings;
@@ -19,9 +18,6 @@ interface Scenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const getBounds = (selector: string) => {
     const elem = UiFinder.findIn(SugarBody.body(), selector).getOrDie();

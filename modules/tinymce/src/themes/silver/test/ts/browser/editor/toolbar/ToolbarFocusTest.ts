@@ -1,16 +1,12 @@
 import { FocusTools, Keys } from '@ephox/agar';
-import { before, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarDocument } from '@ephox/sugar';
 import { McEditor, TinyContentActions, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarFocusTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const pTestFocus = async (settings: RawEditorSettings) => {
     const editor = await McEditor.pFromSettings<Editor>({

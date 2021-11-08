@@ -3,7 +3,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -11,7 +10,7 @@ describe('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', () => {
     plugins: 'lists',
     toolbar: 'bullist',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: toggle bullet list on list with two empty LIs', async () => {
     const editor = hook.editor();

@@ -4,7 +4,6 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -12,7 +11,7 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
     plugins: 'lists',
     toolbar: '',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: backspace from p inside div into li', () => {
     const editor = hook.editor();

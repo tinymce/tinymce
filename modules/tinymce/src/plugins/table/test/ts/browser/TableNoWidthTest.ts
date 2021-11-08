@@ -3,14 +3,13 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.TableNoWidthTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'table',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TINY-6051: Removing and adding a column doesn\'t add sizes', () => {
     const editor = hook.editor();

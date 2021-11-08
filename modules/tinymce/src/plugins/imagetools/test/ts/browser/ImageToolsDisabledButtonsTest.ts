@@ -5,7 +5,6 @@ import { McEditor, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () => {
 
@@ -23,7 +22,6 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsDisabledButtonsTest', () 
   const rotateClockwiseImageButtonSelector = '[role="toolbar"] button[title="Rotate clockwise"]';
 
   before(() => {
-    Theme();
     ImageToolsPlugin();
     ImagePlugin();
   });

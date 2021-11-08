@@ -4,7 +4,6 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () => {
   before(function () {
@@ -17,7 +16,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor fontsizeselect',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const forecolorStruct = (color: string) => ApproxStructure.build((s, str) => {
     return s.element('body', {

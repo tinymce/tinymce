@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.ShortcutsTest', () => {
   const os = PlatformDetection.detect().os;
@@ -15,7 +14,7 @@ describe('browser.tinymce.core.ShortcutsTest', () => {
     indent: false,
     entities: 'raw',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('Shortcuts formats', () => {
     const editor = hook.editor();

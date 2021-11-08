@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
-import Theme from 'tinymce/themes/silver/Theme';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 import * as Settings from 'tinymce/themes/silver/ui/core/color/Settings';
 
@@ -29,7 +28,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     toolbar: 'forecolor backcolor',
     base_url: '/project/tinymce/js/tinymce',
     color_map: colorSettings
-  }, [ Theme ]);
+  }, []);
 
   const resetLocalStorage = () => {
     LocalStorage.removeItem('tinymce-custom-colors');

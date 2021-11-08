@@ -12,7 +12,6 @@ import { ObjectResizeEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../module/test/TableTestUtils';
 
@@ -154,7 +153,7 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
   });
 
   context('table_sizing_mode=unset (default config)', () => {
-    const hook = TinyHooks.bddSetup<Editor>(defaultSettings, [ Plugin, Theme ]);
+    const hook = TinyHooks.bddSetup<Editor>(defaultSettings, [ Plugin ]);
 
     it('TBA: resize should detect current unit for % table', async () => {
       const editor = hook.editor();
@@ -200,7 +199,7 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       ...defaultSettings,
       table_sizing_mode: 'relative'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TBA: new tables should default to % and resize should force %', async () => {
       const editor = hook.editor();
@@ -236,7 +235,7 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       ...defaultSettings,
       table_sizing_mode: 'fixed'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TBA: new tables should default to px and resize should force px', async () => {
       const editor = hook.editor();
@@ -271,7 +270,7 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       ...defaultSettings,
       table_sizing_mode: 'responsive'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6051: new tables should default to no widths and resize should force %', async () => {
       const editor = hook.editor();
@@ -308,7 +307,7 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
       ...defaultSettings,
       table_column_resizing: 'preservetable',
       table_sizing_mode: 'fixed'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6001: adjusting an inner column should not change the table width', async () => {
       const editor = hook.editor();
@@ -347,7 +346,7 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
       ...defaultSettings,
       table_column_resizing: 'resizetable',
       table_sizing_mode: 'fixed'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6001: adjusting an inner column should change the table width', async () => {
       const editor = hook.editor();
@@ -388,7 +387,7 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
       ...defaultSettings,
       table_column_resizing: 'resizetable',
       table_sizing_mode: 'relative'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6242: adjusting the entire table should not resize more than the last column width', async () => {
       const editor = hook.editor();
@@ -415,7 +414,7 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
       table_column_resizing: 'resizetable',
       table_use_colgroups: true,
       table_sizing_mode: 'responsive'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6601: adjusting the entire table should not resize more than the last column width', async () => {
       const editor = hook.editor();
@@ -436,7 +435,7 @@ describe('browser.tinymce.plugins.table.ResizeTableTest', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       ...defaultSettings,
       table_column_resizing: 'resizetable'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6646: with responsive colgroup table, adjusting an inner column with content', async () => {
       const editor = hook.editor();

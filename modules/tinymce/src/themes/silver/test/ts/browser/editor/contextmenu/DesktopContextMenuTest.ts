@@ -9,7 +9,6 @@ import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pOpenContextMenu, pWaitForAndCloseDialog } from '../../../module/ContextMenuUtils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     image_caption: true
-  }, [ ImagePlugin, ImageToolsPlugin, LinkPlugin, TablePlugin, Theme ], true);
+  }, [ ImagePlugin, ImageToolsPlugin, LinkPlugin, TablePlugin ], true);
 
   // Assert focus is on the expected menu item
   const pAssertFocusOnItem = (label: string, selector: string) =>

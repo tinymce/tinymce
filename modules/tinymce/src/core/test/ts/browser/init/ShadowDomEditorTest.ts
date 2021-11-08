@@ -6,14 +6,12 @@ import { McEditor, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.ShadowDomEditorTest', () => {
   before(function () {
     if (!SugarShadowDom.isSupported()) {
       this.skip();
     }
-    Theme();
   });
 
   const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.min.css');

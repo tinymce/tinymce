@@ -7,7 +7,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as EditorView from 'tinymce/core/EditorView';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.EditorViewTest', () => {
   PhantomSkipper.bddSetup();
@@ -63,7 +62,7 @@ describe('browser.tinymce.core.EditorViewTest', () => {
       const hook = tester.setup<Editor>({
         base_url: '/project/tinymce/js/tinymce',
         ...tester.settings
-      }, [ Theme ]);
+      }, []);
 
       before(() => {
         const editor = hook.editor();

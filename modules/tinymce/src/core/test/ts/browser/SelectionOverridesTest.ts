@@ -8,7 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { isCaretContainerBlock } from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.SelectionOverridesTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -19,7 +18,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     indent: false,
     content_style: 'body { margin: 16px; }',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const getScrollTop = (editor: Editor) => Scroll.get(TinyDom.document(editor)).top;
 

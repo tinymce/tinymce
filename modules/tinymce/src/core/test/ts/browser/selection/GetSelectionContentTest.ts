@@ -8,14 +8,13 @@ import { GetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { GetSelectionContentArgs } from 'tinymce/core/content/ContentTypes';
 import { getContent } from 'tinymce/core/selection/GetSelectionContent';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.selection.GetSelectionContentTest', () => {
   const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
   const testDivId = 'testDiv1';
 
   const focusDiv = () => {

@@ -5,7 +5,6 @@ import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.paste.PasteFormatToggleTest', () => {
   before(function () {
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.paste.PasteFormatToggleTest', () => {
     plugins: 'paste',
     valid_styles: 'font-family,color',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: paste plain text', () => {
     const editor = hook.editor();

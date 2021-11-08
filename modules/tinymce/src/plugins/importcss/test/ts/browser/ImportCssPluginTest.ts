@@ -7,7 +7,6 @@ import { McEditor, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface MenuDetails {
   readonly tag?: string;
@@ -24,7 +23,6 @@ interface Assertion {
 describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
   before(() => {
     Plugin();
-    Theme();
   });
 
   const pAssertMenu = async (label: string, expected: MenuDetails[]) => {

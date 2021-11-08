@@ -5,7 +5,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { ImageData } from 'tinymce/plugins/image/core/ImageData';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const updateImage = (editor: Editor, data: Partial<ImageData>) => editor.execCommand('mceUpdateImage', false, data);
 

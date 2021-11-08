@@ -6,7 +6,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 type Alignment = 'left' | 'center' | 'right' | 'justify';
 
@@ -72,7 +71,7 @@ describe('browser.tinymce.plugins.image.ImageAlignTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     image_caption: true
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const pCheckToolbarHighlighting = async (editor: Editor, alignment: Alignment, isFigure: boolean) => {
     const ariaLabels = {

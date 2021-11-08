@@ -7,14 +7,13 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import * as Helpers from 'tinymce/plugins/table/ui/Helpers';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.HelpersTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: extractDataFromCellElement 1', () => {
     const editor = hook.editor();

@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/link/Plugin';
 import { LinkDialogData } from 'tinymce/plugins/link/ui/DialogTypes';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.link.LinkDialogOverrideTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -47,7 +46,7 @@ describe('browser.tinymce.plugins.link.LinkDialogOverrideTest', () => {
         });
       });
     }
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   it('TINY-7738: Regression test for supported dialog validation workaround', async () => {
     const editor = hook.editor();

@@ -7,7 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { SetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertContent from 'tinymce/core/content/InsertContent';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.InsertContentTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -18,7 +17,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('TBA: insertAtCaret - i inside text, converts to em', () => {
     const editor = hook.editor();

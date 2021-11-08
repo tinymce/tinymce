@@ -1,16 +1,12 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import AstNode from 'tinymce/core/api/html/Node';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const settings = {
     menubar: false,

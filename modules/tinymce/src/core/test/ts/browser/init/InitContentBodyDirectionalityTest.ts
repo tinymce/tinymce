@@ -5,11 +5,9 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.InitContentBodyDirectionalityTest', () => {
   before(() => {
-    Theme();
     EditorManager.addI18n('ar', {
       Bold: 'Bold test',
       _dir: 'rtl'

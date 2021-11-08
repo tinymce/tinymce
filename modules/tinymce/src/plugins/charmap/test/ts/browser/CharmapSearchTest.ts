@@ -7,7 +7,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { fakeEvent } from '../module/Helpers';
 
@@ -24,7 +23,7 @@ describe('browser.tinymce.plugins.charmap.SearchTest', () => {
     plugins: 'charmap',
     toolbar: 'charmap',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   // TODO: Replicate this test with only one category of characters.
   it('TBA: Open dialog, Search for "euro", Euro should be first option', async () => {
