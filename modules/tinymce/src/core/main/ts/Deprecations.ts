@@ -19,6 +19,7 @@ const deprecatedSettings = (
   'paste_word_valid_elements,paste_retain_style_properties,paste_convert_word_fake_lists'
 ).split(',');
 
+const deprecatedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,textcolor'.split(',');
 const movedToPremiumPlugins = 'imagetools,toc'.split(',');
 
 const getDeprecatedSettings = (settings: RawEditorSettings): string[] => {
@@ -35,6 +36,7 @@ const getDeprecatedPlugins = (settings: EditorSettings): string[] => {
   const plugins = Tools.makeMap(settings.plugins, ' ');
   const hasPlugin = (plugin: string) => Obj.has(plugins, plugin);
   const pluginNames = [
+    ...Arr.filter(deprecatedPlugins, hasPlugin),
     ...Arr.bind(movedToPremiumPlugins, (plugin) => {
       return hasPlugin(plugin) ? [ `${plugin} (moving to premium)` ] : [];
     })
