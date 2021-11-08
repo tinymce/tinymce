@@ -18,7 +18,7 @@
     "eslint": "lerna exec --stream --no-bail -- eslint src/**/*.ts",
     "start": "run-p watch \"tinymce-grunt start\"",
     "dev": "npm-run-all oxide-icons-build oxide-build -p tsc \"tinymce-grunt dev\"",
-    "ci": "npm-run-all -p oxide-ci oxide-icons-ci -p tsc \"tinymce-grunt dev rollup\"",
+    "ci": "npm-run-all -p oxide-ci oxide-icons-ci -p tsc tinymce-rollup",
     "ci-all": "npm-run-all -p eslint ci",
     "local-ci": "npm-run-all ci-all -s phantomjs-test browser-test",
     "test": "run-s local-ci",
