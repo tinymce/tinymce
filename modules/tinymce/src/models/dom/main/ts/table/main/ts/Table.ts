@@ -6,6 +6,8 @@
  */
 
 import { Selections } from '@ephox/darwin';
+import { Arr, Fun } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -25,9 +27,21 @@ import { ephemera } from './selection/Ephemera';
 import { getSelectionTargets } from './selection/SelectionTargets';
 import { getSelectionCell } from './selection/TableSelection';
 
+export interface PatchedSelections {
+  readonly get: () => SugarElement<HTMLTableCellElement>[];
+}
+
+const patchSelections = (selections: Selections): PatchedSelections => {
+  return {
+    get: () => selections.get().fold(Fun.constant([]), Fun.identity, Arr.pure)
+  };
+};
+
 const setupTable = (editor: Editor): Api => {
   // Move selection and resizing logic to actual core
-  const selections = Selections(() => Util.getBody(editor), () => getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor)), ephemera.selectedSelector);
+  const oldSelections = Selections(() => Util.getBody(editor), () => getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor)), ephemera.selectedSelector);
+  const selections = patchSelections(oldSelections);
+
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
   // TODO: I don't think we want CellSelection here as the selection should be in core but leave here for now
@@ -60,7 +74,7 @@ const setupTable = (editor: Editor): Api => {
 
   // TODO: Attempt making the API just in the internal APIs
   // Maybe add ephemera to the API as well
-  return getApi(clipboard, resizeHandler, selectionTargets, selections, cellSelection);
+  return getApi(clipboard, resizeHandler, selectionTargets, oldSelections, cellSelection);
 };
 
 export {

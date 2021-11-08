@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { CellOpSelection, Selections, TableSelection } from '@ephox/darwin';
+import { CellOpSelection, TableSelection } from '@ephox/darwin';
 import { Arr, Fun, Optionals } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
+import { PatchedSelections } from '../Table';
 import { ephemera } from './Ephemera';
 
 const getSelectionCellFallback = (element: SugarElement<Node>) =>
@@ -30,7 +31,7 @@ const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement 
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
-const getCellsFromSelection = (selections: Selections): SugarElement<HTMLTableCellElement>[] =>
+const getCellsFromSelection = (selections: PatchedSelections): SugarElement<HTMLTableCellElement>[] =>
   CellOpSelection.selection(selections);
 
 const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {

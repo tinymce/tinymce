@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 import { Obj } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 
@@ -15,8 +15,9 @@ import { LookupAction, TableActions } from '../actions/TableActions';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
+import { PatchedSelections } from '../Table';
 
-const registerQueryCommands = (editor: Editor, actions: TableActions, selections: Selections): void => {
+const registerQueryCommands = (editor: Editor, actions: TableActions, selections: PatchedSelections): void => {
   const isRoot = Util.getIsRoot(editor);
 
   const lookupOnSelection = (action: LookupAction): string =>

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 import { Arr, Cell, Optional, Optionals, Thunk } from '@ephox/katamari';
 import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
 import { Compare, SugarNode } from '@ephox/sugar';
@@ -15,6 +15,7 @@ import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
+import { PatchedSelections } from '../Table';
 import * as TableSelection from './TableSelection';
 
 type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
@@ -48,7 +49,7 @@ interface ExtractedSelectionDetails {
 
 type TargetSetupCallback = (targets: RunOperation.CombinedTargets) => boolean;
 
-export const getSelectionTargets = (editor: Editor, selections: Selections): SelectionTargets => {
+export const getSelectionTargets = (editor: Editor, selections: PatchedSelections): SelectionTargets => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
   const changeHandlers = Cell([]);
   // let selectionDetails = Optional.none<ExtractedSelectionDetails>();

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
 import { Insert, Remove, Replication, SelectorFind, Selectors, SugarElement, SugarNode } from '@ephox/sugar';
@@ -19,6 +19,7 @@ import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
+import { PatchedSelections } from '../Table';
 import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Settings';
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
@@ -29,7 +30,7 @@ const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<H
 const getSelectionStartCell = (editor: Editor): Optional<SugarElement<HTMLTableCellElement>> =>
   TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
 
-const registerCommands = (editor: Editor, actions: TableActions, selections: Selections, clipboard: Clipboard): void => {
+const registerCommands = (editor: Editor, actions: TableActions, selections: PatchedSelections, clipboard: Clipboard): void => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {

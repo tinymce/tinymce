@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections, SelectionTypes } from '@ephox/darwin';
+import { SelectionTypes } from '@ephox/darwin';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
@@ -16,6 +16,7 @@ import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
+import { PatchedSelections } from '../Table';
 import { TableActions } from './TableActions';
 
 const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<SugarElement<HTMLTableElement>[]> => {
@@ -35,7 +36,7 @@ const serializeElements = (editor: Editor, elements: SugarElement[]): string =>
 const getTextContent = (elements: SugarElement[]): string =>
   Arr.map(elements, (element) => element.dom.innerText).join('');
 
-const registerEvents = (editor: Editor, selections: Selections, actions: TableActions): void => {
+const registerEvents = (editor: Editor, selections: PatchedSelections, actions: TableActions): void => {
   editor.on('BeforeGetContent', (e) => {
     const multiCellContext = (cells: SugarElement<HTMLTableCellElement>[]) => {
       e.preventDefault();
@@ -45,7 +46,7 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
     };
 
     if (e.selection === true) {
-      SelectionTypes.cata(selections.get(), Fun.noop, multiCellContext, Fun.noop);
+      SelectionTypes.newCata(selections.get(), Fun.noop, multiCellContext, Fun.noop);
     }
   });
 
