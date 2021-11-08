@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
 - The legacy `mobile` theme has been removed #TINY-7832
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194
+- Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192
 
 ## 5.10.1 - 2021-11-03
 
