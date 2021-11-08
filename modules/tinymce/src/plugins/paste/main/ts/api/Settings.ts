@@ -46,19 +46,6 @@ const isPasteAsTextEnabled = (editor: Editor): boolean =>
 const getRetainStyleProps = (editor: Editor): string | undefined =>
   editor.getParam('paste_retain_style_properties');
 
-const getWordValidElements = (editor: Editor): string => {
-  const defaultValidElements = (
-    '-strong/b,-em/i,-u,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
-    '-p/div,-a[href|name],sub,sup,strike,br,del,table[width],tr,' +
-    'td[colspan|rowspan|width],th[colspan|rowspan|width],thead,tfoot,tbody'
-  );
-
-  return editor.getParam('paste_word_valid_elements', defaultValidElements);
-};
-
-const shouldConvertWordFakeLists = (editor: Editor): boolean =>
-  editor.getParam('paste_convert_word_fake_lists', true);
-
 const shouldUseDefaultFilters = (editor: Editor): boolean =>
   editor.getParam('paste_enable_default_filters', true);
 
@@ -100,8 +87,6 @@ export {
   isSmartPasteEnabled,
   isPasteAsTextEnabled,
   getRetainStyleProps,
-  getWordValidElements,
-  shouldConvertWordFakeLists,
   shouldUseDefaultFilters,
   getValidate,
   getAllowHtmlDataUrls,
