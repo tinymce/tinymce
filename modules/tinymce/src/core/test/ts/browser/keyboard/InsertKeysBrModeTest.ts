@@ -2,14 +2,13 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.keyboard.InsertKeysBrModeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     forced_root_block: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const fireInsert = (editor: Editor) => {
     editor.fire('input', { isComposing: false } as InputEvent);

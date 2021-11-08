@@ -1,17 +1,13 @@
 import { Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.EditorRemoveTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const settings = {
     base_url: '/project/tinymce/js/tinymce'

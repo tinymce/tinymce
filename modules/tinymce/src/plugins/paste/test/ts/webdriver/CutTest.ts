@@ -5,7 +5,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.plugins.paste.CutTest', () => {
   before(function () {
@@ -20,7 +19,7 @@ describe('webdriver.tinymce.plugins.paste.CutTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     toolbar: false,
     statusbar: false
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Set and select content, cut using edit menu and assert cut content', async () => {
     const editor = hook.editor();

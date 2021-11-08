@@ -5,7 +5,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { fakeEvent } from '../module/Helpers';
 
@@ -15,7 +14,7 @@ describe('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', () => {
     toolbar: 'charmap',
     charmap: [[ 'A'.charCodeAt(0), 'A' ]],
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: User defined charmap', async () => {
     const editor = hook.editor();

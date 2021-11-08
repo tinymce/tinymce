@@ -4,12 +4,11 @@ import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections 
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
   let normalizeMonitor: Monitor<Range>;
 
   before(() => {

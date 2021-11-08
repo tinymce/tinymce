@@ -7,7 +7,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
-import Theme from 'tinymce/themes/silver/Theme';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 
 type IconProvider = Icons.IconProvider;
@@ -18,7 +17,7 @@ describe('browser.tinymce.themes.silver.icons.IconsTest', () => {
     setup: () => {
       I18n.add('rtllang', { _dir: 'rtl' });
     }
-  }, [ Theme ]);
+  }, []);
 
   const iconIndent = getAllOxide().indent;
   const iconDefault = getAllOxide()['temporary-placeholder'];

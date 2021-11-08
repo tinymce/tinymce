@@ -8,7 +8,6 @@ import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
   const os = PlatformDetection.detect().os;
@@ -130,7 +129,7 @@ describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
         }
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   it('Check basic structure and actions', () => {
     const editor = hook.editor();

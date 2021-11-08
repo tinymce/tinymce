@@ -6,7 +6,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
   const togglePlaceholderCount = Cell(0);
@@ -20,7 +19,7 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
         togglePlaceholderCount.set(togglePlaceholderCount.get() + 1);
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   before(() => hook.editor().focus());
 

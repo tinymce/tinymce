@@ -7,7 +7,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest', () => {
   before(function () {
@@ -21,7 +20,7 @@ describe('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest', () =
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce',
     height: 300
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const selectionChangeState = Cell(false);
 

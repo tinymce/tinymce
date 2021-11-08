@@ -9,7 +9,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface State {
   readonly elm: HTMLElement;
@@ -29,7 +28,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
     height: 500,
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }'
-  }, [ Theme ], true);
+  }, [], true);
 
   const scrollReset = (editor: Editor) => {
     editor.getWin().scrollTo(0, 0);

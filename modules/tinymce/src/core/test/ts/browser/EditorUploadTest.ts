@@ -11,7 +11,6 @@ import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Promise from 'tinymce/core/api/util/Promise';
 import * as Conversions from 'tinymce/core/file/Conversions';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const assertResult = (editor: Editor, title: string, uploadUri: string, uploadedBlobInfo: BlobInfo, result: UploadResult[]) => {
   const firstResult = result[0];
@@ -90,7 +89,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => ed.on('change', appendEvent)
-  }, [ Theme ]);
+  }, []);
 
   afterEach(() => {
     const editor = hook.editor();

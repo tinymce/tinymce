@@ -3,7 +3,6 @@ import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -17,7 +16,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
         'float,margin,margin-top,margin-right,margin-bottom,margin-left,padding-left,text-align,display'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const normalizeRng = (rng: Range) => {
     if (rng.startContainer.nodeType === 3) {

@@ -5,7 +5,6 @@ import { Class, Focus, Insert, Remove, SugarBody, SugarElement, SugarNode } from
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -30,7 +29,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
       });
     },
     contextmenu: 'test'
-  }, [ Theme ], true);
+  }, [], true);
 
   const pWaitForThrobber = () =>
     UiFinder.pWaitForVisible('waiting for throbber to open', SugarBody.body(), '.tox-throbber');

@@ -2,7 +2,6 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.SilverDialogCancelTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -25,7 +24,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogCancelTest', () => {
         });
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   it('Dialog closes without error using cancel button', async () => {
     const editor = hook.editor();

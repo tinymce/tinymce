@@ -6,7 +6,6 @@ import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface Scenario {
   readonly content: string;
@@ -43,7 +42,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarInli
         position: 'node'
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   before(() => {
     Css.setAll(TinyDom.contentAreaContainer(hook.editor()), {

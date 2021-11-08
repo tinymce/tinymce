@@ -6,7 +6,6 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiAc
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { ImageOps } from '../module/test/ImageOps';
 import * as ImageUtils from '../module/test/ImageUtils';
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.imagetools.ContextToolbarTest', () => {
     plugins: 'image imagetools',
     base_url: '/project/tinymce/js/tinymce',
     height: 900
-  }, [ ImagePlugin, ImageToolsPlugin, Theme ], true);
+  }, [ ImagePlugin, ImageToolsPlugin ], true);
 
   const pOpenContextToolbar = async (editor: Editor, source: string) => {
     await ImageUtils.pLoadImage(editor, source, { width: 460, height: 598 });

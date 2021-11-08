@@ -5,7 +5,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEditorTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEditorTest', 
     plugins: 'fullscreen link',
     toolbar: 'fullscreen link',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ FullscreenPlugin, LinkPlugin, Theme ]);
+  }, [ FullscreenPlugin, LinkPlugin ]);
 
   it('TBA: Assert isFullscreen api function is present and fullscreen button is absent', () => {
     const editor = hook.editor();

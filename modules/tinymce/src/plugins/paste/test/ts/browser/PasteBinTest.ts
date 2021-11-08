@@ -7,7 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import { getPasteBinParent, PasteBin } from 'tinymce/plugins/paste/core/PasteBin';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface TestCase {
   readonly label: string;
@@ -17,7 +16,6 @@ interface TestCase {
 
 describe('browser.tinymce.plugins.paste.PasteBin', () => {
   before(() => {
-    Theme();
     Plugin();
   });
 

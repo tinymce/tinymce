@@ -7,7 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as NodeType from 'tinymce/core/dom/NodeType';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as KeyUtils from '../../module/test/KeyUtils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
       editor.on('ScrollIntoView', () => scrollIntoViewCount++);
       editor.on('keydown', () => keydownCount++);
     }
-  }, [ Theme ], true);
+  }, [], true);
   let scrollIntoViewCount = 0;
   let keydownCount = 0;
 

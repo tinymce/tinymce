@@ -7,7 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.command.TableDeleteColumnTest', () => {
   let events: Array<EditorEvent<TableModifiedEvent>> = [];
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.table.command.TableDeleteColumnTest', () => {
     setup: (editor: Editor) => {
       editor.on('tablemodified', logEvent);
     }
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   afterEach(() => {
     events = [];

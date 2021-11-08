@@ -6,7 +6,6 @@ import { TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../module/test/TableTestUtils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', () => {
     plugins: 'table',
     width: 400,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const emptyTable: Scenario = {
     html: '<table style = "width: 100%;">' +

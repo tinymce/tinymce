@@ -3,7 +3,6 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -11,7 +10,7 @@ describe('browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'bold'
-  }, [ Theme ], true);
+  }, [], true);
 
   // TODO: This function was needed to make tests pass on IE, so investigate why it's needed
   const legacySetContent = (editor: Editor, content: string) => {

@@ -6,7 +6,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as MenuUtils from '../../../module/MenuUtils';
 
@@ -15,7 +14,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     toolbar: 'align fontselect fontsizeselect formatselect styleselect',
     base_url: '/project/tinymce/js/tinymce',
     content_css: '/project/tinymce/src/themes/silver/test/css/content.css'
-  }, [ Theme ]);
+  }, []);
 
   const pAssertFocusOnItem = (itemText: string) => FocusTools.pTryOnSelector(
     `Focus should be on ${itemText}`,

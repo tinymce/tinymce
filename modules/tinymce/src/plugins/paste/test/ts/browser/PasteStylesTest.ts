@@ -5,7 +5,6 @@ import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
   before(function () {
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
     plugins: 'paste',
     valid_styles: 'font-family,color',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Paste span with encoded style attribute, paste_webkit_styles: font-family', () => {
     const editor = hook.editor();

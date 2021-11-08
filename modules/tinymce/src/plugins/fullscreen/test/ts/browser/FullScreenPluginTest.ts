@@ -8,7 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   const lastEventArgs = Cell(null);
@@ -88,7 +87,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
             lastEventArgs.set(e);
           });
         }
-      }, [ FullscreenPlugin, LinkPlugin, Theme ]);
+      }, [ FullscreenPlugin, LinkPlugin ]);
 
       it('TBA: Toggle fullscreen on, open link dialog, insert link, close dialog and toggle fullscreen off', async () => {
         const editor = hook.editor();

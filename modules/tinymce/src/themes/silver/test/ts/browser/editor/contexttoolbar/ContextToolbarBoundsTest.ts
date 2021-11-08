@@ -6,7 +6,6 @@ import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 import { getContextToolbarBounds } from 'tinymce/themes/silver/ui/context/ContextToolbarBounds';
 
 import TestBackstage from '../../../module/TestBackstage';
@@ -39,7 +38,6 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarBoun
   const expectedMargin = 1;
 
   before(() => {
-    Theme();
     const body = SugarBody.body();
     Css.set(body, 'margin-left', '10px');
     Css.set(body, 'margin-right', '10px');

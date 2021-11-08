@@ -3,14 +3,13 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'unlink',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Removing a link with a collapsed selection', async () => {
     const editor = hook.editor();

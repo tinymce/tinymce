@@ -6,7 +6,6 @@ import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () => {
@@ -17,7 +16,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
     context(tester.label, () => {
       const hook = tester.setup<Editor>({
         base_url: '/project/tinymce/js/tinymce'
-      }, [ Theme ]);
+      }, []);
       const dialogSelector = 'div[role="dialog"]';
       let currentColor = '';
 

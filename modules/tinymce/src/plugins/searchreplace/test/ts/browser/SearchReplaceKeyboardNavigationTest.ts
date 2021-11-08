@@ -5,7 +5,6 @@ import { TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/searchreplace/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
       edit: { title: 'Edit', items: 'selectall searchreplace' }
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const doc = SugarDocument.getDocument();
 

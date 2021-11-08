@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import * as EditorSettings from 'tinymce/core/EditorSettings';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.EditorSettingsTest', () => {
   const detection = PlatformDetection.detect();
@@ -17,7 +16,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const expectedDefaultSettings: RawEditorSettings = {
     toolbar_mode: 'floating'

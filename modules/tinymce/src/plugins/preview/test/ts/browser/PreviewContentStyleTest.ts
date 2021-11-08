@@ -5,13 +5,12 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as IframeContent from 'tinymce/plugins/preview/core/IframeContent';
 import Plugin from 'tinymce/plugins/preview/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.preview.PreviewContentStyleTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'preview',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   const assertIframeContains = (editor: Editor, text: string, shouldMatch: boolean) => {
     const actual = IframeContent.getPreviewHtml(editor);

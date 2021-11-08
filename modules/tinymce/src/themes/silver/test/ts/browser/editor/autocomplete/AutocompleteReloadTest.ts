@@ -5,7 +5,6 @@ import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@e
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pAssertAutocompleterStructure, pWaitForAutocompleteToOpen } from '../../../module/AutocompleterUtils';
 
@@ -58,7 +57,7 @@ describe('Editor Autocompleter Reload test', () => {
         }
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const pAssertInitialMenu = () => pAssertAutocompleterStructure({
     type: 'list',

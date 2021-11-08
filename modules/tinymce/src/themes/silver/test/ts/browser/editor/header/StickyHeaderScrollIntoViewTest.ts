@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoViewTest', () => {
   PhantomSkipper.bddSetup();
@@ -16,7 +15,7 @@ describe('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoView
     inline: true,
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body, .mce-content-body p { margin: 0 }'
-  }, [ Theme ], true);
+  }, [], true);
 
   const scrollReset = (editor: Editor) => {
     editor.getWin().scrollTo(0, 0);

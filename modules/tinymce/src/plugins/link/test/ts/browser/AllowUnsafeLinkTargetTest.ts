@@ -3,7 +3,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
@@ -15,7 +14,7 @@ describe('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', () => {
       { title: 'New page', value: '_blank' }
     ],
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   before(() => {
     TestLinkUi.clearHistory();

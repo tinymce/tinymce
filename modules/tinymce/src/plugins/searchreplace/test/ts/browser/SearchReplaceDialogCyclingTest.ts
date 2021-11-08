@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/searchreplace/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest',
     plugins: 'searchreplace',
     toolbar: 'searchreplace',
     base_url: '/project/tinymce/js/tinymce',
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   const assertMatchFound = (editor: Editor, index: number) => {
     const matches = SelectorFilter.descendants(TinyDom.body(editor), '.mce-match-marker');

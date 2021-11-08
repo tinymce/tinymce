@@ -204,7 +204,7 @@ const getVisualAidsTableClass = (editor: Editor) => editor.getParam('visual_tabl
 
 const getVisualAidsAnchorClass = (editor: Editor) => editor.getParam('visual_anchor_class', 'mce-item-anchor', 'string');
 
-const getIframeTitle = (editor: Editor) => editor.getParam('iframe_aria_text', 'Rich Text Area. Press ALT-0 for help.', 'string');
+const getIframeAriaText = (editor: Editor) => editor.getParam('iframe_aria_text', 'Rich Text Area. Press ALT-0 for help.', 'string');
 
 const getSetupCallback = (editor: Editor): (editor: Editor) => void | undefined =>
   editor.getParam('setup');
@@ -282,8 +282,8 @@ export {
   getVisualAidsTableClass,
   getFontCss,
   getVisualAidsAnchorClass,
-  getIframeTitle,
   getSetupCallback,
   getInitInstanceCallback,
-  getUrlConverterCallback
+  getUrlConverterCallback,
+  getIframeAriaText
 };
