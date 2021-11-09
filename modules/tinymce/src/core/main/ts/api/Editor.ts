@@ -73,7 +73,7 @@ import WindowManager from './WindowManager';
 export interface EditorConstructor {
   readonly prototype: Editor;
 
-  new (id: string, settings: RawEditorOptions, editorManager: EditorManager): Editor;
+  new (id: string, options: RawEditorOptions, editorManager: EditorManager): Editor;
 }
 
 // Shorten these names

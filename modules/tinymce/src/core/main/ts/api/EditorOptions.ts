@@ -68,7 +68,7 @@ export interface Options {
    *
    * @method register
    * @param {String} name Name of an option.
-   * @param {OptionSpec} spec A option spec containing how to valid the option and other optional metadata.
+   * @param {OptionSpec} spec An option spec describing how to validate the option and other optional metadata.
    */
   register: {
     <K extends BuiltInOptionType>(name: string, spec: BuiltInOptionSpec<K>): void;
@@ -140,14 +140,14 @@ const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<Bu
     }
   })();
 
-  return (value) => ({ value, valid: validator(value), message: `The value must be a ${type}.` });
+  return (value) => ({ value, valid: validator(value), message: `The value must be of type: ${type}.` });
 };
 
 const isBuiltInSpec = <K extends BuiltInOptionType>(spec: unknown): spec is BuiltInOptionSpec<K> =>
   Type.isString((spec as BuiltInOptionSpec<K>).processor);
 
 const getErrorMessage = (message: string, result: ProcessorError): string => {
-  const additionalText = !Strings.isEmpty(result.message) ? '. ' + result.message : '';
+  const additionalText = Strings.isEmpty(result.message) ? '' : `. ${result.message}`;
   return message + additionalText;
 };
 
@@ -171,7 +171,7 @@ const processDefaultValue = <T, U>(name: string, defaultValue: T, processor: Pro
       return result.value;
     } else {
       // eslint-disable-next-line no-console
-      console.error(getErrorMessage(`Invalid default value passed for the ${name} option`, result));
+      console.error(getErrorMessage(`Invalid default value passed for the "${name}" option`, result));
     }
   }
 
@@ -235,13 +235,13 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
   const set = <T>(name: string, value: T) => {
     if (!isRegistered(name)) {
       // eslint-disable-next-line no-console
-      console.warn(`${name} is not a registered option. Ensure the option has been registered before setting a value.`);
+      console.warn(`"${name}" is not a registered option. Ensure the option has been registered before setting a value.`);
       return false;
     } else {
       const spec = registry[name];
       if (spec.immutable) {
         // eslint-disable-next-line no-console
-        console.error(`${name} is an immutable option and cannot be updated`);
+        console.error(`"${name}" is an immutable option and cannot be updated`);
         return false;
       } else {
         return setValue(name, value, spec.processor);
