@@ -201,6 +201,7 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
   }
 };
 
+// TODO: TINY-4627 (TINY-8218) delete this.
 /**
  * Constructs a new SaxParser instance.
  *

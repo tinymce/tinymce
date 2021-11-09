@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj } from '@ephox/katamari';
+import { Obj, Thunk } from '@ephox/katamari';
 
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
@@ -84,7 +84,7 @@ interface DomParser {
   parse: (html: string, args?: ParserArgs) => Node;
 }
 
-let lazyParser: DOMParser | null = null;
+const nativeParser = Thunk.cached(() => new DOMParser());
 
 const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser => {
   const nodeFilters: Record<string, ParserFilterCallback[]> = {};
@@ -350,9 +350,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
    * @return {tinymce.html.Node} Root node containing the tree.
    */
   const parse = (html: string, args?: ParserArgs): Node => {
-    const parser = lazyParser ?? new DOMParser();
-    const output = parser.parseFromString(html, 'text/html');
-    lazyParser = parser;
+    const output = nativeParser().parseFromString(html, 'text/html');
     // TODO: TINY-4627 (TINY-8214) handle settings
     return output.body;
   };
