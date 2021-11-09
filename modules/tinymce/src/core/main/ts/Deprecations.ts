@@ -7,7 +7,7 @@
 
 import { Arr, Obj } from '@ephox/katamari';
 
-import { EditorSettings, RawEditorSettings } from './api/SettingsTypes';
+import { EditorSettings, RawEditorOptions } from './api/OptionTypes';
 import Tools from './api/util/Tools';
 
 const deprecatedSettings = (
@@ -22,7 +22,7 @@ const deprecatedSettings = (
 const deprecatedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,textcolor'.split(',');
 const movedToPremiumPlugins = 'imagetools,toc'.split(',');
 
-const getDeprecatedSettings = (settings: RawEditorSettings): string[] => {
+const getDeprecatedSettings = (settings: RawEditorOptions): string[] => {
   const settingNames = Arr.filter(deprecatedSettings, (setting) => Obj.has(settings, setting));
   // Forced root block is a special case whereby only the empty/false value is deprecated
   const forcedRootBlock = settings.forced_root_block;
@@ -44,7 +44,7 @@ const getDeprecatedPlugins = (settings: EditorSettings): string[] => {
   return Arr.sort(pluginNames);
 };
 
-const logDeprecationsWarning = (rawSettings: RawEditorSettings, finalSettings: EditorSettings): void => {
+const logDeprecationsWarning = (rawSettings: RawEditorOptions, finalSettings: EditorSettings): void => {
   // Note: Ensure we use the original user settings, not the final when logging
   const deprecatedSettings = getDeprecatedSettings(rawSettings);
   const deprecatedPlugins = getDeprecatedPlugins(finalSettings);

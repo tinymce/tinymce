@@ -10,7 +10,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import { isWsPreserveElement } from '../dom/ElementType';
 import * as TrimHtml from '../dom/TrimHtml';
@@ -19,7 +19,7 @@ import { Content, ContentFormat, GetContentArgs } from './ContentTypes';
 import { postProcessGetContent, preProcessGetContent } from './PrePostProcess';
 
 const trimEmptyContents = (editor: Editor, html: string): string => {
-  const blockName = Settings.getForcedRootBlock(editor);
+  const blockName = Options.getForcedRootBlock(editor);
   const emptyRegExp = new RegExp(`^(<${blockName}[^>]*>(&nbsp;|&#160;|\\s|\u00a0|<br \\/>|)<\\/${blockName}>[\r\n]*|<br \\/>[\r\n]*)$`);
   return html.replace(emptyRegExp, '');
 };

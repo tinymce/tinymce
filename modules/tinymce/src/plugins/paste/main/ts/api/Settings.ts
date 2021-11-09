@@ -6,9 +6,16 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import { PastePreProcessEvent, PastePostProcessEvent } from './Events';
+
+const option: {
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K];
+  <T>(name: string): (editor: Editor) => T;
+} = (name: string) => (editor: Editor) =>
+  editor.options.get(name);
 
 const shouldBlockDrop = (editor: Editor): boolean =>
   editor.getParam('paste_block_drop', false);
@@ -62,31 +69,19 @@ const shouldConvertWordFakeLists = (editor: Editor): boolean =>
 const shouldUseDefaultFilters = (editor: Editor): boolean =>
   editor.getParam('paste_enable_default_filters', true);
 
-const getValidate = (editor: Editor): boolean | undefined =>
-  editor.getParam('validate');
-
-const getAllowHtmlDataUrls = (editor: Editor): boolean =>
-  editor.getParam('allow_html_data_urls', false, 'boolean');
-
 const getPasteDataImages = (editor: Editor): boolean =>
   editor.getParam('paste_data_images', false, 'boolean');
 
-const getImagesReuseFilename = (editor: Editor): boolean | undefined =>
-  editor.getParam('images_reuse_filename');
-
-const getForcedRootBlock = (editor: Editor): boolean | string | undefined =>
-  editor.getParam('forced_root_block');
-
-const getForcedRootBlockAttrs = (editor: Editor): Record<string, string> | undefined =>
-  editor.getParam('forced_root_block_attrs');
+const getAllowHtmlDataUrls = option('allow_html_data_urls');
+const getImagesReuseFilename = option('images_reuse_filename');
+const getForcedRootBlock = option('forced_root_block');
+const getForcedRootBlockAttrs = option('forced_root_block_attrs');
 
 const getTabSpaces = (editor: Editor): number =>
   editor.getParam('paste_tab_spaces', 4, 'number');
 
-const getAllowedImageFileTypes = (editor: Editor): string[] => {
-  const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';
-  return Tools.explode(editor.getParam('images_file_types', defaultImageFileTypes, 'string'));
-};
+const getAllowedImageFileTypes = (editor: Editor): string[] =>
+  Tools.explode(editor.options.get('images_file_types'));
 
 export {
   shouldBlockDrop,
@@ -103,9 +98,8 @@ export {
   getWordValidElements,
   shouldConvertWordFakeLists,
   shouldUseDefaultFilters,
-  getValidate,
-  getAllowHtmlDataUrls,
   getPasteDataImages,
+  getAllowHtmlDataUrls,
   getImagesReuseFilename,
   getForcedRootBlock,
   getForcedRootBlockAttrs,

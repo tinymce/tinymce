@@ -12,7 +12,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
-import { ContentLanguage, FilePickerCallback, FilePickerValidationCallback } from 'tinymce/core/api/SettingsTypes';
+import { ContentLanguage, FilePickerCallback, FilePickerValidationCallback } from 'tinymce/core/api/OptionTypes';
 
 export interface ToolbarGroupSetting {
   name?: string;

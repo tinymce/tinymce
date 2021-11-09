@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
+describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   const src = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
   const b64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -63,11 +63,11 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('<p><img src="' + src + '" /></p>');
     TinySelections.select(editor, 'img', []);
     editor.settings.image_advtab = false; // make sure that Advanced tab appears separately
-    editor.settings.images_upload_url = 'postAcceptor.php';
+    editor.options.set('images_upload_url', 'postAcceptor.php');
     await pAssertImageTab(editor, 'Upload', true);
     await pAssertImageTab(editor, 'Advanced', false);
     editor.settings.image_advtab = true;
-    delete editor.settings.images_upload_url;
+    editor.options.unset('images_upload_url');
     await pAssertImageTab(editor, 'Upload', false);
     await pAssertImageTab(editor, 'Advanced', true);
   });
@@ -77,7 +77,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('<p><img src="' + src + '" /></p>');
     TinySelections.select(editor, 'img', []);
     editor.settings.image_uploadtab = false;
-    editor.settings.images_upload_handler = (blobInfo, success) => success('file.jpg');
+    editor.options.set('images_upload_handler', (blobInfo, success) => success('file.jpg'));
     await pAssertImageTab(editor, 'Upload', false);
     editor.settings.image_advtab = true;
     delete editor.settings.image_uploadtab;
@@ -89,11 +89,11 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('<p><img src="' + src + '" /></p>');
     TinySelections.select(editor, 'img', []);
     editor.settings.image_advtab = false; // make sure that Advanced tab appears separately
-    editor.settings.images_upload_handler = (blobInfo, success) => success('file.jpg');
+    editor.options.set('images_upload_handler', (blobInfo, success) => success('file.jpg'));
     await pAssertImageTab(editor, 'Upload', true);
     await pAssertImageTab(editor, 'Advanced', false);
     editor.settings.image_advtab = true;
-    delete editor.settings.images_upload_handler;
+    editor.options.unset('images_upload_handler');
     await pAssertImageTab(editor, 'Upload', false);
     await pAssertImageTab(editor, 'Advanced', true);
   });
@@ -101,21 +101,21 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   it('TBA: Image uploader test with custom route', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.settings.images_upload_url = '/custom/imageUpload';
+    editor.options.set('images_upload_url', '/custom/imageUpload');
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValue('uploaded_image.jpg');
-    delete editor.settings.images_upload_url;
+    editor.options.unset('images_upload_url');
     closeDialog(editor);
   });
 
   it('TBA: Image uploader test with images_upload_handler', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.settings.images_upload_handler = (blobInfo, success) => success('file.jpg');
+    editor.options.set('images_upload_handler', (blobInfo, success) => success('file.jpg'));
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
@@ -128,7 +128,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   it('TBA: Test that we get full base64 string in images_upload_handler', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.settings.images_upload_handler = (blobInfo, success) => success(blobInfo.base64());
+    editor.options.set('images_upload_handler', (blobInfo, success) => success(blobInfo.base64()));
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
@@ -141,7 +141,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   it('TNY-6020: Image uploader test with upload error', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.settings.images_upload_handler = (blobInfo, success, failure) => failure('Error occurred');
+    editor.options.set('images_upload_handler', (blobInfo, success, failure) => failure('Error occurred'));
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
@@ -158,7 +158,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   it('TBA: Image uploader test with automatic uploads disabled', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.settings.automatic_uploads = false;
+    editor.options.set('automatic_uploads', false);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
@@ -166,14 +166,14 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValueStartsWith('blob:');
     closeDialog(editor);
-    delete editor.settings.automatic_uploads;
+    editor.options.unset('automatic_uploads');
   });
 
   it('TINY-6224: Image uploader respects `images_file_types` setting', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.settings.images_upload_handler = (_blobInfo, success) => success('logo.svg');
-    editor.settings.images_file_types = 'svg';
+    editor.options.set('images_upload_handler', (_blobInfo, success) => success('logo.svg'));
+    editor.options.set('images_file_types', 'svg');
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
@@ -181,13 +181,13 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValue('logo.svg');
     closeDialog(editor);
-    delete editor.settings.images_file_types;
+    editor.options.unset('images_file_types');
   });
 
   it('TINY-6622: Image uploader retains the file name/extension', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.settings.images_upload_handler = (blobInfo, success) => success(blobInfo.filename());
+    editor.options.set('images_upload_handler', (blobInfo, success) => success(blobInfo.filename()));
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');

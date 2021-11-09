@@ -11,7 +11,7 @@ import { isReadOnly, processReadonlyEvents } from '../mode/Readonly';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { EditorEventMap } from './EventTypes';
-import * as Settings from './Settings';
+import * as Options from './Options';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
 
@@ -48,7 +48,7 @@ const getEventTarget = (editor: Editor, eventName: string): Node => {
   }
 
   // Bind to event root instead of body if it's defined
-  const eventRoot = Settings.getEventRoot(editor);
+  const eventRoot = Options.getEventRoot(editor);
 
   if (eventRoot) {
     if (!editor.eventRoot) {
@@ -92,7 +92,7 @@ const bindEventDelegate = (editor: Editor, eventName: string) => {
 
   const eventRootElm = getEventTarget(editor, eventName);
 
-  if (Settings.getEventRoot(editor)) {
+  if (Options.getEventRoot(editor)) {
     if (!customEventRootDelegates) {
       customEventRootDelegates = {};
       editor.editorManager.on('removeEditor', () => {

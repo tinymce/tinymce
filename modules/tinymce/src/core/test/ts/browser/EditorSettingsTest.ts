@@ -1,47 +1,40 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import * as EditorSettings from 'tinymce/core/EditorSettings';
 
 describe('browser.tinymce.core.EditorSettingsTest', () => {
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch();
-  const isPhone = detection.deviceType.isPhone();
 
-  const hook = TinyHooks.bddSetupLight<Editor>({
-    base_url: '/project/tinymce/js/tinymce'
-  }, []);
-
-  const expectedDefaultSettings: RawEditorSettings = {
+  const expectedDefaultSettings: RawEditorOptions = {
     toolbar_mode: 'floating'
   };
 
-  const expectedTouchDefaultSettings: RawEditorSettings = {
+  const expectedTouchDefaultSettings: RawEditorOptions = {
     ...expectedDefaultSettings,
     table_grid: false,
-    object_resizing: false,
     resize: false
   };
 
-  const expectedTabletDefaultSettings: RawEditorSettings = {
+  const expectedTabletDefaultSettings: RawEditorOptions = {
     ...expectedTouchDefaultSettings,
     toolbar_mode: 'scrolling',
     toolbar_sticky: false
   };
 
-  const expectedPhoneDefaultSettings: RawEditorSettings = {
+  const expectedPhoneDefaultSettings: RawEditorOptions = {
     ...expectedTabletDefaultSettings,
     menubar: false
   };
 
   it('default desktop settings', () => {
-    const defaultSettings = EditorSettings.getDefaultSettings({}, 'id', 'documentBaseUrl', false, hook.editor());
+    const defaultSettings = EditorSettings.getDefaultOptions({}, false);
     Obj.each(expectedDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });
@@ -51,14 +44,14 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
   });
 
   it('default touch device settings', () => {
-    const defaultSettings = EditorSettings.getDefaultSettings({}, 'id', 'documentBaseUrl', true, hook.editor());
+    const defaultSettings = EditorSettings.getDefaultOptions({}, true);
     Obj.each(expectedTouchDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });
   });
 
   it('default tablet settings', () => {
-    const defaultSettings = EditorSettings.getDefaultMobileSettings({}, false);
+    const defaultSettings = EditorSettings.getDefaultMobileOptions({}, false);
     Obj.each(expectedTabletDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });
@@ -66,14 +59,14 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
   });
 
   it('default phone settings', () => {
-    const defaultSettings = EditorSettings.getDefaultMobileSettings({}, true);
+    const defaultSettings = EditorSettings.getDefaultMobileOptions({}, true);
     Obj.each(expectedPhoneDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });
   });
 
   it('desktop settings should not override mobile default settings', () => {
-    const settings: RawEditorSettings = {
+    const settings: RawEditorOptions = {
       toolbar_mode: 'sliding',
       table_grid: true,
       object_resizing: true,
@@ -82,7 +75,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
       menubar: true
     };
 
-    const mobileSettings = EditorSettings.combineSettings(true, true, {}, {}, settings);
+    const mobileSettings = EditorSettings.combineOptions(true, true, {}, {}, settings);
     Obj.each(expectedPhoneDefaultSettings, (value, key) => {
       assert.propertyVal(mobileSettings, key, value, `Should have default ${key} setting`);
     });
@@ -90,10 +83,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
   context('getEditorSettings', () => {
     it('Override defaults plugins', () => {
-      const settings = EditorSettings.getEditorSettings(
-        hook.editor(),
-        'id',
-        'documentBaseUrl',
+      const settings = EditorSettings.getEditorOptions(
         {
           defaultSetting: 'a',
           plugins: [ 'a' ]
@@ -104,12 +94,8 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         }
       );
 
-      assert.equal(settings.id, 'id', 'Should have the specified id');
-      assert.equal(settings.document_base_url, 'documentBaseUrl', 'Should have the specified documentBaseUrl');
       assert.equal(settings.userSetting, 'b', 'Should have the specified userSetting');
-      assert.isTrue(settings.validate, 'Should have the forced validate setting');
-      assert.equal(settings.theme, isPhone ? 'mobile' : 'silver', 'Should have the default theme');
-      assert.equal(settings.plugins, isPhone ? '' : 'a', 'Should have the specified default plugin');
+      assert.equal(settings.plugins, 'a', 'Should have the specified default plugin');
       assert.equal(settings.defaultSetting, 'a', 'Should have the default setting');
     });
 
@@ -122,9 +108,9 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: [ 'c', 'd' ]
       };
 
-      const settings = EditorSettings.getEditorSettings(hook.editor(), 'id', 'documentBaseUrl', defaultSettings, userSettings);
+      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, isPhone ? 'a b' : 'a b c d', 'Should be both forced and user plugins');
+      assert.equal(settings.plugins, 'a b c d', 'Should be both forced and user plugins');
     });
 
     it('Override defaults with forced_plugins using strings', () => {
@@ -136,9 +122,9 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: 'c d'
       };
 
-      const settings = EditorSettings.getEditorSettings(hook.editor(), 'id', 'documentBaseUrl', defaultSettings, userSettings);
+      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, isPhone ? 'a b' : 'a b c d', 'Should be both forced and user plugins');
+      assert.equal(settings.plugins, 'a b c d', 'Should be both forced and user plugins');
     });
 
     it('Override defaults with forced_plugins using mixed types and spaces', () => {
@@ -150,9 +136,9 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: [ ' c ', '  d   e ' ]
       };
 
-      const settings = EditorSettings.getEditorSettings(hook.editor(), 'id', 'documentBaseUrl', defaultSettings, userSettings);
+      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, isPhone ? 'a b' : 'a b c d e', 'Should be both forced and user plugins');
+      assert.equal(settings.plugins, 'a b c d e', 'Should be both forced and user plugins');
     });
 
     it('Override defaults with just default forced_plugins', () => {
@@ -163,7 +149,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
       const userSettings = {
       };
 
-      const settings = EditorSettings.getEditorSettings(hook.editor(), 'id', 'documentBaseUrl', defaultSettings, userSettings);
+      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
 
       assert.equal(settings.plugins, 'a b', 'Should be just default plugins');
     });
@@ -176,9 +162,9 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: [ 'a', 'b' ]
       };
 
-      const settings = EditorSettings.getEditorSettings(hook.editor(), 'id', 'documentBaseUrl', defaultSettings, userSettings);
+      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, isPhone ? '' : 'a b', 'Should be just user plugins');
+      assert.equal(settings.plugins, 'a b', 'Should be just user plugins');
     });
 
     it('Override defaults with forced_plugins should not be possible to override', () => {
@@ -191,16 +177,13 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: [ 'c', 'd' ]
       };
 
-      const settings = EditorSettings.getEditorSettings(hook.editor(), 'id', 'documentBaseUrl', defaultSettings, userSettings);
+      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, isPhone ? 'a b' : 'a b c d', 'Should be just forced and user plugins');
+      assert.equal(settings.plugins, 'a b c d', 'Should be just forced and user plugins');
     });
 
     it('Getters for various setting types', () => {
-      const settings = EditorSettings.getEditorSettings(
-        {} as Editor,
-        'id',
-        'documentBaseUrl',
+      const settings = EditorSettings.getEditorOptions(
         {
           plugins: [ 'a' ]
         },
@@ -232,10 +215,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
     });
 
     it('Mobile override', () => {
-      const settings = EditorSettings.getEditorSettings(
-        {} as Editor,
-        'id',
-        'documentBaseUrl',
+      const settings = EditorSettings.getEditorOptions(
         {
           settingB: false
         },
@@ -260,98 +240,98 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
   context('combineSettings', () => {
     it('Merged settings (desktop)', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(false, false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 }),
-        { a: 1, b: 2, c: 3, validate: true, external_plugins: {}, plugins: '' },
+        EditorSettings.combineOptions(false, false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 }),
+        { a: 1, b: 2, c: 3, external_plugins: {}, plugins: '' },
         'Should have validate, forced and empty plugins in the merged settings'
       );
     });
 
     it('Merged settings forced_plugins in default override settings (desktop)', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(false, false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
-        { validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
+        EditorSettings.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
+        { external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
         'Should have plugins merged with forced plugins'
       );
     });
 
     it('Merged settings forced_plugins in default override settings (mobile)', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
-        { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
+        EditorSettings.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
         'Should be have plugins merged with forced plugins'
       );
     });
 
     it('Merged settings forced_plugins in default override settings with user mobile settings (desktop)', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(false, false, {}, { forced_plugins: [ 'a' ] }, {
+        EditorSettings.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, {
           plugins: [ 'b' ],
           mobile: { plugins: [ 'c' ], toolbar_sticky: true }
         }),
-        { validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
+        { external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
         'Should not have plugins merged with mobile plugins'
       );
     });
 
     it('Merged settings when theme is silver, forced_plugins in default override settings with user mobile settings (mobile)', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] }}),
-        { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a lists custom' },
+        EditorSettings.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] }}),
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a lists custom' },
         'Should not merge forced_plugins with mobile plugins when theme is not mobile'
       );
     });
 
     it('Merged settings forced_plugins in default override forced_plugins in user settings', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(false, false, {}, { forced_plugins: [ 'a' ] }, { forced_plugins: [ 'b' ] }),
-        { validate: true, external_plugins: {}, forced_plugins: [ 'b' ], plugins: 'a' },
+        EditorSettings.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, { forced_plugins: [ 'b' ] }),
+        { external_plugins: {}, forced_plugins: [ 'b' ], plugins: 'a' },
         'Should not have user forced plugins'
       );
     });
 
     it('Merged settings when mobile.plugins is undefined, on a mobile device', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {}}),
-        { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists b autolink', theme: 'silver' },
+        EditorSettings.combineOptions(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {}}),
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, plugins: 'lists b autolink', theme: 'silver' },
         'Should use settings.plugins when mobile theme is not set'
       );
     });
 
     it('Merged settings with empty mobile.plugins="" on mobile', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: '' }}),
-        { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: '' },
+        EditorSettings.combineOptions(true, true, {}, {}, { mobile: { plugins: '' }}),
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, plugins: '' },
         'Should not have any plugins when mobile.plugins is explicitly empty'
       );
     });
 
     it('Merged settings with defined mobile.plugins', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }}),
-        { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink foo bar' },
+        EditorSettings.combineOptions(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }}),
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, plugins: 'lists autolink foo bar' },
         'Should allow all plugins'
       );
     });
 
     it('Merged settings with mobile.theme silver and mobile.plugins', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(true, true, {}, {}, {
+        EditorSettings.combineOptions(true, true, {}, {}, {
           theme: 'test',
           mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
         }),
-        { ...expectedPhoneDefaultSettings, validate: true, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar' },
+        { ...expectedPhoneDefaultSettings, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar' },
         'Should allow all mobile plugin'
       );
     });
 
     it('Merged settings with mobile.theme silver and mobile.plugins on Desktop', () => {
       assert.deepEqual(
-        EditorSettings.combineSettings(false, false, {}, {}, {
+        EditorSettings.combineOptions(false, false, {}, {}, {
           theme: 'silver',
           plugins: [ 'aa', 'bb', 'cc' ],
           mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
         }),
-        { validate: true, theme: 'silver', external_plugins: {}, plugins: 'aa bb cc' },
+        { theme: 'silver', external_plugins: {}, plugins: 'aa bb cc' },
         'Should respect the desktop settings'
       );
     });

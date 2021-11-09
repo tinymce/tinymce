@@ -12,7 +12,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import EditorManager from '../api/EditorManager';
 import FocusManager from '../api/FocusManager';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import * as SelectionRestore from '../selection/SelectionRestore';
 
@@ -36,7 +36,7 @@ const isEditorContentAreaElement = (elm: Element) => {
 };
 
 const isUIElement = (editor: Editor, elm: Node) => {
-  const customSelector = Settings.getCustomUiSelector(editor);
+  const customSelector = Options.getCustomUiSelector(editor);
   const parent = DOM.getParent(elm, (elm) => {
     return (
       isEditorUIElement(elm) ||

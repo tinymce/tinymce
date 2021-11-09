@@ -10,36 +10,26 @@ import { PlatformDetection } from '@ephox/sand';
 
 import Editor from './api/Editor';
 import Env from './api/Env';
-import { EditorSettings, RawEditorSettings, ToolbarMode } from './api/SettingsTypes';
+import { EditorSettings, RawEditorOptions, ToolbarMode } from './api/OptionTypes';
 import Tools from './api/util/Tools';
 import { logDeprecationsWarning } from './Deprecations';
 
-export interface ParamTypeMap {
-  'hash': Record<string, string>;
-  'string': string;
-  'number': number;
-  'boolean': boolean;
-  'string[]': string[];
-  'array': any[];
-}
-
 interface SectionResult {
-  sections: () => Record<string, Partial<RawEditorSettings>>;
-  settings: () => RawEditorSettings;
+  sections: () => Record<string, Partial<RawEditorOptions>>;
+  options: () => RawEditorOptions;
 }
 
-const sectionResult = (sections: Record<string, Partial<RawEditorSettings>>, settings: RawEditorSettings): SectionResult => ({
+const sectionResult = (sections: Record<string, Partial<RawEditorOptions>>, settings: RawEditorOptions): SectionResult => ({
   sections: Fun.constant(sections),
-  settings: Fun.constant(settings)
+  options: Fun.constant(settings)
 });
 
 const deviceDetection = PlatformDetection.detect().deviceType;
 const isTouch = deviceDetection.isTouch();
 const isPhone = deviceDetection.isPhone();
 const isTablet = deviceDetection.isTablet();
-const defaultTouchSettings: RawEditorSettings = {
+const defaultTouchOptions: RawEditorOptions = {
   table_grid: false,          // Table grid relies on hover, which isn't available so use the dialog instead
-  object_resizing: false,     // No nice way to do object resizing at this stage
   resize: false              // Editor resize doesn't work on touch devices at this stage
 };
 
@@ -51,18 +41,18 @@ const normalizePlugins = (plugins: string | string[]) => {
   });
 };
 
-const extractSections = (keys, settings) => {
-  const result = Obj.bifilter(settings, (value, key) => {
+const extractSections = (keys: string[], options: RawEditorOptions) => {
+  const result = Obj.bifilter(options, (value, key) => {
     return Arr.contains(keys, key);
   });
 
   return sectionResult(result.t, result.f);
 };
 
-const getSection = (sectionResult: SectionResult, name: string, defaults: Partial<RawEditorSettings> = { }) => {
+const getSection = (sectionResult: SectionResult, name: string, defaults: Partial<RawEditorOptions> = { }) => {
   const sections = sectionResult.sections();
-  const sectionSettings = Obj.get(sections, name).getOr({});
-  return Tools.extend({}, defaults, sectionSettings);
+  const sectionOptions = Obj.get(sections, name).getOr({});
+  return Tools.extend({}, defaults, sectionOptions);
 };
 
 const hasSection = (sectionResult: SectionResult, name: string) => {
@@ -73,73 +63,43 @@ const getSectionConfig = (sectionResult: SectionResult, name: string) => {
   return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
 };
 
-const getToolbarMode = (settings: RawEditorSettings, defaultVal: ToolbarMode) =>
+const getToolbarMode = (options: RawEditorOptions, defaultVal: ToolbarMode) =>
   // If toolbar_mode is unset by the user, fall back to:
-  Obj.get(settings, 'toolbar_mode').getOr(defaultVal);
+  Obj.get(options, 'toolbar_mode').getOr(defaultVal);
 
-const getDefaultSettings = (settings: RawEditorSettings, id: string, documentBaseUrl: string, isTouch: boolean, editor: Editor): RawEditorSettings => {
-  const baseDefaults: RawEditorSettings = {
-    id,
-    theme: 'silver',
-    toolbar_mode: getToolbarMode(settings, 'floating'),
-    plugins: '',
-    document_base_url: documentBaseUrl,
-    add_form_submit_trigger: true,
-    submit_patch: true,
-    add_unload_trigger: true,
-    convert_urls: true,
-    relative_urls: true,
-    remove_script_host: true,
-    object_resizing: true,
-    doctype: '<!DOCTYPE html>',
-    visual: true,
-
-    // See: http://www.w3.org/TR/CSS2/fonts.html#propdef-font-size
-    font_size_legacy_values: 'xx-small,small,medium,large,x-large,xx-large,300%',
-    forced_root_block: 'p',
-    hidden_input: true,
-    inline_styles: true,
-    convert_fonts_to_spans: true,
-    indent: true,
-    indent_before: 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,th,ul,ol,li,dl,dt,dd,area,table,thead,' +
-    'tfoot,tbody,tr,section,summary,article,hgroup,aside,figure,figcaption,option,optgroup,datalist',
-    indent_after: 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,th,ul,ol,li,dl,dt,dd,area,table,thead,' +
-    'tfoot,tbody,tr,section,summary,article,hgroup,aside,figure,figcaption,option,optgroup,datalist',
-    entity_encoding: 'named',
-    // Note: Don't bind here, as the binding is handled via the `url_converter_scope`
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    url_converter: editor.convertURL,
-    url_converter_scope: editor
+const getDefaultOptions = (options: RawEditorOptions, isTouch: boolean): RawEditorOptions => {
+  const baseDefaults: RawEditorOptions = {
+    toolbar_mode: getToolbarMode(options, 'floating')
   };
 
   return {
     ...baseDefaults,
-    ...isTouch ? defaultTouchSettings : { }
+    ...isTouch ? defaultTouchOptions : { }
   };
 };
 
-const getDefaultMobileSettings = (mobileSettings: RawEditorSettings, isPhone: boolean): RawEditorSettings => {
-  const defaultMobileSettings: RawEditorSettings = {
+const getDefaultMobileOptions = (mobileOptions: RawEditorOptions, isPhone: boolean): RawEditorOptions => {
+  const defaultMobileOptions: RawEditorOptions = {
     resize: false,               // Editor resize doesn't make sense on mobile
-    toolbar_mode: getToolbarMode(mobileSettings, 'scrolling'),   // Use the default side-scrolling toolbar for tablets/phones
+    toolbar_mode: getToolbarMode(mobileOptions, 'scrolling'),   // Use the default side-scrolling toolbar for tablets/phones
     toolbar_sticky: false        // Only enable sticky toolbar on desktop by default
   };
 
-  const defaultPhoneSettings: RawEditorSettings = {
+  const defaultPhoneOptions: RawEditorOptions = {
     menubar: false               // Phones don't have a lot of screen space, so disable the menubar
   };
 
   return {
-    ...defaultTouchSettings,
-    ...defaultMobileSettings,
-    ...isPhone ? defaultPhoneSettings : { }
+    ...defaultTouchOptions,
+    ...defaultMobileOptions,
+    ...isPhone ? defaultPhoneOptions : { }
   };
 };
 
-const getExternalPlugins = (overrideSettings: RawEditorSettings, settings: RawEditorSettings) => {
-  const userDefinedExternalPlugins = settings.external_plugins ? settings.external_plugins : { };
-  if (overrideSettings && overrideSettings.external_plugins) {
-    return Tools.extend({}, overrideSettings.external_plugins, userDefinedExternalPlugins);
+const getExternalPlugins = (overrideOptions: RawEditorOptions, options: RawEditorOptions) => {
+  const userDefinedExternalPlugins = options.external_plugins ?? { };
+  if (overrideOptions && overrideOptions.external_plugins) {
+    return Tools.extend({}, overrideOptions.external_plugins, userDefinedExternalPlugins);
   } else {
     return userDefinedExternalPlugins;
   }
@@ -150,7 +110,7 @@ const combinePlugins = (forcedPlugins: string[], plugins: string[]): string[] =>
 };
 
 const getPlatformPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, desktopPlugins: string[], mobilePlugins: string[]): string[] => {
-  // is a mobile device with any mobile settings
+  // is a mobile device with any mobile options
   if (isMobileDevice && hasSection(sectionResult, 'mobile')) {
     return mobilePlugins;
   // is desktop
@@ -159,9 +119,9 @@ const getPlatformPlugins = (isMobileDevice: boolean, sectionResult: SectionResul
   }
 };
 
-const processPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings & { external_plugins: Record<string, string> }): EditorSettings => {
-  const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
-  const desktopPlugins = normalizePlugins(settings.plugins);
+const processPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions & { external_plugins: Record<string, string> }): EditorSettings => {
+  const forcedPlugins = normalizePlugins(defaultOverrideOptions.forced_plugins);
+  const desktopPlugins = normalizePlugins(options.plugins);
 
   const mobileConfig = getSectionConfig(sectionResult, 'mobile');
   const mobilePlugins = mobileConfig.plugins ? normalizePlugins(mobileConfig.plugins) : desktopPlugins;
@@ -174,7 +134,7 @@ const processPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, d
     throw new Error('RTC plugin is not supported on IE 11.');
   }
 
-  return Tools.extend(settings, {
+  return Tools.extend(options, {
     plugins: combinedPlugins.join(' ')
   });
 };
@@ -183,41 +143,40 @@ const isOnMobile = (isMobileDevice: boolean, sectionResult: SectionResult) => {
   return isMobileDevice && hasSection(sectionResult, 'mobile');
 };
 
-const combineSettings = (isMobileDevice: boolean, isPhone: boolean, defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
-  // Use mobile mode by default on phones, so patch in the default mobile settings
-  const defaultDeviceSettings = isMobileDevice ? { mobile: getDefaultMobileSettings(settings.mobile || {}, isPhone) } : { };
-  const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(defaultDeviceSettings, settings));
+const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOptions: RawEditorOptions, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): EditorSettings => {
+  // Use mobile mode by default on phones, so patch in the default mobile options
+  const defaultDeviceOptions = isMobileDevice ? { mobile: getDefaultMobileOptions(options.mobile || {}, isPhone) } : { };
+  const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(defaultDeviceOptions, options));
 
-  const extendedSettings = Tools.extend(
-    // Default settings
-    defaultSettings,
+  const extendedOptions = Tools.extend(
+    // Default options
+    defaultOptions,
 
-    // tinymce.overrideDefaults settings
-    defaultOverrideSettings,
+    // tinymce.overrideOptions options
+    defaultOverrideOptions,
 
-    // User settings
-    sectionResult.settings(),
+    // User options
+    sectionResult.options(),
 
     // Sections
     isOnMobile(isMobileDevice, sectionResult) ? getSection(sectionResult, 'mobile') : { },
 
-    // Forced settings
+    // Forced options
     {
-      validate: true,
-      external_plugins: getExternalPlugins(defaultOverrideSettings, sectionResult.settings())
+      external_plugins: getExternalPlugins(defaultOverrideOptions, sectionResult.options())
     }
   );
 
-  return processPlugins(isMobileDevice, sectionResult, defaultOverrideSettings, extendedSettings);
+  return processPlugins(isMobileDevice, sectionResult, defaultOverrideOptions, extendedOptions);
 };
 
-const getEditorSettings = (editor: Editor, id: string, documentBaseUrl: string, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
-  const defaultSettings = getDefaultSettings(settings, id, documentBaseUrl, isTouch, editor);
-  const finalSettings = combineSettings(isPhone || isTablet, isPhone, defaultSettings, defaultOverrideSettings, settings);
-  if (finalSettings.deprecation_warnings !== false) {
-    logDeprecationsWarning(settings, finalSettings);
+const getEditorOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): EditorSettings => {
+  const defaultOptions = getDefaultOptions(options, isTouch);
+  const finalOptions = combineOptions(isPhone || isTablet, isPhone, defaultOptions, defaultOverrideOptions, options);
+  if (finalOptions.deprecation_warnings !== false) {
+    logDeprecationsWarning(options, finalOptions);
   }
-  return finalSettings;
+  return finalOptions;
 };
 
 const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<EditorSettings[K]> => Optional.from(editor.settings[name]).filter(predicate);
@@ -268,4 +227,4 @@ const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string)
   }
 };
 
-export { getEditorSettings, getParam, combineSettings, getDefaultSettings, getDefaultMobileSettings };
+export { getEditorOptions, getParam, combineOptions, getDefaultOptions, getDefaultMobileOptions };

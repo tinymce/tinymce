@@ -480,7 +480,7 @@ const filterWordContent = (editor: Editor, content: string): string => {
 
   // Serialize DOM back to HTML
   content = HtmlSerializer({
-    validate: Settings.getValidate(editor)
+    validate: true
   }, schema).serialize(rootNode);
 
   return content;

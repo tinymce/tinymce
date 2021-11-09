@@ -19,7 +19,9 @@ describe('browser.tinymce.core.caret.FakeCaretTest', () => {
 
   before(() => {
     const mockEditor: any = {
-      getParam: Fun.constant('p'),
+      options: {
+        get: Fun.constant('p')
+      },
       dom: DOMUtils(document)
     };
     fakeCaret = FakeCaret(mockEditor, getRoot().dom, isBlock, Fun.always);

@@ -2,7 +2,7 @@
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
+import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -29,7 +29,7 @@ export default () => {
     });
   };
 
-  const settings: RawEditorSettings = {
+  const settings: RawEditorOptions = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     content_langs: [
