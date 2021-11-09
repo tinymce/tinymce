@@ -43,9 +43,6 @@ const isSmartPasteEnabled = (editor: Editor): boolean =>
 const isPasteAsTextEnabled = (editor: Editor): boolean =>
   editor.getParam('paste_as_text', false);
 
-const getRetainStyleProps = (editor: Editor): string | undefined =>
-  editor.getParam('paste_retain_style_properties');
-
 const shouldUseDefaultFilters = (editor: Editor): boolean =>
   editor.getParam('paste_enable_default_filters', true);
 
@@ -86,7 +83,6 @@ export {
   shouldMergeFormats,
   isSmartPasteEnabled,
   isPasteAsTextEnabled,
-  getRetainStyleProps,
   shouldUseDefaultFilters,
   getValidate,
   getAllowHtmlDataUrls,
