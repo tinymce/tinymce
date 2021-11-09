@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Type } from '@ephox/katamari';
+import { Selections } from '@ephox/darwin';
+import { Arr, Fun, Type } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 
 import { Bookmark } from '../../bookmark/BookmarkTypes';
@@ -24,6 +25,8 @@ import * as NormalizeRange from '../../selection/NormalizeRange';
 import * as SelectionBookmark from '../../selection/SelectionBookmark';
 import { hasAnyRanges, moveEndPoint } from '../../selection/SelectionUtils';
 import * as SetSelectionContent from '../../selection/SetSelectionContent';
+import { ephemera as cellEphemera } from '../../selection/TableEphemera';
+import * as TableSelection from '../../selection/TableSelection';
 import Editor from '../Editor';
 import AstNode from '../html/Node';
 import BookmarkManager from './BookmarkManager';
@@ -84,6 +87,9 @@ interface EditorSelection {
   getStart: (real?: boolean) => Element;
   getEnd: (real?: boolean) => Element;
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
+  // TODO: There could be one problem with this, should it include a single collapsed selection cell
+  // TODO: Should we have something that works for non-fake selection as well?
+  getSelectedCells: (includeCollapsed?: boolean) => HTMLTableCellElement[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
@@ -102,6 +108,19 @@ interface EditorSelection {
   destroy: () => void;
 }
 
+export interface PatchedSelections {
+  readonly get: () => HTMLTableCellElement[];
+}
+
+const patchSelections = (selections: Selections): PatchedSelections => {
+  return {
+    get: () => selections.get().fold(Fun.constant([]), (cells) => Arr.map(cells, (cell) => cell.dom), (cell) => [ cell.dom ])
+  };
+};
+
+const isRoot = (editor: Editor) => (element: SugarElement<Node>): boolean =>
+  Compare.eq(element, SugarElement.fromDom(editor.getBody()));
+
 /**
  * Constructs a new selection instance.
  *
@@ -115,6 +134,13 @@ interface EditorSelection {
 const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor): EditorSelection => {
   let selectedRange: Range | null;
   let explicitRange: Range | null;
+
+  const oldCellSelection = Selections(
+    () => SugarElement.fromDom(editor.getBody()),
+    () => TableSelection.getSelectionCell(SugarElement.fromDom(getStart()), isRoot(editor)),
+    cellEphemera.selectedSelector
+  );
+  const cellSelection = patchSelections(oldCellSelection);
 
   const { selectorChangedWithUnbind } = SelectorChanged(dom, editor);
 
@@ -475,6 +501,17 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
   };
 
+  // const getSelectedCells = cellSelection.get;
+  const getSelectedCells = (includeCollapsed: boolean = true) => {
+    const cells = cellSelection.get();
+    // TODO: I am not quite sure if this is correct as could have a single cell selected with a fake selection using the keyboard which would be filtered out as well
+    if (!includeCollapsed && cells.length === 1) {
+      return [];
+    } else {
+      return cells;
+    }
+  };
+
   const normalize = (): Range => {
     const rng = getRng();
     const sel = getSel();
@@ -566,6 +603,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     getStart,
     getEnd,
     getSelectedBlocks,
+    getSelectedCells,
     normalize,
     selectorChanged,
     selectorChangedWithUnbind,

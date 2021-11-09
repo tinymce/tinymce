@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -23,7 +23,7 @@ interface AddButtonSpec {
   onSetup?: (api: Toolbar.ToolbarButtonInstanceApi) => () => void;
 }
 
-const addButtons = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: FakeClipboard): void => {
+const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: FakeClipboard): void => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
@@ -195,7 +195,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Table styles',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         tableClassList,
         'tableclass',
         (value) => editor.execCommand('mceTableToggleClass', false, value)
@@ -211,7 +210,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Cell styles',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         tableCellClassList,
         'tablecellclass',
         (value) => editor.execCommand('mceTableCellToggleClass', false, value)
@@ -227,7 +225,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Vertical align',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         verticalAlignValues,
         'tablecellverticalalign',
         applyTableCellStyle(editor, 'vertical-align')
@@ -240,7 +237,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Border width',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         Options.getTableBorderWidths(editor),
         'tablecellborderwidth',
         applyTableCellStyle(editor, 'border-width')
@@ -253,7 +249,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Border style',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         Options.getTableBorderStyles(editor),
         'tablecellborderstyle',
         applyTableCellStyle(editor, 'border-style')

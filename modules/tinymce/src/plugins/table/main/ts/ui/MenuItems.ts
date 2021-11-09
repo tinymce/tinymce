@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
 
@@ -25,7 +25,7 @@ interface AddMenuSpec {
   onSetup: (api: Menu.MenuItemInstanceApi) => () => void;
 }
 
-const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: FakeClipboard): void => {
+const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: FakeClipboard): void => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
   // TODO TINY-8172: unwind this before merging the feature branch
@@ -250,7 +250,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Table styles',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         tableClassList,
         'tableclass',
         (value) => editor.execCommand('mceTableToggleClass', false, value)
@@ -266,7 +265,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Cell styles',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         tableCellClassList,
         'tablecellclass',
         (value) => editor.execCommand('mceTableCellToggleClass', false, value)
@@ -282,7 +280,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Vertical align',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         verticalAlignValues,
         'tablecellverticalalign',
         applyTableCellStyle(editor, 'vertical-align')
@@ -295,7 +292,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Border width',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         Options.getTableBorderWidths(editor),
         'tablecellborderwidth',
         applyTableCellStyle(editor, 'border-width')
@@ -308,7 +304,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Border style',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         Options.getTableBorderStyles(editor),
         'tablecellborderstyle',
         applyTableCellStyle(editor, 'border-style')

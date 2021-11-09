@@ -19,7 +19,7 @@ import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
-import { PatchedSelections } from '../Table';
+// import { PatchedSelections } from '../Table';
 import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Settings';
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
@@ -30,7 +30,10 @@ const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<H
 const getSelectionStartCell = (editor: Editor): Optional<SugarElement<HTMLTableCellElement>> =>
   TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
 
-const registerCommands = (editor: Editor, actions: TableActions, selections: PatchedSelections, clipboard: Clipboard): void => {
+const getSelectedCells = (editor: Editor) => (): SugarElement<HTMLTableCellElement>[] =>
+  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+
+const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clipboard): void => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
@@ -85,7 +88,7 @@ const registerCommands = (editor: Editor, actions: TableActions, selections: Pat
 
   const toggleTableCellClass = (_ui: boolean, clazz: string) => {
     performActionOnSelection((table) => {
-      const selectedCells = TableSelection.getCellsFromSelection(selections);
+      const selectedCells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
       const allHaveClass = Arr.forall(selectedCells, (cell) => editor.formatter.match('tablecellclass', { value: clazz }, cell.dom));
       const formatterAction = allHaveClass ? editor.formatter.remove : editor.formatter.apply;
 
@@ -127,20 +130,20 @@ const registerCommands = (editor: Editor, actions: TableActions, selections: Pat
 
   const actOnSelection = (execute: CombinedTargetsTableAction, noEvents: boolean = false) =>
     performActionOnSelection((table, startCell) => {
-      const targets = TableTargets.forMenu(selections, table, startCell);
+      const targets = TableTargets.forMenu(getSelectedCells(editor), table, startCell);
       execute(table, targets, noEvents).each(postExecute);
     });
 
   const copyRowSelection = () =>
     performActionOnSelection((table, startCell) => {
-      const targets = TableTargets.forMenu(selections, table, startCell);
+      const targets = TableTargets.forMenu(getSelectedCells(editor), table, startCell);
       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.none());
       return CopyRows.copyRows(table, targets, generators);
     });
 
   const copyColSelection = () =>
     performActionOnSelection((table, startCell) => {
-      const targets = TableTargets.forMenu(selections, table, startCell);
+      const targets = TableTargets.forMenu(getSelectedCells(editor), table, startCell);
       return CopyCols.copyCols(table, targets);
     });
 
@@ -150,7 +153,7 @@ const registerCommands = (editor: Editor, actions: TableActions, selections: Pat
       const clonedRows = Arr.map(rows, (row) => Replication.deep<HTMLTableColElement | HTMLTableRowElement>(row));
       performActionOnSelection((table, startCell) => {
         const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
-        const targets = TableTargets.pasteRows(selections, startCell, clonedRows, generators);
+        const targets = TableTargets.pasteRows(getSelectedCells(editor), startCell, clonedRows, generators);
         execute(table, targets).each(postExecute);
       });
     });
@@ -213,7 +216,7 @@ const registerCommands = (editor: Editor, actions: TableActions, selections: Pat
     if (!Type.isObject(args)) {
       return;
     }
-    const cells = TableSelection.getCellsFromSelection(selections);
+    const cells = getSelectedCells(editor)();
     if (cells.length === 0) {
       return;
     }

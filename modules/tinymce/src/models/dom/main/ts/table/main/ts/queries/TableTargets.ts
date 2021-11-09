@@ -11,7 +11,7 @@ import { RunOperation, SimpleGenerators } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 
 import { ephemera } from '../selection/Ephemera';
-import { PatchedSelections } from '../Table';
+// import { PatchedSelections } from '../Table';
 
 const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
   element: cell,
@@ -20,11 +20,11 @@ const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElemen
   selection: [ cell ]
 });
 
-const forMenu = (selections: PatchedSelections, table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
+const forMenu = (selectedCells: () => SugarElement<HTMLTableCellElement>[], table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
   element: cell,
-  mergable: CellOpSelection.mergable(table, selections, ephemera),
-  unmergable: CellOpSelection.unmergable(selections),
-  selection: CellOpSelection.selection(selections)
+  mergable: CellOpSelection.mergable(table, selectedCells, ephemera),
+  unmergable: CellOpSelection.unmergable(selectedCells),
+  selection: CellOpSelection.selection(selectedCells)
 });
 
 const paste = (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>, clipboard: SugarElement<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
@@ -33,8 +33,8 @@ const paste = (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElem
   generators
 });
 
-const pasteRows = (selections: PatchedSelections, _cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
-  selection: CellOpSelection.selection(selections),
+const pasteRows = (selectedCells: () => SugarElement<HTMLTableCellElement>[], _cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
+  selection: CellOpSelection.selection(selectedCells),
   clipboard,
   generators
 });

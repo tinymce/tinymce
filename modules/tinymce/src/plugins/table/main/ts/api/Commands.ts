@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 import { Fun, Obj, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -15,13 +15,13 @@ import * as CellDialog from '../ui/CellDialog';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
 
-const registerCommands = (editor: Editor, selections: Selections): void => {
+const registerCommands = (editor: Editor): void => {
   // Register dialog commands
   Obj.each({
     // AP-101 TableDialog.open renders a slightly different dialog if isNew is true
     mceTableProps: Fun.curry(TableDialog.open, editor, false),
     mceTableRowProps: Fun.curry(RowDialog.open, editor),
-    mceTableCellProps: Fun.curry(CellDialog.open, editor, selections)
+    mceTableCellProps: Fun.curry(CellDialog.open, editor)
   }, (func, name) => editor.addCommand(name, () => func()));
 
   editor.addCommand('mceInsertTable', (_ui, args) => {

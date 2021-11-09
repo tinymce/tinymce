@@ -7,9 +7,9 @@ import * as TableSelection from '../api/TableSelection';
 // import { Selections } from '../selection/Selections';
 // import * as SelectionTypes from '../selection/SelectionTypes';
 
-interface PatchedSelections {
-  readonly get: () => SugarElement<HTMLTableCellElement>[];
-}
+// interface PatchedSelections {
+//   readonly get: () => SugarElement<HTMLTableCellElement>[];
+// }
 
 // Return an array of the selected elements
 // TODO: Could probably remove this if new selection just rerturns an array
@@ -20,14 +20,14 @@ interface PatchedSelections {
 //     Arr.pure
 //   );
 
-const selection = (selections: PatchedSelections): SugarElement<HTMLTableCellElement>[] =>
-  selections.get();
+const selection = (selectedCells: () => SugarElement<HTMLTableCellElement>[]): SugarElement<HTMLTableCellElement>[] =>
+  selectedCells();
 
-const unmergable = (selections: PatchedSelections): Optional<SugarElement<HTMLTableCellElement>[]> => {
+const unmergable = (selectedCells: () => SugarElement<HTMLTableCellElement>[]): Optional<SugarElement<HTMLTableCellElement>[]> => {
   const hasSpan = (elem: SugarElement<Element>, type: 'colspan' | 'rowspan') => Attribute.getOpt(elem, type).exists((span) => parseInt(span, 10) > 1);
   const hasRowOrColSpan = (elem: SugarElement<Element>) => hasSpan(elem, 'rowspan') || hasSpan(elem, 'colspan');
 
-  const candidates = selection(selections);
+  const candidates = selection(selectedCells);
 
   return candidates.length > 0 && Arr.forall(candidates, hasRowOrColSpan) ? Optional.some(candidates) : Optional.none();
 };
@@ -46,8 +46,8 @@ const unmergable = (selections: PatchedSelections): Optional<SugarElement<HTMLTa
 //     Optional.none
 //   );
 
-const mergable = (table: SugarElement<HTMLTableElement>, selections: PatchedSelections, ephemera: Ephemera): Optional<RunOperation.ExtractMergable> => {
-  const cells = selections.get();
+const mergable = (table: SugarElement<HTMLTableElement>, selectedCells: () => SugarElement<HTMLTableCellElement>[], ephemera: Ephemera): Optional<RunOperation.ExtractMergable> => {
+  const cells = selectedCells();
 
   if (cells.length <= 1) {
     return Optional.none();

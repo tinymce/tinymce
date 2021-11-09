@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { TableLookup, Warehouse } from '@ephox/snooker';
 import { Compare, SugarElement } from '@ephox/sugar';
@@ -17,7 +17,7 @@ import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import * as Util from '../core/Util';
-import * as TableSelection from '../selection/TableSelection';
+// import * as TableSelection from '../selection/TableSelection';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
 import { getAdvancedTab } from './DialogAdvancedTab';
 import { DomModifier } from './DomModifier';
@@ -163,8 +163,8 @@ const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]): C
   return Helpers.getSharedValues<CellData>(cellsData.getOrDie());
 };
 
-const open = (editor: Editor, selections: Selections): void => {
-  const cells = TableSelection.getCellsFromSelection(selections);
+const open = (editor: Editor): void => {
+  const cells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {

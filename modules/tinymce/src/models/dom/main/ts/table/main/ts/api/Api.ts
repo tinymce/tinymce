@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 
 import { ResizeHandler } from '../actions/ResizeHandler';
 import { Clipboard as FakeClipboard } from '../core/Clipboard';
@@ -16,15 +16,15 @@ export interface Api {
   readonly fakeClipboard: FakeClipboard;
   readonly resizeHandler: ResizeHandler;
   readonly selectionTargets: SelectionTargets;
-  readonly selections: Selections;
+  // readonly selections: Selections;
   readonly cellSelection: CellSelectionApi;
 }
 
-const getApi = (clipboard: FakeClipboard, resizeHandler: ResizeHandler, selectionTargets: SelectionTargets, selections: Selections, cellSelection: CellSelectionApi): Api => ({
+const getApi = (clipboard: FakeClipboard, resizeHandler: ResizeHandler, selectionTargets: SelectionTargets, cellSelection: CellSelectionApi): Api => ({
   fakeClipboard: clipboard,
   resizeHandler,
   selectionTargets,
-  selections,
+  // selections,
   cellSelection
 });
 

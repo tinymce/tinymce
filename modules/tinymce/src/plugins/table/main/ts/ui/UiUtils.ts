@@ -6,14 +6,14 @@
  */
 
 import { Transformations } from '@ephox/acid';
-import { Selections } from '@ephox/darwin';
+// import { Selections } from '@ephox/darwin';
 import { Arr, Obj, Singleton, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import * as TableSelection from '../selection/TableSelection';
+// import * as TableSelection from '../selection/TableSelection';
 
 export interface UserListValue {
   readonly title?: string;
@@ -29,13 +29,13 @@ export interface UserListGroup {
 
 export type UserListItem = UserListValue | UserListGroup;
 
-const onSetupToggle = (editor: Editor, selections: Selections, formatName: string, formatValue: string) => {
+const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) => {
   return (api: Toolbar.ToolbarMenuButtonInstanceApi): () => void => {
     const boundCallback = Singleton.unbindable();
     const isNone = Strings.isEmpty(formatValue);
 
     const init = () => {
-      const selectedCells = TableSelection.getCellsFromSelection(selections);
+      const selectedCells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
 
       const checkNode = (cell: SugarElement<Element>) =>
         editor.formatter.match(formatName, { value: formatValue }, cell.dom, isNone);
@@ -79,7 +79,6 @@ const buildListItems = (items: UserListItem[]): Dialog.ListBoxItemSpec[] =>
 
 const buildMenuItems = (
   editor: Editor,
-  selections: Selections,
   items: UserListItem[],
   format: string,
   onAction: (value: string) => void
@@ -91,14 +90,14 @@ const buildMenuItems = (
       return {
         type: 'nestedmenuitem',
         text,
-        getSubmenuItems: () => buildMenuItems(editor, selections, item.menu, format, onAction)
+        getSubmenuItems: () => buildMenuItems(editor, item.menu, format, onAction)
       };
     } else {
       return {
         text,
         type: 'togglemenuitem',
         onAction: () => onAction(item.value),
-        onSetup: onSetupToggle(editor, selections, format, item.value)
+        onSetup: onSetupToggle(editor, format, item.value)
       };
     }
   });
@@ -116,9 +115,9 @@ const filterNoneItem = (list: UserListItem[]): UserListItem[] =>
     }
   });
 
-const generateMenuItemsCallback = (editor: Editor, selections: Selections, items: UserListItem[], format: string, onAction: (value: string) => void) =>
+const generateMenuItemsCallback = (editor: Editor, items: UserListItem[], format: string, onAction: (value: string) => void) =>
   (callback: (items: Menu.NestedMenuItemContents[]) => void): void =>
-    callback(buildMenuItems(editor, selections, items, format, onAction));
+    callback(buildMenuItems(editor, items, format, onAction));
 
 const buildColorMenu = (editor: Editor, colorList: UserListValue[], style: string): Menu.FancyMenuItemSpec[] => {
   const colorMap = Arr.map(colorList, (entry): Menu.ChoiceMenuItemSpec => ({

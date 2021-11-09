@@ -19,15 +19,15 @@ const Plugin = (editor: Editor): Api => {
   Options.register(editor);
 
   const tableModel = editor.model.table;
-  const selections = tableModel.selections;
+  // const selections = tableModel.selections;
   const modelSelectionTargets = tableModel.selectionTargets;
   const clipboard = tableModel.fakeClipboard;
   const selectionTargets = getSelectionTargets(editor, modelSelectionTargets);
 
-  Commands.registerCommands(editor, selections);
+  Commands.registerCommands(editor);
 
-  MenuItems.addMenuItems(editor, selections, selectionTargets, clipboard);
-  Buttons.addButtons(editor, selections, selectionTargets, clipboard);
+  MenuItems.addMenuItems(editor, selectionTargets, clipboard);
+  Buttons.addButtons(editor, selectionTargets, clipboard);
   Buttons.addToolbars(editor);
 
   return getApi(editor, clipboard, selectionTargets, tableModel);

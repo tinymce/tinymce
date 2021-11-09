@@ -8,14 +8,14 @@
 // import { Selections } from '@ephox/darwin';
 import { Arr, Cell, Optional, Optionals, Thunk } from '@ephox/katamari';
 import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
-import { Compare, SugarNode } from '@ephox/sugar';
+import { Compare, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
-import { PatchedSelections } from '../Table';
+// import { PatchedSelections } from '../Table';
 import * as TableSelection from './TableSelection';
 
 type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
@@ -49,7 +49,7 @@ interface ExtractedSelectionDetails {
 
 type TargetSetupCallback = (targets: RunOperation.CombinedTargets) => boolean;
 
-export const getSelectionTargets = (editor: Editor, selections: PatchedSelections): SelectionTargets => {
+export const getSelectionTargets = (editor: Editor): SelectionTargets => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
   const changeHandlers = Cell([]);
   // let selectionDetails = Optional.none<ExtractedSelectionDetails>();
@@ -60,6 +60,9 @@ export const getSelectionTargets = (editor: Editor, selections: PatchedSelection
   const getStart = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
   const getEnd = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionEnd(editor), Util.getIsRoot(editor));
 
+  const getSelectedCells = () =>
+    Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+
   const findTargets = (): Optional<RunOperation.CombinedTargets> =>
     getStart().bind((startCellOrCaption) =>
       Optionals.flatten(
@@ -68,7 +71,7 @@ export const getSelectionTargets = (editor: Editor, selections: PatchedSelection
             if (isCaption(startCellOrCaption)) {
               return Optional.some(TableTargets.noMenu(startCellOrCaption));
             } else {
-              return Optional.some(TableTargets.forMenu(selections, startTable, startCellOrCaption));
+              return Optional.some(TableTargets.forMenu(getSelectedCells, startTable, startCellOrCaption));
             }
           }
 
