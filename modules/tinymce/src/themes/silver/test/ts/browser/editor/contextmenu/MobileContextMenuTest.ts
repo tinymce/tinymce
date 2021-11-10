@@ -80,6 +80,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.MobileContextMenuTest
       '</tbody>' +
     '</table>';
 
+  const imageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100"/>');
   const placeholderImageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100" data-mce-placeholder="1"/>');
   const linkInTableHtml = contentInTableHtml('<a href="http://tiny.cloud/">Tiny</a>');
 
@@ -155,6 +156,24 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.MobileContextMenuTest
       selectors.deletetable
     ]);
     FocusTools.setFocus(SugarBody.body(), selectors.tableprops);
+    pressEnterKey();
+    await pWaitForAndCloseDialog(editor);
+  });
+
+  it('TBA: Test context menus on image inside a table', async () => {
+    const editor = hook.editor();
+    editor.setContent(imageInTableHtml);
+    await pOpenContextMenu(editor, 'img');
+    assertMenuItems([
+      selectors.link,
+      selectors.image,
+      selectors.cell,
+      selectors.row,
+      selectors.column,
+      selectors.tableprops,
+      selectors.deletetable
+    ]);
+    FocusTools.setFocus(SugarBody.body(), selectors.image);
     pressEnterKey();
     await pWaitForAndCloseDialog(editor);
   });

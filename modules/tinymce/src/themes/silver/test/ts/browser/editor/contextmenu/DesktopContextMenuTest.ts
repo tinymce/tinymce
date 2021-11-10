@@ -1,5 +1,6 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -25,6 +26,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
 
   const pressDownArrowKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
   const pressEnterKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
+  const repeatDownArrowKey = (index: number) => Arr.range(index, pressDownArrowKey);
 
   const tableHtml = '<table style="width: 100%;">' +
   '<tbody>' +
@@ -39,6 +41,8 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
   '</tbody>' +
   '</table>';
 
+  const imgSrc = '../img/dogleft.jpg';
+
   const contentInTableHtml = (content: string) => '<table style="width: 100%;">' +
      '<tbody>' +
         '<tr>' +
@@ -47,6 +51,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
       '</tbody>' +
     '</table>';
 
+  const imageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100"/>');
   const linkInTableHtml = contentInTableHtml('<a href="http://tiny.cloud/">Tiny</a>');
 
   // In Firefox we add a a bogus br element after the link that fixes a gecko link bug when,
@@ -108,6 +113,29 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     pressDownArrowKey();
     pAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")');
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.up());
+    pressEnterKey();
+    await pWaitForAndCloseDialog(editor);
+  });
+
+  it('TBA: Test context menus on image inside a table', async () => {
+    const editor = hook.editor();
+    editor.setContent(imageInTableHtml);
+    await pOpenContextMenu(editor, 'img');
+    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Image', '.tox-collection__item:contains("Image")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")');
+    // Navigate back to the "Image"" menu item
+    repeatDownArrowKey(2);
     pressEnterKey();
     await pWaitForAndCloseDialog(editor);
   });
