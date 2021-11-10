@@ -8,7 +8,7 @@
 import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 
 import Editor from './Editor';
-import { EditorOptions, EditorSettings } from './OptionTypes';
+import { EditorOptions, NormalisedEditorOptions } from './OptionTypes';
 
 interface ProcessorSuccess<T> {
   valid: true;
@@ -72,7 +72,7 @@ export interface Options {
    */
   register: {
     <K extends BuiltInOptionType>(name: string, spec: BuiltInOptionSpec<K>): void;
-    <K extends keyof EditorSettings>(name: K, spec: OptionSpec<EditorSettings[K], EditorOptions[K]> | SimpleOptionSpec<EditorSettings[K]>): void;
+    <K extends keyof NormalisedEditorOptions>(name: K, spec: OptionSpec<NormalisedEditorOptions[K], EditorOptions[K]> | SimpleOptionSpec<NormalisedEditorOptions[K]>): void;
     <T, U>(name: string, spec: OptionSpec<T, U>): void;
     <T>(name: string, spec: SimpleOptionSpec<T>): void;
   };
@@ -219,7 +219,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
 
     // Setup the initial values
     const initValue = Obj.get(values, name).orThunk(() => Obj.get(initialOptions, name));
-    // Set the default first in case the current/initial value isn't set
+    // Set the default first in case the current/initial value isn't valid
     if (!Type.isUndefined(defaultValue)) {
       values[name] = defaultValue;
     }

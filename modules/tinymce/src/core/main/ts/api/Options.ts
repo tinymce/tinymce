@@ -634,7 +634,7 @@ const register = (editor: Editor) => {
 
   registerOption('deprecation_warnings', {
     processor: 'boolean',
-    default: false
+    default: true
   });
 
   // These options must be registered later in the init sequence due to their default values

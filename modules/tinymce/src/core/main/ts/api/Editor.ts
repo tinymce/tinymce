@@ -8,13 +8,14 @@
 import { Arr, Fun, Type } from '@ephox/katamari';
 
 import * as EditorContent from '../content/EditorContent';
+import { logDeprecationsWarning } from '../Deprecations';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
-import { getEditorOptions, getParam } from '../EditorSettings';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
 import { NodeChange } from '../NodeChange';
+import { normaliseOptions, getParam } from '../options/NormaliseOptions';
 import SelectionOverrides from '../SelectionOverrides';
 import { UndoManager } from '../undo/UndoManagerTypes';
 import Quirks from '../util/Quirks';
@@ -38,7 +39,7 @@ import Schema from './html/Schema';
 import { create as createMode, EditorMode } from './Mode';
 import NotificationManager from './NotificationManager';
 import * as Options from './Options';
-import { EditorSettings, RawEditorOptions } from './OptionTypes';
+import { NormalisedEditorOptions, RawEditorOptions } from './OptionTypes';
 import PluginManager, { Plugin } from './PluginManager';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
@@ -100,7 +101,7 @@ class Editor implements EditorObservable {
    * // Get the value of the theme setting
    * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.settings.theme + " theme");
    */
-  public settings: EditorSettings;
+  public settings: NormalisedEditorOptions;
 
   /**
    * Editor instance id, normally the same as the div/textarea that was replaced.
@@ -266,11 +267,16 @@ class Editor implements EditorObservable {
     const self = this;
 
     this.id = id;
-    this.settings = getEditorOptions(editorManager.defaultOptions, options);
+    const normalizedOptions = normaliseOptions(editorManager.defaultOptions, options);
+    this.settings = normalizedOptions;
 
-    this.options = createOptions(self, this.settings);
+    this.options = createOptions(self, normalizedOptions);
     Options.register(self);
     const getOption = this.options.get;
+
+    if (getOption('deprecation_warnings')) {
+      logDeprecationsWarning(options, normalizedOptions);
+    }
 
     const suffix = getOption('suffix');
     if (suffix) {
@@ -387,7 +393,7 @@ class Editor implements EditorObservable {
    * var someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
   public getParam <K extends Exclude<BuiltInOptionType, 'function'>>(name: string, defaultVal: BuiltInOptionTypeMap[K], type: K): BuiltInOptionTypeMap[K];
-  public getParam <K extends keyof EditorSettings>(name: K, defaultVal?: EditorSettings[K], type?: string): EditorSettings[K];
+  public getParam <K extends keyof NormalisedEditorOptions>(name: K, defaultVal?: NormalisedEditorOptions[K], type?: string): NormalisedEditorOptions[K];
   public getParam <T>(name: string, defaultVal: T, type?: string): T;
   public getParam(name: string, defaultVal?: any, type?: string): any {
     return getParam(this, name, defaultVal, type);

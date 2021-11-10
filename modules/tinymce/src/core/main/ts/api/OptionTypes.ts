@@ -218,16 +218,14 @@ export interface RawEditorOptions extends BaseEditorOptions {
   plugins?: string | string[];
 }
 
-// EditorSettings.ts processes the plugins setting to turn it into a string
+// NormaliseOptions.ts processes the plugins setting to turn it into a string
 // and merges in the mobile settings
-export interface EditorSettings extends BaseEditorOptions {
+export interface NormalisedEditorOptions extends BaseEditorOptions {
   external_plugins: Record<string, string>;
   plugins: string;
 }
 
-export interface EditorOptions extends BaseEditorOptions {
-  external_plugins: Record<string, string>;
-  plugins: string;
+export interface EditorOptions extends NormalisedEditorOptions {
   content_css: string[];
   font_css: string[];
   forced_root_block: string;

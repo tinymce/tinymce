@@ -7,10 +7,10 @@
 
 import { Arr, Obj } from '@ephox/katamari';
 
-import { EditorSettings, RawEditorOptions } from './api/OptionTypes';
+import { NormalisedEditorOptions, RawEditorOptions } from './api/OptionTypes';
 import Tools from './api/util/Tools';
 
-const deprecatedSettings = (
+const deprecatedOptions = (
   'autoresize_on_init,content_editable_state,convert_fonts_to_spans,inline_styles,padd_empty_with_br,block_elements,' +
   'boolean_attributes,editor_deselector,editor_selector,elements,file_browser_callback_types,filepicker_validator_handler,' +
   'force_hex_style_colors,force_p_newlines,gecko_spellcheck,images_dataimg_filter,media_scripts,mode,move_caret_before_on_enter_elements,' +
@@ -22,18 +22,18 @@ const deprecatedSettings = (
 const deprecatedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,textcolor'.split(',');
 const movedToPremiumPlugins = 'imagetools,toc'.split(',');
 
-const getDeprecatedSettings = (settings: RawEditorOptions): string[] => {
-  const settingNames = Arr.filter(deprecatedSettings, (setting) => Obj.has(settings, setting));
+const getDeprecatedOptions = (options: RawEditorOptions): string[] => {
+  const settingNames = Arr.filter(deprecatedOptions, (setting) => Obj.has(options, setting));
   // Forced root block is a special case whereby only the empty/false value is deprecated
-  const forcedRootBlock = settings.forced_root_block;
+  const forcedRootBlock = options.forced_root_block;
   if (forcedRootBlock === false || forcedRootBlock === '') {
     settingNames.push('forced_root_block (false only)');
   }
   return Arr.sort(settingNames);
 };
 
-const getDeprecatedPlugins = (settings: EditorSettings): string[] => {
-  const plugins = Tools.makeMap(settings.plugins, ' ');
+const getDeprecatedPlugins = (options: NormalisedEditorOptions): string[] => {
+  const plugins = Tools.makeMap(options.plugins, ' ');
   const hasPlugin = (plugin: string) => Obj.has(plugins, plugin);
   const pluginNames = [
     ...Arr.filter(deprecatedPlugins, hasPlugin),
@@ -44,14 +44,14 @@ const getDeprecatedPlugins = (settings: EditorSettings): string[] => {
   return Arr.sort(pluginNames);
 };
 
-const logDeprecationsWarning = (rawSettings: RawEditorOptions, finalSettings: EditorSettings): void => {
+const logDeprecationsWarning = (rawOptions: RawEditorOptions, normalizedOptions: NormalisedEditorOptions): void => {
   // Note: Ensure we use the original user settings, not the final when logging
-  const deprecatedSettings = getDeprecatedSettings(rawSettings);
-  const deprecatedPlugins = getDeprecatedPlugins(finalSettings);
+  const deprecatedSettings = getDeprecatedOptions(rawOptions);
+  const deprecatedPlugins = getDeprecatedPlugins(normalizedOptions);
 
   const hasDeprecatedPlugins = deprecatedPlugins.length > 0;
   const hasDeprecatedSettings = deprecatedSettings.length > 0;
-  const isLegacyMobileTheme = finalSettings.theme === 'mobile';
+  const isLegacyMobileTheme = normalizedOptions.theme === 'mobile';
   if (hasDeprecatedPlugins || hasDeprecatedSettings || isLegacyMobileTheme) {
     const listJoiner = '\n- ';
     const themesMessage = isLegacyMobileTheme ? `\n\nThemes:${listJoiner}mobile` : '';

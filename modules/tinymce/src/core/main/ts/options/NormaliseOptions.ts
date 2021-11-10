@@ -8,11 +8,9 @@
 import { Arr, Fun, Merger, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-import Editor from './api/Editor';
-import Env from './api/Env';
-import { EditorSettings, RawEditorOptions, ToolbarMode } from './api/OptionTypes';
-import Tools from './api/util/Tools';
-import { logDeprecationsWarning } from './Deprecations';
+import Editor from '../api/Editor';
+import { NormalisedEditorOptions, RawEditorOptions, ToolbarMode } from '../api/OptionTypes';
+import Tools from '../api/util/Tools';
 
 interface SectionResult {
   sections: () => Record<string, Partial<RawEditorOptions>>;
@@ -67,6 +65,7 @@ const getToolbarMode = (options: RawEditorOptions, defaultVal: ToolbarMode) =>
   // If toolbar_mode is unset by the user, fall back to:
   Obj.get(options, 'toolbar_mode').getOr(defaultVal);
 
+// TODO: TINY-8235 (TINY-8234) Move more default options to where they are registered
 const getDefaultOptions = (options: RawEditorOptions, isTouch: boolean): RawEditorOptions => {
   const baseDefaults: RawEditorOptions = {
     toolbar_mode: getToolbarMode(options, 'floating')
@@ -119,7 +118,7 @@ const getPlatformPlugins = (isMobileDevice: boolean, sectionResult: SectionResul
   }
 };
 
-const processPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions & { external_plugins: Record<string, string> }): EditorSettings => {
+const processPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions & { external_plugins: Record<string, string> }): NormalisedEditorOptions => {
   const forcedPlugins = normalizePlugins(defaultOverrideOptions.forced_plugins);
   const desktopPlugins = normalizePlugins(options.plugins);
 
@@ -130,10 +129,6 @@ const processPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, d
 
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
 
-  if (Env.browser.isIE() && Arr.contains(combinedPlugins, 'rtc')) {
-    throw new Error('RTC plugin is not supported on IE 11.');
-  }
-
   return Tools.extend(options, {
     plugins: combinedPlugins.join(' ')
   });
@@ -143,7 +138,7 @@ const isOnMobile = (isMobileDevice: boolean, sectionResult: SectionResult) => {
   return isMobileDevice && hasSection(sectionResult, 'mobile');
 };
 
-const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOptions: RawEditorOptions, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): EditorSettings => {
+const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOptions: RawEditorOptions, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalisedEditorOptions => {
   // Use mobile mode by default on phones, so patch in the default mobile options
   const defaultDeviceOptions = isMobileDevice ? { mobile: getDefaultMobileOptions(options.mobile || {}, isPhone) } : { };
   const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(defaultDeviceOptions, options));
@@ -170,16 +165,12 @@ const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOption
   return processPlugins(isMobileDevice, sectionResult, defaultOverrideOptions, extendedOptions);
 };
 
-const getEditorOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): EditorSettings => {
+const normaliseOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalisedEditorOptions => {
   const defaultOptions = getDefaultOptions(options, isTouch);
-  const finalOptions = combineOptions(isPhone || isTablet, isPhone, defaultOptions, defaultOverrideOptions, options);
-  if (finalOptions.deprecation_warnings !== false) {
-    logDeprecationsWarning(options, finalOptions);
-  }
-  return finalOptions;
+  return combineOptions(isPhone || isTablet, isPhone, defaultOptions, defaultOverrideOptions, options);
 };
 
-const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<EditorSettings[K]> => Optional.from(editor.settings[name]).filter(predicate);
+const getFiltered = <K extends keyof NormalisedEditorOptions> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<NormalisedEditorOptions[K]> => Optional.from(editor.settings[name]).filter(predicate);
 
 const getParamObject = (value: string) => {
   let output = {};
@@ -203,6 +194,7 @@ const getParamObject = (value: string) => {
 
 const isArrayOf = (p: (a: any) => boolean) => (a: any) => Type.isArray(a) && Arr.forall(a, p);
 
+// TODO: TINY-8236 (TINY-8234) Remove this once all settings are converted
 const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string) => {
   const value = name in editor.settings ? editor.settings[name] : defaultVal;
 
@@ -227,4 +219,4 @@ const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string)
   }
 };
 
-export { getEditorOptions, getParam, combineOptions, getDefaultOptions, getDefaultMobileOptions };
+export { normaliseOptions, getParam, combineOptions, getDefaultOptions, getDefaultMobileOptions };

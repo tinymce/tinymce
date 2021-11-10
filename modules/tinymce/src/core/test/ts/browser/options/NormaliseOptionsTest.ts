@@ -6,9 +6,9 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
-import * as EditorSettings from 'tinymce/core/EditorSettings';
+import * as NormaliseOptions from 'tinymce/core/options/NormaliseOptions';
 
-describe('browser.tinymce.core.EditorSettingsTest', () => {
+describe('browser.tinymce.core.options.NormaliseOptionsTest', () => {
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch();
 
@@ -34,7 +34,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
   };
 
   it('default desktop settings', () => {
-    const defaultSettings = EditorSettings.getDefaultOptions({}, false);
+    const defaultSettings = NormaliseOptions.getDefaultOptions({}, false);
     Obj.each(expectedDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });
@@ -44,14 +44,14 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
   });
 
   it('default touch device settings', () => {
-    const defaultSettings = EditorSettings.getDefaultOptions({}, true);
+    const defaultSettings = NormaliseOptions.getDefaultOptions({}, true);
     Obj.each(expectedTouchDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });
   });
 
   it('default tablet settings', () => {
-    const defaultSettings = EditorSettings.getDefaultMobileOptions({}, false);
+    const defaultSettings = NormaliseOptions.getDefaultMobileOptions({}, false);
     Obj.each(expectedTabletDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });
@@ -59,7 +59,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
   });
 
   it('default phone settings', () => {
-    const defaultSettings = EditorSettings.getDefaultMobileOptions({}, true);
+    const defaultSettings = NormaliseOptions.getDefaultMobileOptions({}, true);
     Obj.each(expectedPhoneDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });
@@ -75,15 +75,15 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
       menubar: true
     };
 
-    const mobileSettings = EditorSettings.combineOptions(true, true, {}, {}, settings);
+    const mobileSettings = NormaliseOptions.combineOptions(true, true, {}, {}, settings);
     Obj.each(expectedPhoneDefaultSettings, (value, key) => {
       assert.propertyVal(mobileSettings, key, value, `Should have default ${key} setting`);
     });
   });
 
-  context('getEditorSettings', () => {
+  context('normaliseOptions', () => {
     it('Override defaults plugins', () => {
-      const settings = EditorSettings.getEditorOptions(
+      const settings = NormaliseOptions.normaliseOptions(
         {
           defaultSetting: 'a',
           plugins: [ 'a' ]
@@ -108,7 +108,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: [ 'c', 'd' ]
       };
 
-      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
+      const settings = NormaliseOptions.normaliseOptions(defaultSettings, userSettings);
 
       assert.equal(settings.plugins, 'a b c d', 'Should be both forced and user plugins');
     });
@@ -122,7 +122,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: 'c d'
       };
 
-      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
+      const settings = NormaliseOptions.normaliseOptions(defaultSettings, userSettings);
 
       assert.equal(settings.plugins, 'a b c d', 'Should be both forced and user plugins');
     });
@@ -136,7 +136,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: [ ' c ', '  d   e ' ]
       };
 
-      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
+      const settings = NormaliseOptions.normaliseOptions(defaultSettings, userSettings);
 
       assert.equal(settings.plugins, 'a b c d e', 'Should be both forced and user plugins');
     });
@@ -149,7 +149,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
       const userSettings = {
       };
 
-      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
+      const settings = NormaliseOptions.normaliseOptions(defaultSettings, userSettings);
 
       assert.equal(settings.plugins, 'a b', 'Should be just default plugins');
     });
@@ -162,7 +162,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: [ 'a', 'b' ]
       };
 
-      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
+      const settings = NormaliseOptions.normaliseOptions(defaultSettings, userSettings);
 
       assert.equal(settings.plugins, 'a b', 'Should be just user plugins');
     });
@@ -177,13 +177,13 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         plugins: [ 'c', 'd' ]
       };
 
-      const settings = EditorSettings.getEditorOptions(defaultSettings, userSettings);
+      const settings = NormaliseOptions.normaliseOptions(defaultSettings, userSettings);
 
       assert.equal(settings.plugins, 'a b c d', 'Should be just forced and user plugins');
     });
 
     it('Getters for various setting types', () => {
-      const settings = EditorSettings.getEditorOptions(
+      const settings = NormaliseOptions.normaliseOptions(
         {
           plugins: [ 'a' ]
         },
@@ -201,21 +201,21 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         settings
       } as Editor;
 
-      assert.isUndefined(EditorSettings.getParam(fakeEditor, 'non_existing'), 'Should be undefined for non existing setting');
-      assert.isUndefined(EditorSettings.getParam(fakeEditor, 'non_existing'), 'Should be undefined for existing null setting');
-      assert.isUndefined(EditorSettings.getParam(fakeEditor, 'undef'), 'Should be undefined for existing undefined setting');
-      assert.equal(EditorSettings.getParam(fakeEditor, 'string'), 'a', 'Should be some for existing string setting');
-      assert.equal(EditorSettings.getParam(fakeEditor, 'number'), 1, 'Should be some for existing number setting');
-      assert.isTrue(EditorSettings.getParam(fakeEditor, 'boolTrue'), 'Should be some for existing bool setting');
-      assert.isFalse(EditorSettings.getParam(fakeEditor, 'boolFalse'), 'Should be some for existing bool setting');
-      assert.isUndefined(EditorSettings.getParam(fakeEditor, 'non_existing', undefined, 'string'), 'Should be undefined for non existing setting');
-      assert.equal(EditorSettings.getParam(fakeEditor, 'string', undefined, 'string'), 'a', 'Should be some for existing string setting');
-      assert.isUndefined(EditorSettings.getParam(fakeEditor, 'number', undefined, 'string'), 'Should be undefined for existing number setting');
-      assert.isUndefined(EditorSettings.getParam(fakeEditor, 'boolTrue', undefined, 'string'), 'Should be undefined for existing bool setting');
+      assert.isUndefined(NormaliseOptions.getParam(fakeEditor, 'non_existing'), 'Should be undefined for non existing setting');
+      assert.isUndefined(NormaliseOptions.getParam(fakeEditor, 'non_existing'), 'Should be undefined for existing null setting');
+      assert.isUndefined(NormaliseOptions.getParam(fakeEditor, 'undef'), 'Should be undefined for existing undefined setting');
+      assert.equal(NormaliseOptions.getParam(fakeEditor, 'string'), 'a', 'Should be some for existing string setting');
+      assert.equal(NormaliseOptions.getParam(fakeEditor, 'number'), 1, 'Should be some for existing number setting');
+      assert.isTrue(NormaliseOptions.getParam(fakeEditor, 'boolTrue'), 'Should be some for existing bool setting');
+      assert.isFalse(NormaliseOptions.getParam(fakeEditor, 'boolFalse'), 'Should be some for existing bool setting');
+      assert.isUndefined(NormaliseOptions.getParam(fakeEditor, 'non_existing', undefined, 'string'), 'Should be undefined for non existing setting');
+      assert.equal(NormaliseOptions.getParam(fakeEditor, 'string', undefined, 'string'), 'a', 'Should be some for existing string setting');
+      assert.isUndefined(NormaliseOptions.getParam(fakeEditor, 'number', undefined, 'string'), 'Should be undefined for existing number setting');
+      assert.isUndefined(NormaliseOptions.getParam(fakeEditor, 'boolTrue', undefined, 'string'), 'Should be undefined for existing bool setting');
     });
 
     it('Mobile override', () => {
-      const settings = EditorSettings.getEditorOptions(
+      const settings = NormaliseOptions.normaliseOptions(
         {
           settingB: false
         },
@@ -231,16 +231,16 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         settings
       } as Editor;
 
-      assert.equal(EditorSettings.getParam(fakeEditor, 'settingA', false), isTouch, 'Should only have the mobile setting on touch');
-      assert.equal(EditorSettings.getParam(fakeEditor, 'settingB', false), isTouch, 'Should have the expected mobile setting value on touch');
-      assert.equal(EditorSettings.getParam(fakeEditor, 'settingB', true), isTouch, 'Should have the expected desktop setting on desktop');
+      assert.equal(NormaliseOptions.getParam(fakeEditor, 'settingA', false), isTouch, 'Should only have the mobile setting on touch');
+      assert.equal(NormaliseOptions.getParam(fakeEditor, 'settingB', false), isTouch, 'Should have the expected mobile setting value on touch');
+      assert.equal(NormaliseOptions.getParam(fakeEditor, 'settingB', true), isTouch, 'Should have the expected desktop setting on desktop');
     });
   });
 
   context('combineSettings', () => {
     it('Merged settings (desktop)', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(false, false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 }),
+        NormaliseOptions.combineOptions(false, false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 }),
         { a: 1, b: 2, c: 3, external_plugins: {}, plugins: '' },
         'Should have validate, forced and empty plugins in the merged settings'
       );
@@ -248,7 +248,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings forced_plugins in default override settings (desktop)', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
+        NormaliseOptions.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
         { external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
         'Should have plugins merged with forced plugins'
       );
@@ -256,7 +256,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings forced_plugins in default override settings (mobile)', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
+        NormaliseOptions.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
         { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
         'Should be have plugins merged with forced plugins'
       );
@@ -264,7 +264,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings forced_plugins in default override settings with user mobile settings (desktop)', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, {
+        NormaliseOptions.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, {
           plugins: [ 'b' ],
           mobile: { plugins: [ 'c' ], toolbar_sticky: true }
         }),
@@ -275,7 +275,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings when theme is silver, forced_plugins in default override settings with user mobile settings (mobile)', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] }}),
+        NormaliseOptions.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] }}),
         { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a lists custom' },
         'Should not merge forced_plugins with mobile plugins when theme is not mobile'
       );
@@ -283,7 +283,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings forced_plugins in default override forced_plugins in user settings', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, { forced_plugins: [ 'b' ] }),
+        NormaliseOptions.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, { forced_plugins: [ 'b' ] }),
         { external_plugins: {}, forced_plugins: [ 'b' ], plugins: 'a' },
         'Should not have user forced plugins'
       );
@@ -291,7 +291,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings when mobile.plugins is undefined, on a mobile device', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {}}),
+        NormaliseOptions.combineOptions(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {}}),
         { ...expectedPhoneDefaultSettings, external_plugins: {}, plugins: 'lists b autolink', theme: 'silver' },
         'Should use settings.plugins when mobile theme is not set'
       );
@@ -299,7 +299,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings with empty mobile.plugins="" on mobile', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(true, true, {}, {}, { mobile: { plugins: '' }}),
+        NormaliseOptions.combineOptions(true, true, {}, {}, { mobile: { plugins: '' }}),
         { ...expectedPhoneDefaultSettings, external_plugins: {}, plugins: '' },
         'Should not have any plugins when mobile.plugins is explicitly empty'
       );
@@ -307,7 +307,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings with defined mobile.plugins', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }}),
+        NormaliseOptions.combineOptions(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }}),
         { ...expectedPhoneDefaultSettings, external_plugins: {}, plugins: 'lists autolink foo bar' },
         'Should allow all plugins'
       );
@@ -315,7 +315,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings with mobile.theme silver and mobile.plugins', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(true, true, {}, {}, {
+        NormaliseOptions.combineOptions(true, true, {}, {}, {
           theme: 'test',
           mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
         }),
@@ -326,7 +326,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
 
     it('Merged settings with mobile.theme silver and mobile.plugins on Desktop', () => {
       assert.deepEqual(
-        EditorSettings.combineOptions(false, false, {}, {}, {
+        NormaliseOptions.combineOptions(false, false, {}, {}, {
           theme: 'silver',
           plugins: [ 'aa', 'bb', 'cc' ],
           mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
@@ -347,12 +347,12 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         hash5: 'a=b,c=d'
       }, EditorManager);
 
-      assert.deepEqual(EditorSettings.getParam(editor, 'hash1', {}, 'hash'), { a: 'a', b: 'b', c: 'c' }, 'Should be expected object');
-      assert.deepEqual(EditorSettings.getParam(editor, 'hash2', {}, 'hash'), { a: 'a' }, 'Should be expected object');
-      assert.deepEqual(EditorSettings.getParam(editor, 'hash3', {}, 'hash'), { a: 'b' }, 'Should be expected object');
-      assert.deepEqual(EditorSettings.getParam(editor, 'hash4', {}, 'hash'), { a: 'b', c: 'd,e' }, 'Should be expected object');
-      assert.deepEqual(EditorSettings.getParam(editor, 'hash5', {}, 'hash'), { a: 'b', c: 'd' }, 'Should be expected object');
-      assert.deepEqual(EditorSettings.getParam(editor, 'hash_undefined', { b: 2 }, 'hash'), { b: 2 }, 'Should be expected default object');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'hash1', {}, 'hash'), { a: 'a', b: 'b', c: 'c' }, 'Should be expected object');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'hash2', {}, 'hash'), { a: 'a' }, 'Should be expected object');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'hash3', {}, 'hash'), { a: 'b' }, 'Should be expected object');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'hash4', {}, 'hash'), { a: 'b', c: 'd,e' }, 'Should be expected object');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'hash5', {}, 'hash'), { a: 'b', c: 'd' }, 'Should be expected object');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'hash_undefined', { b: 2 }, 'hash'), { b: 2 }, 'Should be expected default object');
     });
 
     it('getParam primary types', () => {
@@ -367,23 +367,23 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
         mixedArr: [ 'a', 3 ]
       }, EditorManager);
 
-      assert.isTrue(EditorSettings.getParam(editor, 'bool', false, 'boolean'), 'Should be expected bool');
-      assert.equal(EditorSettings.getParam(editor, 'str', 'x', 'string'), 'a', 'Should be expected string');
-      assert.equal(EditorSettings.getParam(editor, 'num', 1, 'number'), 2, 'Should be expected number');
-      assert.deepEqual(EditorSettings.getParam(editor, 'obj', {}, 'object'), { a: 1 }, 'Should be expected object');
-      assert.deepEqual(EditorSettings.getParam(editor, 'arr', [], 'array'), [ 'a' ], 'Should be expected array');
-      assert.equal(typeof EditorSettings.getParam(editor, 'fun', null, 'function'), 'function', 'Should be expected function');
+      assert.isTrue(NormaliseOptions.getParam(editor, 'bool', false, 'boolean'), 'Should be expected bool');
+      assert.equal(NormaliseOptions.getParam(editor, 'str', 'x', 'string'), 'a', 'Should be expected string');
+      assert.equal(NormaliseOptions.getParam(editor, 'num', 1, 'number'), 2, 'Should be expected number');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'obj', {}, 'object'), { a: 1 }, 'Should be expected object');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'arr', [], 'array'), [ 'a' ], 'Should be expected array');
+      assert.equal(typeof NormaliseOptions.getParam(editor, 'fun', null, 'function'), 'function', 'Should be expected function');
 
       // Defaults/fallbacks
-      assert.isFalse(EditorSettings.getParam(editor, 'bool_undefined', false, 'boolean'), 'Should be expected default bool');
-      assert.equal(EditorSettings.getParam(editor, 'str_undefined', 'x', 'string'), 'x', 'Should be expected default string');
-      assert.equal(EditorSettings.getParam(editor, 'num_undefined', 1, 'number'), 1, 'Should be expected default number');
-      assert.deepEqual(EditorSettings.getParam(editor, 'obj_undefined', {}, 'object'), {}, 'Should be expected default object');
-      assert.deepEqual(EditorSettings.getParam(editor, 'arr_undefined', [], 'array'), [], 'Should be expected default array');
-      assert.isNull(EditorSettings.getParam(editor, 'fun_undefined', null, 'function'), 'Should be expected default function');
-      assert.deepEqual(EditorSettings.getParam(editor, 'strArr', [ 'x' ], 'string[]'), [ 'a', 'b' ], 'Should be expected string array');
-      assert.deepEqual(EditorSettings.getParam(editor, 'mixedArr', [ 'x' ], 'string[]'), [ 'x' ], 'Should be expected default array on mixed types');
-      assert.deepEqual(EditorSettings.getParam(editor, 'bool', [ 'x' ], 'string[]'), [ 'x' ], 'Should be expected default array on boolean');
+      assert.isFalse(NormaliseOptions.getParam(editor, 'bool_undefined', false, 'boolean'), 'Should be expected default bool');
+      assert.equal(NormaliseOptions.getParam(editor, 'str_undefined', 'x', 'string'), 'x', 'Should be expected default string');
+      assert.equal(NormaliseOptions.getParam(editor, 'num_undefined', 1, 'number'), 1, 'Should be expected default number');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'obj_undefined', {}, 'object'), {}, 'Should be expected default object');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'arr_undefined', [], 'array'), [], 'Should be expected default array');
+      assert.isNull(NormaliseOptions.getParam(editor, 'fun_undefined', null, 'function'), 'Should be expected default function');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'strArr', [ 'x' ], 'string[]'), [ 'a', 'b' ], 'Should be expected string array');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'mixedArr', [ 'x' ], 'string[]'), [ 'x' ], 'Should be expected default array on mixed types');
+      assert.deepEqual(NormaliseOptions.getParam(editor, 'bool', [ 'x' ], 'string[]'), [ 'x' ], 'Should be expected default array on boolean');
     });
   });
 });
