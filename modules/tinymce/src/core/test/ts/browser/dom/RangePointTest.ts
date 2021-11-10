@@ -5,13 +5,12 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as RangePoint from 'tinymce/core/dom/RangePoint';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.dom.RangePointsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body, p { margin: 0 }'
-  }, [ Theme ]);
+  }, []);
 
   const pAssertXYWithinRange = (editor: Editor, x: number, y: number) => Waiter.pTryUntil('Assert XY position is within selection range', () => {
     const actual = RangePoint.isXYWithinRange(x, y, editor.selection.getRng());

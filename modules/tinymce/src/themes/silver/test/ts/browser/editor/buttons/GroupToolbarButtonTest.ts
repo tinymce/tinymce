@@ -1,18 +1,14 @@
 import { ApproxStructure, Assertions, Mouse, StructAssert, UiFinder } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { extractOnlyOne } from '../../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const defaultToolbarGroupSettings = {
     toolbar: 'formatting',

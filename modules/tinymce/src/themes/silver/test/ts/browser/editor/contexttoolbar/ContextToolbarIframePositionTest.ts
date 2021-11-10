@@ -8,7 +8,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { getGreenImageDataUrl } from '../../../module/Assets';
 
@@ -70,7 +69,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
         position: 'node'
       });
     }
-  }, [ FullscreenPlugin, Theme ], true);
+  }, [ FullscreenPlugin ], true);
 
   beforeEach(() => {
     // Reset scroll position for each test

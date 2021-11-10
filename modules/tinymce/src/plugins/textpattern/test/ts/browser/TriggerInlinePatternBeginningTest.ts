@@ -4,14 +4,13 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/textpattern/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.textpattern.TriggerInlinePatternBeginningTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'textpattern',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   beforeEach(() => {
     const editor = hook.editor();

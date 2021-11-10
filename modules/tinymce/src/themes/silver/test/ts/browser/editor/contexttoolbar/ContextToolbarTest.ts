@@ -5,7 +5,6 @@ import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest', () => {
   const store = TestHelpers.TestStore();
@@ -21,7 +20,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
         items: 'alpha'
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   it('TBA: Moving selection away from the context toolbar predicate should make it disappear', async () => {
     const editor = hook.editor();

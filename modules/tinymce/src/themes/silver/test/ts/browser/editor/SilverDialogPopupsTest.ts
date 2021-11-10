@@ -6,7 +6,6 @@ import { SelectorExists, SugarBody, SugarDocument, SugarElement, WindowSelection
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.DialogPopupsTest', () => {
   before(function () {
@@ -64,7 +63,7 @@ describe('browser.tinymce.themes.silver.editor.DialogPopupsTest', () => {
         })
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const pWaitForDialogClosed = () => Waiter.pTryUntil(
     'Waiting for dialog to close',

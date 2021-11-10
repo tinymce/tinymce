@@ -3,7 +3,6 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { annotate, assertHtmlContent } from '../../module/test/AnnotationAsserts';
 
@@ -22,7 +21,7 @@ describe('browser.tinymce.core.annotate.AnnotateTest', () => {
         });
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   // TODO: Consider testing collapse sections.
   it('should word grab with a collapsed selection', () => {

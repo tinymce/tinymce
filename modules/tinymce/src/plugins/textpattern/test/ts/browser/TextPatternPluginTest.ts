@@ -8,7 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -17,7 +16,7 @@ describe('browser.tinymce.plugins.textpattern.TextPatternPluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'textpattern lists',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ ListsPlugin, TextPatternPlugin, Theme ]);
+  }, [ ListsPlugin, TextPatternPlugin ]);
 
   beforeEach(() => {
     const editor = hook.editor();

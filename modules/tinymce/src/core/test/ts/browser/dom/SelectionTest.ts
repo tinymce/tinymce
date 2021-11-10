@@ -6,7 +6,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.dom.SelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -20,7 +19,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     custom_elements: 'custom1,~custom2',
     extended_valid_elements: 'custom1,custom2',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('getContent', () => {
     const editor = hook.editor();

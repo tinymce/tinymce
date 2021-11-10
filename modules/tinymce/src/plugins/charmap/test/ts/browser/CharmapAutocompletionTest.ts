@@ -4,14 +4,13 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiAc
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.charmap.AutocompletionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'charmap',
     toolbar: 'charmap',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: Autocomplete, trigger an autocomplete and check it appears', async () => {
     const editor = hook.editor();

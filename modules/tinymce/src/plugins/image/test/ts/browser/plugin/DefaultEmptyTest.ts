@@ -3,7 +3,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, assertInputValue, fillActiveDialog, generalTabSelectors } from '../../module/Helpers';
 
@@ -12,7 +11,7 @@ describe('browser.tinymce.plugins.image.plugin.DefaultEmptyTest', () => {
     plugins: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: default image dialog on empty data', async () => {
     const editor = hook.editor();

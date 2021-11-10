@@ -1,18 +1,14 @@
-import { before, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings, ToolbarMode } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as UiUtils from '../../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const assertToolbarToggleState = (editor: Editor, expected: boolean) => {
     const state = editor.queryCommandState('ToggleToolbarDrawer');

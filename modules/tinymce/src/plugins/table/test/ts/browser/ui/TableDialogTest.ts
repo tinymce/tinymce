@@ -4,7 +4,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     },
     table_advtab: false,
     statusbar: false
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const generalSelectors = {
     width: 'label.tox-label:contains(Width) + input.tox-textfield',

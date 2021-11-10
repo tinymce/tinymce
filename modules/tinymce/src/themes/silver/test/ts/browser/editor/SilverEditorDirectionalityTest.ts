@@ -5,11 +5,9 @@ import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.SilverEditorDirectionalityTest', () => {
   before(() => {
-    Theme();
     EditorManager.addI18n('ar', {
       Bold: 'Bold test',
       _dir: 'rtl'

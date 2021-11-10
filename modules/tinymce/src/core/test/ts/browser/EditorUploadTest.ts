@@ -1,5 +1,5 @@
 import { afterEach, before, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Fun, Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -11,7 +11,6 @@ import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Promise from 'tinymce/core/api/util/Promise';
 import * as Conversions from 'tinymce/core/file/Conversions';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const assertResult = (editor: Editor, title: string, uploadUri: string, uploadedBlobInfo: BlobInfo, result: UploadResult[]) => {
   const firstResult = result[0];
@@ -29,6 +28,20 @@ const assertResult = (editor: Editor, title: string, uploadUri: string, uploaded
   assert.equal(editor.getContent(), '<p><img src="' + uploadedBlobInfo.filename() + '" /></p>', title);
 
   return result;
+};
+
+const random = (min: number, max: number) =>
+  Math.round(Math.random() * (max - min) + min);
+
+const randBlobDataUri = (width: number, height: number) => {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  const imageData = ctx.createImageData(width, height);
+  imageData.data.set(Arr.range(imageData.data.length, () => random(0, 255)));
+  ctx.putImageData(imageData, 0, 0);
+  return canvas.toDataURL();
 };
 
 const hasBlobAsSource = (elm: HTMLImageElement) => elm.src.indexOf('blob:') === 0;
@@ -76,7 +89,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => ed.on('change', appendEvent)
-  }, [ Theme ]);
+  }, []);
 
   afterEach(() => {
     const editor = hook.editor();
@@ -442,5 +455,46 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     const editor = hook.editor();
     editor.setContent('<img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6">');
     assert.equal(editor.getContent(), '<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6" /></p>', 'Retain blobs not in blob cache');
+  });
+
+  it('TINY-7735: UploadResult should contain the removed flag if the {remove: true} option was passed to the failure callback', () => {
+    const editor = hook.editor();
+    let uploadCount = 0;
+
+    const uploadDone = (result: UploadResult[]) => {
+
+      assert.isTrue(result[0].status, 'first image upload is successful');
+      assert.isFalse(result[0].removed, 'removed flag is false');
+      assert.isFalse(result[1].status, 'second image upload is failed');
+      assert.isFalse(result[1].removed, 'removed flag is false');
+      assert.isFalse(result[2].status, 'third image upload is failed');
+      assert.isTrue(result[2].removed, 'removed flag is true');
+    };
+
+    const imgHtml1 = imageHtml(randBlobDataUri(10, 10));
+    const imgHtml2 = imageHtml(randBlobDataUri(10, 10));
+    const imgHtml3 = imageHtml(randBlobDataUri(10, 10));
+
+    setInitialContent(editor, imgHtml1 + imgHtml2 + imgHtml3);
+
+    editor.settings.images_upload_handler = (_data: BlobInfo, success, failure) => {
+      uploadCount++;
+
+      if (uploadCount === 1 ) {
+        setTimeout(() => {
+          success('file.png');
+        }, 0);
+      } else if (uploadCount === 2 ) {
+        setTimeout(() => {
+          failure('Error');
+        }, 0);
+      } else if (uploadCount === 3 ) {
+        setTimeout(() => {
+          failure('Error', { remove: true });
+        }, 0);
+      }
+    };
+
+    return editor.uploadImages(uploadDone);
   });
 });

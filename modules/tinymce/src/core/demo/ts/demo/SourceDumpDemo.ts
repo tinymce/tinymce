@@ -11,15 +11,15 @@ export default () => {
     ],
     image_caption: true,
     plugins: [
-      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
+      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-      'save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern',
+      'save table directionality emoticons template paste importcss textpattern',
       'codesample help noneditable print'
     ],
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
     toolbar: 'fontsizeselect fontselect insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
-    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     init_instance_callback: (editor) => {
       editor.on('init keyup change', () => dumpSource(editor));
     }

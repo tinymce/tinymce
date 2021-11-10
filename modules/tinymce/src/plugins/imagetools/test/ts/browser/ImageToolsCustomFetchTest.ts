@@ -7,7 +7,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as ImageUtils from '../module/test/ImageUtils';
 
@@ -22,7 +21,7 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsCustomFetchTest', () => {
     images_upload_handler: uploadHandlerState.handler(srcUrl),
     imagetools_cors_hosts: [ 'localhost' ],
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: flip image with custom fetch image', async () => {
     const editor = hook.editor();

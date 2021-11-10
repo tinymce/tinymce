@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
@@ -17,7 +16,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const pressEnter = (editor: Editor, evt?: any) => {
     const dom = editor.dom;

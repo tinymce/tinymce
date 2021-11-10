@@ -6,7 +6,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as SmartPaste from 'tinymce/plugins/paste/core/SmartPaste';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 // Test cases for TINY-4523 - image url/anchor link paste smartpaste/pasteAsText interactions
 // Pasting an image anchor link (<a href=”….jpg”>):
@@ -25,7 +24,7 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
     indent: false,
     plugins: 'paste',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   beforeEach(() => {
     const editor = hook.editor();

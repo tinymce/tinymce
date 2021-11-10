@@ -6,14 +6,13 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.TableSizingModeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     width: 800,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const test = (editor: Editor, assertion: ApproxStructure.Builder<StructAssert>, defaultStyles?: Record<string, string>) => {
     editor.setContent('');

@@ -4,7 +4,6 @@ import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/textpattern/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.plugins.textpattern.ReplacementTest', () => {
     indent: false,
     plugins: 'textpattern',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   beforeEach(() => {
     const editor = hook.editor();

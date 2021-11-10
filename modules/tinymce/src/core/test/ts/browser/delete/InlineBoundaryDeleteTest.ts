@@ -8,12 +8,11 @@ import Editor from 'tinymce/core/api/Editor';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const locationName = (location: BoundaryLocation.LocationAdt) => {
     return location.fold(

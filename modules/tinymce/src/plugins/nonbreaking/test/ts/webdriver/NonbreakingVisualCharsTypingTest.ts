@@ -7,7 +7,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
 import VisualCharsPlugin from 'tinymce/plugins/visualchars/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest', () => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
@@ -16,7 +15,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
     toolbar: 'nonbreaking visualchars',
     visualchars_default_state: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, NonbreakingPlugin, VisualCharsPlugin ]);
+  }, [ NonbreakingPlugin, VisualCharsPlugin ]);
 
   const detection = PlatformDetection.detect();
 

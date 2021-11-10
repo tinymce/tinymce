@@ -6,7 +6,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import URI from 'tinymce/core/api/util/URI';
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as ImageUtils from '../module/test/ImageUtils';
 
@@ -21,7 +20,7 @@ describe('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', () => {
     automatic_uploads: false,
     images_upload_handler: uploadHandlerState.handler(srcUrl),
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   // Some browsers can transform BMP images on the canvas, others can't. When that happens the image is converted to a PNG.
   // See https://html.spec.whatwg.org/multipage/canvas.html#serialising-bitmaps-to-a-file

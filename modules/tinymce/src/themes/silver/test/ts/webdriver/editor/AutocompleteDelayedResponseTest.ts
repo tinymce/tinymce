@@ -7,7 +7,6 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinyUiActions } from '@e
 
 import Editor from 'tinymce/core/api/Editor';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { AutocompleterStructure, pAssertAutocompleterStructure, pWaitForAutocompleteToClose } from '../../module/AutocompleterUtils';
 
@@ -59,7 +58,7 @@ describe('webdriver.tinymce.themes.silver.editor.AutocompleteDelayedResponseTest
         }
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const pTestAutocompleter = async (scenario: Scenario) => {
     const editor = hook.editor();

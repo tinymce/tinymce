@@ -7,7 +7,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { Clipboard } from 'tinymce/plugins/paste/api/Clipboard';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     paste_data_images: true,
     plugins: 'paste',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   beforeEach(() => {
     const editor = hook.editor();

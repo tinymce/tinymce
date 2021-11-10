@@ -4,7 +4,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -15,7 +14,7 @@ describe('browser.tinymce.plugins.table.TableDefaultAttributesWithColGroupsTest'
     base_url: '/project/tinymce/js/tinymce',
     statusbar: false,
     table_use_colgroups: true
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   beforeEach(() => {
     hook.editor().setContent('');

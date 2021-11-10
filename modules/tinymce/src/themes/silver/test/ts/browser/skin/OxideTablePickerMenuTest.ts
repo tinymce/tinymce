@@ -6,7 +6,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const tableCellsApprox = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi, selectedRows: number, selectedCols: number) => {
   const cells: StructAssert[] = [];
@@ -72,7 +71,7 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
         getSubmenuItems: () => [ tableMenuItem ]
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   it('TBA: Check structure of table picker', async () => {
     const editor = hook.editor();

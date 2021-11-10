@@ -6,7 +6,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as Utils from 'tinymce/plugins/paste/core/Utils';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Strings from '../module/test/Strings';
 
@@ -17,7 +16,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
     indent: false,
     plugins: 'paste',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   beforeEach(() => {
     const editor = hook.editor();

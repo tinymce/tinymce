@@ -6,7 +6,6 @@ import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', () => {
   const store = TestHelpers.TestStore();
@@ -33,7 +32,7 @@ describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', ()
         onItemAction: store.adder('onItemAction')
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   it('Check structure of toolbar collection', async () => {
     const editor = hook.editor();

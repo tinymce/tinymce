@@ -5,7 +5,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, fakeEvent, fillActiveDialog, generalTabSelectors } from '../../module/Helpers';
 
@@ -16,7 +15,7 @@ describe('browser.tinymce.plugins.image.plugin.PrependAbsoluteTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     image_prepend_url: prependUrl
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: image recognizes relative src url and prepends absolute image_prepend_url setting.', async () => {
     const editor = hook.editor();

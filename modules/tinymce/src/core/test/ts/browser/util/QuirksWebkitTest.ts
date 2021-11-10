@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     indent: false,
     disable_nodechange: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   it('Delete from beginning of P into H1', () => {
     const editor = hook.editor();

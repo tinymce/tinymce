@@ -4,7 +4,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     image_caption: true
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const pOpenContextMenu = async (editor: Editor, target: string) => {
     // Not sure why this is needed, but without the browser deselects the contextmenu target

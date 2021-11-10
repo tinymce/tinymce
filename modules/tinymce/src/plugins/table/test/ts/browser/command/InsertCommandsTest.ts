@@ -6,7 +6,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.command.InsertCommandsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.table.command.InsertCommandsTest', () => {
     setup: (editor: Editor) => {
       editor.on('tablemodified', logEvent);
     }
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const cleanTableHtml = (html: string) =>
     html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
