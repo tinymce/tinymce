@@ -52,6 +52,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     '</table>';
 
   const imageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100"/>');
+  const placeholderImageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100" data-mce-placeholder="1"/>');
   const linkInTableHtml = contentInTableHtml('<a href="http://tiny.cloud/">Tiny</a>');
 
   // In Firefox we add a a bogus br element after the link that fixes a gecko link bug when,
@@ -149,6 +150,25 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     await pAssertFocusOnItem('Remove Link', '.tox-collection__item:contains("Remove link")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Open Link', '.tox-collection__item:contains("Open link")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")');
+    pressDownArrowKey();
+    await pAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")');
+  });
+
+  it('TBA: Test context menus on placeholder image inside a table', async () => {
+    const editor = hook.editor();
+    // Placeholder images shouldn't show the image/image tools options
+    editor.setContent(placeholderImageInTableHtml);
+    TinySelections.select(editor, 'img', []);
+    await pOpenContextMenu(editor, 'img');
+    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")');
     pressDownArrowKey();
