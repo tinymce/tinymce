@@ -10,7 +10,7 @@ import { SugarElement, SugarElements } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ResizeHandler } from 'tinymce/models/dom/table/main/ts/actions/ResizeHandler';
-import { Api as TableModelApi } from 'tinymce/models/dom/table/main/ts/api/Api';
+// import { Api as TableModelApi } from 'tinymce/models/dom/table/main/ts/api/Api';
 import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/main/ts/core/Clipboard';
 
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -43,13 +43,14 @@ const insertTable = (editor: Editor) => (columns: number, rows: number, options:
   return table;
 };
 
-const getApi = (editor: Editor, clipboard: FakeClipboard, selectionTargets: SelectionTargets, tableModelApi: TableModelApi): Api => ({
+const getApi = (editor: Editor, clipboard: FakeClipboard, selectionTargets: SelectionTargets): Api => ({
   insertTable: insertTable(editor),
   setClipboardRows: setClipboardElements(clipboard.setRows),
   getClipboardRows: getClipboardElements(clipboard.getRows),
   setClipboardCols: setClipboardElements(clipboard.setColumns),
   getClipboardCols: getClipboardElements(clipboard.getColumns),
-  resizeHandler: tableModelApi.resizeHandler,
+  // resizeHandler: editor.selection.tableResizeHandler,
+  resizeHandler: editor.model.table.resizeHandler,
   selectionTargets,
 });
 

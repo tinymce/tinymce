@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 
 import * as Util from '../core/Util';
-import { CellSelectionApi } from '../selection/CellSelection';
+// import { CellSelectionApi } from '../selection/CellSelection';
 
 const forward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: SugarElement<HTMLTableCellElement>) =>
   go(editor, isRoot, CellNavigation.next(cell, ContentEditable.isEditable));
@@ -40,7 +40,8 @@ const go = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: Ce
 
 const rootElements = [ 'table', 'li', 'dl' ];
 
-const handle = (event: KeyboardEvent, editor: Editor, cellSelection: CellSelectionApi): void => {
+// const handle = (event: KeyboardEvent, editor: Editor, cellSelection: CellSelectionApi): void => {
+const handle = (event: KeyboardEvent, editor: Editor): void => {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
     const isRoot = (element: SugarElement<Node>) => {
@@ -54,7 +55,7 @@ const handle = (event: KeyboardEvent, editor: Editor, cellSelection: CellSelecti
     TableLookup.cell(container, isRoot).each((cell) => {
       event.preventDefault();
       // Clear fake ranged selection because our new selection will always be collapsed
-      TableLookup.table(cell, isRoot).each(cellSelection.clear);
+      TableLookup.table(cell, isRoot).each(editor.selection.tableCellSelection.clear);
       // Collapse selection to start or end based on shift key
       editor.selection.collapse(event.shiftKey);
       const navigation = event.shiftKey ? backward : forward;

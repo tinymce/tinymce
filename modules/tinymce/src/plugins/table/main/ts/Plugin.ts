@@ -30,7 +30,7 @@ const Plugin = (editor: Editor): Api => {
   Buttons.addButtons(editor, selectionTargets, clipboard);
   Buttons.addToolbars(editor);
 
-  return getApi(editor, clipboard, selectionTargets, tableModel);
+  return getApi(editor, clipboard, selectionTargets);
 };
 
 export default (): void => {

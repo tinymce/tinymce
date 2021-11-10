@@ -18,7 +18,7 @@ import * as Events from '../api/Events';
 import { getCloneElements, isResizeTableColumnResizing, getTableHeaderType } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
-import { CellSelectionApi } from '../selection/CellSelection';
+// import { CellSelectionApi } from '../selection/CellSelection';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T, noEvents?: boolean) => Optional<TableActionResult>;
 export interface TableActionResult {
@@ -59,7 +59,13 @@ export interface TableActions {
   readonly getTableColType: LookupAction;
 }
 
-export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, lazyWire: () => ResizeWire): TableActions => {
+// export const TableActions = (editor: Editor, cellSelection: CellSelectionApi): TableActions => {
+// export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, lazyWire: () => ResizeWire): TableActions => {
+export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
+  // TODO: This might not be initialised yet which could be a problem
+  // const lazyWire = editor.selection.tableResizeHandler.lazyWire;
+  // console.log('lazyWire', lazyWire);
+
   const isTableBody = (editor: Editor): boolean =>
     SugarNode.name(Util.getBody(editor)) === 'table';
 
@@ -95,7 +101,7 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
       // with noneditable cells, so lets check if we have a noneditable cell and if so place the selection
       const cells = TableLookup.cells(table);
       return Arr.head(cells).filter(SugarBody.inBody).map((firstCell) => {
-        cellSelection.clear(table);
+        editor.selection.tableCellSelection.clear(table);
         const rng = editor.dom.createRng();
         rng.selectNode(firstCell.dom);
         editor.selection.setRng(rng);
@@ -108,7 +114,7 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
       rng.setStart(des.element.dom, des.offset);
       rng.setEnd(des.element.dom, des.offset);
       editor.selection.setRng(rng);
-      cellSelection.clear(table);
+      editor.selection.tableCellSelection.clear(table);
       return Optional.some(rng);
     });
 

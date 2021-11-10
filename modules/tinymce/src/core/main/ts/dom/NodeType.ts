@@ -72,7 +72,7 @@ const hasAttributeValue = (attrName: string, attrValue: string) => {
 
 const isBogus = (node: NullableNode): node is Element => isElement(node) && node.hasAttribute('data-mce-bogus');
 const isBogusAll = (node: NullableNode): node is Element => isElement(node) && node.getAttribute('data-mce-bogus') === 'all';
-const isTable = (node: NullableNode): node is Element => isElement(node) && node.tagName === 'TABLE';
+const isTable = (node: NullableNode): node is HTMLTableElement => isElement(node) && node.tagName === 'TABLE';
 
 const hasContentEditableState = (value: string) => {
   return (node: NullableNode): node is HTMLElement => {

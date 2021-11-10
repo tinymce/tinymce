@@ -32,7 +32,7 @@ const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
 const getCellsFromSelection = (selections: PatchedSelections): SugarElement<HTMLTableCellElement>[] =>
-  CellOpSelection.selection(selections);
+  CellOpSelection.selection(selections.get);
 
 const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
   const cellOpt = getSelectionCell(selected);

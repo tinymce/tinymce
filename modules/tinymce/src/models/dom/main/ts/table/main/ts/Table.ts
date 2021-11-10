@@ -22,7 +22,7 @@ import { Clipboard as FakeClipboard } from './core/Clipboard';
 import * as TableFormats from './core/TableFormats';
 // import * as Util from './core/Util';
 import * as TabContext from './queries/TabContext';
-import CellSelection from './selection/CellSelection';
+// import CellSelection from './selection/CellSelection';
 import { ephemera } from './selection/Ephemera';
 import { getSelectionTargets } from './selection/SelectionTargets';
 // import { getSelectionCell } from './selection/TableSelection';
@@ -44,9 +44,13 @@ const setupTable = (editor: Editor): Api => {
 
   const selectionTargets = getSelectionTargets(editor);
   const resizeHandler = getResizeHandler(editor);
+  // const resizeHandler = editor.selection.tableResizeHandler;
+  // console.log(resizeHandler);
   // TODO: I don't think we want CellSelection here as the selection should be in core but leave here for now
-  const cellSelection = CellSelection(editor, resizeHandler.lazyResize, selectionTargets);
-  const actions = TableActions(editor, cellSelection, resizeHandler.lazyWire);
+  // const cellSelection = CellSelection(editor, selectionTargets, resizeHandler.lazyResize);
+  // const cellSelection = CellSelection(editor, resizeHandler.lazyResize);
+  // const actions = TableActions(editor, cellSelection, resizeHandler.lazyWire);
+  const actions = TableActions(editor, resizeHandler.lazyWire);
   const clipboard = FakeClipboard();
 
   Commands.registerCommands(editor, actions, clipboard);
@@ -64,7 +68,8 @@ const setupTable = (editor: Editor): Api => {
   // TODO: Move to core - keyboard overrides
   if (hasTabNavigation(editor)) {
     editor.on('keydown', (e: KeyboardEvent) => {
-      TabContext.handle(e, editor, cellSelection);
+      // TabContext.handle(e, editor, cellSelection);
+      TabContext.handle(e, editor);
     });
   }
 
@@ -74,7 +79,8 @@ const setupTable = (editor: Editor): Api => {
 
   // TODO: Attempt making the API just in the internal APIs
   // Maybe add ephemera to the API as well
-  return getApi(clipboard, resizeHandler, selectionTargets, cellSelection);
+  // return getApi(clipboard, resizeHandler, selectionTargets, cellSelection);
+  return getApi(clipboard, resizeHandler, selectionTargets);
 };
 
 export {
