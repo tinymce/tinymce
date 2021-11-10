@@ -182,6 +182,12 @@ class Editor implements EditorObservable {
    */
   public mode: EditorMode;
 
+  /**
+   * Editor options API
+   *
+   * @property options
+   * @type tinymce.options.Options
+   */
   public options: EditorOptions;
 
   public shortcuts: Shortcuts;
