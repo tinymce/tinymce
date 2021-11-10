@@ -218,12 +218,12 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     };
 
     // Setup the initial values
-    if (!Obj.has(values, name)) {
-      if (!Type.isUndefined(defaultValue)) {
-        values[name] = defaultValue;
-      }
-      Obj.get(initialOptions, name).each((value) => setValue(name, value, processor));
+    const initValue = Obj.get(values, name).orThunk(() => Obj.get(initialOptions, name));
+    // Set the default first in case the current/initial value isn't set
+    if (!Type.isUndefined(defaultValue)) {
+      values[name] = defaultValue;
     }
+    initValue.each((value) => setValue(name, value, processor));
   };
 
   const isRegistered = (name: string) =>
