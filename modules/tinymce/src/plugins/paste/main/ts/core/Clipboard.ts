@@ -363,7 +363,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     return pasteBin.getLastRng() || editor.selection.getRng();
   };
 
-  editor.on('paste', (e: EditorEvent<ClipboardEvent & { ieFake: boolean }>) => {
+  editor.on('paste', (e: EditorEvent<ClipboardEvent>) => {
     const isKeyboardPaste = keyboardPasteEvent.isSet() || keyboardPastePressed.isSet();
     if (isKeyboardPaste) {
       keyboardPasteEvent.clear();
