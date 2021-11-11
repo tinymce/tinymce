@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import { getPasteBinParent, PasteBin } from 'tinymce/plugins/paste/core/PasteBin';
+import { PasteBin } from 'tinymce/plugins/paste/core/PasteBin';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 
 interface TestCase {
@@ -76,7 +76,7 @@ describe('browser.tinymce.plugins.paste.PasteBin', () => {
   const assertCases = (editor: Editor, cases: TestCase[]) => {
     const pasteBin = PasteBin(editor);
     Arr.each(cases, (c) => {
-      getPasteBinParent(editor).appendChild(editor.dom.createFragment(c.content));
+      editor.getBody().appendChild(editor.dom.createFragment(c.content));
       assert.equal(pasteBin.getHtml(), c.result, c.label);
       pasteBin.remove();
     });

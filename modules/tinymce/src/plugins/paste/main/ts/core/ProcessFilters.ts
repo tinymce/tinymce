@@ -10,7 +10,6 @@ import DomParser from 'tinymce/core/api/html/DomParser';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Events from '../api/Events';
-import * as WordFilter from './WordFilter';
 
 interface ProcessResult {
   readonly content: string;
@@ -34,30 +33,27 @@ const preProcess = (editor: Editor, html: string): string => {
 
 const processResult = (content: string, cancelled: boolean): ProcessResult => ({ content, cancelled });
 
-const postProcessFilter = (editor: Editor, html: string, internal: boolean, isWordHtml: boolean): ProcessResult => {
+const postProcessFilter = (editor: Editor, html: string, internal: boolean): ProcessResult => {
   const tempBody = editor.dom.create('div', { style: 'display:none' }, html);
-  const postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
+  const postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal);
   return processResult(postProcessArgs.node.innerHTML, postProcessArgs.isDefaultPrevented());
 };
 
-const filterContent = (editor: Editor, content: string, internal: boolean, isWordHtml: boolean): ProcessResult => {
-  const preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
+const filterContent = (editor: Editor, content: string, internal: boolean): ProcessResult => {
+  const preProcessArgs = Events.firePastePreProcess(editor, content, internal);
 
   // Filter the content to remove potentially dangerous content (eg scripts)
   const filteredContent = preProcess(editor, preProcessArgs.content);
 
   if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
-    return postProcessFilter(editor, filteredContent, internal, isWordHtml);
+    return postProcessFilter(editor, filteredContent, internal);
   } else {
     return processResult(filteredContent, preProcessArgs.isDefaultPrevented());
   }
 };
 
 const process = (editor: Editor, html: string, internal: boolean): ProcessResult => {
-  const isWordHtml = WordFilter.isWordContent(html);
-  const content = isWordHtml ? WordFilter.preProcess(editor, html) : html;
-
-  return filterContent(editor, content, internal, isWordHtml);
+  return filterContent(editor, html, internal);
 };
 
 export {
