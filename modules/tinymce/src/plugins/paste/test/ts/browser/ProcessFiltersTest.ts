@@ -8,8 +8,8 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as ProcessFilters from 'tinymce/plugins/paste/core/ProcessFilters';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 
-type PreProcessHandler = (e: EditorEvent<{ content: string; internal: boolean; wordContent: boolean }>) => void;
-type PostProcessHandler = (e: EditorEvent<{ node: HTMLElement; internal: boolean; wordContent: boolean }>) => void;
+type PreProcessHandler = (e: EditorEvent<{ content: string; internal: boolean }>) => void;
+type PostProcessHandler = (e: EditorEvent<{ node: HTMLElement; internal: boolean }>) => void;
 
 describe('browser.tinymce.plugins.paste.ProcessFiltersTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

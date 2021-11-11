@@ -98,7 +98,7 @@ export default () => {
     autosave_ask_before_unload: false,
     toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
     'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
-    contextmenu: 'link linkchecker image imagetools table lists configurepermanentpen',
+    contextmenu: 'link linkchecker image table lists configurepermanentpen',
 
     // Multiple toolbar array
     // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
