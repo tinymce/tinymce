@@ -29,7 +29,7 @@ const getMenuItems = (editor: Editor, name: string, defaultItems: string): strin
 const isContextMenuDisabled = (editor: Editor): boolean => editor.getParam('contextmenu') === false;
 
 const getContextMenu = (editor: Editor): string[] => {
-  return getMenuItems(editor, 'contextmenu', 'link linkchecker image table spellchecker configurepermanentpen');
+  return getMenuItems(editor, 'contextmenu', 'link linkchecker image imagetools table spellchecker configurepermanentpen');
 };
 
 const getAvoidOverlapSelector = (editor: Editor): string => editor.getParam('contextmenu_avoid_overlap', '', 'string');
