@@ -7,7 +7,7 @@
 
 import { Arr, Obj } from '@ephox/katamari';
 
-import { NormalisedEditorOptions, RawEditorOptions } from './api/OptionTypes';
+import { NormalizedEditorOptions, RawEditorOptions } from './api/OptionTypes';
 import Tools from './api/util/Tools';
 
 const deprecatedOptions = (
@@ -32,7 +32,7 @@ const getDeprecatedOptions = (options: RawEditorOptions): string[] => {
   return Arr.sort(settingNames);
 };
 
-const getDeprecatedPlugins = (options: NormalisedEditorOptions): string[] => {
+const getDeprecatedPlugins = (options: NormalizedEditorOptions): string[] => {
   const plugins = Tools.makeMap(options.plugins, ' ');
   const hasPlugin = (plugin: string) => Obj.has(plugins, plugin);
   const pluginNames = [
@@ -44,7 +44,7 @@ const getDeprecatedPlugins = (options: NormalisedEditorOptions): string[] => {
   return Arr.sort(pluginNames);
 };
 
-const logDeprecationsWarning = (rawOptions: RawEditorOptions, normalizedOptions: NormalisedEditorOptions): void => {
+const logDeprecationsWarning = (rawOptions: RawEditorOptions, normalizedOptions: NormalizedEditorOptions): void => {
   // Note: Ensure we use the original user settings, not the final when logging
   const deprecatedSettings = getDeprecatedOptions(rawOptions);
   const deprecatedPlugins = getDeprecatedPlugins(normalizedOptions);

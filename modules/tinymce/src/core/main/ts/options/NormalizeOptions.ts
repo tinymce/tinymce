@@ -9,7 +9,7 @@ import { Arr, Fun, Merger, Obj, Optional, Strings, Type } from '@ephox/katamari'
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
-import { NormalisedEditorOptions, RawEditorOptions, ToolbarMode } from '../api/OptionTypes';
+import { NormalizedEditorOptions, RawEditorOptions, ToolbarMode } from '../api/OptionTypes';
 import Tools from '../api/util/Tools';
 
 interface SectionResult {
@@ -118,7 +118,7 @@ const getPlatformPlugins = (isMobileDevice: boolean, sectionResult: SectionResul
   }
 };
 
-const processPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions & { external_plugins: Record<string, string> }): NormalisedEditorOptions => {
+const processPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions & { external_plugins: Record<string, string> }): NormalizedEditorOptions => {
   const forcedPlugins = normalizePlugins(defaultOverrideOptions.forced_plugins);
   const desktopPlugins = normalizePlugins(options.plugins);
 
@@ -138,7 +138,7 @@ const isOnMobile = (isMobileDevice: boolean, sectionResult: SectionResult) => {
   return isMobileDevice && hasSection(sectionResult, 'mobile');
 };
 
-const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOptions: RawEditorOptions, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalisedEditorOptions => {
+const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOptions: RawEditorOptions, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalizedEditorOptions => {
   // Use mobile mode by default on phones, so patch in the default mobile options
   const defaultDeviceOptions = isMobileDevice ? { mobile: getDefaultMobileOptions(options.mobile || {}, isPhone) } : { };
   const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(defaultDeviceOptions, options));
@@ -165,12 +165,12 @@ const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOption
   return processPlugins(isMobileDevice, sectionResult, defaultOverrideOptions, extendedOptions);
 };
 
-const normaliseOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalisedEditorOptions => {
+const normalizeOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalizedEditorOptions => {
   const defaultOptions = getDefaultOptions(options, isTouch);
   return combineOptions(isPhone || isTablet, isPhone, defaultOptions, defaultOverrideOptions, options);
 };
 
-const getFiltered = <K extends keyof NormalisedEditorOptions> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<NormalisedEditorOptions[K]> => Optional.from(editor.settings[name]).filter(predicate);
+const getFiltered = <K extends keyof NormalizedEditorOptions> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<NormalizedEditorOptions[K]> => Optional.from(editor.settings[name]).filter(predicate);
 
 const getParamObject = (value: string) => {
   let output = {};
@@ -219,4 +219,4 @@ const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string)
   }
 };
 
-export { normaliseOptions, getParam, combineOptions, getDefaultOptions, getDefaultMobileOptions };
+export { normalizeOptions, getParam, combineOptions, getDefaultOptions, getDefaultMobileOptions };

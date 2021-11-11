@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 
 import Editor from './Editor';
-import { EditorOptions, NormalisedEditorOptions } from './OptionTypes';
+import { EditorOptions, NormalizedEditorOptions } from './OptionTypes';
 
 interface ProcessorSuccess<T> {
   valid: true;
@@ -72,7 +72,7 @@ export interface Options {
    */
   register: {
     <K extends BuiltInOptionType>(name: string, spec: BuiltInOptionSpec<K>): void;
-    <K extends keyof NormalisedEditorOptions>(name: K, spec: OptionSpec<NormalisedEditorOptions[K], EditorOptions[K]> | SimpleOptionSpec<NormalisedEditorOptions[K]>): void;
+    <K extends keyof NormalizedEditorOptions>(name: K, spec: OptionSpec<NormalizedEditorOptions[K], EditorOptions[K]> | SimpleOptionSpec<NormalizedEditorOptions[K]>): void;
     <T, U>(name: string, spec: OptionSpec<T, U>): void;
     <T>(name: string, spec: SimpleOptionSpec<T>): void;
   };
@@ -183,7 +183,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
   const values: Record<string, any> = {};
 
   editor.on('init', () => {
-    const unregisteredOptions = Arr.partition(Obj.keys(initialOptions), isRegistered).fail;
+    const unregisteredOptions = Arr.filter(Obj.keys(initialOptions), Fun.not(isRegistered));
     if (unregisteredOptions.length > 0) {
       // eslint-disable-next-line no-console
       console.warn('The following options were specified but have not been registered:\n - ' + unregisteredOptions.join('\n - '));
@@ -210,7 +210,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     // Process and validate the default value
     const defaultValue = processDefaultValue(name, spec.default, processor);
 
-    // Register the spec with the normalised validator
+    // Register the spec with the validated default and normalized processor
     registry[name] = {
       ...spec,
       default: defaultValue,

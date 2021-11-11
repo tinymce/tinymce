@@ -15,7 +15,7 @@ import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
 import { NodeChange } from '../NodeChange';
-import { normaliseOptions, getParam } from '../options/NormaliseOptions';
+import { normalizeOptions, getParam } from '../options/NormalizeOptions';
 import SelectionOverrides from '../SelectionOverrides';
 import { UndoManager } from '../undo/UndoManagerTypes';
 import Quirks from '../util/Quirks';
@@ -39,7 +39,7 @@ import Schema from './html/Schema';
 import { create as createMode, EditorMode } from './Mode';
 import NotificationManager from './NotificationManager';
 import * as Options from './Options';
-import { NormalisedEditorOptions, RawEditorOptions } from './OptionTypes';
+import { NormalizedEditorOptions, RawEditorOptions } from './OptionTypes';
 import PluginManager, { Plugin } from './PluginManager';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
@@ -101,7 +101,7 @@ class Editor implements EditorObservable {
    * // Get the value of the theme setting
    * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.settings.theme + " theme");
    */
-  public settings: NormalisedEditorOptions;
+  public settings: NormalizedEditorOptions;
 
   /**
    * Editor instance id, normally the same as the div/textarea that was replaced.
@@ -273,7 +273,7 @@ class Editor implements EditorObservable {
     const self = this;
 
     this.id = id;
-    const normalizedOptions = normaliseOptions(editorManager.defaultOptions, options);
+    const normalizedOptions = normalizeOptions(editorManager.defaultOptions, options);
     this.settings = normalizedOptions;
 
     this.options = createOptions(self, normalizedOptions);
@@ -399,7 +399,7 @@ class Editor implements EditorObservable {
    * var someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
   public getParam <K extends Exclude<BuiltInOptionType, 'function'>>(name: string, defaultVal: BuiltInOptionTypeMap[K], type: K): BuiltInOptionTypeMap[K];
-  public getParam <K extends keyof NormalisedEditorOptions>(name: K, defaultVal?: NormalisedEditorOptions[K], type?: string): NormalisedEditorOptions[K];
+  public getParam <K extends keyof NormalizedEditorOptions>(name: K, defaultVal?: NormalizedEditorOptions[K], type?: string): NormalizedEditorOptions[K];
   public getParam <T>(name: string, defaultVal: T, type?: string): T;
   public getParam(name: string, defaultVal?: any, type?: string): any {
     return getParam(this, name, defaultVal, type);
