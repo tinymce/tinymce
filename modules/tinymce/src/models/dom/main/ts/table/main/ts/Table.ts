@@ -17,11 +17,11 @@ import { TableActions } from './actions/TableActions';
 import { Api, getApi } from './api/Api';
 import * as Commands from './api/Commands';
 import * as QueryCommands from './api/QueryCommands';
-import { hasTabNavigation } from './api/Settings';
+// import { hasTabNavigation } from './api/Settings';
 import { Clipboard as FakeClipboard } from './core/Clipboard';
 import * as TableFormats from './core/TableFormats';
 // import * as Util from './core/Util';
-import * as TabContext from './queries/TabContext';
+// import * as TabContext from './queries/TabContext';
 // import CellSelection from './selection/CellSelection';
 import { ephemera } from './selection/Ephemera';
 import { getSelectionTargets } from './selection/SelectionTargets';
@@ -50,6 +50,9 @@ const setupTable = (editor: Editor): Api => {
   // const cellSelection = CellSelection(editor, selectionTargets, resizeHandler.lazyResize);
   // const cellSelection = CellSelection(editor, resizeHandler.lazyResize);
   // const actions = TableActions(editor, cellSelection, resizeHandler.lazyWire);
+
+  // TODO: To solve resizeHandler issue, could put register all of this on init to allow Editor to initialise ResizeHandler but doesn't seem like a great solution
+
   const actions = TableActions(editor, resizeHandler.lazyWire);
   const clipboard = FakeClipboard();
 
@@ -66,12 +69,12 @@ const setupTable = (editor: Editor): Api => {
   });
 
   // TODO: Move to core - keyboard overrides
-  if (hasTabNavigation(editor)) {
-    editor.on('keydown', (e: KeyboardEvent) => {
-      // TabContext.handle(e, editor, cellSelection);
-      TabContext.handle(e, editor);
-    });
-  }
+  // if (hasTabNavigation(editor)) {
+  // editor.on('keydown', (e: KeyboardEvent) => {
+  // TabContext.handle(e, editor, cellSelection);
+  // TabContext.handle(e, editor);
+  // });
+  // }
 
   editor.on('remove', () => {
     resizeHandler.destroy();

@@ -6,7 +6,8 @@
  */
 
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Attribute, Insert, SugarElement } from '@ephox/sugar';
+import { CellLocation, CellNavigation, TableLookup } from '@ephox/snooker';
+import { Attribute, Compare, ContentEditable, CursorPosition, Insert, SimSelection, SugarElement, SugarNode, WindowSelection } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -145,8 +146,60 @@ const moveH = (editor: Editor, forward: boolean) => move(editor, forward, naviga
 
 const moveV = (editor: Editor, forward: boolean) => move(editor, forward, navigateVertically);
 
+const getCellFirstCursorPosition = (cell: SugarElement<Node>): Range => {
+  const selection = SimSelection.exact(cell, 0, cell, 0);
+  return WindowSelection.toNative(selection);
+};
+
+const go = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: CellLocation): Optional<Range> => {
+  return cell.fold<Optional<Range>>(Optional.none, Optional.none, (_current, next) => {
+    return CursorPosition.first(next).map((cell) => {
+      return getCellFirstCursorPosition(cell);
+    });
+  }, (current) => {
+    editor.execCommand('mceTableInsertRowAfter');
+    // Move forward from the last cell so that we move into the first valid position in the new row
+    return tabForward(editor, isRoot, current);
+  });
+};
+
+const tabForward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: SugarElement<HTMLTableCellElement>) =>
+  go(editor, isRoot, CellNavigation.next(cell, ContentEditable.isEditable));
+
+const tabBackward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: SugarElement<HTMLTableCellElement>) =>
+  go(editor, isRoot, CellNavigation.prev(cell, ContentEditable.isEditable));
+
+const handleTab = (editor: Editor, forward: boolean): boolean => {
+  const rootElements = [ 'table', 'li', 'dl' ];
+
+  const body = SugarElement.fromDom(editor.getBody());
+  const isRoot = (element: SugarElement<Node>) => {
+    const name = SugarNode.name(element);
+    return Compare.eq(element, body) || Arr.contains(rootElements, name);
+  };
+
+  const rng = editor.selection.getRng();
+  // If navigating backwards, use the start of the ranged selection
+  const container = SugarElement.fromDom(!forward ? rng.startContainer : rng.endContainer);
+  return TableLookup.cell(container, isRoot).map((cell) => {
+    // window.event.preventDefault();
+    // Clear fake ranged selection because our new selection will always be collapsed
+    TableLookup.table(cell, isRoot).each(editor.selection.tableCellSelection.clear);
+    // Collapse selection to start or end based on shift key
+    editor.selection.collapse(!forward);
+    const navigation = !forward ? tabBackward : tabForward;
+    const rng = navigation(editor, isRoot, cell);
+    rng.each((range) => {
+      editor.selection.setRng(range);
+    });
+
+    return true;
+  }).getOr(false);
+};
+
 export {
   isFakeCaretTableBrowser,
   moveH,
-  moveV
+  moveV,
+  handleTab
 };
