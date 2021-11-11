@@ -1,5 +1,5 @@
 // Tests either run in PhantomJs or real browsers
-const runsInPhantom = [
+const runsAtConsole = [
   '@ephox/alloy',
   '@ephox/mcagar',
   '@ephox/katamari',
@@ -55,15 +55,15 @@ const bedrockDefaults = {
   polyfills: [ 'Promise', 'Symbol' ],
 };
 
-const bedrockPhantom = (tests, auto) => {
+const bedrockConsole = (tests, auto) => {
   if (tests.length === 0) {
     return {};
   } else {
     return {
       phantomjs: {
         ...bedrockDefaults,
-        name: 'phantom-tests',
-        browser: 'phantomjs',
+        name: 'console-tests',
+        browser: 'chrome-headless',
         testfiles: testFolders(tests, auto),
       }
     }
@@ -130,8 +130,8 @@ module.exports = function (grunt) {
   const buckets = grunt.option('buckets') || 1;
   const chunk = grunt.option('chunk') || 100;
 
-  const phantomTests = filterChanges(changes, runsInPhantom);
-  const browserTests = filterChangesNot(changes, runsInPhantom);
+  const consoleTests = filterChanges(changes, runsAtConsole);
+  const browserTests = filterChangesNot(changes, runsAtConsole);
 
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
@@ -143,11 +143,11 @@ module.exports = function (grunt) {
       'yarn-dev': { command: 'yarn -s dev' }
     },
     'bedrock-auto': {
-      ...bedrockPhantom(phantomTests, true),
+      ...bedrockConsole(consoleTests, true),
       ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, true)
     },
     'bedrock-manual': {
-      ...bedrockPhantom(phantomTests, false),
+      ...bedrockConsole(consoleTests, false),
       ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, false)
     }
   };
@@ -157,9 +157,9 @@ module.exports = function (grunt) {
   grunt.initConfig(gruntConfig);
 
   //TODO: remove duplication
-  if (phantomTests.length > 0) {
+  if (consoleTests.length > 0) {
     grunt.registerTask('list-changed-phantom', () => {
-      const changeList = JSON.stringify(phantomTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
+      const changeList = JSON.stringify(consoleTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
       grunt.log.writeln('Changed projects for phantomjs testing:', changeList);
     });
     grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);

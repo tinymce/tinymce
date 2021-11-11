@@ -1,4 +1,4 @@
-import { PhantomSkipper, Waiter } from '@ephox/agar';
+import { Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Attribute, Classes, SugarDocument } from '@ephox/sugar';
@@ -28,7 +28,6 @@ interface Scenario {
 }
 
 describe('browser.alloy.position.TransitionsTest', () => {
-  const isPhantomJs = PhantomSkipper.detect();
   const transitionTime = 75;
   const northLayout = {
     onLtr: () => [ Layout.north ],
@@ -164,6 +163,9 @@ describe('browser.alloy.position.TransitionsTest', () => {
       assert.isFalse(Attribute.has(sinks.popup().element, 'data-alloy-transition-timer'), 'Transition timer attribute should not be set');
       gui.store().assertEq(`Transition events for ${sinkName} sink`, events);
     }, 10, transitionTime * 2);
+
+    // Wait another double of transition time, sometimes there are cancel events that pop in
+    await Waiter.pWait(transitionTime * 2);
   };
 
   it('TINY-7740: should not add the transition class when first positioning', async () => {
@@ -211,11 +213,7 @@ describe('browser.alloy.position.TransitionsTest', () => {
       { spec: getHotspotPlacementSpec(button1), expectTransition: true, waitForCompletion: true }
     ];
 
-    // We should have 2 of each event, one for each direction (left/top).
-    // Note: PhantomJS doesn't support transitioncancel
-    const expectedEvents = isPhantomJs ?
-      [ 'transitionend', 'transitionend' ] :
-      [ 'transitioncancel', 'transitioncancel', 'transitionend', 'transitionend' ];
+    const expectedEvents = [ 'transitioncancel', 'transitioncancel', 'transitionend', 'transitionend' ];
     await pTestTransition('relative', sinks.relative(), scenarios, expectedEvents);
     await pTestTransition('fixed', sinks.fixed(), scenarios, expectedEvents);
   });
@@ -240,11 +238,7 @@ describe('browser.alloy.position.TransitionsTest', () => {
       { spec: getHotspotPlacementSpec(button2, 'layout', northLayout), expectTransition: true }
     ];
 
-    // We should only get 1 set of events here as there should be no transition for the makeshift placement
-    // Note: PhantomJS incorrectly triggers a transition for the `top` property when changing layouts
-    const expectedEvents = isPhantomJs ?
-      [ 'transitionend', 'transitionend', 'transitionend' ] :
-      [ 'transitionend', 'transitionend' ];
+    const expectedEvents = [ 'transitionend', 'transitionend' ];
     await pTestTransition('relative', sinks.relative(), scenarios, expectedEvents);
     await pTestTransition('fixed', sinks.fixed(), scenarios, expectedEvents);
   });
@@ -257,16 +251,12 @@ describe('browser.alloy.position.TransitionsTest', () => {
       { spec: getHotspotPlacementSpec(button1, 'placement', northInsetLayout), expectTransition: false }
     ];
 
-    // We should only get 1 set of events here as there should be no transition for the makeshift/inset placements
-    // Note: PhantomJS incorrectly triggers a transition for the `top` property when changing layouts
-    const expectedEvents = isPhantomJs ?
-      [ 'transitionend', 'transitionend', 'transitionend' ] :
-      [ 'transitionend', 'transitionend' ];
+    const expectedEvents = [ 'transitionend', 'transitionend' ];
     await pTestTransition('relative', sinks.relative(), scenarios, expectedEvents);
     await pTestTransition('fixed', sinks.fixed(), scenarios, expectedEvents);
   });
 
-  it('TINY-7440: should stop transitioning once the duration passes if repositioned and the mode doesn\'t trigger a new transition', async () => {
+  it('TINY-7740: should stop transitioning once the duration passes if repositioned and the mode doesn\'t trigger a new transition', async () => {
     gui.store().clear();
     // Position initially at the first button
     const button1 = memButton1.get(gui.component());
@@ -278,12 +268,11 @@ describe('browser.alloy.position.TransitionsTest', () => {
 
     await PositionTestUtils.pTestSink('relative', sinks.relative(), sinks.popup(), getMakeshiftPlacementSpec(100, 350, 'placement', northLayout));
     assertClasses('Still transitioning', [ 'transition' ]);
-    // Wait the rest of the transition time, plus ~1 frame and make sure the transition is complete
-    await Waiter.pWait(transitionTime / 2 + 20);
-    assertClasses('The transition should have completed', []);
-    // We should only get 1 set of events here as there should be no transition the second makeshift placement
-    // Note: PhantomJS doesn't support transitioncancel so instead we just get the single transitionend
-    const expectedEvents = isPhantomJs ? [ 'transitionend' ] : [ 'transitioncancel', 'transitioncancel' ];
-    gui.store().assertEq('Transition events', expectedEvents);
+    // Wait the rest of the transition time, plus ~2 frames and make sure the transition is complete
+    await Waiter.pTryUntil('The transition should have completed', () => assertClasses('Transition Complete', [ 'transition' ]), 10, transitionTime * 2);
+
+    const expectedEvents = [ 'transitioncancel', 'transitioncancel' ];
+    await Waiter.pTryUntil('Transition events', () => gui.store().assertEq('Transition events', expectedEvents), 10, 100);
+
   });
 });

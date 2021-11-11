@@ -42,7 +42,7 @@ const hasChanges = (position: PositionCss, intermediate: Record<TransitionProp, 
 
 const getTransitionDuration = (element: SugarElement<HTMLElement>): number => {
   const get = (name: string) => {
-    // Some older browsers return `null` here (e.g. PhantomJS)
+    // Some older browsers return `null` here (so we probably don't need the string check anymore?)
     const style = Css.get(element, name);
     const times = Type.isString(style) ? style.split(/\s*,\s*/) : [];
     return Arr.filter(times, Strings.isNotEmpty);
@@ -97,19 +97,12 @@ const setupTransitionListeners = (element: SugarElement<HTMLElement>, transition
     transitionCancel.set(DomEvent.bind(element, NativeEvents.transitioncancel(), transitionDone));
   };
 
-  // When the transition starts to run listen for the relevant end event to cleanup
-  // Without a transitionstart event we need to manually trigger this. Thankfully,
-  // this only happens on very old browsers though (e.g. PhantomJS or Chrome <74)
-  if ('ontransitionstart' in element.dom) {
-    const transitionStart = DomEvent.bind(element, NativeEvents.transitionstart(), (e) => {
-      if (isSourceTransition(e)) {
-        transitionStart.unbind();
-        transitionStarted();
-      }
-    });
-  } else {
-    transitionStarted();
-  }
+  const transitionStart = DomEvent.bind(element, NativeEvents.transitionstart(), (e) => {
+    if (isSourceTransition(e)) {
+      transitionStart.unbind();
+      transitionStarted();
+    }
+  });
 
   // Request the next animation frame so we can roughly determine when the transition starts and then ensure
   // the transition is cleaned up. In addition add ~17ms to the delay as that's about about 1 frame at 60fps
