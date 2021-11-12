@@ -11,7 +11,6 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import { Api, getApi } from './api/Api';
 import * as Commands from './api/Commands';
 import * as Options from './api/Options';
-// import { getSelectionTargets } from './selection/SelectionTargets';
 import { getSelectionTargets } from './selection/SelectionTargets';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
@@ -20,9 +19,7 @@ const Plugin = (editor: Editor): Api => {
   Options.register(editor);
 
   const tableModel = editor.model.table;
-  // const modelSelectionTargets = tableModel.selectionTargets;
   const clipboard = tableModel.fakeClipboard;
-  // const selectionTargets = getSelectionTargets(editor, modelSelectionTargets);
   const selectionTargets = getSelectionTargets(editor);
 
   Commands.registerCommands(editor);

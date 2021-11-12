@@ -4,21 +4,6 @@ import { Attribute, SugarElement } from '@ephox/sugar';
 
 import { Ephemera } from '../api/Ephemera';
 import * as TableSelection from '../api/TableSelection';
-// import { Selections } from '../selection/Selections';
-// import * as SelectionTypes from '../selection/SelectionTypes';
-
-// interface PatchedSelections {
-//   readonly get: () => SugarElement<HTMLTableCellElement>[];
-// }
-
-// Return an array of the selected elements
-// TODO: Could probably remove this if new selection just rerturns an array
-// const selection = (selections: PatchedSelections): SugarElement<HTMLTableCellElement>[] =>
-//   SelectionTypes.cata(selections.get(),
-//     Fun.constant([]),
-//     Fun.identity,
-//     Arr.pure
-//   );
 
 const selection = (selectedCells: () => SugarElement<HTMLTableCellElement>[]): SugarElement<HTMLTableCellElement>[] =>
   selectedCells();
@@ -31,20 +16,6 @@ const unmergable = (selectedCells: () => SugarElement<HTMLTableCellElement>[]): 
 
   return candidates.length > 0 && Arr.forall(candidates, hasRowOrColSpan) ? Optional.some(candidates) : Optional.none();
 };
-
-// const mergable = (table: SugarElement<HTMLTableElement>, selections: PatchedSelections, ephemera: Ephemera): Optional<RunOperation.ExtractMergable> =>
-//   SelectionTypes.cata<Optional<RunOperation.ExtractMergable>>(selections.get(),
-//     Optional.none,
-//     (cells) => {
-//       if (cells.length <= 1) {
-//         return Optional.none();
-//       } else {
-//         return TableSelection.retrieveBox(table, ephemera.firstSelectedSelector, ephemera.lastSelectedSelector)
-//           .map((bounds) => ({ bounds, cells }));
-//       }
-//     },
-//     Optional.none
-//   );
 
 const mergable = (table: SugarElement<HTMLTableElement>, selectedCells: () => SugarElement<HTMLTableCellElement>[], ephemera: Ephemera): Optional<RunOperation.ExtractMergable> => {
   const cells = selectedCells();

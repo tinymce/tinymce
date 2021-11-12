@@ -17,7 +17,6 @@ import * as QueryCommands from './api/QueryCommands';
 import { Clipboard as FakeClipboard } from './core/Clipboard';
 import * as TableFormats from './core/TableFormats';
 import { ephemera } from './selection/Ephemera';
-// import { getSelectionTargets } from './selection/SelectionTargets';
 
 export interface PatchedSelections {
   readonly get: () => SugarElement<HTMLTableCellElement>[];
@@ -39,11 +38,6 @@ const setupTable = (editor: Editor): Api => {
     TableFormats.registerFormats(editor);
   });
 
-  // editor.on('remove', () => {
-  //   resizeHandler.destroy();
-  // });
-
-  // return getApi(clipboard, resizeHandler);
   return getApi(clipboard);
 };
 

@@ -151,7 +151,7 @@ const getCellFirstCursorPosition = (cell: SugarElement<Node>): Range => {
   return WindowSelection.toNative(selection);
 };
 
-const go = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: CellLocation): Optional<Range> => {
+const tabGo = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: CellLocation): Optional<Range> => {
   return cell.fold<Optional<Range>>(Optional.none, Optional.none, (_current, next) => {
     return CursorPosition.first(next).map((cell) => {
       return getCellFirstCursorPosition(cell);
@@ -164,10 +164,10 @@ const go = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: Ce
 };
 
 const tabForward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: SugarElement<HTMLTableCellElement>) =>
-  go(editor, isRoot, CellNavigation.next(cell, ContentEditable.isEditable));
+  tabGo(editor, isRoot, CellNavigation.next(cell, ContentEditable.isEditable));
 
 const tabBackward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: SugarElement<HTMLTableCellElement>) =>
-  go(editor, isRoot, CellNavigation.prev(cell, ContentEditable.isEditable));
+  tabGo(editor, isRoot, CellNavigation.prev(cell, ContentEditable.isEditable));
 
 const handleTab = (editor: Editor, forward: boolean): boolean => {
   const rootElements = [ 'table', 'li', 'dl' ];

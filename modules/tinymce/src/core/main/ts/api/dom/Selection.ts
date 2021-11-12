@@ -91,9 +91,7 @@ interface EditorSelection {
   getStart: (real?: boolean) => Element;
   getEnd: (real?: boolean) => Element;
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
-  // TODO: There could be one problem with this, should it include a single collapsed selection cell
-  // TODO: Should we have something that works for non-fake selection as well?
-  getSelectedCells: (includeCollapsed?: boolean) => HTMLTableCellElement[];
+  getSelectedCells: () => HTMLTableCellElement[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
@@ -505,16 +503,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
   };
 
-  // const getSelectedCells = cellSelection.get;
-  const getSelectedCells = (includeCollapsed: boolean = true) => {
-    const cells = cellSelection.get();
-    // TODO: I am not quite sure if this is correct as could have a single cell selected with a fake selection using the keyboard which would be filtered out as well
-    if (!includeCollapsed && cells.length === 1) {
-      return [];
-    } else {
-      return cells;
-    }
-  };
+  const getSelectedCells = cellSelection.get;
 
   const normalize = (): Range => {
     const rng = getRng();

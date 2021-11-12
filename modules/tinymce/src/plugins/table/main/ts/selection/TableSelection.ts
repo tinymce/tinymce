@@ -24,14 +24,11 @@ const getSelectionFromSelector = <T extends Element>(selector: string) =>
     return SelectorFind.closest<T>(cell, selector, isRoot);
   };
 
-// const getSelectionCaption = getSelectionFromSelector<HTMLTableCaptionElement>('caption');
+const getSelectionCaption = getSelectionFromSelector<HTMLTableCaptionElement>('caption');
 
 const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
-
-// const getCellsFromSelection = (selections: Selections): SugarElement<HTMLTableCellElement>[] =>
-//   CellOpSelection.selection(selections.get);
 
 const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
   const cellOpt = getSelectionCell(selected);
@@ -47,9 +44,8 @@ const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): S
 };
 
 export {
-  // getSelectionCaption,
-  // getSelectionCell,
+  getSelectionCaption,
+  getSelectionCell,
   getSelectionCellOrCaption,
-  // getCellsFromSelection,
   getRowsFromSelection
 };

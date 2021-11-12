@@ -46,7 +46,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const lazyResizingBehaviour = () =>
     Settings.getColumnResizingBehaviour(editor) === 'preservetable' ? ResizeBehaviour.preserveTable() : ResizeBehaviour.resizeTable();
 
-  const getNumColumns = (table: SugarElement<Element>) =>
+  const getNumColumns = (table: SugarElement<HTMLTableElement>) =>
     TableGridSize.getGridSize(table).columns;
 
   const afterCornerResize = (table: SugarElement<HTMLTableElement>, origin: string, width: number) => {

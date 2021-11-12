@@ -11,7 +11,6 @@ import { RunOperation, SimpleGenerators } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 
 import { ephemera } from '../selection/Ephemera';
-// import { PatchedSelections } from '../Table';
 
 const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>): RunOperation.CombinedTargets => ({
   element: cell,
