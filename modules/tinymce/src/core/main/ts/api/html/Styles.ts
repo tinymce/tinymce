@@ -24,6 +24,7 @@
  * @version 3.4
  */
 
+import { Transformations } from '@ephox/acid';
 import { Obj, Unicode } from '@ephox/katamari';
 
 import { URLConverter } from '../SettingsTypes';
@@ -39,25 +40,13 @@ export interface StylesSettings {
 }
 
 interface Styles {
-  toHex: (color: string) => string;
   parse: (css: string) => Record<string, string>;
   serialize: (styles: StyleMap, elementName?: string) => string;
 }
 
-const toHex = (match: string, r: string, g: string, b: string) => {
-  const hex = (val: string) => {
-    val = parseInt(val, 10).toString(16);
-
-    return val.length > 1 ? val : '0' + val; // 0 -> 00
-  };
-
-  return '#' + hex(r) + hex(g) + hex(b);
-};
-
 const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
   /* jshint maxlen:255 */
   /* eslint max-len:0 */
-  const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
   const trimRightRegExp = /\s+$/;
@@ -81,20 +70,6 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
   }
 
   return {
-    /**
-     * Parses the specified RGB color value and returns a hex version of that color.
-     * <br>
-     * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-     *
-     * @deprecated
-     * @method toHex
-     * @param {String} color RGB string value like rgb(1,2,3)
-     * @return {String} Hex version of that RGB value like #FF00FF.
-     */
-    toHex: (color: string): string => {
-      return color.replace(rgbRegExp, toHex);
-    },
-
     /**
      * Parses the specified style value into an object collection. This parser will also
      * merge and remove any redundant items that browsers might have added. It will also convert non hex
@@ -299,7 +274,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
             }
 
             // Convert RGB colors to HEX
-            value = value.replace(rgbRegExp, toHex);
+            value = Transformations.anyToHexString(value);
 
             // Convert URLs and force them into url('value') format
             value = value.replace(urlOrStrRegExp, processUrl);

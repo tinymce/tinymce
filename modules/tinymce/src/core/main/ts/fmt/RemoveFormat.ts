@@ -252,7 +252,7 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
   if (format.remove !== 'all') {
     // Remove styles
     each(format.styles as any, (value: FormatAttrOrStyleValue, name: string | number) => {
-      value = FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(value, vars), name + '');
+      value = FormatUtils.normalizeStyleValue(FormatUtils.replaceVars(value, vars), name + '');
 
       // Indexed array
       if (Type.isNumber(name)) {

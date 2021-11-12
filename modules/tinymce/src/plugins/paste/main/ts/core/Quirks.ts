@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
 import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -125,8 +126,8 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean, 
         let inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
 
         if (/color/.test(webKitStyles[i])) {
-          inputValue = dom.toHex(inputValue);
-          currentValue = dom.toHex(currentValue);
+          inputValue = Transformations.anyToHexString(inputValue);
+          currentValue = Transformations.anyToHexString(currentValue);
         }
 
         if (currentValue !== inputValue) {

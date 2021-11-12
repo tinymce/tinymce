@@ -268,7 +268,6 @@ interface DOMUtils {
     (elm: Element, name: string): Element;
   };
   findCommonAncestor: (a: Node, b: Node) => Node;
-  toHex: (rgbVal: string) => string;
   run <R, T extends Node>(this: DOMUtils, elm: T | T[], func: (node: T) => R, scope?: any): typeof elm extends Array<any> ? R[] : R;
   run <R, T extends Node>(this: DOMUtils, elm: RunArguments<T>, func: (node: T) => R, scope?: any): RunResult<typeof elm, R>;
   getAttribs: (elm: string | Node) => NamedNodeMap | Attr[];
@@ -972,8 +971,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
     return ps;
   };
-
-  const toHex = (rgbVal: string) => styles.toHex(Tools.trim(rgbVal));
 
   // Check if element has a data-bookmark attribute, name attribute or is a named anchor
   const isNonEmptyElement = (node: Node) => {
@@ -1773,15 +1770,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @return {Element} Common ancestor element of the two input elements.
      */
     findCommonAncestor,
-
-    /**
-     * Parses the specified RGB color value and returns a hex version of that color.
-     *
-     * @method toHex
-     * @param {String} rgbVal RGB string value like rgb(1,2,3)
-     * @return {String} Hex version of that RGB value like #FF00FF.
-     */
-    toHex,
 
     /**
      * Executes the specified function on the element by id or dom element node or array of elements/id.

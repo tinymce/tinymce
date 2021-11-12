@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { TableLookup, TableOperations } from '@ephox/snooker';
 import { Css, SugarElement, SugarElements } from '@ephox/sugar';
@@ -72,16 +73,16 @@ export type CellData = {
   readonly backgroundcolor?: string;
 };
 
-const rgbToHex = (dom: DOMUtils) => (value: string): string =>
-  Strings.startsWith(value, 'rgb') ? dom.toHex(value) : value;
+const rgbToHex = (value: string): string =>
+  Strings.startsWith(value, 'rgb') ? Transformations.anyToHexString(value) : value;
 
 const extractAdvancedStyles = (dom: DOMUtils, elm: Node): AdvancedStyles => {
   const element = SugarElement.fromDom(elm);
   return {
     borderwidth: Css.getRaw(element, 'border-width').getOr(''),
     borderstyle: Css.getRaw(element, 'border-style').getOr(''),
-    bordercolor: Css.getRaw(element, 'border-color').map(rgbToHex(dom)).getOr(''),
-    backgroundcolor: Css.getRaw(element, 'background-color').map(rgbToHex(dom)).getOr('')
+    bordercolor: Css.getRaw(element, 'border-color').map(rgbToHex).getOr(''),
+    backgroundcolor: Css.getRaw(element, 'background-color').map(rgbToHex).getOr('')
   };
 };
 
@@ -120,10 +121,10 @@ const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): Table
   const style = getDefaultStyles(editor);
   const attrs = getDefaultAttributes(editor);
 
-  const extractAdvancedStyleData = (dom: DOMUtils) => ({
+  const extractAdvancedStyleData = () => ({
     borderstyle: Obj.get(style, 'border-style').getOr(''),
-    bordercolor: rgbToHex(dom)(Obj.get(style, 'border-color').getOr('')),
-    backgroundcolor: rgbToHex(dom)(Obj.get(style, 'background-color').getOr(''))
+    bordercolor: rgbToHex(Obj.get(style, 'border-color').getOr('')),
+    backgroundcolor: rgbToHex(Obj.get(style, 'background-color').getOr(''))
   });
 
   const defaultData: TableData = {
@@ -145,7 +146,7 @@ const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): Table
     return Obj.get(attrs, 'border').fold(() => ({}), (border) => ({ border }));
   };
 
-  const advStyle = (hasAdvTableTab ? extractAdvancedStyleData(editor.dom) : {});
+  const advStyle = (hasAdvTableTab ? extractAdvancedStyleData() : {});
 
   const getCellPaddingCellSpacing = () => {
     const spacing = Obj.get(style, 'border-spacing').or(Obj.get(attrs, 'cellspacing')).fold( () => ({}), (cellspacing) => ({ cellspacing }));

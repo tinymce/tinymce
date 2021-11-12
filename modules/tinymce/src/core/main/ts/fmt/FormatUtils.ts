@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
 import { Arr, Obj, Optionals, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -140,10 +141,10 @@ const isEq = (str1, str2) => {
   return str1.toLowerCase() === str2.toLowerCase();
 };
 
-const normalizeStyleValue = (dom: DOMUtils, value, name: string) => {
+const normalizeStyleValue = (value, name: string) => {
   // Force the format to hex
   if (name === 'color' || name === 'backgroundColor') {
-    value = dom.toHex(value);
+    value = Transformations.anyToHexString(value);
   }
 
   // Opera will return bold as 700
@@ -160,7 +161,7 @@ const normalizeStyleValue = (dom: DOMUtils, value, name: string) => {
 };
 
 const getStyle = (dom: DOMUtils, node: Node, name: string) => {
-  return normalizeStyleValue(dom, dom.getStyle(node, name), name);
+  return normalizeStyleValue(dom.getStyle(node, name), name);
 };
 
 const getTextDecoration = (dom: DOMUtils, node: Node): string => {

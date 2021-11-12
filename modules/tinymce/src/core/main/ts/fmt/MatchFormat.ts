@@ -94,7 +94,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
             return false;
           }
 
-          if ((!similar || format.exact) && !isEq(value, FormatUtils.normalizeStyleValue(dom, expectedValue, key))) {
+          if ((!similar || format.exact) && !isEq(value, FormatUtils.normalizeStyleValue(expectedValue, key))) {
             return false;
           }
         }

@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
 import { Obj, Optionals } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -284,7 +285,7 @@ const getCssText = (editor: Editor, format: any) => {
 
       // Ignore white since it's the default color, not the nicest fix
       // TODO: Fix this by detecting runtime style
-      if (dom.toHex(value).toLowerCase() === '#ffffff') {
+      if (Transformations.anyToHexString(value).toLowerCase() === '#ffffff') {
         return;
       }
     }
@@ -292,7 +293,7 @@ const getCssText = (editor: Editor, format: any) => {
     if (name === 'color') {
       // Ignore black since it's the default color, not the nicest fix
       // TODO: Fix this by detecting runtime style
-      if (dom.toHex(value).toLowerCase() === '#000000') {
+      if (Transformations.anyToHexString(value).toLowerCase() === '#000000') {
         return;
       }
     }
