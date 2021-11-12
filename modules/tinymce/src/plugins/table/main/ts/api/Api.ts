@@ -9,7 +9,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement, SugarElements } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ResizeHandler } from 'tinymce/models/dom/table/main/ts/actions/ResizeHandler';
+// import { ResizeHandler } from 'tinymce/models/dom/table/main/ts/actions/ResizeHandler';
 import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/main/ts/core/Clipboard';
 
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -22,7 +22,7 @@ export interface Api {
   readonly setClipboardCols: (cols: Array<HTMLTableRowElement | HTMLTableColElement>) => void;
   readonly getClipboardCols: () => Array<HTMLTableRowElement | HTMLTableColElement>;
   // Internal Apis
-  readonly resizeHandler: ResizeHandler;
+  // readonly resizeHandler: ResizeHandler;
   readonly selectionTargets: SelectionTargets;
 }
 
@@ -48,7 +48,9 @@ const getApi = (editor: Editor, clipboard: FakeClipboard, selectionTargets: Sele
   getClipboardRows: getClipboardElements(clipboard.getRows),
   setClipboardCols: setClipboardElements(clipboard.setColumns),
   getClipboardCols: getClipboardElements(clipboard.getColumns),
-  resizeHandler: editor.model.table.resizeHandler,
+  // resizeHandler: editor.model.table.resizeHandler,
+  // TODO: Have commented out as tableResizeHandler is not availble when this runs so may need to initialise resizeHandler earlier in the process
+  // resizeHandler: editor.selection.tableResizeHandler,
   selectionTargets,
 });
 

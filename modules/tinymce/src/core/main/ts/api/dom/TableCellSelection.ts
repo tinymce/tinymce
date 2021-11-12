@@ -29,7 +29,6 @@ export interface TableCellSelectionApi {
 }
 
 // export default (editor: Editor, selectionTargets: SelectionTargets): CellSelectionApi => {
-// export default (editor: Editor): CellSelectionApi => {
 export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableCellSelectionApi => {
   // const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
   //   // TODO: We might not need selectionTargets and can just get the selected cells straight from the editor

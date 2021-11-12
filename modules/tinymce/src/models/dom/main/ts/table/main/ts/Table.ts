@@ -10,7 +10,6 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Clipboard from './actions/Clipboard';
-import { getResizeHandler } from './actions/ResizeHandler';
 import { TableActions } from './actions/TableActions';
 import { Api, getApi } from './api/Api';
 import * as Commands from './api/Commands';
@@ -25,13 +24,7 @@ export interface PatchedSelections {
 }
 
 const setupTable = (editor: Editor): Api => {
-  // const selectionTargets = getSelectionTargets(editor);
-  // TODO: Try and move into core and resize bars out of snooker so that we don't need to pass lazyWire into Snooker. Maybe be able to use an event system instead?
-  const resizeHandler = getResizeHandler(editor);
-
-  // TODO: To solve resizeHandler issue, could put register all of this on init to allow Editor to initialise ResizeHandler but doesn't seem like a great solution
-
-  const actions = TableActions(editor, resizeHandler.lazyWire);
+  const actions = TableActions(editor);
   const clipboard = FakeClipboard();
 
   Commands.registerCommands(editor, actions, clipboard);
@@ -46,11 +39,12 @@ const setupTable = (editor: Editor): Api => {
     TableFormats.registerFormats(editor);
   });
 
-  editor.on('remove', () => {
-    resizeHandler.destroy();
-  });
+  // editor.on('remove', () => {
+  //   resizeHandler.destroy();
+  // });
 
-  return getApi(clipboard, resizeHandler);
+  // return getApi(clipboard, resizeHandler);
+  return getApi(clipboard);
 };
 
 export {

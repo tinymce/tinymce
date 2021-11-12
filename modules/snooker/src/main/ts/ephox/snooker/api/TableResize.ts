@@ -39,6 +39,7 @@ interface TableResizeEvents {
 export interface TableResize {
   readonly on: () => void;
   readonly off: () => void;
+  readonly refreshBars: (table: SugarElement<HTMLTableElement>) => void;
   readonly hideBars: () => void;
   readonly showBars: () => void;
   readonly destroy: () => void;
@@ -81,6 +82,7 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
   return {
     on: manager.on,
     off: manager.off,
+    refreshBars: manager.refresh,
     hideBars: manager.hideBars,
     showBars: manager.showBars,
     destroy: manager.destroy,

@@ -254,7 +254,7 @@ Ready.execute(() => {
         // wire, table, target, generators, direction
         const table = SelectorFind.ancestor(start, 'table').getOrDie() as SugarElement<HTMLTableElement>;
         const tableSize = TableSize.getTableSize(table);
-        operation(ResizeWire.only(ephoxUi, isResizable), table, target, generators, { sizing: tableSize });
+        operation(table, target, generators, { sizing: tableSize });
       });
     };
   };
