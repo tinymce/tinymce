@@ -1,5 +1,5 @@
-// Tests either run in PhantomJs or real browsers
-const runsAtConsole = [
+// Tests always run in a browser, but some we run headless
+const runsHeadless = [
   '@ephox/alloy',
   '@ephox/mcagar',
   '@ephox/katamari',
@@ -42,7 +42,7 @@ const filterChangesNot = (changes, badTests) => {
  *  All other projects need their tests in src/test/ts
  */
 const testFolders = (tests, auto) => tests.flatMap((test) => {
-  const testTypes = ['atomic', 'browser', 'phantom'].concat(auto ? ['webdriver'] : []);
+  const testTypes = ['atomic', 'browser', 'headless'].concat(auto ? ['webdriver'] : []);
   const bases = test.name === "tinymce" ? ["src/*/test/ts", "src/*/*/test/ts"] : ["src/test/ts"];
   return bases.flatMap(base => testTypes.map(tt => `${test.location}/${base}/${tt}/**/*Test.ts`));
 });
@@ -55,14 +55,14 @@ const bedrockDefaults = {
   polyfills: [ 'Promise', 'Symbol' ],
 };
 
-const bedrockConsole = (tests, auto) => {
+const bedrockHeadless = (tests, auto) => {
   if (tests.length === 0) {
     return {};
   } else {
     return {
-      phantomjs: {
+      headless: {
         ...bedrockDefaults,
-        name: 'console-tests',
+        name: 'headless-tests',
         browser: 'chrome-headless',
         testfiles: testFolders(tests, auto),
       }
@@ -130,8 +130,8 @@ module.exports = function (grunt) {
   const buckets = grunt.option('buckets') || 1;
   const chunk = grunt.option('chunk') || 100;
 
-  const consoleTests = filterChanges(changes, runsAtConsole);
-  const browserTests = filterChangesNot(changes, runsAtConsole);
+  const headlessTests = filterChanges(changes, runsHeadless);
+  const browserTests = filterChangesNot(changes, runsHeadless);
 
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
@@ -143,11 +143,11 @@ module.exports = function (grunt) {
       'yarn-dev': { command: 'yarn -s dev' }
     },
     'bedrock-auto': {
-      ...bedrockConsole(consoleTests, true),
+      ...bedrockHeadless(headlessTests, true),
       ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, true)
     },
     'bedrock-manual': {
-      ...bedrockConsole(consoleTests, false),
+      ...bedrockHeadless(headlessTests, false),
       ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, false)
     }
   };
@@ -157,20 +157,20 @@ module.exports = function (grunt) {
   grunt.initConfig(gruntConfig);
 
   //TODO: remove duplication
-  if (consoleTests.length > 0) {
-    grunt.registerTask('list-changed-phantom', () => {
-      const changeList = JSON.stringify(consoleTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
-      grunt.log.writeln('Changed projects for phantomjs testing:', changeList);
+  if (headlessTests.length > 0) {
+    grunt.registerTask('list-changed-headless', () => {
+      const changeList = JSON.stringify(headlessTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
+      grunt.log.writeln('Changed projects for console testing:', changeList);
     });
-    grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
-    grunt.registerTask('phantomjs-manual', ['list-changed-phantom', 'shell:tsc', 'bedrock-manual:phantomjs']);
+    grunt.registerTask('headless-auto', ['list-changed-headless', 'shell:tsc', 'bedrock-auto:headless']);
+    grunt.registerTask('headless-manual', ['list-changed-headless', 'shell:tsc', 'bedrock-manual:headless']);
   } else {
-    const noPhantom = () => {
-      grunt.log.writeln('no changed modules need phantomjs testing');
+    const noConsole = () => {
+      grunt.log.writeln('no changed modules need console testing');
     };
-    grunt.registerTask('phantomjs-auto', noPhantom);
-    grunt.registerTask('phantomjs-manual', noPhantom);
-    grunt.registerTask('list-changed-phantom', noPhantom);
+    grunt.registerTask('headless-auto', noConsole);
+    grunt.registerTask('headless-manual', noConsole);
+    grunt.registerTask('list-changed-headless', noConsole);
   }
 
   //TODO: remove duplication

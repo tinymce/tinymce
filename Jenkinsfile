@@ -35,8 +35,8 @@ def runBrowserTests(name, browser, os, bucket, buckets, runAll) {
   runTests(name, bedrockCommand, runAll);
 }
 
-def runConsoleTests(runAll) {
-  def bedrockCommand = "yarn grunt console-auto";
+def runHeadlessTests(runAll) {
+  def bedrockCommand = "yarn grunt headless-auto";
   runTests("chrome-headless", bedrockCommand, runAll);
 }
 
@@ -116,13 +116,13 @@ node("bedrock-macos") {
       }
     }
 
-    processes["console-and-archive"] = {
-      stage ("console tests") {
+    processes["headless-and-archive"] = {
+      stage ("headless tests") {
         // chrome-headless tests run on the same node as the pipeline
         // we are re-using the state prepared by `ci-all` below
         // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
         echo "Platform: chrome-headless tests on node: $NODE_NAME"
-        runConsoleTests(runAllTests)
+        runHeadlessTests(runAllTests)
       }
 
       if (BRANCH_NAME != primaryBranch) {
@@ -149,7 +149,7 @@ node("bedrock-macos") {
     }
 
     stage ("Run Tests") {
-      grunt("list-changed-phantom list-changed-browser")
+      grunt("list-changed-headless list-changed-browser")
       // Run all the tests in parallel
       parallel processes
     }

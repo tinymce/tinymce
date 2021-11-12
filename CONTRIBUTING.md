@@ -97,13 +97,13 @@ Testing relies on `yarn lerna changed` to determine which modules need testing, 
 ### CI test scripts
 ```
 yarn browser-test
-yarn console-test
+yarn headless-test
 ```
 
 ### Dev test scripts
 ```
 yarn browser-test-manual
-yarn console-test-manual
+yarn headless-test-manual
 ```
 
 Development testing will be adjusted in future so that there's only one manual entry point for ease of development. They are still separate for now because there are two projects that use bedrock route configurations; a route config combination process is required to run them at the same time.
