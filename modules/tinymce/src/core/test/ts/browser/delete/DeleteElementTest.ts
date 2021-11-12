@@ -5,14 +5,13 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as DeleteElement from 'tinymce/core/delete/DeleteElement';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.delete.DeleteElementTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const deleteElementPath = (editor: Editor, forward: boolean, path: number[]) => {
     const element = Hierarchy.follow(TinyDom.body(editor), path).getOrDie();

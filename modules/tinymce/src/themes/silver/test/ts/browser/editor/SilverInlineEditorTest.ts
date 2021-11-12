@@ -8,7 +8,6 @@ import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as UiUtils from '../../module/UiUtils';
 
@@ -133,7 +132,7 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
         }
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   beforeEach(async () => {
     hook.editor().focus();

@@ -3,7 +3,6 @@ import { LegacyUnit, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.FormatterCheckTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -17,7 +16,7 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
         'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align,vertical-align'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('Selected style element text', () => {
     const editor = hook.editor();

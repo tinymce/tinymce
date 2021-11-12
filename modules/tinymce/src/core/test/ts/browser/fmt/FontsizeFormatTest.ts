@@ -3,14 +3,13 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.FontsizeFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'fontsizeselect',
     fontsize_formats: '1em',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const assertMenuItemCount = (expected: number) => {
     const actual = document.querySelectorAll('.tox-collection__item').length;

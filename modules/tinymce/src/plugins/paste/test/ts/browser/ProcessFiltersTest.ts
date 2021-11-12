@@ -7,10 +7,9 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as ProcessFilters from 'tinymce/plugins/paste/core/ProcessFilters';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
-type PreProcessHandler = (e: EditorEvent<{ content: string; internal: boolean; wordContent: boolean }>) => void;
-type PostProcessHandler = (e: EditorEvent<{ node: HTMLElement; internal: boolean; wordContent: boolean }>) => void;
+type PreProcessHandler = (e: EditorEvent<{ content: string; internal: boolean }>) => void;
+type PostProcessHandler = (e: EditorEvent<{ node: HTMLElement; internal: boolean }>) => void;
 
 describe('browser.tinymce.plugins.paste.ProcessFiltersTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.paste.ProcessFiltersTest', () => {
     plugins: 'paste',
     base_url: '/project/tinymce/js/tinymce',
     extended_valid_elements: 'b[*]'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const processPre = (editor: Editor, html: string, internal: boolean, preProcess: PreProcessHandler) => {
     editor.on('PastePreProcess', preProcess);

@@ -4,7 +4,6 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiAc
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.emoticons.AutocompletionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.emoticons.AutocompletionTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     emoticons_database_url: '/project/tinymce/src/plugins/emoticons/test/js/test-emojis.js',
     emoticons_database_id: 'tinymce.plugins.emoticons.test-emojis.js'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   // NOTE: This is almost identical to charmap
   it('TBA: Autocomplete, trigger an autocomplete and check it appears', async () => {

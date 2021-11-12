@@ -5,11 +5,9 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.paste.PasteSettingsTest', () => {
   before(() => {
-    Theme();
     Plugin();
   });
 

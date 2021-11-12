@@ -6,7 +6,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLookupTest', () => {
   const predicateNodeNames = Cell<Record<string, string[]>>({ });
@@ -72,7 +71,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
         scope: 'editor'
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const recordNode = (type: string, node: Node) => {
     const nodeName = node.nodeName.toLowerCase();

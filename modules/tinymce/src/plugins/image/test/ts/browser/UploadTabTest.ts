@@ -8,7 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   const src = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const closeDialog = (editor: Editor) =>
     TinyUiActions.cancelDialog(editor);

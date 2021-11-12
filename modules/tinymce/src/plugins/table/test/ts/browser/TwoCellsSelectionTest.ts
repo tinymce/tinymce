@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const enum Direction {
   Row,
@@ -17,7 +16,7 @@ describe('browser.tinymce.plugins.table.TwoCellsSelectionTest', () => {
     plugins: 'table',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const setup = (editor: Editor, colgroup: boolean, direction: Direction) => {
     editor.setContent(

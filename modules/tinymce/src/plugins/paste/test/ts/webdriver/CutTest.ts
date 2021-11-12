@@ -1,17 +1,14 @@
 import { PhantomSkipper, RealMouse, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/paste/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.plugins.paste.CutTest', () => {
   before(function () {
-    // Cut doesn't seem to work in webdriver mode on ie
-    const platform = PlatformDetection.detect();
-    if (platform.browser.isIE() || PhantomSkipper.detect()) {
+    // Cut doesn't seem to work in PhantomJS
+    if (PhantomSkipper.detect()) {
       this.skip();
     }
   });
@@ -20,7 +17,7 @@ describe('webdriver.tinymce.plugins.paste.CutTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     toolbar: false,
     statusbar: false
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Set and select content, cut using edit menu and assert cut content', async () => {
     const editor = hook.editor();

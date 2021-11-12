@@ -7,7 +7,6 @@ import { McEditor, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { Navigation, pProcessNavigation } from '../module/MenuNavigationTestUtils';
 
@@ -22,7 +21,6 @@ interface Assertion {
 describe('browser.tinymce.plugins.importcss.ImportCssGroupsTest', () => {
   before(() => {
     Plugin();
-    Theme();
   });
 
   const pTestEditorWithSettings = async (assertion: Assertion, pluginSettings: RawEditorSettings) => {

@@ -3,7 +3,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { tableSizingModeScenarioTest } from '../../module/test/TableSizingModeCommandUtil';
 
@@ -15,7 +14,7 @@ describe('browser.tinymce.plugins.table.command.TableSizingModeCommandTest', () 
     content_css: false,
     content_style: 'body { margin: 10px; max-width: 800px }',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TINY-6000: Percent (relative) to pixel (fixed) sizing', () => tableSizingModeScenarioTest(hook.editor(), false, {
     mode: 'relative',

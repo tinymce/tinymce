@@ -4,14 +4,13 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.autosave.AutoSavePluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'autosave',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const checkIfEmpty = (editor: Editor, html: string, isEmpty: boolean): void => {
     const result = isEmpty ? 'empty.' : 'not empty.';

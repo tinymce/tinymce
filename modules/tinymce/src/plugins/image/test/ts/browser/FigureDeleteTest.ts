@@ -4,7 +4,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { generalTabSelectors, setInputValue } from '../module/Helpers';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
     toolbar: 'image',
     image_caption: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: removing src in dialog should remove figure element', async () => {
     const editor = hook.editor();

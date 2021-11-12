@@ -3,7 +3,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks } from '../../module/test/TableModifiersTestUtils';
 
@@ -23,7 +22,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
         value: '#51a951',
       }
     ],
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TINY-7476: The color should be changed for a single cell', async () => {
     await pAssertStyleCanBeToggledOnAndOffWithoutCheckmarks(hook.editor(), {

@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/searchreplace/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface FindScenario {
   readonly content: string;
@@ -34,7 +33,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceInSelectionTest', (
     plugins: 'searchreplace',
     base_url: '/project/tinymce/js/tinymce',
     extended_valid_elements: 'b,i'
-  }, [ Theme, Plugin ], true);
+  }, [ Plugin ], true);
 
   const isReplaceScenario = (scenario: FindScenario | ReplaceScenario): scenario is ReplaceScenario => Obj.has(scenario as Record<string, any>, 'replace');
 

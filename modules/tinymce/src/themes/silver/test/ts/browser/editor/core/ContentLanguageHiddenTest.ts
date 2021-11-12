@@ -3,13 +3,12 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.core.ContentLanguageHiddenTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'language | bold italic'
-  }, [ Theme ]);
+  }, []);
 
   it('TINY-7570: Does not show the toolbar button if content_langs is not defined', () => {
     const editor = hook.editor();

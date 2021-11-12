@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertSpanStruct, assertNbspStruct, assertStruct } from '../module/test/Utils';
 
@@ -15,7 +14,7 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
     plugins: 'visualchars',
     toolbar: 'visualchars',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Set content, click visual chars button and assert span char is present in whitespaces, click the button again and assert no span is present in the whitespace', async () => {
     const editor = hook.editor();

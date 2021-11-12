@@ -4,7 +4,6 @@ import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/insertdatetime/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', () =
     insertdatetime_element: true,
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Click on Insertdatetime button and select the first item from the drop down menu. Assert date time is inserted', async () => {
     const editor = hook.editor();

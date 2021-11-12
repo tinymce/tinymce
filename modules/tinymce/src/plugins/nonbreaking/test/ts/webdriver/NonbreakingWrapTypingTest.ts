@@ -6,7 +6,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/nonbreaking/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
@@ -15,7 +14,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
     toolbar: 'nonbreaking',
     nonbreaking_wrap: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   const isGecko = Env.browser.isFirefox();
   const isGeckoOrIE = isGecko || Env.browser.isIE();

@@ -10,7 +10,6 @@ import { ClassListOptions } from 'tinymce/plugins/link/ui/sections/ClassListOpti
 import { LinkListOptions } from 'tinymce/plugins/link/ui/sections/LinkListOptions';
 import { RelOptions } from 'tinymce/plugins/link/ui/sections/RelOptions';
 import { TargetOptions } from 'tinymce/plugins/link/ui/sections/TargetOptions';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
     plugins: 'link',
     toolbar: 'link',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   before(() => {
     TestLinkUi.clearHistory();

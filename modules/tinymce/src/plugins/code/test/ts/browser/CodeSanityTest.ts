@@ -4,14 +4,13 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/code/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.code.CodeSanityTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'code',
     toolbar: 'code',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Source code"]';
 

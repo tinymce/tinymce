@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.table.CustomTableToolbarTest', () => {
     plugins: 'table',
     table_toolbar: 'tableprops tabledelete',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('test custom count of toolbar buttons', async () => {
     const editor = hook.editor();

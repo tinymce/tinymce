@@ -7,7 +7,6 @@ import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -15,7 +14,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
     inline: true,
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
   const testDivId = 'testDiv1234';
 
   const removeTestDiv = () => {

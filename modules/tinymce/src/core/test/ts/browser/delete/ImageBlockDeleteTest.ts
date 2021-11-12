@@ -3,13 +3,12 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.delete.ImageBlockDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     content_style: 'img.block { display: block }',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   context('Delete keys for image block element', () => {
     it('Should place the selection on the image block element on delete before (inline)', () => {

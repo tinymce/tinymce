@@ -4,14 +4,13 @@ import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/pagebreak/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.pagebreak.PageBreakSanityTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'pagebreak',
     toolbar: 'pagebreak',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   it('TBA: Click on the pagebreak toolbar button and assert pagebreak is inserted', () => {
     const editor = hook.editor();

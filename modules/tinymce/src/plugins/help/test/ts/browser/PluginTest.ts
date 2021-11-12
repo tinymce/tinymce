@@ -2,7 +2,6 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Plugin from 'tinymce/plugins/help/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
@@ -12,7 +11,7 @@ describe('browser.tinymce.plugins.help.PluginTest', () => {
     plugins: 'help',
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Assert Help Plugin list contains Help', async () => {
     const editor = hook.editor();

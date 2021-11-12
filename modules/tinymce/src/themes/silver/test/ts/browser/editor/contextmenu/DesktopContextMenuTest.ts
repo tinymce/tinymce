@@ -6,21 +6,19 @@ import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
-import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pOpenContextMenu, pWaitForAndCloseDialog } from '../../../module/ContextMenuUtils';
 
 describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'image imagetools link table',
+    plugins: 'image link table',
     toolbar: 'image editimage link table',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     image_caption: true
-  }, [ ImagePlugin, ImageToolsPlugin, LinkPlugin, TablePlugin, Theme ], true);
+  }, [ ImagePlugin, LinkPlugin, TablePlugin ], true);
 
   // Assert focus is on the expected menu item
   const pAssertFocusOnItem = (label: string, selector: string) =>
@@ -28,7 +26,6 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
 
   const pressDownArrowKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
   const pressEnterKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
-
   const repeatDownArrowKey = (index: number) => Arr.range(index, pressDownArrowKey);
 
   const tableHtml = '<table style="width: 100%;">' +
@@ -129,8 +126,6 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     pressDownArrowKey();
     await pAssertFocusOnItem('Image', '.tox-collection__item:contains("Image")');
     pressDownArrowKey();
-    await pAssertFocusOnItem('Edit Image', '.tox-collection__item:contains("Edit image")');
-    pressDownArrowKey();
     await pAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")');
@@ -141,11 +136,6 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     pressDownArrowKey();
     await pAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")');
     // Navigate back to the "Image"" menu item
-    repeatDownArrowKey(2);
-    pressEnterKey();
-    await pWaitForAndCloseDialog(editor);
-    await pOpenContextMenu(editor, 'img');
-    // Navigate to the "Image tools" menu item
     repeatDownArrowKey(2);
     pressEnterKey();
     await pWaitForAndCloseDialog(editor);

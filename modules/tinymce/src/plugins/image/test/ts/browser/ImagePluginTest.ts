@@ -4,7 +4,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { advancedTabSelectors, assertInputValue, fillActiveDialog, ImageDialogData, setInputValue } from '../module/Helpers';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
         items: 'image'
       });
     }
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const pInitAndOpenDialog = async (editor: Editor, content: string, cursorPos: Cursors.CursorSpec | Cursors.RangeSpec) => {
     editor.settings.image_advtab = true;

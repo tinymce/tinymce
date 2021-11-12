@@ -5,7 +5,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface Definition {
   readonly inputContent: string;
@@ -28,7 +27,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistPluginTest', () => {
     },
     disable_nodechange: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ AdvListPlugin, ListsPlugin, Theme ]);
+  }, [ AdvListPlugin, ListsPlugin ]);
 
   const listStyleTest = (title: string, definition: Definition) => {
     it(title, () => {

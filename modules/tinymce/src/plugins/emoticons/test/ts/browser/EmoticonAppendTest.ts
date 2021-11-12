@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { fakeEvent } from '../module/test/Utils';
 
@@ -27,7 +26,7 @@ describe('browser.tinymce.plugins.emoticons.AppendTest', () => {
         char: '🤯'
       }
     }
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const tabElement = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi) =>
     (name: string): StructAssert => s.element('div', {

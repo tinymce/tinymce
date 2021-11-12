@@ -4,7 +4,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, assertInputValue, generalTabSelectors, setInputValue } from '../module/Helpers';
 
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.image.ImageResizeTest', () => {
       console.log('file picker pressed');
       callback('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
     }
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: image proportion constrains should work directly', async () => {
     const editor = hook.editor();

@@ -6,7 +6,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const defaultExpectedEvents = [
   'beforesetcontent',
@@ -25,7 +24,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         events.push(e.type);
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   const getFontTree = (): AstNode => {
     const body = new AstNode('body', 1);

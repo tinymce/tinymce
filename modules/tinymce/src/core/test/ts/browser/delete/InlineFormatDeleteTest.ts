@@ -6,13 +6,12 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, [ Theme ], true);
+  }, [], true);
 
   const doDelete = (editor: Editor) => {
     const returnVal = InlineFormatDelete.backspaceDelete(editor, true);

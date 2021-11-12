@@ -5,7 +5,6 @@ import { SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.skin.OxideListCollectionMenuTest', () => {
   const store = TestHelpers.TestStore();
@@ -46,7 +45,7 @@ describe('browser.tinymce.themes.silver.skin.OxideListCollectionMenuTest', () =>
         }
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     ':focus { background-color: rgb(222, 224, 226); }'

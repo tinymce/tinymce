@@ -5,11 +5,9 @@ import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import WordcountPlugin from 'tinymce/plugins/wordcount/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
   before(() => {
-    Theme();
     WordcountPlugin(5);
   });
 

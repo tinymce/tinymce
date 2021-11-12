@@ -6,7 +6,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 enum Alignment {
   Left = 'left',
@@ -21,7 +20,7 @@ describe('browser.tinymce.plugins.quickbars.SelectionToolbarTest', () => {
     toolbar: false,
     menubar: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, LinkPlugin, QuickbarsPlugin ], true);
+  }, [ LinkPlugin, QuickbarsPlugin ], true);
 
   const imgSrc = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
