@@ -176,6 +176,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableC
       const lastTimeStamp = Cell<number>(0);
 
       const touchEnd = (t: TouchEvent) => {
+        console.log(t);
         const target = SugarElement.fromDom(t.target as Node);
         if (SugarNode.name(target) === 'td' || SugarNode.name(target) === 'th') {
           const lT = lastTarget.get();

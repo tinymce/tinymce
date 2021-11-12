@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-// import { Selections } from '@ephox/darwin';
-
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/main/ts/core/Clipboard';

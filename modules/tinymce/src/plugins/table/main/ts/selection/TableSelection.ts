@@ -26,7 +26,7 @@ const getSelectionFromSelector = <T extends Element>(selector: string) =>
 
 // const getSelectionCaption = getSelectionFromSelector<HTMLTableCaptionElement>('caption');
 
-// const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
+const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
@@ -49,7 +49,7 @@ const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): S
 export {
   // getSelectionCaption,
   // getSelectionCell,
-  // getSelectionCellOrCaption,
+  getSelectionCellOrCaption,
   // getCellsFromSelection,
   getRowsFromSelection
 };

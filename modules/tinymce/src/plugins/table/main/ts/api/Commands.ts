@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-// import { Selections } from '@ephox/darwin';
 import { Fun, Obj, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';

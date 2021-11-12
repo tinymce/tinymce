@@ -5,30 +5,31 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Optional } from '@ephox/katamari';
-import { RunOperation, TableLookup } from '@ephox/snooker';
-import { SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
+import { Arr, Cell, Fun, Optional, Optionals, Thunk } from '@ephox/katamari';
+import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
+import { Compare, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
-import { SelectionTargets as ModelSelectionTargets } from 'tinymce/models/dom/table/main/ts/selection/SelectionTargets';
 
 import * as Util from '../core/Util';
+import * as TableTargets from '../queries/TableTargets';
+import * as TableSelection from './TableSelection';
 
-type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
-type UiToggleApi = Menu.ToggleMenuItemInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi;
+ type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
+ type UiToggleApi = Menu.ToggleMenuItemInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi;
 
 /*
-onAny - disable if any column in the selection is locked
-onFirst - disable if the first column in the table is selected and is locked
-onLast - disable if the the last column in the table is selected and is locked
-*/
+ onAny - disable if any column in the selection is locked
+ onFirst - disable if the first column in the table is selected and is locked
+ onLast - disable if the the last column in the table is selected and is locked
+ */
 export const enum LockedDisable {
   onAny = 'onAny',
   onFirst = 'onFirst',
   onLast = 'onLast'
 }
-type LockedDisableStrs = keyof typeof LockedDisable;
+ type LockedDisableStrs = keyof typeof LockedDisable;
 
 export interface SelectionTargets {
   readonly onSetupTable: (api: UiApi) => () => void;
@@ -51,17 +52,109 @@ interface ExtractedSelectionDetails {
   readonly locked: Record<LockedDisableStrs, boolean>;
 }
 
-export const getSelectionTargets = (editor: Editor, modelSelectionTargets: ModelSelectionTargets): SelectionTargets => {
-  const selectionDetails = modelSelectionTargets.selectionDetails;
+ type TargetSetupCallback = (targets: RunOperation.CombinedTargets) => boolean;
+
+export const getSelectionTargets = (editor: Editor): SelectionTargets => {
+  const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
+  const changeHandlers = Cell([]);
+  let selectionDetails = Optional.none<ExtractedSelectionDetails>();
 
   const isCaption = SugarNode.isTag('caption');
-  const isDisabledForSelection = (key: keyof ExtractedSelectionDetails) => selectionDetails().forall((details) => !details[key]);
+  const isDisabledForSelection = (key: keyof ExtractedSelectionDetails) => selectionDetails.forall((details) => !details[key]);
+  const getStart = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+  const getEnd = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionEnd(editor), Util.getIsRoot(editor));
 
-  const onSetup = modelSelectionTargets.onSetup;
-  const onSetupWithToggle = modelSelectionTargets.onSetupWithToggle;
+  const getSelectedCells = () =>
+    Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+
+  const findTargets = (): Optional<RunOperation.CombinedTargets> =>
+    getStart().bind((startCellOrCaption) =>
+      Optionals.flatten(
+        Optionals.lift2(TableLookup.table(startCellOrCaption), getEnd().bind(TableLookup.table), (startTable, endTable) => {
+          if (Compare.eq(startTable, endTable)) {
+            if (isCaption(startCellOrCaption)) {
+              return Optional.some(TableTargets.noMenu(startCellOrCaption));
+            } else {
+              return Optional.some(TableTargets.forMenu(getSelectedCells, startTable, startCellOrCaption));
+            }
+          }
+
+          return Optional.none();
+        })
+      )
+    );
+
+  const getExtractedDetails = (targets: RunOperation.CombinedTargets): Optional<ExtractedSelectionDetails> => {
+    const tableOpt = TableLookup.table(targets.element);
+    return tableOpt.map((table) => {
+      const warehouse = Warehouse.fromTable(table);
+      const selectedCells = RunOperation.onCells(warehouse, targets).getOr([] as Structs.DetailExt[]);
+
+      const locked = Arr.foldl(selectedCells, (acc, cell) => {
+        if (cell.isLocked) {
+          acc.onAny = true;
+          if (cell.column === 0) {
+            acc.onFirst = true;
+          } else if (cell.column + cell.colspan >= warehouse.grid.columns) {
+            acc.onLast = true;
+          }
+        }
+        return acc;
+      }, { onAny: false, onFirst: false, onLast: false });
+
+      return {
+        mergeable: RunOperation.onUnlockedMergable(warehouse, targets).isSome(),
+        unmergeable: RunOperation.onUnlockedUnmergable(warehouse, targets).isSome(),
+        locked
+      };
+    });
+  };
+
+  const resetTargets = () => {
+    // Reset the targets
+    targets.set(Thunk.cached(findTargets)());
+
+    // Reset the selection details
+    selectionDetails = targets.get().bind(getExtractedDetails);
+
+    // Trigger change handlers
+    Arr.each(changeHandlers.get(), (handler) => handler());
+  };
+
+  const setupHandler = (handler: () => void) => {
+    // Execute the handler to set the initial state
+    handler();
+
+    // Register the handler so we can update the state when resetting targets
+    changeHandlers.set(changeHandlers.get().concat([ handler ]));
+
+    return () => {
+      changeHandlers.set(Arr.filter(changeHandlers.get(), (h) => h !== handler));
+    };
+  };
+
+  const onSetup = (api: UiApi, isDisabled: TargetSetupCallback) =>
+    setupHandler(() =>
+      targets.get().fold(() => {
+        api.setDisabled(true);
+      }, (targets) => {
+        api.setDisabled(isDisabled(targets));
+      })
+    );
+
+  const onSetupWithToggle = (api: UiToggleApi, isDisabled: TargetSetupCallback, isActive: TargetSetupCallback) =>
+    setupHandler(() =>
+      targets.get().fold(() => {
+        api.setDisabled(true);
+        api.setActive(false);
+      }, (targets) => {
+        api.setDisabled(isDisabled(targets));
+        api.setActive(isActive(targets));
+      })
+    );
 
   const isDisabledFromLocked = (lockedDisable: LockedDisable) =>
-    selectionDetails().exists((details) => details.locked[lockedDisable]);
+    selectionDetails.exists((details) => details.locked[lockedDisable]);
 
   const onSetupTable = (api: UiApi) => onSetup(api, (_) => false);
   const onSetupCellOrRow = (api: UiApi) => onSetup(api, (targets) => isCaption(targets.element));
@@ -92,6 +185,8 @@ export const getSelectionTargets = (editor: Editor, modelSelectionTargets: Model
 
   const onSetupTableColumnHeaders = onSetupTableHeaders('mceTableColType', 'th');
 
+  editor.on('NodeChange ExecCommand TableSelectorChange', resetTargets);
+
   return {
     onSetupTable,
     onSetupCellOrRow,
@@ -100,10 +195,10 @@ export const getSelectionTargets = (editor: Editor, modelSelectionTargets: Model
     onSetupPasteableColumn,
     onSetupMergeable,
     onSetupUnmergeable,
+    resetTargets,
     onSetupTableWithCaption,
     onSetupTableRowHeaders,
     onSetupTableColumnHeaders,
-    resetTargets: modelSelectionTargets.resetTargets,
-    targets: modelSelectionTargets.targets
+    targets: targets.get
   };
 };

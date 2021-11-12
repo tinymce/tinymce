@@ -6,14 +6,11 @@
  */
 
 import { Transformations } from '@ephox/acid';
-// import { Selections } from '@ephox/darwin';
 import { Arr, Obj, Singleton, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
-
-// import * as TableSelection from '../selection/TableSelection';
 
 export interface UserListValue {
   readonly title?: string;

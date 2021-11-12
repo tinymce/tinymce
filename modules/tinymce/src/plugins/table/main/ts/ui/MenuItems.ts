@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-// import { Selections } from '@ephox/darwin';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
 
