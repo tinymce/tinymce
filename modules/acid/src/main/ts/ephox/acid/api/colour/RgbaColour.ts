@@ -7,7 +7,7 @@ const min = Math.min;
 const max = Math.max;
 const round = Math.round;
 
-const rgbRegex = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)/;
+const rgbRegex = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i;
 const rgbaRegex = /^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d?(?:\.\d+)?)\)/;
 
 const rgbaColour = (red: number, green: number, blue: number, alpha: number): Rgba => ({
@@ -106,6 +106,8 @@ const fromStringValues = (red: string, green: string, blue: string, alpha: strin
 };
 
 const fromString = (rgbaString: string): Optional<Rgba> => {
+  // eslint-disable-next-line no-debugger
+  debugger;
   if (rgbaString === 'transparent') {
     return Optional.some(rgbaColour(0, 0, 0, 0));
   }

@@ -537,14 +537,6 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     DOM.remove('test');
   });
 
-  it('toHex', () => {
-    assert.equal(DOM.toHex('rgb(0, 255, 255)'), '#00ffff');
-    assert.equal(DOM.toHex('rgb(255, 0, 0)'), '#ff0000');
-    assert.equal(DOM.toHex('rgb(0, 0, 255)'), '#0000ff');
-    assert.equal(DOM.toHex('rgb  (  0  , 0  , 255  )  '), '#0000ff');
-    assert.equal(DOM.toHex('   RGB  (  0  , 0  , 255  )  '), '#0000ff');
-  });
-
   it('getOuterHTML', () => {
     DOM.add(document.body, 'div', { id: 'test' });
 
