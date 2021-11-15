@@ -317,7 +317,7 @@ describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
     }
   ));
 
-  it('TBA: content_css with two files, basic and internal CSS classes', () => pTestEditorWithSettings(
+  it('TINY-8238: content_css with two files, basic and internal CSS classes', () => pTestEditorWithSettings(
     {
       menuContents: [
         { tag: 'h1', html: 'h1.red', submenu: false },
