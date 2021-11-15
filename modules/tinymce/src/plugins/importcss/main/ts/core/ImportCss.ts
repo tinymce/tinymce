@@ -33,6 +33,8 @@ interface Group extends UserDefinedGroup {
   readonly filter: Filter | undefined;
 }
 
+const INTERNAL_EDITOR_STYLE = /^\.(?:ephox|tiny|mce)(?:-+\w+)+$/;
+
 const removeCacheSuffix = (url: string): string => {
   const cacheSuffix = Env.cacheSuffix;
 
@@ -255,7 +257,7 @@ const setup = (editor: Editor): void => {
     };
 
     Tools.each(getSelectors(editor, editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), (selector) => {
-      if (selector.indexOf('.mce-') === -1) {
+      if (selector.match(INTERNAL_EDITOR_STYLE) === null) {
         if (!selectorFilter || selectorFilter(selector)) {
           const selectorGroups = getGroupsBySelector(groups, selector);
 
