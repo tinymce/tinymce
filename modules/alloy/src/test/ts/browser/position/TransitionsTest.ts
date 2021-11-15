@@ -137,6 +137,8 @@ describe('browser.alloy.position.TransitionsTest', () => {
   };
 
   const pTestTransition = async (sinkName: string, sink: AlloyComponent, scenarios: Scenario[], events: string[]) => {
+    // Wait a while between tests, sometimes there are cancel events that pop in
+    await Waiter.pWait(transitionTime * 2);
     gui.store().clear();
     // Position initially at the first button
     const button1 = memButton1.get(gui.component());
@@ -149,9 +151,12 @@ describe('browser.alloy.position.TransitionsTest', () => {
       await PositionTestUtils.pTestSink(sinkName, sink, sinks.popup(), scenario.spec);
       if (scenario.expectTransition) {
         assertClasses(`Has transition class for transition ${i + 1} in ${sinkName} sink`, [ 'transition' ]);
-        // Either wait enough for the transition to complete or for half the transition time
-        const waitTime = scenario.waitForCompletion === false ? transitionTime / 2 : transitionTime + 20;
-        await Waiter.pWait(waitTime);
+
+        if (scenario.waitForCompletion === false) {
+          await Waiter.pWait(transitionTime / 2);
+        } else {
+          await Waiter.pTryUntilPredicate('Transition ends within expected timeframe', () => Classes.get(sinks.popup().element).length === 0, 50, transitionTime * 2);
+        }
       } else {
         assertClasses(`No classes added for transition ${i + 1} in ${sinkName} sink`, []);
       }
@@ -162,10 +167,7 @@ describe('browser.alloy.position.TransitionsTest', () => {
       assertClasses(`Transition classes removed for ${sinkName} sink`, []);
       assert.isFalse(Attribute.has(sinks.popup().element, 'data-alloy-transition-timer'), 'Transition timer attribute should not be set');
       gui.store().assertEq(`Transition events for ${sinkName} sink`, events);
-    }, 10, transitionTime * 2);
-
-    // Wait another double of transition time, sometimes there are cancel events that pop in
-    await Waiter.pWait(transitionTime * 2);
+    }, 50, transitionTime * 3);
   };
 
   it('TINY-7740: should not add the transition class when first positioning', async () => {
@@ -257,7 +259,6 @@ describe('browser.alloy.position.TransitionsTest', () => {
   });
 
   it('TINY-7740: should stop transitioning once the duration passes if repositioned and the mode doesn\'t trigger a new transition', async () => {
-    gui.store().clear();
     // Position initially at the first button
     const button1 = memButton1.get(gui.component());
     await PositionTestUtils.pTestSink('relative', sinks.relative(), sinks.popup(), getHotspotPlacementSpec(button1, 'placement'));
@@ -269,7 +270,7 @@ describe('browser.alloy.position.TransitionsTest', () => {
     await PositionTestUtils.pTestSink('relative', sinks.relative(), sinks.popup(), getMakeshiftPlacementSpec(100, 350, 'placement', northLayout));
     assertClasses('Still transitioning', [ 'transition' ]);
     // Wait the rest of the transition time, plus ~2 frames and make sure the transition is complete
-    await Waiter.pTryUntil('The transition should have completed', () => assertClasses('Transition Complete', [ 'transition' ]), 10, transitionTime * 2);
+    await Waiter.pTryUntil('The transition should have completed', () => assertClasses('Transition Complete', [ ]), 10, transitionTime * 2);
 
     const expectedEvents = [ 'transitioncancel', 'transitioncancel' ];
     await Waiter.pTryUntil('Transition events', () => gui.store().assertEq('Transition events', expectedEvents), 10, 100);
