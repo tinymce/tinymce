@@ -257,7 +257,7 @@ const setup = (editor: Editor): void => {
     };
 
     Tools.each(getSelectors(editor, editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), (selector) => {
-      if (selector.match(internalEditorStyle) === null) {
+      if (!internalEditorStyle.test(selector)) {
         if (!selectorFilter || selectorFilter(selector)) {
           const selectorGroups = getGroupsBySelector(groups, selector);
 
