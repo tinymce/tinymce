@@ -21,24 +21,6 @@ interface PasteBin {
   readonly isDefaultContent: (content: any) => boolean;
 }
 
-// We can't attach the pastebin to a H1 inline element on IE since it won't allow H1 or other
-// non valid parents to be pasted into the pastebin so we need to attach it to the body
-const getPasteBinParent = (editor: Editor): Element =>
-  (Env.browser.isIE() || Env.browser.isEdge()) && editor.inline ? document.body : editor.getBody();
-
-const isExternalPasteBin = (editor: Editor): boolean =>
-  getPasteBinParent(editor) !== editor.getBody();
-
-const delegatePasteEvents = (editor: Editor, pasteBinElm: Element, pasteBinDefaultContent: string): void => {
-  if (isExternalPasteBin(editor)) {
-    editor.dom.bind(pasteBinElm, 'paste keyup', (_e) => {
-      if (!isDefault(editor, pasteBinDefaultContent)) {
-        editor.fire('paste');
-      }
-    });
-  }
-};
-
 /**
  * Creates a paste bin element as close as possible to the current caret location and places the focus inside that element
  * so that when the real paste event occurs the contents gets inserted into this element
@@ -50,7 +32,7 @@ const create = (editor: Editor, lastRngCell: Cell<Range | null>, pasteBinDefault
   lastRngCell.set(editor.selection.getRng());
 
   // Create a pastebin
-  const pasteBinElm = editor.dom.add(getPasteBinParent(editor), 'div', {
+  const pasteBinElm = editor.dom.add(editor.getBody(), 'div', {
     'id': 'mcepastebin',
     'class': 'mce-pastebin',
     'contentEditable': true,
@@ -58,9 +40,9 @@ const create = (editor: Editor, lastRngCell: Cell<Range | null>, pasteBinDefault
     'style': 'position: fixed; top: 50%; width: 10px; height: 10px; overflow: hidden; opacity: 0'
   }, pasteBinDefaultContent);
 
-  // Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE and Gecko
+  // Move paste bin out of sight since the controlSelection rect gets displayed otherwise on Gecko
   const browser = Env.browser;
-  if (browser.isIE() || browser.isEdge() || browser.isFirefox()) {
+  if (browser.isFirefox()) {
     dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) === 'rtl' ? 0xFFFF : -0xFFFF);
   }
 
@@ -68,8 +50,6 @@ const create = (editor: Editor, lastRngCell: Cell<Range | null>, pasteBinDefault
   dom.bind(pasteBinElm, 'beforedeactivate focusin focusout', (e) => {
     e.stopPropagation();
   });
-
-  delegatePasteEvents(editor, pasteBinElm, pasteBinDefaultContent);
 
   pasteBinElm.focus();
   editor.selection.select(pasteBinElm, true);
@@ -118,7 +98,7 @@ const getHtml = (editor: Editor): string => {
   };
 
   // find only top level elements (there might be more nested inside them as well, see TINY-1162)
-  const pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, (elm) => {
+  const pasteBinClones = Tools.grep(editor.getBody().childNodes, (elm) => {
     return (elm as HTMLElement).id === 'mcepastebin';
   }) as HTMLElement[];
   const pasteBinElm = pasteBinClones.shift();
@@ -174,6 +154,5 @@ const PasteBin = (editor: Editor): PasteBin => {
 };
 
 export {
-  PasteBin,
-  getPasteBinParent
+  PasteBin
 };

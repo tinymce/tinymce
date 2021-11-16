@@ -17,7 +17,6 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Promise from 'tinymce/core/api/util/Promise';
 import VK from 'tinymce/core/api/util/VK';
 
-import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
@@ -290,14 +289,6 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       // pressed, this will be removed on keyup
       keyboardPastePressed.set(true);
 
-      // IE doesn't support Ctrl+Shift+V and it doesn't even produce a paste event
-      // so lets fake a paste event and let IE use the execCommand/dataTransfer methods
-      if ((Env.browser.isIE() || Env.browser.isEdge()) && keyboardPastePlainTextState) {
-        e.preventDefault();
-        Events.firePaste(editor, true);
-        return;
-      }
-
       pasteBin.remove();
       pasteBin.create();
 
@@ -372,7 +363,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     return pasteBin.getLastRng() || editor.selection.getRng();
   };
 
-  editor.on('paste', (e: EditorEvent<ClipboardEvent & { ieFake: boolean }>) => {
+  editor.on('paste', (e: EditorEvent<ClipboardEvent>) => {
     const isKeyboardPaste = keyboardPasteEvent.isSet() || keyboardPastePressed.isSet();
     if (isKeyboardPaste) {
       keyboardPasteEvent.clear();
@@ -397,18 +388,6 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     // Not a keyboard paste prevent default paste and try to grab the clipboard contents using different APIs
     if (!isKeyboardPaste) {
       e.preventDefault();
-    }
-
-    // Try IE only method if paste isn't a keyboard paste
-    if ((Env.browser.isIE() || Env.browser.isEdge()) && (!isKeyboardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
-      pasteBin.create();
-
-      editor.dom.bind(pasteBin.getEl(), 'paste', (e) => {
-        e.stopPropagation();
-      });
-
-      editor.getDoc().execCommand('Paste', false, null);
-      clipboardContent['text/html'] = pasteBin.getHtml();
     }
 
     // If clipboard API has HTML then use that directly
