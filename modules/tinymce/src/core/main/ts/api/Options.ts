@@ -35,7 +35,7 @@ const option = <K extends keyof EditorOptions>(name: K) => (editor: Editor) =>
 const stringOrObjectProcessor = (value: string) =>
   Type.isString(value) || Type.isObject(value);
 
-const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (value: string) => {
+const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (value: unknown) => {
   const valid = Type.isString(value);
   if (valid) {
     if (value.indexOf('=') !== -1) {
@@ -45,7 +45,7 @@ const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (valu
       return { value, valid };
     }
   } else {
-    return { value, valid, message: 'Must be a string.' };
+    return { valid: false as const, message: 'Must be a string.' };
   }
 };
 

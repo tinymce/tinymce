@@ -20,8 +20,8 @@ interface ProcessorError {
   message: string;
 }
 
-type SimpleProcessor<T> = (value: T) => boolean;
-type Processor<T, U> = (value: T) => ProcessorSuccess<U> | ProcessorError;
+type SimpleProcessor = (value: unknown) => boolean;
+type Processor<T> = (value: unknown) => ProcessorSuccess<T> | ProcessorError;
 
 export interface BuiltInOptionTypeMap {
   'string': string;
@@ -47,12 +47,12 @@ export interface BuiltInOptionSpec<K extends BuiltInOptionType> extends BaseOpti
 }
 
 export interface SimpleOptionSpec<T> extends BaseOptionSpec {
-  processor: SimpleProcessor<T>;
+  processor: SimpleProcessor;
   default?: T;
 }
 
 export interface OptionSpec<T, U> extends BaseOptionSpec {
-  processor: Processor<T, U>;
+  processor: Processor<U>;
   default?: T;
 }
 
@@ -120,7 +120,7 @@ export interface Options {
   unset: (name: string) => boolean;
 }
 
-const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<BuiltInOptionTypeMap[K], BuiltInOptionTypeMap[K]> => {
+const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<BuiltInOptionTypeMap[K]> => {
   const validator = (() => {
     switch (type) {
       case 'array':
@@ -138,9 +138,16 @@ const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<Bu
       case 'string[]':
         return (val) => Type.isArrayOf(val, Type.isString);
     }
-  })();
+  })() as (val: unknown) => val is BuiltInOptionTypeMap[K];
 
-  return (value) => ({ value, valid: validator(value), message: `The value must be of type: ${type}.` });
+  return (value) => {
+    const valid = validator(value);
+    if (valid) {
+      return { value, valid };
+    } else {
+      return { valid: false, message: `The value must be a ${type}.` };
+    }
+  };
 };
 
 const isBuiltInSpec = <K extends BuiltInOptionType>(spec: unknown): spec is BuiltInOptionSpec<K> =>
@@ -154,7 +161,7 @@ const getErrorMessage = (message: string, result: ProcessorError): string => {
 const isValidResult = <T>(result: ProcessorSuccess<T> | ProcessorError): result is ProcessorSuccess<T> =>
   result.valid;
 
-const processValue = <T, U>(value: T, processor: SimpleProcessor<T> | Processor<T, U>): ProcessorSuccess<U> | ProcessorError => {
+const processValue = <T, U>(value: T, processor: SimpleProcessor | Processor<U>): ProcessorSuccess<U> | ProcessorError => {
   const result = processor(value);
   if (Type.isBoolean(result)) {
     // Note: Need to cast here as if a boolean is returned then we're guaranteed to be returning the same value
@@ -164,7 +171,7 @@ const processValue = <T, U>(value: T, processor: SimpleProcessor<T> | Processor<
   }
 };
 
-const processDefaultValue = <T, U>(name: string, defaultValue: T, processor: Processor<T, U>): U | undefined => {
+const processDefaultValue = <T, U>(name: string, defaultValue: T, processor: Processor<U>): U | undefined => {
   if (!Type.isUndefined(defaultValue)) {
     const result = processValue(defaultValue, processor);
     if (isValidResult(result)) {
@@ -190,7 +197,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     }
   });
 
-  const setValue = <T, U>(name: string, value: T, processor: SimpleProcessor<T> | Processor<T, U>): boolean => {
+  const setValue = <T, U>(name: string, value: T, processor: SimpleProcessor | Processor<U>): boolean => {
     const result = processValue(value, processor);
     if (isValidResult(result)) {
       values[name] = result.value;
