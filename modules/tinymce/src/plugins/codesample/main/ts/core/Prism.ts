@@ -10,10 +10,10 @@ import Prism from '@ephox/wrap-prismjs';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const get = (editor: Editor): Prism =>
-  Global.Prism && Settings.useGlobalPrismJS(editor) ? Global.Prism : Prism;
+  Global.Prism && Options.useGlobalPrismJS(editor) ? Global.Prism : Prism;
 
 export {
   get
