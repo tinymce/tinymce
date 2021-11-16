@@ -2,27 +2,32 @@ const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 const path = require('path');
 const fs = require('fs');
+const webpack = require('webpack');
 
-const packageData = require("../../package.json");
+const packageData = require('../../package.json');
 
-let create = (entries, tsConfig, outDir, filename) => {
+let create = (entries, tsConfig, outDir = '.') => {
+  const tsConfigPath = path.resolve(tsConfig);
+  const resolvedEntries = Object.entries(entries).reduce((acc, entry) => {
+    acc[entry[0]] = path.resolve('./' + entry[1]);
+    return acc;
+  }, {});
   return {
-    entry: entries,
+    entry: resolvedEntries,
     mode: 'development',
-    devtool: 'source-map',
-    target: ['web', 'es5'],
+    devtool: 'inline-source-map',
+    target: 'web',
     optimization: {
       removeAvailableModules: false,
       removeEmptyChunks: false,
       splitChunks: false,
     },
     resolve: {
-      symlinks: false,
-      extensions: ['.ts', '.js'],
+      extensions: [ '.ts', '.js' ],
       plugins: [
         new TsConfigPathsPlugin({
-          configFile: tsConfig,
-          extensions: ['.ts', '.js']
+          configFile: tsConfigPath,
+          extensions: [ '.ts', '.js' ]
         })
       ]
     },
@@ -35,8 +40,21 @@ let create = (entries, tsConfig, outDir, filename) => {
           }
         },
         {
+          test: /\.(js|mjs)$/,
+          use: ['source-map-loader'],
+          enforce: 'pre'
+        },
+        {
           test: /\.(svg)$/i,
           type: 'asset/source'
+        },
+        {
+          resourceQuery: /raw/,
+          type: 'asset/source'
+        },
+        {
+          test: /\.(js|mjs|ts)$/,
+          use: [ '@ephox/swag/webpack/remapper' ]
         },
         {
           test: /\.ts$/,
@@ -64,12 +82,12 @@ let create = (entries, tsConfig, outDir, filename) => {
             {
               loader: 'ts-loader',
               options: {
+                configFile: tsConfigPath,
                 transpileOnly: true,
+                projectReferences: true,
                 compilerOptions: {
                   declarationMap: false
-                },
-                configFile: tsConfig,
-                projectReferences: true
+                }
               }
             }
           ]
@@ -77,37 +95,52 @@ let create = (entries, tsConfig, outDir, filename) => {
       ]
     },
     plugins: [
-      new LiveReloadPlugin()
+      new LiveReloadPlugin(),
+      // See https://github.com/TypeStrong/ts-loader#usage-with-webpack-watch
+      new webpack.WatchIgnorePlugin({
+        paths: [
+          // Ignore generated .js, .map and .d.ts output files
+          /tinymce\/modules\/.*\/lib\/.*\.(js|map|d\.ts)$/,
+          // Something seems to trigger that node module package.json files change when they
+          // haven't, so lets just ignore them entirely
+          /node_modules\/.*\/package\.json$/
+        ]
+      }),
     ],
     output: {
-      filename: typeof entries === 'string' ? filename : "[name]/" + filename,
+      filename: '[name]',
       path: path.resolve(outDir),
       pathinfo: false
+    },
+    stats: {
+      // suppress type re-export warnings caused by `transpileOnly: true`
+      warningsFilter: /export .* was not found in/
     }
   };
 };
 
-const buildDemoEntries = (typeNames, type, demo) => typeNames.reduce(
+const buildDemoEntries = (typeNames, type, demo, pathPrefix = '') => typeNames.reduce(
   (acc, name) => {
     const tsfile = `src/${type}/${name}/demo/ts/demo/${demo}`;
-    if (fs.existsSync(tsfile)) { acc[name] = tsfile; }
+    if (fs.existsSync(tsfile)) { acc[`${pathPrefix}${type}/${name}/demo.js`] = tsfile; }
     return acc;
   }, {}
 );
 
-const buildEntries = (typeNames, type, entry) => typeNames.reduce(
+const buildEntries = (typeNames, type, entry, pathPrefix = '') => typeNames.reduce(
   (acc, name) => {
-    acc[name] = `src/${type}/${name}/main/ts/${entry}`;
+    const fileName = type.replace(/s$/, '') + '.js';
+    acc[`${pathPrefix}${type}/${name}/${fileName}`] = `src/${type}/${name}/main/ts/${entry}`;
     return acc;
   }, {}
 );
 
 const createPlugin = (name) => {
-  return create(`src/plugins/${name}/demo/ts/demo/Demo.ts`, 'tsconfig.plugin.json', `scratch/demos/plugins/${name}/`, 'demo.js');
+  return create({ 'demo.js': `src/plugins/${name}/demo/ts/demo/Demo.ts` }, '../../tsconfig.demo.json', `scratch/demos/plugins/${name}/`);
 };
 
 const createTheme = (name) => {
-  return create(`src/themes/${name}/demo/ts/demo/Demos.ts`, 'tsconfig.theme.json', `scratch/demos/themes/${name}`, 'demo.js');
+  return create({ 'demo.js': `src/themes/${name}/demo/ts/demo/Demos.ts` }, '../../tsconfig.demo.json', `scratch/demos/themes/${name}`);
 };
 
 const createModel = (name) => {
@@ -115,28 +148,33 @@ const createModel = (name) => {
 };
 
 const allPluginDemos = (plugins) => {
-  return create(buildDemoEntries(plugins, 'plugins', 'Demo.ts'), 'tsconfig.plugin.json', 'scratch/demos/plugins', 'demo.js')
+  return create(buildDemoEntries(plugins, 'plugins', 'Demo.ts'), '../../tsconfig.demo.json', 'scratch/demos')
 };
 
 const allThemeDemos = (themes) => {
-  return create(buildDemoEntries(themes, 'themes', 'Demos.ts'), 'tsconfig.theme.json', 'scratch/demos/themes', 'demo.js')
+  return create(buildDemoEntries(themes, 'themes', 'Demos.ts'), '../../tsconfig.demo.json', 'scratch/demos')
 };
 
 const allModelDemos = (models) => {
-  return create(buildDemoEntries(models, 'models', 'Demo.ts'), 'tsconfig.model.json', 'scratch/demos/models', 'demo.js')
+  return create(buildDemoEntries(models, 'models', 'Demo.ts'), '../../tsconfig.demo.json', 'scratch/demos')
 };
 
 const all = (plugins, themes, models) => {
   return [
-    allPluginDemos(plugins),
-    allThemeDemos(themes),
-    allModelDemos(models),
-    create(`src/core/demo/ts/demo/Demos.ts`, 'tsconfig.json', 'scratch/demos/core/', 'demo.js'),
-    create('src/core/demo/ts/demo/ContentSecurityPolicyDemo.ts', 'tsconfig.json', 'scratch/demos/core/', 'cspdemo.js'),
-    create('src/core/main/ts/api/Main.ts', 'tsconfig.json', 'js/tinymce/', 'tinymce.js'),
-    create(buildEntries(plugins, 'plugins', 'Main.ts'), 'tsconfig.plugin.json', 'js/tinymce/plugins', 'plugin.js'),
-    create(buildEntries(themes, 'themes', 'Main.ts'), 'tsconfig.theme.json', 'js/tinymce/themes', 'theme.js'),
-    create(buildEntries(models, 'models', 'Main.ts'), 'tsconfig.model.json', 'js/tinymce/models', 'model.js')
+    create({
+      'scratch/demos/core/demo.js': 'src/core/demo/ts/demo/Demos.ts',
+      'scratch/demos/core/cspdemo.js': 'src/core/demo/ts/demo/ContentSecurityPolicyDemo.ts',
+      ...buildDemoEntries(plugins, 'plugins', 'Demo.ts', 'scratch/demos/'),
+      ...buildEntries(plugins, 'plugins', 'Main.ts', 'js/tinymce/'),
+      ...buildDemoEntries(models, 'models', 'Demo.ts', 'scratch/demos/'),
+      ...buildEntries(models, 'models', 'Main.ts', 'js/tinymce/'),
+      ...buildDemoEntries(themes, 'themes', 'Demos.ts', 'scratch/demos/'),
+      ...buildEntries(themes, 'themes', 'Main.ts', 'js/tinymce/'),
+    }, '../../tsconfig.demo.json'),
+    // Note: This can't use the demo tsconfig as it is the core package
+    create({
+      'js/tinymce/tinymce.js': 'src/core/main/ts/api/Main.ts'
+    }, '../../tsconfig.json')
   ];
 };
 
