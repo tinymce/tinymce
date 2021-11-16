@@ -443,6 +443,10 @@ const register = (editor: Editor) => {
     processor: 'object'
   });
 
+  registerOption('forced_plugins', {
+    processor: 'string[]'
+  });
+
   registerOption('block_unsupported_drop', {
     processor: 'boolean',
     default: true
@@ -635,6 +639,11 @@ const register = (editor: Editor) => {
   registerOption('deprecation_warnings', {
     processor: 'boolean',
     default: true
+  });
+
+  registerOption('a11y_advanced_options', {
+    processor: 'boolean',
+    default: false
   });
 
   // These options must be registered later in the init sequence due to their default values

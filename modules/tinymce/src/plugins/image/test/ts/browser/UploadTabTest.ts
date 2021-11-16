@@ -62,11 +62,11 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><img src="' + src + '" /></p>');
     TinySelections.select(editor, 'img', []);
-    editor.settings.image_advtab = false; // make sure that Advanced tab appears separately
+    editor.options.set('image_advtab', false); // make sure that Advanced tab appears separately
     editor.options.set('images_upload_url', 'postAcceptor.php');
     await pAssertImageTab(editor, 'Upload', true);
     await pAssertImageTab(editor, 'Advanced', false);
-    editor.settings.image_advtab = true;
+    editor.options.set('image_advtab', true);
     editor.options.unset('images_upload_url');
     await pAssertImageTab(editor, 'Upload', false);
     await pAssertImageTab(editor, 'Advanced', true);
@@ -76,11 +76,11 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><img src="' + src + '" /></p>');
     TinySelections.select(editor, 'img', []);
-    editor.settings.image_uploadtab = false;
+    editor.options.set('image_uploadtab', false);
     editor.options.set('images_upload_handler', (blobInfo, success) => success('file.jpg'));
     await pAssertImageTab(editor, 'Upload', false);
-    editor.settings.image_advtab = true;
-    delete editor.settings.image_uploadtab;
+    editor.options.set('image_advtab', true);
+    editor.options.unset('image_uploadtab');
     await pAssertImageTab(editor, 'Upload', true);
   });
 
@@ -88,11 +88,11 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><img src="' + src + '" /></p>');
     TinySelections.select(editor, 'img', []);
-    editor.settings.image_advtab = false; // make sure that Advanced tab appears separately
+    editor.options.set('image_advtab', false); // make sure that Advanced tab appears separately
     editor.options.set('images_upload_handler', (blobInfo, success) => success('file.jpg'));
     await pAssertImageTab(editor, 'Upload', true);
     await pAssertImageTab(editor, 'Advanced', false);
-    editor.settings.image_advtab = true;
+    editor.options.set('image_advtab', true);
     editor.options.unset('images_upload_handler');
     await pAssertImageTab(editor, 'Upload', false);
     await pAssertImageTab(editor, 'Advanced', true);
