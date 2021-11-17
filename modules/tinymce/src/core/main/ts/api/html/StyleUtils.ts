@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Obj, Strings } from '@ephox/katamari';
 
 import DOMUtils from '../dom/DOMUtils';
 
@@ -49,11 +49,9 @@ const hasStyleConflict = (dom: DOMUtils, node: Node, parentNode: Node): boolean 
   const parentNodeStyleProps = getStyleProps(dom, parentNode);
 
   const valueMismatch = (prop: string) => {
-    const nodeValue = dom.getStyle(node, prop);
-    const parentValue = dom.getStyle(parentNode, prop);
-    const isValidNodeValue = Type.isNonNullable(nodeValue) && Strings.isNotEmpty(nodeValue);
-    const isValidParentValue = Type.isNonNullable(parentValue) && Strings.isNotEmpty(parentValue);
-    return isValidNodeValue && isValidParentValue && nodeValue !== parentValue;
+    const nodeValue = dom.getStyle(node, prop) ?? '';
+    const parentValue = dom.getStyle(parentNode, prop) ?? '';
+    return Strings.isNotEmpty(nodeValue) && Strings.isNotEmpty(parentValue) && nodeValue !== parentValue;
   };
 
   return Arr.exists(nodeStyleProps, (nodeStyleProp) => {
