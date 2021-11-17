@@ -12,7 +12,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 
 import { Clipboard } from '../api/Clipboard';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { ClipboardContents } from './Clipboard';
 import * as InternalHtml from './InternalHtml';
 import * as Utils from './Utils';
@@ -32,7 +32,7 @@ const setFocusedRange = (editor: Editor, rng: Range): void => {
 
 const setup = (editor: Editor, clipboard: Clipboard, draggingInternallyState: Cell<boolean>): void => {
   // Block all drag/drop events
-  if (Settings.shouldBlockDrop(editor)) {
+  if (Options.shouldBlockDrop(editor)) {
     editor.on('dragend dragover draggesture dragdrop drop drag', (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -40,7 +40,7 @@ const setup = (editor: Editor, clipboard: Clipboard, draggingInternallyState: Ce
   }
 
   // Prevent users from dropping data images on Gecko
-  if (!Settings.shouldPasteDataImages(editor)) {
+  if (!Options.shouldPasteDataImages(editor)) {
     editor.on('drop', (e) => {
       const dataTransfer = e.dataTransfer;
 
@@ -64,7 +64,7 @@ const setup = (editor: Editor, clipboard: Clipboard, draggingInternallyState: Ce
       return;
     }
 
-    if (rng && Settings.shouldFilterDrop(editor)) {
+    if (rng && Options.shouldFilterDrop(editor)) {
       let content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
 
       if (content) {
@@ -97,7 +97,7 @@ const setup = (editor: Editor, clipboard: Clipboard, draggingInternallyState: Ce
   });
 
   editor.on('dragover dragend', (e) => {
-    if (Settings.shouldPasteDataImages(editor) && draggingInternallyState.get() === false) {
+    if (Options.shouldPasteDataImages(editor) && draggingInternallyState.get() === false) {
       e.preventDefault();
       setFocusedRange(editor, getCaretRangeFromEvent(editor, e));
     }
