@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.10.2 - 2021-11-17
+
 ### Fixed
 - Internal selectors were appearing in the style list when using the `importcss` plugin #TINY-8238
 
