@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
 
@@ -133,16 +133,16 @@ const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExtern
 
 const applyLinkOverrides = (editor: Editor, linkAttrs: LinkAttrs): LinkAttrs => {
   const newLinkAttrs = { ...linkAttrs };
-  if (!(Settings.getRelList(editor).length > 0) && Settings.allowUnsafeLinkTarget(editor) === false) {
+  if (Options.getRelList(editor).length === 0 && !Options.allowUnsafeLinkTarget(editor)) {
     const newRel = applyRelTargetRules(newLinkAttrs.rel, newLinkAttrs.target === '_blank');
     newLinkAttrs.rel = newRel ? newRel : null;
   }
 
-  if (Optional.from(newLinkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
-    newLinkAttrs.target = Settings.getDefaultLinkTarget(editor);
+  if (Optional.from(newLinkAttrs.target).isNone() && Options.getTargetList(editor) === false) {
+    newLinkAttrs.target = Options.getDefaultLinkTarget(editor);
   }
 
-  newLinkAttrs.href = handleExternalTargets(newLinkAttrs.href, Settings.assumeExternalTargets(editor));
+  newLinkAttrs.href = handleExternalTargets(newLinkAttrs.href, Options.assumeExternalTargets(editor));
 
   return newLinkAttrs;
 };

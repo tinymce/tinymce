@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.link.AssumeExternalTargetsTest', () => {
   context('link_assume_external_targets: true', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.link_assume_external_targets = true;
+      editor.options.set('link_assume_external_targets', true);
     });
 
     it('TBA: www-urls are prompted to add http:// prefix', async () => {
@@ -71,7 +71,7 @@ describe('browser.tinymce.plugins.link.AssumeExternalTargetsTest', () => {
   context('link_assume_external_targets: http', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.link_assume_external_targets = 'http';
+      editor.options.set('link_assume_external_targets', 'http');
     });
 
     it('TBA: add http:// prefix to www-urls', async () => {
@@ -90,7 +90,7 @@ describe('browser.tinymce.plugins.link.AssumeExternalTargetsTest', () => {
   context('link_assume_external_targets: https', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.link_assume_external_targets = 'https';
+      editor.options.set('link_assume_external_targets', 'https');
     });
 
     it('TBA: add https:// prefix to www-urls', async () => {

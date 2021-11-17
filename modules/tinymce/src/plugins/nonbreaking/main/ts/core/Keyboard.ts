@@ -8,11 +8,11 @@
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Actions from './Actions';
 
 const setup = (editor: Editor): void => {
-  const spaces = Settings.getKeyboardSpaces(editor);
+  const spaces = Options.getKeyboardSpaces(editor);
 
   if (spaces > 0) {
     editor.on('keydown', (e) => {

@@ -511,7 +511,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
 
   it('TBA: Apply UL list to single text line', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
     editor.setContent('a');
 
     LegacyUnit.setSelection(editor, 'body', 0);
@@ -520,12 +520,12 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
     assert.equal(editor.selection.getNode().nodeName, 'LI');
 
-    editor.settings.forced_root_block = 'p';
+    editor.options.unset('forced_root_block');
   });
 
   it('TBA: Apply UL list to single text line with BR', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
     editor.setContent('a<br>');
 
     LegacyUnit.setSelection(editor, 'body', 0);
@@ -534,12 +534,12 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
     assert.equal(editor.selection.getNode().nodeName, 'LI');
 
-    editor.settings.forced_root_block = 'p';
+    editor.options.unset('forced_root_block');
   });
 
   it('TBA: Apply UL list to multiple lines separated by BR', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
 
     editor.setContent(
       'a<br>' +
@@ -561,12 +561,12 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     );
     assert.equal(editor.selection.getStart().nodeName, 'LI');
 
-    editor.settings.forced_root_block = 'p';
+    editor.options.unset('forced_root_block');
   });
 
   it('Apply UL list to multiple lines separated by BR and with trailing BR', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
 
     editor.setContent(
       'a<br>' +
@@ -591,7 +591,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
 
   it('TBA: Apply UL list to multiple formatted lines separated by BR', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
 
     editor.setContent(
       '<strong>a</strong><br>' +
@@ -618,7 +618,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
 
   it('TBA: Apply UL list to br line and text block line', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
 
     editor.setContent(
       'a' +
@@ -645,7 +645,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
 
   it('TBA: Apply UL list to text block line and br line', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
 
     editor.setContent(
       '<p>a</p>' +
@@ -672,7 +672,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
 
   it('TBA: Apply UL list to all BR lines (SelectAll)', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
 
     editor.setContent(
       'a<br>' +
@@ -693,7 +693,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ul>'
     );
 
-    editor.settings.forced_root_block = 'p';
+    editor.options.unset('forced_root_block');
   });
 
   it('TBA: Apply UL list to all P lines (SelectAll)', () => {
@@ -962,10 +962,10 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
 
   it('TBA: Apply UL list to single P with forced_root_block_attrs', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = 'p';
-    editor.settings.forced_root_block_attrs = {
+    editor.options.set('forced_root_block', 'p');
+    editor.options.set('forced_root_block_attrs', {
       'data-editor': '1'
-    };
+    });
 
     editor.setContent(
       '<p data-editor="1">a</p>',
@@ -978,8 +978,8 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     TinyAssertions.assertRawContent(editor, '<ul><li data-editor="1">a</li></ul>');
     assert.equal(editor.selection.getNode().nodeName, 'LI');
 
-    editor.settings.forced_root_block = 'p';
-    delete editor.settings.forced_root_block_attrs;
+    editor.options.unset('forced_root_block');
+    editor.options.unset('forced_root_block_attrs');
   });
 
   it('TINY-3755: Lists: Apply list on mix of existing lists and other text blocks', () => {
