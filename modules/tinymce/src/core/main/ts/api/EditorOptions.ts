@@ -67,8 +67,8 @@ export interface Options {
    * Register a new option that can be used within TinyMCE.
    *
    * @method register
-   * @param {String} name Name of an option.
-   * @param {OptionSpec} spec An option spec describing how to validate the option and other optional metadata.
+   * @param {String} name Name of the option.
+   * @param {OptionSpec} spec An option spec describing how to validate the option with other optional metadata.
    */
   register: {
     <K extends BuiltInOptionType>(name: string, spec: BuiltInOptionSpec<K>): void;
@@ -81,7 +81,7 @@ export interface Options {
    * Check if an option has been registered.
    *
    * @method isRegistered
-   * @param {String} name Name of an option.
+   * @param {String} name Name of the option.
    * @return {Boolean} True if the option has already been registered, otherwise false.
    */
   isRegistered: (name: string) => boolean;
@@ -91,7 +91,7 @@ export interface Options {
    *
    * @method get
    * @param {String} name Name of a registered option.
-   * @return {Object} An option value or the registered default if not set.
+   * @return {Object} An option value, the registered default if not set or undefined if not registered.
    */
   get: {
     <K extends keyof EditorOptions>(name: K): EditorOptions[K] | undefined;
@@ -111,7 +111,7 @@ export interface Options {
   };
 
   /**
-   * Clear any set value for the specified option so that it'll revert back to using the default value.
+   * Clear the set value for the specified option and revert back to the default value.
    *
    * @method unset
    * @param {String} name Name of a registered option.
