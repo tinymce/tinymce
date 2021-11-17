@@ -6,14 +6,14 @@
  */
 
 import { Optional, Singleton, Throttler, Thunk } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import { fireAutocompleteEnd, fireAutocompleteStart } from '../api/Events';
+import Promise from '../api/util/Promise';
 import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
 import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
 import * as Autocompleters from '../autocomplete/Autocompleters';
-import * as AutocompleteTag from '../autocomplete/AutocompleteTag';
+import { addAutocompleterDecorator, removeAutocompleterDecorator } from '../Rtc';
 
 interface ActiveAutocompleter {
   triggerChar: string;
@@ -49,22 +49,23 @@ export const setup = (editor: Editor) => {
 
   const cancelIfNecessary = () => {
     if (isActive()) {
-      AutocompleteTag.remove(SugarElement.fromDom(editor.getBody()));
       fireAutocompleteEnd(editor);
       activeAutocompleter.clear();
+      removeAutocompleterDecorator(editor);
     }
   };
 
   const commenceIfNecessary = (context: AutocompleteContext) => {
     if (!isActive()) {
-      // Create the wrapper
-      AutocompleteTag.create(editor, context.range);
-
       // store the element/context
       activeAutocompleter.set({
         triggerChar: context.triggerChar,
         matchLength: context.text.length
       });
+
+      return addAutocompleterDecorator(editor, context.range);
+    } else {
+      return Promise.resolve();
     }
   };
 
@@ -84,25 +85,25 @@ export const setup = (editor: Editor) => {
     doLookup(fetchOptions).fold(
       cancelIfNecessary,
       (lookupInfo) => {
-        commenceIfNecessary(lookupInfo.context);
+        commenceIfNecessary(lookupInfo.context).then(() => {
+          // Wait for the results to return and then display the menu
+          lookupInfo.lookupData.then((lookupData) => {
+            // Lookup the active autocompleter to make sure it's still active, if it isn't then do nothing
+            activeAutocompleter.get().map((ac) => {
+              const context = lookupInfo.context;
 
-        // Wait for the results to return and then display the menu
-        lookupInfo.lookupData.then((lookupData) => {
-          // Lookup the active autocompleter to make sure it's still active, if it isn't then do nothing
-          activeAutocompleter.get().map((ac) => {
-            const context = lookupInfo.context;
-
-            // Ensure the active autocompleter trigger matches, as the old one may have closed
-            // and a new one may have opened. If it doesn't match, then do nothing.
-            if (ac.triggerChar === context.triggerChar) {
-              // close if we haven't found any matches in the last 10 chars
-              if (context.text.length - ac.matchLength >= 10) {
-                cancelIfNecessary();
-              } else {
-                ac.matchLength = context.text.length;
-                fireAutocompleteStart(editor, { context, lookupData });
+              // Ensure the active autocompleter trigger matches, as the old one may have closed
+              // and a new one may have opened. If it doesn't match, then do nothing.
+              if (ac.triggerChar === context.triggerChar) {
+                // close if we haven't found any matches in the last 10 chars
+                if (context.text.length - ac.matchLength >= 10) {
+                  cancelIfNecessary();
+                } else {
+                  ac.matchLength = context.text.length;
+                  fireAutocompleteStart(editor, { context, lookupData });
+                }
               }
-            }
+            });
           });
         });
       }

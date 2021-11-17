@@ -6,9 +6,12 @@
  */
 
 import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
+import Promise from './api/util/Promise';
+import * as AutocompleteTag from './autocomplete/AutocompleteTag';
 import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
@@ -60,6 +63,10 @@ interface RtcRuntimeApi {
   selection: {
     getContent: (args: Partial<GetSelectionContentArgs>) => Content;
   };
+  autocompleter: {
+    addDecoration: (range: Range) => Promise<void>;
+    removeDecoration: () => Promise<void>;
+  };
   raw: {
     getRawModel: () => any;
   };
@@ -110,6 +117,10 @@ interface RtcAdaptor {
   selection: {
     getContent: (format: ContentFormat, args: Partial<GetSelectionContentArgs>) => Content;
   };
+  autocompleter: {
+    addDecoration: (range: Range) => Promise<void>;
+    removeDecoration: () => Promise<void>;
+  };
   raw: {
     getModel: () => Optional<any>;
   };
@@ -157,6 +168,16 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     insertContent: (value, details) => insertHtmlAtCaret(editor, value, details),
     addVisual: (elm) => addVisualInternal(editor, elm)
   },
+  autocompleter: {
+    addDecoration: (range) => {
+      AutocompleteTag.create(editor, range);
+      return Promise.resolve();
+    },
+    removeDecoration: () => {
+      AutocompleteTag.remove(SugarElement.fromDom(editor.getBody()));
+      return Promise.resolve();
+    }
+  },
   selection: {
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
   },
@@ -167,7 +188,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
 
 const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
   const defaultVars = (vars: Record<string, string>) => Type.isObject(vars) ? vars : {};
-  const { undoManager, formatter, editor, selection, raw } = rtcEditor;
+  const { undoManager, formatter, editor, selection, autocompleter, raw } = rtcEditor;
 
   return {
     undoManager: {
@@ -202,6 +223,10 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
     },
     selection: {
       getContent: (_format, args) => selection.getContent(args)
+    },
+    autocompleter: {
+      addDecoration: (range) => autocompleter.addDecoration(range),
+      removeDecoration: () => autocompleter.removeDecoration()
     },
     raw: {
       getModel: () => Optional.some(raw.getRawModel())
@@ -246,6 +271,10 @@ const makeNoopAdaptor = (): RtcAdaptor => {
     },
     selection: {
       getContent: empty
+    },
+    autocompleter: {
+      addDecoration: Fun.constant(Promise.resolve()),
+      removeDecoration: Fun.constant(Promise.resolve())
     },
     raw: {
       getModel: Fun.constant(Optional.none())
@@ -410,3 +439,9 @@ export const getSelectedContent = (editor: Editor, format: ContentFormat, args: 
 
 export const addVisual = (editor: Editor, elm: HTMLElement): void =>
   getRtcInstanceWithError(editor).editor.addVisual(elm);
+
+export const addAutocompleterDecorator = (editor: Editor, range: Range): Promise<void> =>
+  getRtcInstanceWithError(editor).autocompleter.addDecoration(range);
+
+export const removeAutocompleterDecorator = (editor: Editor): Promise<void> =>
+  getRtcInstanceWithError(editor).autocompleter.removeDecoration();
