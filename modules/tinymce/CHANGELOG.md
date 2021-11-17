@@ -39,6 +39,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 
+## 5.10.2 - 2021-11-17
+
+### Fixed
+- Internal selectors were appearing in the style list when using the `importcss` plugin #TINY-8238
+
 ## 5.10.1 - 2021-11-03
 
 ### Fixed
