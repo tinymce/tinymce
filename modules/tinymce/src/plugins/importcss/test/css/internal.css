@@ -8,6 +8,9 @@
 .tiny-pageembed--1by1 {
   padding-top: 100%;
 }
+.tiny-pageembed.tiny-pageembed--1by1 {
+  padding-top: 100%;
+}
 
 /* very old style definitions */
 .mce-container {

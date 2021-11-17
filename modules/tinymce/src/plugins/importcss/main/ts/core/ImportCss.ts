@@ -33,7 +33,7 @@ interface Group extends UserDefinedGroup {
   readonly filter: Filter | undefined;
 }
 
-const internalEditorStyle = /^\.(?:ephox|tiny-pageembed|mce)(?:-+\w+)+$/;
+const internalEditorStyle = /^\.(?:ephox|tiny-pageembed|mce)(?:[.-]+\w+)+$/;
 
 const removeCacheSuffix = (url: string): string => {
   const cacheSuffix = Env.cacheSuffix;
