@@ -9,7 +9,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement, SugarElements } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/main/ts/core/Clipboard';
+import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/api/Clipboard';
 
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { SelectionTargets } from '../selection/SelectionTargets';

@@ -12,9 +12,9 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Clipboard from './actions/Clipboard';
 import { TableActions } from './actions/TableActions';
 import { Api, getApi } from './api/Api';
+import { Clipboard as FakeClipboard } from './api/Clipboard';
 import * as Commands from './api/Commands';
 import * as QueryCommands from './api/QueryCommands';
-import { Clipboard as FakeClipboard } from './core/Clipboard';
 import * as TableFormats from './core/TableFormats';
 import { ephemera } from './selection/Ephemera';
 

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Clipboard as FakeClipboard } from '../core/Clipboard';
+import { Clipboard as FakeClipboard } from './Clipboard';
 
 export interface Api {
   readonly fakeClipboard: FakeClipboard;

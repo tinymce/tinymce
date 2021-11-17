@@ -9,14 +9,13 @@ import { Arr, Optional, Strings } from '@ephox/katamari';
 import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableGridSize, TableResize } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-
 import * as NodeType from '../../dom/NodeType';
 import { enforcePercentage, enforcePixels, syncPixels } from '../../table/TableEnforceUnit';
 import * as Events from '../../table/TableEvents';
 import * as TableSize from '../../table/TableSize';
 import * as Util from '../../table/TableUtil';
 import * as TableWire from '../../table/TableWire';
+import Editor from '../Editor';
 import * as Settings from '../Settings';
 
 export interface TableResizeHandler {
