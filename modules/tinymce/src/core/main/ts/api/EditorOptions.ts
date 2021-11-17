@@ -91,7 +91,7 @@ export interface Options {
    *
    * @method get
    * @param {String} name Name of a registered option.
-   * @return {Object} An option value, the registered default if not set or undefined if not registered.
+   * @return {Object} An option value, the registered default if not set, or undefined if not registered.
    */
   get: {
     <K extends keyof EditorOptions>(name: K): EditorOptions[K] | undefined;
