@@ -8,7 +8,7 @@
 import { Arr, Fun } from '@ephox/katamari';
 
 import Editor from './api/Editor';
-import * as Settings from './api/Settings';
+import * as Options from './api/Options';
 import Delay from './api/util/Delay';
 import * as RangeCompare from './selection/RangeCompare';
 import { hasAnyRanges } from './selection/SelectionUtils';
@@ -100,7 +100,7 @@ class NodeChange {
     let node, parents, root;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-    if (this.editor.initialized && selection && !Settings.shouldDisableNodeChange(this.editor) && !this.editor.mode.isReadOnly()) {
+    if (this.editor.initialized && selection && !Options.shouldDisableNodeChange(this.editor) && !this.editor.mode.isReadOnly()) {
       // Get start node
       root = this.editor.getBody();
       node = selection.getStart(true) || root;

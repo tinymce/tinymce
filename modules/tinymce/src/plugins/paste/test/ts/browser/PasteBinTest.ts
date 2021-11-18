@@ -4,7 +4,7 @@ import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import { PasteBin } from 'tinymce/plugins/paste/core/PasteBin';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 
@@ -61,7 +61,7 @@ describe('browser.tinymce.plugins.paste.PasteBin', () => {
     }
   ];
 
-  const pCreateEditorFromSettings = (settings: RawEditorSettings = {}, html?: string) =>
+  const pCreateEditorFromSettings = (settings: RawEditorOptions = {}, html?: string) =>
     McEditor.pFromHtml<Editor>(html, {
       ...settings,
       add_unload_trigger: false,
@@ -70,7 +70,7 @@ describe('browser.tinymce.plugins.paste.PasteBin', () => {
       base_url: '/project/tinymce/js/tinymce'
     });
 
-  const pCreateEditorFromHtml = (html: string, settings: RawEditorSettings) =>
+  const pCreateEditorFromHtml = (html: string, settings: RawEditorOptions) =>
     pCreateEditorFromSettings(settings, html);
 
   const assertCases = (editor: Editor, cases: TestCase[]) => {

@@ -56,12 +56,12 @@ describe('browser.tinymce.core.focus.FocusControllerTest', () => {
         const uiElm2 = DOMUtils.DOM.create('div', { class: 'mcex-abc' }, null);
         const uiElm3 = DOMUtils.DOM.create('div', { class: 'tox-dialog' }, null);
         const noUiElm = DOMUtils.DOM.create('div', { class: 'mcey-abc' }, null);
-        editor.settings.custom_ui_selector = '.mcex-abc';
+        editor.options.set('custom_ui_selector', '.mcex-abc');
         assert.isTrue(FocusController.isUIElement(editor, uiElm1), 'Should be true since mce- is a ui prefix');
         assert.isTrue(FocusController.isUIElement(editor, uiElm2), 'Should be true since mcex- is a ui prefix');
         assert.isTrue(FocusController.isUIElement(editor, uiElm3), 'Should be true since tox- is a ui prefix');
         assert.isFalse(FocusController.isUIElement(editor, noUiElm), 'Should be false since mcey- is not a ui prefix');
-        delete editor.settings.custom_ui_selector;
+        editor.options.unset('custom_ui_selector');
       });
 
       it('isEditorContentAreaElement on valid element', () => {

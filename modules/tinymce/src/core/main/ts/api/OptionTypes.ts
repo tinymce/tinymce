@@ -44,7 +44,7 @@ interface ToolbarGroup {
 
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
 
-interface BaseEditorSettings {
+interface BaseEditorOptions {
   add_form_submit_trigger?: boolean;
   add_unload_trigger?: boolean;
   allow_conditional_comments?: boolean;
@@ -115,6 +115,7 @@ interface BaseEditorSettings {
   icons_url?: string;
   id?: string;
   iframe_aria_text?: string;
+  iframe_attrs?: Record<string, string>;
   images_file_types?: string;
   images_replace_blob_uris?: boolean;
   images_reuse_filename?: boolean;
@@ -151,7 +152,7 @@ interface BaseEditorSettings {
   padd_empty_with_br?: boolean;
   placeholder?: string;
   preserve_cdata?: boolean;
-  preview_styles?: boolean | string;
+  preview_styles?: false | string;
   protect?: RegExp[];
   readonly?: boolean;
   referrer_policy?: ReferrerPolicy;
@@ -174,7 +175,7 @@ interface BaseEditorSettings {
   submit_patch?: boolean;
   suffix?: string;
   target?: HTMLElement;
-  theme?: string | ThemeInitFunc;
+  theme?: string | ThemeInitFunc | false;
   theme_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar1?: string;
@@ -211,15 +212,23 @@ interface BaseEditorSettings {
   [key: string]: any;
 }
 
-export interface RawEditorSettings extends BaseEditorSettings {
+export interface RawEditorOptions extends BaseEditorOptions {
   external_plugins?: Record<string, string>;
-  mobile?: RawEditorSettings;
+  mobile?: RawEditorOptions;
   plugins?: string | string[];
 }
 
-// EditorSettings.ts processes the plugins setting to turn it into a string
+// NormalizeOptions.ts processes the plugins setting to turn it into a string
 // and merges in the mobile settings
-export interface EditorSettings extends BaseEditorSettings {
+export interface NormalizedEditorOptions extends BaseEditorOptions {
   external_plugins: Record<string, string>;
   plugins: string;
+}
+
+export interface EditorOptions extends NormalizedEditorOptions {
+  content_css: string[];
+  font_css: string[];
+  forced_root_block: string;
+  object_resizing?: string;
+  preview_styles?: string;
 }

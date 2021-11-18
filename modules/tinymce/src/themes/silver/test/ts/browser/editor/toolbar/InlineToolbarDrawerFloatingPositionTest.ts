@@ -6,7 +6,7 @@ import { McEditor, TinyContentActions, TinyDom, TinySelections } from '@ephox/wr
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 import { pAssertFloatingToolbarPosition, pOpenFloatingToolbarAndAssertPosition } from '../../../module/ToolbarUtils';
 
@@ -26,7 +26,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloati
     });
   };
 
-  const pWithEditor = async (settings: RawEditorSettings, pRunTests: (editor: Editor) => Promise<void>) => {
+  const pWithEditor = async (settings: RawEditorOptions, pRunTests: (editor: Editor) => Promise<void>) => {
     const editor = await McEditor.pFromSettings<Editor>({
       theme: 'silver',
       inline: true,

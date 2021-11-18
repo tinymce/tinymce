@@ -8,7 +8,7 @@
 import { Adt, Arr, Optional } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as LazyEvaluator from '../util/LazyEvaluator';
 import * as ContextSelectors from './ContextSelectors';
 import * as NewLineUtils from './NewLineUtils';
@@ -25,7 +25,7 @@ const shouldBlockNewLine = (editor: Editor, _shiftKey) => {
 
 const isBrMode = (requiredState) => {
   return (editor: Editor, _shiftKey) => {
-    const brMode = Settings.getForcedRootBlock(editor) === '';
+    const brMode = Options.getForcedRootBlock(editor) === '';
     return brMode === requiredState;
   };
 };
@@ -46,7 +46,7 @@ const inSummaryBlock = () => inBlock('summary', true);
 
 const shouldPutBrInPre = (requiredState) => {
   return (editor: Editor, _shiftKey) => {
-    return Settings.shouldPutBrInPre(editor) === requiredState;
+    return Options.shouldPutBrInPre(editor) === requiredState;
   };
 };
 
@@ -59,7 +59,7 @@ const hasShiftKey = (_editor: Editor, shiftKey) => {
 };
 
 const canInsertIntoEditableRoot = (editor: Editor) => {
-  const forcedRootBlock = Settings.getForcedRootBlock(editor);
+  const forcedRootBlock = Options.getForcedRootBlock(editor);
   const rootEditable = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
 
   return rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock ? forcedRootBlock : 'P');

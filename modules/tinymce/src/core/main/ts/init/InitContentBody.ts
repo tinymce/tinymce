@@ -20,8 +20,8 @@ import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
-import Schema from '../api/html/Schema';
-import * as Settings from '../api/Settings';
+import Schema, { SchemaSettings } from '../api/html/Schema';
+import * as Options from '../api/Options';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
 import Promise from '../api/util/Promise';
@@ -66,25 +66,25 @@ const getRootName = (editor: Editor): string => editor.inline ? editor.getElemen
 const removeUndefined = <T>(obj: T): T => Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
 
 const mkParserSettings = (editor: Editor): DomParserSettings => {
-  const settings = editor.settings;
+  const getOption = editor.options.get;
   const blobCache = editor.editorUpload.blobCache;
 
   return removeUndefined<DomParserSettings>({
-    allow_conditional_comments: settings.allow_conditional_comments,
-    allow_html_data_urls: settings.allow_html_data_urls,
-    allow_svg_data_urls: settings.allow_svg_data_urls,
-    allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
-    allow_script_urls: settings.allow_script_urls,
-    allow_unsafe_link_target: settings.allow_unsafe_link_target,
-    convert_fonts_to_spans: settings.convert_fonts_to_spans,
-    fix_list_elements: settings.fix_list_elements,
-    font_size_legacy_values: settings.font_size_legacy_values,
-    forced_root_block: settings.forced_root_block,
-    forced_root_block_attrs: settings.forced_root_block_attrs,
-    padd_empty_with_br: settings.padd_empty_with_br,
-    preserve_cdata: settings.preserve_cdata,
-    remove_trailing_brs: settings.remove_trailing_brs,
-    inline_styles: settings.inline_styles,
+    allow_conditional_comments: getOption('allow_conditional_comments'),
+    allow_html_data_urls: getOption('allow_html_data_urls'),
+    allow_svg_data_urls: getOption('allow_svg_data_urls'),
+    allow_html_in_named_anchor: getOption('allow_html_in_named_anchor'),
+    allow_script_urls: getOption('allow_script_urls'),
+    allow_unsafe_link_target: getOption('allow_unsafe_link_target'),
+    convert_fonts_to_spans: getOption('convert_fonts_to_spans'),
+    fix_list_elements: getOption('fix_list_elements'),
+    font_size_legacy_values: getOption('font_size_legacy_values'),
+    forced_root_block: getOption('forced_root_block'),
+    forced_root_block_attrs: getOption('forced_root_block_attrs'),
+    padd_empty_with_br: getOption('padd_empty_with_br'),
+    preserve_cdata: getOption('preserve_cdata'),
+    remove_trailing_brs: getOption('remove_trailing_brs'),
+    inline_styles: getOption('inline_styles'),
     root_name: getRootName(editor),
     validate: true,
     blob_cache: blobCache,
@@ -92,35 +92,41 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
   });
 };
 
+const mkSchemaSettings = (editor: Editor): SchemaSettings => {
+  const getOption = editor.options.get;
+
+  return removeUndefined<DomSerializerSettings>({
+    custom_elements: getOption('custom_elements'),
+    extended_valid_elements: getOption('extended_valid_elements'),
+    invalid_elements: getOption('invalid_elements'),
+    invalid_styles: getOption('invalid_styles'),
+    schema: getOption('schema'),
+    valid_children: getOption('valid_children'),
+    valid_classes: getOption('valid_classes'),
+    valid_elements: getOption('valid_elements'),
+    valid_styles: getOption('valid_styles'),
+    verify_html: getOption('verify_html')
+  });
+};
+
 const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
-  const settings = editor.settings;
+  const getOption = editor.options.get;
 
   return {
     ...mkParserSettings(editor),
+    ...mkSchemaSettings(editor),
     ...removeUndefined<DomSerializerSettings>({
       // SerializerSettings
-      url_converter: settings.url_converter,
-      url_converter_scope: settings.url_converter_scope,
+      url_converter: getOption('url_converter'),
+      url_converter_scope: getOption('url_converter_scope'),
 
       // Writer settings
-      element_format: settings.element_format,
-      entities: settings.entities,
-      entity_encoding: settings.entity_encoding,
-      indent: settings.indent,
-      indent_after: settings.indent_after,
-      indent_before: settings.indent_before,
-
-      // Schema settings
-      custom_elements: settings.custom_elements,
-      extended_valid_elements: settings.extended_valid_elements,
-      invalid_elements: settings.invalid_elements,
-      invalid_styles: settings.invalid_styles,
-      schema: settings.schema,
-      valid_children: settings.valid_children,
-      valid_classes: settings.valid_classes,
-      valid_elements: settings.valid_elements,
-      valid_styles: settings.valid_styles,
-      verify_html: settings.verify_html
+      element_format: getOption('element_format'),
+      entities: getOption('entities'),
+      entity_encoding: getOption('entity_encoding'),
+      indent: getOption('indent'),
+      indent_after: getOption('indent_after'),
+      indent_before: getOption('indent_before')
     })
   };
 };
@@ -177,7 +183,7 @@ const createParser = (editor: Editor): DomParser => {
     }
   });
 
-  if (editor.settings.preserve_cdata) {
+  if (editor.options.get('preserve_cdata')) {
     parser.addNodeFilter('#cdata', (nodes: AstNode[]) => {
       let i = nodes.length;
 
@@ -207,14 +213,15 @@ const createParser = (editor: Editor): DomParser => {
 };
 
 const autoFocus = (editor: Editor) => {
-  if (editor.settings.auto_focus) {
+  const autoFocus = Options.getAutoFocus(editor);
+  if (autoFocus) {
     Delay.setEditorTimeout(editor, () => {
       let focusEditor;
 
-      if (editor.settings.auto_focus === true) {
+      if (autoFocus === true) {
         focusEditor = editor;
       } else {
-        focusEditor = editor.editorManager.get(editor.settings.auto_focus);
+        focusEditor = editor.editorManager.get(autoFocus);
       }
 
       if (!focusEditor.destroyed) {
@@ -252,7 +259,7 @@ const initEditor = (editor: Editor) => {
   editor.focus(true);
   moveSelectionToFirstCaretPosition(editor);
   editor.nodeChanged({ initial: true });
-  const initInstanceCallback = Settings.getInitInstanceCallback(editor);
+  const initInstanceCallback = Options.getInitInstanceCallback(editor);
   if (Type.isFunction(initInstanceCallback)) {
     initInstanceCallback.call(editor, editor);
   }
@@ -278,7 +285,7 @@ const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFont
 
 const loadContentCss = (editor: Editor) => {
   const styleSheetLoader = getStyleSheetLoader(editor);
-  const fontCss = Settings.getFontCss(editor);
+  const fontCss = Options.getFontCss(editor);
   const css = editor.contentCSS;
 
   const removeCss = () => {
@@ -312,19 +319,20 @@ const loadContentCss = (editor: Editor) => {
   const allStylesheets = Promise.all(makeStylesheetLoadingPromises(editor, css, fontCss)).then(loaded).catch(loaded);
 
   // Append specified content CSS last
-  if (editor.settings.content_style) {
-    appendStyle(editor, editor.settings.content_style);
+  const contentStyle = Options.getContentStyle(editor);
+  if (contentStyle) {
+    appendStyle(editor, contentStyle);
   }
 
   return allStylesheets;
 };
 
 const preInit = (editor: Editor) => {
-  const settings = editor.settings, doc = editor.getDoc(), body = editor.getBody();
+  const doc = editor.getDoc(), body = editor.getBody();
 
   Events.firePreInit(editor);
 
-  if (!settings.browser_spellcheck) {
+  if (!Options.shouldBrowserSpellcheck(editor)) {
     doc.body.spellcheck = false; // Gecko
     DOM.setAttrib(body, 'spellcheck', 'false');
   }
@@ -333,14 +341,15 @@ const preInit = (editor: Editor) => {
 
   Events.firePostRender(editor);
 
-  const directionality = Settings.getDirectionality(editor);
+  const directionality = Options.getDirectionality(editor);
   if (directionality !== undefined) {
     body.dir = directionality;
   }
 
-  if (settings.protect) {
+  const protect = Options.getProtect(editor);
+  if (protect) {
     editor.on('BeforeSetContent', (e) => {
-      Tools.each(settings.protect, (pattern) => {
+      Tools.each(protect, (pattern) => {
         e.content = e.content.replace(pattern, (str) => {
           return '<!--mce:protected ' + escape(str) + '-->';
         });
@@ -373,12 +382,11 @@ const initEditorWithInitialContent = (editor: Editor) => {
 };
 
 const initContentBody = (editor: Editor, skipWrite?: boolean) => {
-  const settings = editor.settings;
   const targetElm = editor.getElement();
   let doc = editor.getDoc();
 
   // Restore visibility on target element
-  if (!settings.inline) {
+  if (!editor.inline) {
     editor.getElement().style.visibility = editor.orgVisibility;
   }
 
@@ -402,7 +410,7 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
   // disabled isn't valid on all body elements, so need to cast here
   // TODO: See if we actually need to disable/re-enable here
   (body as any).disabled = true;
-  editor.readonly = !!settings.readonly;
+  editor.readonly = Options.isReadOnly(editor);
 
   if (!editor.readonly) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
@@ -415,7 +423,7 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
   (body as any).disabled = false;
 
   editor.editorUpload = EditorUpload(editor);
-  editor.schema = Schema(settings);
+  editor.schema = Schema(mkSchemaSettings(editor));
   editor.dom = DOMUtils(doc, {
     keep_values: true,
     // Note: Don't bind here, as the binding is handled via the `url_converter_scope`
@@ -426,8 +434,8 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
     root_element: editor.inline ? editor.getBody() : null,
     collect: () => editor.inline,
     schema: editor.schema,
-    contentCssCors: Settings.shouldUseContentCssCors(editor),
-    referrerPolicy: Settings.getReferrerPolicy(editor),
+    contentCssCors: Options.shouldUseContentCssCors(editor),
+    referrerPolicy: Options.getReferrerPolicy(editor),
     onSetAttrib: (e) => {
       editor.fire('SetAttrib', e);
     }
