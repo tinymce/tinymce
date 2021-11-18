@@ -20,7 +20,7 @@ describe('browser.tinymce.plugins.template.InvalidUrlTest', () => {
   it('TBA: Test loading in snippet from file that does not exist', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.settings.templates = [{ title: 'invalid', description: 'b', url: '/custom/404' }, { title: 'a', description: 'a', content: '<strong>c</strong>' }];
+    editor.options.set('templates', [{ title: 'invalid', description: 'b', url: '/custom/404' }, { title: 'a', description: 'a', content: '<strong>c</strong>' }]);
     TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
     await TinyUiActions.pWaitForDialog(editor);
     await TinyUiActions.pWaitForPopup(editor, alertDialogSelector);

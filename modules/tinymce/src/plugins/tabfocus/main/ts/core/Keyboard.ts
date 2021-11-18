@@ -13,7 +13,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const DOM = DOMUtils.DOM;
 
@@ -69,7 +69,7 @@ const setup = (editor: Editor): void => {
       return null;
     };
 
-    const v = Tools.explode(Settings.getTabFocusElements(editor));
+    const v = Tools.explode(Options.getTabFocusElements(editor));
 
     if (v.length === 1) {
       v[1] = v[0];

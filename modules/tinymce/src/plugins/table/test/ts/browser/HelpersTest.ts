@@ -210,7 +210,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
 
   it('TBA: extractDataFromTableElement 3 - border width from border-width style', () => {
     const editor = hook.editor();
-    editor.settings.table_style_by_css = true;
+    editor.options.set('table_style_by_css', true);
     editor.setContent(
       '<table class="foo" style="border-width: 5px" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
     );
@@ -221,7 +221,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
 
   it('TBA: extractDataFromTableElement 4 - border width from border style', () => {
     const editor = hook.editor();
-    editor.settings.table_style_by_css = true;
+    editor.options.set('table_style_by_css', true);
     editor.setContent(
       '<table class="foo" style="border: 5px solid red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
     );
@@ -232,7 +232,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
 
   it('TBA: extractDataFromTableElement 5 - border width from border attr', () => {
     const editor = hook.editor();
-    editor.settings.table_style_by_css = false;
+    editor.options.set('table_style_by_css', false);
     editor.setContent(
       '<table class="foo" border="5"><tbody><tr><td>a</td></tr></tbody></table>'
     );
@@ -243,7 +243,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
 
   it('TBA: extractDataFromTableElement 6 - border width from children', () => {
     const editor = hook.editor();
-    editor.settings.table_style_by_css = false;
+    editor.options.set('table_style_by_css', false);
     editor.setContent(
       '<table class="foo"><tbody><tr><td style="border-width: 5px;">a</td></tr></tbody></table>'
     );
@@ -254,7 +254,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
 
   it('TBA: extractDataFromTableElement 7 - border width, style and color from collapsed style', () => {
     const editor = hook.editor();
-    editor.settings.table_style_by_css = true;
+    editor.options.set('table_style_by_css', true);
     editor.setContent(
       '<table class="foo" style="border: 5px double red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
     );

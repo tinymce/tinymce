@@ -18,7 +18,6 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
   const expectedTouchDefaultSettings: RawEditorOptions = {
     ...expectedDefaultSettings,
-    table_grid: false,
     resize: false
   };
 

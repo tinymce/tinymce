@@ -15,7 +15,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as InsertTable from '../actions/InsertTable';
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
-import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Util from '../core/Util';
 import { getAdvancedTab } from './DialogAdvancedTab';
 import * as Helpers from './Helpers';
@@ -50,13 +50,13 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   styles.height = Util.addPxSuffix(data.height);
 
-  if (dom.getAttrib(tableElm, 'width') && !shouldStyleWithCss(editor)) {
+  if (dom.getAttrib(tableElm, 'width') && !Options.shouldStyleWithCss(editor)) {
     attrs.width = Util.removePxSuffix(data.width);
   } else {
     styles.width = Util.addPxSuffix(data.width);
   }
 
-  if (shouldStyleWithCss(editor)) {
+  if (Options.shouldStyleWithCss(editor)) {
     styles['border-width'] = Util.addPxSuffix(data.border);
     styles['border-spacing'] = Util.addPxSuffix(data.cellspacing);
   } else {
@@ -67,13 +67,13 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   // TODO: this has to be reworked somehow, for example by introducing dedicated option, which
   // will control whether child TD/THs should be processed or not
-  if (shouldStyleWithCss(editor) && tableElm.children) {
+  if (Options.shouldStyleWithCss(editor) && tableElm.children) {
     for (let i = 0; i < tableElm.children.length; i++) {
       styleTDTH(dom, tableElm.children[i], {
         'border-width': Util.addPxSuffix(data.border),
         'padding': Util.addPxSuffix(data.cellpadding)
       });
-      if (hasAdvancedTableTab(editor)) {
+      if (Options.hasAdvancedTableTab(editor)) {
         styleTDTH(dom, tableElm.children[i], {
           'border-color': data.bordercolor
         });
@@ -81,14 +81,14 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
     }
   }
 
-  if (hasAdvancedTableTab(editor)) {
+  if (Options.hasAdvancedTableTab(editor)) {
     styles['background-color'] = data.backgroundcolor;
     styles['border-color'] = data.bordercolor;
     styles['border-style'] = data.borderstyle;
   }
 
-  attrs.style = dom.serializeStyle({ ...getDefaultStyles(editor), ...styles });
-  dom.setAttribs(tableElm, { ...getDefaultAttributes(editor), ...attrs });
+  attrs.style = dom.serializeStyle({ ...Options.getDefaultStyles(editor), ...styles });
+  dom.setAttribs(tableElm, { ...Options.getDefaultAttributes(editor), ...attrs });
 
 };
 
@@ -144,7 +144,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | undefine
 const open = (editor: Editor, insertNewTable: boolean): void => {
   const dom = editor.dom;
   let tableElm: Element;
-  let data = Helpers.extractDataFromSettings(editor, hasAdvancedTableTab(editor));
+  let data = Helpers.extractDataFromSettings(editor, Options.hasAdvancedTableTab(editor));
 
   // Cases for creation/update of tables:
   // 1. isNew == true - called by mceInsertTable - we are inserting a new table so we don't care what the selection's parent is,
@@ -156,10 +156,10 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
     tableElm = dom.getParent(editor.selection.getStart(), 'table', editor.getBody());
     if (tableElm) {
       // Case 2 - isNew == false && table parent
-      data = Helpers.extractDataFromTableElement(editor, tableElm, hasAdvancedTableTab(editor));
+      data = Helpers.extractDataFromTableElement(editor, tableElm, Options.hasAdvancedTableTab(editor));
     } else {
       // Case 3 - isNew == false && non-table parent. data is set to basic defaults so just add the adv properties if needed
-      if (hasAdvancedTableTab(editor)) {
+      if (Options.hasAdvancedTableTab(editor)) {
         data.borderstyle = '';
         data.bordercolor = '';
         data.backgroundcolor = '';
@@ -169,14 +169,14 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
     // Case 1 - isNew == true. We're inserting a new table so use defaults and add cols and rows + adv properties.
     data.cols = '1';
     data.rows = '1';
-    if (hasAdvancedTableTab(editor)) {
+    if (Options.hasAdvancedTableTab(editor)) {
       data.borderstyle = '';
       data.bordercolor = '';
       data.backgroundcolor = '';
     }
   }
 
-  const classes = UiUtils.buildListItems(getTableClassList(editor));
+  const classes = UiUtils.buildListItems(Options.getTableClassList(editor));
 
   if (classes.length > 0) {
     if (data.class) {
@@ -207,7 +207,7 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
     ]
   });
 
-  const dialogBody = hasAdvancedTableTab(editor) ? advancedForm() : nonAdvancedForm();
+  const dialogBody = Options.hasAdvancedTableTab(editor) ? advancedForm() : nonAdvancedForm();
 
   editor.windowManager.open({
     title: 'Table Properties',
