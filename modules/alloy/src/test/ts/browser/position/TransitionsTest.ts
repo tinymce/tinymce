@@ -27,7 +27,7 @@ interface Scenario {
   readonly waitForCompletion?: boolean;
 }
 
-describe('browser.alloy.position.TransitionsTest', () => {
+describe.skip('browser.alloy.position.TransitionsTest', () => {
   const transitionTime = 75;
   const northLayout = {
     onLtr: () => [ Layout.north ],
