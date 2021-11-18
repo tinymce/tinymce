@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
 - The `editor.selection.getContent()` API did not respect the `no_events` argument #TINY-8018
 - The `GetContent` event was not fired when getting `tree` or `text` formats using the `editor.selection.getContent()` API #TINY-8018
+- The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 
 ### Removed
 - Removed the deprecated `$`, `DomQuery` and `Sizzle` APIs #TINY-4520
