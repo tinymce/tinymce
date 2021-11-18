@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional, Optionals, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 
 import Editor from './Editor';
 import { EditorOptions, NormalizedEditorOptions } from './OptionTypes';
@@ -196,7 +196,7 @@ const processDefaultValue = <T, U>(name: string, defaultValue: T, processor: Pro
 
 const create = (editor: Editor, initialOptions: Record<string, unknown>): Options => {
   const registry: Record<string, OptionSpec<any, any>> = {};
-  const values: Record<string, { value: any; isDefault: boolean }> = {};
+  const values: Record<string, any> = {};
 
   editor.on('init', () => {
     const unregisteredOptions = Arr.filter(Obj.keys(initialOptions), Fun.not(isRegistered));
@@ -206,13 +206,10 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     }
   });
 
-  const setRawValue = <T>(name: string, value: T, isDefault: boolean = false) =>
-    values[name] = { value, isDefault };
-
   const setValue = <T, U>(name: string, value: T, processor: SimpleProcessor | Processor<U>): boolean => {
     const result = processValue(value, processor);
     if (isValidResult(result)) {
-      setRawValue(name, result.value);
+      values[name] = result.value;
       // TODO: TINY-8236 (TINY-8234) Remove this later once all settings have been converted
       editor.settings[name] = result.value;
       return true;
@@ -237,13 +234,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     };
 
     // Setup the initial values
-    const initValue = Obj.get(values, name)
-      .bind(({ value, isDefault }) => Optionals.someIf(!isDefault, value))
-      .orThunk(() => Obj.get(initialOptions, name));
-    // Set the default first in case the current/initial value isn't valid
-    if (!Type.isUndefined(defaultValue)) {
-      setRawValue(name, defaultValue, true);
-    }
+    const initValue = Obj.get(values, name).orThunk(() => Obj.get(initialOptions, name));
     initValue.each((value) => setValue(name, value, processor));
   };
 
@@ -251,7 +242,9 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     Obj.has(registry, name);
 
   const get = (name: string) =>
-    Obj.get(values, name).map(({ value }) => value).getOrUndefined();
+    Obj.get(values, name)
+      .orThunk(() => Obj.get(registry, name).map((spec) => spec.default))
+      .getOrUndefined();
 
   const set = <T>(name: string, value: T) => {
     if (!isRegistered(name)) {
@@ -273,11 +266,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
   const unset = (name: string) => {
     const registered = isRegistered(name);
     if (registered) {
-      const spec = registry[name];
-      Optional.from(spec.default).fold<void>(
-        () => delete values[name],
-        (defaultValue) => setRawValue(name, defaultValue, true)
-      );
+      delete values[name];
       // TODO: TINY-8236 (TINY-8234) Remove this later once all settings have been converted
       delete editor.settings[name];
     }
@@ -285,7 +274,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
   };
 
   const isSet = (name: string) =>
-    Obj.get(values, name).exists(({ isDefault }) => !isDefault);
+    Obj.has(values, name);
 
   return {
     register,
