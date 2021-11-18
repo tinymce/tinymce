@@ -11,7 +11,7 @@ import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
 import EditorSelection from './api/dom/Selection';
 import Editor from './api/Editor';
-import * as Settings from './api/Settings';
+import * as Options from './api/Options';
 import Delay from './api/util/Delay';
 import { EditorEvent } from './api/util/EventDispatcher';
 import VK from './api/util/VK';
@@ -344,7 +344,7 @@ const init = (editor: Editor) => {
   bindFakeDragEvents(editor);
   blockIeDrop(editor);
 
-  if (Settings.shouldBlockUnsupportedDrop(editor)) {
+  if (Options.shouldBlockUnsupportedDrop(editor)) {
     blockUnsupportedFileDrop(editor);
   }
 };

@@ -7,11 +7,11 @@ import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 interface Scenario {
-  readonly settings: RawEditorSettings;
+  readonly settings: RawEditorOptions;
   readonly initial: Array<{ clickOn: string; waitFor: string }>;
   readonly assertAbove: string;
   readonly assertBelow: string;

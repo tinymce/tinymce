@@ -4,11 +4,11 @@ import { SugarDocument } from '@ephox/sugar';
 import { McEditor, TinyContentActions, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarFocusTest', () => {
 
-  const pTestFocus = async (settings: RawEditorSettings) => {
+  const pTestFocus = async (settings: RawEditorOptions) => {
     const editor = await McEditor.pFromSettings<Editor>({
       toolbar: 'undo redo | bold italic',
       menubar: false,

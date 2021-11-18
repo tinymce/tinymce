@@ -9,7 +9,7 @@ import { Arr, Strings } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as FontInfo from '../fmt/FontInfo';
 import { mapRange } from '../selection/RangeMap';
 
@@ -19,8 +19,8 @@ const fromFontSizeNumber = (editor: Editor, value: string): string => {
 
     // Convert font size 1-7 to styles
     if (fontSizeNumber >= 1 && fontSizeNumber <= 7) {
-      const fontSizes = Settings.getFontStyleValues(editor);
-      const fontClasses = Settings.getFontSizeClasses(editor);
+      const fontSizes = Options.getFontStyleValues(editor);
+      const fontClasses = Options.getFontSizeClasses(editor);
 
       if (fontClasses) {
         return fontClasses[fontSizeNumber - 1] || value;

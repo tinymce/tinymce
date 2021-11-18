@@ -68,13 +68,13 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', () => {
 
     it('Arrow down at figcaption with forced_root_block_attrs set', () => {
       const editor = hook.editor();
-      editor.settings.forced_root_block_attrs = { class: 'x' };
+      editor.options.set('forced_root_block_attrs', { class: 'x' });
       editor.setContent('<figure><figcaption>a</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertContent(editor, '<figure><figcaption>a</figcaption></figure><p class="x">&nbsp;</p>');
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
-      delete editor.settings.forced_root_block_attrs;
+      editor.options.unset('forced_root_block_attrs');
     });
   });
 });
