@@ -40,10 +40,10 @@ const getRowType = (row: CommonRowDetails): RowDetails => {
   // Header rows can use a combination of theads and ths - want to detect the different combinations
   const isHeaderRow = row.section === 'thead';
   const isHeaderCells = Optionals.is(findCommonCellType(row.cells), 'th');
-  if (isHeaderRow || isHeaderCells) {
-    return { type: 'header', subType: getRowHeaderType(isHeaderRow, isHeaderCells) };
-  } else if (row.section === 'tfoot') {
+  if (row.section === 'tfoot') {
     return { type: 'footer' };
+  } else if (isHeaderRow || isHeaderCells) {
+    return { type: 'header', subType: getRowHeaderType(isHeaderRow, isHeaderCells) };
   } else {
     return { type: 'body' };
   }
