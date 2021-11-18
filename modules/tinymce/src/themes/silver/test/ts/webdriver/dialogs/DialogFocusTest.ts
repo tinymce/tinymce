@@ -2,6 +2,7 @@ import { FocusTools, RealMouse } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { SugarDocument } from '@ephox/sugar';
 
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
@@ -13,7 +14,13 @@ describe('webdriver.tinymce.themes.silver.dialogs.DialogFocusTest', () => {
   const helpers = TestExtras.bddSetup();
 
   let windowManager: WindowManagerImpl;
-  before(() => {
+  before(function () {
+    // This test won't work on Mac OS browsers other than Chrome (webdriver actions appear to be ignored)
+    const platform = PlatformDetection.detect();
+    if (platform.os.isOSX() && !platform.browser.isChrome()) {
+      this.skip();
+    }
+
     windowManager = WindowManager.setup(helpers.extras());
   });
 
