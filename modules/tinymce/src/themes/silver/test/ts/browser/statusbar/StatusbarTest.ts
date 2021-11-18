@@ -3,7 +3,7 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import WordcountPlugin from 'tinymce/plugins/wordcount/Plugin';
 
 describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
@@ -87,7 +87,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
     })
   ];
 
-  const makeTest = (config: RawEditorSettings, structureLabel: string, editorStructure: StructAssert) => async () => {
+  const makeTest = (config: RawEditorOptions, structureLabel: string, editorStructure: StructAssert) => async () => {
     const editor = await McEditor.pFromSettings<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       ...config

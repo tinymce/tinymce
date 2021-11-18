@@ -8,7 +8,7 @@
 import { Selectors, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as NewLineUtils from './NewLineUtils';
 
 const matchesSelector = (editor: Editor, selector: string) => {
@@ -18,11 +18,11 @@ const matchesSelector = (editor: Editor, selector: string) => {
 };
 
 const shouldInsertBr = (editor: Editor) => {
-  return matchesSelector(editor, Settings.getBrNewLineSelector(editor));
+  return matchesSelector(editor, Options.getBrNewLineSelector(editor));
 };
 
 const shouldBlockNewLine = (editor: Editor) => {
-  return matchesSelector(editor, Settings.getNoNewLineSelector(editor));
+  return matchesSelector(editor, Options.getNoNewLineSelector(editor));
 };
 
 export {

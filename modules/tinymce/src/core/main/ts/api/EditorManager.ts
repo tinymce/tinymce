@@ -14,7 +14,7 @@ import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import Env from './Env';
 import { EditorManagerEventMap } from './EventTypes';
-import { RawEditorSettings } from './SettingsTypes';
+import { RawEditorOptions } from './OptionTypes';
 import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Observable from './util/Observable';
 import Promise from './util/Promise';
@@ -105,13 +105,13 @@ const purgeDestroyedEditor = (editor: Editor) => {
 };
 
 interface EditorManager extends Observable<EditorManagerEventMap> {
-  defaultSettings: RawEditorSettings;
+  defaultOptions: RawEditorOptions;
   majorVersion: string;
   minorVersion: string;
   releaseDate: string;
   activeEditor: Editor;
   focusedEditor: Editor;
-  settings: RawEditorSettings;
+  settings: RawEditorOptions;
   baseURI: URI;
   baseURL: string;
   documentBaseURL: string;
@@ -120,12 +120,12 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
 
   add (this: EditorManager, editor: Editor): Editor;
   addI18n: (code: string, item: Record<string, string>) => void;
-  createEditor (this: EditorManager, id: string, settings: RawEditorSettings): Editor;
+  createEditor (this: EditorManager, id: string, options: RawEditorOptions): Editor;
   execCommand (this: EditorManager, cmd: string, ui: boolean, value: any): boolean;
   get (this: EditorManager): Editor[];
   get (this: EditorManager, id: number | string): Editor;
-  init (this: EditorManager, settings: RawEditorSettings): Promise<Editor[]>;
-  overrideDefaults (this: EditorManager, defaultSettings: Partial<RawEditorSettings>): void;
+  init (this: EditorManager, options: RawEditorOptions): Promise<Editor[]>;
+  overrideDefaults (this: EditorManager, defaultOptions: Partial<RawEditorOptions>): void;
   remove (this: EditorManager): void;
   remove (this: EditorManager, selector: string | Editor): Editor | void;
   setActive (this: EditorManager, editor: Editor): void;
@@ -142,7 +142,7 @@ const EditorManager: EditorManager = {
 
   baseURI: null,
   baseURL: null,
-  defaultSettings: {},
+  defaultOptions: {},
   documentBaseURL: null,
   suffix: null,
 
@@ -287,25 +287,25 @@ const EditorManager: EditorManager = {
   },
 
   /**
-   * Overrides the default settings for editor instances.
+   * Overrides the default options for editor instances.
    *
    * @method overrideDefaults
-   * @param {Object} defaultSettings Defaults settings object.
+   * @param {Object} defaultOptions Defaults options object.
    */
-  overrideDefaults(defaultSettings) {
-    const baseUrl = defaultSettings.base_url;
+  overrideDefaults(defaultOptions) {
+    const baseUrl = defaultOptions.base_url;
     if (baseUrl) {
       this._setBaseUrl(baseUrl);
     }
 
-    const suffix = defaultSettings.suffix;
-    if (defaultSettings.suffix) {
+    const suffix = defaultOptions.suffix;
+    if (defaultOptions.suffix) {
       this.suffix = suffix;
     }
 
-    this.defaultSettings = defaultSettings;
+    this.defaultOptions = defaultOptions;
 
-    const pluginBaseUrls = defaultSettings.plugin_base_urls;
+    const pluginBaseUrls = defaultOptions.plugin_base_urls;
     if (pluginBaseUrls !== undefined) {
       Obj.each(pluginBaseUrls, (pluginBaseUrl, pluginName) => {
         AddOnManager.PluginManager.urls[pluginName] = pluginBaseUrl;
@@ -319,7 +319,7 @@ const EditorManager: EditorManager = {
    * For information on basic usage of <code>init</code>, see: <a href="https://www.tiny.cloud/docs/general-configuration-guide/basic-setup/">Basic setup</a>.
    *
    * @method init
-   * @param {Object} settings Settings object to be passed to each editor instance.
+   * @param {Object} options Options object to be passed to each editor instance.
    * @return {Promise} Promise that gets resolved with an array of editors when all editor instances are initialized.
    * @example
    * // Initializes a editor using the longer method
@@ -334,7 +334,7 @@ const EditorManager: EditorManager = {
    *    ...
    * });
    */
-  init(settings: RawEditorSettings) {
+  init(options: RawEditorOptions) {
     const self: EditorManager = this;
     let result;
 
@@ -344,8 +344,8 @@ const EditorManager: EditorManager = {
       ' '
     );
 
-    const isInvalidInlineTarget = (settings: RawEditorSettings, elm: HTMLElement) =>
-      settings.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
+    const isInvalidInlineTarget = (options: RawEditorOptions, elm: HTMLElement) =>
+      options.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
 
     const createId = (elm: HTMLElement & { name?: string }): string => {
       let id = elm.id;
@@ -358,7 +358,7 @@ const EditorManager: EditorManager = {
     };
 
     const execCallback = (name: string) => {
-      const callback = settings[name];
+      const callback = options[name];
 
       if (!callback) {
         return;
@@ -367,7 +367,7 @@ const EditorManager: EditorManager = {
       return callback.apply(self, []);
     };
 
-    const findTargets = (settings: RawEditorSettings): HTMLElement[] => {
+    const findTargets = (options: RawEditorOptions): HTMLElement[] => {
       if (Env.browser.isIE() && Env.browser.version.major < 11) {
         ErrorReporter.initError(
           'TinyMCE does not support the browser you are using. For a list of supported' +
@@ -380,10 +380,10 @@ const EditorManager: EditorManager = {
           'TinyMCE requires standards mode.'
         );
         return [];
-      } else if (Type.isString(settings.selector)) {
-        return DOM.select(settings.selector);
-      } else if (Type.isNonNullable(settings.target)) {
-        return [ settings.target ];
+      } else if (Type.isString(options.selector)) {
+        return DOM.select(options.selector);
+      } else if (Type.isNonNullable(options.target)) {
+        return [ options.target ];
       } else {
         return [];
       }
@@ -398,8 +398,8 @@ const EditorManager: EditorManager = {
       const editors = [];
       let targets: HTMLElement[];
 
-      const createEditor = (id: string, settings: RawEditorSettings, targetElm: HTMLElement) => {
-        const editor: Editor = new Editor(id, settings, self);
+      const createEditor = (id: string, options: RawEditorOptions, targetElm: HTMLElement) => {
+        const editor: Editor = new Editor(id, options, self);
         editors.push(editor);
 
         editor.on('init', () => {
@@ -415,7 +415,7 @@ const EditorManager: EditorManager = {
       DOM.unbind(window, 'ready', initEditors);
       execCallback('onpageload');
 
-      targets = Arr.unique(findTargets(settings));
+      targets = Arr.unique(findTargets(options));
 
       Tools.each(targets, (elm) => {
         purgeDestroyedEditor(self.get(elm.id));
@@ -429,10 +429,10 @@ const EditorManager: EditorManager = {
         provideResults([]);
       } else {
         each(targets, (elm) => {
-          if (isInvalidInlineTarget(settings, elm)) {
+          if (isInvalidInlineTarget(options, elm)) {
             ErrorReporter.initError('Could not initialize inline editor on invalid inline target element', elm);
           } else {
-            createEditor(createId(elm), settings, elm);
+            createEditor(createId(elm), options, elm);
           }
         });
       }
@@ -539,11 +539,11 @@ const EditorManager: EditorManager = {
    *
    * @method createEditor
    * @param {String} id Instance id to use for editor.
-   * @param {Object} settings Editor instance settings.
+   * @param {Object} options Editor instance options.
    * @return {tinymce.Editor} Editor instance that got created.
    */
-  createEditor(id, settings) {
-    return this.add(new Editor(id, settings, this));
+  createEditor(id, options) {
+    return this.add(new Editor(id, options, this));
   },
 
   /**

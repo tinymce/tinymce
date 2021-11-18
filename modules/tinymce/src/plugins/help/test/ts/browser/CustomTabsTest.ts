@@ -6,7 +6,7 @@ import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import Plugin from 'tinymce/plugins/help/Plugin';
 
 describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
     });
   };
 
-  const pCreateEditor = (settings: RawEditorSettings) => McEditor.pFromSettings<Editor>({
+  const pCreateEditor = (settings: RawEditorOptions) => McEditor.pFromSettings<Editor>({
     plugins: 'help',
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce',

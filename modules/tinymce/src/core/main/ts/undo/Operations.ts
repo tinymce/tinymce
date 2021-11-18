@@ -6,7 +6,7 @@
  */
 
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as Levels from './Levels';
@@ -48,7 +48,7 @@ export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: In
   }
 
   // Time to compress
-  const customUndoRedoLevels = Settings.getCustomUndoRedoLevels(editor);
+  const customUndoRedoLevels = Options.getCustomUndoRedoLevels(editor);
 
   if (customUndoRedoLevels) {
     if (undoManager.data.length > customUndoRedoLevels) {
