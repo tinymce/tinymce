@@ -10,7 +10,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import { SchemaMap } from './api/html/Schema';
-import * as Settings from './api/Settings';
+import * as Options from './api/Options';
 import * as Bookmarks from './bookmark/Bookmarks';
 import * as NodeType from './dom/NodeType';
 import * as Parents from './dom/Parents';
@@ -63,7 +63,7 @@ const addRootBlocks = (editor: Editor) => {
   const rootNode = editor.getBody();
   let rootBlockNode, tempNode, wrapped;
 
-  const forcedRootBlock = Settings.getForcedRootBlock(editor);
+  const forcedRootBlock = Options.getForcedRootBlock(editor);
   if (!node || !NodeType.isElement(node) || !forcedRootBlock) {
     return;
   }
@@ -94,7 +94,7 @@ const addRootBlocks = (editor: Editor) => {
       }
 
       if (!rootBlockNode) {
-        rootBlockNode = dom.create(forcedRootBlock, Settings.getForcedRootBlockAttrs(editor));
+        rootBlockNode = dom.create(forcedRootBlock, Options.getForcedRootBlockAttrs(editor));
         node.parentNode.insertBefore(rootBlockNode, node);
         wrapped = true;
       }
@@ -117,7 +117,7 @@ const addRootBlocks = (editor: Editor) => {
 };
 
 const setup = (editor: Editor) => {
-  if (Settings.getForcedRootBlock(editor)) {
+  if (Options.getForcedRootBlock(editor)) {
     editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
   }
 };

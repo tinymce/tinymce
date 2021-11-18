@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.core.init.InitContentBodyDirectionalityTest', () => {
   before(() => {
@@ -20,7 +20,7 @@ describe('browser.tinymce.core.init.InitContentBodyDirectionalityTest', () => {
     return editor.editorCommands.execCommand('mceSetContent', false, content);
   };
 
-  const runTest = async (settings: RawEditorSettings, label: string, expected: string) => {
+  const runTest = async (settings: RawEditorOptions, label: string, expected: string) => {
     const editor = await McEditor.pFromSettings<Editor>({ base_url: '/project/tinymce/js/tinymce', ...settings });
     setContent(editor, '<p>Hello world!</p>');
     const dir = getBodyDir(editor);

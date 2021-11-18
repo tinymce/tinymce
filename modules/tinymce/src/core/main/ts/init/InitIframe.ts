@@ -10,7 +10,7 @@ import { Attribute, Class, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { TranslatedString } from '../api/util/I18n';
 import * as Uuid from '../util/Uuid';
 import * as InitContentBody from './InitContentBody';
@@ -58,22 +58,22 @@ const createIframeElement = (id: string, title: TranslatedString, height: number
 };
 
 const getIframeHtml = (editor: Editor) => {
-  let iframeHTML = Settings.getDocType(editor) + '<html><head>';
+  let iframeHTML = Options.getDocType(editor) + '<html><head>';
 
   // We only need to override paths if we have to
   // IE has a bug where it remove site absolute urls to relative ones if this is specified
-  if (Settings.getDocumentBaseUrl(editor) !== editor.documentBaseUrl) {
+  if (Options.getDocumentBaseUrl(editor) !== editor.documentBaseUrl) {
     iframeHTML += '<base href="' + editor.documentBaseURI.getURI() + '" />';
   }
 
   iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
-  const bodyId = Settings.getBodyId(editor);
-  const bodyClass = Settings.getBodyClass(editor);
-  const translatedAriaText = editor.translate(Settings.getIframeAriaText(editor));
+  const bodyId = Options.getBodyId(editor);
+  const bodyClass = Options.getBodyClass(editor);
+  const translatedAriaText = editor.translate(Options.getIframeAriaText(editor));
 
-  if (Settings.getContentSecurityPolicy(editor)) {
-    iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + Settings.getContentSecurityPolicy(editor) + '" />';
+  if (Options.getContentSecurityPolicy(editor)) {
+    iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + Options.getContentSecurityPolicy(editor) + '" />';
   }
 
   iframeHTML += '</head>' +
@@ -86,7 +86,7 @@ const getIframeHtml = (editor: Editor) => {
 
 const createIframe = (editor: Editor, o) => {
   const iframeTitle = editor.translate('Rich Text Area');
-  const ifr = createIframeElement(editor.id, iframeTitle, o.height, Settings.getIframeAttrs(editor)).dom;
+  const ifr = createIframeElement(editor.id, iframeTitle, o.height, Options.getIframeAttrs(editor)).dom;
 
   ifr.onload = () => {
     ifr.onload = null;

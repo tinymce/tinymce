@@ -4,7 +4,7 @@ import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import { ZWSP } from 'tinymce/core/text/Zwsp';
@@ -35,9 +35,11 @@ describe('browser.tinymce.core.keyboard.InlineUtilsTest', () => {
     textNode.dom.splitText(offset);
   };
 
-  const createFakeEditor = (settings: RawEditorSettings): Editor => {
+  const createFakeEditor = (settings: RawEditorOptions): Editor => {
     return {
-      settings,
+      options: {
+        get: (name) => settings[name] ?? 'a[href],code,.mce-annotation'
+      },
       getParam: (name: string, defaultVal?: any, _type?: string) => settings[name] || defaultVal
     } as any;
   };

@@ -90,7 +90,7 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
 
   it('TINY-6306: New images_file_types settings', () => {
     const editor = hook.editor();
-    editor.settings.images_file_types = 'svg';
+    editor.options.set('images_file_types', 'svg');
     assert.isTrue(
       SmartPaste.isImageUrl(editor, 'https://www.site.com/file.svg'),
       'File type "svg" is valid when set by settings'
@@ -99,7 +99,7 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
       SmartPaste.isImageUrl(editor, 'https://www.site.com/file.SVG'),
       'File type "SVG" (capitals) is valid when set by settings'
     );
-    delete editor.settings.images_file_types;
+    editor.options.unset('images_file_types');
   });
 
   context('Smart paste enabled', () => {
@@ -123,11 +123,11 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
       editor.undoManager.add();
 
       // svg detected as image
-      editor.settings.images_file_types = 'svg';
+      editor.options.set('images_file_types', 'svg');
       editor.execCommand('mceInsertClipboardContent', false, { content: 'http://www.site.com/my.svg' });
       TinyAssertions.assertContent(editor, '<p><img src="http://www.site.com/my.svg" /></p>');
 
-      delete editor.settings.images_file_types;
+      editor.options.unset('images_file_types');
     });
 
     it('TBA: paste as content, paste url on selection', () => {

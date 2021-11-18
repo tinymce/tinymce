@@ -11,7 +11,7 @@ import { PredicateExists, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as Empty from '../dom/Empty';
@@ -39,7 +39,7 @@ const isElementNode = (node: Node): node is Element => {
 
 const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, parentName: string) => {
   // TINY-6483: Can format 'br' if it is contained in a valid empty block and an inline format is being applied
-  if (Settings.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
+  if (Options.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
     // A curated list using the textBlockElements map and parts of the blockElements map from the schema
     const validBRParentElements: Record<string, {}> = {
       ...editor.schema.getTextBlockElements(),
@@ -342,7 +342,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         // start wrapping it with a DIV this is for forced_root_blocks: false
         // It's kind of a hack but people should be using the default block type P since all desktop editors work that way
         const firstFormat = formatList[0];
-        if (!ed.settings.forced_root_block && firstFormat.defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {
+        if (!Options.hasForcedRootBlock(ed) && firstFormat.defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {
           applyFormat(ed, firstFormat.defaultBlock);
         }
 
