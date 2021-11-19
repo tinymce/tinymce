@@ -27,6 +27,7 @@
     "browser-test": "yarn -s grunt browser-auto",
     "browser-test-manual": "yarn -s grunt browser-manual",
     "headless-test": "yarn -s grunt headless-auto",
+    "headless-test-firefox": "yarn -s grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "yarn -s grunt headless-manual",
     "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json --polyfills Promise Symbol",
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"

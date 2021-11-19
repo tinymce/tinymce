@@ -55,7 +55,7 @@ const bedrockDefaults = {
   polyfills: [ 'Promise', 'Symbol' ],
 };
 
-const bedrockHeadless = (tests, auto) => {
+const bedrockHeadless = (tests, browser, auto) => {
   if (tests.length === 0) {
     return {};
   } else {
@@ -63,7 +63,7 @@ const bedrockHeadless = (tests, auto) => {
       headless: {
         ...bedrockDefaults,
         name: 'headless-tests',
-        browser: 'chrome-headless',
+        browser,
         testfiles: testFolders(tests, auto),
       }
     }
@@ -134,6 +134,7 @@ module.exports = function (grunt) {
   const browserTests = filterChangesNot(changes, runsHeadless);
 
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
+  const headlessBrowser = activeBrowser.endsWith("-headless") ? activeBrowser : 'chrome-headless'
   const activeOs = grunt.option('bedrock-os') || 'tests';
   const gruntConfig = {
     shell: {
@@ -143,11 +144,11 @@ module.exports = function (grunt) {
       'yarn-dev': { command: 'yarn -s dev' }
     },
     'bedrock-auto': {
-      ...bedrockHeadless(headlessTests, true),
+      ...bedrockHeadless(headlessTests, headlessBrowser, true),
       ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, true)
     },
     'bedrock-manual': {
-      ...bedrockHeadless(headlessTests, false),
+      ...bedrockHeadless(headlessTests, headlessBrowser, false),
       ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, false)
     }
   };
