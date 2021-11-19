@@ -11,7 +11,6 @@ import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
 import Editor from 'tinymce/core/api/Editor';
-import Promise from 'tinymce/core/api/util/Promise';
 
 import { getSkinUrl, isSkinDisabled } from '../../api/Settings';
 import * as SkinLoaded from './SkinLoaded';

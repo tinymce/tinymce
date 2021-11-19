@@ -4,7 +4,6 @@ import { Arr, Obj } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
 type Alignment = 'left' | 'center' | 'right' | 'justify';
@@ -88,7 +87,7 @@ describe('browser.tinymce.plugins.image.ImageAlignTest', () => {
     await TinyUiActions.pWaitForUi(editor, `button[aria-label="${ariaLabel}"][aria-pressed="${ariaPressed}"]`);
     await Arr.foldl(otherLabels, (p, label) => p.then(async () => {
       await TinyUiActions.pWaitForUi(editor, `button[aria-label="${label}"][aria-pressed="false"]`);
-    }), PromisePolyfill.resolve());
+    }), Promise.resolve());
   };
 
   const pApplyAlignmentFromMenu = async (editor: Editor, alignment: Alignment) => {
@@ -114,7 +113,7 @@ describe('browser.tinymce.plugins.image.ImageAlignTest', () => {
     };
     const ariaLabel = ariaLabels[alignment];
     TinyUiActions.clickOnToolbar(editor, `button[aria-label="${ariaLabel}"]`);
-    return PromisePolyfill.resolve();
+    return Promise.resolve();
   };
 
   beforeEach(() => {
@@ -129,7 +128,7 @@ describe('browser.tinymce.plugins.image.ImageAlignTest', () => {
         await pAlignImage(editor, alignment);
         await pCheckToolbarHighlighting(editor, alignment, isFigure);
         TinyAssertions.assertContentStructure(editor, isFigure ? figureImageApproxStructure(alignment) : imageApproxStructure(alignment));
-      }), PromisePolyfill.resolve());
+      }), Promise.resolve());
 
       editor.setContent('<p><img src="image.png" /></p>');
       TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);

@@ -24,7 +24,6 @@ import Schema from '../api/html/Schema';
 import * as Settings from '../api/Settings';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
-import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';

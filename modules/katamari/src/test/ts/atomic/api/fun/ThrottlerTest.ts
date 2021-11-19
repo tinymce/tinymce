@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import Promise from '@ephox/wrap-promise-polyfill';
 import { assert } from 'chai';
 
 import * as Throttler from 'ephox/katamari/api/Throttler';

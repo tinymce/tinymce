@@ -19,7 +19,6 @@
     "@ephox/bedrock-client": "^11.0.0",
     "@ephox/dispute": "^1.0.3",
     "@ephox/katamari": "^8.1.1",
-    "@ephox/wrap-promise-polyfill": "^2.2.0",
     "tslib": "^2.0.0"
   },
   "files": [

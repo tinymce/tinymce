@@ -1,5 +1,6 @@
 {
   "rules": {
+    "@tinymce/no-unimported-promise": "off",
     "@tinymce/no-implicit-dom-globals": [ "error", {
       "allowed": [ "HTMLInputElement" ],
       "appendDefaults": true

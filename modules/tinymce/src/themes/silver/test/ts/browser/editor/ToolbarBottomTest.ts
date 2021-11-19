@@ -8,7 +8,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 interface Scenario {
   readonly settings: RawEditorSettings;
@@ -34,7 +33,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     await Arr.foldl(scenario.initial, (p, init) => p.then(async () => {
       Mouse.clickOn(SugarBody.body(), init.clickOn);
       await UiFinder.pWaitForVisible(`Wait for "${init.waitFor}" to be visible`, SugarBody.body(), init.waitFor);
-    }), PromisePolyfill.resolve());
+    }), Promise.resolve());
 
     const upperBoxBounds = getBounds(scenario.assertAbove);
     const lowerBoxBounds = getBounds(scenario.assertBelow);

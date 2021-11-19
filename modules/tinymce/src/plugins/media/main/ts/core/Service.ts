@@ -8,7 +8,6 @@
 import { Obj } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import Promise from 'tinymce/core/api/util/Promise';
 
 import * as Settings from '../api/Settings';
 import * as DataToHtml from './DataToHtml';

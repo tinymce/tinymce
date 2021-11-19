@@ -50,7 +50,6 @@ import I18n from './util/I18n';
 import ImageUploader from './util/ImageUploader';
 import LocalStorage from './util/LocalStorage';
 import Observable from './util/Observable';
-import Promise from './util/Promise';
 import Tools from './util/Tools';
 import URI, { URIConstructor } from './util/URI';
 import VK from './util/VK';
@@ -102,7 +101,6 @@ interface TinyMCE extends EditorManager {
   };
 
   util: {
-    Promise: PromiseConstructor;
     Delay: Delay;
     Tools: Tools;
     VK: VK;

@@ -5,7 +5,6 @@ import { McEditor, TinyAssertions, TinyDom } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 
 describe('browser.tinymce.plugins.paste.PlainTextPaste', () => {
@@ -51,7 +50,7 @@ describe('browser.tinymce.plugins.paste.PlainTextPaste', () => {
       editor.setContent('');
       Clipboard.pasteItems(TinyDom.body(editor), data);
       await Waiter.pTryUntil(`Wait for ${label} paste to succeed`, () => TinyAssertions.assertContent(editor, expected));
-    }), PromisePolyfill.resolve());
+    }), Promise.resolve());
   };
 
   it('TBA: Assert forced_root_block <p></p> is added to the pasted data', async () => {

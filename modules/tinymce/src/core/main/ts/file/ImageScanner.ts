@@ -9,7 +9,6 @@ import { Arr, Fun } from '@ephox/katamari';
 
 import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';
-import Promise from '../api/util/Promise';
 import * as Conversions from './Conversions';
 import { UploadStatus } from './UploadStatus';
 

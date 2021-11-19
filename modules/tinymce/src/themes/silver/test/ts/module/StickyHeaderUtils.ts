@@ -3,7 +3,6 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Css, Focus, Scroll, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import { ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 
 const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
@@ -210,7 +209,7 @@ const pCloseMenus = (numOpenedMenus: number) => {
     await Waiter.pTryUntil('Wait for menu to be closed', () => {
       assert.isFalse(SugarBody.inBody(menuElem), 'Assert menu has been closed');
     });
-  }), PromisePolyfill.resolve());
+  }), Promise.resolve());
 };
 
 const pOpenMenuAndTestScrolling = async (pOpenMenu: () => Promise<void>, numMenusToClose: number, top: boolean) => {

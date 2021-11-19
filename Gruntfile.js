@@ -51,7 +51,6 @@ const bedrockDefaults = {
   customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
   overallTimeout: 180000,
   singleTimeout: 60000,
-  polyfills: [ 'Promise', 'Symbol' ],
 };
 
 const bedrockPhantom = (tests, auto) => {

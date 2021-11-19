@@ -6,7 +6,6 @@ import { Class, SugarElement } from '@ephox/sugar';
 
 import Resource from 'tinymce/core/api/Resource';
 import { TinyMCE } from 'tinymce/core/api/Tinymce';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
@@ -24,7 +23,7 @@ describe('phantom.tinymce.themes.silver.components.customeditor.BasicCustomEdito
       Resource
     };
 
-    tinymce.Resource.add('BasicCustomEditorTest', (e: HTMLElement) => new PromisePolyfill((resolve) => {
+    tinymce.Resource.add('BasicCustomEditorTest', (e: HTMLElement) => new Promise((resolve) => {
       const intervalId = setInterval(() => {
         if (resolveInit.get()) {
           clearInterval(intervalId);
