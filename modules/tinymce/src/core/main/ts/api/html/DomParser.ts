@@ -199,145 +199,152 @@ const builder = (rootNode: AstNode, html: string, settings: DomParserSettings, s
     },
 
     start: (name, attrs, empty) => {
-      const elementRule = settings.validate ? schema.getElementRule(name) : {} as SchemaElement;
-      if (elementRule) {
-        const newNode = new AstNode(elementRule.outputName || name, 1);
-        newNode.attributes = attrs;
-        newNode.shortEnded = empty;
+      const newNode = new AstNode(name, 1);
+      newNode.attributes = attrs;
+      newNode.shortEnded = empty;
 
-        node.append(newNode);
+      node.append(newNode);
 
-        // Trim whitespace before block
-        if (blockElements[name]) {
-          removeWhitespaceBefore(newNode);
-        }
+      // Trim whitespace before block
+      if (blockElements[name]) {
+        removeWhitespaceBefore(newNode);
+      }
 
-        // Change current node if the element wasn't empty i.e not <br /> or <img />
-        if (!empty) {
-          node = newNode;
-        }
+      // Change current node if the element wasn't empty i.e not <br /> or <img />
+      if (!empty) {
+        node = newNode;
+      }
 
-        // Check if we are inside a whitespace preserved element
-        if (!isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
-          isInWhiteSpacePreservedElement = true;
-        }
+      // Check if we are inside a whitespace preserved element
+      if (!isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
+        isInWhiteSpacePreservedElement = true;
       }
     },
 
     end: (name) => {
       let textNode, text, sibling, tempNode;
 
-      const elementRule: Partial<SchemaElement> = settings.validate ? schema.getElementRule(name) : {};
-      if (elementRule) {
-        if (blockElements[name]) {
-          if (!isInWhiteSpacePreservedElement) {
-            // Trim whitespace of the first node in a block
-            textNode = node.firstChild;
-            if (textNode && textNode.type === 3) {
-              text = textNode.value.replace(startWhiteSpaceRegExp, '');
-
-              // Any characters left after trim or should we remove it
-              if (text.length > 0) {
-                textNode.value = text;
-                textNode = textNode.next;
-              } else {
-                sibling = textNode.next;
-                textNode.remove();
-                textNode = sibling;
-
-                // Remove any pure whitespace siblings
-                while (textNode && textNode.type === 3) {
-                  text = textNode.value;
-                  sibling = textNode.next;
-
-                  if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
-                    textNode.remove();
-                    textNode = sibling;
-                  }
-
-                  textNode = sibling;
-                }
-              }
-            }
-
-            // Trim whitespace of the last node in a block
-            textNode = node.lastChild;
-            if (textNode && textNode.type === 3) {
-              text = textNode.value.replace(endWhiteSpaceRegExp, '');
-
-              // Any characters left after trim or should we remove it
-              if (text.length > 0) {
-                textNode.value = text;
-                textNode = textNode.prev;
-              } else {
-                sibling = textNode.prev;
-                textNode.remove();
-                textNode = sibling;
-
-                // Remove any pure whitespace siblings
-                while (textNode && textNode.type === 3) {
-                  text = textNode.value;
-                  sibling = textNode.prev;
-
-                  if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
-                    textNode.remove();
-                    textNode = sibling;
-                  }
-
-                  textNode = sibling;
-                }
-              }
-            }
-          }
-
-          // Trim start white space
-          // Removed due to: #5424
-          /* textNode = node.prev;
+      const elementRule = settings.validate && schema.getElementRule(node.name) || {} as SchemaElement;
+      if (blockElements[name]) {
+        if (!isInWhiteSpacePreservedElement) {
+          // Trim whitespace of the first node in a block
+          textNode = node.firstChild;
           if (textNode && textNode.type === 3) {
             text = textNode.value.replace(startWhiteSpaceRegExp, '');
 
-            if (text.length > 0)
+            // Any characters left after trim or should we remove it
+            if (text.length > 0) {
               textNode.value = text;
-            else
+              textNode = textNode.next;
+            } else {
+              sibling = textNode.next;
               textNode.remove();
-          }*/
-        }
+              textNode = sibling;
 
-        // Check if we exited a whitespace preserved element
-        if (isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
-          isInWhiteSpacePreservedElement = false;
-        }
+              // Remove any pure whitespace siblings
+              while (textNode && textNode.type === 3) {
+                text = textNode.value;
+                sibling = textNode.next;
 
-        if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
-          tempNode = node.parent;
+                if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
+                  textNode.remove();
+                  textNode = sibling;
+                }
 
-          if (blockElements[node.name]) {
-            node.empty().remove();
-          } else {
-            node.unwrap();
+                textNode = sibling;
+              }
+            }
           }
 
-          node = tempNode;
-          return;
+          // Trim whitespace of the last node in a block
+          textNode = node.lastChild;
+          if (textNode && textNode.type === 3) {
+            text = textNode.value.replace(endWhiteSpaceRegExp, '');
+
+            // Any characters left after trim or should we remove it
+            if (text.length > 0) {
+              textNode.value = text;
+              textNode = textNode.prev;
+            } else {
+              sibling = textNode.prev;
+              textNode.remove();
+              textNode = sibling;
+
+              // Remove any pure whitespace siblings
+              while (textNode && textNode.type === 3) {
+                text = textNode.value;
+                sibling = textNode.prev;
+
+                if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
+                  textNode.remove();
+                  textNode = sibling;
+                }
+
+                textNode = sibling;
+              }
+            }
+          }
         }
 
-        if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
-          paddEmptyNode(settings, args, blockElements, node);
-        }
+        // Trim start white space
+        // Removed due to: #5424
+        /* textNode = node.prev;
+        if (textNode && textNode.type === 3) {
+          text = textNode.value.replace(startWhiteSpaceRegExp, '');
 
-        node = node.parent;
+          if (text.length > 0)
+            textNode.value = text;
+          else
+            textNode.remove();
+        }*/
       }
+
+      // Check if we exited a whitespace preserved element
+      if (isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
+        isInWhiteSpacePreservedElement = false;
+      }
+
+      if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
+        tempNode = node.parent;
+
+        if (blockElements[node.name]) {
+          node.empty().remove();
+        } else {
+          node.unwrap();
+        }
+
+        node = tempNode;
+        return;
+      }
+
+      if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
+        paddEmptyNode(settings, args, blockElements, node);
+      }
+
+      node = node.parent;
     }
   }, schema);
 
   parser.parse(html, args.format as ParserFormat);
 };
 
-const walker = (root: AstNode, schema: Schema, nodeFilters: Record<string, ParserFilterCallback[]>, attributeFilters: ParserFilter[]): WalkResult => {
+const walker = (root: AstNode, settings: DomParserSettings, schema: Schema, nodeFilters: Record<string, ParserFilterCallback[]>, attributeFilters: ParserFilter[]): WalkResult => {
   const state = { invalidChildren: [], matchedNodes: {}, matchedAttributes: {}};
 
   let node = root;
   while ((node = node.walk())) {
+    if (node.type === 1) {
+      const elementRule = settings.validate ? schema.getElementRule(node.name) : {} as SchemaElement;
+      if (!elementRule) {
+        const previous = node.walk(true);
+        node.unwrap();
+        node = previous;
+        continue;
+      }
+      if (elementRule.outputName) {
+        node.name = elementRule.outputName;
+      }
+    }
     filterNode(node, nodeFilters, attributeFilters, state);
 
     const parent = node.parent;
@@ -684,7 +691,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
     const rootNode = new AstNode(args.context || settings.root_name, 11);
     builder(rootNode, html, settings, schema, args);
-    const state = walker(rootNode, schema, nodeFilters, attributeFilters);
+    const state = walker(rootNode, settings, schema, nodeFilters, attributeFilters);
 
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && state.invalidChildren.length) {
