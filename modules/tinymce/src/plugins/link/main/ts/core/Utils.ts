@@ -247,11 +247,17 @@ const unwrapOptions = (data: LinkDialogOutput) => {
 };
 
 const sanitizeData = (editor: Editor, data: LinkDialogOutput): LinkDialogOutput => {
+  const getOption = editor.options.get;
+  const uriOptions = {
+    allow_html_data_urls: getOption('allow_html_data_urls'),
+    allow_script_urls: getOption('allow_script_urls'),
+    allow_svg_data_urls: getOption('allow_svg_data_urls')
+  };
   // Sanitize the URL
   const href = data.href;
   return {
     ...data,
-    href: URI.isDomSafe(href, 'a', editor.settings) ? href : ''
+    href: URI.isDomSafe(href, 'a', uriOptions) ? href : ''
   };
 };
 

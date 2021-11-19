@@ -41,10 +41,10 @@ describe('browser.tinymce.plugins.link.DefaultLinkTargetTest', () => {
   it('TBA: adds target if default is set and target_list is enabled', async () => {
     const editor = hook.editor();
     editor.options.set('default_link_target', '_blank');
-    editor.settings.target_list = [
+    editor.options.set('target_list', [
       { title: 'None', value: '' },
       { title: 'New', value: '_blank' }
-    ];
+    ]);
     await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
     await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
   });
