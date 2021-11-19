@@ -49,7 +49,7 @@ def gitMerge(String primaryBranch) {
   }
 }
 
-node("bedrock-macos") {
+node("primary-macos") {
   timestamps {
     checkout scm
 
