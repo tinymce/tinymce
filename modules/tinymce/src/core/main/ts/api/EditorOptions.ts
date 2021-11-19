@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 
 import Editor from './Editor';
 import { EditorOptions, NormalizedEditorOptions } from './OptionTypes';
@@ -118,6 +118,15 @@ export interface Options {
    * @return {Boolean} True if the option value was successfully reset, otherwise false.
    */
   unset: (name: string) => boolean;
+
+  /**
+   * Checks to see if a value has been set for the specified option.
+   *
+   * @method isSet
+   * @param {String} name Name of the option.
+   * @return {Boolean} True if the option has a value set, otherwise false.
+   */
+  isSet: (name: string) => boolean;
 }
 
 const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<BuiltInOptionTypeMap[K]> => {
@@ -226,10 +235,6 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
 
     // Setup the initial values
     const initValue = Obj.get(values, name).orThunk(() => Obj.get(initialOptions, name));
-    // Set the default first in case the current/initial value isn't valid
-    if (!Type.isUndefined(defaultValue)) {
-      values[name] = defaultValue;
-    }
     initValue.each((value) => setValue(name, value, processor));
   };
 
@@ -237,7 +242,9 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     Obj.has(registry, name);
 
   const get = (name: string) =>
-    Obj.get(values, name).getOrUndefined();
+    Obj.get(values, name)
+      .orThunk(() => Obj.get(registry, name).map((spec) => spec.default))
+      .getOrUndefined();
 
   const set = <T>(name: string, value: T) => {
     if (!isRegistered(name)) {
@@ -259,23 +266,23 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
   const unset = (name: string) => {
     const registered = isRegistered(name);
     if (registered) {
-      const spec = registry[name];
-      Optional.from(spec.default).fold(
-        () => delete values[name],
-        (defaultValue) => values[name] = defaultValue
-      );
+      delete values[name];
       // TODO: TINY-8236 (TINY-8234) Remove this later once all settings have been converted
       delete editor.settings[name];
     }
     return registered;
   };
 
+  const isSet = (name: string) =>
+    Obj.has(values, name);
+
   return {
     register,
     isRegistered,
     get,
     set,
-    unset
+    unset,
+    isSet
   };
 };
 
