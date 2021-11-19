@@ -155,7 +155,7 @@ describe.skip('browser.alloy.position.TransitionsTest', () => {
         if (scenario.waitForCompletion === false) {
           await Waiter.pWait(transitionTime / 2);
         } else {
-          await Waiter.pTryUntilPredicate('Transition ends within expected timeframe', () => Classes.get(sinks.popup().element).length === 0, 50, transitionTime * 2);
+          await Waiter.pTryUntilPredicate('Transition ends within expected timeframe', () => Classes.get(sinks.popup().element).length === 0, 10, transitionTime * 2);
         }
       } else {
         assertClasses(`No classes added for transition ${i + 1} in ${sinkName} sink`, []);
@@ -167,7 +167,7 @@ describe.skip('browser.alloy.position.TransitionsTest', () => {
       assertClasses(`Transition classes removed for ${sinkName} sink`, []);
       assert.isFalse(Attribute.has(sinks.popup().element, 'data-alloy-transition-timer'), 'Transition timer attribute should not be set');
       gui.store().assertEq(`Transition events for ${sinkName} sink`, events);
-    }, 50, transitionTime * 3);
+    }, 10, transitionTime * 3);
   };
 
   it('TINY-7740: should not add the transition class when first positioning', async () => {
