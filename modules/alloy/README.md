@@ -22,7 +22,7 @@ A webserver to run demos, npm, webpack is required to run and develop alloy
 There are four kinds of tests that alloy runs:
 
 * atomic tests
-* console tests
+* headless tests
 * browser tests
 * webdriver tests
 

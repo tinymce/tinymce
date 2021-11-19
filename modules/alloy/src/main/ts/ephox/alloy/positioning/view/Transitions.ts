@@ -42,9 +42,8 @@ const hasChanges = (position: PositionCss, intermediate: Record<TransitionProp, 
 
 const getTransitionDuration = (element: SugarElement<HTMLElement>): number => {
   const get = (name: string) => {
-    // Some older browsers return `null` here (so we probably don't need the string check anymore?)
     const style = Css.get(element, name);
-    const times = Type.isString(style) ? style.split(/\s*,\s*/) : [];
+    const times = style.split(/\s*,\s*/);
     return Arr.filter(times, Strings.isNotEmpty);
   };
 
@@ -92,15 +91,12 @@ const setupTransitionListeners = (element: SugarElement<HTMLElement>, transition
     }
   };
 
-  const transitionStarted = () => {
-    transitionEnd.set(DomEvent.bind(element, NativeEvents.transitionend(), transitionDone));
-    transitionCancel.set(DomEvent.bind(element, NativeEvents.transitioncancel(), transitionDone));
-  };
-
   const transitionStart = DomEvent.bind(element, NativeEvents.transitionstart(), (e) => {
     if (isSourceTransition(e)) {
       transitionStart.unbind();
-      transitionStarted();
+
+      transitionEnd.set(DomEvent.bind(element, NativeEvents.transitionend(), transitionDone));
+      transitionCancel.set(DomEvent.bind(element, NativeEvents.transitioncancel(), transitionDone));
     }
   });
 

@@ -160,17 +160,17 @@ module.exports = function (grunt) {
   if (headlessTests.length > 0) {
     grunt.registerTask('list-changed-headless', () => {
       const changeList = JSON.stringify(headlessTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
-      grunt.log.writeln('Changed projects for console testing:', changeList);
+      grunt.log.writeln('Changed projects for headless testing:', changeList);
     });
     grunt.registerTask('headless-auto', ['list-changed-headless', 'shell:tsc', 'bedrock-auto:headless']);
     grunt.registerTask('headless-manual', ['list-changed-headless', 'shell:tsc', 'bedrock-manual:headless']);
   } else {
-    const noConsole = () => {
-      grunt.log.writeln('no changed modules need console testing');
+    const noHeadless = () => {
+      grunt.log.writeln('no changed modules need headless testing');
     };
-    grunt.registerTask('headless-auto', noConsole);
-    grunt.registerTask('headless-manual', noConsole);
-    grunt.registerTask('list-changed-headless', noConsole);
+    grunt.registerTask('headless-auto', noHeadless);
+    grunt.registerTask('headless-manual', noHeadless);
+    grunt.registerTask('list-changed-headless', noHeadless);
   }
 
   //TODO: remove duplication
