@@ -199,4 +199,19 @@ describe('browser.tinymce.core.EditorOptionsTest', () => {
     options.register('string', { processor: 'number', default: 5 });
     assert.equal(options.get('string'), 5);
   });
+
+  it('TINY-8206: isSet should return true when set or an initial value exists', () => {
+    const options = create({ string: 'value' });
+    assert.isFalse(options.isSet('nonexistant'));
+
+    options.register('string', { processor: 'string' });
+    options.register('number', { processor: 'number', default: 10 });
+    assert.isTrue(options.isSet('string'));
+    assert.isFalse(options.isSet('number'));
+
+    options.set('string', 'test');
+    options.set('number', 1);
+    assert.isTrue(options.isSet('string'));
+    assert.isTrue(options.isSet('number'));
+  });
 });
