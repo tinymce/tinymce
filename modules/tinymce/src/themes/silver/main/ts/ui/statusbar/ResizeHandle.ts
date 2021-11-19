@@ -17,7 +17,6 @@ import * as Icons from '../icons/Icons';
 import { resize, ResizeTypes } from '../sizing/Resize';
 
 const getResizeType = (editor: Editor): ResizeTypes => {
-  // If autoresize is enabled, disable resize
   const resize = Options.getResize(editor);
   if (resize === false) {
     return ResizeTypes.None;
