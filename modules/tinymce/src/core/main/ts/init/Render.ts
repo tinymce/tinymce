@@ -103,8 +103,7 @@ const loadPlugins = (editor: Editor, suffix: string) => {
     PluginManager.load(name, url, Fun.noop, undefined, () => {
       ErrorReporter.pluginLoadError(editor, url, name);
     });
-    // This should be changed to some type of setParam once such an API is available.
-    editor.settings.plugins += ' ' + name;
+    editor.options.set('plugins', Options.getPlugins(editor) + ' ' + name);
   });
 
   Tools.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {

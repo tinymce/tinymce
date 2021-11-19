@@ -12,9 +12,7 @@ import { Attribute, Css, Height, SugarBody, SugarElement, SugarLocation, Travers
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
-import {
-  getMaxWidthSetting, getToolbarLocation, getToolbarMode, isStickyToolbar, ToolbarLocation, ToolbarMode, useFixedContainer
-} from '../../api/Settings';
+import * as Options from '../../api/Options';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RenderUiComponents } from '../../Render';
 import OuterContainer from '../general/OuterContainer';
@@ -31,16 +29,18 @@ export interface InlineHeader {
   repositionPopups: () => void;
 }
 
+const { ToolbarLocation, ToolbarMode } = Options;
+
 export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponents: RenderUiComponents, backstage: UiFactoryBackstage, floatContainer: Cell<AlloyComponent>): InlineHeader => {
   const { uiMothership, outerContainer } = uiComponents;
   const DOM = DOMUtils.DOM;
-  const useFixedToolbarContainer = useFixedContainer(editor);
-  const isSticky = isStickyToolbar(editor);
-  const editorMaxWidthOpt = getMaxWidthSetting(editor).or(EditorSize.getWidth(editor));
+  const useFixedToolbarContainer = Options.useFixedContainer(editor);
+  const isSticky = Options.isStickyToolbar(editor);
+  const editorMaxWidthOpt = Options.getMaxWidthOption(editor).or(EditorSize.getWidth(editor));
   const headerBackstage = backstage.shared.header;
   const isPositionedAtTop = headerBackstage.isPositionedAtTop;
 
-  const toolbarMode = getToolbarMode(editor);
+  const toolbarMode = Options.getToolbarMode(editor);
   const isSplitToolbar = toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
 
   const visible = Cell(false);
@@ -55,7 +55,7 @@ export const InlineHeader = (editor: Editor, targetElm: SugarElement, uiComponen
     ) : 0;
 
   const calcMode = (container: AlloyComponent): 'top' | 'bottom' => {
-    switch (getToolbarLocation(editor)) {
+    switch (Options.getToolbarLocation(editor)) {
       case ToolbarLocation.auto:
         const toolbar = OuterContainer.getToolbar(outerContainer);
         const offset = calcToolbarOffset(toolbar);

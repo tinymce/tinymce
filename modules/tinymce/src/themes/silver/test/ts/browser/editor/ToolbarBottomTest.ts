@@ -11,7 +11,7 @@ import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 interface Scenario {
-  readonly settings: RawEditorOptions;
+  readonly options: RawEditorOptions;
   readonly initial: Array<{ clickOn: string; waitFor: string }>;
   readonly assertAbove: string;
   readonly assertBelow: string;
@@ -28,7 +28,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     const editor = await McEditor.pFromSettings<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       toolbar_location: 'bottom',
-      ...scenario.settings
+      ...scenario.options
     });
 
     await Arr.foldl(scenario.initial, (p, init) => p.then(async () => {
@@ -44,7 +44,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
 
   context('Check the direction that menus open in when toolbar_location: "bottom"', () => {
     it('Bespoke select menu should open above button', () => pTest({
-      settings: {
+      options: {
         toolbar: 'styleselect'
       },
       initial: [{
@@ -56,7 +56,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('SplitButton menu should open above button', () => pTest({
-      settings: {
+      options: {
         toolbar: 'splitbutton',
         setup: (editor) => {
           editor.ui.registry.addSplitButton('splitbutton', {
@@ -83,7 +83,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('Floating overflow should open above overflow button', () => pTest({
-      settings: {
+      options: {
         width: 500,
         toolbar_mode: 'floating',
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('')
@@ -97,7 +97,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('Menu button in overflow toolbar should open up', () => pTest({
-      settings: {
+      options: {
         width: 500,
         toolbar_mode: 'floating',
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('') + 'align'
@@ -116,7 +116,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('Menubar menu should open above button', () => pTest({
-      settings: {
+      options: {
         width: 500,
         toolbar_mode: 'floating',
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('') + 'align'
@@ -130,7 +130,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('Dropdown menu used in a dialog (i.e. not in the toolbar) should open downwards', () => pTest({
-      settings: {
+      options: {
         setup: (editor) => {
           editor.on('init', () => {
             editor.windowManager.open({

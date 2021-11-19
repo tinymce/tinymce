@@ -12,7 +12,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Events from '../../../api/Events';
-import * as Settings from './Settings';
+import * as Options from './Options';
 
 export type ColorInputCallback = (valueOpt: Optional<string>) => void;
 
@@ -64,14 +64,6 @@ const registerCommands = (editor: Editor) => {
   });
 };
 
-const calcCols = (colors: number) => Math.max(5, Math.ceil(Math.sqrt(colors)));
-
-const getColorCols = (editor: Editor) => {
-  const colors = Settings.getColors(editor);
-  const defaultCols = calcCols(colors.length);
-  return Settings.getColorCols(editor, defaultCols);
-};
-
 const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
   const type: 'choiceitem' = 'choiceitem';
   const remove = {
@@ -97,7 +89,7 @@ const applyColor = (editor: Editor, format, value, onChoice: (v: string) => void
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
       colorOpt.each((color) => {
-        Settings.addColor(color);
+        Options.addColor(color);
         editor.execCommand('mceApplyTextcolor', format, color);
         onChoice(color);
       });
@@ -111,7 +103,7 @@ const applyColor = (editor: Editor, format, value, onChoice: (v: string) => void
   }
 };
 
-const getColors = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)));
+const getColors = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => colors.concat(Options.getCurrentColors().concat(getAdditionalColors(hasCustom)));
 
 const getFetch = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean) => (callback) => {
   callback(getColors(colors, hasCustom));
@@ -135,8 +127,8 @@ const registerTextColorButton = (editor: Editor, name: string, format: ColorForm
         return Strings.contains(value.toLowerCase(), currentHex);
       })).getOr(false);
     },
-    columns: getColorCols(editor),
-    fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
+    columns: Options.getColorCols(editor),
+    fetch: getFetch(Options.getColors(editor), Options.hasCustomColors(editor)),
     onAction: (_splitButtonApi) => {
       applyColor(editor, format, lastColor.get(), Fun.noop);
     },
@@ -261,7 +253,5 @@ export {
   getFetch,
   colorPickerDialog,
   getCurrentColor,
-  getColorCols,
-  getAdditionalColors,
-  calcCols
+  getAdditionalColors
 };

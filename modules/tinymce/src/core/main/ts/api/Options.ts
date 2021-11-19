@@ -369,6 +369,15 @@ const register = (editor: Editor) => {
     processor: 'string'
   });
 
+  registerOption('skin', {
+    processor: (value) => Type.isString(value) || value === false,
+    default: 'oxide'
+  });
+
+  registerOption('skin_url', {
+    processor: 'string'
+  });
+
   registerOption('formats', {
     processor: 'object'
   });
@@ -646,6 +655,11 @@ const register = (editor: Editor) => {
     default: false
   });
 
+  registerOption('content_editable_state', {
+    processor: 'boolean',
+    default: true
+  });
+
   // These options must be registered later in the init sequence due to their default values
   // TODO: TINY-8234 Should we have a way to lazily load the default values?
   editor.on('ScriptsLoaded', () => {
@@ -729,6 +743,7 @@ const getUrlConverterCallback = option('urlconverter_callback');
 const getAutoFocus = option('auto_focus');
 const shouldBrowserSpellcheck = option('browser_spellcheck');
 const getProtect = option('protect');
+const getContentEditableState = option('content_editable_state');
 
 const getFontStyleValues = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('font_size_style_values'));
@@ -815,5 +830,6 @@ export {
   getIframeAriaText,
   getAutoFocus,
   shouldBrowserSpellcheck,
-  getProtect
+  getProtect,
+  getContentEditableState
 };

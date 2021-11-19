@@ -2,6 +2,7 @@ import { Assertions, Chain, Cursors, Step, StructAssert, Waiter } from '@ephox/a
 import { Fun } from '@ephox/katamari';
 
 import { Editor } from '../../alien/EditorTypes';
+import * as Settings from '../../alien/Settings';
 import * as TinyAssertions from '../bdd/TinyAssertions';
 import * as TinySelections from '../bdd/TinySelections';
 
@@ -73,11 +74,11 @@ export const TinyApis = (editor: Editor): TinyApis => {
   const select = Fun.curry(TinySelections.select, editor);
 
   const setSetting = (key: string, value: any): void => {
-    editor.settings[key] = value;
+    Settings.setSetting(editor, key, value);
   };
 
   const deleteSetting = (key: string): void => {
-    delete editor.settings[key];
+    Settings.deleteSetting(editor, key);
   };
 
   const execCommand = (command: string, value?: any) => {

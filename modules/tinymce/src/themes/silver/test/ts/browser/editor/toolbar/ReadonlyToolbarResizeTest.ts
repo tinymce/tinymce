@@ -6,7 +6,7 @@ import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 import { pOpenMore } from '../../../module/MenuUtils';
 import { resizeToPos } from '../../../module/UiUtils';

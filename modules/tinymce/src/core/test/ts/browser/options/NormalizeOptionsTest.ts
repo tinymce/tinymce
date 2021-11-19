@@ -12,53 +12,29 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch();
 
-  const expectedDefaultSettings: RawEditorOptions = {
-    toolbar_mode: 'floating'
-  };
-
-  const expectedTouchDefaultSettings: RawEditorOptions = {
-    ...expectedDefaultSettings,
-    resize: false
-  };
-
-  const expectedTabletDefaultSettings: RawEditorOptions = {
-    ...expectedTouchDefaultSettings,
+  const expectedMobileDefaultSettings: RawEditorOptions = {
+    table_grid: false,
+    object_resizing: false,
+    resize: false,
     toolbar_mode: 'scrolling',
     toolbar_sticky: false
   };
 
   const expectedPhoneDefaultSettings: RawEditorOptions = {
-    ...expectedTabletDefaultSettings,
+    ...expectedMobileDefaultSettings,
     menubar: false
   };
 
-  it('default desktop settings', () => {
-    const defaultSettings = NormalizeOptions.getDefaultOptions({}, false);
-    Obj.each(expectedDefaultSettings, (value, key) => {
-      assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
-    });
-    Obj.each(expectedPhoneDefaultSettings, (value, key) => {
-      assert.notPropertyVal(defaultSettings, key, value, `Should not have default ${key} mobile setting`);
-    });
-  });
-
-  it('default touch device settings', () => {
-    const defaultSettings = NormalizeOptions.getDefaultOptions({}, true);
-    Obj.each(expectedTouchDefaultSettings, (value, key) => {
-      assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
-    });
-  });
-
   it('default tablet settings', () => {
-    const defaultSettings = NormalizeOptions.getDefaultMobileOptions({}, false);
-    Obj.each(expectedTabletDefaultSettings, (value, key) => {
+    const defaultSettings = NormalizeOptions.getMobileOverrideOptions({}, false);
+    Obj.each(expectedMobileDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });
     assert.notProperty(defaultSettings, 'menubar', 'Should not have menubar setting');
   });
 
   it('default phone settings', () => {
-    const defaultSettings = NormalizeOptions.getDefaultMobileOptions({}, true);
+    const defaultSettings = NormalizeOptions.getMobileOverrideOptions({}, true);
     Obj.each(expectedPhoneDefaultSettings, (value, key) => {
       assert.propertyVal(defaultSettings, key, value, `Should have default ${key} setting`);
     });

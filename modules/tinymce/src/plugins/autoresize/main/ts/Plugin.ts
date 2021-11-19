@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Obj } from '@ephox/katamari';
+import { Cell } from '@ephox/katamari';
 
 import PluginManager from 'tinymce/core/api/PluginManager';
 
@@ -23,10 +23,6 @@ import * as Resize from './core/Resize';
 export default (): void => {
   PluginManager.add('autoresize', (editor) => {
     Options.register(editor);
-    // If autoresize is enabled, disable resize if the user hasn't explicitly enabled it
-    if (!Obj.has(editor.settings, 'resize')) {
-      editor.settings.resize = false;
-    }
     if (!editor.inline) {
       const oldSize = Cell(0);
       Commands.register(editor, oldSize);

@@ -33,20 +33,16 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getAutoResizeMinHeight = (editor: Editor): number =>
-  editor.getParam('min_height', editor.getElement().offsetHeight, 'number');
-
-const getAutoResizeMaxHeight = (editor: Editor): number =>
-  editor.getParam('max_height', 0, 'number');
-
+const getMinHeight = option('min_height');
+const getMaxHeight = option('max_height');
 const getAutoResizeOverflowPadding = option<number>('autoresize_overflow_padding');
 const getAutoResizeBottomMargin = option<number>('autoresize_bottom_margin');
 const shouldAutoResizeOnInit = option<boolean>('autoresize_on_init');
 
 export {
   register,
-  getAutoResizeMinHeight,
-  getAutoResizeMaxHeight,
+  getMinHeight,
+  getMaxHeight,
   getAutoResizeOverflowPadding,
   getAutoResizeBottomMargin,
   shouldAutoResizeOnInit

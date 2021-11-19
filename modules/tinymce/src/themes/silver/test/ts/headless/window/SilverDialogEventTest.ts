@@ -86,7 +86,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
             menuItems: () => ({}),
             translate: I18n.translate,
             isDisabled: Fun.never,
-            getSetting: (_settingName: string, defaultVal: any) => defaultVal
+            getOption: (_settingName: string) => undefined
           }
         },
         dialog: {

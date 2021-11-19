@@ -9,7 +9,7 @@ import { Arr, Fun, Merger, Obj, Optional, Strings, Type } from '@ephox/katamari'
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
-import { NormalizedEditorOptions, RawEditorOptions, ToolbarMode } from '../api/OptionTypes';
+import { NormalizedEditorOptions, RawEditorOptions } from '../api/OptionTypes';
 import Tools from '../api/util/Tools';
 
 interface SectionResult {
@@ -23,12 +23,8 @@ const sectionResult = (sections: Record<string, Partial<RawEditorOptions>>, sett
 });
 
 const deviceDetection = PlatformDetection.detect().deviceType;
-const isTouch = deviceDetection.isTouch();
 const isPhone = deviceDetection.isPhone();
 const isTablet = deviceDetection.isTablet();
-const defaultTouchOptions: RawEditorOptions = {
-  resize: false              // Editor resize doesn't work on touch devices at this stage
-};
 
 const normalizePlugins = (plugins: string | string[]) => {
   const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
@@ -60,26 +56,13 @@ const getSectionConfig = (sectionResult: SectionResult, name: string) => {
   return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
 };
 
-const getToolbarMode = (options: RawEditorOptions, defaultVal: ToolbarMode) =>
-  // If toolbar_mode is unset by the user, fall back to:
-  Obj.get(options, 'toolbar_mode').getOr(defaultVal);
-
-// TODO: TINY-8235 (TINY-8234) Move more default options to where they are registered
-const getDefaultOptions = (options: RawEditorOptions, isTouch: boolean): RawEditorOptions => {
-  const baseDefaults: RawEditorOptions = {
-    toolbar_mode: getToolbarMode(options, 'floating')
-  };
-
-  return {
-    ...baseDefaults,
-    ...isTouch ? defaultTouchOptions : { }
-  };
-};
-
-const getDefaultMobileOptions = (mobileOptions: RawEditorOptions, isPhone: boolean): RawEditorOptions => {
+// Get a list of options to override any desktop options
+const getMobileOverrideOptions = (mobileOptions: RawEditorOptions, isPhone: boolean): RawEditorOptions => {
   const defaultMobileOptions: RawEditorOptions = {
+    table_grid: false,           // Table grid relies on hover, which isn't available for touch devices so use the dialog instead
+    object_resizing: false,      // No nice way to do object resizing at this stage
     resize: false,               // Editor resize doesn't make sense on mobile
-    toolbar_mode: getToolbarMode(mobileOptions, 'scrolling'),   // Use the default side-scrolling toolbar for tablets/phones
+    toolbar_mode: Obj.get(mobileOptions, 'toolbar_mode').getOr('scrolling'),   // Use the default side-scrolling toolbar for tablets/phones
     toolbar_sticky: false        // Only enable sticky toolbar on desktop by default
   };
 
@@ -88,7 +71,6 @@ const getDefaultMobileOptions = (mobileOptions: RawEditorOptions, isPhone: boole
   };
 
   return {
-    ...defaultTouchOptions,
     ...defaultMobileOptions,
     ...isPhone ? defaultPhoneOptions : { }
   };
@@ -139,9 +121,9 @@ const isOnMobile = (isMobileDevice: boolean, sectionResult: SectionResult) => {
 };
 
 const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOptions: RawEditorOptions, defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalizedEditorOptions => {
-  // Use mobile mode by default on phones, so patch in the default mobile options
-  const defaultDeviceOptions = isMobileDevice ? { mobile: getDefaultMobileOptions(options.mobile || {}, isPhone) } : { };
-  const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(defaultDeviceOptions, options));
+  // Use mobile mode by default on phones, so patch in the mobile override options
+  const deviceOverrideOptions = isMobileDevice ? { mobile: getMobileOverrideOptions(options.mobile ?? {}, isPhone) } : { };
+  const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(deviceOverrideOptions, options));
 
   const extendedOptions = Tools.extend(
     // Default options
@@ -165,10 +147,8 @@ const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOption
   return processPlugins(isMobileDevice, sectionResult, defaultOverrideOptions, extendedOptions);
 };
 
-const normalizeOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalizedEditorOptions => {
-  const defaultOptions = getDefaultOptions(options, isTouch);
-  return combineOptions(isPhone || isTablet, isPhone, defaultOptions, defaultOverrideOptions, options);
-};
+const normalizeOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalizedEditorOptions =>
+  combineOptions(isPhone || isTablet, isPhone, options, defaultOverrideOptions, options);
 
 const getFiltered = <K extends keyof NormalizedEditorOptions> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<NormalizedEditorOptions[K]> => Optional.from(editor.settings[name]).filter(predicate);
 
@@ -219,4 +199,4 @@ const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string)
   }
 };
 
-export { normalizeOptions, getParam, combineOptions, getDefaultOptions, getDefaultMobileOptions };
+export { normalizeOptions, getParam, combineOptions, getMobileOverrideOptions };

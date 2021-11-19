@@ -1,6 +1,7 @@
 import { Chain, Cursors, StructAssert } from '@ephox/agar';
 
 import { Editor } from '../../alien/EditorTypes';
+import * as Settings from '../../alien/Settings';
 import * as TinyAssertions from '../bdd/TinyAssertions';
 import * as TinySelections from '../bdd/TinySelections';
 import { Presence } from './TinyApis';
@@ -57,13 +58,13 @@ const cSetSelection = <T extends Editor>(startPath: number[], soffset: number, f
 
 const cSetSetting = <T extends Editor>(key: string, value: any): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    editor.settings[key] = value;
+    Settings.setSetting(editor, key, value);
   });
 };
 
 const cDeleteSetting = <T extends Editor>(key: string): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    delete editor.settings[key];
+    Settings.deleteSetting(editor, key);
   });
 };
 
