@@ -82,7 +82,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('style_formats', {
-    processor: 'array'
+    processor: 'object[]'
   });
 
   registerOption('style_formats_merge', {
@@ -101,7 +101,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('content_langs', {
-    processor: 'array'
+    processor: 'object[]'
   });
 
   registerOption('removed_menuitems', {

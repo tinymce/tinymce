@@ -6,7 +6,7 @@
  */
 
 import { Transformations } from '@ephox/acid';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
@@ -43,13 +43,7 @@ const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
   registerOption('color_map', {
-    processor: (value) => {
-      if (Type.isArrayOf(value, Type.isString)) {
-        return { value: mapColors(value), valid: true };
-      } else {
-        return { valid: false, message: 'Must be an array of strings.' };
-      }
-    },
+    processor: 'string[]',
     default: [
       '#BFEDD2', 'Light Green',
       '#FBEEB8', 'Light Yellow',

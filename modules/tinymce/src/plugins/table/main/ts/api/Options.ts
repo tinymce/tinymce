@@ -69,12 +69,12 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('table_border_widths', {
-    processor: 'array',
+    processor: 'object[]',
     default: defaultCellBorderWidths
   });
 
   registerOption('table_border_styles', {
-    processor: 'array',
+    processor: 'object[]',
     default: defaultCellBorderStyles
   });
 
@@ -130,17 +130,17 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('table_cell_class_list', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
   registerOption('table_row_class_list', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
   registerOption('table_class_list', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
@@ -183,12 +183,12 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('table_background_color_map', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
   registerOption('table_border_color_map', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 };

@@ -22,7 +22,7 @@ const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
   registerOption('media_scripts', {
-    processor: 'array'
+    processor: 'object[]'
   });
 
   registerOption('audio_template_callback', {

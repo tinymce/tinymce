@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Type } from '@ephox/katamari';
 import { Regexes } from '@ephox/polaris';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -21,7 +20,7 @@ const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
   registerOption('autolink_pattern', {
-    processor: Type.isNonNullable,
+    processor: 'regexp',
     // Use the Polaris link detection, however for autolink we need to make it be an exact match
     default: new RegExp('^' + Regexes.link().source + '$', 'i')
   });

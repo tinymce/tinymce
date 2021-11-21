@@ -27,10 +27,12 @@ export interface BuiltInOptionTypeMap {
   'string': string;
   'number': number;
   'boolean': boolean;
-  'string[]': string[];
   'array': any[];
   'function': Function;
   'object': any;
+  'string[]': string[];
+  'object[]': any[];
+  'regexp': RegExp;
 }
 
 export type BuiltInOptionType = keyof BuiltInOptionTypeMap;
@@ -146,6 +148,10 @@ const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<Bu
         return Type.isString;
       case 'string[]':
         return (val) => Type.isArrayOf(val, Type.isString);
+      case 'object[]':
+        return (val) => Type.isArrayOf(val, Type.isObject);
+      case 'regexp':
+        return (val) => Type.is(val, RegExp);
     }
   })() as (val: unknown) => val is BuiltInOptionTypeMap[K];
 

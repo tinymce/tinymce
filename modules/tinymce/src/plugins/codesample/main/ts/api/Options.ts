@@ -20,7 +20,7 @@ const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
   registerOption('codesample_languages', {
-    processor: 'array'
+    processor: 'object[]'
   });
 
   registerOption('codesample_global_prismjs', {

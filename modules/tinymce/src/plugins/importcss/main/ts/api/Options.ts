@@ -52,7 +52,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('importcss_groups', {
-    processor: 'array'
+    processor: 'object[]'
   });
 
   registerOption('importcss_append', {
