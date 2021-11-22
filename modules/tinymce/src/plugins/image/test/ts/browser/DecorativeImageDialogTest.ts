@@ -8,7 +8,7 @@ import Plugin from 'tinymce/plugins/image/Plugin';
 
 import { assertCleanHtml, assertInputCheckbox, assertInputValue, fillActiveDialog, generalTabSelectors } from '../module/Helpers';
 
-describe('browser.tinymce.plugins.image.DescriptiveImageDialogTest', () => {
+describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     toolbar: 'image',

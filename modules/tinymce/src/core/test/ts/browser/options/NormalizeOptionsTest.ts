@@ -241,7 +241,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings (desktop)', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(false, false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 }),
-        { a: 1, b: 2, c: 3, external_plugins: {}, plugins: '' },
+        { a: 1, b: 2, c: 3, external_plugins: {}, forced_plugins: [], plugins: '' },
         'Should have validate, forced and empty plugins in the merged settings'
       );
     });
@@ -284,7 +284,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings forced_plugins in default override forced_plugins in user settings', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, { forced_plugins: [ 'b' ] }),
-        { external_plugins: {}, forced_plugins: [ 'b' ], plugins: 'a' },
+        { external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a' },
         'Should not have user forced plugins'
       );
     });
@@ -292,7 +292,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings when mobile.plugins is undefined, on a mobile device', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {}}),
-        { ...expectedPhoneDefaultSettings, external_plugins: {}, plugins: 'lists b autolink', theme: 'silver' },
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [], plugins: 'lists b autolink', theme: 'silver' },
         'Should use settings.plugins when mobile theme is not set'
       );
     });
@@ -300,7 +300,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings with empty mobile.plugins="" on mobile', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(true, true, {}, {}, { mobile: { plugins: '' }}),
-        { ...expectedPhoneDefaultSettings, external_plugins: {}, plugins: '' },
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [], plugins: '' },
         'Should not have any plugins when mobile.plugins is explicitly empty'
       );
     });
@@ -308,7 +308,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings with defined mobile.plugins', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }}),
-        { ...expectedPhoneDefaultSettings, external_plugins: {}, plugins: 'lists autolink foo bar' },
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [], plugins: 'lists autolink foo bar' },
         'Should allow all plugins'
       );
     });
@@ -319,7 +319,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
           theme: 'test',
           mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
         }),
-        { ...expectedPhoneDefaultSettings, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar' },
+        { ...expectedPhoneDefaultSettings, theme: 'silver', external_plugins: {}, forced_plugins: [], plugins: 'lists autolink foo bar' },
         'Should allow all mobile plugin'
       );
     });
@@ -331,7 +331,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
           plugins: [ 'aa', 'bb', 'cc' ],
           mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
         }),
-        { theme: 'silver', external_plugins: {}, plugins: 'aa bb cc' },
+        { theme: 'silver', external_plugins: {}, forced_plugins: [], plugins: 'aa bb cc' },
         'Should respect the desktop settings'
       );
     });

@@ -45,6 +45,7 @@ interface ToolbarGroup {
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
 
 interface BaseEditorOptions {
+  a11y_advanced_options?: boolean;
   add_form_submit_trigger?: boolean;
   add_unload_trigger?: boolean;
   allow_conditional_comments?: boolean;
@@ -222,6 +223,7 @@ export interface RawEditorOptions extends BaseEditorOptions {
 // and merges in the mobile settings
 export interface NormalizedEditorOptions extends BaseEditorOptions {
   external_plugins: Record<string, string>;
+  forced_plugins: string[];
   plugins: string;
 }
 
