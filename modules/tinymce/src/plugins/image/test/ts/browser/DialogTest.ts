@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.image.DialogTest', () => {
 
   it('TBA: Insert Image Dialog with filepicker cycle', async () => {
     const editor = hook.editor();
-    editor.settings.image_advtab = true;
+    editor.options.set('image_advtab', true);
     editor.execCommand('mceImage');
     await pAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")');
     pressTab(editor);
@@ -65,10 +65,10 @@ describe('browser.tinymce.plugins.image.DialogTest', () => {
   it('TBA: Insert Image Dialog with all options', async () => {
     const editor = hook.editor();
     editor.settings.file_picker_callback = Fun.noop;
-    editor.settings.image_advtab = true;
-    editor.settings.image_class_list = [{ title: 'sample', value: 'sample' }];
-    editor.settings.image_list = [{ title: 'sample', value: 'sample' }];
-    editor.settings.image_caption = true;
+    editor.options.set('image_advtab', true);
+    editor.options.set('image_class_list', [{ title: 'sample', value: 'sample' }]);
+    editor.options.set('image_list', [{ title: 'sample', value: 'sample' }]);
+    editor.options.set('image_caption', true);
     editor.execCommand('mceImage');
     await pAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")');
     pressTab(editor);
@@ -98,7 +98,7 @@ describe('browser.tinymce.plugins.image.DialogTest', () => {
 
   it('TBA: Insert Image Dialog with advanced tab', async () => {
     const editor = hook.editor();
-    editor.settings.image_advtab = true;
+    editor.options.set('image_advtab', true);
     editor.execCommand('mceImage');
     await pAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")');
     pressDown(editor);
@@ -122,8 +122,8 @@ describe('browser.tinymce.plugins.image.DialogTest', () => {
 
   it('TBA: Insert Image Dialog with upload tab', async () => {
     const editor = hook.editor();
-    editor.settings.image_advtab = true;
-    editor.settings.images_upload_url = '/custom/imageUpload';
+    editor.options.set('image_advtab', true);
+    editor.options.set('images_upload_url', '/custom/imageUpload');
     editor.execCommand('mceImage');
     await pAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")');
     pressDown(editor);

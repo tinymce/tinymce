@@ -63,7 +63,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
 
   it('TINY-6400: render image_class_list as Dialog type "panel"', async () => {
     const editor = hook.editor();
-    editor.settings.image_caption = false;
+    editor.options.set('image_caption', false);
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     const expected = {
@@ -73,12 +73,12 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
 
     Assertions.assertPresence('Does not have columns for the class but a group', expected, dialog);
     TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
-    editor.settings.image_caption = true;
+    editor.options.set('image_caption', true);
   });
 
   it('TINY-6400: render image_caption as Dialog type "panel"', async () => {
     const editor = hook.editor();
-    delete editor.settings.image_class_list;
+    editor.options.unset('image_class_list');
 
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
@@ -89,10 +89,10 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
 
     Assertions.assertPresence('Does not have columns but a checkbox group', expected, dialog);
     TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
-    editor.settings.image_class_list = [
+    editor.options.set('image_class_list', [
       { title: 'None', value: '' },
       { title: 'class1', value: 'class1' },
       { title: 'class2', value: 'class2' }
-    ];
+    ]);
   });
 });
