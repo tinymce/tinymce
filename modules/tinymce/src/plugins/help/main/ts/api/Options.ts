@@ -21,7 +21,7 @@ const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
   registerOption('help_tabs', {
-    processor: 'object[]'
+    processor: 'array'
   });
 };
 
