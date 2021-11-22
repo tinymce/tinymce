@@ -46,6 +46,15 @@ const register = (editor: Editor): void => {
   const stringOrFalseProcessor = (value: unknown) => Type.isString(value) || value === false;
   const stringOrNumberProcessor = (value: unknown) => Type.isString(value) || Type.isNumber(value);
 
+  registerOption('skin', {
+    processor: (value) => Type.isString(value) || value === false,
+    default: 'oxide'
+  });
+
+  registerOption('skin_url', {
+    processor: 'string'
+  });
+
   registerOption('height', {
     processor: stringOrNumberProcessor,
     default: Math.max(editor.getElement().offsetHeight, 200)

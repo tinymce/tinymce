@@ -369,15 +369,6 @@ const register = (editor: Editor) => {
     processor: 'string'
   });
 
-  registerOption('skin', {
-    processor: (value) => Type.isString(value) || value === false,
-    default: 'oxide'
-  });
-
-  registerOption('skin_url', {
-    processor: 'string'
-  });
-
   registerOption('formats', {
     processor: 'object'
   });
