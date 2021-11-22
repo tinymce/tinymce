@@ -11,7 +11,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Formatter from 'tinymce/core/api/Formatter';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { InlinePattern } from '../core/PatternTypes';
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === Node.ELEMENT_NODE;
@@ -56,7 +56,7 @@ const isReplacementPattern = (pattern: InlinePattern): boolean =>
 
 const getParentBlock = (editor: Editor, rng: Range): Optional<Element> => {
   const parentBlockOpt = Optional.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
-  if (Settings.getForcedRootBlock(editor) === '') {
+  if (Options.getForcedRootBlock(editor) === '') {
     return parentBlockOpt.orThunk(() => Optional.some(editor.getBody()));
   } else {
     return parentBlockOpt;

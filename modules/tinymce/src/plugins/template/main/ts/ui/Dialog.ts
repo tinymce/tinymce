@@ -14,7 +14,7 @@ import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Templates from '../core/Templates';
 import { DialogData, ExternalTemplate, InternalTemplate, UrlTemplate } from '../core/Types';
 import * as Utils from '../core/Utils';
@@ -24,9 +24,9 @@ type UpdateDialogCallback = (dialogApi: Dialog.DialogInstanceApi<DialogData>, te
 const getPreviewContent = (editor: Editor, html: string): string => {
   if (html.indexOf('<html>') === -1) {
     let contentCssEntries = '';
-    const contentStyle = Settings.getContentStyle(editor);
+    const contentStyle = Options.getContentStyle(editor) ?? '';
 
-    const cors = Settings.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
+    const cors = Options.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
 
     Tools.each(editor.contentCSS, (url) => {
       contentCssEntries += '<link type="text/css" rel="stylesheet" href="' +
@@ -38,7 +38,7 @@ const getPreviewContent = (editor: Editor, html: string): string => {
       contentCssEntries += '<style type="text/css">' + contentStyle + '</style>';
     }
 
-    const bodyClass = Settings.getBodyClass(editor);
+    const bodyClass = Options.getBodyClass(editor);
 
     const encode = editor.dom.encode;
 
@@ -74,7 +74,7 @@ const getPreviewContent = (editor: Editor, html: string): string => {
     );
   }
 
-  return Templates.replaceTemplateValues(html, Settings.getPreviewReplaceValues(editor));
+  return Templates.replaceTemplateValues(html, Options.getPreviewReplaceValues(editor));
 };
 
 const open = (editor: Editor, templateList: ExternalTemplate[]): void => {

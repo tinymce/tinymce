@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
 
   beforeEach(() => {
     const editor = hook.editor();
-    editor.settings.toc_depth = 2;
+    editor.options.set('toc_depth', 2);
   });
 
   context('mceInsertToc', () => {
@@ -134,7 +134,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
 
     it('TINY-4636: three tiers with final item', () => {
       const editor = hook.editor();
-      editor.settings.toc_depth = 3;
+      editor.options.set('toc_depth', 3);
 
       editor.setContent(
         '<h1 id="h1">H1</h1>' +
@@ -180,7 +180,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
 
     it('TINY-4636: four tiers with final item', () => {
       const editor = hook.editor();
-      editor.settings.toc_depth = 4;
+      editor.options.set('toc_depth', 4);
 
       editor.setContent(
         '<h1 id="h1">H1</h1>' +
@@ -233,7 +233,7 @@ describe('browser.tinymce.plugins.toc.TocPluginTest', () => {
 
     it('TINY-4636: four tiers with no final item', () => {
       const editor = hook.editor();
-      editor.settings.toc_depth = 4;
+      editor.options.set('toc_depth', 4);
 
       editor.setContent(
         '<h1 id="h1">H1</h1>' +
