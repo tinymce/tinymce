@@ -1,7 +1,7 @@
 import { Arr, Fun, Global, Obj } from '@ephox/katamari';
 
 import { Editor } from '../alien/EditorTypes';
-import { getSetting } from '../alien/Settings';
+import { get as getOption } from '../alien/Options';
 
 const isSilver = (): boolean => {
   const tinymce = Global.tinymce;
@@ -32,7 +32,7 @@ const ModernThemeSelectors: ThemeSelectors = {
 };
 
 const SilverThemeSelectors: ThemeSelectors = {
-  toolBarSelector: (editor: Editor) => Arr.exists([ getSetting(editor, 'toolbar_mode'), getSetting(editor, 'toolbar_drawer') ], (s) => s === 'floating' || s === 'sliding') ? '.tox-toolbar-overlord' : '.tox-toolbar',
+  toolBarSelector: (editor: Editor) => Arr.exists([ getOption(editor, 'toolbar_mode'), getOption(editor, 'toolbar_drawer') ], (s) => s === 'floating' || s === 'sliding') ? '.tox-toolbar-overlord' : '.tox-toolbar',
   menuBarSelector: '.tox-menubar',
   dialogSelector: 'div[role="dialog"]',
   dialogCancelSelector: '.tox-button:contains("Cancel")',

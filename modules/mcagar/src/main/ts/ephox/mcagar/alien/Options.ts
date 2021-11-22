@@ -1,6 +1,6 @@
 import { Editor } from './EditorTypes';
 
-const getSetting = <R>(editor: Editor, name: string): R => {
+const get = <R>(editor: Editor, name: string): R => {
   if (editor.options) {
     return editor.options.get(name);
   } else {
@@ -8,7 +8,7 @@ const getSetting = <R>(editor: Editor, name: string): R => {
   }
 };
 
-const setSetting = <T>(editor: Editor, name: string, value: T): void => {
+const set = <T>(editor: Editor, name: string, value: T): void => {
   if (editor.options) {
     editor.options.set(name, value);
   } else {
@@ -16,7 +16,7 @@ const setSetting = <T>(editor: Editor, name: string, value: T): void => {
   }
 };
 
-const deleteSetting = (editor: Editor, name: string): void => {
+const unset = (editor: Editor, name: string): void => {
   if (editor.options) {
     editor.options.unset(name);
   } else {
@@ -25,7 +25,7 @@ const deleteSetting = (editor: Editor, name: string): void => {
 };
 
 export {
-  getSetting,
-  setSetting,
-  deleteSetting
+  get,
+  set,
+  unset
 };

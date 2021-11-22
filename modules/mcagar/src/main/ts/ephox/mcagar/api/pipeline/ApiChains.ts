@@ -1,7 +1,7 @@
 import { Chain, Cursors, StructAssert } from '@ephox/agar';
 
 import { Editor } from '../../alien/EditorTypes';
-import * as Settings from '../../alien/Settings';
+import * as Options from '../../alien/Options';
 import * as TinyAssertions from '../bdd/TinyAssertions';
 import * as TinySelections from '../bdd/TinySelections';
 import { Presence } from './TinyApis';
@@ -13,8 +13,12 @@ export interface ApiChains {
   cSetSelectionFrom: <T extends Editor> (spec: Cursors.CursorSpec | Cursors.RangeSpec) => Chain<T, T>;
   cSetSelection: <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => Chain<T, T>;
   cSetCursor: <T extends Editor> (elementPath: number[], offset: number) => Chain<T, T>;
+  /** @deprecated use cSetOption instead */
   cDeleteSetting: <T extends Editor> (key: string) => Chain<T, T>;
+  cUnsetOption: <T extends Editor> (key: string) => Chain<T, T>;
+  /** @deprecated use cSetOption instead */
   cSetSetting: <T extends Editor> (key: string, value: any) => Chain<T, T>;
+  cSetOption: <T extends Editor> (key: string, value: any) => Chain<T, T>;
   cGetContent: Chain<Editor, string>;
   cExecCommand: <T extends Editor> (command: string, value?: any) => Chain<T, T>;
   cAssertContent: <T extends Editor> (expected: string) => Chain<T, T>;
@@ -56,15 +60,15 @@ const cSetSelection = <T extends Editor>(startPath: number[], soffset: number, f
   });
 };
 
-const cSetSetting = <T extends Editor>(key: string, value: any): Chain<T, T> => {
+const cSetOption = <T extends Editor>(key: string, value: any): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    Settings.setSetting(editor, key, value);
+    Options.set(editor, key, value);
   });
 };
 
-const cDeleteSetting = <T extends Editor>(key: string): Chain<T, T> => {
+const cUnsetOption = <T extends Editor>(key: string): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    Settings.deleteSetting(editor, key);
+    Options.unset(editor, key);
   });
 };
 
@@ -117,9 +121,11 @@ export const ApiChains: ApiChains = {
   cGetContent,
   cSetSelectionFrom,
   cSetSelection,
-  cSetSetting,
+  cSetSetting: cSetOption,
+  cSetOption,
   cSetRawContent,
-  cDeleteSetting,
+  cDeleteSetting: cUnsetOption,
+  cUnsetOption,
   cSetCursor,
   cSelect,
   cExecCommand,
