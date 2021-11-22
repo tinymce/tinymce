@@ -13,7 +13,7 @@ import * as DetectProPlugin from './alien/DetectProPlugin';
 import * as Api from './api/Api';
 import { Clipboard } from './api/Clipboard';
 import * as Commands from './api/Commands';
-import * as Settings from './api/Settings';
+import * as Options from './api/Options';
 import * as CutCopy from './core/CutCopy';
 import * as DragDrop from './core/DragDrop';
 import * as PrePostProcess from './core/PrePostProcess';
@@ -23,8 +23,10 @@ import * as Buttons from './ui/Buttons';
 export default (): void => {
   PluginManager.add('paste', (editor) => {
     if (DetectProPlugin.hasProPlugin(editor) === false) {
+      Options.register(editor);
+
       const draggingInternallyState = Cell(false);
-      const pasteFormat = Cell(Settings.isPasteAsTextEnabled(editor) ? 'text' : 'html');
+      const pasteFormat = Cell(Options.isPasteAsTextEnabled(editor) ? 'text' : 'html');
       const clipboard = Clipboard(editor, pasteFormat);
 
       Quirks.setup(editor);

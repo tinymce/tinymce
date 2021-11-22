@@ -7,19 +7,19 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const setup = (editor: Editor): void => {
   const plugin = editor.plugins.paste;
 
-  const preProcess = Settings.getPreProcess(editor);
+  const preProcess = Options.getPreProcess(editor);
   if (preProcess) {
     editor.on('PastePreProcess', (e) => {
       preProcess.call(plugin, plugin, e);
     });
   }
 
-  const postProcess = Settings.getPostProcess(editor);
+  const postProcess = Options.getPostProcess(editor);
   if (postProcess) {
     editor.on('PastePostProcess', (e) => {
       postProcess.call(plugin, plugin, e);

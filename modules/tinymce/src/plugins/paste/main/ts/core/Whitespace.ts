@@ -9,7 +9,7 @@ import { Arr, Strings, Unicode } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 // Don't compare other unicode spaces here, as we're only concerned about whitespace the browser would collapse
 const isCollapsibleWhitespace = (c: string): boolean => ' \f\t\v'.indexOf(c) !== -1;
@@ -21,7 +21,7 @@ const normalizeWhitespace = (editor: Editor, text: string): string => {
   // Replace tabs with a variable amount of spaces
   // Note: We don't use an actual tab character here, as it only works when in a "whitespace: pre" element,
   // which will cause other issues, such as trying to type the content will also be treated as being in a pre.
-  const tabSpace = Strings.repeat(' ', Settings.getTabSpaces(editor));
+  const tabSpace = Strings.repeat(' ', Options.getTabSpaces(editor));
   const normalizedText = text.replace(/\t/g, tabSpace);
 
   const result = Arr.foldl(normalizedText, (acc, c) => {

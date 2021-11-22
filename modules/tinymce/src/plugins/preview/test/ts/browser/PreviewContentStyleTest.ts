@@ -30,9 +30,9 @@ describe('browser.tinymce.plugins.preview.PreviewContentStyleTest', () => {
   it('TBA: Set content, set style setting and assert content and style. Delete style and assert style is removed', () => {
     const editor = hook.editor();
     editor.setContent('<p>hello world</p>');
-    editor.settings.content_style = 'p {color: blue;}';
+    editor.options.set('content_style', 'p {color: blue;}');
     assertIframeHtmlContains(editor, '<style type="text/css">p {color: blue;}</style>');
-    delete editor.settings.content_style;
+    editor.options.unset('content_style');
     assertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>');
   });
 
@@ -40,8 +40,8 @@ describe('browser.tinymce.plugins.preview.PreviewContentStyleTest', () => {
     const editor = hook.editor();
     const contentCssUrl = editor.documentBaseURI.toAbsolute('/project/tinymce/js/tinymce/skins/content/default/content.css');
     editor.setContent('<p>hello world</p>');
-    editor.settings.content_css_cors = true;
-    editor.settings.content_style = 'p {color: blue;}';
+    editor.options.set('content_css_cors', true);
+    editor.options.set('content_style', 'p {color: blue;}');
     assertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}" crossorigin="anonymous"><style type="text/css">p {color: blue;}</style>`);
   });
 });
