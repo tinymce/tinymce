@@ -23,11 +23,11 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
   afterEach(() => {
     const editor = hook.editor();
-    delete editor.settings.paste_remove_styles_if_webkit;
-    delete editor.settings.paste_retain_style_properties;
-    delete editor.settings.paste_enable_default_filters;
-    delete editor.settings.paste_data_images;
-    delete editor.settings.paste_webkit_styles;
+    editor.options.unset('paste_remove_styles_if_webkit');
+    editor.options.unset('paste_retain_style_properties');
+    editor.options.unset('paste_enable_default_filters');
+    editor.options.unset('paste_data_images');
+    editor.options.unset('paste_webkit_styles');
   });
 
   it('TBA: Plain text toggle event', () => {
@@ -77,7 +77,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
   it('TBA: Paste styled text content', () => {
     const editor = hook.editor();
-    editor.settings.paste_remove_styles_if_webkit = false;
+    editor.options.set('paste_remove_styles_if_webkit', false);
 
     editor.setContent('<p>1234</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
@@ -115,7 +115,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
   it('TBA: Paste paste_merge_formats: true', () => {
     const editor = hook.editor();
-    editor.settings.paste_merge_formats = true;
+    editor.options.set('paste_merge_formats', true);
     editor.setContent('<p><strong>a</strong></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
 
@@ -125,7 +125,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
   it('TBA: Paste paste_merge_formats: false', () => {
     const editor = hook.editor();
-    editor.settings.paste_merge_formats = false;
+    editor.options.set('paste_merge_formats', false);
     editor.setContent('<p><strong>a</strong></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
 
@@ -200,7 +200,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
   it('TBA: paste data image with paste_data_images: true', () => {
     const editor = hook.editor();
-    editor.settings.paste_data_images = true;
+    editor.options.set('paste_data_images', true);
 
     editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
     TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" /></p>');
@@ -349,21 +349,21 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
     it('TBA: paste webkit retains text styles runtime styles internal', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'color';
+      editor.options.set('paste_webkit_styles', 'color');
       editor.execCommand('mceInsertClipboardContent', false, { content: '&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;' });
       TinyAssertions.assertContent(editor, '<p>&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;</p>');
     });
 
     it('TBA: paste webkit remove runtime styles internal', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'color';
+      editor.options.set('paste_webkit_styles', 'color');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color:red; font-size: 42px" data-mce-style="color: red;">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="color: red;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (color)', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'color';
+      editor.options.set('paste_webkit_styles', 'color');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color:red; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="color: red;">Test</span></p>');
     });
@@ -388,56 +388,56 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
     it('TBA: paste webkit remove runtime styles (background-color)', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'background-color';
+      editor.options.set('paste_webkit_styles', 'background-color');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="background-color:red; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="background-color: red;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (font-size)', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'font-size';
+      editor.options.set('paste_webkit_styles', 'font-size');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="font-size:42px; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="font-size: 42px;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (font-family)', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'font-family';
+      editor.options.set('paste_webkit_styles', 'font-family');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="font-family:Arial; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="font-family: Arial;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles font-family allowed but not specified', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'font-family';
+      editor.options.set('paste_webkit_styles', 'font-family');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<p title="x" style="text-indent: 10px">Test</p>' });
       TinyAssertions.assertContent(editor, '<p title="x">Test</p>');
     });
 
     it('TBA: paste webkit remove runtime styles (custom styles)', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'color font-style';
+      editor.options.set('paste_webkit_styles', 'color font-style');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="color: red; font-style: italic;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (all)', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'all';
+      editor.options.set('paste_webkit_styles', 'all');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style=\"color: red; font-style: italic; text-indent: 10px;\">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (none)', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'none';
+      editor.options.set('paste_webkit_styles', 'none');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p>Test</p>');
     });
 
     it('TBA: paste webkit remove runtime styles (color) in the same (color) (named)', () => {
       const editor = hook.editor();
-      editor.settings.paste_webkit_styles = 'color';
+      editor.options.set('paste_webkit_styles', 'color');
 
       editor.setContent('<p style="color:red">Test</span>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);

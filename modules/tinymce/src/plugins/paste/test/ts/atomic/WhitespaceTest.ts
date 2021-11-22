@@ -6,9 +6,11 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Whitespace from 'tinymce/plugins/paste/core/Whitespace';
 
 describe('atomic.tinymce.plugins.paste.WhitespaceTest', () => {
-  const settings = { paste_tab_spaces: 2 };
+  const options = { paste_tab_spaces: 2 };
   const mockEditor = {
-    getParam: (name, defaultValue) => Obj.get(settings, name).getOr(defaultValue)
+    options: {
+      get: (name) => Obj.get(options, name).getOrUndefined()
+    }
   } as Editor;
 
   it('normalizeWhitespace', () => {

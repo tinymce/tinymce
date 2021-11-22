@@ -105,7 +105,7 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
   context('Smart paste enabled', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.smart_paste = true;
+      editor.options.set('smart_paste', true);
     });
 
     it('TINY-6306: with custom images_file_types settings', () => {
@@ -189,7 +189,7 @@ describe('browser.tinymce.plugins.paste.SmartPasteTest', () => {
   context('Smart paste disabled', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.smart_paste = false;
+      editor.options.set('smart_paste', false);
     });
 
     it('TBA: paste as content, paste image url', () => {

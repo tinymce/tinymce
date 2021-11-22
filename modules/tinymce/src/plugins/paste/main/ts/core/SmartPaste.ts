@@ -10,13 +10,13 @@ import { Arr, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 type PasteFn = (editor: Editor, html: string) => boolean;
 
 const pasteHtml = (editor: Editor, html: string): boolean => {
   editor.insertContent(html, {
-    merge: Settings.shouldMergeFormats(editor),
+    merge: Options.shouldMergeFormats(editor),
     paste: true
   });
 
@@ -36,7 +36,7 @@ const isAbsoluteUrl = (url: string): boolean =>
   /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
 
 const isImageUrl = (editor: Editor, url: string): boolean => {
-  return isAbsoluteUrl(url) && Arr.exists(Settings.getAllowedImageFileTypes(editor), (type) =>
+  return isAbsoluteUrl(url) && Arr.exists(Options.getAllowedImageFileTypes(editor), (type) =>
     Strings.endsWith(url.toLowerCase(), `.${type.toLowerCase()}`)
   );
 };
@@ -80,7 +80,7 @@ const smartInsertContent = (editor: Editor, html: string): void => {
 };
 
 const insertContent = (editor: Editor, html: string, pasteAsText: boolean): void => {
-  if (pasteAsText || Settings.isSmartPasteEnabled(editor) === false) {
+  if (pasteAsText || Options.isSmartPasteEnabled(editor) === false) {
     pasteHtml(editor, html);
   } else {
     smartInsertContent(editor, html);
