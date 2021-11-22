@@ -27,7 +27,6 @@ const isTouch = deviceDetection.isTouch();
 const isPhone = deviceDetection.isPhone();
 const isTablet = deviceDetection.isTablet();
 const defaultTouchOptions: RawEditorOptions = {
-  table_grid: false,          // Table grid relies on hover, which isn't available so use the dialog instead
   resize: false              // Editor resize doesn't work on touch devices at this stage
 };
 

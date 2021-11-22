@@ -8,10 +8,10 @@
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const setup = (editor: Editor): void => {
-  const tocClass = Settings.getTocClass(editor);
+  const tocClass = Options.getTocClass(editor);
 
   editor.on('PreProcess', (e) => {
     const dom = editor.dom;

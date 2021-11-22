@@ -11,13 +11,13 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as DateTimeHelper from './DateTimeHelper';
 import { ExternalTemplate, TemplateValues } from './Types';
 
 const createTemplateList = (editor: Editor, callback: (templates: ExternalTemplate[]) => void) => {
   return (): void => {
-    const templateList = Settings.getTemplates(editor);
+    const templateList = Options.getTemplates(editor);
 
     if (Type.isFunction(templateList)) {
       templateList(callback);
@@ -47,7 +47,7 @@ const replaceTemplateValues = (html: string, templateValues: TemplateValues): st
 };
 
 const replaceVals = (editor: Editor, scope: HTMLElement): void => {
-  const dom = editor.dom, vl = Settings.getTemplateReplaceValues(editor);
+  const dom = editor.dom, vl = Options.getTemplateReplaceValues(editor);
 
   Tools.each(dom.select('*', scope), (e) => {
     Tools.each(vl, (v, k) => {
@@ -70,7 +70,7 @@ const insertTemplate = (editor: Editor, _ui: boolean, html: string): void => {
   const dom = editor.dom;
   const sel = editor.selection.getContent();
 
-  html = replaceTemplateValues(html, Settings.getTemplateReplaceValues(editor));
+  html = replaceTemplateValues(html, Options.getTemplateReplaceValues(editor));
   let el = dom.create('div', null, html);
 
   // Find template element within div
@@ -82,17 +82,17 @@ const insertTemplate = (editor: Editor, _ui: boolean, html: string): void => {
 
   Tools.each(dom.select('*', el), (n) => {
     // Replace cdate
-    if (hasClass(n, Settings.getCreationDateClasses(editor).replace(/\s+/g, '|'))) {
-      n.innerHTML = DateTimeHelper.getDateTime(editor, Settings.getCdateFormat(editor));
+    if (hasClass(n, Options.getCreationDateClasses(editor).replace(/\s+/g, '|'))) {
+      n.innerHTML = DateTimeHelper.getDateTime(editor, Options.getCdateFormat(editor));
     }
 
     // Replace mdate
-    if (hasClass(n, Settings.getModificationDateClasses(editor).replace(/\s+/g, '|'))) {
-      n.innerHTML = DateTimeHelper.getDateTime(editor, Settings.getMdateFormat(editor));
+    if (hasClass(n, Options.getModificationDateClasses(editor).replace(/\s+/g, '|'))) {
+      n.innerHTML = DateTimeHelper.getDateTime(editor, Options.getMdateFormat(editor));
     }
 
     // Replace selection
-    if (hasClass(n, Settings.getSelectedContentClasses(editor).replace(/\s+/g, '|'))) {
+    if (hasClass(n, Options.getSelectedContentClasses(editor).replace(/\s+/g, '|'))) {
       n.innerHTML = sel;
     }
   });

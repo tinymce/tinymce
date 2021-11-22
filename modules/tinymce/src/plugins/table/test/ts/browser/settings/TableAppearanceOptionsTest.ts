@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.table.TableAppearanceTest', () => {
 
   it('TBA: test that settings for appearance can be disabled', async () => {
     const editor = hook.editor();
-    editor.settings.table_appearance_options = false;
+    editor.options.set('table_appearance_options', false);
     editor.setContent(tableHtml);
     TinySelections.select(editor, 'table td', [ 0 ]);
     editor.execCommand('mceTableProps');
@@ -37,7 +37,7 @@ describe('browser.tinymce.plugins.table.TableAppearanceTest', () => {
 
   it('TBA: test that settings for appearance can be enabled', async () => {
     const editor = hook.editor();
-    editor.settings.table_appearance_options = true;
+    editor.options.set('table_appearance_options', true);
     editor.setContent(tableHtml);
     TinySelections.select(editor, 'table td', [ 0 ]);
     editor.execCommand('mceTableProps');
