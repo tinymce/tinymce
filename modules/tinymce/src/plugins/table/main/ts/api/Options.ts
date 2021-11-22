@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -69,12 +69,12 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('table_border_widths', {
-    processor: 'array',
+    processor: 'object[]',
     default: defaultCellBorderWidths
   });
 
   registerOption('table_border_styles', {
-    processor: 'array',
+    processor: 'object[]',
     default: defaultCellBorderStyles
   });
 
@@ -130,17 +130,17 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('table_cell_class_list', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
   registerOption('table_row_class_list', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
   registerOption('table_class_list', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
@@ -171,24 +171,16 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('table_clone_elements', {
-    processor: (value) => {
-      if (Type.isString(value)) {
-        return { value: value.split(/[ ,]/), valid: true };
-      } else if (Type.isArrayOf(value, Type.isString)) {
-        return { value, valid: true };
-      } else {
-        return { valid: false, message: 'Must be a string or an array of strings.' };
-      }
-    }
+    processor: 'string[]'
   });
 
   registerOption('table_background_color_map', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
   registerOption('table_border_color_map', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 };

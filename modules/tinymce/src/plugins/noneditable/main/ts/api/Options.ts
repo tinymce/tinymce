@@ -16,6 +16,8 @@ const option: {
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
+const isRegExp = (x: unknown): x is RegExp => Type.is(x, RegExp);
+
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
@@ -31,9 +33,9 @@ const register = (editor: Editor): void => {
 
   registerOption('noneditable_regexp', {
     processor: (value) => {
-      if (Type.isArray(value)) {
+      if (Type.isArrayOf(value, isRegExp)) {
         return { value, valid: true };
-      } else if (value?.constructor === RegExp) {
+      } else if (isRegExp(value)) {
         return { value: [ value ], valid: true };
       } else {
         return { valid: false, message: 'Must be a RegExp or an array of RegExp.' };

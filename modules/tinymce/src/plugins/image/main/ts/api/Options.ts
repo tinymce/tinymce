@@ -44,7 +44,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('image_class_list', {
-    processor: 'array'
+    processor: 'object[]'
   });
 
   registerOption('image_description', {
