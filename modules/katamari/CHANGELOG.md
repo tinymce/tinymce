@@ -11,12 +11,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Swapped `Optional` to be a class, instead of an object with function fields.
-- Removed usage of polyfill promises in favor of native promises.
 
 ### Improved
 - `Optional` objects should now be faster to construct and work with.
 - The `Result` and `Optional` APIs are now thoroughly documented.
 - Added private `.tag` and `.value` properties to `Result`, to make them friendlier to view in the debugger or console.
+
+### Removed
+- Removed usage of polyfill promises in favor of native promises.
 
 ## 8.1.0 - 2021-10-11
 

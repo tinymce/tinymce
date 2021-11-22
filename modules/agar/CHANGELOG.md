@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+
+### Removed
 - Removed usage of polyfill promises in favor of native promises.
 
 ## 6.0.0 - 2021-08-26

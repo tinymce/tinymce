@@ -204,7 +204,6 @@ const publicApi = {
   },
 
   util: {
-    Promise,
     Delay,
     Tools,
     VK,

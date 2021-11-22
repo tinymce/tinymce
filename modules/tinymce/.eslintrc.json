@@ -1,7 +1,6 @@
 {
   "plugins":[ "notice" ],
   "rules": {
-    "@tinymce/no-unimported-promise": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off"
   },
   "overrides": [
