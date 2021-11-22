@@ -18,7 +18,7 @@ const typeOf = (x: any): string => {
   const t = typeof x;
   if (x === null) {
     return 'null';
-  } else if (t === 'object' && hasProto(x, Array, (o, proto) => proto.isPrototypeOf(o))) {
+  } else if (t === 'object' && Array.isArray(x)) {
     return 'array';
   } else if (t === 'object' && hasProto(x, String, (o, proto) => proto.isPrototypeOf(o))) {
     return 'string';
