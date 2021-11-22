@@ -34,7 +34,7 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
 
   it('TBA: only after setting set to true', async () => {
     const editor = hook.editor();
-    editor.settings.link_context_toolbar = true;
+    editor.options.set('link_context_toolbar', true);
     editor.setContent('<a href="http://www.google.com">google</a>');
     Mouse.trueClickOn(TinyDom.body(editor), 'a');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Link"]');
@@ -45,7 +45,7 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
 
   it('TBA: shows relative link urls', async () => {
     const editor = hook.editor();
-    editor.settings.link_context_toolbar = true;
+    editor.options.set('link_context_toolbar', true);
     editor.setContent('<a href="#heading-1">heading</a>');
     Mouse.trueClickOn(TinyDom.body(editor), 'a');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Link"]');
@@ -54,7 +54,7 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
 
   it('TBA: works with non text elements (e.g. images)', async () => {
     const editor = hook.editor();
-    editor.settings.link_context_toolbar = true;
+    editor.options.set('link_context_toolbar', true);
     editor.setContent('<a href="http://www.google.com/"><img src="image.jpg"></a>');
     Mouse.trueClickOn(TinyDom.body(editor), 'a');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Link"]');
