@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 
 import { indentListSelection, outdentListSelection } from '../actions/Indendation';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Delete from './Delete';
 
 const setupTabKey = (editor: Editor): void => {
@@ -28,7 +28,7 @@ const setupTabKey = (editor: Editor): void => {
 };
 
 const setup = (editor: Editor): void => {
-  if (Settings.shouldIndentOnTab(editor)) {
+  if (Options.shouldIndentOnTab(editor)) {
     setupTabKey(editor);
   }
 

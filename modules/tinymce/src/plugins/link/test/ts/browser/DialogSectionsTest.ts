@@ -10,7 +10,7 @@ import Plugin from 'tinymce/plugins/link/Plugin';
 import { TestLinkUi } from '../module/TestLinkUi';
 
 interface TestSection {
-  readonly setting: { key: string; value: Optional<any> };
+  readonly option: { key: string; value: Optional<any> };
   readonly selector: string;
   readonly exists: boolean;
 }
@@ -33,7 +33,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
   const getStr = (sections: TestSection[]) => {
     const r = {};
     Arr.each(sections, (section) => {
-      r[section.setting.key] = section.setting.value.getOr('{ default }');
+      r[section.option.key] = section.option.value.getOr('{ default }');
     });
     return JSON.stringify(r, null, 2);
   };
@@ -45,13 +45,13 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
     it('Settings: ' + getStr(sections), async () => {
       const editor = hook.editor();
 
-      Arr.each(sections, ({ setting }) => {
-        setting.value.fold(
+      Arr.each(sections, ({ option }) => {
+        option.value.fold(
           () => {
-            delete editor.settings[setting.key];
+            editor.options.unset(option.key);
           },
           (v) => {
-            editor.settings[setting.key] = v;
+            editor.options.set(option.key, v);
           }
         );
       });
@@ -75,7 +75,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
   const checkTargetSection = (exists: boolean, value: Optional<boolean>) => {
     checkSections([
       {
-        setting: { key: 'target_list', value },
+        option: { key: 'target_list', value },
         selector: 'label:contains("Open link in...")',
         exists
       }
@@ -85,7 +85,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
   const checkTitleSection = (exists: boolean, value: Optional<boolean>) => {
     checkSections([
       {
-        setting: { key: 'link_title', value },
+        option: { key: 'link_title', value },
         selector: 'label:contains("Title")',
         exists
       }
@@ -95,7 +95,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
   const checkRelSection = (exists: boolean, value: Optional<Array<{ value: string; title: string }>>) => {
     checkSections([
       {
-        setting: { key: 'rel_list', value },
+        option: { key: 'rel_list', value },
         selector: 'label:contains("Rel")',
         exists
       }
@@ -105,7 +105,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
   const checkClassSection = (exists: boolean, value: Optional<Array<{ value: string; title: string }>>) => {
     checkSections([
       {
-        setting: { key: 'link_class_list', value },
+        option: { key: 'link_class_list', value },
         selector: 'label:contains("Class")',
         exists
       }
@@ -115,7 +115,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
   const checkLinkListSection = (exists: boolean, value: Optional<Array<{ value: string; title: string }>>) => {
     checkSections([
       {
-        setting: { key: 'link_list', value },
+        option: { key: 'link_list', value },
         selector: 'label:contains("Link list")',
         exists
       }
