@@ -35,9 +35,9 @@ def runBrowserTests(name, browser, os, bucket, buckets, runAll) {
   runTests(name, bedrockCommand, runAll);
 }
 
-def runPhantomTests(runAll) {
-  def bedrockCommand = "yarn grunt phantomjs-auto";
-  runTests("PhantomJS", bedrockCommand, runAll);
+def runHeadlessTests(runAll) {
+  def bedrockCommand = "yarn grunt headless-auto";
+  runTests("chrome-headless", bedrockCommand, runAll);
 }
 
 standardProperties()
@@ -49,7 +49,7 @@ def gitMerge(String primaryBranch) {
   }
 }
 
-node("primary") {
+node("headless-macos") {
   timestamps {
     checkout scm
 
@@ -116,13 +116,13 @@ node("primary") {
       }
     }
 
-    processes["phantom-and-archive"] = {
-      stage ("PhantomJS") {
-        // PhantomJS is a browser, but runs on the same node as the pipeline
+    processes["headless-and-archive"] = {
+      stage ("headless tests") {
+        // chrome-headless tests run on the same node as the pipeline
         // we are re-using the state prepared by `ci-all` below
         // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
-        echo "Platform: PhantomJS tests on node: $NODE_NAME"
-        runPhantomTests(runAllTests)
+        echo "Platform: chrome-headless tests on node: $NODE_NAME"
+        runHeadlessTests(runAllTests)
       }
 
       if (BRANCH_NAME != primaryBranch) {
@@ -149,7 +149,7 @@ node("primary") {
     }
 
     stage ("Run Tests") {
-      grunt("list-changed-phantom list-changed-browser")
+      grunt("list-changed-headless list-changed-browser")
       // Run all the tests in parallel
       parallel processes
     }

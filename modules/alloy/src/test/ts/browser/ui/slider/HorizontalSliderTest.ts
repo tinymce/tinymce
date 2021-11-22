@@ -1,4 +1,4 @@
-import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, PhantomSkipper, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -11,11 +11,6 @@ import { Slider } from 'ephox/alloy/api/ui/Slider';
 
 UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, failure) => {
 
-  // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
-  // viewed as an invalid value.
-  if (PhantomSkipper.detect()) {
-    return success();
-  }
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
     Slider.sketch({
       dom: {
@@ -117,11 +112,11 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
 
     const cCheckValue = (expected: number) => Chain.op((parts: any) => {
       const v = Representing.getValue(parts.sliderComp);
-      Assert.eq('Checking slider value', expected, v.x());
+      Assert.eq('Checking slider value', expected, v.x);
     });
 
     const sAssertValue = (label: string, expected: number) => Logger.t(label, Step.sync(() => {
-      Assert.eq(label, expected, Representing.getValue(component).x());
+      Assert.eq(label, expected, Representing.getValue(component).x);
     }));
 
     return [

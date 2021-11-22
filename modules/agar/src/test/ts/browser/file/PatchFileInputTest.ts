@@ -36,7 +36,7 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
     Assert.eq('Should be expected file size', 1, files[0].size);
   };
 
-  Pipeline.async({}, /phantom/i.test(navigator.userAgent) ? [] : [
+  Pipeline.async({}, [
     Logger.t('Patch file input step', GeneralSteps.sequence([
       sRunOnPatchedFileInput(files, sPickFiles),
       Step.sync(() => {

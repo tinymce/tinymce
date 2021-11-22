@@ -1,4 +1,4 @@
-import { Mouse, PhantomSkipper } from '@ephox/agar';
+import { Mouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Scroll, SugarElement, Traverse } from '@ephox/sugar';
@@ -105,19 +105,12 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     selectBesideContentEditable(editor, noneditableDiv, 'before', 2);
   });
 
-  it('offscreen copy of cE=false block remains offscreen', function () {
-    // Chrome and Safari behave correctly, and PhantomJS also declares itself as WebKit but does not
-    // put the off-screen selection off-screen, so fails the above tests. However, it has no visible UI,
-    // so everything is off-screen anyway :-)
-    if (PhantomSkipper.detect()) {
-      this.skip();
-    }
-
+  it('offscreen copy of cE=false block remains offscreen', () => {
     const editor = hook.editor();
     editor.setContent(
       '<table contenteditable="false" style="width: 100%; table-layout: fixed">' +
-      '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
-      '</table>'
+        '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
+        '</table>'
     );
 
     editor.selection.select(editor.dom.select('table')[0]);
@@ -127,8 +120,8 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     assert.isBelow(offscreenSelection.offsetLeft, 0, `The offscreen selection's left border is onscreen`);
     assert.isBelow(offscreenSelection.offsetWidth + offscreenSelection.offsetLeft, 0,
       'The cE=false offscreen selection is visible on-screen. Right edge: ' +
-      offscreenSelection.offsetLeft + '+' + offscreenSelection.offsetWidth + '=' +
-      (offscreenSelection.offsetLeft + offscreenSelection.offsetWidth) + 'px'
+        offscreenSelection.offsetLeft + '+' + offscreenSelection.offsetWidth + '=' +
+        (offscreenSelection.offsetLeft + offscreenSelection.offsetWidth) + 'px'
     );
   });
 
