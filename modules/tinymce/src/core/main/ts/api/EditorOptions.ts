@@ -131,6 +131,17 @@ export interface Options {
   isSet: (name: string) => boolean;
 }
 
+// A string array allows comma/space separated values as well for ease of use
+const stringListProcessor: Processor<string[]> = (value: unknown) => {
+  if (Type.isString(value)) {
+    return { value: value.split(/[ ,]/), valid: true };
+  } else if (Type.isArrayOf(value, Type.isString)) {
+    return { value, valid: true };
+  } else {
+    return { valid: false, message: `The value must be a string[] or a comma/space separated string.` };
+  }
+};
+
 const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<BuiltInOptionTypeMap[K]> => {
   const validator = (() => {
     switch (type) {
@@ -147,22 +158,15 @@ const getBuiltInProcessor = <K extends BuiltInOptionType>(type: K): Processor<Bu
       case 'string':
         return Type.isString;
       case 'string[]':
-        return (val) => Type.isArrayOf(val, Type.isString);
+        return stringListProcessor;
       case 'object[]':
         return (val) => Type.isArrayOf(val, Type.isObject);
       case 'regexp':
         return (val) => Type.is(val, RegExp);
     }
-  })() as (val: unknown) => val is BuiltInOptionTypeMap[K];
+  })() as SimpleProcessor | Processor<BuiltInOptionTypeMap[K]>;
 
-  return (value) => {
-    const valid = validator(value);
-    if (valid) {
-      return { value, valid };
-    } else {
-      return { valid: false, message: `The value must be a ${type}.` };
-    }
-  };
+  return (value) => processValue(value, validator, `The value must be a ${type}.`);
 };
 
 const isBuiltInSpec = <K extends BuiltInOptionType>(spec: unknown): spec is BuiltInOptionSpec<K> =>
@@ -176,11 +180,11 @@ const getErrorMessage = (message: string, result: ProcessorError): string => {
 const isValidResult = <T>(result: ProcessorSuccess<T> | ProcessorError): result is ProcessorSuccess<T> =>
   result.valid;
 
-const processValue = <T, U>(value: T, processor: SimpleProcessor | Processor<U>): ProcessorSuccess<U> | ProcessorError => {
+const processValue = <T, U>(value: T, processor: SimpleProcessor | Processor<U>, message: string = ''): ProcessorSuccess<U> | ProcessorError => {
   const result = processor(value);
   if (Type.isBoolean(result)) {
     // Note: Need to cast here as if a boolean is returned then we're guaranteed to be returning the same value
-    return result ? { value: value as unknown as U, valid: true } : { valid: false, message: '' };
+    return result ? { value: value as unknown as U, valid: true } : { valid: false, message };
   } else {
     return result;
   }

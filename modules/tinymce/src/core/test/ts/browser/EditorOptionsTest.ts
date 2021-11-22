@@ -134,7 +134,7 @@ describe('browser.tinymce.core.EditorOptionsTest', () => {
       function: Fun.noop,
       object: obj,
       objectArray: objArray,
-      regexp: regexp
+      regexp
     });
 
     options.register('string', { processor: 'string' });

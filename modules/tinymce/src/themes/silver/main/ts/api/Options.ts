@@ -100,6 +100,44 @@ const register = (editor: Editor): void => {
     default: '1 1.1 1.2 1.3 1.4 1.5 2'
   });
 
+  registerOption('font_formats', {
+    processor: 'string',
+    default: 'Andale Mono=andale mono,monospace;' +
+      'Arial=arial,helvetica,sans-serif;' +
+      'Arial Black=arial black,sans-serif;' +
+      'Book Antiqua=book antiqua,palatino,serif;' +
+      'Comic Sans MS=comic sans ms,sans-serif;' +
+      'Courier New=courier new,courier,monospace;' +
+      'Georgia=georgia,palatino,serif;' +
+      'Helvetica=helvetica,arial,sans-serif;' +
+      'Impact=impact,sans-serif;' +
+      'Symbol=symbol;' +
+      'Tahoma=tahoma,arial,helvetica,sans-serif;' +
+      'Terminal=terminal,monaco,monospace;' +
+      'Times New Roman=times new roman,times,serif;' +
+      'Trebuchet MS=trebuchet ms,geneva,sans-serif;' +
+      'Verdana=verdana,geneva,sans-serif;' +
+      'Webdings=webdings;' +
+      'Wingdings=wingdings,zapf dingbats'
+  });
+
+  registerOption('fontsize_formats', {
+    processor: 'string',
+    default: '8pt 10pt 12pt 14pt 18pt 24pt 36pt'
+  });
+
+  registerOption('block_formats', {
+    processor: 'string',
+    default: 'Paragraph=p;' +
+      'Heading 1=h1;' +
+      'Heading 2=h2;' +
+      'Heading 3=h3;' +
+      'Heading 4=h4;' +
+      'Heading 5=h5;' +
+      'Heading 6=h6;' +
+      'Preformatted=pre'
+  });
+
   registerOption('content_langs', {
     processor: 'object[]'
   });
