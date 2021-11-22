@@ -10,7 +10,7 @@ import { Arr, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { readImageDataFromSelection } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import * as Utils from '../core/Utils';
@@ -32,19 +32,19 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
     });
   });
 
-  const classList = ListUtils.sanitize(Settings.getClassList(editor));
-  const hasAdvTab = Settings.hasAdvTab(editor);
-  const hasUploadTab = Settings.hasUploadTab(editor);
-  const hasUploadUrl = Settings.hasUploadUrl(editor);
-  const hasUploadHandler = Settings.hasUploadHandler(editor);
+  const classList = ListUtils.sanitize(Options.getClassList(editor));
+  const hasAdvTab = Options.hasAdvTab(editor);
+  const hasUploadTab = Options.hasUploadTab(editor);
+  const hasUploadUrl = Options.hasUploadUrl(editor);
+  const hasUploadHandler = Options.hasUploadHandler(editor);
   const image = readImageDataFromSelection(editor);
-  const hasDescription = Settings.hasDescription(editor);
-  const hasImageTitle = Settings.hasImageTitle(editor);
-  const hasDimensions = Settings.hasDimensions(editor);
-  const hasImageCaption = Settings.hasImageCaption(editor);
-  const hasAccessibilityOptions = Settings.showAccessibilityOptions(editor);
-  const automaticUploads = Settings.isAutomaticUploadsEnabled(editor);
-  const prependURL: Optional<string> = Optional.some(Settings.getPrependUrl(editor)).filter(
+  const hasDescription = Options.hasDescription(editor);
+  const hasImageTitle = Options.hasImageTitle(editor);
+  const hasDimensions = Options.hasDimensions(editor);
+  const hasImageCaption = Options.hasImageCaption(editor);
+  const hasAccessibilityOptions = Options.showAccessibilityOptions(editor);
+  const automaticUploads = Options.isAutomaticUploadsEnabled(editor);
+  const prependURL: Optional<string> = Optional.some(Options.getPrependUrl(editor)).filter(
     (preUrl) => Type.isString(preUrl) && preUrl.length > 0);
 
   return futureImageList.then((imageList): ImageDialogInfo => ({

@@ -15,10 +15,10 @@ describe('browser.tinymce.plugins.image.ImageListTest', () => {
 
   it('TBA: click image list, check that source changes, change source and check that image list changes', async () => {
     const editor = hook.editor();
-    editor.settings.image_list = [
+    editor.options.set('image_list', [
       { title: 'Dog', value: 'mydog.jpg' },
       { title: 'Cat', value: 'mycat.jpg' }
-    ];
+    ]);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     await pSetListBoxItem(generalTabSelectors.images, 'Dog');
