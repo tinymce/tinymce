@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { countNumber, extractOnlyOne } from '../../../module/UiUtils';
 
-describe('browser.tinymce.themes.silver.editor.toolbar.EditorToolbarSettingsTest', () => {
+describe('browser.tinymce.themes.silver.editor.toolbar.EditorToolbarOptionsTest', () => {
 
   const pCreateEditorWithToolbar = (
     toolbarVal: boolean | string | string[] | Record<string, any> | undefined,
@@ -417,10 +417,10 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorToolbarSettingsTest
     McEditor.remove(editor);
   });
 
-  it('TBA: invalid toolbar type should not create a toolbar at all', async () => {
+  it('TBA: invalid toolbar type should fallback to the default toolbar', async () => {
     const editor = await pCreateEditorWithToolbar(1 as any);
-    const numToolbars = countNumber(SugarBody.body(), '.tox-toolbar');
-    assert.equal(numToolbars, 0, 'Should be no toolbars');
+    const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    assertIsDefaultToolbar(toolbar);
     McEditor.remove(editor);
   });
 

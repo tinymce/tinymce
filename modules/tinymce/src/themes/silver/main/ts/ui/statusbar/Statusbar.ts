@@ -10,6 +10,7 @@ import { SimpleSpec } from '@ephox/alloy';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 
+import * as Options from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ElementPath from './ElementPath';
 import * as ResizeHandler from './ResizeHandle';
@@ -32,7 +33,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
   const getTextComponents = (): SimpleSpec[] => {
     const components: SimpleSpec[] = [];
 
-    if (editor.getParam('elementpath', true, 'boolean')) {
+    if (Options.useElementPath(editor)) {
       components.push(ElementPath.renderElementPath(editor, { }, providersBackstage));
     }
 
@@ -40,7 +41,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
       components.push(renderWordCount(editor, providersBackstage));
     }
 
-    if (editor.getParam('branding', true, 'boolean')) {
+    if (Options.useBranding(editor)) {
       components.push(renderBranding());
     }
 

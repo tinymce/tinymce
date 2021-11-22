@@ -99,7 +99,7 @@ class Editor implements EditorObservable {
    * @type Object
    * @example
    * // Get the value of the theme setting
-   * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.settings.theme + " theme");
+   * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.options.get('theme') + " theme");
    */
   public settings: NormalizedEditorOptions;
 

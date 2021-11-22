@@ -26,7 +26,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloati
     });
   };
 
-  const pWithEditor = async (settings: RawEditorOptions, pRunTests: (editor: Editor) => Promise<void>) => {
+  const pWithEditor = async (options: RawEditorOptions, pRunTests: (editor: Editor) => Promise<void>) => {
     const editor = await McEditor.pFromSettings<Editor>({
       theme: 'silver',
       inline: true,
@@ -35,7 +35,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloati
       base_url: '/project/tinymce/js/tinymce',
       toolbar: 'undo redo | styleselect | bold italic underline | strikethrough superscript subscript | alignleft aligncenter alignright aligncenter | outdent indent | cut copy paste | selectall remove',
       toolbar_mode: 'floating',
-      ...settings
+      ...options
     });
     const uiContainer = TinyDom.container(editor);
     Css.set(uiContainer, 'margin-left', '100px');

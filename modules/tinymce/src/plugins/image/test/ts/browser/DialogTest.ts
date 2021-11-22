@@ -64,7 +64,7 @@ describe('browser.tinymce.plugins.image.DialogTest', () => {
 
   it('TBA: Insert Image Dialog with all options', async () => {
     const editor = hook.editor();
-    editor.settings.file_picker_callback = Fun.noop;
+    editor.options.set('file_picker_callback', Fun.noop);
     editor.options.set('image_advtab', true);
     editor.options.set('image_class_list', [{ title: 'sample', value: 'sample' }]);
     editor.options.set('image_list', [{ title: 'sample', value: 'sample' }]);

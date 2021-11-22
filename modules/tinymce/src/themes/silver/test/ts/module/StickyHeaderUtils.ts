@@ -4,7 +4,7 @@ import { Css, Focus, Scroll, SugarBody, SugarDocument, SugarElement } from '@eph
 import { assert } from 'chai';
 
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import { ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarLocation } from 'tinymce/themes/silver/api/Options';
 
 const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change

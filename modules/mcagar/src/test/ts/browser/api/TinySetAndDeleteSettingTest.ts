@@ -10,7 +10,7 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
   const sAssertSetting = (editor: Editor, key: string, expected: any) => {
     return Step.sync(() => {
-      const actual = editor.settings[key];
+      const actual = editor.options ? editor.options.get(key) : editor.settings[key];
 
       return Assertions.assertEq('should have expected val at key', expected, actual);
     });
@@ -18,13 +18,16 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
   const sAssertSettingType = (editor: Editor, key: string, expected: any) => {
     return Step.sync(() => {
-      const actual = typeof editor.settings[key];
+      const actual = editor.options ? editor.options.get(key) : editor.settings[key];
 
-      return Assertions.assertEq('should have expected type', expected, actual);
+      return Assertions.assertEq('should have expected type', expected, typeof actual);
     });
   };
 
   TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
+    if (editor.options) {
+      editor.options.register('a', { processor: Fun.always });
+    }
     const apis = TinyApis(editor);
 
     Pipeline.async({}, [

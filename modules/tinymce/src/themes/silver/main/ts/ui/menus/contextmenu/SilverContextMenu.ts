@@ -15,9 +15,9 @@ import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { AnchorType } from './Coords';
+import * as Options from './Options';
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';
-import * as Settings from './Settings';
 
 type MenuItem = string | Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.SeparatorMenuItemSpec;
 
@@ -106,7 +106,7 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
   return sections;
 };
 
-const isNativeOverrideKeyEvent = (editor: Editor, e: PointerEvent) => e.ctrlKey && !Settings.shouldNeverUseNative(editor);
+const isNativeOverrideKeyEvent = (editor: Editor, e: PointerEvent) => e.ctrlKey && !Options.shouldNeverUseNative(editor);
 
 export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
   // Different browsers trigger the context menu from keyboards differently, so need to check various different things here.
@@ -121,7 +121,7 @@ const getSelectedElement = (editor: Editor, e: PointerEvent) =>
   isTriggeredByKeyboard(editor, e) ? editor.selection.getStart(true) : e.target as Element;
 
 const getAnchorType = (editor: Editor, e: PointerEvent): AnchorType => {
-  const selector = Settings.getAvoidOverlapSelector(editor);
+  const selector = Options.getAvoidOverlapSelector(editor);
   const anchorType = isTriggeredByKeyboard(editor, e) ? 'selection' : 'point';
   if (Strings.isNotEmpty(selector)) {
     const target = getSelectedElement(editor, e);
@@ -161,11 +161,11 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
 
   const showContextMenu = (e) => {
     // Prevent the default if we should never use native
-    if (Settings.shouldNeverUseNative(editor)) {
+    if (Options.shouldNeverUseNative(editor)) {
       e.preventDefault();
     }
 
-    if (isNativeOverrideKeyEvent(editor, e) || Settings.isContextMenuDisabled(editor)) {
+    if (isNativeOverrideKeyEvent(editor, e) || Options.isContextMenuDisabled(editor)) {
       return;
     }
 
@@ -176,7 +176,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       const selectedElement = getSelectedElement(editor, e);
 
       const registry = editor.ui.registry.getAll();
-      const menuConfig = Settings.getContextMenu(editor);
+      const menuConfig = Options.getContextMenu(editor);
       return generateContextMenu(registry.contextMenus, menuConfig, selectedElement);
     };
 

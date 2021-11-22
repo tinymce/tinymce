@@ -5,7 +5,7 @@ import { SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 export interface OpenNestedMenus {
   readonly label: string;

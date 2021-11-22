@@ -417,7 +417,7 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
       body.style.position = 'relative';
     }
 
-    body.contentEditable = editor.getParam('content_editable_state', true);
+    body.contentEditable = '' + Options.getContentEditableState(editor);
   }
 
   (body as any).disabled = false;
