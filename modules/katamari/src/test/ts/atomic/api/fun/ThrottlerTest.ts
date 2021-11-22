@@ -35,7 +35,7 @@ describe('atomic.katamari.api.fun.ThrottlerTest', () => {
       if (value === 'retry') {
         throttler.throttle('retried');
       }
-    }, 100);
+    }, 75);
 
     throttler.throttle('retry');
 

@@ -11,7 +11,7 @@
     "prepublishOnly": "yarn run lint && yarn run build",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "build": "tsc -b",
-    "test": "bedrock-auto -b phantomjs --customRoutes src/test/json/routes.json -d src/test/ts/",
+    "test": "bedrock-auto -b chrome-headless --customRoutes src/test/json/routes.json -d src/test/ts/",
     "test-manual": "bedrock --customRoutes src/test/json/routes.json -d src/test/ts/",
     "start": "webpack-dev-server --open-page './src/demo/html'",
     "build:demo": "webpack"

@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, PhantomSkipper } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, Mouse } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
@@ -70,13 +70,10 @@ describe('browser.tinymce.themes.silver.skin.OxideGridCollectionMenuTest', () =>
       menu
     );
 
-    // Without layout, the flatgrid cannot be calculated on phantom
-    if (!PhantomSkipper.detect()) {
-      await FocusTools.pTryOnSelector('Focus should be on 1', doc, '.tox-collection__item[title="1"]');
-      TinyUiActions.keydown(editor, Keys.right());
-      await FocusTools.pTryOnSelector('Focus should be on 2', doc, '.tox-collection__item[title="2"]');
-      TinyUiActions.keydown(editor, Keys.right());
-      await FocusTools.pTryOnSelector('Focus should be on 3', doc, '.tox-collection__item[title="3"]');
-    }
+    await FocusTools.pTryOnSelector('Focus should be on 1', doc, '.tox-collection__item[title="1"]');
+    TinyUiActions.keydown(editor, Keys.right());
+    await FocusTools.pTryOnSelector('Focus should be on 2', doc, '.tox-collection__item[title="2"]');
+    TinyUiActions.keydown(editor, Keys.right());
+    await FocusTools.pTryOnSelector('Focus should be on 3', doc, '.tox-collection__item[title="3"]');
   });
 });

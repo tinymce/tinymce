@@ -1,4 +1,4 @@
-import { Assertions, Cursors, PhantomSkipper, Waiter } from '@ephox/agar';
+import { Assertions, Cursors, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -21,8 +21,6 @@ interface StateAndHandler {
 }
 
 describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
-  // Only run scrolling tests on real browsers doesn't seem to work on phantomjs for some reason
-  PhantomSkipper.bddSetup();
   const hook = TinyHooks.bddSetup<Editor>({
     add_unload_trigger: false,
     height: 500,
