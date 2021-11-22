@@ -10,7 +10,7 @@ import { Optional } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Utils from '../core/Utils';
 import { LinkDialogInfo } from './DialogTypes';
 import { AnchorListOptions } from './sections/AnchorListOptions';
@@ -59,7 +59,7 @@ const collect = (editor: Editor, linkNode: HTMLAnchorElement): Promise<LinkDialo
       },
       optNode: Optional.from(linkNode),
       flags: {
-        titleEnabled: Settings.shouldShowLinkTitle(editor)
+        titleEnabled: Options.shouldShowLinkTitle(editor)
       }
     };
   });

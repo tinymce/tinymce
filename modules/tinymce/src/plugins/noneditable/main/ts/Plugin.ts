@@ -7,10 +7,12 @@
 
 import PluginManager from 'tinymce/core/api/PluginManager';
 
+import * as Options from './api/Options';
 import * as FilterContent from './core/FilterContent';
 
 export default (): void => {
   PluginManager.add('noneditable', (editor) => {
+    Options.register(editor);
     FilterContent.setup(editor);
   });
 };

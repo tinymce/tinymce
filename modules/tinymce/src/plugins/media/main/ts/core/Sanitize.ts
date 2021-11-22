@@ -10,10 +10,10 @@ import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Writer from 'tinymce/core/api/html/Writer';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const sanitize = (editor: Editor, html: string): string => {
-  if (Settings.shouldFilterHtml(editor) === false) {
+  if (!Options.shouldFilterHtml(editor)) {
     return html;
   }
 
