@@ -227,7 +227,7 @@ const register = (editor: Editor): void => {
 
   registerOption('resize', {
     processor: (value) => value === 'both' || Type.isBoolean(value),
-    // If autoresize is enabled, disable resize
+    // TODO: TINY-8288 - This should be set to `true` once the issue with the theme rendering too early is resolved
     default: !editor.hasPlugin('autoresize')
   });
 };
