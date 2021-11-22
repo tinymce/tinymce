@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const setup = (editor: Editor): void => {
   editor.editorManager.on('BeforeUnload', (e) => {
@@ -22,7 +22,7 @@ const setup = (editor: Editor): void => {
       }
 
       // Setup a return message if the editor is dirty
-      if (!msg && editor.isDirty() && Settings.shouldAskBeforeUnload(editor)) {
+      if (!msg && editor.isDirty() && Options.shouldAskBeforeUnload(editor)) {
         msg = editor.translate('You have unsaved changes are you sure you want to navigate away?');
       }
     });
