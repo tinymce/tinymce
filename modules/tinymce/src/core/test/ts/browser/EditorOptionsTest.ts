@@ -122,6 +122,9 @@ describe('browser.tinymce.core.EditorOptionsTest', () => {
 
   it('TINY-8206: should work with the built-in processors', () => {
     const obj = {};
+    const objArray = [ obj ];
+    const regexp = /test/;
+
     const options = create({
       string: 'a',
       stringArray: [ 'a', 'b' ],
@@ -129,7 +132,9 @@ describe('browser.tinymce.core.EditorOptionsTest', () => {
       boolTrue: true,
       boolFalse: false,
       function: Fun.noop,
-      object: obj
+      object: obj,
+      objectArray: objArray,
+      regexp
     });
 
     options.register('string', { processor: 'string' });
@@ -139,6 +144,9 @@ describe('browser.tinymce.core.EditorOptionsTest', () => {
     options.register('boolFalse', { processor: 'boolean' });
     options.register('function', { processor: 'function' });
     options.register('object', { processor: 'object' });
+    options.register('objectArray', { processor: 'object[]' });
+    options.register('objectArray', { processor: 'object[]' });
+    options.register('regexp', { processor: 'regexp' });
 
     assert.equal(options.get('string'), 'a');
     assert.deepEqual(options.get('stringArray'), [ 'a', 'b' ]);
@@ -147,6 +155,8 @@ describe('browser.tinymce.core.EditorOptionsTest', () => {
     assert.isFalse(options.get('boolFalse'));
     assert.equal(options.get('function'), Fun.noop);
     assert.equal(options.get('object'), obj);
+    assert.equal(options.get('objectArray'), objArray);
+    assert.equal(options.get('regexp'), regexp);
   });
 
   it('TINY-8206: should work with boolean processors', () => {

@@ -66,12 +66,12 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('rel_list', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
   registerOption('link_class_list', {
-    processor: 'array',
+    processor: 'object[]',
     default: []
   });
 
