@@ -31,7 +31,7 @@ export interface UiFactoryBackstageProviders {
   menuItems: () => Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
   translate: (any) => TranslatedString;
   isDisabled: () => boolean;
-  getSetting: Editor['getParam'];
+  getOption: Editor['options']['get'];
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
@@ -70,11 +70,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         menuItems: () => editor.ui.registry.getAll().menuItems,
         translate: I18n.translate,
         isDisabled: () => editor.mode.isReadOnly() || editor.ui.isDisabled(),
-        /*
-          TODO: Remove bind when TINY-6621 is complete
-          This bind is important to ensure we don't lose reference to the editor in getParam
-        */
-        getSetting: editor.getParam.bind(editor)
+        getOption: editor.options.get
       },
       interpreter: (s) => UiFactory.interpretWithoutForm(s, backstage),
       anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),

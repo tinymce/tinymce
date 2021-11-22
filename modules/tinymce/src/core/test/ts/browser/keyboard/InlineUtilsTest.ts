@@ -39,8 +39,7 @@ describe('browser.tinymce.core.keyboard.InlineUtilsTest', () => {
     return {
       options: {
         get: (name) => settings[name] ?? 'a[href],code,.mce-annotation'
-      },
-      getParam: (name: string, defaultVal?: any, _type?: string) => settings[name] || defaultVal
+      }
     } as any;
   };
 

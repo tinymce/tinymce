@@ -6,8 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Improved
+- Updated the APIs to work with the TinyMCE 6 options API.
+
 ### Changed
 - Upgraded to Katamari 9.0, which is incompatible with Katamari 8.0 if used in the same bundle.
+
+### Deprecated
+- The `setSetting` and `deleteSetting` APIs have been deprecated and replaced with `setOption` and `unsetOption` APIs.
 
 ## 7.0.2 - 2021-09-08
 

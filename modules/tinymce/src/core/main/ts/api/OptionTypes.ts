@@ -37,7 +37,7 @@ export type FilePickerValidationCallback = (info: { type: string; url: string },
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => string;
 
-interface ToolbarGroup {
+export interface ToolbarGroup {
   name?: string;
   items: string[];
 }
@@ -70,14 +70,13 @@ interface BaseEditorOptions {
   cache_suffix?: string;
   color_cols?: number;
   color_map?: string[];
+  content_editable_state?: boolean;
   content_css?: boolean | string | string[];
   content_css_cors?: boolean;
   content_security_policy?: string;
   content_style?: string;
-  deprecation_warnings?: boolean;
-  font_css?: string | string[];
   content_langs?: ContentLanguage[];
-  contextmenu?: string | false;
+  contextmenu?: string | string[] | false;
   contextmenu_never_use_native?: boolean;
   convert_fonts_to_spans?: boolean;
   convert_urls?: boolean;
@@ -85,6 +84,7 @@ interface BaseEditorOptions {
   custom_elements?: string;
   custom_ui_selector?: string;
   custom_undo_redo_levels?: number;
+  deprecation_warnings?: boolean;
   directionality?: 'ltr' | 'rtl';
   doctype?: string;
   document_base_url?: string;
@@ -102,6 +102,7 @@ interface BaseEditorOptions {
   fix_list_elements?: boolean;
   fixed_toolbar_container?: string;
   fixed_toolbar_container_target?: HTMLElement;
+  font_css?: string | string[];
   font_formats?: string;
   font_size_classes?: string;
   font_size_legacy_values?: string;
@@ -189,6 +190,8 @@ interface BaseEditorOptions {
   toolbar8?: string;
   toolbar9?: string;
   toolbar_mode?: ToolbarMode;
+  toolbar_sticky?: boolean;
+  toolbar_sticky_offset?: number;
   typeahead_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: any;
@@ -229,6 +232,7 @@ export interface NormalizedEditorOptions extends BaseEditorOptions {
 
 export interface EditorOptions extends NormalizedEditorOptions {
   content_css: string[];
+  contextmenu: string[];
   font_css: string[];
   forced_root_block: string;
   object_resizing?: string;

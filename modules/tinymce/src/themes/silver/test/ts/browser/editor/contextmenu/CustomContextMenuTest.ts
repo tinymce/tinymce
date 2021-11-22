@@ -33,7 +33,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
 
     it('TINY-7072: Support custom context menu items with lowercase names', async () => {
       const editor = hook.editor();
-      editor.settings.contextmenu = 'customcontextmenu';
+      editor.options.set('contextmenu', 'customcontextmenu');
       editor.setContent('<p>Tiny</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'Ti'.length);
       await pOpenContextMenu(editor, 'p');
@@ -43,7 +43,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
 
     it('TINY-7072: Support custom context menu items with mixed case names', async () => {
       const editor = hook.editor();
-      editor.settings.contextmenu = 'customContextMenu';
+      editor.options.set('contextmenu', 'customcontextmenu');
       editor.setContent('<p>Tiny</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'Ti'.length);
       await pOpenContextMenu(editor, 'p');
@@ -55,7 +55,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
   context('Menu item properties', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.contextmenu = 'customcontextmenu';
+      editor.options.set('contextmenu', 'customcontextmenu');
       editor.ui.registry.addContextMenu('customContextMenu', {
         update: () => [
           {

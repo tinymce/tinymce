@@ -11,7 +11,7 @@ import { Css, Height, SugarElement, SugarPosition, Width } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../../api/Events';
-import { getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
+import * as Options from '../../api/Options';
 import * as Utils from './Utils';
 
 interface EditorDimensions {
@@ -26,10 +26,10 @@ export enum ResizeTypes {
 export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalHeight: number, originalWidth: number) => {
   const dimensions: EditorDimensions = {};
 
-  dimensions.height = Utils.calcCappedSize(originalHeight + deltas.top, getMinHeightSetting(editor), getMaxHeightSetting(editor));
+  dimensions.height = Utils.calcCappedSize(originalHeight + deltas.top, Options.getMinHeightOption(editor), Options.getMaxHeightOption(editor));
 
   if (resizeType === ResizeTypes.Both) {
-    dimensions.width = Utils.calcCappedSize(originalWidth + deltas.left, getMinWidthSetting(editor), getMaxWidthSetting(editor));
+    dimensions.width = Utils.calcCappedSize(originalWidth + deltas.left, Options.getMinWidthOption(editor), Options.getMaxWidthOption(editor));
   }
 
   return dimensions;

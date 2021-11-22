@@ -4,13 +4,14 @@ import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 import { extractOnlyOne } from '../../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', () => {
 
-  const defaultToolbarGroupSettings = {
+  const defaultToolbarGroupOptions = {
     toolbar: 'formatting',
     toolbar_groups: {
       formatting: {
@@ -43,20 +44,20 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
     ]
   }));
 
-  const pTestWithEditor = async (settings: Record<string, any>, pDoTest: () => Promise<void>) => {
+  const pTestWithEditor = async (options: RawEditorOptions, pDoTest: () => Promise<void>) => {
     const editor = await McEditor.pFromSettings<Editor>({
       theme: 'silver',
       base_url: '/project/tinymce/js/tinymce',
       toolbar_mode: 'floating',
-      ...settings
+      ...options
     });
     await UiFinder.pWaitForVisible('Waiting for menubar', SugarBody.body(), '.tox-menubar');
     await pDoTest();
     McEditor.remove(editor);
   };
 
-  const testToolbarGroup = (settings: Record<string, any>, buttonSelector: string, toolbarSelector: string, expectedStruct: StructAssert) => () =>
-    pTestWithEditor(settings, async () => {
+  const testToolbarGroup = (options: RawEditorOptions, buttonSelector: string, toolbarSelector: string, expectedStruct: StructAssert) => () =>
+    pTestWithEditor(options, async () => {
       Mouse.clickOn(SugarBody.body(), buttonSelector);
       await UiFinder.pWaitForVisible('Wait for toolbar to appear', SugarBody.body(), toolbarSelector);
       const toolbarGroup = extractOnlyOne(SugarBody.body(), toolbarSelector);
@@ -68,7 +69,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
     });
 
   it('TINY-4229: Register floating group toolbar button via editor settings', testToolbarGroup(
-    defaultToolbarGroupSettings,
+    defaultToolbarGroupOptions,
     'button[title="Formatting"]',
     '.tox-toolbar__overflow',
     defaultToolbarGroupStruct
@@ -112,7 +113,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
 
   it('TINY-4616: Group toolbars are ignored when using wrap toolbar mode', () =>
     pTestWithEditor({
-      ...defaultToolbarGroupSettings,
+      ...defaultToolbarGroupOptions,
       toolbar: 'formatting | underline',
       toolbar_mode: 'wrap'
     }, () => {

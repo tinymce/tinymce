@@ -89,7 +89,8 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 
   const docEle = doc.documentElement;
   const resizeBottomMargin = Options.getAutoResizeBottomMargin(editor);
-  let resizeHeight = Options.getAutoResizeMinHeight(editor);
+  const minHeight = Options.getMinHeight(editor) ?? editor.getElement().offsetHeight;
+  let resizeHeight = minHeight;
 
   // Calculate outer height of the doc element using CSS styles
   const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
@@ -109,12 +110,12 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   const chromeHeight = containerHeight - contentAreaHeight;
 
   // Don't make it smaller than the minimum height
-  if (contentHeight + chromeHeight > Options.getAutoResizeMinHeight(editor)) {
+  if (contentHeight + chromeHeight > minHeight) {
     resizeHeight = contentHeight + chromeHeight;
   }
 
   // If a maximum height has been defined don't exceed this height
-  const maxHeight = Options.getAutoResizeMaxHeight(editor);
+  const maxHeight = Options.getMaxHeight(editor);
   if (maxHeight && resizeHeight > maxHeight) {
     resizeHeight = maxHeight;
     toggleScrolling(editor, true);

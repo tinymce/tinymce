@@ -68,14 +68,8 @@ const getSelectorFilter = option<SelectorFilter>('importcss_selector_filter');
 const getCssGroups = option<UserDefinedGroup[]>('importcss_groups');
 const shouldAppend = option<boolean>('importcss_append');
 const getFileFilter = option<FileFilter>('importcss_file_filter');
-
-const getSkin = (editor: Editor): string | boolean => {
-  const skin = editor.getParam('skin');
-  return skin !== false ? skin || 'oxide' : false;
-};
-
-const getSkinUrl = (editor: Editor): string | undefined =>
-  editor.getParam('skin_url');
+const getSkin = option('skin');
+const getSkinUrl = option('skin_url');
 
 export {
   register,

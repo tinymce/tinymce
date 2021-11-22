@@ -10,7 +10,7 @@ import { FieldSchema, StructureSchema } from '@ephox/boulder';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from './api/Settings';
+import * as Options from './api/Options';
 import { RenderUiComponents } from './Render';
 
 export const ReadOnlyChannel = 'silver.readonly';
@@ -46,7 +46,7 @@ const setupReadonlyModeSwitch = (editor: Editor, uiComponents: RenderUiComponent
 
   editor.on('SwitchMode', () => broadcastReadonly(uiComponents, editor.mode.isReadOnly()));
 
-  if (Settings.isReadOnly(editor)) {
+  if (Options.isReadOnly(editor)) {
     editor.mode.set('readonly');
   }
 };
