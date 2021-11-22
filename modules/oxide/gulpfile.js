@@ -77,6 +77,7 @@ gulp.task('buildSkinSwitcher', (done) => {
 gulp.task('less', function() {
   return gulp.src('./src/less/skins/**/*.less')
     .pipe(less({
+      math: 'always',
       relativeUrls: true,
       plugins: [autoprefix]
     }))

@@ -22,13 +22,13 @@ Starts a webpack-dev-server that compiles the core, themes, plugins and all demo
 Runs tsc, webpack and less. This will only produce the bare essentials for a development build and is a lot faster.
 
 `grunt test`
-Runs all tests on PhantomJS.
+Runs all tests on chrome-headless.
 
 `grunt bedrock-manual`
 Runs all tests manually in a browser.
 
 `grunt bedrock-auto:<browser>`
-Runs all tests through selenium browsers supported are chrome, firefox, ie, MicrosoftEdge, chrome-headless and phantomjs.
+Runs all tests through selenium browsers supported are chrome, firefox, ie, MicrosoftEdge, and chrome-headless.
 
 `grunt webpack:core`
 Builds the demo js files for the core part of tinymce this is required to get the core demos working.

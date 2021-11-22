@@ -49,8 +49,8 @@ const hasStyleConflict = (dom: DOMUtils, node: Node, parentNode: Node): boolean 
   const parentNodeStyleProps = getStyleProps(dom, parentNode);
 
   const valueMismatch = (prop: string) => {
-    const nodeValue = dom.getStyle(node, prop);
-    const parentValue = dom.getStyle(parentNode, prop);
+    const nodeValue = dom.getStyle(node, prop) ?? '';
+    const parentValue = dom.getStyle(parentNode, prop) ?? '';
     return Strings.isNotEmpty(nodeValue) && Strings.isNotEmpty(parentValue) && nodeValue !== parentValue;
   };
 

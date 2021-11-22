@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 - Removed usage of polyfill promises in favor of native promises.
+- Removed the `PhantomSkipper` module.
 
 ## 6.0.0 - 2021-08-26
 
