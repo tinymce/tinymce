@@ -10,6 +10,7 @@ import { Cell, Obj } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
 
 import * as Commands from './api/Commands';
+import * as Options from './api/Options';
 import * as Resize from './core/Resize';
 
 /**
@@ -21,6 +22,7 @@ import * as Resize from './core/Resize';
 
 export default (): void => {
   PluginManager.add('autoresize', (editor) => {
+    Options.register(editor);
     // If autoresize is enabled, disable resize if the user hasn't explicitly enabled it
     if (!Obj.has(editor.settings, 'resize')) {
       editor.settings.resize = false;

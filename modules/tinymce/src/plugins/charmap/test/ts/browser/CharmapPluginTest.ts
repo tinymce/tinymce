@@ -15,10 +15,10 @@ describe('browser.tinymce.plugins.charmap.CharMapPluginTest', () => {
 
   it('TBA: Replace characters by array', () => {
     const editor = hook.editor();
-    editor.settings.charmap = [
+    editor.options.set('charmap', [
       [ 65, 'Latin A' ],
       [ 66, 'Latin B' ]
-    ];
+    ]);
 
     assert.deepEqual(editor.plugins.charmap.getCharMap(), [
       {
@@ -33,10 +33,10 @@ describe('browser.tinymce.plugins.charmap.CharMapPluginTest', () => {
 
   it('TBA: Replace characters by function', () => {
     const editor = hook.editor();
-    editor.settings.charmap = () => [
+    editor.options.set('charmap', () => [
       [ 65, 'Latin A fun' ],
       [ 66, 'Latin B fun' ]
-    ];
+    ]);
 
     assert.deepEqual(editor.plugins.charmap.getCharMap(), [
       {
@@ -51,14 +51,14 @@ describe('browser.tinymce.plugins.charmap.CharMapPluginTest', () => {
 
   it('TBA: Append characters by array', () => {
     const editor = hook.editor();
-    editor.settings.charmap = [
+    editor.options.set('charmap', [
       [ 67, 'Latin C' ]
-    ];
+    ]);
 
-    editor.settings.charmap_append = [
+    editor.options.set('charmap_append', [
       [ 65, 'Latin A' ],
       [ 66, 'Latin B' ]
-    ];
+    ]);
 
     assert.deepEqual(editor.plugins.charmap.getCharMap(), [
       {
@@ -74,14 +74,14 @@ describe('browser.tinymce.plugins.charmap.CharMapPluginTest', () => {
 
   it('TBA: Append characters by function', () => {
     const editor = hook.editor();
-    editor.settings.charmap = [
+    editor.options.set('charmap', [
       [ 67, 'Latin C' ]
-    ];
+    ]);
 
-    editor.settings.charmap_append = () => [
+    editor.options.set('charmap_append', () => [
       [ 65, 'Latin A fun' ],
       [ 66, 'Latin B fun' ]
-    ];
+    ]);
 
     assert.deepEqual(editor.plugins.charmap.getCharMap(), [
       {
