@@ -106,10 +106,10 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
 
   it('TBA: Editor size content set to 10 and autoresize_bottom_margin set to 100', async () => {
     const editor = hook.editor();
-    editor.settings.autoresize_bottom_margin = 100;
+    editor.options.set('autoresize_bottom_margin', 100);
     editor.setContent('<div style="height: 10px;">a</div>');
     await Waiter.pTryUntil('wait for editor content height', () => assertEditorContentApproxHeight(editor, 110), 10, 3000);
-    editor.settings.autoresize_bottom_margin = 50;
+    editor.options.unset('autoresize_bottom_margin');
   });
 
   it('TBA: Editor size increase content to 1000 based and restrict by max height', async () => {
