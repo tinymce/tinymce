@@ -65,9 +65,8 @@ node("headless-macos") {
     }
 
     def browserPermutations = [
-      [ name: "macSafari", os: "macos", browser: "safari", buckets: 1 ],
       [ name: "macChrome", os: "macos", browser: "chrome", buckets: 1 ],
-      [ name: "macFirefox", os: "macos", browser: "firefox", buckets: 1 ]
+      [ name: "macChromeHeadless", os: "macos", browser: "chrome-headless", buckets: 1 ],
     ]
 
     def cleanAndInstall = {
@@ -134,19 +133,19 @@ node("headless-macos") {
     // }
 
     // our linux nodes have multiple executors, sometimes yarn creates conflicts
-    lock("Don't run yarn simultaneously") {
-      stage ("Install tools") {
-        cleanAndInstall()
-      }
-    }
+    // lock("Don't run yarn simultaneously") {
+    //   stage ("Install tools") {
+    //     cleanAndInstall()
+    //   }
+    // }
 
-    stage ("Type check") {
-      exec("yarn ci-all")
-    }
+    // stage ("Type check") {
+    //   exec("yarn ci-all")
+    // }
 
-    stage ("Moxiedoc check") {
-      exec("yarn tinymce-grunt shell:moxiedoc")
-    }
+    // stage ("Moxiedoc check") {
+    //   exec("yarn tinymce-grunt shell:moxiedoc")
+    // }
 
     stage ("Run Tests") {
       grunt("list-changed-headless list-changed-browser")
