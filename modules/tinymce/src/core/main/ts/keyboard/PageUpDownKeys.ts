@@ -46,7 +46,7 @@ const setNodeChangeBlocker = (blocked: Cell<boolean>, editor: Editor, block: boo
 const setup = (editor: Editor, caret: Cell<Text>) => {
 
   // Mac Os doesn't move the selection when pressing page up/down and as such TinyMCE shouldn't be moving it either
-  if (platform.os.isOSX()) {
+  if (platform.os.isMacOS()) {
     return;
   }
 

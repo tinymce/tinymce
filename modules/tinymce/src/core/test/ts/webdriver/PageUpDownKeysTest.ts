@@ -12,7 +12,7 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
     indent: false
   }, [], true);
   const platform = PlatformDetection.detect();
-  const supportsPageUpDown = !(platform.os.isOSX() || platform.os.isWindows() && platform.browser.isFirefox());
+  const supportsPageUpDown = !(platform.os.isMacOS() || platform.os.isWindows() && platform.browser.isFirefox());
 
   // It's necessary to skip tests for Mac and Windows Firefox as they don't move the selection when pressing page up/down
   before(function () {

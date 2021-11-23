@@ -11,7 +11,7 @@ import Env from 'tinymce/core/api/Env';
 
 // Converts shortcut format to Mac/PC variants
 const convertText = (source: string): string => {
-  const isMac = Env.os.isOSX() || Env.os.isiOS();
+  const isMac = Env.os.isMacOS() || Env.os.isiOS();
   const mac = {
     alt: '&#x2325;',
     ctrl: '&#x2303;',

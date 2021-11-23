@@ -7,7 +7,7 @@ export interface OperatingSystem extends UaInfo {
   readonly isWindows: () => boolean;
   readonly isiOS: () => boolean;
   readonly isAndroid: () => boolean;
-  readonly isOSX: () => boolean;
+  readonly isMacOS: () => boolean;
   readonly isLinux: () => boolean;
   readonly isSolaris: () => boolean;
   readonly isFreeBSD: () => boolean;
@@ -47,7 +47,7 @@ const nu = (info: UaInfo): OperatingSystem => {
     // TODO: Fix capitalisation
     isiOS: isOS(ios),
     isAndroid: isOS(android),
-    isOSX: isOS(osx),
+    isMacOS: isOS(osx),
     isLinux: isOS(linux),
     isSolaris: isOS(solaris),
     isFreeBSD: isOS(freebsd),

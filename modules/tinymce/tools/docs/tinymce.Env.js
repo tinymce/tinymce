@@ -120,7 +120,7 @@
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
- * @method os.isOSX
+ * @method os.isMacOS
  * @return {Boolean} Returns <code>true</code> if the user's operating system is Mac OS X.
  */
 
