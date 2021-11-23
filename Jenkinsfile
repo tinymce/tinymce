@@ -65,8 +65,9 @@ node("headless-macos") {
     }
 
     def browserPermutations = [
-      [ name: "macChrome", os: "macos", browser: "chrome", buckets: 1 ],
       [ name: "macChromeHeadless", os: "macos", browser: "chrome-headless", buckets: 1 ],
+      [ name: "macFirefox", os: "macos", browser: "firefox", buckets: 1 ],
+      [ name: "macFirefoxHeadless", os: "macos", browser: "firefox-headless", buckets: 1 ],
     ]
 
     def cleanAndInstall = {
