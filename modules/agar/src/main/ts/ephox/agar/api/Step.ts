@@ -1,5 +1,4 @@
 import { Failure } from '@ephox/bedrock-common';
-import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';

@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as Type from 'ephox/katamari/api/Type';
 

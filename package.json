@@ -29,7 +29,7 @@
     "headless-test": "yarn -s grunt headless-auto",
     "headless-test-firefox": "yarn -s grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "yarn -s grunt headless-manual",
-    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json --polyfills Promise Symbol",
+    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json",
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
@@ -39,7 +39,6 @@
     "@ephox/swag": "^4.4.0",
     "@ephox/wrap-jsverify": "^2.0.1",
     "@ephox/wrap-prismjs": "^1.25.0",
-    "@ephox/wrap-promise-polyfill": "^2.2.1",
     "@tinymce/eslint-plugin": "^1.9.1",
     "@tinymce/moxiedoc": "^0.1.0",
     "@types/chai": "^4.2.15",

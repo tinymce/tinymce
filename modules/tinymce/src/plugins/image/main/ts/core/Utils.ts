@@ -9,7 +9,6 @@ import { Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
-import Promise from 'tinymce/core/api/util/Promise';
 import URI from 'tinymce/core/api/util/URI';
 import XHR from 'tinymce/core/api/util/XHR';
 

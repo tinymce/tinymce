@@ -8,7 +8,6 @@
 import { Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import Promise from 'tinymce/core/api/util/Promise';
 import XHR from 'tinymce/core/api/util/XHR';
 
 import * as Options from '../../api/Options';

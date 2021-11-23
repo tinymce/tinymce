@@ -8,7 +8,6 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import Promise from 'tinymce/core/api/util/Promise';
 
 import * as Options from '../api/Options';
 import { readImageDataFromSelection } from '../core/ImageSelection';

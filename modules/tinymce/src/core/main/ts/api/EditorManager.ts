@@ -17,7 +17,6 @@ import { EditorManagerEventMap } from './EventTypes';
 import { RawEditorOptions } from './OptionTypes';
 import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Observable from './util/Observable';
-import Promise from './util/Promise';
 import Tools from './util/Tools';
 import URI from './util/URI';
 

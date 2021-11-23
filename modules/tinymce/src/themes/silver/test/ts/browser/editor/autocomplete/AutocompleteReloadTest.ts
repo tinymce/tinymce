@@ -4,7 +4,6 @@ import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@e
 
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 import { pAssertAutocompleterStructure, pWaitForAutocompleteToOpen } from '../../../module/AutocompleterUtils';
 
@@ -31,7 +30,7 @@ describe('Editor Autocompleter Reload test', () => {
         columns: 1,
         fetch: (pattern, maxResults, meta) => {
           const prefix = Obj.get(meta, 'prefix').getOr('');
-          return new PromisePolyfill((resolve) => {
+          return new Promise((resolve) => {
             const items: InlineContent.AutocompleterContents[] = Arr.map([ 'a', 'b', 'c', 'd' ], (item) => ({
               value: `item-${item}`,
               text: `${prefix}${item}`
@@ -107,7 +106,7 @@ describe('Editor Autocompleter Reload test', () => {
   };
 
   it('Trigger autocompleter and reload items', () => pTestAutocompleter({
-    action: () => PromisePolyfill.resolve(),
+    action: () => Promise.resolve(),
     assertion: pAssertInitialMenu,
     postAction: async (editor) => {
       TinyUiActions.clickOnUi(editor, '.tox-collection__item:contains("Load more...")');

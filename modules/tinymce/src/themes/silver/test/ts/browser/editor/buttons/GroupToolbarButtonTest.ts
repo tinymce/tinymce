@@ -5,7 +5,6 @@ import { McEditor } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 import { extractOnlyOne } from '../../../module/UiUtils';
 
@@ -119,7 +118,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
     }, () => {
       UiFinder.notExists(SugarBody.body(), 'button[title="Formatting"]');
       UiFinder.exists(SugarBody.body(), 'button[title="Underline"]');
-      return PromisePolyfill.resolve();
+      return Promise.resolve();
     })
   );
 });

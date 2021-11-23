@@ -14,7 +14,6 @@ import { ParserArgs } from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Promise from 'tinymce/core/api/util/Promise';
 import VK from 'tinymce/core/api/util/VK';
 
 import * as Options from '../api/Options';
