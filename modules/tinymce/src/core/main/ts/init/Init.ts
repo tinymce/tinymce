@@ -34,11 +34,11 @@ const initPlugin = (editor: Editor, initializedPlugins: string[], plugin: string
     }
 
     try {
-      const pluginInstance = new Plugin(editor, pluginUrl);
+      const pluginInstance = Plugin(editor, pluginUrl) || {};
 
       editor.plugins[plugin] = pluginInstance;
 
-      if (pluginInstance.init) {
+      if (Type.isFunction(pluginInstance.init)) {
         pluginInstance.init(editor, pluginUrl);
         initializedPlugins.push(plugin);
       }
@@ -83,9 +83,9 @@ const initTheme = (editor: Editor) => {
 
   if (Type.isString(theme)) {
     const Theme = ThemeManager.get(theme);
-    editor.theme = new Theme(editor, ThemeManager.urls[theme]);
+    editor.theme = Theme(editor, ThemeManager.urls[theme]) || {};
 
-    if (editor.theme.init) {
+    if (Type.isFunction(editor.theme.init)) {
       editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''));
     }
   } else {
