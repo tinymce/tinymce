@@ -177,13 +177,6 @@ interface TinyMCE extends EditorManager {
   resolve: Tools['resolve'];
   explode: Tools['explode'];
   _addCacheSuffix: Tools['_addCacheSuffix'];
-
-  // Legacy browser detection
-  isOpera: boolean;
-  isWebKit: boolean;
-  isIE: false | number;
-  isGecko: boolean;
-  isMac: boolean;
 }
 
 /**
