@@ -14,7 +14,7 @@ import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import Delay from 'tinymce/core/api/util/Delay';
 
 import * as Events from '../api/Events';
-import { getUiContainer, isToolbarPersist } from '../api/Settings';
+import { getUiContainer, isToolbarPersist } from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiComponents, RenderUiConfig } from '../Render';

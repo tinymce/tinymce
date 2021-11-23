@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
 import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { exitFullscreen, getFullscreenchangeEventName, getFullscreenRoot, isFullscreenElement, requestFullscreen } from './NativeFullscreen';
 import * as Thor from './Thor';
 
@@ -133,7 +133,7 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
 
   if (!fullscreenInfo) {
     const fullscreenChangeHandler = DomEvent.bind(Traverse.owner(fullscreenRoot), getFullscreenchangeEventName(), (_evt) => {
-      if (Settings.getFullscreenNative(editor)) {
+      if (Options.getFullscreenNative(editor)) {
         // if we have exited browser fullscreen with Escape then exit editor fullscreen too
         if (!isFullscreenElement(fullscreenRoot) && fullscreenState.get() !== null) {
           toggleFullscreen(editor, fullscreenState);
@@ -166,13 +166,13 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editor.on('remove', cleanup);
 
     fullscreenState.set(newFullScreenInfo);
-    if (Settings.getFullscreenNative(editor)) {
+    if (Options.getFullscreenNative(editor)) {
       requestFullscreen(fullscreenRoot);
     }
     Events.fireFullscreenStateChanged(editor, true);
   } else {
     fullscreenInfo.fullscreenChangeHandler.unbind();
-    if (Settings.getFullscreenNative(editor) && isFullscreenElement(fullscreenRoot)) {
+    if (Options.getFullscreenNative(editor) && isFullscreenElement(fullscreenRoot)) {
       exitFullscreen(Traverse.owner(fullscreenRoot));
     }
     iframeStyle.width = fullscreenInfo.iframeWidth;

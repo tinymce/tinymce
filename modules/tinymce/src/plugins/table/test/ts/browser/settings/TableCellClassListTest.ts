@@ -31,7 +31,7 @@ describe('browser.tinymce.plugins.table.TableCellClassListTest', () => {
 
   it('TBA: class input with setting', async () => {
     const editor = hook.editor();
-    editor.settings.table_cell_class_list = [{ title: 'test', value: 'test' }];
+    editor.options.set('table_cell_class_list', [{ title: 'test', value: 'test' }]);
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
     editor.execCommand('mceTableCellProps');

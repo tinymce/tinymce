@@ -53,7 +53,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
 
   it('TBA: Open dialog, set url, submit dialog and assert content', async () => {
     const editor = hook.editor();
-    editor.settings.media_url_resolver = mediaUrlResolver;
+    editor.options.set('media_url_resolver', mediaUrlResolver);
     await pTestResolvedEmbedContentSubmit(editor,
       'https://www.youtube.com/watch?v=IcgmSRJHu_8',
       '<p><span id="fake">https://www.youtube.com/watch?v=IcgmSRJHu_8</span></p>'
@@ -62,7 +62,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
 
   it('TBA: Remove media_url_resolver setting and assert changed content', async () => {
     const editor = hook.editor();
-    delete editor.settings.media_url_resolver;
+    editor.options.unset('media_url_resolver');
     await pTestResolvedEmbedContentSubmit(editor,
       'https://www.youtube.com/watch?v=IcgmSRJHu_8',
       '<p><iframe src="https://www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>'
@@ -71,9 +71,9 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
 
   it('TBA: Open dialog, set embed content, submit dialog and assert content', async () => {
     const editor = hook.editor();
-    editor.settings.media_url_resolver = mediaUrlResolver;
+    editor.options.set('media_url_resolver', mediaUrlResolver);
     await pTestManualEmbedContentSubmit(editor, customEmbed, customEmbed);
-    delete editor.settings.media_url_resolver;
+    editor.options.unset('media_url_resolver');
     await pTestEmbedUnchangedAfterOpenCloseDialog(editor, customEmbed);
   });
 });

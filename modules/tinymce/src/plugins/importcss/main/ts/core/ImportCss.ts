@@ -15,7 +15,7 @@ import { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
 import { Plugin } from 'tinymce/core/api/PluginManager';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { generate, SelectorFormatItem } from './SelectorModel';
 
 type Filter = (value: string, imported?: boolean) => boolean;
@@ -46,10 +46,10 @@ const removeCacheSuffix = (url: string): string => {
 };
 
 const isSkinContentCss = (editor: Editor, href: string): boolean => {
-  const skin = Settings.getSkin(editor);
+  const skin = Options.getSkin(editor);
 
   if (skin) {
-    const skinUrlBase = Settings.getSkinUrl(editor);
+    const skinUrlBase = Options.getSkinUrl(editor);
     const skinUrl = skinUrlBase ? editor.documentBaseURI.toAbsolute(skinUrlBase) : EditorManager.baseURL + '/skins/ui/' + skin;
     const contentSkinUrlPart = EditorManager.baseURL + '/skins/content/';
     return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css' || href.indexOf(contentSkinUrlPart) !== -1;
@@ -171,7 +171,7 @@ const defaultConvertSelectorToFormat = (editor: Editor, selectorText: string): S
   }
 
   // Append to or override class attribute
-  if (Settings.shouldMergeClasses(editor) !== false) {
+  if (Options.shouldMergeClasses(editor)) {
     format.classes = classes;
   } else {
     format.attributes = { class: classes };
@@ -198,7 +198,7 @@ const compileUserDefinedGroups = (groups: UserDefinedGroup[]): Group[] => {
 
 const isExclusiveMode = (editor: Editor, group: Group): boolean => {
   // Exclusive mode can only be disabled when there are groups allowing the same style to be present in multiple groups
-  return group === null || Settings.shouldImportExclusive(editor) !== false;
+  return group === null || Options.shouldImportExclusive(editor);
 };
 
 const isUniqueSelector = (editor: Editor, selector: string, group: Group, globallyUniqueSelectors: Record<string, boolean>): boolean => {
@@ -218,8 +218,8 @@ const convertSelectorToFormat = (editor: Editor, plugin: Plugin, selector: strin
 
   if (group && group.selector_converter) {
     selectorConverter = group.selector_converter;
-  } else if (Settings.getSelectorConverter(editor)) {
-    selectorConverter = Settings.getSelectorConverter(editor);
+  } else if (Options.getSelectorConverter(editor)) {
+    selectorConverter = Options.getSelectorConverter(editor);
   } else {
     selectorConverter = () => {
       return defaultConvertSelectorToFormat(editor, selector);
@@ -234,8 +234,8 @@ const setup = (editor: Editor): void => {
     const model = generate();
 
     const globallyUniqueSelectors = {};
-    const selectorFilter = compileFilter(Settings.getSelectorFilter(editor));
-    const groups = compileUserDefinedGroups(Settings.getCssGroups(editor));
+    const selectorFilter = compileFilter(Options.getSelectorFilter(editor));
+    const groups = compileUserDefinedGroups(Options.getCssGroups(editor));
 
     const processSelector = (selector: string, group: Group): SelectorFormatItem | null => {
       if (isUniqueSelector(editor, selector, group, globallyUniqueSelectors)) {
@@ -256,7 +256,7 @@ const setup = (editor: Editor): void => {
       return null;
     };
 
-    Tools.each(getSelectors(editor, editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), (selector) => {
+    Tools.each(getSelectors(editor, editor.getDoc(), compileFilter(Options.getFileFilter(editor))), (selector) => {
       if (!internalEditorStyle.test(selector)) {
         if (!selectorFilter || selectorFilter(selector)) {
           const selectorGroups = getGroupsBySelector(groups, selector);
@@ -281,7 +281,7 @@ const setup = (editor: Editor): void => {
     const items = model.toFormats();
     editor.fire('addStyleModifications', {
       items,
-      replace: !Settings.shouldAppend(editor)
+      replace: !Options.shouldAppend(editor)
     });
   });
 };

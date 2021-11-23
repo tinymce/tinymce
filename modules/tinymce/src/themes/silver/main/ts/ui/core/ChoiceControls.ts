@@ -9,10 +9,10 @@ import { Arr, Fun, Optional, Optionals, Singleton, Type } from '@ephox/katamari'
 import { Attribute, Dimension, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ContentLanguage } from 'tinymce/core/api/SettingsTypes';
+import { ContentLanguage } from 'tinymce/core/api/OptionTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import * as Settings from '../../api/Settings';
+import * as Options from '../../api/Options';
 
 interface ControlSpec<T> {
   readonly name: string;
@@ -82,7 +82,7 @@ const lineHeightSpec: ControlSpec<string> = {
   text: 'Line height',
   icon: 'line-height',
 
-  getOptions: Settings.getLineHeightFormats,
+  getOptions: Options.getLineHeightFormats,
   hash: (input) => Dimension.normalise(input, [ 'fixed', 'relative', 'empty' ]).getOr(input),
   display: Fun.identity,
 
@@ -93,7 +93,7 @@ const lineHeightSpec: ControlSpec<string> = {
 };
 
 const languageSpec = (editor: Editor): Optional<ControlSpec<ContentLanguage>> => {
-  const settingsOpt = Optional.from(Settings.getContentLanguages(editor));
+  const settingsOpt = Optional.from(Options.getContentLanguages(editor));
   return settingsOpt.map((settings) => ({
     name: 'language',
     text: 'Language',

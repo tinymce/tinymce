@@ -26,7 +26,7 @@
 
 import { Obj, Unicode } from '@ephox/katamari';
 
-import { URLConverter } from '../SettingsTypes';
+import { URLConverter } from '../OptionTypes';
 import Schema from './Schema';
 
 export type StyleMap = Record<string, string | number>;

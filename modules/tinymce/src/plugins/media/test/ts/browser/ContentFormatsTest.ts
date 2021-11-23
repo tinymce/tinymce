@@ -94,7 +94,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
 
   it('TBA: Resize complex object', () => {
     const editor = hook.editor();
-    editor.settings.media_live_embeds = false;
+    editor.options.set('media_live_embeds', false);
     editor.setContent(
       '<video width="300" height="150" controls="controls">' +
       '<source src="s" />' +
@@ -111,7 +111,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     placeholderElm.width = 100;
     placeholderElm.height = 200;
     editor.fire('ObjectResized', { target: placeholderElm, width: placeholderElm.width, height: placeholderElm.height, origin: 'corner-se' });
-    editor.settings.media_filter_html = false;
+    editor.options.set('media_filter_html', false);
 
     TinyAssertions.assertContent(editor,
       '<p>' +
@@ -129,8 +129,8 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
       '</p>'
     );
 
-    delete editor.settings.media_filter_html;
-    delete editor.settings.media_live_embeds;
+    editor.options.unset('media_filter_html');
+    editor.options.unset('media_live_embeds');
   });
 
   it('TBA: Media script elements', () => {

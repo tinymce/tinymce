@@ -138,17 +138,17 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
 
   it(`TBA: default_link_target='_self'`, () => {
     const editor = hook.editor();
-    editor.settings.default_link_target = '_self';
+    editor.options.set('default_link_target', '_self');
     LegacyUnit.equal(
       typeUrl(editor, 'http://www.domain.com'),
       '<p><a href="http://www.domain.com" target="_self">http://www.domain.com</a>&nbsp;</p>'
     );
-    delete editor.settings.default_link_target;
+    editor.options.unset('default_link_target');
   });
 
   it('TBA: link_default_protocol=https', () => {
     const editor = hook.editor();
-    editor.settings.link_default_protocol = 'https';
+    editor.options.set('link_default_protocol', 'https');
     assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
     assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com');
     assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
@@ -158,15 +158,15 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     assertIsLink(editor, 'user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'mailto:user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'first-last@domain.com', 'mailto:first-last@domain.com');
-    delete editor.settings.link_default_protocol;
+    editor.options.unset('link_default_protocol');
   });
 
   it('TBA: link_default_protocol=http', () => {
     const editor = hook.editor();
-    editor.settings.link_default_protocol = 'http';
+    editor.options.set('link_default_protocol', 'http');
     assertIsLink(editor, 'www.domain.com', 'http://www.domain.com');
     assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', '.');
-    delete editor.settings.link_default_protocol;
+    editor.options.unset('link_default_protocol');
   });
 
   it('TINY-7714: should trigger with trailing punctuation', () => {

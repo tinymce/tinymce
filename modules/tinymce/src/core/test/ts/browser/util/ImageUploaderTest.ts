@@ -46,35 +46,35 @@ describe('browser.tinymce.core.util.ImageUploaderTest', () => {
 
   it('TINY-4601: Image upload success', async () => {
     const editor = hook.editor();
-    editor.settings.images_upload_handler = (_blobInfo: BlobInfo, success) => success('https://tiny.cloud/image.png');
+    editor.options.set('images_upload_handler', (_blobInfo: BlobInfo, success) => success('https://tiny.cloud/image.png'));
     const uploadResults = await uploadImages(editor, [ image1 ], true);
     assertUploadResultSuccess(uploadResults, 1, 'https://tiny.cloud/image.png');
   });
 
   it('TINY-4601: Multiple image upload success', async () => {
     const editor = hook.editor();
-    editor.settings.images_upload_handler = (_blobInfo: BlobInfo, success) => success('https://tiny.cloud/image.png');
+    editor.options.set('images_upload_handler', (_blobInfo: BlobInfo, success) => success('https://tiny.cloud/image.png'));
     const uploadResults = await uploadImages(editor, [ image1, image2 ], true);
     assertUploadResultSuccess(uploadResults, 2, 'https://tiny.cloud/image.png');
   });
 
   it('TINY-4601: Image upload failure', async () => {
     const editor = hook.editor();
-    editor.settings.images_upload_handler = (_blobInfo: BlobInfo, _success, failure) => failure('Error msg');
+    editor.options.set('images_upload_handler', (_blobInfo: BlobInfo, _success, failure) => failure('Error msg'));
     const uploadResults = await uploadImages(editor, [ image1 ], true);
     assertUploadResultFailure(uploadResults, 1, 'Error msg');
   });
 
   it('TINY-4601: Image upload failure for empty array', async () => {
     const editor = hook.editor();
-    editor.settings.images_upload_handler = (_blobInfo: BlobInfo, _success, failure) => failure('Error msg');
+    editor.options.set('images_upload_handler', (_blobInfo: BlobInfo, _success, failure) => failure('Error msg'));
     const uploadResults = await uploadImages(editor, [], true);
     assertUploadResultFailure(uploadResults, 0, 'Error msg');
   });
 
   it('TINY-4601: Multiple image upload failure', async () => {
     const editor = hook.editor();
-    editor.settings.images_upload_handler = (_blobInfo: BlobInfo, _success, failure) => failure('Error msg');
+    editor.options.set('images_upload_handler', (_blobInfo: BlobInfo, _success, failure) => failure('Error msg'));
     const uploadResults = await uploadImages(editor, [ image1, image2 ], true);
     assertUploadResultFailure(uploadResults, 2, 'Error msg');
   });

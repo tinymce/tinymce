@@ -82,11 +82,11 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
 
   context('br_newline_selector', () => {
     before(() => {
-      hook.editor().settings.br_newline_selector = 'p,div.test';
+      hook.editor().options.set('br_newline_selector', 'p,div.test');
     });
 
     after(() => {
-      delete hook.editor().settings.br_newline_selector;
+      hook.editor().options.unset('br_newline_selector');
     });
 
     it('Insert newline where br is forced (paragraph)', () => {
@@ -119,11 +119,11 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
 
   context('no_newline_selector', () => {
     before(() => {
-      hook.editor().settings.no_newline_selector = 'p,div.test';
+      hook.editor().options.set('no_newline_selector', 'p,div.test');
     });
 
     after(() => {
-      delete hook.editor().settings.no_newline_selector;
+      hook.editor().options.unset('no_newline_selector');
     });
 
     it('Insert newline where newline is blocked (paragraph)', () => {

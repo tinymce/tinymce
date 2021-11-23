@@ -20,7 +20,7 @@ import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
-import { URLConverter } from '../SettingsTypes';
+import { URLConverter } from '../OptionTypes';
 import { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import EventUtils, { EventUtilsCallback } from './EventUtils';

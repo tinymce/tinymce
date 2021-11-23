@@ -15,7 +15,7 @@ import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
-import { getCloneElements, isResizeTableColumnResizing, getTableHeaderType } from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
 import { CellSelectionApi } from '../selection/CellSelection';
@@ -70,12 +70,12 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
     isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
 
   // Optional.none gives the default cloneFormats.
-  const cloneFormats = getCloneElements(editor);
+  const cloneFormats = Options.getCloneElements(editor);
 
-  const colMutationOp = isResizeTableColumnResizing(editor) ? Fun.noop : CellMutations.halve;
+  const colMutationOp = Options.isResizeTableColumnResizing(editor) ? Fun.noop : CellMutations.halve;
 
   const getTableSectionType = (table: SugarElement<HTMLTableElement>) => {
-    switch (getTableHeaderType(editor)) {
+    switch (Options.getTableHeaderType(editor)) {
       case 'section':
         return TableSection.section();
       case 'sectionCells':
@@ -120,7 +120,7 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const behaviours: RunOperation.OperationBehaviours = {
         sizing: TableSize.get(editor, table),
-        resize: isResizeTableColumnResizing(editor) ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable(),
+        resize: Options.isResizeTableColumnResizing(editor) ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable(),
         section: getTableSectionType(table)
       };
       return guard(table) ? operation(wire, table, target, generators, behaviours).bind((result) => {

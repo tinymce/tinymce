@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 export interface OpenNestedMenus {
   readonly label: string;

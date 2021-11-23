@@ -4,7 +4,7 @@ import { Arr, Obj } from '@ephox/katamari';
 import { McEditor, TinyAssertions, TinyDom } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 
 describe('browser.tinymce.plugins.paste.PlainTextPaste', () => {
@@ -37,7 +37,7 @@ describe('browser.tinymce.plugins.paste.PlainTextPaste', () => {
   const expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr"><br />four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
   const expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.';
 
-  const pCreateEditorFromSettings = (settings: RawEditorSettings) =>
+  const pCreateEditorFromSettings = (settings: RawEditorOptions) =>
     McEditor.pFromSettings<Editor>({
       ...settings,
       base_url: '/project/tinymce/js/tinymce',

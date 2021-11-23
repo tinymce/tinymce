@@ -37,7 +37,7 @@ describe('browser.tinymce.plugins.table.TableDefaultAttributesWithColGroupsTest'
 
   it('TBA: test default title attribute', async () => {
     const editor = hook.editor();
-    editor.settings.table_default_attributes = { title: 'x' };
+    editor.options.set('table_default_attributes', { title: 'x' });
     await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
     TableTestUtils.assertTableStructure(editor, ApproxStructure.build((s, str) => s.element('table', {
       styles: {

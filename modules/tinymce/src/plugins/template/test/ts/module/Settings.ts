@@ -9,14 +9,14 @@ const Settings = (hook: TinyHooks.Hook<Editor>) => {
   const addSettings = (config: Record<string, any>) => {
     const editor = hook.editor();
     Obj.each(config, (val, key) => {
-      editor.settings[key] = val;
+      editor.options.set(key, val);
       settings.add(key);
     });
   };
 
   const cleanupSettings = () => {
     const editor = hook.editor();
-    settings.forEach((key) => delete editor.settings[key]);
+    settings.forEach((key) => editor.options.unset(key));
     settings = new Set<string>();
   };
 

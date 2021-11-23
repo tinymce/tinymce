@@ -106,26 +106,26 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
 
   it('TBA: Editor size content set to 10 and autoresize_bottom_margin set to 100', async () => {
     const editor = hook.editor();
-    editor.settings.autoresize_bottom_margin = 100;
+    editor.options.set('autoresize_bottom_margin', 100);
     editor.setContent('<div style="height: 10px;">a</div>');
     await Waiter.pTryUntil('wait for editor content height', () => assertEditorContentApproxHeight(editor, 110), 10, 3000);
-    editor.settings.autoresize_bottom_margin = 50;
+    editor.options.unset('autoresize_bottom_margin');
   });
 
   it('TBA: Editor size increase content to 1000 based and restrict by max height', async () => {
     const editor = hook.editor();
-    editor.settings.max_height = 200;
+    editor.options.set('max_height', 200);
     editor.setContent('<div style="height: 1000px;">a</div>');
     await Waiter.pTryUntil('wait for editor height', () => assertEditorHeightBelow(editor, 200), 10, 3000);
-    editor.settings.max_height = 0;
+    editor.options.unset('max_height');
   });
 
   it('TBA: Editor size decrease content to 10 and set min height to 500', async () => {
     const editor = hook.editor();
-    editor.settings.min_height = 500;
+    editor.options.set('min_height', 500);
     editor.setContent('<div style="height: 10px;">a</div>');
     await Waiter.pTryUntil('wait for editor height', () => assertEditorHeightAbove(editor, 500), 10, 3000);
-    editor.settings.min_height = 0;
+    editor.options.unset('min_height');
   });
 
   it('TBA: Editor keeps selection in view when resizing', async () => {

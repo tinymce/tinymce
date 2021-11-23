@@ -12,7 +12,7 @@ import { StyleMap } from 'tinymce/core/api/html/Styles';
 import URI from 'tinymce/core/api/util/URI';
 import XHR from 'tinymce/core/api/util/XHR';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { UserListItem } from '../ui/DialogTypes';
 import { ImageData } from './ImageData';
 
@@ -111,7 +111,7 @@ const mergeMargins = (css: StyleMap): StyleMap => {
 
 // TODO: Input on this callback should really be validated
 const createImageList = (editor: Editor, callback: (imageList: false | UserListItem[]) => void): void => {
-  const imageList = Settings.getImageList(editor);
+  const imageList = Options.getImageList(editor);
 
   if (Type.isString(imageList)) {
     XHR.send({
@@ -138,7 +138,7 @@ const waitLoadImage = (editor: Editor, data: ImageData, imgElm: HTMLElement): vo
   };
 
   imgElm.onload = () => {
-    if (!data.width && !data.height && Settings.hasDimensions(editor)) {
+    if (!data.width && !data.height && Options.hasDimensions(editor)) {
       editor.dom.setAttribs(imgElm, {
         width: String(imgElm.clientWidth),
         height: String(imgElm.clientHeight)
@@ -165,8 +165,14 @@ const blobToDataUri = (blob: Blob): Promise<string> => new Promise((resolve, rej
 const isPlaceholderImage = (imgElm: Element): imgElm is HTMLImageElement =>
   imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
 
-const isSafeImageUrl = (editor: Editor, src: string): boolean =>
-  URI.isDomSafe(src, 'img', editor.settings);
+const isSafeImageUrl = (editor: Editor, src: string): boolean => {
+  const getOption = editor.options.get;
+  return URI.isDomSafe(src, 'img', {
+    allow_html_data_urls: getOption('allow_html_data_urls'),
+    allow_script_urls: getOption('allow_script_urls'),
+    allow_svg_data_urls: getOption('allow_svg_data_urls')
+  });
+};
 
 export {
   getImageSize,

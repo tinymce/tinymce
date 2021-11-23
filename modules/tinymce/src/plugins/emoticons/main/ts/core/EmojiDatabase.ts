@@ -10,7 +10,7 @@ import { Merger, Obj, Optional, Singleton, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const ALL_CATEGORY = 'All';
 
@@ -48,7 +48,7 @@ const translateCategory = (categories: Record<string, string>, name: string): st
   Obj.has(categories, name) ? categories[name] : name;
 
 const getUserDefinedEmoticons = (editor: Editor): Record<string, RawEmojiEntry> => {
-  const userDefinedEmoticons = Settings.getAppendedEmoticons(editor);
+  const userDefinedEmoticons = Options.getAppendedEmoticons(editor);
   return Obj.map(userDefinedEmoticons, (value) =>
     // Set some sane defaults for the custom emoji entry
     ({ keywords: [], category: 'user', ...value })
@@ -60,7 +60,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
   const categories = Singleton.value<Record<string, EmojiEntry[]>>();
   const all = Singleton.value<EmojiEntry[]>();
 
-  const emojiImagesUrl = Settings.getEmotionsImageUrl(editor);
+  const emojiImagesUrl = Options.getEmotionsImageUrl(editor);
 
   const getEmoji = (lib: RawEmojiEntry) => {
     // Note: This is a little hacky, but the database doesn't provide a way for us to tell what sort of database is being used

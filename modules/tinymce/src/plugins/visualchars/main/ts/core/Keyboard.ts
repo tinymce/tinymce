@@ -9,7 +9,7 @@ import { Cell, Throttler } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as VisualChars from './VisualChars';
 
 const setup = (editor: Editor, toggleState: Cell<boolean>): void => {
@@ -17,7 +17,7 @@ const setup = (editor: Editor, toggleState: Cell<boolean>): void => {
     VisualChars.toggle(editor);
   }, 300);
 
-  if (Settings.hasForcedRootBlock(editor)) {
+  if (Options.getForcedRootBlock(editor) !== '') {
     editor.on('keydown', (e) => {
       if (toggleState.get() === true) {
         e.keyCode === 13 ? VisualChars.toggle(editor) : debouncedToggle.throttle();

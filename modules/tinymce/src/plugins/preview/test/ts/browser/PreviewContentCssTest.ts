@@ -25,9 +25,9 @@ describe('browser.tinymce.plugins.preview.PreviewContentCssTest', () => {
     const contentCssUrl = editor.documentBaseURI.toAbsolute('/project/tinymce/js/tinymce/skins/content/default/content.css');
 
     editor.setContent('<p>hello world</p>');
-    editor.settings.content_css_cors = true;
+    editor.options.set('content_css_cors', true);
     assertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}" crossorigin="anonymous">`);
-    editor.settings.content_css_cors = false;
+    editor.options.set('content_css_cors', false);
     assertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}">`);
   });
 });

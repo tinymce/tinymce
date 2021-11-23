@@ -135,7 +135,7 @@ describe('browser.tinymce.core.newline.ForcedRootBlockTest', () => {
   context('With paragraph forced root block and additional data forced root block attribute', () => {
     const additionalForcedRootBlockAttrs = { ...forcedRootBlockAttrs, 'data-test': '1' };
     before(() => {
-      hook.editor().settings.forced_root_block_attrs = additionalForcedRootBlockAttrs;
+      hook.editor().options.set('forced_root_block_attrs', additionalForcedRootBlockAttrs);
     });
 
     assertNewLine(
@@ -157,8 +157,8 @@ describe('browser.tinymce.core.newline.ForcedRootBlockTest', () => {
   context('With div forced root block element', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.forced_root_block_attrs = { ...forcedRootBlockAttrs, 'data-test': '1' };
-      editor.settings.forced_root_block = 'div';
+      editor.options.set('forced_root_block_attrs', { ...forcedRootBlockAttrs, 'data-test': '1' });
+      editor.options.set('forced_root_block', 'div');
     });
 
     assertNewLine(

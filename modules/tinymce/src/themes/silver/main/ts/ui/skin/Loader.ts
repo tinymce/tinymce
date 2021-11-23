@@ -12,7 +12,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
 import Editor from 'tinymce/core/api/Editor';
 
-import { getSkinUrl, isSkinDisabled } from '../../api/Settings';
+import * as Options from '../../api/Options';
 import * as SkinLoaded from './SkinLoaded';
 
 const loadStylesheet = (editor: Editor, stylesheetUrl: string, styleSheetLoader: StyleSheetLoader): Promise<void> => new Promise((resolve, reject) => {
@@ -38,7 +38,7 @@ const loadShadowDomUiSkins = (editor: Editor, skinUrl: string): Promise<void> =>
 };
 
 const loadSkin = (isInline: boolean, editor: Editor) => {
-  const skinUrl = getSkinUrl(editor);
+  const skinUrl = Options.getSkinUrl(editor);
 
   if (skinUrl) {
     editor.contentCSS.push(skinUrl + (isInline ? '/content.inline' : '/content') + '.min.css');
@@ -46,7 +46,7 @@ const loadSkin = (isInline: boolean, editor: Editor) => {
 
   // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().
   // Seems to work without, but adding a note in case things break later
-  if (isSkinDisabled(editor) === false && Type.isString(skinUrl)) {
+  if (!Options.isSkinDisabled(editor) && Type.isString(skinUrl)) {
     Promise.all([
       loadUiSkins(editor, skinUrl),
       loadShadowDomUiSkins(editor, skinUrl)

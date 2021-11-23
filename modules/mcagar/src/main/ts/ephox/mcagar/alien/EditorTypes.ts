@@ -24,6 +24,7 @@ export interface GetContentArgs {
 export interface Editor {
   id: string;
   settings: Record<string, any>;
+  options: any;
   inline: boolean;
 
   dom: any;

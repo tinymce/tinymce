@@ -16,7 +16,6 @@ import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import HtmlSerializer from '../api/html/Serializer';
 import * as StyleUtils from '../api/html/StyleUtils';
-import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
@@ -221,7 +220,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   const merge = details.merge;
 
   const serializer = HtmlSerializer({
-    validate: Settings.shouldValidate(editor)
+    validate: true
   }, editor.schema);
   const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;</span>';
 

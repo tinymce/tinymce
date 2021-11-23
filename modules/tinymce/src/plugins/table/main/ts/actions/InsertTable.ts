@@ -12,7 +12,7 @@ import { Attribute, Html, SelectorFilter, SelectorFind, SugarElement } from '@ep
 import Editor from 'tinymce/core/api/Editor';
 
 import { fireNewCell, fireNewRow } from '../api/Events';
-import { getDefaultAttributes, getDefaultStyles, getTableHeaderType, isPercentagesForced, isPixelsForced, isResponsiveForced, useColumnGroup } from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Util from '../core/Util';
 import { enforceNone, enforcePercentage, enforcePixels } from './EnforceUnit';
 
@@ -39,16 +39,16 @@ const isPercentage = (width: string): boolean =>
   Type.isString(width) && width.indexOf('%') !== -1;
 
 const insert = (editor: Editor, columns: number, rows: number, colHeaders: number, rowHeaders: number): HTMLTableElement => {
-  const defaultStyles = getDefaultStyles(editor);
+  const defaultStyles = Options.getDefaultStyles(editor);
   const options: TableRender.RenderOptions = {
     styles: defaultStyles,
-    attributes: getDefaultAttributes(editor),
-    colGroups: useColumnGroup(editor)
+    attributes: Options.getDefaultAttributes(editor),
+    colGroups: Options.useColumnGroup(editor)
   };
 
   // Don't create an undo level when inserting the base table HTML otherwise we can end up with 2 undo levels
   editor.undoManager.ignore(() => {
-    const table = TableRender.render(rows, columns, rowHeaders, colHeaders, getTableHeaderType(editor), options);
+    const table = TableRender.render(rows, columns, rowHeaders, colHeaders, Options.getTableHeaderType(editor), options);
     Attribute.set(table, 'data-mce-id', '__mce');
 
     const html = Html.getOuter(table);
@@ -58,11 +58,11 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
 
   // Enforce the sizing mode of the table
   return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
-    if (isPixelsForced(editor)) {
+    if (Options.isPixelsForced(editor)) {
       enforcePixels(table);
-    } else if (isResponsiveForced(editor)) {
+    } else if (Options.isResponsiveForced(editor)) {
       enforceNone(table);
-    } else if (isPercentagesForced(editor) || isPercentage(defaultStyles.width)) {
+    } else if (Options.isPercentagesForced(editor) || isPercentage(defaultStyles.width)) {
       enforcePercentage(table);
     }
     Util.removeDataStyle(table);

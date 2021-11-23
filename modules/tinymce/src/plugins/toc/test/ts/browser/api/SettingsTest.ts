@@ -3,24 +3,31 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import * as Settings from 'tinymce/plugins/toc/api/Settings';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import * as Options from 'tinymce/plugins/toc/api/Options';
 
 describe('browser.tinymce.plugins.toc.api.SettingsTest', () => {
+  const setupEditor = (options: RawEditorOptions) => {
+    const editor = new Editor('x', options, EditorManager);
+    Options.register(editor);
+    return editor;
+  };
+
   it('getTocClass setting', () => {
-    assert.equal(Settings.getTocClass(new Editor('x', {}, EditorManager)), 'mce-toc', 'Should be default toc class');
-    assert.equal(Settings.getTocClass(new Editor('x', { toc_class: 'c' }, EditorManager)), 'c', 'Should be specified toc class');
+    assert.equal(Options.getTocClass(setupEditor({})), 'mce-toc', 'Should be default toc class');
+    assert.equal(Options.getTocClass(setupEditor({ toc_class: 'c' })), 'c', 'Should be specified toc class');
   });
 
   it('getTocHeader setting', () => {
-    assert.equal(Settings.getTocHeader(new Editor('x', {}, EditorManager)), 'h2', 'Should be default h2');
-    assert.equal(Settings.getTocHeader(new Editor('x', { toc_header: 'h3' }, EditorManager)), 'h3', 'Should be h3');
-    assert.equal(Settings.getTocHeader(new Editor('x', { toc_header: 'h75' }, EditorManager)), 'h2', 'Should be h2 since h75 is invalid');
+    assert.equal(Options.getTocHeader(setupEditor({})), 'h2', 'Should be default h2');
+    assert.equal(Options.getTocHeader(setupEditor({ toc_header: 'h3' })), 'h3', 'Should be h3');
+    assert.equal(Options.getTocHeader(setupEditor({ toc_header: 'h75' })), 'h2', 'Should be h2 since h75 is invalid');
   });
 
   it('getTocDepth setting', () => {
-    assert.equal(Settings.getTocDepth(new Editor('x', {}, EditorManager)), 3, 'Should be default 3');
-    assert.equal(Settings.getTocDepth(new Editor('x', { toc_depth: '5' }, EditorManager)), 5, 'Should be specified toc depth (string)');
-    assert.equal(Settings.getTocDepth(new Editor('x', { toc_depth: 5 }, EditorManager)), 5, 'Should be specified toc depth');
-    assert.equal(Settings.getTocDepth(new Editor('x', { toc_depth: '53' }, EditorManager)), 3, 'Should be default toc depth for invalid');
+    assert.equal(Options.getTocDepth(setupEditor({})), 3, 'Should be default 3');
+    assert.equal(Options.getTocDepth(setupEditor({ toc_depth: 5 })), 5, 'Should be specified toc depth');
+    assert.equal(Options.getTocDepth(setupEditor({ toc_depth: '5' })), 3, 'Should be default toc depth for invalid type');
+    assert.equal(Options.getTocDepth(setupEditor({ toc_depth: 53 })), 3, 'Should be default toc depth for invalid number');
   });
 });

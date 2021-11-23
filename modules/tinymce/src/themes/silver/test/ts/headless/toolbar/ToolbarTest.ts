@@ -4,7 +4,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarDocument } from '@ephox/sugar';
 
-import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
 
 import TestProviders from '../../module/TestProviders';

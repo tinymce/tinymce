@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarLocation } from 'tinymce/themes/silver/api/Options';
 
 import * as StickyUtils from '../../../module/StickyHeaderUtils';
 

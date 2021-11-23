@@ -1,17 +1,33 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import { getPatternSet } from 'tinymce/plugins/textpattern/api/Settings';
+import Editor from 'tinymce/core/api/Editor';
+import * as Options from 'tinymce/plugins/textpattern/api/Options';
 import { findPattern } from 'tinymce/plugins/textpattern/core/BlockPattern';
 
 describe('atomic.tinymce.plugins.textpattern.FindBlockPatternsTest', () => {
+  let defaultPatternSet;
   const mockEditor = {
-    getParam: (_term: string, default_pattern: any, _type: string) => (default_pattern)
-  };
-  const patternSet = getPatternSet(mockEditor as any);
-  const defaultPatterns = patternSet.blockPatterns;
+    options: {
+      register: (name: string, spec: Record<string, any>) => {
+        if (name === 'textpattern_patterns') {
+          defaultPatternSet = spec.processor(spec.default).value;
+        }
+      },
+      get: (name: string) => {
+        return name === 'textpattern_patterns' ? defaultPatternSet : undefined;
+      }
+    }
+  } as Editor;
+
+  before(() => {
+    Options.register(mockEditor);
+  });
 
   it('should find the start of the default patterns', () => {
+    const patternSet = Options.getPatternSet(mockEditor as any);
+    const defaultPatterns = patternSet.blockPatterns;
+
     const testFindStartPattern = (text: string, expectedPattern: string) => {
       const actual = findPattern(defaultPatterns, text).getOrNull();
 
