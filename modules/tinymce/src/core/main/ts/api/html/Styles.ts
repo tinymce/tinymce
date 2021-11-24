@@ -47,6 +47,7 @@ interface Styles {
 const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
   /* jshint maxlen:255 */
   /* eslint max-len:0 */
+  const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
   const trimRightRegExp = /\s+$/;
@@ -274,7 +275,8 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
             }
 
             // Convert RGB colors to HEX
-            value = Transformations.anyToHexString(value);
+            // value = Transformations.anyToHexString(value);
+            value = value.replace(rgbRegExp, Transformations.anyToHexString);
 
             // Convert URLs and force them into url('value') format
             value = value.replace(urlOrStrRegExp, processUrl);

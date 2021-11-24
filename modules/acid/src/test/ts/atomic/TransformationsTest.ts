@@ -58,10 +58,4 @@ describe('browser.acid.api.ConversionsTest', () => {
     const result = Transformations.anyToHexString(input);
     assert.equal(result, '#FF0');
   });
-
-  it('tohex woth transparent', () => {
-    const input = 'transparent';
-    const result = Transformations.anyToHexString(input);
-    assert.equal(result, 'transparent');
-  });
 });

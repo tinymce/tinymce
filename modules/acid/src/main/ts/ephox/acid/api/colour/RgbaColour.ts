@@ -106,8 +106,6 @@ const fromStringValues = (red: string, green: string, blue: string, alpha: strin
 };
 
 const fromString = (rgbaString: string): Optional<Rgba> => {
-  // eslint-disable-next-line no-debugger
-  debugger;
   if (rgbaString === 'transparent') {
     return Optional.some(rgbaColour(0, 0, 0, 0));
   }

@@ -1186,7 +1186,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
     assert.equal(
       editor.getContent(),
-      '<p><span style="color: #ff0000;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
+      '<p><span style="color: #FF0000;">123<a style="color: #FF0000;" href="#">abc</a>456</span></p>',
       `Link should have it's own color.`
     );
   });
@@ -1210,7 +1210,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
     assert.equal(
       editor.getContent(),
-      '<p><span style="color: #ff0000; font-size: 10px;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
+      '<p><span style="color: #FF0000; font-size: 10px;">123<a style="color: #FF0000;" href="#">abc</a>456</span></p>',
       `Link should have it's own color.`
     );
   });
@@ -1364,7 +1364,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       editor.getContent(),
-      '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: ' +
+      '<p><span style="text-decoration: underline;"><span style="color: #FF0000; font-family: ' +
       `'arial black'; text-decoration: underline;">test</span></span></p>`,
       'Underlining colored text should result in a colored underline'
     );
@@ -1388,7 +1388,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(
       editor.getContent(),
       `<p><span style="text-decoration: underline;"><span style="font-family: 'arial black';"><em>` +
-      '<strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong>' +
+      '<strong>This is some <span style="color: #FF0000; text-decoration: underline;">example</span></strong>' +
       '</em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline'
     );
   });
@@ -1440,12 +1440,12 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(
       editor.getContent(),
       `<p><span style="text-decoration: underline;"><span style="font-family: 'arial black','avant garde';"` +
-      `><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong` +
+      `><em><strong>This is some <span style="color: #FF0000; text-decoration: underline;">example</span></strong` +
       `></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: ` +
-      `'arial black','avant garde';"><em><strong>This is some <span style="color: #ff0000; text-decoration:` +
+      `'arial black','avant garde';"><em><strong>This is some <span style="color: #FF0000; text-decoration:` +
       ` underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;` +
       `"><span style="font-family: 'arial black', 'avant garde';"><em><strong>This is some <span style="color:` +
-      ` #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>`,
+      ` #FF0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>`,
       `Colored elements should be underlined when selection is across multiple paragraphs`
     );
   });
@@ -1493,7 +1493,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.remove('format');
     assert.equal(
       editor.getContent(),
-      '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">' +
+      '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #FF0000;\">' +
       'some</span> text.</span></p>',
       'Children nodes that are underlined should be removed if their parent nodes are underlined'
     );
