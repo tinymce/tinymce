@@ -18,7 +18,7 @@ const windows = 'Windows';
 const ios = 'iOS';
 const android = 'Android';
 const linux = 'Linux';
-const osx = 'OSX';
+const macos = 'macOS';
 const solaris = 'Solaris';
 const freebsd = 'FreeBSD';
 const chromeos = 'ChromeOS';
@@ -47,7 +47,7 @@ const nu = (info: UaInfo): OperatingSystem => {
     // TODO: Fix capitalisation
     isiOS: isOS(ios),
     isAndroid: isOS(android),
-    isMacOS: isOS(osx),
+    isMacOS: isOS(macos),
     isLinux: isOS(linux),
     isSolaris: isOS(solaris),
     isFreeBSD: isOS(freebsd),
@@ -63,7 +63,7 @@ export const OperatingSystem = {
   ios: Fun.constant(ios),
   android: Fun.constant(android),
   linux: Fun.constant(linux),
-  osx: Fun.constant(osx),
+  osx: Fun.constant(macos),
   solaris: Fun.constant(solaris),
   freebsd: Fun.constant(freebsd),
   chromeos: Fun.constant(chromeos)
