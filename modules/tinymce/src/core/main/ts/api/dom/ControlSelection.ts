@@ -14,7 +14,7 @@ import * as RangePoint from '../../dom/RangePoint';
 import Editor from '../Editor';
 import Env from '../Env';
 import * as Events from '../Events';
-import * as Settings from '../Settings';
+import * as Options from '../Options';
 import Delay from '../util/Delay';
 import { EditorEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
@@ -119,7 +119,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   };
 
   const isResizable = (elm: Element) => {
-    const selector = Settings.getObjectResizing(editor);
+    const selector = Options.getObjectResizing(editor);
 
     if (!selector) {
       return false;
@@ -183,7 +183,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     width = width < 5 ? 5 : width;
     height = height < 5 ? 5 : height;
 
-    if ((isImage(selectedElm) || isMedia(selectedElm)) && Settings.getResizeImgProportional(editor) !== false) {
+    if ((isImage(selectedElm) || isMedia(selectedElm)) && Options.getResizeImgProportional(editor) !== false) {
       proportional = !VK.modifierPressed(e);
     } else {
       proportional = VK.modifierPressed(e);

@@ -1,6 +1,7 @@
-// Tests either run in PhantomJs or real browsers
-const runsInPhantom = [
+// Tests always run in a browser, but some we run headless
+const runsHeadless = [
   '@ephox/alloy',
+  '@ephox/mcagar',
   '@ephox/katamari',
   '@ephox/katamari-test',
   '@ephox/imagetools',
@@ -41,7 +42,7 @@ const filterChangesNot = (changes, badTests) => {
  *  All other projects need their tests in src/test/ts
  */
 const testFolders = (tests, auto) => tests.flatMap((test) => {
-  const testTypes = ['atomic', 'browser', 'phantom'].concat(auto ? ['webdriver'] : []);
+  const testTypes = ['atomic', 'browser', 'headless'].concat(auto ? ['webdriver'] : []);
   const bases = test.name === "tinymce" ? ["src/*/test/ts", "src/*/*/test/ts"] : ["src/test/ts"];
   return bases.flatMap(base => testTypes.map(tt => `${test.location}/${base}/${tt}/**/*Test.ts`));
 });
@@ -51,18 +52,17 @@ const bedrockDefaults = {
   customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
   overallTimeout: 180000,
   singleTimeout: 60000,
-  polyfills: [ 'Promise', 'Symbol' ],
 };
 
-const bedrockPhantom = (tests, auto) => {
+const bedrockHeadless = (tests, browser, auto) => {
   if (tests.length === 0) {
     return {};
   } else {
     return {
-      phantomjs: {
+      headless: {
         ...bedrockDefaults,
-        name: 'phantom-tests',
-        browser: 'phantomjs',
+        name: 'headless-tests',
+        browser,
         testfiles: testFolders(tests, auto),
       }
     }
@@ -125,14 +125,15 @@ module.exports = function (grunt) {
   const runAllTests = grunt.option('ignore-lerna-changed') || false;
   const changes = fetchLernaProjects(grunt.log, runAllTests);
 
-  const bucket = grunt.option('bucket') || 1;
-  const buckets = grunt.option('buckets') || 1;
-  const chunk = grunt.option('chunk') || 100;
+  const bucket = parseInt(grunt.option('bucket'), 10) || 1;
+  const buckets = parseInt(grunt.option('buckets'), 10) || 1;
+  const chunk = parseInt(grunt.option('chunk'), 10) || 100;
 
-  const phantomTests = filterChanges(changes, runsInPhantom);
-  const browserTests = filterChangesNot(changes, runsInPhantom);
+  const headlessTests = filterChanges(changes, runsHeadless);
+  const browserTests = filterChangesNot(changes, runsHeadless);
 
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
+  const headlessBrowser = activeBrowser.endsWith("-headless") ? activeBrowser : 'chrome-headless'
   const activeOs = grunt.option('bedrock-os') || 'tests';
   const gruntConfig = {
     shell: {
@@ -142,11 +143,11 @@ module.exports = function (grunt) {
       'yarn-dev': { command: 'yarn -s dev' }
     },
     'bedrock-auto': {
-      ...bedrockPhantom(phantomTests, true),
+      ...bedrockHeadless(headlessTests, headlessBrowser, true),
       ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, true)
     },
     'bedrock-manual': {
-      ...bedrockPhantom(phantomTests, false),
+      ...bedrockHeadless(headlessTests, headlessBrowser, false),
       ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, false)
     }
   };
@@ -156,20 +157,20 @@ module.exports = function (grunt) {
   grunt.initConfig(gruntConfig);
 
   //TODO: remove duplication
-  if (phantomTests.length > 0) {
-    grunt.registerTask('list-changed-phantom', () => {
-      const changeList = JSON.stringify(phantomTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
-      grunt.log.writeln('Changed projects for phantomjs testing:', changeList);
+  if (headlessTests.length > 0) {
+    grunt.registerTask('list-changed-headless', () => {
+      const changeList = JSON.stringify(headlessTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
+      grunt.log.writeln('Changed projects for headless testing:', changeList);
     });
-    grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
-    grunt.registerTask('phantomjs-manual', ['list-changed-phantom', 'shell:tsc', 'bedrock-manual:phantomjs']);
+    grunt.registerTask('headless-auto', ['list-changed-headless', 'shell:tsc', 'bedrock-auto:headless']);
+    grunt.registerTask('headless-manual', ['list-changed-headless', 'shell:tsc', 'bedrock-manual:headless']);
   } else {
-    const noPhantom = () => {
-      grunt.log.writeln('no changed modules need phantomjs testing');
+    const noHeadless = () => {
+      grunt.log.writeln('no changed modules need headless testing');
     };
-    grunt.registerTask('phantomjs-auto', noPhantom);
-    grunt.registerTask('phantomjs-manual', noPhantom);
-    grunt.registerTask('list-changed-phantom', noPhantom);
+    grunt.registerTask('headless-auto', noHeadless);
+    grunt.registerTask('headless-manual', noHeadless);
+    grunt.registerTask('list-changed-headless', noHeadless);
   }
 
   //TODO: remove duplication

@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, GeneralSteps, PhantomSkipper, Step, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Step, StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
@@ -12,11 +12,6 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
 UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
-  // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
-  // viewed as an invalid value.
-  if (PhantomSkipper.detect()) {
-    return success();
-  }
 
   const sinkComp = Sinks.relativeSink();
 

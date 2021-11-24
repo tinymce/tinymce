@@ -111,7 +111,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   context('media_live_embeds=false', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.media_live_embeds = false;
+      editor.options.set('media_live_embeds', false);
     });
 
     it('TBA: Set and assert script placeholder structure', () => pTestScriptPlaceholder(hook.editor(),
@@ -145,7 +145,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   context('media_live_embeds=true', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.media_live_embeds = true;
+      editor.options.set('media_live_embeds', true);
     });
 
     it('TBA: Set and assert live iframe embed structure', () => pTestPlaceholder(hook.editor(),

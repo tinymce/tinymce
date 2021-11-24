@@ -8,10 +8,9 @@
 import { Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import Promise from 'tinymce/core/api/util/Promise';
 import XHR from 'tinymce/core/api/util/XHR';
 
-import * as Settings from '../../api/Settings';
+import * as Options from '../../api/Options';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem, UserListItem } from '../DialogTypes';
 
@@ -27,7 +26,7 @@ const parseJson = (text: string): Optional<ListItem[]> => {
 const getLinks = (editor: Editor): Promise<Optional<ListItem[]>> => {
   const extractor = (item: UserListItem) => editor.convertURL(item.value || item.url, 'href');
 
-  const linkList = Settings.getLinkList(editor);
+  const linkList = Options.getLinkList(editor);
   return new Promise<Optional<UserListItem[]>>((callback) => {
     // TODO - better handling of failure
     if (Type.isString(linkList)) {

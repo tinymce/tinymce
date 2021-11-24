@@ -16,8 +16,8 @@ import StyleSheetLoader from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
 import NotificationManager from '../api/NotificationManager';
+import * as Options from '../api/Options';
 import PluginManager from '../api/PluginManager';
-import * as Settings from '../api/Settings';
 import ThemeManager from '../api/ThemeManager';
 import I18n from '../api/util/I18n';
 import Tools from '../api/util/Tools';
@@ -34,8 +34,8 @@ const hasSkipLoadPrefix = (name) => {
 };
 
 const loadLanguage = (scriptLoader, editor: Editor) => {
-  const languageCode = Settings.getLanguageCode(editor);
-  const languageUrl = Settings.getLanguageUrl(editor);
+  const languageCode = Options.getLanguageCode(editor);
+  const languageUrl = Options.getLanguageUrl(editor);
 
   if (I18n.hasCode(languageCode) === false && languageCode !== 'en') {
     const url = languageUrl !== '' ? languageUrl : editor.editorManager.baseURL + '/langs/' + languageCode + '.js';
@@ -47,11 +47,11 @@ const loadLanguage = (scriptLoader, editor: Editor) => {
 };
 
 const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix, callback) => {
-  const theme = Settings.getTheme(editor);
+  const theme = Options.getTheme(editor);
 
   if (Type.isString(theme)) {
     if (!hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
-      const themeUrl = Settings.getThemeUrl(editor);
+      const themeUrl = Options.getThemeUrl(editor);
 
       if (themeUrl) {
         ThemeManager.load(theme, editor.documentBaseURI.toAbsolute(themeUrl));
@@ -73,7 +73,7 @@ interface UrlMeta {
   name: Optional<string>;
 }
 
-const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.from(Settings.getIconsUrl(editor))
+const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.from(Options.getIconsUrl(editor))
   .filter((url) => url.length > 0)
   .map((url) => ({
     url,
@@ -89,7 +89,7 @@ const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffi
 
 const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) => {
   const defaultIconsUrl = getIconsUrlMetaFromName(editor, 'default', suffix);
-  const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Settings.getIconPackName(editor), ''));
+  const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Options.getIconPackName(editor), ''));
 
   Arr.each(Optionals.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
     scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
@@ -99,15 +99,14 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
 };
 
 const loadPlugins = (editor: Editor, suffix: string) => {
-  Tools.each(Settings.getExternalPlugins(editor), (url: string, name: string): void => {
+  Tools.each(Options.getExternalPlugins(editor), (url: string, name: string): void => {
     PluginManager.load(name, url, Fun.noop, undefined, () => {
       ErrorReporter.pluginLoadError(editor, url, name);
     });
-    // This should be changed to some type of setParam once such an API is available.
-    editor.settings.plugins += ' ' + name;
+    editor.options.set('plugins', Options.getPlugins(editor) + ' ' + name);
   });
 
-  Tools.each(Settings.getPlugins(editor).split(/[ ,]/), (plugin) => {
+  Tools.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {
     plugin = Tools.trim(plugin);
 
     if (plugin && !PluginManager.urls[plugin]) {
@@ -148,15 +147,15 @@ const loadScripts = (editor: Editor, suffix: string) => {
 
 const getStyleSheetLoader = (element: SugarElement<Element>, editor: Editor): StyleSheetLoader =>
   StyleSheetLoaderRegistry.instance.forElement(element, {
-    contentCssCors: Settings.hasContentCssCors(editor),
-    referrerPolicy: Settings.getReferrerPolicy(editor)
+    contentCssCors: Options.hasContentCssCors(editor),
+    referrerPolicy: Options.getReferrerPolicy(editor)
   });
 
 const render = (editor: Editor) => {
   const id = editor.id;
 
   // The user might have bundled multiple language packs so we need to switch the active code to the user specified language
-  I18n.setCode(Settings.getLanguageCode(editor));
+  I18n.setCode(Options.getLanguageCode(editor));
 
   const readyHandler = () => {
     DOM.unbind(window, 'ready', readyHandler);
@@ -187,7 +186,7 @@ const render = (editor: Editor) => {
   editor.ui.styleSheetLoader = getStyleSheetLoader(element, editor);
 
   // Hide target element early to prevent content flashing
-  if (!Settings.isInline(editor)) {
+  if (!Options.isInline(editor)) {
     editor.orgVisibility = editor.getElement().style.visibility;
     editor.getElement().style.visibility = 'hidden';
   } else {
@@ -200,7 +199,7 @@ const render = (editor: Editor) => {
     editor.formElement = form;
 
     // Add hidden input for non input elements inside form elements
-    if (Settings.hasHiddenInput(editor) && !NodeType.isTextareaOrInput(editor.getElement())) {
+    if (Options.hasHiddenInput(editor) && !NodeType.isTextareaOrInput(editor.getElement())) {
       DOM.insertAfter(DOM.create('input', { type: 'hidden', name: id }), id);
       editor.hasHiddenInput = true;
     }
@@ -218,7 +217,7 @@ const render = (editor: Editor) => {
     });
 
     // Check page uses id="submit" or name="submit" for it's submit button
-    if (Settings.shouldPatchSubmit(editor) && !form.submit.nodeType && !form.submit.length && !form._mceOldSubmit) {
+    if (Options.shouldPatchSubmit(editor) && !form.submit.nodeType && !form.submit.length && !form._mceOldSubmit) {
       form._mceOldSubmit = form.submit;
       form.submit = () => {
         editor.editorManager.triggerSave();
@@ -232,7 +231,7 @@ const render = (editor: Editor) => {
   editor.windowManager = WindowManager(editor);
   editor.notificationManager = NotificationManager(editor);
 
-  if (Settings.isEncodingXml(editor)) {
+  if (Options.isEncodingXml(editor)) {
     editor.on('GetContent', (e) => {
       if (e.save && Type.isString(e.content)) {
         e.content = DOM.encode(e.content);
@@ -240,7 +239,7 @@ const render = (editor: Editor) => {
     });
   }
 
-  if (Settings.shouldAddFormSubmitTrigger(editor)) {
+  if (Options.shouldAddFormSubmitTrigger(editor)) {
     editor.on('submit', () => {
       if (editor.initialized) {
         editor.save();
@@ -248,7 +247,7 @@ const render = (editor: Editor) => {
     });
   }
 
-  if (Settings.shouldAddUnloadTrigger(editor)) {
+  if (Options.shouldAddUnloadTrigger(editor)) {
     editor._beforeUnload = () => {
       if (editor.initialized && !editor.destroyed && !editor.isHidden()) {
         editor.save({ format: 'raw', no_events: true, set_dirty: false });

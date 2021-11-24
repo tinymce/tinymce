@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Added a new `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
+
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
 
@@ -14,11 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.setContent()` API can now be prevented using the `BeforeSetContent` event. This makes it consistent with the `editor.selection.setContent()` API #TINY-8018
 - Aligning a table to the left or right will now use margin styling instead of float styling #TINY-6558
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
+- Addons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
 - The `editor.selection.getContent()` API did not respect the `no_events` argument #TINY-8018
 - The `GetContent` event was not fired when getting `tree` or `text` formats using the `editor.selection.getContent()` API #TINY-8018
+- The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 
 ### Removed
 - Removed the deprecated `$`, `DomQuery` and `Sizzle` APIs #TINY-4520
@@ -34,10 +39,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
 - The legacy `mobile` theme has been removed #TINY-7832
-- Removed support for Microsoft Internet Explorer 11 #TINY-8194
+- Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
 - Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
+- Removed the `tinymce.utils.Promise` API #TINY-8241
+
+## 5.10.2 - 2021-11-17
+
+### Fixed
+- Internal selectors were appearing in the style list when using the `importcss` plugin #TINY-8238
 
 ## 5.10.1 - 2021-11-03
 

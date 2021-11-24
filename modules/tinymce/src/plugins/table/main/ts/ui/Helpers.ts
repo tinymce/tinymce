@@ -14,7 +14,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Styles from '../actions/Styles';
-import { getDefaultAttributes, getDefaultStyles, shouldStyleWithCss } from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Util from '../core/Util';
 
 /**
@@ -118,8 +118,8 @@ const getHAlignment = Fun.curry(getAlignment, [ 'left', 'center', 'right' ], 'al
 const getVAlignment = Fun.curry(getAlignment, [ 'top', 'middle', 'bottom' ], 'valign');
 
 const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): TableData => {
-  const style = getDefaultStyles(editor);
-  const attrs = getDefaultAttributes(editor);
+  const style = Options.getDefaultStyles(editor);
+  const attrs = Options.getDefaultAttributes(editor);
 
   const extractAdvancedStyleData = () => ({
     borderstyle: Obj.get(style, 'border-style').getOr(''),
@@ -140,7 +140,7 @@ const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): Table
 
   const getBorder = () => {
     const borderWidth = style['border-width'];
-    if (shouldStyleWithCss(editor) && borderWidth) {
+    if (Options.shouldStyleWithCss(editor) && borderWidth) {
       return { border: borderWidth };
     }
     return Obj.get(attrs, 'border').fold(() => ({}), (border) => ({ border }));
@@ -182,7 +182,7 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
     // 3. !shouldStyleWithCss && nothing on the table - grab styles from the first th or td
 
     const optBorderWidth = Css.getRaw(SugarElement.fromDom(elm), 'border-width');
-    if (shouldStyleWithCss(editor) && optBorderWidth.isSome()) {
+    if (Options.shouldStyleWithCss(editor) && optBorderWidth.isSome()) {
       return optBorderWidth.getOr('');
     }
     return dom.getAttrib(elm, 'border') || Styles.getTDTHOverallStyle(editor.dom, elm, 'border-width')
@@ -191,11 +191,11 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
 
   const dom = editor.dom;
 
-  const cellspacing = shouldStyleWithCss(editor) ?
+  const cellspacing = Options.shouldStyleWithCss(editor) ?
     dom.getStyle(elm, 'border-spacing') || dom.getAttrib(elm, 'cellspacing') :
     dom.getAttrib(elm, 'cellspacing') || dom.getStyle(elm, 'border-spacing');
 
-  const cellpadding = shouldStyleWithCss(editor) ?
+  const cellpadding = Options.shouldStyleWithCss(editor) ?
     Styles.getTDTHOverallStyle(dom, elm, 'padding') || dom.getAttrib(elm, 'cellpadding') :
     dom.getAttrib(elm, 'cellpadding') || Styles.getTDTHOverallStyle(dom, elm, 'padding');
 

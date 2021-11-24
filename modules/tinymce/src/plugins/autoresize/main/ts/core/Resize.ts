@@ -15,7 +15,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 /**
  * This class contains all core logic for the autoresize plugin.
@@ -88,8 +88,9 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   }
 
   const docEle = doc.documentElement;
-  const resizeBottomMargin = Settings.getAutoResizeBottomMargin(editor);
-  let resizeHeight = Settings.getAutoResizeMinHeight(editor);
+  const resizeBottomMargin = Options.getAutoResizeBottomMargin(editor);
+  const minHeight = Options.getMinHeight(editor) ?? editor.getElement().offsetHeight;
+  let resizeHeight = minHeight;
 
   // Calculate outer height of the doc element using CSS styles
   const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
@@ -109,12 +110,12 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   const chromeHeight = containerHeight - contentAreaHeight;
 
   // Don't make it smaller than the minimum height
-  if (contentHeight + chromeHeight > Settings.getAutoResizeMinHeight(editor)) {
+  if (contentHeight + chromeHeight > minHeight) {
     resizeHeight = contentHeight + chromeHeight;
   }
 
   // If a maximum height has been defined don't exceed this height
-  const maxHeight = Settings.getAutoResizeMaxHeight(editor);
+  const maxHeight = Options.getMaxHeight(editor);
   if (maxHeight && resizeHeight > maxHeight) {
     resizeHeight = maxHeight;
     toggleScrolling(editor, true);
@@ -151,7 +152,7 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 
 const setup = (editor: Editor, oldSize: Cell<number>): void => {
   editor.on('init', () => {
-    const overflowPadding = Settings.getAutoResizeOverflowPadding(editor);
+    const overflowPadding = Options.getAutoResizeOverflowPadding(editor);
     const dom = editor.dom;
 
     // Disable height 100% on the root document element otherwise we'll end up resizing indefinitely
@@ -171,7 +172,7 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
     resize(editor, oldSize, e);
   });
 
-  if (Settings.shouldAutoResizeOnInit(editor)) {
+  if (Options.shouldAutoResizeOnInit(editor)) {
     editor.on('init', () => {
       // Hit it 20 times in 100 ms intervals
       wait(editor, oldSize, 20, 100, () => {

@@ -119,7 +119,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
 
   it('TINY-6622: pasteImages with reuse filename', async () => {
     const editor = hook.editor();
-    editor.settings.images_reuse_filename = true;
+    editor.options.set('images_reuse_filename', true);
     const clipboard = Clipboard(editor, Cell('html'));
 
     const event = mockEvent('paste', [
@@ -134,12 +134,12 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     const blobInfo = editor.editorUpload.blobCache.getByData(base64ImgSrc, 'image/jpeg');
     assert.equal(blobInfo.filename(), 'image.jfif');
 
-    delete editor.settings.images_reuse_filename;
+    editor.options.unset('images_reuse_filename');
   });
 
   it('TINY-6306: pasteImages with custom file types', async () => {
     const editor = hook.editor();
-    editor.settings.images_file_types = 'svg,tiff';
+    editor.options.set('images_file_types', 'svg,tiff');
     const clipboard = Clipboard(editor, Cell('html'));
 
     const event = mockEvent('paste', [
@@ -151,7 +151,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/tiff;base64,' + base64ImgSrc + '" />a</p>');
     assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
-    delete editor.settings.images_file_types;
+    editor.options.unset('images_file_types');
   });
 
   it('TINY-8079: Should filter items that are not files when pasting images', async () => {

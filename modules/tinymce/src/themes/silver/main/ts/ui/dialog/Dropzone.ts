@@ -24,10 +24,8 @@ import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
 
-const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';
-
 const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders) => {
-  const allowedImageFileTypes = Tools.explode(providersBackstage.getSetting('images_file_types', defaultImageFileTypes, 'string'));
+  const allowedImageFileTypes = Tools.explode(providersBackstage.getOption('images_file_types'));
   const isFileInAllowedTypes = (file: File) => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name.toLowerCase(), `.${type.toLowerCase()}`));
 
   return Arr.filter(Arr.from(files), isFileInAllowedTypes);

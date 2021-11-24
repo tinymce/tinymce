@@ -14,10 +14,9 @@ import { ParserArgs } from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Promise from 'tinymce/core/api/util/Promise';
 import VK from 'tinymce/core/api/util/VK';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
 import { PasteBin } from './PasteBin';
@@ -72,7 +71,7 @@ const pasteHtml = (editor: Editor, html: string, internalFlag: boolean): void =>
 const pasteText = (editor: Editor, text: string): void => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalizeWhitespace(editor, encodedText);
-  const html = Newlines.convert(normalizedText, Settings.getForcedRootBlock(editor), Settings.getForcedRootBlockAttrs(editor));
+  const html = Newlines.convert(normalizedText, Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
   doPaste(editor, html, false, true);
 };
 
@@ -158,7 +157,7 @@ const pasteImage = (editor: Editor, imageItem: FileResult): void => {
 
   const existingBlobInfo = blobCache.getByData(base64, type);
   if (!existingBlobInfo) {
-    const useFileName = Settings.getImagesReuseFilename(editor) && Type.isNonNullable(file.name);
+    const useFileName = Options.getImagesReuseFilename(editor) && Type.isNonNullable(file.name);
     const name = useFileName ? extractFilename(editor, file.name) : id;
     const filename = useFileName ? file.name : undefined;
 
@@ -192,7 +191,7 @@ const readFilesAsDataUris = (items: Array<File | DataTransferItem>) =>
   })));
 
 const isImage = (editor: Editor) => {
-  const allowedExtensions = Settings.getAllowedImageFileTypes(editor);
+  const allowedExtensions = Options.getAllowedImageFileTypes(editor);
   return (file: File): boolean => Strings.startsWith(file.type, 'image/') && Arr.exists(allowedExtensions, (extension) => {
     return Utils.getImageMimeType(extension) === file.type;
   });
@@ -217,7 +216,7 @@ const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): 
 const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Range): boolean => {
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
-  if (Settings.getPasteDataImages(editor) && dataTransfer) {
+  if (Options.shouldPasteDataImages(editor) && dataTransfer) {
     const images = getImagesFromDataTransfer(editor, dataTransfer);
 
     if (images.length > 0) {
@@ -447,7 +446,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
 
     const isDataUri = (src: string): boolean => src.indexOf('data:') === 0;
 
-    if (!Settings.getPasteDataImages(editor) && isPasteInsert(args)) {
+    if (!Options.shouldPasteDataImages(editor) && isPasteInsert(args)) {
       let i = nodes.length;
 
       while (i--) {
@@ -460,7 +459,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
         // Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
         if (isWebKitFakeUrl(src)) {
           remove(nodes[i]);
-        } else if (!Settings.getAllowHtmlDataUrls(editor) && isDataUri(src)) {
+        } else if (!Options.getAllowHtmlDataUrls(editor) && isDataUri(src)) {
           remove(nodes[i]);
         }
       }

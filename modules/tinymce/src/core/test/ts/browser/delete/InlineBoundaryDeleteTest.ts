@@ -107,8 +107,8 @@ describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
 
   it('Backspace key inline_boundaries: false', () => {
     const editor = hook.editor();
-    editor.settings.inline_boundaries = false;
+    editor.options.set('inline_boundaries', false);
     testBackspace('<p>a<a href="#">b</a>c</p>', [ 0, 2 ], 0, '<p>a<a href="#">b</a>c</p>', 'after', [ 0, 2 ], 0);
-    delete editor.settings.inline_boundaries;
+    editor.options.unset('inline_boundaries');
   });
 });

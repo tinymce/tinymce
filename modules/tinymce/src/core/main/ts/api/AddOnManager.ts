@@ -24,7 +24,7 @@ import I18n from './util/I18n';
  *
  * @class tinymce.Theme
  * @example
- * tinymce.ThemeManager.add('MyTheme', function(editor) {
+ * tinymce.ThemeManager.add('MyTheme', (editor) => {
  *     // Setup up custom UI elements in the dom
  *     var div = document.createElement('div');
  *     var iframe = document.createElement('iframe');
@@ -63,7 +63,7 @@ import I18n from './util/I18n';
  *
  * @class tinymce.Plugin
  * @example
- * tinymce.PluginManager.add('MyPlugin', function(editor, url) {
+ * tinymce.PluginManager.add('MyPlugin', (editor, url) => {
  *     // Register a toolbar button that triggers an alert when clicked
  *     // To show this button in the editor, include it in the toolbar setting
  *     editor.ui.registry.addButton('myCustomToolbarButton', {
@@ -101,10 +101,7 @@ export interface UrlObject { prefix: string; resource: string; suffix: string }
 
 type WaitState = 'added' | 'loaded';
 
-// This is a work around as constructors will only work with classes,
-// but our plugins are all functions.
-type AddOnCallback<T> = (editor: Editor, url: string) => void | T;
-export type AddOnConstructor<T> = new (editor: Editor, url: string) => T;
+export type AddOnConstructor<T> = (editor: Editor, url: string) => void | T;
 
 interface AddOnManager<T> {
   items: AddOnConstructor<T>[];
@@ -113,7 +110,7 @@ interface AddOnManager<T> {
   _listeners: { name: string; state: WaitState; callback: () => void }[];
   get: (name: string) => AddOnConstructor<T>;
   requireLangPack: (name: string, languages: string) => void;
-  add: (id: string, addOn: AddOnCallback<T>) => AddOnConstructor<T>;
+  add: (id: string, addOn: AddOnConstructor<T>) => AddOnConstructor<T>;
   remove: (name: string) => void;
   createUrl: (baseUrl: UrlObject, dep: string | UrlObject) => UrlObject;
   load: (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void) => void;
@@ -154,14 +151,13 @@ const AddOnManager = <T>(): AddOnManager<T> => {
     }
   };
 
-  const add = (id: string, addOn: AddOnCallback<T>) => {
-    const addOnConstructor = addOn as unknown as AddOnConstructor<T>;
-    items.push(addOnConstructor);
-    lookup[id] = { instance: addOnConstructor };
+  const add = (id: string, addOn: AddOnConstructor<T>) => {
+    items.push(addOn);
+    lookup[id] = { instance: addOn };
 
     runListeners(id, 'added');
 
-    return addOnConstructor;
+    return addOn;
   };
 
   const remove = (name: string) => {

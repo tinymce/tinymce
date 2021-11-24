@@ -18,7 +18,7 @@ import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 import Env from './Env';
 import { BlobCache, BlobInfo } from './file/BlobCache';
-import * as Settings from './Settings';
+import * as Options from './Options';
 import { createUploader, openNotification } from './util/ImageUploader';
 
 /**
@@ -135,7 +135,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
     replaceUrlInUndoStack(image.src, resultUri);
 
     Attribute.setAll(SugarElement.fromDom(image), {
-      'src': Settings.shouldReuseFileName(editor) ? cacheInvalidator(resultUri) : resultUri,
+      'src': Options.shouldReuseFileName(editor) ? cacheInvalidator(resultUri) : resultUri,
       'data-mce-src': src
     });
   };
@@ -156,7 +156,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           const image = imageInfos[index].image;
           let removed = false;
 
-          if (uploadInfo.status && Settings.shouldReplaceBlobUris(editor)) {
+          if (uploadInfo.status && Options.shouldReplaceBlobUris(editor)) {
             blobCache.removeByUri(image.src);
             if (Rtc.isRtc(editor)) {
               // RTC handles replacing the image URL through callback events
@@ -205,7 +205,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
   };
 
   const uploadImagesAuto = (callback?: UploadCallback) => {
-    if (Settings.isAutomaticUploadsEnabled(editor)) {
+    if (Options.isAutomaticUploadsEnabled(editor)) {
       return uploadImages(callback);
     }
   };
@@ -279,7 +279,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
   };
 
   editor.on('SetContent', () => {
-    if (Settings.isAutomaticUploadsEnabled(editor)) {
+    if (Options.isAutomaticUploadsEnabled(editor)) {
       uploadImagesAuto();
     } else {
       scanForImages();

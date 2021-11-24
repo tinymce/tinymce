@@ -12,7 +12,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
@@ -82,8 +82,8 @@ const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: strin
 
 const setup = (editor: Editor): void => {
   const dom = editor.dom;
-  const rootBlock = Settings.getForcedRootBlock(editor);
-  const placeholder = Settings.getPlaceholder(editor);
+  const rootBlock = Options.getForcedRootBlock(editor);
+  const placeholder = Options.getPlaceholder(editor);
 
   const updatePlaceholder = (e: EditorEvent<unknown>, initial?: boolean) => {
     if (isNonTypingKeyboardEvent(e)) {

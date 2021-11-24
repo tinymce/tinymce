@@ -10,7 +10,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as NodeType from '../dom/NodeType';
 import * as ClientRect from '../geom/ClientRect';
 import * as CaretContainer from './CaretContainer';
@@ -107,7 +107,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
   const lastVisualCaret = Singleton.value<CaretState>();
   let cursorInterval: number | undefined;
   let caretContainerNode: Node | null;
-  const rootBlock = Settings.getForcedRootBlock(editor);
+  const rootBlock = Options.getForcedRootBlock(editor);
   const caretBlock = rootBlock.length > 0 ? rootBlock : 'p';
   const dom = editor.dom;
 

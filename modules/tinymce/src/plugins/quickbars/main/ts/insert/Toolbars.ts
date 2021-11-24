@@ -10,11 +10,11 @@ import { PredicateFind, SelectorFind, SugarElement, SugarNode } from '@ephox/sug
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const addToEditor = (editor: Editor): void => {
-  const insertToolbarItems = Settings.getInsertToolbarItems(editor);
-  if (insertToolbarItems.trim().length > 0) {
+  const insertToolbarItems = Options.getInsertToolbarItems(editor);
+  if (insertToolbarItems.length > 0) {
     editor.ui.registry.addContextToolbar('quickblock', {
       predicate: (node) => {
         const sugarNode = SugarElement.fromDom(node);

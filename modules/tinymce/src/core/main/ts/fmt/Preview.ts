@@ -11,7 +11,7 @@ import { Obj, Optionals } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 
 /**
@@ -191,7 +191,7 @@ const getCssText = (editor: Editor, format: any) => {
   let name, previewFrag;
   let previewCss = '', parentFontSize;
 
-  let previewStyles: string = Settings.getPreviewStyles(editor);
+  let previewStyles = Options.getPreviewStyles(editor);
 
   // No preview forced
   if (previewStyles === '') {

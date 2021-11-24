@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
 
   it('TBA: Paste span with encoded style attribute, paste_webkit_styles: font-family', () => {
     const editor = hook.editor();
-    editor.settings.paste_webkit_styles = 'font-family';
+    editor.options.set('paste_webkit_styles', 'font-family');
     editor.setContent('<p>test</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
     Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="font-family: &quot;a b&quot;;color:green;">b</span>' });
@@ -30,7 +30,7 @@ describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
 
   it('TBA: Paste span with encoded style attribute, paste_webkit_styles: all', () => {
     const editor = hook.editor();
-    editor.settings.paste_webkit_styles = 'all';
+    editor.options.set('paste_webkit_styles', 'all');
     editor.setContent('<p>test</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
     Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="font-family: &quot;a b&quot;; color: green;">b</span>' });
@@ -39,7 +39,7 @@ describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
 
   it('TBA: Paste span with encoded style attribute, paste_webkit_styles: none', () => {
     const editor = hook.editor();
-    editor.settings.paste_webkit_styles = 'none';
+    editor.options.set('paste_webkit_styles', 'none');
     editor.setContent('<p>test</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
     Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="font-family: &quot;a b&quot;;">b</span>' });
@@ -48,7 +48,7 @@ describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
 
   it('TBA: Paste span with encoded style attribute, paste_remove_styles_if_webkit: false', () => {
     const editor = hook.editor();
-    editor.settings.paste_remove_styles_if_webkit = false;
+    editor.options.set('paste_remove_styles_if_webkit', false);
     editor.setContent('<p>test</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
     Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="font-family: &quot;a b&quot;;">b</span>' });

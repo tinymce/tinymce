@@ -31,7 +31,7 @@ describe('browser.tinymce.plugins.table.TableClassListTest', () => {
 
   it('TBA: class input with setting', async () => {
     const editor = hook.editor();
-    editor.settings.table_class_list = [{ title: 'test', value: 'test' }];
+    editor.options.set('table_class_list', [{ title: 'test', value: 'test' }]);
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
     // FIX: Dupe with TableCellClassListTest.

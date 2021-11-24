@@ -20,7 +20,7 @@ import * as InsertNewLine from '../newline/InsertNewLine';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import Editor from './Editor';
 import Env from './Env';
-import { ContentLanguage } from './SettingsTypes';
+import { ContentLanguage } from './OptionTypes';
 import Tools from './util/Tools';
 
 /**

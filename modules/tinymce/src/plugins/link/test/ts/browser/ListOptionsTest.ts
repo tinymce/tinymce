@@ -45,10 +45,10 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
 
   it('TBA: Checking link class generation', () => {
     const editor = hook.editor();
-    editor.settings.link_class_list = [
+    editor.options.set('link_class_list', [
       { title: 'Important', value: 'imp' },
       { title: 'Insignificant', value: 'insig' }
-    ];
+    ]);
 
     const classes = ClassListOptions.getClasses(editor);
     assert.deepEqual(
@@ -63,7 +63,7 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
 
   it('TBA: Checking link list generation', async () => {
     const editor = hook.editor();
-    editor.settings.link_list = (callback) => {
+    editor.options.set('link_list', (callback) => {
       callback([
         {
           title: 'Alpha',
@@ -77,7 +77,7 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
           value: 'beta'
         }
       ]);
-    };
+    });
 
     const links = await LinkListOptions.getLinks(editor);
 
@@ -103,10 +103,10 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
 
   it('TBA: Checking rel generation', () => {
     const editor = hook.editor();
-    editor.settings.rel_list = [
+    editor.options.set('rel_list', [
       { value: '', text: 'None' },
       { value: 'just one', text: 'Just One' }
-    ];
+    ]);
 
     const rels = RelOptions.getRels(editor, Optional.some('initial-target'));
     assert.deepEqual(
@@ -121,10 +121,10 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
 
   it('TBA: Checking targets generation', () => {
     const editor = hook.editor();
-    editor.settings.target_list = [
+    editor.options.set('target_list', [
       { value: 'target1', text: 'Target1' },
       { value: 'target2', text: 'Target2' }
-    ];
+    ]);
 
     const targets = TargetOptions.getTargets(editor);
     assert.deepEqual(

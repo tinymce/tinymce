@@ -22,8 +22,8 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   }, [ Plugin ], true);
 
   const pInitAndOpenDialog = async (editor: Editor, content: string, cursorPos: Cursors.CursorSpec | Cursors.RangeSpec) => {
-    editor.settings.image_advtab = true;
-    editor.settings.image_dimensions = false;
+    editor.options.set('image_advtab', true);
+    editor.options.set('image_dimensions', false);
     editor.setContent(content);
     TinySelections.setSelectionFrom(editor, cursorPos);
     editor.execCommand('mceImage');

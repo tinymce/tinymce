@@ -6,7 +6,6 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 import { AutocompleterStructure, pAssertAutocompleterStructure, pWaitForAutocompleteToClose } from '../../module/AutocompleterUtils';
 
@@ -39,7 +38,7 @@ describe('webdriver.tinymce.themes.silver.editor.AutocompleteDelayedResponseTest
         ch: '$',
         minChars: 0,
         columns: 'auto',
-        fetch: (_pattern, _maxResults) => new PromisePolyfill((resolve) => {
+        fetch: (_pattern, _maxResults) => new Promise((resolve) => {
           setTimeout(() => {
             resolve(
               Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({

@@ -10,7 +10,6 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import Promise from 'tinymce/core/api/util/Promise';
 
 import * as Spot from '../alien/Spot';
 import { toLeaf } from '../alien/TextDescent';

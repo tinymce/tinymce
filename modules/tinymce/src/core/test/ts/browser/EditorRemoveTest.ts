@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 describe('browser.tinymce.core.EditorRemoveTest', () => {
 
@@ -48,14 +47,14 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
         });
       }
     }).then(
-      () => PromisePolyfill.reject('Expected editor would not load completely'),
+      () => Promise.reject('Expected editor would not load completely'),
       (err) => {
         // As we have deliberately removed the editor during the loading process
         // we have to intercept the error that is thrown by McEditor.pFromHtml.
         if (err === McEditor.errorMessageEditorRemoved) {
-          return PromisePolyfill.resolve();
+          return Promise.resolve();
         } else {
-          return PromisePolyfill.reject(err);
+          return Promise.reject(err);
         }
       }
     );

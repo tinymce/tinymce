@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
-import { ToolbarLocation, ToolbarMode } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarLocation, ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 import * as MenuUtils from './MenuUtils';
 import * as PageScroll from './PageScroll';
@@ -153,10 +153,10 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
 
     it('TINY-7337: Checking toolbar_sticky_offset updated sticky header position', async () => {
       const editor = hook.editor();
-      editor.settings.toolbar_sticky_offset = 54;
+      editor.options.set('toolbar_sticky_offset', 54);
 
       await StickyUtils.pAssertHeaderPosition(toolbarLocation, 54);
-      delete editor.settings.toolbar_sticky_offset;
+      editor.options.unset('toolbar_sticky_offset');
     });
   });
 };

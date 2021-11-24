@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as Settings from 'tinymce/themes/silver/api/Settings';
+import * as Options from 'tinymce/themes/silver/api/Options';
 
 describe('browser.tinymce.themes.silver.editor.ShadowDomInlineTest', () => {
   const hook = TinyHooks.bddSetupInShadowRoot<Editor>({
@@ -13,6 +13,6 @@ describe('browser.tinymce.themes.silver.editor.ShadowDomInlineTest', () => {
 
   it('UI container should be inside the shadow root', () => {
     const editor = hook.editor();
-    Assertions.assertDomEq('Should be shadow root', hook.shadowRoot(), Settings.getUiContainer(editor));
+    Assertions.assertDomEq('Should be shadow root', hook.shadowRoot(), Options.getUiContainer(editor));
   });
 });
