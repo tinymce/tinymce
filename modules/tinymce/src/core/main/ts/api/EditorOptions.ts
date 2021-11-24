@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 
 import Editor from './Editor';
 import { EditorOptions, NormalizedEditorOptions } from './OptionTypes';
@@ -209,7 +209,7 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
   const values: Record<string, any> = {};
 
   editor.on('init', () => {
-    const unregisteredOptions = Arr.filter(Obj.keys(initialOptions), Fun.not(isRegistered));
+    const unregisteredOptions = Arr.filter(Obj.keys(initialOptions), (option) => !isRegistered(option) && option !== 'mobile');
     if (unregisteredOptions.length > 0) {
       // eslint-disable-next-line no-console
       console.warn('The following options were specified but have not been registered:\n - ' + unregisteredOptions.join('\n - '));
