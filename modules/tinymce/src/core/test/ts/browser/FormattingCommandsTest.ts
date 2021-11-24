@@ -75,7 +75,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('ForeColor', false, '#FF0000');
-    assert.equal(editor.getContent(), '<p><span style="color: #ff0000;">test 123</span></p>');
+    assert.equal(editor.getContent(), '<p><span style="color: #FF0000;">test 123</span></p>');
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
