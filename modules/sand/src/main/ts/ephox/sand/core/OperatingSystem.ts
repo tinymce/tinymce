@@ -63,7 +63,7 @@ export const OperatingSystem = {
   ios: Fun.constant(ios),
   android: Fun.constant(android),
   linux: Fun.constant(linux),
-  osx: Fun.constant(macos),
+  macos: Fun.constant(macos),
   solaris: Fun.constant(solaris),
   freebsd: Fun.constant(freebsd),
   chromeos: Fun.constant(chromeos)
