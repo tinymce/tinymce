@@ -46,4 +46,22 @@ describe('browser.acid.api.ConversionsTest', () => {
     const result = Transformations.anyToHexString(input);
     assert.equal(result, '#0000FF');
   });
+
+  it('tohex with red as the input', () => {
+    const input = 'red';
+    const result = Transformations.anyToHexString(input);
+    assert.equal(result, 'red');
+  });
+
+  it('tohex with Short Hex Code', () => {
+    const input = '#FF0';
+    const result = Transformations.anyToHexString(input);
+    assert.equal(result, '#FF0');
+  });
+
+  it('tohex woth transparent', () => {
+    const input = 'transparent';
+    const result = Transformations.anyToHexString(input);
+    assert.equal(result, 'transparent');
+  });
 });

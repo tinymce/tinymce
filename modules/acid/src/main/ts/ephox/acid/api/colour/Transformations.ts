@@ -33,7 +33,10 @@ const anyToHex = (color: string): Hex =>
     });
 
 const anyToHexString = (color: string): string =>
-  '#' + anyToHex(color).value;
+  RgbaColour.fromString(color)
+    .map(HexColour.fromRgba)
+    .map((h) => '#' + h.value)
+    .getOr(color);
 
 export {
   anyToHex,
