@@ -15,7 +15,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
-import { hasAdvancedCellTab } from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
@@ -84,7 +84,7 @@ const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData): 
 
     updateSimpleProps(modifier, colModifier, data);
 
-    if (hasAdvancedCellTab(editor)) {
+    if (Options.hasAdvancedCellTab(editor)) {
       updateAdvancedProps(modifier, data);
     }
 
@@ -156,7 +156,7 @@ const onSubmitCellForm = (editor: Editor, cells: SugarElement<HTMLTableCellEleme
 const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]): CellData => {
   const cellsData = TableLookup.table(cells[0]).map((table) =>
     Arr.map(getSelectedCells(table, cells), (item) =>
-      Helpers.extractDataFromCellElement(editor, item.element, hasAdvancedCellTab(editor), item.column)
+      Helpers.extractDataFromCellElement(editor, item.element, Options.hasAdvancedCellTab(editor), item.column)
     )
   );
 
@@ -197,7 +197,7 @@ const open = (editor: Editor, selections: Selections): void => {
   editor.windowManager.open({
     title: 'Cell Properties',
     size: 'normal',
-    body: hasAdvancedCellTab(editor) ? dialogTabPanel : dialogPanel,
+    body: Options.hasAdvancedCellTab(editor) ? dialogTabPanel : dialogPanel,
     buttons: [
       {
         type: 'cancel',

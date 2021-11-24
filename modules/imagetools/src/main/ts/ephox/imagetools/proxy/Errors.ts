@@ -1,5 +1,4 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
-import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as Utils from './Utils';
 

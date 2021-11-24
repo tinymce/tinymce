@@ -31,7 +31,7 @@ describe('browser.tinymce.plugins.table.TableRowClassListTest', () => {
 
   it('TBA: class input with setting', async () => {
     const editor = hook.editor();
-    editor.settings.table_row_class_list = [{ title: 'test', value: 'test' }];
+    editor.options.set('table_row_class_list', [{ title: 'test', value: 'test' }]);
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
     editor.execCommand('mceTableRowProps');

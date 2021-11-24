@@ -52,7 +52,6 @@ const bedrockDefaults = {
   customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
   overallTimeout: 180000,
   singleTimeout: 60000,
-  polyfills: [ 'Promise', 'Symbol' ],
 };
 
 const bedrockHeadless = (tests, browser, auto) => {
@@ -126,9 +125,9 @@ module.exports = function (grunt) {
   const runAllTests = grunt.option('ignore-lerna-changed') || false;
   const changes = fetchLernaProjects(grunt.log, runAllTests);
 
-  const bucket = grunt.option('bucket') || 1;
-  const buckets = grunt.option('buckets') || 1;
-  const chunk = grunt.option('chunk') || 100;
+  const bucket = parseInt(grunt.option('bucket'), 10) || 1;
+  const buckets = parseInt(grunt.option('buckets'), 10) || 1;
+  const chunk = parseInt(grunt.option('chunk'), 10) || 100;
 
   const headlessTests = filterChanges(changes, runsHeadless);
   const browserTests = filterChangesNot(changes, runsHeadless);

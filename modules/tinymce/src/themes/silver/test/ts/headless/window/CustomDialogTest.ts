@@ -5,7 +5,6 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Checked, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
@@ -254,7 +253,7 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
         doc,
         dest.selector
       );
-    }), PromisePolyfill.resolve());
+    }), Promise.resolve());
 
     store.assertEq('Checking the testLog is empty', []);
 

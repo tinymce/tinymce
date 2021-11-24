@@ -81,7 +81,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
   it('TBA: Table row properties dialog (get data from plain cell)', async () => {
     const editor = hook.editor();
     assertEvents([]);
-    editor.settings.table_row_advtab = false;
+    editor.options.set('table_row_advtab', false);
     editor.setContent(baseHtml);
     TinySelections.select(editor, 'td', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -123,7 +123,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
 
   it('TBA: Table row properties dialog (get data from complex row)', async () => {
     const editor = hook.editor();
-    editor.settings.table_row_advtab = true;
+    editor.options.set('table_row_advtab', true);
     editor.setContent(advHtml);
     TinySelections.select(editor, 'td', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);

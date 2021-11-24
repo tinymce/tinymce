@@ -37,7 +37,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on single paragraph with margin', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = true;
+    editor.options.set('indent_use_margin', true);
     editor.setContent('<p style="margin-left: 40px;">a</p>');
     assertOutdentCommandState(editor, true);
     editor.execCommand('outdent');
@@ -46,7 +46,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on single paragraph with padding', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = false;
+    editor.options.set('indent_use_margin', false);
     editor.setContent('<p style="padding-left: 40px;">a</p>');
     assertOutdentCommandState(editor, true);
     editor.execCommand('outdent');
@@ -55,7 +55,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on single paragraph with margin x 2', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = false;
+    editor.options.set('indent_use_margin', false);
     editor.setContent('<p style="padding-left: 80px;">a</p>');
     assertOutdentCommandState(editor, true);
     editor.execCommand('outdent');
@@ -64,7 +64,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on single paragraph with padding x 2', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = true;
+    editor.options.set('indent_use_margin', true);
     editor.setContent('<p style="margin-left: 80px;">a</p>');
     assertOutdentCommandState(editor, true);
     editor.execCommand('outdent');
@@ -73,7 +73,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on mutiple paragraphs with margin', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = true;
+    editor.options.set('indent_use_margin', true);
     editor.setContent('<p style="margin-left: 80px;">a</p><p style="margin-left: 40px;">b</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
     assertOutdentCommandState(editor, true);
@@ -83,7 +83,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on multiple paragraphs with padding', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = false;
+    editor.options.set('indent_use_margin', false);
     editor.setContent('<p style="padding-left: 80px;">a</p><p style="padding-left: 40px;">b</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
     assertOutdentCommandState(editor, true);
@@ -93,7 +93,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on single paragraph with padding and rtl', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = false;
+    editor.options.set('indent_use_margin', false);
     editor.setContent('<p style="padding-right: 80px; direction: rtl;">a</p>');
     assertOutdentCommandState(editor, true);
     editor.execCommand('outdent');
@@ -102,7 +102,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on single paragraph with margin and rtl', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = true;
+    editor.options.set('indent_use_margin', true);
     editor.setContent('<p style="margin-right: 80px; direction: rtl;">a</p>');
     assertOutdentCommandState(editor, true);
     editor.execCommand('outdent');
@@ -112,7 +112,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
   it('Outdent on single paragraph with margin in readonly mode', () => {
     const editor = hook.editor();
     setReadOnly(editor, true);
-    editor.settings.indent_use_margin = true;
+    editor.options.set('indent_use_margin', true);
     editor.setContent('<p style="margin-left: 40px;">a</p>');
     assertOutdentCommandState(editor, false);
     editor.execCommand('outdent');
@@ -122,7 +122,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on selected table using margin', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = true;
+    editor.options.set('indent_use_margin', true);
     editor.setContent('<table style="margin-left: 80px;"><tr><td>a</td></tr></table>');
     editor.execCommand('SelectAll');
     assertOutdentCommandState(editor, true);
@@ -132,7 +132,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on selected table always using margin', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = false;
+    editor.options.set('indent_use_margin', false);
     editor.setContent('<table style="margin-left: 80px;"><tr><td>a</td></tr></table>');
     editor.execCommand('SelectAll');
     assertOutdentCommandState(editor, true);
@@ -142,7 +142,7 @@ describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
 
   it('Outdent on contentEditable=false', () => {
     const editor = hook.editor();
-    editor.settings.indent_use_margin = true;
+    editor.options.set('indent_use_margin', true);
     editor.setContent('<p style="margin-left: 80px;" contenteditable="false"><span contenteditable="true">a</span></p>');
     TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
     editor.execCommand('outdent');

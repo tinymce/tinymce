@@ -53,13 +53,15 @@ export const TestExtras = (): TestExtras => {
   Class.add(uiMothership.element, 'tox');
 
   const backstage = TestBackstage(sink);
-  const settings = {};
+  const options = {};
 
   const mockEditor = {
     setContent: (_content) => {},
     insertContent: (_content: string, _args?: any) => {},
     execCommand: (_cmd: string, _ui?: boolean, _value?: any) => {},
-    getParam: (name: string, defaultVal?: any, _type?: string) => settings[name] || defaultVal
+    options: {
+      get: (name: string) => options[name]
+    }
   } as Editor;
 
   const extras = {

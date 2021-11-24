@@ -9,7 +9,6 @@ import { UploadResult } from 'tinymce/core/api/EditorUpload';
 import Env from 'tinymce/core/api/Env';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Promise from 'tinymce/core/api/util/Promise';
 import * as Conversions from 'tinymce/core/file/Conversions';
 
 const assertResult = (editor: Editor, title: string, uploadUri: string, uploadedBlobInfo: BlobInfo, result: UploadResult[]) => {
@@ -94,8 +93,8 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
   afterEach(() => {
     const editor = hook.editor();
     editor.editorUpload.destroy();
-    editor.settings.automatic_uploads = false;
-    delete editor.settings.images_replace_blob_uris;
+    editor.options.set('automatic_uploads', false);
+    editor.options.unset('images_replace_blob_uris');
     clearEvents();
   });
 
@@ -119,10 +118,10 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
   it('TBA: replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', () => {
     const editor = hook.editor();
-    editor.settings.automatic_uploads = true;
-    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
+    editor.options.set('automatic_uploads', true);
+    editor.options.set('images_upload_handler', (_data: BlobInfo, success) => {
       success('file.png');
-    };
+    });
 
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
@@ -141,12 +140,12 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
   it(`TBA: don't replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri) since blob uris are retained`, () => {
     const editor = hook.editor();
-    editor.settings.images_replace_blob_uris = false;
+    editor.options.set('images_replace_blob_uris', false);
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
+    editor.options.set('images_upload_handler', (_data: BlobInfo, success) => {
       success('file.png');
-    };
+    });
 
     return editor._scanForImages().then((result) => {
       const blobUri = result[0].blobInfo.blobUri();
@@ -167,11 +166,11 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = (data: BlobInfo, success) => {
+    editor.options.set('images_upload_handler', (data: BlobInfo, success) => {
       uploadedBlobInfo = data;
       uploadUri = data.id() + '.png';
       success(uploadUri);
-    };
+    });
 
     assertEventsLength(0);
     return editor.uploadImages((result) => {
@@ -188,11 +187,11 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = (data: BlobInfo, success) => {
+    editor.options.set('images_upload_handler', (data: BlobInfo, success) => {
       uploadedBlobInfo = data;
       uploadUri = data.id() + '.png';
       success(uploadUri);
-    };
+    });
 
     assertEventsLength(0);
     return editor.uploadImages().then((result) => {
@@ -222,11 +221,11 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
-    editor.settings.images_replace_blob_uris = false;
-    editor.settings.images_upload_handler = (data: BlobInfo, success) => {
+    editor.options.set('images_replace_blob_uris', false);
+    editor.options.set('images_upload_handler', (data: BlobInfo, success) => {
       uploadedBlobInfo = data;
       success(data.id() + '.png');
-    };
+    });
 
     assertEventsLength(0);
     return editor.uploadImages(assertResultRetainsUrl).then(assertResultRetainsUrl).then(() => {
@@ -244,13 +243,13 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     const editor = hook.editor();
     let uploadedBlobInfo;
 
-    editor.settings.images_reuse_filename = true;
+    editor.options.set('images_reuse_filename', true);
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = (data: BlobInfo, success) => {
+    editor.options.set('images_upload_handler', (data: BlobInfo, success) => {
       uploadedBlobInfo = data;
       success('custom.png?size=small');
-    };
+    });
 
     const assertResultReusesFilename = (editor: Editor, _uploadedBlobInfo: BlobInfo, result: UploadResult[]) => {
       assert.lengthOf(result, 1, 'uploadImages reuse filename');
@@ -270,7 +269,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         assert.isFalse(hasBlobAsSource(img), 'uploadImages reuse filename');
         assert.include(img.src, 'custom.png?size=small&', 'Check the cache invalidation string was added');
         assert.equal(editor.getContent(), '<p><img src="custom.png?size=small" /></p>', 'uploadImages reuse filename');
-        delete editor.settings.images_reuse_filename;
+        editor.options.unset('images_reuse_filename');
       });
     });
   });
@@ -294,13 +293,13 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
+    editor.options.set('images_upload_handler', (_data: BlobInfo, success) => {
       uploadCount++;
 
       setTimeout(() => {
         success('myimage.png');
       }, 0);
-    };
+    });
 
     assertEventsLength(0);
     return Promise.all([
@@ -329,13 +328,13 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = (_data: BlobInfo, _success, failure) => {
+    editor.options.set('images_upload_handler', (_data: BlobInfo, _success, failure) => {
       uploadCount++;
 
       setTimeout(() => {
         failure('Error');
       }, 0);
-    };
+    });
 
     assertEventsLength(0);
     return Promise.all([
@@ -369,13 +368,13 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     editor.resetContent(imageHtml(testBlobDataUri));
 
-    editor.settings.images_upload_handler = (_data: BlobInfo, _success, failure) => {
+    editor.options.set('images_upload_handler', (_data: BlobInfo, _success, failure) => {
       uploadCount++;
 
       setTimeout(() => {
         failure('Error', { remove: true });
       }, 0);
-    };
+    });
 
     assertEventsLength(0);
     return Promise.all([
@@ -396,10 +395,10 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     editor.setContent(imageHtml(Env.transparentSrc));
 
-    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
+    editor.options.set('images_upload_handler', (_data: BlobInfo, success) => {
       uploadCount++;
       success('url');
-    };
+    });
 
     return editor.uploadImages(uploadDone);
   });
@@ -416,10 +415,10 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     editor.setContent('<img src="' + testBlobDataUri + '" data-mce-bogus="1">');
 
-    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
+    editor.options.set('images_upload_handler', (_data: BlobInfo, success) => {
       uploadCount++;
       success('url');
-    };
+    });
 
     return editor.uploadImages(uploadDone);
   });
@@ -443,10 +442,10 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     editor.setContent('<img src="' + testBlobDataUri + '" data-skip="1">');
     filterCount = 0;
 
-    editor.settings.images_upload_handler = (_data: BlobInfo, success) => {
+    editor.options.set('images_upload_handler', (_data: BlobInfo, success) => {
       uploadCount++;
       success('url');
-    };
+    });
 
     return editor.uploadImages(uploadDone);
   });
@@ -477,7 +476,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     setInitialContent(editor, imgHtml1 + imgHtml2 + imgHtml3);
 
-    editor.settings.images_upload_handler = (_data: BlobInfo, success, failure) => {
+    editor.options.set('images_upload_handler', (_data: BlobInfo, success, failure) => {
       uploadCount++;
 
       if (uploadCount === 1 ) {
@@ -493,7 +492,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
           failure('Error', { remove: true });
         }, 0);
       }
-    };
+    });
 
     return editor.uploadImages(uploadDone);
   });

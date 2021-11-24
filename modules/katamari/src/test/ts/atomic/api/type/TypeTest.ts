@@ -218,4 +218,22 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
       assert.isFalse(Type.isPlainObject(Optional.some(5)));
     });
   });
+
+  context('Type.is', () => {
+    it('returns false for null or undefined', () => {
+      assert.isFalse(Type.is(null, RegExp));
+      assert.isFalse(Type.is(undefined, RegExp));
+    });
+
+    it('returns false for things that are not even objects', () => {
+      assert.isFalse(Type.is('hello', RegExp));
+      assert.isFalse(Type.is(5, RegExp));
+      assert.isFalse(Type.is([ 1, 2, 4 ], RegExp));
+    });
+
+    it('returns true for items that match the constructor', () => {
+      assert.isTrue(Type.is(/test/, RegExp));
+      assert.isTrue(Type.is(new Set(), Set));
+    });
+  });
 });

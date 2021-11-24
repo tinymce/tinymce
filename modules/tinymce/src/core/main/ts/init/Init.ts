@@ -10,9 +10,9 @@ import { Fun, Obj, Optional, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
+import * as Options from '../api/Options';
+import { ThemeInitFunc } from '../api/OptionTypes';
 import PluginManager from '../api/PluginManager';
-import * as Settings from '../api/Settings';
-import { ThemeInitFunc } from '../api/SettingsTypes';
 import ThemeManager from '../api/ThemeManager';
 import { EditorUiApi } from '../api/ui/Ui';
 import Tools from '../api/util/Tools';
@@ -34,11 +34,11 @@ const initPlugin = (editor: Editor, initializedPlugins: string[], plugin: string
     }
 
     try {
-      const pluginInstance = new Plugin(editor, pluginUrl);
+      const pluginInstance = Plugin(editor, pluginUrl) || {};
 
       editor.plugins[plugin] = pluginInstance;
 
-      if (pluginInstance.init) {
+      if (Type.isFunction(pluginInstance.init)) {
         pluginInstance.init(editor, pluginUrl);
         initializedPlugins.push(plugin);
       }
@@ -56,13 +56,13 @@ const trimLegacyPrefix = (name: string) => {
 const initPlugins = (editor: Editor) => {
   const initializedPlugins = [];
 
-  Tools.each(Settings.getPlugins(editor).split(/[ ,]/), (name) => {
+  Tools.each(Options.getPlugins(editor).split(/[ ,]/), (name) => {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
   });
 };
 
 const initIcons = (editor: Editor) => {
-  const iconPackName: string = Tools.trim(Settings.getIconPackName(editor));
+  const iconPackName: string = Tools.trim(Options.getIconPackName(editor));
   const currentIcons = editor.ui.registry.getAll().icons;
 
   const loadIcons = {
@@ -79,15 +79,13 @@ const initIcons = (editor: Editor) => {
 };
 
 const initTheme = (editor: Editor) => {
-  const theme = Settings.getTheme(editor);
+  const theme = Options.getTheme(editor);
 
   if (Type.isString(theme)) {
-    editor.settings.theme = trimLegacyPrefix(theme); // Kept until a proper API can be made. TINY-6142
-
     const Theme = ThemeManager.get(theme);
-    editor.theme = new Theme(editor, ThemeManager.urls[theme]);
+    editor.theme = Theme(editor, ThemeManager.urls[theme]) || {};
 
-    if (editor.theme.init) {
+    if (Type.isFunction(editor.theme.init)) {
       editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''));
     }
   } else {
@@ -103,7 +101,7 @@ const renderFromLoadedTheme = (editor: Editor) => {
 
 const renderFromThemeFunc = (editor: Editor) => {
   const elm = editor.getElement();
-  const theme = Settings.getTheme(editor) as ThemeInitFunc;
+  const theme = Options.getTheme(editor) as ThemeInitFunc;
   const info = theme(editor, elm);
 
   if (info.editorContainer.nodeType) {
@@ -145,9 +143,9 @@ const renderThemeUi = (editor: Editor) => {
 
   editor.orgDisplay = elm.style.display;
 
-  if (Type.isString(Settings.getTheme(editor))) {
+  if (Type.isString(Options.getTheme(editor))) {
     return renderFromLoadedTheme(editor);
-  } else if (Type.isFunction(Settings.getTheme(editor))) {
+  } else if (Type.isFunction(Options.getTheme(editor))) {
     return renderFromThemeFunc(editor);
   } else {
     return renderThemeFalse(editor);

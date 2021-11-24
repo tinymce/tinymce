@@ -10,7 +10,6 @@ import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
 
 import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
-import Promise from 'tinymce/core/api/util/Promise';
 
 import { CropRect } from './CropRect';
 

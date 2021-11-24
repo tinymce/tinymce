@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Strings } from '@ephox/katamari';
+import { Strings, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const rangeEqualsBracketOrSpace = (rangeString: string): boolean =>
   /^[(\[{ \u00a0]$/.test(rangeString);
@@ -72,8 +72,8 @@ const isPunctuation = (char: string) =>
 
 const parseCurrentLine = (editor: Editor, endOffset: number): void => {
   let end, endContainer, bookmark, text, prev, len, rngText;
-  const autoLinkPattern = Settings.getAutoLinkPattern(editor);
-  const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
+  const autoLinkPattern = Options.getAutoLinkPattern(editor);
+  const defaultLinkTarget = Options.getDefaultLinkTarget(editor);
 
   // Never create a link when we are inside a link
   if (editor.dom.getParent(editor.selection.getNode(), 'a[href]') !== null) {
@@ -161,7 +161,7 @@ const parseCurrentLine = (editor: Editor, endOffset: number): void => {
   text = rng.toString().trim();
   const matches = text.match(autoLinkPattern);
 
-  const protocol = Settings.getDefaultLinkProtocol(editor);
+  const protocol = Options.getDefaultLinkProtocol(editor);
 
   if (matches) {
     let url = matches[0];
@@ -176,7 +176,7 @@ const parseCurrentLine = (editor: Editor, endOffset: number): void => {
     editor.selection.setRng(rng);
     editor.execCommand('createlink', false, url);
 
-    if (defaultLinkTarget !== false) {
+    if (Type.isString(defaultLinkTarget)) {
       editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
     }
 

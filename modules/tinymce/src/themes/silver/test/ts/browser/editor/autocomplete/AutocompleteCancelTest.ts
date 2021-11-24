@@ -5,7 +5,6 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 import { pWaitForAutocompleteToClose } from '../../../module/AutocompleterUtils';
 
@@ -27,7 +26,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
         columns: 'auto',
         fetch: (pattern, _maxResults) => {
           const filteredItems = Arr.filter([ 'a', 'b', 'c', 'd' ], (item) => item.indexOf(pattern) !== -1);
-          return new PromisePolyfill((resolve) => {
+          return new Promise((resolve) => {
             resolve(
               Arr.map(filteredItems, (item) => ({
                 value: `colon-${item}`,

@@ -3,7 +3,7 @@ import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 
 describe('browser.tinymce.plugins.paste.PasteSettingsTest', () => {
@@ -11,7 +11,7 @@ describe('browser.tinymce.plugins.paste.PasteSettingsTest', () => {
     Plugin();
   });
 
-  const pCreateInlineEditor = (settings: RawEditorSettings) =>
+  const pCreateInlineEditor = (settings: RawEditorOptions) =>
     McEditor.pFromSettings<Editor>({
       ...settings,
       inline: true,

@@ -38,8 +38,8 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
     const editor = hook.editor();
     const container = TinyDom.container(editor);
     Css.setAll(container, {
-      width: editor.getParam('width') + 'px',
-      height: editor.getParam('height') + 'px',
+      width: editor.options.get('width') + 'px',
+      height: editor.options.get('height') + 'px',
     });
   });
 

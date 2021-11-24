@@ -26,7 +26,7 @@ def runTests(name, bedrockCommand, runAll) {
 def runBrowserTests(name, browser, os, bucket, buckets, runAll) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
-      " --chunk=200" +
+      " --chunk=400" +
       " --bedrock-os=" + os +
       " --bedrock-browser=" + browser +
       " --bucket=" + bucket +
@@ -118,11 +118,14 @@ node("headless-macos") {
 
     processes["headless-and-archive"] = {
       stage ("headless tests") {
-        // chrome-headless tests run on the same node as the pipeline
-        // we are re-using the state prepared by `ci-all` below
-        // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
-        echo "Platform: chrome-headless tests on node: $NODE_NAME"
-        runHeadlessTests(runAllTests)
+        // Prevent multiple headless tests running at once
+        lock("headless tests") {
+          // chrome-headless tests run on the same node as the pipeline
+          // we are re-using the state prepared by `ci-all` below
+          // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
+          echo "Platform: chrome-headless tests on node: $NODE_NAME"
+          runHeadlessTests(runAllTests)
+        }
       }
 
       if (BRANCH_NAME != primaryBranch) {

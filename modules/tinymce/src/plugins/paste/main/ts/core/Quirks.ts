@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 type PreProcessFilter = (editor: Editor, content: string, internal: boolean) => string;
 
@@ -43,15 +43,15 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean):
   }
 
   // Filter away styles that isn't matching the target node
-  const webKitStylesSetting = Settings.getWebkitStyles(editor);
+  const webKitStylesOption = Options.getWebkitStyles(editor);
   let webKitStyles: string[] | string;
 
-  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStylesSetting === 'all') {
+  if (Options.shouldRemoveWebKitStyles(editor) === false || webKitStylesOption === 'all') {
     return content;
   }
 
-  if (webKitStylesSetting) {
-    webKitStyles = webKitStylesSetting.split(/[, ]/);
+  if (webKitStylesOption) {
+    webKitStyles = webKitStylesOption.split(/[, ]/);
   }
 
   // Keep specific styles that doesn't match the current node computed style

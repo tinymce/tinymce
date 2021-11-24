@@ -17,7 +17,7 @@ import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 
-import * as Settings from '../../api/Settings';
+import * as Options from '../../api/Options';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';
@@ -61,7 +61,7 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
 const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   const backstage = extras.backstage;
   const editor = extras.editor;
-  const isStickyToolbar = Settings.isStickyToolbar(editor);
+  const isStickyToolbar = Options.isStickyToolbar(editor);
 
   const alertDialog = AlertDialog.setup(extras);
   const confirmDialog = ConfirmDialog.setup(extras);

@@ -108,7 +108,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
   it('TBA: Table cell properties dialog (get data from basic cell)', async () => {
     const editor = hook.editor();
     assertEventsOrder([]);
-    editor.settings.table_cell_advtab = false;
+    editor.options.set('table_cell_advtab', false);
     editor.setContent(baseHtml);
     TinySelections.select(editor, 'td', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -120,7 +120,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
   it('TBA: Table cell properties dialog (get/set data from/to basic cell)', async () => {
     const editor = hook.editor();
     assertEventsOrder([]);
-    editor.settings.table_cell_advtab = false;
+    editor.options.set('table_cell_advtab', false);
     editor.setContent(baseHtml);
     TinySelections.select(editor, 'td', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -156,7 +156,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
     };
 
     const editor = hook.editor();
-    editor.settings.table_cell_advtab = true;
+    editor.options.set('table_cell_advtab', true);
     editor.setContent(complexHtml);
     TinySelections.select(editor, 'th', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -184,7 +184,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
     const editor = hook.editor();
     assertEventsOrder([]);
-    editor.settings.table_cell_advtab = true;
+    editor.options.set('table_cell_advtab', true);
     editor.setContent('<table><tr><td>X</td></tr></table>');
     TinySelections.select(editor, 'td', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -329,7 +329,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
     const editor = hook.editor();
     assertEventsOrder([]);
-    editor.settings.table_cell_advtab = true;
+    editor.options.set('table_cell_advtab', true);
     editor.setContent(baseHtml);
     TinySelections.select(editor, 'td', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -388,7 +388,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
     const editor = hook.editor();
     assertEventsOrder([]);
-    editor.settings.table_cell_advtab = false;
+    editor.options.set('table_cell_advtab', false);
     editor.setContent(html);
     TinySelections.select(editor, 'td', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);

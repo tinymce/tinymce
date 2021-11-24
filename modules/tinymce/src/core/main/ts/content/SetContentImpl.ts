@@ -11,7 +11,7 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import AstNode from '../api/html/Node';
 import HtmlSerializer from '../api/html/Serializer';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
 import { isWsPreserveElement } from '../dom/ElementType';
@@ -62,12 +62,12 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
       content = '<li>' + padd + '</li>';
     }
 
-    const forcedRootBlockName = Settings.getForcedRootBlock(editor);
+    const forcedRootBlockName = Options.getForcedRootBlock(editor);
 
     // Check if forcedRootBlock is configured and that the block is a valid child of the body
     if (forcedRootBlockName && editor.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
       content = padd;
-      content = editor.dom.createHTML(forcedRootBlockName, Settings.getForcedRootBlockAttrs(editor), content);
+      content = editor.dom.createHTML(forcedRootBlockName, Options.getForcedRootBlockAttrs(editor), content);
     } else if (!content) {
       // We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
       content = '<br data-mce-bogus="1">';

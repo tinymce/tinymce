@@ -131,7 +131,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     };
 
     const editor = hook.editor();
-    editor.settings.table_appearance_options = false;
+    editor.options.set('table_appearance_options', false);
     setTable(editor);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -142,7 +142,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(fullAllOffData, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
-    delete editor.settings.table_appearance_options;
+    editor.options.unset('table_appearance_options');
   });
 
   it('TBA: Table properties dialog all ui on fill ok', async () => {
@@ -206,13 +206,13 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     };
 
     const editor = hook.editor();
-    editor.settings.table_class_list = [
+    editor.options.set('table_class_list', [
       { title: 'None', value: '' },
       { title: 'Dog', value: 'dog' },
       { title: 'Cat', value: 'cat' }
-    ];
-    editor.settings.table_advtab = true;
-    editor.settings.table_style_by_css = true;
+    ]);
+    editor.options.set('table_advtab', true);
+    editor.options.set('table_style_by_css', true);
     setTable(editor);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -225,7 +225,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     TableTestUtils.setDialogValues(emptyAllOnData, true, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
     TableTestUtils.assertElementStructure(editor, 'table', htmlEmptyTable);
-    delete editor.settings.table_class_list;
+    editor.options.unset('table_class_list');
   });
 
   it('TBA: Open dialog via execCommand', async () => {
@@ -252,8 +252,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     };
 
     const editor = hook.editor();
-    editor.settings.table_advtab = true;
-    editor.settings.table_style_by_css = true;
+    editor.options.set('table_advtab', true);
+    editor.options.set('table_style_by_css', true);
     editor.setContent(baseHtml);
     setCursor(editor);
     editor.execCommand('mceTableProps');
@@ -303,13 +303,13 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     };
 
     const editor = hook.editor();
-    editor.settings.table_class_list = [
+    editor.options.set('table_class_list', [
       { title: 'None', value: '' },
       { title: 'Dog', value: 'dog' },
       { title: 'Cat', value: 'cat' }
-    ];
-    editor.settings.table_advtab = true;
-    editor.settings.table_style_by_css = true;
+    ]);
+    editor.options.set('table_advtab', true);
+    editor.options.set('table_style_by_css', true);
     editor.setContent(baseHtml);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -345,7 +345,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     };
 
     const editor = hook.editor();
-    editor.settings.table_appearance_options = false;
+    editor.options.set('table_appearance_options', false);
     editor.setContent(floatTableHtml);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -356,6 +356,6 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(newData, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
-    delete editor.settings.table_appearance_options;
+    editor.options.unset('table_appearance_options');
   });
 });

@@ -11,14 +11,13 @@ import { SugarPosition } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
+import * as Options from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 import { resize, ResizeTypes } from '../sizing/Resize';
 
 const getResizeType = (editor: Editor): ResizeTypes => {
-  // If autoresize is enabled, disable resize
-  const fallback = !editor.hasPlugin('autoresize');
-  const resize = editor.getParam('resize', fallback);
+  const resize = Options.getResize(editor);
   if (resize === false) {
     return ResizeTypes.None;
   } else if (resize === 'both') {

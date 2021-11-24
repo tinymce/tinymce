@@ -6,7 +6,6 @@
  */
 
 import ScriptLoader from './dom/ScriptLoader';
-import Promise from './util/Promise';
 
 interface Resource {
   load: <T = any>(id: string, url: string) => Promise<T>;
