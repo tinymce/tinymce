@@ -82,7 +82,7 @@ describe('BrowserTest', () => {
     check('isOpera', 'Windows', 'Opera', 9, 63, 'Opera/9.63 (Windows NT 5.1; U; en) Presto/2.1.1');
   });
 
-  it('Chromium', () => {
+  it('Chrome', () => {
     check('isChromium', 'Windows', 'Chromium', 3, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.38 Safari/532.0');
     check('isChromium', 'Windows', 'Chromium', 4, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.195.38 Safari/532.0');
     check('isChromium', 'Windows', 'Chromium', 5, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.127 Safari/533.4');
