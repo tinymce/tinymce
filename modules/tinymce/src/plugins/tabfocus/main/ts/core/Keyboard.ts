@@ -99,7 +99,7 @@ const setup = (editor: Editor): void => {
         focusEditor.focus();
       } else {
         setTimeout(() => {
-          if (!Env.browser.isChrome() && !Env.browser.isSafari()) {
+          if (!Env.browser.isChromium() && !Env.browser.isSafari()) {
             window.focus();
           }
 

@@ -320,7 +320,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       TinyContentActions.keystroke(editor, Keys.right(), { ctrl: !os.isMacOS(), alt: os.isMacOS() });
       // TINY-7334: Chromium v90 caused the way the Selection.modify API works on Windows so that
       // it moves to the start of the next word instead of the end of the next word
-      if (os.isWindows() && (browser.isChrome() || browser.isEdge()) && browser.version.major >= 90) {
+      if (os.isWindows() && (browser.isChromium() || browser.isEdge()) && browser.version.major >= 90) {
         TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
       } else {
         TinyAssertions.assertCursor(editor, [ 0, 2 ], 3);
