@@ -132,7 +132,7 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 
     // iPadOS has an issue where it won't rerender the body when the iframe is resized
     // however if we reset the scroll position then it re-renders correctly
-    if (Env.browser.isSafari() && (Env.os.isOSX() || Env.os.isiOS())) {
+    if (Env.browser.isSafari() && (Env.os.isMacOS() || Env.os.isiOS())) {
       const win = editor.getWin();
       win.scrollTo(win.pageXOffset, win.pageYOffset);
     }

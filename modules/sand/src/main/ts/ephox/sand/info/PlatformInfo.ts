@@ -79,7 +79,7 @@ const oses: PlatformInfo[] = [
     versionRegexes: [ /.*?android\ ?([0-9]+)\.([0-9]+).*/ ]
   },
   {
-    name: 'OSX',
+    name: 'macOS',
     search: checkContains('mac os x'),
     versionRegexes: [ /.*?mac\ os\ x\ ?([0-9]+)_([0-9]+).*/ ]
   },

@@ -53,7 +53,7 @@ interface Env {
     isWindows: () => boolean;
     isiOS: () => boolean;
     isAndroid: () => boolean;
-    isOSX: () => boolean;
+    isMacOS: () => boolean;
     isLinux: () => boolean;
     isSolaris: () => boolean;
     isFreeBSD: () => boolean;
@@ -119,7 +119,7 @@ const Env: Env = {
     isFreeBSD: os.isFreeBSD,
     isiOS: os.isiOS,
     isLinux: os.isLinux,
-    isOSX: os.isOSX,
+    isMacOS: os.isMacOS,
     isSolaris: os.isSolaris,
     isWindows: os.isWindows
   },

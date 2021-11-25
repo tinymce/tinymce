@@ -44,7 +44,7 @@ describe('browser.tinymce.core.ShortcutsTest', () => {
     assertShortcut('ctrl+d', { ctrlKey: true, keyCode: 68 }, true);
     assertShortcut('ctrl+d', { altKey: true, keyCode: 68 }, false);
 
-    if (os.isOSX() || os.isiOS()) {
+    if (os.isMacOS() || os.isiOS()) {
       assertShortcut('meta+d', { metaKey: true, keyCode: 68 }, true);
       assertShortcut('access+d', { ctrlKey: true, altKey: true, keyCode: 68 }, true);
       assertShortcut('meta+d', { ctrlKey: true, keyCode: 68 }, false);
