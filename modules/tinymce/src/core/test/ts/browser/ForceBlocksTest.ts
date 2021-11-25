@@ -34,13 +34,13 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
 
   it('Wrap single root text node in P with attrs', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block_attrs = { class: 'class1' };
+    editor.options.set('forced_root_block_attrs', { class: 'class1' });
     editor.getBody().innerHTML = 'abcd';
     LegacyUnit.setSelection(editor, 'body', 2);
     pressArrowKey(editor);
     assert.equal(editor.getContent(), '<p class="class1">abcd</p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
-    delete editor.settings.forced_root_block_attrs;
+    editor.options.unset('forced_root_block_attrs');
   });
 
   it('Wrap single root text node in P but not table sibling', () => {
@@ -79,20 +79,20 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
 
   it('Wrap single root text node in DIV', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = 'div';
+    editor.options.set('forced_root_block', 'div');
     editor.getBody().innerHTML = 'abcd';
     LegacyUnit.setSelection(editor, 'body', 2);
     pressArrowKey(editor);
     assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<div>abcd</div>');
     assert.equal(editor.selection.getNode().nodeName, 'DIV');
-    delete editor.settings.forced_root_block;
+    editor.options.unset('forced_root_block');
   });
 
   it('Remove empty root text nodes', () => {
     const editor = hook.editor();
     const body = editor.getBody();
 
-    editor.settings.forced_root_block = 'div';
+    editor.options.set('forced_root_block', 'div');
     editor.getBody().innerHTML = 'abcd<div>abcd</div>';
     body.insertBefore(editor.getDoc().createTextNode(''), body.firstChild);
     body.appendChild(editor.getDoc().createTextNode(''));

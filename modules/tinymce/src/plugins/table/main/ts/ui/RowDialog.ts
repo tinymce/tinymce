@@ -14,7 +14,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
-import { hasAdvancedRowTab } from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Util from '../core/Util';
 import { ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
@@ -43,7 +43,7 @@ const applyStyleData = (editor: Editor, rows: HTMLTableRowElement[], data: RowDa
 
     updateSimpleProps(modifier, data);
 
-    if (hasAdvancedRowTab(editor)) {
+    if (Options.hasAdvancedRowTab(editor)) {
       updateAdvancedProps(modifier, data);
     }
 
@@ -106,7 +106,7 @@ const open = (editor: Editor): void => {
   }
 
   // Get current data and find shared values between rows
-  const rowsData = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm.dom, hasAdvancedRowTab(editor)));
+  const rowsData = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm.dom, Options.hasAdvancedRowTab(editor)));
   const data = Helpers.getSharedValues<RowData>(rowsData);
 
   const dialogTabPanel: Dialog.TabPanelSpec = {
@@ -134,7 +134,7 @@ const open = (editor: Editor): void => {
   editor.windowManager.open({
     title: 'Row Properties',
     size: 'normal',
-    body: hasAdvancedRowTab(editor) ? dialogTabPanel : dialogPanel,
+    body: Options.hasAdvancedRowTab(editor) ? dialogTabPanel : dialogPanel,
     buttons: [
       {
         type: 'cancel',

@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Guid from './Guid';
 
 interface Header {
@@ -35,9 +35,9 @@ const hasHeaders = (editor: Editor): boolean =>
   readHeaders(editor).length > 0;
 
 const readHeaders = (editor: Editor): Header[] => {
-  const tocClass = Settings.getTocClass(editor);
-  const headerTag = Settings.getTocHeader(editor);
-  const selector = generateSelector(Settings.getTocDepth(editor));
+  const tocClass = Options.getTocClass(editor);
+  const headerTag = Options.getTocHeader(editor);
+  const selector = generateSelector(Options.getTocDepth(editor));
   let headers = editor.dom.select<HTMLHeadingElement>(selector);
 
   // if headerTag is one of h1-9, we need to filter it out from the set
@@ -82,7 +82,7 @@ const generateTitle = (tag: string, title: string): string => {
 
 const generateTocHtml = (editor: Editor): string => {
   const html = generateTocContentHtml(editor);
-  return '<div class="' + editor.dom.encode(Settings.getTocClass(editor)) + '" contenteditable="false">' + html + '</div>';
+  return '<div class="' + editor.dom.encode(Options.getTocClass(editor)) + '" contenteditable="false">' + html + '</div>';
 };
 
 const generateTocContentHtml = (editor: Editor): string => {
@@ -94,7 +94,7 @@ const generateTocContentHtml = (editor: Editor): string => {
     return '';
   }
 
-  html += generateTitle(Settings.getTocHeader(editor), I18n.translate('Table of Contents'));
+  html += generateTitle(Options.getTocHeader(editor), I18n.translate('Table of Contents'));
 
   for (let i = 0; i < headers.length; i++) {
     const h = headers[i];
@@ -140,7 +140,7 @@ const isEmptyOrOffscreen = (editor: Editor, nodes: Node[]): boolean => {
 };
 
 const insertToc = (editor: Editor): void => {
-  const tocClass = Settings.getTocClass(editor);
+  const tocClass = Options.getTocClass(editor);
   const tocElms = editor.dom.select('.' + tocClass);
 
   if (isEmptyOrOffscreen(editor, tocElms)) {
@@ -151,7 +151,7 @@ const insertToc = (editor: Editor): void => {
 };
 
 const updateToc = (editor: Editor): void => {
-  const tocClass = Settings.getTocClass(editor);
+  const tocClass = Options.getTocClass(editor);
   const tocElms = editor.dom.select('.' + tocClass);
 
   if (tocElms.length) {

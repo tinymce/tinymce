@@ -14,11 +14,9 @@ import { ParserArgs } from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Promise from 'tinymce/core/api/util/Promise';
 import VK from 'tinymce/core/api/util/VK';
 
-import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
 import { PasteBin } from './PasteBin';
@@ -73,7 +71,7 @@ const pasteHtml = (editor: Editor, html: string, internalFlag: boolean): void =>
 const pasteText = (editor: Editor, text: string): void => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalizeWhitespace(editor, encodedText);
-  const html = Newlines.convert(normalizedText, Settings.getForcedRootBlock(editor), Settings.getForcedRootBlockAttrs(editor));
+  const html = Newlines.convert(normalizedText, Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
   doPaste(editor, html, false, true);
 };
 
@@ -159,7 +157,7 @@ const pasteImage = (editor: Editor, imageItem: FileResult): void => {
 
   const existingBlobInfo = blobCache.getByData(base64, type);
   if (!existingBlobInfo) {
-    const useFileName = Settings.getImagesReuseFilename(editor) && Type.isNonNullable(file.name);
+    const useFileName = Options.getImagesReuseFilename(editor) && Type.isNonNullable(file.name);
     const name = useFileName ? extractFilename(editor, file.name) : id;
     const filename = useFileName ? file.name : undefined;
 
@@ -193,7 +191,7 @@ const readFilesAsDataUris = (items: Array<File | DataTransferItem>) =>
   })));
 
 const isImage = (editor: Editor) => {
-  const allowedExtensions = Settings.getAllowedImageFileTypes(editor);
+  const allowedExtensions = Options.getAllowedImageFileTypes(editor);
   return (file: File): boolean => Strings.startsWith(file.type, 'image/') && Arr.exists(allowedExtensions, (extension) => {
     return Utils.getImageMimeType(extension) === file.type;
   });
@@ -218,7 +216,7 @@ const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): 
 const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Range): boolean => {
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
-  if (Settings.getPasteDataImages(editor) && dataTransfer) {
+  if (Options.shouldPasteDataImages(editor) && dataTransfer) {
     const images = getImagesFromDataTransfer(editor, dataTransfer);
 
     if (images.length > 0) {
@@ -289,14 +287,6 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       // IE doesn't always fire keydown if the keys are spammed fast enough, so register that paste is
       // pressed, this will be removed on keyup
       keyboardPastePressed.set(true);
-
-      // IE doesn't support Ctrl+Shift+V and it doesn't even produce a paste event
-      // so lets fake a paste event and let IE use the execCommand/dataTransfer methods
-      if ((Env.browser.isIE() || Env.browser.isEdge()) && keyboardPastePlainTextState) {
-        e.preventDefault();
-        Events.firePaste(editor, true);
-        return;
-      }
 
       pasteBin.remove();
       pasteBin.create();
@@ -372,7 +362,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     return pasteBin.getLastRng() || editor.selection.getRng();
   };
 
-  editor.on('paste', (e: EditorEvent<ClipboardEvent & { ieFake: boolean }>) => {
+  editor.on('paste', (e: EditorEvent<ClipboardEvent>) => {
     const isKeyboardPaste = keyboardPasteEvent.isSet() || keyboardPastePressed.isSet();
     if (isKeyboardPaste) {
       keyboardPasteEvent.clear();
@@ -397,18 +387,6 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     // Not a keyboard paste prevent default paste and try to grab the clipboard contents using different APIs
     if (!isKeyboardPaste) {
       e.preventDefault();
-    }
-
-    // Try IE only method if paste isn't a keyboard paste
-    if ((Env.browser.isIE() || Env.browser.isEdge()) && (!isKeyboardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
-      pasteBin.create();
-
-      editor.dom.bind(pasteBin.getEl(), 'paste', (e) => {
-        e.stopPropagation();
-      });
-
-      editor.getDoc().execCommand('Paste', false, null);
-      clipboardContent['text/html'] = pasteBin.getHtml();
     }
 
     // If clipboard API has HTML then use that directly
@@ -468,7 +446,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
 
     const isDataUri = (src: string): boolean => src.indexOf('data:') === 0;
 
-    if (!Settings.getPasteDataImages(editor) && isPasteInsert(args)) {
+    if (!Options.shouldPasteDataImages(editor) && isPasteInsert(args)) {
       let i = nodes.length;
 
       while (i--) {
@@ -481,7 +459,7 @@ const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteForma
         // Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
         if (isWebKitFakeUrl(src)) {
           remove(nodes[i]);
-        } else if (!Settings.getAllowHtmlDataUrls(editor) && isDataUri(src)) {
+        } else if (!Options.getAllowHtmlDataUrls(editor) && isDataUri(src)) {
           remove(nodes[i]);
         }
       }

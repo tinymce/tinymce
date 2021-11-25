@@ -9,7 +9,7 @@ import { Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
@@ -37,7 +37,7 @@ const Quirks = (editor: Editor): Quirks => {
   const isIE = browser.isIE() || browser.isEdge();
   const isWebKit = browser.isChrome() || browser.isSafari();
   const isiOS = Env.deviceType.isiPhone() || Env.deviceType.isiPad();
-  const isMac = Env.os.isOSX() || Env.os.isiOS();
+  const isMac = Env.os.isMacOS() || Env.os.isiOS();
   const mceInternalUrlPrefix = 'data:text/mce-internal,';
   const mceInternalDataType = isIE ? 'Text' : 'URL';
 
@@ -461,12 +461,12 @@ const Quirks = (editor: Editor): Quirks => {
       setEditorCommandState('StyleWithCSS', false);
       setEditorCommandState('enableInlineTableEditing', false);
 
-      if (!Settings.getObjectResizing(editor)) {
+      if (!Options.getObjectResizing(editor)) {
         setEditorCommandState('enableObjectResizing', false);
       }
     };
 
-    if (!Settings.isReadOnly(editor)) {
+    if (!Options.isReadOnly(editor)) {
       editor.on('BeforeExecCommand mousedown', setOpts);
     }
   };
@@ -513,9 +513,9 @@ const Quirks = (editor: Editor): Quirks => {
    * default we want to change that behavior.
    */
   const setDefaultBlockType = () => {
-    if (Settings.getForcedRootBlock(editor)) {
+    if (Options.getForcedRootBlock(editor)) {
       editor.on('init', () => {
-        setEditorCommandState('DefaultParagraphSeparator', Settings.getForcedRootBlock(editor));
+        setEditorCommandState('DefaultParagraphSeparator', Options.getForcedRootBlock(editor));
       });
     }
   };

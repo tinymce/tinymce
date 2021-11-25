@@ -42,9 +42,9 @@ import IconManager from './IconManager';
 import { EditorModeApi } from './Mode';
 import ModelManager, { Model } from './ModelManager';
 import NotificationManager, { NotificationApi, NotificationSpec } from './NotificationManager';
+import { EditorOptions, RawEditorOptions } from './OptionTypes';
 import PluginManager, { Plugin } from './PluginManager';
 import Resource from './Resource';
-import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import ThemeManager, { Theme } from './ThemeManager';
 import { tinymce, TinyMCE } from './Tinymce';
@@ -126,8 +126,8 @@ export {
   WindowManager,
 
   // other useful types
-  RawEditorSettings,
-  EditorSettings,
+  RawEditorOptions,
+  EditorOptions,
   EditorEvent,
   EditorModeApi,
   Bookmark,

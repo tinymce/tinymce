@@ -8,11 +8,11 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const stateToggle = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
   const handler = () => {
-    api.setDisabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
+    api.setDisabled(Options.enableWhenDirty(editor) && !editor.isDirty());
   };
 
   handler();

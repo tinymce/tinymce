@@ -18,7 +18,7 @@ import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBacks
 import * as ReadOnly from '../../ReadOnly';
 import { renderLabel } from '../alien/FieldLabeller';
 import * as ColorSwatch from '../core/color/ColorSwatch';
-import * as Settings from '../core/color/Settings';
+import * as Options from '../core/color/Options';
 import { formChangeEvent } from '../general/FormEvents';
 import { renderPanelButton } from '../general/PanelButton';
 
@@ -108,7 +108,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
             () => AlloyTriggers.emit(colorBit, colorPickerCancelEvent),
             (value) => {
               emitSwatchChange(colorBit, value);
-              Settings.addColor(value);
+              Options.addColor(value);
             }
           );
         }, '#ffffff');

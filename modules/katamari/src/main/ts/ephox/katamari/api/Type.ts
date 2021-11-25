@@ -1,17 +1,16 @@
 const getPrototypeOf = Object.getPrototypeOf;
 
-const hasProto = (v: Object, predicate: (v: Object) => boolean, name: string): boolean => {
-  if (predicate(v)) {
+interface Constructor<T extends Object> {
+  readonly prototype: T;
+  readonly name: string;
+}
+
+const hasProto = <T extends Object>(v: Object, constructor: Constructor<T>, predicate: (v: Object, prototype: T) => boolean): boolean => {
+  if (predicate(v, constructor.prototype)) {
     return true;
   } else {
     // String-based fallback time
-    const constructor = v.constructor;
-    if (isNonNullable(constructor)) {
-      return constructor.name === name;
-    } else {
-      // IE doesn't support the constructor API
-      return getPrototypeOf(v).toString() === `[object ${name}]`;
-    }
+    return v.constructor?.name === constructor.name;
   }
 };
 
@@ -19,9 +18,9 @@ const typeOf = (x: any): string => {
   const t = typeof x;
   if (x === null) {
     return 'null';
-  } else if (t === 'object' && hasProto(x, (v) => Array.prototype.isPrototypeOf(v), 'Array')) {
+  } else if (t === 'object' && Array.isArray(x)) {
     return 'array';
-  } else if (t === 'object' && hasProto(x, (v) => String.prototype.isPrototypeOf(v), 'String')) {
+  } else if (t === 'object' && hasProto(x, String, (o, proto) => proto.isPrototypeOf(o))) {
     return 'string';
   } else {
     return t;
@@ -37,6 +36,9 @@ const isSimpleType = <Yolo>(type: string) => (value: any): value is Yolo =>
 const eq = <T> (t: T) => (a: any): a is T =>
   t === a;
 
+export const is = <E extends Object>(value: any, constructor: Constructor<E>): value is E =>
+  isObject(value) && hasProto<E>(value, constructor, (o, proto) => getPrototypeOf(o) === proto);
+
 export const isString: (value: any) => value is string =
   isType('string');
 
@@ -44,7 +46,7 @@ export const isObject: (value: any) => value is Object =
   isType('object');
 
 export const isPlainObject = (value: unknown): value is Object =>
-  isObject(value) && hasProto(value, (v) => getPrototypeOf(v) === Object.prototype, 'Object');
+  is(value, Object);
 
 export const isArray: (value: any) => value is Array<unknown> =
   isType('array');

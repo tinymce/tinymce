@@ -9,7 +9,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
@@ -80,12 +80,12 @@ const getTable = (previous: boolean, pos: CaretPosition): Optional<HTMLElement> 
 };
 
 const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: CaretPosition) => {
-  const forcedRootBlock = Settings.getForcedRootBlock(editor);
+  const forcedRootBlock = Options.getForcedRootBlock(editor);
 
   if (forcedRootBlock) {
     editor.undoManager.transact(() => {
       const element = SugarElement.fromTag(forcedRootBlock);
-      Attribute.setAll(element, Settings.getForcedRootBlockAttrs(editor));
+      Attribute.setAll(element, Options.getForcedRootBlockAttrs(editor));
       Insert.append(element, SugarElement.fromTag('br'));
 
       if (down) {

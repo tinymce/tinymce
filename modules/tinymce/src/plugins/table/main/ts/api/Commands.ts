@@ -25,7 +25,7 @@ import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
 import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
-import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Settings';
+import * as Options from './Options';
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
 
@@ -58,7 +58,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const setSizingMode = (sizing: string) => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     // Do nothing if tables are forced to use a specific sizing mode
-    const isForcedSizing = isResponsiveForced(editor) || isPixelsForced(editor) || isPercentagesForced(editor);
+    const isForcedSizing = Options.isResponsiveForced(editor) || Options.isPixelsForced(editor) || Options.isPercentagesForced(editor);
     if (!isForcedSizing) {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
         if (sizing === 'relative' && !Sizes.isPercentSizing(table)) {

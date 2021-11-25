@@ -1,13 +1,13 @@
 {
   "name": "@ephox/alloy",
-  "version": "9.0.3",
+  "version": "10.0.0-alpha.0",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^6.0.3",
-    "@ephox/boulder": "^6.0.3",
-    "@ephox/katamari": "^8.1.1",
-    "@ephox/sand": "^5.0.3",
-    "@ephox/sugar": "^8.1.1",
+    "@ephox/agar": "^7.0.0-alpha.0",
+    "@ephox/boulder": "^7.0.0-alpha.0",
+    "@ephox/katamari": "^9.0.0-alpha.0",
+    "@ephox/sand": "^6.0.0-alpha.0",
+    "@ephox/sugar": "^9.0.0-alpha.0",
     "tslib": "^2.0.0"
   },
   "files": [
@@ -22,7 +22,7 @@
     "LICENSE.txt"
   ],
   "scripts": {
-    "test": "bedrock-auto -b phantomjs --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
+    "test": "bedrock-auto -b chrome-headless --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
     "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"

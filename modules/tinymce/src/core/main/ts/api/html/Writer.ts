@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { EntityEncoding } from '../SettingsTypes';
+import { EntityEncoding } from '../OptionTypes';
 import Tools from '../util/Tools';
 import Entities from './Entities';
 

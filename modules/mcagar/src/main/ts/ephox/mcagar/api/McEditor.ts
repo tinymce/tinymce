@@ -1,7 +1,6 @@
 import { Chain } from '@ephox/agar';
 import { Global, Id, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Selectors, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
-import Promise from '@ephox/wrap-promise-polyfill';
 
 import { Editor as EditorType } from '../alien/EditorTypes';
 import { loadScript } from '../loader/Loader';

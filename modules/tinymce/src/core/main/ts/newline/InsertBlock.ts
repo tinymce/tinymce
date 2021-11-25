@@ -11,7 +11,7 @@ import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -162,10 +162,10 @@ const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Re
 };
 
 const setForcedBlockAttrs = (editor: Editor, node) => {
-  const forcedRootBlockName = Settings.getForcedRootBlock(editor);
+  const forcedRootBlockName = Options.getForcedRootBlock(editor);
 
   if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
-    const forcedRootBlockAttrs = Settings.getForcedRootBlockAttrs(editor);
+    const forcedRootBlockAttrs = Options.getForcedRootBlockAttrs(editor);
     applyAttributes(editor, node, forcedRootBlockAttrs);
   }
 };
@@ -264,7 +264,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
     caretNode = block;
 
-    if (Settings.shouldKeepStyles(editor) === false) {
+    if (Options.shouldKeepStyles(editor) === false) {
       dom.setAttrib(block, 'style', null); // wipe out any styles that came over with the block
       dom.setAttrib(block, 'class', null);
     } else {
@@ -368,7 +368,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
     }
 
     // Split the current container block element if enter is pressed inside an empty inner block element
-    if (Settings.shouldEndContainerOnEmptyBlock(editor) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
+    if (Options.shouldEndContainerOnEmptyBlock(editor) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
       // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
       newBlock = dom.split(containerBlock, parentBlock);
     } else {
@@ -386,7 +386,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
   container = rng.startContainer;
   offset = rng.startOffset;
-  newBlockName = Settings.getForcedRootBlock(editor);
+  newBlockName = Options.getForcedRootBlock(editor);
   const shiftKey = !!(evt && evt.shiftKey);
   const ctrlKey = !!(evt && evt.ctrlKey);
 

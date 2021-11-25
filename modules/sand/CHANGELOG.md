@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Upgraded to Katamari 9.0, which is incompatible with Katamari 8.0 if used in the same bundle.
+- The `isOSX` API has been renamed to `isMacOS` #TINY-8175
 
 ## 5.0.0 - 2021-08-26
 

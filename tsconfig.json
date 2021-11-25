@@ -52,7 +52,6 @@
       "tinymce/plugins/help/*": ["modules/tinymce/src/plugins/help/main/ts/*"],
       "tinymce/plugins/hr/*": ["modules/tinymce/src/plugins/hr/main/ts/*"],
       "tinymce/plugins/image/*": ["modules/tinymce/src/plugins/image/main/ts/*"],
-      "tinymce/plugins/imagetools/*": ["modules/tinymce/src/plugins/imagetools/main/ts/*"],
       "tinymce/plugins/importcss/*": ["modules/tinymce/src/plugins/importcss/main/ts/*"],
       "tinymce/plugins/insertdatetime/*": ["modules/tinymce/src/plugins/insertdatetime/main/ts/*"],
       "tinymce/plugins/link/*": ["modules/tinymce/src/plugins/link/main/ts/*"],

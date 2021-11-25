@@ -2,7 +2,7 @@
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
+import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -29,7 +29,7 @@ export default () => {
     });
   };
 
-  const settings: RawEditorSettings = {
+  const settings: RawEditorOptions = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     content_langs: [
@@ -98,7 +98,7 @@ export default () => {
     autosave_ask_before_unload: false,
     toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
     'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
-    contextmenu: 'link linkchecker image imagetools table lists configurepermanentpen',
+    contextmenu: 'link linkchecker image table lists configurepermanentpen',
 
     // Multiple toolbar array
     // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',

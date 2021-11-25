@@ -8,13 +8,13 @@
 import { AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir } from '@ephox/alloy';
 import { Arr, Fun, Merger, Obj, Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, Css, SugarBody } from '@ephox/sugar';
+import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
-import * as Settings from './api/Settings';
+import * as Options from './api/Options';
 import * as Backstage from './backstage/Backstage';
 import * as Events from './Events';
 import * as Iframe from './modes/Iframe';
@@ -59,7 +59,7 @@ export interface RenderUiComponents {
   outerContainer: AlloyComponent;
 }
 
-export type ToolbarConfig = Array<string | Settings.ToolbarGroupSetting> | string | boolean;
+export type ToolbarConfig = Array<string | Options.ToolbarGroupOption> | string | boolean;
 
 export interface RenderToolbarConfig {
   toolbar: ToolbarConfig;
@@ -82,7 +82,7 @@ export interface RenderArgs {
 const setup = (editor: Editor): RenderInfo => {
   const isInline = editor.inline;
   const mode = isInline ? Inline : Iframe;
-  const header = Settings.isStickyToolbar(editor) ? StickyHeader : StaticHeader;
+  const header = Options.isStickyToolbar(editor) ? StickyHeader : StaticHeader;
   let lazyOuterContainer: Optional<AlloyComponent> = Optional.none();
 
   const platform = PlatformDetection.detect();
@@ -91,8 +91,8 @@ const setup = (editor: Editor): RenderInfo => {
   const isTouch = platform.deviceType.isTouch();
   const touchPlatformClass = 'tox-platform-touch';
   const deviceClasses = isTouch ? [ touchPlatformClass ] : [];
-  const isToolbarBottom = Settings.isToolbarLocationBottom(editor);
-  const uiContainer = Settings.getUiContainer(editor);
+  const isToolbarBottom = Options.isToolbarLocationBottom(editor);
+  const uiContainer = Options.getUiContainer(editor);
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -118,7 +118,7 @@ const setup = (editor: Editor): RenderInfo => {
 
   const makeSinkDefinition = (): AlloySpec => {
     // TINY-3321: When the body is using a grid layout, we need to ensure the sink width is manually set
-    const isGridUiContainer = Compare.eq(SugarBody.body(), uiContainer) && Css.get(uiContainer, 'display') === 'grid';
+    const isGridUiContainer = Compare.eq(SugarBody.body(), uiContainer) && Css.get(uiContainer as SugarElement<HTMLElement>, 'display') === 'grid';
 
     const sinkSpec = {
       dom: {
@@ -175,7 +175,7 @@ const setup = (editor: Editor): RenderInfo => {
     }
   });
 
-  const toolbarMode = Settings.getToolbarMode(editor);
+  const toolbarMode = Options.getToolbarMode(editor);
 
   const partToolbar: AlloySpec = OuterContainer.parts.toolbar({
     dom: {
@@ -227,10 +227,8 @@ const setup = (editor: Editor): RenderInfo => {
     backstage
   });
 
-  const sb = editor.getParam('statusbar', true, 'boolean');
-
   const statusbar: Optional<AlloySpec> =
-    sb && !isInline ? Optional.some(renderStatusbar(editor, backstage.shared.providers)) : Optional.none<AlloySpec>();
+    Options.useStatusBar(editor) && !isInline ? Optional.some(renderStatusbar(editor, backstage.shared.providers)) : Optional.none<AlloySpec>();
 
   const socketSidebarContainer: SimpleSpec = {
     dom: {
@@ -244,9 +242,9 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   // False should stop the menubar and toolbar rendering altogether
-  const hasMultipleToolbar = Settings.isMultipleToolbars(editor);
-  const hasToolbar = Settings.isToolbarEnabled(editor);
-  const hasMenubar = Settings.isMenubarEnabled(editor);
+  const hasMultipleToolbar = Options.isMultipleToolbars(editor);
+  const hasToolbar = Options.isToolbarEnabled(editor);
+  const hasMenubar = Options.isMenubarEnabled(editor);
 
   const getPartToolbar = () => {
     if (hasMultipleToolbar) {
@@ -268,9 +266,9 @@ const setup = (editor: Editor): RenderInfo => {
       hasMenubar ? [ partMenubar ] : [ ],
       getPartToolbar(),
       // fixed_toolbar_container anchors to the editable area, else add an anchor bar
-      Settings.useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
+      Options.useFixedContainer(editor) ? [ ] : [ memAnchorBar.asSpec() ]
     ]),
-    sticky: Settings.isStickyToolbar(editor),
+    sticky: Options.isStickyToolbar(editor),
     editor,
     sharedBackstage: backstage.shared
   });
@@ -299,7 +297,7 @@ const setup = (editor: Editor): RenderInfo => {
   ]);
 
   // Hide the outer container if using inline mode and there's no menubar or toolbar
-  const isHidden = Settings.isDistractionFree(editor);
+  const isHidden = Options.isDistractionFree(editor);
 
   const attributes = {
     role: 'application',
@@ -401,20 +399,20 @@ const setup = (editor: Editor): RenderInfo => {
     Sidebar.setup(editor);
     Throbber.setup(editor, lazyThrobber, backstage.shared);
 
-    Obj.map(Settings.getToolbarGroups(editor), (toolbarGroupButtonConfig, name) => {
+    Obj.map(Options.getToolbarGroups(editor), (toolbarGroupButtonConfig, name) => {
       editor.ui.registry.addGroupToolbarButton(name, toolbarGroupButtonConfig);
     });
 
     // Apply Bridge types
     const { buttons, menuItems, contextToolbars, sidebars } = editor.ui.registry.getAll();
-    const toolbarOpt: Optional<ToolbarConfig> = Settings.getMultipleToolbarsSetting(editor);
+    const toolbarOpt: Optional<ToolbarConfig> = Options.getMultipleToolbarsOption(editor);
     const rawUiConfig: RenderUiConfig = {
       menuItems,
 
-      menus: Settings.getMenus(editor),
-      menubar: Settings.getMenubar(editor),
-      toolbar: toolbarOpt.getOrThunk(() => Settings.getToolbar(editor)),
-      allowToolbarGroups: toolbarMode === Settings.ToolbarMode.floating,
+      menus: Options.getMenus(editor),
+      menubar: Options.getMenubar(editor),
+      toolbar: toolbarOpt.getOrThunk(() => Options.getToolbar(editor)),
+      allowToolbarGroups: toolbarMode === Options.ToolbarMode.floating,
       buttons,
 
       // Apollo, not implemented yet

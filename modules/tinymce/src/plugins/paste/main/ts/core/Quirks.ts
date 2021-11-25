@@ -5,18 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
-
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
-import * as Utils from './Utils';
-import * as WordFilter from './WordFilter';
+import * as Options from '../api/Options';
 
-type PreProcessFilter = (editor: Editor, content: string, internal: boolean, wordContent: boolean) => string;
-type PostProcessFilter = (editor: Editor, node: HTMLElement) => void;
+type PreProcessFilter = (editor: Editor, content: string, internal: boolean) => string;
 
 /**
  * This class contains various fixes for browsers. These issues can not be feature
@@ -29,57 +23,8 @@ type PostProcessFilter = (editor: Editor, node: HTMLElement) => void;
 
 const addPreProcessFilter = (editor: Editor, filterFunc: PreProcessFilter) => {
   editor.on('PastePreProcess', (e) => {
-    e.content = filterFunc(editor, e.content, e.internal, e.wordContent);
+    e.content = filterFunc(editor, e.content, e.internal);
   });
-};
-
-const addPostProcessFilter = (editor: Editor, filterFunc: PostProcessFilter) => {
-  editor.on('PastePostProcess', (e) => {
-    filterFunc(editor, e.node);
-  });
-};
-
-/**
- * Removes BR elements after block elements. IE9 has a nasty bug where it puts a BR element after each
- * block element when pasting from word. This removes those elements.
- *
- * This:
- *  <p>a</p><br><p>b</p>
- *
- * Becomes:
- *  <p>a</p><p>b</p>
- */
-const removeExplorerBrElementsAfterBlocks = (editor: Editor, html: string): string => {
-  // Only filter word specific content
-  if (!WordFilter.isWordContent(html)) {
-    return html;
-  }
-
-  // Produce block regexp based on the block elements in schema
-  const blockElements: string[] = [];
-
-  Tools.each(editor.schema.getBlockElements(), (block: Element, blockName: string) => {
-    blockElements.push(blockName);
-  });
-
-  const explorerBlocksRegExp = new RegExp(
-    '(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
-    'g'
-  );
-
-  // Remove BR:s from: <BLOCK>X</BLOCK><BR>
-  html = Utils.filter(html, [
-    [ explorerBlocksRegExp, '$1' ]
-  ]);
-
-  // IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break
-  html = Utils.filter(html, [
-    [ /<br><br>/g, '<BR><BR>' ], // Replace multiple BR elements with uppercase BR to keep them intact
-    [ /<br>/g, ' ' ],            // Replace single br elements with space since they are word wrap BR:s
-    [ /<BR><BR>/g, '<br>' ]      // Replace back the double brs but into a single BR
-  ]);
-
-  return html;
 };
 
 /**
@@ -91,22 +36,22 @@ const removeExplorerBrElementsAfterBlocks = (editor: Editor, html: string): stri
  *  paste_webkit_styles: "all", // Keep all of them
  *  paste_webkit_styles: "font-weight color" // Keep specific ones
  */
-const removeWebKitStyles = (editor: Editor, content: string, internal: boolean, isWordHtml: boolean): string => {
-  // WordFilter has already processed styles at this point and internal doesn't need any processing
-  if (isWordHtml || internal) {
+const removeWebKitStyles = (editor: Editor, content: string, internal: boolean): string => {
+  // Internal doesn't need any processing
+  if (internal) {
     return content;
   }
 
   // Filter away styles that isn't matching the target node
-  const webKitStylesSetting = Settings.getWebkitStyles(editor);
+  const webKitStylesOption = Options.getWebkitStyles(editor);
   let webKitStyles: string[] | string;
 
-  if (Settings.shouldRemoveWebKitStyles(editor) === false || webKitStylesSetting === 'all') {
+  if (Options.shouldRemoveWebKitStyles(editor) === false || webKitStylesOption === 'all') {
     return content;
   }
 
-  if (webKitStylesSetting) {
-    webKitStyles = webKitStylesSetting.split(/[, ]/);
+  if (webKitStylesOption) {
+    webKitStyles = webKitStylesOption.split(/[, ]/);
   }
 
   // Keep specific styles that doesn't match the current node computed style
@@ -154,22 +99,9 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean, 
   return content;
 };
 
-const removeUnderlineAndFontInAnchor = (editor: Editor, root: Element): void => {
-  Arr.each(editor.dom.select('a', root), (anchor) => {
-    Arr.each(editor.dom.select('font,u', anchor), (node) => {
-      editor.dom.remove(node, true);
-    });
-  });
-};
-
 const setup = (editor: Editor): void => {
   if (Env.browser.isChrome() || Env.browser.isSafari()) {
     addPreProcessFilter(editor, removeWebKitStyles);
-  }
-
-  if (Env.browser.isIE() || Env.browser.isEdge()) {
-    addPreProcessFilter(editor, removeExplorerBrElementsAfterBlocks);
-    addPostProcessFilter(editor, removeUnderlineAndFontInAnchor);
   }
 };
 

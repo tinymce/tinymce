@@ -1,4 +1,4 @@
-import { FocusTools, PhantomSkipper, RealMouse } from '@ephox/agar';
+import { FocusTools, RealMouse } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
@@ -15,9 +15,9 @@ describe('webdriver.tinymce.themes.silver.dialogs.DialogFocusTest', () => {
 
   let windowManager: WindowManagerImpl;
   before(function () {
-    // This test won't work on PhantomJS or on all Mac OS browsers (webdriver actions appear to be ignored)
+    // This test won't work on Mac OS browsers other than Chrome (webdriver actions appear to be ignored)
     const platform = PlatformDetection.detect();
-    if (PhantomSkipper.detect() || platform.os.isOSX()) {
+    if (platform.os.isMacOS() && !platform.browser.isChrome()) {
       this.skip();
     }
 

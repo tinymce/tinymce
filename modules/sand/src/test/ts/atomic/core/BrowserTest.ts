@@ -66,7 +66,7 @@ describe('BrowserTest', () => {
     check('isFirefox', 'Windows', 'Firefox', 2, 0, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.20) Gecko/20081217 Firefox/2.0.0.20');
     check('isFirefox', 'Linux', 'Firefox', 3, 6, 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.7) Gecko/20100723 Fedora/3.6.7-1.fc13 Firefox/3.6');
     check('isFirefox', 'FreeBSD', 'Firefox', 3, 6, 'Mozilla/5.0 (X11; U; FreeBSD amd64; en-US; rv:1.9.2.20) Gecko/20110823 Firefox/3.6.20');
-    check('isFirefox', 'OSX', 'Firefox', 3, 5, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.1.9) Gecko/20100315 Firefox/3.5.9 GTB7');
+    check('isFirefox', 'macOS', 'Firefox', 3, 5, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.1.9) Gecko/20100315 Firefox/3.5.9 GTB7');
     // Should fallback to userAgent string if browser cannot be found in userAgentData
     check('isFirefox', 'Windows', 'Firefox', 3, 6, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.2) Gecko/20100115 Firefox/3.6', mockUserAgentData([{ brand: 'Firefox', version: '10' }]));
   });
@@ -74,7 +74,7 @@ describe('BrowserTest', () => {
   it('Desktop Safari', () => {
     check('isSafari', 'Windows', 'Safari', 4, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/531.21.8 (KHTML, like Gecko) Version/4.0.4 Safari/531.21.10');
     check('isSafari', 'Windows', 'Safari', 3, 2, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.28 (KHTML, like Gecko) Version/3.2.2 Safari/525.28.1');
-    check('isSafari', 'OSX', 'Safari', 5, 0, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-au) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8');
+    check('isSafari', 'macOS', 'Safari', 5, 0, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-au) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8');
   });
 
   it('Opera', () => {
@@ -88,7 +88,7 @@ describe('BrowserTest', () => {
     check('isChrome', 'Windows', 'Chrome', 5, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.127 Safari/533.4');
     check('isChrome', 'Windows', 'Chrome', 6, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
     check('isChrome', 'Linux', 'Chrome', 5, 0, 'Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.127 Safari/533.4');
-    check('isChrome', 'OSX', 'Chrome', 6, 0, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
+    check('isChrome', 'macOS', 'Chrome', 6, 0, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
     // Should use browser info from userAgentData if available
     check('isChrome', 'Windows', 'Chrome', 10, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3', mockUserAgentData([{ brand: 'Chromium', version: '10' }]));
   });
@@ -104,7 +104,7 @@ describe('BrowserTest', () => {
     check('isSafari', 'iOS', 'Safari', 9, 3, 'Mozilla/5.0 (iPad; CPU OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13E230');
     check('isSafari', 'iOS', 'Safari', 13, 0, 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1');
     // iPadOS 13
-    check('isSafari', 'OSX', 'Safari', 13, 0, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Safari/605.1.15');
+    check('isSafari', 'macOS', 'Safari', 13, 0, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Safari/605.1.15');
     check('isChrome', 'Android', 'Chrome', 18, 0, 'Mozilla/5.0 (Linux; Android 4.2.2; Nexus 7 Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19');
     check('isChrome', 'ChromeOS', 'Chrome', 78, 0, 'Mozilla/5.0 (X11; CrOS x86_64 12499.66.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.106 Safari/537.36');
   });

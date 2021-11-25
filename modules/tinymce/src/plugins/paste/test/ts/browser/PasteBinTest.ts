@@ -4,8 +4,8 @@ import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import { getPasteBinParent, PasteBin } from 'tinymce/plugins/paste/core/PasteBin';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import { PasteBin } from 'tinymce/plugins/paste/core/PasteBin';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 
 interface TestCase {
@@ -61,7 +61,7 @@ describe('browser.tinymce.plugins.paste.PasteBin', () => {
     }
   ];
 
-  const pCreateEditorFromSettings = (settings: RawEditorSettings = {}, html?: string) =>
+  const pCreateEditorFromSettings = (settings: RawEditorOptions = {}, html?: string) =>
     McEditor.pFromHtml<Editor>(html, {
       ...settings,
       add_unload_trigger: false,
@@ -70,13 +70,13 @@ describe('browser.tinymce.plugins.paste.PasteBin', () => {
       base_url: '/project/tinymce/js/tinymce'
     });
 
-  const pCreateEditorFromHtml = (html: string, settings: RawEditorSettings) =>
+  const pCreateEditorFromHtml = (html: string, settings: RawEditorOptions) =>
     pCreateEditorFromSettings(settings, html);
 
   const assertCases = (editor: Editor, cases: TestCase[]) => {
     const pasteBin = PasteBin(editor);
     Arr.each(cases, (c) => {
-      getPasteBinParent(editor).appendChild(editor.dom.createFragment(c.content));
+      editor.getBody().appendChild(editor.dom.createFragment(c.content));
       assert.equal(pasteBin.getHtml(), c.result, c.label);
       pasteBin.remove();
     });

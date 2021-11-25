@@ -9,7 +9,7 @@ import { Fun, Optional } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterContentEditableFalse, isAfterTable, isBeforeContentEditableFalse, isBeforeTable } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
@@ -30,7 +30,7 @@ const moveToCeFalseVertically = (direction: LineWalker.VDirection, editor: Edito
 };
 
 const createTextBlock = (editor: Editor): Element => {
-  const textBlock = editor.dom.create(Settings.getForcedRootBlock(editor));
+  const textBlock = editor.dom.create(Options.getForcedRootBlock(editor));
   textBlock.innerHTML = '<br data-mce-bogus="1">';
   return textBlock;
 };
@@ -39,7 +39,7 @@ const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void
   const caretWalker = CaretWalker(editor.getBody());
   const getVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, direction === 1 ? caretWalker.next : caretWalker.prev);
 
-  if (range.collapsed && Settings.hasForcedRootBlock(editor)) {
+  if (range.collapsed && Options.hasForcedRootBlock(editor)) {
     const pre = editor.dom.getParent(range.startContainer, 'PRE');
     if (!pre) {
       return;

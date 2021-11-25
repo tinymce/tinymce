@@ -12,7 +12,7 @@ import Env from 'tinymce/core/api/Env';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Sanitize from './Sanitize';
 import * as VideoScript from './VideoScript';
 
@@ -183,7 +183,7 @@ const placeHolderConverter = (editor: Editor) => (nodes: AstNode[]): void => {
     }
 
     if (node.name === 'script') {
-      videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), node.attr('src'));
+      videoScript = VideoScript.getVideoScriptMatch(Options.getScripts(editor), node.attr('src'));
       if (!videoScript) {
         continue;
       }
@@ -199,7 +199,7 @@ const placeHolderConverter = (editor: Editor) => (nodes: AstNode[]): void => {
       }
     }
 
-    if (isLiveEmbedNode(node) && Settings.hasLiveEmbeds(editor)) {
+    if (isLiveEmbedNode(node) && Options.hasLiveEmbeds(editor)) {
       if (!isWithinEmbedWrapper(node)) {
         node.replace(createPreviewNode(editor, node));
       }

@@ -20,7 +20,7 @@ import * as InsertNewLine from '../newline/InsertNewLine';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import Editor from './Editor';
 import Env from './Env';
-import { ContentLanguage } from './SettingsTypes';
+import { ContentLanguage } from './OptionTypes';
 import Tools from './util/Tools';
 
 /**
@@ -324,7 +324,7 @@ class EditorCommands {
             'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
           );
 
-          if (Env.os.isOSX() || Env.os.isiOS()) {
+          if (Env.os.isMacOS() || Env.os.isiOS()) {
             msg = msg.replace(/Ctrl\+/g, '\u2318+');
           }
 

@@ -10,7 +10,7 @@ import { Selections } from '@ephox/darwin';
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableBackgroundColorMap, getTableBorderColorMap, getTableClassList, getToolbar } from '../api/Settings';
+import * as Options from '../api/Options';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
@@ -188,7 +188,7 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
     icon: 'table'
   });
 
-  const tableClassList = filterNoneItem(getTableClassList(editor));
+  const tableClassList = filterNoneItem(Options.getTableClassList(editor));
   if (tableClassList.length !== 0 && editor.editorCommands.hasCustomCommand('mceTableToggleClass')) {
     editor.ui.registry.addMenuButton('tableclass', {
       icon: 'table-classes',
@@ -204,7 +204,7 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
     });
   }
 
-  const tableCellClassList = filterNoneItem(getCellClassList(editor));
+  const tableCellClassList = filterNoneItem(Options.getCellClassList(editor));
   if (tableCellClassList.length !== 0 && editor.editorCommands.hasCustomCommand('mceTableCellToggleClass')) {
     editor.ui.registry.addMenuButton('tablecellclass', {
       icon: 'table-cell-classes',
@@ -241,7 +241,7 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       fetch: generateMenuItemsCallback(
         editor,
         selections,
-        getTableBorderWidths(editor),
+        Options.getTableBorderWidths(editor),
         'tablecellborderwidth',
         applyTableCellStyle(editor, 'border-width')
       ),
@@ -254,7 +254,7 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       fetch: generateMenuItemsCallback(
         editor,
         selections,
-        getTableBorderStyles(editor),
+        Options.getTableBorderStyles(editor),
         'tablecellborderstyle',
         applyTableCellStyle(editor, 'border-style')
       ),
@@ -264,14 +264,14 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
     editor.ui.registry.addMenuButton('tablecellbackgroundcolor', {
       icon: 'cell-background-color',
       tooltip: 'Background color',
-      fetch: (callback) => callback(buildColorMenu(editor, getTableBackgroundColorMap(editor), 'background-color')),
+      fetch: (callback) => callback(buildColorMenu(editor, Options.getTableBackgroundColorMap(editor), 'background-color')),
       onSetup: selectionTargets.onSetupCellOrRow
     });
 
     editor.ui.registry.addMenuButton('tablecellbordercolor', {
       icon: 'cell-border-color',
       tooltip: 'Border color',
-      fetch: (callback) => callback(buildColorMenu(editor, getTableBorderColorMap(editor), 'border-color')),
+      fetch: (callback) => callback(buildColorMenu(editor, Options.getTableBorderColorMap(editor), 'border-color')),
       onSetup: selectionTargets.onSetupCellOrRow
     });
   }
@@ -310,7 +310,7 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
 const addToolbars = (editor: Editor): void => {
   const isTable = (table: Node) => editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
-  const toolbar = getToolbar(editor);
+  const toolbar = Options.getToolbar(editor);
   if (toolbar.length > 0) {
     editor.ui.registry.addContextToolbar('table', {
       predicate: isTable,

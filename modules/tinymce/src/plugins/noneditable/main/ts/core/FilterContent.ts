@@ -11,7 +11,7 @@ import AstNode from 'tinymce/core/api/html/Node';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const hasClass = (checkClassName: string) => (node: AstNode): boolean =>
   (' ' + node.attr('class') + ' ').indexOf(checkClassName) !== -1;
@@ -54,7 +54,7 @@ const convertRegExpsToNonEditable = (editor: Editor, nonEditableRegExps: RegExp[
   }
 
   while (i--) {
-    content = content.replace(nonEditableRegExps[i], replaceMatchWithSpan(editor, content, Settings.getNonEditableClass(editor)));
+    content = content.replace(nonEditableRegExps[i], replaceMatchWithSpan(editor, content, Options.getNonEditableClass(editor)));
   }
 
   e.content = content;
@@ -63,12 +63,12 @@ const convertRegExpsToNonEditable = (editor: Editor, nonEditableRegExps: RegExp[
 const setup = (editor: Editor): void => {
   const contentEditableAttrName = 'contenteditable';
 
-  const editClass = ' ' + Tools.trim(Settings.getEditableClass(editor)) + ' ';
-  const nonEditClass = ' ' + Tools.trim(Settings.getNonEditableClass(editor)) + ' ';
+  const editClass = ' ' + Tools.trim(Options.getEditableClass(editor)) + ' ';
+  const nonEditClass = ' ' + Tools.trim(Options.getNonEditableClass(editor)) + ' ';
 
   const hasEditClass = hasClass(editClass);
   const hasNonEditClass = hasClass(nonEditClass);
-  const nonEditableRegExps = Settings.getNonEditableRegExps(editor);
+  const nonEditableRegExps = Options.getNonEditableRegExps(editor);
 
   editor.on('PreInit', () => {
     if (nonEditableRegExps.length > 0) {

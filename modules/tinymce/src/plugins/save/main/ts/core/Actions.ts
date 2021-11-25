@@ -11,7 +11,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const displayErrorMessage = (editor: Editor, message: string): void => {
   editor.notificationManager.open({
@@ -23,14 +23,14 @@ const displayErrorMessage = (editor: Editor, message: string): void => {
 const save = (editor: Editor): void => {
   const formObj = DOMUtils.DOM.getParent(editor.id, 'form');
 
-  if (Settings.enableWhenDirty(editor) && !editor.isDirty()) {
+  if (Options.enableWhenDirty(editor) && !editor.isDirty()) {
     return;
   }
 
   editor.save();
 
   // Use callback instead
-  const onSaveCallback = Settings.getOnSaveCallback(editor);
+  const onSaveCallback = Options.getOnSaveCallback(editor);
   if (Type.isFunction(onSaveCallback)) {
     onSaveCallback.call(editor, editor);
     editor.nodeChanged();
@@ -60,7 +60,7 @@ const cancel = (editor: Editor): void => {
   const h = Tools.trim(editor.startContent);
 
   // Use callback instead
-  const onCancelCallback = Settings.getOnCancelCallback(editor);
+  const onCancelCallback = Options.getOnCancelCallback(editor);
   if (Type.isFunction(onCancelCallback)) {
     onCancelCallback.call(editor, editor);
     return;

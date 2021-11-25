@@ -8,13 +8,14 @@
 import { Arr, Fun, Type } from '@ephox/katamari';
 
 import * as EditorContent from '../content/EditorContent';
+import { logDeprecationsWarning } from '../Deprecations';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
-import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
 import { NodeChange } from '../NodeChange';
+import { normalizeOptions, getParam } from '../options/NormalizeOptions';
 import SelectionOverrides from '../SelectionOverrides';
 import { UndoManager } from '../undo/UndoManagerTypes';
 import Quirks from '../util/Quirks';
@@ -28,18 +29,19 @@ import DomSerializer from './dom/Serializer';
 import EditorCommands, { EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
+import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
 import EditorUpload, { UploadCallback, UploadResult } from './EditorUpload';
 import Env from './Env';
 import Formatter from './Formatter';
 import DomParser from './html/DomParser';
 import AstNode from './html/Node';
 import Schema from './html/Schema';
-import { create, EditorMode } from './Mode';
+import { create as createMode, EditorMode } from './Mode';
 import { Model } from './ModelManager';
 import NotificationManager from './NotificationManager';
+import * as Options from './Options';
+import { NormalizedEditorOptions, RawEditorOptions } from './OptionTypes';
 import PluginManager, { Plugin } from './PluginManager';
-import * as Settings from './Settings';
-import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
 import { registry } from './ui/Registry';
@@ -73,7 +75,7 @@ import WindowManager from './WindowManager';
 export interface EditorConstructor {
   readonly prototype: Editor;
 
-  new (id: string, settings: RawEditorSettings, editorManager: EditorManager): Editor;
+  new (id: string, options: RawEditorOptions, editorManager: EditorManager): Editor;
 }
 
 // Shorten these names
@@ -98,9 +100,9 @@ class Editor implements EditorObservable {
    * @type Object
    * @example
    * // Get the value of the theme setting
-   * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.settings.theme + " theme");
+   * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.options.get('theme') + " theme");
    */
-  public settings: EditorSettings;
+  public settings: NormalizedEditorOptions;
 
   /**
    * Editor instance id, normally the same as the div/textarea that was replaced.
@@ -181,6 +183,14 @@ class Editor implements EditorObservable {
    */
   public mode: EditorMode;
 
+  /**
+   * Editor options API
+   *
+   * @property options
+   * @type tinymce.options.Options
+   */
+  public options: EditorOptions;
+
   public shortcuts: Shortcuts;
   public loadedCSS: Record<string, any> = {};
   public editorCommands: EditorCommands;
@@ -253,51 +263,64 @@ class Editor implements EditorObservable {
    * @constructor
    * @method Editor
    * @param {String} id Unique id for the editor.
-   * @param {Object} settings Settings for the editor.
+   * @param {Object} options Options for the editor.
    * @param {tinymce.EditorManager} editorManager EditorManager instance.
    */
-  public constructor(id: string, settings: RawEditorSettings, editorManager: EditorManager) {
+  public constructor(id: string, options: RawEditorOptions, editorManager: EditorManager) {
     this.editorManager = editorManager;
     this.documentBaseUrl = editorManager.documentBaseURL;
 
     // Patch in the EditorObservable functions
     extend(this, EditorObservable);
+    const self = this;
 
-    this.settings = getEditorSettings(this, id, this.documentBaseUrl, editorManager.defaultSettings, settings);
+    this.id = id;
+    const normalizedOptions = normalizeOptions(editorManager.defaultOptions, options);
+    this.settings = normalizedOptions;
 
-    if (this.settings.suffix) {
-      editorManager.suffix = this.settings.suffix;
+    this.options = createOptions(self, normalizedOptions);
+    Options.register(self);
+    const getOption = this.options.get;
+
+    if (getOption('deprecation_warnings')) {
+      logDeprecationsWarning(options, normalizedOptions);
+    }
+
+    const suffix = getOption('suffix');
+    if (suffix) {
+      editorManager.suffix = suffix;
     }
     this.suffix = editorManager.suffix;
 
-    if (this.settings.base_url) {
-      editorManager._setBaseUrl(this.settings.base_url);
+    const baseUrl = getOption('base_url');
+    if (baseUrl) {
+      editorManager._setBaseUrl(baseUrl);
     }
     this.baseUri = editorManager.baseURI;
 
-    if (this.settings.referrer_policy) {
-      ScriptLoader.ScriptLoader._setReferrerPolicy(this.settings.referrer_policy);
-      DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(this.settings.referrer_policy);
+    const referrerPolicy = Options.getReferrerPolicy(self);
+    if (referrerPolicy) {
+      ScriptLoader.ScriptLoader._setReferrerPolicy(referrerPolicy);
+      DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(referrerPolicy);
     }
 
-    AddOnManager.languageLoad = this.settings.language_load;
+    AddOnManager.languageLoad = getOption('language_load');
     AddOnManager.baseURL = editorManager.baseURL;
-
-    this.id = id;
 
     this.setDirty(false);
 
-    this.documentBaseURI = new URI(this.settings.document_base_url, {
+    this.documentBaseURI = new URI(Options.getDocumentBaseUrl(self), {
       base_uri: this.baseUri
     });
     this.baseURI = this.baseUri;
-    this.inline = !!this.settings.inline;
+    this.inline = Options.isInline(self);
 
     this.shortcuts = new Shortcuts(this);
     this.editorCommands = new EditorCommands(this);
 
-    if (this.settings.cache_suffix) {
-      Env.cacheSuffix = this.settings.cache_suffix.replace(/^[\?\&]+/, '');
+    const cacheSuffix = getOption('cache_suffix');
+    if (cacheSuffix) {
+      Env.cacheSuffix = cacheSuffix.replace(/^[\?\&]+/, '');
     }
 
     this.ui = {
@@ -310,12 +333,11 @@ class Editor implements EditorObservable {
       isDisabled: Fun.never
     };
 
-    const self = this;
-    this.mode = create(self);
+    this.mode = createMode(self);
 
     // Call setup
     editorManager.fire('SetupEditor', { editor: this });
-    const setupCallback = Settings.getSetupCallback(self);
+    const setupCallback = Options.getSetupCallback(self);
     if (Type.isFunction(setupCallback)) {
       setupCallback.call(self, self);
     }
@@ -378,8 +400,8 @@ class Editor implements EditorObservable {
    * // Returns a specific config value from a specific editor instance by id
    * var someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
-  public getParam <K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
-  public getParam <K extends keyof EditorSettings>(name: K, defaultVal?: EditorSettings[K], type?: string): EditorSettings[K];
+  public getParam <K extends Exclude<BuiltInOptionType, 'function'>>(name: string, defaultVal: BuiltInOptionTypeMap[K], type: K): BuiltInOptionTypeMap[K];
+  public getParam <K extends keyof NormalizedEditorOptions>(name: K, defaultVal?: NormalizedEditorOptions[K], type?: string): NormalizedEditorOptions[K];
   public getParam <T>(name: string, defaultVal: T, type?: string): T;
   public getParam(name: string, defaultVal?: any, type?: string): any {
     return getParam(this, name, defaultVal, type);
@@ -401,7 +423,7 @@ class Editor implements EditorObservable {
    * tinymce.activeEditor.hasPlugin('table');
    */
   public hasPlugin(name: string, loaded?: boolean): boolean {
-    const hasPlugin = Arr.contains(Settings.getPlugins(this).split(/[ ,]/), name);
+    const hasPlugin = Arr.contains(Options.getPlugins(this).split(/[ ,]/), name);
     if (hasPlugin) {
       return loaded ? PluginManager.get(name) !== undefined : true;
     } else {
@@ -994,26 +1016,26 @@ class Editor implements EditorObservable {
    * @return {string} Converted URL string.
    */
   public convertURL(url: string, name: string, elm?): string {
-    const self = this, settings = self.settings;
+    const self = this, getOption = self.options.get;
 
     // Use callback instead
-    const urlConverterCallback = Settings.getUrlConverterCallback(self);
+    const urlConverterCallback = Options.getUrlConverterCallback(self);
     if (Type.isFunction(urlConverterCallback)) {
       return urlConverterCallback.call(self, url, elm, true, name);
     }
 
     // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-    if (!settings.convert_urls || (elm && elm.nodeName === 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
+    if (!getOption('convert_urls') || (elm && elm.nodeName === 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
       return url;
     }
 
     // Convert to relative
-    if (settings.relative_urls) {
+    if (getOption('relative_urls')) {
       return self.documentBaseURI.toRelative(url);
     }
 
     // Convert to absolute
-    url = self.documentBaseURI.toAbsolute(url, settings.remove_script_host);
+    url = self.documentBaseURI.toAbsolute(url, getOption('remove_script_host'));
 
     return url;
   }

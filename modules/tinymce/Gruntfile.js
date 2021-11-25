@@ -7,7 +7,7 @@ let swag = require('@ephox/swag');
 
 let plugins = [
   'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 'code', 'codesample',
-  'directionality', 'emoticons', 'help', 'fullscreen', 'hr', 'image', 'imagetools', 'importcss',
+  'directionality', 'emoticons', 'help', 'fullscreen', 'hr', 'image', 'importcss',
   'insertdatetime', 'link', 'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste',
   'preview', 'print', 'save', 'searchreplace', 'tabfocus', 'table', 'template', 'textpattern',
   'toc', 'visualblocks', 'visualchars', 'wordcount', 'quickbars'
@@ -211,17 +211,16 @@ module.exports = function (grunt) {
       }
     },
 
-    uglify: Object.assign(
+    terser: Object.assign(
       {
         options: {
+          ecma: 2018,
           output: {
             comments: 'all',
             ascii_only: true
           },
           compress: {
-            passes: 2,
-            // TINY-7720: Disable merge_vars as it has a bug that causes errors on IE 11
-            merge_vars: false
+            passes: 2
           }
         },
         core: {
@@ -236,7 +235,7 @@ module.exports = function (grunt) {
           options: {
             mangle: false,
             compress: false,
-            beautify: {
+            output: {
               indent_level: 2
             }
           },
@@ -961,7 +960,7 @@ module.exports = function (grunt) {
   });
   grunt.loadTasks('tools/tasks');
 
-  grunt.registerTask('emoji', ['emojis', 'uglify:emoticons-raw']);
+  grunt.registerTask('emoji', ['emojis', 'terser:emoticons-raw']);
 
   grunt.registerTask('prodBuild', [
     'shell:tsc',
@@ -971,7 +970,7 @@ module.exports = function (grunt) {
     'rollup',
     'concat',
     'copy',
-    'uglify'
+    'terser'
   ]);
 
   grunt.registerTask('prod', [

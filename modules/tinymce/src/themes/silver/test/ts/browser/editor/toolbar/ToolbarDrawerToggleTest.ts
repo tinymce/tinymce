@@ -4,7 +4,7 @@ import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings, ToolbarMode } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions, ToolbarMode } from 'tinymce/core/api/OptionTypes';
 
 import * as UiUtils from '../../../module/UiUtils';
 
@@ -15,13 +15,13 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
     assert.equal(state, expected, 'Expected toolbar toggle state to be ' + expected);
   };
 
-  const pTestToggle = async (settings: RawEditorSettings, shouldToggle: boolean) => {
+  const pTestToggle = async (options: RawEditorOptions, shouldToggle: boolean) => {
     const editor = await McEditor.pFromSettings<Editor>({
       toolbar: 'undo redo | bold italic',
       menubar: false,
       statusbar: false,
       width: 200,
-      ...settings,
+      ...options,
       base_url: '/project/tinymce/js/tinymce'
     });
     editor.focus();

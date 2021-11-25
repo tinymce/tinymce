@@ -16,7 +16,7 @@ import Env from 'tinymce/core/api/Env';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../api/Events';
-import { getCloneElements } from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Util from '../core/Util';
 import { ephemera } from './Ephemera';
 import { SelectionTargets } from './SelectionTargets';
@@ -33,7 +33,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
     selectionTargets.targets().each((targets) => {
       const tableOpt = TableLookup.table(start);
       tableOpt.each((table) => {
-        const cloneFormats = getCloneElements(editor);
+        const cloneFormats = Options.getCloneElements(editor);
         const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
         const otherCells = OtherCells.getOtherCells(table, targets, generators);
         Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);

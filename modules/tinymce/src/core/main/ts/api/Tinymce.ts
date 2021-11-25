@@ -51,7 +51,6 @@ import I18n from './util/I18n';
 import ImageUploader from './util/ImageUploader';
 import LocalStorage from './util/LocalStorage';
 import Observable from './util/Observable';
-import Promise from './util/Promise';
 import Tools from './util/Tools';
 import URI, { URIConstructor } from './util/URI';
 import VK from './util/VK';
@@ -104,7 +103,6 @@ interface TinyMCE extends EditorManager {
   };
 
   util: {
-    Promise: PromiseConstructor;
     Delay: Delay;
     Tools: Tools;
     VK: VK;
@@ -182,13 +180,6 @@ interface TinyMCE extends EditorManager {
   resolve: Tools['resolve'];
   explode: Tools['explode'];
   _addCacheSuffix: Tools['_addCacheSuffix'];
-
-  // Legacy browser detection
-  isOpera: boolean;
-  isWebKit: boolean;
-  isIE: false | number;
-  isGecko: boolean;
-  isMac: boolean;
 }
 
 /**
@@ -209,7 +200,6 @@ const publicApi = {
   },
 
   util: {
-    Promise,
     Delay,
     Tools,
     VK,

@@ -1,4 +1,4 @@
-import { Cursors, PhantomSkipper, Waiter } from '@ephox/agar';
+import { Cursors, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Scroll, SugarLocation, SugarPosition } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 
 describe('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoViewTest', () => {
-  PhantomSkipper.bddSetup();
 
   const hook = TinyHooks.bddSetup<Editor>({
     add_unload_trigger: false,

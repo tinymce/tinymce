@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Toc from '../core/Toc';
 
 const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
@@ -20,7 +20,7 @@ const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) 
 };
 
 const isToc = (editor: Editor) => (elm: Element | null) =>
-  elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
+  elm && editor.dom.is(elm, '.' + Options.getTocClass(editor)) && editor.getBody().contains(elm);
 
 const register = (editor: Editor): void => {
   const insertTocAction = () => editor.execCommand('mceInsertToc');

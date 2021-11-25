@@ -1,7 +1,7 @@
 {
   "name": "@ephox/darwin",
   "description": "This project's purpose is to handle selection and cursor navigation.",
-  "version": "7.0.4",
+  "version": "8.0.0-alpha.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git",
@@ -19,12 +19,12 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/katamari": "^8.1.1",
-    "@ephox/phoenix": "^7.0.3",
-    "@ephox/robin": "^9.0.3",
-    "@ephox/sand": "^5.0.3",
-    "@ephox/snooker": "^10.0.1",
-    "@ephox/sugar": "^8.1.1",
+    "@ephox/katamari": "^9.0.0-alpha.0",
+    "@ephox/phoenix": "^8.0.0-alpha.0",
+    "@ephox/robin": "^10.0.0-alpha.0",
+    "@ephox/sand": "^6.0.0-alpha.0",
+    "@ephox/snooker": "^11.0.0-alpha.0",
+    "@ephox/sugar": "^9.0.0-alpha.0",
     "tslib": "^2.0.0"
   },
   "author": "Tiny Technologies, Inc",
