@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { CellOpSelection, TableSelection } from '@ephox/darwin';
-import { Arr, Fun, Optionals } from '@ephox/katamari';
+import { TableSelection } from '@ephox/darwin';
+import { Fun } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
+import { SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { PatchedSelections } from '../Table';
 import { ephemera } from './Ephemera';
 
 const getSelectionCellFallback = (element: SugarElement<Node>) =>
@@ -25,32 +24,11 @@ const getSelectionFromSelector = <T extends Element>(selector: string) =>
     return SelectorFind.closest<T>(cell, selector, isRoot);
   };
 
-const getSelectionCaption = getSelectionFromSelector<HTMLTableCaptionElement>('caption');
-
 const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
-const getCellsFromSelection = (selections: PatchedSelections): SugarElement<HTMLTableCellElement>[] =>
-  CellOpSelection.selection(selections.get);
-
-const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
-  const cellOpt = getSelectionCell(selected);
-  const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
-    .map((table) => TableLookup.rows(table));
-  return Optionals.lift2(cellOpt, rowsOpt, (cell, rows) =>
-    Arr.filter(rows, (row) =>
-      Arr.exists(SugarElements.fromDom(row.dom.cells), (rowCell) =>
-        Attribute.get(rowCell, selector) === '1' || Compare.eq(rowCell, cell)
-      )
-    )
-  ).getOr([]);
-};
-
 export {
-  getSelectionCaption,
   getSelectionCell,
-  getSelectionCellOrCaption,
-  getCellsFromSelection,
-  getRowsFromSelection
+  getSelectionCellOrCaption
 };

@@ -18,7 +18,6 @@ import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
-// import { CellSelectionApi } from '../selection/CellSelection';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T, noEvents?: boolean) => Optional<TableActionResult>;
 export interface TableActionResult {
@@ -59,14 +58,7 @@ export interface TableActions {
   readonly getTableColType: LookupAction;
 }
 
-// export const TableActions = (editor: Editor, cellSelection: CellSelectionApi): TableActions => {
-// export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, lazyWire: () => ResizeWire): TableActions => {
-// export const TableActions = (editor: Editor, lazyWire: () => ResizeWire): TableActions => {
 export const TableActions = (editor: Editor): TableActions => {
-  // TODO: This might not be initialised yet which could be a problem
-  // const lazyWire = editor.selection.tableResizeHandler.lazyWire;
-  // console.log('lazyWire', lazyWire);
-
   const isTableBody = (editor: Editor): boolean =>
     SugarNode.name(Util.getBody(editor)) === 'table';
 
@@ -77,7 +69,7 @@ export const TableActions = (editor: Editor): TableActions => {
     isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
 
   // Optional.none gives the default cloneFormats.
-  const cloneFormats = Options.getCloneElements(editor);
+  const cloneFormats = Optional.from(Options.getCloneElements(editor));
 
   const colMutationOp = Options.getColumnResizingBehaviour(editor) === 'resizetable' ? Fun.noop : CellMutations.halve;
 
@@ -119,13 +111,11 @@ export const TableActions = (editor: Editor): TableActions => {
       return Optional.some(rng);
     });
 
-  // const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, lazyWire: () => ResizeWire, effect: Events.TableEventData) =>
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, effect: Events.TableEventData) =>
     (table: SugarElement<HTMLTableElement>, target: T, noEvents: boolean = false): Optional<TableActionResult> => {
       Util.removeDataStyle(table);
-      // const wire = lazyWire();
       const doc = SugarElement.fromDom(editor.getDoc());
-      const generators = TableFill.cellOperations(mutate, doc, Optional.from(cloneFormats));
+      const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const behaviours: RunOperation.OperationBehaviours = {
         sizing: TableSize.get(editor, table),
         resize: Options.getColumnResizingBehaviour(editor) === 'resizetable' ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable(),

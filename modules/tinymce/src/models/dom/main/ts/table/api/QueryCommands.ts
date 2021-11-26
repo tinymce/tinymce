@@ -16,7 +16,6 @@ import { LookupAction, TableActions } from '../actions/TableActions';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
-// import { PatchedSelections } from '../Table';
 
 const getSelectedCells = (editor: Editor) => (): SugarElement<HTMLTableCellElement>[] =>
   Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);

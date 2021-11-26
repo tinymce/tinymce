@@ -25,11 +25,6 @@ const option: {
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
-  registerOption('table_sizing_mode', {
-    processor: 'string',
-    default: 'auto'
-  });
-
   registerOption('table_header_type', {
     processor: (value) => {
       const valid = Arr.contains([ 'section', 'cells', 'sectionCells', 'auto' ], value);

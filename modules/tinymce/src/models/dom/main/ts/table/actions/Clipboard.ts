@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-// import { SelectionTypes } from '@ephox/darwin';
 import { Arr, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
@@ -15,8 +14,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
-// import * as TableSelection from '../selection/TableSelection';
-// import { PatchedSelections } from '../Table';
 import { TableActions } from './TableActions';
 
 const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<SugarElement<HTMLTableElement>[]> => {

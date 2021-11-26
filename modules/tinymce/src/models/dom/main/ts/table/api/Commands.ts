@@ -5,21 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-// import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
-import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
+import { CopyCols, CopyRows, Sizes, TableFill, TableLookup, TableConversions } from '@ephox/snooker';
 import { Insert, Remove, Replication, SelectorFind, Selectors, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActionResult, TableActions } from '../actions/TableActions';
 import * as Events from '../api/Events';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
 import { Clipboard } from './Clipboard';
-// import { PatchedSelections } from '../Table';
 import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Options';
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
@@ -60,11 +57,11 @@ const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clip
     if (!isForcedSizing) {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
         if (sizing === 'relative' && !Sizes.isPercentSizing(table)) {
-          enforcePercentage(table);
+          TableConversions.convertToPercentSize(table);
         } else if (sizing === 'fixed' && !Sizes.isPixelSizing(table)) {
-          enforcePixels(table);
+          TableConversions.convertToPixelSize(table);
         } else if (sizing === 'responsive' && !Sizes.isNoneSizing(table)) {
-          enforceNone(table);
+          TableConversions.convertToNoneSize(table);
         }
         Util.removeDataStyle(table);
         Events.fireTableModified(editor, table.dom, Events.structureModified);
