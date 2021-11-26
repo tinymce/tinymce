@@ -100,7 +100,7 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean):
 };
 
 const setup = (editor: Editor): void => {
-  if (Env.browser.isChrome() || Env.browser.isSafari()) {
+  if (Env.browser.isChromium() || Env.browser.isSafari()) {
     addPreProcessFilter(editor, removeWebKitStyles);
   }
 };

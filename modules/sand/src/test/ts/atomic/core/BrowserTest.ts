@@ -83,20 +83,20 @@ describe('BrowserTest', () => {
   });
 
   it('Chrome', () => {
-    check('isChrome', 'Windows', 'Chrome', 3, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.38 Safari/532.0');
-    check('isChrome', 'Windows', 'Chrome', 4, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.195.38 Safari/532.0');
-    check('isChrome', 'Windows', 'Chrome', 5, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.127 Safari/533.4');
-    check('isChrome', 'Windows', 'Chrome', 6, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
-    check('isChrome', 'Linux', 'Chrome', 5, 0, 'Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.127 Safari/533.4');
-    check('isChrome', 'macOS', 'Chrome', 6, 0, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
+    check('isChromium', 'Windows', 'Chromium', 3, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.38 Safari/532.0');
+    check('isChromium', 'Windows', 'Chromium', 4, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.195.38 Safari/532.0');
+    check('isChromium', 'Windows', 'Chromium', 5, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.127 Safari/533.4');
+    check('isChromium', 'Windows', 'Chromium', 6, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
+    check('isChromium', 'Linux', 'Chromium', 5, 0, 'Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.127 Safari/533.4');
+    check('isChromium', 'macOS', 'Chromium', 6, 0, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3');
     // Should use browser info from userAgentData if available
-    check('isChrome', 'Windows', 'Chrome', 10, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3', mockUserAgentData([{ brand: 'Chromium', version: '10' }]));
+    check('isChromium', 'Windows', 'Chromium', 10, 0, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.53 Safari/534.3', mockUserAgentData([{ brand: 'Chromium', version: '10' }]));
   });
 
   it('Chromium Edge', () => {
-    check('isChrome', 'Windows', 'Chrome', 92, 0, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.73');
+    check('isChromium', 'Windows', 'Chromium', 92, 0, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.73');
     // Should use browser info from userAgentData if available
-    check('isChrome', 'Windows', 'Chrome', 93, 0, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.73', mockUserAgentData([{ brand: 'Chromium', version: '93' }]));
+    check('isChromium', 'Windows', 'Chromium', 93, 0, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.73', mockUserAgentData([{ brand: 'Chromium', version: '93' }]));
   });
 
   it('Mobile Browsers', () => {
@@ -105,8 +105,8 @@ describe('BrowserTest', () => {
     check('isSafari', 'iOS', 'Safari', 13, 0, 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1');
     // iPadOS 13
     check('isSafari', 'macOS', 'Safari', 13, 0, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Safari/605.1.15');
-    check('isChrome', 'Android', 'Chrome', 18, 0, 'Mozilla/5.0 (Linux; Android 4.2.2; Nexus 7 Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19');
-    check('isChrome', 'ChromeOS', 'Chrome', 78, 0, 'Mozilla/5.0 (X11; CrOS x86_64 12499.66.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.106 Safari/537.36');
+    check('isChromium', 'Android', 'Chromium', 18, 0, 'Mozilla/5.0 (Linux; Android 4.2.2; Nexus 7 Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19');
+    check('isChromium', 'ChromeOS', 'Chromium', 78, 0, 'Mozilla/5.0 (X11; CrOS x86_64 12499.66.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.106 Safari/537.36');
   });
 
   it('OS versions', () => {
