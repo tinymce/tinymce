@@ -1,5 +1,5 @@
 import { Keys } from '@ephox/agar';
-import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { assert, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -16,12 +16,19 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
 
   context('Space key around inline boundary elements', () => {
     it('Press space at beginning of inline boundary inserting nbsp', () => {
+      let inputEvents = 0;
       const editor = hook.editor();
       editor.setContent('<p>a <a href="#">b</a> c</p>');
+      editor.on('beforeinput input', (e) => {
+        // eslint-disable-next-line no-console
+        console.log(e.isComposing);
+        inputEvents++;
+      });
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       editor.nodeChanged();
       TinyContentActions.keystroke(editor, Keys.space());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1);
+      assert.eq(2, inputEvents, 'Events not fired as expected');
       TinyAssertions.assertContent(editor, '<p>a <a href="#">&nbsp;b</a> c</p>');
     });
 
@@ -32,7 +39,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.nodeChanged();
       TinyContentActions.keystroke(editor, Keys.space());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2);
-      TinyAssertions.assertContent(editor, '<p>a <a href="#">b&nbsp;</a> c</p>');
+      TinyAssertions.assertContent(editor, '<p>a <a href="#">b </a> c</p>');
     });
 
     it('Press space at beginning of inline boundary inserting space', () => {

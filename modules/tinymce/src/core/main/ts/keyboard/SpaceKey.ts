@@ -10,13 +10,12 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as InsertSpace from './InsertSpace';
 import * as MatchKeys from './MatchKeys';
+import { mockInputEvents } from './MockInputEvents';
 
 const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor) }
-  ], evt).each((_) => {
-    evt.preventDefault();
-  });
+  ], evt).each(mockInputEvents(editor, { inputType: 'insertText', data: ' ' }, evt));
 };
 
 const setup = (editor: Editor) => {

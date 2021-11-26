@@ -21,6 +21,7 @@ import * as MediaDelete from '../delete/MediaDelete';
 import * as Outdent from '../delete/Outdent';
 import * as TableDelete from '../delete/TableDelete';
 import * as MatchKeys from './MatchKeys';
+import { mockInputEvents } from './MockInputEvents';
 
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
   MatchKeys.execute([
@@ -43,9 +44,7 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     { keyCode: VK.DELETE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) }
-  ], evt).each((_) => {
-    evt.preventDefault();
-  });
+  ], evt).each(mockInputEvents(editor, { inputType: 'deleteContentBackward' }, evt));
 };
 
 const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent) => {
