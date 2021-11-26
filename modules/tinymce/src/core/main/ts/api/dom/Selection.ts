@@ -34,7 +34,7 @@ import ControlSelection from './ControlSelection';
 import DOMUtils from './DOMUtils';
 import SelectorChanged from './SelectorChanged';
 import DomSerializer from './Serializer';
-import TableCellSelection, { TableCellSelectionApi } from './TableCellSelection';
+import { TableCellSelection } from './TableCellSelection';
 import { TableResizeHandler } from './TableResizeHandler';
 
 /**
@@ -63,7 +63,7 @@ interface EditorSelection {
   bookmarkManager: BookmarkManager;
   controlSelection: ControlSelection;
   tableResizeHandler: TableResizeHandler;
-  tableCellSelection: TableCellSelectionApi;
+  tableCellSelection: TableCellSelection;
   dom: DOMUtils;
   win: Window;
   serializer: DomSerializer;
@@ -613,7 +613,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const bookmarkManager = BookmarkManager(exports);
   const controlSelection = ControlSelection(exports, editor);
   const tableResizeHandler = TableResizeHandler(editor);
-  const tableCellSelection = TableCellSelection(editor, tableResizeHandler.lazyResize);
+  const tableCellSelection = TableCellSelection(editor);
 
   exports.bookmarkManager = bookmarkManager;
   exports.controlSelection = controlSelection;

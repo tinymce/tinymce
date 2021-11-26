@@ -10,7 +10,6 @@ import { OtherCells } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 export interface TableEventData {
   readonly structure: boolean;
@@ -20,12 +19,6 @@ export interface TableEventData {
 export interface TableModifiedEvent extends TableEventData {
   readonly table: HTMLTableElement;
 }
-
-const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<{ node: HTMLTableRowElement }> =>
-  editor.fire('newrow', { node: row });
-
-const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<{ node: HTMLTableCellElement }> =>
-  editor.fire('newcell', { node: cell });
 
 const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string): void => {
   editor.fire('ObjectResizeStart', { target, width, height, origin });
@@ -63,8 +56,6 @@ const structureModified: TableEventData = { structure: true, style: false };
 const styleAndStructureModified: TableEventData = { structure: true, style: true };
 
 export {
-  fireNewRow,
-  fireNewCell,
   fireObjectResizeStart,
   fireObjectResized,
   fireTableSelectionChange,

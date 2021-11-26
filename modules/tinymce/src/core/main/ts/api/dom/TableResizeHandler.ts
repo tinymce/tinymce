@@ -6,11 +6,10 @@
  */
 
 import { Arr, Optional, Strings } from '@ephox/katamari';
-import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableGridSize, TableResize } from '@ephox/snooker';
+import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableConversions, TableGridSize, TableLookup, TableResize, Warehouse } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
 import * as NodeType from '../../dom/NodeType';
-import { enforcePercentage, enforcePixels, syncPixels } from '../../table/TableEnforceUnit';
 import * as Events from '../../table/TableEvents';
 import * as TableSize from '../../table/TableSize';
 import * as Util from '../../table/TableUtil';
@@ -19,25 +18,33 @@ import Editor from '../Editor';
 import * as Options from '../Options';
 
 export interface TableResizeHandler {
-  readonly lazyResize: () => Optional<TableResize>;
-  readonly lazyWire: () => ResizeWire;
+  readonly refreshBars: (table: HTMLTableElement) => void;
+  readonly hideBars: () => void;
+  readonly showBars: () => void;
   readonly destroy: () => void;
 }
 
 const barResizerPrefix = 'bar-';
 const isResizable = (elm: SugarElement<Element>) => Attribute.get(elm, 'data-mce-resize') !== 'false';
 
+const syncPixels = (table: SugarElement<HTMLTableElement>): void => {
+  const warehouse = Warehouse.fromTable(table);
+  if (!Warehouse.hasColumns(warehouse)) {
+    // Ensure the specified width matches the actual cell width
+    Arr.each(TableLookup.cells(table), (cell) => {
+      const computedWidth = Css.get(cell, 'width');
+      Css.set(cell, 'width', computedWidth);
+      Attribute.remove(cell, 'width');
+    });
+  }
+};
+
 export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   let selectionRng = Optional.none<Range>();
-  let resize = Optional.none<TableResize>();
-  let wire = Optional.none<ResizeWire>();
+  let resizeOpt = Optional.none<TableResize>();
+  let wireOpt = Optional.none<ResizeWire>();
   let startW: number;
   let startRawW: string;
-
-  const lazyResize = () => resize;
-
-  const lazyWire = () =>
-    wire.getOr(ResizeWire.only(SugarElement.fromDom(editor.getBody()), isResizable));
 
   const lazySizing = (table: SugarElement<HTMLTableElement>) =>
     TableSize.get(editor, table);
@@ -56,7 +63,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     // Responsive tables don't have a width so we need to convert it to a relative/percent
     // table instead, as that's closer to responsive sizing than fixed sizing
     if (startRawW === '') {
-      enforcePercentage(table);
+      TableConversions.convertToPercentSize(table);
     }
 
     // Adjust the column sizes and update the table width to use the right sizing, if the table changed size.
@@ -86,18 +93,18 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   };
 
   const destroy = () => {
-    resize.each((sz) => {
+    resizeOpt.each((sz) => {
       sz.destroy();
     });
 
-    wire.each((w) => {
+    wireOpt.each((w) => {
       TableWire.remove(editor, w);
     });
   };
 
   editor.on('init', () => {
     const rawWire = TableWire.get(editor, isResizable);
-    wire = Optional.some(rawWire);
+    wireOpt = Optional.some(rawWire);
     if (Options.hasTableObjectResizing(editor) && Options.hasTableResizeBars(editor)) {
       const resizing = lazyResizingBehaviour();
       const sz = TableResize.create(rawWire, resizing, lazySizing);
@@ -125,7 +132,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
         editor.undoManager.add();
       });
 
-      resize = Optional.some(sz);
+      resizeOpt = Optional.some(sz);
     }
   });
 
@@ -141,15 +148,15 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       });
 
       if (!Sizes.isPixelSizing(table) && Options.isTablePixelsForced(editor)) {
-        enforcePixels(table);
+        TableConversions.convertToPixelSize(table);
       } else if (!Sizes.isPercentSizing(table) && Options.isTablePercentagesForced(editor)) {
-        enforcePercentage(table);
+        TableConversions.convertToPercentSize(table);
       }
 
       // TINY-6601: If resizing using a bar, then snooker will base the resizing on the initial size. So
       // when using a responsive table we need to ensure we convert to a relative table before resizing
       if (Sizes.isNoneSizing(table) && Strings.startsWith(e.origin, barResizerPrefix)) {
-        enforcePercentage(table);
+        TableConversions.convertToPercentSize(table);
       }
 
       startW = e.width;
@@ -174,7 +181,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   });
 
   editor.on('SwitchMode', () => {
-    lazyResize().each((resize) => {
+    resizeOpt.each((resize) => {
       if (editor.mode.isReadOnly()) {
         resize.hideBars();
       } else {
@@ -183,9 +190,22 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     });
   });
 
+  const refreshBars = (table: HTMLTableElement): void => {
+    resizeOpt.each((resize) => resize.refreshBars(SugarElement.fromDom(table)));
+  };
+
+  const hideBars = (): void => {
+    resizeOpt.each((resize) => resize.hideBars());
+  };
+
+  const showBars = (): void => {
+    resizeOpt.each((resize) => resize.showBars());
+  };
+
   return {
-    lazyResize,
-    lazyWire,
+    refreshBars,
+    hideBars,
+    showBars,
     destroy
   };
 };

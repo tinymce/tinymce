@@ -11,9 +11,6 @@ import { Attribute, Compare, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getNodeName = (elm: Node): string =>
-  elm.nodeName.toLowerCase();
-
 const getBody = (editor: Editor): SugarElement<HTMLElement> =>
   SugarElement.fromDom(editor.getBody());
 
@@ -25,12 +22,6 @@ const getPixelHeight = (elm: HTMLElement): number =>
 
 const getIsRoot = (editor: Editor) => (element: SugarElement<Node>): boolean =>
   Compare.eq(element, getBody(editor));
-
-const removePxSuffix = (size: string): string =>
-  size ? size.replace(/px$/, '') : '';
-
-const addPxSuffix = (size: string): string =>
-  /^\d+(\.\d+)?$/.test(size) ? size + 'px' : size;
 
 const removeDataStyle = (table: SugarElement<HTMLTableElement>): void => {
   Attribute.remove(table, 'data-mce-style');
@@ -50,28 +41,13 @@ const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
 const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
 const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
 
-const getSelectionStart = (editor: Editor): SugarElement<Element> =>
-  SugarElement.fromDom(editor.selection.getStart());
-
-const getSelectionEnd = (editor: Editor): SugarElement<Element> =>
-  SugarElement.fromDom(editor.selection.getEnd());
-
-const getThunkedSelectionStart = (editor: Editor) => (): SugarElement<Element> =>
-  getSelectionStart(editor);
-
 export {
-  getNodeName,
   getBody,
   getIsRoot,
-  addPxSuffix,
-  removePxSuffix,
   getPixelWidth,
   getPixelHeight,
   getRawWidth,
   removeDataStyle,
   isPercentage,
-  isPixel,
-  getSelectionStart,
-  getSelectionEnd,
-  getThunkedSelectionStart
+  isPixel
 };

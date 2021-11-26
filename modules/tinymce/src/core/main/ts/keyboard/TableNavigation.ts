@@ -184,7 +184,7 @@ const handleTab = (editor: Editor, forward: boolean): boolean => {
   return TableLookup.cell(container, isRoot).map((cell) => {
     // window.event.preventDefault();
     // Clear fake ranged selection because our new selection will always be collapsed
-    TableLookup.table(cell, isRoot).each(editor.selection.tableCellSelection.clear);
+    TableLookup.table(cell, isRoot).each((table) => editor.selection.tableCellSelection.clear(table.dom));
     // Collapse selection to start or end based on shift key
     editor.selection.collapse(!forward);
     const navigation = !forward ? tabBackward : tabForward;

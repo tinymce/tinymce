@@ -94,7 +94,7 @@ export const TableActions = (editor: Editor): TableActions => {
       // with noneditable cells, so lets check if we have a noneditable cell and if so place the selection
       const cells = TableLookup.cells(table);
       return Arr.head(cells).filter(SugarBody.inBody).map((firstCell) => {
-        editor.selection.tableCellSelection.clear(table);
+        editor.selection.tableCellSelection.clear(table.dom);
         const rng = editor.dom.createRng();
         rng.selectNode(firstCell.dom);
         editor.selection.setRng(rng);
@@ -107,7 +107,7 @@ export const TableActions = (editor: Editor): TableActions => {
       rng.setStart(des.element.dom, des.offset);
       rng.setEnd(des.element.dom, des.offset);
       editor.selection.setRng(rng);
-      editor.selection.tableCellSelection.clear(table);
+      editor.selection.tableCellSelection.clear(table.dom);
       return Optional.some(rng);
     });
 
@@ -123,7 +123,7 @@ export const TableActions = (editor: Editor): TableActions => {
       };
       return guard(table) ? operation(table, target, generators, behaviours).bind((result) => {
         // Update the resize bars after the table opeation
-        editor.selection.tableResizeHandler.lazyResize().each((resize) => resize.refreshBars(table));
+        editor.selection.tableResizeHandler.refreshBars(table.dom);
 
         // INVESTIGATE: Should "noEvents" prevent these from firing as well?
         Arr.each(result.newRows, (row) => {

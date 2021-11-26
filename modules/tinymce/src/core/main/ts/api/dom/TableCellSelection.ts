@@ -8,7 +8,7 @@
 import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
-import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
+import { OtherCells, TableFill, TableLookup } from '@ephox/snooker';
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
 import { ephemera } from '../../table/TableEphemera';
@@ -21,11 +21,11 @@ import { EditorEvent } from '../util/EventDispatcher';
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
 
-export interface TableCellSelectionApi {
-  readonly clear: (container: SugarElement<Node>) => void;
+export interface TableCellSelection {
+  readonly clear: (container: Node) => void;
 }
 
-export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableCellSelectionApi => {
+export const TableCellSelection = (editor: Editor): TableCellSelection => {
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     const tableOpt = TableLookup.table(start);
     tableOpt.each((table) => {
@@ -98,7 +98,8 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableC
       const wrappedEvent = DomEvent.fromRawEvent(event);
       // const lazyResize = editor.selection.tableResizeHandler.lazyResize;
 
-      lazyResize().each((resize) => resize.hideBars());
+      // lazyResize().each((resize) => resize.hideBars());
+      editor.selection.tableResizeHandler.hideBars();
 
       const rng = editor.selection.getRng();
       const start = SugarElement.fromDom(rng.startContainer);
@@ -107,7 +108,8 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableC
       keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each((response) => {
         handleResponse(wrappedEvent, response);
       });
-      lazyResize().each((resize) => resize.showBars());
+      // lazyResize().each((resize) => resize.showBars());
+      editor.selection.tableResizeHandler.showBars();
     };
 
     const isLeftMouse = (raw: MouseEvent) => raw.button === 0;
@@ -179,7 +181,10 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableC
     editor.on('NodeChange', syncSelection);
   });
 
+  const clear = (container: Node) =>
+    annotations.clear(SugarElement.fromDom(container));
+
   return {
-    clear: annotations.clear
+    clear
   };
 };
