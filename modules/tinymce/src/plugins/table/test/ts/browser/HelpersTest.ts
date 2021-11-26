@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
       '<td width="20" height="30" scope="row" class="foo" ' +
       'style="background-color: #333333; text-align:left; ' +
       'vertical-align:middle; border-style: dashed; ' +
-      'border-color: #d91111">a</td>' +
+      'border-color: #D91111">a</td>' +
       '</tr></tbody>' +
       '</table>'
     );
@@ -51,7 +51,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
       '</colgroup>' +
       '<tbody>' +
       '<tr>' +
-      '<td height="30" scope="row" class="foo" style="background-color: #333333; text-align:left; vertical-align:middle; border-style: dashed; border-color: #d91111">a</td>' +
+      '<td height="30" scope="row" class="foo" style="background-color: #333333; text-align:left; vertical-align:middle; border-style: dashed; border-color: #D91111">a</td>' +
       '</tr>' +
       '</tbody>' +
       '</table>'

@@ -285,6 +285,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     '<caption>Caption</caption>' +
     '<tbody>' +
     '<tr><td style="border-color: rgb(255, 0, 0); border-width: 1px; padding: 5px;">X</td></tr>' +
+
     '</tbody>' +
     '</table>';
 
