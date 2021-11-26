@@ -47,7 +47,7 @@ const getApi = (editor: Editor, clipboard: FakeClipboard, selectionTargets: Sele
   getClipboardRows: getClipboardElements(clipboard.getRows),
   setClipboardCols: setClipboardElements(clipboard.setColumns),
   getClipboardCols: getClipboardElements(clipboard.getColumns),
-  // TODO: Have commented out as tableResizeHandler is not availble when this runs so may need to initialise resizeHandler earlier in the process
+  // TODO: Have commented out as resizeHandler is exposed by core now
   // resizeHandler: editor.selection.tableResizeHandler,
   selectionTargets,
 });

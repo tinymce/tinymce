@@ -7,7 +7,7 @@
 
 import { CellOpSelection } from '@ephox/darwin';
 import { Optional } from '@ephox/katamari';
-import { RunOperation, SimpleGenerators } from '@ephox/snooker';
+import { RunOperation } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 
 import { ephemera } from '../selection/Ephemera';
@@ -26,17 +26,8 @@ const forMenu = (selectedCells: () => SugarElement<HTMLTableCellElement>[], tabl
   selection: CellOpSelection.selection(selectedCells)
 });
 
-const paste = (element: SugarElement<Element>, clipboard: SugarElement<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
-  element,
-  clipboard,
-  generators
-});
-
-const pasteRows = (selectedCells: () => SugarElement<HTMLTableCellElement>[], _cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
-  selection: CellOpSelection.selection(selectedCells),
-  clipboard,
-  generators
-});
-
-export { noMenu, forMenu, paste, pasteRows };
+export {
+  noMenu,
+  forMenu
+};
 

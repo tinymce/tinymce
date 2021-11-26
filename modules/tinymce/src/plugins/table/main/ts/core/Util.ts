@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SugarElement } from '@ephox/sugar';
 
@@ -16,12 +16,6 @@ const getNodeName = (elm: Node): string =>
 
 const getBody = (editor: Editor): SugarElement<HTMLElement> =>
   SugarElement.fromDom(editor.getBody());
-
-const getPixelWidth = (elm: HTMLElement): number =>
-  elm.getBoundingClientRect().width;
-
-const getPixelHeight = (elm: HTMLElement): number =>
-  elm.getBoundingClientRect().height;
 
 const getIsRoot = (editor: Editor) => (element: SugarElement<Node>): boolean =>
   Compare.eq(element, getBody(editor));
@@ -42,22 +36,11 @@ const removeDataStyle = (table: SugarElement<HTMLTableElement>): void => {
   Arr.each(TableLookup.rows(table), removeStyleAttribute);
 };
 
-const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
-  const raw = editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
-  return Optional.from(raw).filter(Strings.isNotEmpty);
-};
-
-const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
-const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
-
 const getSelectionStart = (editor: Editor): SugarElement<Element> =>
   SugarElement.fromDom(editor.selection.getStart());
 
 const getSelectionEnd = (editor: Editor): SugarElement<Element> =>
   SugarElement.fromDom(editor.selection.getEnd());
-
-const getThunkedSelectionStart = (editor: Editor) => (): SugarElement<Element> =>
-  getSelectionStart(editor);
 
 export {
   getNodeName,
@@ -65,13 +48,7 @@ export {
   getIsRoot,
   addPxSuffix,
   removePxSuffix,
-  getPixelWidth,
-  getPixelHeight,
-  getRawWidth,
   removeDataStyle,
-  isPercentage,
-  isPixel,
   getSelectionStart,
-  getSelectionEnd,
-  getThunkedSelectionStart
+  getSelectionEnd
 };

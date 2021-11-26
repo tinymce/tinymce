@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Type } from '@ephox/katamari';
-import { TableRender } from '@ephox/snooker';
+import { TableRender, TableConversions } from '@ephox/snooker';
 import { Attribute, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,7 +14,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { fireNewCell, fireNewRow } from '../api/Events';
 import * as Options from '../api/Options';
 import * as Util from '../core/Util';
-import { enforceNone, enforcePercentage, enforcePixels } from './EnforceUnit';
 
 const placeCaretInCell = (editor: Editor, cell: SugarElement<HTMLTableCellElement>): void => {
   editor.selection.select(cell.dom, true);
@@ -59,11 +58,11 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   // Enforce the sizing mode of the table
   return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
     if (Options.isPixelsForced(editor)) {
-      enforcePixels(table);
+      TableConversions.convertToPixelSize(table);
     } else if (Options.isResponsiveForced(editor)) {
-      enforceNone(table);
+      TableConversions.convertToNoneSize(table);
     } else if (Options.isPercentagesForced(editor) || isPercentage(defaultStyles.width)) {
-      enforcePercentage(table);
+      TableConversions.convertToPercentSize(table);
     }
     Util.removeDataStyle(table);
     Attribute.remove(table, 'data-mce-id');

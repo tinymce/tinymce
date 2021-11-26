@@ -24,8 +24,6 @@ const getSelectionFromSelector = <T extends Element>(selector: string) =>
     return SelectorFind.closest<T>(cell, selector, isRoot);
   };
 
-const getSelectionCaption = getSelectionFromSelector<HTMLTableCaptionElement>('caption');
-
 const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
@@ -44,7 +42,6 @@ const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): S
 };
 
 export {
-  getSelectionCaption,
   getSelectionCell,
   getSelectionCellOrCaption,
   getRowsFromSelection

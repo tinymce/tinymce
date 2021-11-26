@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -63,11 +63,6 @@ const option: {
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
-  registerOption('table_sizing_mode', {
-    processor: 'string',
-    default: 'auto'
-  });
-
   registerOption('table_border_widths', {
     processor: 'object[]',
     default: defaultCellBorderWidths
@@ -86,16 +81,6 @@ const register = (editor: Editor): void => {
   registerOption('table_default_styles', {
     processor: 'object',
     default: defaultStyles
-  });
-
-  registerOption('table_resize_bars', {
-    processor: 'boolean',
-    default: true
-  });
-
-  registerOption('table_tab_navigation', {
-    processor: 'boolean',
-    default: true
   });
 
   registerOption('table_cell_advtab', {
@@ -154,26 +139,6 @@ const register = (editor: Editor): void => {
     default: false
   });
 
-  registerOption('table_header_type', {
-    processor: (value) => {
-      const valid = Arr.contains([ 'section', 'cells', 'sectionCells', 'auto' ], value);
-      return valid ? { value, valid } : { valid: false, message: 'Must be one of: section, cells, sectionCells or auto.' };
-    },
-    default: 'section'
-  });
-
-  registerOption('table_column_resizing', {
-    processor: (value) => {
-      const valid = Arr.contains([ 'preservetable', 'resizetable' ], value);
-      return valid ? { value, valid } : { valid: false, message: 'Must be preservetable, or resizetable.' };
-    },
-    default: 'preservetable'
-  });
-
-  registerOption('table_clone_elements', {
-    processor: 'string[]'
-  });
-
   registerOption('table_background_color_map', {
     processor: 'object[]',
     default: []
@@ -189,8 +154,6 @@ const getTableSizingMode = option<TableSizingMode>('table_sizing_mode');
 const getTableBorderWidths = option<UserListItem[]>('table_border_widths');
 const getTableBorderStyles = option<UserListValue[]>('table_border_styles');
 const getDefaultAttributes = option<StringMap>('table_default_attributes');
-const hasTableResizeBars = option<boolean>('table_resize_bars');
-const hasTabNavigation = option<boolean>('table_tab_navigation');
 const hasAdvancedCellTab = option<boolean>('table_cell_advtab');
 const hasAdvancedRowTab = option<boolean>('table_row_advtab');
 const hasAdvancedTableTab = option<boolean>('table_advtab');
@@ -203,7 +166,6 @@ const getTableClassList = option<UserListItem[]>('table_class_list');
 const getToolbar = option<string>('table_toolbar');
 const useColumnGroup = option<boolean>('table_use_colgroups');
 const getTableHeaderType = option<string>('table_header_type');
-const getColumnResizingBehaviour = option<'preservetable' | 'resizetable'>('table_column_resizing');
 const getTableBackgroundColorMap = option<UserListValue[]>('table_background_color_map');
 const getTableBorderColorMap = option<UserListValue[]>('table_border_color_map');
 
@@ -216,20 +178,6 @@ const isPixelsForced = (editor: Editor): boolean =>
 const isResponsiveForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'responsive';
 
-const isPreserveTableColumnResizing = (editor: Editor): boolean =>
-  getColumnResizingBehaviour(editor) === 'preservetable';
-
-const isResizeTableColumnResizing = (editor: Editor): boolean =>
-  getColumnResizingBehaviour(editor) === 'resizetable';
-
-const getCloneElements = (editor: Editor): Optional<string[]> =>
-  Optional.from(editor.options.get('table_clone_elements'));
-
-const hasObjectResizing = (editor: Editor): boolean => {
-  const objectResizing = editor.options.get('object_resizing');
-  return Arr.contains(objectResizing.split(','), 'table');
-};
-
 const getDefaultStyles = (editor: Editor): StringMap => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
   const options = editor.options;
@@ -240,8 +188,6 @@ export {
   register,
   getDefaultAttributes,
   getDefaultStyles,
-  hasTableResizeBars,
-  hasTabNavigation,
   hasAdvancedCellTab,
   hasAdvancedRowTab,
   hasAdvancedTableTab,
@@ -251,16 +197,11 @@ export {
   getCellClassList,
   getRowClassList,
   getTableClassList,
-  getCloneElements,
-  hasObjectResizing,
   isPercentagesForced,
   isPixelsForced,
   isResponsiveForced,
   getToolbar,
   getTableHeaderType,
-  getColumnResizingBehaviour,
-  isPreserveTableColumnResizing,
-  isResizeTableColumnResizing,
   getTableBorderWidths,
   getTableBorderStyles,
   getTableBackgroundColorMap,
