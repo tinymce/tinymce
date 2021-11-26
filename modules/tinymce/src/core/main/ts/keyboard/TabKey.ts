@@ -6,14 +6,14 @@
  */
 
 import Editor from '../api/Editor';
-import { allowTableTabNavigation } from '../api/Settings';
+import { hasTableTabNavigation } from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as MatchKeys from './MatchKeys';
 import * as TableNavigation from './TableNavigation';
 
 const tableTabNavigation = (editor: Editor): MatchKeys.KeyPattern[] => {
-  if (allowTableTabNavigation(editor)) {
+  if (hasTableTabNavigation(editor)) {
     return [
       { keyCode: VK.TAB, action: MatchKeys.action(TableNavigation.handleTab, editor, true) },
       { keyCode: VK.TAB, shiftKey: true, action: MatchKeys.action(TableNavigation.handleTab, editor, false) },

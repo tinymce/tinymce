@@ -10,7 +10,7 @@ import { Fun, Obj, Optional, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
-import ModelManager from '../api/ModelManager';
+import ModelManager, { Model } from '../api/ModelManager';
 import * as Options from '../api/Options';
 import { ThemeInitFunc } from '../api/OptionTypes';
 import PluginManager from '../api/PluginManager';
@@ -102,7 +102,7 @@ const initModel = (editor: Editor) => {
   const Model = ModelManager.get(model);
 
   try {
-    editor.model = Model(editor, modelUrl) || {};
+    editor.model = Model(editor, modelUrl) as Model;
   } catch (e) {
     ErrorReporter.modelInitError(editor, model, e);
   }

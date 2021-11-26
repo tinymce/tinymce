@@ -20,7 +20,7 @@ import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
 import { Clipboard } from './Clipboard';
 // import { PatchedSelections } from '../Table';
-import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Settings';
+import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Options';
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
 

@@ -29,7 +29,10 @@ const getHash = (value: string): Record<string, string> => {
   }, {} as Record<string, string>);
 };
 
-const option = <K extends keyof EditorOptions>(name: K) => (editor: Editor) =>
+const option: {
+  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
+  <T>(name: string): (editor: Editor) => T | undefined;
+} = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
 const stringOrObjectProcessor = (value: string) =>

@@ -15,7 +15,7 @@ import { ephemera } from '../../table/TableEphemera';
 import * as Events from '../../table/TableEvents';
 import * as Util from '../../table/TableUtil';
 import Editor from '../Editor';
-import { getTableCloneElements } from '../Settings';
+import { getTableCloneElements } from '../Options';
 import { EditorEvent } from '../util/EventDispatcher';
 
 const hasInternalTarget = (e: Event): boolean =>
@@ -30,7 +30,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>): TableC
     const tableOpt = TableLookup.table(start);
     tableOpt.each((table) => {
       const cloneFormats = getTableCloneElements(editor);
-      const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
+      const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.from(cloneFormats));
 
       const selectedCells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
 

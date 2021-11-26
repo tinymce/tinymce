@@ -14,6 +14,7 @@ import { TableActions } from './actions/TableActions';
 import { Api, getApi } from './api/Api';
 import { Clipboard as FakeClipboard } from './api/Clipboard';
 import * as Commands from './api/Commands';
+import * as Options from './api/Options';
 import * as QueryCommands from './api/QueryCommands';
 import * as TableFormats from './core/TableFormats';
 import { ephemera } from './selection/Ephemera';
@@ -23,6 +24,8 @@ export interface PatchedSelections {
 }
 
 const setupTable = (editor: Editor): Api => {
+  Options.register(editor);
+
   const actions = TableActions(editor);
   const clipboard = FakeClipboard();
 

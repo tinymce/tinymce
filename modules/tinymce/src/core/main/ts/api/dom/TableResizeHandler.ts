@@ -16,7 +16,7 @@ import * as TableSize from '../../table/TableSize';
 import * as Util from '../../table/TableUtil';
 import * as TableWire from '../../table/TableWire';
 import Editor from '../Editor';
-import * as Settings from '../Settings';
+import * as Options from '../Options';
 
 export interface TableResizeHandler {
   readonly lazyResize: () => Optional<TableResize>;
@@ -43,7 +43,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     TableSize.get(editor, table);
 
   const lazyResizingBehaviour = () =>
-    Settings.getColumnResizingBehaviour(editor) === 'preservetable' ? ResizeBehaviour.preserveTable() : ResizeBehaviour.resizeTable();
+    Options.getTableColumnResizingBehaviour(editor) === 'preservetable' ? ResizeBehaviour.preserveTable() : ResizeBehaviour.resizeTable();
 
   const getNumColumns = (table: SugarElement<HTMLTableElement>) =>
     TableGridSize.getGridSize(table).columns;
@@ -69,7 +69,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       const tableSize = lazySizing(table);
 
       // For preserve table we want to always resize the entire table. So pretend the last column is being resized
-      const col = Settings.getColumnResizingBehaviour(editor) === 'preservetable' || isRightEdgeResize ? getNumColumns(table) - 1 : 0;
+      const col = Options.getTableColumnResizingBehaviour(editor) === 'preservetable' || isRightEdgeResize ? getNumColumns(table) - 1 : 0;
       Adjustments.adjustWidth(table, width - startW, col, resizing, tableSize);
     // Handle the edge case where someone might fire this event without resizing.
     // If so then we need to ensure the table is still using percent
@@ -98,7 +98,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   editor.on('init', () => {
     const rawWire = TableWire.get(editor, isResizable);
     wire = Optional.some(rawWire);
-    if (Settings.hasTableObjectResizing(editor) && Settings.hasTableResizeBars(editor)) {
+    if (Options.hasTableObjectResizing(editor) && Options.hasTableResizeBars(editor)) {
       const resizing = lazyResizingBehaviour();
       const sz = TableResize.create(rawWire, resizing, lazySizing);
       sz.on();
@@ -137,12 +137,12 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
 
       // Add a class based on the resizing mode
       Arr.each(editor.dom.select('.mce-clonedresizable'), (clone) => {
-        editor.dom.addClass(clone, 'mce-' + Settings.getColumnResizingBehaviour(editor) + '-columns');
+        editor.dom.addClass(clone, 'mce-' + Options.getTableColumnResizingBehaviour(editor) + '-columns');
       });
 
-      if (!Sizes.isPixelSizing(table) && Settings.isTablePixelsForced(editor)) {
+      if (!Sizes.isPixelSizing(table) && Options.isTablePixelsForced(editor)) {
         enforcePixels(table);
-      } else if (!Sizes.isPercentSizing(table) && Settings.isTablePercentagesForced(editor)) {
+      } else if (!Sizes.isPercentSizing(table) && Options.isTablePercentagesForced(editor)) {
         enforcePercentage(table);
       }
 
@@ -153,7 +153,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       }
 
       startW = e.width;
-      startRawW = Settings.isTableResponsiveForced(editor) ? '' : Util.getRawWidth(editor, targetElm).getOr('');
+      startRawW = Options.isTableResponsiveForced(editor) ? '' : Util.getRawWidth(editor, targetElm).getOr('');
     }
   });
 
