@@ -72,7 +72,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><span style="color: #ff0000; font-weight: bold;">' +
-      '<em>1</em></span><span style="color: #ff0000;"><em>23</em></span>' +
+      '<em>1</em></span><span style="color: rgb(255, 0, 0);"><em>23</em></span>' +
       '<span style=\"color: #ff0000; font-weight: bold;\"><em>4' +
       '</em></span></p>', 'Inline element style where element is format root');
   });
@@ -111,7 +111,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span>' +
-      '</em></span><em><span style="color: #ff0000;">34</span></em></p>', 'Partially selected inline element text with complex children');
+      '</em></span><em><span style="color: rgb(255, 0, 0);">34</span></em></p>', 'Partially selected inline element text with complex children');
   });
 
   it('Inline elements with exact flag', () => {

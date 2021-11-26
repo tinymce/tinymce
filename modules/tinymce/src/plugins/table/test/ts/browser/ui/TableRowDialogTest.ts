@@ -157,7 +157,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     TinyAssertions.assertContent(editor,
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
       '<tbody>' +
-      '<tr style="border-color: blue; border-style: dotted; background-color: #ff0000;">' +
+      '<tr style="border-color: blue; border-style: dotted; background-color: rgb(255, 0, 0);">' +
       '<td>a</td>' +
       '</tr>' +
       '</tbody>' +

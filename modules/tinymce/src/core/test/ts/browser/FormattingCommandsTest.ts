@@ -75,12 +75,12 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('ForeColor', false, '#FF0000');
-    assert.equal(editor.getContent(), '<p><span style="color: #ff0000;">test 123</span></p>');
+    assert.equal(editor.getContent(), '<p><span style="color: rgb(255, 0, 0);">test 123</span></p>');
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('HiliteColor', false, '#FF0000');
-    assert.equal(editor.getContent(), '<p><span style="background-color: #ff0000;">test 123</span></p>');
+    assert.equal(editor.getContent(), '<p><span style="background-color: rgb(255, 0, 0);">test 123</span></p>');
 
     editor.setContent('<p><span style="text-decoration: underline;">test 123</span></p>');
     assert.equal(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');

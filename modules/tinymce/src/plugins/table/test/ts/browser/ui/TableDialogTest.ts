@@ -201,8 +201,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       align: 'left',
       class: 'dog',
       borderstyle: 'dotted',
-      bordercolor: '#ff0000',
-      backgroundcolor: '#0000ff'
+      bordercolor: '#FF0000',
+      backgroundcolor: '#0000FF'
     };
 
     const editor = hook.editor();
@@ -247,8 +247,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       caption: true,
       align: 'left',
       borderstyle: 'dotted',
-      bordercolor: '#ff0000',
-      backgroundcolor: '#0000ff'
+      bordercolor: '#FF0000',
+      backgroundcolor: '#0000FF'
     };
 
     const editor = hook.editor();
@@ -280,11 +280,11 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     const newHtml =
     '<table class="dog" style="width: 500px; height: 500px; margin-left: 0px; margin-right: auto; ' +
-    'background-color: #0000ff; border: 1px dotted #ff0000; ' +
+    'background-color: rgb(0, 0, 255); border: 1px dotted rgb(255, 0, 0); ' +
     'border-spacing: 5px; border-collapse: collapse;" border="1">' +
     '<caption>Caption</caption>' +
     '<tbody>' +
-    '<tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr>' +
+    '<tr><td style="border-color: rgb(255, 0, 0); border-width: 1px; padding: 5px;">X</td></tr>' +
     '</tbody>' +
     '</table>';
 
@@ -298,8 +298,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       align: 'left',
       class: 'dog',
       borderstyle: 'dotted',
-      bordercolor: '#ff0000',
-      backgroundcolor: '#0000ff'
+      bordercolor: '#FF0000',
+      backgroundcolor: '#0000FF'
     };
 
     const editor = hook.editor();

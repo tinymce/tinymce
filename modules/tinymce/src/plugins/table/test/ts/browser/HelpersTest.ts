@@ -38,7 +38,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     assert.equal(cellData.height, '30', 'Extracts height');
 
     assert.equal(cellData.backgroundcolor, '#333333', 'Extracts background-color');
-    assert.equal(cellData.bordercolor, '#d91111', 'Extracts border-color');
+    assert.equal(cellData.bordercolor, '#D91111', 'Extracts border-color');
     assert.equal(cellData.borderstyle, 'dashed', 'Extracts border-style');
   });
 
@@ -67,7 +67,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     assert.equal(cellData.height, '30', 'Extracts height');
 
     assert.equal(cellData.backgroundcolor, '#333333', 'Extracts background-color');
-    assert.equal(cellData.bordercolor, '#d91111', 'Extracts border-color');
+    assert.equal(cellData.bordercolor, '#D91111', 'Extracts border-color');
     assert.equal(cellData.borderstyle, 'dashed', 'Extracts border-style');
   });
 
@@ -87,7 +87,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     assert.equal(cellData.width, '20px', 'Extracts width from style');
     assert.equal(cellData.height, '30px', 'Extracts height from style');
     assert.equal(cellData.backgroundcolor, '#333333', 'Extracts background-color from rgb');
-    assert.equal(cellData.bordercolor, '#d91111', 'Extracts border-color from rgb');
+    assert.equal(cellData.bordercolor, '#D91111', 'Extracts border-color from rgb');
   });
 
   it('TBA: extractDataFromCellElement 2 with colgroup', () => {
@@ -109,7 +109,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     assert.equal(cellData.width, '20px', 'Extracts width from style');
     assert.equal(cellData.height, '30px', 'Extracts height from style');
     assert.equal(cellData.backgroundcolor, '#333333', 'Extracts background-color from rgb');
-    assert.equal(cellData.bordercolor, '#d91111', 'Extracts border-color from rgb');
+    assert.equal(cellData.bordercolor, '#D91111', 'Extracts border-color from rgb');
   });
 
   it('TBA: extractDataFromCellElement 3', () => {
@@ -164,7 +164,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     assert.equal(rowData.align, 'left', 'Extracts align');
     assert.equal(rowData.type, 'body', 'Extracts type');
     assert.equal(rowData.borderstyle, 'dashed', 'Extracts border-style');
-    assert.equal(rowData.bordercolor, '#d91111', 'Extracts border-color');
+    assert.equal(rowData.bordercolor, '#D91111', 'Extracts border-color');
     assert.equal(rowData.backgroundcolor, '#333333', 'Extracts background-color');
   });
 

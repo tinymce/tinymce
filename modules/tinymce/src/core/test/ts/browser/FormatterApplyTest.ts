@@ -250,7 +250,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<p><b style=\"color: #ff0000; font-size: 10px;\">1234</b></p>', 'Inline element with styles');
+    assert.equal(getContent(editor), '<p><b style="color: rgb(255, 0, 0); font-size: 10px;">1234</b></p>', 'Inline element with styles');
   });
 
   it('Inline element with attributes and styles', () => {
@@ -274,7 +274,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<p><b id="value2" style="color: #ff0000; font-size: 10px;" title="value1">1234</b></p>',
+      '<p><b id="value2" style="color: rgb(255, 0, 0); font-size: 10px;" title="value1">1234</b></p>',
       'Inline element with attributes and styles'
     );
   });
@@ -484,7 +484,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<p><span style=\"font-weight: bold;\">a<span style=\"color: #ff0000;\">1234</span>b</span></p>',
+      '<p><span style="font-weight: bold;">a<span style="color: rgb(255, 0, 0);">1234</span>b</span></p>',
       'Inline element merged with child 2'
     );
   });
@@ -524,7 +524,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<p><span style="color: #ff0000; font-weight: bold;">1234</span></p>', 'Inline element merged with child 4');
+    assert.equal(getContent(editor), '<p><span style="color: rgb(255, 0, 0); font-weight: bold;">1234</span></p>');
   });
 
   it('Inline element merged with child 5', () => {
@@ -541,7 +541,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<p><span style="color: #00ff00;">1234</span></p>', 'Inline element merged with child 5');
+    assert.equal(getContent(editor), '<p><span style="color: rgb(0, 255, 0);">1234</span></p>', 'Inline element merged with child 5');
   });
 
   it('Inline element with attributes merged with child 1', () => {
@@ -679,7 +679,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<p><span style="color: #00ff00;"><span style="color: #ff0000;">1234</span></span></p>',
+      '<p><span style="color: rgb(0, 255, 0);"><span style="color: #ff0000;">1234</span></span></p>',
       'Inline element not merged in exact mode'
     );
   });
@@ -699,7 +699,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<p><span style="color: #ff0000;">1234</span></p>', 'Inline element merged in exact mode');
+    assert.equal(getContent(editor), '<p><span style="color: rgb(255, 0, 0);">1234</span></p>');
   });
 
   it('Deep left branch', () => {
@@ -776,7 +776,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       color: '#ff0000',
       title: 'title'
     });
-    assert.equal(getContent(editor), '<p><b style="color: #ff0000;" title="title">1234</b></p>', 'Inline element on selected text');
+    assert.equal(getContent(editor), '<p><b style="color: rgb(255, 0, 0);" title="title">1234</b></p>', 'Inline element on selected text');
   });
 
   it('Remove redundant children', () => {
@@ -822,7 +822,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       color: '#ff',
       title: 'title'
     });
-    assert.equal(getContent(editor), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
+    assert.equal(getContent(editor), '<p><b style="color: rgb(255, 0, 255);" title="title2">1234</b></p>', 'Inline element on selected text with function values');
   });
 
   it('Block element on selected text', () => {
@@ -1019,7 +1019,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<p class="a b c" style="color: #ff0000;" title="test">1234</p>',
+      '<p class="a b c" style="color: rgb(255, 0, 0);" title="test">1234</p>',
       'Apply format on single element that matches a selector'
     );
   });
@@ -1044,7 +1044,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<div class="a b c" style="color: #ff0000;" title="test"><p>1234</p><p>test</p><p>1234</p></div>',
+      '<div class="a b c" style="color: rgb(255, 0, 0);" title="test"><p>1234</p><p>test</p><p>1234</p></div>',
       'Apply format on single element parent that matches a selector'
     );
   });
@@ -1069,7 +1069,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<p class="a b c" style="color: #ff0000;" title="test">1234</p><div>test</div><p class="a b c" style="color: #ff0000;" title="test">1234</p>',
+      '<p class="a b c" style="color: rgb(255, 0, 0);" title="test">1234</p><div>test</div><p class="a b c" style="color: rgb(255, 0, 0);" title="test">1234</p>',
       'Apply format on multiple elements that matches a selector'
     );
   });
@@ -1094,7 +1094,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>',
+      '<p class="c d a b" style="color: rgb(0, 255, 0);" title="test2">1234</p>',
       'Apply format on top of existing selector element'
     );
   });
@@ -1120,7 +1120,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<div><span class="a b c" style="color: #ff0000;" title="test">text</span></div>',
+      '<div><span class="a b c" style="color: rgb(255, 0, 0);" title="test">text</span></div>',
       'Apply format on single element that matches a selector'
     );
   });
@@ -1146,7 +1146,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<div class="a b c" style="color: #ff0000;" title="test">text</div>',
+      '<div class="a b c" style="color: rgb(255, 0, 0);" title="test">text</div>',
       'Apply format on single element that matches a selector'
     );
   });
@@ -1186,7 +1186,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
     assert.equal(
       editor.getContent(),
-      '<p><span style="color: #FF0000;">123<a style="color: #FF0000;" href="#">abc</a>456</span></p>',
+      '<p><span style="color: rgb(255, 0, 0);">123<a style="color: rgb(255, 0, 0);" href="#">abc</a>456</span></p>',
       `Link should have it's own color.`
     );
   });
@@ -1210,7 +1210,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
     assert.equal(
       editor.getContent(),
-      '<p><span style="color: #FF0000; font-size: 10px;">123<a style="color: #FF0000;" href="#">abc</a>456</span></p>',
+      '<p><span style="color: rgb(255, 0, 0); font-size: 10px;">123<a style="color: rgb(255, 0, 0);" href="#">abc</a>456</span></p>',
       `Link should have it's own color.`
     );
   });
@@ -1345,7 +1345,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       editor.getContent(),
-      `<p><span style="color: #ff0000; font-family: 'arial black'; text-decoration: underline;">test</span></p>`,
+      `<p><span style="color: rgb(255, 0, 0); font-family: 'arial black'; text-decoration: underline;">test</span></p>`,
       'Coloring an underlined text should result in a colored underline'
     );
   });
@@ -1364,7 +1364,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       editor.getContent(),
-      '<p><span style="text-decoration: underline;"><span style="color: #FF0000; font-family: ' +
+      '<p><span style="text-decoration: underline;"><span style="color: rgb(255, 0, 0); font-family: ' +
       `'arial black'; text-decoration: underline;">test</span></span></p>`,
       'Underlining colored text should result in a colored underline'
     );
@@ -1388,7 +1388,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(
       editor.getContent(),
       `<p><span style="text-decoration: underline;"><span style="font-family: 'arial black';"><em>` +
-      '<strong>This is some <span style="color: #FF0000; text-decoration: underline;">example</span></strong>' +
+      '<strong>This is some <span style="color: rgb(255, 0, 0); text-decoration: underline;">example</span></strong>' +
       '</em> text</span></span></p>', 'Underlining colored and underlined text should result in a colored underline'
     );
   });
@@ -1411,7 +1411,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
     assert.equal(getContent(editor), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow;' +
-      ' text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>',
+      ' text-decoration: underline;">yellow<span style="color: rgb(255, 0, 0); text-decoration: underline;">red</span>yellow</span></span></p>',
     'Coloring an colored underdlined text should result in newly colored underline'
     );
   });
@@ -1440,12 +1440,12 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(
       editor.getContent(),
       `<p><span style="text-decoration: underline;"><span style="font-family: 'arial black','avant garde';"` +
-      `><em><strong>This is some <span style="color: #FF0000; text-decoration: underline;">example</span></strong` +
+      `><em><strong>This is some <span style="color: rgb(255, 0, 0); text-decoration: underline;">example</span></strong` +
       `></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: ` +
-      `'arial black','avant garde';"><em><strong>This is some <span style="color: #FF0000; text-decoration:` +
+      `'arial black','avant garde';"><em><strong>This is some <span style="color: rgb(255, 0, 0); text-decoration:` +
       ` underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;` +
       `"><span style="font-family: 'arial black', 'avant garde';"><em><strong>This is some <span style="color:` +
-      ` #FF0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>`,
+      ` rgb(255, 0, 0); text-decoration: underline;">example</span></strong></em> text</span></span></p>`,
       `Colored elements should be underlined when selection is across multiple paragraphs`
     );
   });
@@ -1493,7 +1493,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.remove('format');
     assert.equal(
       editor.getContent(),
-      '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #FF0000;\">' +
+      '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: rgb(255, 0, 0);\">' +
       'some</span> text.</span></p>',
       'Children nodes that are underlined should be removed if their parent nodes are underlined'
     );
@@ -1984,7 +1984,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.getBody().innerHTML = '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>';
     LegacyUnit.setSelection(editor, 'span span', 0, 'span span', 1);
     editor.formatter.apply('fontname', { value: 'verdana' });
-    assert.equal(getContent(editor), '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>');
+    assert.equal(getContent(editor), '<p><span style="font-family: verdana;">a <span style="color: rgb(255, 0, 0);">b</span>c</span></p>');
   });
 
   it('FontName should not toggle', () => {
@@ -2017,7 +2017,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('hilitecolor', { value: '#ff0000' });
     assert.equal(
       getContent(editor),
-      '<p><span style="background-color: #ff0000;">a <span style="font-size: 36pt; background-color: #ff0000;">b</span> c</span></p>'
+      '<p><span style="background-color: rgb(255, 0, 0);">a <span style="font-size: 36pt; background-color: rgb(255, 0, 0);">b</span> c</span></p>'
     );
 
     editor.formatter.remove('hilitecolor', { value: '#ff0000' });
@@ -2093,7 +2093,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.getBody().innerHTML = '<p><strong><span style="font-size: 18px;">abc</span></strong></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.apply('hilitecolor', { value: '#ff0000' });
-    assert.equal(getContent(editor), '<p><span style="background-color: #ff0000;"><strong><span style="font-size: 18px; background-color: #ff0000;">abc</span></strong></span></p>');
+    assert.equal(getContent(editor), '<p><span style="background-color: rgb(255, 0, 0);"><strong><span style="font-size: 18px; background-color: rgb(255, 0, 0);">abc</span></strong></span></p>');
   });
 
   it('Background color over range of font sizes', () => {
@@ -2103,7 +2103,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('hilitecolor', { value: '#ff0000' });
     assert.equal(
       getContent(editor),
-      '<p><span style="background-color: #ff0000;">a<span style="font-size: 18px; background-color: #ff0000;">b</span><span style="font-size: 24px; background-color: #ff0000;">c</span></span></p>'
+      '<p><span style="background-color: rgb(255, 0, 0);">a<span style="font-size: 18px; background-color: rgb(255, 0, 0);">b</span><span style="font-size: 24px; background-color: rgb(255, 0, 0);">c</span></span></p>'
     );
   });
 
@@ -2118,7 +2118,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(
       getContent(editor),
       '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span ' +
-      'style="font-size: 36pt; background-color: #ff0000;">b</span> <span style="font-size: 8pt;">c</span></span></p>'
+      'style="font-size: 36pt; background-color: rgb(255, 0, 0);">b</span> <span style="font-size: 8pt;">c</span></span></p>'
     );
   });
 
@@ -2127,7 +2127,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.getBody().innerHTML = '<p><span style="color: #00ff00; font-size: 14pt;">text</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 4);
     editor.formatter.apply('forecolor', { value: '#ff0000' });
-    assert.equal(getContent(editor), '<p><span style="color: #ff0000; font-size: 14pt;">text</span></p>');
+    assert.equal(getContent(editor), '<p><span style="color: rgb(255, 0, 0); font-size: 14pt;">text</span></p>');
   });
 
   it('GH-3519: Font family selection does not work after changing font size', () => {
@@ -2293,7 +2293,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.setContent('<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">cd</span><strong>ef</strong></span></p>');
     LegacyUnit.setSelection(editor, 'span span', 1, 'strong', 1);
     editor.formatter.apply('hilitecolor', { value: '#00ff00' });
-    assert.equal(getContent(editor), '<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">c<span style="background-color: #00ff00;">d</span></span><strong><span style="background-color: #00ff00;">e</span>f</strong></span></p>');
+    assert.equal(getContent(editor), '<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">c<span style="background-color: rgb(0, 255, 0);">d</span></span><strong><span style="background-color: rgb(0, 255, 0);">e</span>f</strong></span></p>');
   });
 
   it('Apply format to node outside fake table selection', () => {
