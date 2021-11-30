@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added a new `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
+- The tabindex attribute is copied from the target element to the iframe #TINY-8315
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
@@ -46,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `tinymce.utils.Promise` API #TINY-8241
+- Remove the Tabfocus plugin #TINY-8315
 
 ## 5.10.2 - 2021-11-17
 
