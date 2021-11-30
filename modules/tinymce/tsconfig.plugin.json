@@ -30,7 +30,6 @@
       "tinymce/plugins/pagebreak/*": ["src/plugins/pagebreak/main/ts/*"],
       "tinymce/plugins/paste/*": ["src/plugins/paste/main/ts/*"],
       "tinymce/plugins/preview/*": ["src/plugins/preview/main/ts/*"],
-      "tinymce/plugins/print/*": ["src/plugins/print/main/ts/*"],
       "tinymce/plugins/quickbars/*": ["src/plugins/quickbars/main/ts/*"],
       "tinymce/plugins/save/*": ["src/plugins/save/main/ts/*"],
       "tinymce/plugins/searchreplace/*": ["src/plugins/searchreplace/main/ts/*"],

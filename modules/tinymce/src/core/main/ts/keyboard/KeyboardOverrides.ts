@@ -31,6 +31,8 @@ const registerKeyboardOverrides = (editor: Editor) => {
   HomeEndKeys.setup(editor, caret);
   PageUpDownKeys.setup(editor, caret);
 
+  editor.addShortcut('Meta+P', '', 'mcePrint'); // TODO: check with RTC
+
   return caret;
 };
 

@@ -9,7 +9,7 @@ let plugins = [
   'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 'code', 'codesample',
   'directionality', 'emoticons', 'help', 'fullscreen', 'hr', 'image', 'importcss',
   'insertdatetime', 'link', 'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste',
-  'preview', 'print', 'save', 'searchreplace', 'tabfocus', 'table', 'template', 'textpattern',
+  'preview', 'save', 'searchreplace', 'tabfocus', 'table', 'template', 'textpattern',
   'toc', 'visualblocks', 'visualchars', 'wordcount', 'quickbars'
 ];
 
