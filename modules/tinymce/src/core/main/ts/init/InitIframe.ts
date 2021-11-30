@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional, Strings } from '@ephox/katamari';
 import { Attribute, Class, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -40,7 +41,7 @@ const relaxDomain = (editor: Editor, ifr) => {
   return false;
 };
 
-const createIframeElement = (id: string, title: TranslatedString, customAttrs: {}, tabindex: number) => {
+const createIframeElement = (id: string, title: TranslatedString, customAttrs: {}, tabindex: Optional<number>) => {
   const iframe = SugarElement.fromTag('iframe');
 
   Attribute.setAll(iframe, customAttrs);
@@ -49,9 +50,10 @@ const createIframeElement = (id: string, title: TranslatedString, customAttrs: {
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
-    title,
-    tabindex
+    title
   });
+
+  tabindex.each((t) => Attribute.set(iframe, 'tabindex', t));
 
   Class.add(iframe, 'tox-edit-area__iframe');
 
@@ -87,7 +89,7 @@ const getIframeHtml = (editor: Editor) => {
 
 const createIframe = (editor: Editor, o) => {
   const iframeTitle = editor.translate('Rich Text Area');
-  const tabindex = parseInt(editor.getElement().getAttribute('tabindex'), 10);
+  const tabindex = Attribute.getOpt(SugarElement.fromDom(editor.getElement()), 'tabindex').bind(Strings.toInt);
   const ifr = createIframeElement(editor.id, iframeTitle, Options.getIframeAttrs(editor), tabindex).dom;
 
   ifr.onload = () => {
