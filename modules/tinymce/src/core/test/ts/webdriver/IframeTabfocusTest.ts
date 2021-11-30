@@ -27,7 +27,7 @@ describe('webdriver.tinymce.core.keyboard.TabfocusSanityTest', () => {
     inputElem.parentNode.removeChild(inputElem);
   });
 
-  it('TBA: Add an input field outside the editor, focus on the editor, press the tab key and assert focus shifts to the input field', async () => {
+  it('TINY-8315: Add an input field outside the editor, focus on the editor, press the tab key and assert focus shifts to the input field', async () => {
     FocusTools.isOnSelector('iframe is focused', SugarDocument.getDocument(), 'iframe');
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('\t') ]);
     await FocusTools.pTryOnSelector('Wait for focus to be on input', SugarDocument.getDocument(), '#inputElem');

@@ -21,7 +21,7 @@ describe('browser.tinymce.core.init.InitIframeEditorWithTabindex', () => {
     base_url: '/project/tinymce/js/tinymce',
   }, setup, []);
 
-  it('Check if iframe element has the right tabindex attribute', () => {
+  it('TINY-8315: Check if the iframe element has the right tabindex attribute', () => {
     const editor = hook.editor();
     const ifr = SugarElement.fromDom(editor.iframeElement);
     assert.equal(Attribute.get(ifr, 'tabindex'), '7', 'Tabindex attribute should have the right value');
