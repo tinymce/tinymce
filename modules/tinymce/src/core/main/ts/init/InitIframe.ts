@@ -40,7 +40,7 @@ const relaxDomain = (editor: Editor, ifr) => {
   return false;
 };
 
-const createIframeElement = (id: string, title: TranslatedString, height: number, customAttrs: {}) => {
+const createIframeElement = (id: string, title: TranslatedString, customAttrs: {}, tabindex: number) => {
   const iframe = SugarElement.fromTag('iframe');
 
   Attribute.setAll(iframe, customAttrs);
@@ -49,7 +49,8 @@ const createIframeElement = (id: string, title: TranslatedString, height: number
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
-    title
+    title,
+    tabindex
   });
 
   Class.add(iframe, 'tox-edit-area__iframe');
@@ -86,7 +87,8 @@ const getIframeHtml = (editor: Editor) => {
 
 const createIframe = (editor: Editor, o) => {
   const iframeTitle = editor.translate('Rich Text Area');
-  const ifr = createIframeElement(editor.id, iframeTitle, o.height, Options.getIframeAttrs(editor)).dom;
+  const tabindex = parseInt(editor.getElement().getAttribute('tabindex'), 10);
+  const ifr = createIframeElement(editor.id, iframeTitle, Options.getIframeAttrs(editor), tabindex).dom;
 
   ifr.onload = () => {
     ifr.onload = null;
