@@ -26,13 +26,13 @@ describe('browser.tinymce.core.init.InitEditorNoThemeInlineTest', () => {
     const editor = hook.editor();
     const body = SugarBody.body();
     const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
-    const nextElement = Traverse.nextSibling(targetElement);
 
     // TODO FIXME this seems like an odd exception
     assert.isNull(editor.getContainer(), 'Should be null since inline without a theme does not set editorContainer');
     Assertions.assertDomEq('Should be expected editor body element', targetElement, TinyDom.body(editor));
     Assertions.assertDomEq('Should be expected editor target element', targetElement, TinyDom.targetElement(editor));
     Assertions.assertDomEq('Editor.contentAreaContainer should equal target element', targetElement, TinyDom.contentAreaContainer(editor));
-    assert.isTrue(nextElement.isNone(), 'Should be no element after target');
+    // The only element that should be after the target is the TableResizeHandler TableWire div element
+    assert.lengthOf(Traverse.nextSiblings(targetElement), 1, 'Should only be one element after target');
   });
 });
