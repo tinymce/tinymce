@@ -53,9 +53,7 @@ const createIframeElement = (id: string, title: TranslatedString, customAttrs: {
     title
   });
 
-  Attribute.setOptions(iframe, {
-    tabindex
-  });
+  tabindex.each((t) => Attribute.set(iframe, 'tabindex', t));
 
   Class.add(iframe, 'tox-edit-area__iframe');
 
