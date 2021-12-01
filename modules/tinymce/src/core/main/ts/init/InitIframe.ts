@@ -44,6 +44,9 @@ const relaxDomain = (editor: Editor, ifr) => {
 const createIframeElement = (id: string, title: TranslatedString, customAttrs: {}, tabindex: Optional<number>) => {
   const iframe = SugarElement.fromTag('iframe');
 
+  // This can also be explicitly set by customAttrs, so do this first
+  tabindex.each((t) => Attribute.set(iframe, 'tabindex', t));
+
   Attribute.setAll(iframe, customAttrs);
 
   Attribute.setAll(iframe, {
@@ -52,8 +55,6 @@ const createIframeElement = (id: string, title: TranslatedString, customAttrs: {
     allowTransparency: 'true',
     title
   });
-
-  tabindex.each((t) => Attribute.set(iframe, 'tabindex', t));
 
   Class.add(iframe, 'tox-edit-area__iframe');
 
