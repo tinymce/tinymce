@@ -9,7 +9,7 @@
  * This class is used to parse CSS styles it also compresses styles to reduce the output size.
  *
  * @example
- * var Styles = new tinymce.html.Styles({
+ * var Styles = tinymce.html.Styles({
  *    url_converter: function(url) {
  *       return url;
  *    }
@@ -54,7 +54,7 @@ const toHex = (match: string, r: string, g: string, b: string) => {
   return '#' + hex(r) + hex(g) + hex(b);
 };
 
-const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
+const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
   /* jshint maxlen:255 */
   /* eslint max-len:0 */
   const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
@@ -80,7 +80,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
     encodingLookup[invisibleChar + i] = encodingItems[i];
   }
 
-  return {
+  const self: Styles = {
     /**
      * Parses the specified RGB color value and returns a hex version of that color.
      * <br>
@@ -108,7 +108,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
       const styles: any = {};
       let matches, name, value, isEncoded;
       const urlConverter = settings.url_converter;
-      const urlConverterScope = settings.url_converter_scope || this;
+      const urlConverterScope = settings.url_converter_scope || self;
 
       const compress = (prefix, suffix, noJoin?) => {
         const top = styles[prefix + '-top' + suffix];
@@ -384,6 +384,8 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
       return css;
     }
   };
+
+  return self;
 };
 
 export default Styles;
