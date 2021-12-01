@@ -8,7 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    iframe_attrs: { // we're cheating a bit because another test checks tabindex is copied to the iframe
+    iframe_attrs: { // using this instead of tabindex on the target to check custom attrs don't get clobbered
       tabindex: '1'
     }
   }, [ ], true);
