@@ -50,7 +50,6 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'pagebreak', name: 'Page Break' },
   { key: 'paste', name: 'Paste' },
   { key: 'preview', name: 'Preview' },
-  { key: 'print', name: 'Print' },
   { key: 'quickbars', name: 'Quick Toolbars' },
   { key: 'save', name: 'Save' },
   { key: 'searchreplace', name: 'Search and Replace' },
