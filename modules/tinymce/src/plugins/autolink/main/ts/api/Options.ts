@@ -25,7 +25,7 @@ const register = (editor: Editor): void => {
     default: new RegExp('^' + Regexes.link().source + '$', 'i')
   });
 
-  registerOption('default_link_target', {
+  registerOption('link_default_target', {
     processor: 'string'
   });
 
@@ -36,7 +36,7 @@ const register = (editor: Editor): void => {
 };
 
 const getAutoLinkPattern = option<RegExp>('autolink_pattern');
-const getDefaultLinkTarget = option<string>('default_link_target');
+const getDefaultLinkTarget = option<string>('link_default_target');
 const getDefaultLinkProtocol = option<string>('link_default_protocol');
 
 export {

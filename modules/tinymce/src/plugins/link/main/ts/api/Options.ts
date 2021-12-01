@@ -51,7 +51,7 @@ const register = (editor: Editor): void => {
     processor: (value) => Type.isString(value) || Type.isFunction(value) || Type.isArrayOf(value, Type.isObject)
   });
 
-  registerOption('default_link_target', {
+  registerOption('link_default_target', {
     processor: 'string'
   });
 
@@ -60,12 +60,12 @@ const register = (editor: Editor): void => {
     default: 'http'
   });
 
-  registerOption('target_list', {
+  registerOption('link_target_list', {
     processor: (value) => Type.isBoolean(value) || Type.isArrayOf(value, Type.isObject),
     default: true
   });
 
-  registerOption('rel_list', {
+  registerOption('link_rel_list', {
     processor: 'object[]',
     default: []
   });
@@ -94,10 +94,10 @@ const register = (editor: Editor): void => {
 const assumeExternalTargets = option<AssumeExternalTargets>('link_assume_external_targets');
 const hasContextToolbar = option<boolean>('link_context_toolbar');
 const getLinkList = option<string | UserListItem[] | UserLinkListCallback>('link_list');
-const getDefaultLinkTarget = option<string>('default_link_target');
+const getDefaultLinkTarget = option<string>('link_default_target');
 const getDefaultLinkProtocol = option<string>('link_default_protocol');
-const getTargetList = option<boolean | UserListItem[]>('target_list');
-const getRelList = option<UserListItem[]>('rel_list');
+const getTargetList = option<boolean | UserListItem[]>('link_target_list');
+const getRelList = option<UserListItem[]>('link_rel_list');
 const getLinkClassList = option<UserListItem[]>('link_class_list');
 const shouldShowLinkTitle = option<boolean>('link_title');
 const allowUnsafeLinkTarget = option<boolean>('allow_unsafe_link_target');

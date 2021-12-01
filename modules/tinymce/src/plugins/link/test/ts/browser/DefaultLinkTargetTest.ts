@@ -33,15 +33,15 @@ describe('browser.tinymce.plugins.link.DefaultLinkTargetTest', () => {
 
   it('TBA: adds target if default is set', async () => {
     const editor = hook.editor();
-    editor.options.set('default_link_target', '_blank');
+    editor.options.set('link_default_target', '_blank');
     await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
     await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
   });
 
-  it('TBA: adds target if default is set and target_list is enabled', async () => {
+  it('TBA: adds target if default is set and link_target_list is enabled', async () => {
     const editor = hook.editor();
-    editor.options.set('default_link_target', '_blank');
-    editor.options.set('target_list', [
+    editor.options.set('link_default_target', '_blank');
+    editor.options.set('link_target_list', [
       { title: 'None', value: '' },
       { title: 'New', value: '_blank' }
     ]);
@@ -49,18 +49,18 @@ describe('browser.tinymce.plugins.link.DefaultLinkTargetTest', () => {
     await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
   });
 
-  it('TBA: adds target if default is set and target_list is disabled', async () => {
+  it('TBA: adds target if default is set and link_target_list is disabled', async () => {
     const editor = hook.editor();
-    editor.options.set('default_link_target', '_blank');
-    editor.options.set('target_list', false);
+    editor.options.set('link_default_target', '_blank');
+    editor.options.set('link_target_list', false);
     await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
     await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
-    editor.options.unset('target_list');
+    editor.options.unset('link_target_list');
   });
 
   it(`TBA: changing to current window doesn't apply the default`, async () => {
     const editor = hook.editor();
-    editor.options.set('default_link_target', '_blank');
+    editor.options.set('link_default_target', '_blank');
     await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
     await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
     await TestLinkUi.pOpenLinkDialog(editor);
@@ -71,7 +71,7 @@ describe('browser.tinymce.plugins.link.DefaultLinkTargetTest', () => {
 
   it(`TBA: default isn't applied to an existing link`, async () => {
     const editor = hook.editor();
-    editor.options.set('default_link_target', '_blank');
+    editor.options.set('link_default_target', '_blank');
     editor.setContent('<a href="http://www.google.com">https://www.google.com/</a>');
     await TestLinkUi.pAssertContentPresence(editor, { 'a:not([target="_blank"])': 1, 'a': 1 });
     await TestLinkUi.pOpenLinkDialog(editor);

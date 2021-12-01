@@ -103,7 +103,7 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
 
   it('TBA: Checking rel generation', () => {
     const editor = hook.editor();
-    editor.options.set('rel_list', [
+    editor.options.set('link_rel_list', [
       { value: '', text: 'None' },
       { value: 'just one', text: 'Just One' }
     ]);
@@ -115,13 +115,13 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
         { value: '', text: 'None' },
         { value: 'just one', text: 'Just One' }
       ],
-      'Checking rel_list output'
+      'Checking link_rel_list output'
     );
   });
 
   it('TBA: Checking targets generation', () => {
     const editor = hook.editor();
-    editor.options.set('target_list', [
+    editor.options.set('link_target_list', [
       { value: 'target1', text: 'Target1' },
       { value: 'target2', text: 'Target2' }
     ]);
@@ -133,7 +133,7 @@ describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
         { value: 'target1', text: 'Target1' },
         { value: 'target2', text: 'Target2' }
       ],
-      'Checking target_list output'
+      'Checking link_target_list output'
     );
   });
 });
