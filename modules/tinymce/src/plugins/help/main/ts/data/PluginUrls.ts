@@ -53,7 +53,6 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'quickbars', name: 'Quick Toolbars' },
   { key: 'save', name: 'Save' },
   { key: 'searchreplace', name: 'Search and Replace' },
-  { key: 'tabfocus', name: 'Tab Focus' },
   { key: 'table', name: 'Table' },
   { key: 'template', name: 'Template' },
   { key: 'textcolor', name: 'Text Color' },
