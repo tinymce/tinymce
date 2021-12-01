@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Aligning a table to the left or right will now use margin styling instead of float styling #TINY-6558
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
 - Addons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
+- A number of APIs that were not actually classes no longer require using the `new` operator #TINY-8322
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
