@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.init.InitIframeEditorWithTabindex', () => {
+describe('browser.tinymce.core.init.InitIframeEditorWithTabindexTest', () => {
   const setup = () => {
     const elem = SugarElement.fromTag('textarea');
     Attribute.set(elem, 'tabindex', '7');
