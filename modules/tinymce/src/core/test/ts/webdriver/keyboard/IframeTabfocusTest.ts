@@ -5,7 +5,7 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('webdriver.tinymce.core.keyboard.TabfocusSanityTest', () => {
+describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     iframe_attrs: { // we're cheating a bit because another test checks tabindex is copied to the iframe
