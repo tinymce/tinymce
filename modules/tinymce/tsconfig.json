@@ -42,7 +42,6 @@
       "tinymce/plugins/table/*": ["src/plugins/table/main/ts/*"],
       "tinymce/plugins/template/*": ["src/plugins/template/main/ts/*"],
       "tinymce/plugins/textpattern/*": ["src/plugins/textpattern/main/ts/*"],
-      "tinymce/plugins/toc/*": ["src/plugins/toc/main/ts/*"],
       "tinymce/plugins/visualblocks/*": ["src/plugins/visualblocks/main/ts/*"],
       "tinymce/plugins/visualchars/*": ["src/plugins/visualchars/main/ts/*"],
       "tinymce/plugins/wordcount/*": ["src/plugins/wordcount/main/ts/*"],
