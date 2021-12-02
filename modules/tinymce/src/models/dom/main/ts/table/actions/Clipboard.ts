@@ -14,6 +14,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
+import * as TableSelection from '../selection/TableSelection';
 import { TableActions } from './TableActions';
 
 const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<SugarElement<HTMLTableElement>[]> => {
@@ -43,7 +44,7 @@ const registerEvents = (editor: Editor, actions: TableActions): void => {
     };
 
     if (e.selection === true) {
-      const cells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+      const cells = TableSelection.getCellsFromSelection(editor);
       if (cells.length > 1) {
         multiCellContext(cells);
       }
@@ -52,7 +53,7 @@ const registerEvents = (editor: Editor, actions: TableActions): void => {
 
   editor.on('BeforeSetContent', (e) => {
     if (e.selection === true && e.paste === true) {
-      const selectedCells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+      const selectedCells = TableSelection.getCellsFromSelection(editor);
       Arr.head(selectedCells).each((cell) => {
         TableLookup.table(cell).each((table) => {
 

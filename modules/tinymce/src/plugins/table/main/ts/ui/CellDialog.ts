@@ -16,6 +16,7 @@ import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import * as Util from '../core/Util';
+import * as TableSelection from '../selection/TableSelection';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
 import { getAdvancedTab } from './DialogAdvancedTab';
 import { DomModifier } from './DomModifier';
@@ -162,7 +163,7 @@ const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]): C
 };
 
 const open = (editor: Editor): void => {
-  const cells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+  const cells = TableSelection.getCellsFromSelection(editor);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {

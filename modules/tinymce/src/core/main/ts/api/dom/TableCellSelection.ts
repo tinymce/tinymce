@@ -6,13 +6,14 @@
  */
 
 import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup } from '@ephox/snooker';
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
 import { ephemera } from '../../table/TableEphemera';
 import * as Events from '../../table/TableEvents';
+import { getCellsFromSelection } from '../../table/TableSelection';
 import * as Util from '../../table/TableUtil';
 import Editor from '../Editor';
 import { getTableCloneElements } from '../Options';
@@ -32,7 +33,7 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
       const cloneFormats = getTableCloneElements(editor);
       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.from(cloneFormats));
 
-      const selectedCells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+      const selectedCells = getCellsFromSelection(editor);
 
       const otherCells = OtherCells.getOtherCells(table, { selection: selectedCells }, generators);
       Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);

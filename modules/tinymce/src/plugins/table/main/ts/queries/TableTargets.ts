@@ -19,7 +19,7 @@ const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElemen
   selection: [ cell ]
 });
 
-const forMenu = (selectedCells: () => SugarElement<HTMLTableCellElement>[], table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
+const forMenu = (selectedCells: SugarElement<HTMLTableCellElement>[], table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
   element: cell,
   mergable: CellOpSelection.mergable(table, selectedCells, ephemera),
   unmergable: CellOpSelection.unmergable(selectedCells),

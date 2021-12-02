@@ -6,10 +6,11 @@
  */
 
 import { TableSelection } from '@ephox/darwin';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
+import Editor from '../api/Editor';
 import { ephemera } from './TableEphemera';
 
 const getSelectionCellFallback = (element: SugarElement<Node>) =>
@@ -26,10 +27,10 @@ const getSelectionFromSelector = <T extends Element>(selector: string) =>
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
-// const getCellsFromSelection = (getSelectedCells: () => SugarElement<HTMLTableCellElement>[]): SugarElement<HTMLTableCellElement>[] =>
-//   CellOpSelection.selection(getSelectedCells);
+const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
+  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
 
 export {
-  getSelectionCell
-  // getCellsFromSelection,
+  getSelectionCell,
+  getCellsFromSelection
 };

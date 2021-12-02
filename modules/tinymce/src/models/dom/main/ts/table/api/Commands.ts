@@ -27,9 +27,6 @@ const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<H
 const getSelectionStartCell = (editor: Editor): Optional<SugarElement<HTMLTableCellElement>> =>
   TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
 
-const getSelectedCells = (editor: Editor) => (): SugarElement<HTMLTableCellElement>[] =>
-  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
-
 const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clipboard): void => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
@@ -85,7 +82,7 @@ const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clip
 
   const toggleTableCellClass = (_ui: boolean, clazz: string) => {
     performActionOnSelection((table) => {
-      const selectedCells = Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+      const selectedCells = TableSelection.getCellsFromSelection(editor);
       const allHaveClass = Arr.forall(selectedCells, (cell) => editor.formatter.match('tablecellclass', { value: clazz }, cell.dom));
       const formatterAction = allHaveClass ? editor.formatter.remove : editor.formatter.apply;
 
@@ -127,20 +124,20 @@ const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clip
 
   const actOnSelection = (execute: CombinedTargetsTableAction, noEvents: boolean = false) =>
     performActionOnSelection((table, startCell) => {
-      const targets = TableTargets.forMenu(getSelectedCells(editor), table, startCell);
+      const targets = TableTargets.forMenu(TableSelection.getCellsFromSelection(editor), table, startCell);
       execute(table, targets, noEvents).each(postExecute);
     });
 
   const copyRowSelection = () =>
     performActionOnSelection((table, startCell) => {
-      const targets = TableTargets.forMenu(getSelectedCells(editor), table, startCell);
+      const targets = TableTargets.forMenu(TableSelection.getCellsFromSelection(editor), table, startCell);
       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.none());
       return CopyRows.copyRows(table, targets, generators);
     });
 
   const copyColSelection = () =>
     performActionOnSelection((table, startCell) => {
-      const targets = TableTargets.forMenu(getSelectedCells(editor), table, startCell);
+      const targets = TableTargets.forMenu(TableSelection.getCellsFromSelection(editor), table, startCell);
       return CopyCols.copyCols(table, targets);
     });
 
@@ -150,7 +147,7 @@ const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clip
       const clonedRows = Arr.map(rows, (row) => Replication.deep<HTMLTableColElement | HTMLTableRowElement>(row));
       performActionOnSelection((table, startCell) => {
         const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
-        const targets = TableTargets.pasteRows(getSelectedCells(editor), startCell, clonedRows, generators);
+        const targets = TableTargets.pasteRows(TableSelection.getCellsFromSelection(editor), startCell, clonedRows, generators);
         execute(table, targets).each(postExecute);
       });
     });
@@ -213,7 +210,7 @@ const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clip
     if (!Type.isObject(args)) {
       return;
     }
-    const cells = getSelectedCells(editor)();
+    const cells = TableSelection.getCellsFromSelection(editor);
     if (cells.length === 0) {
       return;
     }

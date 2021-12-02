@@ -64,9 +64,6 @@ export const getSelectionTargets = (editor: Editor): SelectionTargets => {
   const getStart = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
   const getEnd = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionEnd(editor), Util.getIsRoot(editor));
 
-  const getSelectedCells = () =>
-    Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
-
   const findTargets = (): Optional<RunOperation.CombinedTargets> =>
     getStart().bind((startCellOrCaption) =>
       Optionals.flatten(
@@ -75,7 +72,7 @@ export const getSelectionTargets = (editor: Editor): SelectionTargets => {
             if (isCaption(startCellOrCaption)) {
               return Optional.some(TableTargets.noMenu(startCellOrCaption));
             } else {
-              return Optional.some(TableTargets.forMenu(getSelectedCells, startTable, startCellOrCaption));
+              return Optional.some(TableTargets.forMenu(TableSelection.getCellsFromSelection(editor), startTable, startCellOrCaption));
             }
           }
 

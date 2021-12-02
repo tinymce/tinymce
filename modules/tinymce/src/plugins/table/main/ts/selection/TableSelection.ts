@@ -10,6 +10,8 @@ import { Arr, Fun, Optionals } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
+import { Editor } from 'tinymce/core/api/PublicApi';
+
 import { ephemera } from './Ephemera';
 
 const getSelectionCellFallback = (element: SugarElement<Node>) =>
@@ -28,6 +30,9 @@ const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement 
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
+const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
+  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+
 const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
   const cellOpt = getSelectionCell(selected);
   const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
@@ -44,5 +49,6 @@ const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): S
 export {
   getSelectionCell,
   getSelectionCellOrCaption,
-  getRowsFromSelection
+  getRowsFromSelection,
+  getCellsFromSelection
 };

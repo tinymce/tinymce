@@ -5,10 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-// import { Selections } from '@ephox/darwin';
-import { Arr, Obj } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -17,16 +15,13 @@ import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
 
-const getSelectedCells = (editor: Editor) => (): SugarElement<HTMLTableCellElement>[] =>
-  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
-
 const registerQueryCommands = (editor: Editor, actions: TableActions): void => {
   const isRoot = Util.getIsRoot(editor);
 
   const lookupOnSelection = (action: LookupAction): string =>
     TableSelection.getSelectionCell(Util.getSelectionStart(editor)).bind((cell) =>
       TableLookup.table(cell, isRoot).map((table) => {
-        const targets = TableTargets.forMenu(getSelectedCells(editor), table, cell);
+        const targets = TableTargets.forMenu(TableSelection.getCellsFromSelection(editor), table, cell);
         return action(table, targets);
       })
     ).getOr('');

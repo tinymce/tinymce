@@ -6,9 +6,11 @@
  */
 
 import { TableSelection } from '@ephox/darwin';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
 
 import { ephemera } from './Ephemera';
 
@@ -28,7 +30,11 @@ const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement 
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
+const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
+  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+
 export {
   getSelectionCell,
-  getSelectionCellOrCaption
+  getSelectionCellOrCaption,
+  getCellsFromSelection
 };
