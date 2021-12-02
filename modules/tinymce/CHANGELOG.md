@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a new `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
 - The `tabindex` attribute is now copied from the target element to the iframe #TINY-8315
+- New `slider` dialog component #TINY-8304
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735

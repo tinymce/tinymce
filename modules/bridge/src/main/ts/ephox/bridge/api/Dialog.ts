@@ -30,6 +30,7 @@ import {
 import { createPanel, Panel, PanelSpec } from '../components/dialog/Panel';
 import { createSelectBox, SelectBox, SelectBoxItem, SelectBoxItemSpec, SelectBoxSpec } from '../components/dialog/SelectBox';
 import { createSizeInput, SizeInput, SizeInputSpec } from '../components/dialog/SizeInput';
+import { Slider, SliderSpec } from '../components/dialog/Slider';
 import { createTable, Table, TableSpec } from '../components/dialog/Table';
 import { createTabPanel, Tab, TabPanel, TabPanelSpec, TabSpec } from '../components/dialog/TabPanel';
 import { createTextArea, TextArea, TextAreaSpec } from '../components/dialog/Textarea';
@@ -157,6 +158,9 @@ export {
   SizeInput,
   SizeInputSpec,
   createSizeInput,
+
+  Slider,
+  SliderSpec,
 
   Table,
   TableSpec,

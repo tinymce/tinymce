@@ -53,3 +53,36 @@
     width: @slider-handle-width;
   }
 }
+
+.tox:not([dir=rtl]) {
+  // Spacing between multiple sliders in a bar
+  .tox-form__controls-h-stack > .tox-slider:not(:first-of-type) {
+    margin-left: @pad-sm;
+  }
+
+  // Spacing between form group and slider in a bar
+  .tox-form__controls-h-stack > .tox-form__group + .tox-slider {
+    margin-left: @pad-xl;
+  }
+
+  .tox-form__controls-h-stack > .tox-slider + .tox-form__group {
+    margin-left: @pad-xl;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  // Spacing between multiple sliders in a bar
+  .tox-form__controls-h-stack > .tox-slider:not(:first-of-type) {
+    margin-right: @pad-sm;
+  }
+
+  // Spacing between form group and slider in a bar
+  .tox-form__controls-h-stack > .tox-form__group + .tox-slider {
+    margin-right: @pad-xl;
+  }
+
+  .tox-form__controls-h-stack > .tox-slider + .tox-form__group {
+    margin-right: @pad-xl;
+  }
+}

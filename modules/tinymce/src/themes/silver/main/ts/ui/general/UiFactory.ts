@@ -23,6 +23,7 @@ import { renderListBox } from '../dialog/ListBox';
 import { renderPanel } from '../dialog/Panel';
 import { renderSelectBox } from '../dialog/SelectBox';
 import { renderSizeInput } from '../dialog/SizeInput';
+import { renderSlider } from '../dialog/Slider';
 import { renderTable } from '../dialog/Table';
 import { renderInput, renderTextarea } from '../dialog/TextField';
 import { renderUrlInput } from '../dialog/UrlInput';
@@ -67,6 +68,7 @@ const factories: Record<string, FormPartRenderer> = {
   listbox: make((spec, backstage) => renderListBox(spec, backstage)),
   selectbox: make((spec, backstage) => renderSelectBox(spec, backstage.shared.providers)),
   sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared.providers)),
+  slider: make((spec, backstage) => renderSlider(spec, backstage.shared.providers)),
   urlinput: make((spec, backstage) => renderUrlInput(spec, backstage, backstage.urlinput)),
   customeditor: make(renderCustomEditor),
   htmlpanel: make(renderHtmlPanel),

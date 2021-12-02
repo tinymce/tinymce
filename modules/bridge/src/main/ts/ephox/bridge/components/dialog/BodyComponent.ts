@@ -17,6 +17,7 @@ import { ListBox, ListBoxSpec } from './ListBox';
 import { Panel, PanelSpec } from './Panel';
 import { SelectBox, SelectBoxSpec } from './SelectBox';
 import { SizeInput, SizeInputSpec } from './SizeInput';
+import { Slider, SliderSpec } from './Slider';
 import { Table, TableSpec } from './Table';
 import { TextArea, TextAreaSpec } from './Textarea';
 import { UrlInput, UrlInputSpec } from './UrlInput';
@@ -30,6 +31,7 @@ export type BodyComponentSpec
   | ListBoxSpec
   | SelectBoxSpec
   | SizeInputSpec
+  | SliderSpec
   | IframeSpec
   | HtmlPanelSpec
   | UrlInputSpec
@@ -54,6 +56,7 @@ export type BodyComponent
   | ListBox
   | SelectBox
   | SizeInput
+  | Slider
   | Iframe
   | HtmlPanel
   | UrlInput
