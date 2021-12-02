@@ -115,7 +115,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         icon: Optional.some('more-drawer'),
         disabled: false,
         tooltip: Optional.some('More...'),
-        primary: false,
+        buttonType: Optional.none(),
         borderless: false
       }, Optional.none(), toolbarSpec.providers)
     },

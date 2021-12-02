@@ -19,11 +19,11 @@ import { renderSizeInput } from '../SizeInput';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
 const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProviders) => {
-  const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, primary: boolean): Memento.MementoRecord => Memento.record(renderButton({
+  const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, buttonType: 'primary' | 'secondary' | 'toolbar'): Memento.MementoRecord => Memento.record(renderButton({
     name: text,
     text,
     disabled,
-    primary,
+    buttonType: Optional.some(buttonType),
     icon: Optional.none(),
     borderless: false
   }, action, providersBackstage));
@@ -33,7 +33,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     icon: Optional.some(icon),
     tooltip: Optional.some(tooltip),
     disabled,
-    primary: false,
+    buttonType: Optional.none(),
     borderless: false
   }, action, providersBackstage));
 
@@ -102,7 +102,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
 
   const createBackButton = (): Memento.MementoRecord => createButton('Back', (button) => emit(button, ImageToolsEvents.internal.back(), {
     swap: getBackSwap(button)
-  }), false, false);
+  }), false, 'secondary');
 
   const createSpacer = (): Memento.MementoRecord => Memento.record({
     dom: {
@@ -114,7 +114,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
 
   const createApplyButton = (): Memento.MementoRecord => createButton('Apply', (button) => emit(button, ImageToolsEvents.internal.apply(), {
     swap: getBackSwap(button)
-  }), true, true);
+  }), true, 'primary');
 
   const makeCropTransform = (): ((ir: ImageResult) => Promise<ImageResult>) => (ir: ImageResult): Promise<ImageResult> => {
     const rect = imagePanel.getRect();
@@ -128,7 +128,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
       const transform = makeCropTransform();
       emitTransformApply(button, transform);
       imagePanel.hideCrop();
-    }, false, true)
+    }, false, 'primary')
   ];
 
   const CropPanel = Container.sketch({
@@ -170,7 +170,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
         const transform = makeResizeTransform(width, height);
         emitTransformApply(button, transform);
       });
-    }, false, true)
+    }, false, 'primary')
   ];
 
   const ResizePanel = Container.sketch({

@@ -224,7 +224,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     icon: Optional.some('browse'),
     text: spec.label.getOr(''),
     disabled: spec.disabled,
-    primary: false,
+    buttonType: Optional.none(),
     borderless: true
   }, (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
 

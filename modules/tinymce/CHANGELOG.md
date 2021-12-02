@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tabindex` attribute is now copied from the target element to the iframe #TINY-8315
 - New `slider` dialog component #TINY-8304
 - New `spacer` dialog component #TINY-8304
+- New `buttonType` property on dialog buttons, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
+- The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead.
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018

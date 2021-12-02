@@ -91,8 +91,24 @@ export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: Alloy
     innerHtml: translatedText
   };
 
+  const buttonType = spec.buttonType.getOr(!spec.primary && !spec.borderless ? 'secondary' : 'primary');
+
+  let baseClasses;
+  switch (buttonType) {
+    case 'primary':
+      baseClasses = [ 'tox-button' ];
+      break;
+    case 'toolbar':
+      baseClasses = [ 'tox-tbtn' ];
+      break;
+    case 'secondary':
+    default:
+      baseClasses = [ 'tox-button', 'tox-button--secondary' ];
+      break;
+  }
+
   const classes = [
-    ...!spec.primary && !spec.borderless ? [ 'tox-button', 'tox-button--secondary' ] : [ 'tox-button' ],
+    ...baseClasses,
     ...icon.isSome() ? [ 'tox-button--icon' ] : [],
     ...spec.borderless ? [ 'tox-button--naked' ] : [],
     ...extraClasses
@@ -156,6 +172,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
       ...spec,
+      buttonType: Optional.none(),
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
