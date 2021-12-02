@@ -14,7 +14,7 @@ interface SpecificsInput {
   data?: null | string;
 }
 
-const mockInputEvents = (editor: Editor, specifics: SpecificsInput, event: KeyboardEvent) =>
+const fireFakeInputEvent = (editor: Editor, specifics: SpecificsInput, event: KeyboardEvent) =>
   () => {
     const overrides = {
       bubbles: true,
@@ -33,20 +33,13 @@ const mockInputEvents = (editor: Editor, specifics: SpecificsInput, event: Keybo
       metaKey: event.metaKey
     };
 
-    const beforeSpecific = {
-      ...overrides,
-      cancelable: true,
-    };
+    const input = clone(new InputEvent('input'));
 
-    const beforeInput = clone(new window.InputEvent('beforeinput'));
-    const input = clone(new window.InputEvent('input'));
-
-    editor.fire('beforeinput', { ...beforeInput, ...beforeSpecific, ...specifics });
     editor.fire('input', { ...input, ...overrides, ...specifics });
 
     event.preventDefault();
   };
 
 export {
-  mockInputEvents
+  fireFakeInputEvent
 };
