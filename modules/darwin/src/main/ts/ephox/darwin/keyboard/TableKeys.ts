@@ -68,7 +68,7 @@ const tryAgain = (bridge: WindowBridge, element: SugarElement, offset: number, m
 const tryAt = (bridge: WindowBridge, direction: KeyDirection, box: Carets): Optional<Situs> => {
   const browser = PlatformDetection.detect().browser;
   // NOTE: As we attempt to take over selection everywhere, we'll probably need to separate these again.
-  if (browser.isChrome() || browser.isSafari() || browser.isFirefox() || browser.isEdge()) {
+  if (browser.isChromium() || browser.isSafari() || browser.isFirefox() || browser.isEdge()) {
     return direction.otherRetry(bridge, box);
   } else if (browser.isIE()) {
     return direction.ieRetry(bridge, box);

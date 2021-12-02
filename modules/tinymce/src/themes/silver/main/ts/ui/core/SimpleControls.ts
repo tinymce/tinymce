@@ -52,7 +52,8 @@ const registerCommandButtons = (editor: Editor) => {
     // visualaid was here but also exists in VisualAid.ts?
     { name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document' },
     { name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting' },
-    { name: 'remove', text: 'Remove', action: 'Delete', icon: 'remove' }
+    { name: 'remove', text: 'Remove', action: 'Delete', icon: 'remove' },
+    { name: 'print', text: 'Print', action: 'mcePrint', icon: 'print' }
   ], (btn) => {
     editor.ui.registry.addButton(btn.name, {
       tooltip: btn.text,
@@ -86,21 +87,22 @@ const registerMenuItems = (editor: Editor) => {
     { name: 'bold', text: 'Bold', action: 'Bold', icon: 'bold', shortcut: 'Meta+B' },
     { name: 'italic', text: 'Italic', action: 'Italic', icon: 'italic', shortcut: 'Meta+I' },
     { name: 'underline', text: 'Underline', action: 'Underline', icon: 'underline', shortcut: 'Meta+U' },
-    { name: 'strikethrough', text: 'Strikethrough', action: 'Strikethrough', icon: 'strike-through', shortcut: '' },
-    { name: 'subscript', text: 'Subscript', action: 'Subscript', icon: 'subscript', shortcut: '' },
-    { name: 'superscript', text: 'Superscript', action: 'Superscript', icon: 'superscript', shortcut: '' },
-    { name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting', shortcut: '' },
-    { name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document', shortcut: '' },
+    { name: 'strikethrough', text: 'Strikethrough', action: 'Strikethrough', icon: 'strike-through' },
+    { name: 'subscript', text: 'Subscript', action: 'Subscript', icon: 'subscript' },
+    { name: 'superscript', text: 'Superscript', action: 'Superscript', icon: 'superscript' },
+    { name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting' },
+    { name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document' },
     { name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut', shortcut: 'Meta+X' },
     { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy', shortcut: 'Meta+C' },
     { name: 'paste', text: 'Paste', action: 'Paste', icon: 'paste', shortcut: 'Meta+V' },
-    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A' }
-  ], (btn) => {
-    editor.ui.registry.addMenuItem(btn.name, {
-      text: btn.text,
-      icon: btn.icon,
-      shortcut: btn.shortcut,
-      onAction: onActionExecCommand(editor, btn.action)
+    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A' },
+    { name: 'print', text: 'Print...', action: 'mcePrint', icon: 'print', shortcut: 'Meta+P' }
+  ], (menuitem) => {
+    editor.ui.registry.addMenuItem(menuitem.name, {
+      text: menuitem.text,
+      icon: menuitem.icon,
+      shortcut: menuitem.shortcut,
+      onAction: onActionExecCommand(editor, menuitem.action)
     });
   });
 

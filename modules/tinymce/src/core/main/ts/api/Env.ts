@@ -41,7 +41,7 @@ interface Env {
     current: string | undefined;
     version: Version;
     isEdge: () => boolean;
-    isChrome: () => boolean;
+    isChromium: () => boolean;
     isIE: () => boolean;
     isOpera: () => boolean;
     isFirefox: () => boolean;
@@ -104,7 +104,7 @@ const Env: Env = {
   browser: {
     current: browser.current,
     version: browser.version,
-    isChrome: browser.isChrome,
+    isChromium: browser.isChromium,
     isEdge: browser.isEdge,
     isFirefox: browser.isFirefox,
     isIE: browser.isIE,

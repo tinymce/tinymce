@@ -58,14 +58,14 @@ import XHR from './util/XHR';
 import WindowManager from './WindowManager';
 
 interface DOMUtilsNamespace {
-  new (doc: Document, settings: Partial<DOMUtilsSettings>): DOMUtils;
+  (doc: Document, settings: Partial<DOMUtilsSettings>): DOMUtils;
 
   DOM: DOMUtils;
   nodeIndex: (node: Node, normalized?: boolean) => number;
 }
 
 interface RangeUtilsNamespace {
-  new (dom: DOMUtils): RangeUtils;
+  (dom: DOMUtils): RangeUtils;
 
   compareRanges: (rng1: RangeLikeObject, rng2: RangeLikeObject) => boolean;
   getCaretRangeFromPoint: (clientX: number, clientY: number, doc: Document) => Range;
@@ -74,7 +74,7 @@ interface RangeUtilsNamespace {
 }
 
 interface AddOnManagerNamespace {
-  new <T>(): AddOnManager<T>;
+  <T>(): AddOnManager<T>;
 
   language: string | undefined;
   languageLoad: boolean;
@@ -91,7 +91,7 @@ interface BookmarkManagerNamespace {
 }
 
 interface SaxParserNamespace {
-  new (settings?: SaxParserSettings, schema?: Schema): SaxParser;
+  (settings?: SaxParserSettings, schema?: Schema): SaxParser;
 
   findEndTag: (schema: Schema, html: string, startIndex: number) => number;
 }
@@ -119,42 +119,42 @@ interface TinyMCE extends EditorManager {
   dom: {
     EventUtils: EventUtilsConstructor;
     TreeWalker: DomTreeWalkerConstructor;
-    TextSeeker: new (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
+    TextSeeker: (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
     DOMUtils: DOMUtilsNamespace;
     ScriptLoader: ScriptLoaderConstructor;
     RangeUtils: RangeUtilsNamespace;
-    Serializer: new (settings: DomSerializerSettings, editor?: Editor) => DomSerializer;
+    Serializer: (settings: DomSerializerSettings, editor?: Editor) => DomSerializer;
     ControlSelection: (selection: EditorSelection, editor: Editor) => ControlSelection;
     BookmarkManager: BookmarkManagerNamespace;
-    Selection: new (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor) => EditorSelection;
-    StyleSheetLoader: new (documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings) => StyleSheetLoader;
+    Selection: (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor) => EditorSelection;
+    StyleSheetLoader: (documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings) => StyleSheetLoader;
     Event: EventUtils;
   };
 
   html: {
-    Styles: new (settings?: StylesSettings, schema?: Schema) => Styles;
+    Styles: (settings?: StylesSettings, schema?: Schema) => Styles;
     Entities: Entities;
     Node: AstNodeConstructor;
-    Schema: new (settings?: SchemaSettings) => Schema;
+    Schema: (settings?: SchemaSettings) => Schema;
     SaxParser: SaxParserNamespace;
-    DomParser: new (settings?: DomParserSettings, schema?: Schema) => DomParser;
-    Writer: new (settings?: WriterSettings) => Writer;
-    Serializer: new (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
+    DomParser: (settings?: DomParserSettings, schema?: Schema) => DomParser;
+    Writer: (settings?: WriterSettings) => Writer;
+    Serializer: (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
   };
 
   AddOnManager: AddOnManagerNamespace;
-  Annotator: new (editor: Editor) => Annotator;
+  Annotator: (editor: Editor) => Annotator;
   Editor: EditorConstructor;
   EditorCommands: EditorCommandsConstructor;
   EditorManager: EditorManager;
   EditorObservable: EditorObservable;
   Env: Env;
   FocusManager: FocusManager;
-  Formatter: new (editor: Editor) => Formatter;
-  NotificationManager: new (editor: Editor) => NotificationManager;
+  Formatter: (editor: Editor) => Formatter;
+  NotificationManager: (editor: Editor) => NotificationManager;
   Shortcuts: ShortcutsConstructor;
-  UndoManager: new (editor: Editor) => UndoManagerType;
-  WindowManager: new (editor: Editor) => WindowManager;
+  UndoManager: (editor: Editor) => UndoManagerType;
+  WindowManager: (editor: Editor) => WindowManager;
 
   // Global instances
   DOM: DOMUtils;

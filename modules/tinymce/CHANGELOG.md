@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added a new `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
+- The `tabindex` attribute is now copied from the target element to the iframe #TINY-8315
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
@@ -15,10 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
 - The `tinymce.Env.os.isOSX` API has been renamed to `tinymce.Env.os.isMacOS` #TINY-8175
+- The `tinymce.Env.browser.isChrome` API has been renamed to `tinymce.Env.browser.isChromium` to better reflect its functionality #TINY-8300
 - The `editor.setContent()` API can now be prevented using the `BeforeSetContent` event. This makes it consistent with the `editor.selection.setContent()` API #TINY-8018
 - Aligning a table to the left or right will now use margin styling instead of float styling #TINY-6558
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
-- Addons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
+- Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
+- A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
+- Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -45,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `tinymce.utils.Promise` API #TINY-8241
+- Removed the `tabfocus` plugin #TINY-8315
 
 ## 5.10.2 - 2021-11-17
 

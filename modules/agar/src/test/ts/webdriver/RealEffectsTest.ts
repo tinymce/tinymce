@@ -20,7 +20,7 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
 
   // IE never passes unless watched and Edge 18 fails to hover on mousemove
   // the meta key on mac using chromedriver/safaridriver doesn't work (see https://github.com/webdriverio/webdriverio/issues/622)
-  if (platform.browser.isIE() || platform.browser.isEdge() || platform.browser.isSafari() || (platform.os.isMacOS() && platform.browser.isChrome())) {
+  if (platform.browser.isIE() || platform.browser.isEdge() || platform.browser.isSafari() || (platform.os.isMacOS() && platform.browser.isChromium())) {
     return success();
   }
 

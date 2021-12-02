@@ -26,12 +26,12 @@
  */
 
 /**
- * Returns <code>true</code> if the user's browser is Google Chrome.
+ * Returns <code>true</code> if the user's browser is Chromium based, such as Google Chrome or newer versions of Microsoft Edge.
  * <br>
  * <em>Added in TinyMCE 5.1</em>
  *
- * @method browser.isChrome
- * @return {Boolean} Returns <code>true</code> if the user's browser is Google Chrome.
+ * @method browser.isChromium
+ * @return {Boolean} Returns <code>true</code> if the user's browser is Chromium based.
  */
 
 /**

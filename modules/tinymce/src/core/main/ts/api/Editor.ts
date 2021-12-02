@@ -1087,34 +1087,6 @@ class Editor implements EditorObservable {
   public _scanForImages(): Promise<BlobInfoImagePair[]> {
     return this.editorUpload.scanForImages();
   }
-
-  /**
-   * No longer supported, use editor.ui.registry.addButton instead
-   */
-  public addButton() {
-    throw new Error('editor.addButton has been removed in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addSidebar instead
-   */
-  public addSidebar() {
-    throw new Error('editor.addSidebar has been removed in tinymce 5x, use editor.ui.registry.addSidebar instead');
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addMenuItem instead
-   */
-  public addMenuItem() {
-    throw new Error('editor.addMenuItem has been removed in tinymce 5x, use editor.ui.registry.addMenuItem instead');
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addContextMenu instead
-   */
-  public addContextToolbar() {
-    throw new Error('editor.addContextToolbar has been removed in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
-  }
 }
 
 export default Editor;

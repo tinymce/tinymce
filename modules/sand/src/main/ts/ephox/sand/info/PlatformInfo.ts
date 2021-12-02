@@ -26,7 +26,7 @@ const browsers: PlatformInfo[] = [
   },
   // This is Google Chrome and Chromium Edge
   {
-    name: 'Chrome',
+    name: 'Chromium',
     brand: 'Chromium',
     versionRegexes: [ /.*?chrome\/([0-9]+)\.([0-9]+).*/, normalVersionRegex ],
     search: (uastring) => {

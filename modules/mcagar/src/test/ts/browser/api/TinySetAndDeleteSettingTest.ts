@@ -10,7 +10,7 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
   const sAssertSetting = (editor: Editor, key: string, expected: any) => {
     return Step.sync(() => {
-      const actual = editor.options ? editor.options.get(key) : editor.settings[key];
+      const actual = editor.options ? editor.options.get(key) : editor.settings?.[key];
 
       return Assertions.assertEq('should have expected val at key', expected, actual);
     });
@@ -18,7 +18,7 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
   const sAssertSettingType = (editor: Editor, key: string, expected: any) => {
     return Step.sync(() => {
-      const actual = editor.options ? editor.options.get(key) : editor.settings[key];
+      const actual = editor.options ? editor.options.get(key) : editor.settings?.[key];
 
       return Assertions.assertEq('should have expected type', expected, typeof actual);
     });

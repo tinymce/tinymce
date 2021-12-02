@@ -11,10 +11,10 @@ export default () => {
     ],
     image_caption: true,
     plugins: [
-      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak toc',
+      'autosave advlist autolink link image lists charmap preview hr anchor pagebreak toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
       'save table directionality emoticons template paste importcss textpattern',
-      'codesample help noneditable print'
+      'codesample help noneditable'
     ],
     add_unload_trigger: false,
     autosave_ask_before_unload: false,

@@ -144,7 +144,7 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
     // So we need to continue to resize the iframe down until the size gets fixed
-    if ((Env.browser.isSafari() || Env.browser.isChrome()) && deltaSize < 0) {
+    if ((Env.browser.isSafari() || Env.browser.isChromium()) && deltaSize < 0) {
       resize(editor, oldSize, trigger);
     }
   }

@@ -36,7 +36,7 @@ The `browser` field has the following information:
 * `current`: the name of the browser as a string
 * `version`: a `(major, minor)` tuple representing the version
 * `isEdge`: returns true iff. the browser is *Microsoft Edge*
-* `isChrome`: returns true iff. the browser is *Chrome*
+* `isChromium`: returns true iff. the browser is *Chromium Based*
 * `isIE`: returns true iff. the browser is *Internet Explorer*
 * `isOpera`: returns true iff. the browser is *Opera*
 * `isFirefox`: returns true iff. the browser is *Firefox*
