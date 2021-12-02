@@ -201,7 +201,6 @@ const builder = (rootNode: AstNode, html: string, settings: DomParserSettings, s
     start: (name, attrs, empty) => {
       const newNode = new AstNode(name, 1);
       newNode.attributes = attrs;
-      newNode.shortEnded = empty;
 
       node.append(newNode);
 

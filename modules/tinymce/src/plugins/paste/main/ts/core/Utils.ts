@@ -79,7 +79,7 @@ const innerText = (html: string): string => {
     }
 
     // Walk all children
-    if (!node.shortEnded) {
+    if (!(node.name in schema.getShortEndedElements())) {
       if ((node = node.firstChild)) {
         do {
           walk(node);
