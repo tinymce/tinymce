@@ -56,7 +56,6 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'table', name: 'Table' },
   { key: 'template', name: 'Template' },
   { key: 'textcolor', name: 'Text Color' },
-  { key: 'textpattern', name: 'Text Pattern' },
   { key: 'toc', name: 'Table of Contents' },
   { key: 'visualblocks', name: 'Visual Blocks' },
   { key: 'visualchars', name: 'Visual Characters' },

@@ -26,7 +26,7 @@ export default () => {
     plugins: [
       'autosave advlist autolink link image lists charmap preview hr anchor pagebreak toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-      'save table directionality emoticons template paste textpattern',
+      'save table directionality emoticons template paste',
       'codesample help noneditable'
     ]
   };

@@ -9,7 +9,6 @@ import { Arr, Cell, Results } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import { getTextPatterns } from '../api/Options';
-
 import { createPatternSet, normalizePattern } from './core/Pattern';
 import { PatternSet, RawPattern } from './core/PatternTypes';
 import * as Keyboard from './keyboard/Keyboard';

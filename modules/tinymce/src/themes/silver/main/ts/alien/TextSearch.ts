@@ -12,8 +12,8 @@ import TextSeeker from 'tinymce/core/api/dom/TextSeeker';
 
 import * as Spot from './Spot';
 
-// Note: This is duplicated with the TextPattern plugins `TextSearch` module, as there isn't really a nice way to share code across
-// plugins/themes. So if any changes are made here, be sure to keep changes synced with the textpattern plugin
+// Note: This is duplicated with the Text Patterns `TextSearch` module, as there isn't really a nice way to share code across
+// plugins/themes. So if any changes are made here, be sure to keep changes synced with the Text Patterns code
 
 export type ProcessCallback = (element: Text, offset: number, text: string) => number;
 

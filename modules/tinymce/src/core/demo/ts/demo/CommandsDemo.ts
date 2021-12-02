@@ -102,7 +102,7 @@ export default () => {
     plugins: [
       'advlist autolink link image lists charmap preview hr anchor pagebreak toc',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-      'save table directionality emoticons template paste importcss textpattern codesample'
+      'save table directionality emoticons template paste importcss codesample'
     ],
     toolbar1: 'bold italic',
     menubar: false

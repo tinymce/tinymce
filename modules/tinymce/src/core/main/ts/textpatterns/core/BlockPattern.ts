@@ -9,9 +9,9 @@ import { Arr, Optional, Unicode } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+import { getForcedRootBlock } from 'tinymce/core/api/Options';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Options from '../api/Options';
 import * as TextSearch from '../text/TextSearch';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
@@ -68,7 +68,7 @@ const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMat
   const rng = editor.selection.getRng();
 
   return Utils.getParentBlock(editor, rng).filter((block) => {
-    const forcedRootBlock = Options.getForcedRootBlock(editor);
+    const forcedRootBlock = getForcedRootBlock(editor);
     const matchesForcedRootBlock = forcedRootBlock === '' && dom.is(block, 'body') || dom.is(block, forcedRootBlock);
     return block !== null && matchesForcedRootBlock;
   }).bind((block) => {

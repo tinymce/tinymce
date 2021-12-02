@@ -66,7 +66,6 @@
       "tinymce/plugins/table/*": ["modules/tinymce/src/plugins/table/main/ts/*"],
       "tinymce/plugins/template/*": ["modules/tinymce/src/plugins/template/main/ts/*"],
       "tinymce/plugins/textcolor/*": ["modules/tinymce/src/plugins/textcolor/main/ts/*"],
-      "tinymce/plugins/textpattern/*": ["modules/tinymce/src/plugins/textpattern/main/ts/*"],
       "tinymce/plugins/toc/*": ["modules/tinymce/src/plugins/toc/main/ts/*"],
       "tinymce/plugins/visualblocks/*": ["modules/tinymce/src/plugins/visualblocks/main/ts/*"],
       "tinymce/plugins/visualchars/*": ["modules/tinymce/src/plugins/visualchars/main/ts/*"],
