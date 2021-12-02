@@ -10,14 +10,13 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as InsertNewLine from '../newline/InsertNewLine';
 import { endTypingLevelIgnoreLocks } from '../undo/TypingState';
-import { mockInputEvents } from './MockInputEvents';
 
 const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) => {
   if (event.isDefaultPrevented()) {
     return;
   }
 
-  mockInputEvents(editor, { inputType: 'insertParagraph', cancelable: false }, event)();
+  event.preventDefault();
 
   endTypingLevelIgnoreLocks(editor.undoManager);
   editor.undoManager.transact(() => {
