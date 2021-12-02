@@ -203,7 +203,7 @@ const createParser = (editor: Editor): DomParser => {
       const node = nodes[i];
 
       if (node.isEmpty(nonEmptyElements) && node.getAll('br').length === 0) {
-        node.append(new AstNode('br', 1)).shortEnded = true;
+        node.append(new AstNode('br', 1));
       }
     }
   });

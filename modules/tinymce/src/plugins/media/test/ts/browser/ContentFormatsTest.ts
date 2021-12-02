@@ -45,7 +45,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
 
     TinyAssertions.assertContent(editor,
-      '<p><embed src="320x240.ogg" width="100" height="200"></embed>text<a href="#">link</a></p>'
+      '<p><embed src="320x240.ogg" width="100" height="200" />text<a href="#">link</a></p>'
     );
   });
 

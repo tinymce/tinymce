@@ -60,7 +60,6 @@ const createPlaceholderNode = (editor: Editor, node: AstNode): AstNode => {
   const name = node.name;
 
   const placeHolder = new AstNode('img', 1);
-  placeHolder.shortEnded = true;
 
   retainAttributesAndInnerHtml(editor, node, placeHolder);
 

@@ -15,7 +15,7 @@ const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, blockEleme
   const brPreferred = settings.padd_empty_with_br || args.insert;
 
   if (brPreferred && blockElements[node.name]) {
-    node.empty().append(new AstNode('br', 1)).shortEnded = true;
+    node.empty().append(new AstNode('br', 1));
   } else {
     node.empty().append(new AstNode('#text', 3)).value = Unicode.nbsp;
   }
