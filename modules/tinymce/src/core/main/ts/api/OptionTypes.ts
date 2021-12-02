@@ -6,6 +6,7 @@
  */
 
 import { UploadHandler } from '../file/Uploader';
+import { RawPattern } from '../textpatterns/core/PatternTypes';
 import Editor from './Editor';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
@@ -177,6 +178,7 @@ interface BaseEditorOptions {
   submit_patch?: boolean;
   suffix?: string;
   target?: HTMLElement;
+  text_patterns?: RawPattern[] | false;
   theme?: string | ThemeInitFunc | false;
   theme_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;

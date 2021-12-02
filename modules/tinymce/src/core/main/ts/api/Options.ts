@@ -655,6 +655,29 @@ const register = (editor: Editor) => {
     processor: 'string'
   });
 
+  registerOption('text_patterns', {
+    processor: (value) => {
+      if (Type.isArrayOf(value, Type.isObject) || value === false) {
+        return { value, valid: true };
+      } else {
+        return { valid: false, message: 'Must be an array of objects or false.' };
+      }
+    },
+    default: [
+      { start: '*', end: '*', format: 'italic' },
+      { start: '**', end: '**', format: 'bold' },
+      { start: '#', format: 'h1' },
+      { start: '##', format: 'h2' },
+      { start: '###', format: 'h3' },
+      { start: '####', format: 'h4' },
+      { start: '#####', format: 'h5' },
+      { start: '######', format: 'h6' },
+      { start: '1. ', cmd: 'InsertOrderedList' },
+      { start: '* ', cmd: 'InsertUnorderedList' },
+      { start: '- ', cmd: 'InsertUnorderedList' }
+    ]
+  });
+
   // These options must be registered later in the init sequence due to their default values
   // TODO: TINY-8234 Should we have a way to lazily load the default values?
   editor.on('ScriptsLoaded', () => {
@@ -739,6 +762,7 @@ const getAutoFocus = option('auto_focus');
 const shouldBrowserSpellcheck = option('browser_spellcheck');
 const getProtect = option('protect');
 const getContentEditableState = option('content_editable_state');
+const getTextPatterns = option('text_patterns');
 
 const getFontStyleValues = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('font_size_style_values'));
@@ -826,5 +850,6 @@ export {
   getAutoFocus,
   shouldBrowserSpellcheck,
   getProtect,
-  getContentEditableState
+  getContentEditableState,
+  getTextPatterns
 };

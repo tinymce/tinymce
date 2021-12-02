@@ -40,6 +40,7 @@ import * as MultiClickSelection from '../selection/MultiClickSelection';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
+import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
 
 declare const escape: any;
@@ -460,6 +461,7 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
   DeleteCommands.setup(editor, caret);
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
+  TextPattern.setup(editor);
 
   const setupRtcThunk = Rtc.setup(editor);
 
