@@ -6,7 +6,7 @@ tinymce.init({
   skin_url: '../../../../../js/tinymce/skins/ui/oxide',
   toolbar: 'code',
   height: 600,
-  textpattern_patterns: [
+  text_patterns: [
     { start: '*', end: '*', format: 'italic' },
     { start: '**', end: '**', format: 'bold' },
     { start: '#', format: 'h1' },

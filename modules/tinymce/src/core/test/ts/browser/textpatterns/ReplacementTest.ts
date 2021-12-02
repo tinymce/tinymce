@@ -3,9 +3,8 @@ import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Plugin from 'tinymce/plugins/textpattern/Plugin';
 
-import * as Utils from '../module/test/Utils';
+import * as Utils from '../../module/test/TextPatternsUtils';
 
 describe('browser.tinymce.plugins.textpattern.ReplacementTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -17,9 +16,8 @@ describe('browser.tinymce.plugins.textpattern.ReplacementTest', () => {
       { start: '#', format: 'h1' }
     ],
     indent: false,
-    plugins: 'textpattern',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ]);
+  }, [ ]);
 
   beforeEach(() => {
     const editor = hook.editor();

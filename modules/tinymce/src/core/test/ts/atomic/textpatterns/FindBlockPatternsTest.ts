@@ -1,31 +1,24 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import * as Options from 'tinymce/plugins/textpattern/api/Options';
-import { findPattern } from 'tinymce/plugins/textpattern/core/BlockPattern';
+import { findPattern } from 'tinymce/core/textpatterns/core/BlockPattern';
+import { generatePatternSet } from 'tinymce/core/textpatterns/TextPatterns';
 
 describe('atomic.tinymce.plugins.textpattern.FindBlockPatternsTest', () => {
-  let defaultPatternSet;
-  const mockEditor = {
-    options: {
-      register: (name: string, spec: Record<string, any>) => {
-        if (name === 'text_patterns') {
-          defaultPatternSet = spec.processor(spec.default).value;
-        }
-      },
-      get: (name: string) => {
-        return name === 'text_patterns' ? defaultPatternSet : undefined;
-      }
-    }
-  } as Editor;
-
-  before(() => {
-    Options.register(mockEditor);
-  });
-
   it('should find the start of the default patterns', () => {
-    const patternSet = Options.getPatternSet(mockEditor as any);
+    const patternSet = generatePatternSet([
+      { start: '*', end: '*', format: 'italic' },
+      { start: '**', end: '**', format: 'bold' },
+      { start: '#', format: 'h1' },
+      { start: '##', format: 'h2' },
+      { start: '###', format: 'h3' },
+      { start: '####', format: 'h4' },
+      { start: '#####', format: 'h5' },
+      { start: '######', format: 'h6' },
+      { start: '1. ', cmd: 'InsertOrderedList' },
+      { start: '* ', cmd: 'InsertUnorderedList' },
+      { start: '- ', cmd: 'InsertUnorderedList' }
+    ]);
     const defaultPatterns = patternSet.blockPatterns;
 
     const testFindStartPattern = (text: string, expectedPattern: string) => {

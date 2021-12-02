@@ -22,7 +22,7 @@ const option: {
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
-  registerOption('textpattern_patterns', {
+  registerOption('text_patterns', {
     processor: (value) => {
       if (Type.isArrayOf(value, Type.isObject)) {
         const normalized = Results.partition(Arr.map(value, normalizePattern));
@@ -49,7 +49,7 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getPatternSet = option<PatternSet>('textpattern_patterns');
+const getPatternSet = option<PatternSet>('text_patterns');
 const getForcedRootBlock = option('forced_root_block');
 
 export {

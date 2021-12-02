@@ -8,7 +8,6 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import * as Options from 'tinymce/plugins/textpattern/api/Options';
 import { findPatterns } from 'tinymce/plugins/textpattern/core/InlinePattern';
 import { InlinePattern, InlinePatternMatch } from 'tinymce/plugins/textpattern/core/PatternTypes';
-import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import { PathRange } from 'tinymce/plugins/textpattern/utils/PathRange';
 
 interface ExpectedPatternMatch {
@@ -20,7 +19,7 @@ interface ExpectedPatternMatch {
 describe('browser.tinymce.plugins.textpattern.FindInlinePatternTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     forced_root_block: false,
-    plugins: 'textpattern lists',
+    plugins: 'lists',
     text_patterns: [
       { start: '*', end: '*', format: 'italic' },
       { start: '**', end: '**', format: 'bold' },
@@ -30,7 +29,7 @@ describe('browser.tinymce.plugins.textpattern.FindInlinePatternTest', () => {
       { start: 'asap', replacement: 'as soon as possible' }
     ],
     base_url: '/project/tinymce/js/tinymce'
-  }, [ ListsPlugin, TextPatternPlugin ]);
+  }, [ ListsPlugin ]);
 
   const inlinePatterns = Thunk.cached(() => Options.getPatternSet(hook.editor()).inlinePatterns);
 

@@ -11,29 +11,26 @@ import Editor from '../api/Editor';
 import { getTextPatterns } from '../api/Options';
 
 import { createPatternSet, normalizePattern } from './core/Pattern';
-import { PatternSet } from './core/PatternTypes';
+import { PatternSet, RawPattern } from './core/PatternTypes';
 import * as Keyboard from './keyboard/Keyboard';
 
-const getPatternSet = (editor: Editor): PatternSet | false => {
-  const value = getTextPatterns(editor);
-  if (value === false) {
-    return false;
-  } else {
-    const normalized = Results.partition(Arr.map(value, normalizePattern));
-    // eslint-disable-next-line no-console
-    Arr.each(normalized.errors, (err) => console.error(err.message, err.pattern));
-    return createPatternSet(normalized.values);
-  }
+const generatePatternSet = (patterns: RawPattern[]): PatternSet => {
+  const normalized = Results.partition(Arr.map(patterns, normalizePattern));
+  // eslint-disable-next-line no-console
+  Arr.each(normalized.errors, (err) => console.error(err.message, err.pattern));
+  return createPatternSet(normalized.values);
 };
 
-const setup = (editor) => {
-  const patternSet = getPatternSet(editor);
+const setup = (editor: Editor): void => {
+  const patterns = getTextPatterns(editor);
 
-  if (patternSet !== false) {
+  if (patterns !== false) {
+    const patternSet = generatePatternSet(patterns);
     Keyboard.setup(editor, Cell(patternSet));
   }
 };
 
 export {
-  setup
+  setup,
+  generatePatternSet
 };
