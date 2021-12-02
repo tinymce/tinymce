@@ -1,6 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
-import Sizzle from '@ephox/wrap-sizzle';
+import * as Sizzle from 'sizzle';
 
 const toOptionEl = (output: Element[]): Optional<SugarElement<Element>> =>
   output.length === 0 ? Optional.none() : Optional.from(output[0]).map(SugarElement.fromDom);

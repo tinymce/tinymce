@@ -315,11 +315,6 @@
   resolved "https://registry.yarnpkg.com/@ephox/wrap-promise-polyfill/-/wrap-promise-polyfill-2.2.1.tgz#afaabe10bc4c44d167e2f8fa6e722cbd7817d386"
   integrity sha512-hg2IKjR3E8awv6ZPUZtHVLa+ZQkaN1ksVacw40Jq2gg6uMU9GkBTcSOl+9PswBzva2Jg0lxX0r0ipMAWemDwsA==
 
-"@ephox/wrap-sizzle@^4.0.0":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@ephox/wrap-sizzle/-/wrap-sizzle-4.0.1.tgz#84193c357de60a47fa5d65ec181801bc5b8d576c"
-  integrity sha512-zztEqdwnHGsYNbMj9IsA6oOjluHy41Zpw69kBcc/qrEOv0CR1K6/2ojCKG0VYd36lYd2RaDjxyCPqO7X+KPXlA==
-
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.3.tgz#9e42981ef035beb3dd49add17acb96e8ff6f394c"
@@ -1430,6 +1425,11 @@
   integrity sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==
   dependencies:
     "@types/node" "*"
+
+"@types/sizzle@^2.3.3":
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.3.tgz#ff5e2f1902969d305225a047c8a0fd5c915cebef"
+  integrity sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==
 
 "@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.3"
@@ -10483,6 +10483,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.5.tgz#9e3e8cc0c75a99472b44321033a7702e7738252f"
   integrity sha512-KWcOiKeQj6ZyXx7zq4YxSMgHRlod4czeBQZrPb8OKcohcqAXShm7E20kEMle9WBt26hFcAf0qLOcp5zmY7kOqQ==
+
+sizzle@^2.3.4:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/sizzle/-/sizzle-2.3.6.tgz#ecc604ba69e4848d879b6a7fcf5409a270c6c3ec"
+  integrity sha512-abtd95IkbcMAaYk1Lux4k9Xz6wnQqyLy2aco9HGJ8jVaCDEcc+ug0hW8RdV6aIre3ycWXxPdcX0u7QL/1UaSoA==
 
 slash@^2.0.0:
   version "2.0.0"
