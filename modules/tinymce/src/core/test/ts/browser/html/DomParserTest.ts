@@ -816,4 +816,12 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       '</table>'
     );
   });
+
+  it('TINY-8205: Fixes up invalid children even when top-level element does not fit the context', () => {
+    const parser = DomParser();
+    const html = '<p>Hello world! <button>This is a button with a meta tag in it<meta /></button></p>';
+    const serializedHtml = serializer.serialize(parser.parse(html, { context: 'p' }));
+
+    assert.equal(serializedHtml, '<p>Hello world! <button>This is a button with a meta tag in it</button></p>');
+  });
 });

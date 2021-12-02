@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 
+import { cleanInvalidNodes } from '../../html/InvalidNodes';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
-import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
+import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import AstNode from './Node';
@@ -403,142 +404,6 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
   settings.validate = 'validate' in settings ? settings.validate : true;
   settings.root_name = settings.root_name || 'body';
 
-  const fixInvalidChildren = (state: WalkResult) => {
-    const nodes = state.invalidChildren;
-    const nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
-    const nonEmptyElements = schema.getNonEmptyElements();
-    const whitespaceElements = schema.getWhiteSpaceElements();
-    const textBlockElements = schema.getTextBlockElements();
-    const specialElements = schema.getSpecialElements();
-
-    const removeOrUnwrapInvalidNode = (node: AstNode, originalNodeParent: AstNode = node.parent): void => {
-      if (specialElements[node.name]) {
-        node.empty().remove();
-      } else {
-        // are the children of `node` valid children of the top level parent?
-        // if not, remove or unwrap them too
-        const children = node.children();
-        for (const childNode of children) {
-          if (!schema.isValidChild(originalNodeParent.name, childNode.name)) {
-            removeOrUnwrapInvalidNode(childNode, originalNodeParent);
-          }
-        }
-        node.unwrap();
-      }
-    };
-
-    for (let ni = 0; ni < nodes.length; ni++) {
-      const node = nodes[ni];
-      let parent: AstNode | undefined, newParent: AstNode | undefined, tempNode: AstNode | undefined;
-
-      // Already removed or fixed
-      if (!node.parent || node.fixed) {
-        continue;
-      }
-
-      // If the invalid element is a text block and the text block is within a parent LI element
-      // Then unwrap the first text block and convert other sibling text blocks to LI elements similar to Word/Open Office
-      if (textBlockElements[node.name] && node.parent.name === 'li') {
-        // Move sibling text blocks after LI element
-        let sibling = node.next;
-        while (sibling) {
-          if (textBlockElements[sibling.name]) {
-            sibling.name = 'li';
-            sibling.fixed = true;
-            node.parent.insert(sibling, node.parent);
-          } else {
-            break;
-          }
-
-          sibling = sibling.next;
-        }
-
-        // Unwrap current text block
-        node.unwrap();
-        continue;
-      }
-
-      // Get list of all parent nodes until we find a valid parent to stick the child into
-      const parents = [ node ];
-      for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name) &&
-        !nonSplitableElements[parent.name]; parent = parent.parent) {
-        parents.push(parent);
-      }
-
-      // Found a suitable parent
-      if (parent && parents.length > 1) {
-        // If the node is a valid child of the parent, then try to move it. Otherwise unwrap it
-        if (schema.isValidChild(parent.name, node.name)) {
-          // Reverse the array since it makes looping easier
-          parents.reverse();
-
-          // Clone the related parent and insert that after the moved node
-          newParent = filterNode(parents[0].clone(), nodeFilters, attributeFilters, state);
-
-          // Start cloning and moving children on the left side of the target node
-          let currentNode = newParent;
-          for (let i = 0; i < parents.length - 1; i++) {
-            if (schema.isValidChild(currentNode.name, parents[i].name)) {
-              tempNode = filterNode(parents[i].clone(), nodeFilters, attributeFilters, state);
-              currentNode.append(tempNode);
-            } else {
-              tempNode = currentNode;
-            }
-
-            for (let childNode = parents[i].firstChild; childNode && childNode !== parents[i + 1];) {
-              const nextNode = childNode.next;
-              tempNode.append(childNode);
-              childNode = nextNode;
-            }
-
-            currentNode = tempNode;
-          }
-
-          if (!isEmpty(schema, nonEmptyElements, whitespaceElements, newParent)) {
-            parent.insert(newParent, parents[0], true);
-            parent.insert(node, newParent);
-          } else {
-            parent.insert(node, parents[0], true);
-          }
-
-          // Check if the element is empty by looking through it's contents and special treatment for <p><br /></p>
-          parent = parents[0];
-          if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent) || hasOnlyChild(parent, 'br')) {
-            parent.empty().remove();
-          }
-        } else {
-          removeOrUnwrapInvalidNode(node);
-        }
-      } else if (node.parent) {
-        // If it's an LI try to find a UL/OL for it or wrap it
-        if (node.name === 'li') {
-          let sibling = node.prev;
-          if (sibling && (sibling.name === 'ul' || sibling.name === 'ol')) {
-            sibling.append(node);
-            continue;
-          }
-
-          sibling = node.next;
-          if (sibling && (sibling.name === 'ul' || sibling.name === 'ol')) {
-            sibling.insert(node, sibling.firstChild, true);
-            continue;
-          }
-
-          node.wrap(filterNode(new AstNode('ul', 1), nodeFilters, attributeFilters, state));
-          continue;
-        }
-
-        // Try wrapping the element in a DIV
-        if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
-          node.wrap(filterNode(new AstNode('div', 1), nodeFilters, attributeFilters, state));
-        } else {
-          // We failed wrapping it, remove or unwrap it
-          removeOrUnwrapInvalidNode(node);
-        }
-      }
-    }
-  };
-
   /**
    * Adds a node filter function to the parser, the parser will collect the specified nodes by name
    * and then execute the callback once it has finished parsing the document.
@@ -550,7 +415,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
    *  }
    * });
    * @method addNodeFilter
-   * @method {String} name Comma separated list of nodes to collect.
+   * @param {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
   const addNodeFilter = (name: string, callback: ParserFilterCallback) => {
@@ -694,10 +559,12 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && state.invalidChildren.length) {
-      if (!args.context) {
-        fixInvalidChildren(state);
+      if (args.context) {
+        const { pass: topLevelChildren, fail: otherChildren } = Arr.partition(state.invalidChildren, (child) => child.parent === rootNode);
+        cleanInvalidNodes(otherChildren, schema, (newNode) => filterNode(newNode, nodeFilters, attributeFilters, state));
+        args.invalid = topLevelChildren.length > 0;
       } else {
-        args.invalid = true;
+        cleanInvalidNodes(state.invalidChildren, schema, (newNode) => filterNode(newNode, nodeFilters, attributeFilters, state));
       }
     }
 
