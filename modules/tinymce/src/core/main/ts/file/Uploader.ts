@@ -36,9 +36,9 @@ export interface UploadFailureOptions {
   remove?: boolean;
 }
 
+type ProgressFn = (percent: number) => void;
 export type UploadHandler = (blobInfo: BlobInfo, success: (url: string) => void, failure: (err: string, options?: UploadFailureOptions) => void, progress: ProgressFn) => void;
 
-type ProgressFn = (percent: number) => void;
 type ResolveFn<T> = (result?: T | Promise<T>) => void;
 
 export interface UploadResult {
