@@ -23,9 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
-- The `default_link_target` has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
-- The `rel_list` has been renamed to `link_rel_list` for `link` plugins #TINY-4603
-- The `target_list` has been renamed to `link_target_list` for `link` plugins #TINY-4603
+- The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
+- The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
+- The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
