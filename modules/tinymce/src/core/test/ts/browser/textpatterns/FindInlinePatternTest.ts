@@ -4,11 +4,12 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { getTextPatterns } from 'tinymce/core/api/Options';
+import { findPatterns } from 'tinymce/core/textpatterns/core/InlinePattern';
+import { InlinePattern, InlinePatternMatch, RawPattern } from 'tinymce/core/textpatterns/core/PatternTypes';
+import { generatePatternSet } from 'tinymce/core/textpatterns/TextPatterns';
+import { PathRange } from 'tinymce/core/textpatterns/utils/PathRange';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import * as Options from 'tinymce/plugins/textpattern/api/Options';
-import { findPatterns } from 'tinymce/plugins/textpattern/core/InlinePattern';
-import { InlinePattern, InlinePatternMatch } from 'tinymce/plugins/textpattern/core/PatternTypes';
-import { PathRange } from 'tinymce/plugins/textpattern/utils/PathRange';
 
 interface ExpectedPatternMatch {
   readonly pattern: Partial<InlinePattern>;
@@ -31,7 +32,10 @@ describe('browser.tinymce.plugins.textpattern.FindInlinePatternTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ ListsPlugin ]);
 
-  const inlinePatterns = Thunk.cached(() => Options.getPatternSet(hook.editor()).inlinePatterns);
+  const inlinePatterns = Thunk.cached(() => {
+    const rawPatterns = getTextPatterns(hook.editor()) as RawPattern[];
+    return generatePatternSet(rawPatterns).inlinePatterns;
+  });
 
   const getInlinePattern = (editor: Editor, patterns: InlinePattern[], space: boolean = false) =>
     findPatterns(editor, patterns, space);

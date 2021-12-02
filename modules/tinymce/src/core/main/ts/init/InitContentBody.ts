@@ -455,13 +455,13 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
 
   if (!Rtc.isRtc(editor)) {
     MultiClickSelection.setup(editor);
+    TextPattern.setup(editor);
   }
 
   const caret = KeyboardOverrides.setup(editor);
   DeleteCommands.setup(editor, caret);
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
-  TextPattern.setup(editor);
 
   const setupRtcThunk = Rtc.setup(editor);
 
