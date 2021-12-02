@@ -36,8 +36,9 @@ export interface UploadFailureOptions {
   remove?: boolean;
 }
 
-export type UploadHandler = (blobInfo: BlobInfo, success: (url: string) => void, failure: (err: string, options?: UploadFailureOptions) => void, progress?: (percent: number) => void) => void;
+export type UploadHandler = (blobInfo: BlobInfo, success: (url: string) => void, failure: (err: string, options?: UploadFailureOptions) => void, progress: ProgressFn) => void;
 
+type ProgressFn = (percent: number) => void;
 type ResolveFn<T> = (result?: T | Promise<T>) => void;
 
 export interface UploadResult {
@@ -133,7 +134,8 @@ export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
     uploadStatus.markPending(blobInfo.blobUri());
 
     return new Promise((resolve) => {
-      let notification, progress;
+      let notification: NotificationApi;
+      let progress: ProgressFn;
 
       try {
         const closeNotification = () => {
