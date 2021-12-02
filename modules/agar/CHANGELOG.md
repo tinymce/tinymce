@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Changed
+- The `sizzle` library is now used directly instead of using the `@ephox/wrap-sizzle` wrapper library.
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
 
 ### Removed

@@ -30,7 +30,8 @@
     "@ephox/sand": "^6.0.0-alpha.0",
     "@ephox/sugar": "^9.0.0-alpha.0",
     "@ephox/wrap-jsverify": "^2.0.1",
-    "@ephox/wrap-sizzle": "^4.0.0",
+    "@types/sizzle": "^2.3.3",
+    "sizzle": "^2.3.4",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
