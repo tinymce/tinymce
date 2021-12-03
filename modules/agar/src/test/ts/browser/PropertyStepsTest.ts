@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import Jsc from '@ephox/wrap-jsverify';
+import * as fc from 'fast-check';
 
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as PropertySteps from 'ephox/agar/api/PropertySteps';
@@ -11,7 +11,7 @@ UnitTest.asynctest('PropertyStepsTest', (success, failure) => {
   Pipeline.async({}, [
     PropertySteps.sAsyncProperty(
       'Check number dividing by 1 is itself',
-      [ Jsc.integer ],
+      [ fc.integer() ],
       Step.stateful((num: number, next, _die) => {
         Assert.eq('x / 1 === x', num, num / 1);
         next(num);

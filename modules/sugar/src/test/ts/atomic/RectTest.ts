@@ -1,19 +1,19 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import Jsc from '@ephox/wrap-jsverify';
+import { assert } from 'chai';
+import * as fc from 'fast-check';
 
 import { Rect } from 'ephox/sugar/api/selection/Rect';
 
 UnitTest.test('Rect', () => {
-  Jsc.property(
-    'Rect',
-    Jsc.number,
-    Jsc.number,
-    Jsc.number,
-    Jsc.number,
-    Jsc.number,
-    Jsc.number,
+  fc.assert(fc.property(
+    fc.float(),
+    fc.float(),
+    fc.float(),
+    fc.float(),
+    fc.float(),
+    fc.float(),
     (left: number, right: number, top: number, bottom: number, width: number, height: number) =>
-      Jsc.eq({
+      assert.deepEqual({
         left,
         top,
         right,
@@ -28,5 +28,5 @@ UnitTest.test('Rect', () => {
         width: () => width,
         height: () => height
       }))
-  );
+  ));
 });

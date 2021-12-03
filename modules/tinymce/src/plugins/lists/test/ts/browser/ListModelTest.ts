@@ -2,7 +2,7 @@ import { Arbitraries } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import Jsc from '@ephox/wrap-jsverify';
+import * as fc from 'fast-check';
 
 import { composeList } from 'tinymce/plugins/lists/listmodel/ComposeList';
 import { Entry } from 'tinymce/plugins/lists/listmodel/Entry';
@@ -11,24 +11,22 @@ import { parseLists } from 'tinymce/plugins/lists/listmodel/ParseLists';
 import { ListType } from 'tinymce/plugins/lists/listmodel/Util';
 
 describe('browser.tinymce.plugins.lists.ListModelTest', () => {
-  // TODO: Migrate to fast-check
   it('TBA: Validate lists plugin model', () => {
-    const arbitratyContent = Jsc.bless({
-      generator: Arbitraries.content('inline').generator.map((el) => [ el ])
+    const arbitraryContent = Arbitraries.content('inline').map((el) => [ el ]);
+
+    const arbitraryEntry = fc.record({
+      isSelected: fc.constant(false),
+      dirty: fc.constant(false),
+      depth: fc.integer({ min: 1, max: 10 }),
+      content: arbitraryContent,
+      listType: fc.constantFrom(ListType.OL, ListType.UL),
+      listAttributes: fc.constantFrom({}, { style: 'list-style-type: lower-alpha;' }),
+      itemAttributes: fc.constantFrom({}, { style: 'color: red;' })
     });
 
-    const arbitraryEntry = Jsc.record({
-      isSelected: Jsc.constant(false),
-      depth: Jsc.integer(1, 10),
-      content: Jsc.small(arbitratyContent),
-      listType: Jsc.oneof(Jsc.constant(ListType.OL), Jsc.constant(ListType.UL)),
-      listAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'list-style-type: lower-alpha;' })),
-      itemAttributes: Jsc.oneof(Jsc.constant({}), Jsc.constant({ style: 'color: red;' }))
-    });
+    const arbitraryEntries = fc.array(arbitraryEntry);
 
-    const arbitraryEntries = Jsc.array(arbitraryEntry);
-
-    const composeParseProperty = Jsc.forall(arbitraryEntries, (inputEntries: Entry[]) => {
+    const composeParseProperty = fc.property(arbitraryEntries, (inputEntries: Entry[]) => {
       normalizeEntries(inputEntries);
       const outputEntries = composeParse(inputEntries);
       return isEqualEntries(inputEntries, outputEntries) || errorMessage(inputEntries, outputEntries);
@@ -42,9 +40,11 @@ describe('browser.tinymce.plugins.lists.ListModelTest', () => {
 
     const isEqualEntries = (a: Entry[], b: Entry[]): boolean => stringifyEntries(a) === stringifyEntries(b);
 
-    const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): string => '\nPretty print counterexample:\n' +
-      `input: [${stringifyEntries(inputEntries)}\n]\n` +
-      `output: [${stringifyEntries(outputEntries)}\n]`;
+    const errorMessage = (inputEntries: Entry[], outputEntries: Entry[]): never => {
+      throw new Error('\nPretty print counterexample:\n' +
+        `input: [${stringifyEntries(inputEntries)}\n]\n` +
+        `output: [${stringifyEntries(outputEntries)}\n]`);
+    };
 
     const stringifyEntries = (entries: Entry[]): string => Arr.map(entries, stringifyEntry).join(',');
 
@@ -59,11 +59,7 @@ describe('browser.tinymce.plugins.lists.ListModelTest', () => {
 
     const serializeElements = (elms: SugarElement[]): string => Arr.map(elms, (el) => el.dom.outerHTML).join('');
 
-    Jsc.assert(composeParseProperty, {
-      size: 500,
-      tests: 500,
-      quiet: true
-    });
+    fc.assert(composeParseProperty, { numRuns: 200 });
   });
 
   // Manual testing. To simplify debugging once a counterexample has been found.

@@ -1,27 +1,24 @@
-import { Optional } from '@ephox/katamari';
-import Jsc from '@ephox/wrap-jsverify';
+import * as fc from 'fast-check';
 
-import { WeightedChoice } from './WeightedChoice';
+import * as WeightedChoice from './WeightedChoice';
 
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
-interface Decorator {
-  weight: number;
+export interface Decorator<T> extends WeightedChoice.WeightedItem{
   property: string;
-  value: any; // generator
+  value: fc.Arbitrary<T>;
 }
 
-const gOne = (wDecorations: Decorator[]) =>
-  WeightedChoice.generator(wDecorations).flatMap((choice: Optional<Decorator>) =>
+const gOne = <T>(wDecorations: Decorator<T>[]): fc.Arbitrary<Record<string, T>> =>
+  WeightedChoice.generator(wDecorations).chain((choice) =>
     choice.fold(() =>
-      Jsc.constant({}).generator,
+      fc.constant({}),
     (c) => c.value.map((v) => {
       const r = {};
       r[c.property] = v;
       return r;
     })));
 
-const gEnforce = (decorations: Decorator[]) => Jsc.constant(decorations).generator;
+const gEnforce = <T>(decorations: T): fc.Arbitrary<T> =>
+  fc.constant(decorations);
 
 export {
   gOne,

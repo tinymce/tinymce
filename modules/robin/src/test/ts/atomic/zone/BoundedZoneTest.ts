@@ -2,7 +2,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
-import { ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
+import { arbRangeIds } from 'ephox/robin/test/Arbitraries';
 import * as PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import { assertProps, assertZones, RawZone } from 'ephox/robin/test/ZoneObjects';
 import * as TextZones from 'ephox/robin/zone/TextZones';
@@ -114,9 +114,7 @@ UnitTest.test('BoundedZoneTest', () => {
 
   ], 'div1');
 
-  PropertyAssertions.check('Checking any id ranges', [
-    arbRangeIds(doc1, doc1.property().isText)
-  ], (info: ArbRangeIds) => {
+  PropertyAssertions.check('Checking any id ranges', arbRangeIds(doc1, doc1.property().isText), (info) => {
     const item1 = doc1.find(doc1.get(), info.startId).getOrDie();
     const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
     const actual = TextZones.fromBounded(doc1, item1, item2, 'en', ZoneViewports.anything());

@@ -300,11 +300,6 @@
     rollup-plugin-dts "^3.0.2"
     webpack-sources "^2.3.0"
 
-"@ephox/wrap-jsverify@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@ephox/wrap-jsverify/-/wrap-jsverify-2.0.1.tgz#8984b292eeab3bd570eab773541650d257793d4d"
-  integrity sha512-RSSsUFBV9uVUPzmCRvYXZBEZhVahYXs/j0JVgCy0CrbS98nV60BeYd97QB37sr05Lv7haLWzKf9XAcVAO7M8Ng==
-
 "@ephox/wrap-prismjs@^1.25.0":
   version "1.25.0"
   resolved "https://registry.yarnpkg.com/@ephox/wrap-prismjs/-/wrap-prismjs-1.25.0.tgz#a77f94d6a04346e42c1bd318622ae06fd84528b6"
@@ -4931,13 +4926,12 @@ fancy-log@^1.3.2, fancy-log@^1.3.3:
     parse-node-version "^1.0.0"
     time-stamp "^1.0.0"
 
-fast-check@^1.18.1:
-  version "1.26.0"
-  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-1.26.0.tgz#3a85998a9c30ed7f58976276e06046645e0de18a"
-  integrity sha512-B1AjSfe0bmi6FdFIzmrrGSjrsF6e2MCmZiM6zJaRbBMP+gIvdNakle5FIMKi0xbS9KlN9BZho1R7oB/qoNIQuA==
+fast-check@^2.0.0, fast-check@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-2.20.0.tgz#0c88d8640649e981adb501ef92f90a26dc8bd628"
+  integrity sha512-tFNjLyPnOUg6iimVxOtoWMJOIyybCo7B8gUGm1yv43jDCQ0hlPUn0fmna/XO/n1yPxn/dxQw3+IygPSbMDiiog==
   dependencies:
-    pure-rand "^2.0.0"
-    tslib "^2.0.0"
+    pure-rand "^5.0.0"
 
 fast-deep-equal@^1.0.0:
   version "1.1.0"
@@ -9552,10 +9546,10 @@ puppeteer-core@^5.1.0:
     unbzip2-stream "^1.3.3"
     ws "^7.2.3"
 
-pure-rand@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/pure-rand/-/pure-rand-2.0.0.tgz#3324633545207907fe964c2f0ebf05d8e9a7f129"
-  integrity sha512-mk98aayyd00xbfHgE3uEmAUGzz3jCdm8Mkf5DUXUhc7egmOaGG2D7qhVlynGenNe9VaNJZvzO9hkc8myuTkDgw==
+pure-rand@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/pure-rand/-/pure-rand-5.0.0.tgz#87f5bdabeadbd8904e316913a5c0b8caac517b37"
+  integrity sha512-lD2/y78q+7HqBx2SaT6OT4UcwtvXNRfEpzYEzl0EQ+9gZq2Qi3fa0HDnYPeqQwhlHJFBUhT7AO3mLU3+8bynHA==
 
 q@^1.1.2, q@^1.5.1:
   version "1.5.1"
