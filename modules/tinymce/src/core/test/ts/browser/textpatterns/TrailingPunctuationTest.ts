@@ -4,7 +4,7 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.plugins.textpattern.TrailingPunctuationTest', () => {
+describe('browser.tinymce.textpatterns.TrailingPunctuationTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, [ ], true);

@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import { findPattern } from 'tinymce/core/textpatterns/core/BlockPattern';
 import { generatePatternSet } from 'tinymce/core/textpatterns/TextPatterns';
 
-describe('atomic.tinymce.plugins.textpattern.FindBlockPatternsTest', () => {
+describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
   it('should find the start of the default patterns', () => {
     const patternSet = generatePatternSet([
       { start: '*', end: '*', format: 'italic' },

@@ -4,7 +4,7 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.plugins.textpattern.TriggerInlinePatternBeginningTest', () => {
+describe('browser.tinymce.textpatterns.TriggerInlinePatternBeginningTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'

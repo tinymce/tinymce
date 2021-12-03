@@ -6,7 +6,7 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
 import * as Utils from '../../module/test/TextPatternsUtils';
 
-describe('browser.tinymce.plugins.textpattern.TextPatternPluginForcedRootBlockFalseTest', () => {
+describe('browser.tinymce.textpatterns.TextPatternsForcedRootBlockFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     base_url: '/project/tinymce/js/tinymce',

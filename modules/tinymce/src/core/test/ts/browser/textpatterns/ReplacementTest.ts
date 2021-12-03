@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Utils from '../../module/test/TextPatternsUtils';
 
-describe('browser.tinymce.plugins.textpattern.ReplacementTest', () => {
+describe('browser.tinymce.textpatterns.ReplacementTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     text_patterns: [
       { start: 'brb', replacement: 'be right back' },
