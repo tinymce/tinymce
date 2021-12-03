@@ -8,7 +8,7 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, Menu, SystemEvents } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Arr, Cell, Optional, Singleton, Throttler, Thunk } from '@ephox/katamari';
-import { Remove, SugarElement } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -24,7 +24,6 @@ import { createAutocompleteItems, createMenuFrom, FocusMode } from './ui/menus/m
 
 interface ActiveAutocompleter {
   triggerChar: string;
-  element: SugarElement;
   matchLength: number;
 }
 
@@ -61,8 +60,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   const cancelIfNecessary = () => {
     if (isActive()) {
       // Unwrap the content if an incomplete mention
-      const lastElement = activeAutocompleter.get().map((ac) => ac.element);
-      AutocompleteTag.detect(lastElement.getOr(SugarElement.fromDom(editor.selection.getNode()))).each(Remove.unwrap);
+      AutocompleteTag.remove(SugarElement.fromDom(editor.getBody()));
 
       // Hide the menu and reset
       hideIfNecessary();
@@ -119,12 +117,11 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   const commenceIfNecessary = (context: AutocompleteContext) => {
     if (!isActive()) {
       // Create the wrapper
-      const wrapper = AutocompleteTag.create(editor, context.range);
+      AutocompleteTag.create(editor, context.range);
 
-      // store the element/context
+      // store the context
       activeAutocompleter.set({
         triggerChar: context.triggerChar,
-        element: wrapper,
         matchLength: context.text.length
       });
       processingAction.set(false);
@@ -132,32 +129,34 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   };
 
   const display = (ac: ActiveAutocompleter, context: AutocompleteContext, lookupData: AutocompleteLookupData[], items: ItemTypes.ItemSpec[]) => {
-    // Update the last displayed matched length
-    ac.matchLength = context.text.length;
+    AutocompleteTag.findIn(SugarElement.fromDom(editor.getBody())).each((element) => {
+      // Update the last displayed matched length
+      ac.matchLength = context.text.length;
 
-    // Display the autocompleter menu
-    const columns: InlineContent.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
-    InlineView.showAt(
-      autocompleter,
-      Menu.sketch(
-        createMenuFrom(
-          createPartialMenuWithAlloyItems('autocompleter-value', true, items, columns, 'normal'),
-          columns,
-          FocusMode.ContentFocus,
-          // Use the constant.
-          'normal'
-        )
-      ),
-      {
-        anchor: {
-          type: 'node',
-          root: SugarElement.fromDom(editor.getBody()),
-          node: Optional.from(ac.element)
+      // Display the autocompleter menu
+      const columns: InlineContent.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
+      InlineView.showAt(
+        autocompleter,
+        Menu.sketch(
+          createMenuFrom(
+            createPartialMenuWithAlloyItems('autocompleter-value', true, items, columns, 'normal'),
+            columns,
+            FocusMode.ContentFocus,
+            // Use the constant.
+            'normal'
+          )
+        ),
+        {
+          anchor: {
+            type: 'node',
+            root: SugarElement.fromDom(editor.getBody()),
+            node: Optional.from(element)
+          }
         }
-      }
-    );
+      );
 
-    InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
+      InlineView.getContent(autocompleter).each(Highlighting.highlightFirst);
+    });
   };
 
   const doLookup = (fetchOptions?: Record<string, any>): Optional<AutocompleteLookupInfo> =>

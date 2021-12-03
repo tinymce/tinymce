@@ -6,16 +6,16 @@
  */
 
 import { Optional } from '@ephox/katamari';
-import { Awareness, CursorPosition, Insert, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Awareness, CursorPosition, Insert, Remove, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 const autocompleteSelector = '[data-mce-autocompleter]';
 
-const create = (editor: Editor, range: Range): SugarElement =>
+const create = (editor: Editor, range: Range) => {
   // Check if an existing wrapper exists (eg from undoing), otherwise
   // wrap the content in a span, so we know where to search between
-  detect(SugarElement.fromDom(editor.selection.getNode())).getOrThunk(() => {
+  if (findIn(SugarElement.fromDom(editor.getBody())).isNone()) {
     // Create a wrapper
     const wrapper = SugarElement.fromHtml('<span data-mce-autocompleter="1" data-mce-bogus="1"></span>', editor.getDoc());
 
@@ -28,13 +28,18 @@ const create = (editor: Editor, range: Range): SugarElement =>
     CursorPosition.last(wrapper).map((last) => {
       editor.selection.setCursorLocation(last.dom, Awareness.getEnd(last));
     });
-
-    return wrapper;
-  });
+  }
+};
 
 const detect = (elm: SugarElement): Optional<SugarElement> => SelectorFind.closest(elm, autocompleteSelector);
 
+const findIn = (elm: SugarElement): Optional<SugarElement> => SelectorFind.descendant(elm, autocompleteSelector);
+
+const remove = (elm: SugarElement) => findIn(elm).each(Remove.unwrap);
+
 export {
   create,
-  detect
+  detect,
+  findIn,
+  remove
 };
