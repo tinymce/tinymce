@@ -37,7 +37,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.nodeChanged();
       TinyContentActions.keystroke(editor, Keys.space());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2);
-      TinyAssertions.assertContent(editor, '<p>a <a href="#">b </a> c</p>');
+      TinyAssertions.assertContent(editor, '<p>a <a href="#">b&nbsp;</a> c</p>');
     });
 
     it('Press space at beginning of inline boundary inserting space', () => {

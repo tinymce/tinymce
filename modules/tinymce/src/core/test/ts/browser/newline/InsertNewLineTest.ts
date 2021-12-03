@@ -1,5 +1,6 @@
 import { ApproxStructure } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -15,7 +16,10 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
   const bookmarkSpan = '<span data-mce-type="bookmark" id="mce_2_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>';
 
   const insertNewline = (editor: Editor, args: Partial<EditorEvent<KeyboardEvent>>) => {
-    InsertNewLine.insert(editor, args as EditorEvent<KeyboardEvent>);
+    const overrides = {
+      preventDefault: Fun.noop,
+    };
+    InsertNewLine.insert(editor, { ...args, ...overrides } as EditorEvent<KeyboardEvent>);
   };
 
   context('Enter in paragraph', () => {
