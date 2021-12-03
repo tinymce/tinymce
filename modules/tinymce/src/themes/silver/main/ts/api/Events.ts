@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { AutocompleteReloadEventArgs } from 'tinymce/core/autocomplete/AutocompleteEventArgs';
 
 const fireSkinLoaded = (editor: Editor) => editor.fire('SkinLoaded');
 
@@ -21,6 +22,8 @@ const fireScrollContent = (editor: Editor, e: Event) => editor.fire('ScrollConte
 
 const fireTextColorChange = (editor: Editor, data: { name: string; color: string }) => editor.fire('TextColorChange', data);
 
+const fireAutocompleteReload = (editor: Editor, args: AutocompleteReloadEventArgs) => editor.fire('AutocompleteReload', args);
+
 export {
   fireSkinLoaded,
   fireSkinLoadError,
@@ -28,5 +31,6 @@ export {
   fireScrollContent,
   fireBeforeRenderUI,
   fireResizeContent,
-  fireTextColorChange
+  fireTextColorChange,
+  fireAutocompleteReload
 };

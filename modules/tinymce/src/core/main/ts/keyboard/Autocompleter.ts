@@ -10,23 +10,12 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
+import { fireAutocompleteEnd, fireAutocompleteStart, fireAutocompleteUpdate } from '../api/Events';
 import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
-import { AutocompleteLookupData, AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
+import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
 import * as Autocompleters from '../autocomplete/Autocompleters';
 import * as AutocompleteTag from '../autocomplete/AutocompleteTag';
 
-export interface AutoCompleteReloadEventArgs {
-  fetchOptions: Record<string, any>;
-}
-
-export interface AutoCompleteEventArgs {
-  context: AutocompleteContext;
-  lookupData: AutocompleteLookupData[];
-}
-
-const fireAutocompleteStart = (editor: Editor, args: AutoCompleteEventArgs) => editor.fire('AutocompleteStart', args);
-const fireAutocompleteUpdate = (editor: Editor, args: AutoCompleteEventArgs) => editor.fire('AutocompleteUpdate', args);
-const fireAutocompleteEnd = (editor: Editor) => editor.fire('AutocompleteEnd');
 interface ActiveAutocompleter {
   triggerChar: string;
   matchLength: number;

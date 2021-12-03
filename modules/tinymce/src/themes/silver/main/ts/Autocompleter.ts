@@ -15,18 +15,13 @@ import { DOMUtils } from 'tinymce/core/api/PublicApi';
 import { AutocompleteContext } from 'tinymce/core/autocomplete/AutocompleteContext';
 import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteLookup';
 
+import { fireAutocompleteReload } from './api/Events';
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
 import * as AutocompleteTagReader from './autocomplete/AutocompleteTagReader';
 import { UiFactoryBackstageShared } from './backstage/Backstage';
 import ItemResponse from './ui/menus/item/ItemResponse';
 import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';
 import { createAutocompleteItems, createMenuFrom, FocusMode } from './ui/menus/menu/SingleMenu';
-
-export interface AutoCompleteReloadEventArgs {
-  fetchOptions: Record<string, any>;
-}
-
-const fireAutocompleteReload = (editor: Editor, args: AutoCompleteReloadEventArgs) => editor.fire('AutocompleteReload', args);
 
 const getAutocompleterRange = (dom: DOMUtils, initRange: Range): Optional<Range> => {
   return AutocompleteTagReader.detect(SugarElement.fromDom(initRange.startContainer)).map((elm) => {
