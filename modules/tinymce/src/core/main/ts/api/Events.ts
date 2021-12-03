@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AutocompleteEventArgs } from '../autocomplete/AutocompleteEventArgs';
+import { AutocompleterEventArgs } from '../autocomplete/AutocompleterEventArgs';
 import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
@@ -58,11 +58,11 @@ const fireBeforeGetContent = <T extends GetContentArgs>(editor: Editor, args: T)
 const fireGetContent = <T extends GetContentArgs & { content: Content }>(editor: Editor, args: T) =>
   editor.fire('GetContent', args);
 
-const fireAutocompleteStart = (editor: Editor, args: AutocompleteEventArgs) => editor.fire('AutocompleteStart', args);
+const fireAutocompleterStart = (editor: Editor, args: AutocompleterEventArgs) => editor.fire('AutocompleterStart', args);
 
-const fireAutocompleteUpdate = (editor: Editor, args: AutocompleteEventArgs) => editor.fire('AutocompleteUpdate', args);
+const fireAutocompleterUpdate = (editor: Editor, args: AutocompleterEventArgs) => editor.fire('AutocompleterUpdate', args);
 
-const fireAutocompleteEnd = (editor: Editor) => editor.fire('AutocompleteEnd');
+const fireAutocompleterEnd = (editor: Editor) => editor.fire('AutocompleterEnd');
 
 export {
   firePreProcess,
@@ -83,7 +83,7 @@ export {
   fireSetContent,
   fireBeforeGetContent,
   fireGetContent,
-  fireAutocompleteStart,
-  fireAutocompleteUpdate,
-  fireAutocompleteEnd
+  fireAutocompleterStart,
+  fireAutocompleterUpdate,
+  fireAutocompleterEnd
 };

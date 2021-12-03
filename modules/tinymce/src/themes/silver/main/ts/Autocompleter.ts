@@ -14,7 +14,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/PublicApi';
 import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteLookup';
 
-import { fireAutocompleteReload } from './api/Events';
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
 import * as AutocompleteTagReader from './autocomplete/AutocompleteTagReader';
 import { UiFactoryBackstageShared } from './backstage/Backstage';
@@ -60,7 +59,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     }
   };
 
-  const cancelIfNecessary = () => editor.execCommand('CloseAutocomplete');
+  const cancelIfNecessary = () => editor.execCommand('CloseAutocompleter');
 
   const getCombinedItems = (matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
     const columns = Arr.findMap(matches, (m) => Optional.from(m.columns)).getOr(1);
@@ -76,7 +75,10 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
           getAutocompleterRange(editor.dom, nr).each((range) => {
             const autocompleterApi: InlineContent.AutocompleterInstanceApi = {
               hide: () => cancelIfNecessary(),
-              reload: (fetchOptions: Record<string, any>) => fireAutocompleteReload(editor, { fetchOptions })
+              reload: (fetchOptions: Record<string, any>) => {
+                hideIfNecessary();
+                editor.execCommand('ReloadAutocompleter', false, { fetchOptions });
+              }
             };
             processingAction.set(true);
             match.onAction(autocompleterApi, range, itemValue, itemMeta);
@@ -130,22 +132,20 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     }
   };
 
-  editor.on('AutocompleteStart', ({ lookupData }) => {
+  editor.on('AutocompleterStart', ({ lookupData }) => {
     activeState.set(true);
     processingAction.set(false);
     updateDisplay(lookupData);
   });
 
-  editor.on('AutocompleteUpdate', ({ lookupData }) => updateDisplay(lookupData));
+  editor.on('AutocompleterUpdate', ({ lookupData }) => updateDisplay(lookupData));
 
-  editor.on('AutocompleteEnd', () => {
+  editor.on('AutocompleterEnd', () => {
     // Hide the menu and reset
     hideIfNecessary();
     activeState.set(false);
     processingAction.set(false);
   });
-
-  editor.on('AutocompleteReload', () => hideIfNecessary());
 
   const autocompleterUiApi: AutocompleterUiApi = {
     cancelIfNecessary,

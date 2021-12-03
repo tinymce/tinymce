@@ -8,11 +8,7 @@
 import { AutocompleteContext } from './AutocompleteContext';
 import { AutocompleteLookupData } from './AutocompleteLookup';
 
-export interface AutocompleteReloadEventArgs {
-  fetchOptions: Record<string, any>;
-}
-
-export interface AutocompleteEventArgs {
+export interface AutocompleterEventArgs {
   context: AutocompleteContext;
   lookupData: AutocompleteLookupData[];
 }

@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional, Singleton, Throttler, Thunk } from '@ephox/katamari';
+import { Optional, Singleton, Throttler, Thunk, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { fireAutocompleteEnd, fireAutocompleteStart, fireAutocompleteUpdate } from '../api/Events';
+import { fireAutocompleterEnd, fireAutocompleterStart, fireAutocompleterUpdate } from '../api/Events';
 import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
 import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
 import * as Autocompleters from '../autocomplete/Autocompleters';
@@ -51,7 +51,7 @@ export const setup = (editor: Editor) => {
   const cancelIfNecessary = () => {
     if (isActive()) {
       AutocompleteTag.remove(SugarElement.fromDom(editor.getBody()));
-      fireAutocompleteEnd(editor);
+      fireAutocompleterEnd(editor);
       activeAutocompleter.clear();
     }
   };
@@ -107,9 +107,9 @@ export const setup = (editor: Editor) => {
                 ac.matchLength = context.text.length;
 
                 if (wasNecessary) {
-                  fireAutocompleteStart(editor, { context, lookupData });
+                  fireAutocompleterStart(editor, { context, lookupData });
                 } else {
-                  fireAutocompleteUpdate(editor, { context, lookupData });
+                  fireAutocompleterUpdate(editor, { context, lookupData });
                 }
               }
             }
@@ -119,9 +119,12 @@ export const setup = (editor: Editor) => {
     );
   };
 
-  editor.on('AutocompleteReload', ({ fetchOptions }) => load(fetchOptions));
+  editor.editorCommands.addCommand('ReloadAutocompleter', (_ui, value) => {
+    const fetchOptions: Record<string, any> = Type.isObject(value) ? value.fetchOptions : {};
+    load(fetchOptions);
+  });
 
-  editor.editorCommands.addCommand('CloseAutocomplete', () => cancelIfNecessary());
+  editor.editorCommands.addCommand('CloseAutocompleter', () => cancelIfNecessary());
 
   setupEditorInput(editor, load);
 };
