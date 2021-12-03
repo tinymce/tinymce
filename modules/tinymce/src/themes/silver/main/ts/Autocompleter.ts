@@ -12,11 +12,11 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/PublicApi';
+import { AutocompleteContext } from 'tinymce/core/autocomplete/AutocompleteContext';
+import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteLookup';
 
-import { AutocompleteContext } from './autocomplete/AutocompleteContext';
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
-import { AutocompleteLookupData } from './autocomplete/AutocompleteLookup';
-import * as AutocompleteTagReader from './autocomplete/AutocompleteTag';
+import * as AutocompleteTagReader from './autocomplete/AutocompleteTagReader';
 import { UiFactoryBackstageShared } from './backstage/Backstage';
 import ItemResponse from './ui/menus/item/ItemResponse';
 import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';

@@ -13,7 +13,6 @@ import ThemeManager, { Theme } from 'tinymce/core/api/ThemeManager';
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import * as Options from './api/Options';
 import { Autocompleter } from './Autocompleter';
-import * as AutocompleterCore from './AutocompleterCore';
 import * as Render from './Render';
 import * as ColorOptions from './ui/core/color/Options';
 import * as WindowManager from './ui/dialog/WindowManager';
@@ -32,7 +31,6 @@ export default () => {
     registerOptions(editor);
     const { uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
 
-    AutocompleterCore.setup(editor);
     Autocompleter.register(editor, backstage.shared);
 
     const windowMgr = WindowManager.setup({ editor, backstage });

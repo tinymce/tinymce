@@ -10,10 +10,10 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { AutocompleteContext, getContext } from './autocomplete/AutocompleteContext';
-import { AutocompleteLookupData, AutocompleteLookupInfo, lookup, lookupWithContext } from './autocomplete/AutocompleteLookup';
-import * as Autocompleters from './autocomplete/Autocompleters';
-import * as AutocompleteTag from './autocomplete/AutocompleteTag';
+import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
+import { AutocompleteLookupData, AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
+import * as Autocompleters from '../autocomplete/Autocompleters';
+import * as AutocompleteTag from '../autocomplete/AutocompleteTag';
 
 export interface AutoCompleteReloadEventArgs {
   fetchOptions: Record<string, any>;

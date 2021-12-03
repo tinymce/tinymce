@@ -12,7 +12,7 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-import * as AutocompleteTag from './AutocompleteTag';
+import * as AutocompleteTagReader from './AutocompleteTagReader';
 
 export interface AutocompleterUiApi {
   getView: () => Optional<AlloyComponent>;
@@ -77,7 +77,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
 
   editor.on('NodeChange', (e) => {
     // Close if active, not in the middle of an onAction callback and we're no longer inside the autocompleter span
-    if (api.isActive() && !api.isProcessingAction() && AutocompleteTag.detect(SugarElement.fromDom(e.element)).isNone()) {
+    if (api.isActive() && !api.isProcessingAction() && AutocompleteTagReader.detect(SugarElement.fromDom(e.element)).isNone()) {
       api.cancelIfNecessary();
     }
   });
