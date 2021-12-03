@@ -1,13 +1,11 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Css, SugarElement } from '@ephox/sugar';
 
 import * as CopySelected from 'ephox/snooker/api/CopySelected';
 import { reducePrecision } from 'ephox/snooker/test/SizeUtils';
 
 const SEL_CLASS = 'copy-selected';
-const isIE = PlatformDetection.detect().browser.isIE();
 
 interface TestCase {
   readonly label: string;
@@ -174,7 +172,7 @@ const testCases: TestCase[] = [
   },
   {
     label: 'TINY-6664: Assert table width - responsive single column',
-    expectedWidth: isIE ? 'auto' : '',
+    expectedWidth: '',
     table: (
       `<table style="border-collapse: collapse;" border="1">
         <tbody>
@@ -194,7 +192,7 @@ const testCases: TestCase[] = [
   },
   {
     label: 'TINY-6664: Assert table width - responsive multiple columns',
-    expectedWidth: isIE ? 'auto' : '',
+    expectedWidth: '',
     table: (
       `<table style="border-collapse: collapse;" border="1">
         <tbody>
@@ -214,7 +212,7 @@ const testCases: TestCase[] = [
   },
   {
     label: 'TINY-6664: Assert table width - responsive entire table',
-    expectedWidth: isIE ? 'auto' : '',
+    expectedWidth: '',
     table: (
       `<table style="border-collapse: collapse;" border="1">
         <tbody>

@@ -15,7 +15,6 @@ import DomSerializer, { DomSerializerSettings } from '../api/dom/Serializer';
 import StyleSheetLoader from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
-import Env from '../api/Env';
 import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
@@ -37,7 +36,6 @@ import { NodeChange } from '../NodeChange';
 import * as Rtc from '../Rtc';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
-import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
@@ -240,13 +238,7 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
       const node = pos.getNode();
       // If a table is the first caret pos, then walk down one more level
       const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
-      // Don't set the selection on IE, as since it's a single selection model setting the selection will cause
-      // it to grab focus, so instead store the selection in the bookmark
-      if (Env.browser.isIE()) {
-        SelectionBookmark.storeNative(editor, caretPos.toRange());
-      } else {
-        editor.selection.setRng(caretPos.toRange());
-      }
+      editor.selection.setRng(caretPos.toRange());
     });
   }
 };

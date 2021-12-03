@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - All `th` rows in `tfoot` sections were incorrectly detected as header rows.
 
+### Removed
+- Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.
+
 ## 10.0.0 - 2021-10-11
 
 ### Changed

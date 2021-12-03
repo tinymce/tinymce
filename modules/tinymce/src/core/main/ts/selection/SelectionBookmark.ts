@@ -6,13 +6,10 @@
  */
 
 import { Optional } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Compare, SimRange, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
-
-const browser = PlatformDetection.detect().browser;
 
 const clamp = (offset: number, element: SugarElement<Node>): number => {
   const max = SugarNode.isText(element) ? SugarText.get(element).length : Traverse.children(element).length + 1;
@@ -40,7 +37,7 @@ const isOrContains = (root: SugarElement<Node>, elm: SugarElement<Node>): boolea
 const isRngInRoot = (root: SugarElement<Node>) => (rng: SimRange): boolean =>
   isOrContains(root, rng.start) && isOrContains(root, rng.finish);
 
-const shouldStore = (editor: Editor) => editor.inline === true || browser.isIE();
+const shouldStore = (editor: Editor) => editor.inline;
 
 const nativeRangeToSelectionRange = (r: Range): SimRange =>
   SimSelection.range(SugarElement.fromDom(r.startContainer), r.startOffset, SugarElement.fromDom(r.endContainer), r.endOffset);

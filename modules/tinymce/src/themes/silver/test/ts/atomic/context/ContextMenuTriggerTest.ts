@@ -32,17 +32,5 @@ describe('atomic.tinymce.themes.silver.context.ContextMenuTriggerTest', () => {
       assert.isFalse(isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 2, body))); // Firefox mouse
       assert.isTrue(isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 0, body))); // Firefox keyboard
     });
-
-    it('Check edge-like event', () => {
-      assert.isFalse(isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 2, node, 'mouse'))); // Edge mouse
-      assert.isFalse(isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 2, body, 'mouse'))); // Edge mouse
-      assert.isTrue(isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 2, body, ''))); // Edge keyboard
-    });
-
-    it('Check IE-like event', () => {
-      assert.isFalse(isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 2, node, 'mouse'))); // IE mouse
-      assert.isFalse(isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 2, body, 'mouse'))); // IE mouse
-      assert.isTrue(isTriggeredByKeyboard(fakeEditor, createFakeEvent('contextmenu', 2, body, ''))); // IE keyboard
-    });
   });
 });

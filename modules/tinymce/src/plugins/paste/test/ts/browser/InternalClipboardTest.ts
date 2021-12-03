@@ -1,6 +1,5 @@
 import { Clipboard, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -10,7 +9,6 @@ import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.plugins.paste.InternalClipboardTest', () => {
-  const browser = PlatformDetection.detect().browser;
   let dataTransfer, lastPreProcessEvent, lastPostProcessEvent;
 
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -151,8 +149,7 @@ describe('browser.tinymce.plugins.paste.InternalClipboardTest', () => {
       cut(editor, '<p>a<em>cd</em>e</p>', [ 0, 0 ], 0, [ 0, 1, 0 ], 1);
       assertClipboardData('a<em>c</em>', 'ac');
       await pWaitUntilAssertContent(editor, '<p><em>d</em>e</p>');
-      // TODO: Investigate why Edge ends up with a different selection here
-      TinyAssertions.assertSelection(editor, browser.isEdge() ? [ 0 ] : [ 0, 0, 0 ], 0, browser.isEdge() ? [ 0 ] : [ 0, 0, 0 ], 0);
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
     });
 
     it('TBA: Cut collapsed selection', async () => {

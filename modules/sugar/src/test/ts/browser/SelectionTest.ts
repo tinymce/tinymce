@@ -1,5 +1,4 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
@@ -51,11 +50,7 @@ UnitTest.test('Browser Test: SelectionTest', () => {
   assertSelection('(p1text, 1) -> (p2text, 2)', p1text, 1, p2text, 1);
 
   setSelection(p2text, 2, p1text, 3);
-  if (!PlatformDetection.detect().browser.isIE()) {
-    assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
-  } else {
-    assertSelection('reversed (p1text, 3) -> (p2text, 2)', p1text, 3, p2text, 2);
-  }
+  assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
 
   const assertFragmentHtml = (expected: string, fragment: SugarElement<Node>) => {
     const div = SugarElement.fromTag('div');

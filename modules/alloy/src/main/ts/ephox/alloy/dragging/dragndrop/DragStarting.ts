@@ -23,11 +23,11 @@ const dragStart = (component: AlloyComponent, target: SugarElement, config: Drag
   config.getImage.each((f) => {
     const image = f(component);
     const parent = config.getImageParent.fold(
-      () => Traverse.parent(target).getOr(SugarBody.body()),
+      () => Traverse.parentElement(target).getOr(SugarBody.body()),
       (f) => f(component)
     );
 
-    setImageClone(transfer, image, parent, target);
+    setImageClone(transfer, image, parent);
   });
 };
 

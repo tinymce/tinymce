@@ -9,7 +9,6 @@ import { Arr, Obj, Type, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Css, Focus, Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
-import Env from './api/Env';
 import VK from './api/util/VK';
 import * as CaretContainer from './caret/CaretContainer';
 import CaretPosition from './caret/CaretPosition';
@@ -42,7 +41,6 @@ interface SelectionOverrides {
 const getContentEditableRoot = (editor: Editor, node: Node) => CefUtils.getContentEditableRoot(editor.getBody(), node);
 
 const SelectionOverrides = (editor: Editor): SelectionOverrides => {
-  const isIE = Env.browser.isIE() || Env.browser.isEdge();
   const selection = editor.selection, dom = editor.dom;
   const isBlock = dom.isBlock as (node: Node) => node is HTMLElement;
 
@@ -93,7 +91,6 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const showBlockCaretContainer = (blockCaretContainer: HTMLElement) => {
     if (blockCaretContainer.hasAttribute('data-mce-caret')) {
       CaretContainer.showCaretContainerBlock(blockCaretContainer);
-      setRange(getRange()); // Removes control rect on IE
       selection.scrollIntoView(blockCaretContainer);
     }
   };
@@ -285,8 +282,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       const clipboardData = e.clipboardData;
 
       // Make sure we get proper html/text for the fake cE=false selection
-      // Doesn't work at all on Edge since it doesn't have proper clipboardData support
-      if (!e.isDefaultPrevented() && e.clipboardData && !isIE) {
+      if (!e.isDefaultPrevented() && e.clipboardData) {
         const realSelectionElement = getRealSelectionElement();
         if (realSelectionElement) {
           e.preventDefault();
@@ -343,7 +339,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     return newRng;
   };
 
-  const setupOffscreenSelection = (node: Element, targetClone: Node, origTargetClone: Node) => {
+  const setupOffscreenSelection = (node: Element, targetClone: Node) => {
     const body = SugarElement.fromDom(editor.getBody());
     const doc = editor.getDoc();
     const realSelectionContainer = SelectorFind.descendant<HTMLElement>(body, '#' + realSelectionId).getOrThunk(() => {
@@ -354,28 +350,14 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     });
 
     const newRange = dom.createRng();
-
-    // WHY is IE making things so hard! Copy on <i contentEditable="false">x</i> produces: <em>x</em>
-    // This is a ridiculous hack where we place the selection from a block over the inline element
-    // so that just the inline element is copied as is and not converted.
-    if (targetClone === origTargetClone && isIE) {
-      Remove.empty(realSelectionContainer);
-      InsertAll.append(realSelectionContainer, [
-        SugarElement.fromHtml('<p style="font-size: 0" data-mce-bogus="all">\u00a0</p>', doc),
-        SugarElement.fromDom(targetClone)
-      ]);
-      newRange.setStartAfter(realSelectionContainer.dom.firstChild.firstChild);
-      newRange.setEndAfter(targetClone);
-    } else {
-      Remove.empty(realSelectionContainer);
-      InsertAll.append(realSelectionContainer, [
-        SugarElement.fromText(Unicode.nbsp, doc),
-        SugarElement.fromDom(targetClone),
-        SugarElement.fromText(Unicode.nbsp, doc)
-      ]);
-      newRange.setStart(realSelectionContainer.dom.firstChild, 1);
-      newRange.setEnd(realSelectionContainer.dom.lastChild, 0);
-    }
+    Remove.empty(realSelectionContainer);
+    InsertAll.append(realSelectionContainer, [
+      SugarElement.fromText(Unicode.nbsp, doc),
+      SugarElement.fromDom(targetClone),
+      SugarElement.fromText(Unicode.nbsp, doc)
+    ]);
+    newRange.setStart(realSelectionContainer.dom.firstChild, 1);
+    newRange.setEnd(realSelectionContainer.dom.lastChild, 0);
 
     Css.setAll(realSelectionContainer, {
       top: dom.getPos(node, editor.getBody()).y + 'px'
@@ -397,7 +379,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     }
 
     // Setup the offscreen selection
-    const range = setupOffscreenSelection(elm, e.targetClone, targetClone);
+    const range = setupOffscreenSelection(elm, e.targetClone);
 
     // We used to just remove all data-mce-selected values and set 1 on node.
     // But data-mce-selected can be values other than 1 so keep existing value if

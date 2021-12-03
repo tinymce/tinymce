@@ -2,16 +2,12 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { AlloyComponent, Composing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
 
 import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
-  const browser = PlatformDetection.detect().browser;
-  const platformNeedsSandboxing = !(browser.isIE() || browser.isEdge());
-
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderIFrame({
       name: 'frame-a',
@@ -73,20 +69,6 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       frame.element
     );
 
-  const assertStandardIframeContent = (frame: AlloyComponent) =>
-    // TODO: See if we can match the contents inside the iframe body. That may not be possible though,
-    //       as attempting to use assertStructure is throwing permission errors from tests
-    Assertions.assertStructure(
-      'Checking to see that the src tag is now set on the iframe',
-      ApproxStructure.build((s, str, _arr) => s.element('iframe', {
-        classes: [],
-        attrs: {
-          src: str.is(`javascript:''`)
-        }
-      })),
-      frame.element
-    );
-
   it('Check basic structure', () => {
     assertInitialIframeStructure(hook.component());
   });
@@ -96,10 +78,6 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     const frame = Composing.getCurrent(component).getOrDie('Could not find internal frame field');
     const content = '<p><span class="me">Me</span></p>';
     Representing.setValue(frame, content);
-    if (platformNeedsSandboxing) {
-      assertSandboxedIframeContent(frame, content);
-    } else {
-      assertStandardIframeContent(frame);
-    }
+    assertSandboxedIframeContent(frame, content);
   });
 });

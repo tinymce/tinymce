@@ -8,16 +8,10 @@ import * as UiFinder from './UiFinder';
 type TogglableElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement;
 
 const fireEvent = (elem: SugarElement, event: string) => {
-  let evt: Event;
-  if (Type.isFunction(Event)) {
-    evt = new Event(event, {
-      bubbles: true,
-      cancelable: true
-    });
-  } else { // support IE
-    evt = document.createEvent('Event');
-    evt.initEvent(event, true, true);
-  }
+  const evt = new Event(event, {
+    bubbles: true,
+    cancelable: true
+  });
   elem.dom.dispatchEvent(evt);
 };
 

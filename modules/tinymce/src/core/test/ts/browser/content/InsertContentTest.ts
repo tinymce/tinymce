@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -9,8 +8,6 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertContent from 'tinymce/core/content/InsertContent';
 
 describe('browser.tinymce.core.content.InsertContentTest', () => {
-  const browser = PlatformDetection.detect().browser;
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -584,42 +581,22 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       '</table>'
     );
 
-    if (browser.isIE()) {
-      // IE renders this verbatim and other browsers remove nested buttons
-      TinyAssertions.assertContent(
-        editor,
-        '<table>' +
-          '<tbody>' +
-            '<tr>' +
-              '<td>' +
-                '<button>' +
-                  '<img />' +
-                  '<button></button>' +
-                  '<img />' +
-                '</button>' +
-              '</td>' +
-            '</tr>' +
-          '</tbody>' +
-        '</table>'
-      );
-    } else {
-      TinyAssertions.assertContent(
-        editor,
-        '<table>' +
-          '<tbody>' +
-            '<tr>' +
-              '<td>' +
-                '<button>' +
-                  '<img />' +
-                '</button>' +
-                '<button></button>' +
+    TinyAssertions.assertContent(
+      editor,
+      '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>' +
+              '<button>' +
                 '<img />' +
-              '</td>' +
-            '</tr>' +
-          '</tbody>' +
-        '</table>'
-      );
-    }
+              '</button>' +
+              '<button></button>' +
+              '<img />' +
+            '</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>'
+    );
   });
 
   it('TINY-7842: Inserting content into a contenteditable=true block within a contenteditable=false parent', () => {
