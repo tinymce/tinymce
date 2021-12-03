@@ -9,7 +9,6 @@ import { Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import Env from '../api/Env';
 import { Content, ContentFormat, GetSelectionContentArgs } from '../content/ContentTypes';
 import { postProcessGetContent, preProcessGetContent } from '../content/PrePostProcess';
 import * as CharType from '../text/CharType';
@@ -18,12 +17,10 @@ import * as EventProcessRanges from './EventProcessRanges';
 import * as FragmentReader from './FragmentReader';
 import * as MultiRange from './MultiRange';
 
-const trimLeadingCollapsibleText = (text: string) => text.replace(/^[ \f\n\r\t\v]+/, '');
 const isCollapsibleWhitespace = (text: string, index: number) => index >= 0 && index < text.length && CharType.isWhiteSpace(text.charAt(index));
 
-const getInnerText = (bin: HTMLElement, shouldTrim: boolean) => {
-  const text = Zwsp.trim(bin.innerText);
-  return shouldTrim ? trimLeadingCollapsibleText(text) : text;
+const getInnerText = (bin: HTMLElement) => {
+  return Zwsp.trim(bin.innerText);
 };
 
 const getContextNodeName = (parentBlockOpt: Optional<HTMLElement>): string =>
@@ -36,16 +33,11 @@ const getTextContent = (editor: Editor): string =>
 
     const contextNodeName = getContextNodeName(parentBlockOpt);
 
-    // Trim leading collapsible whitespace on IE 11, as on IE 11 innerText doesn't consider how it'll render.
-    // Firefox, IE and Edge also actually render trailing spaces in some cases, so don't trim trailing whitespace.
-    // Should not trim spaces inside pre-blocks.
-    const shouldTrimSpaces = Env.browser.isIE() && contextNodeName !== 'pre';
-
     const bin = editor.dom.add(body, contextNodeName, {
       'data-mce-bogus': 'all',
       'style': 'overflow: hidden; opacity: 0;'
     }, rng.cloneContents());
-    const text = getInnerText(bin, shouldTrimSpaces);
+    const text = getInnerText(bin);
 
     // textContent will not strip leading/trailing spaces since it doesn't consider how it'll render
     const nonRenderedText = Zwsp.trim(bin.textContent);
@@ -54,7 +46,7 @@ const getTextContent = (editor: Editor): string =>
     if (isCollapsibleWhitespace(nonRenderedText, 0) || isCollapsibleWhitespace(nonRenderedText, nonRenderedText.length - 1)) {
       // If the bin contains a trailing/leading space, then we need to inspect the parent block to see if we should include the spaces
       const parentBlock = parentBlockOpt.getOr(body);
-      const parentBlockText = getInnerText(parentBlock, shouldTrimSpaces);
+      const parentBlockText = getInnerText(parentBlock);
       const textIndex = parentBlockText.indexOf(text);
 
       if (textIndex === -1) {

@@ -83,27 +83,14 @@ const pasteText = (editor: Editor, text: string): void => {
  */
 const getDataTransferItems = (dataTransfer: DataTransfer | undefined): ClipboardContents => {
   const items: ClipboardContents = {};
-  const mceInternalUrlPrefix = 'data:text/mce-internal,';
 
-  if (dataTransfer) {
-    // Use old WebKit/IE API
-    if (dataTransfer.getData) {
-      const legacyText = dataTransfer.getData('Text');
-      if (legacyText && legacyText.length > 0) {
-        if (legacyText.indexOf(mceInternalUrlPrefix) === -1) {
-          items['text/plain'] = legacyText;
-        }
-      }
-    }
-
-    if (dataTransfer.types) {
-      for (let i = 0; i < dataTransfer.types.length; i++) {
-        const contentType = dataTransfer.types[i];
-        try { // IE11 throws exception when contentType is Files (type is present but data cannot be retrieved via getData())
-          items[contentType] = dataTransfer.getData(contentType);
-        } catch (ex) {
-          items[contentType] = ''; // useless in general, but for consistency across browsers
-        }
+  if (dataTransfer && dataTransfer.types) {
+    for (let i = 0; i < dataTransfer.types.length; i++) {
+      const contentType = dataTransfer.types[i];
+      try { // IE11 throws exception when contentType is Files (type is present but data cannot be retrieved via getData())
+        items[contentType] = dataTransfer.getData(contentType);
+      } catch (ex) {
+        items[contentType] = ''; // useless in general, but for consistency across browsers
       }
     }
   }

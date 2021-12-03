@@ -6,16 +6,13 @@
  */
 
 import { Arr, Fun, Obj, Optionals, Type } from '@ephox/katamari';
-import {
-  Attribute, Class, Css, Html, Insert, InsertAll, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport
-} from '@ephox/sugar';
+import { Attribute, Class, Css, Html, Insert, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
 import * as TrimNode from '../../dom/TrimNode';
 import { isWhitespaceText } from '../../text/Whitespace';
-import Env from '../Env';
 import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
@@ -42,7 +39,6 @@ import DomTreeWalker from './TreeWalker';
 // Shorten names
 const each = Tools.each;
 const grep = Tools.grep;
-const isIE = Env.browser.isIE() || Env.browser.isEdge();
 
 interface AttrHooks {
   style: {
@@ -408,20 +404,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const clone = (node: Node, deep: boolean) => {
-    // TODO: Add feature detection here in the future
-    if (!isIE || !NodeType.isElement(node) || deep) {
-      return node.cloneNode(deep);
-    } else {
-      // Make a HTML5 safe shallow copy
-      const clone = doc.createElement(node.nodeName);
-
-      // Copy attribs
-      each(getAttribs(node), (attr) => {
-        setAttrib(clone, attr.nodeName, getAttrib(node, attr.nodeName));
-      });
-
-      return clone;
-    }
+    return node.cloneNode(deep);
   };
 
   const getRoot = (): HTMLElement => settings.root_element || doc.body;
@@ -494,7 +477,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       name = name.replace(/-(\D)/g, (a, b) => b.toUpperCase());
 
       if (name === 'float') {
-        name = Env.browser.isIE() ? 'styleFloat' : 'cssFloat';
+        name = 'cssFloat';
       }
 
       return $elm.style ? $elm.style[name] : undefined;
@@ -658,34 +641,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const setHTML = (elm: string | Node | Node[], html: string) => {
     run(elm, (e) => {
       const $elm = SugarElement.fromDom(e);
-
-      if (isIE) {
-        const target = e;
-        if ((target as any).canHaveHTML === false) {
-          return;
-        }
-
-        // Remove all child nodes, IE keeps empty text nodes in DOM
-        while (target.firstChild) {
-          target.removeChild(target.firstChild);
-        }
-
-        try {
-          // IE will remove comments from the beginning
-          // unless you padd the contents with something
-          (target as Element).innerHTML = '<br>' + html;
-          target.removeChild(target.firstChild);
-        } catch (ex) {
-          // IE sometimes produces an unknown runtime error on innerHTML if it's a div inside a p
-          const wrapper = SugarElement.fromTag('div');
-          Html.set(wrapper, '<br>' + html);
-          InsertAll.append($elm, Traverse.children(wrapper).slice(1));
-        }
-
-        return html;
-      } else {
-        Html.set($elm, html);
-      }
+      Html.set($elm, html);
     });
   };
 
@@ -1190,21 +1146,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const isChildOf = (node: Node, parent: Node) => {
-    // IE only supports the native `contains` functions on HTMLElements, but not Nodes or Elements
-    // so we have to use the slow walking path for IE unfortunately.
-    if (!isIE) {
-      return node === parent || parent.contains(node);
-    } else {
-      while (node) {
-        if (parent === node) {
-          return true;
-        }
-
-        node = node.parentNode;
-      }
-
-      return false;
-    }
+    return node === parent || parent.contains(node);
   };
 
   const dumpRng = (r: Range) => (
@@ -1890,7 +1832,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     getContentEditableParent,
 
     /**
-     * Destroys all internal references to the DOM to solve IE leak issues.
+     * Destroys all internal references to the DOM to solve memory leak issues.
      *
      * @method destroy
      */

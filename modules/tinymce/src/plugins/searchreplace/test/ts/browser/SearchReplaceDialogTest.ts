@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,8 +13,6 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     toolbar: 'searchreplace',
     base_url: '/project/tinymce/js/tinymce',
   }, [ Plugin ]);
-
-  const browser = PlatformDetection.detect().browser;
 
   const assertFound = (editor: Editor, count: number) => TinyAssertions.assertContentPresence(editor, {
     '.mce-match-marker': count
@@ -77,9 +74,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'ttt');
     await Utils.pSelectPreference(editor, 'Find in selection');
     findAndAssertFound(editor, 2);
-    browser.isIE() ? // TODO: Look into what to do with IE as it has a single selection model which causes some different behaviour
-      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0) :
-      TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 4);
+    TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 4);
     await Utils.pSelectPreference(editor, 'Find in selection');
     TinyUiActions.closeDialog(editor);
   });

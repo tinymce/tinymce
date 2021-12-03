@@ -76,11 +76,6 @@ const fix = <T extends PartialEvent> (originalEvent: T, data?): EventUtilsEvent<
       (doc && doc.clientTop || body && body.clientTop || 0);
   }
 
-  // Add missing metaKey for IE 8
-  if (Type.isUndefined(event.metaKey)) {
-    event.metaKey = false;
-  }
-
   return event;
 };
 
@@ -464,7 +459,7 @@ class EventUtils {
   }
 
   /**
-   * Destroys the event object. Call this on IE to remove memory leaks.
+   * Destroys the event object. Call this to remove memory leaks.
    */
   public destroy() {
     this.events = {};

@@ -40,7 +40,7 @@ const markAllMatches = (editor: Editor, currentSearchState: Cell<SearchState>, p
     'data-mce-bogus': 1
   });
 
-  marker.className = 'mce-match-marker'; // IE 7 adds class="mce-match-marker" and class=mce-match-marker
+  marker.className = 'mce-match-marker';
   const node = editor.getBody();
 
   done(editor, currentSearchState, false);

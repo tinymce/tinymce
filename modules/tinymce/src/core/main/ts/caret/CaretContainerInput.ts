@@ -20,14 +20,9 @@ const findBlockCaretContainer = (editor: Editor): HTMLElement | null =>
     .map((elm) => elm.dom)
     .getOrNull();
 
-const removeIeControlRect = (editor: Editor): void => {
-  editor.selection.setRng(editor.selection.getRng());
-};
-
 const showBlockCaretContainer = (editor: Editor, blockCaretContainer: HTMLElement): void => {
   if (blockCaretContainer.hasAttribute('data-mce-caret')) {
     CaretContainer.showCaretContainerBlock(blockCaretContainer);
-    removeIeControlRect(editor);
     editor.selection.scrollIntoView(blockCaretContainer);
   }
 };

@@ -15,8 +15,8 @@ UnitTest.asynctest('RealMouseTest', (success, failure) => {
 
   const detection = PlatformDetection.detect();
 
-  // IE never passes unless watched and Safari/Edge 18 fails to hover on mousemove
-  if (detection.browser.isIE() || detection.browser.isEdge() || detection.browser.isSafari()) {
+  // Safari fails to hover on mousemove
+  if (detection.browser.isSafari()) {
     return success();
   }
 
