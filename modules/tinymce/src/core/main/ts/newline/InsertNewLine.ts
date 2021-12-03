@@ -19,13 +19,13 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
     () => {
       InsertBr.insert(editor, evt);
       if (Type.isNonNullable(evt)) {
-        fireFakeInputEvent(editor, { inputType: 'insertLineBreak', cancelable: false }, evt)();
+        fireFakeInputEvent(editor, { inputType: 'insertLineBreak', cancelable: false }, evt);
       }
     },
     () => {
       InsertBlock.insert(editor, evt);
       if (Type.isNonNullable(evt)) {
-        fireFakeInputEvent(editor, { inputType: 'insertParagraph', cancelable: false }, evt)();
+        fireFakeInputEvent(editor, { inputType: 'insertParagraph', cancelable: false }, evt);
       }
     },
     Fun.noop

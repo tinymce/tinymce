@@ -15,7 +15,10 @@ import * as MatchKeys from './MatchKeys';
 const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor) }
-  ], evt).each(fireFakeInputEvent(editor, { inputType: 'insertText', data: ' ' }, evt));
+  ], evt).each(() => {
+    evt.preventDefault();
+    fireFakeInputEvent(editor, { inputType: 'insertText', data: ' ' }, evt);
+  });
 };
 
 const setup = (editor: Editor) => {

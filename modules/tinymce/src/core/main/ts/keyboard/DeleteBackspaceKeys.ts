@@ -50,6 +50,7 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     } else {
       fireFakeInputEvent(editor, { inputType: 'deleteContentForward' }, evt);
     }
+    evt.preventDefault();
   });
 };
 
