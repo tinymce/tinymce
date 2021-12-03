@@ -24,6 +24,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     text,
     disabled,
     buttonType: Optional.some(buttonType),
+    primary: buttonType === 'primary',
     icon: Optional.none(),
     borderless: false
   }, action, providersBackstage));
@@ -34,6 +35,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
     tooltip: Optional.some(tooltip),
     disabled,
     buttonType: Optional.none(),
+    primary: false,
     borderless: false
   }, action, providersBackstage));
 

@@ -91,6 +91,7 @@ export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: Alloy
     innerHtml: translatedText
   };
 
+  // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
   const buttonType = spec.buttonType.getOr(!spec.primary && !spec.borderless ? 'secondary' : 'primary');
 
   let baseClasses;

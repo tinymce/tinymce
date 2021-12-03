@@ -5,7 +5,7 @@ export interface ButtonSpec {
   type: 'button';
   text: string;
   disabled?: boolean;
-  /** @deprecated use `buttonType: "primary" instead */
+  /** @deprecated use `buttonType: "primary"` instead */
   primary?: boolean;
   name?: string;
   icon?: string;
@@ -17,8 +17,8 @@ export interface Button {
   type: 'button';
   text: string;
   disabled: boolean;
-  /** @deprecated use `buttonType: "primary" instead */
-  primary?: boolean;
+  /** @deprecated use `buttonType: "primary"` instead */
+  primary: boolean;
   name: string;
   icon: Optional<string>;
   borderless: boolean;
