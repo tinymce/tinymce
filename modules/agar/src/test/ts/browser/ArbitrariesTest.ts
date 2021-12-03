@@ -1,16 +1,16 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import {
-  Attribute, Compare, Css, Insert, PredicateFilter, Remove, SelectorFilter, SugarBody, SugarNode, SugarText, Traverse, Truncate
+  Attribute, Compare, Css, Insert, PredicateFilter, Remove, SelectorFilter, SugarBody, SugarElement, SugarNode, SugarText, Traverse, Truncate
 } from '@ephox/sugar';
-import Jsc from '@ephox/wrap-jsverify';
+import * as fc from 'fast-check';
 
 import * as Arbitraries from 'ephox/agar/api/Arbitraries';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import * as Generators from 'ephox/agar/api/Generators';
 
 UnitTest.test('Arbitraries Test', () => {
-  const assertProperty = (label, element, assertion) => {
+  const assertProperty = (label: string, element: SugarElement<Node>, assertion: (node: SugarElement<Node>) => boolean): boolean => {
     Insert.append(SugarBody.body(), element);
 
     const self = SugarNode.isElement(element) ? [ element ] : [];
@@ -18,18 +18,26 @@ UnitTest.test('Arbitraries Test', () => {
     const failing = Arr.filter(descendants, assertion);
     Remove.remove(element);
     if (failing.length > 0) {
-      return 'These elements did not satisfy property ' + label + ': \n' +
-        Arr.map(failing, Truncate.getHtml).join('\n');
+      throw new Error('These elements did not satisfy property ' + label + ': \n' +
+        Arr.map(failing, Truncate.getHtml).join('\n'));
     }
     return true;
   };
 
-  const checkProperty = (label, arb, f) => {
-    // Increase when doing proper testing.
-    Jsc.syncProperty(label, [ arb ], f, { tests: 3 });
+  const checkProperty = <T>(label: string, arb: fc.Arbitrary<T>, f: (val: T) => boolean | void) => {
+    try {
+      // Increase when doing proper testing.
+      fc.assert(fc.property(arb, f), { numRuns: 3 });
+      // eslint-disable-next-line no-console
+      console.log('✓ ' + label);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('x ' + label);
+      throw e;
+    }
   };
 
-  checkProperty('Text nodes should have node type 3', Arbitraries.content('netext'), (textnode) => {
+  checkProperty('Text nodes should have node type 3', Arbitraries.content<Text>('netext'), (textnode) => {
     Assertions.assertEq(
       'Node type of "netext"',
       3,
@@ -38,13 +46,13 @@ UnitTest.test('Arbitraries Test', () => {
     return true;
   });
 
-  checkProperty('Zerowidth text nodes should have node type 3 and be uFEFF', Arbitraries.content('zerowidth'), (textnode) => {
+  checkProperty('Zerowidth text nodes should have node type 3 and be uFEFF', Arbitraries.content<Text>('zerowidth'), (textnode) => {
     Assertions.assertEq('Node type of "zerowidth"', 3, SugarNode.type(textnode));
     Assertions.assertEq('Text value of zerowidth', '\uFEFF', SugarText.get(textnode));
     return true;
   });
 
-  checkProperty('Zerowidths text nodes should have node type 3 and be uFEFF or u200B', Arbitraries.content('zerowidths'), (textnode) => {
+  checkProperty('Zerowidths text nodes should have node type 3 and be uFEFF or u200B', Arbitraries.content<Text>('zerowidths'), (textnode) => {
     Assertions.assertEq('Node type of "zerowidths"', 3, SugarNode.type(textnode));
     Assertions.assertEq('Zerowidths cursor value: ' + SugarText.get(textnode), true, Arr.contains([ '\uFEFF', '\u200B' ], SugarText.get(textnode)));
     return true;
@@ -61,8 +69,8 @@ UnitTest.test('Arbitraries Test', () => {
         'test-data': { weight: 1.0, useDepth: true }
       }
     }
-  }), (data) =>
-    assertProperty('style and attr api', data, (elem) => SugarNode.name(elem) === 'span' && (
+  }), (data: SugarElement<HTMLElement>) =>
+    assertProperty('style and attr api', data, (elem) => SugarNode.isTag('span')(elem) && (
       Attribute.get(elem, 'data-a') !== 'b' || Css.getRaw(elem, 'color').getOr('') !== 'red'
     )));
 
@@ -71,16 +79,15 @@ UnitTest.test('Arbitraries Test', () => {
       type: 'leaf',
       tag: 'span',
       attributes: Generators.chooseOne([
-        { weight: 1.0, property: 'data-custom', value: Jsc.constant('hi').generator },
-        { weight: 2.0, property: 'contenteditable', value: Jsc.constant('true').generator }
+        { weight: 1.0, property: 'data-custom', value: fc.constant('hi') },
+        { weight: 2.0, property: 'contenteditable', value: fc.constant('true') }
       ]),
       styles: Generators.chooseOne([
         { weight: 1.0, property: 'color', value: Generators.hexColor },
-        { weight: 0.5, property: 'visibility', value: Jsc.elements([ 'hidden', 'visible' ]).generator }
-      ]),
-      components: {}
+        { weight: 0.5, property: 'visibility', value: fc.constantFrom('hidden', 'visible') }
+      ])
     }
-  }), (leaf) => {
+  }), (leaf: SugarElement<HTMLElement>) => {
     const hasDataCustom = Attribute.get(leaf, 'data-custom') === 'hi';
     const hasContentEditable = Attribute.get(leaf, 'contenteditable') === 'true';
     const hasColor = Css.getRaw(leaf, 'color').isSome();
@@ -105,10 +112,9 @@ UnitTest.test('Arbitraries Test', () => {
       styles: Generators.enforce({
         color: 'blue',
         visibility: 'hidden'
-      }),
-      components: {}
+      })
     }
-  }), (leaf) => {
+  }), (leaf: SugarElement<HTMLElement>) => {
     Assertions.assertEq('data-custom should be "hi"', 'enforced-hi', Attribute.get(leaf, 'data-custom'));
     Assertions.assertEq('contenteditable should be "false"', 'false', Attribute.get(leaf, 'contenteditable'));
     Assertions.assertEq('should have color: blue', 'blue', Css.getRaw(leaf, 'color').getOrDie('Must have color'));
@@ -116,12 +122,12 @@ UnitTest.test('Arbitraries Test', () => {
     return true;
   });
 
-  checkProperty('Comment nodes should have node type 8', Arbitraries.content('comment'), (comment) => {
+  checkProperty('Comment nodes should have node type 8', Arbitraries.content('comment'), (comment: SugarElement<Comment>) => {
     Assertions.assertEq('Node type of "comment"', 8, SugarNode.type(comment));
     return true;
   });
 
-  checkProperty('Whitespace should be " ", "\n", or "br"', Arbitraries.content('whitespace'), (element) => {
+  checkProperty('Whitespace should be " ", "\n", or "br"', Arbitraries.content('whitespace'), (element: SugarElement<Node>) => {
     if (SugarNode.isText(element)) {
       Assertions.assertEq('Text content of "whitespace"', '', SugarText.get(element).trim());
       return true;
@@ -133,52 +139,53 @@ UnitTest.test('Arbitraries Test', () => {
     }
   });
 
-  checkProperty('Inline elements should have display: inline', Arbitraries.content('inline'), (element) =>
+  checkProperty('Inline elements should have display: inline', Arbitraries.content('inline'), (element: SugarElement<HTMLElement>) =>
     // console.log('inline.element', Html.getOuter(element));
     assertProperty('(display === inline)', element, (elem) =>
-      Css.get(elem, 'display') !== 'inline' || Arr.contains([ 'span-underline', 'span-strikethrough' ], SugarNode.name(elem))
+      SugarNode.isElement(elem) && Css.get(elem, 'display') !== 'inline' || Arr.contains([ 'span-underline', 'span-strikethrough' ], SugarNode.name(elem))
     )
   );
 
-  checkProperty('Container elements', Arbitraries.content('container'), (element) => assertProperty('if display === inline, no descendants have display block', element, (elem) => {
-    if (Css.get(elem, 'display') === 'inline') {
-      const descendants = PredicateFilter.descendants(elem, (kin) => SugarNode.isElement(kin) && Css.get(kin, 'display') !== 'inline');
-      return descendants.length > 0;
-    } else {
-      return false;
-    }
-  }));
+  checkProperty('Container elements', Arbitraries.content('container'), (element: SugarElement<HTMLElement>) =>
+    assertProperty('if display === inline, no descendants have display block', element, (elem) => {
+      if (SugarNode.isElement(elem) && Css.get(elem, 'display') === 'inline') {
+        const descendants = PredicateFilter.descendants(elem, (kin) => SugarNode.isElement(kin) && Css.get(kin, 'display') !== 'inline');
+        return descendants.length > 0;
+      } else {
+        return false;
+      }
+    })
+  );
 
-  checkProperty('Formatting elements should only contain (display === inline)',
-    Arbitraries.content('formatting'),
-    (section) => assertProperty(
+  checkProperty('Formatting elements should only contain (display === inline)', Arbitraries.content('formatting'), (section: SugarElement<HTMLElement>) =>
+    assertProperty(
       'nothing should have display block inside a formatting element',
       section,
       (elem) => !Compare.eq(section, elem) && SugarNode.isElement(elem) && Css.get(elem, 'display') !== 'inline'
     )
   );
 
-  checkProperty('Table cell elements', Arbitraries.content('tablecell'), (element) => {
+  checkProperty('Table cell elements', Arbitraries.content('tablecell'), (element: SugarElement<HTMLTableCellElement>) => {
     Assertions.assertEq('Cells should be th|td', true, [ 'td', 'th' ].indexOf(SugarNode.name(element)) > -1);
     return true;
   });
 
-  checkProperty('Table row elements', Arbitraries.content('tr'), (element) => {
+  checkProperty('Table row elements', Arbitraries.content('tr'), (element: SugarElement<HTMLTableRowElement>) => {
     Assertions.assertEq('Table rows must be <tr>', 'tr', SugarNode.name(element));
     return true;
   });
 
-  checkProperty('Table body elements', Arbitraries.content('tbody'), (element) => {
+  checkProperty('Table body elements', Arbitraries.content('tbody'), (element: SugarElement<HTMLTableSectionElement>) => {
     Assertions.assertEq('Table body must be <tbody>', 'tbody', SugarNode.name(element));
     return true;
   });
 
-  checkProperty('Table foot elements', Arbitraries.content('tfoot'), (element) => {
+  checkProperty('Table foot elements', Arbitraries.content('tfoot'), (element: SugarElement<HTMLTableSectionElement>) => {
     Assertions.assertEq('Table foot must be <tfoot>', 'tfoot', SugarNode.name(element));
     return true;
   });
 
-  checkProperty('Table head elements', Arbitraries.content('thead'), (element) => {
+  checkProperty('Table head elements', Arbitraries.content('thead'), (element: SugarElement<HTMLTableSectionElement>) => {
     Assertions.assertEq('Table head must be <thead>', 'thead', SugarNode.name(element));
     return true;
   });
@@ -192,7 +199,7 @@ UnitTest.test('Arbitraries Test', () => {
         caption: { chance: 1.0 }
       }
     }
-  }), (element) => {
+  }), (element: SugarElement<HTMLTableElement>) => {
     Assertions.assertEq('Table must be <table>', 'table', SugarNode.name(element));
     Assertions.assertPresence('Checking table generator', {
       'thead': 1,
@@ -207,13 +214,13 @@ UnitTest.test('Arbitraries Test', () => {
     return true;
   });
 
-  checkProperty('li elements', Arbitraries.content('listitem'), (element) => {
+  checkProperty('li elements', Arbitraries.content('listitem'), (element: SugarElement<HTMLLIElement>) => {
     Assertions.assertEq('List items must be <li>', 'li', SugarNode.name(element));
     // console.log('li.node', Html.getOuter(element));
     return true;
   });
 
-  checkProperty('ol and ul elements', Arbitraries.content('list'), (element) => {
+  checkProperty('ol and ul elements', Arbitraries.content('list'), (element: SugarElement<HTMLOListElement | HTMLUListElement>) => {
     Assertions.assertEq('Lists should be ol|ul', true, [ 'ol', 'ul' ].indexOf(SugarNode.name(element)) > -1);
     return true;
   });

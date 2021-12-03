@@ -39,9 +39,9 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
 
     Pipeline.async({}, [
       apis.sFocus(),
-      scenarios.sAsyncProperty('Test', Arbitraries.content('inline', {}).generator, sAssertion(editor), {
+      scenarios.sAsyncProperty('Test', Arbitraries.content('inline', {}), sAssertion(editor), {
         property: {
-          tests: 100
+          numRuns: 100
           // Rename to seed.
           // rngState: '8cce615fb3d2a47809'
         },

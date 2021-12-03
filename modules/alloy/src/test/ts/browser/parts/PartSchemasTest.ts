@@ -1,12 +1,15 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import Jsc from '@ephox/wrap-jsverify';
+import * as fc from 'fast-check';
 
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 
-interface TestSpec { defaultValue: number; overriddenValue: number }
+interface TestSpec {
+  readonly defaultValue: number;
+  readonly overriddenValue: number;
+}
 
 UnitTest.test('Atomic Test: parts.SchemasTest', () => {
   const internal = PartType.required<any, TestSpec>({
@@ -89,26 +92,26 @@ UnitTest.test('Atomic Test: parts.SchemasTest', () => {
     { }
   );
 
-  Jsc.syncProperty('Just internal', [ Jsc.string ], () => checkSuccess(
+  fc.assert(fc.property(fc.string(), () => checkSuccess(
     'just internal',
     { },
     [ internal ],
     { }
-  ));
+  )));
 
-  Jsc.syncProperty('Just external', [ Jsc.string ], (s: string) => checkSuccess(
+  fc.assert(fc.property(fc.string(), (s) => checkSuccess(
     'just external',
     {
       external: { entirety: s }
     },
     [ external ],
     { external: s }
-  ));
+  )));
 
-  Jsc.syncProperty('Just group', [ Jsc.string ], () => checkSuccess(
+  fc.assert(fc.property(fc.string(), () => checkSuccess(
     'just group',
     { },
     [ group ],
     { }
-  ));
+  )));
 });

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - The `sizzle` library is now used directly instead of using the `@ephox/wrap-sizzle` wrapper library.
+- Replaced `jsverify` with `fast-check` for the `Arbitraries` module.
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
 
 ### Removed

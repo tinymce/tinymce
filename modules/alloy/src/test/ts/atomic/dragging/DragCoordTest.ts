@@ -1,7 +1,8 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
-import Jsc from '@ephox/wrap-jsverify';
+import { assert } from 'chai';
+import * as fc from 'fast-check';
 
 import * as DragCoord from 'ephox/alloy/api/data/DragCoord';
 
@@ -16,38 +17,20 @@ UnitTest.test('DragCoordTest', () => {
     const comparing = label + '\nCoordinate Expected: (' + expected.left + ', ' + expected.top + ')' +
       '\nCoordinate Actual: (' + actual.left + ', ' + actual.top + ')';
 
-    return Jsc.eq(expected.left, actual.left) &&
-      Jsc.eq(expected.top, actual.top) ? true : comparing;
+    assert.equal(actual.left, expected.left, comparing);
+    assert.equal(actual.top, expected.top, comparing);
   };
 
-  const arbConversions = Jsc.elements([
+  const arbConversions = fc.constantFrom<TestConversion>(
     { asPoint: DragCoord.asFixed, nu: DragCoord.fixed, mode: 'fixed' },
     { asPoint: DragCoord.asAbsolute, nu: DragCoord.absolute, mode: 'absolute' },
     { asPoint: DragCoord.asOffset, nu: DragCoord.offset, mode: 'offset' }
-  ]);
+  );
 
-  const arbPosition = (name: string) =>
-    Jsc.tuple([ Jsc.integer, Jsc.integer ])
-      .smap(
-        (arr: [ number, number ]) => SugarPosition(arr[0], arr[1]),
-        (pos: SugarPosition) => [ pos.left, pos.top ],
-        (pos: SugarPosition) => name + ': { left: ' + pos.left + ', top: ' + pos.top + '}'
-      );
+  const arbPosition = fc.tuple(fc.integer(), fc.integer()).map((arr: [ number, number ]) => SugarPosition(arr[0], arr[1]));
 
-  Jsc.property(
-    'round-tripping coordinates',
-    arbConversions,
-    Jsc.array(arbConversions),
-    arbPosition('point'),
-    arbPosition('scroll'),
-    arbPosition('origin'),
-    (
-      original: TestConversion,
-      transformations: TestConversion[],
-      coord: SugarPosition,
-      scroll: SugarPosition,
-      origin: SugarPosition
-    ) => {
+  fc.assert(fc.property(arbConversions, fc.array(arbConversions), arbPosition, arbPosition, arbPosition,
+    (original, transformations, coord, scroll, origin) => {
       const o = original.nu(coord.left, coord.top);
 
       const label = [ original.mode ].concat(Arr.map(transformations, (t) => t.mode));
@@ -64,5 +47,5 @@ UnitTest.test('DragCoordTest', () => {
         output
       );
     }
-  );
+  ));
 });

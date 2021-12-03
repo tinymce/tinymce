@@ -1,24 +1,24 @@
 import { Generators, PropertySteps, Step } from '@ephox/agar';
 import { Html, SimRange, SugarElement } from '@ephox/sugar';
-import Jsc from '@ephox/wrap-jsverify';
+import * as fc from 'fast-check';
 
 import { Editor } from '../../alien/EditorTypes';
 
-type ContentGenerator = any;
-interface SelectionExclusions { containers: (container: SugarElement) => boolean }
+type ContentGenerator = fc.Arbitrary<SugarElement<HTMLElement>>;
+interface SelectionExclusions { containers: (container: SugarElement<Node>) => boolean }
 interface ArbScenarioOptions { exclusions: SelectionExclusions }
-interface AsyncPropertyOptions { scenario: ArbScenarioOptions; property: Record<string, any> }
+interface AsyncPropertyOptions { scenario: ArbScenarioOptions; property: fc.Parameters }
 
 interface Scenario {
-  input: string;
-  selection: SimRange;
+  readonly input: string;
+  readonly selection: SimRange;
 }
 
 export interface TinyScenarios {
-  genScenario: (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) => Scenario;
-  arbScenario: (genContent: ContentGenerator, options: ArbScenarioOptions) => Scenario;
+  genScenario: (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) => fc.Arbitrary<Scenario>;
+  arbScenario: (genContent: ContentGenerator, options: ArbScenarioOptions) => fc.Arbitrary<Scenario>;
 
-  sAsyncProperty: <T, X, Y>(label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) => Step<T, T>;
+  sAsyncProperty: <T>(label: string, generator: ContentGenerator, step: Step<Scenario, any>, options: AsyncPropertyOptions) => Step<T, T>;
 }
 
 export const TinyScenarios = (editor: Editor): TinyScenarios => {
@@ -26,7 +26,7 @@ export const TinyScenarios = (editor: Editor): TinyScenarios => {
   // We can't just generate a scenario because normalisation is going to cause issues
   // with getting a selection.
   const genScenario = (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) => {
-    return genContent.flatMap((structure: SugarElement) => {
+    return genContent.chain((structure) => {
       const html = Html.getOuter(structure);
       editor.setContent(html);
       return Generators.selection(SugarElement.fromDom(editor.getBody()), selectionExclusions).map((selection: SimRange) => {
@@ -43,21 +43,11 @@ export const TinyScenarios = (editor: Editor): TinyScenarios => {
     });
   };
 
-  const arbScenario = (genContent: ContentGenerator, options: ArbScenarioOptions) => {
-    return Jsc.bless({
-      generator: genScenario(genContent, options.exclusions),
-      show: (scenario: Scenario) => {
-        const root = SugarElement.fromDom(editor.getBody());
-        return JSON.stringify({
-          input: scenario.input,
-          selection: Generators.describeSelection(root, scenario.selection)
-        }, null, 2);
-      }
-    });
-  };
+  const arbScenario = (genContent: ContentGenerator, options: ArbScenarioOptions) =>
+    genScenario(genContent, options.exclusions);
 
-  const sAsyncProperty = <T, X, Y> (label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) => {
-    return PropertySteps.sAsyncProperty<T, X, Y>(
+  const sAsyncProperty = <T> (label: string, generator: ContentGenerator, step: Step<Scenario, any>, options: AsyncPropertyOptions) => {
+    return PropertySteps.sAsyncProperty<T, Scenario>(
       label,
       [
         arbScenario(generator, options.scenario)

@@ -2,9 +2,9 @@ import { Logger } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
-import Jsc from '@ephox/wrap-jsverify';
+import * as fc from 'fast-check';
 
-import { ArbTextIds, arbTextIds } from 'ephox/robin/test/Arbitraries';
+import { arbTextIds } from 'ephox/robin/test/Arbitraries';
 import * as Clustering from 'ephox/robin/words/Clustering';
 import { WordDecisionItem } from 'ephox/robin/words/WordDecision';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
@@ -231,24 +231,20 @@ UnitTest.test('ClusteringTest', () => {
     Logger.sync(
       label,
       () => {
-        Jsc.property(
-          label + ': Checking that text nodes have consistent zones',
-          arbTextIds(universe),
-          (idInfo: ArbTextIds) => {
-            const startId = idInfo.startId;
-            const textIds = idInfo.textIds;
-            if (startId === 'root') {
-              return true;
-            }
-            const start = universe.find(universe.get(), startId).getOrDie();
-            if (universe.property().isBoundary(start)) {
-              return true;
-            }
-            const actual = Clustering.byLanguage(universe, start);
-            checkProps(universe, textIds, start, actual);
+        fc.assert(fc.property(arbTextIds(universe), (idInfo) => {
+          const startId = idInfo.startId;
+          const textIds = idInfo.textIds;
+          if (startId === 'root') {
             return true;
           }
-        );
+          const start = universe.find(universe.get(), startId).getOrDie();
+          if (universe.property().isBoundary(start)) {
+            return true;
+          }
+          const actual = Clustering.byLanguage(universe, start);
+          checkProps(universe, textIds, start, actual);
+          return true;
+        }));
       }
     );
   };

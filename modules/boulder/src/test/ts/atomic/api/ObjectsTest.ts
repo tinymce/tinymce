@@ -1,32 +1,30 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj, Result } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
-import Jsc from '@ephox/wrap-jsverify';
+import * as fc from 'fast-check';
 
 import * as Objects from 'ephox/boulder/api/Objects';
 
 UnitTest.test('ObjectsTest', () => {
-  const smallSet = Jsc.nestring;
+  const smallSet = fc.string({ minLength: 1 });
 
-  const check = (label, arb, checker) => {
-    Jsc.syncProperty(label, [ arb ], checker, {});
+  const check = <T>(arb: fc.Arbitrary<T>, checker: (value: T) => boolean | void) => {
+    fc.assert(fc.property(arb, checker));
   };
 
   const testNarrow = () => {
-    const narrowGen = Jsc.bless({
-      generator: Jsc.dict(smallSet).generator.flatMap((obj) => {
-        const keys = Obj.keys(obj);
-        return keys.length === 0 ? Jsc.constant({
-          obj,
-          fields: []
-        }).generator : Jsc.array(Jsc.elements(keys)).generator.map((fields) => ({
-          obj,
-          fields
-        }));
-      })
+    const narrowGen = fc.dictionary(smallSet, smallSet).chain((obj) => {
+      const keys = Obj.keys(obj);
+      return keys.length === 0 ? fc.constant({
+        obj,
+        fields: []
+      }) : fc.array(fc.constantFrom(...keys)).map((fields) => ({
+        obj,
+        fields
+      }));
     });
 
-    check('Testing narrow', narrowGen, (input) => {
+    check(narrowGen, (input) => {
       const narrowed = Objects.narrow(input.obj, input.fields);
       Obj.each(narrowed, (_, k) => {
         if (!Arr.contains(input.fields, k)) {
@@ -42,20 +40,18 @@ UnitTest.test('ObjectsTest', () => {
   };
 
   const testExclude = () => {
-    const excludeGen = Jsc.bless({
-      generator: Jsc.dict(smallSet).generator.flatMap((obj) => {
-        const keys = Obj.keys(obj);
-        return keys.length === 0 ? Jsc.constant({
-          obj,
-          fields: []
-        }).generator : Jsc.array(Jsc.elements(keys)).generator.map((fields) => ({
-          obj,
-          fields
-        }));
-      })
+    const excludeGen = fc.dictionary(smallSet, smallSet).chain((obj) => {
+      const keys = Obj.keys(obj);
+      return keys.length === 0 ? fc.constant({
+        obj,
+        fields: []
+      }) : fc.array(fc.constantFrom(...keys)).map((fields) => ({
+        obj,
+        fields
+      }));
     });
 
-    check('Testing exclude', excludeGen, (input) => {
+    check(excludeGen, (input) => {
       const excluded = Objects.exclude(input.obj, input.fields);
       Obj.each(excluded, (_, k) => {
         if (Arr.contains(input.fields, k)) {
@@ -63,7 +59,6 @@ UnitTest.test('ObjectsTest', () => {
             input.fields.join(', ') + ']');
         }
       });
-      return true;
     });
 
     const actual = Objects.exclude({ a: 'a', b: 'b', c: 'c' }, [ 'b' ]);
@@ -162,18 +157,19 @@ UnitTest.test('ObjectsTest', () => {
     );
 
     // some property-based tests
-    const resultList = Jsc.bless({
-      generator: Jsc.dict(smallSet).generator.flatMap((obj) => Jsc.bool.generator.flatMap((flag) => flag ? Jsc.constant(Result.value(obj)).generator : (() => Jsc.array(Jsc.nestring).generator.map(Result.error))()))
-    });
+    const resultList = fc.dictionary(smallSet, smallSet).chain((obj) =>
+      fc.boolean().chain((flag): fc.Arbitrary<Result<Record<string, string>, string[]>> =>
+        flag ? fc.constant(Result.value(obj)) : fc.array(smallSet).map(Result.error)
+      )
+    );
 
-    const inputList = Jsc.bless({
-      generator: Jsc.array(resultList).generator.flatMap((results) => Jsc.dict(smallSet).generator.map((base) => ({
-        results,
-        base
-      })))
-    });
+    const inputList = fc.array(resultList).chain((results) => fc.dictionary(smallSet, smallSet).map((base) => ({
+      results,
+      base
+    })));
 
-    check('Testing consolidate', inputList, (input) => {
+    // Testing consolidate
+    check(inputList, (input) => {
       const actual = Objects.consolidate(input.results, input.base);
 
       const hasError = Arr.exists(input.results, (res) => res.isError());
@@ -186,21 +182,18 @@ UnitTest.test('ObjectsTest', () => {
       return true;
     });
 
-    Jsc.syncProperty(
-      'Testing consolidate with base',
-      [ inputList, Jsc.nestring, Jsc.json ],
-      (input, baseKey: string, baseValue) => {
-        const actual = Objects.consolidate(input.results, Objects.wrap(baseKey, baseValue));
-        const hasError = Arr.exists(input.results, (res) => res.isError());
+    // Testing consolidate with base
+    fc.assert(fc.property(inputList, smallSet, fc.json(), (input, baseKey, baseValue) => {
+      const actual = Objects.consolidate(input.results, Objects.wrap(baseKey, baseValue));
+      const hasError = Arr.exists(input.results, (res) => res.isError());
 
-        if (hasError) {
-          return Jsc.eq(true, actual.isError()) ? true : 'Error contained in list, so should be error overall';
-        } else {
-          Assert.eq('No errors in list, so should be value overall', true, actual.isValue());
-          return Jsc.eq(true, Obj.has(actual.getOrDie() as any, baseKey)) ? true : 'Missing base key: ' + baseKey;
-        }
+      if (hasError) {
+        Assert.eq('Error contained in list, so should be error overall', true, actual.isError());
+      } else {
+        Assert.eq('No errors in list, so should be value overall', true, actual.isValue());
+        Assert.eq('Missing base key: ' + baseKey, true, Obj.has(actual.getOrDie(), baseKey));
       }
-    );
+    }));
   };
 
   testNarrow();
