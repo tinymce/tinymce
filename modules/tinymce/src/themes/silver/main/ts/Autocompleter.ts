@@ -12,7 +12,6 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/PublicApi';
-import { AutocompleteContext } from 'tinymce/core/autocomplete/AutocompleteContext';
 import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteLookup';
 
 import { fireAutocompleteReload } from './api/Events';
@@ -63,7 +62,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
 
   const cancelIfNecessary = () => editor.execCommand('CloseAutocomplete');
 
-  const getCombinedItems = (context: AutocompleteContext, matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
+  const getCombinedItems = (matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
     const columns = Arr.findMap(matches, (m) => Optional.from(m.columns)).getOr(1);
 
     return Arr.bind(matches, (match) => {
@@ -92,7 +91,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     });
   };
 
-  const display = (context: AutocompleteContext, lookupData: AutocompleteLookupData[], items: ItemTypes.ItemSpec[]) => {
+  const display = (lookupData: AutocompleteLookupData[], items: ItemTypes.ItemSpec[]) => {
     AutocompleteTagReader.findIn(SugarElement.fromDom(editor.getBody())).each((element) => {
       // Display the autocompleter menu
       const columns: InlineContent.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
@@ -120,24 +119,24 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     });
   };
 
-  const updateDisplay = (context: AutocompleteContext, lookupData: AutocompleteLookupData[]) => {
-    const combinedItems = getCombinedItems(context, lookupData);
+  const updateDisplay = (lookupData: AutocompleteLookupData[]) => {
+    const combinedItems = getCombinedItems(lookupData);
 
     // Open the autocompleter if there are items to show
     if (combinedItems.length > 0) {
-      display(context, lookupData, combinedItems);
+      display(lookupData, combinedItems);
     } else {
       hideIfNecessary();
     }
   };
 
-  editor.on('AutocompleteStart', ({ context, lookupData }) => {
+  editor.on('AutocompleteStart', ({ lookupData }) => {
     activeState.set(true);
     processingAction.set(false);
-    updateDisplay(context, lookupData);
+    updateDisplay(lookupData);
   });
 
-  editor.on('AutocompleteUpdate', ({ context, lookupData }) => updateDisplay(context, lookupData));
+  editor.on('AutocompleteUpdate', ({ lookupData }) => updateDisplay(lookupData));
 
   editor.on('AutocompleteEnd', () => {
     // Hide the menu and reset
