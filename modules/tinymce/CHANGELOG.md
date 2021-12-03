@@ -64,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
+- Removed the deprecated `XHR` API #TINY-8164
 - Removed the legacy browser detection properties from `Env` #TINY-8162
 - Removed the deprecated `setIconStroke` Split Toolbar Button API #TINY-8162
 - Removed the deprecated `editors` property from `EditorManager` #TINY-8162

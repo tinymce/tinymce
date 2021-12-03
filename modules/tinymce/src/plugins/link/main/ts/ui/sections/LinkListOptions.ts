@@ -8,7 +8,6 @@
 import { Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import XHR from 'tinymce/core/api/util/XHR';
 
 import * as Options from '../../api/Options';
 import { ListOptions } from '../../core/ListOptions';
@@ -30,11 +29,12 @@ const getLinks = (editor: Editor): Promise<Optional<ListItem[]>> => {
   return new Promise<Optional<UserListItem[]>>((callback) => {
     // TODO - better handling of failure
     if (Type.isString(linkList)) {
-      XHR.send({
-        url: linkList,
-        success: (text) => callback(parseJson(text)),
-        error: (_) => callback(Optional.none())
-      });
+      window.fetch(linkList)
+        .then((res) => res.text())
+        .then(
+          (text) => callback(parseJson(text)),
+          () => callback(Optional.none())
+        );
     } else if (Type.isFunction(linkList)) {
       linkList((output) => callback(Optional.some(output)));
     } else {

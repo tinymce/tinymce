@@ -9,7 +9,6 @@ import { Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import XHR from 'tinymce/core/api/util/XHR';
 
 import * as Options from '../api/Options';
 import * as DateTimeHelper from './DateTimeHelper';
@@ -22,12 +21,9 @@ const createTemplateList = (editor: Editor, callback: (templates: ExternalTempla
     if (Type.isFunction(templateList)) {
       templateList(callback);
     } else if (Type.isString(templateList)) {
-      XHR.send({
-        url: templateList,
-        success: (text) => {
-          callback(JSON.parse(text));
-        }
-      });
+      window.fetch(templateList)
+        .then((res) => res.json())
+        .then(callback);
     } else {
       callback(templateList);
     }

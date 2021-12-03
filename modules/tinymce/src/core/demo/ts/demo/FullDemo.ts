@@ -44,10 +44,11 @@ export default () => {
       { title: 'My page 1', value: 'http://www.tinymce.com' },
       { title: 'My page 2', value: 'http://www.moxiecode.com' }
     ],
-    image_list: [
-      { title: 'My page 1', value: 'http://www.tinymce.com' },
-      { title: 'My page 2', value: 'http://www.moxiecode.com' }
-    ],
+    // image_list: [
+    //   { title: 'My page 1', value: 'http://www.tinymce.com' },
+    //   { title: 'My page 2', value: 'http://www.moxiecode.com' }
+    // ],
+    image_list: 'http://localhost:8000/data.json',
     image_class_list: [
       { title: 'None', value: '' },
       { title: 'Some class', value: 'class-name' }
@@ -76,10 +77,11 @@ export default () => {
         callback('movie.mp4', { embed: '<p>test</p>' });
       }
     },
-    templates: [
-      { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
-      { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
-    ],
+    // templates: [
+    //   { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
+    //   { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
+    // ],
+    templates: 'http://localhost:8000/templates.json',
     template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
     template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
     image_caption: true,

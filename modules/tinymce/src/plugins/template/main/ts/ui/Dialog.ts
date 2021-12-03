@@ -11,7 +11,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
-import XHR from 'tinymce/core/api/util/XHR';
 
 import * as Options from '../api/Options';
 import * as Templates from '../core/Templates';
@@ -110,15 +109,16 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
   };
 
   const getTemplateContent = (t: InternalTemplate) => new Promise<string>((resolve, reject) => {
-    t.value.url.fold(() => resolve(t.value.content.getOr('')), (url) => XHR.send({
-      url,
-      success: (html: string) => {
-        resolve(html);
-      },
-      error: (e) => {
-        reject(e);
-      }
-    }));
+    t.value.url.fold(
+      () => resolve(t.value.content.getOr('')),
+      (url) => window.fetch(url).then((res) => {
+        if (res.ok && res.status === 200) {
+          return resolve(res.text());
+        } else {
+          return reject();
+        }
+      }).catch(reject)
+    );
   });
 
   const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) =>
