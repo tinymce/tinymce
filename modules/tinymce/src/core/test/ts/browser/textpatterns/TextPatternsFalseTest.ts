@@ -5,6 +5,7 @@ import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
+
 import * as Utils from '../../module/test/TextPatternsUtils';
 
 describe('browser.tinymce.core.textpattern.TextPatternsFalseTest', () => {

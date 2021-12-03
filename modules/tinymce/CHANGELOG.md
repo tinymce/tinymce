@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
+- Moved the `textpattern` plugin to TinyMCE core #TINY-8312
+- Renamed the `textpattern_patterns` setting to `text_patterns` #TINY-8312
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -50,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `tabfocus` plugin #TINY-8315
+- Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 
 ## 5.10.2 - 2021-11-17
 
