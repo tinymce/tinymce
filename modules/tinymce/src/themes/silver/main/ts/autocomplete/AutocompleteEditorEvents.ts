@@ -15,7 +15,6 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as AutocompleteTag from './AutocompleteTag';
 
 export interface AutocompleterUiApi {
-  onKeypress: { cancel: () => void; throttle: (evt: Event) => void };
   getView: () => Optional<AlloyComponent>;
   isMenuOpen: () => boolean;
   isActive: () => boolean;
@@ -24,22 +23,12 @@ export interface AutocompleterUiApi {
 }
 
 const setup = (api: AutocompleterUiApi, editor: Editor) => {
-
-  editor.on('keypress compositionend', api.onKeypress.throttle);
-
-  editor.on('remove', api.onKeypress.cancel);
-
   const redirectKeyToItem = (item: AlloyComponent, e: EditorEvent<KeyboardEvent>) => {
     AlloyTriggers.emitWith(item, NativeEvents.keydown(), { raw: e });
   };
 
   editor.on('keydown', (e) => {
     const getItem = (): Optional<AlloyComponent> => api.getView().bind(Highlighting.getHighlighted);
-
-    // Pressing <backspace> updates the autocompleter
-    if (e.which === 8) {
-      api.onKeypress.throttle(e);
-    }
 
     if (api.isActive()) {
       // Pressing <esc> closes the autocompleter
