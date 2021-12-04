@@ -132,7 +132,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
                 const root = data.inline.element;
                 const path = data.path;
                 const range = Cursors.calculate(root, path);
-                range.start.dom.scrollIntoView();
+                (range.start as SugarElement<Element>).dom.scrollIntoView();
                 return Result.value(data);
               }),
 
@@ -168,7 +168,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
                   finishPath: [ 7 ],
                   foffset: 1
                 }));
-                Scroll.intoView(range.start, true);
+                Scroll.intoView(range.start as SugarElement<Element>, true);
                 return Result.value(data);
               }),
 

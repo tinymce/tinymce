@@ -26,20 +26,20 @@ const getMenuRoot = (editor: Editor) => {
 
 const clickOnToolbar = <T extends Element>(editor: Editor, selector: string): SugarElement<T> => {
   const container = getToolbarRoot(editor);
-  const elem = UiFinder.findIn(container, selector).getOrDie();
+  const elem = UiFinder.findIn<T>(container, selector).getOrDie();
   Mouse.click(elem);
   return elem;
 };
 
 const clickOnMenu = <T extends Element>(editor: Editor, selector: string): SugarElement<T> => {
   const container = getMenuRoot(editor);
-  const elem = UiFinder.findIn(container, selector).getOrDie();
+  const elem = UiFinder.findIn<T>(container, selector).getOrDie();
   Mouse.click(elem);
   return elem;
 };
 
 const clickOnUi = <T extends Element>(editor: Editor, selector: string): SugarElement<T> => {
-  const elem = UiFinder.findIn(getUiRoot(editor), selector).getOrDie();
+  const elem = UiFinder.findIn<T>(getUiRoot(editor), selector).getOrDie();
   Mouse.click(elem);
   return elem;
 };

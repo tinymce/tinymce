@@ -139,7 +139,7 @@ describe('browser.tinymce.plugins.table.InsertRowTableResizeTest', () => {
   const insertTable = (editor: Editor, table: string) => {
     editor.setContent(table);
     const bodyElem = TinyDom.fromDom(editor.getBody());
-    const tableElem = UiFinder.findIn(bodyElem, 'table').getOr(bodyElem);
+    const tableElem = UiFinder.findIn<HTMLTableElement>(bodyElem, 'table').getOrDie();
     SelectorFind.descendant(tableElem, 'td,th').each((cell) => {
       editor.selection.select(cell.dom, true);
       editor.selection.collapse(true);

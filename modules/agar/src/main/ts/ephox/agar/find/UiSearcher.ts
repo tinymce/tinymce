@@ -6,29 +6,29 @@ import * as SizzleFind from '../alien/SizzleFind';
 
 interface TargetAdt {
   fold: <T> (
-    self: (element: SugarElement<any>, selector: string) => T,
-    children: (element: SugarElement<any>, selector: string) => T,
-    descendants: (element: SugarElement<any>, selector: string) => T
+    self: (element: SugarElement<Node>, selector: string) => T,
+    children: (element: SugarElement<Node>, selector: string) => T,
+    descendants: (element: SugarElement<Node>, selector: string) => T
   ) => T;
   match: <T>(branches: {
-    self: (element: SugarElement<any>, selector: string) => T;
-    children: (element: SugarElement<any>, selector: string) => T;
-    descendants: (element: SugarElement<any>, selector: string) => T;
+    self: (element: SugarElement<Node>, selector: string) => T;
+    children: (element: SugarElement<Node>, selector: string) => T;
+    descendants: (element: SugarElement<Node>, selector: string) => T;
   }) => T;
   log: (label: string) => void;
 }
 
 const targets: {
-  self: (element: SugarElement<any>, selector: string) => TargetAdt;
-  children: (element: SugarElement<any>, selector: string) => TargetAdt;
-  descendants: (element: SugarElement<any>, selector: string) => TargetAdt;
+  self: (element: SugarElement<Node>, selector: string) => TargetAdt;
+  children: (element: SugarElement<Node>, selector: string) => TargetAdt;
+  descendants: (element: SugarElement<Node>, selector: string) => TargetAdt;
 } = Adt.generate([
   { self: [ 'element', 'selector' ] },
   { children: [ 'element', 'selector' ] },
   { descendants: [ 'element', 'selector' ] }
 ]);
 
-const derive = (element: SugarElement<any>, selector: string) => {
+const derive = (element: SugarElement<Node>, selector: string) => {
   // Not sure if error is what I want here.
   if (selector === undefined) {
     throw new Error('No selector passed through');
@@ -41,19 +41,19 @@ const derive = (element: SugarElement<any>, selector: string) => {
   }
 };
 
-const matchesSelf = (element: SugarElement<any>, selector: string): Optional<SugarElement<any>> =>
-  SizzleFind.matches(element, selector) ? Optional.some(element) : Optional.none();
+const matchesSelf = <T extends Element>(element: SugarElement<Node>, selector: string): Optional<SugarElement<T>> =>
+  SizzleFind.matches<T>(element, selector) ? Optional.some(element) : Optional.none();
 
-const select = (element: SugarElement<any>, selector: string): Optional<SugarElement<any>> =>
-  derive(element, selector).fold(
+const select = <T extends Element>(element: SugarElement<Node>, selector: string): Optional<SugarElement<T>> =>
+  derive(element, selector).fold<Optional<SugarElement<T>>>(
     matchesSelf,
     SizzleFind.child,
     SizzleFind.descendant
   );
 
-const selectAll = (element: SugarElement<any>, selector: string): Array<SugarElement<any>> =>
-  derive(element, selector).fold(
-    (element, selector) => matchesSelf(element, selector).toArray(),
+const selectAll = <T extends Element>(element: SugarElement<Node>, selector: string): Array<SugarElement<T>> =>
+  derive(element, selector).fold<Array<SugarElement<T>>>(
+    (element, selector) => matchesSelf<T>(element, selector).toArray(),
     SizzleFind.children,
     SizzleFind.descendants
   );
@@ -64,13 +64,13 @@ const toResult = <T>(message: TestLabel, option: Optional<T>): Result<T, TestLab
     Result.value
   );
 
-const findIn = (container: SugarElement<any>, selector: string): Result<SugarElement<any>, TestLabel> =>
+const findIn = <T extends Element>(container: SugarElement<Node>, selector: string): Result<SugarElement<T>, TestLabel> =>
   toResult(
     () => 'Could not find selector: ' + selector + ' in ' + Truncate.getHtml(container),
     select(container, selector)
   );
 
-const findAllIn = (container: SugarElement<any>, selector: string): Array<SugarElement<any>> =>
+const findAllIn = <T extends Element>(container: SugarElement<Node>, selector: string): Array<SugarElement<T>> =>
   selectAll(container, selector);
 
 export {
