@@ -147,11 +147,11 @@ const create = (currentRect: GeomRect, viewPortRect: GeomRect, clampRect: GeomRe
 
     repaint(currentRect);
 
-    const handleFocus = (e: EventArgs<FocusEvent>) => {
+    const handleFocus = (e: EventArgs<FocusEvent, Element>) => {
       Attribute.set(e.target, 'aria-grabbed', e.raw.type === 'focus' ? 'true' : 'false');
     };
 
-    const handleKeydown = (e: EventArgs<KeyboardEvent>) => {
+    const handleKeydown = (e: EventArgs<KeyboardEvent, Element>) => {
       let activeHandle: Handle;
 
       Arr.each(handles, (handle) => {

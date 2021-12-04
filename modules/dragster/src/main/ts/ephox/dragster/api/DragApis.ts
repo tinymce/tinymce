@@ -7,11 +7,11 @@ export interface DragMutation {
   mutate: (x: number, y: number) => void;
 }
 
-export interface DragMode {
+export interface DragMode<T> {
   compare: (old: SugarPosition, nu: SugarPosition) => SugarPosition;
-  extract: (event: EventArgs) => Optional<SugarPosition>;
+  extract: (event: EventArgs<T>) => Optional<SugarPosition>;
   mutate: (mutation: DragMutation, info: SugarPosition) => void;
-  sink: (dragApi: DragApi, settings: Partial<BlockerOptions>) => DragSink;
+  sink: (dragApi: DragApi<T>, settings: Partial<BlockerOptions>) => DragSink;
 }
 
 export interface DragSink {
@@ -21,14 +21,14 @@ export interface DragSink {
   destroy: () => void;
 }
 
-export interface DragApi {
-  forceDrop: (evt?: EventArgs) => void;
-  drop: (evt?: EventArgs) => void;
-  move: (evt: EventArgs) => void;
-  delayDrop: (evt?: EventArgs) => void;
+export interface DragApi<T> {
+  forceDrop: (evt?: EventArgs<T>) => void;
+  drop: (evt?: EventArgs<T>) => void;
+  move: (evt: EventArgs<T>) => void;
+  delayDrop: (evt?: EventArgs<T>) => void;
 }
 
-export const DragMode: (value: DragMode) => DragMode = Contracts.exactly([
+export const DragMode: <T>(value: DragMode<T>) => DragMode<T> = Contracts.exactly([
   'compare',
   'extract',
   'mutate',
@@ -42,7 +42,7 @@ export const DragSink: (value: DragSink) => DragSink = Contracts.exactly([
   'destroy'
 ]);
 
-export const DragApi: (value: DragApi) => DragApi = Contracts.exactly([
+export const DragApi: <T>(value: DragApi<T>) => DragApi<T> = Contracts.exactly([
   'forceDrop',
   'drop',
   'move',

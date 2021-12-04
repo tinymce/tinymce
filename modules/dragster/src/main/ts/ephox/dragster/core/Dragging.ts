@@ -26,7 +26,7 @@ export interface Dragging {
   readonly events: DragActionEvents['registry'];
 }
 
-const setup = (mutation: DragMutation, mode: DragMode, settings: Partial<BlockerOptions>): Dragging => {
+const setup = <T>(mutation: DragMutation, mode: DragMode<T>, settings: Partial<BlockerOptions>): Dragging => {
   let active = false;
 
   const events: DragActionEvents = Events.create({
@@ -52,7 +52,7 @@ const setup = (mutation: DragMutation, mode: DragMode, settings: Partial<Blocker
     events.trigger.start();
   };
 
-  const mousemove = (event: EventArgs) => {
+  const mousemove = (event: EventArgs<T>) => {
     throttledDrop.cancel();
     movement.onEvent(event, mode);
   };

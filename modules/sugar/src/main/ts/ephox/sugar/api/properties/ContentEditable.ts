@@ -4,7 +4,7 @@ import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
 import * as SelectorFind from '../search/SelectorFind';
 
-const closest = (target: SugarElement<HTMLElement>): Optional<SugarElement<HTMLElement>> =>
+const closest = (target: SugarElement<Node>): Optional<SugarElement<HTMLElement>> =>
   SelectorFind.closest(target, '[contenteditable]');
 
 const isEditable = (element: SugarElement<HTMLElement>, assumeEditable: boolean = false): boolean => {

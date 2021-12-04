@@ -6,7 +6,7 @@ import { DragApi, DragMode, DragSink } from 'ephox/dragster/api/DragApis';
 import * as Dragging from 'ephox/dragster/core/Dragging';
 
 UnitTest.test('DraggerTest', () => {
-  let optApi: Optional<DragApi> = Optional.none();
+  let optApi: Optional<DragApi<any>> = Optional.none();
 
   const argumentToStart: any = 'start';
   const argumentToMutate: any = 'mutate';
