@@ -160,7 +160,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerRedialTest', () => 
     Mouse.clickOn(SugarBody.body(), 'button:contains("Destination: DialogB")');
 
     Mouse.clickOn(SugarBody.body(), 'button:contains("Destination: DialogC")');
-    const input = UiFinder.findIn(SugarBody.body(), 'input').getOrDie();
+    const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), 'input').getOrDie();
     assert.equal(Value.get(input), 'C.Alpha', 'Checking input value');
 
     dialogApi.disable('tab.switch.two');

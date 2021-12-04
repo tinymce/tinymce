@@ -201,7 +201,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
       editorContainer
     ));
 
-    const button = UiFinder.findIn(editorContainer, 'button[aria-label="Bold"]').getOrDie();
+    const button = UiFinder.findIn<HTMLButtonElement>(editorContainer, 'button[aria-label="Bold"]').getOrDie();
     Mouse.trueClick(button);
     await Waiter.pTryUntil('', () => Assertions.assertStructure(
       'Check p element path',

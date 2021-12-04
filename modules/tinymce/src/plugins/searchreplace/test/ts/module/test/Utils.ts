@@ -11,22 +11,22 @@ const fakeEvent = (elm: SugarElement<HTMLElement>, name: string) => {
   elm.dom.dispatchEvent(evt);
 };
 
-const pFindInDialog = async (editor: Editor, selector: string) => {
+const pFindInDialog = async <T extends HTMLElement>(editor: Editor, selector: string) => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
-  return UiFinder.findIn(dialog, selector).getOrDie();
+  return UiFinder.findIn<T>(dialog, selector).getOrDie();
 };
 
 const pAssertFieldValue = async (editor: Editor, selector: string, value: string) => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
   await Waiter.pTryUntilPredicate(`Wait for new ${selector} value`, () => {
-    const result = UiFinder.findIn(dialog, selector);
+    const result = UiFinder.findIn<HTMLInputElement>(dialog, selector);
     const actualValue = UiControls.getValue(result.getOrDie());
     return actualValue === value;
   });
 };
 
 const pSetFieldValue = async (editor: Editor, selector: string, value: string) => {
-  const elm = await pFindInDialog(editor, selector);
+  const elm = await pFindInDialog<HTMLInputElement>(editor, selector);
   UiControls.setValue(elm, value);
   fakeEvent(elm, 'input');
 };

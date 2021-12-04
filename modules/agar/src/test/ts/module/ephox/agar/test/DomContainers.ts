@@ -41,7 +41,7 @@ const mSetupShadowRoot = Step.stateful((state, next, _die) => {
 });
 
 interface TeardownState {
-  container: SugarElement<any>;
+  container: SugarElement<HTMLElement>;
 }
 
 const mTeardown = Step.stateful<TeardownState, TeardownState>((state, next, _die) => {

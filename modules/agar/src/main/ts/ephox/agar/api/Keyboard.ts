@@ -12,7 +12,7 @@ export type KeyModifiers = MixedKeyModifiers;
   modifiers - { shift: BOOL, alt: BOOL }
   dispatcher - dispatch event from some element
 */
-const fakeKeys = (types: string[]) => (value: number, modifiers: KeyModifiers = {}, dispatcher: SugarElement<any>) => {
+const fakeKeys = (types: string[]) => (value: number, modifiers: KeyModifiers = {}, dispatcher: SugarElement<Node>) => {
   const doc = Traverse.owner(dispatcher);
   Arr.each(types, (type) => {
     keyevent(type, doc, value, modifiers, dispatcher);

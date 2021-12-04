@@ -17,14 +17,14 @@ const getFocused = <T extends HTMLElement>(doc: SugarElement<Document | ShadowRo
   );
 };
 
-const getActiveValue = (element: SugarElement<Node>): string => {
+const getActiveValue = (element: SugarElement<Node>): string | undefined => {
   const doc = SugarShadowDom.getRootNode(element);
   const focused = getFocused(doc).getOrDie();
   return UiControls.getValue(focused as SugarElement<any>);
 };
 
-const setFocus = <T extends Element>(container: SugarElement<Node>, selector: string): SugarElement<T> => {
-  const elem = UiFinder.findIn(container, selector).getOrDie();
+const setFocus = <T extends HTMLElement>(container: SugarElement<Node>, selector: string): SugarElement<T> => {
+  const elem = UiFinder.findIn<T>(container, selector).getOrDie();
   Focus.focus(elem);
   return elem;
 };
@@ -92,7 +92,7 @@ const sTryOnSelector = <T>(label: string, doc: SugarElement<Document | ShadowRoo
 const pTryOnSelector = (label: string, doc: SugarElement<Document | ShadowRoot>, selector: string): Promise<SugarElement<HTMLElement>> =>
   Waiter.pTryUntil(label + '. Focus did not match: ' + selector, () => isOnSelector(label, doc, selector));
 
-const cSetFocus = <T extends Node, U extends Element>(label: string, selector: string): Chain<SugarElement<T>, SugarElement<U>> =>
+const cSetFocus = <T extends Node, U extends HTMLElement>(label: string, selector: string): Chain<SugarElement<T>, SugarElement<U>> =>
   // Input: container
   Chain.control(
     Chain.mapper((container) => setFocus<U>(container, selector)),

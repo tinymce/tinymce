@@ -29,7 +29,7 @@ body {
 
   it('TINY-6783:  Sink width matches body width when in display grid', () => {
     const bodyWidth = Width.get(SugarBody.body());
-    const sink = UiFinder.findIn(SugarBody.body(), '.tox-silver-sink').getOrDie();
+    const sink = UiFinder.findIn<HTMLDivElement>(SugarBody.body(), '.tox-silver-sink').getOrDie();
     const sinkWidth = Width.get(sink);
     assert.equal(sinkWidth, bodyWidth, `Sink should be ${bodyWidth}px wide`);
   });

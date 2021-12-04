@@ -102,7 +102,7 @@ describe('headless.tinymce.themes.silver.window.TabbedDialogTest', () => {
     const dialog = UiFinder.findIn(SugarBody.body(), '[role="dialog"]').getOrDie();
     UiFinder.findIn(dialog, '[role="tab"]:contains("Basic")').getOrDie();
     UiFinder.findIn(dialog, '[role="tab"]:contains("Advanced")').getOrDie();
-    const tabview = UiFinder.findIn(dialog, '[role="tabpanel"]').getOrDie();
+    const tabview = UiFinder.findIn<HTMLElement>(dialog, '[role="tabpanel"]').getOrDie();
 
     Mouse.clickOn(dialog, 'button:contains("-> Basic")');
     assertFormContents('Clicking Basic button', tabview, (s, str, _arr) => s.element('input', {

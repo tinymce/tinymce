@@ -54,7 +54,7 @@ const gotoAdvancedTab = (): void => {
 };
 
 const setFieldValue = (selector: string, value: string | boolean): SugarElement<HTMLElement> => {
-  const element = UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+  const element = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), selector).getOrDie();
   Focus.focus(element);
   if (element.dom.type === 'checkbox' && Type.isBoolean(value)) {
     Checked.set(element, value);
@@ -111,13 +111,13 @@ const assertCleanHtml = (label: string, editor: Editor, expected: string): void 
   Assertions.assertHtml(label, expected, cleanHtml(editor.getContent()));
 
 const assertInputValue = (selector: string, expected: string): void => {
-  const element = UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+  const element = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), selector).getOrDie();
   const value = Value.get(element);
   assert.equal(value, expected, `input value should be ${expected}`);
 };
 
 const assertInputCheckbox = (selector: string, expectedState: boolean): void => {
-  const element = UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+  const element = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), selector).getOrDie();
   const value = Checked.get(element);
   assert.equal(value, expectedState, `input value should be ${expectedState}`);
 };

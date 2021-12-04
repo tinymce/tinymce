@@ -6,56 +6,58 @@ import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
 const touchStart = Touches.touchstart;
-const touchStartAt = (element: SugarElement<any>, dx: number, dy: number): void => Touches.touchstartAt(dx, dy)(element);
+const touchStartAt = (element: SugarElement<Node>, dx: number, dy: number): void => Touches.touchstartAt(dx, dy)(element);
 const touchEnd = Touches.touchend;
-const touchEndAt = (element: SugarElement<any>, dx: number, dy: number): void => Touches.touchendAt(dx, dy)(element);
+const touchEndAt = (element: SugarElement<Node>, dx: number, dy: number): void => Touches.touchendAt(dx, dy)(element);
 const touchMove = Touches.touchmove;
-const touchMoveTo = (element: SugarElement<any>, dx: number, dy: number): void => Touches.touchmoveTo(dx, dy)(element);
+const touchMoveTo = (element: SugarElement<Node>, dx: number, dy: number): void => Touches.touchmoveTo(dx, dy)(element);
 
-const cTrigger = (selector: string, action: (ele: SugarElement<any>) => void) => Chain.async<SugarElement, SugarElement>((container, next, die) => {
-  UiFinder.findIn(container, selector).fold(
-    () => die('Could not find element: ' + selector),
-    (ele) => {
-      action(ele);
-      next(container);
-    }
-  );
-});
+const cTrigger = <T extends Node, U extends Element>(selector: string, action: (ele: SugarElement<U>) => void) =>
+  Chain.async<SugarElement<T>, SugarElement<T>>((container, next, die) => {
+    UiFinder.findIn<U>(container, selector).fold(
+      () => die('Could not find element: ' + selector),
+      (ele) => {
+        action(ele);
+        next(container);
+      }
+    );
+  });
 
-const sTriggerWith = <T>(container: SugarElement<any>, selector: string, action: (ele: SugarElement<any>) => void) => Chain.asStep<T, SugarElement>(container, [ cTrigger(selector, action) ]);
+const sTriggerWith = <T, U extends Element>(container: SugarElement<Node>, selector: string, action: (ele: SugarElement<U>) => void) =>
+  Chain.asStep<T, SugarElement<Node>>(container, [ cTrigger<Node, U>(selector, action) ]);
 
-const trueTap = (elem: SugarElement<any>): void => {
+const trueTap = (elem: SugarElement<HTMLElement>): void => {
   // The closest event queue to a true tap event
   Focus.focus(elem);
   Touches.touchstart(elem);
   Touches.touchend(elem);
 };
 
-const tap = (elem: SugarElement<any>): void => {
+const tap = (elem: SugarElement<Node>): void => {
   Touches.touchstart(elem);
   Touches.touchend(elem);
 };
 
-const sTap = <T>(element: SugarElement<any>): Step<T, T> =>
+const sTap = <T>(element: SugarElement<Node>): Step<T, T> =>
   Step.sync<T>(() => tap(element));
 
-const sTrueTapOn = <T>(container: SugarElement<any>, selector: string): Step<T, T> =>
-  sTriggerWith<T>(container, selector, trueTap);
+const sTrueTapOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
+  sTriggerWith<T, HTMLElement>(container, selector, trueTap);
 
-const sTapOn = <T>(container: SugarElement<any>, selector: string): Step<T, T> =>
-  sTriggerWith<T>(container, selector, tap);
+const sTapOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
+  sTriggerWith<T, Element>(container, selector, tap);
 
-const cTapOn = (selector: string): Chain<SugarElement, SugarElement> =>
+const cTapOn = <T extends Node>(selector: string): Chain<SugarElement<T>, SugarElement<T>> =>
   cTrigger(selector, tap);
 
-const cTouchStartAt = (dx: number, dy: number): Chain<SugarElement, SugarElement> =>
-  Chain.op(Touches.touchstartAt(dx, dy));
+const cTouchStartAt = <T extends Node>(dx: number, dy: number): Chain<SugarElement<T>, SugarElement<T>> =>
+  Chain.op<SugarElement<T>>(Touches.touchstartAt(dx, dy));
 
-const cTouchEndAt = (dx: number, dy: number): Chain<SugarElement, SugarElement> =>
-  Chain.op(Touches.touchendAt(dx, dy));
+const cTouchEndAt = <T extends Node>(dx: number, dy: number): Chain<SugarElement<T>, SugarElement<T>> =>
+  Chain.op<SugarElement<T>>(Touches.touchendAt(dx, dy));
 
-const cTouchMoveTo = (dx: number, dy: number): Chain<SugarElement, SugarElement> =>
-  Chain.op(Touches.touchmoveTo(dx, dy));
+const cTouchMoveTo = <T extends Node>(dx: number, dy: number): Chain<SugarElement<T>, SugarElement<T>> =>
+  Chain.op<SugarElement<T>>(Touches.touchmoveTo(dx, dy));
 
 const point = Touches.point;
 
