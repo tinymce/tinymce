@@ -19,18 +19,19 @@ const isLeftButtonPressed = (raw: MouseEvent) => {
 };
 
 // Not 100% sure whether this works, so use with caution
-const isRealClick = (raw: any): boolean => {
+const isRealClick = (raw: MouseEvent): boolean => {
   // standards, only gecko/webkit as of Sept 2015
   // https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
   // fallback to yes because there's no other way to really know
   const isTrusted = raw.isTrusted !== undefined && raw.isTrusted !== true ? false : true;
   // Firefox non-standard property
   // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent#mozInputSource
-  return (raw.mozInputSource === 6 || raw.mozInputSource === 0) ? false : isTrusted;
+  const firefoxRaw = raw as any;
+  return (firefoxRaw.mozInputSource === 6 || firefoxRaw.mozInputSource === 0) ? false : isTrusted;
 };
 
 const filtered = (event: string, filter: EventFilter<MouseEvent>) => ({
-  bind: (element: SugarElement, f: EventHandler<MouseEvent>) => {
+  bind: (element: SugarElement<EventTarget>, f: EventHandler<MouseEvent>) => {
     return FilteredEvent.bind(element, event, filter, f);
   }
 });

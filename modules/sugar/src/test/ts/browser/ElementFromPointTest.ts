@@ -25,7 +25,7 @@ UnitTest.test('ElementFromPointTest', () => {
     });
   };
 
-  const getAt = (elm: SugarElement, placeX: number, placeY: number, testX: number, testY: number) => {
+  const getAt = (elm: SugarElement<Node>, placeX: number, placeY: number, testX: number, testY: number) => {
     placeElm(elm, placeX, placeY, 100, 50);
     return SugarElement.fromPoint(SugarElement.fromDom(document), testX, testY);
   };
