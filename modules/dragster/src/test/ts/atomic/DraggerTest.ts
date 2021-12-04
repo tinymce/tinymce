@@ -23,7 +23,7 @@ UnitTest.test('DraggerTest', () => {
     sink: (dragApi, _settings) => {
       optApi = Optional.some(dragApi);
       return DragSink({
-        element: () => 'element' as unknown as SugarElement, // fake element
+        element: () => 'element' as unknown as SugarElement<HTMLElement>, // fake element
         start: (v) => {
           assert.eq(argumentToStart, v);
         },
