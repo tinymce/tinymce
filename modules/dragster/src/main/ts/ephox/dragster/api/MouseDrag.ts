@@ -34,7 +34,7 @@ const sink = (dragApi: DragApi<MouseEvent>, settings: Partial<BlockerOptions>) =
     mdown.unbind();
   };
 
-  const start = (parent: SugarElement) => {
+  const start = (parent: SugarElement<Node>) => {
     Insert.append(parent, blocker.element());
   };
 
