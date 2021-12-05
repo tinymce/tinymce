@@ -10,7 +10,7 @@ let plugins = [
   'directionality', 'emoticons', 'help', 'fullscreen', 'hr', 'image', 'importcss',
   'insertdatetime', 'link', 'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste',
   'preview', 'save', 'searchreplace', 'table', 'template', 'textpattern',
-  'toc', 'visualblocks', 'visualchars', 'wordcount', 'quickbars'
+  'visualblocks', 'visualchars', 'wordcount', 'quickbars'
 ];
 
 let themes = [

@@ -88,7 +88,7 @@ export default () => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'autosave advlist autolink link image lists charmap preview hr anchor pagebreak toc',
+      'autosave advlist autolink link image lists charmap preview hr anchor pagebreak',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
       'save table directionality emoticons template paste importcss textpattern',
       'codesample help noneditable'
