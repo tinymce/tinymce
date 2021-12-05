@@ -6,8 +6,8 @@ import { WindowBridge } from '../api/WindowBridge';
 
 type NoneHandler<T> = (message: string) => T;
 type SuccessHandler<T> = () => T;
-type FailedUpHandler<T> = (cell: SugarElement) => T;
-type FailedDownHandler<T> = (cell: SugarElement) => T;
+type FailedUpHandler<T> = (cell: SugarElement<HTMLTableCellElement>) => T;
+type FailedDownHandler<T> = (cell: SugarElement<HTMLTableCellElement>) => T;
 
 export interface BeforeAfter {
   fold: <T> (
@@ -25,7 +25,7 @@ export interface BeforeAfter {
   log: (label: string) => void;
 }
 
-export type BeforeAfterFailureConstructor = (cell: SugarElement) => BeforeAfter;
+export type BeforeAfterFailureConstructor = (cell: SugarElement<HTMLTableCellElement>) => BeforeAfter;
 
 const adt: {
   none: (message: string) => BeforeAfter;
@@ -40,21 +40,28 @@ const adt: {
 ]);
 
 // Let's get some bounding rects, and see if they overlap (x-wise)
-const isOverlapping = (bridge: WindowBridge, before: SugarElement, after: SugarElement): boolean => {
+const isOverlapping = (bridge: WindowBridge, before: SugarElement<Element>, after: SugarElement<Element>): boolean => {
   const beforeBounds = bridge.getRect(before);
   const afterBounds = bridge.getRect(after);
   return afterBounds.right > beforeBounds.left && afterBounds.left < beforeBounds.right;
 };
 
-const isRow = (elem: SugarElement): Optional<SugarElement<HTMLTableRowElement>> => {
+const isRow = (elem: SugarElement<Node>): Optional<SugarElement<HTMLTableRowElement>> => {
   return SelectorFind.closest(elem, 'tr');
 };
 
-const verify = (bridge: WindowBridge, before: SugarElement, beforeOffset: number, after: SugarElement, afterOffset: number,
-                failure: BeforeAfterFailureConstructor, isRoot: (e: SugarElement) => boolean): BeforeAfter => {
+const verify = (
+  bridge: WindowBridge,
+  before: SugarElement<Node>,
+  beforeOffset: number,
+  after: SugarElement<Node>,
+  afterOffset: number,
+  failure: BeforeAfterFailureConstructor,
+  isRoot: (e: SugarElement<Node>) => boolean
+): BeforeAfter => {
   // Identify the cells that the before and after are in.
-  return SelectorFind.closest(after, 'td,th', isRoot).bind((afterCell) => {
-    return SelectorFind.closest(before, 'td,th', isRoot).map((beforeCell) => {
+  return SelectorFind.closest<HTMLTableCellElement>(after, 'td,th', isRoot).bind((afterCell) => {
+    return SelectorFind.closest<HTMLTableCellElement>(before, 'td,th', isRoot).map((beforeCell) => {
       // If they are not in the same cell
       if (!Compare.eq(afterCell, beforeCell)) {
         return DomParent.sharedOne(isRow, [ afterCell, beforeCell ]).fold(() => {
