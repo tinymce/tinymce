@@ -11,8 +11,8 @@ interface Edges {
   readonly table: SugarElement<HTMLTableElement>;
 }
 
-const lookupTable = (container: SugarElement) => {
-  return SelectorFind.ancestor(container, 'table');
+const lookupTable = (container: SugarElement<Node>) => {
+  return SelectorFind.ancestor<HTMLTableElement>(container, 'table');
 };
 
 const identify = (start: SugarElement, finish: SugarElement, isRoot?: (element: SugarElement) => boolean): Optional<Identified> => {
@@ -56,7 +56,7 @@ const identify = (start: SugarElement, finish: SugarElement, isRoot?: (element: 
           });
         } else { // Selecting from a nested table to a different nested table.
           return DomParent.ancestors(start, finish).shared.bind((lca) => {
-            return SelectorFind.closest(lca, 'table', isRoot).bind((lcaTable) => {
+            return SelectorFind.closest<HTMLTableElement>(lca, 'table', isRoot).bind((lcaTable) => {
               const finishAncestorCells = SelectorFilter.ancestors(finish, 'td,th', getIsRoot(lcaTable));
               const finishCell = finishAncestorCells.length > 0 ? finishAncestorCells[finishAncestorCells.length - 1] : finish;
               const startAncestorCells = SelectorFilter.ancestors(start, 'td,th', getIsRoot(lcaTable));
@@ -79,9 +79,9 @@ const retrieve = <T extends Element> (container: SugarElement<Node>, selector: s
   return sels.length > 0 ? Optional.some(sels) : Optional.none<SugarElement<T>[]>();
 };
 
-const getLast = (boxes: SugarElement<Element>[], lastSelectedSelector: string): Optional<SugarElement<Element>> => {
+const getLast = (boxes: SugarElement<HTMLTableCellElement>[], lastSelectedSelector: string): Optional<SugarElement<HTMLTableCellElement>> => {
   return Arr.find(boxes, (box) => {
-    return Selectors.is(box, lastSelectedSelector);
+    return Selectors.is<HTMLTableCellElement>(box, lastSelectedSelector);
   });
 };
 
@@ -115,7 +115,7 @@ const expandTo = (finish: SugarElement, firstSelectedSelector: string): Optional
   });
 };
 
-const shiftSelection = (boxes: SugarElement[], deltaRow: number, deltaColumn: number,
+const shiftSelection = (boxes: SugarElement<HTMLTableCellElement>[], deltaRow: number, deltaColumn: number,
                         firstSelectedSelector: string, lastSelectedSelector: string): Optional<IdentifiedExt> => {
   return getLast(boxes, lastSelectedSelector).bind((last) => {
     return TablePositions.moveBy(last, deltaRow, deltaColumn).bind((finish) => {

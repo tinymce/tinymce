@@ -3,9 +3,10 @@ import { Attribute, InsertAll, Replication, SugarElement } from '@ephox/sugar';
 
 import { onUnlockedCells, TargetSelection } from '../model/RunOperation';
 import * as CellUtils from '../util/CellUtils';
+import { CellElement } from '../util/TableTypes';
 import { Warehouse } from './Warehouse';
 
-const constrainSpan = (element: SugarElement, property: 'colspan' | 'rowspan' | 'span', value: number) => {
+const constrainSpan = (element: SugarElement<CellElement>, property: 'colspan' | 'rowspan' | 'span', value: number) => {
   const currentColspan = CellUtils.getAttrValue(element, property, 1);
   if (value === 1 || currentColspan <= 1) {
     Attribute.remove(element, property);
@@ -43,7 +44,7 @@ const generateRows = (house: Warehouse, minColRange: number, maxColRange: number
     return fakeTR;
   });
 
-const copyCols = (table: SugarElement, target: TargetSelection): Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]> => {
+const copyCols = (table: SugarElement<HTMLTableElement>, target: TargetSelection): Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]> => {
   const house = Warehouse.fromTable(table);
   const details = onUnlockedCells(house, target);
   return details.map((selectedCells): SugarElement<HTMLTableRowElement | HTMLTableColElement>[] => {

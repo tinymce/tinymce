@@ -53,7 +53,7 @@ const getTotalHeight = (cell: SugarElement<HTMLTableCellElement>): number => {
   return normalizePixelSize(value, cell, Height.get, setHeight);
 };
 
-const get = (cell: SugarElement<HTMLTableCellElement>, type: 'rowspan' | 'colspan', f: (e: SugarElement) => number): number => {
+const get = (cell: SugarElement<HTMLTableCellElement>, type: 'rowspan' | 'colspan', f: (e: SugarElement<HTMLTableCellElement>) => number): number => {
   const v = f(cell);
   const span = getSpan(cell, type);
   return v / span;

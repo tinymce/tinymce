@@ -1,14 +1,12 @@
 import { Arr } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import * as Structs from '../api/Structs';
 import * as GridRow from '../model/GridRow';
+import { CompElm, Subst } from '../util/TableTypes';
 
-type CompElm = <T>(e1: SugarElement<T>, e2: SugarElement<T>) => boolean;
-type Subst = <T>(element: SugarElement<T>, comparator: CompElm) => SugarElement<T>;
-type CloneCell = (elem: Structs.ElementNew, index: number) => Structs.ElementNew;
+type CloneCell = (elem: Structs.ElementNew<HTMLTableCellElement>, index: number) => Structs.ElementNew<HTMLTableCellElement>;
 
-const cloneRow = (row: Structs.RowCells, cloneCell: CloneCell, comparator: CompElm, substitution: Subst) =>
+const cloneRow = (row: Structs.RowCells<HTMLTableRowElement>, cloneCell: CloneCell, comparator: CompElm, substitution: Subst) =>
   GridRow.clone(row, (elem) => substitution(elem, comparator), cloneCell);
 
 // substitution :: (item, comparator) -> item
@@ -25,7 +23,12 @@ const insertRowAt = (grid: Structs.RowCells[], index: number, example: number, c
     return ret;
   }, comparator, substitution);
 
-  return cols.concat(before).concat([ newRow ]).concat(after);
+  return [
+    ...cols,
+    ...before,
+    newRow,
+    ...after
+  ];
 };
 
 const getElementFor = (row: Structs.RowCells, column: number, section: string, withinSpan: boolean, example: number, comparator: CompElm, substitution: Subst): Structs.ElementNew => {
@@ -80,7 +83,12 @@ const splitCellIntoRows = (grid: Structs.RowCells[], exampleRow: number, example
     return isTargetCell ? Structs.elementnew(substitution(ex.element, comparator), true, ex.isLocked) : ex;
   }, comparator, substitution);
 
-  return cols.concat(before).concat([ newRow ]).concat(after);
+  return [
+    ...cols,
+    ...before,
+    newRow,
+    ...after
+  ];
 };
 
 const deleteColumnsAt = (grid: Structs.RowCells[], columns: number[]): Structs.RowCells[] =>
@@ -92,7 +100,11 @@ const deleteColumnsAt = (grid: Structs.RowCells[], columns: number[]): Structs.R
 
 const deleteRowsAt = (grid: Structs.RowCells[], start: number, finish: number): Structs.RowCells[] => {
   const { rows, cols } = GridRow.extractGridDetails(grid);
-  return cols.concat(rows.slice(0, start)).concat(rows.slice(finish + 1));
+  return [
+    ...cols,
+    ...rows.slice(0, start),
+    ...rows.slice(finish + 1)
+  ];
 };
 
 export {

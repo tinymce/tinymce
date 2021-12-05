@@ -4,11 +4,11 @@ import { Attribute, Insert, InsertAll, Remove, Replication, SelectorFilter, Sele
 import { Detail, DetailNew, RowDetailNew, Section } from '../api/Structs';
 
 interface NewRowsAndCells {
-  readonly newRows: SugarElement[];
-  readonly newCells: SugarElement[];
+  readonly newRows: SugarElement<HTMLTableRowElement>[];
+  readonly newCells: SugarElement<HTMLTableCellElement>[];
 }
 
-const setIfNot = (element: SugarElement, property: string, value: number, ignore: number): void => {
+const setIfNot = (element: SugarElement<Element>, property: string, value: number, ignore: number): void => {
   if (value === ignore) {
     Attribute.remove(element, property);
   } else {
@@ -41,11 +41,11 @@ const generateSection = (table: SugarElement<HTMLTableElement>, sectionName: Sec
   return section;
 };
 
-const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, grid: RowDetailNew<T>[]): NewRowsAndCells => {
-  const newRows: SugarElement[] = [];
-  const newCells: SugarElement[] = [];
+const render = (table: SugarElement<HTMLTableElement>, grid: RowDetailNew<DetailNew>[]): NewRowsAndCells => {
+  const newRows: SugarElement<HTMLTableRowElement>[] = [];
+  const newCells: SugarElement<HTMLTableCellElement>[] = [];
 
-  const syncRows = (gridSection: RowDetailNew<T>[]) =>
+  const syncRows = (gridSection: RowDetailNew<DetailNew<HTMLTableCellElement>, HTMLTableRowElement>[]) =>
     Arr.map(gridSection, (row) => {
       if (row.isNew) {
         newRows.push(row.element);
@@ -64,7 +64,7 @@ const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, gri
     });
 
   // Assumption we should only ever have 1 colgroup. The spec allows for multiple, however it's currently unsupported
-  const syncColGroup = (gridSection: RowDetailNew<T>[]) =>
+  const syncColGroup = (gridSection: RowDetailNew<DetailNew<HTMLTableColElement>, HTMLTableColElement>[]) =>
     Arr.bind(gridSection, (colGroup) =>
       Arr.map(colGroup.cells, (col) => {
         setIfNot(col.element, 'span', col.colspan, 1);
@@ -72,10 +72,10 @@ const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, gri
       })
     );
 
-  const renderSection = (gridSection: RowDetailNew<T>[], sectionName: Section) => {
+  const renderSection = (gridSection: RowDetailNew<DetailNew>[], sectionName: Section) => {
     const section = generateSection(table, sectionName);
     const sync = sectionName === 'colgroup' ? syncColGroup : syncRows;
-    const sectionElems = sync(gridSection);
+    const sectionElems = sync(gridSection as RowDetailNew<any, any>[]);
     InsertAll.append(section, sectionElems);
   };
 
@@ -83,7 +83,7 @@ const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, gri
     SelectorFind.child(table, sectionName).each(Remove.remove);
   };
 
-  const renderOrRemoveSection = (gridSection: RowDetailNew<T>[], sectionName: Section) => {
+  const renderOrRemoveSection = (gridSection: RowDetailNew<DetailNew>[], sectionName: Section) => {
     if (gridSection.length > 0) {
       renderSection(gridSection, sectionName);
     } else {
@@ -91,10 +91,10 @@ const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, gri
     }
   };
 
-  const headSection: RowDetailNew<T>[] = [];
-  const bodySection: RowDetailNew<T>[] = [];
-  const footSection: RowDetailNew<T>[] = [];
-  const columnGroupsSection: RowDetailNew<T>[] = [];
+  const headSection: RowDetailNew<DetailNew>[] = [];
+  const bodySection: RowDetailNew<DetailNew>[] = [];
+  const footSection: RowDetailNew<DetailNew>[] = [];
+  const columnGroupsSection: RowDetailNew<DetailNew>[] = [];
 
   Arr.each(grid, (row) => {
     switch (row.section) {

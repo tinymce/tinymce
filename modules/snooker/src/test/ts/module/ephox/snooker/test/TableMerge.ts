@@ -30,7 +30,7 @@ const mergeTest = (
   gridA: Structs.ElementNew[][],
   gridB: Structs.ElementNew[][],
   generator: () => SimpleGenerators,
-  comparator: (a: SugarElement, b: SugarElement) => boolean
+  comparator: (a: SugarElement<HTMLElement>, b: SugarElement<HTMLElement>) => boolean
 ): void => {
   // The last step, merge cells from gridB into gridA
   const nuGrid = TableMerge.merge(
@@ -63,7 +63,7 @@ const mergeIVTest = (
   gridSpecA: Spec,
   gridSpecB: Spec,
   generator: () => SimpleGenerators,
-  comparator: (a: SugarElement, b: SugarElement) => boolean
+  comparator: (a: SugarElement<HTMLElement>, b: SugarElement<HTMLElement>) => boolean
 ): void => {
   // The last step, merge cells from gridB into gridA
   const nuGrid = TableMerge.merge(
@@ -82,7 +82,7 @@ const suite = (
   gridA: Structs.ElementNew[][],
   gridB: Structs.ElementNew[][],
   generator: () => SimpleGenerators,
-  comparator: (a: SugarElement, b: SugarElement) => boolean,
+  comparator: (a: SugarElement<HTMLElement>, b: SugarElement<HTMLElement>) => boolean,
   expectedMeasure: { rowDelta: number; colDelta: number },
   expectedTailor: Structs.ElementNew[][],
   expectedMergeGrids: Structs.ElementNew[][]

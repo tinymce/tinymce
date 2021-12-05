@@ -7,6 +7,7 @@ import { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Deltas from '../calc/Deltas';
 import * as CellUtils from '../util/CellUtils';
+import { CellElement } from '../util/TableTypes';
 import { BarPositions, RowInfo } from './BarPositions';
 import * as ColumnSizes from './ColumnSizes';
 import * as Recalculations from './Recalculations';
@@ -14,7 +15,7 @@ import * as Sizes from './Sizes';
 
 const sumUp = (newSize: number[]) => Arr.foldr(newSize, (b, a) => b + a, 0);
 
-const recalculate = (warehouse: Warehouse, widths: number[]): Recalculations.CellWidthSpan[] => {
+const recalculate = (warehouse: Warehouse, widths: number[]): Recalculations.CellWidthSpan<CellElement>[] => {
   if (Warehouse.hasColumns(warehouse)) {
     return Recalculations.recalculateWidthForColumns(warehouse, widths);
   } else {
@@ -31,7 +32,7 @@ const recalculateAndApply = (warehouse: Warehouse, widths: number[], tableSize: 
   });
 };
 
-const adjustWidth = (table: SugarElement, delta: number, index: number, resizing: ResizeBehaviour, tableSize: TableSize): void => {
+const adjustWidth = (table: SugarElement<HTMLTableElement>, delta: number, index: number, resizing: ResizeBehaviour, tableSize: TableSize): void => {
   const warehouse = Warehouse.fromTable(table);
   const step = tableSize.getCellDelta(delta);
   const widths = tableSize.getWidths(warehouse, tableSize);
@@ -46,7 +47,7 @@ const adjustWidth = (table: SugarElement, delta: number, index: number, resizing
   resizing.resizeTable(tableSize.adjustTableWidth, clampedStep, isLastColumn);
 };
 
-const adjustHeight = (table: SugarElement, delta: number, index: number, direction: BarPositions<RowInfo>): void => {
+const adjustHeight = (table: SugarElement<HTMLTableElement>, delta: number, index: number, direction: BarPositions<RowInfo>): void => {
   const warehouse = Warehouse.fromTable(table);
   const heights = ColumnSizes.getPixelHeights(warehouse, table, direction);
 
@@ -79,7 +80,7 @@ const adjustAndRedistributeWidths = <T extends Detail> (_table: SugarElement<HTM
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = <T extends Detail> (_table: SugarElement, list: RowDetail<T>[], _info: { }, tableSize: TableSize): void => {
+const adjustWidthTo = <T extends Detail> (_table: SugarElement<HTMLTableElement>, list: RowDetail<T>[], _info: { }, tableSize: TableSize): void => {
   const warehouse = Warehouse.generate(list);
   const widths = tableSize.getWidths(warehouse, tableSize);
 
