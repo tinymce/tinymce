@@ -68,10 +68,10 @@ const closeDialog = (editor: Editor, selector?: string): void => {
 const pWaitForUi = (editor: Editor, selector: string): Promise<SugarElement<Element>> =>
   UiFinder.pWaitFor(`Waiting for a UI element matching '${selector}' to exist`, getUiRoot(editor), selector);
 
-const pWaitForPopup = (editor: Editor, selector: string): Promise<SugarElement<Element>> =>
+const pWaitForPopup = (editor: Editor, selector: string): Promise<SugarElement<HTMLElement>> =>
   UiFinder.pWaitForVisible(`Waiting for a popup matching '${selector}' to be visible`, getUiRoot(editor), selector);
 
-const pWaitForDialog = (editor: Editor, selector?: string): Promise<SugarElement> => {
+const pWaitForDialog = (editor: Editor, selector?: string): Promise<SugarElement<Element>> => {
   const dialogSelector = Type.isUndefined(selector) ? getThemeSelectors().dialogSelector : selector;
   return UiFinder.pWaitForVisible(`Waiting for a dialog matching '${dialogSelector}' to be visible`, getUiRoot(editor), dialogSelector);
 };
