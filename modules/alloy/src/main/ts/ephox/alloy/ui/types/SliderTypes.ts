@@ -46,7 +46,7 @@ export interface Manager {
   setValueFrom: (spectrum: AlloyComponent, detail: SliderDetail, value: number | SugarPosition) => void;
   setToMin: (spectrum: AlloyComponent, detail: SliderDetail) => void;
   setToMax: (spectrum: AlloyComponent, detail: SliderDetail) => void;
-  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Optional<number | SugarPosition>;
+  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent<MouseEvent | TouchEvent>) => Optional<number | SugarPosition>;
   setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void;
   onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
   onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;

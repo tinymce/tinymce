@@ -1,5 +1,4 @@
 import { Fun, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import * as AriaOwner from '../../aria/AriaOwner';
@@ -95,7 +94,7 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
         Sandboxing.config({
           onOpen,
           onClose,
-          isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement): boolean => {
+          isPartOf: (container, data, queryElem): boolean => {
             return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(button, queryElem);
           },
           getAttachPoint: () => {

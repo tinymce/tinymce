@@ -3,12 +3,12 @@ import { Css, Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 import * as DataTransfers from './DataTransfers';
 
 export interface DragnDropImageClone {
-  readonly element: SugarElement;
+  readonly element: SugarElement<HTMLElement>;
   readonly x: number;
   readonly y: number;
 }
 
-const createGhostClone = (image: DragnDropImageClone): SugarElement => {
+const createGhostClone = (image: DragnDropImageClone): SugarElement<HTMLElement> => {
   const ghost = Replication.deep(image.element);
 
   // Firefox will scale down non ghost images to 175px so lets limit the size to 175px in general

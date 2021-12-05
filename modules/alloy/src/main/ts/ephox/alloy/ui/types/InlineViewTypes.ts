@@ -20,7 +20,7 @@ export interface InlineViewDetail extends SingleSketchDetail {
   onHide: (component: AlloyComponent) => void;
   onEscape: Optional<(component: AlloyComponent) => void>;
   getRelated: (component: AlloyComponent) => Optional<AlloyComponent>;
-  isExtraPart: (component: AlloyComponent, target: SugarElement) => boolean;
+  isExtraPart: (component: AlloyComponent, target: SugarElement<Node>) => boolean;
   lazySink: LazySink;
   eventOrder: Record<string, string[]>;
   fireDismissalEventInstead: Optional<{
@@ -41,7 +41,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
   onHide?: (component: AlloyComponent) => void;
   onEscape?: (component: AlloyComponent) => void;
   getRelated?: (component: AlloyComponent) => Optional<AlloyComponent>;
-  isExtraPart?: (component: AlloyComponent, target: SugarElement) => boolean;
+  isExtraPart?: (component: AlloyComponent, target: SugarElement<Node>) => boolean;
   eventOrder?: Record<string, string[]>;
   fireDismissalEventInstead?: {
     event?: string;
@@ -59,7 +59,7 @@ export interface InlineMenuSpec {
 
 export interface InlineViewApis {
   showAt: (component: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec) => void;
-  showWithin: (component: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, boxElement: Optional<SugarElement>) => void;
+  showWithin: (component: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, boxElement: Optional<SugarElement<HTMLElement>>) => void;
   showWithinBounds: (component: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, getBounds: () => Optional<Bounds>) => void;
   showMenuAt: (component: AlloyComponent, placementSpec: PlacementSpec, menuSpec: InlineMenuSpec) => void;
   showMenuWithinBounds: (component: AlloyComponent, placementSpec: PlacementSpec, menuSpec: InlineMenuSpec, getBounds: () => Optional<Bounds>) => void;

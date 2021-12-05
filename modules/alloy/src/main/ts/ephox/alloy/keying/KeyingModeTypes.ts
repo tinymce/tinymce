@@ -7,9 +7,9 @@ import { FocusManager } from '../api/focus/FocusManagers';
 import { BehaviourState, Stateless } from '../behaviour/common/BehaviourState';
 import { NativeSimulatedEvent, SimulatedEvent } from '../events/SimulatedEvent';
 
-export type KeyHandlerApi = (comp: AlloyComponent, se: NativeSimulatedEvent) => Optional<boolean>;
+export type KeyHandlerApi = (comp: AlloyComponent, se: NativeSimulatedEvent<KeyboardEvent>) => Optional<boolean>;
 
-export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Optional<boolean>;
+export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent<KeyboardEvent>, config: C, state: S) => Optional<boolean>;
 
 export enum FocusInsideModes {
   OnFocusMode = 'onFocus',
@@ -37,7 +37,7 @@ export interface TabbingConfigSpec extends GeneralKeyingConfigSpec {
   onEnter?: KeyHandlerApi;
   selector?: string;
   firstTabstop?: number;
-  useTabstopAt?: (elem: SugarElement) => boolean;
+  useTabstopAt?: (elem: SugarElement<HTMLElement>) => boolean;
   visibilitySelector?: string;
 }
 
@@ -46,7 +46,7 @@ export interface TabbingConfig extends GeneralKeyingConfig {
   onEnter: Optional<KeyHandlerApi>;
   selector: string;
   firstTabstop: number;
-  useTabstopAt: (elem: SugarElement) => boolean;
+  useTabstopAt: (elem: SugarElement<HTMLElement>) => boolean;
   visibilitySelector: Optional<string>;
   cyclic: boolean;
 }
@@ -81,7 +81,7 @@ export interface EscapingConfig extends GeneralKeyingConfig {
 export interface ExecutingConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'execution';
   // NOTE: inconsistent.
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   useSpace?: boolean;
   useEnter?: boolean;
   useControlEnter?: boolean;
@@ -89,7 +89,7 @@ export interface ExecutingConfigSpec extends GeneralKeyingConfigSpec {
 }
 
 export interface ExecutingConfig extends GeneralKeyingConfig {
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   useSpace: boolean;
   useEnter: boolean;
   useControlEnter: boolean;
@@ -100,7 +100,7 @@ export interface ExecutingConfig extends GeneralKeyingConfig {
 export interface FlatgridConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'flatgrid';
   selector: string;
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   onEscape?: KeyHandlerApi;
   captureTab?: boolean;
   initSize: {
@@ -111,7 +111,7 @@ export interface FlatgridConfigSpec extends GeneralKeyingConfigSpec {
 
 export interface FlatgridConfig extends GeneralKeyingConfig {
   selector: string;
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   onEscape: KeyHandlerApi;
   captureTab: boolean;
   initSize: {
@@ -130,18 +130,18 @@ export interface FlatgridState extends BehaviourState {
 export interface FlowConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'flow';
   selector: string;
-  getInitial?: (comp: AlloyComponent) => Optional<SugarElement>;
+  getInitial?: (comp: AlloyComponent) => Optional<SugarElement<HTMLElement>>;
   onEscape?: KeyHandlerApi;
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   executeOnMove?: boolean;
   allowVertical?: boolean;
 }
 
 export interface FlowConfig extends GeneralKeyingConfig {
   selector: string;
-  getInitial: (comp: AlloyComponent) => Optional<SugarElement>;
+  getInitial: (comp: AlloyComponent) => Optional<SugarElement<HTMLElement>>;
   onEscape: KeyHandlerApi;
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   executeOnMove: boolean;
   allowVertical: boolean;
 }
@@ -154,8 +154,8 @@ export interface MatrixConfigSpec extends GeneralKeyingConfigSpec {
     cell: string;
   };
   cycles?: boolean;
-  previousSelector?: (comp: AlloyComponent) => Optional<SugarElement>;
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  previousSelector?: (comp: AlloyComponent) => Optional<SugarElement<HTMLElement>>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
 }
 
 export interface MatrixConfig extends GeneralKeyingConfig {
@@ -164,21 +164,21 @@ export interface MatrixConfig extends GeneralKeyingConfig {
     cell: string;
   };
   cycles: boolean;
-  previousSelector: (comp: AlloyComponent) => Optional<SugarElement>;
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  previousSelector: (comp: AlloyComponent) => Optional<SugarElement<HTMLElement>>;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
 }
 
 // Menu type
 export interface MenuConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'menu';
   selector: string;
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   moveOnTab?: boolean;
 }
 
 export interface MenuConfig extends GeneralKeyingConfig {
   selector: string;
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement<HTMLElement>) => Optional<boolean>;
   moveOnTab: boolean;
 }
 

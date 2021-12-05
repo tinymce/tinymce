@@ -79,7 +79,7 @@ export default (): void => {
           return data;
         },
         getImage: (component) => {
-          const clone = Replication.deep(component.element);
+          const clone = Replication.deep<HTMLElement>(component.element);
           Css.set(clone, 'background-color', 'blue');
           return {
             element: clone,

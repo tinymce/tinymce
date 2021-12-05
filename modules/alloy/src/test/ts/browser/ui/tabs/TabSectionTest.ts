@@ -89,7 +89,7 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
       SelectorFind.descendant(component.element, '.test-tabview').getOrDie('Could not find tabview')
     ).getOrDie();
 
-    const sAssertTabSelection = (label: string, expected: boolean, element: SugarElement) =>
+    const sAssertTabSelection = (label: string, expected: boolean, element: SugarElement<HTMLButtonElement>) =>
       Assertions.sAssertStructure(label + ' (asserting structure)', ApproxStructure.build((s, str, arr) => s.element('button', {
         attrs: {
           'aria-selected': expected ? str.is('true') : str.is('false')

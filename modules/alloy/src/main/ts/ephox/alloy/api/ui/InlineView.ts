@@ -96,7 +96,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, placeme
 };
 
 const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: InlineViewDetail, spec): SketchSpec => {
-  const isPartOfRelated = (sandbox: AlloyComponent, queryElem: SugarElement) => {
+  const isPartOfRelated = (sandbox: AlloyComponent, queryElem: SugarElement<Node>) => {
     const related = detail.getRelated(sandbox);
     return related.exists((rel) => ComponentStructure.isPartOf(rel, queryElem));
   };
@@ -110,7 +110,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
     showWithin(sandbox, thing, placementSpec, Optional.none());
   };
 
-  const showWithin = (sandbox: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, boxElement: Optional<SugarElement>) => {
+  const showWithin = (sandbox: AlloyComponent, thing: AlloySpec, placementSpec: PlacementSpec, boxElement: Optional<SugarElement<HTMLElement>>) => {
     showWithinBounds(sandbox, thing, placementSpec, () => boxElement.map((elem) => Boxes.box(elem)));
   };
 

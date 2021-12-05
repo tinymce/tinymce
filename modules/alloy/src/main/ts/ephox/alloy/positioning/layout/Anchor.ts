@@ -18,7 +18,7 @@ const anchor = (anchorBox: AnchorBox, origin: Origins.OriginAdt): Anchor => ({
   origin
 });
 
-const element = (anchorElement: SugarElement, origin: Origins.OriginAdt): Anchor => {
+const element = (anchorElement: SugarElement<HTMLElement>, origin: Origins.OriginAdt): Anchor => {
   const anchorBox = Origins.toBox(origin, anchorElement);
 
   return anchor(anchorBox, origin);

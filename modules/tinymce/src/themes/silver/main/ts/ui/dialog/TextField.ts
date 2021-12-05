@@ -49,7 +49,7 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
 
   const validatingBehaviours = spec.validation.map((vl) => Invalidating.config({
     getRoot: (input) => {
-      return Traverse.parent(input.element);
+      return Traverse.parentElement(input.element);
     },
     invalidClass: 'tox-invalid',
     validator: {

@@ -15,12 +15,12 @@ import { applyTransitionCss } from './Transitions';
  * in case we decide to bring back the flexibility of working with non-standard positioning.
  */
 
-const elementSize = (p: SugarElement): AnchorElement => ({
+const elementSize = (p: SugarElement<HTMLElement>): AnchorElement => ({
   width: Width.getOuter(p),
   height: Height.getOuter(p)
 });
 
-const layout = (anchorBox: AnchorBox, element: SugarElement, bubbles: Bubble, options: ReparteeOptions): RepositionDecision => {
+const layout = (anchorBox: AnchorBox, element: SugarElement<HTMLElement>, bubbles: Bubble, options: ReparteeOptions): RepositionDecision => {
   // clear the potentially limiting factors before measuring
   Css.remove(element, 'max-height');
   Css.remove(element, 'max-width');
@@ -29,7 +29,7 @@ const layout = (anchorBox: AnchorBox, element: SugarElement, bubbles: Bubble, op
   return Bounder.attempts(element, options.preference, anchorBox, elementBox, bubbles, options.bounds);
 };
 
-const setClasses = (element: SugarElement, decision: RepositionDecision): void => {
+const setClasses = (element: SugarElement<HTMLElement>, decision: RepositionDecision): void => {
   const classInfo = decision.classes;
   Classes.remove(element, classInfo.off);
   Classes.add(element, classInfo.on);
@@ -41,19 +41,19 @@ const setClasses = (element: SugarElement, decision: RepositionDecision): void =
  *
  * There are a few cases where we specifically don't want a max-height, which is why it's optional.
  */
-const setHeight = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
+const setHeight = (element: SugarElement<HTMLElement>, decision: RepositionDecision, options: ReparteeOptions): void => {
   // The old API enforced MaxHeight.anchored() for fixed position. That no longer seems necessary.
   const maxHeightFunction = options.maxHeightFunction;
 
   maxHeightFunction(element, decision.maxHeight);
 };
 
-const setWidth = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
+const setWidth = (element: SugarElement<HTMLElement>, decision: RepositionDecision, options: ReparteeOptions): void => {
   const maxWidthFunction = options.maxWidthFunction;
   maxWidthFunction(element, decision.maxWidth);
 };
 
-const position = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
+const position = (element: SugarElement<HTMLElement>, decision: RepositionDecision, options: ReparteeOptions): void => {
   // This is a point of difference between Alloy and Repartee. Repartee appears to use Measure to calculate the available space for fixed origin
   // That is not ported yet.
   const positionCss = Origins.reposition(options.origin, decision);
@@ -63,7 +63,7 @@ const position = (element: SugarElement, decision: RepositionDecision, options: 
   applyPositionCss(element, positionCss);
 };
 
-const setPlacement = (element: SugarElement, decision: RepositionDecision): void => {
+const setPlacement = (element: SugarElement<HTMLElement>, decision: RepositionDecision): void => {
   Placement.setPlacement(element, decision.placement);
 };
 
