@@ -3,6 +3,7 @@ import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
+import { CellElement } from '../util/TableTypes';
 
 export type RowHeaderType = 'section' | 'cells' | 'sectionCells';
 export type RowType = 'header' | 'body' | 'footer';
@@ -13,7 +14,7 @@ interface RowDetails {
 }
 
 interface CommonCellDetails {
-  readonly element: SugarElement;
+  readonly element: SugarElement<CellElement>;
 }
 
 interface CommonRowDetails {

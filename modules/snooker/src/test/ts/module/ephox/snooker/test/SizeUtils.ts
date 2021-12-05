@@ -23,7 +23,7 @@ const reducePrecision = (value: string, precision: number = 1): string => {
   }
 };
 
-const readWidth = (element: SugarElement): (string | null)[][] => {
+const readWidth = (element: SugarElement<HTMLTableElement>): (string | null)[][] => {
   const rows = SelectorFilter.descendants(element, 'tr');
   return Arr.map(rows, (row) => {
     const cells = SelectorFilter.descendants(row, 'td,th');
@@ -33,7 +33,7 @@ const readWidth = (element: SugarElement): (string | null)[][] => {
   });
 };
 
-const readHeight = (element: SugarElement): (string | null)[][] => {
+const readHeight = (element: SugarElement<HTMLTableElement>): (string | null)[][] => {
   const rows = SelectorFilter.descendants(element, 'tr');
   return Arr.map(rows, (row) => {
     const cells = SelectorFilter.descendants(row, 'td,th');

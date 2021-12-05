@@ -23,7 +23,7 @@ UnitTest.test('CopySelectedTest', () => {
   const SEL_CLASS = 'copy-selected';
 
   // traverse really needs this built in
-  const traverseChildElements = (e: SugarElement) => {
+  const traverseChildElements = (e: SugarElement<Element>) => {
     return Arr.map(e.dom.children, SugarElement.fromDom);
   };
 
@@ -112,7 +112,7 @@ UnitTest.test('CopySelectedTest', () => {
       const domCells = traverseChildElements(domRows[i]);
       assertWithInfo(row.length, domCells.length, 'number of cells in output row ' + i + ' to be ');
       Arr.each(row, (cell, j) => {
-        const domCell = domCells[j];
+        const domCell = domCells[j] as SugarElement<HTMLElement>;
         assertWithInfo(cell.html, Html.get(domCell), 'cell text');
         assertWithInfo(cell.rowspan, Attribute.get(domCell, 'rowspan'), 'rowspan');
         assertWithInfo(cell.colspan, Attribute.get(domCell, 'colspan'), 'colspan');

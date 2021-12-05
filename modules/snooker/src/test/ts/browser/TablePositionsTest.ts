@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as TablePositions from 'ephox/snooker/api/TablePositions';
@@ -9,7 +9,7 @@ UnitTest.test('RectangularTest', () => {
   const div = SugarElement.fromTag('div');
   Insert.append(body, div);
 
-  const table = SugarElement.fromHtml(
+  const table = SugarElement.fromHtml<HTMLTableElement>(
     '<table id="tableA" border=1>' +
        '<tbody>' +
          '<tr>' +
@@ -40,7 +40,7 @@ UnitTest.test('RectangularTest', () => {
      '</table>'
   );
 
-  const table2 = SugarElement.fromHtml('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
+  const table2 = SugarElement.fromHtml<HTMLTableElement>('<table id="tableB" border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border:none;">' +
    '<tbody><tr>' +
       '<td id="TBA0" style="min-width: 100px; height: 40px" rowspan="3">A0</td>' +
       '<td id="TBA1" style="min-width: 100px; height: 40px">A1 </td>' +
@@ -73,14 +73,14 @@ UnitTest.test('RectangularTest', () => {
 
   InsertAll.append(div, [ table, table2 ] );
 
-  const check = (tableTarget: SugarElement, from: string, to: string, expected: boolean) => {
-    [].forEach.call(tableTarget.dom.querySelectorAll('td'), (td: HTMLElement) => {
+  const check = (tableTarget: SugarElement<HTMLTableElement>, from: string, to: string, expected: boolean) => {
+    Arr.each(tableTarget.dom.querySelectorAll('td'), (td) => {
       td.style.background = '';
     });
-    Optional.from(document.querySelector(from) as HTMLElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';
-    Optional.from(document.querySelector(to) as HTMLElement).getOrDie('Missing element for "to" selector').style.background = '#5adb33';
-    const start = SelectorFilter.descendants(tableTarget, from)[0];
-    const finish = SelectorFilter.descendants(tableTarget, to)[0];
+    Optional.from(document.querySelector(from) as HTMLTableCellElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';
+    Optional.from(document.querySelector(to) as HTMLTableCellElement).getOrDie('Missing element for "to" selector').style.background = '#5adb33';
+    const start = SelectorFilter.descendants<HTMLTableCellElement>(tableTarget, from)[0];
+    const finish = SelectorFilter.descendants<HTMLTableCellElement>(tableTarget, to)[0];
     const c = TablePositions.getBox(tableTarget, start, finish);
     assert.eq(expected, c.isSome());
   };

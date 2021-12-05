@@ -8,13 +8,13 @@ import * as MergingOperations from 'ephox/snooker/operate/MergingOperations';
 UnitTest.test('MergeOperationsTest', () => {
   const b = Structs.bounds;
   const r = Structs.rowcells;
-  const re = () => 'row' as unknown as SugarElement;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew, false);
+  const re = () => 'row' as unknown as SugarElement<any>;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement<any>, isNew, false);
 
   // Test basic merge.
   (() => {
     const check = (expected: Structs.RowCells[], grid: Structs.RowCells[], bounds: Structs.Bounds, lead: string) => {
-      const actual = MergingOperations.merge(grid, bounds, Fun.tripleEquals, Fun.constant(lead as unknown as SugarElement));
+      const actual = MergingOperations.merge(grid, bounds, Fun.tripleEquals, Fun.constant(lead as unknown as SugarElement<any>));
       assert.eq(expected.length, actual.length);
       Arr.each(expected, (row, i) => {
         Arr.each(row.cells, (cell, j) => {
@@ -108,7 +108,7 @@ UnitTest.test('MergeOperationsTest', () => {
   // Test basic unmerge.
   (() => {
     const check = (expected: Structs.RowCells[], grid: Structs.RowCells[], target: string) => {
-      const actual = MergingOperations.unmerge(grid, target as unknown as SugarElement, Fun.tripleEquals, Fun.constant('?') as any);
+      const actual = MergingOperations.unmerge(grid, target as unknown as SugarElement<any>, Fun.tripleEquals, Fun.constant('?') as any);
       assert.eq(expected.length, actual.length);
       Arr.each(expected, (row, i) => {
         Arr.each(row.cells, (cell, j) => {
