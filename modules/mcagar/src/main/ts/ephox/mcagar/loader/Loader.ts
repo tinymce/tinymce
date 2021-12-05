@@ -49,7 +49,7 @@ const loadScript = (url: string): FutureResult<string, Error> => FutureResult.nu
   Insert.append(SugarBody.body(), script);
 });
 
-const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: Optional<SugarElement>): void => {
+const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: Optional<SugarElement<Element>>): void => {
   const target = elementOpt.getOrThunk(() => createTarget(settings.inline));
   const randomId = Id.generate('tiny-loader');
   Attribute.set(target, 'id', randomId);

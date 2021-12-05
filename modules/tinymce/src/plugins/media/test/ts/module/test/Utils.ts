@@ -21,7 +21,7 @@ const pOpenDialog = async (editor: Editor) => {
   return await TinyUiActions.pWaitForDialog(editor);
 };
 
-const findInDialog = <T extends HTMLElement>(dialog: SugarElement<HTMLElement>, selector: string) =>
+const findInDialog = <T extends HTMLElement>(dialog: SugarElement<Element>, selector: string) =>
   UiFinder.findIn<T>(dialog, selector).getOrDie();
 
 const pFindInDialog = <T extends HTMLElement>(selector: string) => async (editor: Editor) => {
@@ -29,12 +29,12 @@ const pFindInDialog = <T extends HTMLElement>(selector: string) => async (editor
   return findInDialog<T>(dialog, selector);
 };
 
-const getValueOn = (dialog: SugarElement<HTMLElement>, selector: string) => {
+const getValueOn = (dialog: SugarElement<Element>, selector: string) => {
   const elem = findInDialog<HTMLInputElement>(dialog, selector);
   return UiControls.getValue(elem);
 };
 
-const setValueOn = (dialog: SugarElement<HTMLElement>, selector: string, newValue: string) => {
+const setValueOn = (dialog: SugarElement<Element>, selector: string, newValue: string) => {
   const elem = findInDialog<HTMLInputElement>(dialog, selector);
   UiControls.setValue(elem, newValue);
 };
