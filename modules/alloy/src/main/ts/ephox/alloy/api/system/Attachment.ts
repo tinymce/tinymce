@@ -9,7 +9,7 @@ const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
   attachWith(parent, child, Insert.append);
 };
 
-const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: SugarElement, child: SugarElement) => void): void => {
+const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: SugarElement<Node>, child: SugarElement<Node>) => void): void => {
   parent.getSystem().addToWorld(child);
   insertion(parent.element, child.element);
   if (SugarBody.inBody(parent.element)) {
@@ -42,15 +42,15 @@ const detachChildren = (component: AlloyComponent): void => {
   component.syncComponents();
 };
 
-const attachSystem = (element: SugarElement, guiSystem: GuiSystem): void => {
+const attachSystem = (element: SugarElement<Node>, guiSystem: GuiSystem): void => {
   attachSystemWith(element, guiSystem, Insert.append);
 };
 
-const attachSystemAfter = (element: SugarElement, guiSystem: GuiSystem): void => {
+const attachSystemAfter = (element: SugarElement<Node>, guiSystem: GuiSystem): void => {
   attachSystemWith(element, guiSystem, Insert.after);
 };
 
-const attachSystemWith = (element: SugarElement, guiSystem: GuiSystem, inserter: (marker: SugarElement, element: SugarElement) => void): void => {
+const attachSystemWith = (element: SugarElement<Node>, guiSystem: GuiSystem, inserter: (marker: SugarElement<Node>, element: SugarElement<Node>) => void): void => {
   inserter(element, guiSystem.element);
   const children = Traverse.children(guiSystem.element);
   Arr.each(children, (child) => {

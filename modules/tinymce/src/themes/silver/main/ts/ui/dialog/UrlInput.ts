@@ -89,7 +89,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     typeaheadBehaviours: Behaviour.derive(Arr.flatten([
       urlBackstage.getValidationHandler().map(
         (handler) => Invalidating.config({
-          getRoot: (comp) => Traverse.parent(comp.element),
+          getRoot: (comp) => Traverse.parentElement(comp.element),
           invalidClass: 'tox-control-wrap--status-invalid',
           notify: {
             onInvalid: (comp: AlloyComponent, err: string) => {

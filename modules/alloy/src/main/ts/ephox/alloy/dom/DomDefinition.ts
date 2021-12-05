@@ -13,7 +13,7 @@ export interface GeneralDefinitionSpec<EC> {
   // defChildren?: DC[];
 }
 
-export interface DomDefinitionSpec extends GeneralDefinitionSpec<SugarElement> {
+export interface DomDefinitionSpec extends GeneralDefinitionSpec<SugarElement<Node>> {
 
 }
 
@@ -28,16 +28,16 @@ export interface GeneralDefinitionDetail<EC> {
   domChildren: EC[];
 }
 
-export interface DomDefinitionDetail extends GeneralDefinitionDetail<SugarElement> {
+export interface DomDefinitionDetail extends GeneralDefinitionDetail<SugarElement<Node>> {
 
 }
 
-const defToStr = (defn: GeneralDefinitionDetail<any>): string => {
+const defToStr = <EC>(defn: GeneralDefinitionDetail<EC>): string => {
   const raw = defToRaw(defn);
   return JSON.stringify(raw, null, 2);
 };
 
-const defToRaw = (defn: GeneralDefinitionDetail<SugarElement>): GeneralDefinitionSpec<string> => ({
+const defToRaw = <EC>(defn: GeneralDefinitionDetail<EC>): GeneralDefinitionSpec<string> => ({
   uid: defn.uid,
   tag: defn.tag,
   classes: defn.classes,

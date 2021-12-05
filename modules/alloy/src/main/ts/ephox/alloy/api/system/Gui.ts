@@ -17,12 +17,12 @@ import { AlloySystemApi } from './SystemApi';
 
 export interface GuiSystem {
   readonly root: AlloyComponent;
-  readonly element: SugarElement;
+  readonly element: SugarElement<HTMLElement>;
   readonly destroy: () => void;
   readonly add: (component: AlloyComponent) => void;
   readonly remove: (component: AlloyComponent) => void;
   readonly getByUid: (uid: string) => Result<AlloyComponent, Error>;
-  readonly getByDom: (element: SugarElement) => Result<AlloyComponent, Error>;
+  readonly getByDom: (element: SugarElement<Node>) => Result<AlloyComponent, Error>;
 
   readonly addToWorld: (comp: AlloyComponent) => void;
   readonly removeFromWorld: (comp: AlloyComponent) => void;
@@ -48,14 +48,14 @@ const create = (): GuiSystem => {
 };
 
 const takeover = (root: AlloyComponent): GuiSystem => {
-  const isAboveRoot = (el: SugarElement): boolean => Traverse.parent(root.element).fold(
+  const isAboveRoot = (el: SugarElement<Node>): boolean => Traverse.parent(root.element).fold(
     Fun.always,
     (parent) => Compare.eq(el, parent)
   );
 
   const registry = Registry();
 
-  const lookup = (eventName: string, target: SugarElement) => registry.find(isAboveRoot, eventName, target);
+  const lookup = (eventName: string, target: SugarElement<Node>) => registry.find(isAboveRoot, eventName, target);
 
   const domEvents = GuiEvents.setup(root.element, {
     triggerEvent: (eventName, event) => {
@@ -66,13 +66,13 @@ const takeover = (root: AlloyComponent): GuiSystem => {
   const systemApi: AlloySystemApi = {
     // This is a real system
     debugInfo: Fun.constant('real'),
-    triggerEvent: (eventName: string, target: SugarElement, data: any) => {
+    triggerEvent: (eventName: string, target: SugarElement<Node>, data: any) => {
       Debugging.monitorEvent(eventName, target, (logger: Debugging.DebuggerLogger) =>
         // The return value is not used because this is a fake event.
         Triggers.triggerOnUntilStopped(lookup, eventName, data, target, logger)
       );
     },
-    triggerFocus: (target: SugarElement, originator: SugarElement) => {
+    triggerFocus: (target: SugarElement<HTMLElement>, originator: SugarElement<Node>) => {
       Tagger.read(target).fold(() => {
         // When the target is not within the alloy system, dispatch a normal focus event.
         Focus.focus(target);
@@ -195,7 +195,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
     new Error('Could not find component with uid: "' + uid + '" in system.')
   ), Result.value);
 
-  const getByDom = (elem: SugarElement): Result<AlloyComponent, Error> => {
+  const getByDom = (elem: SugarElement<Node>): Result<AlloyComponent, Error> => {
     const uid = Tagger.read(elem).getOr('not found');
     return getByUid(uid);
   };

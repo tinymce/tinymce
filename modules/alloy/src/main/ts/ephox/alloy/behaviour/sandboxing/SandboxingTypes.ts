@@ -14,7 +14,7 @@ export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<Sandboxing
   openWhileCloaked: (sandbox: AlloyComponent, thing: AlloySpec, transaction: () => void) => AlloyComponent;
   close: (sandbox: AlloyComponent) => void;
   isOpen: (sandbox: AlloyComponent) => boolean;
-  isPartOf: (sandbox: AlloyComponent, candidate: SugarElement) => boolean;
+  isPartOf: (sandbox: AlloyComponent, candidate: SugarElement<Node>) => boolean;
   getState: (sandbox: AlloyComponent) => Optional<AlloyComponent>;
   setContent: (sandbox: AlloyComponent, thing: AlloySpec) => Optional<AlloyComponent>;
   closeSandbox: (sandbox: AlloyComponent) => void;
@@ -22,7 +22,7 @@ export interface SandboxingBehaviour extends Behaviour.AlloyBehaviour<Sandboxing
 
 export interface SandboxingConfigSpec extends Behaviour.BehaviourConfigSpec {
   getAttachPoint: (sandbox: AlloyComponent) => AlloyComponent;
-  isPartOf: (sandbox: AlloyComponent, data: AlloyComponent, queryElem: SugarElement) => boolean;
+  isPartOf: (sandbox: AlloyComponent, data: AlloyComponent, queryElem: SugarElement<Node>) => boolean;
   onOpen?: (sandbox: AlloyComponent, menu: AlloyComponent) => void;
   onClose?: (sandbox: AlloyComponent, menu: AlloyComponent) => void;
   cloakVisibilityAttr?: string;
@@ -33,7 +33,7 @@ export interface SandboxingConfig extends Behaviour.BehaviourConfigDetail {
   getAttachPoint: (sandbox: AlloyComponent) => AlloyComponent;
   onOpen: (sandbox: AlloyComponent, thing: AlloyComponent) => void;
   onClose: (sandbox: AlloyComponent, thing: AlloyComponent) => void;
-  isPartOf: (sandbox: AlloyComponent, data: AlloyComponent, queryElem: SugarElement) => boolean;
+  isPartOf: (sandbox: AlloyComponent, data: AlloyComponent, queryElem: SugarElement<Node>) => boolean;
 }
 
 export interface SandboxingState extends BehaviourState {

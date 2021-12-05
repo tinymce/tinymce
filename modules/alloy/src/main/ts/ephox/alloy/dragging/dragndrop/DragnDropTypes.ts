@@ -22,9 +22,9 @@ export interface StartingDragndropConfigSpec {
   phoneyTypes?: string[];
   effectAllowed?: string;
   getData?: (component: AlloyComponent) => string;
-  getImageParent?: (component: AlloyComponent) => SugarElement;
+  getImageParent?: (component: AlloyComponent) => SugarElement<Element>;
   getImage?: (component: AlloyComponent) => DragnDropImageClone;
-  canDrag?: (component: AlloyComponent, target: SugarElement) => boolean;
+  canDrag?: (component: AlloyComponent, target: SugarElement<Node>) => boolean;
   onDragstart?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
   onDragover?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
   onDragend?: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
@@ -35,9 +35,9 @@ export interface DragStartingConfig {
   phoneyTypes: string[];
   effectAllowed: DataTransfer['effectAllowed'];
   getData: Optional<(component: AlloyComponent) => string>;
-  getImageParent: Optional<(component: AlloyComponent) => SugarElement>;
+  getImageParent: Optional<(component: AlloyComponent) => SugarElement<Element>>;
   getImage: Optional<(component: AlloyComponent) => DragnDropImageClone>;
-  canDrag: (component: AlloyComponent, target: SugarElement) => boolean;
+  canDrag: (component: AlloyComponent, target: SugarElement<Node>) => boolean;
   onDragstart: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;
   onDragend: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => void;

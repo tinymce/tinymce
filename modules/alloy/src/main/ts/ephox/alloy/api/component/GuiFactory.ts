@@ -44,9 +44,9 @@ const text = (textContent: string): PremadeSpec => {
 };
 
 // Rename.
-export interface ExternalElement { uid?: string; element: SugarElement }
+export interface ExternalElement { uid?: string; element: SugarElement<Node> }
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec: { uid: Optional<string>; element: SugarElement } = StructureSchema.asRawOrDie('external.component', StructureSchema.objOfOnly([
+  const extSpec: { uid: Optional<string>; element: SugarElement<Node> } = StructureSchema.asRawOrDie('external.component', StructureSchema.objOfOnly([
     FieldSchema.required('element'),
     FieldSchema.option('uid')
   ]), spec);

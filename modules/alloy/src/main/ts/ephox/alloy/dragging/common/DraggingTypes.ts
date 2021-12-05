@@ -70,11 +70,11 @@ export interface SnapsConfigSpec<E> {
 }
 
 export interface DraggingConfig<E> {
-  readonly getTarget: (comp: SugarElement) => SugarElement;
+  readonly getTarget: (comp: SugarElement<HTMLElement>) => SugarElement<HTMLElement>;
   readonly snaps: Optional<SnapsConfig<E>>;
-  readonly onDrop: (comp: AlloyComponent, target: SugarElement) => void;
+  readonly onDrop: (comp: AlloyComponent, target: SugarElement<HTMLElement>) => void;
   readonly repositionTarget: boolean;
-  readonly onDrag: (comp: AlloyComponent, target: SugarElement, delta: SugarPosition) => void;
+  readonly onDrag: (comp: AlloyComponent, target: SugarElement<HTMLElement>, delta: SugarPosition) => void;
   readonly getBounds: () => Bounds;
   readonly blockerClass: string;
   readonly dragger: {
@@ -84,10 +84,10 @@ export interface DraggingConfig<E> {
 
 export interface CommonDraggingConfigSpec<E> {
   readonly useFixed?: () => boolean;
-  readonly onDrop?: (comp: AlloyComponent, target: SugarElement) => void;
+  readonly onDrop?: (comp: AlloyComponent, target: SugarElement<HTMLElement>) => void;
   readonly repositionTarget?: boolean;
-  readonly onDrag?: (comp: AlloyComponent, target: SugarElement, delta: SugarPosition) => void;
-  readonly getTarget?: (elem: SugarElement) => SugarElement;
+  readonly onDrag?: (comp: AlloyComponent, target: SugarElement<HTMLElement>, delta: SugarPosition) => void;
+  readonly getTarget?: (elem: SugarElement<HTMLElement>) => SugarElement<HTMLElement>;
   readonly getBounds?: () => Bounds;
   readonly snaps?: SnapsConfigSpec<E>;
   readonly blockerClass: string;
