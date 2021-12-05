@@ -17,7 +17,7 @@ interface RC {
 }
 
 export type MouseHandler = MouseSelection;
-export type ExternalHandler = (start: SugarElement<Node>, finish: SugarElement<Node>) => void;
+export type ExternalHandler = (start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => void;
 
 export interface KeyboardHandler {
   readonly keydown: (event: EventArgs<KeyboardEvent>, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number, direction: typeof SelectionKeys.ltr) => Optional<Response>;
@@ -26,7 +26,7 @@ export interface KeyboardHandler {
 
 const rc = (rows: number, cols: number): RC => ({ rows, cols });
 
-const mouse = (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): MouseHandler => {
+const mouse = (win: Window, container: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean, annotations: SelectionAnnotation): MouseHandler => {
   const bridge = WindowBridge(win);
 
   const handlers = MouseSelection(bridge, container, isRoot, annotations);
@@ -39,7 +39,7 @@ const mouse = (win: Window, container: SugarElement, isRoot: (e: SugarElement) =
   };
 };
 
-const keyboard = (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): KeyboardHandler => {
+const keyboard = (win: Window, container: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean, annotations: SelectionAnnotation): KeyboardHandler => {
   const bridge = WindowBridge(win);
 
   const clearToNavigate = () => {
@@ -47,12 +47,12 @@ const keyboard = (win: Window, container: SugarElement, isRoot: (e: SugarElement
     return Optional.none<Response>();
   };
 
-  const keydown = (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number, direction: typeof SelectionKeys.ltr) => {
+  const keydown = (event: EventArgs<KeyboardEvent>, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number, direction: typeof SelectionKeys.ltr) => {
     const realEvent = event.raw;
     const keycode = realEvent.which;
     const shiftKey = realEvent.shiftKey === true;
 
-    const handler = CellSelection.retrieve(container, annotations.selectedSelector).fold(() => {
+    const handler = CellSelection.retrieve<HTMLTableCellElement>(container, annotations.selectedSelector).fold(() => {
       // Make sure any possible lingering annotations are cleared
       if (SelectionKeys.isNavigation(keycode) && !shiftKey) {
         annotations.clearBeforeUpdate(container);
@@ -112,7 +112,7 @@ const keyboard = (win: Window, container: SugarElement, isRoot: (e: SugarElement
     return handler();
   };
 
-  const keyup = (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number) => {
+  const keyup = (event: EventArgs<KeyboardEvent>, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => {
     return CellSelection.retrieve(container, annotations.selectedSelector).fold<Optional<Response>>(() => {
       const realEvent = event.raw;
       const keycode = realEvent.which;
@@ -134,10 +134,10 @@ const keyboard = (win: Window, container: SugarElement, isRoot: (e: SugarElement
   };
 };
 
-const external = (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): ExternalHandler => {
+const external = (win: Window, container: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean, annotations: SelectionAnnotation): ExternalHandler => {
   const bridge = WindowBridge(win);
 
-  return (start: SugarElement, finish: SugarElement) => {
+  return (start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     annotations.clearBeforeUpdate(container);
     CellSelection.identify(start, finish, isRoot).each((cellSel) => {
       const boxes = cellSel.boxes.getOr([]);

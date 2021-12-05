@@ -150,7 +150,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
 
       const touchEnd = (t: TouchEvent) => {
         const target = SugarElement.fromDom(t.target as Node);
-        if (SugarNode.name(target) === 'td' || SugarNode.name(target) === 'th') {
+        if (SugarNode.isTag('td')(target) || SugarNode.isTag('th')(target)) {
           const lT = lastTarget.get();
           const lTS = lastTimeStamp.get();
           if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {
