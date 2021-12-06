@@ -13,7 +13,7 @@ export default () => {
     selector: 'div.tiny-text',
     inline: false,
     theme: 'silver',
-    toolbar: [ 'styleselect', 'MagicButton', 'code', 'undo', 'toc', 'redo', 'preview', '|', 'help', 'link', '|', 'align', 'alignleft', 'alignright', 'aligncenter',
+    toolbar: [ 'styleselect', 'MagicButton', 'code', 'undo', 'redo', 'preview', '|', 'help', 'link', '|', 'align', 'alignleft', 'alignright', 'aligncenter',
       'alignjustify', 'alignnone', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|', 'blockquote',
       'outdent', 'indent', '|', 'cut', 'copy', 'paste', '|', 'help', 'selectall', 'visualaid', 'newdocument', 'removeformat', 'remove', '|', 'menu-button-1'
     ].join(' '),
@@ -29,7 +29,6 @@ export default () => {
       'wordcount',
       'table',
       'code',
-      'toc',
       'paste',
       'image',
       'charmap',

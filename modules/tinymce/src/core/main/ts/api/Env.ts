@@ -41,7 +41,7 @@ interface Env {
     current: string | undefined;
     version: Version;
     isEdge: () => boolean;
-    isChrome: () => boolean;
+    isChromium: () => boolean;
     isIE: () => boolean;
     isOpera: () => boolean;
     isFirefox: () => boolean;
@@ -53,7 +53,7 @@ interface Env {
     isWindows: () => boolean;
     isiOS: () => boolean;
     isAndroid: () => boolean;
-    isOSX: () => boolean;
+    isMacOS: () => boolean;
     isLinux: () => boolean;
     isSolaris: () => boolean;
     isFreeBSD: () => boolean;
@@ -104,7 +104,7 @@ const Env: Env = {
   browser: {
     current: browser.current,
     version: browser.version,
-    isChrome: browser.isChrome,
+    isChromium: browser.isChromium,
     isEdge: browser.isEdge,
     isFirefox: browser.isFirefox,
     isIE: browser.isIE,
@@ -119,7 +119,7 @@ const Env: Env = {
     isFreeBSD: os.isFreeBSD,
     isiOS: os.isiOS,
     isLinux: os.isLinux,
-    isOSX: os.isOSX,
+    isMacOS: os.isMacOS,
     isSolaris: os.isSolaris,
     isWindows: os.isWindows
   },

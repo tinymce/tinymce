@@ -35,9 +35,9 @@ const Quirks = (editor: Editor): Quirks => {
   const browser = Env.browser;
   const isGecko = browser.isFirefox();
   const isIE = browser.isIE() || browser.isEdge();
-  const isWebKit = browser.isChrome() || browser.isSafari();
+  const isWebKit = browser.isChromium() || browser.isSafari();
   const isiOS = Env.deviceType.isiPhone() || Env.deviceType.isiPad();
-  const isMac = Env.os.isOSX() || Env.os.isiOS();
+  const isMac = Env.os.isMacOS() || Env.os.isiOS();
   const mceInternalUrlPrefix = 'data:text/mce-internal,';
   const mceInternalDataType = isIE ? 'Text' : 'URL';
 

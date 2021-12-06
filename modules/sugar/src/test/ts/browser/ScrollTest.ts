@@ -135,7 +135,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     const cX = Math.round(center.left);
     const cY = Math.round(center.top);
 
-    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isOSX() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
+    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isMacOS() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
 
     scrollCheck(0, 0, 0, 0, doc, 'start pos');
 

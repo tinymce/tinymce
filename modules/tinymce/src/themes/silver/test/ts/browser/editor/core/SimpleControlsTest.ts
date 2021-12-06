@@ -1,14 +1,14 @@
 import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'bold italic underline strikethrough',
+    toolbar: 'bold italic underline strikethrough print',
   }, []);
 
   const assertToolbarButtonPressed = (title: string) =>
@@ -89,5 +89,10 @@ describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
     editor.setContent('<p><span style="text-decoration: line-through;">strikethrough text</span></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     assertToolbarButtonPressed('Strikethrough');
+  });
+
+  it('TINY-8314: Assert print button exists', async () => {
+    const editor = hook.editor();
+    await TinyUiActions.pWaitForUi(editor, 'button[aria-label="Print"]');
   });
 });

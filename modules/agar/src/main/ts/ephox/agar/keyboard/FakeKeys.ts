@@ -40,7 +40,7 @@ const keyevent = (type: string, doc: SugarElement<Document>, value: number, modi
     safari(type, doc, value, mod, dispatcher);
   } else {
 
-    if (platform.browser.isChrome() || platform.browser.isEdge() || platform.browser.isFirefox()) {
+    if (platform.browser.isChromium() || platform.browser.isEdge() || platform.browser.isFirefox()) {
       if (type === 'keypress') {
         defineGetter(oEvent, 'charCode', getter);
       }

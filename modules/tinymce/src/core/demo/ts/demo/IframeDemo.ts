@@ -35,7 +35,7 @@ export default () => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'print preview media link image'
+      'preview media link image'
     ],
     add_unload_trigger: false,
     autosave_ask_before_unload: false,

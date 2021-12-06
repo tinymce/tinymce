@@ -342,7 +342,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
 
   context('paste_webkit_styles', () => {
     before(function () {
-      if (!browser.isChrome() && !browser.isSafari()) {
+      if (!browser.isChromium() && !browser.isSafari()) {
         this.skip();
       }
     });

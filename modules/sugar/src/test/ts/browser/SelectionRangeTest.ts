@@ -46,8 +46,8 @@ UnitTest.test('WindowSelectionTest', () => {
       return variants.safari;
     } else if (detection.browser.isIE() && variants.ie !== undefined) {
       return variants.ie;
-    } else if (detection.browser.isChrome() && variants.chrome !== undefined) {
-      return variants.chrome;
+    } else if (detection.browser.isChromium() && variants.chromium !== undefined) {
+      return variants.chromium;
     } else if (detection.browser.isEdge() && variants.spartan !== undefined) {
       return variants.spartan;
     } else {
@@ -133,7 +133,7 @@ UnitTest.test('WindowSelectionTest', () => {
         finish: [ 0, 1, 0 ],
         foffset: 'w'.length
       },
-      chrome: {
+      chromium: {
         start: [ 0 ],
         soffset: 2,
         finish: [ 0, 1, 0 ],
@@ -199,7 +199,7 @@ UnitTest.test('WindowSelectionTest', () => {
         finish: [ 0 ],
         foffset: 7
       },
-      chrome: {
+      chromium: {
         start: [ 0 ],
         soffset: 7,
         finish: [ 0 ],
@@ -253,7 +253,7 @@ UnitTest.test('WindowSelectionTest', () => {
         start: [ 0 ],
         soffset: 6
       },
-      chrome: {
+      chromium: {
         finish: [ 0, 3, 1 ],
         foffset: 1,
         start: [ 0 ],

@@ -35,8 +35,8 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     { keyCode: VK.DOWN, action: MatchKeys.action(MediaNavigation.moveV, editor, true) },
     { keyCode: VK.RIGHT, action: MatchKeys.action(BoundarySelection.move, editor, caret, true) },
     { keyCode: VK.LEFT, action: MatchKeys.action(BoundarySelection.move, editor, caret, false) },
-    { keyCode: VK.RIGHT, ctrlKey: !os.isOSX(), altKey: os.isOSX(), action: MatchKeys.action(BoundarySelection.moveNextWord, editor, caret) },
-    { keyCode: VK.LEFT, ctrlKey: !os.isOSX(), altKey: os.isOSX(), action: MatchKeys.action(BoundarySelection.movePrevWord, editor, caret) },
+    { keyCode: VK.RIGHT, ctrlKey: !os.isMacOS(), altKey: os.isMacOS(), action: MatchKeys.action(BoundarySelection.moveNextWord, editor, caret) },
+    { keyCode: VK.LEFT, ctrlKey: !os.isMacOS(), altKey: os.isMacOS(), action: MatchKeys.action(BoundarySelection.movePrevWord, editor, caret) },
     { keyCode: VK.UP, action: MatchKeys.action(ContentEndpointNavigation.moveV, editor, false) },
     { keyCode: VK.DOWN, action: MatchKeys.action(ContentEndpointNavigation.moveV, editor, true) }
   ], evt).each((_) => {
