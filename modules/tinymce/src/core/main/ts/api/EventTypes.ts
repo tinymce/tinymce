@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { AutocompleterEventArgs } from '../autocomplete/AutocompleterEventArgs';
 import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
@@ -118,6 +119,9 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'longpresscancel': { };
   'PreProcess': PreProcessEvent;
   'PostProcess': PostProcessEvent;
+  'AutocompleterStart': AutocompleterEventArgs;
+  'AutocompleterUpdate': AutocompleterEventArgs;
+  'AutocompleterEnd': { };
 }
 
 export interface EditorManagerEventMap {
