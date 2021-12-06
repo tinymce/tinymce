@@ -123,7 +123,6 @@ class AstNode {
   public next?: AstNode;
   public prev?: AstNode;
   public raw?: boolean;
-  public fixed?: boolean;
 
   /**
    * Constructs a new Node instance.
