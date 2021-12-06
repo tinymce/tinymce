@@ -1,15 +1,17 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 
-import { formComponentFields, FormComponentWithLabel, FormComponentWithLabelSpec } from './FormComponent';
+import { formComponentFields, FormComponent, FormComponentSpec } from './FormComponent';
 
-export interface SliderSpec extends FormComponentWithLabelSpec {
+export interface SliderSpec extends FormComponentSpec {
   type: 'slider';
+  label: string;
   min?: number;
   max?: number;
 }
 
-export interface Slider extends FormComponentWithLabel {
+export interface Slider extends FormComponent {
   type: 'slider';
+  label: string;
   min: number;
   max: number;
 }
