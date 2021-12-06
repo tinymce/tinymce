@@ -12,7 +12,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/api/Clipboard';
 
 import { insertTableWithDataValidation } from '../actions/InsertTable';
-import { SelectionTargets } from '../selection/SelectionTargets';
 
 export interface Api {
   readonly insertTable: (columns: number, rows: number, options?: Record<string, number>) => HTMLTableElement | null;
@@ -20,9 +19,6 @@ export interface Api {
   readonly getClipboardRows: () => Array<HTMLTableRowElement | HTMLTableColElement>;
   readonly setClipboardCols: (cols: Array<HTMLTableRowElement | HTMLTableColElement>) => void;
   readonly getClipboardCols: () => Array<HTMLTableRowElement | HTMLTableColElement>;
-  // Internal Apis
-  // readonly resizeHandler: ResizeHandler;
-  readonly selectionTargets: SelectionTargets;
 }
 
 const getClipboardElements = <T extends HTMLElement>(getClipboard: () => Optional<SugarElement<T>[]>) => (): T[] => getClipboard().fold(
@@ -41,15 +37,13 @@ const insertTable = (editor: Editor) => (columns: number, rows: number, options:
   return table;
 };
 
-const getApi = (editor: Editor, clipboard: FakeClipboard, selectionTargets: SelectionTargets): Api => ({
+// TODO: Want to move insertTable and clipboard API into core directly
+const getApi = (editor: Editor, clipboard: FakeClipboard): Api => ({
   insertTable: insertTable(editor),
   setClipboardRows: setClipboardElements(clipboard.setRows),
   getClipboardRows: getClipboardElements(clipboard.getRows),
   setClipboardCols: setClipboardElements(clipboard.setColumns),
   getClipboardCols: getClipboardElements(clipboard.getColumns),
-  // TODO: Have commented out as resizeHandler is exposed by core now
-  // resizeHandler: editor.selection.tableResizeHandler,
-  selectionTargets,
 });
 
 export { getApi };
