@@ -11,10 +11,11 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import { fireAutocompleterEnd, fireAutocompleterStart, fireAutocompleterUpdate } from '../api/Events';
-import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
-import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
+import { getContext } from '../autocomplete/AutocompleteContext';
+import { lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
 import * as Autocompleters from '../autocomplete/Autocompleters';
 import * as AutocompleteTag from '../autocomplete/AutocompleteTag';
+import { AutocompleteContext, AutocompleteLookupInfo } from '../autocomplete/AutocompleteTypes';
 
 interface ActiveAutocompleter {
   triggerChar: string;

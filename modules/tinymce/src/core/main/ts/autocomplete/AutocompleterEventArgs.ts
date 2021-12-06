@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AutocompleteContext } from './AutocompleteContext';
-import { AutocompleteLookupData } from './AutocompleteLookup';
+import { AutocompleteContext, AutocompleteLookupData } from './AutocompleteTypes';
 
 export interface AutocompleterEventArgs {
   context: AutocompleteContext;

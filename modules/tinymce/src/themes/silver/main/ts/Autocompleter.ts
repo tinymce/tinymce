@@ -12,7 +12,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { DOMUtils } from 'tinymce/core/api/PublicApi';
-import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteLookup';
+import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
 
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
 import * as AutocompleteTagReader from './autocomplete/AutocompleteTagReader';

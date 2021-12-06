@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InlineContent } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -14,22 +13,10 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Spot from '../alien/Spot';
 import { toLeaf } from '../alien/TextDescent';
 import { repeatLeft } from '../alien/TextSearch';
-import { AutocompleteContext, getContext } from './AutocompleteContext';
+import { getContext } from './AutocompleteContext';
 import { AutocompleterDatabase } from './Autocompleters';
+import { AutocompleteContext, AutocompleteLookupInfo } from './AutocompleteTypes';
 import { isWhitespace } from './AutocompleteUtils';
-
-export interface AutocompleteLookupData {
-  matchText: string;
-  items: InlineContent.AutocompleterContents[];
-  columns: InlineContent.ColumnTypes;
-  onAction: (autoApi: InlineContent.AutocompleterInstanceApi, rng: Range, value: string, meta: Record<string, any>) => void;
-  highlightOn: string[];
-}
-
-export interface AutocompleteLookupInfo {
-  context: AutocompleteContext;
-  lookupData: Promise<AutocompleteLookupData[]>;
-}
 
 const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) =>
   // If at the start of the range, then we need to look backwards one more place. Otherwise we just need to look at the current text

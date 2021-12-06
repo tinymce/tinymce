@@ -7,9 +7,8 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/PublicApi';
-import { AutocompleteContext } from 'tinymce/core/autocomplete/AutocompleteContext';
-import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteLookup';
 import { AutocompleterEventArgs } from 'tinymce/core/autocomplete/AutocompleterEventArgs';
+import { AutocompleteContext, AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
 
 describe('browser.tinymce.core.keyboard.AutoCompleterTest', () => {
   const triggerChar = '+';
