@@ -11,11 +11,10 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import { fireAutocompleterEnd, fireAutocompleterStart, fireAutocompleterUpdate } from '../api/Events';
-import { getContext } from '../autocomplete/AutocompleteContext';
-import { lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
+import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
+import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
 import * as Autocompleters from '../autocomplete/Autocompleters';
 import * as AutocompleteTag from '../autocomplete/AutocompleteTag';
-import { AutocompleteContext, AutocompleteLookupInfo } from '../autocomplete/AutocompleteTypes';
 
 interface ActiveAutocompleter {
   triggerChar: string;
@@ -108,9 +107,9 @@ export const setup = (editor: Editor) => {
                 ac.matchLength = context.text.length;
 
                 if (wasNecessary) {
-                  fireAutocompleterStart(editor, { context, lookupData });
+                  fireAutocompleterStart(editor, { lookupData });
                 } else {
-                  fireAutocompleterUpdate(editor, { context, lookupData });
+                  fireAutocompleterUpdate(editor, { lookupData });
                 }
               }
             }

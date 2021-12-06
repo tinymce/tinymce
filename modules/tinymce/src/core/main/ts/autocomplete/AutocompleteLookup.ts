@@ -13,10 +13,15 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Spot from '../alien/Spot';
 import { toLeaf } from '../alien/TextDescent';
 import { repeatLeft } from '../alien/TextSearch';
-import { getContext } from './AutocompleteContext';
+import { AutocompleteContext, getContext } from './AutocompleteContext';
 import { AutocompleterDatabase } from './Autocompleters';
-import { AutocompleteContext, AutocompleteLookupInfo } from './AutocompleteTypes';
+import { AutocompleteLookupData } from './AutocompleteTypes';
 import { isWhitespace } from './AutocompleteUtils';
+
+export interface AutocompleteLookupInfo {
+  context: AutocompleteContext;
+  lookupData: Promise<AutocompleteLookupData[]>;
+}
 
 const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) =>
   // If at the start of the range, then we need to look backwards one more place. Otherwise we just need to look at the current text

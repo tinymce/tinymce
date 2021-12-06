@@ -12,8 +12,13 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 import { repeatLeft } from '../alien/TextSearch';
 import * as AutocompleteTag from './AutocompleteTag';
-import { AutocompleteContext } from './AutocompleteTypes';
 import { getText, isValidTextRange, isWhitespace } from './AutocompleteUtils';
+
+export interface AutocompleteContext {
+  range: Range;
+  text: string;
+  triggerChar: string;
+}
 
 const stripTriggerChar = (text: string, triggerCh: string) => text.substring(triggerCh.length);
 

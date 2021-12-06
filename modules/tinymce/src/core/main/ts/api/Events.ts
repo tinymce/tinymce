@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AutocompleterEventArgs } from '../autocomplete/AutocompleterEventArgs';
+import { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
 import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';

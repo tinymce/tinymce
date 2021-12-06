@@ -7,12 +7,6 @@
 
 import { InlineContent } from '@ephox/bridge';
 
-export interface AutocompleteContext {
-  range: Range;
-  text: string;
-  triggerChar: string;
-}
-
 export interface AutocompleteLookupData {
   matchText: string;
   items: InlineContent.AutocompleterContents[];
@@ -21,7 +15,6 @@ export interface AutocompleteLookupData {
   highlightOn: string[];
 }
 
-export interface AutocompleteLookupInfo {
-  context: AutocompleteContext;
-  lookupData: Promise<AutocompleteLookupData[]>;
+export interface AutocompleterEventArgs {
+  lookupData: AutocompleteLookupData[];
 }
