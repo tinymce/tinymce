@@ -1,9 +1,7 @@
 import { ApproxStructure, Keys } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
@@ -11,7 +9,6 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import * as Utils from '../../module/test/TextPatternsUtils';
 
 describe('browser.tinymce.textpatterns.TextPatternsTest', () => {
-  const detection = PlatformDetection.detect();
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     base_url: '/project/tinymce/js/tinymce'
@@ -202,46 +199,8 @@ describe('browser.tinymce.textpatterns.TextPatternsTest', () => {
     TinyAssertions.assertContentPresence(editor, { ol: 1, li: 2 });
   });
 
-  it('getPatterns/setPatterns', () => {
-    const editor = hook.editor();
-    // Store the original patterns
-    const origPatterns = editor.plugins.textpattern.getPatterns();
-
-    editor.plugins.textpattern.setPatterns([
-      { start: '#', format: 'h1' },
-      { start: '##', format: 'h2' },
-      { start: '###', format: 'h3' }
-    ]);
-
-    assert.deepEqual(
-      editor.plugins.textpattern.getPatterns(),
-      [
-        {
-          format: 'h3',
-          start: '###'
-        },
-        {
-          format: 'h2',
-          start: '##'
-        },
-
-        {
-          format: 'h1',
-          start: '#'
-        }
-      ],
-      'should be the same'
-    );
-
-    // Restore the original patterns
-    editor.plugins.textpattern.setPatterns(origPatterns);
-  });
-
-  // TODO TINY-3258 reenable this test when issues with Chrome 72-75 are sorted out
-  it('test inline and block at the same time', function () {
-    if (detection.browser.isChromium()) {
-      this.skip();
-    }
+  // TODO TINY-3258 trying to re-enable this...
+  it('test inline and block at the same time', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '* **important list**');
     TinyAssertions.assertContentPresence(editor, { ul: 1, li: 2, strong: 1 });
