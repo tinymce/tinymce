@@ -83,7 +83,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
       }, store.adder('button.action'), TestProviders)
     ));
 
-    it('Check basic structure', () => {
+    it('TINY-8304: Check basic structure', () => {
       Assertions.assertStructure(
         'Checking initial structure',
         ApproxStructure.build((s, str, arr) => s.element('button', {

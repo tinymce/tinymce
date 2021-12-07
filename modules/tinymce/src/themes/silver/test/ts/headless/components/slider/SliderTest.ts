@@ -6,7 +6,7 @@ import { renderSlider } from 'tinymce/themes/silver/ui/dialog/Slider';
 
 import TestProviders from '../../../module/TestProviders';
 
-describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
+describe('headless.tinymce.themes.silver.components.slider.SliderTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSlider({
       name: 'some name',
@@ -16,7 +16,7 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
     }, TestProviders)
   ));
 
-  it('Check basic structure', () => {
+  it('TINY-8304: Check basic structure', () => {
     Assertions.assertStructure(
       'Checking initial structure',
       ApproxStructure.build((s, str, arr) => s.element('div', {
