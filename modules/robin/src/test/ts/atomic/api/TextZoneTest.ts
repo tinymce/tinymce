@@ -1,7 +1,6 @@
 import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
-import Jsc from '@ephox/wrap-jsverify';
 
 import * as TextZone from 'ephox/robin/api/general/TextZone';
 import { ArbIds, arbIds, ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
@@ -162,78 +161,60 @@ UnitTest.test('TextZoneTest', () => {
 
   PropertyAssertions.check(
     'Check text single',
-    [
-      arbIds(doc1, doc1.property().isText)
-    ],
+    arbIds(doc1, doc1.property().isText),
     checkSingleProp
   );
 
   PropertyAssertions.check(
     'Check text range',
-    [
-      arbRangeIds(doc1, doc1.property().isText)
-    ],
+    arbRangeIds(doc1, doc1.property().isText),
     checkRangeProp
   );
 
-  PropertyAssertions.check('Check that empty tags produce no zone', [
-    arbIds(doc1, doc1.property().isEmptyTag)
-  ], (info: ArbIds) => {
+  PropertyAssertions.check('Check that empty tags produce no zone', arbIds(doc1, doc1.property().isEmptyTag), (info) => {
     const item = doc1.find(doc1.get(), info.startId).getOrDie();
     // Consider other offsets
     const actual = TextZone.range(doc1, item, 0, item, 0, 'en', 'en');
-    return Jsc.eq(true, actual.isNone());
+    return actual.isNone();
   });
 
   PropertyAssertions.check(
     'Check empty range',
-    [
-      arbRangeIds(doc1, doc1.property().isEmptyTag)
-    ],
+    arbRangeIds(doc1, doc1.property().isEmptyTag),
     checkRangeProp
   );
 
   PropertyAssertions.check(
     'Check boundary single',
-    [
-      arbIds(doc1, doc1.property().isBoundary)
-    ],
+    arbIds(doc1, doc1.property().isBoundary),
     checkSingleProp
   );
 
   PropertyAssertions.check(
     'Check boundary range',
-    [
-      arbRangeIds(doc1, doc1.property().isBoundary)
-    ],
+    arbRangeIds(doc1, doc1.property().isBoundary),
     checkRangeProp
   );
 
   PropertyAssertions.check(
     'Check inline tag single',
-    [
-      arbRangeIds(doc1, (item: Gene) => {
-        return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
-      })
-    ],
+    arbRangeIds(doc1, (item: Gene) => {
+      return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
+    }),
     checkSingleProp
   );
 
   PropertyAssertions.check(
     'Check inline tag range',
-    [
-      arbRangeIds(doc1, (item: Gene) => {
-        return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
-      })
-    ],
+    arbRangeIds(doc1, (item: Gene) => {
+      return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
+    }),
     checkRangeProp
   );
 
   PropertyAssertions.check(
     'Check any tag range',
-    [
-      arbRangeIds(doc1, Fun.always)
-    ],
+    arbRangeIds(doc1, Fun.always),
     checkRangeProp
   );
 });

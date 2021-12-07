@@ -1,9 +1,11 @@
 import { Unicode } from '@ephox/katamari';
-import Jsc from '@ephox/wrap-jsverify';
+import { SugarElement } from '@ephox/sugar';
+import * as fc from 'fast-check';
 
 import * as ArbNodes from './ArbNodes';
+import { ArbitraryDetail, CompositeDetail, StructureDetail } from './ArbSchemaTypes';
 
-const formatting = {
+const formatting: CompositeDetail = {
   type: 'composite',
   tags: {
     p: { weight: 1 },
@@ -17,7 +19,7 @@ const formatting = {
   }
 };
 
-const inline = {
+const inline: CompositeDetail = {
   type: 'composite',
   recursionDepth: 3,
   // Underline, strikethrough
@@ -39,7 +41,7 @@ const inline = {
   }
 };
 
-const container = {
+const container: CompositeDetail = {
   type: 'composite',
   recursionDepth: 3,
   tags: {
@@ -55,7 +57,7 @@ const container = {
   }
 };
 
-const listitem = {
+const listitem: CompositeDetail = {
   type: 'composite',
   recursionDepth: 5,
   tag: 'li',
@@ -66,7 +68,7 @@ const listitem = {
   }
 };
 
-const list = {
+const list: CompositeDetail = {
   type: 'composite',
   recursionDepth: 5,
   tags: {
@@ -79,7 +81,7 @@ const list = {
   }
 };
 
-const table = {
+const table: StructureDetail = {
   type: 'structure',
   tag: 'table',
   components: {
@@ -90,7 +92,7 @@ const table = {
   }
 };
 
-const tbody = {
+const tbody: CompositeDetail = {
   type: 'composite',
   tag: 'tbody',
   components: {
@@ -99,7 +101,7 @@ const tbody = {
   }
 };
 
-const thead = {
+const thead: CompositeDetail = {
   type: 'composite',
   tag: 'thead',
   components: {
@@ -108,7 +110,7 @@ const thead = {
   }
 };
 
-const tfoot = {
+const tfoot: CompositeDetail = {
   type: 'composite',
   tag: 'tfoot',
   components: {
@@ -117,7 +119,7 @@ const tfoot = {
   }
 };
 
-const tr = {
+const tr: CompositeDetail = {
   type: 'composite',
   tag: 'tr',
   components: {
@@ -126,7 +128,7 @@ const tr = {
   }
 };
 
-const tablecell = {
+const tablecell: CompositeDetail = {
   type: 'composite',
   tags: {
     th: { weight: 1.0 },
@@ -139,7 +141,7 @@ const tablecell = {
   }
 };
 
-const caption = {
+const caption: CompositeDetail = {
   type: 'composite',
   tag: 'caption',
   components: {
@@ -149,44 +151,44 @@ const caption = {
   }
 };
 
-const image = {
+const image: ArbitraryDetail<SugarElement<HTMLElement>> = {
   type: 'arbitrary',
   // INVESTIGATE: Represent these without this import (not sure if good idea)
-  component: ArbNodes.elementOfArb(Jsc.elements([ 'img' ]))
+  component: ArbNodes.elementOfArb(fc.constantFrom('img'))
 };
 
-const netext = {
+const netext: ArbitraryDetail<SugarElement<Text>> = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.nestring)
+  component: ArbNodes.textOfArb(fc.string({ minLength: 1 }))
 };
 
-const anytext = {
+const anytext: ArbitraryDetail<SugarElement<Text>> = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.string)
+  component: ArbNodes.textOfArb(fc.string())
 };
 
 // TODO: Br?
-const whitespace = {
+const whitespace: ArbitraryDetail<SugarElement<Text>> = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.elements([ ' ', '\n' ]))
+  component: ArbNodes.textOfArb(fc.constantFrom(' ', '\n'))
 };
 
-const zerowidth = {
+const zerowidth: ArbitraryDetail<SugarElement<Text>> = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.constant(Unicode.zeroWidth))
+  component: ArbNodes.textOfArb(fc.constant(Unicode.zeroWidth))
 };
 
-const zerowidths = {
+const zerowidths: ArbitraryDetail<SugarElement<Text>> = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.elements([ '\u200B', Unicode.zeroWidth ]))
+  component: ArbNodes.textOfArb(fc.constantFrom('\u200B', Unicode.zeroWidth))
 };
 
-const comment = {
+const comment: ArbitraryDetail<SugarElement<Comment>> = {
   type: 'arbitrary',
   component: ArbNodes.comment
 };
 
-export {
+export const ArbSchema = {
   whitespace,
   formatting,
   inline,
@@ -207,3 +209,5 @@ export {
   zerowidth,
   zerowidths
 };
+
+export type ArbSchema = typeof ArbSchema;

@@ -1,8 +1,6 @@
 import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import Jsc from '@ephox/wrap-jsverify';
-
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import * as fc from 'fast-check';
 
 export interface ArbTextIds {
   readonly startId: string;
@@ -32,49 +30,33 @@ const textIds = (universe: TestUniverse) => {
   return getIds(universe.get(), universe.property().isText);
 };
 
-const arbTextIds = (universe: TestUniverse) => {
+const arbTextIds = (universe: TestUniverse): fc.Arbitrary<ArbTextIds> => {
   const ids = textIds(universe);
-  return Jsc.elements(textIds(universe)).smap((id: string): ArbTextIds => {
-    return {
-      startId: id,
-      textIds: ids
-    };
-  }, (obj: ArbTextIds) => {
-    return obj.startId;
-  });
+  return fc.constantFrom(...textIds(universe)).map((id) => ({
+    startId: id,
+    textIds: ids
+  }));
 };
 
-const arbIds = (universe: TestUniverse, predicate: (g: Gene) => boolean) => {
+const arbIds = (universe: TestUniverse, predicate: (g: Gene) => boolean): fc.Arbitrary<ArbIds> => {
   const ids = getIds(universe.get(), predicate);
 
-  return Jsc.elements(ids).smap((id: string): ArbIds => {
-    return {
-      startId: id,
+  return fc.constantFrom(...ids).map((id) => ({
+    startId: id,
+    ids
+  }));
+};
+
+const arbRangeIds = (universe: TestUniverse, predicate: (g: Gene) => boolean): fc.Arbitrary<ArbRangeIds> => {
+  const ids = getIds(universe.get(), predicate);
+
+  return fc.integer({ min: 0, max: ids.length - 1 }).chain((startIndex) =>
+    fc.integer({ min: startIndex, max: ids.length - 1 }).map((finishIndex) => ({
+      startId: ids[startIndex],
+      finishId: ids[finishIndex],
       ids
-    };
-  }, (obj: ArbIds) => {
-    return obj.startId;
-  }, (obj: ArbIds) => {
-    return '[id :: ' + obj.startId + ']';
-  });
-};
-
-const arbRangeIds = (universe: TestUniverse, predicate: (g: Gene) => boolean) => {
-  const ids = getIds(universe.get(), predicate);
-
-  const generator = Jsc.integer(0, ids.length - 1).generator.flatMap((startIndex: number) => {
-    return Jsc.integer(startIndex, ids.length - 1).generator.map((finishIndex: number): ArbRangeIds => {
-      return {
-        startId: ids[startIndex],
-        finishId: ids[finishIndex],
-        ids
-      };
-    });
-  });
-
-  return Jsc.bless({
-    generator
-  });
+    }))
+  );
 };
 
 export { arbTextIds, arbRangeIds, arbIds };

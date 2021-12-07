@@ -75,7 +75,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
   const checkTargetSection = (exists: boolean, value: Optional<boolean>) => {
     checkSections([
       {
-        option: { key: 'target_list', value },
+        option: { key: 'link_target_list', value },
         selector: 'label:contains("Open link in...")',
         exists
       }
@@ -95,7 +95,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
   const checkRelSection = (exists: boolean, value: Optional<Array<{ value: string; title: string }>>) => {
     checkSections([
       {
-        option: { key: 'rel_list', value },
+        option: { key: 'link_rel_list', value },
         selector: 'label:contains("Rel")',
         exists
       }
