@@ -1,4 +1,4 @@
-import { Fun, Type } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, DomEvent, Insert, SugarElement } from '@ephox/sugar';
 
@@ -84,18 +84,14 @@ export default (): void => {
       },
 
       onChange: (_slider, thumb, value: SliderValue) => {
-        if (isValueY(value)) {
-          Replacing.set(thumb, [
-            GuiFactory.text(value.toString())
-          ]);
-        }
+        Replacing.set(thumb, [
+          GuiFactory.text(value.toString())
+        ]);
       },
       onInit: (_slider, thumb, _spectrum, value: SliderValue) => {
-        if (isValueY(value)) {
-          Replacing.set(thumb, [
-            GuiFactory.text(value.toString())
-          ]);
-        }
+        Replacing.set(thumb, [
+          GuiFactory.text(value.toString())
+        ]);
       },
 
       components: [
@@ -130,14 +126,6 @@ export default (): void => {
     })
   );
 
-  const isValueX = (v: SliderValue): boolean => {
-    return Type.isFunction((v as SliderValueXY).x);
-  };
-
-  const isValueY = (v: SliderValue): boolean => {
-    return Type.isFunction((v as SliderValueXY).y);
-  };
-
   const getColor = (hue: number) => {
     if (hue < 0) {
       return 'black';
@@ -170,15 +158,11 @@ export default (): void => {
       stepSize: 10,
 
       onChange: (_slider, thumb, value: SliderValue) => {
-        if (isValueX(value)) {
-          setColor(thumb, (value as SliderValueXY).x);
-        }
+        setColor(thumb, (value as SliderValueXY).x);
       },
 
       onInit: (_slider, thumb, _spectrum, value: SliderValue) => {
-        if (isValueX(value)) {
-          setColor(thumb, (value as SliderValueXY).x);
-        }
+        setColor(thumb, (value as SliderValueXY).x);
       },
 
       components: [
