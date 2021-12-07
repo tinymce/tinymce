@@ -33,7 +33,7 @@ interface InlinePatternMatchWithMarkers extends InlinePatternMatch {
   readonly startMarker: Marker;
 }
 
-const matchesPattern = (dom: DOMUtils, block: Node, patternContent: string) => (element: Text, offset: number): number => {
+const matchesPattern = (patternContent: string) => (element: Text, offset: number): number => {
   const text = element.data;
   const searchText = text.substring(0, offset);
   const startEndIndex = searchText.lastIndexOf(patternContent.charAt(patternContent.length - 1));
@@ -52,7 +52,7 @@ const matchesPattern = (dom: DOMUtils, block: Node, patternContent: string) => (
 
 const findPatternStartFromSpot = (dom: DOMUtils, pattern: InlinePattern, block: Node, spot: Spot.SpotPoint<Text>): Optional<Range> => {
   const startPattern = pattern.start;
-  const startSpot = TextSearch.repeatLeft(dom, spot.container, spot.offset, matchesPattern(dom, block, startPattern), block);
+  const startSpot = TextSearch.repeatLeft(dom, spot.container, spot.offset, matchesPattern(startPattern), block);
   return startSpot.bind((spot) => {
     if (spot.offset >= startPattern.length) {
       // Complete match
