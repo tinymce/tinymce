@@ -9,6 +9,7 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import * as TableFormats from '../table/TableFormats';
 import * as DefaultFormats from './DefaultFormats';
 import { Format, Formats } from './FormatTypes';
 import { isInlineFormat, isSelectorFormat } from './FormatUtils';
@@ -86,6 +87,7 @@ export const FormatRegistry = (editor: Editor): FormatRegistry => {
   };
 
   register(DefaultFormats.get(editor.dom));
+  register(TableFormats.get());
   register(Options.getFormats(editor));
 
   return {

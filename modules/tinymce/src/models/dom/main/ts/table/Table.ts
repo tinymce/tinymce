@@ -16,7 +16,6 @@ import { Clipboard as FakeClipboard } from './api/Clipboard';
 import * as Commands from './api/Commands';
 // import * as Options from './api/Options';
 import * as QueryCommands from './api/QueryCommands';
-import * as TableFormats from './core/TableFormats';
 import { ephemera } from './selection/Ephemera';
 
 export interface PatchedSelections {
@@ -38,7 +37,6 @@ const setupTable = (editor: Editor): Api => {
   editor.on('PreInit', () => {
     editor.serializer.addTempAttr(ephemera.firstSelected);
     editor.serializer.addTempAttr(ephemera.lastSelected);
-    TableFormats.registerFormats(editor);
   });
 
   return getApi(clipboard);
