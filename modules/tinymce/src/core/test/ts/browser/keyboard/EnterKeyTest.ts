@@ -15,7 +15,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd',
     entities: 'raw',
     indent: false,
-    text_patterns: false,
+    text_patterns: false, // TODO TINY-8341 investigate why this is needed
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
