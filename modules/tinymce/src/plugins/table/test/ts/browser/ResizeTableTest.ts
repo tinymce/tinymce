@@ -8,8 +8,8 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ObjectResizeEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 import * as TableTestUtils from '../module/test/TableTestUtils';

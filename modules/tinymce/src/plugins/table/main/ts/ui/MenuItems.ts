@@ -170,7 +170,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     editor.ui.registry.addMenuItem('inserttable', {
       text: 'Table',
       icon: 'table',
-      onAction: cmd('mceInsertTable')
+      onAction: cmd('mceInsertTableDialog')
     });
   } else {
     editor.ui.registry.addNestedMenuItem('inserttable', {
@@ -186,7 +186,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   editor.ui.registry.addMenuItem('inserttabledialog', {
     text: 'Insert table',
     icon: 'table',
-    onAction: cmd('mceInsertTable')
+    onAction: cmd('mceInsertTableDialog')
   });
 
   addMenuIfRegistered('tableprops', {

@@ -6,17 +6,18 @@
  */
 
 import { Fun, Obj, Type } from '@ephox/katamari';
+import { TableLookup } from '@ephox/snooker';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import * as InsertTable from '../actions/InsertTable';
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import * as Util from '../core/Util';
+import * as TableSelection from '../selection/TableSelection';
 import { getAdvancedTab } from './DialogAdvancedTab';
 import * as Helpers from './Helpers';
 import * as TableDialogGeneralTab from './TableDialogGeneralTab';
@@ -108,7 +109,11 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | undefine
       const cols = parseInt(data.cols, 10) || 1;
       const rows = parseInt(data.rows, 10) || 1;
       // Cases 1 & 3 - inserting a table
-      tableElm = InsertTable.insert(editor, cols, rows, 0, 0);
+      editor.execCommand('mceInsertTable', false, { rows, columns: cols });
+      tableElm = TableSelection.getSelectionCell(Util.getSelectionStart(editor))
+        .bind((cell) => TableLookup.table(cell, Util.getIsRoot(editor)))
+        .map((table) => table.dom)
+        .getOrUndefined();
     }
 
     if (Obj.size(modifiedData) > 0) {

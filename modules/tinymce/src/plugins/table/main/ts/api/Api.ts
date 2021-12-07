@@ -11,10 +11,7 @@ import { SugarElement, SugarElements } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/api/Clipboard';
 
-import { insertTableWithDataValidation } from '../actions/InsertTable';
-
 export interface Api {
-  readonly insertTable: (columns: number, rows: number, options?: Record<string, number>) => HTMLTableElement | null;
   readonly setClipboardRows: (rows: Array<HTMLTableRowElement | HTMLTableColElement>) => void;
   readonly getClipboardRows: () => Array<HTMLTableRowElement | HTMLTableColElement>;
   readonly setClipboardCols: (cols: Array<HTMLTableRowElement | HTMLTableColElement>) => void;
@@ -31,15 +28,8 @@ const setClipboardElements = <T extends HTMLElement>(setClipboard: (elems: Optio
   setClipboard(elmsOpt);
 };
 
-const insertTable = (editor: Editor) => (columns: number, rows: number, options: Record<string, number> = {}): HTMLTableElement | null => {
-  const table = insertTableWithDataValidation(editor, rows, columns, options, 'Invalid values for insertTable - rows and columns values are required to insert a table.');
-  editor.undoManager.add();
-  return table;
-};
-
 // TODO: Want to move insertTable and clipboard API into core directly
-const getApi = (editor: Editor, clipboard: FakeClipboard): Api => ({
-  insertTable: insertTable(editor),
+const getApi = (_editor: Editor, clipboard: FakeClipboard): Api => ({
   setClipboardRows: setClipboardElements(clipboard.setRows),
   getClipboardRows: getClipboardElements(clipboard.getRows),
   setClipboardCols: setClipboardElements(clipboard.setColumns),

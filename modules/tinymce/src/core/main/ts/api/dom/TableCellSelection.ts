@@ -12,11 +12,11 @@ import { OtherCells, TableFill, TableLookup } from '@ephox/snooker';
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
 import { ephemera } from '../../table/TableEphemera';
-import * as Events from '../../table/TableEvents';
 import { getCellsFromSelection } from '../../table/TableSelection';
 import * as Util from '../../table/TableUtil';
 import Editor from '../Editor';
 import { getTableCloneElements } from '../Options';
+import * as Events from '../TableEvents';
 import { EditorEvent } from '../util/EventDispatcher';
 
 const hasInternalTarget = (e: Event): boolean =>

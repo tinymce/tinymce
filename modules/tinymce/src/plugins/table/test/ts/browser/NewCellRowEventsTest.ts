@@ -5,6 +5,8 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
+import { insertTable } from '../module/test/TableTestUtils';
+
 describe('browser.tinymce.plugins.table.NewCellRowEventsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
@@ -31,7 +33,7 @@ describe('browser.tinymce.plugins.table.NewCellRowEventsTest', () => {
       e.node.setAttribute('data-counter', counter++);
     });
 
-    editor.plugins.table.insertTable(2, 3);
+    insertTable(editor, { rows: 3, columns: 2 });
 
     assert.lengthOf(cells, 6);
     assert.lengthOf(rows, 3);

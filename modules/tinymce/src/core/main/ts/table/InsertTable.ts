@@ -9,11 +9,10 @@ import { Arr, Fun, Type } from '@ephox/katamari';
 import { TableRender, TableConversions } from '@ephox/snooker';
 import { Attribute, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-
-import { fireNewCell, fireNewRow } from '../api/Events';
+import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import * as Util from '../core/Util';
+import * as Events from '../api/TableEvents';
+import * as Util from './TableUtil';
 
 const placeCaretInCell = (editor: Editor, cell: SugarElement<HTMLTableCellElement>): void => {
   editor.selection.select(cell.dom, true);
@@ -26,10 +25,10 @@ const selectFirstCellInTable = (editor: Editor, tableElm: SugarElement<HTMLTable
 
 const fireEvents = (editor: Editor, table: SugarElement<HTMLTableElement>): void => {
   Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr'), (row) => {
-    fireNewRow(editor, row.dom);
+    Events.fireNewRow(editor, row.dom);
 
     Arr.each(SelectorFilter.descendants<HTMLTableCellElement>(row, 'th,td'), (cell) => {
-      fireNewCell(editor, cell.dom);
+      Events.fireNewCell(editor, cell.dom);
     });
   });
 };
@@ -38,11 +37,11 @@ const isPercentage = (width: string): boolean =>
   Type.isString(width) && width.indexOf('%') !== -1;
 
 const insert = (editor: Editor, columns: number, rows: number, colHeaders: number, rowHeaders: number): HTMLTableElement => {
-  const defaultStyles = Options.getDefaultStyles(editor);
+  const defaultStyles = Options.getTableDefaultStyles(editor);
   const options: TableRender.RenderOptions = {
     styles: defaultStyles,
-    attributes: Options.getDefaultAttributes(editor),
-    colGroups: Options.useColumnGroup(editor)
+    attributes: Options.getTableDefaultAttributes(editor),
+    colGroups: Options.tableUseColumnGroup(editor)
   };
 
   // Don't create an undo level when inserting the base table HTML otherwise we can end up with 2 undo levels
@@ -57,11 +56,11 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
 
   // Enforce the sizing mode of the table
   return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
-    if (Options.isPixelsForced(editor)) {
+    if (Options.isTablePixelsForced(editor)) {
       TableConversions.convertToPixelSize(table);
-    } else if (Options.isResponsiveForced(editor)) {
+    } else if (Options.isTableResponsiveForced(editor)) {
       TableConversions.convertToNoneSize(table);
-    } else if (Options.isPercentagesForced(editor) || isPercentage(defaultStyles.width)) {
+    } else if (Options.isTablePercentagesForced(editor) || isPercentage(defaultStyles.width)) {
       TableConversions.convertToPercentSize(table);
     }
     Util.removeDataStyle(table);
@@ -72,7 +71,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   }).getOr(null);
 };
 
-const insertTableWithDataValidation = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}, errorMsg: string): HTMLTableElement | null => {
+const insertTable = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}, errorMsg: string): HTMLTableElement | null => {
   const checkInput = (val: any) => Type.isNumber(val) && val > 0;
 
   if (checkInput(rows) && checkInput(columns)) {
@@ -87,6 +86,5 @@ const insertTableWithDataValidation = (editor: Editor, rows: number, columns: nu
 };
 
 export {
-  insert,
-  insertTableWithDataValidation
+  insertTable
 };

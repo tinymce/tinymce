@@ -10,12 +10,12 @@ import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableConversions, Tabl
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
 import * as NodeType from '../../dom/NodeType';
-import * as Events from '../../table/TableEvents';
 import * as TableSize from '../../table/TableSize';
 import * as Util from '../../table/TableUtil';
 import * as TableWire from '../../table/TableWire';
 import Editor from '../Editor';
 import * as Options from '../Options';
+import * as Events from '../TableEvents';
 
 export interface TableResizeHandler {
   readonly refreshBars: (table: HTMLTableElement) => void;

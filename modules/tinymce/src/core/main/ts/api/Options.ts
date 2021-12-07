@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { SugarElement, Width } from '@ephox/sugar';
 
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
@@ -50,6 +51,11 @@ const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (valu
   } else {
     return { valid: false as const, message: 'Must be a string.' };
   }
+};
+
+const defaultTableStyles = {
+  'border-collapse': 'collapse',
+  'width': '100%'
 };
 
 const register = (editor: Editor) => {
@@ -704,6 +710,19 @@ const register = (editor: Editor) => {
     default: true
   });
 
+  registerOption('table_use_colgroups', {
+    processor: 'boolean',
+    default: false
+  });
+
+  registerOption('table_header_type', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'section', 'cells', 'sectionCells', 'auto' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: section, cells, sectionCells or auto.' };
+    },
+    default: 'section'
+  });
+
   registerOption('table_sizing_mode', {
     processor: 'string',
     default: 'auto'
@@ -715,6 +734,18 @@ const register = (editor: Editor) => {
       return valid ? { value, valid } : { valid: false, message: 'Must be preservetable, or resizetable.' };
     },
     default: 'preservetable'
+  });
+
+  registerOption('table_default_attributes', {
+    processor: 'object',
+    default: {
+      border: '1'
+    }
+  });
+
+  registerOption('table_default_styles', {
+    processor: 'object',
+    default: defaultTableStyles
   });
 
   // These options must be registered later in the init sequence due to their default values
@@ -819,6 +850,20 @@ const hasForcedRootBlock = (editor: Editor): boolean =>
 
 type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
+const determineDefaultTableStyles = (editor: Editor): Record<string, string> => {
+  if (isTablePixelsForced(editor)) {
+    // Determine the inner size of the parent block element where the table will be inserted
+    const dom = editor.dom;
+    const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
+    const contentWidth = Width.getInner(SugarElement.fromDom(parentBlock));
+    return { ...defaultTableStyles, width: contentWidth + 'px' };
+  } else if (isTableResponsiveForced(editor)) {
+    return Obj.filter(defaultTableStyles, (_value, key) => key !== 'width');
+  } else {
+    return defaultTableStyles;
+  }
+};
+
 const getTableCloneElements = (editor: Editor): string[] =>
   editor.options.get('table_clone_elements');
 const hasTableTabNavigation = option('table_tab_navigation');
@@ -835,6 +880,14 @@ const isTablePixelsForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'fixed';
 const isTableResponsiveForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'responsive';
+const getTableDefaultAttributes = option('table_default_attributes');
+const getTableDefaultStyles = (editor: Editor): Record<string, string> => {
+  // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
+  const options = editor.options;
+  return options.isSet('table_default_styles') ? options.get('table_default_styles') : determineDefaultTableStyles(editor);
+};
+const tableUseColumnGroup = option('table_use_colgroups');
+const getTableHeaderType = option('table_header_type');
 
 export {
   register,
@@ -921,5 +974,9 @@ export {
   getTableColumnResizingBehaviour,
   isTablePercentagesForced,
   isTablePixelsForced,
-  isTableResponsiveForced
+  isTableResponsiveForced,
+  getTableDefaultAttributes,
+  getTableDefaultStyles,
+  tableUseColumnGroup,
+  getTableHeaderType
 };

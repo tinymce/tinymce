@@ -18,6 +18,7 @@ import * as EditorFocus from '../focus/EditorFocus';
 import * as InsertBr from '../newline/InsertBr';
 import * as InsertNewLine from '../newline/InsertNewLine';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
+import * as InsertTable from '../table/InsertTable';
 import Editor from './Editor';
 import Env from './Env';
 import { ContentLanguage } from './OptionTypes';
@@ -519,6 +520,10 @@ class EditorCommands {
         if (value.href) {
           editor.formatter.apply('link', value, anchor);
         }
+      },
+
+      'mceInsertTable': (_command, _ui, args) => {
+        InsertTable.insertTable(editor, args.rows, args.columns, args.options, 'Invalid values for mceInsertTable - rows and columns values are required to insert a table.');
       },
 
       'selectAll': () => {

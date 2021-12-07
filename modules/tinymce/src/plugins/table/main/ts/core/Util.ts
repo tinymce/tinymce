@@ -5,9 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
-import { TableLookup } from '@ephox/snooker';
-import { Attribute, Compare, SugarElement } from '@ephox/sugar';
+import { Compare, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -26,16 +24,6 @@ const removePxSuffix = (size: string): string =>
 const addPxSuffix = (size: string): string =>
   /^\d+(\.\d+)?$/.test(size) ? size + 'px' : size;
 
-const removeDataStyle = (table: SugarElement<HTMLTableElement>): void => {
-  Attribute.remove(table, 'data-mce-style');
-
-  const removeStyleAttribute = (element: SugarElement<HTMLElement>) => Attribute.remove(element, 'data-mce-style');
-
-  Arr.each(TableLookup.cells(table), removeStyleAttribute);
-  Arr.each(TableLookup.columns(table), removeStyleAttribute);
-  Arr.each(TableLookup.rows(table), removeStyleAttribute);
-};
-
 const getSelectionStart = (editor: Editor): SugarElement<Element> =>
   SugarElement.fromDom(editor.selection.getStart());
 
@@ -48,7 +36,6 @@ export {
   getIsRoot,
   addPxSuffix,
   removePxSuffix,
-  removeDataStyle,
   getSelectionStart,
   getSelectionEnd
 };

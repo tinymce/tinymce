@@ -182,7 +182,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
 
   addButtonIfRegistered('tableinsertdialog', {
     tooltip: 'Insert table',
-    command: 'mceInsertTable',
+    command: 'mceInsertTableDialog',
     icon: 'table'
   });
 

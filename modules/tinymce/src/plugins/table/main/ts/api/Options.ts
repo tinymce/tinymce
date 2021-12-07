@@ -22,10 +22,6 @@ type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
 
-const defaultAttributes = {
-  border: '1'
-};
-
 const defaultStyles = {
   'border-collapse': 'collapse',
   'width': '100%'
@@ -71,16 +67,6 @@ const register = (editor: Editor): void => {
   registerOption('table_border_styles', {
     processor: 'object[]',
     default: defaultCellBorderStyles
-  });
-
-  registerOption('table_default_attributes', {
-    processor: 'object',
-    default: defaultAttributes
-  });
-
-  registerOption('table_default_styles', {
-    processor: 'object',
-    default: defaultStyles
   });
 
   registerOption('table_cell_advtab', {
@@ -134,11 +120,6 @@ const register = (editor: Editor): void => {
     default: defaultTableToolbar
   });
 
-  registerOption('table_use_colgroups', {
-    processor: 'boolean',
-    default: false
-  });
-
   registerOption('table_background_color_map', {
     processor: 'object[]',
     default: []
@@ -164,13 +145,8 @@ const getCellClassList = option<UserListItem[]>('table_cell_class_list');
 const getRowClassList = option<UserListItem[]>('table_row_class_list');
 const getTableClassList = option<UserListItem[]>('table_class_list');
 const getToolbar = option<string>('table_toolbar');
-const useColumnGroup = option<boolean>('table_use_colgroups');
-const getTableHeaderType = option<string>('table_header_type');
 const getTableBackgroundColorMap = option<UserListValue[]>('table_background_color_map');
 const getTableBorderColorMap = option<UserListValue[]>('table_border_color_map');
-
-const isPercentagesForced = (editor: Editor): boolean =>
-  getTableSizingMode(editor) === 'relative';
 
 const isPixelsForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'fixed';
@@ -197,14 +173,9 @@ export {
   getCellClassList,
   getRowClassList,
   getTableClassList,
-  isPercentagesForced,
-  isPixelsForced,
-  isResponsiveForced,
   getToolbar,
-  getTableHeaderType,
   getTableBorderWidths,
   getTableBorderStyles,
   getTableBackgroundColorMap,
-  getTableBorderColorMap,
-  useColumnGroup
+  getTableBorderColorMap
 };

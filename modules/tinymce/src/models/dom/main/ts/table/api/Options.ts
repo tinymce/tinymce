@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
-
 import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
@@ -22,17 +20,10 @@ const option: {
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
-const register = (editor: Editor): void => {
-  const registerOption = editor.options.register;
-
-  registerOption('table_header_type', {
-    processor: (value) => {
-      const valid = Arr.contains([ 'section', 'cells', 'sectionCells', 'auto' ], value);
-      return valid ? { value, valid } : { valid: false, message: 'Must be one of: section, cells, sectionCells or auto.' };
-    },
-    default: 'section'
-  });
-};
+// const register = (editor: Editor): void => {
+// const registerOption = editor.options.register;
+//
+// };
 
 const getColumnResizingBehaviour = option<'preservetable' | 'resizetable'>('table_column_resizing');
 
@@ -52,7 +43,7 @@ const getCloneElements = (editor: Editor): string[] =>
   editor.options.get('table_clone_elements');
 
 export {
-  register,
+  // register,
   getCloneElements,
   isPercentagesForced,
   isPixelsForced,
