@@ -6,7 +6,7 @@
  */
 
 import { Obj, Type } from '@ephox/katamari';
-import { Attribute, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, DomEvent, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -372,21 +372,9 @@ const initEditorWithInitialContent = (editor: Editor) => {
   }
 };
 
-const initContentBody = (editor: Editor, skipWrite?: boolean) => {
+const contentBodyLoaded = (editor: Editor): void => {
   const targetElm = editor.getElement();
   let doc = editor.getDoc();
-
-  // Restore visibility on target element
-  if (!editor.inline) {
-    editor.getElement().style.visibility = editor.orgVisibility;
-  }
-
-  // Setup iframe body
-  if (!skipWrite && !editor.inline) {
-    doc.open();
-    doc.write(editor.iframeHTML);
-    doc.close();
-  }
 
   if (editor.inline) {
     DOM.addClass(targetElm, 'mce-content-body');
@@ -474,6 +462,30 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
       });
     });
   });
+};
+
+const initContentBody = (editor: Editor, skipWrite?: boolean) => {
+  // Restore visibility on target element
+  if (!editor.inline) {
+    editor.getElement().style.visibility = editor.orgVisibility;
+  }
+
+  // Setup iframe body
+  if (!skipWrite && !editor.inline) {
+    const iframe = editor.iframeElement;
+    const binder = DomEvent.bind(SugarElement.fromDom(iframe), 'load', () => {
+      binder.unbind();
+
+      // Reset the content document, since using srcdoc will change the document
+      editor.contentDocument = iframe.contentDocument;
+
+      // Continue to init the editor
+      contentBodyLoaded(editor);
+    });
+    iframe.srcdoc = editor.iframeHTML;
+  } else {
+    contentBodyLoaded(editor);
+  }
 };
 
 export {
