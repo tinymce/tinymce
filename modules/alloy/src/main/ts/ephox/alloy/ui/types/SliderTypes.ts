@@ -8,13 +8,9 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
-export interface SliderValueX {
-  readonly x: number;
-}
+export type SliderValueX = number;
 
-export interface SliderValueY {
-  readonly y: number;
-}
+export type SliderValueY = number;
 
 export interface SliderValueXY {
   readonly x: number;

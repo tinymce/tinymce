@@ -276,7 +276,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
         mode: 'x',
         minX: min,
         maxX: max,
-        getInitialValue: Fun.constant({ x: value })
+        getInitialValue: Fun.constant(value)
       },
       components: [
         labelPart,
@@ -292,7 +292,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
 
   const makeVariableSlider = (label: string, transform: (ir: ImageResult, adjust: number) => Promise<ImageResult>, min: number, value: number, max: number): Memento.MementoRecord => {
     const onChoose = (slider: AlloyComponent, _thumb: AlloyComponent, value: SliderTypes.SliderValueX): void => {
-      const valTransform = makeValueTransform(transform, value.x / 100);
+      const valTransform = makeValueTransform(transform, value / 100);
       // TODO: Fire the disable event on mousedown and enable on mouseup for silder
       emitTransform(slider, valTransform);
     };

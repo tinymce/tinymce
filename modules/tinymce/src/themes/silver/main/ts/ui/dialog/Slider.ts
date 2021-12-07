@@ -56,9 +56,7 @@ export const renderSlider = (spec: SliderSpec, providerBackstage: UiFactoryBacks
       mode: 'x',
       minX: spec.min,
       maxX: spec.max,
-      // TODO: should this be read from the dialog? I think this initial value is more of a 'default'
-      //       not the same as the dialog initial value.
-      getInitialValue: Fun.constant({ x: (Math.abs(spec.max) - Math.abs(spec.min)) / 2 })
+      getInitialValue: Fun.constant((Math.abs(spec.max) - Math.abs(spec.min)) / 2)
     },
     components: [
       labelPart,
@@ -69,9 +67,8 @@ export const renderSlider = (spec: SliderSpec, providerBackstage: UiFactoryBacks
       ComposingConfigs.self(),
       Focusing.config({})
     ]),
-    // TODO: The slider type should be configurable, although we only use the X as far as I can tell
     onChoose: (component, thumb, value: SliderTypes.SliderValueX) => {
-      AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name, value: value.x } );
+      AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name, value } );
     }
   });
 };
