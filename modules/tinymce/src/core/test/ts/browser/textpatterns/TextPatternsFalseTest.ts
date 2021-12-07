@@ -4,7 +4,6 @@ import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
 import * as Utils from '../../module/test/TextPatternsUtils';
 
@@ -13,7 +12,7 @@ describe('browser.tinymce.core.textpattern.TextPatternsFalseTest', () => {
     plugins: 'lists',
     text_patterns: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ ListsPlugin ]);
+  }, [ ]);
 
   beforeEach(() => {
     const editor = hook.editor();
