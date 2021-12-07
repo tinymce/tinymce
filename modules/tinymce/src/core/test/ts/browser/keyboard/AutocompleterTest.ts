@@ -8,7 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/PublicApi';
 import { AutocompleterEventArgs, AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
 
-describe('browser.tinymce.core.keyboard.AutoCompleterTest', () => {
+describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
   const triggerChar = '+';
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
@@ -60,7 +60,7 @@ describe('browser.tinymce.core.keyboard.AutoCompleterTest', () => {
   const pWaitForEvents = (events: string[], expectedEvents: string[]) =>
     Waiter.pTryUntil('Waited for events to include expected events', () => assert.deepEqual(events, expectedEvents));
 
-  const asseertLookupData = (lookupData: AutocompleteLookupData, expectedMatchText: string) => {
+  const assertLookupData = (lookupData: AutocompleteLookupData, expectedMatchText: string) => {
     assert.equal(lookupData.columns, 1);
     assert.deepEqual(lookupData.highlightOn, []);
     assert.equal(lookupData.matchText, expectedMatchText);
@@ -71,7 +71,7 @@ describe('browser.tinymce.core.keyboard.AutoCompleterTest', () => {
     assert.isFunction(lookupData.onAction);
   };
 
-  it('autocompleter events start, update, end by esc key', async () => {
+  it('TINY-8279: autocompleter events start, update, end by esc key', async () => {
     const editor = hook.editor();
     const events: string[] = [];
     const collect = (args: EditorEvent<AutocompleterEventArgs>) => events.push(args.type);
@@ -84,32 +84,32 @@ describe('browser.tinymce.core.keyboard.AutoCompleterTest', () => {
     editor.off('AutocompleterStart AutocompleterUpdate AutocompleterEnd', collect);
   });
 
-  it('ReloadAutocompleter command should fire an AutocompleterUpdate event', async () => {
+  it('TINY-8279: mceAutocompleterReload command should fire an AutocompleterUpdate event', async () => {
     const editor = hook.editor();
     const events: string[] = [];
     const collect = (args: EditorEvent<AutocompleterEventArgs>) => events.push(args.type);
 
     editor.on('AutocompleterUpdate', collect);
     await pOpenAutocompleter(editor);
-    editor.execCommand('ReloadAutocompleter');
+    editor.execCommand('mceAutocompleterReload');
     await pWaitForEvents(events, [ 'autocompleterupdate' ]);
     await pCloseAutocompleterByKey(editor);
     editor.off('AutocompleterUpdate', collect);
   });
 
-  it('CloseAutocompleter command should fire an AutocompleterEnd event', async () => {
+  it('TINY-8279: mceAutocompleterClose command should fire an AutocompleterEnd event', async () => {
     const editor = hook.editor();
     const events: string[] = [];
     const collect = (args: EditorEvent<AutocompleterEventArgs>) => events.push(args.type);
 
     editor.on('AutocompleterEnd', collect);
     await pOpenAutocompleter(editor);
-    editor.execCommand('CloseAutocompleter');
+    editor.execCommand('mceAutocompleterClose');
     await pWaitForEvents(events, [ 'autocompleterend' ]);
     editor.off('AutocompleterEnd', collect);
   });
 
-  it('autocompleter events start, update, end by enter key', async () => {
+  it('TINY-8279: autocompleter events start, update, end by enter key', async () => {
     const editor = hook.editor();
     const events: string[] = [];
     const collect = (args: EditorEvent<AutocompleterEventArgs>) => events.push(args.type);
@@ -122,7 +122,7 @@ describe('browser.tinymce.core.keyboard.AutoCompleterTest', () => {
     editor.off('AutocompleterStart AutocompleterUpdate AutocompleterEnd', collect);
   });
 
-  it('autocompleter events start, update should have lookupData', async () => {
+  it('TINY-8279: autocompleter events start, update should have lookupData', async () => {
     const editor = hook.editor();
     const eventArgs: AutocompleterEventArgs[] = [];
     const collect = (args: EditorEvent<AutocompleterEventArgs>) => eventArgs.push(args);
@@ -134,7 +134,7 @@ describe('browser.tinymce.core.keyboard.AutoCompleterTest', () => {
       assert.equal(eventArgs.length, 1);
       assert.equal(eventArgs[0].lookupData.length, 1);
 
-      asseertLookupData(eventArgs[0].lookupData[0], '');
+      assertLookupData(eventArgs[0].lookupData[0], '');
     });
 
     await pUpdateWithChar(editor, 'a');
@@ -143,10 +143,10 @@ describe('browser.tinymce.core.keyboard.AutoCompleterTest', () => {
       assert.equal(eventArgs.length, 2);
       assert.equal(eventArgs[1].lookupData.length, 1);
 
-      asseertLookupData(eventArgs[1].lookupData[0], 'a');
+      assertLookupData(eventArgs[1].lookupData[0], 'a');
     });
 
-    editor.execCommand('CloseAutocompleter');
+    editor.execCommand('mceAutocompleterClose');
 
     editor.off('AutocompleterStart AutocompleterUpdate', collect);
   });

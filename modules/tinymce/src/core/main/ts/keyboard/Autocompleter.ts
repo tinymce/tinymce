@@ -15,14 +15,15 @@ import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteCon
 import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
 import * as Autocompleters from '../autocomplete/Autocompleters';
 import * as AutocompleteTag from '../autocomplete/AutocompleteTag';
+import { AutocompleterReloadArgs } from '../autocomplete/AutocompleteTypes';
 
 interface ActiveAutocompleter {
-  triggerChar: string;
-  matchLength: number;
+  readonly triggerChar: string;
+  readonly matchLength: number;
 }
 
 const setupEditorInput = (editor: Editor, load: (fetchOptions?: Record<string, any>) => void) => {
-  const update = Throttler.last(() => load(), 50);
+  const update = Throttler.last(load, 50);
 
   editor.on('keypress compositionend', (e) => {
     // IE will pass the escape key here, so just don't do anything on escape
@@ -43,10 +44,10 @@ const setupEditorInput = (editor: Editor, load: (fetchOptions?: Record<string, a
   editor.on('remove', update.cancel);
 };
 
-export const setup = (editor: Editor) => {
+export const setup = (editor: Editor): void => {
   const activeAutocompleter = Singleton.value<ActiveAutocompleter>();
 
-  const isActive = () => activeAutocompleter.get().isSome();
+  const isActive = activeAutocompleter.isSet;
 
   const cancelIfNecessary = () => {
     if (isActive()) {
@@ -104,7 +105,10 @@ export const setup = (editor: Editor) => {
               if (context.text.length - ac.matchLength >= 10) {
                 cancelIfNecessary();
               } else {
-                ac.matchLength = context.text.length;
+                activeAutocompleter.set({
+                  ...ac,
+                  matchLength: context.text.length
+                });
 
                 if (wasNecessary) {
                   fireAutocompleterStart(editor, { lookupData });
@@ -119,12 +123,12 @@ export const setup = (editor: Editor) => {
     );
   };
 
-  editor.editorCommands.addCommand('ReloadAutocompleter', (_ui, value) => {
+  editor.addCommand('mceAutocompleterReload', (_ui, value: AutocompleterReloadArgs) => {
     const fetchOptions: Record<string, any> = Type.isObject(value) ? value.fetchOptions : {};
     load(fetchOptions);
   });
 
-  editor.editorCommands.addCommand('CloseAutocompleter', () => cancelIfNecessary());
+  editor.addCommand('mceAutocompleterCancel', cancelIfNecessary);
 
   setupEditorInput(editor, load);
 };

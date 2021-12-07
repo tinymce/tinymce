@@ -12,7 +12,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 const autocompleteSelector = '[data-mce-autocompleter]';
 
-const create = (editor: Editor, range: Range) => {
+const create = (editor: Editor, range: Range): void => {
   // Check if an existing wrapper exists (eg from undoing), otherwise
   // wrap the content in a span, so we know where to search between
   if (findIn(SugarElement.fromDom(editor.getBody())).isNone()) {
@@ -31,11 +31,11 @@ const create = (editor: Editor, range: Range) => {
   }
 };
 
-const detect = (elm: SugarElement): Optional<SugarElement> => SelectorFind.closest(elm, autocompleteSelector);
+const detect = (elm: SugarElement<Element>): Optional<SugarElement<Element>> => SelectorFind.closest(elm, autocompleteSelector);
 
-const findIn = (elm: SugarElement): Optional<SugarElement> => SelectorFind.descendant(elm, autocompleteSelector);
+const findIn = (elm: SugarElement<Element>): Optional<SugarElement> => SelectorFind.descendant(elm, autocompleteSelector);
 
-const remove = (elm: SugarElement) => findIn(elm).each(Remove.unwrap);
+const remove = (elm: SugarElement<Element>): void => findIn(elm).each(Remove.unwrap);
 
 export {
   create,

@@ -51,7 +51,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   );
 
   const isMenuOpen = () => InlineView.isOpen(autocompleter);
-  const isActive = () => activeState.get();
+  const isActive = activeState.get;
 
   const hideIfNecessary = () => {
     if (isActive()) {
@@ -59,7 +59,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     }
   };
 
-  const cancelIfNecessary = () => editor.execCommand('CloseAutocompleter');
+  const cancelIfNecessary = () => editor.execCommand('mceAutocompleterClose');
 
   const getCombinedItems = (matches: AutocompleteLookupData[]): ItemTypes.ItemSpec[] => {
     const columns = Arr.findMap(matches, (m) => Optional.from(m.columns)).getOr(1);
@@ -77,7 +77,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
               hide: () => cancelIfNecessary(),
               reload: (fetchOptions: Record<string, any>) => {
                 hideIfNecessary();
-                editor.execCommand('ReloadAutocompleter', false, { fetchOptions });
+                editor.execCommand('mceAutocompleterReload', false, { fetchOptions });
               }
             };
             processingAction.set(true);
