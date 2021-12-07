@@ -8,6 +8,7 @@ import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
+import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, failure) => {
 
@@ -112,12 +113,8 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
 
     const cCheckValue = (expected: number) => Chain.op((parts: any) => {
       const v = Representing.getValue(parts.sliderComp);
-      Assert.eq('Checking slider value', expected, v.x);
+      Assert.eq('Checking slider value', expected, v);
     });
-
-    const sAssertValue = (label: string, expected: number) => Logger.t(label, Step.sync(() => {
-      Assert.eq(label, expected, Representing.getValue(component).x);
-    }));
 
     return [
       Logger.t(
@@ -200,16 +197,16 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       ),
 
       Keyboard.sKeydown(doc, Keys.left(), {}),
-      sAssertValue('200 -> 190 (step size)', 190),
+      RepresentPipes.sAssertValue('200 -> 190 (step size)', 190, component),
 
       Keyboard.sKeydown(doc, Keys.left(), {}),
-      sAssertValue('200 -> 180 (step size)', 180),
+      RepresentPipes.sAssertValue('200 -> 180 (step size)', 180, component),
 
       Step.sync(() => {
         Slider.resetToMin(component);
       }),
 
-      sAssertValue('min: 50', 50),
+      RepresentPipes.sAssertValue('min: 50', 50, component),
 
       Keyboard.sKeydown(doc, Keys.left(), {}),
       Logger.t(
@@ -240,10 +237,13 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
       ),
 
       Keyboard.sKeydown(doc, Keys.right(), {}),
-      sAssertValue('Checking that the thumb is now one step further right', 60),
+      RepresentPipes.sAssertValue('Checking that the thumb is now one step further right', 60, component),
 
       Keyboard.sKeydown(doc, Keys.right(), {}),
-      sAssertValue('Checking that the thumb is now one step further right', 70)
+      RepresentPipes.sAssertValue('Checking that the thumb is now one step further right', 70, component),
+
+      RepresentPipes.sSetValue(component, 99),
+      RepresentPipes.sAssertValue('Check that Representing.setValue does something', 99, component),
     ];
   }, success, failure);
 });
