@@ -128,7 +128,7 @@ export const setup = (editor: Editor): void => {
     load(fetchOptions);
   });
 
-  editor.addCommand('mceAutocompleterCancel', cancelIfNecessary);
+  editor.addCommand('mceAutocompleterClose', cancelIfNecessary);
 
   setupEditorInput(editor, load);
 };
