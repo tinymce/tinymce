@@ -6,7 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
@@ -73,23 +73,16 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
   });
 };
 
-const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Optional<AutocompleteContext> => {
-  const startContainer = SugarElement.fromDom(initRange.startContainer);
-
-  if (SugarNode.isElement(startContainer)) {
-    return AutocompleteTag.detect(startContainer).fold(
-      () => findStart(dom, initRange, ch, minChars),
-      (elm) => {
-        const range = dom.createRng();
-        range.selectNode(elm.dom);
-        const text = getText(range);
-        return Optional.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
-      }
-    );
-  } else {
-    return Optional.none();
-  }
-};
+const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Optional<AutocompleteContext> =>
+  AutocompleteTag.detect(SugarElement.fromDom(initRange.startContainer)).fold(
+    () => findStart(dom, initRange, ch, minChars),
+    (elm) => {
+      const range = dom.createRng();
+      range.selectNode(elm.dom);
+      const text = getText(range);
+      return Optional.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
+    }
+  );
 
 export {
   findChar, // Exposed for testing.
