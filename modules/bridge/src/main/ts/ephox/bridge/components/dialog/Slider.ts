@@ -1,4 +1,4 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 
 import { formComponentFields, FormComponent, FormComponentSpec } from './FormComponent';
 
@@ -23,3 +23,5 @@ export const sliderSchema = StructureSchema.objOf(
     FieldSchema.defaultedNumber('max', 0),
   ])
 );
+
+export const sliderInputDataProcessor = ValueType.number;
