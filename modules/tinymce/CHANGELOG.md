@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
 - The `tabindex` attribute is now copied from the target element to the iframe #TINY-8315
 - New `slider` dialog component #TINY-8304
-- New `spacer` dialog component #TINY-8304
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 
 ### Improved
