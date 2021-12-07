@@ -27,6 +27,9 @@ import { addVisualInternal } from './view/VisualAidsImpl';
 
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
+  init: {
+    bindEvents: () => void;
+  };
   undoManager: {
     beforeChange: () => void;
     add: () => UndoLevel;
@@ -70,6 +73,9 @@ interface RtcRuntimeApi {
 
 /** A copy of the TinyMCE api definitions that the plugin overrides  */
 interface RtcAdaptor {
+  init: {
+    bindEvents: () => void;
+  };
   undoManager: {
     beforeChange: (locks: Locks, beforeBookmark: UndoBookmark) => void;
     add: (
@@ -125,6 +131,9 @@ interface RtcEditor extends Editor {
 }
 
 const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
+  init: {
+    bindEvents: Fun.noop
+  },
   undoManager: {
     beforeChange: (locks, beforeBookmark) => Operations.beforeChange(editor, locks, beforeBookmark),
     add: (undoManager, index, locks, beforeBookmark, level, event) =>
@@ -167,9 +176,12 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
 
 const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
   const defaultVars = (vars: Record<string, string>) => Type.isObject(vars) ? vars : {};
-  const { undoManager, formatter, editor, selection, raw } = rtcEditor;
+  const { init, undoManager, formatter, editor, selection, raw } = rtcEditor;
 
   return {
+    init: {
+      bindEvents: init.bindEvents
+    },
     undoManager: {
       beforeChange: undoManager.beforeChange,
       add: undoManager.add,
@@ -214,6 +226,9 @@ const makeNoopAdaptor = (): RtcAdaptor => {
   const empty = Fun.constant('');
 
   return {
+    init: {
+      bindEvents: Fun.noop
+    },
     undoManager: {
       beforeChange: Fun.noop,
       add: nul,
@@ -410,3 +425,6 @@ export const getSelectedContent = (editor: Editor, format: ContentFormat, args: 
 
 export const addVisual = (editor: Editor, elm: HTMLElement): void =>
   getRtcInstanceWithError(editor).editor.addVisual(elm);
+
+export const bindEvents = (editor: Editor): void =>
+  getRtcInstanceWithError(editor).init.bindEvents();

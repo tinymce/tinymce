@@ -474,9 +474,11 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
       setupRtc().then((_rtcMode) => {
         editor.setProgressState(false);
         initEditorWithInitialContent(editor);
+        Rtc.bindEvents(editor);
       }, (err) => {
         editor.notificationManager.open({ type: 'error', text: String(err) });
         initEditorWithInitialContent(editor);
+        Rtc.bindEvents(editor);
       });
     });
   });

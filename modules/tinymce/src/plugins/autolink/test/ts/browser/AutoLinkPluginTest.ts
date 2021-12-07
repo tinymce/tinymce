@@ -136,14 +136,14 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     );
   });
 
-  it(`TBA: default_link_target='_self'`, () => {
+  it(`TBA: link_default_target='_self'`, () => {
     const editor = hook.editor();
-    editor.options.set('default_link_target', '_self');
+    editor.options.set('link_default_target', '_self');
     LegacyUnit.equal(
       typeUrl(editor, 'http://www.domain.com'),
       '<p><a href="http://www.domain.com" target="_self">http://www.domain.com</a>&nbsp;</p>'
     );
-    editor.options.unset('default_link_target');
+    editor.options.unset('link_default_target');
   });
 
   it('TBA: link_default_protocol=https', () => {

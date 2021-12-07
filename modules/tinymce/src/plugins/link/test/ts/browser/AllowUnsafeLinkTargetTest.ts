@@ -10,7 +10,7 @@ describe('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
-    target_list: [
+    link_target_list: [
       { title: 'New page', value: '_blank' }
     ],
     base_url: '/project/tinymce/js/tinymce'
@@ -56,10 +56,10 @@ describe('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', () => {
     TinyAssertions.assertContent(editor, '<p><a href="http://www.google.com" target="_blank" rel="alternate nofollow noopener">Google</a></p>');
   });
 
-  it('TBA: allow_unsafe_link_target=false: proper option selected for defined rel_list', async () => {
+  it('TBA: allow_unsafe_link_target=false: proper option selected for defined link_rel_list', async () => {
     const editor = hook.editor();
     editor.options.set('allow_unsafe_link_target', false);
-    editor.options.set('rel_list', [
+    editor.options.set('link_rel_list', [
       { title: 'Lightbox', value: 'lightbox' },
       { title: 'Test rel', value: 'alternate nofollow' },
       { title: 'Table of contents', value: 'toc' }
