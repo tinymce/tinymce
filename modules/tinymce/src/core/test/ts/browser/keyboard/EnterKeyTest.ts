@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyHooks, TinyApis } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -19,21 +19,23 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
   }, []);
 
   const pressEnter = (editor: Editor, shouldBeParagraph: boolean, evt?: any) => {
-    const inputEvents = [];
-    editor.on('input', (event) => {
-      inputEvents.push(event.type);
-      inputEvents.push(event.inputType);
-    });
+    const inputEvents: string[] = [];
     const dom = editor.dom;
     const target = editor.selection.getNode();
 
+    const collect = (event: InputEvent) => {
+      inputEvents.push(event.inputType);
+    };
+
     evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
 
+    editor.on('input', collect);
     dom.fire(target, 'keydown', evt);
     dom.fire(target, 'keypress', evt);
     dom.fire(target, 'keyup', evt);
+    editor.off('input', collect);
 
-    assert.deepEqual([ 'input', shouldBeParagraph ? 'insertParagraph' : 'insertLineBreak' ], inputEvents, 'Events not fired as expected'); // deepEqual to match content, not object id.
+    assert.deepEqual([ shouldBeParagraph ? 'insertParagraph' : 'insertLineBreak' ], inputEvents, 'Events not fired as expected');
   };
 
   it('Enter at end of H1', () => {
@@ -750,5 +752,17 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     LegacyUnit.setSelection(editor, 'summary', 1);
     pressEnter(editor, false);
     assert.equal(editor.getContent(), '<details><summary>a<br />b</summary></details>');
+  });
+
+  it('Enter on expanded range', () => {
+    const editor = hook.editor();
+    const apis = TinyApis(editor);
+
+    editor.setContent('<p>abc</p>');
+    apis.setSelection([ 0, 0 ], 1, [ 0, 0 ], 2);
+
+    pressEnter(editor, true);
+    apis.assertContent( '<p>a</p><p>c</p>');
+    apis.assertSelection([ 1, 0 ], 0, [ 1, 0 ], 0);
   });
 });

@@ -51,8 +51,9 @@ const deleteFromTo = (editor: Editor, caret: Cell<Text>, from: CaretPosition, to
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
 
   editor.undoManager.ignore(() => {
-    editor.selection.setRng(rangeFromPositions(from, to));
-    editor.execCommand('Delete');
+    const range = rangeFromPositions(from, to);
+    editor.selection.setRng(range);
+    range.deleteContents();
 
     BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
       .map(BoundaryLocation.inside)

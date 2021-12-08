@@ -21,7 +21,7 @@ const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) 
   endTypingLevelIgnoreLocks(editor.undoManager);
   editor.undoManager.transact(() => {
     if (editor.selection.isCollapsed() === false) {
-      editor.execCommand('Delete');
+      editor.selection.getRng().deleteContents();
     }
 
     InsertNewLine.insert(editor, event);

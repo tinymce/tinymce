@@ -17,7 +17,8 @@ const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
     { keyCode: VK.SPACEBAR, action: MatchKeys.action(InsertSpace.insertSpaceOrNbspAtSelection, editor) }
   ], evt).each(() => {
     evt.preventDefault();
-    fireFakeInputEvent(editor, { inputType: 'insertText', data: ' ' }, evt);
+    // Browsers sends space in data even if the dom ends up with a nbsp so we should always be sending a space
+    fireFakeInputEvent(editor, 'insertText', { data: ' ' });
   });
 };
 

@@ -45,11 +45,7 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) }
   ], evt).each((value) => {
-    if (value.keyCode === VK.BACKSPACE) {
-      fireFakeInputEvent(editor, { inputType: 'deleteContentBackward' }, evt);
-    } else {
-      fireFakeInputEvent(editor, { inputType: 'deleteContentForward' }, evt);
-    }
+    fireFakeInputEvent(editor, value.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward');
     evt.preventDefault();
   });
 };

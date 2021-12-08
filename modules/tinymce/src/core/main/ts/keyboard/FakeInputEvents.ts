@@ -9,27 +9,27 @@ import Editor from '../api/Editor';
 import { clone } from '../events/EventUtils';
 
 interface SpecificsInput {
-  inputType: string;
-  cancelable?: boolean;
   data?: null | string;
 }
 
-const fireFakeInputEvent = (editor: Editor, specifics: SpecificsInput, event: KeyboardEvent) => {
+const fireFakeInputEvent = (editor: Editor, inputType: string, specifics: SpecificsInput = {}) => {
+  const target = editor.getBody();
   const overrides = {
     bubbles: true,
     composed: true,
     data: null,
     isComposing: false,
     detail: 0,
-    view: event.view,
-    target: event.target,
-    currentTarget: event.currentTarget,
-    eventPhase: event.eventPhase,
-    originalTarget: event.target,
-    explicitOriginalTarget: event.target,
-    isTrusted: event.isTrusted,
-    srcElement: event.srcElement,
-    metaKey: event.metaKey
+    view: null,
+    target,
+    currentTarget: target,
+    eventPhase: Event.AT_TARGET,
+    originalTarget: target,
+    explicitOriginalTarget: target,
+    isTrusted: true,
+    srcElement: target,
+    cancelable: false,
+    inputType
   };
 
   const input = clone(new InputEvent('input'));
