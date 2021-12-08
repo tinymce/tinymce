@@ -6,7 +6,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as Options from 'tinymce/core/api/Options';
 import * as InlinePattern from 'tinymce/core/textpatterns/core/InlinePattern';
-import { InlinePattern as InlinePatternType, InlinePatternMatch, RawPattern } from 'tinymce/core/textpatterns/core/PatternTypes';
+import { InlinePattern as InlinePatternType, InlinePatternMatch } from 'tinymce/core/textpatterns/core/PatternTypes';
 import * as TextPatterns from 'tinymce/core/textpatterns/TextPatterns';
 import { PathRange } from 'tinymce/core/textpatterns/utils/PathRange';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
@@ -33,7 +33,7 @@ describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
   }, [ ListsPlugin ]);
 
   const inlinePatterns = Thunk.cached(() => {
-    const rawPatterns = Options.getTextPatterns(hook.editor()) as RawPattern[];
+    const rawPatterns = Options.getTextPatterns(hook.editor());
     return TextPatterns.generatePatternSet(rawPatterns).inlinePatterns;
   });
 
