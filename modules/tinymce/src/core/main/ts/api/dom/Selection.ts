@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
+import { Selections, SelectionTypes } from '@ephox/darwin';
 import { Arr, Type } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 
@@ -91,7 +91,6 @@ interface EditorSelection {
   getStart: (real?: boolean) => Element;
   getEnd: (real?: boolean) => Element;
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
-  getSelectedCells: () => HTMLTableCellElement[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
@@ -471,7 +470,52 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    */
   const getNode = (): Element => ElementSelection.getNode(editor.getBody(), getRng());
 
-  const getSelectedBlocks = (startElm: Element, endElm: Element) => ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
+  // const getSelectedBlocks = (startElm?: Element, endElm?: Element) => ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
+
+  // Trying to just use returned array from Darwin Selections. I don't think this gives enough fidenlity
+  // const getSelectedBlocks = (startElm?: Element, endElm?: Element) => {
+  //   const selectedCells = cellSelection.get();
+  //   // Returns even for collapsed selection in cell which causes TableInListTest and IndentListsInTableTest to fail
+  //   if (selectedCells.length > 1) {
+  //     return Arr.map(selectedCells, (cell) => cell.dom);
+  //   } else {
+  //     return ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
+  //   }
+  // };
+
+  // Use getSelectedBlocks instead of getSelectedCells. Will just have to filter out any non-td/th elements and operate from that
+  // TODO: Still need some way of knowing if the the selection is a fake one or not.
+  // Complications when dealing with partial selection that starts or ends outside the table or into another table
+
+  const getSelectedBlocks = (startElm?: Element, endElm?: Element) => {
+    const selectedCells = cellSelection.get();
+    const selectedBlocks = ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
+
+    return SelectionTypes.fold(
+      selectedCells,
+      () => {
+        console.log('here1');
+        return selectedBlocks;
+      },
+      (cells) => {
+        // This path is take whenever there is fake cell selection even for just a single cell
+        console.log('here2');
+        return Arr.map(cells, (cell) => cell.dom);
+      },
+      (cell) => {
+        // If the selection is collapsed and we are in a TD, prepend the TD to the selected blocks but only if there already isn't a td cell from the selectedBlocks
+        // TODO: May need to filter out duplicated TDs for case when inside a TD that doesn't have a paragraph or anything
+        if (isCollapsed() && !Arr.exists(selectedBlocks, NodeType.isTableCell)) {
+          console.log('here3');
+          return [ cell.dom as Element ].concat(selectedBlocks);
+        } else {
+          // If the selection isn't collapsed
+          console.log('here4');
+          return selectedBlocks;
+        }
+      }
+    );
+  };
 
   const isForward = (): boolean => {
     const sel = getSel();
@@ -494,9 +538,6 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
   };
-
-  const getSelectedCells = () =>
-    Arr.map(cellSelection.get(), (cell) => cell.dom);
 
   const normalize = (): Range => {
     const rng = getRng();
@@ -592,7 +633,6 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     getStart,
     getEnd,
     getSelectedBlocks,
-    getSelectedCells,
     normalize,
     selectorChanged,
     selectorChangedWithUnbind,

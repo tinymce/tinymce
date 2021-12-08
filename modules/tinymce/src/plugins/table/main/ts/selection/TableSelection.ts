@@ -12,6 +12,7 @@ import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNod
 
 import { Editor } from 'tinymce/core/api/PublicApi';
 
+import * as Util from '../core/Util';
 import { ephemera } from './Ephemera';
 
 const getSelectionCellFallback = (element: SugarElement<Node>) =>
@@ -30,8 +31,13 @@ const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement 
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
-const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
-  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] => {
+  if (Util.isSelectionWithinTable(editor)) {
+    return Arr.bind(editor.selection.getSelectedBlocks(), (block) => Util.isTableCell(block) ? [ SugarElement.fromDom(block) ] : []);
+  } else {
+    return [];
+  }
+};
 
 const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
   const cellOpt = getSelectionCell(selected);
