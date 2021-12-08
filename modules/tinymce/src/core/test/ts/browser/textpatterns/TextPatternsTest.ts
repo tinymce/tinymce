@@ -199,7 +199,6 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
     TinyAssertions.assertContentPresence(editor, { ol: 1, li: 2 });
   });
 
-  // TODO TINY-3258 trying to re-enable this...
   it('test inline and block at the same time', () => {
     const editor = hook.editor();
     Utils.setContentAndPressEnter(editor, '* **important list**');
