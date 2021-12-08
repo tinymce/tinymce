@@ -10,6 +10,7 @@ import { DropZone, DropZoneSpec } from './Dropzone';
 import { Grid, GridSpec } from './Grid';
 import { HtmlPanel, HtmlPanelSpec } from './HtmlPanel';
 import { Iframe, IframeSpec } from './Iframe';
+import { ImagePanel, ImagePanelSpec } from './ImagePanel';
 import { ImageTools, ImageToolsSpec } from './ImageTools';
 import { Input, InputSpec } from './Input';
 import { Label, LabelSpec } from './Label';
@@ -39,6 +40,7 @@ export type BodyComponentSpec
   | ColorInputSpec
   | GridSpec
   | ColorPickerSpec
+  | ImagePanelSpec
   | ImageToolsSpec
   | AlertBannerSpec
   | CollectionSpec
@@ -64,6 +66,7 @@ export type BodyComponent
   | ColorInput
   | Grid
   | ColorPicker
+  | ImagePanel
   | ImageTools
   | AlertBanner
   | Collection

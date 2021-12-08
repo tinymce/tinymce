@@ -14,6 +14,7 @@ import { dropZoneSchema } from './Dropzone';
 import { createGridFields } from './Grid';
 import { htmlPanelSchema } from './HtmlPanel';
 import { iframeSchema } from './Iframe';
+import { imagePanelSchema } from './ImagePanel';
 import { imageToolsSchema } from './ImageTools';
 import { inputSchema } from './Input';
 import { createLabelFields } from './Label';
@@ -68,6 +69,7 @@ export const itemSchema = StructureSchema.valueThunkOf(
     urlinput: urlInputSchema,
     customeditor: customEditorSchema,
     htmlpanel: htmlPanelSchema,
+    imagepanel: imagePanelSchema,
     imagetools: imageToolsSchema,
     collection: collectionSchema,
     label: StructureSchema.objOf(createLabelFields(createItemsField('label'))),
