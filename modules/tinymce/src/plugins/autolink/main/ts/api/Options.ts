@@ -31,7 +31,7 @@ const register = (editor: Editor): void => {
 
   registerOption('link_default_protocol', {
     processor: 'string',
-    default: 'http'
+    default: 'https'
   });
 };
 

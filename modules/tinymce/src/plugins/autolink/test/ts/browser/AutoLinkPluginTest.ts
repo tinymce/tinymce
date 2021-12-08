@@ -57,8 +57,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     assertIsLink(editor, 'customprotocol://www.domain.com', 'customprotocol://www.domain.com');
     assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
     assertIsLink(editor, 'ftp://www.domain.com', 'ftp://www.domain.com');
-    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com');
-    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', '.');
+    assertIsLink(editor, 'www.domain.com', 'https://www.domain.com');
+    assertIsLink(editor, 'www.domain.com', 'https://www.domain.com', '.');
     assertIsLink(editor, 'user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'mailto:user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'first-last@domain.com', 'mailto:first-last@domain.com');
@@ -99,8 +99,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     typeAnEclipsedURL(editor, 'https://www.domain.com');
     typeAnEclipsedURL(editor, 'ssh://www.domain.com');
     typeAnEclipsedURL(editor, 'ftp://www.domain.com');
-    typeAnEclipsedURL(editor, 'www.domain.com', 'http://www.domain.com');
-    typeAnEclipsedURL(editor, 'www.domain.com', 'http://www.domain.com');
+    typeAnEclipsedURL(editor, 'www.domain.com', 'https://www.domain.com');
+    typeAnEclipsedURL(editor, 'www.domain.com', 'https://www.domain.com');
 
     typeAnEclipsedURL(editor, 'https://www.domain.com', 'https://www.domain.com', '[', ']');
     typeAnEclipsedURL(editor, 'https://www.domain.com', 'https://www.domain.com', '{', '}');
@@ -112,8 +112,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     typeNewlineURL(editor, 'https://www.domain.com');
     typeNewlineURL(editor, 'ssh://www.domain.com');
     typeNewlineURL(editor, 'ftp://www.domain.com');
-    typeNewlineURL(editor, 'www.domain.com', 'http://www.domain.com');
-    typeNewlineURL(editor, 'www.domain.com', 'http://www.domain.com', true);
+    typeNewlineURL(editor, 'www.domain.com', 'https://www.domain.com');
+    typeNewlineURL(editor, 'www.domain.com', 'https://www.domain.com', true);
   });
 
   it('TBA: Url inside blank formatting wrapper', () => {
