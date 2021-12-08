@@ -48,7 +48,6 @@
       "tinymce/plugins/emoticons/*": ["modules/tinymce/src/plugins/emoticons/main/ts/*"],
       "tinymce/plugins/fullscreen/*": ["modules/tinymce/src/plugins/fullscreen/main/ts/*"],
       "tinymce/plugins/help/*": ["modules/tinymce/src/plugins/help/main/ts/*"],
-      "tinymce/plugins/hr/*": ["modules/tinymce/src/plugins/hr/main/ts/*"],
       "tinymce/plugins/image/*": ["modules/tinymce/src/plugins/image/main/ts/*"],
       "tinymce/plugins/importcss/*": ["modules/tinymce/src/plugins/importcss/main/ts/*"],
       "tinymce/plugins/insertdatetime/*": ["modules/tinymce/src/plugins/insertdatetime/main/ts/*"],
