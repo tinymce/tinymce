@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InlineContent } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -16,15 +15,8 @@ import { toLeaf } from '../alien/TextDescent';
 import { repeatLeft } from '../alien/TextSearch';
 import { AutocompleteContext, getContext } from './AutocompleteContext';
 import { AutocompleterDatabase } from './Autocompleters';
+import { AutocompleteLookupData } from './AutocompleteTypes';
 import { isWhitespace } from './AutocompleteUtils';
-
-export interface AutocompleteLookupData {
-  matchText: string;
-  items: InlineContent.AutocompleterContents[];
-  columns: InlineContent.ColumnTypes;
-  onAction: (autoApi: InlineContent.AutocompleterInstanceApi, rng: Range, value: string, meta: Record<string, any>) => void;
-  highlightOn: string[];
-}
 
 export interface AutocompleteLookupInfo {
   context: AutocompleteContext;

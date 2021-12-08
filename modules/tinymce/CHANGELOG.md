@@ -7,8 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Added a new `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
+- New `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
 - The `tabindex` attribute is now copied from the target element to the iframe #TINY-8315
+- New `AutocompleterStart`, `AutocompleterUpdate` and `AutocompleterEnd` events #TINY-8279
+- New `mceAutocompleterClose`, `mceAutocompleterReload` commands #TINY-8279
 - New `slider` dialog component #TINY-8304
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 

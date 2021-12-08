@@ -74,11 +74,11 @@ UnitTest.test('ObjectsTest', () => {
 
   const testConsolidate = () => {
     const checkErr = (label, expected, objs, base) => {
-      KAssert.eqError('eq', expected, Objects.consolidate(objs, base));
+      KAssert.eqError(`eq ${label}`, expected, Objects.consolidate(objs, base));
     };
 
     const checkVal = (label, expected, objs, base) => {
-      KAssert.eqValue('eq', expected, Objects.consolidate(objs, base));
+      KAssert.eqValue(`eq ${label}`, expected, Objects.consolidate(objs, base));
     };
 
     checkVal(

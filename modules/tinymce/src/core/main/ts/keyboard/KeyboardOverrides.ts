@@ -11,6 +11,7 @@ import Editor from '../api/Editor';
 import * as CaretContainerInput from '../caret/CaretContainerInput';
 import * as Rtc from '../Rtc';
 import * as ArrowKeys from './ArrowKeys';
+import * as Autocompleter from './Autocompleter';
 import * as BoundarySelection from './BoundarySelection';
 import * as DeleteBackspaceKeys from './DeleteBackspaceKeys';
 import * as EnterKey from './EnterKey';
@@ -35,6 +36,7 @@ const setup = (editor: Editor): Cell<Text> => {
     InputKeys.setup(editor);
     HomeEndKeys.setup(editor, caret);
     PageUpDownKeys.setup(editor, caret);
+    Autocompleter.setup(editor);
 
     return caret;
   }
