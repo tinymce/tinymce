@@ -13,7 +13,7 @@ import Env from 'tinymce/core/api/Env';
 // Note: This is different to the help shortcut converter, as it doesn't padd the + symbol with spaces
 //       so as to not take up large amounts of space in the menus
 const convertText = (source: string) => {
-  const isMac = Env.os.isOSX() || Env.os.isiOS();
+  const isMac = Env.os.isMacOS() || Env.os.isiOS();
   const mac = {
     alt: '&#x2325;',
     ctrl: '&#x2303;',

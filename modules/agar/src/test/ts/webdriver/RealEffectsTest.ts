@@ -18,9 +18,8 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
 
   const platform = PlatformDetection.detect();
 
-  // IE never passes unless watched and Edge 18 fails to hover on mousemove
   // the meta key on mac using chromedriver/safaridriver doesn't work (see https://github.com/webdriverio/webdriverio/issues/622)
-  if (platform.browser.isIE() || platform.browser.isEdge() || platform.browser.isSafari() || (platform.os.isOSX() && platform.browser.isChrome())) {
+  if (platform.browser.isSafari() || (platform.os.isMacOS() && platform.browser.isChromium())) {
     return success();
   }
 
@@ -58,7 +57,7 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
     Chain.asStep(body, [
       UiFinder.cFindIn('button.test'),
       Chain.mapper((button) => {
-        const prop = platform.browser.isFirefox() || platform.browser.isEdge() || platform.browser.isIE() ? 'border-right-color' : 'border-color';
+        const prop = platform.browser.isFirefox() ? 'border-right-color' : 'border-color';
         return Css.get(button, prop);
       }),
       Assertions.cAssertEq(label + '\nChecking color of button border', expected)
@@ -84,7 +83,7 @@ UnitTest.asynctest('Real Effects Test', (success, failure) => {
     sCheckInput('After correcting "this"', 'I am typing this'),
     Step.wait(50),
     RealKeys.sSendKeysOn('input', [
-      RealKeys.combo(platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true }, 'a')
+      RealKeys.combo(platform.os.isMacOS() ? { metaKey: true } : { ctrlKey: true }, 'a')
     ]),
     Step.wait(50),
     RealClipboard.sCopy('input'),

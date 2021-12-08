@@ -4,8 +4,8 @@ const isEdge = (platform: PlatformDetection): boolean => {
   return platform.browser.isEdge();
 };
 
-const isChrome = (platform: PlatformDetection): boolean => {
-  return platform.browser.isChrome();
+const isChromium = (platform: PlatformDetection): boolean => {
+  return platform.browser.isChromium();
 };
 
 const isFirefox = (platform: PlatformDetection): boolean => {
@@ -30,7 +30,7 @@ const isOpera = (platform: PlatformDetection): boolean => {
 
 export {
   isEdge,
-  isChrome,
+  isChromium,
   isFirefox,
   isOpera,
   isIE11,

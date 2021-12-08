@@ -17,7 +17,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.MobileContextMenuTest
 
   before(function () {
     const browser = detection.browser;
-    const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
+    const runTests = browser.isChromium() || browser.isFirefox() || browser.isSafari();
     if (!runTests) {
       this.skip();
     }

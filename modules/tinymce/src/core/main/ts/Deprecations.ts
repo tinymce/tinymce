@@ -20,7 +20,7 @@ const deprecatedOptions = (
 ).split(',');
 
 const deprecatedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,textcolor'.split(',');
-const movedToPremiumPlugins = 'imagetools,toc'.split(',');
+const movedToPremiumPlugins = 'toc'.split(',');
 
 const getDeprecatedOptions = (options: RawEditorOptions): string[] => {
   const settingNames = Arr.filter(deprecatedOptions, (setting) => Obj.has(options, setting));

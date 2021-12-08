@@ -136,7 +136,7 @@ describe('browser.tinymce.core.EditorTest', () => {
   });
 
   it('TBA: WebKit Serialization range bug', function () {
-    if (!(browser.isChrome() || browser.isSafari())) {
+    if (!(browser.isChromium() || browser.isSafari())) {
       this.skip();
     }
 

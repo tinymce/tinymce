@@ -11,7 +11,7 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 describe('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationTest', () => {
   before(function () {
     const browser = PlatformDetection.detect().browser;
-    if (!browser.isChrome() && !browser.isSafari()) {
+    if (!browser.isChromium() && !browser.isSafari()) {
       this.skip();
     }
   });

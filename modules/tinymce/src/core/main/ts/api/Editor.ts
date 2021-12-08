@@ -80,7 +80,6 @@ export interface EditorConstructor {
 // Shorten these names
 const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
-const ie = Env.browser.isIE() || Env.browser.isEdge();
 
 /**
  * Include Editor API docs.
@@ -620,14 +619,9 @@ class Editor implements EditorObservable {
    * @method hide
    */
   public hide() {
-    const self = this, doc = self.getDoc();
+    const self = this;
 
     if (!self.hidden) {
-      // Fixed bug where IE has a blinking cursor left from the editor
-      if (ie && doc && !self.inline) {
-        doc.execCommand('SelectAll');
-      }
-
       // We must save before we hide so Safari doesn't crash
       self.save();
 
@@ -1084,34 +1078,6 @@ class Editor implements EditorObservable {
 
   public _scanForImages(): Promise<BlobInfoImagePair[]> {
     return this.editorUpload.scanForImages();
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addButton instead
-   */
-  public addButton() {
-    throw new Error('editor.addButton has been removed in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addSidebar instead
-   */
-  public addSidebar() {
-    throw new Error('editor.addSidebar has been removed in tinymce 5x, use editor.ui.registry.addSidebar instead');
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addMenuItem instead
-   */
-  public addMenuItem() {
-    throw new Error('editor.addMenuItem has been removed in tinymce 5x, use editor.ui.registry.addMenuItem instead');
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addContextMenu instead
-   */
-  public addContextToolbar() {
-    throw new Error('editor.addContextToolbar has been removed in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
   }
 }
 

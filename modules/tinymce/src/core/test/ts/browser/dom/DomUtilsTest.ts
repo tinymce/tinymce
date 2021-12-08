@@ -1,5 +1,4 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -9,7 +8,6 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
-  const isIE = PlatformDetection.detect().browser.isIE();
   const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
   it('parseStyle', () => {
@@ -90,8 +88,7 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     );
     DOM.removeClass(DOM.select('span', 'test'), 'test1');
     assert.equal(DOM.get('test2').className, '', 'incorrect classname');
-    // Note: IE 11 is different here, as modern browsers will re-generate the class list and remove duplicates when making changes
-    assert.equal(DOM.get('test3').className, isIE ? 'test test' : 'test', 'incorrect classname');
+    assert.equal(DOM.get('test3').className, 'test', 'incorrect classname');
     assert.equal(DOM.get('test4').className, 'test', 'incorrect classname');
 
     DOM.get('test').innerHTML = '<span id="test2" class="test"></span>';
@@ -458,13 +455,8 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     assert.equal(c, 3);
   });
 
-  it('loadCSS contentCssCors enabled', function () {
+  it('loadCSS contentCssCors enabled', () => {
     let c = 0;
-
-    // The crossorigin attribute isn't supported in IE11
-    if (isIE) {
-      this.skip();
-    }
 
     // Create an iframe to load in, so that we are using a different document. Otherwise DOMUtils will fallback to using the default.
     const iframe = DOM.create('iframe', { src: `javascript=''` }) as HTMLIFrameElement;

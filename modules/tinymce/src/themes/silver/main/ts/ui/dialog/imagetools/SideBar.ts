@@ -17,6 +17,7 @@ const createButton = (innerHtml: string, icon: string, disabled: boolean, action
   name: innerHtml,
   icon: Optional.some(icon),
   disabled,
+  buttonType: Optional.none(),
   tooltip: Optional.some(innerHtml),
   primary: false,
   borderless: false

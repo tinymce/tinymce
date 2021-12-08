@@ -9,7 +9,7 @@ import Plugin from 'tinymce/plugins/paste/Plugin';
 describe('browser.tinymce.plugins.paste.PasteFormatToggleTest', () => {
   before(function () {
     const browser = PlatformDetection.detect().browser;
-    if (!browser.isChrome() && !browser.isSafari()) {
+    if (!browser.isChromium() && !browser.isSafari()) {
       this.skip();
     }
   });

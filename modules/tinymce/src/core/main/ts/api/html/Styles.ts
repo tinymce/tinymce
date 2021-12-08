@@ -9,7 +9,7 @@
  * This class is used to parse CSS styles it also compresses styles to reduce the output size.
  *
  * @example
- * var Styles = new tinymce.html.Styles({
+ * var Styles = tinymce.html.Styles({
  *    url_converter: function(url) {
  *       return url;
  *    }
@@ -43,7 +43,7 @@ interface Styles {
   serialize: (styles: StyleMap, elementName?: string) => string;
 }
 
-const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
+const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
   /* jshint maxlen:255 */
   /* eslint max-len:0 */
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
@@ -68,7 +68,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
     encodingLookup[invisibleChar + i] = encodingItems[i];
   }
 
-  return {
+  const self: Styles = {
     /**
      * Parses the specified style value into an object collection. This parser will also
      * merge and remove any redundant items that browsers might have added. It will also convert non hex
@@ -82,7 +82,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
       const styles: any = {};
       let matches, name, value, isEncoded;
       const urlConverter = settings.url_converter;
-      const urlConverterScope = settings.url_converter_scope || this;
+      const urlConverterScope = settings.url_converter_scope || self;
 
       const compress = (prefix, suffix, noJoin?) => {
         const top = styles[prefix + '-top' + suffix];
@@ -355,6 +355,8 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
       return css;
     }
   };
+
+  return self;
 };
 
 export default Styles;

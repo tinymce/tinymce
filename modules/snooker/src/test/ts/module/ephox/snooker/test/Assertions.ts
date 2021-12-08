@@ -1,7 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
@@ -210,11 +209,10 @@ const checkStructure = (
 const checkDelete = (
   label: string,
   optExpCell: Optional<ExpCell>,
-  optExpectedHtml: Optional<{ ie: string; normal: string }>,
+  optExpectedHtml: Optional<string>,
   input: string,
   operation: OperationCallback<TargetSelection>,
-  cells: ExpCell[],
-  platform: ReturnType<typeof PlatformDetection.detect>
+  cells: ExpCell[]
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   const container = makeContainer();
@@ -249,11 +247,7 @@ const checkDelete = (
     Assertions.assertEq(label + ': The table was expected to be removed from the DOM', false, Traverse.parent(table).isSome());
 
   }, (expectedHtml) => {
-    if (platform.browser.isIE() || platform.browser.isEdge()) {
-      Assertions.assertHtml(label, expectedHtml.ie, Html.getOuter(table));
-    } else {
-      Assertions.assertHtml(label, expectedHtml.normal, Html.getOuter(table));
-    }
+    Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
     Remove.remove(container);
   });
 

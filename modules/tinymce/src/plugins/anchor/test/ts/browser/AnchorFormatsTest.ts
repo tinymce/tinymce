@@ -3,7 +3,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/anchor/Plugin';
 
 describe('browser.tinymce.plugins.anchor.AnchorFormatsTest', () => {
@@ -29,12 +28,7 @@ describe('browser.tinymce.plugins.anchor.AnchorFormatsTest', () => {
   it('TINY-6236: Check that namedAnchor format matches on non-empty named anchor', () => {
     const editor = hook.editor();
     editor.setContent('<p><a id="abc">abc</a></p>');
-    // Note: Browser check since selection is unstable on IE11 due to TINY-3799
-    if (Env.browser.isIE()) {
-      TinySelections.select(editor, 'a', []);
-    } else {
-      TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
-    }
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
     testMatchFormat(editor, true);
   });
 

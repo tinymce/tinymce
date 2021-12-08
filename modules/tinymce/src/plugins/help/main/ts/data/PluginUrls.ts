@@ -50,16 +50,13 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'pagebreak', name: 'Page Break' },
   { key: 'paste', name: 'Paste' },
   { key: 'preview', name: 'Preview' },
-  { key: 'print', name: 'Print' },
   { key: 'quickbars', name: 'Quick Toolbars' },
   { key: 'save', name: 'Save' },
   { key: 'searchreplace', name: 'Search and Replace' },
-  { key: 'tabfocus', name: 'Tab Focus' },
   { key: 'table', name: 'Table' },
   { key: 'template', name: 'Template' },
   { key: 'textcolor', name: 'Text Color' },
   { key: 'textpattern', name: 'Text Pattern' },
-  { key: 'toc', name: 'Table of Contents' },
   { key: 'visualblocks', name: 'Visual Blocks' },
   { key: 'visualchars', name: 'Visual Characters' },
   { key: 'wordcount', name: 'Word Count' },
@@ -82,7 +79,8 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'rtc', name: 'Real-Time Collaboration', type: PluginType.Premium },
   { key: 'tinymcespellchecker', name: 'Spell Checker Pro', type: PluginType.Premium },
   { key: 'tinycomments', name: 'Tiny Comments', type: PluginType.Premium, slug: 'comments' },
-  { key: 'tinydrive', name: 'Tiny Drive', type: PluginType.Premium }
+  { key: 'tinydrive', name: 'Tiny Drive', type: PluginType.Premium },
+  { key: 'toc', name: 'Table of Contents', type: PluginType.Premium },
 ], (item) => ({
   ...item,
   // Set the defaults/fallbacks for the plugin urls

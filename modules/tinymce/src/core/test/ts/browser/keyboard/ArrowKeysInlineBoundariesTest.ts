@@ -36,9 +36,9 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
     assert.equal(chr, Zwsp.ZWSP, 'Should be after a zwsp at caret');
   };
 
-  // TODO: This function was needed to make tests pass on Firefox and IE, but it is likely hiding bugs in the arrow navigation
+  // TODO: This function was needed to make tests pass on Firefox, but it is likely hiding bugs in the arrow navigation
   const legacySetRawContent = (editor: Editor, content: string) => {
-    if (browser.isIE() || browser.isFirefox()) {
+    if (browser.isFirefox()) {
       editor.getBody().innerHTML = content;
     } else {
       editor.setContent(content, { format: 'raw' });
@@ -317,10 +317,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p>aa <a href="#">bb</a> cc</p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
       editor.nodeChanged();
-      TinyContentActions.keystroke(editor, Keys.right(), { ctrl: !os.isOSX(), alt: os.isOSX() });
+      TinyContentActions.keystroke(editor, Keys.right(), { ctrl: !os.isMacOS(), alt: os.isMacOS() });
       // TINY-7334: Chromium v90 caused the way the Selection.modify API works on Windows so that
       // it moves to the start of the next word instead of the end of the next word
-      if (os.isWindows() && (browser.isChrome() || browser.isEdge()) && browser.version.major >= 90) {
+      if (os.isWindows() && browser.isChromium() && browser.version.major >= 90) {
         TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
       } else {
         TinyAssertions.assertCursor(editor, [ 0, 2 ], 3);
@@ -332,7 +332,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p>aa <a href="#">bb</a> cc</p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       editor.nodeChanged();
-      TinyContentActions.keystroke(editor, Keys.left(), { ctrl: !os.isOSX(), alt: os.isOSX() });
+      TinyContentActions.keystroke(editor, Keys.left(), { ctrl: !os.isMacOS(), alt: os.isMacOS() });
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     });
   });

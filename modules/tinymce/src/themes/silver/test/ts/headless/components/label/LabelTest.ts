@@ -34,6 +34,7 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
         classes: [ arr.has('tox-form__group') ],
         children: [
           s.element('label', {
+            classes: [ arr.has('tox-label') ],
             children: [
               s.text(str.is('Group of Options'))
             ]

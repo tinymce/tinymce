@@ -14,7 +14,7 @@ describe('browser.tinymce.plugins.emoticons.SearchTest', () => {
   before(function () {
     // TODO: TINY-6905: Test is flaking on Chromium Edge 86, so we need to investigate
     const platform = PlatformDetection.detect();
-    if (platform.browser.isChrome() && platform.os.isWindows()) {
+    if (platform.browser.isChromium() && platform.os.isWindows()) {
       this.skip();
     }
   });

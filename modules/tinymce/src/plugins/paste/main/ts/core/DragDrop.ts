@@ -17,7 +17,7 @@ import { ClipboardContents } from './Clipboard';
 import * as InternalHtml from './InternalHtml';
 import * as Utils from './Utils';
 
-const getCaretRangeFromEvent = (editor: Editor, e: MouseEvent): Range =>
+const getCaretRangeFromEvent = (editor: Editor, e: MouseEvent): Range | undefined =>
   RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
 
 const isPlainTextFileUrl = (content: ClipboardContents): boolean => {

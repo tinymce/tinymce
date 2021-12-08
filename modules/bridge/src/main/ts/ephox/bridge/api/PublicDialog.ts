@@ -22,6 +22,7 @@ import { ListBoxItemSpec, ListBoxSpec, ListBoxSingleItemSpec, ListBoxNestedItemS
 import { PanelSpec } from '../components/dialog/Panel';
 import { SelectBoxItemSpec, SelectBoxSpec } from '../components/dialog/SelectBox';
 import { SizeInputSpec } from '../components/dialog/SizeInput';
+import { SliderSpec } from '../components/dialog/Slider';
 import { TableSpec } from '../components/dialog/Table';
 import { TabPanelSpec, TabSpec } from '../components/dialog/TabPanel';
 import { TextAreaSpec } from '../components/dialog/Textarea';
@@ -87,6 +88,8 @@ export {
   SelectBoxItemSpec,
 
   SizeInputSpec,
+
+  SliderSpec,
 
   TableSpec,
 

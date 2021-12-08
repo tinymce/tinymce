@@ -8,7 +8,6 @@
 import { Strings, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 
 import * as Options from '../api/Options';
 
@@ -186,30 +185,11 @@ const parseCurrentLine = (editor: Editor, endOffset: number): void => {
 };
 
 const setup = (editor: Editor): void => {
-  let autoUrlDetectState: boolean | undefined;
-
   editor.on('keydown', (e) => {
     if (e.keyCode === 13) {
       return handleEnter(editor);
     }
   });
-
-  // Internet Explorer has built-in automatic linking for most cases
-  if (Env.browser.isIE()) {
-    editor.on('focus', () => {
-      if (!autoUrlDetectState) {
-        autoUrlDetectState = true;
-
-        try {
-          editor.execCommand('AutoUrlDetect', false, true);
-        } catch (ex) {
-          // Ignore
-        }
-      }
-    });
-
-    return;
-  }
 
   editor.on('keypress', (e) => {
     // One of the closing bracket keys: ), ] or }

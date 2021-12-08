@@ -8,7 +8,7 @@ import Plugin from 'tinymce/plugins/paste/Plugin';
 
 describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
   before(function () {
-    if (!Env.browser.isChrome() && !Env.browser.isSafari()) {
+    if (!Env.browser.isChromium() && !Env.browser.isSafari()) {
       this.skip();
     }
   });

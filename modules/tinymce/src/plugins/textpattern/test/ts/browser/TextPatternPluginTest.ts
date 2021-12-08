@@ -240,7 +240,7 @@ describe('browser.tinymce.plugins.textpattern.TextPatternPluginTest', () => {
 
   // TODO TINY-3258 reenable this test when issues with Chrome 72-75 are sorted out
   it('test inline and block at the same time', function () {
-    if (detection.browser.isChrome()) {
+    if (detection.browser.isChromium()) {
       this.skip();
     }
     const editor = hook.editor();

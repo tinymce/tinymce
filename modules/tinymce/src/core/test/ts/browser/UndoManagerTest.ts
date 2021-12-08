@@ -14,7 +14,7 @@ import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.UndoManagerTest', () => {
   const os = PlatformDetection.detect().os;
-  const isMac = os.isOSX() || os.isiOS();
+  const isMac = os.isMacOS() || os.isiOS();
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,

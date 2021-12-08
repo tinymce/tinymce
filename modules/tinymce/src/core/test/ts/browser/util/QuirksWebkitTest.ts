@@ -9,7 +9,7 @@ import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
   before(function () {
-    if (!Env.browser.isChrome() && !Env.browser.isSafari()) {
+    if (!Env.browser.isChromium() && !Env.browser.isSafari()) {
       this.skip();
     }
   });

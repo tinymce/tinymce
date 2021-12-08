@@ -1,22 +1,15 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 import fc from 'fast-check';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
 
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
-  before(function () {
-    if (Env.browser.isIE()) {
-      this.skip();
-    }
-  });
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'autolink',
     indent: false,
@@ -136,14 +129,14 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     );
   });
 
-  it(`TBA: default_link_target='_self'`, () => {
+  it(`TBA: link_default_target='_self'`, () => {
     const editor = hook.editor();
-    editor.options.set('default_link_target', '_self');
+    editor.options.set('link_default_target', '_self');
     LegacyUnit.equal(
       typeUrl(editor, 'http://www.domain.com'),
       '<p><a href="http://www.domain.com" target="_self">http://www.domain.com</a>&nbsp;</p>'
     );
-    editor.options.unset('default_link_target');
+    editor.options.unset('link_default_target');
   });
 
   it('TBA: link_default_protocol=https', () => {

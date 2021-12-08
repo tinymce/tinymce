@@ -105,7 +105,8 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
             mode: 'manual',
             getValue: (_) => {
               return modelDetail.value.get();
-            }
+            },
+            setValue
           }
         }),
 
