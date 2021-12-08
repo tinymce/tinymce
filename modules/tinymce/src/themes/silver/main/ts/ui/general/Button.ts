@@ -79,6 +79,18 @@ export const renderIconButton = (spec: IconButtonWrapper, action: (comp: AlloyCo
   return AlloyButton.sketch(iconButtonSpec);
 };
 
+const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondary' | 'toolbar') => {
+  switch (buttonType) {
+    case 'primary':
+      return [ 'tox-button' ];
+    case 'toolbar':
+      return [ 'tox-tbtn' ];
+    case 'secondary':
+    default:
+      return [ 'tox-button', 'tox-button--secondary' ];
+  }
+};
+
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
 export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []) => {
@@ -91,8 +103,13 @@ export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: Alloy
     innerHtml: translatedText
   };
 
+  // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
+  const buttonType = spec.buttonType.getOr(!spec.primary && !spec.borderless ? 'secondary' : 'primary');
+
+  const baseClasses = calculateClassesFromButtonType(buttonType);
+
   const classes = [
-    ...!spec.primary && !spec.borderless ? [ 'tox-button', 'tox-button--secondary' ] : [ 'tox-button' ],
+    ...baseClasses,
     ...icon.isSome() ? [ 'tox-button--icon' ] : [],
     ...spec.borderless ? [ 'tox-button--naked' ] : [],
     ...extraClasses
@@ -156,6 +173,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
       ...spec,
+      buttonType: Optional.none(),
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);

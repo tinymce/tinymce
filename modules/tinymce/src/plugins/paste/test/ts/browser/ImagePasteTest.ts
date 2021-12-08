@@ -50,10 +50,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
       bytes[i] = buff.charCodeAt(i);
     }
 
-    // Note: We need to mock creating a File due to IE not supporting the File constructor
-    const file = new Blob([ bytes ], { type }) as any;
-    file.name = filename;
-    return file;
+    return new window.File([ bytes ], filename, { type });
   };
 
   const mockEvent = <K extends 'drop' | 'paste'>(type: K, files: File[]): K extends 'drop' ? DragEvent : ClipboardEvent => {

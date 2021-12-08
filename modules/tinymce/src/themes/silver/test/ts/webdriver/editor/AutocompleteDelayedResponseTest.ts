@@ -1,8 +1,7 @@
 import { Keys, RealKeys, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -24,13 +23,6 @@ interface Scenario {
 
 describe('webdriver.tinymce.themes.silver.editor.AutocompleteDelayedResponseTest', () => {
   const store = TestHelpers.TestStore();
-  before(function () {
-    // This test is a little too flaky on IE
-    if (PlatformDetection.detect().browser.isIE()) {
-      this.skip();
-    }
-  });
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {

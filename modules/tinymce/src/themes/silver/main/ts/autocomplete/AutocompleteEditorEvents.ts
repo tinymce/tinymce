@@ -12,10 +12,9 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-import * as AutocompleteTag from './AutocompleteTag';
+import * as AutocompleteTagReader from './AutocompleteTagReader';
 
 export interface AutocompleterUiApi {
-  onKeypress: { cancel: () => void; throttle: (evt: Event) => void };
   getView: () => Optional<AlloyComponent>;
   isMenuOpen: () => boolean;
   isActive: () => boolean;
@@ -24,22 +23,12 @@ export interface AutocompleterUiApi {
 }
 
 const setup = (api: AutocompleterUiApi, editor: Editor) => {
-
-  editor.on('keypress compositionend', api.onKeypress.throttle);
-
-  editor.on('remove', api.onKeypress.cancel);
-
   const redirectKeyToItem = (item: AlloyComponent, e: EditorEvent<KeyboardEvent>) => {
     AlloyTriggers.emitWith(item, NativeEvents.keydown(), { raw: e });
   };
 
   editor.on('keydown', (e) => {
     const getItem = (): Optional<AlloyComponent> => api.getView().bind(Highlighting.getHighlighted);
-
-    // Pressing <backspace> updates the autocompleter
-    if (e.which === 8) {
-      api.onKeypress.throttle(e);
-    }
 
     if (api.isActive()) {
       // Pressing <esc> closes the autocompleter
@@ -88,7 +77,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
 
   editor.on('NodeChange', (e) => {
     // Close if active, not in the middle of an onAction callback and we're no longer inside the autocompleter span
-    if (api.isActive() && !api.isProcessingAction() && AutocompleteTag.detect(SugarElement.fromDom(e.element)).isNone()) {
+    if (api.isActive() && !api.isProcessingAction() && AutocompleteTagReader.detect(SugarElement.fromDom(e.element)).isNone()) {
       api.cancelIfNecessary();
     }
   });

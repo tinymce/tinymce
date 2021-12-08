@@ -1,5 +1,4 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { SelectorFind, Width } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -24,8 +23,6 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   };
 
-  const platform = PlatformDetection.detect();
-
   const getTableWidth = (editor: Editor) =>
     SelectorFind.child<HTMLTableElement>(TinyDom.body(editor), 'table').map(Width.get).getOrDie();
 
@@ -37,8 +34,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
       TinyAssertions.assertContent(editor, '');
     } else {
       const afterWidth = getTableWidth(editor);
-      // 2px margin of error, 30px margin of error for IE
-      assert.approximately(afterWidth, beforeWidth * multiplier, platform.browser.isIE() ? 30 : 2, 'Assert table width');
+      assert.approximately(afterWidth, beforeWidth * multiplier, 2, 'Assert table width');
     }
   };
 

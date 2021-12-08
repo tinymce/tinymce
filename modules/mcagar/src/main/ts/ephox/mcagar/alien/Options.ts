@@ -11,7 +11,7 @@ const get = <R>(editor: Editor, name: string): R => {
 const set = <T>(editor: Editor, name: string, value: T): void => {
   if (editor.options) {
     editor.options.set(name, value);
-  } else {
+  } else if (editor.settings) {
     editor.settings[name] = value;
   }
 };
@@ -19,7 +19,7 @@ const set = <T>(editor: Editor, name: string, value: T): void => {
 const unset = (editor: Editor, name: string): void => {
   if (editor.options) {
     editor.options.unset(name);
-  } else {
+  } else if (editor.settings) {
     delete editor.settings[name];
   }
 };

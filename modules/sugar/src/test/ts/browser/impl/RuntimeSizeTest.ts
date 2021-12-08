@@ -1,6 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -22,8 +21,6 @@ interface TableModel {
 }
 
 UnitTest.test('Runtime Size Test', () => {
-  const platform = PlatformDetection.detect();
-
   const random = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
 
   const getOuterHeight = (elm: SugarElement) => Math.round(elm.dom.getBoundingClientRect().height);
@@ -54,13 +51,7 @@ UnitTest.test('Runtime Size Test', () => {
 
     Arr.each(s1.cells, (cz1, i) => {
       const cz2 = s2.cells[i];
-      // Sometimes the widths of the cells are 1 px off due to rounding but the total table width is never off
-      const assertMessage = `${message}, expected cell size: ${cz1}, actual: ${cz2}, table: ${tableHtml}`;
-      if (platform.browser.isIE() || platform.browser.isEdge()) {
-        assert.approximately(cz1, cz2, 1, assertMessage);
-      } else {
-        assert.equal(cz1, cz2, assertMessage);
-      }
+      assert.equal(cz1, cz2, `${message}, expected cell size: ${cz1}, actual: ${cz2}, table: ${tableHtml}`);
     });
   };
 

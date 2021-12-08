@@ -534,6 +534,10 @@ class EditorCommands {
         editor.setContent('');
       },
 
+      'mcePrint': () => {
+        editor.getWin().print();
+      },
+
       'InsertLineBreak': (command, ui, value) => {
         InsertBr.insert(editor, value);
         return true;

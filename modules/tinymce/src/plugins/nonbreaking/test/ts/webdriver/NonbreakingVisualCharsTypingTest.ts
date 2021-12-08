@@ -1,5 +1,5 @@
 import { ApproxStructure, RealKeys } from '@ephox/agar';
-import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -19,25 +19,15 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
 
   const detection = PlatformDetection.detect();
 
-  const isIE = detection.browser.isIE();
   const getNbspText = (text: string) => {
     if (detection.browser.isFirefox()) {
       return Unicode.zeroWidth + text + ' ';
-    } else if (isIE) {
-      return text + ' ';
     } else {
       return Unicode.zeroWidth + text + Unicode.nbsp;
     }
   };
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
-
-  before(function () {
-    // TODO TINY-4129: this currently fails on IE 11 and Edge 18 or above and needs to be investigated
-    if (detection.browser.isIE() || detection.browser.isEdge()) {
-      this.skip();
-    }
-  });
 
   beforeEach(() => {
     const editor = hook.editor();
@@ -105,7 +95,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualCharsTypingTest
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(isIE ? 'test' : Unicode.zeroWidth + 'test'))
+            s.text(str.is(Unicode.zeroWidth + 'test'))
           ]
         })
       ]

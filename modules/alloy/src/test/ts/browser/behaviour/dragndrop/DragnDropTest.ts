@@ -1,7 +1,6 @@
 import { DragnDrop as Dnd, Files, GeneralSteps, Logger } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { DragnDrop } from 'ephox/alloy/api/behaviour/DragnDrop';
@@ -12,8 +11,6 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import { DropDragndropConfigSpec, StartingDragndropConfigSpec } from 'ephox/alloy/dragging/dragndrop/DragnDropTypes';
 
 UnitTest.asynctest('DragnDropTest', (success, failure) => {
-  const platform = PlatformDetection.detect();
-
   const createDraggable = (store: TestStore, cls: string, overrides: Partial<StartingDragndropConfigSpec>) => Container.sketch({
     dom: {
       styles: {
@@ -155,7 +152,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
       sAssertDraggedData('Should have expected data', store, { data: 'b' })
     ])),
 
-    Logger.t('Drag and drop with custom dataTransfer code', GeneralSteps.sequence(platform.browser.isIE() ? [] : [
+    Logger.t('Drag and drop with custom dataTransfer code', GeneralSteps.sequence([
       store.sClear,
       Dnd.sDragnDrop('.draggableDataC', '.dropzoneA'),
       sAssertDraggedData('Should have expected data', store, { data: 'c' })

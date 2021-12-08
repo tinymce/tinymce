@@ -21,7 +21,6 @@ UnitTest.test('WindowVisualViewport.bind', () => {
   });
 
   // Trigger resize
-  // Note: Won't work on IE/Edge as they don't support the visual viewport API
   WindowVisualViewport.get().each((viewport) => {
     const resizeEvent = new UIEvent('resize');
     viewport.dispatchEvent(resizeEvent);

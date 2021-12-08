@@ -1,6 +1,5 @@
 import { Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
-import { PlatformDetection } from '@ephox/sand';
 import { Awareness, Compare, CursorPosition, PredicateExists, SelectorFilter, SelectorFind, SimRange, SugarElement, Traverse } from '@ephox/sugar';
 
 import { WindowBridge } from '../api/WindowBridge';
@@ -47,20 +46,15 @@ const simulate = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, di
 
 const navigate = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
                   anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<Response>): Optional<Response> => {
-  // Do not override the up/down keys on IE.
-  if (PlatformDetection.detect().browser.isIE()) {
-    return Optional.none<Response>();
-  } else {
-    return precheck(initial, isRoot).orThunk(() => {
-      return simulate(bridge, isRoot, direction, initial, anchor).map((info) => {
-        const range = info.range;
-        return Response.create(
-          Optional.some(Util.makeSitus(range.start, range.soffset, range.finish, range.foffset)),
-          true
-        );
-      });
+  return precheck(initial, isRoot).orThunk(() => {
+    return simulate(bridge, isRoot, direction, initial, anchor).map((info) => {
+      const range = info.range;
+      return Response.create(
+        Optional.some(Util.makeSitus(range.start, range.soffset, range.finish, range.foffset)),
+        true
+      );
     });
-  }
+  });
 };
 
 const firstUpCheck = (initial: SugarElement, isRoot: (e: SugarElement) => boolean): Optional<Response> => {
