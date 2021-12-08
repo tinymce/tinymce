@@ -19,7 +19,7 @@ describe('browser.tinymce.core.textpatterns.TextPatternsFalseTest', () => {
     editor.setContent('');
   });
 
-  it('Try applying italic format on single word using space and assert it does nothing', () => {
+  it('TINY-8312: Try applying italic format on single word using space and assert it does nothing', () => {
     const editor = hook.editor();
     Utils.setContentAndPressSpace(editor, '*a *', 4);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
