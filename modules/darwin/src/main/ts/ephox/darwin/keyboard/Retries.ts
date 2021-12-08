@@ -150,14 +150,6 @@ const adjustTil = (bridge: WindowBridge, movement: CaretMovement, original: Care
   });
 };
 
-const ieTryDown = (bridge: WindowBridge, caret: Carets): Optional<Situs> => {
-  return bridge.situsFromPoint(caret.left, caret.bottom + JUMP_SIZE);
-};
-
-const ieTryUp = (bridge: WindowBridge, caret: Carets): Optional<Situs> => {
-  return bridge.situsFromPoint(caret.left, caret.top - JUMP_SIZE);
-};
-
 const checkScroll = (movement: CaretMovement, adjusted: Carets, bridge: WindowBridge): Optional<number> => {
   // I'm not convinced that this is right. Let's re-examine it later.
   if (movement.point(adjusted) > bridge.getInnerHeight()) {
@@ -183,7 +175,5 @@ const retry = (movement: CaretMovement, bridge: WindowBridge, caret: Carets): Op
 export const Retries = {
   tryUp: Fun.curry(retry, upMovement),
   tryDown: Fun.curry(retry, downMovement),
-  ieTryUp,
-  ieTryDown,
   getJumpSize: Fun.constant(JUMP_SIZE)
 };

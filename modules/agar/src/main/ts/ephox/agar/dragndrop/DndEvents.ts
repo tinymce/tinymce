@@ -1,14 +1,6 @@
-import { Obj } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 
 import { setProtectedMode, setReadOnlyMode, setReadWriteMode } from '../datatransfer/Mode';
-
-interface IeDragEvent extends DragEvent {
-  readonly ieDefaultPrevented?: boolean;
-}
-
-const platform = PlatformDetection.detect();
 
 const createDndEvent = (name: string) => (win: Window, x: number, y: number, dataTransfer: DataTransfer): DragEvent => {
   const event: any = document.createEvent('CustomEvent');
@@ -25,16 +17,6 @@ const createDndEvent = (name: string) => (win: Window, x: number, y: number, dat
   event.screenY = win.screenY + y;
   event.dataTransfer = dataTransfer;
 
-  // IE doesn't update the defaultPrevented state for some reason
-  // and it's read only so we need to have a different property
-  if (platform.browser.isIE()) {
-    const orgPreventDefault = event.preventDefault;
-    event.preventDefault = () => {
-      event.ieDefaultPrevented = true;
-      orgPreventDefault.call(event);
-    };
-  }
-
   return event;
 };
 
@@ -46,7 +28,7 @@ const createDragenterEvent = createDndEvent('dragenter');
 const createDropEvent = createDndEvent('drop');
 const createDragEvent = createDndEvent('drag');
 
-const isDefaultPrevented = (evt: DragEvent): boolean => evt.defaultPrevented || Obj.has(evt as IeDragEvent, 'ieDefaultPrevented');
+const isDefaultPrevented = (evt: DragEvent): boolean => evt.defaultPrevented;
 
 const dispatchDndEvent = (event: DragEvent, target: SugarElement<Node>): DragEvent => {
   if (event.type === 'dragstart') {

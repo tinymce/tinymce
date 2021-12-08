@@ -74,7 +74,7 @@ const needsRtlTransform = (iconName: string) =>
 const addFocusableBehaviour = () =>
   AddEventsBehaviour.config('add-focusable', [
     AlloyEvents.runOnAttached((comp) => {
-      // set focusable=false on SVGs to prevent IE 11 from focusing the toolbar when tabbing into the editor
+      // set focusable=false on SVGs to prevent focusing the toolbar when tabbing into the editor
       SelectorFind.child(comp.element, 'svg').each((svg) => Attribute.set(svg, 'focusable', 'false'));
     })
   ]);

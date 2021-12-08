@@ -1,18 +1,10 @@
-import { before, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
+import { describe, it } from '@ephox/bedrock-client';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.dom.ContentCssCorsTest', () => {
-  before(function () {
-    // The crossorigin attribute isn't supported in IE11
-    if (PlatformDetection.detect().browser.isIE()) {
-      this.skip();
-    }
-  });
-
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
     menubar: false,

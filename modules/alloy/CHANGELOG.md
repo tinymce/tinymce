@@ -8,10 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+- Firefox will now use the native `focusin` and `focusout` events instead of capturing the `focus` and `blur` events.
 - Horizontal and Vertical slider data is now just a number, instead of objects with single `x` or `y` properties #TINY-8304
 
 ### Fixed
 - Slider components did not respond to `Representing.setValue` #TINY-8304
+
+### Removed
+- Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.
 
 ## 9.0.2 - 2021-10-11
 

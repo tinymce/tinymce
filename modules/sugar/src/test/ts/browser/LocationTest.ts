@@ -367,7 +367,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     ];
 
     // relative scroll
-    const leftScroll = (doc.rtl && (platform.browser.isIE() || platform.browser.isEdge())) ? -1000 : 1000; // IE has RTL -ve direction from left to right
+    const leftScroll = 1000;
     const topScroll = 2000;
     // GUESS: 1px differences from JQuery is due to the 1px margin on the body
     const withScroll = [

@@ -1,5 +1,5 @@
 import { Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Focus, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -115,16 +115,10 @@ const pAssertSizeRecalcUnconstrained = async (editor: Editor) => {
 const fakeEvent = (elem: SugarElement<HTMLElement>, name: string) => {
   const element: HTMLElement = elem.dom;
   // NOTE we can't fake a paste event here.
-  let event: Event;
-  if (Type.isFunction(Event)) {
-    event = new Event(name, {
-      bubbles: true,
-      cancelable: true
-    });
-  } else { // support IE
-    event = document.createEvent('Event');
-    event.initEvent(name, true, true);
-  }
+  const event = new Event(name, {
+    bubbles: true,
+    cancelable: true
+  });
   element.dispatchEvent(event);
 };
 

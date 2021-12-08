@@ -1,5 +1,5 @@
 import { FocusTools, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Obj, Type } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 import { Attribute, Class, SugarBody, SugarDocument, SugarElement, Traverse, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -26,16 +26,10 @@ const clickOnConfirmDialog = (editor: Editor, state: boolean) => {
 };
 
 const fireEvent = (elem: SugarElement, event: string) => {
-  let evt: Event;
-  if (Type.isFunction(Event)) {
-    evt = new Event(event, {
-      bubbles: true,
-      cancelable: true
-    });
-  } else { // support IE
-    evt = document.createEvent('Event');
-    evt.initEvent(event, true, true);
-  }
+  const evt = new Event(event, {
+    bubbles: true,
+    cancelable: true
+  });
   elem.dom.dispatchEvent(evt);
 };
 

@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -10,7 +9,6 @@ import { GetSelectionContentArgs } from 'tinymce/core/content/ContentTypes';
 import { getContent } from 'tinymce/core/selection/GetSelectionContent';
 
 describe('browser.tinymce.selection.GetSelectionContentTest', () => {
-  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
@@ -127,11 +125,7 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><em> spaces </em></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
-    // Firefox, IE & Edge actually renders the trailing space within the editor in this case
-    // however Firefox reports via innerText that it doesn't render the trailing space. So
-    // as discussed we should use whatever it is returning for innerText
-    const expectedContent = browser.isIE() || browser.isEdge() ? 'spaces ' : 'spaces';
-    assertGetContent('Should be some content', editor, expectedContent, { format: 'text' });
+    assertGetContent('Should be some content', editor, 'spaces', { format: 'text' });
     editor.setContent('<p> spaces </p>');
     TinySelections.setSelection(editor, [], 0, [], 1);
     assertGetContent('Should be some content', editor, 'spaces', { format: 'text' });

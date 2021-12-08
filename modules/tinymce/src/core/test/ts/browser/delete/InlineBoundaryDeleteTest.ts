@@ -69,10 +69,8 @@ describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
   });
 
   it('Backspace key on image', () => {
-    const editor = hook.editor();
     testBackspace('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 2 ], 0, '<p>a<a href="#"><img src="#" /></a>c</p>', 'end', [ 0, 1, 1 ], 0);
     testBackspace('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 1 ], 0, '<p>a<a href="#"><img src="#" /></a>c</p>', 'before', [ 0, 0 ], 1);
-    editor.execCommand('SelectAll'); // Needed for IE 11 for some odd reason the selection api is in some odd state
     testBackspace('<p>a<a href="#"><img src="#" />c</a>d</p>', [ 0, 1 ], 1, '<p>a<a href="#">c</a>d</p>', 'start', [ 0, 1, 0 ], 1);
   });
 

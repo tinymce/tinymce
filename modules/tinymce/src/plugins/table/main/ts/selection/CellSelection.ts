@@ -12,7 +12,6 @@ import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker'
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../api/Events';
@@ -117,13 +116,6 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
       // Only added by Chrome/Firefox in June 2015.
       // This is only to fix a 1px bug (TBIO-2836) so return true if we're on an older browser
       if (raw.buttons === undefined) {
-        return true;
-      }
-
-      // Edge 44+ broke the "buttons" property so that it now returns 0 always on mouseover
-      // so we can't detect if the left mouse button is down. The deprecated "which" property
-      // also can't be used as it returns 1 at all times, as such just return true.
-      if (Env.browser.isEdge() && raw.buttons === 0) {
         return true;
       }
 
