@@ -7,13 +7,13 @@
 
 import { Arr, Id, Optional, Strings } from '@ephox/katamari';
 
+import * as Spot from 'tinymce/core/alien/Spot';
+import * as TextSearch from 'tinymce/core/alien/TextSearch';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
-import * as TextSearch from '../text/TextSearch';
 import { createMarker, Marker, rangeFromMarker, removeMarker } from '../utils/Marker';
 import { generatePathRange, generatePathRangeFromRange } from '../utils/PathRange';
-import * as Spot from '../utils/Spot';
 import * as Utils from '../utils/Utils';
 import { InlinePattern, InlinePatternMatch } from './PatternTypes';
 

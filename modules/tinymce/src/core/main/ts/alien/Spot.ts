@@ -6,8 +6,8 @@
  */
 
 export interface SpotPoint<T> {
-  container: T;
-  offset: number;
+  readonly container: T;
+  readonly offset: number;
 }
 
 const point = <T>(container: T, offset: number): SpotPoint<T> => ({

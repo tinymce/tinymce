@@ -5,9 +5,9 @@ import { SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
+import { SpotPoint } from 'tinymce/core/alien/Spot';
+import * as TextSearch from 'tinymce/core/alien/TextSearch';
 import Editor from 'tinymce/core/api/Editor';
-import * as TextSearch from 'tinymce/core/textpatterns/text/TextSearch';
-import { SpotPoint } from 'tinymce/core/textpatterns/utils/Spot';
 
 describe('browser.tinymce.textpatterns.TextSearchTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

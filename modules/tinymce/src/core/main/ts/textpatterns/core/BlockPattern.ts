@@ -7,12 +7,12 @@
 
 import { Arr, Optional, Unicode } from '@ephox/katamari';
 
+import * as TextSearch from 'tinymce/core/alien/TextSearch';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { getForcedRootBlock } from 'tinymce/core/api/Options';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as TextSearch from '../text/TextSearch';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
 import { BlockPattern, BlockPatternMatch, Pattern } from './PatternTypes';
