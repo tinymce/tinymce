@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Utils from '../../module/test/TextPatternsUtils';
 
-describe('browser.tinymce.textpatterns.UndoTextPatternTest', () => {
+describe('browser.tinymce.core.textpatterns.UndoTextPatternTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, [ ]);

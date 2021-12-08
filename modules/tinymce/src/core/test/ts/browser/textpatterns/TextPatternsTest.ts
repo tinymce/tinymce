@@ -8,7 +8,7 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
 import * as Utils from '../../module/test/TextPatternsUtils';
 
-describe('browser.tinymce.textpatterns.TextPatternsTest', () => {
+describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     base_url: '/project/tinymce/js/tinymce'

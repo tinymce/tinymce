@@ -17,7 +17,7 @@ interface ExpectedPatternMatch {
   readonly endRng: PathRange;
 }
 
-describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
+describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     forced_root_block: false,
     plugins: 'lists',

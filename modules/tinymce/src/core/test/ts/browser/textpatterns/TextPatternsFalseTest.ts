@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Utils from '../../module/test/TextPatternsUtils';
 
-describe('browser.tinymce.core.textpattern.TextPatternsFalseTest', () => {
+describe('browser.tinymce.core.textpatterns.TextPatternsFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     text_patterns: false,

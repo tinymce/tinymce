@@ -9,7 +9,7 @@ import { SpotPoint } from 'tinymce/core/alien/Spot';
 import * as TextSearch from 'tinymce/core/alien/TextSearch';
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.textpatterns.TextSearchTest', () => {
+describe('browser.tinymce.core.textpatterns.TextSearchTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
