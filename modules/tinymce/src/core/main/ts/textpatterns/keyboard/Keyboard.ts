@@ -7,10 +7,9 @@
 
 import { Cell } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import Delay from 'tinymce/core/api/util/Delay';
-import VK from 'tinymce/core/api/util/VK';
-
+import Editor from '../../api/Editor';
+import Delay from '../../api/util/Delay';
+import VK from '../../api/util/VK';
 import { PatternSet } from '../core/PatternTypes';
 import * as KeyHandler from './KeyHandler';
 

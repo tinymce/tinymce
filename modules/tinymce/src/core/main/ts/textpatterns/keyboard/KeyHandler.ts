@@ -7,10 +7,9 @@
 
 import { Unicode } from '@ephox/katamari';
 
-import { textBefore } from 'tinymce/core/alien/TextSearch';
-import Editor from 'tinymce/core/api/Editor';
-import VK from 'tinymce/core/api/util/VK';
-
+import { textBefore } from '../../alien/TextSearch';
+import Editor from '../../api/Editor';
+import VK from '../../api/util/VK';
 import * as BlockPattern from '../core/BlockPattern';
 import * as InlinePattern from '../core/InlinePattern';
 import { PatternSet } from '../core/PatternTypes';

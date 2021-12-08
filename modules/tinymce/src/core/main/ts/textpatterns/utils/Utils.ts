@@ -7,10 +7,9 @@
 
 import { Optional } from '@ephox/katamari';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
-import * as Options from 'tinymce/core/api/Options';
-
+import DOMUtils from '../../api/dom/DOMUtils';
+import Editor from '../../api/Editor';
+import * as Options from '../../api/Options';
 import * as NodeType from '../../dom/NodeType';
 
 const cleanEmptyNodes = (dom: DOMUtils, node: Node, isRoot: (e: Node) => boolean): void => {

@@ -1,12 +1,12 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import { findPattern } from 'tinymce/core/textpatterns/core/BlockPattern';
-import { generatePatternSet } from 'tinymce/core/textpatterns/TextPatterns';
+import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
+import * as TextPatterns from 'tinymce/core/textpatterns/TextPatterns';
 
 describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
   it('should find the start of the default patterns', () => {
-    const patternSet = generatePatternSet([
+    const patternSet = TextPatterns.generatePatternSet([
       { start: '*', end: '*', format: 'italic' },
       { start: '**', end: '**', format: 'bold' },
       { start: '#', format: 'h1' },
@@ -22,7 +22,7 @@ describe('atomic.tinymce.textpatterns.FindBlockPatternsTest', () => {
     const defaultPatterns = patternSet.blockPatterns;
 
     const testFindStartPattern = (text: string, expectedPattern: string) => {
-      const actual = findPattern(defaultPatterns, text).getOrNull();
+      const actual = BlockPattern.findPattern(defaultPatterns, text).getOrNull();
 
       assert.equal(actual.start, expectedPattern, 'Assert correct pattern');
     };

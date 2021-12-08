@@ -7,13 +7,12 @@
 
 import { Arr, Obj, Optional, Type, Unicode } from '@ephox/katamari';
 
-import * as TextSearch from 'tinymce/core/alien/TextSearch';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
-import Formatter from 'tinymce/core/api/Formatter';
-import * as Options from 'tinymce/core/api/Options';
-import Tools from 'tinymce/core/api/util/Tools';
-
+import * as TextSearch from '../../alien/TextSearch';
+import DOMUtils from '../../api/dom/DOMUtils';
+import Editor from '../../api/Editor';
+import Formatter from '../../api/Formatter';
+import * as Options from '../../api/Options';
+import Tools from '../../api/util/Tools';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
 import { BlockPattern, BlockPatternMatch, Pattern } from './PatternTypes';
