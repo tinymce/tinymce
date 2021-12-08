@@ -5,17 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import Formatter from 'tinymce/core/api/Formatter';
-import { getForcedRootBlock } from 'tinymce/core/api/Options';
+import * as Options from 'tinymce/core/api/Options';
 
-import { InlinePattern } from '../core/PatternTypes';
-
-const isElement = (node: Node): node is HTMLElement => node.nodeType === Node.ELEMENT_NODE;
-const isText = (node: Node): node is Text => node.nodeType === Node.TEXT_NODE;
+import * as NodeType from '../../dom/NodeType';
 
 const cleanEmptyNodes = (dom: DOMUtils, node: Node, isRoot: (e: Node) => boolean): void => {
   // Recursively walk up the tree while we have a parent and the node is empty. If the node is empty, then remove it.
@@ -33,10 +29,10 @@ const deleteRng = (dom: DOMUtils, rng: Range, isRoot: (e: Node) => boolean, clea
 
   // Clean up any empty nodes if required
   if (clean && !isRoot(rng.startContainer)) {
-    if (isText(rng.startContainer) && rng.startContainer.data.length === 0) {
+    if (NodeType.isText(rng.startContainer) && rng.startContainer.data.length === 0) {
       dom.remove(rng.startContainer);
     }
-    if (isText(rng.endContainer) && rng.endContainer.data.length === 0) {
+    if (NodeType.isText(rng.endContainer) && rng.endContainer.data.length === 0) {
       dom.remove(rng.endContainer);
     }
     cleanEmptyNodes(dom, startParent, isRoot);
@@ -46,17 +42,9 @@ const deleteRng = (dom: DOMUtils, rng: Range, isRoot: (e: Node) => boolean, clea
   }
 };
 
-const isBlockFormatName = (name: string, formatter: Formatter): boolean => {
-  const formatSet = formatter.get(name);
-  return Type.isArray(formatSet) && Arr.head(formatSet).exists((format) => Obj.has(format as any, 'block'));
-};
-
-const isReplacementPattern = (pattern: InlinePattern): boolean =>
-  pattern.start.length === 0;
-
 const getParentBlock = (editor: Editor, rng: Range): Optional<Element> => {
   const parentBlockOpt = Optional.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
-  if (getForcedRootBlock(editor) === '') {
+  if (Options.getForcedRootBlock(editor) === '') {
     return parentBlockOpt.orThunk(() => Optional.some(editor.getBody()));
   } else {
     return parentBlockOpt;
@@ -66,9 +54,5 @@ const getParentBlock = (editor: Editor, rng: Range): Optional<Element> => {
 export {
   cleanEmptyNodes,
   deleteRng,
-  getParentBlock,
-  isBlockFormatName,
-  isElement,
-  isReplacementPattern,
-  isText
+  getParentBlock
 };

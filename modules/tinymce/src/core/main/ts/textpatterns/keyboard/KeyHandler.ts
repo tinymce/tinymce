@@ -14,7 +14,7 @@ import VK from 'tinymce/core/api/util/VK';
 import * as BlockPattern from '../core/BlockPattern';
 import * as InlinePattern from '../core/InlinePattern';
 import { PatternSet } from '../core/PatternTypes';
-import { cleanEmptyNodes } from '../utils/Utils';
+import * as Utils from '../utils/Utils';
 
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   // Skip checking when the selection isn't collapsed
@@ -45,7 +45,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
           const node = s.container;
           if (node.data.charAt(s.offset - 1) === Unicode.zeroWidth) {
             node.deleteData(s.offset - 1, 1);
-            cleanEmptyNodes(editor.dom, node.parentNode, (e: Node) => e === editor.dom.getRoot());
+            Utils.cleanEmptyNodes(editor.dom, node.parentNode, (e: Node) => e === editor.dom.getRoot());
           }
         });
       }

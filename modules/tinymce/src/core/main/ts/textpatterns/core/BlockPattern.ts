@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional, Unicode } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type, Unicode } from '@ephox/katamari';
 
 import * as TextSearch from 'tinymce/core/alien/TextSearch';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import { getForcedRootBlock } from 'tinymce/core/api/Options';
+import Formatter from 'tinymce/core/api/Formatter';
+import * as Options from 'tinymce/core/api/Options';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
@@ -38,9 +39,14 @@ const applyPattern = (editor: Editor, match: BlockPatternMatch): boolean => {
   const pattern = match.pattern;
   const rng = resolvePathRange(dom.getRoot(), match.range).getOrDie('Unable to resolve path range');
 
+  const isBlockFormatName = (name: string, formatter: Formatter): boolean => {
+    const formatSet = formatter.get(name);
+    return Type.isArray(formatSet) && Arr.head(formatSet).exists((format) => Obj.has(format as any, 'block'));
+  };
+
   Utils.getParentBlock(editor, rng).each((block) => {
     if (pattern.type === 'block-format') {
-      if (Utils.isBlockFormatName(pattern.format, editor.formatter)) {
+      if (isBlockFormatName(pattern.format, editor.formatter)) {
         editor.undoManager.transact(() => {
           stripPattern(editor.dom, block, pattern);
           editor.formatter.apply(pattern.format);
@@ -68,7 +74,7 @@ const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMat
   const rng = editor.selection.getRng();
 
   return Utils.getParentBlock(editor, rng).filter((block) => {
-    const forcedRootBlock = getForcedRootBlock(editor);
+    const forcedRootBlock = Options.getForcedRootBlock(editor);
     const matchesForcedRootBlock = forcedRootBlock === '' && dom.is(block, 'body') || dom.is(block, forcedRootBlock);
     return block !== null && matchesForcedRootBlock;
   }).bind((block) => {

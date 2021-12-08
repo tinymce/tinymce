@@ -7,7 +7,7 @@
 
 import { Arr, Optional } from '@ephox/katamari';
 
-import * as Utils from './Utils';
+import * as NodeType from '../../dom/NodeType';
 
 export interface PathRange {
   readonly start: number[];
@@ -15,7 +15,7 @@ export interface PathRange {
 }
 
 const generatePath = (root: Node, node: Node, offset: number): number[] => {
-  if (Utils.isText(node) && (offset < 0 || offset > node.data.length)) {
+  if (NodeType.isText(node) && (offset < 0 || offset > node.data.length)) {
     return [];
   }
   const p = [ offset ];
@@ -44,7 +44,7 @@ const resolvePath = (root: Node, path: number[]): Optional<{ node: Node; offset:
   const offset = nodePath.pop();
   const resolvedNode = Arr.foldl(nodePath, (optNode: Optional<Node>, index: number) => optNode.bind((node) => Optional.from(node.childNodes[index])), Optional.some(root));
   return resolvedNode.bind((node) => {
-    if (Utils.isText(node) && (offset < 0 || offset > node.data.length)) {
+    if (NodeType.isText(node) && (offset < 0 || offset > node.data.length)) {
       return Optional.none();
     } else {
       return Optional.some({ node, offset });

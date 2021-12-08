@@ -4,15 +4,15 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { getTextPatterns } from 'tinymce/core/api/Options';
-import { findPatterns } from 'tinymce/core/textpatterns/core/InlinePattern';
-import { InlinePattern, InlinePatternMatch, RawPattern } from 'tinymce/core/textpatterns/core/PatternTypes';
-import { generatePatternSet } from 'tinymce/core/textpatterns/TextPatterns';
+import * as Options from 'tinymce/core/api/Options';
+import * as InlinePattern from 'tinymce/core/textpatterns/core/InlinePattern';
+import { InlinePattern as InlinePatternType, InlinePatternMatch, RawPattern } from 'tinymce/core/textpatterns/core/PatternTypes';
+import * as TextPatterns from 'tinymce/core/textpatterns/TextPatterns';
 import { PathRange } from 'tinymce/core/textpatterns/utils/PathRange';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
 interface ExpectedPatternMatch {
-  readonly pattern: Partial<InlinePattern>;
+  readonly pattern: Partial<InlinePatternType>;
   readonly startRng: PathRange;
   readonly endRng: PathRange;
 }
@@ -33,12 +33,12 @@ describe('browser.tinymce.textpatterns.FindInlinePatternTest', () => {
   }, [ ListsPlugin ]);
 
   const inlinePatterns = Thunk.cached(() => {
-    const rawPatterns = getTextPatterns(hook.editor()) as RawPattern[];
-    return generatePatternSet(rawPatterns).inlinePatterns;
+    const rawPatterns = Options.getTextPatterns(hook.editor()) as RawPattern[];
+    return TextPatterns.generatePatternSet(rawPatterns).inlinePatterns;
   });
 
-  const getInlinePattern = (editor: Editor, patterns: InlinePattern[], space: boolean = false) =>
-    findPatterns(editor, patterns, space);
+  const getInlinePattern = (editor: Editor, patterns: InlinePatternType[], space: boolean = false) =>
+    InlinePattern.findPatterns(editor, patterns, space);
 
   const assertPatterns = (actualMatches: InlinePatternMatch[], expectedMatches: ExpectedPatternMatch[]) => {
     assert.lengthOf(actualMatches, expectedMatches.length, 'Pattern count does not match');

@@ -9,13 +9,12 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import TextSeeker from '../api/dom/TextSeeker';
+import * as NodeType from '../dom/NodeType';
 import * as Spot from './Spot';
 
 const DOM = DOMUtils.DOM;
 
 export type ProcessCallback = (element: Text, offset: number, text: string) => number;
-
-const isText = (node: Node): node is Text => node.nodeType === Node.TEXT_NODE;
 
 const alwaysNext = (startNode: Node) => (node: Node): number =>
   startNode === node ? -1 : 0;
@@ -27,7 +26,7 @@ const isBoundary = (dom: DOMUtils) => (node: Node): boolean =>
 
 // Finds the text node before the specified node, or just returns the node if it's already on a text node
 const textBefore = (node: Node, offset: number, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
-  if (isText(node) && offset >= 0) {
+  if (NodeType.isText(node) && offset >= 0) {
     return Optional.some(Spot.point(node, offset));
   } else {
     const textSeeker = TextSeeker(DOM);
@@ -36,7 +35,7 @@ const textBefore = (node: Node, offset: number, rootNode: Node): Optional<Spot.S
 };
 
 const textAfter = (node: Node, offset: number, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
-  if (isText(node) && offset >= node.length) {
+  if (NodeType.isText(node) && offset >= node.length) {
     return Optional.some(Spot.point(node, offset));
   } else {
     const textSeeker = TextSeeker(DOM);
@@ -45,7 +44,7 @@ const textAfter = (node: Node, offset: number, rootNode: Node): Optional<Spot.Sp
 };
 
 const scanLeft = (node: Text, offset: number, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
-  if (!isText(node)) {
+  if (!NodeType.isText(node)) {
     return Optional.none();
   }
   const text = node.textContent;
@@ -61,7 +60,7 @@ const scanLeft = (node: Text, offset: number, rootNode: Node): Optional<Spot.Spo
 };
 
 const scanRight = (node: Text, offset: number, rootNode: Node): Optional<Spot.SpotPoint<Text>> => {
-  if (!isText(node)) {
+  if (!NodeType.isText(node)) {
     return Optional.none();
   }
   const text = node.textContent;

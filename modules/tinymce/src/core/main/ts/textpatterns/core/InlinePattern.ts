@@ -33,6 +33,9 @@ interface InlinePatternMatchWithMarkers extends InlinePatternMatch {
   readonly startMarker: Marker;
 }
 
+const isReplacementPattern = (pattern: InlinePattern): boolean =>
+  pattern.start.length === 0;
+
 const matchesPattern = (patternContent: string) => (element: Text, offset: number): number => {
   const text = element.data;
   const searchText = text.substring(0, offset);
@@ -116,7 +119,7 @@ const findPattern = (editor: Editor, block: Node, details: PatternDetails): Opti
     const endPathRng = generatePathRange(root, spot.container, spot.offset, endNode, endOffset);
 
     // If we have a replacement pattern, then it can't have nested patterns so just return immediately
-    if (Utils.isReplacementPattern(pattern)) {
+    if (isReplacementPattern(pattern)) {
       return Optional.some({
         matches: [{
           pattern,
@@ -243,7 +246,7 @@ const addMarkers = (dom: DOMUtils, matches: InlinePatternMatch[]): InlinePattern
   // Add start markers
   return Arr.foldr(matchesWithEnds, (acc, match) => {
     const idx = matchesWithEnds.length - acc.length - 1;
-    const startMarker = Utils.isReplacementPattern(match.pattern) ? match.endMarker : createMarker(dom, markerPrefix + `_start${idx}`, match.startRng);
+    const startMarker = isReplacementPattern(match.pattern) ? match.endMarker : createMarker(dom, markerPrefix + `_start${idx}`, match.startRng);
     return acc.concat([{
       ...match,
       startMarker
@@ -279,7 +282,7 @@ const applyMatches = (editor: Editor, matches: InlinePatternMatch[]): void => {
   Arr.each(matchesWithMarkers, (match) => {
     const block = dom.getParent(match.startMarker.start, dom.isBlock);
     const isRoot = (node: Node) => node === block;
-    if (Utils.isReplacementPattern(match.pattern)) {
+    if (isReplacementPattern(match.pattern)) {
       applyReplacementPattern(editor, match.pattern, match.endMarker, isRoot);
     } else {
       applyPatternWithContent(editor, match.pattern, match.startMarker, match.endMarker, isRoot);
