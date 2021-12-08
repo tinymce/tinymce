@@ -31,7 +31,7 @@ const addPreProcessFilter = (editor: Editor, filterFunc: PreProcessFilter) => {
 
 const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
 
-const ToHexanything = (value: string) => value.replace(rgbRegExp, Transformations.anyToHexString);
+const toHexAnything = (value: string) => value.replace(rgbRegExp, Transformations.anyToHexString).toLowerCase();
 
 /**
  * WebKit has a nasty bug where the all computed styles gets added to style attributes when copy/pasting contents.
@@ -73,14 +73,16 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean):
       }
 
       for (let i = 0; i < webKitStyles.length; i++) {
-        let inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
+        const inputValue = inputStyles[webKitStyles[i]];
+        let compareInput = inputValue;
+        let currentValue = dom.getStyle(node, webKitStyles[i], true);
 
         if (/color/.test(webKitStyles[i])) {
-          inputValue = ToHexanything(inputValue);
-          currentValue = ToHexanything(currentValue);
+          compareInput = toHexAnything(compareInput);
+          currentValue = toHexAnything(currentValue);
         }
 
-        if (currentValue !== inputValue) {
+        if (currentValue !== compareInput) {
           outputStyles[webKitStyles[i]] = inputValue;
         }
       }
