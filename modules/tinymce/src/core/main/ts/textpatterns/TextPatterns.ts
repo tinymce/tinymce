@@ -23,7 +23,7 @@ const generatePatternSet = (patterns: RawPattern[]): PatternSet => {
 const setup = (editor: Editor): void => {
   const patterns = getTextPatterns(editor);
 
-  if (patterns !== false) {
+  if (patterns.length > 0) {
     const patternSet = generatePatternSet(patterns);
     Keyboard.setup(editor, Cell(patternSet));
   }

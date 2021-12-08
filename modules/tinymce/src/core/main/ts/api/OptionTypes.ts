@@ -239,4 +239,5 @@ export interface EditorOptions extends NormalizedEditorOptions {
   forced_root_block: string;
   object_resizing?: string;
   preview_styles?: string;
+  text_patterns?: RawPattern[];
 }
