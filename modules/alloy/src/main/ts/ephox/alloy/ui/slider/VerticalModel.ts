@@ -16,10 +16,6 @@ const fireSliderChange = (spectrum: AlloyComponent, value: SliderValueY): void =
   AlloyTriggers.emitWith(spectrum, ModelCommon.sliderChangeEvent(), { value });
 };
 
-const sliderValue = (y: number): SliderValueY => ({
-  y
-});
-
 // find the value of the y offset of where the mouse was clicked from the model.
 const findValueOfOffset = (spectrum: AlloyComponent, detail: VerticalSliderDetail, top: number): number => {
   const args = {
@@ -43,7 +39,7 @@ const findValueOfOffset = (spectrum: AlloyComponent, detail: VerticalSliderDetai
 // find the value and fire a slider change event, returning the value
 const setValueFrom = (spectrum: AlloyComponent, detail: VerticalSliderDetail, value: number): number => {
   const yValue = findValueOfOffset(spectrum, detail, value);
-  const sliderVal = sliderValue(yValue);
+  const sliderVal = yValue;
   fireSliderChange(spectrum, sliderVal);
   return yValue;
 };
@@ -51,20 +47,20 @@ const setValueFrom = (spectrum: AlloyComponent, detail: VerticalSliderDetail, va
 // fire a slider change event with the minimum value
 const setToMin = (spectrum: AlloyComponent, detail: VerticalSliderDetail): void => {
   const min = minY(detail);
-  fireSliderChange(spectrum, sliderValue(min));
+  fireSliderChange(spectrum, min);
 };
 
 // fire a slider change event with the maximum value
 const setToMax = (spectrum: AlloyComponent, detail: VerticalSliderDetail): void => {
   const max = maxY(detail);
-  fireSliderChange(spectrum, sliderValue(max));
+  fireSliderChange(spectrum, max);
 };
 
 // move in a direction by step size. Fire change at the end
 const moveBy = (direction: number, spectrum: AlloyComponent, detail: VerticalSliderDetail): Optional<number> => {
   const f = (direction > 0) ? SliderModel.increaseBy : SliderModel.reduceBy;
-  const yValue = f(currentValue(detail).y, minY(detail), maxY(detail), step(detail));
-  fireSliderChange(spectrum, sliderValue(yValue));
+  const yValue = f(currentValue(detail), minY(detail), maxY(detail), step(detail));
+  fireSliderChange(spectrum, yValue);
   return Optional.some(yValue);
 };
 
@@ -117,7 +113,7 @@ const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, det
   const pos = findPositionOfValue(
     slider,
     edges.getSpectrum(slider),
-    value.y,
+    value,
     edges.getTopEdge(slider),
     edges.getBottomEdge(slider),
     detail

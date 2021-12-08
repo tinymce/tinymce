@@ -12,6 +12,7 @@ import { inputDataProcessor } from '../components/dialog/Input';
 import { listBoxDataProcessor } from '../components/dialog/ListBox';
 import { selectBoxDataProcessor } from '../components/dialog/SelectBox';
 import { sizeInputDataProcessor } from '../components/dialog/SizeInput';
+import { sliderInputDataProcessor } from '../components/dialog/Slider';
 import { textAreaDataProcessor } from '../components/dialog/Textarea';
 import { dialogToggleMenuItemDataProcessor } from '../components/dialog/ToggleMenuItem';
 import { urlInputDataProcessor } from '../components/dialog/UrlInput';
@@ -31,8 +32,9 @@ const dataProcessors = {
   dropzone: dropZoneDataProcessor,
   input: inputDataProcessor,
   iframe: iframeDataProcessor,
-  sizeinput: sizeInputDataProcessor,
   selectbox: selectBoxDataProcessor,
+  sizeinput: sizeInputDataProcessor,
+  slider: sliderInputDataProcessor,
   listbox: listBoxDataProcessor,
   size: sizeInputDataProcessor,
   textarea: textAreaDataProcessor,

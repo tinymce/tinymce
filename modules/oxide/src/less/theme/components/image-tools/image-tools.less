@@ -11,14 +11,19 @@
 
 .tox {
   .tox-image-tools {
-    width: 100%;
+    .tox-spacer {
+      flex: 1;
+    }
+
+    .tox-bar.tox-form__controls-h-stack {
+      align-items: center;
+      display: flex;
+      height: 60px;
+      justify-content: center;
+    }
   }
 
-  .tox-image-tools__toolbar {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-  }
+  /* old component styles */
 
   .tox-image-tools__image {
     background-color: #666;
