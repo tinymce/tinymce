@@ -83,14 +83,11 @@ const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondary' | 't
   switch (buttonType) {
     case 'primary':
       return [ 'tox-button' ];
-      break;
     case 'toolbar':
       return [ 'tox-tbtn' ];
-      break;
     case 'secondary':
     default:
       return [ 'tox-button', 'tox-button--secondary' ];
-      break;
   }
 };
 
