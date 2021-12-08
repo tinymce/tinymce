@@ -21,7 +21,11 @@ const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) 
   endTypingLevelIgnoreLocks(editor.undoManager);
   editor.undoManager.transact(() => {
     if (editor.selection.isCollapsed() === false) {
-      editor.selection.getRng().deleteContents();
+      // Hacky way to avoid input events to be fired by execCommand idealy we would have our own delete implementation
+      const orgReadonly = editor.readonly;
+      editor.readonly = true;
+      editor.execCommand('Delete');
+      editor.readonly = orgReadonly;
     }
 
     InsertNewLine.insert(editor, event);
