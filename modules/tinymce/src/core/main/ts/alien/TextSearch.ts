@@ -7,9 +7,8 @@
 
 import { Arr, Optional } from '@ephox/katamari';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import TextSeeker from 'tinymce/core/api/dom/TextSeeker';
-
+import DOMUtils from '../api/dom/DOMUtils';
+import TextSeeker from '../api/dom/TextSeeker';
 import * as Spot from './Spot';
 
 const DOM = DOMUtils.DOM;
