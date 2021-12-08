@@ -41,15 +41,7 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
     platform.browser.isFirefox() && !document.hasFocus();
 
   const trueTapEventOrder = (() => {
-    // IE seems to fire input.focus at the end.
-    if (platform.browser.isIE()) {
-      return [
-        'input.touchstart', 'container.touchstart',
-        'input.touchend', 'container.touchend',
-        'input.focus'
-
-      ];
-    } else if (isUnfocusedFirefox()) {
+    if (isUnfocusedFirefox()) {
       return [
         'input.touchstart', 'container.touchstart',
         'input.touchend', 'container.touchend'

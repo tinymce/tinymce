@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -9,7 +8,6 @@ import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.FormatterRemoveTest', () => {
-  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     extended_valid_elements: 'b[style],i,span[style|contenteditable|class]',
@@ -354,12 +352,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     assert.equal(editor.getContent(), '<table><tbody><tr><td>one two</td></tr></tbody></table>');
   });
 
-  it('contentEditable: false on start and contentEditable: true on end', function () {
-    if (browser.isIE() || browser.isEdge()) {
-      // Skipped since IE doesn't support selection of parts of a cE=false element
-      this.skip();
-    }
-
+  it('contentEditable: false on start and contentEditable: true on end', () => {
     const editor = hook.editor();
     editor.formatter.register('format', { inline: 'b' });
     editor.setContent('<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>');

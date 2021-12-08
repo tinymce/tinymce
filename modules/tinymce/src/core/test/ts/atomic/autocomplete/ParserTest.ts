@@ -1,9 +1,9 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import * as AutocompleteContext from 'tinymce/themes/silver/autocomplete/AutocompleteContext';
+import * as AutocompleteContext from 'tinymce/core/autocomplete/AutocompleteContext';
 
-describe('atomic.tinymce.themes.silver.autocomplete.AutocompleteContext', () => {
+describe('atomic.tinymce.core.autocomplete.AutocompleteContext', () => {
   it('findChar', () => {
     assert.equal(AutocompleteContext.findChar('', 0, '@').getOr(null), -1);
     assert.equal(AutocompleteContext.findChar('abc', 0, '@').getOr(null), -1);

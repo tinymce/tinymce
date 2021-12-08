@@ -11,7 +11,6 @@ import { Remove, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
 import Editor from '../api/Editor';
-import Env from '../api/Env';
 import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import HtmlSerializer from '../api/html/Serializer';
@@ -143,13 +142,10 @@ const moveSelectionToMarker = (editor: Editor, marker: HTMLElement | null): void
   if (NodeType.isText(node)) {
     rng.setStart(node, node.nodeValue.length);
 
-    // TODO: Why can't we normalize on IE
-    if (!(Env.browser.isIE() || Env.browser.isEdge())) {
-      const node2 = marker.nextSibling;
-      if (NodeType.isText(node2)) {
-        node.appendData(node2.data);
-        node2.parentNode.removeChild(node2);
-      }
+    const node2 = marker.nextSibling;
+    if (NodeType.isText(node2)) {
+      node.appendData(node2.data);
+      node2.parentNode.removeChild(node2);
     }
   } else {
     // If the previous sibling isn't a text node or doesn't exist set the selection before the marker node

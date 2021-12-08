@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Added a new `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
+- New `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
 - The `tabindex` attribute is now copied from the target element to the iframe #TINY-8315
+- New `AutocompleterStart`, `AutocompleterUpdate` and `AutocompleterEnd` events #TINY-8279
+- New `mceAutocompleterClose`, `mceAutocompleterReload` commands #TINY-8279
+- New `slider` dialog component #TINY-8304
+- New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
@@ -26,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
+- The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - Moved the `textpattern` plugin to TinyMCE core #TINY-8312
 - Renamed the `textpattern_patterns` setting to `text_patterns` #TINY-8312
 
@@ -57,6 +62,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
+
+### Deprecated
+- The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
 
 ## 5.10.2 - 2021-11-17
 

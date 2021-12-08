@@ -6,10 +6,10 @@
  */
 
 import { Singleton } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import Env from '../api/Env';
 import * as Options from '../api/Options';
 import * as NodeType from '../dom/NodeType';
 import * as ClientRect from '../geom/ClientRect';
@@ -31,8 +31,6 @@ interface CaretState {
   element: HTMLElement;
   before: boolean;
 }
-
-const browser = PlatformDetection.detect().browser;
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isMedia = NodeType.isMedia;
@@ -227,7 +225,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
   };
 };
 
-export const isFakeCaretTableBrowser = (): boolean => browser.isIE() || browser.isEdge() || browser.isFirefox();
+export const isFakeCaretTableBrowser = (): boolean => Env.browser.isFirefox();
 
 export const isInlineFakeCaretTarget = (node: Node): node is HTMLElement =>
   isContentEditableFalse(node) || isMedia(node);

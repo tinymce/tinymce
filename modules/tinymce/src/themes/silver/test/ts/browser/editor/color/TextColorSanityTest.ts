@@ -1,18 +1,10 @@
 import { ApproxStructure } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
+import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () => {
-  before(function () {
-    const browser = PlatformDetection.detect().browser;
-    if (browser.isIE()) {
-      this.skip();
-    }
-  });
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor fontsizeselect',
     base_url: '/project/tinymce/js/tinymce'

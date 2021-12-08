@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 
 const autoprefix = new lessAutoprefix({
-  browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'],
+  browsers: ['last 2 Safari versions', 'iOS 14.0', 'last 2 Chrome versions', 'Firefox ESR'],
   grid: 'no-autoplace'
 });
 

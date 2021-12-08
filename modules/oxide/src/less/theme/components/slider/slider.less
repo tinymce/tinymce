@@ -25,7 +25,6 @@
     align-items: center;
     display: flex;
     flex: 1;
-    -ms-flex-preferred-size: auto;
     height: @slider-handle-height;
     justify-content: center;
     position: relative;
@@ -51,5 +50,19 @@
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
     width: @slider-handle-width;
+  }
+
+  // Spacing between multiple sliders in a stack
+  .tox-form__controls-h-stack > .tox-slider:not(:first-of-type) {
+    margin-inline-start: @pad-sm;
+  }
+
+  // Spacing between form group and slider in a stack
+  .tox-form__controls-h-stack > .tox-form__group + .tox-slider {
+    margin-inline-start: @pad-xl;
+  }
+
+  .tox-form__controls-h-stack > .tox-slider + .tox-form__group {
+    margin-inline-start: @pad-xl;
   }
 }

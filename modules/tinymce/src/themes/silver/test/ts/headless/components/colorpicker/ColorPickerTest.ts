@@ -2,7 +2,7 @@ import { HsvColour } from '@ephox/acid';
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Optional, Type } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -19,16 +19,10 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
   ));
 
   const fireEvent = (elem: SugarElement<Node>, event: string) => {
-    let evt: Event;
-    if (Type.isFunction(Event)) {
-      evt = new Event(event, {
-        bubbles: true,
-        cancelable: true
-      });
-    } else { // support IE
-      evt = document.createEvent('Event');
-      evt.initEvent(event, true, true);
-    }
+    const evt = new Event(event, {
+      bubbles: true,
+      cancelable: true
+    });
     elem.dom.dispatchEvent(evt);
   };
 

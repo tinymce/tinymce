@@ -32,7 +32,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
 
   context('FakeCaret before/after table', () => {
     before(function () {
-      if (!browser.isEdge() && !browser.isFirefox()) {
+      if (!browser.isFirefox()) {
         this.skip();
       }
     });

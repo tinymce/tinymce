@@ -1,22 +1,13 @@
 import { Strings } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 
 import { SugarElement } from '../api/node/SugarElement';
 import * as Css from '../api/properties/Css';
-
-const needManualCalc = (): boolean => {
-  const browser = PlatformDetection.detect().browser;
-  return browser.isIE() || browser.isEdge();
-};
 
 const toNumber = (px: string, fallback: number): number =>
   Strings.toFloat(px).getOr(fallback);
 
 const getProp = (element: SugarElement<HTMLElement>, name: string, fallback: number): number =>
   toNumber(Css.get(element, name), fallback);
-
-const getBoxSizing = (element: SugarElement<HTMLElement>): string =>
-  Css.get(element, 'box-sizing');
 
 const calcContentBoxSize = (element: SugarElement<HTMLElement>, size: number, upper: 'top' | 'left', lower: 'bottom' | 'right') => {
   const paddingUpper = getProp(element, `padding-${upper}`, 0);
@@ -40,10 +31,10 @@ const getCalculatedWidth = (element: SugarElement<HTMLElement>, boxSizing: strin
 };
 
 const getHeight = (element: SugarElement<HTMLElement>): number =>
-  needManualCalc() ? getCalculatedHeight(element, getBoxSizing(element)) : getProp(element, 'height', element.dom.offsetHeight);
+  getProp(element, 'height', element.dom.offsetHeight);
 
 const getWidth = (element: SugarElement<HTMLElement>): number =>
-  needManualCalc() ? getCalculatedWidth(element, getBoxSizing(element)) : getProp(element, 'width', element.dom.offsetWidth);
+  getProp(element, 'width', element.dom.offsetWidth);
 
 const getInnerHeight = (element: SugarElement<HTMLElement>): number =>
   getCalculatedHeight(element, 'content-box');

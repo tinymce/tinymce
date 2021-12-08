@@ -279,17 +279,6 @@ const bindFakeDragEvents = (editor: Editor) => {
   });
 };
 
-const blockIeDrop = (editor: Editor) => {
-  editor.on('drop', (e) => {
-    // FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
-    const realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
-
-    if (isContentEditableFalse(realTarget) || editor.dom.getContentEditableParent(realTarget) === 'false') {
-      e.preventDefault();
-    }
-  });
-};
-
 // Block files being dropped within the editor to prevent accidentally navigating away
 // while editing. Note that we can't use the `editor.on` API here, as we want these
 // to run after the editor event handlers have run. We also bind to the document
@@ -342,7 +331,6 @@ const blockUnsupportedFileDrop = (editor: Editor) => {
 
 const init = (editor: Editor) => {
   bindFakeDragEvents(editor);
-  blockIeDrop(editor);
 
   if (Options.shouldBlockUnsupportedDrop(editor)) {
     blockUnsupportedFileDrop(editor);
