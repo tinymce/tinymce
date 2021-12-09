@@ -11,6 +11,7 @@ describe('browser.acid.api.ConversionsTest', () => {
     const hexBlack = HexColour.fromRgba(rgbaBlack);
     assert.equal(hexBlack.value, '000000');
   });
+
   it('RGB to hex white', () => {
     const rgbaWhite = RgbaColour.rgbaColour(255, 255, 255, 1);
     const hexWhite = HexColour.fromRgba(rgbaWhite);

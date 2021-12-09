@@ -32,7 +32,7 @@ const anyToHex = (color: string): Hex =>
       return HexColour.fromRgba(RgbaColour.rgbaColour(r, g, b, a));
     });
 
-const anyToHexString = (color: string): string =>
+const rgbaToHexString = (color: string): string =>
   RgbaColour.fromString(color)
     .map(HexColour.fromRgba)
     .map((h) => '#' + h.value)
@@ -40,7 +40,7 @@ const anyToHexString = (color: string): string =>
 
 export {
   anyToHex,
-  anyToHexString,
+  rgbaToHexString,
   hexToHsv,
   hsvToHex
 };

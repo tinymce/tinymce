@@ -74,7 +74,7 @@ export type CellData = {
 };
 
 const rgbToHex = (value: string): string =>
-  Strings.startsWith(value, 'rgb') ? Transformations.anyToHexString(value) : value;
+  Strings.startsWith(value, 'rgb') ? Transformations.rgbaToHexString(value) : value;
 
 const extractAdvancedStyles = (dom: DOMUtils, elm: Node): AdvancedStyles => {
   const element = SugarElement.fromDom(elm);

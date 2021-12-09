@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
+- RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
 - The `tinymce.Env.os.isOSX` API has been renamed to `tinymce.Env.os.isMacOS` #TINY-8175
 - The `tinymce.Env.browser.isChrome` API has been renamed to `tinymce.Env.browser.isChromium` to better reflect its functionality #TINY-8300
 - The `editor.setContent()` API can now be prevented using the `BeforeSetContent` event. This makes it consistent with the `editor.selection.setContent()` API #TINY-8018
@@ -59,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `tabfocus` plugin #TINY-8315
+- Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

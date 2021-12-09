@@ -144,7 +144,7 @@ const isEq = (str1, str2) => {
 const normalizeStyleValue = (value, name: string) => {
   // Force the format to hex
   if (name === 'color' || name === 'backgroundColor') {
-    value = Transformations.anyToHexString(value);
+    value = Transformations.rgbaToHexString(value);
   }
 
   // Opera will return bold as 700
