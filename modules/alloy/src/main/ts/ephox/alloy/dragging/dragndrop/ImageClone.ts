@@ -1,6 +1,4 @@
-import { Arr, Singleton } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Css, DomEvent, Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { Css, Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 
 import * as DataTransfers from './DataTransfers';
 
@@ -29,7 +27,7 @@ const createGhostClone = (image: DragnDropImageClone): SugarElement => {
 // Fire dragDrop on that image
 // remove the image in a setTimeout( 0 )
 // http://jsfiddle.net/stevendwood/akScu/21/
-const setDragImageFromClone = (transfer: DataTransfer, parent: SugarElement, image: DragnDropImageClone): void => {
+const setDragImageFromClone = (transfer: DataTransfer, parent: SugarElement<Element>, image: DragnDropImageClone): void => {
   const ghost = createGhostClone(image);
 
   Insert.append(parent, ghost);
@@ -40,81 +38,8 @@ const setDragImageFromClone = (transfer: DataTransfer, parent: SugarElement, ima
   }, 0);
 };
 
-// IE and Edge doesn't support setDragImage so this fallback will hide the target from being used as a ghost
-const blockDefaultGhost = (target: SugarElement): void => {
-  const targetClone = Replication.deep(target);
-  const oldStyles = Arr.map([ 'position', 'visibility' ], (name) => ({ name, value: Css.getRaw(target, name) }));
-
-  Insert.before(target, targetClone);
-  Css.setAll(target, {
-    position: 'fixed',
-    visibility: 'hidden'
-  });
-
-  setTimeout(() => {
-    Arr.each(oldStyles, (prop) => {
-      prop.value.fold(
-        () => Css.remove(target, prop.name),
-        (value) => Css.set(target, prop.name, value)
-      );
-    });
-
-    Remove.remove(targetClone);
-  }, 0);
-};
-
-// Edge doesn't have setDragImage support and just hiding the target element will position the drop icon incorrectly so we need custom ghost
-// TODO: Get rid of this once Edge switches to Chromium we feature detect setDragImage support so once they have it should use that instead
-const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: SugarElement, target: SugarElement): void => {
-  const ghostState = Singleton.value<SugarElement<any>>();
-
-  const drag = DomEvent.bind(target, 'drag', (evt) => {
-    // The calculated position needs to at least be cord + 1 since it would otherwise interfere with dropping
-    const x = evt.x + Math.max(image.x + 1, 1);
-    const y = evt.y + Math.max(image.y + 1, 1);
-
-    const ghost = ghostState.get().getOrThunk(() => {
-      const newGhost = createGhostClone(image);
-
-      ghostState.set(newGhost);
-
-      Css.setAll(newGhost, {
-        position: 'fixed',
-        margin: '0',
-        opacity: '0.6'
-      });
-
-      Attribute.set(newGhost, 'role', 'presentation');
-
-      Insert.append(parent, newGhost);
-
-      return newGhost;
-    });
-
-    Css.setAll(ghost, {
-      left: `${x}px`,
-      top: `${y}px`
-    });
-  });
-
-  const dragEnd = DomEvent.bind(target, 'dragend', (_) => {
-    ghostState.on(Remove.remove);
-    drag.unbind();
-    dragEnd.unbind();
-  });
-
-  blockDefaultGhost(target);
-};
-
-const setImageClone = (transfer: DataTransfer, image: DragnDropImageClone, parent: SugarElement, target: SugarElement): void => {
-  if (DataTransfers.hasDragImageSupport(transfer)) {
-    setDragImageFromClone(transfer, parent, image);
-  } else if (PlatformDetection.detect().browser.isEdge()) {
-    setDragImageFromCloneEdgeFallback(image, parent, target);
-  } else {
-    // We can't provide a fallback on IE 11 since the drag event doesn't update the mouse position
-    blockDefaultGhost(target);
-  }
+const setImageClone = (transfer: DataTransfer, image: DragnDropImageClone, parent: SugarElement<Element>): void => {
+  setDragImageFromClone(transfer, parent, image);
 };
 
 export { setImageClone };

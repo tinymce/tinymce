@@ -6,11 +6,12 @@
  */
 
 import { Throttler } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as SelectionBookmark from './SelectionBookmark';
+
+type StoreThrottler = Throttler.Throttler<[]>;
 
 const isManualNodeChange = (e) => {
   return e.type === 'nodechange' && e.selectionChange;
@@ -28,26 +29,14 @@ const registerPageMouseUp = (editor: Editor, throttledStore) => {
   });
 };
 
-const registerFocusOut = (editor: Editor) => {
-  editor.on('focusout', () => {
-    SelectionBookmark.store(editor);
-  });
-};
-
-const registerMouseUp = (editor: Editor, throttledStore) => {
+const registerMouseUp = (editor: Editor, throttledStore: StoreThrottler) => {
   editor.on('mouseup touchend', (_e) => {
     throttledStore.throttle();
   });
 };
 
-const registerEditorEvents = (editor: Editor, throttledStore) => {
-  const browser = PlatformDetection.detect().browser;
-
-  if (browser.isIE()) {
-    registerFocusOut(editor);
-  } else {
-    registerMouseUp(editor, throttledStore);
-  }
+const registerEditorEvents = (editor: Editor, throttledStore: StoreThrottler) => {
+  registerMouseUp(editor, throttledStore);
 
   editor.on('keyup NodeChange', (e) => {
     if (!isManualNodeChange(e)) {

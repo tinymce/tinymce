@@ -15,7 +15,6 @@ import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as Rtc from '../Rtc';
-import * as CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
 
 /**
  * This file includes fixes for various browser quirks it's made to make it easy to add/remove browser specific fixes.
@@ -34,12 +33,9 @@ const Quirks = (editor: Editor): Quirks => {
   const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, parser = editor.parser;
   const browser = Env.browser;
   const isGecko = browser.isFirefox();
-  const isIE = browser.isIE() || browser.isEdge();
   const isWebKit = browser.isChromium() || browser.isSafari();
   const isiOS = Env.deviceType.isiPhone() || Env.deviceType.isiPad();
   const isMac = Env.os.isMacOS() || Env.os.isiOS();
-  const mceInternalUrlPrefix = 'data:text/mce-internal,';
-  const mceInternalDataType = isIE ? 'Text' : 'URL';
 
   /**
    * Executes a command with a specific state this can be to enable/disable browser editing features.
@@ -61,76 +57,6 @@ const Quirks = (editor: Editor): Quirks => {
    */
   const isDefaultPrevented = (e) => {
     return e.isDefaultPrevented();
-  };
-
-  /**
-   * Sets Text/URL data on the event's dataTransfer object to a special data:text/mce-internal url.
-   * This is to workaround the inability to set custom contentType on IE and Safari.
-   * The editor's selected content is encoded into this url so drag and drop between editors will work.
-   *
-   * @private
-   * @param {DragEvent} e Event object
-   */
-  const setMceInternalContent = (e) => {
-    let selectionHtml, internalContent;
-
-    if (e.dataTransfer) {
-      if (editor.selection.isCollapsed() && e.target.tagName === 'IMG') {
-        selection.select(e.target);
-      }
-
-      selectionHtml = editor.selection.getContent();
-
-      // Safari/IE doesn't support custom dataTransfer items so we can only use URL and Text
-      if (selectionHtml.length > 0) {
-        internalContent = mceInternalUrlPrefix + escape(editor.id) + ',' + escape(selectionHtml);
-        e.dataTransfer.setData(mceInternalDataType, internalContent);
-      }
-    }
-  };
-
-  /**
-   * Gets content of special data:text/mce-internal url on the event's dataTransfer object.
-   * This is to workaround the inability to set custom contentType on IE and Safari.
-   * The editor's selected content is encoded into this url so drag and drop between editors will work.
-   *
-   * @private
-   * @param {DragEvent} e Event object
-   * @returns {String} mce-internal content
-   */
-  const getMceInternalContent = (e) => {
-    let internalContent;
-
-    if (e.dataTransfer) {
-      internalContent = e.dataTransfer.getData(mceInternalDataType);
-
-      if (internalContent && internalContent.indexOf(mceInternalUrlPrefix) >= 0) {
-        internalContent = internalContent.substr(mceInternalUrlPrefix.length).split(',');
-
-        return {
-          id: unescape(internalContent[0]),
-          html: unescape(internalContent[1])
-        };
-      }
-    }
-
-    return null;
-  };
-
-  /**
-   * Inserts contents using the paste clipboard command if it's available if it isn't it will fallback
-   * to the core command.
-   *
-   * @private
-   * @param {String} content Content to insert at selection.
-   * @param {Boolean} internal State if the paste is to be considered internal or external.
-   */
-  const insertClipboardContents = (content, internal) => {
-    if (editor.queryCommandSupported('mceInsertClipboardContent')) {
-      editor.execCommand('mceInsertClipboardContent', false, { content, internal });
-    } else {
-      editor.execCommand('mceInsertContent', false, content);
-    }
   };
 
   /**
@@ -582,13 +508,6 @@ const Quirks = (editor: Editor): Quirks => {
         let rng;
 
         if (e.target.nodeName === 'HTML') {
-          // Edge seems to only need focus if we set the range
-          // the caret will become invisible and moved out of the iframe!!
-          if (browser.isEdge()) {
-            editor.getBody().focus();
-            return;
-          }
-
           // Need to store away non collapsed ranges since the focus call will mess that up see #7382
           rng = editor.selection.getRng();
           editor.getBody().focus();
@@ -615,13 +534,6 @@ const Quirks = (editor: Editor): Quirks => {
         }
       });
     }
-  };
-
-  /**
-   * Disables the autolinking in IE 9+ this is then re-enabled by the autolink plugin.
-   */
-  const disableAutoUrlDetect = () => {
-    setEditorCommandState('AutoUrlDetect', false);
   };
 
   /**
@@ -733,30 +645,6 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
-  /**
-   * IE cannot set custom contentType's on drag events, and also does not properly drag/drop between
-   * editors. This uses a special data:text/mce-internal URL to pass data when drag/drop between editors.
-   */
-  const ieInternalDragAndDrop = () => {
-    editor.on('dragstart', (e) => {
-      setMceInternalContent(e);
-    });
-
-    editor.on('drop', (e) => {
-      if (!isDefaultPrevented(e)) {
-        const internalContent = getMceInternalContent(e);
-
-        if (internalContent && internalContent.id !== editor.id) {
-          e.preventDefault();
-
-          const rng = CaretRangeFromPoint.fromPoint(e.x, e.y, editor.getDoc());
-          selection.setRng(rng);
-          insertClipboardContents(internalContent.html, true);
-        }
-      }
-    });
-  };
-
   // No-op since Mozilla seems to have fixed the caret repaint issues
   const refreshContentEditable = Fun.noop;
 
@@ -822,14 +710,6 @@ const Quirks = (editor: Editor): Quirks => {
       } else {
         selectAll();
       }
-    }
-
-    if (isIE) {
-      bodyHeight();
-      disableBackspaceIntoATable();
-      selectAll();
-      disableAutoUrlDetect();
-      ieInternalDragAndDrop();
     }
 
     // Gecko

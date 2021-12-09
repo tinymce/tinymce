@@ -3,7 +3,6 @@ import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
@@ -137,18 +136,10 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     editor.selection.setContent('');
     LegacyUnit.equal(editor.getContent(), '<p>text</p>', 'Set contents to empty at selection (collapsed)');
     rng = editor.selection.getRng();
-    if (!document.createRange) {
-      // The old IE selection can only be positioned in text nodes
-      LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild.firstChild, 'Selection start container');
-      LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
-      LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild.firstChild, 'Selection end container');
-      LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
-    } else {
-      LegacyUnit.equalDom(rng.startContainer, editor.getBody(), 'Selection start container');
-      LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
-      LegacyUnit.equalDom(rng.endContainer, editor.getBody(), 'Selection end container');
-      LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
-    }
+    LegacyUnit.equalDom(rng.startContainer, editor.getBody(), 'Selection start container');
+    LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
+    LegacyUnit.equalDom(rng.endContainer, editor.getBody(), 'Selection end container');
+    LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
 
     // Set selected contents, onSetContent event
     eventObj = {};
@@ -645,11 +636,6 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    // if (tinymce.isOpera || tinymce.isIE) {
-    //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-    //  return;
-    // }
-
     editor.setContent('<p>text</p>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getDoc(), 0);
@@ -667,11 +653,6 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('normalize to br from document', () => {
     const editor = hook.editor();
     let rng;
-
-    // if (tinymce.isOpera || tinymce.isIE) {
-    //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-    //  return;
-    // }
 
     editor.setContent('<p><br /></p>');
     rng = editor.dom.createRng();
@@ -719,20 +700,6 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 0);
     editor.selection.setRng(rng);
-  });
-
-  it('normalize with contentEditable:true parent and contentEditable:false child element', () => {
-    const editor = hook.editor();
-    if (Env.browser.isIE()) {
-      editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
-      LegacyUnit.setSelection(editor, 'em', 0);
-      editor.selection.normalize();
-
-      const rng = editor.selection.getRng();
-
-      LegacyUnit.equal((rng.startContainer.parentNode as HTMLElement).contentEditable !== 'false', true);
-      LegacyUnit.equal(rng.startOffset, 0);
-    }
   });
 
   it('normalize to text node from body', () => {
@@ -1052,11 +1019,6 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('normalize after table should not move', () => {
     const editor = hook.editor();
     let rng;
-
-    // if (tinymce.isOpera || tinymce.isIE) {
-    //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-    //  return;
-    // }
 
     editor.setContent('a<table><tr><td>b</td></tr></table>');
     rng = editor.dom.createRng();

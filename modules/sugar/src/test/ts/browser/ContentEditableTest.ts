@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -73,12 +72,9 @@ describe('ContentEditableTest', () => {
     assert.isTrue(ContentEditable.isEditable(div, true));
 
     // Once attached fallbacks should make no difference
-    // Note: IE 11 is skipped as we can't use the computed value
-    if (!PlatformDetection.detect().browser.isIE()) {
-      Insert.append(SugarBody.body(), parent);
-      assert.isFalse(ContentEditable.isEditable(div, false));
-      assert.isFalse(ContentEditable.isEditable(div, true));
-    }
+    Insert.append(SugarBody.body(), parent);
+    assert.isFalse(ContentEditable.isEditable(div, false));
+    assert.isFalse(ContentEditable.isEditable(div, true));
 
     // Sanity check once editable
     makeEditable(parent);

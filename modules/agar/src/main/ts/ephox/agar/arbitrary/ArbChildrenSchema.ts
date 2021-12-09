@@ -1,46 +1,67 @@
-import { Arr, Merger, Obj } from '@ephox/katamari';
-import Jsc from '@ephox/wrap-jsverify';
+import { Arr, Fun, Merger, Obj } from '@ephox/katamari';
+import * as fc from 'fast-check';
 
-import { WeightedChoice } from './WeightedChoice';
+import * as WeightedChoice from './WeightedChoice';
 
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+type WeightedItem = WeightedChoice.WeightedItem;
+
+interface ChanceItem {
+  readonly chance: number;
+}
+
+interface Detail<T> {
+  readonly components: Record<string, T>;
+}
+
+export interface CompositeDetail extends Detail<WeightedItem> {
+  readonly recursionDepth?: number;
+}
+
+export interface StructureDetail extends Detail<ChanceItem> {}
+
+type Component<T> = T & {
+  readonly component?: string;
+};
+
+export type Construct<T> = (component: string, depth: number) => fc.Arbitrary<T>;
 
 const skipChild = '_';
 
-const toComponents = (detail) =>
+const toComponents = <T>(detail: Detail<T>): Component<T>[] =>
   Obj.mapToArray(detail.components, (v, k) =>
     // If there is no component, then the choice will be None.
     k !== skipChild ? Merger.deepMerge(v, { component: k }) : v
   );
 
-const none = Jsc.constant([]).generator;
+const none = fc.constant([]);
 
-const composite = (rawDepth, detail, construct) => {
+const composite = <T>(rawDepth: number | undefined, detail: CompositeDetail, construct: Construct<T>): fc.Arbitrary<T[]> => {
   const components = toComponents(detail);
-  const depth = rawDepth !== undefined ? rawDepth : detail.recursionDepth;
+  const depth = rawDepth ?? detail.recursionDepth;
+  if (depth === 0) {
+    return none;
+  } else {
+    const genComponent = (choice: Component<WeightedItem>, depth: number | undefined) => {
+      const newDepth = choice.useDepth === true ? depth - 1 : depth;
+      return fc.array(construct(choice.component, newDepth), { minLength: 1, maxLength: 5 });
+    };
 
-  const genComponent = (choice, depth) => {
-    const newDepth = choice.useDepth === true ? depth - 1 : depth;
-    return Jsc.generator.nearray(
-      construct(choice.component, newDepth).generator
+    const repeat = WeightedChoice.generator(components).chain((choice) =>
+      choice.fold(
+        Fun.constant(none),
+        (c) => genComponent(c, depth)
+      )
     );
-  };
 
-  const repeat = WeightedChoice.generator(components).flatMap((choice) =>
-    choice.fold(
-      () => Jsc.constant([]).generator,
-      (c) => genComponent(c, depth)
-    )
-  );
-
-  return depth === 0 ? Jsc.constant([]).generator : Jsc.generator.nearray(repeat).map(Arr.flatten);
+    return fc.array(repeat, { minLength: 1, maxLength: 5 }).map(Arr.flatten);
+  }
 };
 
-const structure = (rawDepth, detail, construct) => {
+const structure = <T>(rawDepth: number | undefined, detail: StructureDetail, construct: Construct<T>): fc.Arbitrary<T[]> => {
   const components = toComponents(detail);
-  return Jsc.number(0, 1).generator.flatMap((random) => {
+  return fc.float({ min: 0, max: 1 }).chain((random) => {
     // TODO: Allow the order to be mixed up?
-    const children = Arr.foldl(
+    const children = Arr.foldl<Component<ChanceItem>, fc.Arbitrary<T>[]>(
       components,
       (b, component) =>
         random <= component.chance ?
@@ -48,7 +69,7 @@ const structure = (rawDepth, detail, construct) => {
           b,
       []
     );
-    return Jsc.tuple(children).generator;
+    return fc.tuple(...children);
   });
 };
 

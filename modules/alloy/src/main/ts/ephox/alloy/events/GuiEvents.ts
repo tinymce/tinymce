@@ -1,6 +1,5 @@
 import { Arr, Singleton } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
-import { DomEvent, EventArgs, EventUnbinder, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
+import { DomEvent, EventArgs, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
@@ -12,30 +11,10 @@ const isDangerous = (event: EventArgs<KeyboardEvent>): boolean => {
   return keyEv.which === Keys.BACKSPACE[0] && !Arr.contains([ 'input', 'textarea' ], SugarNode.name(event.target)) && !SelectorExists.closest(event.target, '[contenteditable="true"]');
 };
 
-const isFirefox = (): boolean => PlatformDetection.detect().browser.isFirefox();
-
 export interface GuiEventSettings {
   readonly triggerEvent: (eventName: string, event: EventArgs) => boolean;
   readonly stopBackspace?: boolean;
 }
-
-const bindFocus = (container: SugarElement, handler: (evt: EventArgs) => void): EventUnbinder => {
-  if (isFirefox()) {
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
-    return DomEvent.capture(container, 'focus', handler);
-  } else {
-    return DomEvent.bind(container, 'focusin', handler);
-  }
-};
-
-const bindBlur = (container: SugarElement, handler: (evt: EventArgs) => void): EventUnbinder => {
-  if (isFirefox()) {
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
-    return DomEvent.capture(container, 'blur', handler);
-  } else {
-    return DomEvent.bind(container, 'focusout', handler);
-  }
-};
 
 const setup = (container: SugarElement, rawSettings: GuiEventSettings): { unbind: () => void } => {
   const settings: Required<GuiEventSettings> = {
@@ -118,7 +97,7 @@ const setup = (container: SugarElement, rawSettings: GuiEventSettings): { unbind
     }
   });
 
-  const onFocusIn = bindFocus(container, (event) => {
+  const onFocusIn = DomEvent.bind(container, 'focusin', (event) => {
     const stopped = settings.triggerEvent('focusin', event);
     if (stopped) {
       event.kill();
@@ -126,7 +105,7 @@ const setup = (container: SugarElement, rawSettings: GuiEventSettings): { unbind
   });
 
   const focusoutTimeout = Singleton.value<number>();
-  const onFocusOut = bindBlur(container, (event) => {
+  const onFocusOut = DomEvent.bind(container, 'focusout', (event) => {
     const stopped = settings.triggerEvent('focusout', event);
     if (stopped) {
       event.kill();

@@ -24,7 +24,7 @@ import * as CaretBookmark from './CaretBookmark';
 
 const addBogus = (dom: DOMUtils, node: Node): Node => {
   // Adds a bogus BR element for empty block elements
-  if (NodeType.isElement(node) && dom.isBlock(node) && !node.innerHTML && !(Env.browser.isIE() || Env.browser.isEdge())) {
+  if (NodeType.isElement(node) && dom.isBlock(node) && !node.innerHTML) {
     node.innerHTML = '<br data-mce-bogus="1" />';
   }
 

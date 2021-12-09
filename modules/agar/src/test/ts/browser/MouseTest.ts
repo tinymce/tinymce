@@ -55,14 +55,7 @@ UnitTest.asynctest('MouseTest', (success, failure) => {
     platform.browser.isFirefox() && !document.hasFocus();
 
   const trueClickEventOrder = (() => {
-    // IE seems to fire input.focus at the end.
-    if (platform.browser.isIE()) {
-      return [
-        'input.mousedown', 'container.mousedown',
-        'input.mouseup', 'container.mouseup',
-        'input.click', 'container.click', 'input.focus'
-      ];
-    } else if (isUnfocusedFirefox()) {
+    if (isUnfocusedFirefox()) {
       return [
         'input.mousedown', 'container.mousedown',
         'input.mouseup', 'container.mouseup',

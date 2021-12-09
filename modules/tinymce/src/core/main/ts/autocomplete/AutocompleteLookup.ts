@@ -5,26 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InlineContent } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
-
 import * as Spot from '../alien/Spot';
-import { toLeaf } from '../alien/TextDescent';
-import { repeatLeft } from '../alien/TextSearch';
+import * as TextDescent from '../alien/TextDescent';
+import * as TextSearch from '../alien/TextSearch';
+import DOMUtils from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
 import { AutocompleteContext, getContext } from './AutocompleteContext';
 import { AutocompleterDatabase } from './Autocompleters';
+import { AutocompleteLookupData } from './AutocompleteTypes';
 import { isWhitespace } from './AutocompleteUtils';
-
-export interface AutocompleteLookupData {
-  matchText: string;
-  items: InlineContent.AutocompleterContents[];
-  columns: InlineContent.ColumnTypes;
-  onAction: (autoApi: InlineContent.AutocompleterInstanceApi, rng: Range, value: string, meta: Record<string, any>) => void;
-  highlightOn: string[];
-}
 
 export interface AutocompleteLookupInfo {
   context: AutocompleteContext;
@@ -33,13 +24,13 @@ export interface AutocompleteLookupInfo {
 
 const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) =>
   // If at the start of the range, then we need to look backwards one more place. Otherwise we just need to look at the current text
-  repeatLeft(dom, leaf.container, leaf.offset, (element, offset) => offset === 0 ? -1 : offset, dom.getRoot()).filter((spot) => {
+  TextSearch.repeatLeft(dom, leaf.container, leaf.offset, (element, offset) => offset === 0 ? -1 : offset, dom.getRoot()).filter((spot) => {
     const char = spot.container.data.charAt(spot.offset - 1);
     return !isWhitespace(char);
   }).isSome();
 
 const isStartOfWord = (dom: DOMUtils) => (rng: Range) => {
-  const leaf = toLeaf(rng.startContainer, rng.startOffset);
+  const leaf = TextDescent.toLeaf(rng.startContainer, rng.startOffset);
   return !isPreviousCharContent(dom, leaf);
 };
 

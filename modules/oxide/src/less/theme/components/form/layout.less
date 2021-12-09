@@ -19,7 +19,6 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    -ms-flex-preferred-size: auto;
   }
 
   // Wraps a label and input combo.
@@ -81,25 +80,21 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    -ms-flex-preferred-size: auto;
 
     // Any styles that use `.tox-form__group--stretched` should only contain rules for flex or more generally the layout.
     // Behavioural styles (such as `white-space`) belong in the specific component styles
     .tox-textarea {
       flex: 1;
-      -ms-flex-preferred-size: auto;
     }
 
     .tox-navobj {
       display: flex;
       flex: 1;
-      -ms-flex-preferred-size: auto;
     }
 
     // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
     .tox-navobj :nth-child(2) {
       flex: 1;
-      -ms-flex-preferred-size: auto;
       // IE 11
       height: 100%;
     }

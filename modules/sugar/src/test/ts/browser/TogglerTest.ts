@@ -59,9 +59,6 @@ UnitTest.test('TogglerTest', () => {
   // CSS toggles are silly - we should delete this and do it in a way that does not require detection
 
   const checkDisplayBlockRemoved = (has: boolean) => {
-    // oh IE, you bastard
-    // var isie = PlatformDetection.detect().browser.isIE();
-    // var off = isie ? 'block' : undefined;
     const v = has ? 'none' : 'block';
     assert.eq(v, Css.get(c, 'display'));
   };

@@ -113,7 +113,6 @@ export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
   // If a longpress touch event, always treat it as a pointer event
   // Chrome: button = 0, pointerType = undefined & target = the selection range node
   // Firefox: button = 0, pointerType = undefined & target = body
-  // IE/Edge: button = 2, pointerType = "" & target = body
   // Safari: N/A (Mac's don't expose a contextmenu keyboard shortcut)
   e.type !== 'longpress' && (e.button !== 2 || e.target === editor.getBody() && e.pointerType === '');
 

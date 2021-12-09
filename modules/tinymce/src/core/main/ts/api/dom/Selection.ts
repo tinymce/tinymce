@@ -25,7 +25,6 @@ import * as SelectionBookmark from '../../selection/SelectionBookmark';
 import { hasAnyRanges, moveEndPoint } from '../../selection/SelectionUtils';
 import * as SetSelectionContent from '../../selection/SetSelectionContent';
 import Editor from '../Editor';
-import Env from '../Env';
 import AstNode from '../html/Node';
 import BookmarkManager from './BookmarkManager';
 import ControlSelection from './ControlSelection';
@@ -43,8 +42,6 @@ import DomSerializer from './Serializer';
  * alert(tinymce.activeEditor.selection.getNode().nodeName);
  */
 
-const isNativeIeSelection = (rng: any): boolean => !!(rng).select;
-
 const isAttachedToDom = (node: Node): boolean => {
   return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
 };
@@ -52,8 +49,6 @@ const isAttachedToDom = (node: Node): boolean => {
 const isValidRange = (rng: Range) => {
   if (!rng) {
     return false;
-  } else if (isNativeIeSelection(rng)) { // Native IE range still produced by placeCaretAt
-    return true;
   } else {
     return isAttachedToDom(rng.startContainer) && isAttachedToDom(rng.endContainer);
   }
@@ -337,10 +332,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
     // No range found then create an empty one
     // This can occur when the editor is placed in a hidden container element on Gecko
-    // Or on IE when there was an exception
     if (!rng) {
-      // TODO: Is this still needed in modern browsers?
-      rng = doc.createRange ? doc.createRange() : (doc.body as any).createTextRange();
+      rng = doc.createRange();
     }
 
     // If range is at start of document then move it to start of body
@@ -379,20 +372,6 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
       return;
     }
 
-    // Is IE specific range
-    const ieRange: any = isNativeIeSelection(rng) ? rng : null;
-    if (ieRange) {
-      explicitRange = null;
-
-      try {
-        ieRange.select();
-      } catch (ex) {
-        // Needed for some odd IE bug #1843306
-      }
-
-      return;
-    }
-
     const sel = getSel();
 
     const evt = editor.fire('SetSelectionRange', { range: rng, forward });
@@ -418,8 +397,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
       selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
     }
 
-    // WebKit egde case selecting images works better using setBaseAndExtent when the image is floated
-    if (!rng.collapsed && rng.startContainer === rng.endContainer && sel.setBaseAndExtent && !(Env.browser.isIE() || Env.browser.isEdge())) {
+    // WebKit edge case selecting images works better using setBaseAndExtent when the image is floated
+    if (!rng.collapsed && rng.startContainer === rng.endContainer && sel.setBaseAndExtent) {
       if (rng.endOffset - rng.startOffset < 2) {
         if (rng.startContainer.hasChildNodes()) {
           node = rng.startContainer.childNodes[rng.startOffset];
@@ -550,7 +529,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     }
   };
 
-  const placeCaretAt = (clientX: number, clientY: number) => setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
+  const placeCaretAt = (clientX: number, clientY: number) =>
+    setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
 
   const getBoundingClientRect = (): ClientRect | DOMRect => {
     const rng = getRng();

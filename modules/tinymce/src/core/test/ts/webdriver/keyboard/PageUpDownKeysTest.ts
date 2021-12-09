@@ -48,12 +48,7 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       editor.setContent('<p><a href="google.com">link</a>text</p>');
       TinySelections.setCursor(editor, [ 0, 1 ], 4);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageUp') ]);
-
-      if (platform.browser.isIE()) {
-        TinyAssertions.assertCursor(editor, [ 0 ], 0);
-      } else {
-        TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
-      }
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
 
       editor.options.unset('inline_boundaries');
     });
@@ -86,12 +81,7 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       editor.setContent('<p>test<a href="google.com">link</a></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageDown') ]);
-
-      if (platform.browser.isIE()) {
-        TinyAssertions.assertCursor(editor, [ 0 ], 2);
-      } else {
-        TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 4);
-      }
+      TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 4);
 
       editor.options.unset('inline_boundaries');
     });

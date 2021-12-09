@@ -2,15 +2,12 @@ import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, UiFinder, 
 import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
-  const platform = PlatformDetection.detect();
-  const isIE = platform.browser.isIE();
   const store = TestHelpers.TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
@@ -161,12 +158,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await pAssertNoPopDialog();
   });
 
-  // TODO FIXME DISABLED-TEST TINY-2724
-  // Disable reason: Focus does not return to the context toolbar after its context form is closed (by escape)
-  it('TBA: Launch a context form from a context toolbar', async function () {
-    if (isIE) {
-      this.skip();
-    }
+  it('TBA: Launch a context form from a context toolbar', async () => {
     const editor = hook.editor();
     const doc = SugarDocument.getDocument();
     openToolbar(editor, 'test-toolbar');
@@ -176,7 +168,6 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await FocusTools.pTryOnSelector('Focus should now be on input in context form that was launched by button', doc, 'input');
     hasDialog('Launched context form should have an inner dialog class');
     TinyUiActions.keydown(editor, Keys.escape());
-    // IE fails here
     await FocusTools.pTryOnSelector('Focus should have shifted back to the triggering toolbar', doc, '.tox-pop button');
     hasDialog('Restored context toolbar (esc from form) should have an inner dialog class');
     TinyUiActions.keydown(editor, Keys.escape());

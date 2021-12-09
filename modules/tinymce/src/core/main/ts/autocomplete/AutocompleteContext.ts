@@ -8,9 +8,8 @@
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-
-import { repeatLeft } from '../alien/TextSearch';
+import * as TextSearch from '../alien/TextSearch';
+import DOMUtils from '../api/dom/DOMUtils';
 import * as AutocompleteTag from './AutocompleteTag';
 import { getText, isValidTextRange, isWhitespace } from './AutocompleteUtils';
 
@@ -51,7 +50,7 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
     findChar(text, offset, ch).getOr(offset);
 
   const root = dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
-  return repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
+  return TextSearch.repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
     const range = initRange.cloneRange();
     range.setStart(spot.container, spot.offset);
     range.setEnd(initRange.endContainer, initRange.endOffset);
@@ -73,15 +72,16 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
   });
 };
 
-const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Optional<AutocompleteContext> => AutocompleteTag.detect(SugarElement.fromDom(initRange.startContainer)).fold(
-  () => findStart(dom, initRange, ch, minChars),
-  (elm) => {
-    const range = dom.createRng();
-    range.selectNode(elm.dom);
-    const text = getText(range);
-    return Optional.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
-  }
-);
+const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Optional<AutocompleteContext> =>
+  AutocompleteTag.detect(SugarElement.fromDom(initRange.startContainer)).fold(
+    () => findStart(dom, initRange, ch, minChars),
+    (elm) => {
+      const range = dom.createRng();
+      range.selectNode(elm.dom);
+      const text = getText(range);
+      return Optional.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
+    }
+  );
 
 export {
   findChar, // Exposed for testing.
