@@ -22,6 +22,7 @@ import * as SpaceKey from './SpaceKey';
 
 const setup = (editor: Editor): Cell<Text> => {
   editor.addShortcut('Meta+P', '', 'mcePrint');
+  Autocompleter.setup(editor);
 
   if (Rtc.isRtc(editor)) {
     return Cell(null);
@@ -36,7 +37,6 @@ const setup = (editor: Editor): Cell<Text> => {
     InputKeys.setup(editor);
     HomeEndKeys.setup(editor, caret);
     PageUpDownKeys.setup(editor, caret);
-    Autocompleter.setup(editor);
 
     return caret;
   }
