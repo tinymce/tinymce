@@ -17,6 +17,7 @@ import { renderCustomEditor } from '../dialog/CustomEditor';
 import { renderDropZone } from '../dialog/Dropzone';
 import { renderGrid } from '../dialog/Grid';
 import { renderIFrame } from '../dialog/IFrame';
+import { renderImagePanel } from '../dialog/ImagePanel';
 import { renderImageTools } from '../dialog/imagetools/ImageTools';
 import { renderLabel } from '../dialog/Label';
 import { renderListBox } from '../dialog/ListBox';
@@ -73,6 +74,7 @@ const factories: Record<string, FormPartRenderer> = {
   customeditor: make(renderCustomEditor),
   htmlpanel: make(renderHtmlPanel),
   imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared.providers)),
+  imagepanel: make((spec, _backstage) => renderImagePanel(spec)),
   table: make((spec, backstage) => renderTable(spec, backstage.shared.providers)),
   panel: make((spec, backstage) => renderPanel(spec, backstage))
 };

@@ -15,11 +15,17 @@
       flex: 1;
     }
 
-    .tox-bar.tox-form__controls-h-stack {
+    .tox-bar {
       align-items: center;
       display: flex;
       height: 60px;
       justify-content: center;
+    }
+
+    // Apply spacing between toolbars and image
+    .tox-imagepanel,
+    .tox-imagepanel + .tox-bar {
+      margin-top: @pad-sm;
     }
   }
 
