@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
 
 ### Fixed
-- Fix RGBA and RGB parsing to account for whitespace.   
+- Fix RGBA and RGB parsing to account for whitespace.
+
 ### Removed
 - Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.
 
