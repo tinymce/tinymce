@@ -1,14 +1,14 @@
-import { UiFinder } from '@ephox/agar';
+import { ApproxStructure, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'bold italic underline strikethrough print',
+    toolbar: 'bold italic underline strikethrough print hr',
   }, []);
 
   const assertToolbarButtonPressed = (title: string) =>
@@ -94,5 +94,18 @@ describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
   it('TINY-8314: Assert print button exists', async () => {
     const editor = hook.editor();
     await TinyUiActions.pWaitForUi(editor, 'button[aria-label="Print"]');
+  });
+
+  it('TINY-8313: Click on the horizontal rule toolbar button and assert hr is added to the editor', () => {
+    const editor = hook.editor();
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Horizontal line"]');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s) => {
+      return s.element('body', {
+        children: [
+          s.element('hr', {}),
+          s.anything()
+        ]
+      });
+    }));
   });
 });
