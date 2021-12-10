@@ -18,13 +18,15 @@
     width: 100%;
   }
 
-  .tox-imagepanel__bg {
-    background: url(data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==);
+  // start the container off screen to avoid showing the image at full size before zooming to fit
+  .tox-imagepanel__container {
+    display: flex;
+    left: "1vw";
     position: absolute;
+    top: "1vw";
   }
 
   .tox-imagepanel__image {
     background: url(data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==);
-    position: absolute;
   }
 }
