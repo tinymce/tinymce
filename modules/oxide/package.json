@@ -31,5 +31,9 @@
     "src/text/**/*",
     "README.md",
     "LICENSE.txt"
-  ]
+  ],
+  "dependencies": {
+    "prism-themes": "^1.9.0",
+    "prismjs": "^1.25.0"
+  }
 }

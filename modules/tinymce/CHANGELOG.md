@@ -26,11 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
+- Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 - The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
+- The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
 - Moved the `textpattern` plugin to TinyMCE core #TINY-8312
 - Renamed the `textpattern_patterns` setting to `text_patterns` #TINY-8312
 
@@ -41,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 
 ### Removed
-- Removed the deprecated `$`, `DomQuery` and `Sizzle` APIs #TINY-4520
+- Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
 - Removed the legacy browser detection properties from `Env` #TINY-8162
 - Removed the deprecated `setIconStroke` Split Toolbar Button API #TINY-8162

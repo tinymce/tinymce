@@ -7,7 +7,7 @@ let swag = require('@ephox/swag');
 
 let plugins = [
   'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 'code', 'codesample',
-  'directionality', 'emoticons', 'help', 'fullscreen', 'hr', 'image', 'importcss',
+  'directionality', 'emoticons', 'help', 'fullscreen', 'image', 'importcss',
   'insertdatetime', 'link', 'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste',
   'preview', 'save', 'searchreplace', 'table', 'template',
   'visualblocks', 'visualchars', 'wordcount', 'quickbars'
@@ -45,6 +45,7 @@ module.exports = function (grunt) {
     pkg: packageData,
 
     shell: {
+      prismjs: { command: 'node ./bin/build-prism.js', cwd: '../../' },
       tsc: { command: 'tsc -b' },
       moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' }
     },
@@ -894,6 +895,7 @@ module.exports = function (grunt) {
   grunt.registerTask('emoji', ['emojis', 'terser:emoticons-raw']);
 
   grunt.registerTask('prodBuild', [
+    'shell:prismjs',
     'shell:tsc',
     'eslint',
     'globals',
@@ -914,6 +916,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('dev', [
+    'shell:prismjs',
     'globals',
     'emoji',
     // TODO: Make webpack use the oxide CSS directly

@@ -285,7 +285,7 @@ const register = (editor: Editor) => {
           return { value: Arr.map(value.split(','), Strings.trim), valid };
         } else if (Type.isArray(value)) {
           return { value, valid };
-        } else if (value === false || editor.inline) {
+        } else if (value === false) {
           return { value: [], valid };
         } else {
           return { value, valid };
@@ -294,7 +294,7 @@ const register = (editor: Editor) => {
         return { valid: false, message: 'Must be false, a string or an array of strings.' };
       }
     },
-    default: [ 'default' ]
+    default: isInline(editor) ? [] : [ 'default' ]
   });
 
   registerOption('content_style', {

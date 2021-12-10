@@ -38,7 +38,6 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'emoticons', name: 'Emoticons' },
   { key: 'fullscreen', name: 'Full Screen' },
   { key: 'help', name: 'Help' },
-  { key: 'hr', name: 'Horizontal Rule' },
   { key: 'image', name: 'Image' },
   { key: 'importcss', name: 'Import CSS' },
   { key: 'insertdatetime', name: 'Insert Date/Time' },

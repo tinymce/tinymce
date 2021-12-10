@@ -48,7 +48,6 @@ import Shortcuts from './Shortcuts';
 import ThemeManager, { Theme } from './ThemeManager';
 import { tinymce, TinyMCE } from './Tinymce';
 import * as Ui from './ui/Ui';
-import Class from './util/Class';
 import Delay from './util/Delay';
 import EventDispatcher, { EditorEvent } from './util/EventDispatcher';
 import I18n from './util/I18n';
@@ -91,7 +90,6 @@ export {
   HtmlSerializer,
 
   // utils
-  Class,
   Delay,
   EventDispatcher,
   I18n,
