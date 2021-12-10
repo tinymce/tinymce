@@ -6,7 +6,7 @@
  */
 
 import { Selections, SelectionTypes } from '@ephox/darwin';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 
 import { Bookmark } from '../../bookmark/BookmarkTypes';
@@ -470,47 +470,31 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    */
   const getNode = (): Element => ElementSelection.getNode(editor.getBody(), getRng());
 
-  // const getSelectedBlocks = (startElm?: Element, endElm?: Element) => ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
-
-  // Trying to just use returned array from Darwin Selections. I don't think this gives enough fidenlity
-  // const getSelectedBlocks = (startElm?: Element, endElm?: Element) => {
-  //   const selectedCells = cellSelection.get();
-  //   // Returns even for collapsed selection in cell which causes TableInListTest and IndentListsInTableTest to fail
-  //   if (selectedCells.length > 1) {
-  //     return Arr.map(selectedCells, (cell) => cell.dom);
-  //   } else {
-  //     return ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
-  //   }
-  // };
-
-  // Use getSelectedBlocks instead of getSelectedCells. Will just have to filter out any non-td/th elements and operate from that
-  // TODO: Still need some way of knowing if the the selection is a fake one or not.
-  // Complications when dealing with partial selection that starts or ends outside the table or into another table
-
-  const getSelectedBlocks = (startElm?: Element, endElm?: Element) => {
+  /**
+   *
+   * @param startElm
+   * @param endElm
+   * @returns an array containing the blocks within the selection
+   */
+  const getSelectedBlocks = (startElm?: Element, endElm?: Element): Element[] => {
     const selectedCells = cellSelection.get();
     const selectedBlocks = ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
 
-    return SelectionTypes.fold(
-      selectedCells,
-      () => {
-        console.log('here1');
-        return selectedBlocks;
-      },
+    // TODO: Should I not take this path is startElm or endElm is specified - i.e. just return ElementSelection.getSelectedBlocks straight away?
+
+    return SelectionTypes.fold(selectedCells,
+      // No fake selected cells, fallback to selected blocks
+      Fun.constant(selectedBlocks),
+      // This path is taken whenever there is fake cell selection even for just a single cell
       (cells) => {
-        // This path is take whenever there is fake cell selection even for just a single cell
-        console.log('here2');
         return Arr.map(cells, (cell) => cell.dom);
       },
       (cell) => {
-        // If the selection is collapsed and we are in a TD, prepend the TD to the selected blocks but only if there already isn't a td cell from the selectedBlocks
-        // TODO: May need to filter out duplicated TDs for case when inside a TD that doesn't have a paragraph or anything
+        // If the selection is collapsed, we are in a table cell so prepend the cell onto selectedBlocks but only if it isn't already in selectedBlocks
+        // TODO: Fix this as could have selected text in cell If the selection is not collapsed, the single cell will already be present in selectedBlocks
         if (isCollapsed() && !Arr.exists(selectedBlocks, NodeType.isTableCell)) {
-          console.log('here3');
           return [ cell.dom as Element ].concat(selectedBlocks);
         } else {
-          // If the selection isn't collapsed
-          console.log('here4');
           return selectedBlocks;
         }
       }
