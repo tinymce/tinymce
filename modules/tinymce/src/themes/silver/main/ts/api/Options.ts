@@ -266,7 +266,8 @@ const register = (editor: Editor): void => {
   registerOption('resize', {
     processor: (value) => value === 'both' || Type.isBoolean(value),
     // TODO: TINY-8288 - This should be set to `true` once the issue with the theme rendering too early is resolved
-    default: !editor.hasPlugin('autoresize')
+    // Editor resize doesn't work on touch devices at this stage
+    default: !Env.deviceType.isTouch() && !editor.hasPlugin('autoresize')
   });
 };
 
