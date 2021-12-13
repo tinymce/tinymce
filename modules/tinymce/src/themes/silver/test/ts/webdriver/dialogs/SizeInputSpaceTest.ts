@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, RealKeys, UiFinder } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
@@ -11,6 +11,7 @@ import TestProviders from '../../module/TestProviders';
 describe('webdriver.tinymce.themes.silver.dialogs.SizeInputSpaceTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSizeInput({
+      uid: Id.generate(''),
       name: 'dimensions',
       label: Optional.some('size'),
       constrain: true,

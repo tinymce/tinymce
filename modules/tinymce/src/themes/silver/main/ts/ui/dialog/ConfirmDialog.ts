@@ -6,7 +6,7 @@
  */
 
 import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
@@ -28,6 +28,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
 
     const memFooterYes = Memento.record(
       renderFooterButton({
+        uid: Id.generate(''),
         name: 'yes',
         text: 'Yes',
         primary: true,
@@ -38,6 +39,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
     );
 
     const footerNo = renderFooterButton({
+      uid: Id.generate(''),
       name: 'no',
       text: 'No',
       primary: false,

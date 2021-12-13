@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyComponent, AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Id, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarDocument, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -22,6 +22,7 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
       },
       components: [
         renderColorInput({
+          uid: Id.generate(''),
           name: 'alpha',
           label: Optional.some('test-color-input')
         }, helpers.shared(), {

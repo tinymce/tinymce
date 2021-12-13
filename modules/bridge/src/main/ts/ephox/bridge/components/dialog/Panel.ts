@@ -33,6 +33,7 @@ export interface PanelSpec {
 }
 
 export interface Panel {
+  uid: string;
   type: 'panel';
   classes: string[];
   items: BodyComponent[];
@@ -78,6 +79,7 @@ export const itemSchema = StructureSchema.valueThunkOf(
 );
 
 const panelFields = [
+  ComponentSchema.uid,
   ComponentSchema.type,
   FieldSchema.defaulted('classes', []),
   FieldSchema.requiredArrayOf('items', itemSchema)

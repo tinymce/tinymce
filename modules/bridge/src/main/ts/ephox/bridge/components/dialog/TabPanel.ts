@@ -17,23 +17,27 @@ export interface TabPanelSpec {
 }
 
 export interface Tab {
+  uid: string;
   name: string;
   title: string;
   items: BodyComponent[];
 }
 
 export interface TabPanel {
+  uid: string;
   type: 'tabpanel';
   tabs: Tab[];
 }
 
 export const tabFields = [
+  ComponentSchema.uid,
   ComponentSchema.generatedName('tab'),
   ComponentSchema.title,
   FieldSchema.requiredArrayOf('items', itemSchema)
 ];
 
 export const tabPanelFields = [
+  ComponentSchema.uid,
   ComponentSchema.type,
   FieldSchema.requiredArrayOfObj('tabs', tabFields)
 ];

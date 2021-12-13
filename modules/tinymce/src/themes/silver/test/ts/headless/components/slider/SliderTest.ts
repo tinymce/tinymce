@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
+import { Id } from '@ephox/katamari';
 
 import { renderSlider } from 'tinymce/themes/silver/ui/dialog/Slider';
 
@@ -9,6 +10,7 @@ import TestProviders from '../../../module/TestProviders';
 describe('headless.tinymce.themes.silver.components.slider.SliderTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSlider({
+      uid: Id.generate(''),
       name: 'some name',
       label: 'test label',
       min: 0,

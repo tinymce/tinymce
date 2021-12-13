@@ -141,6 +141,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
   );
 
   return FormField.sketch({
+    uid: spec.uid,
     dom: {
       tag: 'div',
       classes: [ 'tox-form__group' ]

@@ -102,6 +102,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
   );
 
   return AlloyFormField.sketch({
+    uid: spec.uid,
     dom: {
       tag: 'label',
       classes: [ 'tox-checkbox' ]

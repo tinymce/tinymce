@@ -9,11 +9,13 @@ export interface BarSpec {
 }
 
 export interface Bar {
+  uid: string;
   type: 'bar';
   items: BodyComponent[];
 }
 
 export const createBarFields = (itemsField: FieldProcessor): FieldProcessor[] => [
+  ComponentSchema.uid,
   ComponentSchema.type,
   itemsField
 ];

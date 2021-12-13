@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyTriggers, Container, Disabling, Memento, SketchSpec } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -14,6 +14,7 @@ import { renderIconButton } from '../../general/Button';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
 const createButton = (innerHtml: string, icon: string, disabled: boolean, action: (button: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderIconButton({
+  uid: Id.generate(''),
   name: innerHtml,
   icon: Optional.some(icon),
   disabled,

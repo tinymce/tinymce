@@ -220,6 +220,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   );
 
   const memUrlPickerButton = Memento.record(renderButton({
+    uid: Id.generate(''),
     name: spec.name,
     icon: Optional.some('browse'),
     text: spec.label.getOr(''),
@@ -257,6 +258,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   };
 
   return AlloyFormField.sketch({
+    uid: spec.uid,
     dom: renderFormFieldDom(),
     components: pLabel.toArray().concat([
       controlHWrapper()

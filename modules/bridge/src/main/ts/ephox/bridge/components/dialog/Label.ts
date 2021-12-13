@@ -10,12 +10,14 @@ export interface LabelSpec {
 }
 
 export interface Label {
+  uid: string;
   type: 'label';
   label: string;
   items: BodyComponent[];
 }
 
 export const createLabelFields = (itemsField: FieldProcessor): FieldProcessor[] => [
+  ComponentSchema.uid,
   ComponentSchema.type,
   ComponentSchema.label,
   itemsField

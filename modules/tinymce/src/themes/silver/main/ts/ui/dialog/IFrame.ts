@@ -70,7 +70,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
     factory: { sketch: factory }
   });
 
-  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
+  return renderFormFieldWith(spec.uid, pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
 };
 
 export {

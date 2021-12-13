@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions, Keyboard, Keys, UiFinder } from '@ephox/agar';
 import { AlloyComponent, Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
+import { Id } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
@@ -18,6 +19,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderCheckbox({
+      uid: Id.generate(''),
       label: 'TestCheckbox',
       name: 'test-check-box',
       disabled: false

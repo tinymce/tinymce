@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
@@ -12,6 +12,7 @@ import TestProviders from '../../../module/TestProviders';
 describe('headless.tinymce.themes.silver.components.textarea.TextareaTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderTextarea({
+      uid: Id.generate(''),
       name: 'textarea',
       label: Optional.some('LabelA'),
       placeholder: Optional.none(),

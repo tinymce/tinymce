@@ -6,24 +6,25 @@
  */
 
 import { AlloySpec, Behaviour, FormField as AlloyFormField, RawDomSchema, SketchSpec } from '@ephox/alloy';
-// TODO: Export properly from alloy.
 import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
-const renderFormFieldWith = (pLabel: Optional<AlloySpec>, pField: AlloySpec, extraClasses: string[], extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[]): SketchSpec => {
-  const spec = renderFormFieldSpecWith(pLabel, pField, extraClasses, extraBehaviours);
+const renderFormFieldWith = (uid: string, pLabel: Optional<AlloySpec>, pField: AlloySpec, extraClasses: string[], extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[]): SketchSpec => {
+  const spec = renderFormFieldSpecWith(uid, pLabel, pField, extraClasses, extraBehaviours);
   return AlloyFormField.sketch(spec);
 };
 
-const renderFormField = (pLabel: Optional<AlloySpec>, pField: AlloySpec): SketchSpec => renderFormFieldWith(pLabel, pField, [ ], [ ]);
+const renderFormField = (uid: string, pLabel: Optional<AlloySpec>, pField: AlloySpec): SketchSpec => renderFormFieldWith(uid, pLabel, pField, [ ], [ ]);
 
-const renderFormFieldSpec = (pLabel: Optional<AlloySpec>, pField: AlloySpec) => ({
+const renderFormFieldSpec = (uid: string, pLabel: Optional<AlloySpec>, pField: AlloySpec) => ({
+  uid,
   dom: renderFormFieldDom(),
   components: pLabel.toArray().concat([ pField ])
 });
 
-const renderFormFieldSpecWith = (pLabel: Optional<AlloySpec>, pField: AlloySpec, extraClasses: string[], extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[]) => ({
+const renderFormFieldSpecWith = (uid: string, pLabel: Optional<AlloySpec>, pField: AlloySpec, extraClasses: string[], extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[]) => ({
+  uid,
   dom: renderFormFieldDomWith(extraClasses),
   components: pLabel.toArray().concat([ pField ]),
   fieldBehaviours: Behaviour.derive(extraBehaviours)
@@ -31,7 +32,7 @@ const renderFormFieldSpecWith = (pLabel: Optional<AlloySpec>, pField: AlloySpec,
 
 const renderFormFieldDom = (): RawDomSchema => renderFormFieldDomWith([ ]);
 
-const renderFormFieldDomWith = (extraClasses): RawDomSchema => ({
+const renderFormFieldDomWith = (extraClasses: string[]): RawDomSchema => ({
   tag: 'div',
   classes: [ 'tox-form__group' ].concat(extraClasses)
 });

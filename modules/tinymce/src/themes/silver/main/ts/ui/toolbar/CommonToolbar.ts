@@ -10,7 +10,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SplitFloatingToolbar as AlloySplitFloatingToolbar,
   SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup
 } from '@ephox/alloy';
-import { Arr, Optional, Result } from '@ephox/katamari';
+import { Arr, Id, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
@@ -111,6 +111,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         items: []
       }),
       'overflow-button': renderIconButtonSpec({
+        uid: Id.generate(''),
         name: 'more',
         icon: Optional.some('more-drawer'),
         disabled: false,

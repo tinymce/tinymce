@@ -10,7 +10,7 @@ import {
   Representing, Slider, SliderTypes
 } from '@ephox/alloy';
 import { ImageResult, ImageTransformations } from '@ephox/imagetools';
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Id, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -20,6 +20,7 @@ import * as ImageToolsEvents from './ImageToolsEvents';
 
 const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProviders) => {
   const createButton = (text: string, action: (button: AlloyComponent) => void, disabled: boolean, buttonType: 'primary' | 'secondary' | 'toolbar'): Memento.MementoRecord => Memento.record(renderButton({
+    uid: Id.generate(''),
     name: text,
     text,
     disabled,
@@ -30,6 +31,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
   }, action, providersBackstage));
 
   const createIconButton = (icon: string, tooltip: string, action: (button: AlloyComponent) => void, disabled: boolean): Memento.MementoRecord => Memento.record(renderIconButton({
+    uid: Id.generate(''),
     name: icon,
     icon: Optional.some(icon),
     tooltip: Optional.some(tooltip),
@@ -150,6 +152,7 @@ const renderEditPanel = (imagePanel, providersBackstage: UiFactoryBackstageProvi
 
   const memSize = Memento.record(
     renderSizeInput({
+      uid: Id.generate(''),
       name: 'size',
       label: Optional.none(),
       constrain: true,

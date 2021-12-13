@@ -10,6 +10,7 @@ export interface HtmlPanelSpec {
 }
 
 export interface HtmlPanel {
+  uid: string;
   type: 'htmlpanel';
   html: string;
   // The htmlpanel can either have the attribute role = "presentation" or role = "document" and associated behaviours
@@ -17,6 +18,7 @@ export interface HtmlPanel {
 }
 
 const htmlPanelFields = [
+  ComponentSchema.uid,
   ComponentSchema.type,
   FieldSchema.requiredString('html'),
   FieldSchema.defaultedStringEnum('presets', 'presentation', [ 'presentation', 'document' ])

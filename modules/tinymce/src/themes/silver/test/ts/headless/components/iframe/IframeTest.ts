@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { AlloyComponent, Composing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
 
@@ -10,6 +10,7 @@ import TestProviders from '../../../module/TestProviders';
 describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderIFrame({
+      uid: Id.generate(''),
       name: 'frame-a',
       label: Optional.some('iframe label'),
       sandboxed: true

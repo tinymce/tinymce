@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Mouse } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
 
@@ -11,6 +11,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
   describe('primary style', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
+        uid: Id.generate(''),
         name: 'test-button',
         text: 'ButtonText',
         disabled: false,
@@ -46,6 +47,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
   describe('secondary style', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
+        uid: Id.generate(''),
         name: 'test-button',
         text: 'ButtonText',
         disabled: false,
@@ -73,6 +75,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
   describe('toolbar style', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
+        uid: Id.generate(''),
         name: 'test-button',
         text: 'ButtonText',
         disabled: false,

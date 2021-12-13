@@ -10,12 +10,14 @@ export interface TableSpec {
 }
 
 export interface Table {
+  uid: string;
   type: 'table';
   header: string[];
   cells: string[][];
 }
 
 const tableFields = [
+  ComponentSchema.uid,
   ComponentSchema.type,
   FieldSchema.requiredArrayOf('header', ValueType.string),
   FieldSchema.requiredArrayOf('cells', StructureSchema.arrOf(ValueType.string))

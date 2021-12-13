@@ -6,7 +6,7 @@
  */
 
 import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 
 import { renderFooterButton } from '../general/Button';
 import { formCancelEvent, FormCancelEvent } from '../general/FormEvents';
@@ -24,6 +24,7 @@ export const setup = (extras) => {
 
     const memFooterClose = Memento.record(
       renderFooterButton({
+        uid: Id.generate(''),
         name: 'close-alert',
         text: 'OK',
         primary: true,

@@ -14,6 +14,7 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 export type PanelSpec = Omit<Dialog.Panel, 'type'>;
 
 const renderPanel = (spec: PanelSpec, backstage: UiFactoryBackstage): SimpleSpec => ({
+  uid: spec.uid,
   dom: {
     tag: 'div',
     classes: spec.classes

@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Id } from '@ephox/katamari';
 
 import { renderHtmlPanel } from 'tinymce/themes/silver/ui/general/HtmlPanel';
 
@@ -8,6 +9,7 @@ describe('headless.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', ()
   context('Presentation', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
+        uid: Id.generate(''),
         html: '<br /><br /><hr />',
         presets: 'presentation'
       })
@@ -34,6 +36,7 @@ describe('headless.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', ()
   context('Document', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
+        uid: Id.generate(''),
         html: '<br /><hr />',
         presets: 'document'
       })

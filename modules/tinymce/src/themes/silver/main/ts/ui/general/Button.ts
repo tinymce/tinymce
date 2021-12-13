@@ -7,7 +7,7 @@
 
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, Memento,
-  SimpleOrSketchSpec, SketchSpec, Tabstopping
+  RawDomSchema, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
@@ -32,12 +32,20 @@ export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   tooltip: Optional<string>;
 }
 
-const renderCommonSpec = (spec, actionOpt: Optional<(comp: AlloyComponent) => void>, extraBehaviours = [], dom, components, providersBackstage: UiFactoryBackstageProviders) => {
-  const action = actionOpt.fold(() => ({}), (action) => ({
+const renderCommonSpec = (
+  spec: ButtonSpec | IconButtonWrapper,
+  actionOpt: Optional<(comp: AlloyComponent) => void>,
+  extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[] = [],
+  dom: RawDomSchema,
+  components: AlloySpec[],
+  providersBackstage: UiFactoryBackstageProviders
+) => {
+  const action = actionOpt.fold(Fun.constant({}), (action) => ({
     action
   }));
 
   const common = {
+    uid: spec.uid,
     buttonBehaviours: Behaviour.derive([
       DisablingConfigs.button(() => spec.disabled || providersBackstage.isDisabled()),
       ReadOnly.receivingConfig(),
@@ -185,7 +193,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
 export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   const action = getAction(spec.name, 'custom');
-  return renderFormField(Optional.none(), AlloyFormField.parts.field({
+  return renderFormField(spec.uid, Optional.none(), AlloyFormField.parts.field({
     factory: AlloyButton,
     ...renderButtonSpec(spec, Optional.some(action), providersBackstage, [
       RepresentingConfigs.memory(''),

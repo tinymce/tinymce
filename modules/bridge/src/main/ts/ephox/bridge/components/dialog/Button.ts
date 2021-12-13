@@ -16,6 +16,7 @@ export interface ButtonSpec {
 }
 
 export interface Button {
+  uid: string;
   type: 'button';
   text: string;
   disabled: boolean;
@@ -28,6 +29,7 @@ export interface Button {
 }
 
 const buttonFields = [
+  ComponentSchema.uid,
   ComponentSchema.type,
   ComponentSchema.text,
   ComponentSchema.disabled,

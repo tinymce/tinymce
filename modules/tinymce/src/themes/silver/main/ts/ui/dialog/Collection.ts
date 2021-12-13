@@ -159,5 +159,5 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
 
   const extraClasses = [ 'tox-form__group--collection' ];
 
-  return renderFormFieldWith(pLabel, pField, extraClasses, [ ]);
+  return renderFormFieldWith(spec.uid, pLabel, pField, extraClasses, [ ]);
 };

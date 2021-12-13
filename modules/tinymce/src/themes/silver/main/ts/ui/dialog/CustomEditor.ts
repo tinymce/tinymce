@@ -31,6 +31,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   const initialValue = Singleton.value<string>();
 
   return {
+    uid: spec.uid,
     dom: {
       tag: 'div',
       classes: [ 'tox-custom-editor' ]

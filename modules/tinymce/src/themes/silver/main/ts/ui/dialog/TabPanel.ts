@@ -48,6 +48,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
 
   const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(spec.tabs, (tab) => {
     return {
+      uid: tab.uid,
       value: tab.name,
       dom: {
         tag: 'div',
@@ -100,6 +101,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
   const tabMode = setMode(allTabs).smartTabHeight;
 
   return AlloyTabSection.sketch({
+    uid: spec.uid,
     dom: {
       tag: 'div',
       classes: [ 'tox-dialog__body' ]

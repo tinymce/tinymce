@@ -12,6 +12,7 @@ export interface AlertBannerSpec {
 }
 
 export interface AlertBanner {
+  uid: string;
   type: 'alertbanner';
   level: 'info' | 'warn' | 'error' | 'success';
   text: string;
@@ -20,6 +21,7 @@ export interface AlertBanner {
 }
 
 const alertBannerFields = [
+  ComponentSchema.uid,
   ComponentSchema.type,
   ComponentSchema.text,
   FieldSchema.requiredStringEnum('level', [ 'info', 'warn', 'error', 'success' ]),

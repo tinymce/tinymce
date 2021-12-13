@@ -118,6 +118,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage):
   };
 
   return AlloyFormField.sketch({
+    uid: spec.uid,
     dom: {
       tag: 'div',
       classes: [ 'tox-form__group' ]

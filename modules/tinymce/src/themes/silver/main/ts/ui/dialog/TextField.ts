@@ -100,12 +100,13 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
     ReadOnly.receivingConfig()
   ];
 
-  return renderFormFieldWith(pLabel, pField, extraClasses2, extraBehaviours);
+  return renderFormFieldWith(spec.uid, pLabel, pField, extraClasses2, extraBehaviours);
 };
 
 export type Validator = (v: string) => true | string;
 
 export interface TextField {
+  uid: string;
   multiline: boolean;
   name: string;
   classname: string;
@@ -126,6 +127,7 @@ type InputSpec = Omit<Dialog.Input, 'type'>;
 type TextAreaSpec = Omit<Dialog.TextArea, 'type'>;
 
 const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderTextField({
+  uid: spec.uid,
   name: spec.name,
   multiline: false,
   label: spec.label,
@@ -139,6 +141,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
 }, providersBackstage);
 
 const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderTextField({
+  uid: spec.uid,
   name: spec.name,
   multiline: true,
   label: spec.label,

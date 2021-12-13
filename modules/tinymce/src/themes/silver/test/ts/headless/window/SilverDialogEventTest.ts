@@ -3,7 +3,7 @@ import { AlloyComponent, Behaviour, GuiFactory, ModalDialog, Positioning, TestHe
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { ValueType } from '@ephox/boulder';
 import { DialogManager } from '@ephox/bridge';
-import { Fun, Optional, Result } from '@ephox/katamari';
+import { Fun, Id, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
@@ -28,12 +28,14 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
       title: 'test dialog',
       size: 'normal',
       body: {
+        uid: Id.generate(''),
         type: 'panel',
         items: [],
         classes: []
       },
       buttons: [
         {
+          uid: Id.generate(''),
           type: 'cancel',
           name: 'cancel',
           text: 'Cancel',
@@ -43,6 +45,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           icon: Optional.none()
         },
         {
+          uid: Id.generate(''),
           type: 'submit',
           name: 'save',
           text: 'Save',

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Cell, Fun, Global } from '@ephox/katamari';
+import { Cell, Fun, Global, Id } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
 import Resource from 'tinymce/core/api/Resource';
@@ -45,6 +45,7 @@ describe('headless.tinymce.themes.silver.components.customeditor.BasicCustomEdit
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderCustomEditor({
+      uid: Id.generate(''),
       type: 'customeditor',
       name: 'customeditor',
       tag: 'textarea',

@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
+import { Id } from '@ephox/katamari';
 
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
 
@@ -17,6 +18,7 @@ describe('headless.tinymce.themes.silver.components.alertbanner.AlertBannerTest'
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderAlertBanner({
+      uid: Id.generate(''),
       level: 'warn',
       text: 'I am a banner',
       icon: 'helpA',

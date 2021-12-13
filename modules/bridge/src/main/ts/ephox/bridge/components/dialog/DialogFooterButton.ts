@@ -32,6 +32,7 @@ export interface DialogFooterMenuButtonSpec extends BaseDialogFooterButtonSpec {
 export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooterMenuButtonSpec;
 
 interface BaseDialogFooterButton {
+  uid: string;
   name: string;
   align: 'start' | 'end';
   primary: boolean;
@@ -55,6 +56,7 @@ export interface DialogFooterMenuButton extends BaseDialogFooterButton {
 export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton;
 
 const baseFooterButtonFields = [
+  ComponentSchema.uid,
   ComponentSchema.generatedName('button'),
   ComponentSchema.optionalIcon,
   FieldSchema.defaultedStringEnum('align', 'end', [ 'start', 'end' ]),

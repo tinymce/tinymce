@@ -22,6 +22,7 @@ export interface AlertBannerWrapper extends AlertBannerSpec {
 export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
   // For using the alert banner inside a dialog
   Container.sketch({
+    uid: spec.uid,
     dom: {
       tag: 'div',
       attributes: {

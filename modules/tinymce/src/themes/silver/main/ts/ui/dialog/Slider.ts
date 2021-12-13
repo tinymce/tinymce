@@ -45,6 +45,7 @@ export const renderSlider = (spec: SliderSpec, providerBackstage: UiFactoryBacks
   });
 
   return Slider.sketch({
+    uid: spec.uid,
     dom: {
       tag: 'div',
       classes: [ 'tox-slider' ],

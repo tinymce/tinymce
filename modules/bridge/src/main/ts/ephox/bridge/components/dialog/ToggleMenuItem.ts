@@ -10,11 +10,13 @@ export interface DialogToggleMenuItemSpec extends CommonMenuItemSpec {
 }
 
 export interface DialogToggleMenuItem extends CommonMenuItem {
+  uid: string;
   type: 'togglemenuitem';
   name: string;
 }
 
 export const dialogToggleMenuItemSchema = StructureSchema.objOf([
+  ComponentSchema.uid,
   ComponentSchema.type,
   ComponentSchema.name
 ].concat(commonMenuItemFields));

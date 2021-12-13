@@ -8,6 +8,7 @@ export interface FormComponentSpec {
 }
 
 export interface FormComponent {
+  uid: string;
   type: string;
   name: string;
 }
@@ -21,6 +22,7 @@ export interface FormComponentWithLabel extends FormComponent {
 }
 
 export const formComponentFields = [
+  ComponentSchema.uid,
   ComponentSchema.type,
   ComponentSchema.name
 ];

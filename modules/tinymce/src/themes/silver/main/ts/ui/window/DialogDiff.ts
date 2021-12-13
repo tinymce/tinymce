@@ -18,20 +18,22 @@ export enum DiffType {
   Removed
 }
 
-interface GeneralDiffResult<T extends Component> {
-  readonly type: Omit<DiffType, DiffType.Replaced>;
-  readonly item: T;
-  readonly items: DiffResult<Dialog.BodyComponent>[];
-}
+type GenericDiffType = DiffType.Replaced | DiffType.Unchanged | DiffType.Changed;
 
-interface ReplacedDiffResult<T extends Component> {
-  readonly type: DiffType.Replaced;
+interface GenericDiffResult<T> {
+  readonly type: GenericDiffType;
   readonly item: T;
   readonly oldItem: T;
   readonly items: DiffResult<Dialog.BodyComponent>[];
 }
 
-export type DiffResult<T extends Component> = GeneralDiffResult<T> | ReplacedDiffResult<T>;
+interface AddedRemovedDiffResult<T> {
+  readonly type: DiffType.Added | DiffType.Removed;
+  readonly item: T;
+  readonly items: DiffResult<Dialog.BodyComponent>[];
+}
+
+export type DiffResult<T> = GenericDiffResult<T> | AddedRemovedDiffResult<T>;
 
 const nestedComponentTypes = new Set([
   'panel',
@@ -43,29 +45,36 @@ const nestedComponentTypes = new Set([
 const hasItems = (comp: Component): comp is Dialog.Panel | Dialog.Bar | Dialog.Grid | Dialog.Label =>
   nestedComponentTypes.has(comp.type) && Obj.has(comp as Record<string, any>, 'items');
 
-const createResult = <T extends Component>(type: DiffType, item: T, items: DiffResult<Dialog.BodyComponent>[] = []): GeneralDiffResult<T> => ({
+const createResult = <T>(type: GenericDiffType, item: T, oldItem: T, items: DiffResult<Dialog.BodyComponent>[] = []): GenericDiffResult<T> => ({
   type,
   item,
+  oldItem,
   items
 });
 
-const hasDifferentProps = (comp1: Component, comp2: Component) =>
-  Obj.find(comp1, (_, key) => !Obj.has(comp2 as Record<string, any>, key)).isSome();
+const createAddedRemovedResult = <T extends Component>(type: DiffType.Added | DiffType.Removed, item: T): AddedRemovedDiffResult<T> => ({
+  type,
+  item,
+  items: []
+});
 
-const hasDifferentValues = (comp1: Component, comp2: Component) =>
-  Obj.find(comp1, (value, key) => comp2[key] !== value).isSome();
+const hasDifferentProps = (comp1: Record<string, any>, comp2: Record<string, any>) =>
+  Obj.find(comp1, (_, key) => key !== 'uid' && !Obj.has(comp2, key)).isSome();
+
+const hasDifferentValues = (comp1: Record<string, any>, comp2: Record<string, any>) =>
+  Obj.find(comp1, (value, key) => key !== 'uid' && comp2[key] !== value).isSome();
 
 export const diffItems = <T extends Component>(newItems: T[], oldItems: T[]): DiffResult<T>[] => {
   const results = Arr.map(newItems, (newItem, index) =>
     Arr.get(oldItems, index).fold(
-      () => createResult(DiffType.Added, newItem),
+      () => createAddedRemovedResult(DiffType.Added, newItem),
       (oldItem) => diffComponent(newItem, oldItem)
     )
   );
 
   if (oldItems.length > newItems.length) {
     Arr.each(oldItems.slice(newItems.length), (oldItem) => {
-      results.push(createResult(DiffType.Removed, oldItem));
+      results.push(createAddedRemovedResult(DiffType.Removed, oldItem));
     });
   }
 
@@ -75,7 +84,7 @@ export const diffItems = <T extends Component>(newItems: T[], oldItems: T[]): Di
 export const diffComponent = <T extends Component>(newComp: T, oldComp: T): DiffResult<T> => {
   // If the types are different then we have a new component
   if (newComp.type !== oldComp.type) {
-    return { type: DiffType.Replaced, item: newComp, oldItem: oldComp, items: [] };
+    return createResult(DiffType.Replaced, newComp, oldComp);
   } else {
     // Check if any of the properties and their values are different
     const hasChanged = hasDifferentProps(newComp, oldComp) || hasDifferentProps(oldComp, newComp) || hasDifferentValues(newComp, oldComp);
@@ -83,9 +92,6 @@ export const diffComponent = <T extends Component>(newComp: T, oldComp: T): Diff
 
     // If there were child items then diff them as well
     const childResults = hasItems(newComp) && hasItems(oldComp) ? diffItems(newComp.items, oldComp.items) : [];
-    return createResult(type, newComp, childResults);
+    return createResult(type, newComp, oldComp, childResults);
   }
 };
-
-export const isReplaced = <T extends Component>(result: DiffResult<T>): result is ReplacedDiffResult<T> =>
-  result.type === DiffType.Replaced;

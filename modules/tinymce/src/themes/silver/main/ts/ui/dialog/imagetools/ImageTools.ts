@@ -172,6 +172,7 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
   };
 
   return {
+    uid: detail.uid,
     dom: {
       tag: 'div',
       attributes: {

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
 import { AlloyComponent, Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -15,6 +15,7 @@ describe('headless.tinymce.themes.silver.components.listbox.ListBoxTest', () => 
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderListBox({
+      uid: Id.generate(''),
       name: 'selector',
       label: Optional.some('selector'),
       disabled: false,

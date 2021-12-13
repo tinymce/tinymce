@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
@@ -20,6 +20,7 @@ describe('headless.tinymce.themes.silver.components.selectbox.SelectboxTest', ()
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSelectBox({
+      uid: Id.generate(''),
       name: 'selector',
       size: 1,
       label: Optional.some('selector'),

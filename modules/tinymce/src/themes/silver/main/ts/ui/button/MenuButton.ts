@@ -18,7 +18,7 @@ import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
+export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'> & { uid?: string };
 
 const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => ({
   isDisabled: () => Disabling.isDisabled(component),
@@ -39,6 +39,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>): SketchSpec => renderCommonDropdown({
+  uid: spec.uid,
   text: spec.text,
   icon: spec.icon,
   tooltip: spec.tooltip,

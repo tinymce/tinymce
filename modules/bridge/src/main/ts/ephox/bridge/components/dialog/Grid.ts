@@ -10,12 +10,14 @@ export interface GridSpec {
 }
 
 export interface Grid {
+  uid: string;
   type: 'grid';
   columns: number;
   items: BodyComponent[];
 }
 
 export const createGridFields = (itemsField: FieldProcessor): FieldProcessor[] => [
+  ComponentSchema.uid,
   ComponentSchema.type,
   FieldSchema.requiredNumber('columns'),
   itemsField

@@ -63,6 +63,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
   };
 
   return AlloyFormField.sketch({
+    uid: spec.uid,
     dom: {
       tag: 'div',
       classes: [ 'tox-form__group' ]

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyTriggers, Disabling, Focusing, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Future, Optional } from '@ephox/katamari';
+import { Future, Id, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -16,6 +16,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
 
   const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
     renderUrlInput({
+      uid: Id.generate(''),
       label: Optional.some('UrlInput label'),
       name: 'col1',
       filetype: 'file',

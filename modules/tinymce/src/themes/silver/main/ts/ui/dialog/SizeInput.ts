@@ -100,6 +100,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
   );
 
   return AlloyFormCoupledInputs.sketch({
+    uid: spec.uid,
     dom: {
       tag: 'div',
       classes: [ 'tox-form__group' ]

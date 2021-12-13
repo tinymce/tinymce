@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Fun, Id } from '@ephox/katamari';
 
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 
@@ -15,8 +15,10 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderLabel({
+      uid: Id.generate(''),
       label: 'Group of Options',
       items: [
+        // Note: These are actual alloy specs since the mocked interpreter is Fun.identity
         {
           dom: {
             tag: 'label',

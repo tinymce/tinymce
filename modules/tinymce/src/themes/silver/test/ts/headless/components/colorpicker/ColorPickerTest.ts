@@ -2,7 +2,7 @@ import { HsvColour } from '@ephox/acid';
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { Id, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -13,6 +13,7 @@ import * as RepresentingUtils from '../../../module/RepresentingUtils';
 describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderColorPicker({
+      uid: Id.generate(''),
       label: Optional.some('ColorPicker label'),
       name: 'col1'
     })

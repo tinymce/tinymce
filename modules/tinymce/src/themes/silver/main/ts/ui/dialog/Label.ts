@@ -25,6 +25,7 @@ export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstage
   } as AlloySpec;
   const comps = Arr.map(spec.items, backstageShared.interpreter);
   return {
+    uid: spec.uid,
     dom: {
       tag: 'div',
       classes: [ 'tox-form__group' ]

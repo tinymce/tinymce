@@ -13,6 +13,7 @@ type HtmlPanelSpec = Omit<Dialog.HtmlPanel, 'type'>;
 export const renderHtmlPanel = (spec: HtmlPanelSpec): SketchSpec => {
   if (spec.presets === 'presentation') {
     return AlloyContainer.sketch({
+      uid: spec.uid,
       dom: {
         tag: 'div',
         classes: [ 'tox-form__group' ],
@@ -21,6 +22,7 @@ export const renderHtmlPanel = (spec: HtmlPanelSpec): SketchSpec => {
     });
   } else {
     return AlloyContainer.sketch({
+      uid: spec.uid,
       dom: {
         tag: 'div',
         classes: [ 'tox-form__group' ],

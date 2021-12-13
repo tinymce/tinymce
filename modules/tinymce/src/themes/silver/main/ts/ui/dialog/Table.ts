@@ -37,6 +37,7 @@ export const renderTable = (spec: TableSpec, providersBackstage: UiFactoryBackst
   const renderTr = (row: string[]) => ({ dom: { tag: 'tr' }, components: Arr.map(row, renderTd) });
   const renderRows = (rows: string[][]) => ({ dom: { tag: 'tbody' }, components: Arr.map(rows, renderTr) });
   return {
+    uid: spec.uid,
     dom: {
       tag: 'table',
       classes: [ 'tox-dialog__table' ]

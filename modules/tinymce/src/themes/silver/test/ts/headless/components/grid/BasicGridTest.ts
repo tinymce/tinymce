@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Fun, Id } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
@@ -14,8 +14,10 @@ describe('headless.tinymce.themes.silver.components.grid.GridTest', () => {
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderGrid({
+      uid: Id.generate(''),
       columns: 10,
       items: [
+        // Note: These are actual alloy specs since the mocked interpreter is Fun.identity
         {
           dom: {
             tag: 'div',

@@ -6,7 +6,7 @@
  */
 
 import { ColourPicker } from '@ephox/acid';
-import { AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 
@@ -38,27 +38,27 @@ const english = {
   'aria.input.invalid': 'Invalid input'
 };
 
-const getEnglishText = (key) => {
+const getEnglishText = (key: string) => {
   return english[key];
 };
 
-const translate = (key) => {
+const translate = (key: string) => {
   // TODO: use this: I18n.translate()
   return getEnglishText(key);
 };
 
 type ColorPickerSpec = Omit<Dialog.ColorPicker, 'type'>;
 
-export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
+export const renderColorPicker = (spec: ColorPickerSpec): SimpleSpec => {
   const getClass = (key: string) => 'tox-' + key;
 
   const colourPickerFactory = ColourPicker.makeFactory(translate, getClass);
 
-  const onValidHex = (form) => {
+  const onValidHex = (form: AlloyComponent) => {
     AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: true });
   };
 
-  const onInvalidHex = (form) => {
+  const onInvalidHex = (form: AlloyComponent) => {
     AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: false });
   };
 
@@ -77,6 +77,7 @@ export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
   );
 
   return {
+    uid: spec.uid,
     dom: {
       tag: 'div'
     },
