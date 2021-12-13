@@ -5,10 +5,11 @@ import { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import * as MergingOperations from '../operate/MergingOperations';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
+import { CompElm } from '../util/TableTypes';
 import * as Fitment from './Fitment';
 import * as GridRow from './GridRow';
 
-const isSpanning = (grid: Structs.RowCells[], row: number, col: number, comparator: (a: SugarElement, b: SugarElement) => boolean): boolean => {
+const isSpanning = (grid: Structs.RowCells[], row: number, col: number, comparator: CompElm): boolean => {
   const candidate = GridRow.getCell(grid[row], col);
   const matching = Fun.curry(comparator, candidate.element);
   const currentRow = grid[row];
@@ -27,13 +28,20 @@ const isSpanning = (grid: Structs.RowCells[], row: number, col: number, comparat
     );
 };
 
-const mergeTables = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: SugarElement, b: SugarElement) => boolean, lockedColumns: number[]): Structs.RowCells[] => {
+const mergeTables = (
+  startAddress: Structs.Address,
+  gridA: Structs.RowCells[],
+  gridBRows: Structs.RowCells<HTMLTableRowElement>[],
+  generator: SimpleGenerators,
+  comparator: CompElm,
+  lockedColumns: number[]
+): Structs.RowCells[] => {
   // Assumes
   //  - gridA is square and gridB is square
   const startRow = startAddress.row;
   const startCol = startAddress.column;
-  const mergeHeight = gridB.length;
-  const mergeWidth = GridRow.cellLength(gridB[0]);
+  const mergeHeight = gridBRows.length;
+  const mergeWidth = GridRow.cellLength(gridBRows[0]);
   const endRow = startRow + mergeHeight;
   const endCol = startCol + mergeWidth + lockedColumns.length;
   const lockedColumnObj = Arr.mapToObject(lockedColumns, Fun.always);
@@ -51,8 +59,9 @@ const mergeTables = (startAddress: Structs.Address, gridA: Structs.RowCells[], g
         MergingOperations.unmerge(gridA, GridRow.getCellElement(gridA[r], c), comparator, generator.cell);
       }
       const gridBColIndex = c - startCol - skippedCol;
-      const newCell = GridRow.getCell(gridB[r - startRow], gridBColIndex);
-      const newCellElm = newCell.element;
+      const newCell = GridRow.getCell(gridBRows[r - startRow], gridBColIndex);
+      // This can't be a col element at this point so we can cast it to a cell
+      const newCellElm = newCell.element as SugarElement<HTMLTableCellElement>;
       const replacement = generator.replace(newCellElm);
       GridRow.mutateCell(gridA[r], c, Structs.elementnew(replacement, true, newCell.isLocked));
     }
@@ -78,10 +87,10 @@ const getValidStartAddress = (currentStartAddress: Structs.Address, grid: Struct
   };
 };
 
-const getLockedColumnsWithinBounds = (startAddress: Structs.Address, grid: Structs.RowCells[], lockedColumns: number[]) =>
-  Arr.filter(lockedColumns, (colNum) => colNum >= startAddress.column && colNum <= GridRow.cellLength(grid[0]) + startAddress.column);
+const getLockedColumnsWithinBounds = (startAddress: Structs.Address, rows: Structs.RowCells<HTMLTableRowElement>[], lockedColumns: number[]) =>
+  Arr.filter(lockedColumns, (colNum) => colNum >= startAddress.column && colNum <= GridRow.cellLength(rows[0]) + startAddress.column);
 
-const merge = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: SugarElement, b: SugarElement) => boolean): Result<Structs.RowCells[], string> => {
+const merge = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: CompElm): Result<Structs.RowCells[], string> => {
   const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(gridA);
   const validStartAddress = getValidStartAddress(startAddress, gridA, lockedColumns);
   /*
@@ -111,7 +120,7 @@ const merge = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: 
   });
 };
 
-const insertCols = (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: SugarElement, b: SugarElement) => boolean): Structs.RowCells[] => {
+const insertCols = (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: CompElm): Structs.RowCells[] => {
   MergingOperations.splitCols(gridA, index, comparator, generator.cell);
 
   const delta = Fitment.measureHeight(gridB, gridA);
@@ -138,7 +147,7 @@ const insertCols = (index: number, gridA: Structs.RowCells[], gridB: Structs.Row
   - Tailor gridB by adding extra columns to end of gridB if required
 */
 
-const insertRows = (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: SugarElement, b: SugarElement) => boolean): Structs.RowCells[] => {
+const insertRows = (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: CompElm): Structs.RowCells[] => {
   MergingOperations.splitRows(gridA, index, comparator, generator.cell);
 
   const locked = LockedColumnUtils.getLockedColumnsFromGrid(gridA);
@@ -160,7 +169,12 @@ const insertRows = (index: number, gridA: Structs.RowCells[], gridB: Structs.Row
   const fittedGridB = Fitment.lockedColFill(gridB, generator, newLocked);
   const fittedNewGrid = Fitment.tailor(fittedGridB, secondDelta, generator);
 
-  return oldCols.concat(oldRows.slice(0, index)).concat(fittedNewGrid).concat(oldRows.slice(index, oldRows.length));
+  return [
+    ...oldCols,
+    ...oldRows.slice(0, index),
+    ...fittedNewGrid,
+    ...oldRows.slice(index, oldRows.length)
+  ];
 };
 
 export {

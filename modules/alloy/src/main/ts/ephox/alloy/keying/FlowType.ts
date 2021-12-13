@@ -26,7 +26,7 @@ const schema = [
 
 // TODO: Remove dupe.
 // TODO: Probably use this for not just execution.
-const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Optional<SugarElement> =>
+const findCurrent = (component: AlloyComponent, flowConfig: FlowConfig): Optional<SugarElement<HTMLElement>> =>
   flowConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, flowConfig.selector));
 
 const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, flowConfig: FlowConfig): Optional<boolean> =>
@@ -34,16 +34,16 @@ const execute = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent
 
 const focusIn = (component: AlloyComponent, flowConfig: FlowConfig, _state: Stateless): void => {
   flowConfig.getInitial(component).orThunk(
-    () => SelectorFind.descendant(component.element, flowConfig.selector)
+    () => SelectorFind.descendant<HTMLElement>(component.element, flowConfig.selector)
   ).each((first) => {
     flowConfig.focusManager.set(component, first);
   });
 };
 
-const moveLeft = (element: SugarElement, focused: SugarElement, info: FlowConfig): Optional<SugarElement> =>
+const moveLeft = (element: SugarElement<HTMLElement>, focused: SugarElement<HTMLElement>, info: FlowConfig): Optional<SugarElement<HTMLElement>> =>
   DomNavigation.horizontal(element, info.selector, focused, -1);
 
-const moveRight = (element: SugarElement, focused: SugarElement, info: FlowConfig): Optional<SugarElement> =>
+const moveRight = (element: SugarElement<HTMLElement>, focused: SugarElement<HTMLElement>, info: FlowConfig): Optional<SugarElement<HTMLElement>> =>
   DomNavigation.horizontal(element, info.selector, focused, +1);
 
 const doMove = (movement: KeyRuleHandler<FlowConfig, Stateless>): KeyRuleHandler<FlowConfig, Stateless> =>

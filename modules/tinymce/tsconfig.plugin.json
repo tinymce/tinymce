@@ -18,7 +18,6 @@
       "tinymce/plugins/emoticons/*": ["src/plugins/emoticons/main/ts/*"],
       "tinymce/plugins/fullscreen/*": ["src/plugins/fullscreen/main/ts/*"],
       "tinymce/plugins/help/*": ["src/plugins/help/main/ts/*"],
-      "tinymce/plugins/hr/*": ["src/plugins/hr/main/ts/*"],
       "tinymce/plugins/image/*": ["src/plugins/image/main/ts/*"],
       "tinymce/plugins/importcss/*": ["src/plugins/importcss/main/ts/*"],
       "tinymce/plugins/insertdatetime/*": ["src/plugins/insertdatetime/main/ts/*"],
@@ -36,8 +35,6 @@
       "tinymce/plugins/table/*": ["src/plugins/table/main/ts/*"],
       "tinymce/plugins/template/*": ["src/plugins/template/main/ts/*"],
       "tinymce/plugins/textcolor/*": ["src/plugins/textcolor/main/ts/*"],
-      "tinymce/plugins/textpattern/*": ["src/plugins/textpattern/main/ts/*"],
-      "tinymce/plugins/toc/*": ["src/plugins/toc/main/ts/*"],
       "tinymce/plugins/visualblocks/*": ["src/plugins/visualblocks/main/ts/*"],
       "tinymce/plugins/visualchars/*": ["src/plugins/visualchars/main/ts/*"],
       "tinymce/plugins/wordcount/*": ["src/plugins/wordcount/main/ts/*"]

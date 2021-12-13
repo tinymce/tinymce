@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
 
   const pWaitForVisualBlocks = (editor: Editor, waitUntilEnabled: boolean = true) =>
     Waiter.pTryUntil('Wait for background css to be applied to first element', () => {
-      const p = TinyDom.fromDom(editor.getBody().firstChild);
+      const p = SugarElement.fromDom(editor.getBody().firstElementChild);
       const background = Css.get(p, 'background-image');
       if (waitUntilEnabled) {
         assert.include(background, 'url(', 'Paragraph should have a url background');

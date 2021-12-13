@@ -21,7 +21,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
 
   const alpha = SugarElement.fromText('alpha');
 
-  const touches = (x: number, y: number, target: SugarElement) => ({
+  const touches = (x: number, y: number, target: SugarElement<Node>) => ({
     raw: {
       touches: [
         { clientX: x, clientY: y }

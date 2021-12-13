@@ -47,7 +47,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
   const pTestUiStateEnabled = async (editor: Editor, alt: string) => {
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    const altElem = UiFinder.findIn(SugarBody.body(), generalTabSelectors.alt).getOrDie();
+    const altElem = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), generalTabSelectors.alt).getOrDie();
     const value = Value.get(altElem);
     assert.equal(value, alt, 'Assert input value');
     TinyUiActions.submitDialog(editor);

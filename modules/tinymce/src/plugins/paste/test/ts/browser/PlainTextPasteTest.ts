@@ -22,14 +22,6 @@ describe('browser.tinymce.plugins.paste.PlainTextPaste', () => {
     Chrome: {
       'text/plain': srcText,
       'text/html': '<div>one</div><div>two</div><div><br></div><div>three</div><div><br></div><div><br></div><div>four</div><div><br></div><div><br></div><div><br></div><div>.'
-    },
-    Edge: {
-      'text/plain': srcText,
-      'text/html': '<div>one<br>two</div><div>three</div><div><br>four</div><div><br></div><div>.</div>'
-    },
-    IE: {
-      'text/plain': srcText,
-      'text/html': '<p>one<br>two</p><p>three</p><p><br>four</p><p><br></p><p>.</p>'
     }
   };
 

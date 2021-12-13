@@ -9,9 +9,10 @@ const fromHtml = <E extends Node = Node & ChildNode> (html: string, scope?: Docu
   const div = doc.createElement('div');
   div.innerHTML = html;
   if (!div.hasChildNodes() || div.childNodes.length > 1) {
+    const message = 'HTML does not have a single root node';
     // eslint-disable-next-line no-console
-    console.error('HTML does not have a single root node', html);
-    throw new Error('HTML must have a single root node');
+    console.error(message, html);
+    throw new Error(message);
   }
   return fromDom(div.childNodes[0] as unknown as E);
 };
@@ -19,7 +20,7 @@ const fromHtml = <E extends Node = Node & ChildNode> (html: string, scope?: Docu
 const fromTag: {
   <K extends keyof HTMLElementTagNameMap>(tag: K, scope?: Document | null): SugarElement<HTMLElementTagNameMap[K]>;
   (tag: string, scope?: Document | null): SugarElement<HTMLElement>;
-} = (tag: string, scope?: Document | null): SugarElement => {
+} = (tag: string, scope?: Document | null): SugarElement<HTMLElement> => {
   const doc = scope || document;
   const node = doc.createElement(tag);
   return fromDom(node);

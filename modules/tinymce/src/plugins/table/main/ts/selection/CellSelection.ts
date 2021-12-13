@@ -12,7 +12,6 @@ import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker'
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../api/Events';
@@ -120,13 +119,6 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
         return true;
       }
 
-      // Edge 44+ broke the "buttons" property so that it now returns 0 always on mouseover
-      // so we can't detect if the left mouse button is down. The deprecated "which" property
-      // also can't be used as it returns 1 at all times, as such just return true.
-      if (Env.browser.isEdge() && raw.buttons === 0) {
-        return true;
-      }
-
       // use bitwise & for optimal comparison
       // eslint-disable-next-line no-bitwise
       return (raw.buttons & 1) !== 0;
@@ -158,7 +150,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
 
       const touchEnd = (t: TouchEvent) => {
         const target = SugarElement.fromDom(t.target as Node);
-        if (SugarNode.name(target) === 'td' || SugarNode.name(target) === 'th') {
+        if (SugarNode.isTag('td')(target) || SugarNode.isTag('th')(target)) {
           const lT = lastTarget.get();
           const lTS = lastTimeStamp.get();
           if (Compare.eq(lT, target) && (t.timeStamp - lTS) < 300) {

@@ -11,7 +11,7 @@ import { TinyDom } from 'ephox/mcagar/api/TinyDom';
 
 UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure) => {
 
-  const sAssertion = (editor: Editor, body: SugarElement) => Step.sync(() => {
+  const sAssertion = (editor: Editor, body: SugarElement<Node>) => Step.sync(() => {
     const strongs = UiFinder.findAllIn(body, 'strong');
     Assertions.assertEq('There should be no strong tags', 0, strongs.length);
     const editorContent1 = editor.getContent();
@@ -35,14 +35,14 @@ UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure)
             b: { weight: 0 }
           }
         }
-      }).generator, sAssertion(editor, body), {
+      }), sAssertion(editor, body), {
         scenario: {
           exclusions: {
             containers: Fun.never
           }
         },
         property: {
-          tests: 100
+          numRuns: 100
         }
       })
     ], loadSuccess, loadFailure);

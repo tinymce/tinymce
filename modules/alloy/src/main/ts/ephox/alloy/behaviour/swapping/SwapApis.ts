@@ -4,7 +4,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../common/BehaviourState';
 import { SwappingConfig } from './SwappingTypes';
 
-const swap = (element: SugarElement, addCls: string, removeCls: string): void => {
+const swap = (element: SugarElement<Element>, addCls: string, removeCls: string): void => {
   Class.remove(element, removeCls);
   Class.add(element, addCls);
 };

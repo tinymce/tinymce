@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Deprecated
 - The `setSetting` and `deleteSetting` APIs have been deprecated and replaced with `setOption` and `unsetOption` APIs.
 
+### Removed
+- Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.
+
 ## 7.0.2 - 2021-09-08
 
 ### Fixed

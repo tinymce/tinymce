@@ -44,12 +44,8 @@ UnitTest.test('WindowSelectionTest', () => {
       return variants.firefox;
     } else if (detection.browser.isSafari() && variants.safari !== undefined) {
       return variants.safari;
-    } else if (detection.browser.isIE() && variants.ie !== undefined) {
-      return variants.ie;
     } else if (detection.browser.isChromium() && variants.chromium !== undefined) {
       return variants.chromium;
-    } else if (detection.browser.isEdge() && variants.spartan !== undefined) {
-      return variants.spartan;
     } else {
       return variants.fallback;
     }
@@ -104,19 +100,6 @@ UnitTest.test('WindowSelectionTest', () => {
         soffset: 'wo'.length,
         finish: [ 0, 1, 0 ],
         foffset: 'w'.length
-      },
-      // '<p>This <strong>w[o]rld</strong> is not <strong>w<em>ha</em>t</strong> I<br><br>wanted</p><p><br>And even more</p>';
-      ie: {
-        start: [ 0, 1, 0 ],
-        soffset: 'w'.length,
-        finish: [ 0, 1, 0 ],
-        foffset: 'wo'.length
-      },
-      spartan: {
-        start: [ 0, 1, 0 ],
-        soffset: 'wo'.length,
-        finish: [ 0, 1, 0 ],
-        foffset: 'w'.length
       }
     },
     Situ.on(find( [ 0, 1, 0 ]), 'wo'.length),
@@ -134,18 +117,6 @@ UnitTest.test('WindowSelectionTest', () => {
         foffset: 'w'.length
       },
       chromium: {
-        start: [ 0 ],
-        soffset: 2,
-        finish: [ 0, 1, 0 ],
-        foffset: 'w'.length
-      },
-      ie: {
-        finish: [ 0 ],
-        foffset: 2,
-        start: [ 0, 1, 0 ],
-        soffset: 'w'.length
-      },
-      spartan: {
         start: [ 0 ],
         soffset: 2,
         finish: [ 0, 1, 0 ],
@@ -192,12 +163,6 @@ UnitTest.test('WindowSelectionTest', () => {
         soffset: 7,
         finish: [ 0 ],
         foffset: 0
-      },
-      ie: {
-        start: [ 0 ],
-        soffset: 0,
-        finish: [ 0 ],
-        foffset: 7
       },
       chromium: {
         start: [ 0 ],
@@ -258,12 +223,6 @@ UnitTest.test('WindowSelectionTest', () => {
         foffset: 1,
         start: [ 0 ],
         soffset: 6
-      },
-      ie: {
-        start: [ 0, 3, 1 ],
-        soffset: 1,
-        finish: [ 0 ],
-        foffset: 6
       },
       spartan: {
         finish: [ 0, 3, 1 ],

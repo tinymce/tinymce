@@ -85,7 +85,7 @@ const renderInlineHeader = (
       mode: 'mouse',
       blockerClass: 'blocker',
       getTarget: (handle) => {
-        return SelectorFind.closest(handle, '[role="dialog"]').getOrDie();
+        return SelectorFind.closest<HTMLElement>(handle, '[role="dialog"]').getOrDie();
       },
       snaps: {
         getSnapPoints: () => [ ],

@@ -1,14 +1,11 @@
-import { Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, Insert, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
-  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
@@ -16,10 +13,6 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
 
   const fireInsert = (editor: Editor) => {
     editor.fire('input', { isComposing: false } as InputEvent);
-  };
-
-  const fireKeyPress = (editor: Editor) => {
-    editor.fire('keypress');
   };
 
   const insertEmptyTextNodesAt = (editor: Editor, count: number, path: number[], insert: (marker: SugarElement, element: SugarElement) => void) => {
@@ -208,18 +201,6 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
         TinyAssertions.assertContent(editor, '<p><img src="about:blank" />&nbsp;</p>');
       });
-    });
-
-    it('Insert in text on IE using keypress', async function () {
-      if (!browser.isIE()) {
-        this.skip();
-      }
-      const editor = hook.editor();
-      editor.setContent('<p>a&nbsp;b</p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 3);
-      fireKeyPress(editor);
-      await Waiter.pTryUntil('', () => TinyAssertions.assertContent(editor, '<p>a b</p>'), 10, 1000);
-      TinyAssertions.assertSelection(editor, [ 0, 0 ], 3, [ 0, 0 ], 3);
     });
 
     context('Nbsp in pre', () => {

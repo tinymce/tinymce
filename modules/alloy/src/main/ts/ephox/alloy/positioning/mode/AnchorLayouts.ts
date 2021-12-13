@@ -14,13 +14,13 @@ const schema = (): FieldProcessor => FieldSchema.optionObjOf('layouts', [
 ]);
 
 const get = (
-  elem: SugarElement,
+  elem: SugarElement<Element>,
   info: HasLayoutAnchor,
   defaultLtr: AnchorLayout[],
   defaultRtl: AnchorLayout[],
   defaultBottomLtr: AnchorLayout[],
   defaultBottomRtl: AnchorLayout[],
-  dirElement: Optional<SugarElement>
+  dirElement: Optional<SugarElement<Element>>
 ): AnchorLayout[] => {
   const isBottomToTop = dirElement.map(isBottomToTopDir).getOr(false);
 

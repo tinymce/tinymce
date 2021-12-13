@@ -13,7 +13,7 @@ import * as ForeignGui from 'ephox/alloy/api/system/ForeignGui';
 
 import * as Frames from './frames/Frames';
 
-const resize = (element: SugarElement, changeX: number, changeY: number): void => {
+const resize = (element: SugarElement<HTMLElement>, changeX: number, changeY: number): void => {
   const heading = document.querySelector('h2');
   if (heading === null) {
     throw new Error('heading not found');
@@ -30,7 +30,7 @@ export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
   const platform = PlatformDetection.detect();
 
-  const onNode = (name: string) => (elem: SugarElement): Optional<SugarElement> =>
+  const onNode = (name: string) => (elem: SugarElement<Node>): Optional<SugarElement<Node>> =>
     Optionals.someIf(SugarNode.name(elem) === name, elem);
 
   const contents = '<div><strong>drag1</strong> and <code>click1</code> and <strong>drag2</strong> ' +
@@ -59,11 +59,11 @@ export default (): void => {
     addAsForeign(root);
   });
 
-  const inlineContainer = SugarElement.fromHtml(
+  const inlineContainer = SugarElement.fromHtml<HTMLDivElement>(
     contents
   );
 
-  const addAsForeign = (root: SugarElement) => {
+  const addAsForeign = (root: SugarElement<HTMLElement>) => {
     const connection = ForeignGui.engage({
       root,
       dispatchers: [

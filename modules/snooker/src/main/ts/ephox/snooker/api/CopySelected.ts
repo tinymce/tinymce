@@ -139,7 +139,7 @@ const getTableWidthDelta = (table: SugarElement<HTMLTableElement>, warehouse: Wa
   return tableSize.getCellDelta(delta);
 };
 
-const extract = (table: SugarElement, selectedSelector: string): SugarElement => {
+const extract = (table: SugarElement<HTMLTableElement>, selectedSelector: string): SugarElement<HTMLTableElement> => {
   const isSelected = (detail: DetailExt) => Selectors.is(detail.element, selectedSelector);
 
   const replica = Replication.deep(table);

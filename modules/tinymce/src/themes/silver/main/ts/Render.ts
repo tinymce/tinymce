@@ -86,8 +86,6 @@ const setup = (editor: Editor): RenderInfo => {
   let lazyOuterContainer: Optional<AlloyComponent> = Optional.none();
 
   const platform = PlatformDetection.detect();
-  const isIE = platform.browser.isIE();
-  const platformClasses = isIE ? [ 'tox-platform-ie' ] : [];
   const isTouch = platform.deviceType.isTouch();
   const touchPlatformClass = 'tox-platform-touch';
   const deviceClasses = isTouch ? [ touchPlatformClass ] : [];
@@ -123,7 +121,7 @@ const setup = (editor: Editor): RenderInfo => {
     const sinkSpec = {
       dom: {
         tag: 'div',
-        classes: [ 'tox', 'tox-silver-sink', 'tox-tinymce-aux' ].concat(platformClasses).concat(deviceClasses),
+        classes: [ 'tox', 'tox-silver-sink', 'tox-tinymce-aux' ].concat(deviceClasses),
         ...dirAttributes
       },
       behaviours: Behaviour.derive([
@@ -312,8 +310,7 @@ const setup = (editor: Editor): RenderInfo => {
         classes: [ 'tox', 'tox-tinymce' ]
           .concat(isInline ? [ 'tox-tinymce-inline' ] : [])
           .concat(isToolbarBottom ? [ 'tox-tinymce--toolbar-bottom' ] : [])
-          .concat(deviceClasses)
-          .concat(platformClasses),
+          .concat(deviceClasses),
         styles: {
           // This is overridden by the skin, it helps avoid FOUC
           visibility: 'hidden',

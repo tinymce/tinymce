@@ -10,7 +10,7 @@ import * as DataTransfers from './DataTransfers';
 import { DragStartingConfig } from './DragnDropTypes';
 import { setImageClone } from './ImageClone';
 
-const dragStart = (component: AlloyComponent, target: SugarElement, config: DragStartingConfig, transfer: DataTransfer) => {
+const dragStart = (component: AlloyComponent, target: SugarElement<Node>, config: DragStartingConfig, transfer: DataTransfer) => {
   DataTransfers.setEffectAllowed(transfer, config.effectAllowed);
 
   config.getData.each((getData) => {
@@ -23,11 +23,11 @@ const dragStart = (component: AlloyComponent, target: SugarElement, config: Drag
   config.getImage.each((f) => {
     const image = f(component);
     const parent = config.getImageParent.fold(
-      () => Traverse.parent(target).getOr(SugarBody.body()),
+      () => Traverse.parentElement(target).getOr(SugarBody.body()),
       (f) => f(component)
     );
 
-    setImageClone(transfer, image, parent, target);
+    setImageClone(transfer, image, parent);
   });
 };
 

@@ -15,7 +15,7 @@ const selection = (selections: Selections): SugarElement<HTMLTableCellElement>[]
     Arr.pure
   );
 
-const unmergable = (selections: Selections): Optional<SugarElement[]> => {
+const unmergable = (selections: Selections): Optional<SugarElement<HTMLTableCellElement>[]> => {
   const hasSpan = (elem: SugarElement<Element>, type: 'colspan' | 'rowspan') => Attribute.getOpt(elem, type).exists((span) => parseInt(span, 10) > 1);
   const hasRowOrColSpan = (elem: SugarElement<Element>) => hasSpan(elem, 'rowspan') || hasSpan(elem, 'colspan');
 

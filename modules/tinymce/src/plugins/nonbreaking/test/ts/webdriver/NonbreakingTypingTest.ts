@@ -16,7 +16,6 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
   }, [ Plugin ]);
 
   const isGecko = Env.browser.isFirefox();
-  const isGeckoOrIE = isGecko || Env.browser.isIE();
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
 
@@ -88,7 +87,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is(isGeckoOrIE ? '\u00a0 ' : '\u00a0\u00a0'))
+              s.text(str.is(isGecko ? '\u00a0 ' : '\u00a0\u00a0'))
             ].concat(isGecko ? [ s.element('br', {}) ] : [])
           })
         ]
@@ -107,7 +106,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is(isGeckoOrIE ? 'test test ' : 'test test\u00a0'))
+              s.text(str.is(isGecko ? 'test test ' : 'test test\u00a0'))
             ].concat(isGecko ? [ s.element('br', {}) ] : [])
           })
         ]

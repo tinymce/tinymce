@@ -8,7 +8,7 @@
 import { Arr, Fun, Type } from '@ephox/katamari';
 
 import * as EditorContent from '../content/EditorContent';
-import { logDeprecationsWarning } from '../Deprecations';
+import * as Deprecations from '../Deprecations';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
 import { BlobInfoImagePair } from '../file/ImageScanner';
@@ -81,7 +81,6 @@ export interface EditorConstructor {
 // Shorten these names
 const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
-const ie = Env.browser.isIE() || Env.browser.isEdge();
 
 /**
  * Include Editor API docs.
@@ -283,7 +282,7 @@ class Editor implements EditorObservable {
     const getOption = this.options.get;
 
     if (getOption('deprecation_warnings')) {
-      logDeprecationsWarning(options, normalizedOptions);
+      Deprecations.logWarnings(options, normalizedOptions);
     }
 
     const suffix = getOption('suffix');
@@ -622,14 +621,9 @@ class Editor implements EditorObservable {
    * @method hide
    */
   public hide() {
-    const self = this, doc = self.getDoc();
+    const self = this;
 
     if (!self.hidden) {
-      // Fixed bug where IE has a blinking cursor left from the editor
-      if (ie && doc && !self.inline) {
-        doc.execCommand('SelectAll');
-      }
-
       // We must save before we hide so Safari doesn't crash
       self.save();
 

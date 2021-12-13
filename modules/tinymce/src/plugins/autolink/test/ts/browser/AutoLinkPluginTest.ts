@@ -1,22 +1,15 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 import fc from 'fast-check';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
 
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
-  before(function () {
-    if (Env.browser.isIE()) {
-      this.skip();
-    }
-  });
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'autolink',
     indent: false,
@@ -64,8 +57,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     assertIsLink(editor, 'customprotocol://www.domain.com', 'customprotocol://www.domain.com');
     assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
     assertIsLink(editor, 'ftp://www.domain.com', 'ftp://www.domain.com');
-    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com');
-    assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', '.');
+    assertIsLink(editor, 'www.domain.com', 'https://www.domain.com');
+    assertIsLink(editor, 'www.domain.com', 'https://www.domain.com', '.');
     assertIsLink(editor, 'user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'mailto:user@domain.com', 'mailto:user@domain.com');
     assertIsLink(editor, 'first-last@domain.com', 'mailto:first-last@domain.com');
@@ -106,8 +99,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     typeAnEclipsedURL(editor, 'https://www.domain.com');
     typeAnEclipsedURL(editor, 'ssh://www.domain.com');
     typeAnEclipsedURL(editor, 'ftp://www.domain.com');
-    typeAnEclipsedURL(editor, 'www.domain.com', 'http://www.domain.com');
-    typeAnEclipsedURL(editor, 'www.domain.com', 'http://www.domain.com');
+    typeAnEclipsedURL(editor, 'www.domain.com', 'https://www.domain.com');
+    typeAnEclipsedURL(editor, 'www.domain.com', 'https://www.domain.com');
 
     typeAnEclipsedURL(editor, 'https://www.domain.com', 'https://www.domain.com', '[', ']');
     typeAnEclipsedURL(editor, 'https://www.domain.com', 'https://www.domain.com', '{', '}');
@@ -119,8 +112,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     typeNewlineURL(editor, 'https://www.domain.com');
     typeNewlineURL(editor, 'ssh://www.domain.com');
     typeNewlineURL(editor, 'ftp://www.domain.com');
-    typeNewlineURL(editor, 'www.domain.com', 'http://www.domain.com');
-    typeNewlineURL(editor, 'www.domain.com', 'http://www.domain.com', true);
+    typeNewlineURL(editor, 'www.domain.com', 'https://www.domain.com');
+    typeNewlineURL(editor, 'www.domain.com', 'https://www.domain.com', true);
   });
 
   it('TBA: Url inside blank formatting wrapper', () => {
@@ -136,14 +129,14 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     );
   });
 
-  it(`TBA: default_link_target='_self'`, () => {
+  it(`TBA: link_default_target='_self'`, () => {
     const editor = hook.editor();
-    editor.options.set('default_link_target', '_self');
+    editor.options.set('link_default_target', '_self');
     LegacyUnit.equal(
       typeUrl(editor, 'http://www.domain.com'),
       '<p><a href="http://www.domain.com" target="_self">http://www.domain.com</a>&nbsp;</p>'
     );
-    editor.options.unset('default_link_target');
+    editor.options.unset('link_default_target');
   });
 
   it('TBA: link_default_protocol=https', () => {

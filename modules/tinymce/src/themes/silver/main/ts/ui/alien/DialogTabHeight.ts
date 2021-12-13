@@ -7,7 +7,6 @@
 
 import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabbarTypes, TabSection } from '@ephox/alloy';
 import { Arr, Singleton } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Css, Focus, Height, SelectorFind, SugarElement, SugarShadowDom, Traverse, Width } from '@ephox/sugar';
 
 import { formResizeEvent } from '../general/FormEvents';
@@ -62,14 +61,9 @@ const showTab = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, com
 };
 
 const setTabviewHeight = (tabview: SugarElement<Element>, height: number) => {
-  // Set both height and flex-basis as some browsers don't support flex-basis. However don't set it on
-  // IE 11 since it incorrectly includes margins in the flex-basis calculations so it can't be relied on.
+  // Set both height and flex-basis as some browsers don't support flex-basis.
   Css.set(tabview, 'height', height + 'px');
-  if (!PlatformDetection.detect().browser.isIE()) {
-    Css.set(tabview, 'flex-basis', height + 'px');
-  } else {
-    Css.remove(tabview, 'flex-basis');
-  }
+  Css.set(tabview, 'flex-basis', height + 'px');
 };
 
 const updateTabviewHeight = (dialogBody: SugarElement, tabview: SugarElement, maxTabHeight: Singleton.Value<number>) => {

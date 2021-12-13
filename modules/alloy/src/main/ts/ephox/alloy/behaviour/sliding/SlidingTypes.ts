@@ -26,7 +26,7 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   closedClass: string;
   dimension: {
     property: string;
-    getDimension: (elem: SugarElement) => string;
+    getDimension: (elem: SugarElement<HTMLElement>) => string;
   };
   onGrown: (comp: AlloyComponent) => void;
   onShrunk: (comp: AlloyComponent) => void;
@@ -34,7 +34,7 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   growingClass: string;
   onStartGrow: (comp: AlloyComponent) => void;
   onStartShrink: (comp: AlloyComponent) => void;
-  getAnimationRoot: Optional<(comp: AlloyComponent) => SugarElement>;
+  getAnimationRoot: Optional<(comp: AlloyComponent) => SugarElement<Element>>;
 
 }
 
@@ -54,7 +54,7 @@ export interface SlidingConfigSpec extends Behaviour.BehaviourConfigSpec {
   shrinkingClass: string;
   growingClass: string;
   onStartGrow?: (component: AlloyComponent) => void;
-  getAnimationRoot?: (component: AlloyComponent) => SugarElement;
+  getAnimationRoot?: (component: AlloyComponent) => SugarElement<Element>;
   onStartShrink?: (component: AlloyComponent) => void;
   onShrunk?: (component: AlloyComponent) => void;
   onGrown?: (component: AlloyComponent) => void;

@@ -1,5 +1,5 @@
 import { FocusTools, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Obj, Type } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 import { Attribute, Class, SugarBody, SugarDocument, SugarElement, Traverse, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -26,21 +26,15 @@ const clickOnConfirmDialog = (editor: Editor, state: boolean) => {
 };
 
 const fireEvent = (elem: SugarElement, event: string) => {
-  let evt: Event;
-  if (Type.isFunction(Event)) {
-    evt = new Event(event, {
-      bubbles: true,
-      cancelable: true
-    });
-  } else { // support IE
-    evt = document.createEvent('Event');
-    evt.initEvent(event, true, true);
-  }
+  const evt = new Event(event, {
+    bubbles: true,
+    cancelable: true
+  });
   elem.dom.dispatchEvent(evt);
 };
 
 const getInput = (selector: string) =>
-  UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+  UiFinder.findIn<HTMLInputElement>(SugarBody.body(), selector).getOrDie();
 
 const assertInputValue = (label: string, selector: string, expected: string | boolean): void => {
   const input = getInput(selector);
@@ -100,9 +94,9 @@ const pClickConfirmNo = async (editor: Editor) => {
   await pWaitForConfirmClose();
 };
 
-const pFindInDialog = async (editor: Editor, selector: string) => {
+const pFindInDialog = async <T extends Element>(editor: Editor, selector: string) => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
-  return UiFinder.findIn(dialog, selector).getOrDie();
+  return UiFinder.findIn<T>(dialog, selector).getOrDie();
 };
 
 const clearHistory = () => {
@@ -119,7 +113,7 @@ const pSetListBoxItem = async (editor: Editor, group: string, itemText: string) 
 };
 
 const pSetInputFieldValue = async (editor: Editor, group: string, newValue: string) => {
-  const element = await pFindInDialog(editor, 'label:contains("' + group + '") + input');
+  const element = await pFindInDialog<HTMLInputElement>(editor, 'label:contains("' + group + '") + input');
   UiControls.setValue(element, newValue);
   fireEvent(element, 'input');
 };

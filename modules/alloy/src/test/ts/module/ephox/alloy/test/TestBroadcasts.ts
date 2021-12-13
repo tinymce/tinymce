@@ -3,7 +3,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
-const dismiss = (gui: GuiSystem, element: SugarElement): void => {
+const dismiss = (gui: GuiSystem, element: SugarElement<Element>): void => {
   gui.broadcastOn([
     'dismiss.popups'
   ], {
@@ -17,7 +17,7 @@ const reposition = (gui: GuiSystem): void => {
   ], { });
 };
 
-const sDismiss = <T>(label: string, gui: GuiSystem, element: SugarElement): Step<T, T> =>
+const sDismiss = <T>(label: string, gui: GuiSystem, element: SugarElement<Element>): Step<T, T> =>
   Logger.t(
     'Broadcast dismiss: ' + label,
     GeneralSteps.sequence([

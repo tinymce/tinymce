@@ -30,7 +30,7 @@ const wrappedSetTimeout = (callback: () => void, time?: number) => {
 
 const wrappedSetInterval = (callback: Function, time?: number): number => {
   if (!Type.isNumber(time)) {
-    time = 1; // IE 8 needs it to be > 0
+    time = 0;
   }
 
   return setInterval(callback, time);

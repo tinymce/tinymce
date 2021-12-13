@@ -69,7 +69,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
       content = padd;
       content = editor.dom.createHTML(forcedRootBlockName, Options.getForcedRootBlockAttrs(editor), content);
     } else if (!content) {
-      // We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
+      // We need to add a BR when forced_root_block is disabled to place the caret
       content = '<br data-mce-bogus="1">';
     }
 

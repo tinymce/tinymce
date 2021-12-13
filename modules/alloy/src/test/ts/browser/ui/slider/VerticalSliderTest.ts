@@ -8,6 +8,7 @@ import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
+import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failure) => {
 
@@ -26,7 +27,7 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       model: {
         mode: 'y',
         minY: 50,
-        getInitialValue: Fun.constant({ y: 200 }),
+        getInitialValue: Fun.constant(200),
         maxY: 200
       },
       stepSize: 10,
@@ -56,9 +57,9 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
     })
   ), (doc, _body, _gui, component, _store) => {
 
-    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom.getBoundingClientRect());
+    const cGetBounds = Chain.mapper((elem: SugarElement<Element>) => elem.dom.getBoundingClientRect());
 
-    const cGetComponent = Chain.binder((elem: SugarElement) => component.getSystem().getByDom(elem));
+    const cGetComponent = Chain.binder((elem: SugarElement<Element>) => component.getSystem().getByDom(elem));
 
     const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element),
@@ -113,12 +114,8 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
 
     const cCheckValue = (expected: number) => Chain.op((parts: any) => {
       const v = Representing.getValue(parts.sliderComp);
-      Assert.eq('Checking slider value', expected, v.y);
+      Assert.eq('Checking slider value', expected, v);
     });
-
-    const sAssertValue = (label: string, expected: number) => Logger.t(label, Step.sync(() => {
-      Assert.eq(label, expected, Representing.getValue(component).y);
-    }));
 
     return [
       Logger.t(
@@ -201,16 +198,16 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       ),
 
       Keyboard.sKeydown(doc, Keys.up(), {}),
-      sAssertValue('200 -> 190 (step size)', 190),
+      RepresentPipes.sAssertValue('200 -> 190 (step size)', 190, component),
 
       Keyboard.sKeydown(doc, Keys.up(), {}),
-      sAssertValue('200 -> 180 (step size)', 180),
+      RepresentPipes.sAssertValue('200 -> 180 (step size)', 180, component),
 
       Step.sync(() => {
         Slider.resetToMin(component);
       }),
 
-      sAssertValue('min: 50', 50),
+      RepresentPipes.sAssertValue('min: 50', 50, component),
 
       Keyboard.sKeydown(doc, Keys.up(), {}),
       Logger.t(
@@ -241,10 +238,13 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       ),
 
       Keyboard.sKeydown(doc, Keys.down(), {}),
-      sAssertValue('Checking that the thumb is now one step further bottom', 60),
+      RepresentPipes.sAssertValue('Checking that the thumb is now one step further bottom', 60, component),
 
       Keyboard.sKeydown(doc, Keys.down(), {}),
-      sAssertValue('Checking that the thumb is now one step further bottom', 70)
+      RepresentPipes.sAssertValue('Checking that the thumb is now one step further bottom', 70, component),
+
+      RepresentPipes.sSetValue(component, 99),
+      RepresentPipes.sAssertValue('Check that Representing.setValue does something', 99, component),
     ];
   }, success, failure);
 });

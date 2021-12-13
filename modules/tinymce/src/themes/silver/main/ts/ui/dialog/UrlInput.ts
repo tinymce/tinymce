@@ -89,7 +89,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     typeaheadBehaviours: Behaviour.derive(Arr.flatten([
       urlBackstage.getValidationHandler().map(
         (handler) => Invalidating.config({
-          getRoot: (comp) => Traverse.parent(comp.element),
+          getRoot: (comp) => Traverse.parentElement(comp.element),
           invalidClass: 'tox-control-wrap--status-invalid',
           notify: {
             onInvalid: (comp: AlloyComponent, err: string) => {
@@ -225,6 +225,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     text: spec.label.getOr(''),
     disabled: spec.disabled,
     primary: false,
+    buttonType: Optional.none(),
     borderless: true
   }, (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
 

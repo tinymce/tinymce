@@ -9,7 +9,7 @@ import * as TableMerge from 'ephox/snooker/test/TableMerge';
 
 UnitTest.test('FitmentIVTest', () => {
   const en = (fakeElement: any, isNew: boolean) =>
-    Structs.elementnew(fakeElement as SugarElement, isNew, false);
+    Structs.elementnew(fakeElement as SugarElement<any>, isNew, false);
 
   // Spend 5 seconds running as many iterations as we can (there are three cycles, so 15s total)
   const CYCLE_TIME = 5000;

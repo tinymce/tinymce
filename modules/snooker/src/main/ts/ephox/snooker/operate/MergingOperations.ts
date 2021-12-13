@@ -3,9 +3,9 @@ import { SugarElement } from '@ephox/sugar';
 
 import * as Structs from '../api/Structs';
 import * as GridRow from '../model/GridRow';
+import { CellElement, CompElm } from '../util/TableTypes';
 
-type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
-type Subst = () => SugarElement;
+type Subst = () => SugarElement<HTMLTableCellElement>;
 
 // substitution: () -> item
 const merge = (grid: Structs.RowCells[], bounds: Structs.Bounds, comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
@@ -26,7 +26,7 @@ const merge = (grid: Structs.RowCells[], bounds: Structs.Bounds, comparator: Com
 };
 
 // substitution: () -> item
-const unmerge = (grid: Structs.RowCells[], target: SugarElement, comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
+const unmerge = (grid: Structs.RowCells[], target: SugarElement<HTMLElement>, comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
   const rows = GridRow.extractGridDetails(grid).rows;
   // Mutating. Do we care about the efficiency gain?
   let first = true;
@@ -38,9 +38,9 @@ const unmerge = (grid: Structs.RowCells[], target: SugarElement, comparator: Com
       const currentCellElm = currentCell.element;
       const isToReplace = comparator(currentCellElm, target);
 
-      if (isToReplace === true && first === false) {
+      if (isToReplace && !first) {
         GridRow.mutateCell(row, j, Structs.elementnew(substitution(), true, currentCell.isLocked));
-      } else if (isToReplace === true) {
+      } else if (isToReplace) {
         first = false;
       }
     }
@@ -48,12 +48,12 @@ const unmerge = (grid: Structs.RowCells[], target: SugarElement, comparator: Com
   return grid;
 };
 
-const uniqueCells = (row: Structs.ElementNew[], comparator: CompElm): Structs.ElementNew[] => {
+const uniqueCells = <T extends CellElement>(row: Structs.ElementNew<T>[], comparator: CompElm): Structs.ElementNew<T>[] => {
   return Arr.foldl(row, (rest, cell) => {
     return Arr.exists(rest, (currentCell) => {
       return comparator(currentCell.element, cell.element);
     }) ? rest : rest.concat([ cell ]);
-  }, [] as Structs.ElementNew[]);
+  }, [] as Structs.ElementNew<T>[]);
 };
 
 const splitCols = (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
@@ -81,7 +81,7 @@ const splitRows = (grid: Structs.RowCells[], index: number, comparator: CompElm,
     const cells = uniqueCells(rowPrevCells, comparator);
     Arr.each(cells, (cell) => {
       // only make a sub when we have to
-      let replacement = Optional.none<SugarElement>();
+      let replacement = Optional.none<SugarElement<HTMLTableCellElement>>();
       for (let i = index; i < rows.length; i++) {
         for (let j = 0; j < GridRow.cellLength(rows[0]); j++) {
           const row = rows[i];

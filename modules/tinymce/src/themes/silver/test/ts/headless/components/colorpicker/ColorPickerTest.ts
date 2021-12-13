@@ -2,7 +2,7 @@ import { HsvColour } from '@ephox/acid';
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Optional, Type } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -19,16 +19,10 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
   ));
 
   const fireEvent = (elem: SugarElement<Node>, event: string) => {
-    let evt: Event;
-    if (Type.isFunction(Event)) {
-      evt = new Event(event, {
-        bubbles: true,
-        cancelable: true
-      });
-    } else { // support IE
-      evt = document.createEvent('Event');
-      evt.initEvent(event, true, true);
-    }
+    const evt = new Event(event, {
+      bubbles: true,
+      cancelable: true
+    });
     elem.dom.dispatchEvent(evt);
   };
 
@@ -36,27 +30,27 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
     Waiter.pTryUntil(
       'Waiting until hex updates the other fields',
       () => {
-        const input = UiFinder.findIn(component.element, `label:contains("${labelText}") + input`).getOrDie();
+        const input = UiFinder.findIn<HTMLInputElement>(component.element, `label:contains("${labelText}") + input`).getOrDie();
         const value = UiControls.getValue(input);
         assert.equal(value, expected, 'Checking value in input');
       }
     );
 
   const setRgbValue = (component: AlloyComponent, value: string, colour: 'R' | 'G' | 'B') => {
-    const input = UiFinder.findIn(component.element, `label:contains("${colour}") + input`).getOrDie();
+    const input = UiFinder.findIn<HTMLInputElement>(component.element, `label:contains("${colour}") + input`).getOrDie();
     UiControls.setValue(input, value);
     fireEvent(input, 'input');
   };
 
   const setHexValue = (component: AlloyComponent, value: string) => {
-    const input = UiFinder.findIn(component.element, `label:contains("#") + input`).getOrDie();
+    const input = UiFinder.findIn<HTMLInputElement>(component.element, `label:contains("#") + input`).getOrDie();
     UiControls.setValue(input, value);
     fireEvent(input, 'input');
   };
 
   const pAssertPaletteHue = (component: AlloyComponent, expected: number) => {
     return Waiter.pTryUntil('Assert hue of palette matches expected', () => {
-      const canvas = UiFinder.findIn(component.element, 'canvas').getOrDie();
+      const canvas = UiFinder.findIn<HTMLCanvasElement>(component.element, 'canvas').getOrDie();
       // get 1px square from top right of palette canvas
       const imageData = canvas.dom.getContext('2d').getImageData(100, 0, 1, 1).data;
       const rgb = { red: imageData[0], green: imageData[1], blue: imageData[2], alpha: (imageData[3] / 255) * 100 };

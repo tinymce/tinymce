@@ -6,7 +6,7 @@
  */
 
 import { Obj, Type } from '@ephox/katamari';
-import { Attribute, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, DomEvent, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -15,7 +15,6 @@ import DomSerializer, { DomSerializerSettings } from '../api/dom/Serializer';
 import StyleSheetLoader from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
-import Env from '../api/Env';
 import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
@@ -37,9 +36,9 @@ import { NodeChange } from '../NodeChange';
 import * as Rtc from '../Rtc';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
-import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
+import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
 
 declare const escape: any;
@@ -240,13 +239,7 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
       const node = pos.getNode();
       // If a table is the first caret pos, then walk down one more level
       const caretPos = NodeType.isTable(node) ? CaretFinder.firstPositionIn(node).getOr(pos) : pos;
-      // Don't set the selection on IE, as since it's a single selection model setting the selection will cause
-      // it to grab focus, so instead store the selection in the bookmark
-      if (Env.browser.isIE()) {
-        SelectionBookmark.storeNative(editor, caretPos.toRange());
-      } else {
-        editor.selection.setRng(caretPos.toRange());
-      }
+      editor.selection.setRng(caretPos.toRange());
     });
   }
 };
@@ -380,21 +373,9 @@ const initEditorWithInitialContent = (editor: Editor) => {
   }
 };
 
-const initContentBody = (editor: Editor, skipWrite?: boolean) => {
+const contentBodyLoaded = (editor: Editor): void => {
   const targetElm = editor.getElement();
   let doc = editor.getDoc();
-
-  // Restore visibility on target element
-  if (!editor.inline) {
-    editor.getElement().style.visibility = editor.orgVisibility;
-  }
-
-  // Setup iframe body
-  if (!skipWrite && !editor.inline) {
-    doc.open();
-    doc.write(editor.iframeHTML);
-    doc.close();
-  }
 
   if (editor.inline) {
     DOM.addClass(targetElm, 'mce-content-body');
@@ -454,6 +435,7 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
 
   if (!Rtc.isRtc(editor)) {
     MultiClickSelection.setup(editor);
+    TextPattern.setup(editor);
   }
 
   const caret = KeyboardOverrides.setup(editor);
@@ -474,12 +456,38 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
       setupRtc().then((_rtcMode) => {
         editor.setProgressState(false);
         initEditorWithInitialContent(editor);
+        Rtc.bindEvents(editor);
       }, (err) => {
         editor.notificationManager.open({ type: 'error', text: String(err) });
         initEditorWithInitialContent(editor);
+        Rtc.bindEvents(editor);
       });
     });
   });
+};
+
+const initContentBody = (editor: Editor, skipWrite?: boolean) => {
+  // Restore visibility on target element
+  if (!editor.inline) {
+    editor.getElement().style.visibility = editor.orgVisibility;
+  }
+
+  // Setup iframe body
+  if (!skipWrite && !editor.inline) {
+    const iframe = editor.iframeElement;
+    const binder = DomEvent.bind(SugarElement.fromDom(iframe), 'load', () => {
+      binder.unbind();
+
+      // Reset the content document, since using srcdoc will change the document
+      editor.contentDocument = iframe.contentDocument;
+
+      // Continue to init the editor
+      contentBodyLoaded(editor);
+    });
+    iframe.srcdoc = editor.iframeHTML;
+  } else {
+    contentBodyLoaded(editor);
+  }
 };
 
 export {

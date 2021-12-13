@@ -20,6 +20,7 @@ import { createLabelFields } from './Label';
 import { listBoxSchema } from './ListBox';
 import { selectBoxSchema } from './SelectBox';
 import { sizeInputSchema } from './SizeInput';
+import { sliderSchema } from './Slider';
 import { tableSchema } from './Table';
 import { textAreaSchema } from './Textarea';
 import { urlInputSchema } from './UrlInput';
@@ -62,6 +63,7 @@ export const itemSchema = StructureSchema.valueThunkOf(
     listbox: listBoxSchema,
     selectbox: selectBoxSchema,
     sizeinput: sizeInputSchema,
+    slider: sliderSchema,
     textarea: textAreaSchema,
     urlinput: urlInputSchema,
     customeditor: customEditorSchema,

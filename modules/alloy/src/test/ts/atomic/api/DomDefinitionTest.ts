@@ -1,26 +1,9 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
-import Jsc from '@ephox/wrap-jsverify';
+import { Arr, Obj, Optional } from '@ephox/katamari';
+import * as fc from 'fast-check';
 
+import { DomDefinitionDetail } from 'ephox/alloy/dom/DomDefinition';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
-
-interface ModifiationType {
-  classes: string[];
-  attributes: Record<string, string>;
-  styles: Record<string, string>;
-}
-
-interface DefinitionType {
-  uid: string;
-  tag: string;
-  classes: string[];
-  attributes: Record<string, string>;
-  styles: Record<string, string>;
-  value: Optional<string>;
-  innerHtml: Optional<string>;
-  domChildren: SugarElement[];
-}
 
 UnitTest.test('DomDefinitionTest', () => {
   // TODO: Add property based tests.
@@ -29,108 +12,79 @@ UnitTest.test('DomDefinitionTest', () => {
   // test became a lot less useful. Therefore, we'll just test a few
   // properties
 
-  const arbOptionOf = (arb: any) => Jsc.tuple([ Jsc.bool, arb ]).smap(
-    (arr: [boolean, string]) => arr[0] ? Optional.some(arr[1]) : Optional.none(),
-    (opt: Optional<string>) => opt.fold(
-      () => [ false, '' ],
-      (v) => [ true, v ]
-    ),
-    (opt: Optional<string>) => opt.fold(
-      Fun.constant('None'),
-      (v) => 'Some(' + v + ')'
-    )
+  const arbOptionOf = (arb: fc.Arbitrary<string>) => fc.tuple(fc.boolean(), arb).map(
+    (arr: [boolean, string]) => arr[0] ? Optional.some(arr[1]) : Optional.none()
   );
 
-  const arbDefinition = Jsc.tuple([
-    Jsc.nestring,
-    Jsc.nestring,
-    Jsc.array(Jsc.nestring),
-    Jsc.dict(Jsc.nestring),
-    Jsc.dict(Jsc.nestring),
-    arbOptionOf(Jsc.string),
-    arbOptionOf(Jsc.string)
-  ]).smap(
-    (arr: [string, string, string[], Record<string, string>, Record<string, string>, Optional<string>, Optional<string>]) => ({
-      uid: arr[0],
-      tag: arr[1],
-      classes: arr[2],
-      attributes: arr[3],
-      styles: arr[4],
-      value: arr[5],
-      innerHtml: arr[6],
-      domChildren: [ ] as SugarElement[]
-    }),
-    (defn: DefinitionType) => [ defn.uid, defn.tag, defn.classes, defn.attributes, defn.styles, defn.value, defn.innerHtml, defn.domChildren ],
-    (defn: DefinitionType) => JSON.stringify({
-      'Definition arbitrary': defn
-    }, null, 2)
-  );
+  const nestring = fc.string({ minLength: 1 });
+  const arbDefinition = fc.tuple(
+    nestring,
+    nestring,
+    fc.array(nestring),
+    fc.dictionary(nestring, nestring),
+    fc.dictionary(nestring, nestring),
+    arbOptionOf(fc.string()),
+    arbOptionOf(fc.string())
+  ).map((arr: [string, string, string[], Record<string, string>, Record<string, string>, Optional<string>, Optional<string>]): DomDefinitionDetail => ({
+    uid: arr[0],
+    tag: arr[1],
+    classes: arr[2],
+    attributes: arr[3],
+    styles: arr[4],
+    value: arr[5],
+    innerHtml: arr[6],
+    domChildren: [ ]
+  }));
 
-  const arbModification = Jsc.tuple([
-    Jsc.array(Jsc.nestring),
-    Jsc.dict(Jsc.nestring),
-    Jsc.dict(Jsc.nestring)
-  ]).smap(
-    (arr: [ string[], Record<string, string>, Record<string, string>]) => ({
-      classes: arr[0],
-      attributes: arr[1],
-      styles: arr[2]
-    }),
-    (mod: ModifiationType) => [ mod.classes, mod.attributes, mod.styles ],
-    (mod: ModifiationType) => JSON.stringify({
-      'Modification arbitrary': mod
-    }, null, 2)
-  );
+  const arbModification = fc.tuple(
+    fc.array(nestring),
+    fc.dictionary(nestring, nestring),
+    fc.dictionary(nestring, nestring)
+  ).map((arr: [ string[], Record<string, string>, Record<string, string>]): DomModification.DomModification => ({
+    classes: arr[0],
+    attributes: arr[1],
+    styles: arr[2]
+  }));
 
-  Jsc.syncProperty(
-    'Testing whatever is in modification, ends up in result',
-    [
-      arbDefinition,
-      arbModification
-    ], (defn: DefinitionType, mod: ModifiationType) => {
-      const result = DomModification.merge(defn, mod);
+  fc.assert(fc.property(arbDefinition, arbModification, (defn, mod) => {
+    const result = DomModification.merge(defn, mod);
+    Assert.eq(
+      () => 'All classes in mod should be in final result: ' + JSON.stringify(result, null, 2) + '. Should be none left over.',
+      [ ],
+      Arr.difference(mod.classes, result.classes)
+    );
+    Assert.eq(
+      () => 'All classes in defn should be in final result ' + JSON.stringify(result, null, 2) + '.too. Should be none left over.',
+      [ ],
+      Arr.difference(defn.classes, result.classes)
+    );
+    Assert.eq(
+      () => 'All styles from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
+      true,
+      Obj.find(mod.styles, (v, k) => result.styles[k] !== v).isNone()
+    );
+
+    Obj.each(defn.styles, (v, k) => {
       Assert.eq(
-        () => 'All classes in mod should be in final result: ' + JSON.stringify(result, null, 2) + '. Should be none left over.',
-        [ ],
-        Arr.difference(mod.classes, result.classes)
-      );
-      Assert.eq(
-        () => 'All classes in defn should be in final result ' + JSON.stringify(result, null, 2) + '.too. Should be none left over.',
-        [ ],
-        Arr.difference(defn.classes, result.classes)
-      );
-      Assert.eq(
-        () => 'All styles from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
+        () => 'Defn Style: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
         true,
-        Obj.find(mod.styles, (v, k) => result.styles[k] !== v).isNone()
+        result.styles[k] === v || result.styles[k] === mod.styles[k] && Obj.has(mod.styles, k)
       );
+    });
 
-      Obj.each(defn.styles, (v, k) => {
-        Assert.eq(
-          () => 'Defn Style: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
-          true,
-          result.styles[k] === v || result.styles[k] === mod.styles[k] && Obj.has(mod.styles, k)
-        );
-      });
+    Assert.eq(
+      () => 'All attributes from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
+      true,
+      Obj.find(mod.attributes, (v, k) => result.attributes[k] !== v).isNone()
+    );
 
+    Obj.each(defn.attributes, (v, k) => {
       Assert.eq(
-        () => 'All attributes from modification should be in final result' + JSON.stringify(result, null, 2) + '.',
+        () => 'Defn attribute: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
         true,
-        Obj.find(mod.attributes, (v, k) => result.attributes[k] !== v).isNone()
+        result.attributes[k] === v || result.attributes[k] === mod.attributes[k] && Obj.has(mod.attributes, k)
       );
-
-      Obj.each(defn.attributes, (v, k) => {
-        Assert.eq(
-          () => 'Defn attribute: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
-          true,
-          result.attributes[k] === v || result.attributes[k] === mod.attributes[k] && Obj.has(mod.attributes, k)
-        );
-      });
-      return true;
-    },
-    {
-      tests: 100
-    }
-  );
+    });
+  }));
 
 });

@@ -11,7 +11,7 @@ const countNumber = (container: SugarElement<Node>, selector: string) => {
 };
 
 const extractOnlyOne = (container: SugarElement<Node>, selector: string) => {
-  const ts = UiFinder.findAllIn(container, selector);
+  const ts = UiFinder.findAllIn<HTMLElement>(container, selector);
   if (ts.length === 1) {
     return ts[0];
   } else {

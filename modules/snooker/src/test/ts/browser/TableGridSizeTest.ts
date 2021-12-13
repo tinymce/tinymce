@@ -5,7 +5,7 @@ import * as TableGridSize from 'ephox/snooker/api/TableGridSize';
 
 UnitTest.test('Table grid size test', () => {
   const testGridSize = (html: string, expectedColumnCount: number, expectedRowCount: number) => {
-    const tbl = SugarElement.fromHtml(html);
+    const tbl = SugarElement.fromHtml<HTMLTableElement>(html);
     const size = TableGridSize.getGridSize(tbl);
 
     assert.eq(expectedColumnCount, size.columns, 'Should be expected column count');

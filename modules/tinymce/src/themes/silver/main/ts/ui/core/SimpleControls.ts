@@ -53,7 +53,8 @@ const registerCommandButtons = (editor: Editor) => {
     { name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document' },
     { name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting' },
     { name: 'remove', text: 'Remove', action: 'Delete', icon: 'remove' },
-    { name: 'print', text: 'Print', action: 'mcePrint', icon: 'print' }
+    { name: 'print', text: 'Print', action: 'mcePrint', icon: 'print' },
+    { name: 'hr', text: 'Horizontal line', action: 'InsertHorizontalRule', icon: 'horizontal-rule' }
   ], (btn) => {
     editor.ui.registry.addButton(btn.name, {
       tooltip: btn.text,
@@ -96,7 +97,8 @@ const registerMenuItems = (editor: Editor) => {
     { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy', shortcut: 'Meta+C' },
     { name: 'paste', text: 'Paste', action: 'Paste', icon: 'paste', shortcut: 'Meta+V' },
     { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A' },
-    { name: 'print', text: 'Print...', action: 'mcePrint', icon: 'print', shortcut: 'Meta+P' }
+    { name: 'print', text: 'Print...', action: 'mcePrint', icon: 'print', shortcut: 'Meta+P' },
+    { name: 'hr', text: 'Horizontal line', action: 'InsertHorizontalRule', icon: 'horizontal-rule' }
   ], (menuitem) => {
     editor.ui.registry.addMenuItem(menuitem.name, {
       text: menuitem.text,

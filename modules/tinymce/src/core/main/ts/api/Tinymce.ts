@@ -44,7 +44,6 @@ import Resource from './Resource';
 import Shortcuts, { ShortcutsConstructor } from './Shortcuts';
 import ThemeManager from './ThemeManager';
 import UndoManager from './UndoManager';
-import Class from './util/Class';
 import Delay from './util/Delay';
 import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
@@ -107,7 +106,6 @@ interface TinyMCE extends EditorManager {
     Tools: Tools;
     VK: VK;
     URI: URIConstructor;
-    Class: Class;
     EventDispatcher: EventDispatcherConstructor<any>;
     Observable: Observable<any>;
     I18n: I18n;
@@ -204,7 +202,6 @@ const publicApi = {
     Tools,
     VK,
     URI,
-    Class,
     EventDispatcher,
     Observable,
     I18n,
