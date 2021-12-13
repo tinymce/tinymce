@@ -183,7 +183,7 @@ const pDragResizeBar = async (editor: Editor, rowOrCol: 'row' | 'column', index:
 };
 
 // The critical part is the target element as this is what Darwin (MouseSelection.ts) uses to determine the fake selection
-const selectWithMouse = (start: SugarElement<Element>, end: SugarElement<Element>): void => {
+const selectWithMouse = (start: SugarElement<Node>, end: SugarElement<Node>): void => {
   Mouse.mouseDown(start, { button: 0 });
   Mouse.mouseOver(end, { button: 0 });
   Mouse.mouseUp(end, { button: 0 });
@@ -211,7 +211,7 @@ const getCellWidth = (editor: Editor, table: SugarElement<HTMLTableElement>, row
 };
 
 const getInput = (selector: string) =>
-  UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+  UiFinder.findIn<HTMLInputElement>(SugarBody.body(), selector).getOrDie();
 
 const assertInputValue = (label: string, selector: string, expected: string | boolean): void => {
   const input = getInput(selector);

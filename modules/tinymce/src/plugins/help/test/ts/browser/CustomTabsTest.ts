@@ -16,7 +16,7 @@ describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
 
   const compareTabNames = (editor: Editor, expectedNames: string[]) => {
     editor.execCommand('mceHelp');
-    const actualTabs = UiFinder.findAllIn(SugarDocument.getDocument(), 'div.tox-dialog__body-nav-item.tox-tab');
+    const actualTabs = UiFinder.findAllIn<HTMLDivElement>(SugarDocument.getDocument(), 'div.tox-dialog__body-nav-item.tox-tab');
     const actualNames = Arr.map(actualTabs, (tab) => Html.get(tab));
     Arr.map(expectedNames, (x, i) => {
       assert.equal(actualNames[i], x, 'Tab names did not match');

@@ -4,12 +4,13 @@ import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as DetailsList from '../model/DetailsList';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
+import { CompElm } from '../util/TableTypes';
 import * as TableLookup from './TableLookup';
 
 export interface Warehouse {
   readonly grid: Structs.Grid;
   readonly access: Record<string, Structs.DetailExt>;
-  readonly all: Structs.RowDetail<Structs.DetailExt>[];
+  readonly all: Structs.RowDetail<Structs.DetailExt, HTMLTableRowElement>[];
   readonly columns: Record<number, Structs.ColumnExt>;
   readonly colgroups: Structs.Colgroup<Structs.ColumnExt>[];
 }
@@ -21,12 +22,12 @@ const key = (row: number, column: number): string => {
 const getAt = (warehouse: Warehouse, row: number, column: number): Optional<Structs.DetailExt> =>
   Optional.from(warehouse.access[key(row, column)]);
 
-const findItem = <T>(warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean): Optional<Structs.DetailExt> => {
+const findItem = (warehouse: Warehouse, item: SugarElement<HTMLTableCellElement>, comparator: CompElm): Optional<Structs.DetailExt> => {
   const filtered = filterItems(warehouse, (detail) => {
     return comparator(item, detail.element);
   });
 
-  return filtered.length > 0 ? Optional.some(filtered[0]) : Optional.none<Structs.DetailExt>();
+  return filtered.length > 0 ? Optional.some(filtered[0]) : Optional.none();
 };
 
 const filterItems = (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean): Structs.DetailExt[] => {
@@ -36,11 +37,11 @@ const filterItems = (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: 
   return Arr.filter(all, predicate);
 };
 
-const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowDetail<T>): Record<number, Structs.ColumnExt> => {
+const generateColumns = (rowData: Structs.RowDetail<Structs.Detail<HTMLTableColElement>, HTMLTableColElement>): Record<number, Structs.ColumnExt> => {
   const columnsGroup: Record<number, Structs.ColumnExt> = {};
   let index = 0;
 
-  Arr.each(rowData.cells, (column: T) => {
+  Arr.each(rowData.cells, (column) => {
     const colspan = column.colspan;
 
     Arr.range(colspan, (columnIndex) => {
@@ -60,7 +61,7 @@ const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowDetail<T>
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Warehouse => {
+const generate = (list: Structs.RowDetail<Structs.Detail>[]): Warehouse => {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.
@@ -69,7 +70,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
   //          element
   //          rowspan (merge cols)
   const access: Record<string, Structs.DetailExt> = {};
-  const cells: Structs.RowDetail<Structs.DetailExt>[] = [];
+  const cells: Structs.RowDetail<Structs.DetailExt, HTMLTableRowElement>[] = [];
 
   const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
   const lockedColumns: Record<string, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
@@ -81,7 +82,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
   const { pass: colgroupRows, fail: rows } = Arr.partition(list, (rowData) => rowData.section === 'colgroup');
 
   // Handle rows first
-  Arr.each(rows, (rowData) => {
+  Arr.each(rows as Array<Structs.RowDetail<Structs.Detail<HTMLTableCellElement>, HTMLTableRowElement>>, (rowData) => {
     const currentRow: Structs.DetailExt[] = [];
     Arr.each(rowData.cells, (rowCell) => {
       let start = 0;
@@ -115,9 +116,9 @@ const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Wareh
 
   // Handle colgroups
   // Note: Currently only a single colgroup is supported so just use the last one
-  const { columns, colgroups } = Arr.last(colgroupRows).map((rowData) => {
-    const columns = generateColumns<T>(rowData);
-    const colgroup = Structs.colgroup(rowData.element as SugarElement<HTMLTableColElement>, Obj.values(columns));
+  const { columns, colgroups } = Arr.last(colgroupRows as Array<Structs.RowDetail<Structs.Detail<HTMLTableColElement>, HTMLTableColElement>>).map((rowData) => {
+    const columns = generateColumns(rowData);
+    const colgroup = Structs.colgroup(rowData.element, Obj.values(columns));
     return {
       colgroups: [ colgroup ],
       columns

@@ -7,7 +7,7 @@ const range = <T, R>(num: number, f: (v: T, i: number) => R[]): R[] => {
   return Arr.bind(array, f);
 };
 
-const sequence = <T>(doc: SugarElement<HTMLDocument>, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>): Step<T, T> => {
+const sequence = <T>(doc: SugarElement<Document>, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>): Step<T, T> => {
   const array = range(identifiers.length, (_, i) => [
     Keyboard.sKeydown(doc, key, modifiers),
     FocusTools.sTryOnSelector(
@@ -22,7 +22,7 @@ const sequence = <T>(doc: SugarElement<HTMLDocument>, key: number, modifiers: { 
 };
 
 // Selector based
-const highlights = <T>(container: SugarElement, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>): Step<T, T> => {
+const highlights = <T>(container: SugarElement<Node>, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>): Step<T, T> => {
   const array = range(identifiers.length, (_, i) => {
     const msg = 'Highlight should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label;
     const doc = Traverse.owner(container);

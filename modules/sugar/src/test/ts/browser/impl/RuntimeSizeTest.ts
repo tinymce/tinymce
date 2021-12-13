@@ -23,27 +23,28 @@ interface TableModel {
 UnitTest.test('Runtime Size Test', () => {
   const random = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
 
-  const getOuterHeight = (elm: SugarElement) => Math.round(elm.dom.getBoundingClientRect().height);
-  const getOuterWidth = (elm: SugarElement) => Math.round(elm.dom.getBoundingClientRect().width);
+  const getOuterHeight = (elm: SugarElement<HTMLElement>) => Math.round(elm.dom.getBoundingClientRect().height);
+  const getOuterWidth = (elm: SugarElement<HTMLElement>) => Math.round(elm.dom.getBoundingClientRect().width);
 
-  const measureCells = (getSize: (e: SugarElement) => number, table: SugarElement) => Arr.map(SelectorFilter.descendants(table, 'td'), getSize);
+  const measureCells = (getSize: (e: SugarElement<HTMLElement>) => number, table: SugarElement<HTMLElement>) =>
+    Arr.map(SelectorFilter.descendants<HTMLTableCellElement>(table, 'td'), getSize);
 
-  const measureTable = (table: SugarElement, getSize: (e: SugarElement) => number) => ({
+  const measureTable = (table: SugarElement<HTMLElement>, getSize: (e: SugarElement<HTMLElement>) => number) => ({
     total: getSize(table),
     cells: measureCells(getSize, table)
   });
 
-  const setHeight = (table: SugarElement, value: string) => Css.set(table, 'height', value);
-  const setWidth = (table: SugarElement, value: string) => Css.set(table, 'width', value);
+  const setHeight = (table: SugarElement<Node>, value: string) => Css.set(table, 'height', value);
+  const setWidth = (table: SugarElement<Node>, value: string) => Css.set(table, 'width', value);
 
-  const resizeTableBy = (table: SugarElement, setSize: (e: SugarElement, v: string) => void, tableInfo: { total: number; cells: number[] }, delta: number) => {
+  const resizeTableBy = (table: SugarElement<HTMLElement>, setSize: (e: SugarElement<HTMLElement>, v: string) => void, tableInfo: { total: number; cells: number[] }, delta: number) => {
     setSize(table, '');
-    Arr.map(SelectorFilter.descendants(table, 'td'), (cell, i) => {
+    Arr.map(SelectorFilter.descendants<HTMLTableCellElement>(table, 'td'), (cell, i) => {
       setSize(cell, (tableInfo.cells[i] + delta) + 'px');
     });
   };
 
-  const assertSize = (s1: { total: number; cells: number[] }, table: SugarElement, getOuterSize: (e: SugarElement) => number, message: string) => {
+  const assertSize = (s1: { total: number; cells: number[] }, table: SugarElement<HTMLElement>, getOuterSize: (e: SugarElement<HTMLElement>) => number, message: string) => {
     const s2 = measureTable(table, getOuterSize);
     const tableHtml = Html.getOuter(table);
 
@@ -142,8 +143,13 @@ UnitTest.test('Runtime Size Test', () => {
   const getHeightDelta = (model: TableModel, delta: number) => model.rows * delta;
   const getWidthDelta = (model: TableModel, delta: number) => model.cols * delta;
 
-  const testTableSize = (createTable: (rows: number, cols: number) => SugarElement, getOuterSize: (e: SugarElement) => number, getSize: (e: SugarElement) => number,
-                         setSize: (e: SugarElement, v: string) => void, getTotalDelta: (model: TableModel, delta: number) => number) => () => {
+  const testTableSize = (
+    createTable: (rows: number, cols: number) => SugarElement<HTMLElement>,
+    getOuterSize: (e: SugarElement<HTMLElement>) => number,
+    getSize: (e: SugarElement<HTMLElement>) => number,
+    setSize: (e: SugarElement<HTMLElement>, v: string) => void,
+    getTotalDelta: (model: TableModel, delta: number) => number
+  ) => () => {
     const rows = random(1, 5);
     const cols = random(1, 5);
 

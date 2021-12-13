@@ -53,7 +53,7 @@ describe('browser.tinymce.plugins.image.FigureResizeTest', () => {
     TinyUiActions.submitDialog(editor);
 
     const body = TinyDom.body(editor);
-    const img = UiFinder.findIn(body, 'figure > img').getOrDie();
+    const img = UiFinder.findIn<HTMLImageElement>(body, 'figure > img').getOrDie();
     Mouse.trueClick(img);
     TinyAssertions.assertSelection(editor, [], 0, [], 1);
 

@@ -7,7 +7,7 @@ import * as UiFinder from './UiFinder';
 
 type TogglableElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement;
 
-const fireEvent = (elem: SugarElement, event: string) => {
+const fireEvent = (elem: SugarElement<Node>, event: string) => {
   const evt = new Event(event, {
     bubbles: true,
     cancelable: true
@@ -23,7 +23,7 @@ const setValue = (element: SugarElement<TogglableElement>, newValue: string, eve
 };
 
 const setValueOn = (container: SugarElement<Node>, selector: string, newValue: string, eventName?: string): void => {
-  const element = UiFinder.findIn(container, selector).getOrDie();
+  const element = UiFinder.findIn<TogglableElement>(container, selector).getOrDie();
   setValue(element, newValue, eventName);
 };
 

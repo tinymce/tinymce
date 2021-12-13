@@ -19,7 +19,7 @@ const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceS
   }, component.element);
 };
 
-const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement, c: SugarElement) => void, childSpec: AlloySpec): void => {
+const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement<Node>, c: SugarElement<Node>) => void, childSpec: AlloySpec): void => {
   const child = component.getSystem().build(childSpec);
   Attachment.attachWith(component, child, insertion);
 };
@@ -50,7 +50,7 @@ const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, re
     remove(component, replaceConfig, replaceState, replacee);
 
     replacer.each((r) => {
-      insert(component, replaceConfig, (p: SugarElement, c: SugarElement) => {
+      insert(component, replaceConfig, (p: SugarElement<Node>, c: SugarElement<Node>) => {
         Insert.appendAt(p, c, replaceeIndex);
       }, r);
     });

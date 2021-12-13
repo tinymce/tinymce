@@ -8,7 +8,7 @@ import { getAnimationRoot } from './SlidingUtils';
 const getDimensionProperty = (slideConfig: SlidingConfig): string =>
   slideConfig.dimension.property;
 
-const getDimension = (slideConfig: SlidingConfig, elem: SugarElement): string =>
+const getDimension = (slideConfig: SlidingConfig, elem: SugarElement<HTMLElement>): string =>
   slideConfig.dimension.getDimension(elem);
 
 const disableTransitions = (component: AlloyComponent, slideConfig: SlidingConfig): void => {

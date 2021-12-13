@@ -16,11 +16,11 @@ UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success,
   const createManager = (prefix: string) => {
     let active: string | undefined = '';
 
-    const set = (_component: AlloyComponent, focusee: SugarElement) => {
+    const set = (_component: AlloyComponent, focusee: SugarElement<HTMLElement>) => {
       active = Attribute.get(focusee, 'class');
     };
 
-    const get = (component: AlloyComponent) => SelectorFind.descendant(component.element, '.' + active);
+    const get = (component: AlloyComponent) => SelectorFind.descendant<HTMLElement>(component.element, '.' + active);
 
     // Test only method
     const sAssert = (label: string, expected: string) => Step.sync(() => {

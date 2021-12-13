@@ -83,9 +83,9 @@ const settings = {
     makeSidebar(ed, 'sidebar1', 'green', 200);
   },
   plugins: [
-    'autosave advlist autolink link image lists charmap preview hr anchor pagebreak',
+    'autosave advlist autolink link image lists charmap preview anchor pagebreak',
     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-    'save table directionality emoticons template paste importcss textpattern codesample help noneditable'
+    'save table directionality emoticons template paste importcss codesample help noneditable'
   ],
   // rtl_ui: true,
   add_unload_trigger: false,

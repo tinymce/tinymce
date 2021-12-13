@@ -16,10 +16,10 @@ export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<Invalida
 
 export interface InvalidatingConfigSpec extends Behaviour.BehaviourConfigSpec {
   invalidClass: string;
-  getRoot?: (comp: AlloyComponent) => Optional<SugarElement>;
+  getRoot?: (comp: AlloyComponent) => Optional<SugarElement<Element>>;
   notify?: {
     aria?: string;
-    getContainer?: (input: AlloyComponent) => Optional<SugarElement>;
+    getContainer?: (input: AlloyComponent) => Optional<SugarElement<Node>>;
     validHtml?: string;
     onValid?: (comp: AlloyComponent) => void;
     onInvalid?: (comp: AlloyComponent, err: string) => void;
@@ -36,13 +36,13 @@ export interface InvalidatingConfig extends Behaviour.BehaviourConfigDetail {
   invalidClass: string;
   notify: Optional<{
     aria: string;
-    getContainer: (input: AlloyComponent) => Optional<SugarElement>;
+    getContainer: (input: AlloyComponent) => Optional<SugarElement<Node>>;
     onValid: (comp: AlloyComponent) => void;
     validHtml: string;
     onInvalid: (comp: AlloyComponent, err: string) => void;
     onValidate: (comp: AlloyComponent) => void;
   }>;
-  getRoot: (comp: AlloyComponent) => Optional<SugarElement>;
+  getRoot: (comp: AlloyComponent) => Optional<SugarElement<Element>>;
   validator: Optional<{
     validate: (input: AlloyComponent) => Future<Result<any, string>>;
     onEvent: string;

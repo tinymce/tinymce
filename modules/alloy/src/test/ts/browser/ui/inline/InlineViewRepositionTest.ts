@@ -85,7 +85,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
       ])
     );
 
-    const sCheckPosition = (label: string, element: SugarElement, x: number, y: number) => Logger.t(
+    const sCheckPosition = (label: string, element: SugarElement<HTMLDivElement>, x: number, y: number) => Logger.t(
       label,
       Step.sync(() => {
         const top = parseInt(Css.get(element, 'top').replace('px', ''), 10);

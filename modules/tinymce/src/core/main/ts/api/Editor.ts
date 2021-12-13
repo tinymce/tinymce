@@ -8,7 +8,7 @@
 import { Arr, Fun, Type } from '@ephox/katamari';
 
 import * as EditorContent from '../content/EditorContent';
-import { logDeprecationsWarning } from '../Deprecations';
+import * as Deprecations from '../Deprecations';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
 import { BlobInfoImagePair } from '../file/ImageScanner';
@@ -280,7 +280,7 @@ class Editor implements EditorObservable {
     const getOption = this.options.get;
 
     if (getOption('deprecation_warnings')) {
-      logDeprecationsWarning(options, normalizedOptions);
+      Deprecations.logWarnings(options, normalizedOptions);
     }
 
     const suffix = getOption('suffix');

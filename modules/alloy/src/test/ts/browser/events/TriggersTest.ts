@@ -62,8 +62,8 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
 
   const logger = Debugging.noLogger();
 
-  const lookup = (eventType: string, target: SugarElement) =>
-    Attribute.getOpt(target, 'data-event-id').bind((targetId) =>
+  const lookup = (eventType: string, target: SugarElement<Node>) =>
+    Attribute.getOpt(target as SugarElement<Element>, 'data-event-id').bind((targetId) =>
       Obj.get(domEvents as any, eventType).bind((x) => Obj.get(x, targetId)).map((h: Function) => ({
         descHandler: {
           cHandler: h,

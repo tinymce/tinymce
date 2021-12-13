@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Link"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Remove link"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Open link"]');
-    await UiFinder.pWaitForState('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com');
+    await UiFinder.pWaitForState<HTMLInputElement>('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com');
   });
 
   it('TBA: shows relative link urls', async () => {
@@ -49,7 +49,7 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
     editor.setContent('<a href="#heading-1">heading</a>');
     Mouse.trueClickOn(TinyDom.body(editor), 'a');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Link"]');
-    await UiFinder.pWaitForState('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === '#heading-1');
+    await UiFinder.pWaitForState<HTMLInputElement>('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === '#heading-1');
   });
 
   it('TBA: works with non text elements (e.g. images)', async () => {
@@ -58,6 +58,6 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
     editor.setContent('<a href="http://www.google.com/"><img src="image.jpg"></a>');
     Mouse.trueClickOn(TinyDom.body(editor), 'a');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Link"]');
-    await UiFinder.pWaitForState('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com/');
+    await UiFinder.pWaitForState<HTMLInputElement>('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com/');
   });
 });

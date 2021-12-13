@@ -1,11 +1,11 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { Scroll, SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
+import { Scroll, SugarDocument, SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
 
 import * as Frames from './Frames';
 import * as Navigation from './Navigation';
 
-const find = (element: SugarElement): SugarPosition => {
-  const doc = SugarElement.fromDom(document);
+const find = (element: SugarElement<Element>): SugarPosition => {
+  const doc = SugarDocument.getDocument();
   const scroll = Scroll.get(doc);
 
   // Get the path of iframe elements to this element.

@@ -11,7 +11,7 @@ describe('browser.snooker.lookup.TypeTest', () => {
   const container = SugarElement.fromTag('div');
 
   const assertWithWarehouse = (assertions: (warehouse: Warehouse, table: SugarElement<HTMLTableElement>) => void) => {
-    const table = UiFinder.findIn(container, 'table').getOrDie();
+    const table = UiFinder.findIn<HTMLTableElement>(container, 'table').getOrDie();
     const warehouse = Warehouse.fromTable(table);
     assertions(warehouse, table);
   };

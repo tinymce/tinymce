@@ -10,22 +10,22 @@ const offscreen = {
 const tokenSelector = Fun.constant('span[id^="ephox-alloy-aria-voice"]');
 
 // INVESTIGATE: Aria is special for insertion. Think about it more.
-const create = (doc: SugarElement<HTMLDocument>, text: string): SugarElement => {
-  const span: SugarElement = SugarElement.fromTag('span', doc.dom);
+const create = (doc: SugarElement<Document>, text: string): SugarElement<HTMLSpanElement> => {
+  const span = SugarElement.fromTag('span', doc.dom);
   Attribute.set(span, 'role', 'presentation');
   // This stops it saying other things (possibly blank) between transitions.
-  const contents: SugarElement = SugarElement.fromText(text, doc.dom);
+  const contents = SugarElement.fromText(text, doc.dom);
   Insert.append(span, contents);
   return span;
 };
 
-const linkToDescription = (item: SugarElement, token: SugarElement): void => {
+const linkToDescription = (item: SugarElement<Element>, token: SugarElement<Element>): void => {
   const id = Id.generate('ephox-alloy-aria-voice');
   Attribute.set(token, 'id', id);
   Attribute.set(item, 'aria-describedby', id);
 };
 
-const describe = (item: SugarElement, description: string): SugarElement => {
+const describe = (item: SugarElement<Element>, description: string): SugarElement<HTMLSpanElement> => {
   const doc = Traverse.owner(item);
   const token = create(doc, description);
 
@@ -39,7 +39,7 @@ const describe = (item: SugarElement, description: string): SugarElement => {
   return token;
 };
 
-const base = (getAttrs: (string: string) => { }, parent: SugarElement, text: string): void => {
+const base = (getAttrs: (string: string) => { }, parent: SugarElement<Element>, text: string): void => {
   const doc = Traverse.owner(parent);
 
   // firefox needs aria-describedby to speak a role=alert token, which causes IE11 to read twice
@@ -76,9 +76,9 @@ const getShoutAttrs = (_text: string) => ({
   'role': 'alert'
 });
 
-const speak = (parent: SugarElement, text: string): void => base(getSpeakAttrs, parent, text);
+const speak = (parent: SugarElement<Element>, text: string): void => base(getSpeakAttrs, parent, text);
 
-const shout = (parent: SugarElement, text: string): void => base(getShoutAttrs, parent, text);
+const shout = (parent: SugarElement<Element>, text: string): void => base(getShoutAttrs, parent, text);
 
 export {
   describe,

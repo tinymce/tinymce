@@ -4,7 +4,7 @@ import { Traverse, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
 const assertValue = (label: string, component: AlloyComponent, selector: string, expected: string) => {
-  const elem = UiFinder.findIn(component.element, selector).getOrDie();
+  const elem = UiFinder.findIn<HTMLSelectElement>(component.element, selector).getOrDie();
   assert.equal(Value.get(elem), expected, label + ' - checking value of ' + selector);
 };
 

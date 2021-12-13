@@ -58,7 +58,7 @@ const cMouseMove = cMouseMoveWith({ });
 const cMouseOut = cMouseOutWith({ });
 
 const triggerOn = <T extends Element>(container: SugarElement<Node>, selector: string, action: (ele: SugarElement<T>) => void): SugarElement<T> => {
-  const ele = UiFinder.findIn(container, selector).getOrDie();
+  const ele = UiFinder.findIn<T>(container, selector).getOrDie();
   action(ele);
   return ele;
 };

@@ -3,16 +3,17 @@ import { SugarElement } from '@ephox/sugar';
 
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
+import { CellElement } from '../util/TableTypes';
 import { Generators } from './Generators';
 import { DetailExt, RowCells } from './Structs';
 import { Warehouse } from './Warehouse';
 
 export interface OtherCells {
-  readonly upOrLeftCells: SugarElement<HTMLTableCellElement>[];
-  readonly downOrRightCells: SugarElement<HTMLTableCellElement>[];
+  readonly upOrLeftCells: SugarElement<CellElement>[];
+  readonly downOrRightCells: SugarElement<CellElement>[];
 }
 
-const getUpOrLeftCells = (grid: RowCells[], selectedCells: DetailExt[]): SugarElement[] => {
+const getUpOrLeftCells = (grid: RowCells[], selectedCells: DetailExt[]): SugarElement<CellElement>[] => {
   // Get rows up or at the row of the bottom right cell
   const upGrid = grid.slice(0, selectedCells[selectedCells.length - 1].row + 1);
   const upDetails = toDetailList(upGrid);
@@ -23,7 +24,7 @@ const getUpOrLeftCells = (grid: RowCells[], selectedCells: DetailExt[]): SugarEl
   });
 };
 
-const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[]): SugarElement[] => {
+const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[]): SugarElement<CellElement>[] => {
   // Get rows down or at the row of the top left cell (including rowspans)
   const downGrid = grid.slice(selectedCells[0].row + selectedCells[0].rowspan - 1, grid.length);
   const downDetails = toDetailList(downGrid);

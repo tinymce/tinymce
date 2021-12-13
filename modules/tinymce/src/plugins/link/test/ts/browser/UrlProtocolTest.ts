@@ -69,8 +69,8 @@ describe('browser.tinymce.plugins.link.UrlProtocolTest', () => {
 
   it('TBA: Test regex for non relative link with no protocol', async () => {
     const editor = hook.editor();
-    await pTestProtocolConfirm(editor, 'www.http.com', 'http://');
-    await pTestProtocolConfirm(editor, 'www3.http.com', 'http://');
+    await pTestProtocolConfirm(editor, 'www.http.com', 'https://');
+    await pTestProtocolConfirm(editor, 'www3.http.com', 'https://');
   });
 
   it('TBA: Test regex for relative link', async () => {

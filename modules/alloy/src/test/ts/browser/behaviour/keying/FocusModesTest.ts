@@ -77,7 +77,7 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
       Keying.focusIn(comp);
     });
 
-    const sTriggerFocus = (target: SugarElement) => Step.sync(() => {
+    const sTriggerFocus = (target: SugarElement<HTMLElement>) => Step.sync(() => {
       component.getSystem().triggerFocus(target, component.element);
     });
 

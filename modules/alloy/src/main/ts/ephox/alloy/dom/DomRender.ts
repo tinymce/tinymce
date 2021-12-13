@@ -3,7 +3,7 @@ import { Attribute, Classes, Css, Html, InsertAll, SugarElement, Value } from '@
 import * as Tagger from '../registry/Tagger';
 import * as DomDefinition from './DomDefinition';
 
-const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement>): SugarElement => {
+const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>): SugarElement<HTMLElement> => {
   const subject = SugarElement.fromTag(definition.tag);
   Attribute.setAll(subject, definition.attributes);
   Classes.add(subject, definition.classes);

@@ -300,11 +300,6 @@
     rollup-plugin-dts "^3.0.2"
     webpack-sources "^2.3.0"
 
-"@ephox/wrap-prismjs@^1.25.0":
-  version "1.25.0"
-  resolved "https://registry.yarnpkg.com/@ephox/wrap-prismjs/-/wrap-prismjs-1.25.0.tgz#a77f94d6a04346e42c1bd318622ae06fd84528b6"
-  integrity sha512-o0c0kPF0iejJbVFgmHp4U3sCpmRmFEhHvuEpf57eFscuhtKaOEHpaAyBVcwPbnPKeGEJ6dH1q/kMVLhQANh06A==
-
 "@ephox/wrap-promise-polyfill@^2.2.0":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@ephox/wrap-promise-polyfill/-/wrap-promise-polyfill-2.2.1.tgz#afaabe10bc4c44d167e2f8fa6e722cbd7817d386"
@@ -1394,6 +1389,11 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
+
+"@types/prismjs@^1.16.6":
+  version "1.16.6"
+  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.16.6.tgz#377054f72f671b36dbe78c517ce2b279d83ecc40"
+  integrity sha512-dTvnamRITNqNkqhlBd235kZl3KfVJQQoT5jkXeiWSBK7i4/TLKBNLV0S1wOt8gy4E2TY722KLtdmv2xc6+Wevg==
 
 "@types/puppeteer-core@^5.4.0":
   version "5.4.0"
@@ -9400,6 +9400,16 @@ printj@~1.1.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/printj/-/printj-1.1.2.tgz#d90deb2975a8b9f600fb3a1c94e3f4c53c78a222"
   integrity sha512-zA2SmoLaxZyArQTOPj5LXecR+RagfPSU5Kw1qP+jkWeNlrq+eJZyY2oS68SU1Z/7/myXM4lo9716laOFAVStCQ==
+
+prism-themes@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/prism-themes/-/prism-themes-1.9.0.tgz#19c034f3205f1e28d75d89728e54ccd745f7e3dd"
+  integrity sha512-tX2AYsehKDw1EORwBps+WhBFKc2kxfoFpQAjxBndbZKr4fRmMkv47XN0BghC/K1qwodB1otbe4oF23vUTFDokw==
+
+prismjs@^1.25.0:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.25.0.tgz#6f822df1bdad965734b310b315a23315cf999756"
+  integrity sha512-WCjJHl1KEWbnkQom1+SzftbtXMKQoezOCYs5rECqMN+jP+apI7ftoflyqigqzopSO3hMhTEb0mFClA8lkolgEg==
 
 process-nextick-args@^2.0.0, process-nextick-args@~2.0.0:
   version "2.0.1"
