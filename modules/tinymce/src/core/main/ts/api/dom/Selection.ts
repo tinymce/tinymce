@@ -471,6 +471,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const getNode = (): Element => ElementSelection.getNode(editor.getBody(), getRng());
 
   /**
+   * Returns
    *
    * @param startElm
    * @param endElm
@@ -485,14 +486,14 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     return SelectionTypes.fold(selectedCells,
       // No fake selected cells, fallback to selected blocks
       Fun.constant(selectedBlocks),
-      // This path is taken whenever there is fake cell selection even for just a single cell
+      // This path is taken whenever there is fake cell selection even for just a single selected cell
       (cells) => {
         return Arr.map(cells, (cell) => cell.dom);
       },
       (cell) => {
-        // If the selection is collapsed, we are in a table cell so prepend the cell onto selectedBlocks but only if it isn't already in selectedBlocks
-        // TODO: Fix this as could have selected text in cell If the selection is not collapsed, the single cell will already be present in selectedBlocks
-        if (isCollapsed() && !Arr.exists(selectedBlocks, NodeType.isTableCell)) {
+        // For this path, the start of the selection whether collapsed or ranged is within a table cell
+        // If the first selected block is not the cell, then prepend it to the selected blocks list as the cell is a parent block for the selection
+        if (Arr.head(selectedBlocks).forall((block) => block !== cell.dom)) {
           return [ cell.dom as Element ].concat(selectedBlocks);
         } else {
           return selectedBlocks;

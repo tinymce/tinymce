@@ -80,7 +80,11 @@ const handle = (editor: Editor, command: string): void => {
     }
   }
 
-  Arr.each(getBlocksToIndent(editor), (block) => {
+  // TODO: This logic is not working properly due to getSelectedBLocks changes
+  const blocks = getBlocksToIndent(editor);
+  // console.log(blocks);
+
+  Arr.each(blocks, (block) => {
     indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom);
   });
 };
