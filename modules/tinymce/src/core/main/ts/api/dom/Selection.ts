@@ -62,8 +62,8 @@ const isValidRange = (rng: Range) => {
 interface EditorSelection {
   bookmarkManager: BookmarkManager;
   controlSelection: ControlSelection;
-  tableResizeHandler: TableResizeHandler;
-  tableCellSelection: TableCellSelection;
+  _tableResizeHandler: TableResizeHandler;
+  _tableCellSelection: TableCellSelection;
   dom: DOMUtils;
   win: Window;
   serializer: DomSerializer;
@@ -133,8 +133,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     cellEphemera.selectedSelector
   );
 
-  const tableResizeHandler = TableResizeHandler(editor);
-  const tableCellSelection = TableCellSelection(editor);
+  const _tableResizeHandler = TableResizeHandler(editor);
+  const _tableCellSelection = TableCellSelection(editor);
 
   const { selectorChangedWithUnbind } = SelectorChanged(dom, editor);
 
@@ -573,14 +573,14 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const destroy = () => {
     win = selectedRange = explicitRange = null;
     controlSelection.destroy();
-    tableResizeHandler.destroy();
+    _tableResizeHandler.destroy();
   };
 
   const exports: EditorSelection = {
     bookmarkManager: null,
     controlSelection: null,
-    tableResizeHandler,
-    tableCellSelection,
+    _tableResizeHandler,
+    _tableCellSelection,
     dom,
     win,
     serializer,

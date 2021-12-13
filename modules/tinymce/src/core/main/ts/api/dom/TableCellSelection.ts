@@ -100,7 +100,7 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
       // const lazyResize = editor.selection.tableResizeHandler.lazyResize;
 
       // lazyResize().each((resize) => resize.hideBars());
-      editor.selection.tableResizeHandler.hideBars();
+      editor.selection._tableResizeHandler.hideBars();
 
       const rng = editor.selection.getRng();
       const start = SugarElement.fromDom(rng.startContainer);
@@ -110,7 +110,7 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
         handleResponse(wrappedEvent, response);
       });
       // lazyResize().each((resize) => resize.showBars());
-      editor.selection.tableResizeHandler.showBars();
+      editor.selection._tableResizeHandler.showBars();
     };
 
     const isLeftMouse = (raw: MouseEvent) => raw.button === 0;
