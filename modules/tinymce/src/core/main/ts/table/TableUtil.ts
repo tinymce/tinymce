@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional, Optionals, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SugarElement } from '@ephox/sugar';
 
@@ -41,12 +41,6 @@ const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
 const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
 const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
 
-const isSelectionWithinTable = (editor: Editor) => {
-  const startTableOpt = TableLookup.table(SugarElement.fromDom(editor.selection.getStart()), getIsRoot(editor));
-  const endTableOpt = TableLookup.table(SugarElement.fromDom(editor.selection.getEnd()), getIsRoot(editor));
-  return Optionals.equals(startTableOpt, endTableOpt, Compare.eq);
-};
-
 export {
   getBody,
   getIsRoot,
@@ -55,6 +49,5 @@ export {
   getRawWidth,
   removeDataStyle,
   isPercentage,
-  isPixel,
-  isSelectionWithinTable
+  isPixel
 };

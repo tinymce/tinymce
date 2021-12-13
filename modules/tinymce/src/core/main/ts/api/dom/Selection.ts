@@ -91,6 +91,7 @@ interface EditorSelection {
   getStart: (real?: boolean) => Element;
   getEnd: (real?: boolean) => Element;
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
+  getSelectedCells: () => HTMLTableCellElement[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
@@ -470,37 +471,20 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    */
   const getNode = (): Element => ElementSelection.getNode(editor.getBody(), getRng());
 
-  /**
-   * Returns
-   *
-   * @param startElm
-   * @param endElm
-   * @returns an array containing the blocks within the selection
-   */
-  const getSelectedBlocks = (startElm?: Element, endElm?: Element): Element[] => {
-    const selectedCells = cellSelection.get();
-    const selectedBlocks = ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
+  const getSelectedBlocks = (startElm: Element, endElm: Element) =>
+    ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
 
-    // TODO: Should I not take this path is startElm or endElm is specified - i.e. just return ElementSelection.getSelectedBlocks straight away?
-
-    return SelectionTypes.fold(selectedCells,
-      // No fake selected cells, fallback to selected blocks
-      Fun.constant(selectedBlocks),
+  const getSelectedCells = (): HTMLTableCellElement[] =>
+    SelectionTypes.fold<HTMLTableCellElement[]>(cellSelection.get(),
+      // No fake selected cells
+      Fun.constant([]),
       // This path is taken whenever there is fake cell selection even for just a single selected cell
       (cells) => {
         return Arr.map(cells, (cell) => cell.dom);
       },
-      (cell) => {
-        // For this path, the start of the selection whether collapsed or ranged is within a table cell
-        // If the first selected block is not the cell, then prepend it to the selected blocks list as the cell is a parent block for the selection
-        if (Arr.head(selectedBlocks).forall((block) => block !== cell.dom)) {
-          return [ cell.dom as Element ].concat(selectedBlocks);
-        } else {
-          return selectedBlocks;
-        }
-      }
+      // For this path, the start of the selection whether collapsed or ranged is within a table cell
+      (cell) => [ cell.dom ]
     );
-  };
 
   const isForward = (): boolean => {
     const sel = getSel();
@@ -618,6 +602,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     getStart,
     getEnd,
     getSelectedBlocks,
+    getSelectedCells,
     normalize,
     selectorChanged,
     selectorChangedWithUnbind,

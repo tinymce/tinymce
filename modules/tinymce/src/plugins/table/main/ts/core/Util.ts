@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optionals } from '@ephox/katamari';
-import { TableLookup } from '@ephox/snooker';
 import { Compare, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -32,17 +30,6 @@ const getSelectionStart = (editor: Editor): SugarElement<Element> =>
 const getSelectionEnd = (editor: Editor): SugarElement<Element> =>
   SugarElement.fromDom(editor.selection.getEnd());
 
-const isTableCell = (node: Element): node is HTMLTableCellElement => {
-  const name = node.nodeName.toLowerCase();
-  return name === 'td' || name === 'th';
-};
-
-const isSelectionWithinTable = (editor: Editor) => {
-  const startTableOpt = TableLookup.table(getSelectionStart(editor), getIsRoot(editor));
-  const endTableOpt = TableLookup.table(getSelectionEnd(editor), getIsRoot(editor));
-  return Optionals.equals(startTableOpt, endTableOpt, Compare.eq);
-};
-
 export {
   getNodeName,
   getBody,
@@ -50,7 +37,5 @@ export {
   addPxSuffix,
   removePxSuffix,
   getSelectionStart,
-  getSelectionEnd,
-  isTableCell,
-  isSelectionWithinTable
+  getSelectionEnd
 };

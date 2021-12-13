@@ -11,8 +11,6 @@ import { TableLookup } from '@ephox/snooker';
 import { SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import * as NodeType from '../dom/NodeType';
-import * as TableUtil from '../table/TableUtil';
 import { ephemera } from './TableEphemera';
 
 const getSelectionCellFallback = (element: SugarElement<Node>) =>
@@ -29,13 +27,8 @@ const getSelectionFromSelector = <T extends Element>(selector: string) =>
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
-const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] => {
-  if (TableUtil.isSelectionWithinTable(editor)) {
-    return Arr.bind(editor.selection.getSelectedBlocks(), (block) => NodeType.isTableCell(block) ? [ SugarElement.fromDom(block) ] : []);
-  } else {
-    return [];
-  }
-};
+const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
+  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
 
 export {
   getSelectionCell,
