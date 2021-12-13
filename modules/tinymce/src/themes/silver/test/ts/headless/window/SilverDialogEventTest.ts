@@ -77,7 +77,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
       {
         redial: () => dialogSpec(store),
         closeWindow: () => store.adder('closeWindow')
-      } as WindowExtra,
+      } as WindowExtra<{}>,
       {
         shared: {
           getSink: () => Result.value(sink),

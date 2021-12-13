@@ -1,6 +1,7 @@
-import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import { StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { CommonMenuItem, commonMenuItemFields, CommonMenuItemSpec } from '../menu/CommonMenuItem';
 
 export interface DialogToggleMenuItemSpec extends CommonMenuItemSpec {
@@ -14,8 +15,8 @@ export interface DialogToggleMenuItem extends CommonMenuItem {
 }
 
 export const dialogToggleMenuItemSchema = StructureSchema.objOf([
-  FieldSchema.requiredString('type'),
-  FieldSchema.requiredString('name')
+  ComponentSchema.type,
+  ComponentSchema.name
 ].concat(commonMenuItemFields));
 
 export const dialogToggleMenuItemDataProcessor = ValueType.boolean;

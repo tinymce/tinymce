@@ -1,6 +1,7 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { BaseToolbarButton, baseToolbarButtonFields, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
 import {
   BaseToolbarToggleButton, baseToolbarToggleButtonFields, BaseToolbarToggleButtonInstanceApi, BaseToolbarToggleButtonSpec
@@ -81,25 +82,25 @@ export interface ContextForm extends ContextBar {
 }
 
 const contextButtonFields = baseToolbarButtonFields.concat([
-  FieldSchema.defaulted('type', 'contextformbutton'),
-  FieldSchema.defaulted('primary', false),
-  FieldSchema.requiredFunction('onAction'),
+  ComponentSchema.defaultedType('contextformbutton'),
+  ComponentSchema.primary,
+  ComponentSchema.onAction,
   FieldSchema.customField('original', Fun.identity)
 ]);
 
 const contextToggleButtonFields = baseToolbarToggleButtonFields.concat([
-  FieldSchema.defaulted('type', 'contextformbutton'),
-  FieldSchema.defaulted('primary', false),
-  FieldSchema.requiredFunction('onAction'),
+  ComponentSchema.defaultedType('contextformbutton'),
+  ComponentSchema.primary,
+  ComponentSchema.onAction,
   FieldSchema.customField('original', Fun.identity)
 ]);
 
 const launchButtonFields = baseToolbarButtonFields.concat([
-  FieldSchema.defaulted('type', 'contextformbutton')
+  ComponentSchema.defaultedType('contextformbutton')
 ]);
 
 const launchToggleButtonFields = baseToolbarToggleButtonFields.concat([
-  FieldSchema.defaulted('type', 'contextformtogglebutton')
+  ComponentSchema.defaultedType('contextformtogglebutton')
 ]);
 
 const toggleOrNormal = StructureSchema.choose('type', {
@@ -108,9 +109,9 @@ const toggleOrNormal = StructureSchema.choose('type', {
 });
 
 const contextFormSchema = StructureSchema.objOf([
-  FieldSchema.defaulted('type', 'contextform'),
+  ComponentSchema.defaultedType('contextform'),
   FieldSchema.defaultedFunction('initValue', Fun.constant('')),
-  FieldSchema.optionString('label'),
+  ComponentSchema.optionalLabel,
   FieldSchema.requiredArrayOf('commands', toggleOrNormal),
   FieldSchema.optionOf('launch', StructureSchema.choose('type', {
     contextformbutton: launchButtonFields,

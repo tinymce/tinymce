@@ -1,6 +1,7 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { CardMenuItemSpec } from '../menu/CardMenuItem';
 import { SeparatorMenuItem, separatorMenuItemSchema, SeparatorMenuItemSpec } from '../menu/SeparatorMenuItem';
 
@@ -58,24 +59,24 @@ export interface Autocompleter {
 
 const autocompleterItemSchema = StructureSchema.objOf([
   // Currently, autocomplete items don't support configuring type, active, disabled, meta
-  FieldSchema.defaulted('type', 'autocompleteitem'),
-  FieldSchema.defaulted('active', false),
-  FieldSchema.defaulted('disabled', false),
-  FieldSchema.defaulted('meta', {}),
-  FieldSchema.requiredString('value'),
-  FieldSchema.optionString('text'),
-  FieldSchema.optionString('icon')
+  ComponentSchema.defaultedType('autocompleteitem'),
+  ComponentSchema.active,
+  ComponentSchema.disabled,
+  ComponentSchema.defaultedMeta,
+  ComponentSchema.value,
+  ComponentSchema.optionalText,
+  ComponentSchema.optionalIcon
 ]);
 
 const autocompleterSchema = StructureSchema.objOf([
-  FieldSchema.requiredString('type'),
+  ComponentSchema.type,
   FieldSchema.requiredString('ch'),
   FieldSchema.defaultedNumber('minChars', 1),
-  FieldSchema.defaulted('columns', 1),
+  ComponentSchema.defaultedColumns(1),
   FieldSchema.defaultedNumber('maxResults', 10),
   FieldSchema.optionFunction('matches'),
-  FieldSchema.requiredFunction('fetch'),
-  FieldSchema.requiredFunction('onAction'),
+  ComponentSchema.fetch,
+  ComponentSchema.onAction,
   FieldSchema.defaultedArrayOf('highlightOn', [], ValueType.string)
 ]);
 

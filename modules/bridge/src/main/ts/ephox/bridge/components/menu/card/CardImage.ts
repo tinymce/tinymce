@@ -1,6 +1,8 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../../core/ComponentSchema';
+
 export interface CardImageSpec {
   type: 'cardimage';
   src: string;
@@ -16,7 +18,7 @@ export interface CardImage {
 }
 
 const cardImageFields = [
-  FieldSchema.requiredString('type'),
+  ComponentSchema.type,
   FieldSchema.requiredString('src'),
   FieldSchema.optionString('alt'),
   FieldSchema.defaultedArrayOf('classes', [], ValueType.string)
