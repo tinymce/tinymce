@@ -6,9 +6,9 @@
  */
 
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, Replacing
 } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { Optional, Optionals } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -59,10 +59,17 @@ const renderTitle = (
     },
     components: [],
     behaviours: Behaviour.derive([
+      Replacing.config({}),
       Reflecting.config({
         channel: `${titleChannel}-${dialogId}`,
         initialData: spec,
-        renderComponents
+        updateState: (comp, data, state) => {
+          // Only update the components if the title has changed
+          if (!Optionals.is(state, data, (a, b) => a.title === b.title)) {
+            Replacing.set(comp, renderComponents(data));
+          }
+          return Optional.some(data);
+        }
       })
     ])
   };

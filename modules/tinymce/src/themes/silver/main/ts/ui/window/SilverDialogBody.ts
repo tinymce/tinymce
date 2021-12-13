@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Replacing, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 
@@ -21,11 +21,14 @@ interface WindowBodySpec {
   body: Dialog.Dialog<unknown>['body'];
 }
 
+interface BodyState {
+  readonly isTabPanel: () => boolean;
+}
+
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
 const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
-  const renderComponents = (incoming: WindowBodySpec) => {
-    const body = incoming.body;
+  const renderComponents = (body: Dialog.Dialog<unknown>['body']) => {
     switch (body.type) {
       case 'tabpanel': {
         return [
@@ -41,9 +44,16 @@ const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<
     }
   };
 
-  const updateState = (_comp: AlloyComponent, incoming: WindowBodySpec) => Optional.some({
-    isTabPanel: () => incoming.body.type === 'tabpanel'
-  });
+  const updateState = (comp: AlloyComponent, data: WindowBodySpec, _state: Optional<BodyState>) => {
+    const body = data.body;
+
+    // TODO: TINY-8334 Diff changes and re-render only what's needed
+    Replacing.set(comp, renderComponents(body));
+
+    return Optional.some({
+      isTabPanel: () => body.type === 'tabpanel'
+    });
+  };
 
   const ariaAttributes = {
     'aria-live': 'polite'
@@ -61,11 +71,11 @@ const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<
     components: [],
     behaviours: Behaviour.derive([
       ComposingConfigs.childAt(0),
+      Replacing.config({}),
       Reflecting.config({
         channel: `${bodyChannel}-${dialogId}`,
-        updateState,
-        renderComponents,
-        initialData: spec
+        initialData: spec,
+        updateState
       })
     ])
   };

@@ -5,18 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SketchSpec } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Container, DomFactory, GuiFactory, ModalDialog, Reflecting, SketchSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
 import { footerChannel } from './DialogChannels';
+import * as Diff from './DialogDiff';
 
-export interface DialogMemButton {
-  readonly name: Dialog.DialogFooterButton['name'];
-  readonly align: Dialog.DialogFooterButton['align'];
-  readonly memento: MementoRecord;
+const DiffType = Diff.DiffType;
+
+export interface BuiltDialogButton {
+  readonly comp: AlloyComponent;
+  readonly spec: Dialog.DialogFooterButton;
 }
 
 export interface WindowFooterSpec {
@@ -25,27 +27,26 @@ export interface WindowFooterSpec {
 
 export interface FooterState {
   readonly lookupByName: (buttonName: string) => Optional<AlloyComponent>;
-  readonly footerButtons: DialogMemButton[];
+  readonly footerButtons: BuiltDialogButton[];
 }
 
 const makeButton = (button: Dialog.DialogFooterButton, backstage: UiFactoryBackstage) =>
   renderFooterButton(button, button.type, backstage);
 
-const lookup = (compInSystem: AlloyComponent, footerButtons: DialogMemButton[], buttonName: string) =>
-  Arr.find(footerButtons, (button) => button.name === buttonName)
-    .bind((memButton) => memButton.memento.getOpt(compInSystem));
+const lookup = (footerButtons: BuiltDialogButton[], buttonName: string) =>
+  Arr.find(footerButtons, ({ spec }) => spec.name === buttonName);
 
 const renderComponents = (_data: WindowFooterSpec, state: Optional<FooterState>) => {
   // default group is 'end'
-  const footerButtons = state.map((s) => s.footerButtons).getOr([ ]);
-  const buttonGroups = Arr.partition(footerButtons, (button) => button.align === 'start');
+  const footerButtons: BuiltDialogButton[] = state.map((s) => s.footerButtons).getOr([]);
+  const buttonGroups = Arr.partition(footerButtons, ({ spec }) => spec.align === 'start');
 
-  const makeGroup = (edge: string, buttons: DialogMemButton[]): SketchSpec => Container.sketch({
+  const makeGroup = (edge: string, buttons: BuiltDialogButton[]): SketchSpec => Container.sketch({
     dom: {
       tag: 'div',
       classes: [ `tox-dialog__footer-${edge}` ]
     },
-    components: Arr.map(buttons, (button) => button.memento.asSpec())
+    components: Arr.map(buttons, (button) => GuiFactory.premade(button.comp))
   });
 
   const startButtons = makeGroup('start', buttonGroups.pass);
@@ -53,19 +54,29 @@ const renderComponents = (_data: WindowFooterSpec, state: Optional<FooterState>)
   return [ startButtons, endButtons ];
 };
 
+const compileButton = (spec: Dialog.DialogFooterButton, backstage: UiFactoryBackstage): BuiltDialogButton => {
+  const comp = GuiFactory.build(makeButton(spec, backstage));
+  return {
+    spec,
+    comp
+  };
+};
+
 const renderFooter = (initSpec: WindowFooterSpec, dialogId: string, backstage: UiFactoryBackstage) => {
-  const updateState = (comp: AlloyComponent, data: WindowFooterSpec) => {
-    const footerButtons: DialogMemButton[] = Arr.map(data.buttons, (button) => {
-      const memButton = Memento.record(makeButton(button, backstage));
-      return {
-        name: button.name,
-        align: button.align,
-        memento: memButton
-      };
+  const updateState = (comp: AlloyComponent, data: WindowFooterSpec, state: Optional<FooterState>) => {
+    const oldButtons = state.map((s) => s.footerButtons).getOr([]);
+    const diffs = Diff.diffItems(data.buttons, Arr.map(oldButtons, (button) => button.spec));
+    const footerButtons = Arr.map(diffs, (diff) => {
+      const item = diff.item;
+      if (diff.type === DiffType.Unchanged) {
+        return lookup(oldButtons, item.name).getOrThunk(() => compileButton(item, backstage));
+      } else {
+        return compileButton(item, backstage);
+      }
     });
 
     const lookupByName = (buttonName: string) =>
-      lookup(comp, footerButtons, buttonName);
+      lookup(footerButtons, buttonName).map((button) => button.comp);
 
     return Optional.some<FooterState>({
       lookupByName,

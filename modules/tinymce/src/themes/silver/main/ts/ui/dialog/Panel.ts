@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { SimpleSpec } from '@ephox/alloy';
+import { Behaviour, Replacing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
@@ -20,7 +20,10 @@ const renderPanel = (spec: PanelSpec, backstage: UiFactoryBackstage): SimpleSpec
   },
   // All of the items passed through the form need to be put through the interpreter
   // with their form part preserved.
-  components: Arr.map(spec.items, backstage.shared.interpreter)
+  components: Arr.map(spec.items, backstage.shared.interpreter),
+  behaviours: Behaviour.derive([
+    Replacing.config({})
+  ])
 });
 
 export {

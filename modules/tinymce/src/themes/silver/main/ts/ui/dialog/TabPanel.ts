@@ -6,7 +6,7 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, Form as AlloyForm, Keying, Receiving, Representing,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, Form as AlloyForm, Keying, Receiving, Replacing, Representing,
   SketchSpec, Tabbar as AlloyTabbar, TabbarTypes, TabSection as AlloyTabSection, Tabstopping
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
@@ -68,11 +68,11 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
                 mode: 'acyclic',
                 useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
               }),
-
               AddEventsBehaviour.config('TabView.form.events', [
                 AlloyEvents.runOnAttached(setDataOnForm),
                 AlloyEvents.runOnDetached(updateDataWithForm)
               ]),
+              Replacing.config({}),
               Receiving.config({
                 channels: Objects.wrapAll([
                   {

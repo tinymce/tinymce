@@ -12,8 +12,8 @@ export interface ReflectingBehaviour<I, S> extends Behaviour.AlloyBehaviour<Refl
 
 export interface ReflectingConfigSpec<I, S> extends Behaviour.BehaviourConfigSpec {
   channel: string;
-  renderComponents?: (data: I, state: Optional<S>) => AlloySpec[ ];
-  updateState?: (comp: AlloyComponent, data: I) => Optional<S>;
+  renderComponents?: (data: I, state: Optional<S>) => AlloySpec[];
+  updateState?: (comp: AlloyComponent, data: I, state: Optional<S>) => Optional<S>;
   initialData?: I;
 }
 
@@ -25,7 +25,7 @@ export interface ReflectingState<S> extends BehaviourState {
 
 export interface ReflectingConfig<I, S> extends Behaviour.BehaviourConfigDetail {
   channel: string;
-  renderComponents: Optional<(data: I, state: Optional<S>) => AlloySpec[ ]>;
-  updateState: Optional<(comp: AlloyComponent, data: I) => Optional<S>>;
+  renderComponents: Optional<(data: I, state: Optional<S>) => AlloySpec[]>;
+  updateState: Optional<(comp: AlloyComponent, data: I, state: Optional<S>) => Optional<S>>;
   initialData: Optional<any>;
 }

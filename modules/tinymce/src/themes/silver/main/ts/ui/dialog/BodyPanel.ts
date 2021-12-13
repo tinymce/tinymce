@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Form as AlloyForm, Keying, Memento, SimpleSpec } from '@ephox/alloy';
+import { Behaviour, Form as AlloyForm, Keying, Memento, Replacing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
 
@@ -27,7 +27,10 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       },
       // All of the items passed through the form need to be put through the interpreter
       // with their form part preserved.
-      components: Arr.map(spec.items, (item) => interpretInForm(parts, item, backstage))
+      components: Arr.map(spec.items, (item) => interpretInForm(parts, item, backstage)),
+      formBehaviours: Behaviour.derive([
+        Replacing.config({})
+      ])
     }))
   );
 

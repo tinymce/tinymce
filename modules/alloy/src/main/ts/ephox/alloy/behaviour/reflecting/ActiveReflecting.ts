@@ -10,7 +10,7 @@ import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState: ReflectingState<S>): AlloyEvents.AlloyEventRecord => {
   const update = (component: AlloyComponent, data: I) => {
     reflectingConfig.updateState.each((updateState) => {
-      const newState = updateState(component, data);
+      const newState = updateState(component, data, reflectingState.get());
       reflectingState.set(newState);
     });
 

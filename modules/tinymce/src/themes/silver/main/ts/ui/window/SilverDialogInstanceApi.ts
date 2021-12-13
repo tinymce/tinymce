@@ -130,9 +130,10 @@ const getDialogApi = <T extends Dialog.DialogData>(
       const dialogInit = doRedial(d);
       root.getSystem().broadcastOn([ `${dialogChannel}-${id}` ], dialogInit);
 
-      root.getSystem().broadcastOn([ `${titleChannel}-${id}` ], dialogInit.internalDialog);
-      root.getSystem().broadcastOn([ `${bodyChannel}-${id}` ], dialogInit.internalDialog);
-      root.getSystem().broadcastOn([ `${footerChannel}-${id}` ], dialogInit.internalDialog);
+      const dialog = dialogInit.internalDialog;
+      root.getSystem().broadcastOn([ `${titleChannel}-${id}` ], dialog);
+      root.getSystem().broadcastOn([ `${bodyChannel}-${id}` ], dialog);
+      root.getSystem().broadcastOn([ `${footerChannel}-${id}` ], dialog);
 
       instanceApi.setData(dialogInit.initialData);
     });

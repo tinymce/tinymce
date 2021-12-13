@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { SimpleSpec } from '@ephox/alloy';
+import { Behaviour, Replacing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
@@ -18,5 +18,8 @@ export const renderGrid = (spec: GridSpec, backstage: UiFactoryBackstageShared):
     tag: 'div',
     classes: [ 'tox-form__grid', `tox-form__grid--${spec.columns}col` ]
   },
-  components: Arr.map(spec.items, backstage.interpreter)
+  components: Arr.map(spec.items, backstage.interpreter),
+  behaviours: Behaviour.derive([
+    Replacing.config({})
+  ])
 });
