@@ -18,6 +18,7 @@ import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as BoundarySelection from '../keyboard/BoundarySelection';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import * as DeleteElement from './DeleteElement';
+import { execDeleteCommand } from './DeleteUtils';
 
 const rangeFromPositions = (from: CaretPosition, to: CaretPosition): Range => {
   const range = document.createRange();
@@ -51,9 +52,8 @@ const deleteFromTo = (editor: Editor, caret: Cell<Text>, from: CaretPosition, to
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
 
   editor.undoManager.ignore(() => {
-    const range = rangeFromPositions(from, to);
-    editor.selection.setRng(range);
-    range.deleteContents();
+    editor.selection.setRng(rangeFromPositions(from, to));
+    execDeleteCommand(editor);
 
     BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
       .map(BoundaryLocation.inside)
