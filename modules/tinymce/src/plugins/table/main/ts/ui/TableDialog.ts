@@ -110,7 +110,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | undefine
       const rows = parseInt(data.rows, 10) || 1;
       // Cases 1 & 3 - inserting a table
       editor.execCommand('mceInsertTable', false, { rows, columns: cols });
-      tableElm = TableSelection.getSelectionCell(Util.getSelectionStart(editor))
+      tableElm = TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor))
         .bind((cell) => TableLookup.table(cell, Util.getIsRoot(editor)))
         .map((table) => table.dom)
         .getOrUndefined();

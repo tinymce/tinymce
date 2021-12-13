@@ -15,7 +15,7 @@ import { ephemera } from '../../table/TableEphemera';
 import { getCellsFromSelection } from '../../table/TableSelection';
 import * as Util from '../../table/TableUtil';
 import Editor from '../Editor';
-import { getTableCloneElements } from '../Options';
+import * as Options from '../Options';
 import * as Events from '../TableEvents';
 import { EditorEvent } from '../util/EventDispatcher';
 
@@ -30,11 +30,9 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     const tableOpt = TableLookup.table(start);
     tableOpt.each((table) => {
-      const cloneFormats = getTableCloneElements(editor);
-      const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.from(cloneFormats));
-
+      const cloneFormats = Optional.from(Options.getTableCloneElements(editor));
+      const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
       const selectedCells = getCellsFromSelection(editor);
-
       const otherCells = OtherCells.getOtherCells(table, { selection: selectedCells }, generators);
       Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
     });
@@ -97,9 +95,6 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
 
     const keydown = (event: KeyboardEvent) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
-      // const lazyResize = editor.selection.tableResizeHandler.lazyResize;
-
-      // lazyResize().each((resize) => resize.hideBars());
       editor.selection._tableResizeHandler.hideBars();
 
       const rng = editor.selection.getRng();
@@ -109,7 +104,7 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
       keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each((response) => {
         handleResponse(wrappedEvent, response);
       });
-      // lazyResize().each((resize) => resize.showBars());
+
       editor.selection._tableResizeHandler.showBars();
     };
 

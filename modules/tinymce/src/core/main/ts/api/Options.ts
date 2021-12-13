@@ -19,6 +19,8 @@ const deviceDetection = PlatformDetection.detect().deviceType;
 const isTouch = deviceDetection.isTouch();
 const DOM = DOMUtils.DOM;
 
+type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
+
 const getHash = (value: string): Record<string, string> => {
   const items = value.indexOf('=') > 0 ? value.split(/[;,](?![^=;,]*(?:[;,]|$))/) : value.split(',');
   return Arr.foldl(items, (output, item) => {
@@ -848,8 +850,6 @@ const isEncodingXml = (editor: Editor): boolean =>
 const hasForcedRootBlock = (editor: Editor): boolean =>
   getForcedRootBlock(editor) !== '';
 
-type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
-
 const determineDefaultTableStyles = (editor: Editor): Record<string, string> => {
   if (isTablePixelsForced(editor)) {
     // Determine the inner size of the parent block element where the table will be inserted
@@ -864,7 +864,7 @@ const determineDefaultTableStyles = (editor: Editor): Record<string, string> => 
   }
 };
 
-const getTableCloneElements = (editor: Editor): string[] =>
+const getTableCloneElements = (editor: Editor): string[] | undefined =>
   editor.options.get('table_clone_elements');
 const hasTableTabNavigation = option('table_tab_navigation');
 const getTableSizingMode = option<TableSizingMode>('table_sizing_mode');
