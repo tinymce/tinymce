@@ -18,7 +18,7 @@ export default (sink?: AlloyComponent): UiFactoryBackstage => {
   return {
     shared: {
       providers: TestProviders,
-      interpreter: Fun.identity,
+      interpreter: Fun.identity as any,
       anchors: {
         inlineDialog: hotspotAnchorFn,
         banner: hotspotAnchorFn,

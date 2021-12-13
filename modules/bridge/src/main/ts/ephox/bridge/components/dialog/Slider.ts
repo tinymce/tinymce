@@ -1,5 +1,6 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { formComponentFields, FormComponent, FormComponentSpec } from './FormComponent';
 
 export interface SliderSpec extends FormComponentSpec {
@@ -18,7 +19,7 @@ export interface Slider extends FormComponent {
 
 export const sliderSchema = StructureSchema.objOf(
   formComponentFields.concat([
-    FieldSchema.requiredString('label'),
+    ComponentSchema.label,
     FieldSchema.defaultedNumber('min', 0),
     FieldSchema.defaultedNumber('max', 0),
   ])

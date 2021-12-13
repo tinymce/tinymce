@@ -1,6 +1,7 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
 export interface SizeInputSpec extends FormComponentWithLabelSpec {
@@ -17,7 +18,7 @@ export interface SizeInput extends FormComponentWithLabel {
 
 const sizeInputFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('constrain', true),
-  FieldSchema.defaultedBoolean('disabled', false)
+  ComponentSchema.disabled
 ]);
 
 export const sizeInputSchema = StructureSchema.objOf(sizeInputFields);

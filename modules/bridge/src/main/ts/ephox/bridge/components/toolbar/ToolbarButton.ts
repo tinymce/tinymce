@@ -1,5 +1,7 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Fun, Optional, Result } from '@ephox/katamari';
+import { StructureSchema } from '@ephox/boulder';
+import { Optional, Result } from '@ephox/katamari';
+
+import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface BaseToolbarButtonSpec<I extends BaseToolbarButtonInstanceApi> {
   disabled?: boolean;
@@ -38,16 +40,16 @@ export interface ToolbarButton extends BaseToolbarButton<ToolbarButtonInstanceAp
 }
 
 export const baseToolbarButtonFields = [
-  FieldSchema.defaultedBoolean('disabled', false),
-  FieldSchema.optionString('tooltip'),
-  FieldSchema.optionString('icon'),
-  FieldSchema.optionString('text'),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
+  ComponentSchema.disabled,
+  ComponentSchema.optionalTooltip,
+  ComponentSchema.optionalIcon,
+  ComponentSchema.optionalText,
+  ComponentSchema.onSetup
 ];
 
 export const toolbarButtonSchema = StructureSchema.objOf([
-  FieldSchema.requiredString('type'),
-  FieldSchema.requiredFunction('onAction')
+  ComponentSchema.type,
+  ComponentSchema.onAction
 ].concat(baseToolbarButtonFields));
 
 export const createToolbarButton = (spec: ToolbarButtonSpec): Result<ToolbarButton, StructureSchema.SchemaError<any>> =>

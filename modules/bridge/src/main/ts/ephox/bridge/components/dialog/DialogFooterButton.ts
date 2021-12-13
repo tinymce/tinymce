@@ -1,6 +1,7 @@
-import { FieldPresence, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Id, Optional, Result } from '@ephox/katamari';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { DialogToggleMenuItem, dialogToggleMenuItemSchema, DialogToggleMenuItemSpec } from './ToggleMenuItem';
 
 export type DialogFooterMenuButtonItemSpec = DialogToggleMenuItemSpec;
@@ -54,21 +55,16 @@ export interface DialogFooterMenuButton extends BaseDialogFooterButton {
 export type DialogFooterButton = DialogFooterNormalButton | DialogFooterMenuButton;
 
 const baseFooterButtonFields = [
-  FieldSchema.field(
-    'name',
-    'name',
-    FieldPresence.defaultedThunk(() => Id.generate('button-name')),
-    ValueType.string
-  ),
-  FieldSchema.optionString('icon'),
+  ComponentSchema.generatedName('button'),
+  ComponentSchema.optionalIcon,
   FieldSchema.defaultedStringEnum('align', 'end', [ 'start', 'end' ]),
-  FieldSchema.defaultedBoolean('primary', false),
-  FieldSchema.defaultedBoolean('disabled', false)
+  ComponentSchema.primary,
+  ComponentSchema.disabled
 ];
 
 export const dialogFooterButtonFields = [
   ...baseFooterButtonFields,
-  FieldSchema.requiredString('text')
+  ComponentSchema.text
 ];
 
 const normalFooterButtonFields = [
@@ -78,9 +74,9 @@ const normalFooterButtonFields = [
 
 const menuFooterButtonFields = [
   FieldSchema.requiredStringEnum('type', [ 'menu' ]),
-  FieldSchema.optionString('text'),
-  FieldSchema.optionString('tooltip'),
-  FieldSchema.optionString('icon'),
+  ComponentSchema.optionalText,
+  ComponentSchema.optionalTooltip,
+  ComponentSchema.optionalIcon,
   FieldSchema.requiredArrayOf('items', dialogToggleMenuItemSchema),
   ...baseFooterButtonFields
 ];

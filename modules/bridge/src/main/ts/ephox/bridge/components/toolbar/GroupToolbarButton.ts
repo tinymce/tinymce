@@ -1,6 +1,7 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { BaseToolbarButton, baseToolbarButtonFields, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from './ToolbarButton';
 
 interface ToolbarGroupSetting {
@@ -26,10 +27,10 @@ export interface GroupToolbarButton extends BaseToolbarButton<GroupToolbarButton
 }
 
 export const groupToolbarButtonSchema = StructureSchema.objOf([
-  FieldSchema.requiredString('type'),
+  ComponentSchema.type,
   FieldSchema.requiredOf('items', StructureSchema.oneOf([
     StructureSchema.arrOfObj([
-      FieldSchema.requiredString('name'),
+      ComponentSchema.name,
       FieldSchema.requiredArrayOf('items', ValueType.string)
     ]),
     ValueType.string
