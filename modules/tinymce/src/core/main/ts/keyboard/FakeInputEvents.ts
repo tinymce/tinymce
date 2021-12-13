@@ -26,7 +26,7 @@ const fireFakeInputEvent = (editor: Editor, inputType: string, specifics: Specif
     eventPhase: Event.AT_TARGET,
     originalTarget: target,
     explicitOriginalTarget: target,
-    isTrusted: true,
+    isTrusted: false,
     srcElement: target,
     cancelable: false,
     inputType

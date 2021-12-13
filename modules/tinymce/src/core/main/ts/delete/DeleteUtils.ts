@@ -9,7 +9,7 @@ import { Optional, Optionals } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import { EditorEvent } from '../api/PublicApi';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isListItem, isTextBlock } from '../dom/ElementType';

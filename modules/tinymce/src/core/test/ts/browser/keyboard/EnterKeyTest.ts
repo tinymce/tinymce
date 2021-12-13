@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks, TinyApis } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -757,13 +757,12 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
 
   it('Enter on expanded range', () => {
     const editor = hook.editor();
-    const apis = TinyApis(editor);
 
     editor.setContent('<p>abc</p>');
-    apis.setSelection([ 0, 0 ], 1, [ 0, 0 ], 2);
-
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
     pressEnter(editor, true);
-    apis.assertContent( '<p>a</p><p>c</p>');
-    apis.assertSelection([ 1, 0 ], 0, [ 1, 0 ], 0);
+
+    TinyAssertions.assertContent(editor, '<p>a</p><p>c</p>');
+    TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
   });
 });
