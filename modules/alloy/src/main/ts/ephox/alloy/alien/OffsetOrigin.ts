@@ -1,7 +1,7 @@
 import { Optional, Optionals } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarElement, SugarLocation, SugarPosition, Traverse } from '@ephox/sugar';
 
-const getOffsetParent = (element: SugarElement): Optional<SugarElement<HTMLElement>> => {
+const getOffsetParent = (element: SugarElement<HTMLElement>): Optional<SugarElement<HTMLElement>> => {
   // Firefox sets the offsetParent to the body when fixed instead of null like
   // all other browsers. So we need to check if the element is fixed and if so then
   // disregard the elements offsetParent.
@@ -24,7 +24,7 @@ const getOffsetParent = (element: SugarElement): Optional<SugarElement<HTMLEleme
  * This allows the absolute coordinates to be obtained by adding the
  * origin to the offset coordinates and not needing to know scroll.
  */
-const getOrigin = (element: SugarElement): SugarPosition =>
+const getOrigin = (element: SugarElement<HTMLElement>): SugarPosition =>
   getOffsetParent(element).map(SugarLocation.absolute).getOrThunk(() => SugarPosition(0, 0));
 
 export {

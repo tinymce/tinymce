@@ -8,9 +8,8 @@
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-
-import { repeatLeft } from '../alien/TextSearch';
+import * as TextSearch from '../alien/TextSearch';
+import DOMUtils from '../api/dom/DOMUtils';
 import * as AutocompleteTag from './AutocompleteTag';
 import { getText, isValidTextRange, isWhitespace } from './AutocompleteUtils';
 
@@ -51,7 +50,7 @@ const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number
     findChar(text, offset, ch).getOr(offset);
 
   const root = dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
-  return repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
+  return TextSearch.repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
     const range = initRange.cloneRange();
     range.setStart(spot.container, spot.offset);
     range.setEnd(initRange.endContainer, initRange.endOffset);

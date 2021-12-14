@@ -74,8 +74,8 @@ const dismissRequested = prefixName('system.dismissRequested');
 const repositionRequested = prefixName('system.repositionRequested');
 
 export interface AlloyFocusShiftedEvent extends CustomEvent {
-  readonly prevFocus: Optional<SugarElement>;
-  readonly newFocus: Optional<SugarElement>;
+  readonly prevFocus: Optional<SugarElement<HTMLElement>>;
+  readonly newFocus: Optional<SugarElement<HTMLElement>>;
 }
 
 const focusShifted = prefixName('focusmanager.shifted');

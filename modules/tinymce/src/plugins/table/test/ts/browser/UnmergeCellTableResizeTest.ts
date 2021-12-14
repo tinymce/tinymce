@@ -236,7 +236,7 @@ describe('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', () => {
   const insertTable = (editor: Editor, table: string) => {
     editor.setContent(table);
     const bodyElem = TinyDom.body(editor);
-    const tableElem = UiFinder.findIn(bodyElem, 'table').getOr(bodyElem);
+    const tableElem = UiFinder.findIn<HTMLTableElement>(bodyElem, 'table').getOrDie();
     SelectorFind.descendant(tableElem, 'td,th').each((cell) => {
       editor.selection.select(cell.dom, true);
       editor.selection.collapse(true);

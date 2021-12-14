@@ -11,11 +11,11 @@ export interface BlobImageAsset {
 export interface UrlImageAsset {
   id: () => string;
   url: () => string;
-  raw: () => SugarElement;
+  raw: () => SugarElement<HTMLImageElement>;
 }
 
 export type BlobCallback<T> = (id: string, imageresult: ImageResult, objurl: string) => T;
-export type UrlCallback<T> = (id: string, url: string, raw: SugarElement) => T;
+export type UrlCallback<T> = (id: string, url: string, raw: SugarElement<HTMLImageElement>) => T;
 
 export interface ImageAssetAdt {
   fold: <T> (

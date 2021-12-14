@@ -1,7 +1,6 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { ContentEditable, Remove, SugarElement, Width } from '@ephox/sugar';
 
-import { TableSection } from '../api/TableSection';
 import * as Blocks from '../lookup/Blocks';
 import { findCommonCellType, findCommonRowType } from '../lookup/Type';
 import * as DetailsList from '../model/DetailsList';
@@ -14,15 +13,17 @@ import * as ModificationOperations from '../operate/ModificationOperations';
 import * as TransformOperations from '../operate/TransformOperations';
 import * as Adjustments from '../resize/Adjustments';
 import * as ColUtils from '../util/ColUtils';
+import { CompElm } from '../util/TableTypes';
 import { Generators, GeneratorsMerging, GeneratorsModification, GeneratorsTransform, SimpleGenerators } from './Generators';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
+import { TableSection } from './TableSection';
 import { Warehouse } from './Warehouse';
 
 export interface TableOperationResult {
   readonly grid: Structs.RowCells[];
-  readonly cursor: Optional<SugarElement>;
+  readonly cursor: Optional<SugarElement<HTMLTableCellElement>>;
 }
 
 type ExtractMergable = RunOperation.ExtractMergable;
@@ -40,8 +41,6 @@ interface ExtractColsDetail {
   readonly pixelDelta: number;
 }
 
-type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
-
 // This uses a slight variation to the default `ContentEditable.isEditable` behaviour,
 // as when the element is detached we assume it is editable because it is a new cell.
 const isEditable = (elem: SugarElement<HTMLElement>) =>
@@ -54,12 +53,12 @@ const prune = (table: SugarElement<HTMLTableElement>) => {
   }
 };
 
-const outcome = (grid: Structs.RowCells[], cursor: Optional<SugarElement>): TableOperationResult => ({
+const outcome = (grid: Structs.RowCells[], cursor: Optional<SugarElement<HTMLTableCellElement>>): TableOperationResult => ({
   grid,
   cursor
 });
 
-const findEditableCursorPosition = (rows: Structs.RowCells[]) =>
+const findEditableCursorPosition = (rows: Structs.RowCells<HTMLTableRowElement>[]) =>
   Arr.findMap(rows, (row) =>
     Arr.findMap(row.cells, (cell) => {
       const elem = cell.element;
@@ -264,8 +263,8 @@ const opMergeCells = (grid: Structs.RowCells[], mergable: ExtractMergable, compa
   return outcome(newGrid, Optional.from(cells[0]));
 };
 
-const opUnmergeCells = (grid: Structs.RowCells[], unmergable: SugarElement[], comparator: CompElm, genWrappers: GeneratorsMerging) => {
-  const unmerge = (b: Structs.RowCells[], cell: SugarElement) =>
+const opUnmergeCells = (grid: Structs.RowCells[], unmergable: SugarElement<HTMLTableCellElement>[], comparator: CompElm, genWrappers: GeneratorsMerging) => {
+  const unmerge = (b: Structs.RowCells[], cell: SugarElement<HTMLTableCellElement>) =>
     MergingOperations.unmerge(b, cell, comparator, genWrappers.unmerge(cell));
 
   const newGrid = Arr.foldr(unmergable, unmerge, grid);

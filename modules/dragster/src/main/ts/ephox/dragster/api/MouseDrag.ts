@@ -8,7 +8,7 @@ const compare = (old: SugarPosition, nu: SugarPosition) => {
   return SugarPosition(nu.left - old.left, nu.top - old.top);
 };
 
-const extract = (event: EventArgs) => {
+const extract = (event: EventArgs<MouseEvent>) => {
   return Optional.some(SugarPosition(event.x, event.y));
 };
 
@@ -16,7 +16,7 @@ const mutate = (mutation: DragMutation, info: SugarPosition) => {
   mutation.mutate(info.left, info.top);
 };
 
-const sink = (dragApi: DragApi, settings: Partial<BlockerOptions>) => {
+const sink = (dragApi: DragApi<MouseEvent>, settings: Partial<BlockerOptions>) => {
   const blocker = Blocker(settings);
 
   // Included for safety. If the blocker has stayed on the screen, get rid of it on a click.
@@ -34,7 +34,7 @@ const sink = (dragApi: DragApi, settings: Partial<BlockerOptions>) => {
     mdown.unbind();
   };
 
-  const start = (parent: SugarElement) => {
+  const start = (parent: SugarElement<Node>) => {
     Insert.append(parent, blocker.element());
   };
 
@@ -50,7 +50,7 @@ const sink = (dragApi: DragApi, settings: Partial<BlockerOptions>) => {
   });
 };
 
-export default DragMode({
+export default DragMode<MouseEvent>({
   compare,
   extract,
   sink,

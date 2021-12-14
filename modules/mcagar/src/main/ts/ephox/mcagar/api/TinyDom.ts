@@ -3,7 +3,7 @@ import { SimRange, SugarElement } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 
 export interface TinyDom {
-  readonly fromDom: (elm: Node) => SugarElement;
+  readonly fromDom: <T extends Node | Window>(elm: T) => SugarElement<T>;
   readonly fromRange: (rng: Range) => SimRange;
   readonly body: (editor: Editor) => SugarElement<HTMLElement>;
   readonly document: (editor: Editor) => SugarElement<HTMLDocument>;
@@ -16,7 +16,7 @@ export interface TinyDom {
 /**
  * @deprecated Use SugarElement.fromDom instead.
  */
-const fromDom = (elm: Node): SugarElement<Node> =>
+const fromDom = <T extends Node | Window>(elm: T): SugarElement<T> =>
   SugarElement.fromDom(elm);
 
 const fromRange = (rng: Range): SimRange =>

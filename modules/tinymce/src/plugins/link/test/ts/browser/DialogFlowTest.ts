@@ -25,7 +25,7 @@ describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
   });
 
   const pAssertInputValue = async (editor: Editor, expected: string, group: string) => {
-    const input = await TestLinkUi.pFindInDialog(editor, 'label:contains("' + group + '") + input');
+    const input = await TestLinkUi.pFindInDialog<HTMLInputElement>(editor, 'label:contains("' + group + '") + input');
     const value = UiControls.getValue(input);
     assert.equal(value, expected, 'Checking input value');
   };

@@ -1,6 +1,8 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
+import { CellElement, RowElement, RowCell } from '../util/TableTypes';
+
 export interface Dimension {
   readonly width: number;
   readonly height: number;
@@ -26,17 +28,17 @@ export interface Coords {
   readonly y: number;
 }
 
-export interface Detail {
-  readonly element: SugarElement;
+export interface Detail<T extends CellElement = CellElement> {
+  readonly element: SugarElement<T>;
   readonly rowspan: number;
   readonly colspan: number;
 }
 
-export interface DetailNew extends Detail {
+export interface DetailNew<T extends CellElement = CellElement> extends Detail<T> {
   readonly isNew: boolean;
 }
 
-export interface DetailExt extends Detail {
+export interface DetailExt extends Detail<HTMLTableCellElement> {
   readonly row: number;
   readonly column: number;
   readonly isLocked: boolean;
@@ -45,25 +47,25 @@ export interface DetailExt extends Detail {
 export type Section = 'tfoot' | 'thead' | 'tbody' | 'colgroup';
 const validSectionList: Section[] = [ 'tfoot', 'thead', 'tbody', 'colgroup' ];
 
-export interface RowDetail<T extends Detail> {
-  readonly element: SugarElement<HTMLTableRowElement | HTMLTableColElement>;
+export interface RowDetail<T extends Detail<RowCell<R>>, R extends RowElement = RowElement> {
+  readonly element: SugarElement<R>;
   readonly cells: T[];
   readonly section: Section;
 }
 
-export interface RowDetailNew<T extends Detail> extends RowDetail<T> {
+export interface RowDetailNew<T extends Detail<RowCell<R>>, R extends RowElement = RowElement> extends RowDetail<T, R> {
   readonly isNew: boolean;
 }
 
-export interface RowCells {
-  readonly element: SugarElement<HTMLTableRowElement | HTMLTableColElement>;
-  readonly cells: ElementNew[];
+export interface RowCells<R extends RowElement = RowElement> {
+  readonly element: SugarElement<R>;
+  readonly cells: ElementNew<RowCell<R>>[];
   readonly section: Section;
   readonly isNew: boolean;
 }
 
-export interface ElementNew {
-  readonly element: SugarElement;
+export interface ElementNew<T extends CellElement = CellElement> {
+  readonly element: SugarElement<T>;
   readonly isNew: boolean;
   readonly isLocked: boolean;
 }
@@ -117,13 +119,13 @@ const coords = (x: number, y: number): Coords => ({
   y
 });
 
-const detail = (element: SugarElement<HTMLTableCellElement | HTMLTableColElement>, rowspan: number, colspan: number): Detail => ({
+const detail = <T extends CellElement>(element: SugarElement<T>, rowspan: number, colspan: number): Detail<T> => ({
   element,
   rowspan,
   colspan
 });
 
-const detailnew = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number, isNew: boolean): DetailNew => ({
+const detailnew = <T extends CellElement>(element: SugarElement<T>, rowspan: number, colspan: number, isNew: boolean): DetailNew<T> => ({
   element,
   rowspan,
   colspan,
@@ -139,26 +141,26 @@ const extended = (element: SugarElement<HTMLTableCellElement>, rowspan: number, 
   isLocked
 });
 
-const rowdetail = <T extends Detail> (element: SugarElement<HTMLTableRowElement | HTMLTableColElement>, cells: T[], section: Section): RowDetail<T> => ({
+const rowdetail = <T extends Detail<RowCell<R>>, R extends RowElement> (element: SugarElement<R>, cells: T[], section: Section): RowDetail<T, R> => ({
   element,
   cells,
   section
 });
 
-const rowdetailnew = <T extends Detail> (element: SugarElement, cells: T[], section: Section, isNew: boolean): RowDetailNew<T> => ({
+const rowdetailnew = <T extends Detail<RowCell<R>>, R extends RowElement> (element: SugarElement<R>, cells: T[], section: Section, isNew: boolean): RowDetailNew<T, R> => ({
   element,
   cells,
   section,
   isNew
 });
 
-const elementnew = (element: SugarElement, isNew: boolean, isLocked: boolean): ElementNew => ({
+const elementnew = <T extends CellElement>(element: SugarElement<T>, isNew: boolean, isLocked: boolean): ElementNew<T> => ({
   element,
   isNew,
   isLocked
 });
 
-const rowcells = (element: SugarElement<HTMLTableRowElement | HTMLTableColElement>, cells: ElementNew[], section: Section, isNew: boolean): RowCells => ({
+const rowcells = <R extends RowElement>(element: SugarElement<R>, cells: ElementNew<RowCell<R>>[], section: Section, isNew: boolean): RowCells<R> => ({
   element,
   cells,
   section,

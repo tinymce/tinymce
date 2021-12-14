@@ -23,7 +23,7 @@ interface Growth {
 type GrowthFn = (x: number, y: number) => Growth;
 
 const grower = (f: GrowthFn) => {
-  return (element: SugarElement) => {
+  return (element: SugarElement<HTMLElement>) => {
     const events: GrowEvents = Events.create({
       grow: Event([ 'x', 'y' ])
     });

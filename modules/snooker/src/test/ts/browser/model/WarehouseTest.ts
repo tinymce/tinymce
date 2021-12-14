@@ -41,9 +41,9 @@ describe('WarehouseTest', () => {
   };
 
   const s = (elemText: string, rowspan: number, colspan: number) => Structs.detail(createCell(elemText), rowspan, colspan);
-  const f = (cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdetail(SugarElement.fromTag('tr'), cells, section);
+  const f = (cells: Structs.Detail<HTMLTableCellElement>[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdetail(SugarElement.fromTag('tr'), cells, section);
   const c = (id: string, colspan: number) => Structs.detail(createCol(id), 1, colspan);
-  const cg = (cols: Structs.Detail[]) => Structs.rowdetail(SugarElement.fromTag('colgroup'), cols, 'colgroup');
+  const cg = (cols: Structs.Detail<HTMLTableColElement>[]) => Structs.rowdetail(SugarElement.fromTag('colgroup'), cols, 'colgroup');
 
   const testTable = [
     f([ s('a', 1, 2), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1), s('f', 1, 1) ], 'thead'),

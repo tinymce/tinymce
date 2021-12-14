@@ -56,7 +56,7 @@ describe('browser.tinymce.plugins.link.LinkDialogOverrideTest', () => {
 
     // Assert save button disabled
     UiFinder.exists(sugarBody, 'button[title="Save"][disabled="disabled"]');
-    const input = UiFinder.findIn(sugarBody, 'input[type="url"]').getOrDie();
+    const input = UiFinder.findIn<HTMLInputElement>(sugarBody, 'input[type="url"]').getOrDie();
 
     // Set value and fire 'input' event
     UiControls.setValue(input, 'https://www.google.com', 'input');

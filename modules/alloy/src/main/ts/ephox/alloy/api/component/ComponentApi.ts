@@ -20,7 +20,7 @@ export interface AlloyComponent {
   readonly connect: (newApi: AlloySystemApi) => void;
   readonly disconnect: () => void;
   readonly getApis: <A>() => A;
-  readonly element: SugarElement;
+  readonly element: SugarElement<any>;
   readonly syncComponents: () => void;
   readonly components: () => AlloyComponent[];
   readonly events: ReadonlyRecord<string, UncurriedHandler>;

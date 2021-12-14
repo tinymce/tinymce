@@ -8,8 +8,7 @@
 import { Optional, Singleton, Throttler, Thunk, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-
+import Editor from '../api/Editor';
 import { fireAutocompleterEnd, fireAutocompleterStart, fireAutocompleterUpdate } from '../api/Events';
 import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
 import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';

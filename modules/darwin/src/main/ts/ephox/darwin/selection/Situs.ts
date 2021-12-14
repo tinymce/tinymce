@@ -5,7 +5,7 @@ export interface Situs {
   readonly finish: Situ;
 }
 
-const create = (start: SugarElement, soffset: number, finish: SugarElement, foffset: number): Situs => {
+const create = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number): Situs => {
   return {
     start: Situ.on(start, soffset),
     finish: Situ.on(finish, foffset)

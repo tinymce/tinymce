@@ -109,7 +109,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
     );
   }, (doc, _body, gui, component, store) => {
 
-    const fireTouchstart = (target: SugarElement, x: number, y: number) => {
+    const fireTouchstart = (target: SugarElement<Node>, x: number, y: number) => {
       AlloyTriggers.dispatchWith(component, target, NativeEvents.touchstart(), {
         raw: {
           touches: [
@@ -119,15 +119,15 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
       });
     };
 
-    const fireTouchend = (target: SugarElement) => {
+    const fireTouchend = (target: SugarElement<Node>) => {
       AlloyTriggers.dispatch(component, target, NativeEvents.touchend());
     };
 
-    const fireLongpress = (target: SugarElement) => {
+    const fireLongpress = (target: SugarElement<Node>) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.longpress());
     };
 
-    const sFireTouchmoveOn = (container: SugarElement, selector: string) => Chain.asStep(gui.element, [
+    const sFireTouchmoveOn = (container: SugarElement<Node>, selector: string) => Chain.asStep(gui.element, [
       UiFinder.cFindIn(selector),
       Chain.op((target) => {
         const rect = target.dom.getBoundingClientRect();

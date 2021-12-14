@@ -7,7 +7,7 @@ import * as DragCoord from '../../api/data/DragCoord';
 import * as Snappables from '../snap/Snappables';
 import { DraggingConfig, DragStartData, SnapsConfig } from './DraggingTypes';
 
-const getCurrentCoord = (target: SugarElement): DragCoord.CoordAdt =>
+const getCurrentCoord = (target: SugarElement<HTMLElement>): DragCoord.CoordAdt =>
   Optionals.lift3(Css.getRaw(target, 'left'), Css.getRaw(target, 'top'), Css.getRaw(target, 'position'), (left, top, position) => {
     const nu = position === 'fixed' ? DragCoord.fixed : DragCoord.offset;
     return nu(
@@ -52,7 +52,7 @@ const calcNewCoord = <E>(component: AlloyComponent, optSnaps: Optional<SnapsConf
     return DragCoord.fixed(fixedCoord.left, fixedCoord.top);
   }, (snapInfo) => {
     const snapping = Snappables.moveOrSnap(component, snapInfo, currentCoord, delta, scroll, origin);
-    snapping.extra.each((extra: any) => {
+    snapping.extra.each((extra) => {
       snapInfo.onSensor(component, extra);
     });
     return snapping.coord;

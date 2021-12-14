@@ -12,7 +12,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
-  const root = Singleton.value<SugarElement<any>>();
+  const root = Singleton.value<SugarElement<Element>>();
 
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build({
     dom: {

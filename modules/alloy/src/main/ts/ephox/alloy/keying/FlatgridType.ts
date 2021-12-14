@@ -25,12 +25,12 @@ const schema = [
 ];
 
 const focusIn = (component: AlloyComponent, gridConfig: FlatgridConfig, _gridState: FlatgridState): void => {
-  SelectorFind.descendant(component.element, gridConfig.selector).each((first: SugarElement) => {
+  SelectorFind.descendant<HTMLElement>(component.element, gridConfig.selector).each((first) => {
     gridConfig.focusManager.set(component, first);
   });
 };
 
-const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Optional<SugarElement> =>
+const findCurrent = (component: AlloyComponent, gridConfig: FlatgridConfig): Optional<SugarElement<HTMLElement>> =>
   gridConfig.focusManager.get(component).bind((elem) => SelectorFind.closest(elem, gridConfig.selector));
 
 const execute = (

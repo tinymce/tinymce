@@ -128,7 +128,7 @@ const pAssertMenuStructure = (label: string, container: SugarElement<HTMLElement
 
 // Assume editor height 400
 const pTestMenuScroll = async (top: boolean) => {
-  const menu = UiFinder.findIn(SugarBody.body(), '[role="menu"]').getOrDie();
+  const menu = UiFinder.findIn<HTMLElement>(SugarBody.body(), '[role="menu"]').getOrDie();
   await pAssertMenuStructure('Checking the opened menus default positioning', menu, 'absolute');
   scrollRelativeEditor(200, top);
   await pAssertMenuStructure('When the top of the editor scrolls off screen, menus should become sticky', menu, 'fixed');

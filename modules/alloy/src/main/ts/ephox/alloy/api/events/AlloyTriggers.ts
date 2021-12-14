@@ -16,11 +16,11 @@ const emitExecute = (component: AlloyComponent): void => {
   emit(component, SystemEvents.execute());
 };
 
-const dispatch = (component: AlloyComponent, target: SugarElement, event: string): void => {
+const dispatch = (component: AlloyComponent, target: SugarElement<Node>, event: string): void => {
   dispatchWith(component, target, event, { });
 };
 
-const dispatchWith = (component: AlloyComponent, target: SugarElement, event: string, properties: Record<string, any>): void => {
+const dispatchWith = (component: AlloyComponent, target: SugarElement<Node>, event: string, properties: Record<string, any>): void => {
   const data = {
     target,
     ...properties
@@ -28,11 +28,11 @@ const dispatchWith = (component: AlloyComponent, target: SugarElement, event: st
   component.getSystem().triggerEvent(event, target, data);
 };
 
-const dispatchEvent = <T extends EventFormat>(component: AlloyComponent, target: SugarElement, event: string, simulatedEvent: SimulatedEvent<T>): void => {
+const dispatchEvent = <T extends EventFormat>(component: AlloyComponent, target: SugarElement<Node>, event: string, simulatedEvent: SimulatedEvent<T>): void => {
   component.getSystem().triggerEvent(event, target, simulatedEvent.event);
 };
 
-const dispatchFocus = (component: AlloyComponent, target: SugarElement): void => {
+const dispatchFocus = (component: AlloyComponent, target: SugarElement<HTMLElement>): void => {
   component.getSystem().triggerFocus(target, component.element);
 };
 

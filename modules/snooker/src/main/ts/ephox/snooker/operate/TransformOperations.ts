@@ -6,12 +6,11 @@ import { TableSection } from '../api/TableSection';
 import { isHeaderCell, isHeaderCells } from '../lookup/Type';
 import * as GridRow from '../model/GridRow';
 import * as CellUtils from '../util/CellUtils';
+import { CompElm, Subst } from '../util/TableTypes';
 
-type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
-type Subst = (element: SugarElement, comparator: CompElm) => SugarElement;
-type CellReplacer = (cell: Structs.ElementNew, comparator: CompElm, substitute: Subst) => Structs.ElementNew;
-type ScopeGenerator = (cell: Structs.ElementNew, rowIndex: number, colIndex: number) => Optional<null | string>;
-type ReplacePredicate = (cell: Structs.ElementNew, rowIndex: number, colIndex: number) => boolean;
+type CellReplacer = (cell: Structs.ElementNew<HTMLTableCellElement>, comparator: CompElm, substitute: Subst) => Structs.ElementNew<HTMLTableCellElement>;
+type ScopeGenerator = (cell: Structs.ElementNew<HTMLTableCellElement>, rowIndex: number, colIndex: number) => Optional<null | string>;
+type ReplacePredicate = (cell: Structs.ElementNew<HTMLTableCellElement>, rowIndex: number, colIndex: number) => boolean;
 
 const notInStartRow = (grid: Structs.RowCells[], rowIndex: number, colIndex: number, comparator: CompElm): boolean =>
   GridRow.getCellElement(grid[rowIndex], colIndex) !== undefined && (rowIndex > 0 && comparator(GridRow.getCellElement(grid[rowIndex - 1], colIndex), GridRow.getCellElement(grid[rowIndex], colIndex)));
@@ -25,7 +24,7 @@ const notInStartColumn = (row: Structs.RowCells, index: number, comparator: Comp
 const isDuplicatedCell = (grid: Structs.RowCells[], rowIndex: number, colIndex: number, comparator: CompElm): boolean =>
   notInStartRow(grid, rowIndex, colIndex, comparator) || notInStartColumn(grid[rowIndex], colIndex, comparator);
 
-const rowReplacerPredicate = (targetRow: Structs.RowCells, columnHeaders: boolean[]): ReplacePredicate => {
+const rowReplacerPredicate = (targetRow: Structs.RowCells<HTMLTableRowElement>, columnHeaders: boolean[]): ReplacePredicate => {
   const entireTableIsHeader = Arr.forall(columnHeaders, Fun.identity) && isHeaderCells(targetRow.cells);
   return entireTableIsHeader ? Fun.always : (cell, _rowIndex, colIndex) => {
     const type = SugarNode.name(cell.element);
@@ -33,7 +32,7 @@ const rowReplacerPredicate = (targetRow: Structs.RowCells, columnHeaders: boolea
   };
 };
 
-const columnReplacePredicate = (targetColumn: Structs.ElementNew[], rowHeaders: boolean[]): ReplacePredicate => {
+const columnReplacePredicate = (targetColumn: Structs.ElementNew<HTMLTableCellElement>[], rowHeaders: boolean[]): ReplacePredicate => {
   const entireTableIsHeader = Arr.forall(rowHeaders, Fun.identity) && isHeaderCells(targetColumn);
   return entireTableIsHeader ? Fun.always : (cell, rowIndex, _colIndex) => {
     const type = SugarNode.name(cell.element);
@@ -41,13 +40,13 @@ const columnReplacePredicate = (targetColumn: Structs.ElementNew[], rowHeaders: 
   };
 };
 
-const determineScope = (applyScope: boolean, element: SugarElement<HTMLTableCellElement>, newScope: 'row' | 'col', isInHeader: boolean): string | null => {
-  const hasSpan = (scope: string) => scope === 'row' ? CellUtils.hasRowspan(element) : CellUtils.hasColspan(element);
+const determineScope = (applyScope: boolean, cell: SugarElement<HTMLTableCellElement>, newScope: 'row' | 'col', isInHeader: boolean): string | null => {
+  const hasSpan = (scope: string) => scope === 'row' ? CellUtils.hasRowspan(cell) : CellUtils.hasColspan(cell);
   const getScope = (scope: string) => hasSpan(scope) ? `${scope}group` : scope;
 
   if (applyScope) {
-    return isHeaderCell(element) ? getScope(newScope) : null;
-  } else if (isInHeader && isHeaderCell(element)) {
+    return isHeaderCell(cell) ? getScope(newScope) : null;
+  } else if (isInHeader && isHeaderCell(cell)) {
     // The cell is still in a header row/column so ensure the right scope is reverted to
     const oppositeScope = newScope === 'row' ? 'col' : 'row';
     return getScope(oppositeScope);
@@ -57,25 +56,25 @@ const determineScope = (applyScope: boolean, element: SugarElement<HTMLTableCell
   }
 };
 
-const rowScopeGenerator = (applyScope: boolean, columnHeaders: boolean[]) => (cell: Structs.ElementNew, rowIndex: number, columnIndex: number) =>
+const rowScopeGenerator = (applyScope: boolean, columnHeaders: boolean[]) => (cell: Structs.ElementNew<HTMLTableCellElement>, rowIndex: number, columnIndex: number) =>
   Optional.some(determineScope(applyScope, cell.element, 'col', columnHeaders[columnIndex]));
 
-const columnScopeGenerator = (applyScope: boolean, rowHeaders: boolean[]) => (cell: Structs.ElementNew, rowIndex: number) =>
+const columnScopeGenerator = (applyScope: boolean, rowHeaders: boolean[]) => (cell: Structs.ElementNew<HTMLTableCellElement>, rowIndex: number) =>
   Optional.some(determineScope(applyScope, cell.element, 'row', rowHeaders[rowIndex]));
 
-const replace = (cell: Structs.ElementNew, comparator: CompElm, substitute: Subst) =>
+const replace = (cell: Structs.ElementNew<HTMLTableCellElement>, comparator: CompElm, substitute: Subst) =>
   Structs.elementnew(substitute(cell.element, comparator), true, cell.isLocked);
 
 const replaceIn = (
   grid: Structs.RowCells[],
-  targets: Structs.ElementNew[],
+  targets: Structs.ElementNew<HTMLTableCellElement>[],
   comparator: CompElm,
   substitute: Subst,
   replacer: CellReplacer,
   genScope: ScopeGenerator,
   shouldReplace: ReplacePredicate
 ): Structs.RowCells[] => {
-  const isTarget = (cell: Structs.ElementNew) => {
+  const isTarget = (cell: Structs.ElementNew): cell is Structs.ElementNew<HTMLTableCellElement> => {
     return Arr.exists(targets, (target) => {
       return comparator(cell.element, target.element);
     });
@@ -97,13 +96,13 @@ const replaceIn = (
   });
 };
 
-const getColumnCells = (rows: Structs.RowCells[], columnIndex: number, comparator: CompElm) =>
+const getColumnCells = (rows: Structs.RowCells<HTMLTableRowElement>[], columnIndex: number, comparator: CompElm) =>
   Arr.bind(rows, (row, i) => {
     // check if already added.
     return isDuplicatedCell(rows, i, columnIndex, comparator) ? [] : [ GridRow.getCell(row, columnIndex) ];
   });
 
-const getRowCells = (rows: Structs.RowCells[], rowIndex: number, comparator: CompElm) => {
+const getRowCells = (rows: Structs.RowCells<HTMLTableRowElement>[], rowIndex: number, comparator: CompElm) => {
   const targetRow = rows[rowIndex];
   return Arr.bind(targetRow.cells, (item, i) => {
     // Check that we haven't already added this one.
@@ -118,7 +117,7 @@ const replaceColumns = (grid: Structs.RowCells[], indexes: number[], applyScope:
   // Make this efficient later.
   const rows = GridRow.extractGridDetails(grid).rows;
   const targets = Arr.bind(indexes, (index) => getColumnCells(rows, index, comparator));
-  const rowHeaders = Arr.map(grid, (row) => isHeaderCells(row.cells));
+  const rowHeaders = Arr.map(rows, (row) => isHeaderCells(row.cells));
 
   const shouldReplaceCell = columnReplacePredicate(targets, rowHeaders);
   const scopeGenerator = columnScopeGenerator(applyScope, rowHeaders);
@@ -141,7 +140,7 @@ const replaceRows = (grid: Structs.RowCells[], indexes: number[], section: Struc
   Arr.each(indexes, (index) => {
     newRows[index] = tableSection.transformRow(rows[index], section);
   });
-  const newGrid = cols.concat(newRows);
+  const newGrid = [ ...cols, ...newRows ];
 
   const shouldReplaceCell = rowReplacerPredicate(targetRow, columnHeaders);
   const scopeGenerator = rowScopeGenerator(applyScope, columnHeaders);

@@ -30,7 +30,14 @@ const setup = (callback: Loader.RunCallback, urls: string[], settings: Record<st
   }, failure);
 };
 
-const setupFromElement = (callback: Loader.RunCallback, urls: string[], settings: Record<string, any>, element: SugarElement, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
+const setupFromElement = (
+  callback: Loader.RunCallback,
+  urls: string[],
+  settings: Record<string, any>,
+  element: SugarElement<Element>,
+  success: Loader.SuccessCallback,
+  failure: Loader.FailureCallback
+): void => {
   loadScripts(urls, () => {
     Loader.setup({
       preInit: setupBaseUrl,

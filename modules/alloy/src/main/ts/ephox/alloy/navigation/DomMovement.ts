@@ -5,11 +5,11 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import { GeneralKeyingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
-export type ElementMover <C, S> = (elem: SugarElement, focused: SugarElement, config: C, state: S) => Optional<SugarElement>;
+export type ElementMover <C, S> = (elem: SugarElement<HTMLElement>, focused: SugarElement<HTMLElement>, config: C, state: S) => Optional<SugarElement<HTMLElement>>;
 
 // Looks up direction (considering LTR and RTL), finds the focused element,
 // and tries to move. If it succeeds, triggers focus and kills the event.
-const useH = <C extends GeneralKeyingConfig, S>(movement: (elem: SugarElement) => ElementMover<C, S>): KeyRuleHandler<C, S> =>
+const useH = <C extends GeneralKeyingConfig, S>(movement: (elem: SugarElement<Element>) => ElementMover<C, S>): KeyRuleHandler<C, S> =>
   (component, simulatedEvent, config, state) => {
     const move = movement(component.element);
     return use(move, component, simulatedEvent, config, state);

@@ -9,7 +9,7 @@ const eq = (e1: SugarElement<unknown>, e2: SugarElement<unknown>): boolean =>
 const isEqualNode = (e1: SugarElement<Node>, e2: SugarElement<Node>): boolean =>
   e1.dom.isEqualNode(e2.dom);
 
-const member = (element: SugarElement, elements: SugarElement[]): boolean =>
+const member = (element: SugarElement<unknown>, elements: SugarElement<unknown>[]): boolean =>
   Arr.exists(elements, Fun.curry(eq, element));
 
 // Returns: true if node e1 contains e2, otherwise false.

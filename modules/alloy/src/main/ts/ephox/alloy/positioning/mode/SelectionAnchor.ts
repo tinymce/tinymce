@@ -12,7 +12,7 @@ import * as ContainerOffsets from './ContainerOffsets';
 import * as ContentAnchorCommon from './ContentAnchorCommon';
 
 // A range from (a, 1) to (body, end) was giving the wrong bounds.
-const descendOnce = (element: SugarElement, offset: number): Descend.ElementAndOffset<Node> =>
+const descendOnce = (element: SugarElement<Node>, offset: number): Descend.ElementAndOffset<Node> =>
   SugarNode.isText(element) ? Descend.point(element, offset) : Descend.descendOnce(element, offset);
 
 const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Optional<SimRange> => {
@@ -44,8 +44,8 @@ const placement = (component: AlloyComponent, anchorInfo: SelectionAnchor, origi
     return optRect.bind((rawRect) => ContentAnchorCommon.getBox(rawRect.left, rawRect.top, rawRect.width, rawRect.height));
   });
 
-  const targetElement: Optional<SugarElement> = getAnchorSelection(win, anchorInfo)
-    .bind((sel) => SugarNode.isElement(sel.start) ? Optional.some<SugarElement<Node>>(sel.start) : Traverse.parentNode(sel.start));
+  const targetElement = getAnchorSelection(win, anchorInfo)
+    .bind((sel) => SugarNode.isElement(sel.start) ? Optional.some(sel.start) : Traverse.parentElement(sel.start));
   const elem = targetElement.getOr(component.element);
 
   return ContentAnchorCommon.calcNewAnchor(selectionBox, rootPoint, anchorInfo, origin, elem);

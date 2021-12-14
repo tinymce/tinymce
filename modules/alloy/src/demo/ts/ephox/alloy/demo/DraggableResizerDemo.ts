@@ -20,7 +20,7 @@ export default (): void => {
   Attachment.attachSystem(body, gui);
   Css.set(body, 'margin-bottom', '2000px');
 
-  const onDrag = (comp: AlloyComponent, targetElement: SugarElement, delta: SugarPosition) => {
+  const onDrag = (comp: AlloyComponent, targetElement: SugarElement<Node>, delta: SugarPosition) => {
     Traverse.parent(targetElement).bind(Traverse.parent).bind(Traverse.firstChild).each((box) => {
       Css.getRaw(box, 'height').each((h) => {
         const parsedHeight = parseInt(h, 10);

@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', () => {
     editor.setContent('<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;www.domain.com</p>');
     TinySelections.setCursor(editor, [ 0, 1 ], 15);
     KeyUtils.type(editor, ' ');
-    TinyAssertions.assertContent(editor, '<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;<a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>');
+    TinyAssertions.assertContent(editor, '<p><a href="http://www.domain.com">www.domain.com</a>&nbsp;<a href="https://www.domain.com">www.domain.com</a>&nbsp;</p>');
   });
 
   it('TBA: FireFox does not seem to add a nbsp between link and text', () => {
@@ -25,6 +25,6 @@ describe('browser.tinymce.plugins.autolink.ConsecutiveLinkTest', () => {
     editor.setContent('<p><a href="http://www.domain.com">www.domain.com</a> www.domain.com</p>');
     TinySelections.setCursor(editor, [ 0, 1 ], 15);
     KeyUtils.type(editor, ' ');
-    TinyAssertions.assertContent(editor, '<p><a href="http://www.domain.com">www.domain.com</a> <a href="http://www.domain.com">www.domain.com</a>&nbsp;</p>');
+    TinyAssertions.assertContent(editor, '<p><a href="http://www.domain.com">www.domain.com</a> <a href="https://www.domain.com">www.domain.com</a>&nbsp;</p>');
   });
 });

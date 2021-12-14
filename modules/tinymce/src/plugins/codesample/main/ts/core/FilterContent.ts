@@ -10,8 +10,8 @@ import { Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
+import * as Prism from '../prism/Prism';
 import * as Utils from '../util/Utils';
-import * as Prism from './Prism';
 
 const setup = (editor: Editor): void => {
   editor.on('PreProcess', (e) => {

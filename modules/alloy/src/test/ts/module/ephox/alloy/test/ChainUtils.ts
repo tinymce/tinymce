@@ -28,7 +28,7 @@ const cFindUids = <T>(gui: Record<string, any>, lookups: Record<string, string>)
 
 const cToElement = Chain.mapper((comp: AlloyComponent) => comp.element);
 
-const eToComponent = (other: AlloyComponent): Chain<SugarElement, AlloyComponent> =>
+const eToComponent = (other: AlloyComponent): Chain<SugarElement<Node>, AlloyComponent> =>
   Chain.binder((elem) => other.getSystem().getByDom(elem));
 
 export {

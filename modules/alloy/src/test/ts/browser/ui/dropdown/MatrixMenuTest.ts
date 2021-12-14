@@ -65,11 +65,11 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
     })
   ), (_doc, _body, _gui, component, store) => {
     // TODO: Flesh out test.
-    const cAssertStructure = (label: string, expected: StructAssert) => Chain.op((element: SugarElement) => {
+    const cAssertStructure = (label: string, expected: StructAssert) => Chain.op((element: SugarElement<HTMLOListElement>) => {
       Assertions.assertStructure(label, expected, element);
     });
 
-    const cTriggerFocusItem = Chain.op((target: SugarElement) => {
+    const cTriggerFocusItem = Chain.op((target: SugarElement<HTMLLIElement>) => {
       AlloyTriggers.dispatch(component, target, SystemEvents.focusItem());
     });
 

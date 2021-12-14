@@ -40,7 +40,7 @@ const position = (component: AlloyComponent, posConfig: PositioningConfig, posSt
   positionWithin(component, posConfig, posState, placee, placementSpec, Optional.none());
 };
 
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, boxElement: Optional<SugarElement>): void => {
+const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, boxElement: Optional<SugarElement<HTMLElement>>): void => {
   const boundsBox = boxElement.map(box);
   return positionWithinBounds(component, posConfig, posState, placee, placementSpec, boundsBox);
 };

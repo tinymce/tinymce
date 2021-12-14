@@ -6,17 +6,15 @@ import { Situs } from '../selection/Situs';
 import { BeforeAfter } from './BeforeAfter';
 import { KeyDirection } from './KeyDirection';
 
-const isBr = (elem: SugarElement) => {
-  return SugarNode.name(elem) === 'br';
-};
+const isBr = SugarNode.isTag('br');
 
-const gatherer = (cand: SugarElement, gather: KeyDirection['gather'], isRoot: (e: SugarElement) => boolean): Optional<SugarElement> => {
+const gatherer = (cand: SugarElement<Node>, gather: KeyDirection['gather'], isRoot: (e: SugarElement<Node>) => boolean): Optional<SugarElement<Node>> => {
   return gather(cand, isRoot).bind((target) => {
     return SugarNode.isText(target) && SugarText.get(target).trim().length === 0 ? gatherer(target, gather, isRoot) : Optional.some(target);
   });
 };
 
-const handleBr = (isRoot: (e: SugarElement) => boolean, element: SugarElement, direction: KeyDirection) => {
+const handleBr = (isRoot: (e: SugarElement<Node>) => boolean, element: SugarElement<Node>, direction: KeyDirection) => {
   // 1. Has a neighbouring sibling ... position relative to neighbouring element
   // 2. Has no neighbouring sibling ... position relative to gathered element
   return direction.traverse(element).orThunk(() => {
@@ -24,14 +22,14 @@ const handleBr = (isRoot: (e: SugarElement) => boolean, element: SugarElement, d
   }).map(direction.relative);
 };
 
-const findBr = (element: SugarElement, offset: number) => {
+const findBr = (element: SugarElement<Node>, offset: number) => {
   return Traverse.child(element, offset).filter(isBr).orThunk(() => {
     // Can be either side of the br, and still be a br.
     return Traverse.child(element, offset - 1).filter(isBr);
   });
 };
 
-const handleParent = (isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection) => {
+const handleParent = (isRoot: (e: SugarElement<Node>) => boolean, element: SugarElement<Node>, offset: number, direction: KeyDirection) => {
   // 1. Has no neighbouring sibling, position relative to gathered element
   // 2. Has a neighbouring sibling, position at the neighbouring sibling with respect to parent
   return findBr(element, offset).bind((br) => {
@@ -45,7 +43,7 @@ const handleParent = (isRoot: (e: SugarElement) => boolean, element: SugarElemen
   });
 };
 
-const tryBr = (isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection): Optional<Situs> => {
+const tryBr = (isRoot: (e: SugarElement<Node>) => boolean, element: SugarElement<Node>, offset: number, direction: KeyDirection): Optional<Situs> => {
   // Three different situations
   // 1. the br is the child, and it has a previous sibling. Use parent, index-1)
   // 2. the br is the child and it has no previous sibling, set to before the previous gather result
@@ -61,7 +59,7 @@ const tryBr = (isRoot: (e: SugarElement) => boolean, element: SugarElement, offs
   });
 };
 
-const process = (analysis: BeforeAfter): Optional<SpotPoint<SugarElement>> => {
+const process = (analysis: BeforeAfter): Optional<SpotPoint<SugarElement<HTMLTableCellElement>>> => {
   return BeforeAfter.cata(analysis,
     (_message) => {
       return Optional.none();
