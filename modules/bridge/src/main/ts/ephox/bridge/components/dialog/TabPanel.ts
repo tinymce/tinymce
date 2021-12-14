@@ -6,6 +6,7 @@ import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 import { itemSchema } from './Panel';
 
 export interface TabSpec {
+  type?: 'tab';
   name?: string;
   title: string;
   items: BodyComponentSpec[];
@@ -18,6 +19,7 @@ export interface TabPanelSpec {
 
 export interface Tab {
   uid: string;
+  type: 'tab';
   name: string;
   title: string;
   items: BodyComponent[];
@@ -31,6 +33,7 @@ export interface TabPanel {
 
 export const tabFields = [
   ComponentSchema.uid,
+  ComponentSchema.defaultedType('tab'),
   ComponentSchema.generatedName('tab'),
   ComponentSchema.title,
   FieldSchema.requiredArrayOf('items', itemSchema)

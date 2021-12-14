@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Replacing, Tabstopping } from '@ephox/alloy';
+import {
+  AlloyComponent, AlloySpec, Behaviour, Composing, Focusing, Form, GuiFactory, Keying, ModalDialog, Reflecting, Replacing, Tabstopping
+} from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -15,42 +17,109 @@ import { renderBodyPanel } from '../dialog/BodyPanel';
 import { renderTabPanel } from '../dialog/TabPanel';
 import * as NavigableObject from '../general/NavigableObject';
 import { bodyChannel } from './DialogChannels';
+import * as Diff from './DialogDiff';
 
-// TypeScript allows some pretty weird stuff.
+const DiffType = Diff.DiffType;
+
+type Body = Dialog.Dialog<unknown>['body'];
+
 interface WindowBodySpec {
-  body: Dialog.Dialog<unknown>['body'];
+  body: Body;
 }
 
 interface BodyState {
+  readonly body: Body;
   readonly isTabPanel: () => boolean;
 }
+
+const lookupByUid = (compInSystem: AlloyComponent, uid: string): Optional<AlloyComponent> =>
+  compInSystem.getSystem().getByUid(uid).toOptional();
+
+const getChangedComponents = (diff: Diff.DiffResult<any, any>): Record<string, { parent: Diff.GenericDiffResult<any>; items: Diff.DiffResult<any>[] }> =>
+  Arr.foldl(diff.items, (acc, result) => {
+    const parent = result.parent;
+    if (Type.isNonNullable(parent) && (result.type === DiffType.Changed || result.type === DiffType.Removed || result.type === DiffType.Added)) {
+      const containerUid = parent.oldItem.uid;
+      const current = acc[containerUid] ?? { parent, items: [] };
+      current.items = current.items.concat([ result ]);
+      acc[containerUid] = current;
+      return acc;
+    } else {
+      return { ...acc, ...getChangedComponents(result) };
+    }
+  }, {});
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
 const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
-  const renderComponents = (body: Dialog.Dialog<unknown>['body']) => {
+  const renderComponents = (body: Body) => {
     switch (body.type) {
       case 'tabpanel': {
-        return [
-          renderTabPanel(body, backstage)
-        ];
+        return renderTabPanel(body, backstage);
       }
 
       default: {
-        return [
-          renderBodyPanel(body, backstage)
-        ];
+        return renderBodyPanel(body, backstage);
       }
     }
   };
 
-  const updateState = (comp: AlloyComponent, data: WindowBodySpec, _state: Optional<BodyState>) => {
+  const updateFormState = (form: AlloyComponent, items: Diff.DiffResult<any>[]) => {
+    // TODO: This needs to handle adding child components to the form as well
+    Form.clearFields(form);
+    const remainingItems = Arr.filter(items, (item) => item.type !== DiffType.Removed);
+    // Process added/updated fields
+    Arr.each(remainingItems, ({ item }) => {
+      Form.addField(form, item.name, item);
+    });
+  };
+
+  const partialRenderComponents = (comp: AlloyComponent, diff: Diff.DiffResult<Body, Dialog.BodyComponent | Dialog.Tab>) => {
+    const form = Composing.getCurrent(comp).bind(Composing.getCurrent).getOr(comp);
+    const changed = getChangedComponents(diff);
+
+    const interpreter = backstage.shared.interpreter;
+
+    Obj.each(changed, (detail, uid) => {
+      lookupByUid(comp, uid).each((container) => {
+        const newItems = Arr.bind(detail.parent.items, (item) => {
+          if (item.type === DiffType.Unchanged) {
+            // mutate the spec uid to re-use the old uid
+            item.item.uid = item.oldItem.uid;
+            // TODO: This lookup doesn't really work because named fields get their uid overwritten by the form parts
+            return [ lookupByUid(comp, item.item.uid).map(GuiFactory.premade).getOrThunk(() => interpreter(item.item)) ];
+          } else if (item.type === DiffType.Removed) {
+            return [];
+          } else {
+            return [ interpreter(item.item) ];
+          }
+        });
+        Replacing.set(container, newItems);
+        // TODO: Should these just be added when rendered by the interpreter instead?
+        updateFormState(form, detail.items);
+      });
+    });
+  };
+
+  const updateState = (comp: AlloyComponent, data: WindowBodySpec, state: Optional<BodyState>) => {
     const body = data.body;
 
-    // TODO: TINY-8334 Diff changes and re-render only what's needed
-    Replacing.set(comp, renderComponents(body));
+    const render = () => Replacing.set(comp, [ renderComponents(body) ]);
+    state.fold(render, (s) => {
+      const diff = Diff.diffBody(body, s.body);
+      if (diff.type === DiffType.Unchanged) {
+        // mutate the spec uid to re-use the old uid
+        body.uid = diff.oldItem.uid;
+        lookupByUid(comp, body.uid).fold(render, Fun.noop);
+      } else if (diff.type === DiffType.ChildrenChanged) {
+        partialRenderComponents(comp, diff);
+      } else {
+        render();
+      }
+    });
 
     return Optional.some({
+      body,
       isTabPanel: () => body.type === 'tabpanel'
     });
   };

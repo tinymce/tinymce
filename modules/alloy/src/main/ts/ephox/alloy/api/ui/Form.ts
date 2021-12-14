@@ -86,12 +86,24 @@ const make = (detail: FormDetail, components: AlloySpec[]) => ({
     getField: (form: AlloyComponent, key: string) => {
       // Returns an Optional (not a result);
       return AlloyParts.getPart(form, detail, key).bind(Composing.getCurrent);
+    },
+    removeField: (form: AlloyComponent, key: string) => {
+      delete detail.partUids[key];
+    },
+    addField: (form: AlloyComponent, key: string, spec: SketchSpec) => {
+      detail.partUids[key] = spec.uid;
+    },
+    clearFields: (_form: AlloyComponent) => {
+      detail.partUids = {};
     }
   }
 });
 
 const Form = {
   getField: GuiTypes.makeApi((apis: FormApis, component: AlloyComponent, key: string) => apis.getField(component, key)),
+  removeField: GuiTypes.makeApi((apis: FormApis, component: AlloyComponent, key: string) => apis.removeField(component, key)),
+  addField: GuiTypes.makeApi((apis: FormApis, component: AlloyComponent, key: string, spec: SketchSpec) => apis.addField(component, key, spec)),
+  clearFields: GuiTypes.makeApi((apis: FormApis, form: AlloyComponent) => apis.clearFields(form)),
   sketch
 } as FormSketcher;
 

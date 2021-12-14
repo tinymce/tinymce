@@ -6,75 +6,123 @@
  */
 
 import { Dialog } from '@ephox/bridge';
-import { Arr, Obj } from '@ephox/katamari';
+import { Eq } from '@ephox/dispute';
+import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 
-type Component = Dialog.DialogFooterButton | Dialog.BodyComponent;
+type Component = Dialog.DialogFooterButton | Dialog.BodyComponent | Dialog.Tab;
+type Body = Dialog.Dialog<unknown>['body'];
 
 export enum DiffType {
   Unchanged,
   Changed,
-  Replaced,
+  ChildrenChanged,
   Added,
   Removed
 }
 
-type GenericDiffType = DiffType.Replaced | DiffType.Unchanged | DiffType.Changed;
+type GenericDiffType = DiffType.Unchanged | DiffType.Changed | DiffType.ChildrenChanged ;
 
-interface GenericDiffResult<T> {
+interface BaseDiffResult<T, I> {
+  readonly type: DiffType;
+  readonly item: T;
+  readonly items: DiffResult<I>[];
+  parent?: GenericDiffResult<ContainerComponent | Dialog.TabPanel>;
+}
+
+export interface GenericDiffResult<T, I = Dialog.BodyComponent> extends BaseDiffResult<T, I> {
   readonly type: GenericDiffType;
-  readonly item: T;
   readonly oldItem: T;
-  readonly items: DiffResult<Dialog.BodyComponent>[];
 }
 
-interface AddedRemovedDiffResult<T> {
+export interface AddedRemovedDiffResult<T, I = Dialog.BodyComponent> extends BaseDiffResult<T, I> {
   readonly type: DiffType.Added | DiffType.Removed;
-  readonly item: T;
-  readonly items: DiffResult<Dialog.BodyComponent>[];
 }
 
-export type DiffResult<T> = GenericDiffResult<T> | AddedRemovedDiffResult<T>;
+export type DiffResult<T, I = Dialog.BodyComponent> = GenericDiffResult<T, I> | AddedRemovedDiffResult<T, I>;
 
-const nestedComponentTypes = new Set([
+export type ContainerComponent = Dialog.Panel | Dialog.Bar | Dialog.Grid | Dialog.Label | Dialog.Tab;
+const containerComponentTypes = new Set([
   'panel',
+  'tabpanel',
   'bar',
   'grid',
-  'label'
+  'label',
+  'tab'
 ]);
 
-const hasItems = (comp: Component): comp is Dialog.Panel | Dialog.Bar | Dialog.Grid | Dialog.Label =>
-  nestedComponentTypes.has(comp.type) && Obj.has(comp as Record<string, any>, 'items');
+const isContainer = (comp: Component | Dialog.TabPanel): comp is ContainerComponent | Dialog.TabPanel =>
+  containerComponentTypes.has(comp.type);
 
-const createResult = <T>(type: GenericDiffType, item: T, oldItem: T, items: DiffResult<Dialog.BodyComponent>[] = []): GenericDiffResult<T> => ({
-  type,
-  item,
-  oldItem,
-  items
-});
+const hasChildren = (comp: Component): comp is ContainerComponent =>
+  isContainer(comp) && Obj.has(comp as Record<string, any>, 'items');
 
-const createAddedRemovedResult = <T extends Component>(type: DiffType.Added | DiffType.Removed, item: T): AddedRemovedDiffResult<T> => ({
+const genericResult = <T, U>(type: GenericDiffType, item: T, oldItem: T, items: DiffResult<U>[] = []): GenericDiffResult<T, U> => {
+  const result = {
+    type,
+    item,
+    oldItem,
+    items
+  };
+
+  Arr.each(result.items, (item) => {
+    // If we have items then the result item is guaranteed to be a container
+    item.parent = result as any;
+  });
+
+  return result;
+};
+
+const addedRemovedResult = <T>(type: DiffType.Added | DiffType.Removed, item: T): AddedRemovedDiffResult<T> => ({
   type,
   item,
   items: []
 });
 
+const eq = (a: any, b: any): boolean => {
+  // Need a special case for optionals here
+  if (Type.is(a, Optional) && Type.is(b, Optional)) {
+    return Optionals.equals(a, b);
+  } else {
+    return Eq.eqAny.eq(a, b);
+  }
+};
+
+const ignoredKeys = new Set([
+  'uid',
+  'items',
+  'tabs'
+]);
+
 const hasDifferentProps = (comp1: Record<string, any>, comp2: Record<string, any>) =>
-  Obj.find(comp1, (_, key) => key !== 'uid' && !Obj.has(comp2, key)).isSome();
+  Obj.find(comp1, (_, key) => !ignoredKeys.has(key) && !Obj.has(comp2, key)).isSome();
 
 const hasDifferentValues = (comp1: Record<string, any>, comp2: Record<string, any>) =>
-  Obj.find(comp1, (value, key) => key !== 'uid' && comp2[key] !== value).isSome();
+  Obj.find(comp1, (value, key) => !ignoredKeys.has(key) && !eq(comp2[key], value)).isSome();
+
+// Check if any of the properties and their values are different
+const hasChanges = (newComp: Record<string, any>, oldComp: Record<string, any>) =>
+  hasDifferentProps(newComp, oldComp) || hasDifferentProps(oldComp, newComp) || hasDifferentValues(newComp, oldComp);
+
+const hasChildChanges = <T>(results: DiffResult<T>[]): boolean =>
+  Arr.exists(results, (result) => result.type !== DiffType.Unchanged);
+
+const generateDiff = <T, U>(item: T, oldItem: T, childDiffs: DiffResult<U>[]): GenericDiffResult<T, U> => {
+  const childType = hasChildChanges(childDiffs) ? DiffType.ChildrenChanged : DiffType.Unchanged;
+  const type = hasChanges(item, oldItem) ? DiffType.Changed : childType;
+  return genericResult(type, item, oldItem, childDiffs);
+};
 
 export const diffItems = <T extends Component>(newItems: T[], oldItems: T[]): DiffResult<T>[] => {
   const results = Arr.map(newItems, (newItem, index) =>
     Arr.get(oldItems, index).fold(
-      () => createAddedRemovedResult(DiffType.Added, newItem),
+      () => addedRemovedResult(DiffType.Added, newItem),
       (oldItem) => diffComponent(newItem, oldItem)
     )
   );
 
   if (oldItems.length > newItems.length) {
     Arr.each(oldItems.slice(newItems.length), (oldItem) => {
-      results.push(createAddedRemovedResult(DiffType.Removed, oldItem));
+      results.push(addedRemovedResult(DiffType.Removed, oldItem));
     });
   }
 
@@ -82,16 +130,24 @@ export const diffItems = <T extends Component>(newItems: T[], oldItems: T[]): Di
 };
 
 export const diffComponent = <T extends Component>(newComp: T, oldComp: T): DiffResult<T> => {
-  // If the types are different then we have a new component
+  // If the types are different then we have a new component so don't look at the children
   if (newComp.type !== oldComp.type) {
-    return createResult(DiffType.Replaced, newComp, oldComp);
+    return genericResult(DiffType.Changed, newComp, oldComp);
+  } else if (hasChildren(newComp) && hasChildren(oldComp)) {
+    const childResults = diffItems(newComp.items, oldComp.items);
+    return generateDiff(newComp, oldComp, childResults);
   } else {
-    // Check if any of the properties and their values are different
-    const hasChanged = hasDifferentProps(newComp, oldComp) || hasDifferentProps(oldComp, newComp) || hasDifferentValues(newComp, oldComp);
-    const type = hasChanged ? DiffType.Changed : DiffType.Unchanged;
+    return generateDiff(newComp, oldComp, []);
+  }
+};
 
-    // If there were child items then diff them as well
-    const childResults = hasItems(newComp) && hasItems(oldComp) ? diffItems(newComp.items, oldComp.items) : [];
-    return createResult(type, newComp, oldComp, childResults);
+export const diffBody = (newBody: Body, oldBody: Body): DiffResult<Body, Dialog.BodyComponent | Dialog.Tab> => {
+  if (newBody.type === 'panel' && oldBody.type === 'panel') {
+    return diffComponent(newBody, oldBody);
+  } else if (newBody.type === 'tabpanel' && oldBody.type === 'tabpanel') {
+    const childResults = diffItems(newBody.tabs, oldBody.tabs);
+    return generateDiff(newBody, oldBody, childResults);
+  } else {
+    return genericResult(DiffType.Changed, newBody, oldBody);
   }
 };
