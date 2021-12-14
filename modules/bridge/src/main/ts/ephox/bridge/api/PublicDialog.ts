@@ -16,7 +16,6 @@ import { GridSpec } from '../components/dialog/Grid';
 import { HtmlPanelSpec } from '../components/dialog/HtmlPanel';
 import { IframeSpec } from '../components/dialog/Iframe';
 import { ImagePanelSpec } from '../components/dialog/ImagePanel';
-import { ImageToolsSpec } from '../components/dialog/ImageTools';
 import { InputSpec } from '../components/dialog/Input';
 import { LabelSpec } from '../components/dialog/Label';
 import { ListBoxItemSpec, ListBoxSpec, ListBoxSingleItemSpec, ListBoxNestedItemSpec } from '../components/dialog/ListBox';
@@ -73,8 +72,6 @@ export {
   IframeSpec,
 
   ImagePanelSpec,
-
-  ImageToolsSpec,
 
   InputSpec,
 

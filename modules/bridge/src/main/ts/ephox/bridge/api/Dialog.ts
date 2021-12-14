@@ -22,7 +22,6 @@ import { createGridFields, Grid, GridSpec } from '../components/dialog/Grid';
 import { createHtmlPanel, HtmlPanel, HtmlPanelSpec } from '../components/dialog/HtmlPanel';
 import { createIframe, Iframe, IframeSpec } from '../components/dialog/Iframe';
 import { ImagePanel, ImagePanelSpec } from '../components/dialog/ImagePanel';
-import { createImageTools, ImageTools, ImageToolsSpec, ImageToolsState } from '../components/dialog/ImageTools';
 import { createInput, Input, InputSpec } from '../components/dialog/Input';
 import { createLabelFields, Label, LabelSpec } from '../components/dialog/Label';
 import {
@@ -127,11 +126,6 @@ export {
 
   ImagePanel,
   ImagePanelSpec,
-
-  ImageTools,
-  ImageToolsSpec,
-  ImageToolsState,
-  createImageTools,
 
   Input,
   InputSpec,

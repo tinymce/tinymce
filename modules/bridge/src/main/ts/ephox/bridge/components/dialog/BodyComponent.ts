@@ -11,7 +11,6 @@ import { Grid, GridSpec } from './Grid';
 import { HtmlPanel, HtmlPanelSpec } from './HtmlPanel';
 import { Iframe, IframeSpec } from './Iframe';
 import { ImagePanel, ImagePanelSpec } from './ImagePanel';
-import { ImageTools, ImageToolsSpec } from './ImageTools';
 import { Input, InputSpec } from './Input';
 import { Label, LabelSpec } from './Label';
 import { ListBox, ListBoxSpec } from './ListBox';
@@ -41,7 +40,6 @@ export type BodyComponentSpec
   | GridSpec
   | ColorPickerSpec
   | ImagePanelSpec
-  | ImageToolsSpec
   | AlertBannerSpec
   | CollectionSpec
   | LabelSpec
@@ -67,7 +65,6 @@ export type BodyComponent
   | Grid
   | ColorPicker
   | ImagePanel
-  | ImageTools
   | AlertBanner
   | Collection
   | Label
