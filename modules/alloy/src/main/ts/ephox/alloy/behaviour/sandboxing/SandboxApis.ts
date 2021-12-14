@@ -20,6 +20,7 @@ const rebuild = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: San
   Attachment.attach(point, sandbox);
 
   // Must be after the sandbox is in the system
+  // CONSIDER finding a way to use buildOrPatch here.
   const built = sandbox.getSystem().build(data);
   Attachment.attach(sandbox, built);
   sState.set(built);

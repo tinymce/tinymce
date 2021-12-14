@@ -9,6 +9,35 @@ const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
   attachWith(parent, child, Insert.append);
 };
 
+// Unike attach, a virtualAttach makes no actual DOM changes.
+// This is because it should only be used in a situation
+// where we are patching an existing element.
+const virtualAttach = (parent: AlloyComponent, child: AlloyComponent): void => {
+  // The original vdom spike didn't syncComponents afterwards.
+  // I'm not sure if that is important.
+
+  // So we still add it to the world
+  parent.getSystem().addToWorld(child);
+  // And we fire attaching ONLY if it's already in the DOM
+  if (SugarBody.inBody(parent.element)) {
+    InternalAttachment.fireAttaching(child);
+  }
+};
+
+// Unlike detach, a virtualDetach makes no actual DOM changes.
+// This is because it's used in patching circumstances.
+const doVirtualDetach = (comp: AlloyComponent): void => {
+  InternalAttachment.fireDetaching(comp);
+  comp.getSystem().removeFromWorld(comp);
+};
+
+const virtualDetachChildren = (comp: AlloyComponent): void => {
+  // This will not detach the component, but will detach
+  // its children (virtually) and sync at the end.
+  const subs = comp.components();
+  Arr.each(subs, doVirtualDetach);
+};
+
 const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: SugarElement<Node>, child: SugarElement<Node>) => void): void => {
   parent.getSystem().addToWorld(child);
   insertion(parent.element, child.element);
@@ -75,5 +104,8 @@ export {
   attachSystem,
   attachSystemAfter,
 
-  detachSystem
+  detachSystem,
+
+  virtualAttach,
+  virtualDetachChildren
 };

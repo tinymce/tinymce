@@ -1,6 +1,6 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun, Obj, Optional, Result } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, Traverse } from '@ephox/sugar';
 
 import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
@@ -12,16 +12,22 @@ import * as Component from './Component';
 import { AlloyComponent } from './ComponentApi';
 import { AlloySpec, PremadeSpec, SimpleOrSketchSpec, SketchSpec } from './SpecTypes';
 
-const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
+const buildSubcomponents = (spec: SimpleOrSketchSpec, obsoleted: Optional<SugarElement<Node>>): AlloyComponent[] => {
   const components = Obj.get(spec, 'components').getOr([ ]);
-  return Arr.map(components, build);
+
+  return obsoleted.fold(
+    () => Arr.map(components, build),
+    (obs) => Arr.map(components, (c, i) => {
+      return buildOrPatch(c, Traverse.child(obs, i));
+    })
+  );
 };
 
-const buildFromSpec = (userSpec: SketchSpec): Result<AlloyComponent, string> => {
+const buildFromSpec = (userSpec: SketchSpec, obsoleted: Optional<SugarElement<Node>>): Result<AlloyComponent, string> => {
   const { events: specEvents, ...spec }: SketchSpec = CustomSpec.make(userSpec);
 
   // Build the subcomponents. A spec hierarchy is built from the bottom up.
-  const components: AlloyComponent[] = buildSubcomponents(spec);
+  const components: AlloyComponent[] = buildSubcomponents(spec, obsoleted);
 
   const completeSpec = {
     ...spec,
@@ -31,7 +37,7 @@ const buildFromSpec = (userSpec: SketchSpec): Result<AlloyComponent, string> => 
 
   return Result.value(
     // Note, this isn't a spec any more, because it has built children
-    Component.build(completeSpec)
+    Component.build(completeSpec, obsoleted)
   );
 };
 
@@ -94,19 +100,24 @@ const isSketchSpec = (spec: AlloySpec): spec is SketchSpec =>
   Obj.has(spec as SimpleOrSketchSpec, 'uid');
 
 // INVESTIGATE: A better way to provide 'meta-specs'
-const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).getOrThunk(() => {
+const buildOrPatch = (spec: AlloySpec, obsoleted: Optional<SugarElement<Node>>): AlloyComponent => GuiTypes.getPremade(spec).getOrThunk(() => {
   // EFFICIENCY: Consider not merging here, and passing uid through separately
   const userSpecWithUid = isSketchSpec(spec) ? spec : {
     uid: uids(''),
     ...spec
   } as SketchSpec;
-  return buildFromSpec(userSpecWithUid).getOrDie();
+  return buildFromSpec(userSpecWithUid, obsoleted).getOrDie();
 });
+
+const build = (spec: AlloySpec): AlloyComponent => {
+  return buildOrPatch(spec, Optional.none());
+};
 
 const premade = GuiTypes.premade;
 
 export {
   build,
+  buildOrPatch,
   premade,
   external,
   text

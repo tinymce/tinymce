@@ -4,19 +4,16 @@ import { Compare, Insert, SugarElement } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as Attachment from '../../api/system/Attachment';
-import * as AriaFocus from '../../aria/AriaFocus';
-import * as InternalAttachment from '../../system/InternalAttachment';
 import { Stateless } from '../common/BehaviourState';
+import { withoutReuse, withReuse } from './ReplacingAll';
 import { ReplacingConfig } from './ReplacingTypes';
 
 const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void => {
   // NOTE: we may want to create a behaviour which allows you to switch
   // between predefined layouts, which would make a noop detection easier.
   // Until then, we'll just use AriaFocus like redesigning does.
-  AriaFocus.preserve(() => {
-    const newChildren = Arr.map(data, component.getSystem().build);
-    InternalAttachment.replaceChildren(component, newChildren);
-  }, component.element);
+  const replacer = replaceConfig.reuseDom ? withReuse : withoutReuse;
+  return replacer(component, data);
 };
 
 const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement<Node>, c: SugarElement<Node>) => void, childSpec: AlloySpec): void => {
