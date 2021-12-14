@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `mceAutocompleterClose`, `mceAutocompleterReload` commands #TINY-8279
 - New `slider` dialog component #TINY-8304
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
+- New `imagepanel` dialog component, allowing preview and zoom of any image URL #TINY-8333
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
@@ -60,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
+- Removed the `imagetools` dialog component #TINY-8333
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `tabfocus` plugin #TINY-8315
