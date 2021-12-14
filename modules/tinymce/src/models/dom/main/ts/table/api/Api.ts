@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+// TODO: Remove file once fakeClipboard is moved to core
+
 import { Clipboard as FakeClipboard } from './Clipboard';
 
 export interface Api {

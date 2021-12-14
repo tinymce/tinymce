@@ -10,6 +10,7 @@ import ModelManager, { Model } from 'tinymce/core/api/ModelManager';
 
 import * as Table from './table/Table';
 
+// TODO: Remove table API once fakeClipboard can be removed
 const DomModel = (editor: Editor): Model => {
   const tableApi = Table.setupTable(editor);
 

@@ -11,6 +11,8 @@ import { SugarElement, SugarElements } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/api/Clipboard';
 
+// TODO: Remove this file once clipboard is moved to core
+
 export interface Api {
   readonly setClipboardRows: (rows: Array<HTMLTableRowElement | HTMLTableColElement>) => void;
   readonly getClipboardRows: () => Array<HTMLTableRowElement | HTMLTableColElement>;
@@ -28,7 +30,6 @@ const setClipboardElements = <T extends HTMLElement>(setClipboard: (elems: Optio
   setClipboard(elmsOpt);
 };
 
-// TODO: Want to move insertTable and clipboard API into core directly
 const getApi = (_editor: Editor, clipboard: FakeClipboard): Api => ({
   setClipboardRows: setClipboardElements(clipboard.setRows),
   getClipboardRows: getClipboardElements(clipboard.getRows),

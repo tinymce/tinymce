@@ -5,12 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-// import { Api } from 'tinymce/models/dom/table/api/Api';
-
 import AddOnManager from './AddOnManager';
 
+// TODO: Remove table prop once fake clipboard handling is figured out
 export interface Model {
-  // TODO: Figure out best way to add type for table API exposed by model
   table: any;
 }
 

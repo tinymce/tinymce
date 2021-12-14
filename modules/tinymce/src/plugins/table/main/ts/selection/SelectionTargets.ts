@@ -16,8 +16,8 @@ import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from './TableSelection';
 
- type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
- type UiToggleApi = Menu.ToggleMenuItemInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi;
+type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
+type UiToggleApi = Menu.ToggleMenuItemInstanceApi | Toolbar.ToolbarToggleButtonInstanceApi;
 
 /*
  onAny - disable if any column in the selection is locked
@@ -29,7 +29,7 @@ export const enum LockedDisable {
   onFirst = 'onFirst',
   onLast = 'onLast'
 }
- type LockedDisableStrs = keyof typeof LockedDisable;
+type LockedDisableStrs = keyof typeof LockedDisable;
 
 export interface SelectionTargets {
   readonly onSetupTable: (api: UiApi) => () => void;
@@ -52,7 +52,7 @@ interface ExtractedSelectionDetails {
   readonly locked: Record<LockedDisableStrs, boolean>;
 }
 
- type TargetSetupCallback = (targets: RunOperation.CombinedTargets) => boolean;
+type TargetSetupCallback = (targets: RunOperation.CombinedTargets) => boolean;
 
 export const getSelectionTargets = (editor: Editor): SelectionTargets => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
