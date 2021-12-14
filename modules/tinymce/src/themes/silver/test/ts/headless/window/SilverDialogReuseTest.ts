@@ -15,7 +15,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogTest', () => {
   const store = TestHelpers.TestStore();
   const helpers = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
-  let dialogApi: Dialog.DialogInstanceApi<any>;
+  let dialogApi: Dialog.DialogInstanceApi<{ fred: string; wilma?: string }>;
   before(() => {
     windowManager = WindowManager.setup(helpers.extras());
   });
@@ -77,7 +77,8 @@ describe('headless.tinymce.themes.silver.window.SilverDialogTest', () => {
       }
     );
 
-    console.log("Preactive: ", Focus.active().getOrDie().dom);
+    // eslint-disable-next-line no-console
+    console.log('Preactive: ', Focus.active().getOrDie().dom);
 
     dialogApi.redial({
       title: 'Silver Test Modal Dialog',
@@ -110,7 +111,8 @@ describe('headless.tinymce.themes.silver.window.SilverDialogTest', () => {
       'input'
     );
 
-    console.log("active", Focus.active().getOrDie().dom);
+    // eslint-disable-next-line no-console
+    console.log('active', Focus.active().getOrDie().dom);
     assert.equal((Focus.active().getOrDie('Focused element').dom as any).GOOSE, 'goose');
 
     assert.deepEqual(dialogApi.getData(), {

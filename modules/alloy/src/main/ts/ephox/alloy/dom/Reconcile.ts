@@ -1,14 +1,13 @@
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import { Attribute, Classes, Css, Html, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Tagger from '../registry/Tagger';
 import { DomDefinitionDetail } from './DomDefinition';
 import { patchChildren } from './Patching';
 
-
 interface KeyValueDiff {
-  toSet: Record<string, string>;
-  toRemove: string[];
+  readonly toSet: Record<string, string>;
+  readonly toRemove: string[];
 }
 
 const diffKeyValueSet = (newObj: Record<string, string>, oldObj: Record<string, string>): KeyValueDiff => {
@@ -16,7 +15,7 @@ const diffKeyValueSet = (newObj: Record<string, string>, oldObj: Record<string, 
   const oldKeys = Obj.keys(oldObj);
   const toRemove = Arr.difference(oldKeys, newKeys);
   const toSet = Obj.bifilter(newObj, (v, k) => {
-    return !oldObj.hasOwnProperty(k) || v !== oldObj[k];
+    return !Obj.has(oldObj, k) || v !== oldObj[k];
   }).t;
 
   return { toRemove, toSet };
@@ -47,10 +46,10 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
   const updateHtml = () => {
     // Let's simplify ... don't support virtual DOM diffing if mixing HTML and children. Let's
     // just stop supporting that. If innerHtml is supplied, no child components.
-    // Very experimental. If something doesn't have a UID, assume it was part of innerHTML
+    // Very experimental. If something doesn't have a tagged UID, assume it was part of innerHTML
     const childrenOfObsolete = Traverse.children(obsoleted);
 
-    if (Arr.forall(childrenOfObsolete, (c) => !SugarNode.isElement(c) || !Attribute.has(c, 'data-alloy-id')) && definition.domChildren.length === 0) {
+    if (Arr.forall(childrenOfObsolete, (c) => Tagger.read(c).isNone()) && definition.domChildren.length === 0) {
       Html.set(obsoleted, definition.innerHtml.getOr(''));
     } else {
       // Do nothing

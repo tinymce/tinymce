@@ -4,7 +4,6 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
-// import * as InternalAttachment from '../../system/InternalAttachment';
 import { withReuse } from '../replacing/ReplacingAll';
 import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 
@@ -19,11 +18,7 @@ const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState:
     reflectingConfig.renderComponents.each((renderComponents) => {
       const newComponents = renderComponents(data, reflectingState.get());
 
-      console.log("Goose");
-
       withReuse(component, newComponents);
-      // const newChildren = Arr.map(newComponents, component.getSystem().build);
-      // InternalAttachment.replaceChildren(component, newChildren);
     });
   };
 

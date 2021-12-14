@@ -1,7 +1,7 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Compare, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
-const switchElement = (parent: SugarElement, original: SugarElement, nu: SugarElement) => {
+const switchElement = (parent: SugarElement<Element>, original: SugarElement<Node>, nu: SugarElement<Node>) => {
   // All of this code is trying to handle the situation
   // where there are premades. The problem with premades
   // is that they might have existing DOM elements as their
@@ -9,7 +9,7 @@ const switchElement = (parent: SugarElement, original: SugarElement, nu: SugarEl
   // moving them around. This is all very experimental.
 
   // The thing that we are putting in the DOM already contains
-  // as a descedant the thing that we are replacing.
+  // as a descendant the thing that we are replacing.
   if (Compare.contains(nu, original)) {
     // Because the original is going to be removed when we
     // try to add the new one, we want to find a way to add
@@ -35,36 +35,36 @@ const switchElement = (parent: SugarElement, original: SugarElement, nu: SugarEl
 };
 
 /*
-    * What is going on here, you ask?
-    *
-    * During patching, it is quite possible that an element is going to
-    * be replaced by something which has the replacee as a child. In this
-    * situation, we cannot insert before it, because it is already in the
-    * tree. Therefore, we have to remove it first.
-    *
-    * I'm not sure whether we should just always do it in that order. There
-    * is probably no harm, and it is likely a lot safer.
-    *
-    * However, this is going to fail in situations where the thing that is
-    * getting put in new is not the obsoleted child, but a child further away.
-    * Although, maybe the DOM just handles that? Let's see if we can get a test
-    * case. It looks like the DOM handles most things that aren't insertBefore.
-    * Though, I'm not sure about that.
-    *
-    * Let's run tests
-    *
-    */
+ * What is going on here, you ask?
+ *
+ * During patching, it is quite possible that an element is going to
+ * be replaced by something which has the replacee as a child. In this
+ * situation, we cannot insert before it, because it is already in the
+ * tree. Therefore, we have to remove it first.
+ *
+ * I'm not sure whether we should just always do it in that order. There
+ * is probably no harm, and it is likely a lot safer.
+ *
+ * However, this is going to fail in situations where the thing that is
+ * getting put in new is not the obsoleted child, but a child further away.
+ * Although, maybe the DOM just handles that? Let's see if we can get a test
+ * case. It looks like the DOM handles most things that aren't insertBefore.
+ * Though, I'm not sure about that.
+ *
+ * Let's run tests
+ *
+ */
 const patchChildren = <T, C>(
   nu: T[],
   process: (t: T, i: number, optObs: Optional<SugarElement<Node>>) => C,
-  toDom: (c: C) => SugarElement,
-  parent: SugarElement
+  toDom: (c: C) => SugarElement<Node>,
+  parent: SugarElement<Element>
 ): C[] => {
   const builtChildren = Arr.map(nu, (n, i) => {
     // Before building anything, this is the DOM element
-    // we are going to try to use.yhu
+    // we are going to try to use.
     const oldObsoleted = Traverse.child(parent, i);
-    const childC: C = process(n, i, oldObsoleted);
+    const childC = process(n, i, oldObsoleted);
     const child = toDom(childC);
 
     // When dealing with premades, the process of building

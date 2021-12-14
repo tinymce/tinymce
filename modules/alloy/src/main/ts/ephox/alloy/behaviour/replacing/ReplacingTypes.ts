@@ -21,5 +21,4 @@ export interface ReplacingConfigSpec extends Behaviour.BehaviourConfigSpec {
 
 export interface ReplacingConfig extends Behaviour.BehaviourConfigDetail {
   reuseDom: boolean;
-  // Intentionally Blank
 }

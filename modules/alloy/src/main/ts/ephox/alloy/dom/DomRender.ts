@@ -32,18 +32,21 @@ const introduceToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarE
 
 const attemptPatch = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>, obsoleted: SugarElement<Element>): Optional<SugarElement<Element>> => {
   try {
-    console.log("attempting to patch", obsoleted.dom);
+    // eslint-disable-next-line no-console
+    console.log('attempting to patch', obsoleted.dom);
     const e = reconcileToDom(definition, obsoleted);
+    // eslint-disable-next-line no-console
     console.log('success patching');
     return Optional.some(e);
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('err', err);
     return Optional.none();
   }
 };
 
 const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>, optObsoleted: Optional<SugarElement<any>>): SugarElement<any> => {
-  const isSameTag = (candidate: SugarElement<any>) => {
+  const isSameTag = (candidate: SugarElement<Node>) => {
     return SugarNode.name(candidate) === definition.tag;
   };
 
