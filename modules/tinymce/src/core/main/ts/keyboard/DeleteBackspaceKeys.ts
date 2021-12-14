@@ -20,6 +20,7 @@ import * as InlineFormatDelete from '../delete/InlineFormatDelete';
 import * as MediaDelete from '../delete/MediaDelete';
 import * as Outdent from '../delete/Outdent';
 import * as TableDelete from '../delete/TableDelete';
+import { fireFakeInputEvent } from './FakeInputEvents';
 import * as MatchKeys from './MatchKeys';
 
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
@@ -43,8 +44,9 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     { keyCode: VK.DELETE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) }
-  ], evt).each((_) => {
+  ], evt).each((value) => {
     evt.preventDefault();
+    fireFakeInputEvent(editor, value.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward');
   });
 };
 

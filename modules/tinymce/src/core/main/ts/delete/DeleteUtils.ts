@@ -9,10 +9,19 @@ import { Optional, Optionals } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isListItem, isTextBlock } from '../dom/ElementType';
 import * as InlineUtils from '../keyboard/InlineUtils';
+
+const execDeleteCommand = (editor: Editor) => {
+  // We need to prevent the input event from being fired by execCommand when delete is used internally
+  const inputBlocker = (e: EditorEvent<InputEvent>) => e.stopImmediatePropagation();
+  editor.on('input', inputBlocker, true);
+  editor.execCommand('Delete');
+  editor.off('input', inputBlocker);
+};
 
 const isBeforeRoot = (rootNode: SugarElement<Node>) => (elm: SugarElement<Node>): boolean =>
   Compare.eq(rootNode, SugarElement.fromDom(elm.dom.parentNode));
@@ -62,6 +71,7 @@ const willDeleteLastPositionInElement = (forward: boolean, fromPos: CaretPositio
     }).getOr(true);
 
 export {
+  execDeleteCommand,
   getParentBlock,
   paddEmptyBody,
   willDeleteLastPositionInElement
