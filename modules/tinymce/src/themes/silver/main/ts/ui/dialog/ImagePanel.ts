@@ -80,23 +80,27 @@ export const renderImagePanel = (spec: ImagePanelSpec): SimpleSpec => {
 
   const setValue = (frameComponent: AlloyComponent, data: ImagePanelData) => {
     const repaintImg = (img) => {
-      const zoom = data.zoom.getOrThunk(() => {
-        const z = zoomToFit(frameComponent.element, img);
-        data.zoom = Optional.some(z);
-        return z;
+      // Ensure the component hasn't been removed while the image was loading
+      // if it is disconnected, just do nothing
+      if (frameComponent.getSystem().isConnected()) {
+        const zoom = data.zoom.getOrThunk(() => {
+          const z = zoomToFit(frameComponent.element, img);
+          data.zoom = Optional.some(z);
+          return z;
+        }
+        );
+        const position = calculateImagePosition(
+          Width.get(frameComponent.element),
+          Height.get(frameComponent.element),
+          img.dom.naturalWidth,
+          img.dom.naturalHeight,
+          zoom
+        );
+        memContainer.getOpt(frameComponent).each((container) => {
+          Css.setAll(container.element, position);
+        });
+        cachedData.set(data);
       }
-      );
-      const position = calculateImagePosition(
-        Width.get(frameComponent.element),
-        Height.get(frameComponent.element),
-        img.dom.naturalWidth,
-        img.dom.naturalHeight,
-        zoom
-      );
-      memContainer.getOpt(frameComponent).each((container) => {
-        Css.setAll(container.element, position);
-      });
-      cachedData.set(data);
     };
 
     memImage.getOpt(frameComponent).each((imageComponent) => {
