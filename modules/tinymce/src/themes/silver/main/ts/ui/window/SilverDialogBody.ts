@@ -32,24 +32,45 @@ interface BodyState {
   readonly isTabPanel: () => boolean;
 }
 
-const lookupByUid = (compInSystem: AlloyComponent, uid: string): Optional<AlloyComponent> =>
-  compInSystem.getSystem().getByUid(uid).toOptional();
+const withNamedItem = (item: Dialog.BodyComponent | Dialog.Tab, f: (name: string) => void) =>
+  Obj.get(item as Record<string, any>, 'name').each(f);
 
-const getChangedComponents = (diff: Diff.DiffResult<any, any>): Record<string, { parent: Diff.GenericDiffResult<any>; items: Diff.DiffResult<any>[] }> =>
-  Arr.foldl(diff.items, (acc, result) => {
-    const parent = result.parent;
-    if (Type.isNonNullable(parent) && (result.type === DiffType.Changed || result.type === DiffType.Removed || result.type === DiffType.Added)) {
-      const containerUid = parent.oldItem.uid;
-      const current = acc[containerUid] ?? { parent, items: [] };
-      current.items = current.items.concat([ result ]);
-      acc[containerUid] = current;
-      return acc;
-    } else if (result.type === DiffType.ChildrenChanged) {
-      return { ...acc, ...getChangedComponents(result) };
-    } else {
-      return acc;
+const isChangedDiff = (diff: Diff.DiffResult<unknown>) =>
+  diff.type === DiffType.Changed || diff.type === DiffType.Removed || diff.type === DiffType.Added;
+
+const getComposedContainer = (comp: AlloyComponent, uid: string) => {
+  // TODO: Should this die if we can't find the container or do something else? maybe it should trigger a full re-render?
+  const container = comp.getSystem().getByUid(uid).getOrDie();
+  return container.hasConfigured(Composing) ? Composing.getCurrent(container).getOr(container) : container;
+};
+
+const isSketchSpec = (spec: AlloySpec): spec is SketchSpec =>
+  Type.isString((spec as SketchSpec).uid);
+
+const patchComponent = (
+  comp: AlloyComponent,
+  form: AlloyComponent,
+  diff: Diff.DiffResult<Dialog.BodyComponent>,
+  index: number,
+  interpreter: (spec: Dialog.BodyComponent) => AlloySpec
+): Dialog.BodyComponent[] => {
+  const patchChildren = (parentComp: AlloyComponent) =>
+    Arr.bind(diff.items, (d, index) => patchComponent(parentComp, form, d, index, interpreter));
+
+  if (diff.type === DiffType.ChildrenChanged) {
+    const oldItem = diff.oldItem;
+    const hasChangedChild = Arr.exists(diff.items, isChangedDiff);
+    const composed = hasChangedChild ? getComposedContainer(comp, oldItem.uid) : comp;
+    return [{ ...oldItem, items: patchChildren(composed) }] as Dialog.BodyComponent[];
+  } else {
+    // Deregister the form component if being removed
+    if (diff.type === DiffType.Removed) {
+      // TODO: This should also clean up child form components when removing
+      withNamedItem(diff.item, (name) => Form.removeField(form, name));
     }
-  }, {});
+    return Diff.applyDiff(comp, diff, index, interpreter);
+  }
+};
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
@@ -68,35 +89,45 @@ const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<
 
   const partialRenderComponents = (comp: AlloyComponent, body: Body, diff: Diff.GenericDiffResult<Body, Dialog.BodyComponent | Dialog.Tab>) => {
     const form = Composing.getCurrent(comp).bind(Composing.getCurrent).getOr(comp);
-    const changed = getChangedComponents(diff);
 
-    const withNamedItem = (item: Dialog.BodyComponent, f: (name: string) => void) =>
-      Obj.get(item as Record<string, any>, 'name').each(f);
-
-    const interpreter = (spec: Dialog.BodyComponent) => {
-      const alloySpec = backstage.shared.interpreter(spec) as SketchSpec;
-      withNamedItem(spec, (name) => Form.addField(form, name, alloySpec));
+    const interpreter = (spec: Dialog.BodyComponent): AlloySpec => {
+      const alloySpec = backstage.shared.interpreter(spec);
+      if (isSketchSpec(alloySpec)) {
+        withNamedItem(spec, (name) => Form.addField(form, name, alloySpec));
+      }
       return alloySpec;
     };
 
-    // TODO: This logic won't work as we need to rebuild the tree by merging the changes
-    // mutate the spec uid to re-use the old uid
-    body.uid = diff.oldItem.uid;
-    Obj.each(changed, (detail, uid) => {
-      lookupByUid(comp, uid).each((container) => {
-        const composed = container.hasConfigured(Composing) ? Composing.getCurrent(container).getOr(container) : container;
-        const newItems = Arr.bind(detail.parent.items, (d, index) => {
-          // Deregister the form component if being removed
-          if (d.type === DiffType.Removed) {
-            withNamedItem(d.item, (name) => Form.removeField(form, name));
-          }
-          return Diff.applyDiff(composed, d, index, interpreter);
-        });
-        console.log(newItems);
+    const patchChildren = (childDiff: Diff.GenericDiffResult<Dialog.Panel | Dialog.Tab>): Dialog.BodyComponent[] => {
+      const composed = getComposedContainer(comp, childDiff.oldItem.uid);
+      return Arr.bind(childDiff.items, (d, index) => {
+        return patchComponent(composed, form, d, index, interpreter);
       });
-    });
+    };
 
-    return body;
+    const oldBody = diff.oldItem;
+    switch (oldBody.type) {
+      case 'tabpanel': {
+        // If a tab has changed we can't currently replace a single tab so we need to rerender the whole lot
+        // TODO: Look at adding a way for tab views to be added/removed/updated
+        const hasChangedTab = Arr.exists(diff.items, isChangedDiff);
+        if (hasChangedTab) {
+          Replacing.set(comp, [ renderComponents(body) ]);
+          return body;
+        } else {
+          return {
+            ...oldBody, tabs: Arr.map(diff.items, (tabDiff) => {
+              const castTabDiff = tabDiff as Diff.GenericDiffResult<Dialog.Tab>;
+              return { ...castTabDiff.oldItem, items: patchChildren(castTabDiff) };
+            })
+          };
+        }
+      }
+
+      case 'panel': {
+        return { ...oldBody, items: patchChildren(diff as Diff.GenericDiffResult<Dialog.Panel>) };
+      }
+    }
   };
 
   const updateState = (comp: AlloyComponent, data: WindowBodySpec, state: Optional<BodyState>) => {

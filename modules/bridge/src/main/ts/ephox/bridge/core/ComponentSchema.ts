@@ -31,7 +31,7 @@ export const defaultedMeta = FieldSchema.defaulted('meta', {});
 export const defaultedOnAction = FieldSchema.defaultedFunction('onAction', Fun.noop);
 export const defaultedType = (type: string): FieldProcessor => FieldSchema.defaultedString('type', type);
 
-export const uid = FieldSchema.customField('uid', () => Id.generate('comp'));
+export const uid = FieldSchema.customField('uid', () => Id.generate('bridge'));
 
 export const generatedName = (namePrefix: string): FieldProcessor =>
   FieldSchema.field(

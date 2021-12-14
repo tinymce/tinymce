@@ -154,7 +154,7 @@ export const diffBody = (newBody: Body, oldBody: Body): DiffResult<Body, Dialog.
 };
 
 export const applyDiff = <T extends Component>(comp: AlloyComponent, diff: DiffResult<T>, index: number, render: (spec: T) => AlloySpec): T[] => {
-  if (diff.type === DiffType.Unchanged) {
+  if (diff.type === DiffType.Unchanged || diff.type === DiffType.ChildrenChanged) {
     // TODO: TINY-8334 Remove this mutation, it's only temporarily needed
     diff.item.uid = diff.oldItem.uid;
     return [ diff.oldItem ];
