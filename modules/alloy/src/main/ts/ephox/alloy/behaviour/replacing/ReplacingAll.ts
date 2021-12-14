@@ -1,10 +1,11 @@
-import { Arr, Optional } from '@ephox/katamari';
-import { Compare, Insert, SugarElement, Traverse } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
+import { Traverse } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as Attachment from '../../api/system/Attachment';
 import * as AriaFocus from '../../aria/AriaFocus';
+import { patchChildren } from '../../dom/Patching';
 import * as InternalAttachment from '../../system/InternalAttachment';
 
 const withoutReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
@@ -15,15 +16,6 @@ const withoutReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
     const newChildren = Arr.map(data, parent.getSystem().build);
     InternalAttachment.replaceChildren(parent, newChildren);
   }, parent.element);
-};
-
-const patchChildren = <T, C>(
-  nu: T[],
-  process: (t: T, i: number, optObs: Optional<AlloyComponent>) => C,
-  toDom: (c: C) => SugarElement,
-  parent: SugarElement
-): C[] => {
-  return [];
 };
 
 const withReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
