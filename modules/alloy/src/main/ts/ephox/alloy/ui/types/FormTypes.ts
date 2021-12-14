@@ -29,7 +29,6 @@ export interface FormApis {
   getField: (form: AlloyComponent, key: string) => Optional<AlloyComponent>;
   addField: (form: AlloyComponent, key: string, spec: SketchSpec) => void;
   removeField: (form: AlloyComponent, key: string) => void;
-  clearFields: (form: AlloyComponent) => void;
 }
 
 export interface FormSketcher extends FormApis {

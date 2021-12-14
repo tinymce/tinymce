@@ -6,17 +6,15 @@
  */
 
 import {
-  AlloyComponent, AlloySpec, Behaviour, Container, DomFactory, GuiFactory, Memento, ModalDialog, Reflecting, Replacing, SketchSpec
+  AlloyComponent, AlloySpec, Behaviour, Container, DomFactory, Memento, ModalDialog, Reflecting, Replacing, SketchSpec
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
 import { footerChannel } from './DialogChannels';
 import * as Diff from './DialogDiff';
-
-const DiffType = Diff.DiffType;
 
 export interface FooterButton {
   readonly detail: AlloySpec;
@@ -39,11 +37,6 @@ const lookupByName = (compInSystem: AlloyComponent, footerButtons: Dialog.Dialog
   Arr.find(footerButtons, (spec) => spec.name === buttonName)
     .bind((spec) => lookupFromSpec(compInSystem, spec));
 
-const makeButton = (spec: Dialog.DialogFooterButton, backstage: UiFactoryBackstage): FooterButton => ({
-  spec,
-  detail: renderFooterButton(spec, spec.type, backstage)
-});
-
 const makeGroup = (edge: string): SketchSpec => Container.sketch({
   dom: {
     tag: 'div',
@@ -55,35 +48,21 @@ const makeGroup = (edge: string): SketchSpec => Container.sketch({
   ])
 });
 
-const replaceButtons = (buttons: FooterButton[]) => (comp: AlloyComponent) =>
-  Replacing.set(comp, Arr.map(buttons, (button) => button.detail));
-
 const renderFooter = (initSpec: WindowFooterSpec, dialogId: string, backstage: UiFactoryBackstage) => {
   const updateState = (comp: AlloyComponent, data: WindowFooterSpec, state: Optional<FooterState>) => {
-    // Generate the alloy specs, making sure to re-use any unchanged buttons
-    const prevButtons = state.map((s) => s.buttons).getOr([]);
-    const diffs = Diff.diffItems(data.buttons, prevButtons);
-    const footerButtons = Arr.map(diffs, (diff) => {
-      const spec = diff.item;
-      if (diff.type === DiffType.Unchanged) {
-        // mutate the spec uid to re-use the old uid
-        spec.uid = diff.oldItem.uid;
-        return lookupFromSpec(comp, spec)
-          .map((buttonComp) => ({ spec, detail: GuiFactory.premade(buttonComp) }))
-          .getOrThunk(() => makeButton(spec, backstage));
-      } else {
-        return makeButton(spec, backstage);
-      }
-    });
-
-    // Replace/render the buttons
-    const buttonGroups = Arr.partition(footerButtons, ({ spec }) => spec.align === 'start');
-    memStartContainer.getOpt(comp).each(replaceButtons(buttonGroups.pass));
-    memEndContainer.getOpt(comp).each(replaceButtons(buttonGroups.fail));
+    const buttons = Optionals.lift2(memStartContainer.getOpt(comp), memEndContainer.getOpt(comp), (start, end) => {
+      // Determine what's changed and apply the changes
+      const prevButtons: Dialog.DialogFooterButton[] = state.map((s) => s.buttons).getOr([]);
+      const diffs = Diff.diffItems(data.buttons, prevButtons);
+      return Arr.bind(diffs, (diff, index) => {
+        const group = diff.item.align === 'start' ? start : end;
+        return Diff.applyDiff(group, diff, index, (spec) => renderFooterButton(spec, spec.type, backstage));
+      });
+    }).getOr(data.buttons);
 
     return Optional.some<FooterState>({
-      lookupByName: (buttonName) => lookupByName(comp, data.buttons, buttonName),
-      buttons: data.buttons
+      lookupByName: (buttonName) => lookupByName(comp, buttons, buttonName),
+      buttons
     });
   };
 

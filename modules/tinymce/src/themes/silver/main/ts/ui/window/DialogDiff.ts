@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { AlloyComponent, AlloySpec, Replacing } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Eq } from '@ephox/dispute';
 import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
@@ -149,5 +150,25 @@ export const diffBody = (newBody: Body, oldBody: Body): DiffResult<Body, Dialog.
     return generateDiff(newBody, oldBody, childResults);
   } else {
     return genericResult(DiffType.Changed, newBody, oldBody);
+  }
+};
+
+export const applyDiff = <T extends Component>(comp: AlloyComponent, diff: DiffResult<T>, index: number, render: (spec: T) => AlloySpec): T[] => {
+  if (diff.type === DiffType.Unchanged) {
+    // TODO: TINY-8334 Remove this mutation, it's only temporarily needed
+    diff.item.uid = diff.oldItem.uid;
+    return [ diff.oldItem ];
+  } else if (diff.type === DiffType.Removed) {
+    Replacing.replaceAt(comp, index, Optional.none());
+    return [];
+  } else {
+    // Generate the new/updated item and then add or replace it
+    const newItem = render(diff.item);
+    if (diff.type === DiffType.Changed) {
+      Replacing.replaceAt(comp, index, Optional.some(newItem));
+    } else {
+      Replacing.append(comp, newItem);
+    }
+    return [ diff.item ];
   }
 };

@@ -6,7 +6,7 @@
  */
 
 import {
-  AlloyComponent, AlloySpec, Behaviour, Composing, Focusing, Form, GuiFactory, Keying, ModalDialog, Reflecting, Replacing, Tabstopping
+  AlloyComponent, AlloySpec, Behaviour, Composing, Focusing, Form, Keying, ModalDialog, Reflecting, Replacing, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
@@ -44,8 +44,10 @@ const getChangedComponents = (diff: Diff.DiffResult<any, any>): Record<string, {
       current.items = current.items.concat([ result ]);
       acc[containerUid] = current;
       return acc;
-    } else {
+    } else if (result.type === DiffType.ChildrenChanged) {
       return { ...acc, ...getChangedComponents(result) };
+    } else {
+      return acc;
     }
   }, {});
 
@@ -64,62 +66,60 @@ const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<
     }
   };
 
-  const updateFormState = (form: AlloyComponent, items: Diff.DiffResult<any>[]) => {
-    // TODO: This needs to handle adding child components to the form as well
-    Form.clearFields(form);
-    const remainingItems = Arr.filter(items, (item) => item.type !== DiffType.Removed);
-    // Process added/updated fields
-    Arr.each(remainingItems, ({ item }) => {
-      Form.addField(form, item.name, item);
-    });
-  };
-
-  const partialRenderComponents = (comp: AlloyComponent, diff: Diff.DiffResult<Body, Dialog.BodyComponent | Dialog.Tab>) => {
+  const partialRenderComponents = (comp: AlloyComponent, body: Body, diff: Diff.GenericDiffResult<Body, Dialog.BodyComponent | Dialog.Tab>) => {
     const form = Composing.getCurrent(comp).bind(Composing.getCurrent).getOr(comp);
     const changed = getChangedComponents(diff);
 
-    const interpreter = backstage.shared.interpreter;
+    const withNamedItem = (item: Dialog.BodyComponent, f: (name: string) => void) =>
+      Obj.get(item as Record<string, any>, 'name').each(f);
 
+    const interpreter = (spec: Dialog.BodyComponent) => {
+      const alloySpec = backstage.shared.interpreter(spec) as SketchSpec;
+      withNamedItem(spec, (name) => Form.addField(form, name, alloySpec));
+      return alloySpec;
+    };
+
+    // TODO: This logic won't work as we need to rebuild the tree by merging the changes
+    // mutate the spec uid to re-use the old uid
+    body.uid = diff.oldItem.uid;
     Obj.each(changed, (detail, uid) => {
       lookupByUid(comp, uid).each((container) => {
-        const newItems = Arr.bind(detail.parent.items, (item) => {
-          if (item.type === DiffType.Unchanged) {
-            // mutate the spec uid to re-use the old uid
-            item.item.uid = item.oldItem.uid;
-            // TODO: This lookup doesn't really work because named fields get their uid overwritten by the form parts
-            return [ lookupByUid(comp, item.item.uid).map(GuiFactory.premade).getOrThunk(() => interpreter(item.item)) ];
-          } else if (item.type === DiffType.Removed) {
-            return [];
-          } else {
-            return [ interpreter(item.item) ];
+        const composed = container.hasConfigured(Composing) ? Composing.getCurrent(container).getOr(container) : container;
+        const newItems = Arr.bind(detail.parent.items, (d, index) => {
+          // Deregister the form component if being removed
+          if (d.type === DiffType.Removed) {
+            withNamedItem(d.item, (name) => Form.removeField(form, name));
           }
+          return Diff.applyDiff(composed, d, index, interpreter);
         });
-        Replacing.set(container, newItems);
-        // TODO: Should these just be added when rendered by the interpreter instead?
-        updateFormState(form, detail.items);
+        console.log(newItems);
       });
     });
+
+    return body;
   };
 
   const updateState = (comp: AlloyComponent, data: WindowBodySpec, state: Optional<BodyState>) => {
     const body = data.body;
 
-    const render = () => Replacing.set(comp, [ renderComponents(body) ]);
-    state.fold(render, (s) => {
+    const render = () => {
+      Replacing.set(comp, [ renderComponents(body) ]);
+      return body;
+    };
+
+    const newBody = state.fold(render, (s) => {
       const diff = Diff.diffBody(body, s.body);
       if (diff.type === DiffType.Unchanged) {
-        // mutate the spec uid to re-use the old uid
-        body.uid = diff.oldItem.uid;
-        lookupByUid(comp, body.uid).fold(render, Fun.noop);
+        return diff.oldItem;
       } else if (diff.type === DiffType.ChildrenChanged) {
-        partialRenderComponents(comp, diff);
+        return partialRenderComponents(comp, body, diff);
       } else {
-        render();
+        return render();
       }
     });
 
     return Optional.some({
-      body,
+      body: newBody,
       isTabPanel: () => body.type === 'tabpanel'
     });
   };
@@ -133,7 +133,7 @@ const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<
       tag: 'div',
       classes: [ 'tox-dialog__content-js' ],
       attributes: {
-        ...contentId.map((x): {id?: string} => ({ id: x })).getOr({}),
+        ...contentId.map((x): { id?: string } => ({ id: x })).getOr({}),
         ...ariaAttrs ? ariaAttributes : {}
       }
     },
@@ -181,8 +181,8 @@ const renderIframeBody = (spec: Dialog.UrlDialog) => {
               }
             },
             behaviours: Behaviour.derive([
-              Tabstopping.config({ }),
-              Focusing.config({ })
+              Tabstopping.config({}),
+              Focusing.config({})
             ])
           })
         ]

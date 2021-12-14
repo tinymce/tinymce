@@ -27,7 +27,10 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       },
       // All of the items passed through the form need to be put through the interpreter
       // with their form part preserved.
-      components: Arr.map(spec.items, (item) => interpretInForm(parts, item, backstage))
+      components: Arr.map(spec.items, (item) => interpretInForm(parts, item, backstage)),
+      formBehaviours: Behaviour.derive([
+        Replacing.config({})
+      ])
     }))
   );
 
@@ -49,7 +52,6 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       }
     ],
     behaviours: Behaviour.derive([
-      Replacing.config({}),
       Keying.config({
         mode: 'acyclic',
         useTabstopAt: Fun.not(NavigableObject.isPseudoStop)

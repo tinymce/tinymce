@@ -92,9 +92,6 @@ const make = (detail: FormDetail, components: AlloySpec[]) => ({
     },
     addField: (form: AlloyComponent, key: string, spec: SketchSpec) => {
       detail.partUids[key] = spec.uid;
-    },
-    clearFields: (_form: AlloyComponent) => {
-      detail.partUids = {};
     }
   }
 });
@@ -103,7 +100,6 @@ const Form = {
   getField: GuiTypes.makeApi((apis: FormApis, component: AlloyComponent, key: string) => apis.getField(component, key)),
   removeField: GuiTypes.makeApi((apis: FormApis, component: AlloyComponent, key: string) => apis.removeField(component, key)),
   addField: GuiTypes.makeApi((apis: FormApis, component: AlloyComponent, key: string, spec: SketchSpec) => apis.addField(component, key, spec)),
-  clearFields: GuiTypes.makeApi((apis: FormApis, form: AlloyComponent) => apis.clearFields(form)),
   sketch
 } as FormSketcher;
 
