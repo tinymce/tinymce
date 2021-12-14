@@ -1,8 +1,10 @@
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { Attribute, Classes, Css, Html, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
+import * as Tagger from '../registry/Tagger';
 import { DomDefinitionDetail } from './DomDefinition';
 import { patchChildren } from './Patching';
+
 
 interface KeyValueDiff {
   toSet: Record<string, string>;
@@ -24,7 +26,7 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
   // The tag was the same, so change the attributes etc.
 
   const { class: clazz, style, ...existingAttributes } = Attribute.clone(obsoleted);
-  const { toSet: attrsToSet, toRemove: attrsToRemove } = diffKeyValueSet(definition.attributes.getOr({ }), existingAttributes);
+  const { toSet: attrsToSet, toRemove: attrsToRemove } = diffKeyValueSet(definition.attributes, existingAttributes);
 
   const updateAttrs = () => {
     Arr.each(attrsToRemove, (a) => Attribute.remove(obsoleted, a));
@@ -79,6 +81,8 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
   updateClasses();
   updateHtml();
   updateChildren();
+
+  Tagger.writeOnly(obsoleted, definition.uid);
 
   // TODO: Something about value
   return obsoleted;

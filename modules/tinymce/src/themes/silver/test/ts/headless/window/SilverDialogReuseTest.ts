@@ -77,6 +77,8 @@ describe('headless.tinymce.themes.silver.window.SilverDialogTest', () => {
       }
     );
 
+    console.log("Preactive: ", Focus.active().getOrDie().dom);
+
     dialogApi.redial({
       title: 'Silver Test Modal Dialog',
       body: {
@@ -108,11 +110,12 @@ describe('headless.tinymce.themes.silver.window.SilverDialogTest', () => {
       'input'
     );
 
-    assert.equal((Focus.active().getOrDie('Focused element').dom as any).goose, 'lively');
+    console.log("active", Focus.active().getOrDie().dom);
+    assert.equal((Focus.active().getOrDie('Focused element').dom as any).GOOSE, 'goose');
 
     assert.deepEqual(dialogApi.getData(), {
       fred: 'said hello pebbles',
-      wilma: 'definitely'
+      wilma: 'new things'
     }, 'Initial data');
   });
 });

@@ -32,9 +32,12 @@ const introduceToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarE
 
 const attemptPatch = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>, obsoleted: SugarElement<Element>): Optional<SugarElement<Element>> => {
   try {
+    console.log("attempting to patch", obsoleted.dom);
     const e = reconcileToDom(definition, obsoleted);
+    console.log('success patching');
     return Optional.some(e);
-  } catch (_) {
+  } catch (err) {
+    console.error('err', err);
     return Optional.none();
   }
 };
