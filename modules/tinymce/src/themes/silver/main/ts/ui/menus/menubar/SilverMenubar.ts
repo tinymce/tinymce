@@ -84,7 +84,9 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
     components: [ ],
 
     behaviours: Behaviour.derive([
-      Replacing.config({ }),
+      Replacing.config({
+        reuseDom: true
+      }),
       AddEventsBehaviour.config('menubar-events', [
         AlloyEvents.runOnAttached((component) => {
           detail.onSetup(component);

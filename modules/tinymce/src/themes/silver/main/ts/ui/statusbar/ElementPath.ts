@@ -121,7 +121,9 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
       }),
       ReadOnly.receivingConfig(),
       Tabstopping.config({ }),
-      Replacing.config({ }),
+      Replacing.config({
+        reuseDom: true
+      }),
       AddEventsBehaviour.config('elementPathEvents', [
         AlloyEvents.runOnAttached((comp, _e) => {
           // NOTE: If statusbar ever gets re-rendered, we will need to free this.

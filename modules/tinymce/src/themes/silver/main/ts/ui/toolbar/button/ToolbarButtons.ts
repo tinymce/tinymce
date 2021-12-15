@@ -187,7 +187,7 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, provid
   renderCommonToolbarButton(spec,
     {
       toolbarButtonBehaviours: [
-        Replacing.config({ }),
+        Replacing.config({ reuseDom: true }),
         Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false })
       ].concat(bonusEvents.length > 0 ? [
         // TODO: May have to pass through eventOrder if events start clashing

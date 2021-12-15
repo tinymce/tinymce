@@ -115,7 +115,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
         ])
       ),
       Blocking.config({ getRoot: () => Optional.some(dialog) }),
-      Replacing.config({}),
+      Replacing.config({ reuseDom: true }),
       RepresentingConfigs.memory({})
     ]),
 

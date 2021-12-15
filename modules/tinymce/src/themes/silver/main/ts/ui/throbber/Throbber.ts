@@ -97,7 +97,9 @@ const renderThrobber = (spec): AlloySpec => ({
     }
   },
   behaviours: Behaviour.derive([
-    Replacing.config({}),
+    Replacing.config({
+      reuseDom: true
+    }),
     Blocking.config({
       focus: false
     }),

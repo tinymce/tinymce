@@ -34,7 +34,9 @@ export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstage
     ].concat(comps),
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
-      Replacing.config({}),
+      Replacing.config({
+        reuseDom: true
+      }),
       RepresentingConfigs.domHtml(Optional.none()),
       Keying.config({
         mode: 'acyclic'

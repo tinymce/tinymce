@@ -129,7 +129,9 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
         }
       }),
       ReadOnly.receivingConfig(),
-      Replacing.config({ }),
+      Replacing.config({
+        reuseDom: true
+      }),
       Representing.config({
         store: {
           mode: 'memory',

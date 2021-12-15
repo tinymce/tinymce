@@ -96,7 +96,9 @@ export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem): ItemT
     },
     components: [ emptyLabelText ],
     behaviours: Behaviour.derive([
-      Replacing.config({})
+      Replacing.config({
+        reuseDom: true
+      })
     ])
   });
 

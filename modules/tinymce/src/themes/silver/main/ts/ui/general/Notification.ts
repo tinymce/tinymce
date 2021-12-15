@@ -66,7 +66,9 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       innerHtml: detail.translationProvider(detail.text)
     },
     behaviours: Behaviour.derive([
-      Replacing.config({ })
+      Replacing.config({
+        reuseDom: true
+      })
     ])
   });
 
@@ -74,8 +76,8 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
     dom: {
       tag: 'div',
       classes: [ 'tox-bar' ],
-      attributes: {
-        style: `width: ${percent}%`
+      styles: {
+        width: `${percent}%`
       }
     }
   });
@@ -106,7 +108,9 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       renderPercentText(0)
     ],
     behaviours: Behaviour.derive([
-      Replacing.config({ })
+      Replacing.config({
+        reuseDom: true
+      })
     ])
   });
 
