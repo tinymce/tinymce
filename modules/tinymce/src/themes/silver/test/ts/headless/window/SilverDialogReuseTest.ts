@@ -15,7 +15,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
   const store = TestHelpers.TestStore();
   const helpers = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
-  let dialogApi: Dialog.DialogInstanceApi<{ fred: string; wilma?: string }>;
+  let dialogApi: Dialog.DialogInstanceApi<any>;
   before(() => {
     windowManager = WindowManager.setup(helpers.extras());
   });
@@ -62,6 +62,43 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
     }, 'Initial data');
   };
 
+  const openNestedDialogAndAssertInitialData = () => {
+    dialogApi = windowManager.open({
+      title: 'Silver Test Modal Dialog',
+      body: {
+        type: 'panel',
+        items: [
+          {
+            type: 'bar',
+            items: [
+              {
+                name: 'hello',
+                type: 'button',
+                text: 'Hello!'
+              }
+            ]
+          },
+          {
+            type: 'checkbox',
+            name: 'check',
+            label: 'Check!'
+          }
+        ]
+      },
+      buttons: baseDialogButtons,
+      ...baseDialogActions,
+      initialData: {
+        check: true
+      }
+    }, {}, () => store.adder('closeWindow')());
+    dialogApi.focus('check');
+
+    assert.deepEqual(dialogApi.getData(), {
+      check: true,
+      hello: ''
+    }, 'Initial data');
+  };
+
   it('TINY-8334: Open a dialog, assert initial focus, redial with similar data, check focus maintained', async () => {
     openDialogAndAssertInitialData();
     const beforeInput = await FocusTools.pTryOnSelector('Focus should start on the input', SugarDocument.getDocument(), 'input');
@@ -100,6 +137,51 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
     assert.deepEqual(dialogApi.getData(), {
       fred: 'said hello pebbles',
       wilma: 'new things'
+    }, 'Initial data');
+  });
+
+  it('TINY-8334: Open a dialog with nested spec, redial with different child spec, check top level items are not re-rendered', async () => {
+    openNestedDialogAndAssertInitialData();
+    const beforeCheckbox = await FocusTools.pTryOnSelector('Focus should start on the checkbox', SugarDocument.getDocument(), 'input');
+
+    // Tag the element
+    (beforeCheckbox.dom as any).GOOSE = 'goose';
+
+    dialogApi.redial({
+      title: 'Silver Test Modal Dialog',
+      body: {
+        type: 'panel',
+        items: [
+          {
+            type: 'bar',
+            items: [
+              {
+                name: 'helloworld',
+                type: 'button',
+                text: 'Hello World!'
+              }
+            ]
+          },
+          {
+            type: 'checkbox',
+            name: 'check',
+            label: 'Check!'
+          }
+        ]
+      },
+      buttons: baseDialogButtons,
+      ...baseDialogActions,
+      initialData: {
+        check: false
+      }
+    });
+
+    const afterCheckbox = await FocusTools.pTryOnSelector('Focus should stay on the checkbox', SugarDocument.getDocument(), 'input');
+    assert.equal((afterCheckbox.dom as any).GOOSE, 'goose', 'The check input should not have been recreated');
+
+    assert.deepEqual(dialogApi.getData(), {
+      check: false,
+      helloworld: ''
     }, 'Initial data');
   });
 });
