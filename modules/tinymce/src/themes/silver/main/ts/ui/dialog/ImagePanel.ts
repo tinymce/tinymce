@@ -14,7 +14,7 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 
 type ImagePanelSpec = Omit<Dialog.ImagePanel, 'type'>;
 
-interface ImagePanelData {
+export interface ImagePanelData {
   url: string;
   zoom: Optional<number>;
 }
