@@ -6,7 +6,7 @@ import * as Behaviour from './Behaviour';
 
 const Replacing: ReplacingBehaviour = Behaviour.create({
   fields: [
-    FieldSchema.defaultedBoolean('reuseDom', true)
+    FieldSchema.defaultedBoolean('reuseDom', false)
   ],
   name: 'replacing',
   apis: ReplaceApis
