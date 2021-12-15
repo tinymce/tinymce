@@ -6,15 +6,14 @@
  */
 
 import { Optional, Singleton, Throttler, Thunk, Type } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import { fireAutocompleterEnd, fireAutocompleterStart, fireAutocompleterUpdate } from '../api/Events';
 import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
 import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
 import * as Autocompleters from '../autocomplete/Autocompleters';
-import * as AutocompleteTag from '../autocomplete/AutocompleteTag';
 import { AutocompleterReloadArgs } from '../autocomplete/AutocompleteTypes';
+import * as Rtc from '../Rtc';
 
 interface ActiveAutocompleter {
   readonly triggerChar: string;
@@ -50,7 +49,7 @@ export const setup = (editor: Editor): void => {
 
   const cancelIfNecessary = () => {
     if (isActive()) {
-      AutocompleteTag.remove(SugarElement.fromDom(editor.getBody()));
+      Rtc.removeAutocompleterDecoration(editor);
       fireAutocompleterEnd(editor);
       activeAutocompleter.clear();
     }
@@ -59,7 +58,7 @@ export const setup = (editor: Editor): void => {
   const commenceIfNecessary = (context: AutocompleteContext) => {
     if (!isActive()) {
       // Create the wrapper
-      AutocompleteTag.create(editor, context.range);
+      Rtc.addAutocompleterDecoration(editor, context.range);
 
       // store the element/context
       activeAutocompleter.set({
