@@ -1,7 +1,6 @@
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { Attribute, Classes, Css, Html, SugarElement, Value } from '@ephox/sugar';
 
-import * as Tagger from '../registry/Tagger';
 import { DomDefinitionDetail } from './DomDefinition';
 import { patchChildren } from './Patching';
 
@@ -73,8 +72,6 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
   // Patching can only support one form of children, so we only update the html or the children, but never both
   definition.innerHtml.fold(updateChildren, updateHtml);
   updateValue();
-
-  Tagger.writeOnly(obsoleted, definition.uid);
 
   return obsoleted;
 };

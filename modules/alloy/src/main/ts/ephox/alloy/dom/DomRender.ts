@@ -21,12 +21,6 @@ const introduceToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarE
     Value.set(subject as SugarElement<HTMLInputElement | HTMLTextAreaElement>, value);
   });
 
-  if (!definition.uid) {
-    // eslint-disable-next-line no-debugger
-    debugger;
-  }
-  Tagger.writeOnly(subject, definition.uid);
-
   return subject;
 };
 
@@ -43,16 +37,20 @@ const attemptPatch = (definition: DomDefinition.GeneralDefinitionDetail<SugarEle
 const hasMixedChildren = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>) =>
   definition.innerHtml.isSome() && definition.domChildren.length > 0;
 
-const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>, optObsoleted: Optional<SugarElement<Node>>): SugarElement<any> => {
+const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>, optObsoleted: Optional<SugarElement<Node>>): SugarElement<Element> => {
   // If the current tag doesn't match, let's not try to add anything further down the tree.
   // If it does match though and we don't have mixed children then attempt to patch attributes etc...
   const canBePatched = (candidate: SugarElement<Node>): candidate is SugarElement<Element> =>
     SugarNode.name(candidate) === definition.tag && !hasMixedChildren(definition);
 
-  return optObsoleted
+  const elem = optObsoleted
     .filter(canBePatched)
     .bind((obsoleted) => attemptPatch(definition, obsoleted))
     .getOrThunk(() => introduceToDom(definition));
+
+  Tagger.writeOnly(elem, definition.uid);
+
+  return elem;
 };
 
 export {
