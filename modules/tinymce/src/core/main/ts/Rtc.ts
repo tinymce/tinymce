@@ -6,10 +6,12 @@
  */
 
 import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
 import { Model } from './api/ModelManager';
+import * as AutocompleteTag from './autocomplete/AutocompleteTag';
 import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
@@ -68,6 +70,10 @@ interface RtcRuntimeApi {
     getSharedModelApi: () => Model;
     getRawModel: () => any;
   };
+  autocompleter: {
+    addDecoration: (range: Range) => void;
+    removeDecoration: () => void;
+  };
   rtc: {
     isRemote: boolean;
   };
@@ -117,6 +123,10 @@ interface RtcAdaptor {
   };
   selection: {
     getContent: (format: ContentFormat, args: Partial<GetSelectionContentArgs>) => Content;
+  };
+  autocompleter: {
+    addDecoration: (range: Range) => void;
+    removeDecoration: () => void;
   };
   raw: {
     getModel: () => Optional<any>;
@@ -171,6 +181,10 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   selection: {
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
   },
+  autocompleter: {
+    addDecoration: (range: Range) => AutocompleteTag.create(editor, range),
+    removeDecoration: () => AutocompleteTag.remove(SugarElement.fromDom(editor.getBody()))
+  },
   raw: {
     getModel: () => Optional.none()
   }
@@ -178,7 +192,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
 
 const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
   const defaultVars = (vars: Record<string, string>) => Type.isObject(vars) ? vars : {};
-  const { init, undoManager, formatter, editor, selection, raw } = rtcEditor;
+  const { init, undoManager, formatter, editor, selection, autocompleter, raw } = rtcEditor;
 
   return {
     init: {
@@ -216,6 +230,10 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
     },
     selection: {
       getContent: (_format, args) => selection.getContent(args)
+    },
+    autocompleter: {
+      addDecoration: autocompleter.addDecoration,
+      removeDecoration: autocompleter.removeDecoration
     },
     raw: {
       getModel: () => Optional.some(raw.getRawModel())
@@ -263,6 +281,10 @@ const makeNoopAdaptor = (): RtcAdaptor => {
     },
     selection: {
       getContent: empty
+    },
+    autocompleter: {
+      addDecoration: Fun.noop,
+      removeDecoration: Fun.noop
     },
     raw: {
       getModel: Fun.constant(Optional.none())
@@ -431,3 +453,9 @@ export const addVisual = (editor: Editor, elm: HTMLElement): void =>
 
 export const bindEvents = (editor: Editor): void =>
   getRtcInstanceWithError(editor).init.bindEvents();
+
+export const addAutocompleterDecoration = (editor: Editor, range: Range): void =>
+  getRtcInstanceWithError(editor).autocompleter.addDecoration(range);
+
+export const removeAutocompleterDecoration = (editor: Editor): void =>
+  getRtcInstanceWithError(editor).autocompleter.removeDecoration();
