@@ -44,7 +44,6 @@
     "awesome-typescript-loader": "^5.2.0",
     "chai": "^4.3.3",
     "chalk": "^4.1.0",
-    "chromedriver": "^96.0.0",
     "emojilib": "^2.4.0",
     "eslint": "^7.0.0",
     "eslint-plugin-notice": "^0.9.10",
