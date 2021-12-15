@@ -1,8 +1,8 @@
-import { FocusTools } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, StructAssert, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Dialog as BridgeSpec } from '@ephox/bridge';
-import { SugarDocument } from '@ephox/sugar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { Dialog } from 'tinymce/core/api/ui/Ui';
@@ -37,18 +37,69 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
     }
   ];
 
+  const assertRedialStructure = (build: ApproxStructure.Builder<StructAssert[]>) => {
+    const dialog = UiFinder.findIn(SugarBody.body(), '[role="dialog"]').getOrDie();
+    Assertions.assertStructure(
+      'Redial should have worked',
+      ApproxStructure.build((s, str, arr) => {
+        return s.element('div', {
+          classes: [
+            arr.has('tox-dialog')
+          ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-dialog__header') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-dialog__title') ],
+                  html: str.is('Silver Test Modal Dialog')
+                }),
+                s.element('button', {
+                  attrs: {
+                    'aria-label': str.is('Close')
+                  }
+                })
+              ]
+            }),
+            s.element('div', {
+              classes: [ arr.has('tox-dialog__content-js') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-dialog__body') ],
+                  children: [
+                    s.element('div', {
+                      classes: [ arr.has('tox-dialog__body-content') ],
+                      children: [
+                        s.element('div', {
+                          classes: [ arr.has('tox-form') ],
+                          children: build(s, str, arr)
+                        })
+                      ]
+                    })
+                  ]
+                })
+              ]
+            }),
+            s.element('div', {
+              classes: [ arr.has('tox-dialog__footer') ]
+            })
+          ]
+        });
+      }),
+      dialog
+    );
+  };
+
   const openDialogAndAssertInitialData = () => {
     dialogApi = windowManager.open({
       title: 'Silver Test Modal Dialog',
       body: {
         type: 'panel',
-        items: [
-          {
-            type: 'input',
-            name: 'fred',
-            label: 'Freds Input'
-          }
-        ]
+        items: [{
+          type: 'input',
+          name: 'fred',
+          label: 'Freds Input'
+        }]
       },
       buttons: baseDialogButtons,
       ...baseDialogActions,
@@ -70,13 +121,11 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
         items: [
           {
             type: 'bar',
-            items: [
-              {
-                name: 'hello',
-                type: 'button',
-                text: 'Hello!'
-              }
-            ]
+            items: [{
+              name: 'hello',
+              type: 'button',
+              text: 'Hello!'
+            }]
           },
           {
             type: 'checkbox',
@@ -131,6 +180,23 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
       }
     });
 
+    assertRedialStructure((s, str, arr) => [
+      s.element('div', {
+        classes: [ arr.has('tox-form__group') ],
+        children: [
+          s.element('label', { children: [ s.text(str.is('Freds Input')) ] }),
+          s.element('input', { attrs: { type: str.is('text') }})
+        ]
+      }),
+      s.element('div', {
+        classes: [ arr.has('tox-form__group') ],
+        children: [
+          s.element('label', { children: [ s.text(str.is('Wilmas input')) ] }),
+          s.element('input', { attrs: { type: str.is('text') }})
+        ]
+      }),
+    ]);
+
     const afterInput = await FocusTools.pTryOnSelector('Focus should stay on the input after redial', SugarDocument.getDocument(), 'input');
     assert.equal((afterInput.dom as any).GOOSE, 'goose', 'The fred input should not have been recreated');
 
@@ -154,13 +220,11 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
         items: [
           {
             type: 'bar',
-            items: [
-              {
-                name: 'slippery',
-                type: 'slider',
-                label: 'Move me!'
-              }
-            ]
+            items: [{
+              name: 'slippery',
+              type: 'slider',
+              label: 'Move me!'
+            }]
           },
           {
             type: 'checkbox',
@@ -176,8 +240,32 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
       }
     });
 
+    assertRedialStructure((s, str, arr) => [
+      s.element('div', {
+        classes: [ arr.has('tox-bar'), arr.has('tox-form__controls-h-stack') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-slider') ],
+            children: [
+              s.element('label', { children: [ s.text(str.is('Move me!')) ] }),
+              s.element('div', { classes: [ arr.has('tox-slider__rail') ] }),
+              s.element('div', { classes: [ arr.has('tox-slider__handle') ] })
+            ]
+          })
+        ]
+      }),
+      s.element('label', {
+        classes: [ arr.has('tox-checkbox') ],
+        children: [
+          s.element('input', { attrs: { type: str.is('checkbox') }}),
+          s.element('div', { classes: [ arr.has('tox-checkbox__icons') ] }),
+          s.element('span', { children: [ s.text(str.is('Check!')) ] })
+        ]
+      }),
+    ]);
+
     const afterCheckbox = await FocusTools.pTryOnSelector('Focus should stay on the checkbox', SugarDocument.getDocument(), 'input');
-    assert.equal((afterCheckbox.dom as any).GOOSE, 'goose', 'The check input should not have been recreated');
+    assert.equal((afterCheckbox.dom as any).GOOSE, 'goose', 'The checkbox input should not have been recreated');
 
     assert.deepEqual(dialogApi.getData(), {
       check: false,
