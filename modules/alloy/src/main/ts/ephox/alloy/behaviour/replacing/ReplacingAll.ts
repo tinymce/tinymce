@@ -17,7 +17,7 @@ const withoutReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
 };
 
 const withReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
-  // Note: We'll shouldn't need AriaPreserve since we're trying to keep the existing elements,
+  // Note: We shouldn't need AriaPreserve since we're trying to keep the existing elements,
   // but let's just do it for now just to be safe.
   AriaFocus.preserve(() => {
     InternalAttachment.virtualReplaceChildren(parent, data, () => {

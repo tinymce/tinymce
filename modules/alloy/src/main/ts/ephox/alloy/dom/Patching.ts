@@ -1,8 +1,10 @@
 import { Arr, Optional } from '@ephox/katamari';
-import { Compare, Insert, Remove, Replication, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Insert, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { AlloySpec } from '../api/component/SpecTypes';
+
+type SpecBuilder = (spec: AlloySpec, i: number, optObs: Optional<SugarElement<Node>>) => AlloyComponent;
 
 const determineObsoleted = (parent: SugarElement<Element>, child: SugarElement<Node>, index: number, oldObsoleted: Optional<SugarElement<Node>>) => {
   // When dealing with premades, the process of building something may have moved existing nodes around, so we see
@@ -19,12 +21,11 @@ const determineObsoleted = (parent: SugarElement<Element>, child: SugarElement<N
   return newObsoleted.map((newObs) => {
     const elemChanged = oldObsoleted.exists((o) => !Compare.eq(o, newObs));
 
-    // Adding a marker prevents the case where a premade is added to
-    // something shifted it from where it was which caused it to be
-    // different which in turn un-synced all following children and
-    // made it so they couldn't be patched
+    // Adding a marker prevents the case where a premade is added to something shifting it from where
+    // it was. That in turn un-synced all trailing children and made it so they couldn't be patched.
     if (elemChanged) {
-      const marker = Replication.shallow(newObs);
+      const oldTag = oldObsoleted.map(SugarNode.name).getOr('span');
+      const marker = SugarElement.fromTag(oldTag);
       Insert.before(newObs, marker);
       return marker;
     } else {
@@ -61,29 +62,24 @@ const patchChildrenWith = <T, C>(parent: SugarElement<Element>, nu: T[], f: (n: 
   return builtChildren;
 };
 
-const patchSpecChildren = (
-  parent: SugarElement<Element>,
-  nu: AlloySpec[],
-  process: (t: AlloySpec, i: number, optObs: Optional<SugarElement<Node>>) => AlloyComponent
-): AlloyComponent[] => {
-  return patchChildrenWith(parent, nu, (n, i) => {
+const patchSpecChildren = (parent: SugarElement<Element>, specs: AlloySpec[], build: SpecBuilder): AlloyComponent[] =>
+  patchChildrenWith(parent, specs, (spec, index) => {
     // Before building anything, this is the DOM element we are going to try to use.
-    const oldObsoleted = Traverse.child(parent, i);
-    const childComp = process(n, i, oldObsoleted);
+    const oldObsoleted = Traverse.child(parent, index);
+    const childComp = build(spec, index, oldObsoleted);
     const child = childComp.element;
 
-    const obsoleted = determineObsoleted(parent, child, i, oldObsoleted);
+    const obsoleted = determineObsoleted(parent, child, index, oldObsoleted);
     ensureInDom(parent, child, obsoleted);
 
     return childComp;
   });
-};
 
-const patchDomChildren = (parent: SugarElement<Element>, nu: SugarElement<Node>[]): SugarElement<Node>[] =>
-  patchChildrenWith(parent, nu, (n, i) => {
-    const optObsoleted = Traverse.child(parent, i);
-    ensureInDom(parent, n, optObsoleted);
-    return n;
+const patchDomChildren = (parent: SugarElement<Element>, nodes: SugarElement<Node>[]): SugarElement<Node>[] =>
+  patchChildrenWith(parent, nodes, (node, index) => {
+    const optObsoleted = Traverse.child(parent, index);
+    ensureInDom(parent, node, optObsoleted);
+    return node;
   });
 
 export {

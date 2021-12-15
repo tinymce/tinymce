@@ -140,7 +140,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
     }, 'Initial data');
   });
 
-  it('TINY-8334: Open a dialog with nested spec, redial with different child spec, check top level items are not re-rendered', async () => {
+  it('TINY-8334: Open a dialog with nested spec, redial with a different child spec, check top level items are not re-rendered', async () => {
     openNestedDialogAndAssertInitialData();
     const beforeCheckbox = await FocusTools.pTryOnSelector('Focus should start on the checkbox', SugarDocument.getDocument(), 'input');
 
@@ -156,9 +156,9 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
             type: 'bar',
             items: [
               {
-                name: 'helloworld',
-                type: 'button',
-                text: 'Hello World!'
+                name: 'slippery',
+                type: 'slider',
+                label: 'Move me!'
               }
             ]
           },
@@ -181,7 +181,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
 
     assert.deepEqual(dialogApi.getData(), {
       check: false,
-      helloworld: ''
+      slippery: 0
     }, 'Initial data');
   });
 });
