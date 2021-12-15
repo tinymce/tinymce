@@ -178,7 +178,9 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       memBannerText.asSpec()
     ],
     behaviours: Behaviour.derive([
-      Replacing.config({ })
+      Replacing.config({
+        reuseDom: true
+      })
     ])
   };
 

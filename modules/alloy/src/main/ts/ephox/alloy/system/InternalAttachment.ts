@@ -17,8 +17,42 @@ const fireAttaching = (component: AlloyComponent): void => {
   AlloyTriggers.emit(component, SystemEvents.attachedToDom());
 };
 
-const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
+// Unlike attach, a virtualAttach makes no actual DOM changes.
+// This is because it should only be used in a situation
+// where we are patching an existing element.
+const virtualAttach = (parent: AlloyComponent, child: AlloyComponent): void => {
+  // So we still add it to the world
+  parent.getSystem().addToWorld(child);
+  // And we fire attaching ONLY if it's already in the DOM
+  if (SugarBody.inBody(parent.element)) {
+    fireAttaching(child);
+  }
+};
+
+// Unlike detach, a virtualDetach makes no actual DOM changes.
+// This is because it's used in patching circumstances.
+const doVirtualDetach = (comp: AlloyComponent): void => {
+  fireDetaching(comp);
+  comp.getSystem().removeFromWorld(comp);
+};
+
+const virtualDetachChildren = (comp: AlloyComponent): void => {
+  // This will not detach the component, but will detach its children (virtually) and sync at the end.
+  // Note: This doesn't sync the components as no DOM changes are made.
+  const subs = comp.components();
+  Arr.each(subs, doVirtualDetach);
+};
+
+const doAttach = (parent: AlloyComponent, child: AlloyComponent): void => {
   Insert.append(parent.element, child.element);
+};
+
+const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
+  parent.getSystem().addToWorld(child);
+  doAttach(parent, child);
+  if (SugarBody.inBody(parent.element)) {
+    fireAttaching(child);
+  }
 };
 
 const detachChildren = (component: AlloyComponent): void => {
@@ -45,23 +79,22 @@ const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[
   Arr.each(newChildren, (childComp) => {
     // If the component isn't connected, ie is new, then we also need to add it to the world
     if (!childComp.getSystem().isConnected()) {
-      component.getSystem().addToWorld(childComp);
       attach(component, childComp);
-      if (SugarBody.inBody(component.element)) {
-        fireAttaching(childComp);
-      }
     } else {
-      attach(component, childComp);
+      doAttach(component, childComp);
     }
-    component.syncComponents();
   });
+  component.syncComponents();
 };
 
 export {
   fireAttaching,
   fireDetaching,
 
+  attach,
   detachChildren,
+  replaceChildren,
 
-  replaceChildren
+  virtualAttach,
+  virtualDetachChildren
 };

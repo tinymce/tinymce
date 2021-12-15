@@ -18,7 +18,6 @@ const init = (): CouplingState => {
           'No information found for coupled component: ' + name
         );
         const spec = builder(component);
-        // TODO: Consider investigating the VDOM buildOrPatch call
         const built = component.getSystem().build(spec);
         coupled[name] = built;
         return built;

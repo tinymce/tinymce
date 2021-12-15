@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj } from '@ephox/katamari';
-import { Attribute, Classes, Css, Html, SugarElement, Traverse } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, SugarElement, Value } from '@ephox/sugar';
 
 import * as Tagger from '../registry/Tagger';
 import { DomDefinitionDetail } from './DomDefinition';
@@ -22,8 +22,6 @@ const diffKeyValueSet = (newObj: Record<string, string>, oldObj: Record<string, 
 };
 
 const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement<Element>): SugarElement<Element> => {
-  // The tag was the same, so change the attributes etc.
-
   const { class: clazz, style, ...existingAttributes } = Attribute.clone(obsoleted);
   const { toSet: attrsToSet, toRemove: attrsToRemove } = diffKeyValueSet(definition.attributes, existingAttributes);
 
@@ -43,31 +41,18 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
   const classesToRemove = Arr.difference(existingClasses, definition.classes);
   const classesToAdd = Arr.difference(definition.classes, existingClasses);
 
-  const updateHtml = () => {
-    // Let's simplify ... don't support virtual DOM diffing if mixing HTML and children. Let's
-    // just stop supporting that. If innerHtml is supplied, no child components.
-    // Very experimental. If something doesn't have a tagged UID, assume it was part of innerHTML
-    const childrenOfObsolete = Traverse.children(obsoleted);
-
-    if (Arr.forall(childrenOfObsolete, (c) => Tagger.read(c).isNone()) && definition.domChildren.length === 0) {
-      Html.set(obsoleted, definition.innerHtml.getOr(''));
-    } else {
-      // Do nothing
-    }
+  const updateHtml = (html: string) => {
+    Html.set(obsoleted, html);
   };
 
   const updateChildren = () => {
-    if (definition.innerHtml.isNone()) {
-      const children = definition.domChildren;
-      patchChildren(
-        children,
-        (c, _i, _obs) => c,
-        Fun.identity,
-        obsoleted
-      );
-    } else {
-      // No longer support HTML and children specified.
-    }
+    const children = definition.domChildren;
+    patchChildren(
+      children,
+      (c, _i, _obs) => c,
+      Fun.identity,
+      obsoleted
+    );
   };
 
   const updateClasses = () => {
@@ -75,15 +60,22 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
     Classes.remove(obsoleted, classesToRemove);
   };
 
+  const updateValue = () => {
+    const valueElement = obsoleted as SugarElement<HTMLInputElement | HTMLTextAreaElement>;
+    definition.value
+      .filter((value) => value !== Value.get(valueElement))
+      .each((value) => Value.set(valueElement, value));
+  };
+
   updateAttrs();
-  updateStyles();
   updateClasses();
-  updateHtml();
-  updateChildren();
+  updateStyles();
+  // Patching can only support one form of children, so we only update the html or the children, but never both
+  definition.innerHtml.fold(updateChildren, updateHtml);
+  updateValue();
 
   Tagger.writeOnly(obsoleted, definition.uid);
 
-  // TODO: Something about value
   return obsoleted;
 };
 

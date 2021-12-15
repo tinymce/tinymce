@@ -32,35 +32,27 @@ const introduceToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarE
 
 const attemptPatch = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>, obsoleted: SugarElement<Element>): Optional<SugarElement<Element>> => {
   try {
-    // eslint-disable-next-line no-console
-    console.log('attempting to patch', obsoleted.dom);
     const e = reconcileToDom(definition, obsoleted);
-    // eslint-disable-next-line no-console
-    console.log('success patching');
     return Optional.some(e);
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('err', err);
     return Optional.none();
   }
 };
 
-const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>, optObsoleted: Optional<SugarElement<any>>): SugarElement<any> => {
-  const isSameTag = (candidate: SugarElement<Node>) => {
-    return SugarNode.name(candidate) === definition.tag;
-  };
+// If a component has both innerHtml and children then we can't patch it
+const hasMixedChildren = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>) =>
+  definition.innerHtml.isSome() && definition.domChildren.length > 0;
 
-  const patched = optObsoleted.filter(isSameTag).bind(
-    (o) => attemptPatch(definition, o)
-  );
+const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarElement<Node>>, optObsoleted: Optional<SugarElement<Node>>): SugarElement<any> => {
+  // If the current tag doesn't match, let's not try to add anything further down the tree.
+  // If it does match though and we don't have mixed children then attempt to patch attributes etc...
+  const canBePatched = (candidate: SugarElement<Node>): candidate is SugarElement<Element> =>
+    SugarNode.name(candidate) === definition.tag && !hasMixedChildren(definition);
 
-  return patched.getOrThunk(
-    () => {
-      // If the parent tag doesn't match, let's not try to
-      // add anything further down the tree.
-      return introduceToDom(definition);
-    }
-  );
+  return optObsoleted
+    .filter(canBePatched)
+    .bind((obsoleted) => attemptPatch(definition, obsoleted))
+    .getOrThunk(() => introduceToDom(definition));
 };
 
 export {

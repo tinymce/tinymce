@@ -73,24 +73,20 @@ const patchChildren = <T, C>(
     // If it isn't, we need to introduce some complex
     // behaviour
     const newObsoleted = Traverse.child(parent, i);
-    const obsoleted = newObsoleted.map(
-      (newObs) => {
-        const elemChanged = oldObsoleted.exists(
-          (o) => !Compare.eq(o, newObs)
-        );
+    const obsoleted = newObsoleted.map((newObs) => {
+      const elemChanged = oldObsoleted.exists((o) => !Compare.eq(o, newObs));
 
-        // If the element has changed, then we introduce
-        // an additional marker to increase the likelihood
-        // that the nodes to the right can still be reused (?)
-        if (elemChanged) {
-          const marker = SugarElement.fromTag('span');
-          Insert.before(newObs, marker);
-          return marker;
-        } else {
-          return newObs;
-        }
+      // If the element has changed, then we introduce
+      // an additional marker to increase the likelihood
+      // that the nodes to the right can still be reused (?)
+      if (elemChanged) {
+        const marker = SugarElement.fromTag('span');
+        Insert.before(newObs, marker);
+        return marker;
+      } else {
+        return newObs;
       }
-    );
+    });
 
     obsoleted.fold(
       () => {
@@ -98,7 +94,7 @@ const patchChildren = <T, C>(
         Insert.append(parent, child);
       },
       (obs) => {
-        // I don't these branches handles all the cases.
+        // I don't think these branches handles all the cases.
         if (!Compare.eq(obs, child)) {
           // This situation occurs when the DOM element
           // that has been patched when building it is no

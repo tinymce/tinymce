@@ -109,9 +109,8 @@ const buildOrPatch = (spec: AlloySpec, obsoleted: Optional<SugarElement<Node>>):
   return buildFromSpec(userSpecWithUid, obsoleted).getOrDie();
 });
 
-const build = (spec: AlloySpec): AlloyComponent => {
-  return buildOrPatch(spec, Optional.none());
-};
+const build = (spec: AlloySpec): AlloyComponent =>
+  buildOrPatch(spec, Optional.none());
 
 const premade = GuiTypes.premade;
 

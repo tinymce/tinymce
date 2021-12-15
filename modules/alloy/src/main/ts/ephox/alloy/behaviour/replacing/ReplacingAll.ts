@@ -3,7 +3,6 @@ import { Traverse } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
-import * as Attachment from '../../api/system/Attachment';
 import * as AriaFocus from '../../aria/AriaFocus';
 import { patchChildren } from '../../dom/Patching';
 import * as InternalAttachment from '../../system/InternalAttachment';
@@ -19,11 +18,11 @@ const withoutReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
 };
 
 const withReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
-
-  // I don't think we'll need AriaPreserve, but let's just do it for now.
+  // Note: We'll shouldn't need AriaPreserve since we're trying to keep the existing elements,
+  // but let's just do it for now just to be safe.
   AriaFocus.preserve(() => {
     // Firstly, virtually detach all the children
-    Attachment.virtualDetachChildren(parent);
+    InternalAttachment.virtualDetachChildren(parent);
 
     // Build the new children
     const children: AlloyComponent[] = patchChildren(
@@ -36,8 +35,9 @@ const withReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
       parent.element
     );
 
+    // Finally, reattach the children and sync the parent components
     Arr.each(children, (child) => {
-      Attachment.virtualAttach(parent, child);
+      InternalAttachment.virtualAttach(parent, child);
     });
     parent.syncComponents();
   }, parent.element);
