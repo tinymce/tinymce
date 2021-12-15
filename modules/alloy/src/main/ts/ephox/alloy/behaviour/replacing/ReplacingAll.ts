@@ -12,8 +12,7 @@ const withoutReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
   // between predefined layouts, which would make a noop detection easier.
   // Until then, we'll just use AriaFocus like redesigning does.
   AriaFocus.preserve(() => {
-    const newChildren = Arr.map(data, parent.getSystem().build);
-    InternalAttachment.replaceChildren(parent, newChildren);
+    InternalAttachment.replaceChildren(parent, data, () => Arr.map(data, parent.getSystem().build));
   }, parent.element);
 };
 
@@ -21,24 +20,17 @@ const withReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
   // Note: We'll shouldn't need AriaPreserve since we're trying to keep the existing elements,
   // but let's just do it for now just to be safe.
   AriaFocus.preserve(() => {
-    // Firstly, virtually detach all the children
-    InternalAttachment.virtualDetachChildren(parent);
-
-    // Build the new children
-    const children: AlloyComponent[] = patchSpecChildren(
-      parent.element,
-      data,
-      (d, i) => {
-        const optObsoleted = Traverse.child(parent.element, i);
-        return parent.getSystem().buildOrPatch(d, optObsoleted);
-      }
-    );
-
-    // Finally, reattach the children and sync the parent components
-    Arr.each(children, (child) => {
-      InternalAttachment.virtualAttach(parent, child);
+    InternalAttachment.virtualReplaceChildren(parent, data, () => {
+      // Build the new children
+      return patchSpecChildren(
+        parent.element,
+        data,
+        (d, i) => {
+          const optObsoleted = Traverse.child(parent.element, i);
+          return parent.getSystem().buildOrPatch(d, optObsoleted);
+        }
+      );
     });
-    parent.syncComponents();
   }, parent.element);
 };
 

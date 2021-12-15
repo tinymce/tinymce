@@ -2,8 +2,13 @@ import { Arr } from '@ephox/katamari';
 import { Insert, Remove, SugarBody } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
+import { AlloySpec } from '../api/component/SpecTypes';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
+import * as GuiTypes from '../api/ui/GuiTypes';
+
+const isConnected = (comp: AlloyComponent) =>
+  comp.getSystem().isConnected();
 
 const fireDetaching = (component: AlloyComponent): void => {
   AlloyTriggers.emit(component, SystemEvents.detachedFromDom());
@@ -36,13 +41,6 @@ const doVirtualDetach = (comp: AlloyComponent): void => {
   comp.getSystem().removeFromWorld(comp);
 };
 
-const virtualDetachChildren = (comp: AlloyComponent): void => {
-  // This will not detach the component, but will detach its children (virtually) and sync at the end.
-  // Note: This doesn't sync the components as no DOM changes are made.
-  const subs = comp.components();
-  Arr.each(subs, doVirtualDetach);
-};
-
 const doAttach = (parent: AlloyComponent, child: AlloyComponent): void => {
   Insert.append(parent.element, child.element);
 };
@@ -63,10 +61,12 @@ const detachChildren = (component: AlloyComponent): void => {
   component.syncComponents();
 };
 
-const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[]): void => {
+const replaceChildren = (component: AlloyComponent, newSpecs: AlloySpec[], buildNewChildren: (newSpecs: AlloySpec[]) => AlloyComponent[]): void => {
   // Detach all existing children
   const subs = component.components();
   detachChildren(component);
+
+  const newChildren = buildNewChildren(newSpecs);
 
   // Determine which components have been deleted and remove them from the world
   const deleted = Arr.difference(subs, newChildren);
@@ -78,10 +78,44 @@ const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[
   // Add all new components
   Arr.each(newChildren, (childComp) => {
     // If the component isn't connected, ie is new, then we also need to add it to the world
-    if (!childComp.getSystem().isConnected()) {
+    if (!isConnected(childComp)) {
       attach(component, childComp);
     } else {
       doAttach(component, childComp);
+    }
+  });
+  component.syncComponents();
+};
+
+const virtualReplaceChildren = (component: AlloyComponent, newSpecs: AlloySpec[], buildNewChildren: (newSpecs: AlloySpec[]) => AlloyComponent[]): void => {
+  // Detach all existing child components that aren't premade specs
+  const subs = component.components();
+  const existingComps = Arr.bind(newSpecs, (spec) => GuiTypes.getPremade(spec).toArray());
+  Arr.each(subs, (childComp) => {
+    if (!Arr.contains(existingComps, childComp)) {
+      doVirtualDetach(childComp);
+    }
+  });
+
+  const newChildren = buildNewChildren(newSpecs);
+
+  // Determine which components have been deleted and remove them from the world
+  // It's probable the component has already been detached beforehand so only
+  // detach what's still attached to the world (i.e removed premades)
+  const deleted = Arr.difference(subs, newChildren);
+  Arr.each(deleted, (deletedComp) => {
+    if (isConnected(deletedComp)) {
+      doVirtualDetach(deletedComp);
+    }
+  });
+
+  // Add all new components
+  Arr.each(newChildren, (childComp) => {
+    // If the component isn't connected, ie is new, then we also need to add it to the world
+    if (!isConnected(childComp)) {
+      virtualAttach(component, childComp);
+    } else {
+      // Already attached so do nothing
     }
   });
   component.syncComponents();
@@ -96,5 +130,5 @@ export {
   replaceChildren,
 
   virtualAttach,
-  virtualDetachChildren
+  virtualReplaceChildren
 };
