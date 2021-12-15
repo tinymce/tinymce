@@ -4,7 +4,7 @@ import { Traverse } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as AriaFocus from '../../aria/AriaFocus';
-import { patchChildren } from '../../dom/Patching';
+import { patchSpecChildren } from '../../dom/Patching';
 import * as InternalAttachment from '../../system/InternalAttachment';
 
 const withoutReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
@@ -25,14 +25,13 @@ const withReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
     InternalAttachment.virtualDetachChildren(parent);
 
     // Build the new children
-    const children: AlloyComponent[] = patchChildren(
+    const children: AlloyComponent[] = patchSpecChildren(
+      parent.element,
       data,
       (d, i) => {
         const optObsoleted = Traverse.child(parent.element, i);
         return parent.getSystem().buildOrPatch(d, optObsoleted);
-      },
-      (c) => c.element,
-      parent.element
+      }
     );
 
     // Finally, reattach the children and sync the parent components

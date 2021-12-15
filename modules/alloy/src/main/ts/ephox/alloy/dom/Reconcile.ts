@@ -1,8 +1,8 @@
-import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Classes, Css, Html, SugarElement, Value } from '@ephox/sugar';
 
 import { DomDefinitionDetail } from './DomDefinition';
-import { patchChildren } from './Patching';
+import { patchDomChildren } from './Patching';
 
 interface KeyValueDiff {
   readonly toSet: Record<string, string>;
@@ -46,12 +46,7 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
 
   const updateChildren = () => {
     const children = definition.domChildren;
-    patchChildren(
-      children,
-      (c, _i, _obs) => c,
-      Fun.identity,
-      obsoleted
-    );
+    patchDomChildren(obsoleted, children);
   };
 
   const updateClasses = () => {
