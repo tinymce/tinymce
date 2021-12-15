@@ -4,7 +4,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
-import { withReuse } from '../replacing/ReplacingAll';
+import { withoutReuse, withReuse } from '../replacing/ReplacingAll';
 import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 
 const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState: ReflectingState<S>): AlloyEvents.AlloyEventRecord => {
@@ -18,7 +18,8 @@ const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState:
     reflectingConfig.renderComponents.each((renderComponents) => {
       const newComponents = renderComponents(data, reflectingState.get());
 
-      withReuse(component, newComponents);
+      const replacer = reflectingConfig.reuseDom ? withReuse : withoutReuse;
+      replacer(component, newComponents);
     });
   };
 
