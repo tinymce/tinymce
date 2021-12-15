@@ -1,6 +1,7 @@
 import { Optional } from '@ephox/katamari';
 import { Attribute, Classes, Css, Html, InsertAll, SugarElement, SugarNode, Value } from '@ephox/sugar';
 
+import { isPremade } from '../api/ui/GuiTypes';
 import * as Tagger from '../registry/Tagger';
 import * as DomDefinition from './DomDefinition';
 import { reconcileToDom } from './Reconcile';
@@ -41,7 +42,7 @@ const renderToDom = (definition: DomDefinition.GeneralDefinitionDetail<SugarElem
   // If the current tag doesn't match, let's not try to add anything further down the tree.
   // If it does match though and we don't have mixed children then attempt to patch attributes etc...
   const canBePatched = (candidate: SugarElement<Node>): candidate is SugarElement<Element> =>
-    SugarNode.name(candidate) === definition.tag && !hasMixedChildren(definition);
+    SugarNode.name(candidate) === definition.tag && !hasMixedChildren(definition) && !isPremade(candidate);
 
   const elem = optObsoleted
     .filter(canBePatched)
