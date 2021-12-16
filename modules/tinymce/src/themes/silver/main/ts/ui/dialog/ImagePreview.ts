@@ -8,7 +8,7 @@
 import { AlloyComponent, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Optional, Singleton } from '@ephox/katamari';
-import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
+import { Attribute, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 
@@ -18,20 +18,6 @@ export interface ImagePreviewData {
   readonly url: string;
   readonly zoom: Optional<number>;
 }
-
-// Does this belong somewhere else?
-const loadImage = (image: SugarElement<HTMLImageElement>): Promise<SugarElement<HTMLImageElement>> => new Promise((resolve) => {
-  const loaded = () => {
-    image.dom.removeEventListener('load', loaded);
-    resolve(image);
-  };
-
-  if (image.dom.complete) {
-    resolve(image);
-  } else {
-    image.dom.addEventListener('load', loaded);
-  }
-});
 
 const calculateImagePosition = (panelWidth: number, panelHeight: number, imageWidth: number, imageHeight: number, zoom: number) => {
   const width = imageWidth * zoom;
@@ -111,7 +97,7 @@ export const renderImagePreview = (spec: ImagePanelSpec): SimpleSpec => {
         Attribute.set(img, 'src', data.url);
       }
 
-      loadImage(img).then(repaintImg);
+      Ready.image(img).then(repaintImg);
     });
   };
 

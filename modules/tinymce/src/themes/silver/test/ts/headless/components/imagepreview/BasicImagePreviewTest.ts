@@ -2,24 +2,10 @@ import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Ready } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { ImagePreviewData, renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
-
-// Dupe from the image panel. This definitely belongs somewhere else.
-const loadImage = (image: SugarElement<HTMLImageElement>): Promise<SugarElement<HTMLImageElement>> => new Promise((resolve) => {
-  const loaded = () => {
-    image.dom.removeEventListener('load', loaded);
-    resolve(image);
-  };
-
-  if (image.dom.complete) {
-    resolve(image);
-  } else {
-    image.dom.addEventListener('load', loaded);
-  }
-});
 
 describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePreviewTest', () => {
   const testImageUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==';
@@ -99,7 +85,7 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
       url: testImageUrl,
       zoom: Optional.some(1.5)
     });
-    await loadImage(findImage(component));
+    await Ready.image(findImage(component));
     Assertions.assertStructure(
       'Checking structure after zoom',
       ApproxStructure.build((s, str, arr) =>
