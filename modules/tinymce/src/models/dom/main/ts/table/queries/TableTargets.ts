@@ -5,6 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+/*
+ NOTE: This file is partially duplicated in the following locations:
+  - plugins/table/queries/TableTargets.ts
+  - advtable
+ Make sure that if making changes to this file, the other files are updated as well
+ */
+
 import { CellOpSelection } from '@ephox/darwin';
 import { Optional } from '@ephox/katamari';
 import { RunOperation, SimpleGenerators } from '@ephox/snooker';

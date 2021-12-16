@@ -5,6 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+/*
+ NOTE: This file is partially duplicated in the following locations:
+  - core/table/TableSelection.ts
+  - models/dom/table/selection/TableSelection.ts
+  - advtable
+ Make sure that if making changes to this file, the other files are updated as well
+ */
+
 import { TableSelection } from '@ephox/darwin';
 import { Arr, Fun, Optionals } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';

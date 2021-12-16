@@ -5,6 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+/*
+ NOTE: This file is duplicated in the following locations:
+  - core/table/TableEphemera.ts
+  - plugins/table/selection/Ephemera.ts
+  - advtable
+ Make sure that if making changes to this file, the other files are updated as well
+ */
+
 import { Ephemera as DarwinEphemera } from '@ephox/darwin';
 
 const strSelected = 'data-mce-selected';
