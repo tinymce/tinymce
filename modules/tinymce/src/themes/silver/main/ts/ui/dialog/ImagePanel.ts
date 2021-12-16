@@ -15,8 +15,8 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 type ImagePanelSpec = Omit<Dialog.ImagePanel, 'type'>;
 
 export interface ImagePanelData {
-  url: string;
-  zoom: Optional<number>;
+  readonly url: string;
+  readonly zoom: Optional<number>;
 }
 
 // Does this belong somewhere else?
@@ -47,7 +47,7 @@ const calculateImagePosition = (panelWidth: number, panelHeight: number, imageWi
   };
 };
 
-const zoomToFit = (panel: SugarElement, img: SugarElement) => {
+const zoomToFit = (panel: SugarElement<HTMLElement>, img: SugarElement<HTMLImageElement>) => {
   const panelW = Width.get(panel);
   const panelH = Height.get(panel);
   const width = img.dom.naturalWidth;
@@ -79,7 +79,7 @@ export const renderImagePanel = (spec: ImagePanelSpec): SimpleSpec => {
   });
 
   const setValue = (frameComponent: AlloyComponent, data: ImagePanelData) => {
-    const repaintImg = (img) => {
+    const repaintImg = (img: SugarElement<HTMLImageElement>) => {
       // Ensure the component hasn't been removed while the image was loading
       // if it is disconnected, just do nothing
       if (frameComponent.getSystem().isConnected()) {

@@ -72,7 +72,7 @@ const factories: Record<string, FormPartRenderer> = {
   urlinput: make((spec, backstage) => renderUrlInput(spec, backstage, backstage.urlinput)),
   customeditor: make(renderCustomEditor),
   htmlpanel: make(renderHtmlPanel),
-  imagepanel: make((spec, _backstage) => renderImagePanel(spec)),
+  imagepanel: make(renderImagePanel),
   table: make((spec, backstage) => renderTable(spec, backstage.shared.providers)),
   panel: make((spec, backstage) => renderPanel(spec, backstage))
 };

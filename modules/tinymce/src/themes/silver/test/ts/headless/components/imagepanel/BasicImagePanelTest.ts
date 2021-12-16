@@ -5,7 +5,7 @@ import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { ImagePanelData, renderImagePanel } from '../../../../../main/ts/ui/dialog/ImagePanel';
+import { ImagePanelData, renderImagePanel } from 'tinymce/themes/silver/ui/dialog/ImagePanel';
 
 // Dupe from the image panel. This definitely belongs somewhere else.
 const loadImage = (image: SugarElement<HTMLImageElement>): Promise<SugarElement<HTMLImageElement>> => new Promise((resolve) => {
