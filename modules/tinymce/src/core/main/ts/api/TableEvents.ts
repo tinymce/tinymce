@@ -5,26 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+/*
+ NOTE: This file is duplicated in the following locations:
+  - models/dom/table/api/Events.ts
+  - plugins/table/api/Events.ts
+  - advtable
+ Make sure that if making changes to this file, the other files are updated as well
+ */
+
 import { Optional } from '@ephox/katamari';
 import { OtherCells } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import Editor from './Editor';
+import { NewTableCellEvent, NewTableRowEvent, TableEventData } from './EventTypes';
+import { EditorEvent } from './util/EventDispatcher';
 
-export interface TableEventData {
-  readonly structure: boolean;
-  readonly style: boolean;
-}
-
-export interface TableModifiedEvent extends TableEventData {
-  readonly table: HTMLTableElement;
-}
-
-const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<{ node: HTMLTableRowElement }> =>
+const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<NewTableRowEvent> =>
   editor.fire('newrow', { node: row });
 
-const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<{ node: HTMLTableCellElement }> =>
+const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<NewTableCellEvent> =>
   editor.fire('newcell', { node: cell });
 
 const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string): void => {
@@ -35,7 +35,7 @@ const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, h
   editor.fire('ObjectResized', { target, width, height, origin });
 };
 
-// TODO: Unwrap SugarElement references
+// TODO: <Jira> Unwrap SugarElement references and need for Optional when firing event
 const fireTableSelectionChange = (
   editor: Editor,
   cells: SugarElement<HTMLTableCellElement>[],

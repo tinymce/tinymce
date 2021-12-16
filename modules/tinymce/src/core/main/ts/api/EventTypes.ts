@@ -5,6 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional } from '@ephox/katamari';
+import { OtherCells } from '@ephox/snooker';
+import { SugarElement } from '@ephox/sugar';
+
 import { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
 import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
@@ -57,6 +61,25 @@ export interface LoadErrorEvent { message: string }
 
 export interface PreProcessEvent extends ParserArgs { node: Element }
 export interface PostProcessEvent extends ParserArgs { content: string }
+
+export interface NewTableRowEvent { node: HTMLTableRowElement }
+export interface NewTableCellEvent { node: HTMLTableCellElement }
+
+export interface TableEventData {
+  readonly structure: boolean;
+  readonly style: boolean;
+}
+export interface TableModifiedEvent extends TableEventData {
+  readonly table: HTMLTableElement;
+}
+
+// TODO: <Jira> Remove the need for SugarElements and Optional
+export interface TableSelectionChangeEvent {
+  cells: SugarElement<HTMLTableCellElement>[];
+  start: SugarElement<HTMLTableCellElement>;
+  finish: SugarElement<HTMLTableCellElement>;
+  otherCells: Optional<OtherCells.OtherCells>;
+}
 
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
@@ -122,6 +145,11 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'AutocompleterStart': AutocompleterEventArgs;
   'AutocompleterUpdate': AutocompleterEventArgs;
   'AutocompleterEnd': { };
+  'TableSelectionChange': TableSelectionChangeEvent;
+  'TableSelectionClear': { };
+  'TableModified': TableModifiedEvent;
+  'newrow': NewTableRowEvent;
+  'newcell': NewTableCellEvent;
 }
 
 export interface EditorManagerEventMap {

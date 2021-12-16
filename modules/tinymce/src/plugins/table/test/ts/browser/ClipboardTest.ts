@@ -4,9 +4,9 @@ import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections } from '
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { TableEventData } from 'tinymce/core/api/EventTypes';
 import Tools from 'tinymce/core/api/util/Tools';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
-import { TableEventData } from 'tinymce/plugins/table/api/Events';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.plugins.table.ClipboardTest', () => {

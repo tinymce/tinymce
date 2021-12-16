@@ -25,12 +25,12 @@ describe('browser.tinymce.plugins.table.NewCellRowEventsTest', () => {
 
     editor.on('newcell', (e) => {
       cells.push(e.node);
-      e.node.setAttribute('data-counter', counter++);
+      e.node.setAttribute('data-counter', '' + counter++);
     });
 
     editor.on('newrow', (e) => {
       rows.push(e.node);
-      e.node.setAttribute('data-counter', counter++);
+      e.node.setAttribute('data-counter', '' + counter++);
     });
 
     insertTable(editor, { rows: 3, columns: 2 });
