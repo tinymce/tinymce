@@ -69,6 +69,7 @@ const bddSetupIn = <T extends RootNode>(
 ): Hook<T> => {
   let state: Record<string, any> = {};
   let teardown: () => void = Fun.noop;
+  let hasFailure = false;
 
   // Note: Don't use bedrock imports here so as to avoid requiring bedrock as a
   // dependency. It'll still work the same, but we'll be missing the types.
@@ -99,9 +100,17 @@ const bddSetupIn = <T extends RootNode>(
     };
   });
 
+  Global.afterEach(function (this: any) {
+    if (this.currentTest?.isFailed() === true) {
+      hasFailure = true;
+    }
+  });
+
   Global.after(() => {
-    Obj.get(state, 'gui').each(Attachment.detachSystem);
-    teardown();
+    if (!hasFailure) {
+      Obj.get(state, 'gui').each(Attachment.detachSystem);
+      teardown();
+    }
     state = {};
   });
 
