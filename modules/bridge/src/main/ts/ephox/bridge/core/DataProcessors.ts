@@ -8,7 +8,7 @@ import { colorPickerDataProcessor } from '../components/dialog/ColorPicker';
 import { customEditorDataProcessor } from '../components/dialog/CustomEditor';
 import { dropZoneDataProcessor } from '../components/dialog/Dropzone';
 import { iframeDataProcessor } from '../components/dialog/Iframe';
-import { imagePanelDataProcessor } from '../components/dialog/ImagePreview';
+import { imagePreviewDataProcessor } from '../components/dialog/ImagePreview';
 import { inputDataProcessor } from '../components/dialog/Input';
 import { listBoxDataProcessor } from '../components/dialog/ListBox';
 import { selectBoxDataProcessor } from '../components/dialog/SelectBox';
@@ -33,7 +33,7 @@ const dataProcessors = {
   dropzone: dropZoneDataProcessor,
   input: inputDataProcessor,
   iframe: iframeDataProcessor,
-  imagepreview: imagePanelDataProcessor,
+  imagepreview: imagePreviewDataProcessor,
   selectbox: selectBoxDataProcessor,
   sizeinput: sizeInputDataProcessor,
   slider: sliderInputDataProcessor,

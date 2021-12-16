@@ -71,7 +71,7 @@ export {
 
   IframeSpec,
 
-  ImagePreviewSpec as ImagePanelSpec,
+  ImagePreviewSpec,
 
   InputSpec,
 

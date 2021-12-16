@@ -124,8 +124,8 @@ export {
   IframeSpec,
   createIframe,
 
-  ImagePreview as ImagePreview,
-  ImagePreviewSpec as ImagePanelSpec,
+  ImagePreview,
+  ImagePreviewSpec,
 
   Input,
   InputSpec,

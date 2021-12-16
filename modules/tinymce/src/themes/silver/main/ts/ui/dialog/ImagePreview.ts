@@ -12,7 +12,7 @@ import { Attribute, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 
-type ImagePanelSpec = Omit<Dialog.ImagePreview, 'type'>;
+type ImagePreviewSpec = Omit<Dialog.ImagePreview, 'type'>;
 
 export interface ImagePreviewData {
   readonly url: string;
@@ -41,7 +41,7 @@ const zoomToFit = (panel: SugarElement<HTMLElement>, img: SugarElement<HTMLImage
   return Math.min((panelW) / width, (panelH) / height, 1);
 };
 
-export const renderImagePreview = (spec: ImagePanelSpec): SimpleSpec => {
+export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
   const cachedData = Singleton.value<ImagePreviewData>();
 
   const memImage = Memento.record({

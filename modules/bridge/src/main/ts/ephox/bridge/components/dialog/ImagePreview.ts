@@ -13,11 +13,11 @@ export interface ImagePreview extends FormComponent {
   height: Optional<string>;
 }
 
-export const imagePanelSchema = StructureSchema.objOf(formComponentFields.concat([
+export const imagePreviewSchema = StructureSchema.objOf(formComponentFields.concat([
   FieldSchema.optionString('height'),
 ]));
 
-export const imagePanelDataProcessor = StructureSchema.objOf([
+export const imagePreviewDataProcessor = StructureSchema.objOf([
   FieldSchema.requiredString('url'),
   FieldSchema.optionNumber('zoom'),
 ]);
