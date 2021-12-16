@@ -5,18 +5,15 @@ import { FormComponent, formComponentFields, FormComponentSpec } from './FormCom
 
 export interface ImagePreviewSpec extends FormComponentSpec {
   type: 'imagepreview';
-  width?: string;
   height?: string;
 }
 
 export interface ImagePreview extends FormComponent {
   type: 'imagepreview';
-  width: Optional<string>;
   height: Optional<string>;
 }
 
 export const imagePanelSchema = StructureSchema.objOf(formComponentFields.concat([
-  FieldSchema.optionString('width'),
   FieldSchema.optionString('height'),
 ]));
 

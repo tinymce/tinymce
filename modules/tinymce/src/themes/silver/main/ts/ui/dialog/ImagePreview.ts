@@ -14,7 +14,7 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 
 type ImagePanelSpec = Omit<Dialog.ImagePreview, 'type'>;
 
-export interface ImagePanelData {
+export interface ImagePreviewData {
   readonly url: string;
   readonly zoom: Optional<number>;
 }
@@ -56,7 +56,7 @@ const zoomToFit = (panel: SugarElement<HTMLElement>, img: SugarElement<HTMLImage
 };
 
 export const renderImagePreview = (spec: ImagePanelSpec): SimpleSpec => {
-  const cachedData = Singleton.value<ImagePanelData>();
+  const cachedData = Singleton.value<ImagePreviewData>();
 
   const memImage = Memento.record({
     dom: {
@@ -78,7 +78,7 @@ export const renderImagePreview = (spec: ImagePanelSpec): SimpleSpec => {
     ]
   });
 
-  const setValue = (frameComponent: AlloyComponent, data: ImagePanelData) => {
+  const setValue = (frameComponent: AlloyComponent, data: ImagePreviewData) => {
     const repaintImg = (img: SugarElement<HTMLImageElement>) => {
       // Ensure the component hasn't been removed while the image was loading
       // if it is disconnected, just do nothing
@@ -116,7 +116,6 @@ export const renderImagePreview = (spec: ImagePanelSpec): SimpleSpec => {
   };
 
   const styles: Record<string, string> = {};
-  spec.width.each((w) => styles.width = w);
   spec.height.each((h) => styles.height = h);
 
   return {

@@ -5,7 +5,7 @@ import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { ImagePanelData, renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
+import { ImagePreviewData, renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
 
 // Dupe from the image panel. This definitely belongs somewhere else.
 const loadImage = (image: SugarElement<HTMLImageElement>): Promise<SugarElement<HTMLImageElement>> => new Promise((resolve) => {
@@ -25,11 +25,20 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
   const testImageUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==';
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
-    renderImagePreview({
-      name: 'test-panel',
-      height: Optional.some('200px'),
-      width: Optional.some('200px'),
-    })
+    {
+      dom: {
+        tag: 'div',
+        styles: {
+          width: '200px'
+        }
+      },
+      components: [
+        renderImagePreview({
+          name: 'test-panel',
+          height: Optional.some('200px'),
+        })
+      ]
+    }
   ));
 
   const findImage = (component) => UiFinder.findIn<HTMLImageElement>(component.element, 'img').getOrDie();
@@ -39,30 +48,36 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
     assert.equal(node.src, url, label + ' - checking "src" attribute');
   };
 
-  const setPanelState = (component: AlloyComponent, state: ImagePanelData) => {
-    Representing.setValue(component, state);
+  const setPanelState = (component: AlloyComponent, state: ImagePreviewData) => {
+    // the component is a wrapper div just there to set a known width, the image preview is the child
+    const [ imagePreview ] = component.components();
+    Representing.setValue(imagePreview, state);
   };
 
   it('Check basic structure', () => {
     Assertions.assertStructure(
       'Checking initial structure',
       ApproxStructure.build((s, str, arr) =>
+        // the component is a wrapper div just there to set a known width, the image preview is the child
         s.element('div', {
-          classes: [ arr.has('tox-imagepreview') ],
-          styles: {
-            width: str.is('200px'),
-            height: str.is('200px')
-          },
           children: [
             s.element('div', {
-              classes: [ arr.has('tox-imagepanel__container') ],
+              classes: [ arr.has('tox-imagepreview') ],
+              styles: {
+                height: str.is('200px')
+              },
               children: [
-                s.element('img', {
-                  classes: [ arr.has('tox-imagepanel__image') ],
-                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-imagepreview__container') ],
+                  children: [
+                    s.element('img', {
+                      classes: [ arr.has('tox-imagepreview__image') ],
+                    }),
+                  ]
+                })
               ]
             })
-          ]
+          ],
         })),
       hook.component().element
     );
@@ -86,27 +101,23 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
     });
     await loadImage(findImage(component));
     Assertions.assertStructure(
-      'Checking initial structure',
+      'Checking structure after zoom',
       ApproxStructure.build((s, str, arr) =>
+        // the component is a wrapper div just there to set a known width, the image preview is the child
         s.element('div', {
-          classes: [ arr.has('tox-imagepreview') ],
-          styles: {
-            width: str.is('200px'),
-            height: str.is('200px')
-          },
           children: [
             s.element('div', {
-              classes: [ arr.has('tox-imagepanel__container') ],
-              styles: {
-                top: str.is('99.25px'),
-                left: str.is('99.25px'),
-                width: str.is('1.5px'),
-                height: str.is('1.5px')
-              },
+              classes: [ arr.has('tox-imagepreview') ],
               children: [
-                s.element('img', {
-                  classes: [ arr.has('tox-imagepanel__image') ],
-                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-imagepreview__container') ],
+                  styles: {
+                    top: str.is('99.25px'),
+                    left: str.is('99.25px'),
+                    width: str.is('1.5px'),
+                    height: str.is('1.5px')
+                  }
+                })
               ]
             })
           ]
