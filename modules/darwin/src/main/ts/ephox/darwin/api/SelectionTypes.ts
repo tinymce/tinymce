@@ -7,17 +7,17 @@ export const enum SelectionTypeTag {
 }
 
 interface SelectionTypeNone {
-  tag: SelectionTypeTag.None;
+  readonly tag: SelectionTypeTag.None;
 }
 
 interface SelectionTypeSingle {
-  tag: SelectionTypeTag.Single;
-  element: SugarElement<HTMLTableCellElement>;
+  readonly tag: SelectionTypeTag.Single;
+  readonly element: SugarElement<HTMLTableCellElement>;
 }
 
 interface SelectionTypeMultiple {
-  tag: SelectionTypeTag.Multiple;
-  elements: SugarElement<HTMLTableCellElement>[];
+  readonly tag: SelectionTypeTag.Multiple;
+  readonly elements: SugarElement<HTMLTableCellElement>[];
 }
 
 export type SelectionType = SelectionTypeNone | SelectionTypeSingle | SelectionTypeMultiple;

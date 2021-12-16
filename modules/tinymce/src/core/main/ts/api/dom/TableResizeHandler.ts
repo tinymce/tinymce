@@ -11,7 +11,7 @@ import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
 import * as NodeType from '../../dom/NodeType';
 import * as TableSize from '../../table/TableSize';
-import * as Util from '../../table/TableUtil';
+import * as Utils from '../../table/TableUtils';
 import * as TableWire from '../../table/TableWire';
 import Editor from '../Editor';
 import * as Options from '../Options';
@@ -80,14 +80,14 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       Adjustments.adjustWidth(table, width - startW, col, resizing, tableSize);
     // Handle the edge case where someone might fire this event without resizing.
     // If so then we need to ensure the table is still using percent
-    } else if (Util.isPercentage(startRawW)) {
+    } else if (Utils.isPercentage(startRawW)) {
       const percentW = parseFloat(startRawW.replace('%', ''));
       const targetPercentW = width * percentW / startW;
       Css.set(table, 'width', targetPercentW + '%');
     }
 
     // Sync the cell sizes, as the core resizing logic doesn't update them, but snooker does
-    if (Util.isPixel(startRawW)) {
+    if (Utils.isPixel(startRawW)) {
       syncPixels(table);
     }
   };
@@ -115,20 +115,20 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
 
       sz.events.beforeResize.bind((event) => {
         const rawTable = event.table.dom;
-        Events.fireObjectResizeStart(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable), barResizerPrefix + event.type);
+        Events.fireObjectResizeStart(editor, rawTable, Utils.getPixelWidth(rawTable), Utils.getPixelHeight(rawTable), barResizerPrefix + event.type);
       });
 
       sz.events.afterResize.bind((event) => {
         const table = event.table;
         const rawTable = table.dom;
-        Util.removeDataStyle(table);
+        Utils.removeDataStyle(table);
 
         selectionRng.each((rng) => {
           editor.selection.setRng(rng);
           editor.focus();
         });
 
-        Events.fireObjectResized(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable), barResizerPrefix + event.type);
+        Events.fireObjectResized(editor, rawTable, Utils.getPixelWidth(rawTable), Utils.getPixelHeight(rawTable), barResizerPrefix + event.type);
         editor.undoManager.add();
       });
 
@@ -160,7 +160,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       }
 
       startW = e.width;
-      startRawW = Options.isTableResponsiveForced(editor) ? '' : Util.getRawWidth(editor, targetElm).getOr('');
+      startRawW = Options.isTableResponsiveForced(editor) ? '' : Utils.getRawWidth(editor, targetElm).getOr('');
     }
   });
 
@@ -175,7 +175,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
         afterCornerResize(table, origin, e.width);
       }
 
-      Util.removeDataStyle(table);
+      Utils.removeDataStyle(table);
       Events.fireTableModified(editor, table.dom, Events.styleModified);
     }
   });

@@ -18,6 +18,6 @@ export {
   TableSelection,
   WindowBridge,
   Selections,
-  CellOpSelection,
-  SelectionTypes
+  SelectionTypes,
+  CellOpSelection
 };

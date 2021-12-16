@@ -10,10 +10,7 @@ export interface Selections {
 
 export const Selections = (lazyRoot: () => SugarElement<Element>, getStart: () => Optional<SugarElement<HTMLTableCellElement>>, selectedSelector: string): Selections => {
   const get = () => TableSelection.retrieve<HTMLTableCellElement>(lazyRoot(), selectedSelector).fold(
-    () => getStart().fold(
-      SelectionTypes.none,
-      SelectionTypes.single
-    ),
+    () => getStart().fold(SelectionTypes.none, SelectionTypes.single),
     SelectionTypes.multiple
   );
 

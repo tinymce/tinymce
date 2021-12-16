@@ -12,7 +12,7 @@ import { Compare, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import * as Util from '../core/Util';
+import * as Utils from '../core/Utils';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from './TableSelection';
 
@@ -61,8 +61,8 @@ export const getSelectionTargets = (editor: Editor): SelectionTargets => {
 
   const isCaption = SugarNode.isTag('caption');
   const isDisabledForSelection = (key: keyof ExtractedSelectionDetails) => selectionDetails.forall((details) => !details[key]);
-  const getStart = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
-  const getEnd = () => TableSelection.getSelectionCellOrCaption(Util.getSelectionEnd(editor), Util.getIsRoot(editor));
+  const getStart = () => TableSelection.getSelectionCellOrCaption(Utils.getSelectionStart(editor), Utils.getIsRoot(editor));
+  const getEnd = () => TableSelection.getSelectionCellOrCaption(Utils.getSelectionEnd(editor), Utils.getIsRoot(editor));
 
   const findTargets = (): Optional<RunOperation.CombinedTargets> =>
     getStart().bind((startCellOrCaption) =>
@@ -165,7 +165,7 @@ export const getSelectionTargets = (editor: Editor): SelectionTargets => {
 
   const onSetupTableWithCaption = (api: UiToggleApi) => {
     return onSetupWithToggle(api, Fun.never, (targets) => {
-      const tableOpt = TableLookup.table(targets.element, Util.getIsRoot(editor));
+      const tableOpt = TableLookup.table(targets.element, Utils.getIsRoot(editor));
       return tableOpt.exists((table) => SelectorExists.child(table, 'caption'));
     });
   };

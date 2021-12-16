@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
 
-import { addPxSuffix, removePxSuffix } from 'tinymce/plugins/table/core/Util';
+import { addPxSuffix, removePxSuffix } from 'tinymce/plugins/table/core/Utils';
 
 describe('atomic.tinymce.plugins.table.core.UtilTest', () => {
   it('removePxSuffix', () => {

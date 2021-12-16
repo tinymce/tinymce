@@ -13,16 +13,17 @@ import {
 import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { TableEventData } from 'tinymce/core/api/EventTypes';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
-import * as Util from '../core/Util';
+import * as Utils from '../core/TableUtils';
 import * as TableSize from '../queries/TableSize';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T, noEvents?: boolean) => Optional<TableActionResult>;
 export interface TableActionResult {
   readonly rng: Range;
-  readonly effect: Events.TableEventData;
+  readonly effect: TableEventData;
 }
 export type CombinedTargetsTableAction = TableAction<RunOperation.CombinedTargets>;
 export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
@@ -60,7 +61,7 @@ export interface TableActions {
 
 export const TableActions = (editor: Editor): TableActions => {
   const isTableBody = (editor: Editor): boolean =>
-    SugarNode.name(Util.getBody(editor)) === 'table';
+    SugarNode.name(Utils.getBody(editor)) === 'table';
 
   const lastRowGuard = (table: SugarElement<HTMLTableElement>): boolean =>
     isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
@@ -111,9 +112,9 @@ export const TableActions = (editor: Editor): TableActions => {
       return Optional.some(rng);
     });
 
-  const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, effect: Events.TableEventData) =>
+  const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, effect: TableEventData) =>
     (table: SugarElement<HTMLTableElement>, target: T, noEvents: boolean = false): Optional<TableActionResult> => {
-      Util.removeDataStyle(table);
+      Utils.removeDataStyle(table);
       const doc = SugarElement.fromDom(editor.getDoc());
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const behaviours: RunOperation.OperationBehaviours = {
@@ -136,7 +137,7 @@ export const TableActions = (editor: Editor): TableActions => {
         const range = setSelectionFromAction(table, result);
 
         if (SugarBody.inBody(table)) {
-          Util.removeDataStyle(table);
+          Utils.removeDataStyle(table);
           if (!noEvents) {
             Events.fireTableModified(editor, table.dom, effect);
           }

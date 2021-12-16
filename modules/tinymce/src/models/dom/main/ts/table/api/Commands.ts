@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActionResult, TableActions } from '../actions/TableActions';
 import * as Events from '../api/Events';
-import * as Util from '../core/Util';
+import * as Utils from '../core/TableUtils';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
 import { Clipboard } from './Clipboard';
@@ -22,13 +22,13 @@ import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Optio
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
 
 const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>> =>
-  TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+  TableSelection.getSelectionCellOrCaption(Utils.getSelectionStart(editor), Utils.getIsRoot(editor));
 
 const getSelectionStartCell = (editor: Editor): Optional<SugarElement<HTMLTableCellElement>> =>
-  TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+  TableSelection.getSelectionCell(Utils.getSelectionStart(editor), Utils.getIsRoot(editor));
 
 const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clipboard): void => {
-  const isRoot = Util.getIsRoot(editor);
+  const isRoot = Utils.getIsRoot(editor);
   const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
       const cursor = SugarElement.fromText('');
@@ -60,7 +60,7 @@ const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clip
         } else if (sizing === 'responsive' && !Sizes.isNoneSizing(table)) {
           TableConversions.convertToNoneSize(table);
         }
-        Util.removeDataStyle(table);
+        Utils.removeDataStyle(table);
         Events.fireTableModified(editor, table.dom, Events.structureModified);
       });
     }

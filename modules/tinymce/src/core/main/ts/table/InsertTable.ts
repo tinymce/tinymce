@@ -12,7 +12,7 @@ import { Attribute, Html, SelectorFilter, SelectorFind, SugarElement } from '@ep
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as Events from '../api/TableEvents';
-import * as Util from './TableUtil';
+import * as Utils from './TableUtils';
 
 const placeCaretInCell = (editor: Editor, cell: SugarElement<HTMLTableCellElement>): void => {
   editor.selection.select(cell.dom, true);
@@ -55,7 +55,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   });
 
   // Enforce the sizing mode of the table
-  return SelectorFind.descendant<HTMLTableElement>(Util.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
+  return SelectorFind.descendant<HTMLTableElement>(Utils.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
     if (Options.isTablePixelsForced(editor)) {
       TableConversions.convertToPixelSize(table);
     } else if (Options.isTableResponsiveForced(editor)) {
@@ -63,7 +63,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
     } else if (Options.isTablePercentagesForced(editor) || isPercentage(defaultStyles.width)) {
       TableConversions.convertToPercentSize(table);
     }
-    Util.removeDataStyle(table);
+    Utils.removeDataStyle(table);
     Attribute.remove(table, 'data-mce-id');
     fireEvents(editor, table);
     selectFirstCellInTable(editor, table);

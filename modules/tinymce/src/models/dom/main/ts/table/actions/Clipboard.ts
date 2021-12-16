@@ -11,7 +11,7 @@ import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Util from '../core/Util';
+import * as Utils from '../core/TableUtils';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
@@ -22,7 +22,7 @@ const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<
   return TableLookup.table(cells[0]).map(
     (table) => {
       const replica = CopySelected.extract(table, Ephemera.attributeSelector);
-      Util.removeDataStyle(replica);
+      Utils.removeDataStyle(replica);
       return [ replica ];
     }
   );

@@ -13,7 +13,7 @@ import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, 
 
 import { ephemera } from '../../table/TableEphemera';
 import { getCellsFromSelection } from '../../table/TableSelection';
-import * as Util from '../../table/TableUtil';
+import * as Utils from '../../table/TableUtils';
 import Editor from '../Editor';
 import * as Options from '../Options';
 import * as Events from '../TableEvents';
@@ -44,8 +44,8 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
 
   editor.on('init', (_e) => {
     const win = editor.getWin();
-    const body = Util.getBody(editor);
-    const isRoot = Util.getIsRoot(editor);
+    const body = Utils.getBody(editor);
+    const isRoot = Utils.getIsRoot(editor);
 
     // When the selection changes through either the mouse or keyboard, and the selection is no longer within the table.
     // Remove the selection.

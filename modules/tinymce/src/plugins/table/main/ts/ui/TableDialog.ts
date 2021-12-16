@@ -16,7 +16,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
-import * as Util from '../core/Util';
+import * as Utils from '../core/Utils';
 import * as TableSelection from '../selection/TableSelection';
 import { getAdvancedTab } from './DialogAdvancedTab';
 import * as Helpers from './Helpers';
@@ -49,17 +49,17 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   attrs.class = data.class;
 
-  styles.height = Util.addPxSuffix(data.height);
+  styles.height = Utils.addPxSuffix(data.height);
 
   if (dom.getAttrib(tableElm, 'width') && !Options.shouldStyleWithCss(editor)) {
-    attrs.width = Util.removePxSuffix(data.width);
+    attrs.width = Utils.removePxSuffix(data.width);
   } else {
-    styles.width = Util.addPxSuffix(data.width);
+    styles.width = Utils.addPxSuffix(data.width);
   }
 
   if (Options.shouldStyleWithCss(editor)) {
-    styles['border-width'] = Util.addPxSuffix(data.border);
-    styles['border-spacing'] = Util.addPxSuffix(data.cellspacing);
+    styles['border-width'] = Utils.addPxSuffix(data.border);
+    styles['border-spacing'] = Utils.addPxSuffix(data.cellspacing);
   } else {
     attrs.border = data.border;
     attrs.cellpadding = data.cellpadding;
@@ -71,8 +71,8 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
   if (Options.shouldStyleWithCss(editor) && tableElm.children) {
     for (let i = 0; i < tableElm.children.length; i++) {
       styleTDTH(dom, tableElm.children[i], {
-        'border-width': Util.addPxSuffix(data.border),
-        'padding': Util.addPxSuffix(data.cellpadding)
+        'border-width': Utils.addPxSuffix(data.border),
+        'padding': Utils.addPxSuffix(data.cellpadding)
       });
       if (Options.hasAdvancedTableTab(editor)) {
         styleTDTH(dom, tableElm.children[i], {
@@ -110,8 +110,8 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | undefine
       const rows = parseInt(data.rows, 10) || 1;
       // Cases 1 & 3 - inserting a table
       editor.execCommand('mceInsertTable', false, { rows, columns: cols });
-      tableElm = TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor))
-        .bind((cell) => TableLookup.table(cell, Util.getIsRoot(editor)))
+      tableElm = TableSelection.getSelectionCell(Utils.getSelectionStart(editor), Utils.getIsRoot(editor))
+        .bind((cell) => TableLookup.table(cell, Utils.getIsRoot(editor)))
         .map((table) => table.dom)
         .getOrUndefined();
     }
