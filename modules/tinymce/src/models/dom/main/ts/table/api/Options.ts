@@ -8,27 +8,19 @@
 import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
-export interface StringMap {
-  [key: string]: string;
-}
-
- type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
-
 const option: {
   <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
   <T>(name: string): (editor: Editor) => T | undefined;
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
-// const register = (editor: Editor): void => {
-// const registerOption = editor.options.register;
-//
-// };
+const getCloneElements = option('table_clone_elements');
 
-const getColumnResizingBehaviour = option<'preservetable' | 'resizetable'>('table_column_resizing');
+const getColumnResizingBehaviour = option('table_column_resizing');
 
-const getTableSizingMode = option<TableSizingMode>('table_sizing_mode');
-const getTableHeaderType = option<string>('table_header_type');
+const getTableSizingMode = option('table_sizing_mode');
+
+const getTableHeaderType = option('table_header_type');
 
 const isPercentagesForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'relative';
@@ -39,11 +31,7 @@ const isPixelsForced = (editor: Editor): boolean =>
 const isResponsiveForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'responsive';
 
-const getCloneElements = (editor: Editor): string[] =>
-  editor.options.get('table_clone_elements');
-
 export {
-  // register,
   getCloneElements,
   isPercentagesForced,
   isPixelsForced,

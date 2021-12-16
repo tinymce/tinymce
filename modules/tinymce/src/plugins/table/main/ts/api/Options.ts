@@ -14,14 +14,9 @@ import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
 import { UserListItem, UserListValue } from '../ui/UiUtils';
 
-export interface StringMap {
-  [key: string]: string;
-}
-
-type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
-
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
 
+// Note: This is also specified in the core Options.ts file
 const defaultStyles = {
   'border-collapse': 'collapse',
   'width': '100%'
@@ -36,6 +31,7 @@ const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double',
   return { title: type, value: type.toLowerCase() };
 });
 
+// Note: This is also contained in the core Options.ts file
 const determineDefaultStyles = (editor: Editor): Record<string, string> => {
   if (isPixelsForced(editor)) {
     // Determine the inner size of the parent block element where the table will be inserted
@@ -131,10 +127,10 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getTableSizingMode = option<TableSizingMode>('table_sizing_mode');
+const getTableSizingMode = option('table_sizing_mode');
 const getTableBorderWidths = option<UserListItem[]>('table_border_widths');
 const getTableBorderStyles = option<UserListValue[]>('table_border_styles');
-const getDefaultAttributes = option<StringMap>('table_default_attributes');
+const getDefaultAttributes = option('table_default_attributes');
 const hasAdvancedCellTab = option<boolean>('table_cell_advtab');
 const hasAdvancedRowTab = option<boolean>('table_row_advtab');
 const hasAdvancedTableTab = option<boolean>('table_advtab');
@@ -154,7 +150,7 @@ const isPixelsForced = (editor: Editor): boolean =>
 const isResponsiveForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'responsive';
 
-const getDefaultStyles = (editor: Editor): StringMap => {
+const getDefaultStyles = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
   const options = editor.options;
   return options.isSet('table_default_styles') ? options.get('table_default_styles') : determineDefaultStyles(editor);

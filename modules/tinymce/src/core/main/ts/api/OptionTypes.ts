@@ -33,7 +33,7 @@ export type SetupCallback = (editor: Editor) => void;
 
 export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
-export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string}) => void) => void;
+export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string }) => void) => void;
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => string;
@@ -44,6 +44,10 @@ export interface ToolbarGroup {
 }
 
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
+
+export type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
+export type TableColumnResizing = 'preservetable' | 'resizetable';
+export type TableHeaderType = 'section' | 'cells' | 'sectionCells' | 'auto';
 
 interface BaseEditorOptions {
   a11y_advanced_options?: boolean;
@@ -215,6 +219,17 @@ interface BaseEditorOptions {
   forced_plugins?: string | string[];
   plugin_base_urls?: Record<string, string>;
   service_message?: string;
+
+  // Table specific options
+  table_clone_elements?: string[];
+  table_tab_navigation?: boolean;
+  table_resize_bars?: boolean;
+  table_sizing_mode?: TableSizingMode;
+  table_column_resizing?: TableColumnResizing;
+  table_default_attributes?: Record<string, string>;
+  table_default_styles?: Record<string, string>;
+  table_use_colgroups?: boolean;
+  table_header_type?: TableHeaderType;
 
   // Allow additional dynamic settings
   [key: string]: any;

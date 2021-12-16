@@ -19,8 +19,6 @@ const deviceDetection = PlatformDetection.detect().deviceType;
 const isTouch = deviceDetection.isTouch();
 const DOM = DOMUtils.DOM;
 
-type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
-
 const getHash = (value: string): Record<string, string> => {
   const items = value.indexOf('=') > 0 ? value.split(/[;,](?![^=;,]*(?:[;,]|$))/) : value.split(',');
   return Arr.foldl(items, (output, item) => {
@@ -32,10 +30,7 @@ const getHash = (value: string): Record<string, string> => {
   }, {} as Record<string, string>);
 };
 
-const option: {
-  <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
-  <T>(name: string): (editor: Editor) => T | undefined;
-} = (name: string) => (editor: Editor) =>
+const option = <K extends keyof EditorOptions>(name: K) => (editor: Editor) =>
   editor.options.get(name);
 
 const stringOrObjectProcessor = (value: string) =>
@@ -55,6 +50,7 @@ const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (valu
   }
 };
 
+// Note: This is also specified in the table plugin Options.ts file
 const defaultTableStyles = {
   'border-collapse': 'collapse',
   'width': '100%'
@@ -850,6 +846,7 @@ const isEncodingXml = (editor: Editor): boolean =>
 const hasForcedRootBlock = (editor: Editor): boolean =>
   getForcedRootBlock(editor) !== '';
 
+// Note: This is also contained in the table plugin Options.ts file
 const determineDefaultTableStyles = (editor: Editor): Record<string, string> => {
   if (isTablePixelsForced(editor)) {
     // Determine the inner size of the parent block element where the table will be inserted
@@ -864,11 +861,10 @@ const determineDefaultTableStyles = (editor: Editor): Record<string, string> => 
   }
 };
 
-const getTableCloneElements = (editor: Editor): string[] | undefined =>
-  editor.options.get('table_clone_elements');
+const getTableCloneElements = option('table_clone_elements');
 const hasTableTabNavigation = option('table_tab_navigation');
-const getTableSizingMode = option<TableSizingMode>('table_sizing_mode');
-const getTableColumnResizingBehaviour = option<'preservetable' | 'resizetable'>('table_column_resizing');
+const getTableSizingMode = option('table_sizing_mode');
+const getTableColumnResizingBehaviour = option('table_column_resizing');
 const hasTableObjectResizing = (editor: Editor): boolean => {
   const objectResizing = editor.options.get('object_resizing');
   return Arr.contains(objectResizing.split(','), 'table');
