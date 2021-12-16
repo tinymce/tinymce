@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Optional, Singleton } from '@ephox/katamari';
+import { Optional, Optionals, Singleton } from '@ephox/katamari';
 import { Attribute, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -17,6 +17,9 @@ type ImagePreviewSpec = Omit<Dialog.ImagePreview, 'type'>;
 export interface ImagePreviewData {
   readonly url: string;
   readonly zoom: Optional<number>;
+  // not documented, but can be helpful when dynamically changing the URL
+  readonly cachedWidth: Optional<number>;
+  readonly cachedHeight: Optional<number>;
 }
 
 const calculateImagePosition = (panelWidth: number, panelHeight: number, imageWidth: number, imageHeight: number, zoom: number) => {
@@ -33,11 +36,9 @@ const calculateImagePosition = (panelWidth: number, panelHeight: number, imageWi
   };
 };
 
-const zoomToFit = (panel: SugarElement<HTMLElement>, img: SugarElement<HTMLImageElement>) => {
+const zoomToFit = (panel: SugarElement<HTMLElement>, width: number, height: number) => {
   const panelW = Width.get(panel);
   const panelH = Height.get(panel);
-  const width = img.dom.naturalWidth;
-  const height = img.dom.naturalHeight;
   return Math.min((panelW) / width, (panelH) / height, 1);
 };
 
@@ -65,30 +66,25 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
   });
 
   const setValue = (frameComponent: AlloyComponent, data: ImagePreviewData) => {
-    const repaintImg = (img: SugarElement<HTMLImageElement>) => {
-      // Ensure the component hasn't been removed while the image was loading
-      // if it is disconnected, just do nothing
-      if (frameComponent.getSystem().isConnected()) {
-        const zoom = data.zoom.getOrThunk(() => {
-          const z = zoomToFit(frameComponent.element, img);
-          cachedData.set({
-            ...data,
-            zoom: Optional.some(z)
-          });
-          return z;
-        }
-        );
-        const position = calculateImagePosition(
-          Width.get(frameComponent.element),
-          Height.get(frameComponent.element),
-          img.dom.naturalWidth,
-          img.dom.naturalHeight,
-          zoom
-        );
-        memContainer.getOpt(frameComponent).each((container) => {
-          Css.setAll(container.element, position);
+    const applyFramePositioning = (imageWidth: number, imageHeight: number) => {
+      const zoom = data.zoom.getOrThunk(() => {
+        const z = zoomToFit(frameComponent.element, imageWidth, imageHeight);
+        cachedData.set({
+          ...data,
+          zoom: Optional.some(z)
         });
+        return z;
       }
+      );
+      const position = calculateImagePosition(
+        Width.get(frameComponent.element),
+        Height.get(frameComponent.element),
+        imageWidth, imageHeight,
+        zoom
+      );
+      memContainer.getOpt(frameComponent).each((container) => {
+        Css.setAll(container.element, position);
+      });
     };
 
     memImage.getOpt(frameComponent).each((imageComponent) => {
@@ -97,7 +93,17 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
         Attribute.set(img, 'src', data.url);
       }
 
-      Ready.image(img).then(repaintImg);
+      Optionals.lift2(data.cachedWidth, data.cachedHeight, (width, height) => {
+        applyFramePositioning(width, height);
+      });
+
+      Ready.image(img).then((img: SugarElement<HTMLImageElement>) => {
+        // Ensure the component hasn't been removed while the image was loading
+        // if it is disconnected, just do nothing
+        if (frameComponent.getSystem().isConnected()) {
+          applyFramePositioning(img.dom.naturalWidth, img.dom.naturalHeight);
+        }
+      });
     });
   };
 

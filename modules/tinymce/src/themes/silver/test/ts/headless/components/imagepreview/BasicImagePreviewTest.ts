@@ -74,7 +74,9 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
     assertImageState('Initial image panel state', component, '');
     setPanelState(component, {
       url: testImageUrl,
-      zoom: Optional.none()
+      zoom: Optional.none(),
+      cachedWidth: Optional.none(),
+      cachedHeight: Optional.none(),
     });
     assertImageState('set URL state', component, testImageUrl);
   });
@@ -83,7 +85,9 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
     const component = hook.component();
     setPanelState(component, {
       url: testImageUrl,
-      zoom: Optional.some(1.5)
+      zoom: Optional.some(1.5),
+      cachedWidth: Optional.none(),
+      cachedHeight: Optional.none(),
     });
     await Ready.image(findImage(component));
     Assertions.assertStructure(

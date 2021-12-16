@@ -20,4 +20,6 @@ export const imagePreviewSchema = StructureSchema.objOf(formComponentFields.conc
 export const imagePreviewDataProcessor = StructureSchema.objOf([
   FieldSchema.requiredString('url'),
   FieldSchema.optionNumber('zoom'),
+  FieldSchema.optionNumber('cachedWidth'),
+  FieldSchema.optionNumber('cachedHeight'),
 ]);
