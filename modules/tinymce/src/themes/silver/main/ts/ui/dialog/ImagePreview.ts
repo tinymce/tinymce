@@ -12,7 +12,7 @@ import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 
-type ImagePanelSpec = Omit<Dialog.ImagePanel, 'type'>;
+type ImagePanelSpec = Omit<Dialog.ImagePreview, 'type'>;
 
 export interface ImagePanelData {
   readonly url: string;
@@ -55,20 +55,20 @@ const zoomToFit = (panel: SugarElement<HTMLElement>, img: SugarElement<HTMLImage
   return Math.min((panelW) / width, (panelH) / height, 1);
 };
 
-export const renderImagePanel = (spec: ImagePanelSpec): SimpleSpec => {
+export const renderImagePreview = (spec: ImagePanelSpec): SimpleSpec => {
   const cachedData = Singleton.value<ImagePanelData>();
 
   const memImage = Memento.record({
     dom: {
       tag: 'img',
-      classes: [ 'tox-imagepanel__image' ],
+      classes: [ 'tox-imagepreview__image' ],
     },
   });
 
   const memContainer = Memento.record({
     dom: {
       tag: 'div',
-      classes: [ 'tox-imagepanel__container' ],
+      classes: [ 'tox-imagepreview__container' ],
       attributes: {
         role: 'presentation'
       },
@@ -85,7 +85,10 @@ export const renderImagePanel = (spec: ImagePanelSpec): SimpleSpec => {
       if (frameComponent.getSystem().isConnected()) {
         const zoom = data.zoom.getOrThunk(() => {
           const z = zoomToFit(frameComponent.element, img);
-          data.zoom = Optional.some(z);
+          cachedData.set({
+            ...data,
+            zoom: Optional.some(z)
+          });
           return z;
         }
         );
@@ -99,7 +102,6 @@ export const renderImagePanel = (spec: ImagePanelSpec): SimpleSpec => {
         memContainer.getOpt(frameComponent).each((container) => {
           Css.setAll(container.element, position);
         });
-        cachedData.set(data);
       }
     };
 
@@ -120,7 +122,7 @@ export const renderImagePanel = (spec: ImagePanelSpec): SimpleSpec => {
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-imagepanel' ],
+      classes: [ 'tox-imagepreview' ],
       styles,
       attributes: {
         role: 'presentation'

@@ -21,7 +21,7 @@ import { createDropZone, DropZone, DropZoneSpec } from '../components/dialog/Dro
 import { createGridFields, Grid, GridSpec } from '../components/dialog/Grid';
 import { createHtmlPanel, HtmlPanel, HtmlPanelSpec } from '../components/dialog/HtmlPanel';
 import { createIframe, Iframe, IframeSpec } from '../components/dialog/Iframe';
-import { ImagePanel, ImagePanelSpec } from '../components/dialog/ImagePanel';
+import { ImagePreview, ImagePreviewSpec } from '../components/dialog/ImagePreview';
 import { createInput, Input, InputSpec } from '../components/dialog/Input';
 import { createLabelFields, Label, LabelSpec } from '../components/dialog/Label';
 import {
@@ -124,8 +124,8 @@ export {
   IframeSpec,
   createIframe,
 
-  ImagePanel,
-  ImagePanelSpec,
+  ImagePreview as ImagePreview,
+  ImagePreviewSpec as ImagePanelSpec,
 
   Input,
   InputSpec,

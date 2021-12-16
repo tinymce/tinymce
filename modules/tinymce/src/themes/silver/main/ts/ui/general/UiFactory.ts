@@ -17,7 +17,7 @@ import { renderCustomEditor } from '../dialog/CustomEditor';
 import { renderDropZone } from '../dialog/Dropzone';
 import { renderGrid } from '../dialog/Grid';
 import { renderIFrame } from '../dialog/IFrame';
-import { renderImagePanel } from '../dialog/ImagePanel';
+import { renderImagePreview } from '../dialog/ImagePreview';
 import { renderLabel } from '../dialog/Label';
 import { renderListBox } from '../dialog/ListBox';
 import { renderPanel } from '../dialog/Panel';
@@ -72,7 +72,7 @@ const factories: Record<string, FormPartRenderer> = {
   urlinput: make((spec, backstage) => renderUrlInput(spec, backstage, backstage.urlinput)),
   customeditor: make(renderCustomEditor),
   htmlpanel: make(renderHtmlPanel),
-  imagepanel: make(renderImagePanel),
+  imagepreview: make(renderImagePreview),
   table: make((spec, backstage) => renderTable(spec, backstage.shared.providers)),
   panel: make((spec, backstage) => renderPanel(spec, backstage))
 };

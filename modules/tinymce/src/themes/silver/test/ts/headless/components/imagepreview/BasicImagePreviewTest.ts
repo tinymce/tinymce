@@ -5,7 +5,7 @@ import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { ImagePanelData, renderImagePanel } from 'tinymce/themes/silver/ui/dialog/ImagePanel';
+import { ImagePanelData, renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
 
 // Dupe from the image panel. This definitely belongs somewhere else.
 const loadImage = (image: SugarElement<HTMLImageElement>): Promise<SugarElement<HTMLImageElement>> => new Promise((resolve) => {
@@ -21,11 +21,11 @@ const loadImage = (image: SugarElement<HTMLImageElement>): Promise<SugarElement<
   }
 });
 
-describe('headless.tinymce.themes.silver.components.imagepanel.Image Panel component Test', () => {
+describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePreviewTest', () => {
   const testImageUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==';
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
-    renderImagePanel({
+    renderImagePreview({
       name: 'test-panel',
       height: Optional.some('200px'),
       width: Optional.some('200px'),
@@ -48,7 +48,7 @@ describe('headless.tinymce.themes.silver.components.imagepanel.Image Panel compo
       'Checking initial structure',
       ApproxStructure.build((s, str, arr) =>
         s.element('div', {
-          classes: [ arr.has('tox-imagepanel') ],
+          classes: [ arr.has('tox-imagepreview') ],
           styles: {
             width: str.is('200px'),
             height: str.is('200px')
@@ -89,7 +89,7 @@ describe('headless.tinymce.themes.silver.components.imagepanel.Image Panel compo
       'Checking initial structure',
       ApproxStructure.build((s, str, arr) =>
         s.element('div', {
-          classes: [ arr.has('tox-imagepanel') ],
+          classes: [ arr.has('tox-imagepreview') ],
           styles: {
             width: str.is('200px'),
             height: str.is('200px')
