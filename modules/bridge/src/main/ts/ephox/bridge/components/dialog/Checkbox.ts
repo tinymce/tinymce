@@ -1,26 +1,25 @@
-import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import { StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
-export interface CheckboxSpec {
-  name: string;
+import * as ComponentSchema from '../../core/ComponentSchema';
+import { FormComponent, formComponentFields, FormComponentSpec } from './FormComponent';
+
+export interface CheckboxSpec extends FormComponentSpec {
   type: 'checkbox';
   label: string;
   disabled?: boolean;
 }
 
-export interface Checkbox {
-  name: string;
+export interface Checkbox extends FormComponent {
   type: 'checkbox';
   label: string;
   disabled: boolean;
 }
 
-const checkboxFields = [
-  FieldSchema.requiredString('type'),
-  FieldSchema.requiredString('name'),
-  FieldSchema.requiredString('label'),
-  FieldSchema.defaultedBoolean('disabled', false)
-];
+const checkboxFields = formComponentFields.concat([
+  ComponentSchema.label,
+  ComponentSchema.disabled
+]);
 
 export const checkboxSchema = StructureSchema.objOf(checkboxFields);
 

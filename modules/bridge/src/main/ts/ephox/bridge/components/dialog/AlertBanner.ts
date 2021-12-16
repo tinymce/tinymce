@@ -1,6 +1,8 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
+
 export interface AlertBannerSpec {
   type: 'alertbanner';
   level: 'info' | 'warn' | 'error' | 'success';
@@ -18,10 +20,10 @@ export interface AlertBanner {
 }
 
 const alertBannerFields = [
-  FieldSchema.requiredString('type'),
-  FieldSchema.requiredString('text'),
+  ComponentSchema.type,
+  ComponentSchema.text,
   FieldSchema.requiredStringEnum('level', [ 'info', 'warn', 'error', 'success' ]),
-  FieldSchema.requiredString('icon'),
+  ComponentSchema.icon,
   FieldSchema.defaulted('url', '')
 ];
 

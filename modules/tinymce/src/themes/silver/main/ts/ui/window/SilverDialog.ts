@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Composing, ModalDialog } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Id, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderModalBody } from './SilverDialogBody';
@@ -27,20 +27,22 @@ const getDialogSizeClasses = (size: Dialog.DialogSize): string[] => {
   }
 };
 
-const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage) => {
-  const header = SilverDialogCommon.getHeader(dialogInit.internalDialog.title, backstage);
+const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage) => {
+  const dialogId = Id.generate('dialog');
+  const internalDialog = dialogInit.internalDialog;
+  const header = SilverDialogCommon.getHeader(internalDialog.title, dialogId, backstage);
 
   const body = renderModalBody({
     body: dialogInit.internalDialog.body
-  }, backstage);
+  }, dialogId, backstage);
 
-  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons);
+  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(internalDialog.buttons);
 
   const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
 
   const footer = renderModalFooter({
     buttons: storagedMenuButtons
-  }, backstage);
+  }, dialogId, backstage);
 
   const dialogEvents = SilverDialogEvents.initDialog(
     () => instanceApi,
@@ -48,9 +50,10 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
     backstage.shared.getSink
   );
 
-  const dialogSize = getDialogSizeClasses(dialogInit.internalDialog.size);
+  const dialogSize = getDialogSizeClasses(internalDialog.size);
 
   const spec = {
+    id: dialogId,
     header,
     body,
     footer: Optional.some(footer),
@@ -68,6 +71,7 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
     };
 
     return {
+      getId: Fun.constant(dialogId),
       getRoot: Fun.constant(dialog),
       getBody: () => ModalDialog.getBody(dialog),
       getFooter: () => ModalDialog.getFooter(dialog),

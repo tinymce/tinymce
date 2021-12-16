@@ -1,6 +1,7 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { CommonMenuItem, CommonMenuItemSpec, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
 
 export interface ChoiceMenuItemSpec extends CommonMenuItemSpec {
@@ -20,9 +21,9 @@ export interface ChoiceMenuItem extends CommonMenuItem {
 }
 
 export const choiceMenuItemSchema = StructureSchema.objOf([
-  FieldSchema.requiredString('type'),
-  FieldSchema.defaultedBoolean('active', false),
-  FieldSchema.optionString('icon')
+  ComponentSchema.type,
+  ComponentSchema.active,
+  ComponentSchema.optionalIcon
 ].concat(commonMenuItemFields));
 
 export const createChoiceMenuItem = (spec: ChoiceMenuItemSpec): Result<ChoiceMenuItem, StructureSchema.SchemaError<any>> =>
