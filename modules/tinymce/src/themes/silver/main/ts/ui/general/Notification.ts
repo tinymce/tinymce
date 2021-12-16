@@ -66,9 +66,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       innerHtml: detail.translationProvider(detail.text)
     },
     behaviours: Behaviour.derive([
-      Replacing.config({
-        reuseDom: true
-      })
+      Replacing.config({ })
     ])
   });
 
@@ -108,9 +106,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       renderPercentText(0)
     ],
     behaviours: Behaviour.derive([
-      Replacing.config({
-        reuseDom: true
-      })
+      Replacing.config({ })
     ])
   });
 
@@ -182,9 +178,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       memBannerText.asSpec()
     ],
     behaviours: Behaviour.derive([
-      Replacing.config({
-        reuseDom: true
-      })
+      Replacing.config({ })
     ])
   };
 

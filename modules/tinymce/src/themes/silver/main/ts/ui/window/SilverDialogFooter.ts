@@ -76,8 +76,7 @@ const renderFooter = (initSpec: WindowFooterSpec, backstage: UiFactoryBackstage)
         channel: footerChannel,
         initialData: initSpec,
         updateState,
-        renderComponents,
-        reuseDom: true
+        renderComponents
       })
     ])
   };

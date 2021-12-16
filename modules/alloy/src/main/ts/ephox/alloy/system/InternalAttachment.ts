@@ -36,21 +36,13 @@ const virtualAttach = (parent: AlloyComponent, child: AlloyComponent): void => {
 
 // Unlike detach, a virtualDetach makes no actual DOM changes.
 // This is because it's used in patching circumstances.
-const doVirtualDetach = (comp: AlloyComponent): void => {
+const virtualDetach = (comp: AlloyComponent): void => {
   fireDetaching(comp);
   comp.getSystem().removeFromWorld(comp);
 };
 
-const doAttach = (parent: AlloyComponent, child: AlloyComponent): void => {
-  Insert.append(parent.element, child.element);
-};
-
 const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
-  parent.getSystem().addToWorld(child);
-  doAttach(parent, child);
-  if (SugarBody.inBody(parent.element)) {
-    fireAttaching(child);
-  }
+  Insert.append(parent.element, child.element);
 };
 
 const detachChildren = (component: AlloyComponent): void => {
@@ -79,9 +71,13 @@ const replaceChildren = (component: AlloyComponent, newSpecs: AlloySpec[], build
   Arr.each(newChildren, (childComp) => {
     // If the component isn't connected, ie is new, then we also need to add it to the world
     if (!isConnected(childComp)) {
+      component.getSystem().addToWorld(childComp);
       attach(component, childComp);
+      if (SugarBody.inBody(component.element)) {
+        fireAttaching(childComp);
+      }
     } else {
-      doAttach(component, childComp);
+      attach(component, childComp);
     }
   });
   component.syncComponents();
@@ -93,7 +89,7 @@ const virtualReplaceChildren = (component: AlloyComponent, newSpecs: AlloySpec[]
   const existingComps = Arr.bind(newSpecs, (spec) => GuiTypes.getPremade(spec).toArray());
   Arr.each(subs, (childComp) => {
     if (!Arr.contains(existingComps, childComp)) {
-      doVirtualDetach(childComp);
+      virtualDetach(childComp);
     }
   });
 
@@ -105,7 +101,7 @@ const virtualReplaceChildren = (component: AlloyComponent, newSpecs: AlloySpec[]
   const deleted = Arr.difference(subs, newChildren);
   Arr.each(deleted, (deletedComp) => {
     if (isConnected(deletedComp)) {
-      doVirtualDetach(deletedComp);
+      virtualDetach(deletedComp);
     }
   });
 
@@ -125,10 +121,10 @@ export {
   fireAttaching,
   fireDetaching,
 
-  attach,
   detachChildren,
   replaceChildren,
 
   virtualAttach,
+  virtualDetach,
   virtualReplaceChildren
 };

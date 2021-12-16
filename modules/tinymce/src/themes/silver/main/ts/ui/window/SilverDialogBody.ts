@@ -64,8 +64,7 @@ const renderBody = (spec: WindowBodySpec, id: Optional<string>, backstage: UiFac
         channel: bodyChannel,
         updateState,
         renderComponents,
-        initialData: spec,
-        reuseDom: true
+        initialData: spec
       })
     ])
   };

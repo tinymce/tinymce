@@ -196,9 +196,7 @@ const renderSidebar = (spec) => ({
             AlloyTriggers.emitWith(slider, fixSize, { width: Width.get(slider.element) + 'px' });
           }
         }),
-        Replacing.config({
-          reuseDom: true
-        }),
+        Replacing.config({}),
         Composing.config({
           find: (comp: AlloyComponent) => {
             const children = Replacing.contents(comp);

@@ -133,9 +133,7 @@ const renderCommonDropdown = <T>(
         DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.isDisabled()),
         ReadOnly.receivingConfig(),
         Unselecting.config({ }),
-        Replacing.config({
-          reuseDom: true
-        }),
+        Replacing.config({ }),
         AddEventsBehaviour.config('dropdown-events', [
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)

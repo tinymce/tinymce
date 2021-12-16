@@ -59,8 +59,7 @@ const renderTitle = (
     behaviours: Behaviour.derive([
       Reflecting.config({
         channel: titleChannel,
-        renderComponents,
-        reuseDom: true
+        renderComponents
       })
     ])
   };

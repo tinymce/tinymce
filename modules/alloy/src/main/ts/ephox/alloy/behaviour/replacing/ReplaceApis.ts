@@ -4,9 +4,27 @@ import { Compare, Insert, SugarElement } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as Attachment from '../../api/system/Attachment';
+import * as InternalAttachment from '../../system/InternalAttachment';
 import { Stateless } from '../common/BehaviourState';
 import { withoutReuse, withReuse } from './ReplacingAll';
 import { ReplacingConfig } from './ReplacingTypes';
+
+const virtualReplace = (component: AlloyComponent, replacee: AlloyComponent, _replaceeIndex: number, childSpec: AlloySpec) => {
+  InternalAttachment.virtualDetach(replacee);
+  const child = component.getSystem().buildOrPatch(childSpec, Optional.some(replacee.element));
+  InternalAttachment.virtualAttach(component, child);
+  component.syncComponents();
+};
+
+const insert = (component: AlloyComponent, insertion: (p: SugarElement<Node>, c: SugarElement<Node>) => void, childSpec: AlloySpec): void => {
+  const child = component.getSystem().build(childSpec);
+  Attachment.attachWith(component, child, insertion);
+};
+
+const replace = (component: AlloyComponent, replacee: AlloyComponent, replaceeIndex: number, childSpec: AlloySpec) => {
+  Attachment.detach(replacee);
+  insert(component, (p, c) => Insert.appendAt(p, c, replaceeIndex), childSpec);
+};
 
 const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, data: AlloySpec[]): void => {
   // NOTE: we may want to create a behaviour which allows you to switch
@@ -16,17 +34,12 @@ const set = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceS
   return replacer(component, data);
 };
 
-const insert = (component: AlloyComponent, replaceConfig: ReplacingConfig, insertion: (p: SugarElement<Node>, c: SugarElement<Node>) => void, childSpec: AlloySpec): void => {
-  const child = component.getSystem().build(childSpec);
-  Attachment.attachWith(component, child, insertion);
-};
-
 const append = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, appendee: AlloySpec): void => {
-  insert(component, replaceConfig, Insert.append, appendee);
+  insert(component, Insert.append, appendee);
 };
 
 const prepend = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, prependee: AlloySpec): void => {
-  insert(component, replaceConfig, Insert.prepend, prependee);
+  insert(component, Insert.prepend, prependee);
 };
 
 // NOTE: Removee is going to be a component, not a spec.
@@ -43,14 +56,13 @@ const contents = (component: AlloyComponent, _replaceConfig: ReplacingConfig): A
 const replaceAt = (component: AlloyComponent, replaceConfig: ReplacingConfig, replaceState: Stateless, replaceeIndex: number, replacer: Optional<AlloySpec>): Optional<AlloyComponent> => {
   const children = contents(component, replaceConfig);
   return Optional.from(children[replaceeIndex]).map((replacee) => {
-    // remove it.
-    remove(component, replaceConfig, replaceState, replacee);
-
-    replacer.each((r) => {
-      insert(component, replaceConfig, (p: SugarElement<Node>, c: SugarElement<Node>) => {
-        Insert.appendAt(p, c, replaceeIndex);
-      }, r);
-    });
+    replacer.fold(
+      () => Attachment.detach(replacee),
+      (r) => {
+        const replacer = replaceConfig.reuseDom ? virtualReplace : replace;
+        replacer(component, replacee, replaceeIndex, r);
+      }
+    );
     return replacee;
   });
 };

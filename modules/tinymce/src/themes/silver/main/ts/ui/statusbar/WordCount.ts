@@ -35,9 +35,7 @@ export const renderWordCount = (editor: Editor, providersBackstage: UiFactoryBac
       DisablingConfigs.button(providersBackstage.isDisabled),
       ReadOnly.receivingConfig(),
       Tabstopping.config({ }),
-      Replacing.config({
-        reuseDom: true
-      }),
+      Replacing.config({ }),
       Representing.config({
         store: {
           mode: 'memory',

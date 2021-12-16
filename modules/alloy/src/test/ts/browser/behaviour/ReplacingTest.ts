@@ -5,6 +5,7 @@ import { Compare, SugarBody } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
@@ -13,24 +14,17 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('ReplacingTest', (success, failure) => {
-
-  const memDefault = Memento.record(Container.sketch({
+  const make = (reuseDom: boolean) => Container.sketch({
     containerBehaviours: Behaviour.derive([
-      Replacing.config({ })
+      Replacing.config({ reuseDom })
     ]),
     components: [
       Container.sketch({ dom: { tag: 'span' }})
     ]
-  }));
+  });
 
-  const memReuse = Memento.record(Container.sketch({
-    containerBehaviours: Behaviour.derive([
-      Replacing.config({ reuseDom: true })
-    ]),
-    components: [
-      Container.sketch({ dom: { tag: 'label' }})
-    ]
-  }));
+  const memWithoutReuse = Memento.record(make(false));
+  const memWithReuse = Memento.record(make(true));
 
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
     Container.sketch({
@@ -38,13 +32,13 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         Replacing.config({ })
       ]),
       components: [
-        memDefault.asSpec(),
-        memReuse.asSpec()
+        memWithoutReuse.asSpec(),
+        memWithReuse.asSpec()
       ]
     })
   ), (_doc, _body, _gui, component, _store) => {
-    const defaultComp = memDefault.get(component);
-    const reuseComp = memReuse.get(component);
+    const withoutReuseComp = memWithoutReuse.get(component);
+    const withReuseComp = memWithReuse.get(component);
     const dog = GuiFactory.premade(
       GuiFactory.build({
         uid: 'dog',
@@ -62,54 +56,55 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
       components: [ ]
     });
 
-    const sCheckReplaceAt = (label: string, expectedClasses: string[], inputClasses: string[], replaceeIndex: number, replaceClass: string) => Logger.t(
+    const sCheckReplaceAt = (label: string, comp: AlloyComponent, expectedClasses: string[], inputClasses: string[], replaceeIndex: number, replaceClass: Optional<string>) => Logger.t(
       `${label}: Check replaceAt(${replaceeIndex}, "${replaceClass}") for data: [${inputClasses.join(', ')}]`,
       Step.sync(() => {
-        Replacing.set(defaultComp,
+        Replacing.set(comp,
           Arr.map(inputClasses, (ic) => makeTag('div', [ ic ]))
         );
-        Replacing.replaceAt(defaultComp, replaceeIndex, Optional.some(makeTag('div', [ replaceClass ])));
+        Replacing.replaceAt(comp, replaceeIndex, replaceClass.map((clazz) => makeTag('div', [ clazz ])));
         Assertions.assertStructure(
           'Asserting structure',
           ApproxStructure.build((s, _str, arr) => s.element('div', {
             children: Arr.map(expectedClasses, (ec) => s.element('div', { classes: [ arr.has(ec) ] }))
           })),
-          defaultComp.element
+          comp.element
         );
       })
     );
 
-    return [
-      Log.stepsAsStep('TBA', 'Replacing', [
+    return Arr.map([
+      { comp: withoutReuseComp, label: 'Without reuse' },
+      { comp: withReuseComp, label: 'With reuse' },
+    ], (spec) => {
+      return Log.stepsAsStep('TBA', spec.label, [
         Assertions.sAssertStructure(
           'Initially, has a single span',
           ApproxStructure.build((s, _str, _arr) => s.element('div', {
             children: [
-              s.element('span', { })
+              s.element('span', {})
             ]
           })),
-          defaultComp.element
+          spec.comp.element
         ),
 
         Step.sync(() => {
-          Replacing.set(defaultComp, [
-
-          ]);
+          Replacing.set(spec.comp, []);
         }),
 
         Assertions.sAssertStructure(
           'After set([]), is empty',
           ApproxStructure.build((s, _str, _arr) => s.element('div', {
-            children: [ ]
+            children: []
           })),
-          defaultComp.element
+          spec.comp.element
         ),
         Step.sync(() => {
-          Assert.eq('Should have no contents', [ ], Replacing.contents(defaultComp));
+          Assert.eq('Should have no contents', [], Replacing.contents(spec.comp));
         }),
 
         Step.sync(() => {
-          Replacing.set(defaultComp, [
+          Replacing.set(spec.comp, [
             Container.sketch({ uid: 'first' }),
             Container.sketch({ uid: 'second' })
           ]);
@@ -119,20 +114,20 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           'After first time of replace([ first, second ])',
           ApproxStructure.build((s, _str, _arr) => s.element('div', {
             children: [
-              s.element('div', { }),
-              s.element('div', { })
+              s.element('div', {}),
+              s.element('div', {})
             ]
           })),
-          defaultComp.element
+          spec.comp.element
         ),
         Step.sync(() => {
-          Assert.eq('Should have 2 children', 2, Replacing.contents(defaultComp).length);
+          Assert.eq('Should have 2 children', 2, Replacing.contents(spec.comp).length);
         }),
 
         Logger.t(
           'Repeating adding the same uids to check clearing is working',
           Step.sync(() => {
-            Replacing.set(defaultComp, [
+            Replacing.set(spec.comp, [
               Container.sketch({ uid: 'first' }),
               Container.sketch({ uid: 'second' })
             ]);
@@ -142,41 +137,41 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           'After second time of set([ first, second ])',
           ApproxStructure.build((s, _str, _arr) => s.element('div', {
             children: [
-              s.element('div', { }),
-              s.element('div', { })
+              s.element('div', {}),
+              s.element('div', {})
             ]
           })),
-          defaultComp.element
+          spec.comp.element
         ),
         Step.sync(() => {
-          Assert.eq('Should have 2 children still', 2, Replacing.contents(defaultComp).length);
+          Assert.eq('Should have 2 children still', 2, Replacing.contents(spec.comp).length);
         }),
 
         Logger.t(
           'Replacing.append to put a new thing at the end.',
           Step.sync(() => {
-            Replacing.append(defaultComp, Container.sketch({ dom: { tag: 'span' }}));
+            Replacing.append(spec.comp, Container.sketch({ dom: { tag: 'span' }}));
           })
         ),
         Assertions.sAssertStructure(
           'After append(span)',
           ApproxStructure.build((s, _str, _arr) => s.element('div', {
             children: [
-              s.element('div', { }),
-              s.element('div', { }),
-              s.element('span', { })
+              s.element('div', {}),
+              s.element('div', {}),
+              s.element('span', {})
             ]
           })),
-          defaultComp.element
+          spec.comp.element
         ),
         Step.sync(() => {
-          Assert.eq('Should have 3 children now', 3, Replacing.contents(defaultComp).length);
+          Assert.eq('Should have 3 children now', 3, Replacing.contents(spec.comp).length);
         }),
 
         Logger.t(
           'Replacing.prepend to put a new thing at the start',
           Step.sync(() => {
-            Replacing.prepend(defaultComp, Container.sketch({
+            Replacing.prepend(spec.comp, Container.sketch({
               dom: {
                 tag: 'label'
               }
@@ -189,22 +184,22 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           ApproxStructure.build((s, _str, _arr) => s.element('div', {
             children: [
               s.element('label', {}),
-              s.element('div', { }),
-              s.element('div', { }),
-              s.element('span', { })
+              s.element('div', {}),
+              s.element('div', {}),
+              s.element('span', {})
             ]
           })),
-          defaultComp.element
+          spec.comp.element
         ),
         Step.sync(() => {
-          Assert.eq('Should have 4 children now', 4, Replacing.contents(defaultComp).length);
+          Assert.eq('Should have 4 children now', 4, Replacing.contents(spec.comp).length);
         }),
 
         Logger.t(
           'Replacing.remove to remove the second div',
           Step.sync(() => {
-            const second = defaultComp.getSystem().getByUid('second').getOrDie();
-            Replacing.remove(defaultComp, second);
+            const second = spec.comp.getSystem().getByUid('second').getOrDie();
+            Replacing.remove(spec.comp, second);
           })
         ),
 
@@ -213,20 +208,20 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           ApproxStructure.build((s, _str, _arr) => s.element('div', {
             children: [
               s.element('label', {}),
-              s.element('div', { }),
-              s.element('span', { })
+              s.element('div', {}),
+              s.element('span', {})
             ]
           })),
-          defaultComp.element
+          spec.comp.element
         ),
         Step.sync(() => {
-          Assert.eq('Should have 3 children again', 3, Replacing.contents(defaultComp).length);
+          Assert.eq('Should have 3 children again', 3, Replacing.contents(spec.comp).length);
         }),
 
         Logger.t(
           'Removing should have removed from world, so I should be able to re-add it',
           Step.sync(() => {
-            Replacing.append(defaultComp, Container.sketch({ uid: 'second' }));
+            Replacing.append(spec.comp, Container.sketch({ uid: 'second' }));
           })
         ),
 
@@ -235,204 +230,15 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
           ApproxStructure.build((s, _str, _arr) => s.element('div', {
             children: [
               s.element('label', {}),
-              s.element('div', { }),
-              s.element('span', { }),
-              s.element('div', { })
+              s.element('div', {}),
+              s.element('span', {}),
+              s.element('div', {})
             ]
           })),
-          defaultComp.element
+          spec.comp.element
         ),
         Step.sync(() => {
-          Assert.eq('Should have 4 children again', 4, Replacing.contents(defaultComp).length);
-        }),
-
-        sCheckReplaceAt(
-          '.replaceAt 0 of 0 - should do nothing',
-          [ ],
-          [ ],
-          0,
-          'replaceAt-0'
-        ),
-
-        sCheckReplaceAt(
-          '.replaceAt 0 of 1',
-          [ 'replaceAt-0' ],
-          [ 'original' ],
-          0,
-          'replaceAt-0'
-        ),
-
-        sCheckReplaceAt(
-          '.replaceAt 0 of 3',
-          [ 'replaceAt-0', 'original2', 'original3' ],
-          [ 'original1', 'original2', 'original3' ],
-          0,
-          'replaceAt-0'
-        ),
-
-        sCheckReplaceAt(
-          '.replaceAt 2 of 3',
-          [ 'original1', 'original2', 'replaceAt-2' ],
-          [ 'original1', 'original2', 'original3' ],
-          2,
-          'replaceAt-2'
-        )
-      ]),
-
-      Log.stepsAsStep('TINY-8334', 'Partial replacing', [
-        Assertions.sAssertStructure(
-          'Initially, has a single label',
-          ApproxStructure.build((s, _str, _arr) => s.element('div', {
-            children: [
-              s.element('label', { })
-            ]
-          })),
-          reuseComp.element
-        ),
-
-        Chain.asStep(reuseComp.element, [
-          UiFinder.cFindIn('label'),
-          Chain.op((label) => {
-            label.dom.magicAttribute = 24;
-            Replacing.set(reuseComp, [
-              { dom: { tag: 'label' }}
-            ]);
-          }),
-          Chain.inject(reuseComp.element),
-          UiFinder.cFindIn('label'),
-          Chain.op((label) => {
-            Assert.eq('magic attribute', 24, label.dom.magicAttribute);
-          })
-        ]),
-
-        Chain.asStep(reuseComp.element, [
-          Chain.op(() => {
-            Replacing.set(reuseComp, [
-              {
-                dom: {
-                  tag: 'div'
-                },
-                components: [
-                  { dom: { tag: 'label', classes: [ 'nested-label' ] }},
-                  dog
-                ]
-              }
-            ]);
-          }),
-          UiFinder.cFindIn('.nested-label'),
-          Chain.op((label) => {
-            label.dom.magicAttribute = 25;
-            Replacing.set(reuseComp, [
-              {
-                dom: {
-                  tag: 'div'
-                },
-                components: [
-                  { dom: { tag: 'label', classes: [ 'other-label' ] }},
-                  dog
-                ]
-              }
-            ]);
-          }),
-          Chain.inject(reuseComp.element),
-          UiFinder.cFindIn('.other-label'),
-          Chain.op((label) => {
-            Assert.eq('Testing that the DOM element has stuck around (and has kept a variable)', 25, label.dom.magicAttribute);
-          })
-        ]),
-
-        Step.sync(() => {
-          Replacing.set(reuseComp, [
-            {
-              dom: DomFactory.fromHtml('<div class="other" />'),
-              components: [
-                {
-                  dom: DomFactory.fromHtml('<span>something else</span>'),
-                  components: [
-                    {
-                      dom: DomFactory.fromHtml('<em data-dog="true">italics</em>')
-                    }
-                  ]
-                }
-              ]
-            }
-          ]);
-          const beforeLastChild = UiFinder.findIn(SugarBody.body(), 'em[data-dog]').getOrDie();
-
-          // Replace while only changing the class of the middle component
-          Replacing.set(reuseComp, [
-            {
-              dom: DomFactory.fromHtml('<div class="other" />'),
-              components: [
-                {
-                  dom: DomFactory.fromHtml('<span class="fine">something else</span>'),
-                  components: [
-                    {
-                      dom: DomFactory.fromHtml('<em data-dog="true">italics</em>')
-                    }
-                  ]
-                }
-              ]
-            }
-          ]);
-
-          const afterLastChild = UiFinder.findIn(SugarBody.body(), 'em[data-dog]').getOrDie();
-          Assert.eq('The DOM elements should not have been re-rendered', beforeLastChild.dom, afterLastChild.dom);
-        }),
-
-        // Now, test a premade
-        Step.sync(() => {
-          const premadeA = GuiFactory.build({
-            dom: {
-              tag: 'div',
-              classes: [ 'mover' ]
-            }
-          });
-
-          Replacing.set(reuseComp, [
-            {
-              dom: {
-                tag: 'div',
-                classes: [ 'first' ]
-              }
-            },
-            GuiFactory.premade(premadeA)
-          ]);
-
-          Assertions.assertStructure(
-            'Before moving premade',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('first') ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('mover') ]
-                  })
-                ]
-              });
-            }),
-            reuseComp.element
-          );
-
-          Replacing.set(reuseComp, [
-            GuiFactory.premade(premadeA)
-          ]);
-
-          Assertions.assertStructure(
-            'After moving premade to be the first child',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('mover') ]
-                  })
-                ]
-              });
-            }),
-            reuseComp.element
-          );
+          Assert.eq('Should have 4 children again', 4, Replacing.contents(spec.comp).length);
         }),
 
         Logger.t(
@@ -448,7 +254,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
             Logger.sync(
               'Checking moving premade',
               () => {
-                Replacing.set(reuseComp, [
+                Replacing.set(spec.comp, [
                   specA,
                   premadeB
                 ]);
@@ -463,10 +269,10 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
                       ]
                     });
                   }),
-                  reuseComp.element
+                  spec.comp.element
                 );
 
-                Replacing.set(reuseComp, [
+                Replacing.set(spec.comp, [
                   premadeB,
                   specA
                 ]);
@@ -481,10 +287,10 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
                       ]
                     });
                   }),
-                  reuseComp.element
+                  spec.comp.element
                 );
 
-                Replacing.set(reuseComp, [
+                Replacing.set(spec.comp, [
                   {
                     dom: {
                       tag: 'blockquote',
@@ -508,10 +314,10 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
                       ]
                     });
                   }),
-                  reuseComp.element
+                  spec.comp.element
                 );
 
-                Replacing.set(reuseComp, [
+                Replacing.set(spec.comp, [
                   {
                     dom: {
                       tag: 'span',
@@ -539,10 +345,10 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
                       ]
                     });
                   }),
-                  reuseComp.element
+                  spec.comp.element
                 );
 
-                Replacing.set(reuseComp, [
+                Replacing.set(spec.comp, [
                   {
                     dom: {
                       tag: 'span',
@@ -568,16 +374,212 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
                       ]
                     });
                   }),
-                  reuseComp.element
+                  spec.comp.element
                 );
               }
             );
           })
+        ),
+
+        sCheckReplaceAt(
+          '.replaceAt 0 of 0 - should do nothing',
+          spec.comp,
+          [],
+          [],
+          0,
+          Optional.some('replaceAt-0')
+        ),
+
+        sCheckReplaceAt(
+          '.replaceAt 0 of 1',
+          spec.comp,
+          [ 'replaceAt-0' ],
+          [ 'original' ],
+          0,
+          Optional.some('replaceAt-0')
+        ),
+
+        sCheckReplaceAt(
+          '.replaceAt 0 of 3',
+          spec.comp,
+          [ 'replaceAt-0', 'original2', 'original3' ],
+          [ 'original1', 'original2', 'original3' ],
+          0,
+          Optional.some('replaceAt-0')
+        ),
+
+        sCheckReplaceAt(
+          '.replaceAt 2 of 3',
+          spec.comp,
+          [ 'original1', 'original2', 'replaceAt-2' ],
+          [ 'original1', 'original2', 'original3' ],
+          2,
+          Optional.some('replaceAt-2')
+        ),
+
+        sCheckReplaceAt(
+          '.replaceAt 2 with noting',
+          spec.comp,
+          [ 'original1', 'original3' ],
+          [ 'original1', 'original2', 'original3' ],
+          1,
+          Optional.none()
         )
+      ]);
+    }).concat([
+      Step.sync(() => {
+        Replacing.set(withReuseComp, [
+          { dom: { tag: 'label' }}
+        ]);
+      }),
+
+      Chain.asStep(withReuseComp.element, [
+        UiFinder.cFindIn('label'),
+        Chain.op((label) => {
+          label.dom.magicAttribute = 24;
+          Replacing.set(withReuseComp, [
+            { dom: { tag: 'label' }}
+          ]);
+        }),
+        Chain.inject(withReuseComp.element),
+        UiFinder.cFindIn('label'),
+        Chain.op((label) => {
+          Assert.eq('magic attribute', 24, label.dom.magicAttribute);
+        })
+      ]),
+
+      Chain.asStep(withReuseComp.element, [
+        Chain.op(() => {
+          Replacing.set(withReuseComp, [
+            {
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                { dom: { tag: 'label', classes: [ 'nested-label' ] }},
+                dog
+              ]
+            }
+          ]);
+        }),
+        UiFinder.cFindIn('.nested-label'),
+        Chain.op((label) => {
+          label.dom.magicAttribute = 25;
+          Replacing.set(withReuseComp, [
+            {
+              dom: {
+                tag: 'div'
+              },
+              components: [
+                { dom: { tag: 'label', classes: [ 'other-label' ] }},
+                dog
+              ]
+            }
+          ]);
+        }),
+        Chain.inject(withReuseComp.element),
+        UiFinder.cFindIn('.other-label'),
+        Chain.op((label) => {
+          Assert.eq('Testing that the DOM element has stuck around (and has kept a variable)', 25, label.dom.magicAttribute);
+        })
       ]),
 
       Step.sync(() => {
-        Replacing.set(reuseComp, [
+        Replacing.set(withReuseComp, [
+          {
+            dom: DomFactory.fromHtml('<div class="other" />'),
+            components: [
+              {
+                dom: DomFactory.fromHtml('<span>something else</span>'),
+                components: [
+                  {
+                    dom: DomFactory.fromHtml('<em data-dog="true">italics</em>')
+                  }
+                ]
+              }
+            ]
+          }
+        ]);
+        const beforeLastChild = UiFinder.findIn(SugarBody.body(), 'em[data-dog]').getOrDie();
+
+        // Replace while only changing the class of the middle component
+        Replacing.set(withReuseComp, [
+          {
+            dom: DomFactory.fromHtml('<div class="other" />'),
+            components: [
+              {
+                dom: DomFactory.fromHtml('<span class="fine">something else</span>'),
+                components: [
+                  {
+                    dom: DomFactory.fromHtml('<em data-dog="true">italics</em>')
+                  }
+                ]
+              }
+            ]
+          }
+        ]);
+
+        const afterLastChild = UiFinder.findIn(SugarBody.body(), 'em[data-dog]').getOrDie();
+        Assert.eq('The DOM elements should not have been re-rendered', beforeLastChild.dom, afterLastChild.dom);
+      }),
+
+      // Now, test a premade
+      Step.sync(() => {
+        const premadeA = GuiFactory.build({
+          dom: {
+            tag: 'div',
+            classes: [ 'mover' ]
+          }
+        });
+
+        Replacing.set(withReuseComp, [
+          {
+            dom: {
+              tag: 'div',
+              classes: [ 'first' ]
+            }
+          },
+          GuiFactory.premade(premadeA)
+        ]);
+
+        Assertions.assertStructure(
+          'Before moving premade',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('div', {
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('first') ]
+                }),
+                s.element('div', {
+                  classes: [ arr.has('mover') ]
+                })
+              ]
+            });
+          }),
+          withReuseComp.element
+        );
+
+        Replacing.set(withReuseComp, [
+          GuiFactory.premade(premadeA)
+        ]);
+
+        Assertions.assertStructure(
+          'After moving premade to be the first child',
+          ApproxStructure.build((s, str, arr) => {
+            return s.element('div', {
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('mover') ]
+                })
+              ]
+            });
+          }),
+          withReuseComp.element
+        );
+      }),
+
+      Step.sync(() => {
+        Replacing.set(withReuseComp, [
           {
             dom: {
               tag: 'div',
@@ -592,7 +594,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         ]);
 
         const beforeSpan = UiFinder.findIn(SugarBody.body(), 'span.foo').getOrDie();
-        Replacing.set(reuseComp, [
+        Replacing.set(withReuseComp, [
           {
             dom: {
               tag: 'div',
@@ -614,18 +616,18 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
               children: [
                 s.element('div', {
                   children: [
-                    s.element('p', { }),
+                    s.element('p', {}),
                     s.element('span', { classes: [ arr.has('bar') ] }),
                   ]
                 })
               ]
             })
           ),
-          reuseComp.element
+          withReuseComp.element
         );
 
         Assert.eq('Span elements were re-rendered as mixed children cannot be patched', false, Compare.eq(afterSpan, beforeSpan));
       })
-    ];
+    ]);
   }, success, failure);
 });

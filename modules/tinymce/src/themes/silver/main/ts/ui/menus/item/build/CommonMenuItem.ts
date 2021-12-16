@@ -50,9 +50,7 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
         ]),
         DisablingConfigs.item(() => spec.disabled || providersbackstage.isDisabled()),
         ReadOnly.receivingConfig(),
-        Replacing.config({
-          reuseDom: true
-        })
+        Replacing.config({ })
       ].concat(spec.itemBehaviours)
     )
   };

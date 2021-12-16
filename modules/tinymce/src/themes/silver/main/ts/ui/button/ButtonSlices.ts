@@ -22,7 +22,7 @@ const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider)
   renderIcon(iconName, iconsProvider, []);
 
 const renderReplacableIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleOrSketchSpec =>
-  renderIcon(iconName, iconsProvider, [ Replacing.config({ reuseDom: true }) ]);
+  renderIcon(iconName, iconsProvider, [ Replacing.config({ }) ]);
 
 const renderLabel = (text: string, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
   dom: {
@@ -31,9 +31,7 @@ const renderLabel = (text: string, prefix: string, providersBackstage: UiFactory
     classes: [ `${prefix}__select-label` ]
   },
   behaviours: Behaviour.derive([
-    Replacing.config({
-      reuseDom: true
-    })
+    Replacing.config({ })
   ])
 });
 

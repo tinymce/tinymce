@@ -5,5 +5,5 @@ export default [
   FieldSchema.option('renderComponents'),
   FieldSchema.option('updateState'),
   FieldSchema.option('initialData'),
-  FieldSchema.defaultedBoolean('reuseDom', false)
+  FieldSchema.defaultedBoolean('reuseDom', true)
 ];
