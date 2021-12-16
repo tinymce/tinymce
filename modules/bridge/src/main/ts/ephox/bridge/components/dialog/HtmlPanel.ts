@@ -1,6 +1,8 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
+
 export interface HtmlPanelSpec {
   type: 'htmlpanel';
   html: string;
@@ -15,7 +17,7 @@ export interface HtmlPanel {
 }
 
 const htmlPanelFields = [
-  FieldSchema.requiredString('type'),
+  ComponentSchema.type,
   FieldSchema.requiredString('html'),
   FieldSchema.defaultedStringEnum('presets', 'presentation', [ 'presentation', 'document' ])
 ];

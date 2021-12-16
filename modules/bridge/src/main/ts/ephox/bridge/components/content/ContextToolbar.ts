@@ -1,6 +1,7 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { ContextBar, contextBarFields, ContextBarSpec } from './ContextBar';
 
 export interface ContextToolbarSpec extends ContextBarSpec {
@@ -14,7 +15,7 @@ export interface ContextToolbar extends ContextBar {
 }
 
 const contextToolbarSchema = StructureSchema.objOf([
-  FieldSchema.defaulted('type', 'contexttoolbar'),
+  ComponentSchema.defaultedType('contexttoolbar'),
   FieldSchema.requiredString('items')
 ].concat(contextBarFields));
 

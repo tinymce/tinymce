@@ -1,6 +1,8 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
+
 export interface SidebarInstanceApi {
   element: () => HTMLElement;
 }
@@ -22,11 +24,11 @@ export interface Sidebar {
 }
 
 export const sidebarSchema = StructureSchema.objOf([
-  FieldSchema.optionString('icon'),
-  FieldSchema.optionString('tooltip'),
+  ComponentSchema.optionalIcon,
+  ComponentSchema.optionalTooltip,
   FieldSchema.defaultedFunction('onShow', Fun.noop),
   FieldSchema.defaultedFunction('onHide', Fun.noop),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
+  ComponentSchema.onSetup
 ]);
 
 export const createSidebar = (spec: SidebarSpec): Result<Sidebar, StructureSchema.SchemaError<any>> => StructureSchema.asRaw('sidebar', sidebarSchema, spec);
