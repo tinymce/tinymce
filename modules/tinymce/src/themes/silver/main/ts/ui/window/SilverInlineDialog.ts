@@ -8,7 +8,7 @@
 // DUPE with SilverDialog. Cleaning up.
 import {
   AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents,
-  Receiving, Reflecting, Replacing, SimpleSpec, SystemEvents
+  Receiving, Reflecting, Replacing, SystemEvents
 } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
 import { Fun, Id, Optional } from '@ephox/katamari';
@@ -30,23 +30,25 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
   const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
+  const internalDialog = dialogInit.internalDialog;
 
   const updateState = (_comp, incoming: DialogManager.DialogInit<T>) => Optional.some(incoming);
 
   const memHeader = Memento.record(
     renderInlineHeader({
-      title: dialogInit.internalDialog.title,
+      title: internalDialog.title,
       draggable: true
-    }, dialogId, dialogLabelId, backstage.shared.providers) as SimpleSpec
+    }, dialogId, dialogLabelId, backstage.shared.providers)
   );
 
   const memBody = Memento.record(
     renderInlineBody({
-      body: dialogInit.internalDialog.body
-    }, dialogId, dialogContentId, backstage, ariaAttrs) as SimpleSpec
+      body: internalDialog.body,
+      initialData: internalDialog.initialData,
+    }, dialogId, dialogContentId, backstage, ariaAttrs)
   );
 
-  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons);
+  const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(internalDialog.buttons);
 
   const objOfCells = SilverDialogCommon.extractCellsToObject(storagedMenuButtons);
 

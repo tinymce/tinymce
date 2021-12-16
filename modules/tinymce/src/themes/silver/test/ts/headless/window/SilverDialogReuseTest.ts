@@ -1,7 +1,8 @@
 import { ApproxStructure, Assertions, FocusTools, StructAssert, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Dialog as BridgeSpec } from '@ephox/bridge';
+import { Optional } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -18,6 +19,10 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
   let dialogApi: Dialog.DialogInstanceApi<any>;
   before(() => {
     windowManager = WindowManager.setup(helpers.extras());
+  });
+
+  afterEach(() => {
+    Optional.from(dialogApi).each((api) => api.close());
   });
 
   const baseDialogActions = {

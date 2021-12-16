@@ -53,7 +53,12 @@ const getItems = (fileType: 'image' | 'media' | 'file', input: AlloyComponent, u
 
 const errorId = Id.generate('aria-invalid');
 
-export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage, urlBackstage: UiFactoryBackstageForUrlInput): SketchSpec => {
+export const renderUrlInput = (
+  spec: UrlInputSpec,
+  backstage: UiFactoryBackstage,
+  urlBackstage: UiFactoryBackstageForUrlInput,
+  initialData: Optional<Dialog.UrlInputData>
+): SketchSpec => {
   const providersBackstage = backstage.shared.providers;
 
   const updateHistory = (component: AlloyComponent): void => {
@@ -64,6 +69,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   // TODO: Make alloy's typeahead only swallow enter and escape if menu is open
   const pField = AlloyFormField.parts.field({
     factory: AlloyTypeahead,
+    ...initialData.map((initialData) => ({ initialData })).getOr({}),
     dismissOnBlur: true,
     inputClasses: [ 'tox-textfield' ],
     sandboxClasses: [ 'tox-dialog__popups' ],

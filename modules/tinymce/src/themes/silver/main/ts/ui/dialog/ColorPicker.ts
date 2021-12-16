@@ -12,6 +12,7 @@ import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formActionEvent } from '../general/FormEvents';
 
 const english = {
@@ -34,7 +35,7 @@ const translate = (providerBackstage: UiFactoryBackstageProviders) => (key: stri
 
 type ColorPickerSpec = Omit<Dialog.ColorPicker, 'type'>;
 
-export const renderColorPicker = (_spec: ColorPickerSpec, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+export const renderColorPicker = (_spec: ColorPickerSpec, providerBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SimpleSpec => {
   const getClass = (key: string) => 'tox-' + key;
 
   const colourPickerFactory = ColourPicker.makeFactory(translate(providerBackstage), getClass);
@@ -70,39 +71,37 @@ export const renderColorPicker = (_spec: ColorPickerSpec, providerBackstage: UiF
     ],
     behaviours: Behaviour.derive([
       // We'll allow invalid values
-      Representing.config({
-        store: {
-          mode: 'manual',
-          getValue: (comp) => {
-            const picker = memPicker.get(comp);
-            const optRgbForm = Composing.getCurrent(picker);
-            const optHex = optRgbForm.bind((rgbForm) => {
-              const formValues = Representing.getValue(rgbForm);
-              return formValues.hex as Optional<string>;
-            }) ;
-            return optHex.map((hex) => '#' + hex).getOr('');
-          },
-          setValue: (comp, newValue) => {
-            const pattern = /^#([a-fA-F0-9]{3}(?:[a-fA-F0-9]{3})?)/;
-            const m = pattern.exec(newValue);
-            const picker = memPicker.get(comp);
-            const optRgbForm = Composing.getCurrent(picker);
-            optRgbForm.fold(() => {
-              // eslint-disable-next-line no-console
-              console.log('Can not find form');
-            }, (rgbForm) => {
-              Representing.setValue(rgbForm, {
-                hex: Optional.from(m[1]).getOr('')
-              });
-
-              // So not the way to do this.
-              Form.getField(rgbForm, 'hex').each((hexField) => {
-                AlloyTriggers.emit(hexField, NativeEvents.input());
-              });
+      RepresentingConfigs.withComp(
+        initialData,
+        (comp) => {
+          const picker = memPicker.get(comp);
+          const optRgbForm = Composing.getCurrent(picker);
+          const optHex = optRgbForm.bind((rgbForm) => {
+            const formValues = Representing.getValue(rgbForm);
+            return formValues.hex as Optional<string>;
+          });
+          return optHex.map((hex) => '#' + hex).getOr('');
+        },
+        (comp, newValue) => {
+          const pattern = /^#([a-fA-F0-9]{3}(?:[a-fA-F0-9]{3})?)/;
+          const m = pattern.exec(newValue);
+          const picker = memPicker.get(comp);
+          const optRgbForm = Composing.getCurrent(picker);
+          optRgbForm.fold(() => {
+            // eslint-disable-next-line no-console
+            console.log('Can not find form');
+          }, (rgbForm) => {
+            Representing.setValue(rgbForm, {
+              hex: Optional.from(m[1]).getOr('')
             });
-          }
+
+            // So not the way to do this.
+            Form.getField(rgbForm, 'hex').each((hexField) => {
+              AlloyTriggers.emit(hexField, NativeEvents.input());
+            });
+          });
         }
-      }),
+      ),
       ComposingConfigs.self()
     ])
   };

@@ -3,7 +3,7 @@ import { BarSpec } from '../components/dialog/Bar';
 import { BodyComponentSpec } from '../components/dialog/BodyComponent';
 import { ButtonSpec } from '../components/dialog/Button';
 import { CheckboxSpec } from '../components/dialog/Checkbox';
-import { CollectionSpec } from '../components/dialog/Collection';
+import { CollectionItem, CollectionSpec } from '../components/dialog/Collection';
 import { ColorInputSpec } from '../components/dialog/ColorInput';
 import { ColorPickerSpec } from '../components/dialog/ColorPicker';
 import { CustomEditorInit, CustomEditorInitFn, CustomEditorSpec } from '../components/dialog/CustomEditor';
@@ -29,7 +29,7 @@ import { TextAreaSpec } from '../components/dialog/Textarea';
 import {
   UrlDialogActionDetails, UrlDialogFooterButtonSpec, UrlDialogInstanceApi, UrlDialogMessage, UrlDialogSpec
 } from '../components/dialog/UrlDialog';
-import { UrlInputSpec } from '../components/dialog/UrlInput';
+import { UrlInputData, UrlInputSpec } from '../components/dialog/UrlInput';
 
 // These are the types that are exposed though a public end user api
 
@@ -44,6 +44,7 @@ export {
 
   CheckboxSpec,
 
+  CollectionItem,
   CollectionSpec,
 
   ColorInputSpec,
@@ -98,6 +99,7 @@ export {
 
   TextAreaSpec,
 
+  UrlInputData,
   UrlInputSpec,
 
   UrlDialogSpec,

@@ -29,7 +29,7 @@ describe('headless.tinymce.themes.silver.components.selectbox.SelectboxTest', ()
         { value: 'two', text: 'Two' },
         { value: 'three', text: 'Three' }
       ]
-    }, providers)
+    }, providers, Optional.none())
   ));
 
   it('Check basic structure', () => {

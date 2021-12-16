@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Focusing, Keying, ModalDialog, Reflecting, SimpleSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 
@@ -19,23 +19,24 @@ import { bodyChannel } from './DialogChannels';
 // TypeScript allows some pretty weird stuff.
 interface WindowBodySpec {
   body: Dialog.Dialog<unknown>['body'];
+  initialData: Dialog.DialogData;
 }
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
-const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
+const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): SimpleSpec => {
   const renderComponents = (incoming: WindowBodySpec) => {
     const body = incoming.body;
     switch (body.type) {
       case 'tabpanel': {
         return [
-          renderTabPanel(body, backstage)
+          renderTabPanel(body, incoming.initialData, backstage)
         ];
       }
 
       default: {
         return [
-          renderBodyPanel(body, backstage)
+          renderBodyPanel(body, incoming.initialData, backstage)
         ];
       }
     }
