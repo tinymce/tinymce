@@ -1,6 +1,7 @@
 import { FieldPresence, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { alertBannerSchema } from './AlertBanner';
 import { createBarFields } from './Bar';
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
@@ -77,7 +78,7 @@ export const itemSchema = StructureSchema.valueThunkOf(
 );
 
 const panelFields = [
-  FieldSchema.requiredString('type'),
+  ComponentSchema.type,
   FieldSchema.defaulted('classes', []),
   FieldSchema.requiredArrayOf('items', itemSchema)
 ];

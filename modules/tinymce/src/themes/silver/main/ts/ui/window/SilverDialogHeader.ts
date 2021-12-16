@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-/* eslint-disable max-len */
-import { AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting } from '@ephox/alloy';
+import {
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting
+} from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
@@ -42,7 +43,8 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
 
 const renderTitle = (
   spec: WindowHeaderSpec,
-  id: Optional<string>,
+  dialogId: string,
+  titleId: Optional<string>,
   providersBackstage: UiFactoryBackstageProviders
 ): AlloySpec => {
   const renderComponents = (data: WindowHeaderSpec) => [ GuiFactory.text(providersBackstage.translate(data.title)) ];
@@ -52,13 +54,14 @@ const renderTitle = (
       tag: 'div',
       classes: [ 'tox-dialog__title' ],
       attributes: {
-        ...id.map((x) => ({ id: x }) as {id?: string}).getOr({})
+        ...titleId.map((x) => ({ id: x })).getOr({})
       }
     },
-    components: renderComponents(spec),
+    components: [],
     behaviours: Behaviour.derive([
       Reflecting.config({
-        channel: titleChannel,
+        channel: `${titleChannel}-${dialogId}`,
+        initialData: spec,
         renderComponents
       })
     ])
@@ -71,12 +74,13 @@ const renderDragHandle = () => ({
 
 const renderInlineHeader = (
   spec: WindowHeaderSpec,
+  dialogId: string,
   titleId: string,
   providersBackstage: UiFactoryBackstageProviders
 ): AlloySpec => Container.sketch({
   dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
   components: [
-    renderTitle(spec, Optional.some(titleId), providersBackstage),
+    renderTitle(spec, dialogId, Optional.some(titleId), providersBackstage),
     renderDragHandle(),
     renderClose(providersBackstage)
   ],
@@ -88,7 +92,7 @@ const renderInlineHeader = (
         return SelectorFind.closest<HTMLElement>(handle, '[role="dialog"]').getOrDie();
       },
       snaps: {
-        getSnapPoints: () => [ ],
+        getSnapPoints: () => [],
         leftAttr: 'data-drag-left',
         topAttr: 'data-drag-top'
       }
@@ -96,9 +100,9 @@ const renderInlineHeader = (
   ])
 });
 
-const renderModalHeader = (spec: WindowHeaderSpec, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
+const renderModalHeader = (spec: WindowHeaderSpec, dialogId: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec => {
   const pTitle = ModalDialog.parts.title(
-    renderTitle(spec, Optional.none(), providersBackstage)
+    renderTitle(spec, dialogId, Optional.none(), providersBackstage)
   );
 
   const pHandle = ModalDialog.parts.draghandle(

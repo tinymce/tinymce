@@ -26,7 +26,8 @@ import { renderInlineFooter } from './SilverDialogFooter';
 import { renderInlineHeader } from './SilverDialogHeader';
 import { getDialogApi } from './SilverDialogInstanceApi';
 
-const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
+const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
+  const dialogId = Id.generate('dialog');
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
 
@@ -36,13 +37,13 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
     renderInlineHeader({
       title: dialogInit.internalDialog.title,
       draggable: true
-    }, dialogLabelId, backstage.shared.providers) as SimpleSpec
+    }, dialogId, dialogLabelId, backstage.shared.providers) as SimpleSpec
   );
 
   const memBody = Memento.record(
     renderInlineBody({
       body: dialogInit.internalDialog.body
-    }, dialogContentId, backstage, ariaAttrs) as SimpleSpec
+    }, dialogId, dialogContentId, backstage, ariaAttrs) as SimpleSpec
   );
 
   const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(dialogInit.internalDialog.buttons);
@@ -52,7 +53,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
   const memFooter = Memento.record(
     renderInlineFooter({
       buttons: storagedMenuButtons
-    }, backstage)
+    }, dialogId, backstage)
   );
 
   const dialogEvents = SilverDialogEvents.initDialog(
@@ -99,7 +100,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
         )
       }),
       Reflecting.config({
-        channel: dialogChannel,
+        channel: `${dialogChannel}-${dialogId}`,
         updateState,
         initialData: dialogInit
       }),
@@ -128,6 +129,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
 
   // TODO: Clean up the dupe between this (InlineDialog) and SilverDialog
   const instanceApi = getDialogApi<T>({
+    getId: Fun.constant(dialogId),
     getRoot: Fun.constant(dialog),
     getFooter: () => memFooter.get(dialog),
     getBody: () => memBody.get(dialog),
