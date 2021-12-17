@@ -35,7 +35,7 @@ const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, h
   editor.fire('ObjectResized', { target, width, height, origin });
 };
 
-// TODO: <Jira> Unwrap SugarElement references and need for Optional when firing event
+// TODO: TINY-8368 Unwrap SugarElement references and need for Optional when firing event
 const fireTableSelectionChange = (
   editor: Editor,
   cells: SugarElement<HTMLTableCellElement>[],

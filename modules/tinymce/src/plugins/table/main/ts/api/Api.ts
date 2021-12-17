@@ -11,7 +11,7 @@ import { SugarElement, SugarElements } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/api/Clipboard';
 
-// TODO: Remove this file once clipboard is moved to core
+// TODO: TINY-8353 Remove this file once clipboard is moved to core
 
 export interface Api {
   readonly setClipboardRows: (rows: Array<HTMLTableRowElement | HTMLTableColElement>) => void;

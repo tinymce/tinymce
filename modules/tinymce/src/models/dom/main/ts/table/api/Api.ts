@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-// TODO: Remove file once fakeClipboard is moved to core
+// TODO: TINY-8353 Remove file once fakeClipboard is moved to core
 
 import { Clipboard as FakeClipboard } from './Clipboard';
 

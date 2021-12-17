@@ -73,7 +73,7 @@ export interface TableModifiedEvent extends TableEventData {
   readonly table: HTMLTableElement;
 }
 
-// TODO: <Jira> Remove the need for SugarElements and Optional
+// TODO: TINY-8368 Remove the need for SugarElements and Optional
 export interface TableSelectionChangeEvent {
   cells: SugarElement<HTMLTableCellElement>[];
   start: SugarElement<HTMLTableCellElement>;
