@@ -6,7 +6,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Singleton } from '@ephox/katamari';
+// The FakeClipboard has been designed to match the native Clipboard API as closely as possible
+// https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
+
+import { Obj, Singleton } from '@ephox/katamari';
+
+export interface FakeClipboardItem {
+  readonly items: Record<string, any>;
+  readonly types: ReadonlyArray<string>;
+  readonly getType: <D = any>(type: string) => D | undefined;
+}
 
 /**
   * TinyMCE FakeClipboard API.
@@ -17,19 +26,29 @@ import { Singleton } from '@ephox/katamari';
 interface FakeClipboard {
 
   /**
+   * Create a FakeClipboardItem instance that is used when reading or writing data via the FakeClipboard API.
+   *
+   * @method FakeClipboardItem
+   * @param {Record<string, any>} items an object with the type as the key and any data as the value
+   * @returns {FakeClipboardItem} FakeClipboardItem
+   */
+  readonly FakeClipboardItem: (items: Record<string, any>) => FakeClipboardItem;
+
+  /**
    * Writes arbitrary data to the fake clipboard.
    *
    * @method write
    * @param {any} data data to be written to the fake clipboard
    */
-  readonly write: <T>(data: T) => void;
+  readonly write: (data: FakeClipboardItem[]) => void;
 
   /**
    * Requests arbitrary data from the fake clipboard.
    *
    * @method read
+   * @returns {FakeClipboardItem} FakeClipboardItem or undefined
    */
-  readonly read: <T>() => T | undefined;
+  readonly read: () => FakeClipboardItem[] | undefined;
 
   /**
    * Clear arbitrary data on the fake clipboard.
@@ -40,18 +59,25 @@ interface FakeClipboard {
 }
 
 const setup = (): FakeClipboard => {
-  const dataValue = Singleton.value<any>();
+  const dataValue = Singleton.value<FakeClipboardItem[]>();
 
-  const write = <T>(data: T): void => {
+  const FakeClipboardItem = (items: Record<string, any>): FakeClipboardItem => ({
+    items,
+    types: Obj.keys(items),
+    getType: (type: string) => Obj.get(items, type).getOrUndefined()
+  });
+
+  const write = (data: FakeClipboardItem[]): void => {
     dataValue.set(data);
   };
 
-  const read = <T>(): T | undefined =>
+  const read = (): FakeClipboardItem[] | undefined =>
     dataValue.get().getOrUndefined();
 
   const clear = dataValue.clear;
 
   return {
+    FakeClipboardItem,
     write,
     read,
     clear

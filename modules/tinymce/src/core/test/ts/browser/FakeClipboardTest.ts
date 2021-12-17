@@ -10,28 +10,69 @@ describe('browser.tinymce.core.FakeClipboardTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
-  it('fake clipboard returns undefined when not set', () => {
+  it('TINY-8353: fake clipboard returns undefined when not set', () => {
     assert.isUndefined(FakeClipboard.read());
   });
 
-  it('can write to and read from fake clipboard', () => {
-    FakeClipboard.write('hello');
-    assert.equal(FakeClipboard.read(), 'hello');
+  it('TINY-8353: can create a FakeClipboardItem', () => {
+    const data = {
+      text: 'This is text',
+      test: 1
+    };
+
+    const item = FakeClipboard.FakeClipboardItem(data);
+    assert.deepEqual(item.types, [ 'text', 'test' ]);
+    assert.deepEqual(item.items, data);
+    assert.equal(item.getType('text'), 'This is text');
+    assert.equal(item.getType('test'), 1);
+    assert.isUndefined(item.getType('noexist'));
   });
 
-  it('can clear fake clipboard after being written to', () => {
-    FakeClipboard.write('hello');
-    assert.equal(FakeClipboard.read(), 'hello');
+  it('TINY-8353: can write to and read from fake clipboard', () => {
+    const item = FakeClipboard.FakeClipboardItem({
+      text: 'hello',
+    });
+    FakeClipboard.write([ item ]);
+
+    const clipboardItems = FakeClipboard.read();
+    assert.lengthOf(clipboardItems, 1);
+    assert.equal(clipboardItems[0].getType('text'), 'hello');
+  });
+
+  it('TINY-8353: can write to and read multiple clipboard items', () => {
+    FakeClipboard.write([
+      FakeClipboard.FakeClipboardItem({ text: 'item1' }),
+      FakeClipboard.FakeClipboardItem({ text: 'item2' }),
+    ]);
+
+    const clipboardItems = FakeClipboard.read();
+    assert.lengthOf(clipboardItems, 2);
+    assert.equal(clipboardItems[0].getType('text'), 'item1');
+    assert.equal(clipboardItems[1].getType('text'), 'item2');
+  });
+
+  it('TINY-8353: can clear fake clipboard after being written to', () => {
+    const item = FakeClipboard.FakeClipboardItem({
+      text: 'hello',
+    });
+    FakeClipboard.write([ item ]);
+
+    const clipboardItems = FakeClipboard.read();
+    assert.lengthOf(clipboardItems, 1);
+
     FakeClipboard.clear();
     assert.isUndefined(FakeClipboard.read());
   });
 
-  it('can store an object', () => {
+  it('TINY-8353: can store an object', () => {
     const testObj = {
       a: 1,
       b: 2
     };
-    FakeClipboard.write(testObj);
-    assert.deepEqual(FakeClipboard.read(), testObj);
+    FakeClipboard.write([
+      FakeClipboard.FakeClipboardItem({ obj: testObj })
+    ]);
+
+    assert.deepEqual(FakeClipboard.read()[0].getType('obj'), testObj);
   });
 });
