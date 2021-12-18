@@ -9,13 +9,14 @@ import { assert } from 'chai';
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
 
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
+import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderColorPicker({
       label: Optional.some('ColorPicker label'),
       name: 'col1'
-    })
+    }, TestProviders)
   ));
 
   const fireEvent = (elem: SugarElement<Node>, event: string) => {
