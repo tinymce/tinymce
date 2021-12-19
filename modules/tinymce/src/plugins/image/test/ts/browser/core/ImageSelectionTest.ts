@@ -214,7 +214,7 @@ describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>' +
 		      '<strong>A</strong>' +
-		      '<img src="image.png>' +
+		      '<img src="image.png">' +
 		      '<strong>B</strong>' +
 		      '</p>');
     TinySelections.select(editor, 'img', []);
@@ -255,7 +255,7 @@ describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
     const editor = hook.editor();
     editor.setContent('<div>' +
 		      '<strong>A</strong>' +
-		      '<img src="image.png>' +
+		      '<img src="image.png">' +
 		      '<strong>B</strong>' +
 		      '</div>');
     TinySelections.select(editor, 'img', []);

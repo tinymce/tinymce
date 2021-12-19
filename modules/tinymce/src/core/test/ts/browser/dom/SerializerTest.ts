@@ -753,7 +753,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(TrimHtml.trimExternal(ser2, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
   });
 
-  it('trim data-mce-bougs="all"', () => {
+  it('trim data-mce-bogus="all"', () => {
     const ser = DomSerializer({});
 
     DOM.setHTML('test', 'a<p data-mce-bogus="all">b</p>c');
