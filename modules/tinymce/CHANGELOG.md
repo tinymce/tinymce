@@ -26,15 +26,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
-- Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
-- Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 - The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
+- Moved the `noneditable` plugin to TinyMCE core #TINY-8311
+- Renamed the `noneditable_noneditable_class` and `noneditable_editable_class` options to `noneditable_class` and `editable_class` #TINY-8311
 - Moved the `textpattern` plugin to TinyMCE core #TINY-8312
-- Renamed the `textpattern_patterns` setting to `text_patterns` #TINY-8312
+- Renamed the `textpattern_patterns` option to `text_patterns` #TINY-8312
+- Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
+- Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
