@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `slider` dialog component #TINY-8304
 - New `FakeClipboard` API to the `tinymce` global #TINY-8353
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
+- New `mceInsertTableDialog` command #TINY-8273
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
@@ -38,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
 - Moved the `textpattern` plugin to TinyMCE core #TINY-8312
 - Renamed the `textpattern_patterns` setting to `text_patterns` #TINY-8312
+- The `mceInsertTable` command can no longer open the insert table dialog. Use the `mceInsertTableDialog` command instead #TINY-8273
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
