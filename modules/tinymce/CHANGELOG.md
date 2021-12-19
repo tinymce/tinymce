@@ -84,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
+- Removed the `mceInsertRawHTML` command, in favor of `mceInsertContent` #TINY-8214
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
