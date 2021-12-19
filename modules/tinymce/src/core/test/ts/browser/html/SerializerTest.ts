@@ -24,8 +24,8 @@ describe('browser.tinymce.core.html.SerializerTest', () => {
     const serializer = HtmlSerializer();
 
     assert.equal(
-      serializer.serialize(DomParser().parse('<b class="class" id="id">x</b>')),
-      '<strong id="id" class="class">x</strong>'
+      serializer.serialize(DomParser().parse('<b class="class" id="test-id">x</b>')),
+      '<strong id="test-id" class="class">x</strong>'
     );
   });
 

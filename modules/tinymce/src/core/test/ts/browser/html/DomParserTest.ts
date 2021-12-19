@@ -115,7 +115,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   it('Whitespace preserved in PRE', () => {
     parser = DomParser({}, schema);
     root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
-    assert.equal(serializer.serialize(root), '<pre>  \t\r\n   test  \t\r\n   </pre>', 'Whitespace around and inside PRE');
+    assert.equal(serializer.serialize(root), '<pre>  \t\n   test  \t\n   </pre>', 'Whitespace around and inside PRE');
     assert.deepEqual(countNodes(root), { 'body': 1, 'pre': 1, '#text': 1 }, 'Whitespace around and inside PRE (count)');
 
     parser = DomParser({}, schema);
@@ -129,7 +129,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     root = parser.parse('  \t\r\n  <PRE>  \t\r\n  <span>    test    </span> \t\r\n   </PRE>   \t\r\n  ');
     assert.equal(
       serializer.serialize(root),
-      '<pre>  \t\r\n  <span>    test    </span> \t\r\n   </pre>',
+      '<pre>  \t\n  <span>    test    </span> \t\n   </pre>',
       'Whitespace around and inside PRE'
     );
     assert.deepEqual(countNodes(root), { 'body': 1, 'pre': 1, 'span': 1, '#text': 3 }, 'Whitespace around and inside PRE (count)');
