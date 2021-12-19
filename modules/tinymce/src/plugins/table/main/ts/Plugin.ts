@@ -18,8 +18,9 @@ import * as MenuItems from './ui/MenuItems';
 const Plugin = (editor: Editor): Api => {
   Options.register(editor);
 
+  // TODO: TINY-8353 Remove fakeClipboard references
   const tableModel = editor.model.table;
-  const clipboard = tableModel.fakeClipboard;
+  const clipboard = tableModel?.fakeClipboard;
   const selectionTargets = getSelectionTargets(editor);
 
   Commands.registerCommands(editor);

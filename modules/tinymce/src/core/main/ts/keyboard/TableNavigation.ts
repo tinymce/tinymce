@@ -21,6 +21,7 @@ import {
 } from '../caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '../caret/TableCells';
 import * as NodeType from '../dom/NodeType';
+import * as TableUtils from '../table/TableUtils';
 import * as NavigationUtils from './NavigationUtils';
 
 type PositionsUntilFn = (scope: HTMLElement, start: CaretPosition) => LineInfo;
@@ -172,7 +173,7 @@ const tabBackward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean,
 const handleTab = (editor: Editor, forward: boolean): boolean => {
   const rootElements = [ 'table', 'li', 'dl' ];
 
-  const body = SugarElement.fromDom(editor.getBody());
+  const body = TableUtils.getBody(editor);
   const isRoot = (element: SugarElement<Node>) => {
     const name = SugarNode.name(element);
     return Compare.eq(element, body) || Arr.contains(rootElements, name);

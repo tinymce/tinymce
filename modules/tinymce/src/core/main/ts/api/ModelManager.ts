@@ -9,7 +9,7 @@ import AddOnManager from './AddOnManager';
 
 // TODO: TINY-8353 Remove table prop once fake clipboard handling is figured out
 export interface Model {
-  table: any;
+  table?: any;
 }
 
 type ModelManager = AddOnManager<Model>;

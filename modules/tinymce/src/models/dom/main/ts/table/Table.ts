@@ -13,7 +13,6 @@ import { Api, getApi } from './api/Api';
 import { Clipboard as FakeClipboard } from './api/Clipboard';
 import * as Commands from './api/Commands';
 import * as QueryCommands from './api/QueryCommands';
-import { ephemera } from './selection/Ephemera';
 
 const setupTable = (editor: Editor): Api => {
   const actions = TableActions(editor);
@@ -23,12 +22,6 @@ const setupTable = (editor: Editor): Api => {
   QueryCommands.registerQueryCommands(editor, actions);
   // TODO: Maybe move to core. Although, will need RTC to have that working first
   Clipboard.registerEvents(editor, actions);
-
-  // TODO: Maybe expose ephemera as an API of the table model
-  editor.on('PreInit', () => {
-    editor.serializer.addTempAttr(ephemera.firstSelected);
-    editor.serializer.addTempAttr(ephemera.lastSelected);
-  });
 
   return getApi(clipboard);
 };

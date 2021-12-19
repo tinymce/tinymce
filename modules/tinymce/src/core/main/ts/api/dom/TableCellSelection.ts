@@ -95,7 +95,7 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
 
     const keydown = (event: KeyboardEvent) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
-      editor.selection._tableResizeHandler.hideBars();
+      editor.selection._tableResizeHandler.hideHandles();
 
       const rng = editor.selection.getRng();
       const start = SugarElement.fromDom(rng.startContainer);
@@ -105,7 +105,7 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
         handleResponse(wrappedEvent, response);
       });
 
-      editor.selection._tableResizeHandler.showBars();
+      editor.selection._tableResizeHandler.showHandles();
     };
 
     const isLeftMouse = (raw: MouseEvent) => raw.button === 0;
@@ -175,6 +175,11 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
     editor.on('keyup', keyup);
     editor.on('keydown', keydown);
     editor.on('NodeChange', syncSelection);
+  });
+
+  editor.on('PreInit', () => {
+    editor.serializer.addTempAttr(ephemera.firstSelected);
+    editor.serializer.addTempAttr(ephemera.lastSelected);
   });
 
   const clear = (container: Node) =>

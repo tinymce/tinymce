@@ -18,9 +18,9 @@ import * as Options from '../Options';
 import * as Events from '../TableEvents';
 
 export interface TableResizeHandler {
-  readonly refreshBars: (table: HTMLTableElement) => void;
-  readonly hideBars: () => void;
-  readonly showBars: () => void;
+  readonly refreshHandles: (table: HTMLTableElement) => void;
+  readonly hideHandles: () => void;
+  readonly showHandles: () => void;
   readonly destroy: () => void;
 }
 
@@ -190,22 +190,22 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     });
   });
 
-  const refreshBars = (table: HTMLTableElement): void => {
+  const refreshHandles = (table: HTMLTableElement): void => {
     resizeOpt.each((resize) => resize.refreshBars(SugarElement.fromDom(table)));
   };
 
-  const hideBars = (): void => {
+  const hideHandles = (): void => {
     resizeOpt.each((resize) => resize.hideBars());
   };
 
-  const showBars = (): void => {
+  const showHandles = (): void => {
     resizeOpt.each((resize) => resize.showBars());
   };
 
   return {
-    refreshBars,
-    hideBars,
-    showBars,
+    refreshHandles,
+    hideHandles,
+    showHandles,
     destroy
   };
 };
