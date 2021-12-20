@@ -20,11 +20,11 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       '*': 'width,height,vertical-align,text-align,float,border-color,border-style,background-color,border,padding,border-spacing,border-collapse,border-width'
     },
     setup: (editor: Editor) => {
-      editor.on('tablemodified', (event) => {
+      editor.on('TableModified', (event) => {
         logEventTypes(event);
         logTableModified(event);
       });
-      editor.on('newcell', logEventTypes);
+      editor.on('NewCell', logEventTypes);
     }
   }, [ Plugin ], true);
 

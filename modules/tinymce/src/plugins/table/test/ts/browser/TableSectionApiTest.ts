@@ -240,8 +240,8 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
-      ed.on('tablemodified', logModifiedEvent);
-      ed.on('newcell', logNewCellEvent);
+      ed.on('TableModified', logModifiedEvent);
+      ed.on('NewCell', logNewCellEvent);
     }
   };
 

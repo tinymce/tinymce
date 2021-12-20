@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
       '*': 'width,height,vertical-align,text-align,float,border-color,border-style,background-color,border,padding,border-spacing,border-collapse'
     },
     setup: (editor: Editor) => {
-      editor.on('tablemodified', logEvent);
+      editor.on('TableModified', logEvent);
     }
   }, [ Plugin ], true);
 

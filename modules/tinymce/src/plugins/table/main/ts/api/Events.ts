@@ -18,10 +18,10 @@ import { NewTableCellEvent, NewTableRowEvent, TableEventData } from 'tinymce/cor
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<NewTableRowEvent> =>
-  editor.fire('newrow', { node: row });
+  editor.fire('NewRow', { node: row });
 
 const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<NewTableCellEvent> =>
-  editor.fire('newcell', { node: cell });
+  editor.fire('NewCell', { node: cell });
 
 const fireTableModified = (editor: Editor, table: HTMLTableElement, data: TableEventData): void => {
   editor.fire('TableModified', { ...data, table });

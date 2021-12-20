@@ -60,7 +60,7 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
       }
     ],
     setup: (editor: Editor) => {
-      editor.on('tablemodified', logEvent);
+      editor.on('TableModified', logEvent);
     }
   }, [ Plugin ], true);
 

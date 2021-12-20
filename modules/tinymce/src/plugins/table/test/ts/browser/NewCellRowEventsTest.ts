@@ -17,18 +17,18 @@ describe('browser.tinymce.plugins.table.NewCellRowEventsTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
-  it('TBA: Table newcell/newrow events', () => {
+  it('TBA: Table NewCell/NewRow events', () => {
     const editor = hook.editor();
     const cells: HTMLTableCellElement[] = [];
     const rows: HTMLTableRowElement[] = [];
     let counter = 0;
 
-    editor.on('newcell', (e) => {
+    editor.on('NewCell', (e) => {
       cells.push(e.node);
       e.node.setAttribute('data-counter', '' + counter++);
     });
 
-    editor.on('newrow', (e) => {
+    editor.on('NewRow', (e) => {
       rows.push(e.node);
       e.node.setAttribute('data-counter', '' + counter++);
     });

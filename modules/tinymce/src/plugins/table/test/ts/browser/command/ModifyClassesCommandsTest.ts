@@ -16,7 +16,7 @@ describe('browser.tinymce.plugins.table.command.ModifyClassesCommandsTest', () =
     },
     base_url: '/project/tinymce/js/tinymce',
     setup: (editor: Editor) => {
-      editor.on('tablemodified', logEvent);
+      editor.on('TableModified', logEvent);
     }
   }, [ Plugin ], true);
 

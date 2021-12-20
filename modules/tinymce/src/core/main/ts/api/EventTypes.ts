@@ -148,8 +148,8 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'TableSelectionChange': TableSelectionChangeEvent;
   'TableSelectionClear': { };
   'TableModified': TableModifiedEvent;
-  'newrow': NewTableRowEvent;
-  'newcell': NewTableCellEvent;
+  'NewRow': NewTableRowEvent;
+  'NewCell': NewTableCellEvent;
 }
 
 export interface EditorManagerEventMap {

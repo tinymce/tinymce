@@ -22,10 +22,10 @@ import { NewTableCellEvent, NewTableRowEvent, TableEventData } from './EventType
 import { EditorEvent } from './util/EventDispatcher';
 
 const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<NewTableRowEvent> =>
-  editor.fire('newrow', { node: row });
+  editor.fire('NewRow', { node: row });
 
 const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<NewTableCellEvent> =>
-  editor.fire('newcell', { node: cell });
+  editor.fire('NewCell', { node: cell });
 
 const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string): void => {
   editor.fire('ObjectResizeStart', { target, width, height, origin });
