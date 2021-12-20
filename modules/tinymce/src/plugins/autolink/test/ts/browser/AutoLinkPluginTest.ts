@@ -54,8 +54,9 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
     assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com');
     assertIsLink(editor, 'file://www.domain.com', 'file://www.domain.com');
-    assertIsLink(editor, 'customprotocol://www.domain.com', 'customprotocol://www.domain.com');
-    assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
+    // TODO: TINY-4627/TINY-8202: improve our URL handling so that we don't need to add every possible custom protocol to our regex
+    // assertIsLink(editor, 'customprotocol://www.domain.com', 'customprotocol://www.domain.com');
+    // assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
     assertIsLink(editor, 'ftp://www.domain.com', 'ftp://www.domain.com');
     assertIsLink(editor, 'www.domain.com', 'https://www.domain.com');
     assertIsLink(editor, 'www.domain.com', 'https://www.domain.com', '.');
@@ -97,7 +98,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     const editor = hook.editor();
     typeAnEclipsedURL(editor, 'http://www.domain.com');
     typeAnEclipsedURL(editor, 'https://www.domain.com');
-    typeAnEclipsedURL(editor, 'ssh://www.domain.com');
+    // TODO: TINY-4627/TINY-8202
+    // typeAnEclipsedURL(editor, 'ssh://www.domain.com');
     typeAnEclipsedURL(editor, 'ftp://www.domain.com');
     typeAnEclipsedURL(editor, 'www.domain.com', 'https://www.domain.com');
     typeAnEclipsedURL(editor, 'www.domain.com', 'https://www.domain.com');
@@ -110,7 +112,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     const editor = hook.editor();
     typeNewlineURL(editor, 'http://www.domain.com');
     typeNewlineURL(editor, 'https://www.domain.com');
-    typeNewlineURL(editor, 'ssh://www.domain.com');
+    // TODO: TINY-4627/TINY-8202
+    // typeNewlineURL(editor, 'ssh://www.domain.com');
     typeNewlineURL(editor, 'ftp://www.domain.com');
     typeNewlineURL(editor, 'www.domain.com', 'https://www.domain.com');
     typeNewlineURL(editor, 'www.domain.com', 'https://www.domain.com', true);
@@ -144,7 +147,8 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     editor.options.set('link_default_protocol', 'https');
     assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
     assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com');
-    assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
+    // TODO: TINY-4627/TINY-8202
+    // assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
     assertIsLink(editor, 'ftp://www.domain.com', 'ftp://www.domain.com');
     assertIsLink(editor, 'www.domain.com', 'https://www.domain.com');
     assertIsLink(editor, 'www.domain.com', 'https://www.domain.com', '.');

@@ -271,7 +271,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(DOM.get('test'), { getInner: true }), '<span style="border: 1px solid red;">test</span>');
   });
 
-  it('Comments', () => {
+  // TODO: TINY-4672/TINY-8204
+  it.skip('Comments', () => {
     const ser = DomSerializer({ fix_list_elements: true });
 
     ser.setRules('*[*]');
@@ -339,7 +340,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
   });
 
-  it('Script with tags inside a comment with element_format: xhtml', () => {
+  // TODO: TINY-4627/TINY-8363
+  it.skip('Script with tags inside a comment with element_format: xhtml', () => {
     const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
@@ -350,7 +352,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     );
   });
 
-  it('Script with tags inside a comment', () => {
+  // TODO: TINY-4627/TINY-8363
+  it.skip('Script with tags inside a comment', () => {
     const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
