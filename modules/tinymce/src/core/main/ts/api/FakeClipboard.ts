@@ -29,8 +29,8 @@ interface FakeClipboard {
    * Create a FakeClipboardItem instance that is used when reading or writing data via the FakeClipboard API.
    *
    * @method FakeClipboardItem
-   * @param {Record<string, any>} items an object with the type as the key and any data as the value
-   * @returns {FakeClipboardItem} FakeClipboardItem
+   * @param {Object} items An object with the type as the key and any data as the value.
+   * @returns {tinymce.FakeClipboard.FakeClipboardItem} A new fake clipboard item to represent the specified items.
    */
   readonly FakeClipboardItem: (items: Record<string, any>) => FakeClipboardItem;
 
@@ -38,7 +38,7 @@ interface FakeClipboard {
    * Writes arbitrary data to the fake clipboard.
    *
    * @method write
-   * @param {any} data data to be written to the fake clipboard
+   * @param {Array} data An array of FakeClipboardItems to be written to the fake clipboard.
    */
   readonly write: (data: FakeClipboardItem[]) => void;
 
@@ -46,7 +46,7 @@ interface FakeClipboard {
    * Requests arbitrary data from the fake clipboard.
    *
    * @method read
-   * @returns {FakeClipboardItem} FakeClipboardItem or undefined
+   * @returns {Array} An array of FakeClipboardItems if items exist on the fake clipboard, otherwise undefined.
    */
   readonly read: () => FakeClipboardItem[] | undefined;
 
