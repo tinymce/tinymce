@@ -68,7 +68,7 @@ const open = (editor: Editor, database: EmojiDatabase): void => {
       }))
     };
     return {
-      title: 'Emoticons',
+      title: 'Emojis',
       size: 'normal',
       body,
       initialData: initialState,
@@ -98,7 +98,7 @@ const open = (editor: Editor, database: EmojiDatabase): void => {
   dialogApi.focus(patternName);
 
   if (!database.hasLoaded()) {
-    dialogApi.block('Loading emoticons...');
+    dialogApi.block('Loading emojis...');
     database.waitForLoad().then(() => {
       dialogApi.redial(getInitialState());
       updateFilter.throttle(dialogApi);
@@ -106,7 +106,7 @@ const open = (editor: Editor, database: EmojiDatabase): void => {
       dialogApi.unblock();
     }).catch((_err) => {
       dialogApi.redial({
-        title: 'Emoticons',
+        title: 'Emojis',
         body: {
           type: 'panel',
           items: [
@@ -114,7 +114,7 @@ const open = (editor: Editor, database: EmojiDatabase): void => {
               type: 'alertbanner',
               level: 'error',
               icon: 'warning',
-              text: '<p>Could not load emoticons</p>'
+              text: 'Could not load emojis'
             }
           ]
         },

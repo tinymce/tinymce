@@ -11,13 +11,13 @@ const register = (editor: Editor): void => {
   const onAction = () => editor.execCommand('mceEmoticons');
 
   editor.ui.registry.addButton('emoticons', {
-    tooltip: 'Emoticons',
+    tooltip: 'Emojis',
     icon: 'emoji',
     onAction
   });
 
   editor.ui.registry.addMenuItem('emoticons', {
-    text: 'Emoticons...',
+    text: 'Emojis...',
     icon: 'emoji',
     onAction
   });
