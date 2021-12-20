@@ -1,4 +1,4 @@
-import { Assertions } from '@ephox/agar';
+import { Assertions, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
@@ -34,5 +34,6 @@ describe('browser.tinymce.core.init.InitEditorNoThemeInlineTest', () => {
     Assertions.assertDomEq('Editor.contentAreaContainer should equal target element', targetElement, TinyDom.contentAreaContainer(editor));
     // The only element that should be after the target is the TableResizeHandler TableWire div element
     assert.lengthOf(Traverse.nextSiblings(targetElement), 1, 'Should only be one element after target');
+    UiFinder.exists(body, 'div[style="position: static; height: 0px; width: 0px; padding: 0px; margin: 0px; border: 0px;"]');
   });
 });

@@ -4,7 +4,7 @@ import * as fc from 'fast-check';
 
 import { addPxSuffix, removePxSuffix } from 'tinymce/plugins/table/core/Utils';
 
-describe('atomic.tinymce.plugins.table.core.UtilTest', () => {
+describe('atomic.tinymce.plugins.table.core.UtilsTest', () => {
   it('removePxSuffix', () => {
     assert.equal(removePxSuffix(''), '', 'Empty string is identical');
     assert.equal(removePxSuffix('10px'), '10', 'Pixel string has pixel removed');
