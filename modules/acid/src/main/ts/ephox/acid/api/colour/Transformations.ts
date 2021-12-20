@@ -32,8 +32,15 @@ const anyToHex = (color: string): Hex =>
       return HexColour.fromRgba(RgbaColour.rgbaColour(r, g, b, a));
     });
 
+const rgbaToHexString = (color: string): string =>
+  RgbaColour.fromString(color)
+    .map(HexColour.fromRgba)
+    .map((h) => '#' + h.value)
+    .getOr(color);
+
 export {
   anyToHex,
+  rgbaToHexString,
   hexToHsv,
   hsvToHex
 };

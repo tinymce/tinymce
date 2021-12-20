@@ -7,8 +7,8 @@ const min = Math.min;
 const max = Math.max;
 const round = Math.round;
 
-const rgbRegex = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)/;
-const rgbaRegex = /^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d?(?:\.\d+)?)\)/;
+const rgbRegex = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i;
+const rgbaRegex = /^\s*rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d?(?:\.\d+)?)\s*\)\s*$/i;
 
 const rgbaColour = (red: number, green: number, blue: number, alpha: number): Rgba => ({
   red,
