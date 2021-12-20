@@ -2293,7 +2293,10 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.setContent('<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">cd</span><strong>ef</strong></span></p>');
     LegacyUnit.setSelection(editor, 'span span', 1, 'strong', 1);
     editor.formatter.apply('hilitecolor', { value: '#00ff00' });
-    assert.equal(getContent(editor), '<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">c<span style="background-color: rgb(0, 255, 0);">d</span></span><strong><span style="background-color: rgb(0, 255, 0);">e</span>f</strong></span></p>');
+    assert.equal(getContent(editor),
+      '<p>' +
+        '<span style="background-color: #ff0000;">ab<span style="font-size: 32px;">c<span style="background-color: rgb(0, 255, 0);">d</span></span><strong><span style="background-color: rgb(0, 255, 0);">e</span>f</strong></span>' +
+      '</p>');
   });
 
   it('Apply format to node outside fake table selection', () => {
