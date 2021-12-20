@@ -6,7 +6,8 @@ import Schema from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 describe('browser.tinymce.core.html.SerializerTest', () => {
-  it('Basic serialization', () => {
+  // TODO: TINY-4627/TINY-8202: most of the things in this test currently have issues
+  it.skip('Basic serialization', () => {
     const serializer = HtmlSerializer();
 
     assert.equal(serializer.serialize(DomParser().parse('text<text&')), 'text&lt;text&amp;');
@@ -29,7 +30,8 @@ describe('browser.tinymce.core.html.SerializerTest', () => {
     );
   });
 
-  it('Serialize with validate: true, when parsing with validate:false bug', () => {
+  // TODO: TINY-4627/TINY-8383
+  it.skip('Serialize with validate: true, when parsing with validate:false bug', () => {
     const schema = Schema({ valid_elements: 'b' });
     const serializer = HtmlSerializer({}, schema);
 
