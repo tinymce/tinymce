@@ -95,7 +95,7 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
 
     const keydown = (event: KeyboardEvent) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
-      editor.selection._tableResizeHandler.hideHandles();
+      editor.selection._tableResizeHandler.hide();
 
       const rng = editor.selection.getRng();
       const start = SugarElement.fromDom(rng.startContainer);
@@ -105,7 +105,7 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
         handleResponse(wrappedEvent, response);
       });
 
-      editor.selection._tableResizeHandler.showHandles();
+      editor.selection._tableResizeHandler.show();
     };
 
     const isLeftMouse = (raw: MouseEvent) => raw.button === 0;

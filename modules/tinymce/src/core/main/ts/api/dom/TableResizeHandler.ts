@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Singleton, Strings } from '@ephox/katamari';
 import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableConversions, TableGridSize, TableLookup, TableResize, Warehouse } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
@@ -18,9 +18,9 @@ import * as Options from '../Options';
 import * as Events from '../TableEvents';
 
 export interface TableResizeHandler {
-  readonly refreshHandles: (table: HTMLTableElement) => void;
-  readonly hideHandles: () => void;
-  readonly showHandles: () => void;
+  readonly refresh: (table: HTMLTableElement) => void;
+  readonly hide: () => void;
+  readonly show: () => void;
   readonly destroy: () => void;
 }
 
@@ -40,9 +40,9 @@ const syncPixels = (table: SugarElement<HTMLTableElement>): void => {
 };
 
 export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
-  let selectionRng = Optional.none<Range>();
-  let resizeOpt = Optional.none<TableResize>();
-  let wireOpt = Optional.none<ResizeWire>();
+  const selectionRng = Singleton.value<Range>();
+  const tableResize = Singleton.value<TableResize>();
+  const resizeWire = Singleton.value<ResizeWire>();
   let startW: number;
   let startRawW: string;
 
@@ -93,24 +93,24 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   };
 
   const destroy = () => {
-    resizeOpt.each((sz) => {
+    tableResize.get().each((sz) => {
       sz.destroy();
     });
 
-    wireOpt.each((w) => {
+    resizeWire.get().each((w) => {
       TableWire.remove(editor, w);
     });
   };
 
   editor.on('init', () => {
     const rawWire = TableWire.get(editor, isResizable);
-    wireOpt = Optional.some(rawWire);
+    resizeWire.set(rawWire);
     if (Options.hasTableObjectResizing(editor) && Options.hasTableResizeBars(editor)) {
       const resizing = lazyResizingBehaviour();
       const sz = TableResize.create(rawWire, resizing, lazySizing);
       sz.on();
       sz.events.startDrag.bind((_event) => {
-        selectionRng = Optional.some(editor.selection.getRng());
+        selectionRng.set(editor.selection.getRng());
       });
 
       sz.events.beforeResize.bind((event) => {
@@ -123,7 +123,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
         const rawTable = table.dom;
         Utils.removeDataStyle(table);
 
-        selectionRng.each((rng) => {
+        selectionRng.get().each((rng) => {
           editor.selection.setRng(rng);
           editor.focus();
         });
@@ -132,7 +132,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
         editor.undoManager.add();
       });
 
-      resizeOpt = Optional.some(sz);
+      tableResize.set(sz);
     }
   });
 
@@ -181,7 +181,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   });
 
   editor.on('SwitchMode', () => {
-    resizeOpt.each((resize) => {
+    tableResize.get().each((resize) => {
       if (editor.mode.isReadOnly()) {
         resize.hideBars();
       } else {
@@ -190,22 +190,22 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     });
   });
 
-  const refreshHandles = (table: HTMLTableElement): void => {
-    resizeOpt.each((resize) => resize.refreshBars(SugarElement.fromDom(table)));
+  const refresh = (table: HTMLTableElement): void => {
+    tableResize.get().each((resize) => resize.refreshBars(SugarElement.fromDom(table)));
   };
 
-  const hideHandles = (): void => {
-    resizeOpt.each((resize) => resize.hideBars());
+  const hide = (): void => {
+    tableResize.get().each((resize) => resize.hideBars());
   };
 
-  const showHandles = (): void => {
-    resizeOpt.each((resize) => resize.showBars());
+  const show = (): void => {
+    tableResize.get().each((resize) => resize.showBars());
   };
 
   return {
-    refreshHandles,
-    hideHandles,
-    showHandles,
+    refresh,
+    hide,
+    show,
     destroy
   };
 };
