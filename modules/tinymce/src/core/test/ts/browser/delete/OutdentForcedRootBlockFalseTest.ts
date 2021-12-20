@@ -35,7 +35,8 @@ describe('browser.tinymce.core.delete.OutdentForcedRootBlockFalseTest', () => {
 
   const testBackspace = testDeleteOrBackspaceKey(Keys.backspace());
 
-  it('Backspace key on text with forced_root_block: false', () => {
+  // TODO: TINY-8260, either remove or re-enable these tests
+  it.skip('Backspace key on text with forced_root_block: false', () => {
     testBackspace('a', [ 0 ], 0, '<div>a</div>', [ 0, 0 ], 0); // outdent
     testBackspace('aa', [ 0 ], 1, '<div style="padding-left: 40px;">aa</div>', [ 0, 0 ], 1); // no outdent
     testBackspace('a <br>b', [ 2 ], 0, 'a\n<div>b</div>', [ 1, 0 ], 0); // outdent
