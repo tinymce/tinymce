@@ -69,13 +69,13 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
     const applyFramePositioning = (imageWidth: number, imageHeight: number) => {
       const zoom = data.zoom.getOrThunk(() => {
         const z = zoomToFit(frameComponent.element, imageWidth, imageHeight);
+        // this is a bit unweildy to set twice but having zoom not be optional added a lot of complexity
         cachedData.set({
           ...data,
           zoom: Optional.some(z)
         });
         return z;
-      }
-      );
+      });
       const position = calculateImagePosition(
         Width.get(frameComponent.element),
         Height.get(frameComponent.element),
@@ -86,6 +86,8 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
         Css.setAll(container.element, position);
       });
     };
+
+    cachedData.set(data);
 
     memImage.getOpt(frameComponent).each((imageComponent) => {
       const img = imageComponent.element;
