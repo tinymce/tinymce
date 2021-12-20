@@ -28,7 +28,7 @@ export interface Attribute {
   required?: boolean;
   defaultValue?: string;
   forcedValue?: string;
-  validValues?: any;
+  validValues?: Record<string, {}>;
 }
 
 export interface DefaultAttribute {
@@ -41,7 +41,7 @@ export interface AttributePattern {
   forcedValue?: string;
   pattern: RegExp;
   required?: boolean;
-  validValues?: Record<string, string>;
+  validValues?: Record<string, {}>;
 }
 
 export interface ElementRule {
@@ -67,7 +67,6 @@ export interface SchemaRegExpMap { [name: string]: RegExp }
 
 interface Schema {
   children: Record<string, SchemaMap>;
-  elements: Record<string, SchemaElement>;
   getValidStyles: () => Record<string, string[]> | undefined;
   getValidClasses: () => Record<string, SchemaMap> | undefined;
   getBlockElements: () => SchemaMap;
@@ -1002,7 +1001,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
         if (attrPatterns) {
           i = attrPatterns.length;
           while (i--) {
-            if (attrPatterns[i].pattern.test(name)) {
+            if (attrPatterns[i].pattern.test(attr)) {
               return true;
             }
           }
@@ -1068,7 +1067,6 @@ const Schema = (settings?: SchemaSettings): Schema => {
 
   return {
     children,
-    elements,
     getValidStyles,
     getValidClasses,
     getBlockElements,
