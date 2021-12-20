@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `AutocompleterStart`, `AutocompleterUpdate` and `AutocompleterEnd` events #TINY-8279
 - New `mceAutocompleterClose`, `mceAutocompleterReload` commands #TINY-8279
 - New `slider` dialog component #TINY-8304
+- New `FakeClipboard` API to the `tinymce` global #TINY-8353
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 
 ### Improved
