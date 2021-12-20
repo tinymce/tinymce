@@ -15,6 +15,7 @@ export interface ReflectingConfigSpec<I, S> extends Behaviour.BehaviourConfigSpe
   renderComponents?: (data: I, state: Optional<S>) => AlloySpec[ ];
   updateState?: (comp: AlloyComponent, data: I) => Optional<S>;
   initialData?: I;
+  reuseDom?: boolean;
 }
 
 export interface ReflectingState<S> extends BehaviourState {
@@ -28,4 +29,5 @@ export interface ReflectingConfig<I, S> extends Behaviour.BehaviourConfigDetail 
   renderComponents: Optional<(data: I, state: Optional<S>) => AlloySpec[ ]>;
   updateState: Optional<(comp: AlloyComponent, data: I) => Optional<S>>;
   initialData: Optional<any>;
+  reuseDom: boolean;
 }
