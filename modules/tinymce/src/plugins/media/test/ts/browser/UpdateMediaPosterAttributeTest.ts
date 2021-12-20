@@ -22,7 +22,8 @@ describe('browser.tinymce.plugins.media.UpdateMediaPosterAttributeTest', () => {
     TinyUiActions.clickOnUi(editor, 'div.tox-tab:contains(Advanced)');
   };
 
-  it('TBA: Assert embed data of the video after updating dimensions and media poster value', async () => {
+  // TODO: TINY-4627/TINY-8382
+  it.skip('TBA: Assert embed data of the video after updating dimensions and media poster value', async () => {
     const editor = hook.editor();
     await Utils.pOpenDialog(editor);
     await Utils.pPasteSourceValue(editor, source);

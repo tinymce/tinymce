@@ -5,7 +5,8 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 
-describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
+// TODO: TINY-4627/TINY-8382
+describe.skip('browser.tinymce.plugins.media.ContentFormatsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'media',
     toolbar: 'media',

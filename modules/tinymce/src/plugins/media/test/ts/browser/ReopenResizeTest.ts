@@ -32,7 +32,8 @@ describe('browser.tinymce.plugins.media.ReopenResizeTest', () => {
     assert.lengthOf(images, 1, 'assert image is present');
   };
 
-  it('TBA: Open dialog, set source value, assert width, close dialog. Reopen dialog, change width, close dialog and assert resize handles are present', async () => {
+  // TODO: TINY-4627/TINY-8382
+  it.skip('TBA: Open dialog, set source value, assert width, close dialog. Reopen dialog, change width, close dialog and assert resize handles are present', async () => {
     const editor = hook.editor();
     await Utils.pOpenDialog(editor);
     await Utils.pPasteSourceValue(editor, 'a');
