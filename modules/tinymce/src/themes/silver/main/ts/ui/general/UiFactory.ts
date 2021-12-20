@@ -64,7 +64,7 @@ const factories: Record<string, FormPartRenderer<any>> = {
   button: make<Dialog.Button>((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
   checkbox: make<Dialog.Checkbox>((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),
   colorinput: make<Dialog.ColorInput>((spec, backstage) => renderColorInput(spec, backstage.shared, backstage.colorinput)),
-  colorpicker: make<Dialog.ColorPicker>(renderColorPicker), // Not sure if this needs name.
+  colorpicker: make<Dialog.ColorPicker>((spec, backstage) => renderColorPicker(spec, backstage.shared.providers)), // Not sure if this needs name.
   dropzone: make<Dialog.DropZone>((spec, backstage) => renderDropZone(spec, backstage.shared.providers)),
   grid: make<Dialog.Grid>((spec, backstage) => renderGrid(spec, backstage.shared)),
   listbox: make<Dialog.ListBox>((spec, backstage) => renderListBox(spec, backstage)),
