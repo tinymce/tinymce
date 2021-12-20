@@ -19,6 +19,28 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 
+export type Validator = (v: string) => true | string;
+
+export interface TextField {
+  multiline: boolean;
+  name: string;
+  classname: string;
+  flex: boolean;
+  label: Optional<string>;
+  inputMode: Optional<string>;
+  placeholder: Optional<string>;
+  disabled: boolean;
+  validation: Optional<{
+    validator: Validator;
+    validateOnLoad?: boolean;
+  }>;
+  maximized: boolean;
+  data: Optional<string>;
+}
+
+type InputSpec = Omit<Dialog.Input, 'type'>;
+type TextAreaSpec = Omit<Dialog.TextArea, 'type'>;
+
 const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstageProviders) => {
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
@@ -72,6 +94,7 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
 
   const pField = AlloyFormField.parts.field({
     tag: spec.multiline === true ? 'textarea' : 'input',
+    ...spec.data.map((data) => ({ data })).getOr({}),
     inputAttributes,
     inputClasses: [ spec.classname ],
     inputBehaviours: Behaviour.derive(
@@ -103,29 +126,7 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
   return renderFormFieldWith(pLabel, pField, extraClasses2, extraBehaviours);
 };
 
-export type Validator = (v: string) => true | string;
-
-export interface TextField {
-  multiline: boolean;
-  name: string;
-  classname: string;
-  flex: boolean;
-  label: Optional<string>;
-  inputMode: Optional<string>;
-  placeholder: Optional<string>;
-  disabled: boolean;
-  validation: Optional<{
-    validator: Validator;
-    validateOnLoad?: boolean;
-  }>;
-  maximized: boolean;
-}
-
-type InputSpec = Omit<Dialog.Input, 'type'>;
-
-type TextAreaSpec = Omit<Dialog.TextArea, 'type'>;
-
-const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderTextField({
+const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({
   name: spec.name,
   multiline: false,
   label: spec.label,
@@ -135,10 +136,11 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
   disabled: spec.disabled,
   classname: 'tox-textfield',
   validation: Optional.none(),
-  maximized: spec.maximized
+  maximized: spec.maximized,
+  data: initialData
 }, providersBackstage);
 
-const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderTextField({
+const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({
   name: spec.name,
   multiline: true,
   label: spec.label,
@@ -148,7 +150,8 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
   disabled: spec.disabled,
   classname: 'tox-textarea',
   validation: Optional.none(),
-  maximized: spec.maximized
+  maximized: spec.maximized,
+  data: initialData
 }, providersBackstage);
 
 export {

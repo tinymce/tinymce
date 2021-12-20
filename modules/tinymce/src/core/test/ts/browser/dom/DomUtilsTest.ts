@@ -22,7 +22,7 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
 
     assert.equal(dom.serializeStyle(dom.parseStyle('border: 1px solid red; color: green')), 'border: 1px solid red; color: green;', 'incorrect parsing');
 
-    assert.equal(dom.serializeStyle(dom.parseStyle('border: 1px solid rgb(0, 255, 255); color: green')), 'border: 1px solid #00ffff; color: green;', 'incorrect parsing');
+    assert.equal(dom.serializeStyle(dom.parseStyle('border: 1px solid rgb(0, 255, 255); color: green')), 'border: 1px solid rgb(0, 255, 255); color: green;', 'incorrect parsing');
 
     assert.equal(dom.serializeStyle(
       dom.parseStyle('border-top: 1px solid red; border-left: 1px solid red; border-bottom: 1px solid red; border-right: 1px solid red;')
@@ -527,14 +527,6 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     assert.equal(DOM.get('test2').innerHTML, '');
 
     DOM.remove('test');
-  });
-
-  it('toHex', () => {
-    assert.equal(DOM.toHex('rgb(0, 255, 255)'), '#00ffff');
-    assert.equal(DOM.toHex('rgb(255, 0, 0)'), '#ff0000');
-    assert.equal(DOM.toHex('rgb(0, 0, 255)'), '#0000ff');
-    assert.equal(DOM.toHex('rgb  (  0  , 0  , 255  )  '), '#0000ff');
-    assert.equal(DOM.toHex('   RGB  (  0  , 0  , 255  )  '), '#0000ff');
   });
 
   it('getOuterHTML', () => {

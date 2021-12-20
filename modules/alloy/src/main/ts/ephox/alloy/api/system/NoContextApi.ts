@@ -26,6 +26,7 @@ const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
     broadcastOn: warn('broadcastOn'),
     broadcastEvent: warn('broadcastEvent'),
     build: fail('build'),
+    buildOrPatch: fail('buildOrPatch'),
     addToWorld: fail('addToWorld'),
     removeFromWorld: fail('removeFromWorld'),
     addToGui: fail('addToGui'),

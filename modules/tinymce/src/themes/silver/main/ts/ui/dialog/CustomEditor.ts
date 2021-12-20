@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Obj, Singleton } from '@ephox/katamari';
+import { Obj, Optional, Singleton } from '@ephox/katamari';
 
 import Resource from 'tinymce/core/api/Resource';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 
 type CustomEditorSpec = Dialog.CustomEditor;
 type CustomEditorInitFn = Dialog.CustomEditorInitFn;
@@ -55,23 +56,19 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
           });
         })
       ]),
-      Representing.config({
-        store: {
-          mode: 'manual',
-          getValue: () => editorApi.get().fold(
-            () => initialValue.get().getOr(''),
-            (ed) => ed.getValue()
-          ),
-          setValue: (component, value) => {
-            editorApi.get().fold(
-              () => {
-                initialValue.set(value);
-              },
-              (ed) => ed.setValue(value)
-            );
-          }
+      RepresentingConfigs.withComp(
+        Optional.none(),
+        () => editorApi.get().fold(
+          () => initialValue.get().getOr(''),
+          (ed) => ed.getValue()
+        ),
+        (component, value) => {
+          editorApi.get().fold(
+            () => initialValue.set(value),
+            (ed) => ed.setValue(value)
+          );
         }
-      }),
+      ),
 
       ComposingConfigs.self()
     ]),

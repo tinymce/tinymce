@@ -13,7 +13,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
     renderDropZone({
       name: 'drop1',
       label: Optional.some('Dropzone Label')
-    }, TestProviders)
+    }, TestProviders, Optional.none())
   ));
 
   it('Check basic structure', () => {

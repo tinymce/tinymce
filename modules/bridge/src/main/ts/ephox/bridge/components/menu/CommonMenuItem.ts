@@ -1,5 +1,7 @@
-import { FieldPresence, FieldProcessor, FieldSchema, ValueType } from '@ephox/boulder';
-import { Id, Optional } from '@ephox/katamari';
+import { FieldProcessor } from '@ephox/boulder';
+import { Optional } from '@ephox/katamari';
+
+import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface CommonMenuItemSpec {
   disabled?: boolean;
@@ -23,14 +25,9 @@ export interface CommonMenuItem {
 }
 
 export const commonMenuItemFields: FieldProcessor[] = [
-  FieldSchema.defaultedBoolean('disabled', false),
-  FieldSchema.optionString('text'),
-  FieldSchema.optionString('shortcut'),
-  FieldSchema.field(
-    'value',
-    'value',
-    FieldPresence.defaultedThunk(() => Id.generate('menuitem-value')),
-    ValueType.anyValue()
-  ),
-  FieldSchema.defaulted('meta', { })
+  ComponentSchema.disabled,
+  ComponentSchema.optionalText,
+  ComponentSchema.optionalShortcut,
+  ComponentSchema.generatedValue('menuitem'),
+  ComponentSchema.defaultedMeta
 ];

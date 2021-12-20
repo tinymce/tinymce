@@ -1,6 +1,7 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
 export interface InputSpec extends FormComponentWithLabelSpec {
@@ -23,7 +24,7 @@ const inputFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('inputMode'),
   FieldSchema.optionString('placeholder'),
   FieldSchema.defaultedBoolean('maximized', false),
-  FieldSchema.defaultedBoolean('disabled', false)
+  ComponentSchema.disabled
 ]);
 
 export const inputSchema = StructureSchema.objOf(inputFields);

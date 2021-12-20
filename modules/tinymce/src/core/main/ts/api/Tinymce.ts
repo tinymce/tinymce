@@ -25,6 +25,7 @@ import EditorCommands, { EditorCommandsConstructor } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import Env from './Env';
+import FakeClipboard from './FakeClipboard';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
 import Rect from './geom/Rect';
@@ -162,6 +163,7 @@ interface TinyMCE extends EditorManager {
   ModelManager: ModelManager;
   IconManager: IconManager;
   Resource: Resource;
+  FakeClipboard: FakeClipboard;
 
   // Global utility functions
   trim: Tools['trim'];
@@ -258,6 +260,7 @@ const publicApi = {
   ModelManager,
   IconManager,
   Resource,
+  FakeClipboard,
 
   // Global utility functions
   trim: Tools.trim,

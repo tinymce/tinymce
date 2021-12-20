@@ -18,7 +18,7 @@ describe('headless.tinymce.themes.silver.components.input.InputTest', () => {
       placeholder: Optional.none(),
       maximized: false,
       disabled: false
-    }, TestProviders)
+    }, TestProviders, Optional.none())
   ));
 
   it('Check basic structure', () => {

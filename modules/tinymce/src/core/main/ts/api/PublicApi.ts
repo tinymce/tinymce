@@ -26,6 +26,7 @@ import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import Env from './Env';
 import * as Events from './EventTypes';
+import FakeClipboard from './FakeClipboard';
 import * as Formats from './fmt/Format';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
@@ -122,6 +123,7 @@ export {
   ModelManager,
   UndoManager,
   WindowManager,
+  FakeClipboard,
 
   // other useful types
   RawEditorOptions,

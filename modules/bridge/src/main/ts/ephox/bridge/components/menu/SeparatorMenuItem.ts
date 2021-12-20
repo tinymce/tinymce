@@ -1,5 +1,7 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
+
+import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface SeparatorMenuItemSpec {
   type?: 'separator';
@@ -15,8 +17,8 @@ export interface SeparatorMenuItem {
 }
 
 export const separatorMenuItemSchema = StructureSchema.objOf([
-  FieldSchema.requiredString('type'),
-  FieldSchema.optionString('text')
+  ComponentSchema.type,
+  ComponentSchema.optionalText
 ]);
 
 export const createSeparatorMenuItem = (spec: SeparatorMenuItemSpec): Result<SeparatorMenuItem, StructureSchema.SchemaError<any>> =>

@@ -8,7 +8,7 @@ import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 
 describe('headless.tinymce.themes.silver.components.grid.GridTest', () => {
   const sharedBackstage = {
-    interpreter: Fun.identity,
+    interpreter: Fun.identity as any,
     translate: I18n.translate
   };
 

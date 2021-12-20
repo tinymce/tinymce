@@ -40,10 +40,16 @@ interface ColorPickerCancelEvent extends CustomEvent {
 
 type ColorInputSpec = Omit<Dialog.ColorInput, 'type'>;
 
-export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
+export const renderColorInput = (
+  spec: ColorInputSpec,
+  sharedBackstage: UiFactoryBackstageShared,
+  colorInputBackstage: UiFactoryBackstageForColorInput,
+  initialData: Optional<string>
+): SimpleSpec => {
   const pField = FormField.parts.field({
     factory: Input,
     inputClasses: [ 'tox-textfield' ],
+    data: initialData,
 
     onSetValue: (c) => Invalidating.run(c).get(Fun.noop),
 

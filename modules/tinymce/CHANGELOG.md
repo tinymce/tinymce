@@ -12,13 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `AutocompleterStart`, `AutocompleterUpdate` and `AutocompleterEnd` events #TINY-8279
 - New `mceAutocompleterClose`, `mceAutocompleterReload` commands #TINY-8279
 - New `slider` dialog component #TINY-8304
+- New `FakeClipboard` API to the `tinymce` global #TINY-8353
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
+- The dialog `redial` API will now only rerender the changed components instead of the whole dialog #TINY-8334
 
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
+- RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
 - The `tinymce.Env.os.isOSX` API has been renamed to `tinymce.Env.os.isMacOS` #TINY-8175
 - The `tinymce.Env.browser.isChrome` API has been renamed to `tinymce.Env.browser.isChromium` to better reflect its functionality #TINY-8300
 - The `editor.setContent()` API can now be prevented using the `BeforeSetContent` event. This makes it consistent with the `editor.selection.setContent()` API #TINY-8018
@@ -41,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.selection.getContent()` API did not respect the `no_events` argument #TINY-8018
 - The `GetContent` event was not fired when getting `tree` or `text` formats using the `editor.selection.getContent()` API #TINY-8018
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
+- The aria labels for the color picker dialog were not translated #TINY-8381
 
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
@@ -62,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
+- Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 

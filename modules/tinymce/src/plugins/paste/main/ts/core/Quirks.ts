@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
@@ -26,6 +28,10 @@ const addPreProcessFilter = (editor: Editor, filterFunc: PreProcessFilter) => {
     e.content = filterFunc(editor, e.content, e.internal);
   });
 };
+
+const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
+
+const rgbToHex = (value: string) => value.replace(rgbRegExp, Transformations.rgbaToHexString).toLowerCase();
 
 /**
  * WebKit has a nasty bug where the all computed styles gets added to style attributes when copy/pasting contents.
@@ -67,14 +73,16 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean):
       }
 
       for (let i = 0; i < webKitStyles.length; i++) {
-        let inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
+        const inputValue = inputStyles[webKitStyles[i]];
+        let compareInput = inputValue;
+        let currentValue = dom.getStyle(node, webKitStyles[i], true);
 
         if (/color/.test(webKitStyles[i])) {
-          inputValue = dom.toHex(inputValue);
-          currentValue = dom.toHex(currentValue);
+          compareInput = rgbToHex(compareInput);
+          currentValue = rgbToHex(currentValue);
         }
 
-        if (currentValue !== inputValue) {
+        if (currentValue !== compareInput) {
           outputStyles[webKitStyles[i]] = inputValue;
         }
       }

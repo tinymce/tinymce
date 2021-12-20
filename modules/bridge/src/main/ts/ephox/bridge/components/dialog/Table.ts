@@ -1,6 +1,8 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
+
 export interface TableSpec {
   type: 'table';
   header: string[];
@@ -14,7 +16,7 @@ export interface Table {
 }
 
 const tableFields = [
-  FieldSchema.requiredString('type'),
+  ComponentSchema.type,
   FieldSchema.requiredArrayOf('header', ValueType.string),
   FieldSchema.requiredArrayOf('cells', StructureSchema.arrOf(ValueType.string))
 ];

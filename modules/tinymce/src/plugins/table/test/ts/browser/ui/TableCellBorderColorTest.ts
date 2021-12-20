@@ -31,7 +31,8 @@ describe('browser.tinymce.plugins.table.ui.TableCellBorderColorTest', () => {
       subMenuRemoveTitle: 'Remove color',
       rows: 1,
       columns: 1,
-      customStyle: 'border-color: #159a15'
+      customStyle: 'border-color: rgb(21, 154, 21)'
+
     });
   });
 
@@ -42,7 +43,8 @@ describe('browser.tinymce.plugins.table.ui.TableCellBorderColorTest', () => {
       subMenuRemoveTitle: 'Remove color',
       rows: 2,
       columns: 2,
-      customStyle: 'border-color: #159a15'
+      customStyle: 'border-color: rgb(21, 154, 21)'
+
     });
   });
 });
