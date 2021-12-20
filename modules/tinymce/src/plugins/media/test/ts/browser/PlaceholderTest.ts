@@ -114,7 +114,8 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
       editor.options.set('media_live_embeds', false);
     });
 
-    it('TBA: Set and assert script placeholder structure', () => pTestScriptPlaceholder(hook.editor(),
+    // TODO: TINY-4627/TINY-8382
+    it.skip('TBA: Set and assert script placeholder structure', () => pTestScriptPlaceholder(hook.editor(),
       '<p>\n' +
       '<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
       '<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
@@ -128,7 +129,8 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
       placeholderStructure
     ));
 
-    it('TBA: Set and assert video placeholder structure', () => pTestPlaceholder(hook.editor(),
+    // TODO: TINY-4627/TINY-8382
+    it.skip('TBA: Set and assert video placeholder structure', () => pTestPlaceholder(hook.editor(),
       '/custom/video.mp4',
       '<p><video controls="controls" width="300" height="150">\n' +
       '<source src="custom/video.mp4" type="video/mp4"></video></p>',
