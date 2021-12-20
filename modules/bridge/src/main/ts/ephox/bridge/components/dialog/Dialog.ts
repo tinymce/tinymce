@@ -100,7 +100,7 @@ export const dialogSchema = StructureSchema.objOf([
   FieldSchema.defaultedFunction('onSubmit', Fun.noop),
   FieldSchema.defaultedFunction('onClose', Fun.noop),
   FieldSchema.defaultedFunction('onCancel', Fun.noop),
-  FieldSchema.defaulted('onTabChange', Fun.noop)
+  FieldSchema.defaultedFunction('onTabChange', Fun.noop)
 ]);
 
 export const createDialog = <T>(spec: DialogSpec<T>): Result<Dialog<T>, StructureSchema.SchemaError<any>> =>

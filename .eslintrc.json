@@ -7,6 +7,7 @@
       "modules/*/tsconfig.json"
     ]
   },
+  "plugins": ["only-warn"],
   "rules": {
     "@typescript-eslint/camelcase": "off", // leave off
     "@typescript-eslint/member-ordering": "off",

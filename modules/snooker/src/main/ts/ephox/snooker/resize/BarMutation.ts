@@ -5,7 +5,7 @@ import { SugarElement } from '@ephox/sugar';
 import { DragDistanceEvent, Mutation } from './Mutation';
 
 export interface DragEvent extends DragDistanceEvent {
-  readonly target: SugarElement;
+  readonly target: SugarElement<Element>;
 }
 
 interface DragDistanceEvents {
@@ -13,13 +13,13 @@ interface DragDistanceEvents {
     drag: Bindable<DragEvent>;
   };
   trigger: {
-    drag: (xDelta: number, yDelta: number, target: SugarElement) => void;
+    drag: (xDelta: number, yDelta: number, target: SugarElement<Element>) => void;
   };
 }
 
 export interface BarMutation {
-  assign: (t: SugarElement) => void;
-  get: () => Optional<SugarElement>;
+  assign: (t: SugarElement<Element>) => void;
+  get: () => Optional<SugarElement<Element>>;
   mutate: (x: number, y: number) => void;
   events: {
     drag: Bindable<DragEvent>;
@@ -31,7 +31,7 @@ export const BarMutation = (): BarMutation => {
     drag: Event([ 'xDelta', 'yDelta', 'target' ])
   });
 
-  let target = Optional.none<SugarElement>();
+  let target = Optional.none<SugarElement<Element>>();
 
   const delegate = Mutation();
 
@@ -42,7 +42,7 @@ export const BarMutation = (): BarMutation => {
     });
   });
 
-  const assign = (t: SugarElement) => {
+  const assign = (t: SugarElement<Element>) => {
     target = Optional.some(t);
   };
 

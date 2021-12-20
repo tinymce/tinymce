@@ -1,5 +1,6 @@
-import { FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
+
+import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface FormComponentSpec {
   type: string;
@@ -20,10 +21,10 @@ export interface FormComponentWithLabel extends FormComponent {
 }
 
 export const formComponentFields = [
-  FieldSchema.requiredString('type'),
-  FieldSchema.requiredString('name')
+  ComponentSchema.type,
+  ComponentSchema.name
 ];
 
 export const formComponentWithLabelFields = formComponentFields.concat([
-  FieldSchema.optionString('label')
+  ComponentSchema.optionalLabel
 ]);

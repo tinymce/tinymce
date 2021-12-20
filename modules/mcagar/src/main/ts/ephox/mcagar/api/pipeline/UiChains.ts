@@ -12,7 +12,7 @@ export interface UiChains {
 
   cWaitForPopup: <T> (label: string, selector: string) => Chain<T, T>;
   cWaitForUi: <T> (label: string, selector: string) => Chain<T, T>;
-  cWaitForState: <T> (hasState: (element: SugarElement) => boolean) => (label: string, selector: string) => Chain<T, T>;
+  cWaitForState: <T, U extends Element> (hasState: (element: SugarElement<U>) => boolean) => (label: string, selector: string) => Chain<T, T>;
 
   cCloseDialog: <T> (selector: string) => Chain<T, T>;
   cSubmitDialog: <T> (selector?: string) => Chain<T, T>;
@@ -30,7 +30,7 @@ const cEditorRoot = Chain.mapper((editor: Editor) => {
 
 const cDialogRoot = Chain.injectThunked(SugarBody.body);
 
-const cGetToolbarRoot: Chain<Editor, SugarElement> = NamedChain.asChain([
+const cGetToolbarRoot: Chain<Editor, SugarElement<HTMLElement>> = NamedChain.asChain([
   NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
   NamedChain.direct('editor', cToolstripRoot, 'container'),
   NamedChain.merge([ 'editor', 'container' ], 'data'),
@@ -38,12 +38,12 @@ const cGetToolbarRoot: Chain<Editor, SugarElement> = NamedChain.asChain([
   NamedChain.output('toolbar')
 ]);
 
-const cGetMenuRoot = Chain.fromChains<Editor, SugarElement>([
+const cGetMenuRoot = Chain.fromChains<Editor, SugarElement<HTMLElement>>([
   cToolstripRoot,
-  Chain.binder((container: SugarElement) => UiFinder.findIn(container, getThemeSelectors().menuBarSelector))
+  Chain.binder((container: SugarElement<HTMLElement>) => UiFinder.findIn(container, getThemeSelectors().menuBarSelector))
 ]);
 
-const cClickOnWithin = <T>(label: string, selector: string, cContext: Chain<T, SugarElement>): Chain<T, T> => {
+const cClickOnWithin = <T>(label: string, selector: string, cContext: Chain<T, SugarElement<Node>>): Chain<T, T> => {
   return Chain.control(
     NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
@@ -67,7 +67,7 @@ const cClickOnMenu = <T extends Editor>(label: string, selector: string): Chain<
   return cClickOnWithin<T>(label, selector, cGetMenuRoot);
 };
 
-const cWaitForState = <T>(hasState: (element: SugarElement) => boolean) => {
+const cWaitForState = <T, U extends Element>(hasState: (element: SugarElement<U>) => boolean) => {
   return (label: string, selector: string): Chain<T, T> => {
     return NamedChain.asChain([
       NamedChain.write('element', Chain.fromChains([
@@ -87,11 +87,11 @@ const cWaitForVisible = <T>(label: string, selector: string): Chain<T, T> => {
 };
 
 const cWaitForPopup = <T>(label: string, selector: string): Chain<T, T> => {
-  return cWaitForState<T>(Visibility.isVisible)(label, selector);
+  return cWaitForState<T, HTMLElement>(Visibility.isVisible)(label, selector);
 };
 
 const cWaitForUi = <T>(label: string, selector: string): Chain<T, T> => {
-  return cWaitForState<T>(Fun.always)(label, selector);
+  return cWaitForState<T, Element>(Fun.always)(label, selector);
 };
 
 const cTriggerContextMenu = <T>(label: string, target: string, menu: string): Chain<T, T> => {

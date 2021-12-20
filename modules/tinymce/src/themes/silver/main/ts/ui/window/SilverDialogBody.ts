@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 
@@ -23,24 +23,25 @@ interface WindowBodySpec {
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
-const renderBody = (spec: WindowBodySpec, id: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
+const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
   const renderComponents = (incoming: WindowBodySpec) => {
-    switch (incoming.body.type) {
+    const body = incoming.body;
+    switch (body.type) {
       case 'tabpanel': {
         return [
-          renderTabPanel(incoming.body, backstage)
+          renderTabPanel(body, backstage)
         ];
       }
 
       default: {
         return [
-          renderBodyPanel(incoming.body, backstage)
+          renderBodyPanel(body, backstage)
         ];
       }
     }
   };
 
-  const updateState = (_comp, incoming: WindowBodySpec) => Optional.some({
+  const updateState = (_comp: AlloyComponent, incoming: WindowBodySpec) => Optional.some({
     isTabPanel: () => incoming.body.type === 'tabpanel'
   });
 
@@ -53,15 +54,15 @@ const renderBody = (spec: WindowBodySpec, id: Optional<string>, backstage: UiFac
       tag: 'div',
       classes: [ 'tox-dialog__content-js' ],
       attributes: {
-        ...id.map((x): {id?: string} => ({ id: x })).getOr({}),
+        ...contentId.map((x): {id?: string} => ({ id: x })).getOr({}),
         ...ariaAttrs ? ariaAttributes : {}
       }
     },
-    components: [ ],
+    components: [],
     behaviours: Behaviour.derive([
       ComposingConfigs.childAt(0),
       Reflecting.config({
-        channel: bodyChannel,
+        channel: `${bodyChannel}-${dialogId}`,
         updateState,
         renderComponents,
         initialData: spec
@@ -70,10 +71,11 @@ const renderBody = (spec: WindowBodySpec, id: Optional<string>, backstage: UiFac
   };
 };
 
-const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => renderBody(spec, Optional.some(contentId), backstage, ariaAttrs);
+const renderInlineBody = (spec: WindowBodySpec, dialogId: string, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) =>
+  renderBody(spec, dialogId, Optional.some(contentId), backstage, ariaAttrs);
 
-const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) => {
-  const bodySpec = renderBody(spec, Optional.none(), backstage, false);
+const renderModalBody = (spec: WindowBodySpec, dialogId: string, backstage: UiFactoryBackstage) => {
+  const bodySpec = renderBody(spec, dialogId, Optional.none(), backstage, false);
   return ModalDialog.parts.body(
     bodySpec
   );

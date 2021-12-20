@@ -20,7 +20,7 @@ type GetRulesFunc<C extends GeneralKeyingConfig, S extends BehaviourState> = (co
 
 export interface KeyingType <C extends GeneralKeyingConfig, S extends BehaviourState> {
   readonly schema: () => FieldProcessor[];
-  readonly processKey: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, getRules: GetRulesFunc<C, S>, keyingConfig: C, keyingState: S) => Optional<boolean>;
+  readonly processKey: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<KeyboardEvent>, getRules: GetRulesFunc<C, S>, keyingConfig: C, keyingState: S) => Optional<boolean>;
   readonly toEvents: (keyingConfig: C, keyingState: S) => AlloyEvents.AlloyEventRecord;
 }
 
@@ -38,7 +38,7 @@ const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
     Fields.output('sendFocusIn', optFocusIn)
   ]);
 
-  const processKey = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, getRules: GetRulesFunc<C, S>, keyingConfig: C, keyingState: S): Optional<boolean> => {
+  const processKey = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<KeyboardEvent>, getRules: GetRulesFunc<C, S>, keyingConfig: C, keyingState: S): Optional<boolean> => {
     const rules = getRules(component, simulatedEvent, keyingConfig, keyingState);
 
     return KeyRules.choose(rules, simulatedEvent.event).bind((rule) => rule(component, simulatedEvent, keyingConfig, keyingState));

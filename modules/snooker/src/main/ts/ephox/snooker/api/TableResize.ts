@@ -12,12 +12,12 @@ type BarPositions<A> = BarPositions.BarPositions<A>;
 type ResizeType = 'row' | 'col';
 
 export interface BeforeTableResizeEvent {
-  readonly table: SugarElement;
+  readonly table: SugarElement<HTMLTableElement>;
   readonly type: ResizeType;
 }
 
 export interface AfterTableResizeEvent {
-  readonly table: SugarElement;
+  readonly table: SugarElement<HTMLTableElement>;
   readonly type: ResizeType;
 }
 
@@ -30,8 +30,8 @@ interface TableResizeEventRegistry {
 interface TableResizeEvents {
   readonly registry: TableResizeEventRegistry;
   readonly trigger: {
-    readonly beforeResize: (table: SugarElement, type: ResizeType) => void;
-    readonly afterResize: (table: SugarElement, type: ResizeType) => void;
+    readonly beforeResize: (table: SugarElement<HTMLTableElement>, type: ResizeType) => void;
+    readonly afterResize: (table: SugarElement<HTMLTableElement>, type: ResizeType) => void;
     readonly startDrag: () => void;
   };
 }

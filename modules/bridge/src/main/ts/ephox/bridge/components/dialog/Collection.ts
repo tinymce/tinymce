@@ -1,6 +1,7 @@
-import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
+import { FieldProcessor, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
 export interface CollectionSpec extends FormComponentWithLabelSpec {
@@ -15,16 +16,16 @@ export interface Collection extends FormComponentWithLabel {
 }
 
 const collectionFields: FieldProcessor[] = formComponentWithLabelFields.concat([
-  FieldSchema.defaulted('columns', 'auto')
+  ComponentSchema.defaultedColumns('auto')
 ]);
 
 export const collectionSchema = StructureSchema.objOf(collectionFields);
 
 // TODO: Make type for CollectionItem
 export const collectionDataProcessor = StructureSchema.arrOfObj([
-  FieldSchema.requiredString('value'),
-  FieldSchema.requiredString('text'),
-  FieldSchema.requiredString('icon')
+  ComponentSchema.value,
+  ComponentSchema.text,
+  ComponentSchema.icon
 ]);
 
 export const createCollection = (spec: CollectionSpec): Result<Collection, StructureSchema.SchemaError<any>> =>

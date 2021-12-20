@@ -38,6 +38,7 @@ import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
+import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
 
 declare const escape: any;
@@ -434,6 +435,7 @@ const contentBodyLoaded = (editor: Editor): void => {
 
   if (!Rtc.isRtc(editor)) {
     MultiClickSelection.setup(editor);
+    TextPattern.setup(editor);
   }
 
   const caret = KeyboardOverrides.setup(editor);

@@ -26,20 +26,20 @@ const getMenuRoot = (editor: Editor) => {
 
 const clickOnToolbar = <T extends Element>(editor: Editor, selector: string): SugarElement<T> => {
   const container = getToolbarRoot(editor);
-  const elem = UiFinder.findIn(container, selector).getOrDie();
+  const elem = UiFinder.findIn<T>(container, selector).getOrDie();
   Mouse.click(elem);
   return elem;
 };
 
 const clickOnMenu = <T extends Element>(editor: Editor, selector: string): SugarElement<T> => {
   const container = getMenuRoot(editor);
-  const elem = UiFinder.findIn(container, selector).getOrDie();
+  const elem = UiFinder.findIn<T>(container, selector).getOrDie();
   Mouse.click(elem);
   return elem;
 };
 
 const clickOnUi = <T extends Element>(editor: Editor, selector: string): SugarElement<T> => {
-  const elem = UiFinder.findIn(getUiRoot(editor), selector).getOrDie();
+  const elem = UiFinder.findIn<T>(getUiRoot(editor), selector).getOrDie();
   Mouse.click(elem);
   return elem;
 };
@@ -68,10 +68,10 @@ const closeDialog = (editor: Editor, selector?: string): void => {
 const pWaitForUi = (editor: Editor, selector: string): Promise<SugarElement<Element>> =>
   UiFinder.pWaitFor(`Waiting for a UI element matching '${selector}' to exist`, getUiRoot(editor), selector);
 
-const pWaitForPopup = (editor: Editor, selector: string): Promise<SugarElement<Element>> =>
+const pWaitForPopup = (editor: Editor, selector: string): Promise<SugarElement<HTMLElement>> =>
   UiFinder.pWaitForVisible(`Waiting for a popup matching '${selector}' to be visible`, getUiRoot(editor), selector);
 
-const pWaitForDialog = (editor: Editor, selector?: string): Promise<SugarElement> => {
+const pWaitForDialog = (editor: Editor, selector?: string): Promise<SugarElement<Element>> => {
   const dialogSelector = Type.isUndefined(selector) ? getThemeSelectors().dialogSelector : selector;
   return UiFinder.pWaitForVisible(`Waiting for a dialog matching '${dialogSelector}' to be visible`, getUiRoot(editor), dialogSelector);
 };

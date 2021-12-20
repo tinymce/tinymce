@@ -27,9 +27,9 @@ export interface Retries {
 
 export interface CaretMovement {
   point: (caret: Carets) => number;
-  adjuster: (bridge: WindowBridge, element: SugarElement, guessBox: Carets, original: Carets, caret: Carets) => Retries;
+  adjuster: (bridge: WindowBridge, element: SugarElement<Node>, guessBox: Carets, original: Carets, caret: Carets) => Retries;
   move: (caret: Carets, amount: number) => Carets;
-  gather: (element: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<SugarElement>;
+  gather: (element: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean) => Optional<SugarElement<Node>>;
 }
 
 const JUMP_SIZE = 5;
@@ -48,7 +48,7 @@ const isOutside = (caret: Carets, box: Carets): boolean => {
 };
 
 // Find the block and determine whether or not that block is outside. If it is outside, move up/down and right.
-const inOutsideBlock = (bridge: WindowBridge, element: SugarElement, caret: Carets) => {
+const inOutsideBlock = (bridge: WindowBridge, element: SugarElement<Node>, caret: Carets) => {
   return PredicateFind.closest(element, DomStructure.isBlock).fold(Fun.never, (cell) => {
     return Rectangles.getEntireBox(bridge, cell).exists((box) => {
       return isOutside(caret, box);
@@ -76,7 +76,7 @@ const inOutsideBlock = (bridge: WindowBridge, element: SugarElement, caret: Care
  *    because the guess is GOOD.
  */
 
-const adjustDown = (bridge: WindowBridge, element: SugarElement, guessBox: Carets, original: Carets, caret: Carets): Retries => {
+const adjustDown = (bridge: WindowBridge, element: SugarElement<Node>, guessBox: Carets, original: Carets, caret: Carets): Retries => {
   const lowerCaret = Carets.moveDown(caret, JUMP_SIZE);
   if (Math.abs(guessBox.bottom - original.bottom) < 1) {
     return adt.retry(lowerCaret);
@@ -89,7 +89,7 @@ const adjustDown = (bridge: WindowBridge, element: SugarElement, guessBox: Caret
   }
 };
 
-const adjustUp = (bridge: WindowBridge, element: SugarElement, guessBox: Carets, original: Carets, caret: Carets): Retries => {
+const adjustUp = (bridge: WindowBridge, element: SugarElement<Node>, guessBox: Carets, original: Carets, caret: Carets): Retries => {
   const higherCaret = Carets.moveUp(caret, JUMP_SIZE);
   if (Math.abs(guessBox.top - original.top) < 1) {
     return adt.retry(higherCaret);

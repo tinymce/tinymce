@@ -20,12 +20,13 @@ import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
 import { dialogChannel } from './DialogChannels';
 import { renderModalHeader } from './SilverDialogHeader';
 
-export interface WindowExtra {
-  redial?: <T extends Dialog.DialogData>(newConfig: Dialog.DialogSpec<T>) => DialogManager.DialogInit<T>;
+export interface WindowExtra<T extends Dialog.DialogData> {
+  redial?: (newConfig: Dialog.DialogSpec<T>) => DialogManager.DialogInit<T>;
   closeWindow: () => void;
 }
 
 export interface DialogSpec {
+  id: string;
   header: AlloySpec;
   body: AlloyParts.ConfiguredPart;
   footer: Optional<AlloyParts.ConfiguredPart>;
@@ -34,10 +35,10 @@ export interface DialogSpec {
   extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
 }
 
-const getHeader = (title: string, backstage: UiFactoryBackstage) => renderModalHeader({
+const getHeader = (title: string, dialogId: string, backstage: UiFactoryBackstage) => renderModalHeader({
   title: backstage.shared.providers.translate(title),
   draggable: backstage.dialog.isDraggableModal()
-}, backstage.shared.providers);
+}, dialogId, backstage.shared.providers);
 
 const getBusySpec = (message: string, bs: Record<string, Behaviour.ConfiguredBehaviour<any, any, any>>, providers: UiFactoryBackstageProviders) => ({
   dom: {
@@ -60,7 +61,7 @@ const getBusySpec = (message: string, bs: Record<string, Behaviour.ConfiguredBeh
   }]
 });
 
-const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBackstageProviders, extra: WindowExtra) => ({
+const getEventExtras = <T extends Dialog.DialogData>(lazyDialog: () => AlloyComponent, providers: UiFactoryBackstageProviders, extra: WindowExtra<T>) => ({
   onClose: () => extra.closeWindow(),
   onBlock: (blockEvent: FormBlockEvent) => {
     ModalDialog.setBusy(lazyDialog(), (_comp, bs) => getBusySpec(blockEvent.message, bs, providers));
@@ -78,7 +79,7 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
     lazySink: backstage.shared.getSink,
     extraBehaviours: [
       Reflecting.config({
-        channel: dialogChannel,
+        channel: `${dialogChannel}-${spec.id}`,
         updateState,
         initialData
       }),

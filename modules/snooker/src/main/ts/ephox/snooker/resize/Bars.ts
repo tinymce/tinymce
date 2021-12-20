@@ -106,11 +106,11 @@ const show = (wire: ResizeWire): void => {
   });
 };
 
-const isRowBar = (element: SugarElement<Node>): boolean => {
+const isRowBar = (element: SugarElement<Node>): element is SugarElement<HTMLDivElement> => {
   return Class.has(element, resizeRowBar);
 };
 
-const isColBar = (element: SugarElement<Node>): boolean => {
+const isColBar = (element: SugarElement<Node>): element is SugarElement<HTMLDivElement> => {
   return Class.has(element, resizeColBar);
 };
 

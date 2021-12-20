@@ -1,5 +1,5 @@
 import { Arr, Num, Optional, Optionals, Result } from '@ephox/katamari';
-import { Class, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Class, SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
@@ -85,8 +85,8 @@ const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, _hStat
   SelectorFind.descendant(component.element, '.' + hConfig.itemClass).bind((e) => component.getSystem().getByDom(e).toOptional());
 
 const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> => {
-  const items: SugarElement[] = SelectorFilter.descendants(component.element, '.' + hConfig.itemClass);
-  const last = items.length > 0 ? Optional.some(items[items.length - 1]) : Optional.none<SugarElement>();
+  const items = SelectorFilter.descendants(component.element, '.' + hConfig.itemClass);
+  const last = items.length > 0 ? Optional.some(items[items.length - 1]) : Optional.none();
   return last.bind((c) => component.getSystem().getByDom(c).toOptional());
 };
 

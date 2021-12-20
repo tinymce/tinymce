@@ -6,14 +6,13 @@
  */
 
 import { ColourPicker } from '@ephox/acid';
-import { AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { formActionEvent } from '../general/FormEvents';
-
-// import I18n from 'tinymce/core/api/util/I18n';
 
 const english = {
   'colorcustom.rgb.red.label': 'R',
@@ -25,40 +24,26 @@ const english = {
   'colorcustom.rgb.hex.label': '#',
   'colorcustom.rgb.hex.description': 'Hex color code',
   'colorcustom.rgb.range': 'Range 0 to 255',
-  'colorcustom.sb.saturation': 'Saturation',
-  'colorcustom.sb.brightness': 'Brightness',
-  'colorcustom.sb.picker': 'Saturation and Brightness Picker',
-  'colorcustom.sb.palette': 'Saturation and Brightness Palette',
-  'colorcustom.sb.instructions': 'Use arrow keys to select saturation and brightness, on x and y axes',
-  'colorcustom.hue.hue': 'Hue',
-  'colorcustom.hue.slider': 'Hue Slider',
-  'colorcustom.hue.palette': 'Hue Palette',
-  'colorcustom.hue.instructions': 'Use arrow keys to select a hue',
   'aria.color.picker': 'Color Picker',
   'aria.input.invalid': 'Invalid input'
 };
 
-const getEnglishText = (key) => {
-  return english[key];
-};
-
-const translate = (key) => {
-  // TODO: use this: I18n.translate()
-  return getEnglishText(key);
+const translate = (providerBackstage: UiFactoryBackstageProviders) => (key: string) => {
+  return providerBackstage.translate(english[key]);
 };
 
 type ColorPickerSpec = Omit<Dialog.ColorPicker, 'type'>;
 
-export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
+export const renderColorPicker = (_spec: ColorPickerSpec, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const getClass = (key: string) => 'tox-' + key;
 
-  const colourPickerFactory = ColourPicker.makeFactory(translate, getClass);
+  const colourPickerFactory = ColourPicker.makeFactory(translate(providerBackstage), getClass);
 
-  const onValidHex = (form) => {
+  const onValidHex = (form: AlloyComponent) => {
     AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: true });
   };
 
-  const onInvalidHex = (form) => {
+  const onInvalidHex = (form: AlloyComponent) => {
     AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: false });
   };
 

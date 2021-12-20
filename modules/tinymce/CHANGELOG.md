@@ -33,12 +33,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
+- Moved the `textpattern` plugin to TinyMCE core #TINY-8312
+- Renamed the `textpattern_patterns` setting to `text_patterns` #TINY-8312
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
 - The `editor.selection.getContent()` API did not respect the `no_events` argument #TINY-8018
 - The `GetContent` event was not fired when getting `tree` or `text` formats using the `editor.selection.getContent()` API #TINY-8018
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
+- The aria labels for the color picker dialog were not translated #TINY-8381
 
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
@@ -62,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `tabfocus` plugin #TINY-8315
+- Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
 
 ### Deprecated

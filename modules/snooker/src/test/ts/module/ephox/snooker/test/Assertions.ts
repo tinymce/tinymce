@@ -301,7 +301,7 @@ const checkUnmerge = (
   Insert.append(SugarBody.body(), container);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const unmergables = Arr.map(unmergablePaths, (path) =>
-    Hierarchy.follow(table, [ path.section, path.row, path.column ])
+    Hierarchy.follow(table, [ path.section, path.row, path.column ]) as Optional<SugarElement<HTMLTableCellElement>>
   );
 
   const unmergable = Optional.some(Optionals.cat(unmergables));

@@ -20,7 +20,7 @@ import * as TableWire from './TableWire';
 
 export interface ResizeHandler {
   readonly lazyResize: () => Optional<TableResize>;
-  readonly lazyWire: () => any;
+  readonly lazyWire: () => ResizeWire;
   readonly destroy: () => void;
 }
 
@@ -49,7 +49,7 @@ export const getResizeHandler = (editor: Editor): ResizeHandler => {
   const lazyResizingBehaviour = () =>
     Options.isPreserveTableColumnResizing(editor) ? ResizeBehaviour.preserveTable() : ResizeBehaviour.resizeTable();
 
-  const getNumColumns = (table: SugarElement<Element>) =>
+  const getNumColumns = (table: SugarElement<HTMLTableElement>) =>
     TableGridSize.getGridSize(table).columns;
 
   const afterCornerResize = (table: SugarElement<HTMLTableElement>, origin: string, width: number) => {

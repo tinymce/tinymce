@@ -4,9 +4,9 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { Chain } from './Chain';
 
 export interface CursorRange {
-  readonly start: SugarElement<any>;
+  readonly start: SugarElement<Node>;
   readonly soffset: number;
-  readonly finish: SugarElement<any>;
+  readonly finish: SugarElement<Node>;
   readonly foffset: number;
 }
 
@@ -17,7 +17,7 @@ export interface CursorPath {
   readonly foffset: number;
 }
 
-const range = (obj: { start: SugarElement<any>; soffset: number; finish: SugarElement<any>; foffset: number }): CursorRange => ({
+const range = (obj: { start: SugarElement<Node>; soffset: number; finish: SugarElement<Node>; foffset: number }): CursorRange => ({
   start: obj.start,
   soffset: obj.soffset,
   finish: obj.finish,
@@ -65,13 +65,13 @@ const isCursorSpec = (spec: CursorSpec | RangeSpec): spec is CursorSpec =>
 const pathFrom = (spec: CursorSpec | RangeSpec): CursorPath =>
   isCursorSpec(spec) ? pathFromCollapsed(spec) : pathFromRange(spec);
 
-const follow = (container: SugarElement<any>, calcPath: number[]): Result<SugarElement<any>, string> =>
+const follow = (container: SugarElement<Node>, calcPath: number[]): Result<SugarElement<Node>, string> =>
   Hierarchy.follow(container, calcPath).fold(() =>
     Result.error('Could not follow path: ' + calcPath.join(',')),
   Result.value
   );
 
-const followPath = (container: SugarElement<any>, calcPath: CursorPath): Result<CursorRange, string> =>
+const followPath = (container: SugarElement<Node>, calcPath: CursorPath): Result<CursorRange, string> =>
   follow(container, calcPath.startPath).bind((start) =>
     follow(container, calcPath.finishPath).map((finish) =>
       range({
@@ -81,11 +81,11 @@ const followPath = (container: SugarElement<any>, calcPath: CursorPath): Result<
         foffset: calcPath.foffset
       })));
 
-const cFollowPath = (calcPath: CursorPath): Chain<SugarElement<any>, CursorRange> =>
-  Chain.binder((container: SugarElement<any>) => followPath(container, calcPath));
+const cFollowPath = (calcPath: CursorPath): Chain<SugarElement<Node>, CursorRange> =>
+  Chain.binder((container) => followPath(container, calcPath));
 
-const cFollowCursor = (elementPath: number[], offset: number): Chain<SugarElement<any>, CursorRange> =>
-  Chain.binder((container: SugarElement<any>) =>
+const cFollowCursor = (elementPath: number[], offset: number): Chain<SugarElement<Node>, CursorRange> =>
+  Chain.binder((container) =>
     follow(container, elementPath).map((element) =>
       range({
         start: element,
@@ -96,16 +96,16 @@ const cFollowCursor = (elementPath: number[], offset: number): Chain<SugarElemen
     )
   );
 
-const cFollow = (elementPath: number[]): Chain<SugarElement<any>, SugarElement<any>> =>
-  Chain.binder((container: SugarElement<any>) => follow(container, elementPath));
+const cFollow = (elementPath: number[]): Chain<SugarElement<Node>, SugarElement<Node>> =>
+  Chain.binder((container) => follow(container, elementPath));
 
 const cToRange = Chain.mapper(range);
 const cToPath = Chain.mapper(path);
 
-const calculate = (container: SugarElement<any>, calcPath: CursorPath): CursorRange =>
+const calculate = (container: SugarElement<Node>, calcPath: CursorPath): CursorRange =>
   followPath(container, calcPath).getOrDie();
 
-const calculateOne = (container: SugarElement<any>, calcPath: number[]): SugarElement<any> =>
+const calculateOne = (container: SugarElement<Node>, calcPath: number[]): SugarElement<Node> =>
   follow(container, calcPath).getOrDie();
 
 export {

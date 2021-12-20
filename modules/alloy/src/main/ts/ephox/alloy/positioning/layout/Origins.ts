@@ -71,7 +71,7 @@ const reposition = (origin: OriginAdt, decision: RepositionDecision): PositionCs
   return positionWithDirection('fixed', decision, x, y, width, height);
 });
 
-const toBox = (origin: OriginAdt, element: SugarElement): Boxes.Bounds => {
+const toBox = (origin: OriginAdt, element: SugarElement<HTMLElement>): Boxes.Bounds => {
   const rel = Fun.curry(OuterPosition.find, element);
   const position = origin.fold(rel, rel, () => {
     const scroll = Scroll.get();

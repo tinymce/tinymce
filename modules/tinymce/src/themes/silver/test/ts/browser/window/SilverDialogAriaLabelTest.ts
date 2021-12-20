@@ -40,7 +40,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogAriaLabelTest', () =>
   };
 
   const assertDialogLabelledBy = () => {
-    const dialog = UiFinder.findIn(SugarBody.body(), '[role="dialog"]').getOrDie();
+    const dialog = UiFinder.findIn<HTMLElement>(SugarBody.body(), '[role="dialog"]').getOrDie();
     const labelId = getDialogLabelId(dialog);
     UiFinder.exists(dialog, `#${labelId}`);
   };

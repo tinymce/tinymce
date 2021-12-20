@@ -16,7 +16,7 @@ interface Item {
   type: string;
 }
 
-const isDraggable = (element: SugarElement<any>): boolean => {
+const isDraggable = (element: SugarElement<Element>): boolean => {
   const name = SugarNode.name(element);
   return (
     name === 'img' ||
@@ -37,7 +37,7 @@ const checkNotDefaultPrevented = (evt: DragEvent): void => {
   }
 };
 
-const dragnDrop = (from: SugarElement<any>, to: SugarElement<any>, prevented: boolean = true): void => {
+const dragnDrop = (from: SugarElement<Element>, to: SugarElement<Element>, prevented: boolean = true): void => {
   const fromWin = getWindowFromElement(from);
   const toWin = getWindowFromElement(to);
   const fromRect = from.dom.getBoundingClientRect();
@@ -98,8 +98,8 @@ const cDragnDrop = <T extends Element> (fromSelector: string, toSelector: string
 const sDragnDrop = <T>(fromSelector: string, toSelector: string, prevented?: boolean): Step<T, T> =>
   Chain.asStep(SugarBody.body(), [ cDragnDrop(fromSelector, toSelector, prevented) ]);
 
-const pDragnDrop = (fromSelector: string, toSelector: string, prevented?: boolean): Promise<SugarElement<Element>> =>
-  Chain.toPromise(cDragnDrop(fromSelector, toSelector, prevented))(SugarBody.body());
+const pDragnDrop = (fromSelector: string, toSelector: string, prevented?: boolean): Promise<SugarElement<HTMLElement>> =>
+  Chain.toPromise(cDragnDrop<HTMLElement>(fromSelector, toSelector, prevented))(SugarBody.body());
 
 const sDropFiles = <T>(files: File[], toSelector: string, prevented?: boolean): Step<T, T> => Chain.asStep(SugarBody.body(), [
   UiFinder.cFindIn(toSelector),

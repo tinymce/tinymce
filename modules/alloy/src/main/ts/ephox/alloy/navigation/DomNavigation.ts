@@ -3,7 +3,7 @@ import { Attribute, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as DomPinpoint from './DomPinpoint';
 
-const horizontal = (container: SugarElement<HTMLElement>, selector: string, current: SugarElement<HTMLElement>, delta: number): Optional<SugarElement> => {
+const horizontal = (container: SugarElement<HTMLElement>, selector: string, current: SugarElement<HTMLElement>, delta: number): Optional<SugarElement<HTMLElement>> => {
 
   const isDisabledButton = (candidate: SugarElement<HTMLElement>) =>
     SugarNode.name(candidate) === 'button' && Attribute.get(candidate, 'disabled') === 'disabled';

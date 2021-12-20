@@ -1,6 +1,8 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../../core/ComponentSchema';
+
 export interface CardTextSpec {
   type: 'cardtext';
   text: string;
@@ -16,9 +18,9 @@ export interface CardText {
 }
 
 const cardTextFields = [
-  FieldSchema.requiredString('type'),
-  FieldSchema.requiredString('text'),
-  FieldSchema.optionString('name'),
+  ComponentSchema.type,
+  ComponentSchema.text,
+  ComponentSchema.optionalName,
   FieldSchema.defaultedArrayOf('classes', [ 'tox-collection__item-label' ], ValueType.string)
 ];
 

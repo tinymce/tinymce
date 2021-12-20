@@ -56,7 +56,7 @@ const close = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: Sandb
 const isOpen = (_sandbox: AlloyComponent, _sConfig: SandboxingConfig, sState: SandboxingState): boolean =>
   sState.isOpen();
 
-const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: SugarElement): boolean =>
+const isPartOf = (sandbox: AlloyComponent, sConfig: SandboxingConfig, sState: SandboxingState, queryElem: SugarElement<Node>): boolean =>
   isOpen(sandbox, sConfig, sState) && sState.get().exists(
     (data) => sConfig.isPartOf(sandbox, data, queryElem)
   );
@@ -88,7 +88,7 @@ const cloak = (sandbox: AlloyComponent, sConfig: SandboxingConfig, _sState: Sand
   store(sandbox, 'visibility', sConfig.cloakVisibilityAttr, 'hidden');
 };
 
-const hasPosition = (element: SugarElement): boolean => Arr.exists(
+const hasPosition = (element: SugarElement<HTMLElement>): boolean => Arr.exists(
   [ 'top', 'left', 'right', 'bottom' ],
   (pos) => Css.getRaw(element, pos).isSome()
 );

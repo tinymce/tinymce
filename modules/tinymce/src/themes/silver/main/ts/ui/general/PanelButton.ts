@@ -27,7 +27,7 @@ export interface SwatchPanelButtonSpec {
   columns: number;
   presets: Toolbar.PresetTypes;
   getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  onItemAction: (comp: AlloyComponent, value) => void;
+  onItemAction: (comp: AlloyComponent, value: string) => void;
   layouts?: Layouts;
 }
 

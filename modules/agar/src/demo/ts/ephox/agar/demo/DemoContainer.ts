@@ -1,6 +1,6 @@
 import { Class, Html, Insert, InsertAll, Remove, SugarElement, SugarElements } from '@ephox/sugar';
 
-export const init = (name: string, f: (success: () => void, failure: (err: any) => void) => SugarElement[]): void => {
+export const init = (name: string, f: (success: () => void, failure: (err: any) => void) => SugarElement<Node>[]): void => {
   const container = SugarElement.fromTag('div');
   Class.add(container, 'demo-container');
   Html.set(container, '<p>' + name + '</p>');

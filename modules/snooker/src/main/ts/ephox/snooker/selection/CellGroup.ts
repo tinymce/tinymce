@@ -14,7 +14,7 @@ const getBounds = (detailA: Structs.DetailExt, detailB: Structs.DetailExt): Stru
   );
 };
 
-const getAnyBox = (warehouse: Warehouse, startCell: SugarElement, finishCell: SugarElement): Optional<Structs.Bounds> => {
+const getAnyBox = (warehouse: Warehouse, startCell: SugarElement<HTMLTableCellElement>, finishCell: SugarElement<HTMLTableCellElement>): Optional<Structs.Bounds> => {
   const startCoords = Warehouse.findItem(warehouse, startCell, Compare.eq);
   const finishCoords = Warehouse.findItem(warehouse, finishCell, Compare.eq);
   return startCoords.bind((sc) => {
@@ -24,7 +24,7 @@ const getAnyBox = (warehouse: Warehouse, startCell: SugarElement, finishCell: Su
   });
 };
 
-const getBox = (warehouse: Warehouse, startCell: SugarElement, finishCell: SugarElement): Optional<Structs.Bounds> => {
+const getBox = (warehouse: Warehouse, startCell: SugarElement<HTMLTableCellElement>, finishCell: SugarElement<HTMLTableCellElement>): Optional<Structs.Bounds> => {
   return getAnyBox(warehouse, startCell, finishCell).bind((bounds) => {
     return CellBounds.isRectangular(warehouse, bounds);
   });

@@ -1,6 +1,6 @@
 import { SugarElement, Truncate } from '@ephox/sugar';
 
-const element = (elem: SugarElement): string => Truncate.getHtml(elem);
+const element = (elem: SugarElement<Node>): string => Truncate.getHtml(elem);
 
 export {
   element

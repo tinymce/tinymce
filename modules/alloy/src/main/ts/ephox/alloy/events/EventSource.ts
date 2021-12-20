@@ -3,7 +3,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import { EventFormat } from './SimulatedEvent';
 
-const derive = (rawEvent: EventFormat, rawTarget: SugarElement): Cell<SugarElement> => {
+const derive = (rawEvent: EventFormat, rawTarget: SugarElement<Node>): Cell<SugarElement<Node>> => {
   const source = Obj.get(rawEvent, 'target').getOr(rawTarget);
 
   return Cell(source);

@@ -68,7 +68,7 @@ const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail:
   moveBy(direction, spectrum, detail).map<boolean>(Fun.always);
 
 // get y offset from event
-const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Optional<number> => {
+const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent<MouseEvent | TouchEvent>): Optional<number> => {
   const pos = ModelCommon.getEventSource(simulatedEvent);
   return pos.map((p) => {
     return p.top;

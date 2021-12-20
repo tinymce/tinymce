@@ -11,14 +11,14 @@ const isResizable = (elm: SugarElement<Element>) => Attribute.get(elm, resizeAtt
 const tableHtml = '<table style="width: 400px"><tbody><tr><td style="width: 200px"></td><td style="width: 200px"></td></tr></tbody></table>';
 const colgroupTableHtml = '<table style="width: 400px"><colgroup><col style="width: 200px" /><col style="width: 200px" /></colgroup><tbody><tr><td></td><td></td></tr></tbody></table>';
 
-const assertdBarCounts = (scope: SugarElement, rows: number, cols: number) => {
+const assertdBarCounts = (scope: SugarElement<Node>, rows: number, cols: number) => {
   const rowBars = SelectorFilter.descendants(scope, 'div[data-row]');
   const colBars = SelectorFilter.descendants(scope, 'div[data-column]');
   Assert.eq(`Should be ${rows} row bar in the dom`, rows, rowBars.length);
   Assert.eq(`Should be ${cols} col bars in the dom`, cols, colBars.length);
 };
 
-const setResizeAttr = (scope: SugarElement, selector: string, value: string) => {
+const setResizeAttr = (scope: SugarElement<Node>, selector: string, value: string) => {
   const elm = SelectorFind.descendant(scope, selector).getOrDie(`Could not find ${selector}`);
   Attribute.set(elm, resizeAttribute, value);
 };

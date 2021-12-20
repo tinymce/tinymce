@@ -3,7 +3,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import { Navigation } from './Navigation';
 
-const walkUp = (navigation: Navigation, doc: SugarElement<HTMLDocument>): SugarElement[] => {
+const walkUp = (navigation: Navigation, doc: SugarElement<Document>): SugarElement<Element>[] => {
   const frame = navigation.view(doc);
   return frame.fold(Fun.constant([]), (f) => {
     const parent = navigation.owner(f);
@@ -13,7 +13,7 @@ const walkUp = (navigation: Navigation, doc: SugarElement<HTMLDocument>): SugarE
 };
 
 // TODO: Why is this an option if it is always some?
-const pathTo = (element: SugarElement, navigation: Navigation): Optional<SugarElement[]> => {
+const pathTo = (element: SugarElement<Node>, navigation: Navigation): Optional<SugarElement<Element>[]> => {
   const d = navigation.owner(element);
   const paths = walkUp(navigation, d);
   return Optional.some(paths);

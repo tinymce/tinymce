@@ -5,7 +5,7 @@ import * as Tagger from '../registry/Tagger';
 import * as DescribedHandler from './DescribedHandler';
 
 export interface ElementAndHandler {
-  readonly element: SugarElement;
+  readonly element: SugarElement<Node>;
   readonly descHandler: CurriedHandler;
 }
 
@@ -28,10 +28,10 @@ export interface EventRegistry {
   readonly registerId: (extraArgs: any[], id: string, events: Record<EventName, UncurriedHandler>) => void;
   readonly unregisterId: (id: string) => void;
   readonly filterByType: (type: string) => UidAndHandler[];
-  readonly find: (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement) => Optional<ElementAndHandler>;
+  readonly find: (isAboveRoot: (elem: SugarElement<Node>) => boolean, type: string, target: SugarElement<Node>) => Optional<ElementAndHandler>;
 }
 
-const eventHandler = (element: SugarElement, descHandler: CurriedHandler): ElementAndHandler => ({
+const eventHandler = (element: SugarElement<Node>, descHandler: CurriedHandler): ElementAndHandler => ({
   element,
   descHandler
 });
@@ -55,7 +55,7 @@ export const EventRegistry = (): EventRegistry => {
     });
   };
 
-  const findHandler = (handlers: Record<Uid, CurriedHandler>, elem: SugarElement): Optional<ElementAndHandler> =>
+  const findHandler = (handlers: Record<Uid, CurriedHandler>, elem: SugarElement<Node>): Optional<ElementAndHandler> =>
     Tagger.read(elem)
       .bind((id) => Obj.get(handlers, id))
       .map((descHandler) => eventHandler(elem, descHandler));
@@ -67,7 +67,7 @@ export const EventRegistry = (): EventRegistry => {
       .getOr([ ]);
 
   // Given event type, and element, find the handler.
-  const find = (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement): Optional<ElementAndHandler> =>
+  const find = (isAboveRoot: (elem: SugarElement<Node>) => boolean, type: string, target: SugarElement<Node>): Optional<ElementAndHandler> =>
     Obj.get(registry, type)
       .bind((handlers) => TransformFind.closest(target, (elem) => findHandler(handlers, elem), isAboveRoot));
 

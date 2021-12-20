@@ -9,7 +9,7 @@ export interface Movement {
   readonly on: () => void;
   readonly off: () => void;
   readonly isOn: () => boolean;
-  readonly onEvent: (event: EventArgs, mode: DragMode) => void;
+  readonly onEvent: <T>(event: EventArgs<T>, mode: DragMode<T>) => void;
   readonly events: DragEvents['registry'];
 }
 
@@ -28,7 +28,7 @@ export const Movement = (): Movement => {
     dragState = noDragState;
   };
 
-  const onEvent = (event: EventArgs, mode: DragMode) => {
+  const onEvent = <T>(event: EventArgs<T>, mode: DragMode<T>) => {
     dragState.onEvent(event, mode);
   };
 

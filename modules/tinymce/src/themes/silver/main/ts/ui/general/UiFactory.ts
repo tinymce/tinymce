@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, FormTypes, SimpleOrSketchSpec } from '@ephox/alloy';
-import { Merger, Obj } from '@ephox/katamari';
+import { AlloyParts, AlloySpec, FormTypes, SimpleOrSketchSpec } from '@ephox/alloy';
+import { Dialog } from '@ephox/bridge/';
+import { Fun, Merger, Obj } from '@ephox/katamari';
 
-import { BridgedType, UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderBar } from '../dialog/Bar';
 import { renderCollection } from '../dialog/Collection';
 import { renderColorInput } from '../dialog/ColorInput';
@@ -34,54 +35,57 @@ import { renderHtmlPanel } from './HtmlPanel';
 
 /* eslint-disable no-console */
 
-export type FormPartRenderer = (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
-export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
+export type FormPartRenderer<T extends Dialog.BodyComponent> = (parts: FormTypes.FormParts, spec: T, backstage: UiFactoryBackstage) => AlloySpec;
+export type NoFormRenderer<T extends Dialog.BodyComponent> = (spec: T, backstage: UiFactoryBackstage) => AlloySpec;
 
-const make = (render: NoFormRenderer): FormPartRenderer => {
-  return (parts, spec, backstage) => Obj.get(spec, 'name').fold(
-    () => render(spec, backstage),
-    (fieldName) => parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)
-  );
+const make = <T extends Dialog.BodyComponent>(render: NoFormRenderer<T>): FormPartRenderer<T> => {
+  return (parts, spec, backstage) =>
+    Obj.get(spec as Record<string, any>, 'name').fold(
+      () => render(spec, backstage),
+      (fieldName) => parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)
+    );
 };
 
-const makeIframe = (render: NoFormRenderer): FormPartRenderer => (parts, spec, backstage) => {
+const makeIframe = (render: NoFormRenderer<Dialog.Iframe>): FormPartRenderer<Dialog.Iframe> => (parts, spec, backstage) => {
   const iframeSpec = Merger.deepMerge(spec, {
     source: 'dynamic'
   });
   return make(render)(parts, iframeSpec, backstage);
 };
 
-const factories: Record<string, FormPartRenderer> = {
-  bar: make((spec, backstage) => renderBar(spec, backstage.shared)),
-  collection: make((spec, backstage) => renderCollection(spec, backstage.shared.providers)),
-  alertbanner: make((spec, backstage) => renderAlertBanner(spec, backstage.shared.providers)),
-  input: make((spec, backstage) => renderInput(spec, backstage.shared.providers)),
-  textarea: make((spec, backstage) => renderTextarea(spec, backstage.shared.providers)),
-  label: make((spec, backstage) => renderLabel(spec, backstage.shared)),
+const factories: Record<string, FormPartRenderer<any>> = {
+  bar: make<Dialog.Bar>((spec, backstage) => renderBar(spec, backstage.shared)),
+  collection: make<Dialog.Collection>((spec, backstage) => renderCollection(spec, backstage.shared.providers)),
+  alertbanner: make<Dialog.AlertBanner>((spec, backstage) => renderAlertBanner(spec, backstage.shared.providers)),
+  input: make<Dialog.Input>((spec, backstage) => renderInput(spec, backstage.shared.providers)),
+  textarea: make<Dialog.TextArea>((spec, backstage) => renderTextarea(spec, backstage.shared.providers)),
+  label: make<Dialog.Label>((spec, backstage) => renderLabel(spec, backstage.shared)),
   iframe: makeIframe((spec, backstage) => renderIFrame(spec, backstage.shared.providers)),
-  button: make((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
-  checkbox: make((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),
-  colorinput: make((spec, backstage) => renderColorInput(spec, backstage.shared, backstage.colorinput)),
-  colorpicker: make(renderColorPicker), // Not sure if this needs name.
-  dropzone: make((spec, backstage) => renderDropZone(spec, backstage.shared.providers)),
-  grid: make((spec, backstage) => renderGrid(spec, backstage.shared)),
-  listbox: make((spec, backstage) => renderListBox(spec, backstage)),
-  selectbox: make((spec, backstage) => renderSelectBox(spec, backstage.shared.providers)),
-  sizeinput: make((spec, backstage) => renderSizeInput(spec, backstage.shared.providers)),
-  slider: make((spec, backstage) => renderSlider(spec, backstage.shared.providers)),
-  urlinput: make((spec, backstage) => renderUrlInput(spec, backstage, backstage.urlinput)),
-  customeditor: make(renderCustomEditor),
-  htmlpanel: make(renderHtmlPanel),
-  imagetools: make((spec, backstage) => renderImageTools(spec, backstage.shared.providers)),
-  table: make((spec, backstage) => renderTable(spec, backstage.shared.providers)),
-  panel: make((spec, backstage) => renderPanel(spec, backstage))
+  button: make<Dialog.Button>((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
+  checkbox: make<Dialog.Checkbox>((spec, backstage) => renderCheckbox(spec, backstage.shared.providers)),
+  colorinput: make<Dialog.ColorInput>((spec, backstage) => renderColorInput(spec, backstage.shared, backstage.colorinput)),
+  colorpicker: make<Dialog.ColorPicker>((spec, backstage) => renderColorPicker(spec, backstage.shared.providers)), // Not sure if this needs name.
+  dropzone: make<Dialog.DropZone>((spec, backstage) => renderDropZone(spec, backstage.shared.providers)),
+  grid: make<Dialog.Grid>((spec, backstage) => renderGrid(spec, backstage.shared)),
+  listbox: make<Dialog.ListBox>((spec, backstage) => renderListBox(spec, backstage)),
+  selectbox: make<Dialog.SelectBox>((spec, backstage) => renderSelectBox(spec, backstage.shared.providers)),
+  sizeinput: make<Dialog.SizeInput>((spec, backstage) => renderSizeInput(spec, backstage.shared.providers)),
+  slider: make<Dialog.Slider>((spec, backstage) => renderSlider(spec, backstage.shared.providers)),
+  urlinput: make<Dialog.UrlInput>((spec, backstage) => renderUrlInput(spec, backstage, backstage.urlinput)),
+  customeditor: make<Dialog.CustomEditor>(renderCustomEditor),
+  htmlpanel: make<Dialog.HtmlPanel>(renderHtmlPanel),
+  imagetools: make<Dialog.ImageTools>((spec, backstage) => renderImageTools(spec, backstage.shared.providers)),
+  table: make<Dialog.Table>((spec, backstage) => renderTable(spec, backstage.shared.providers)),
+  panel: make<Dialog.Panel>((spec, backstage) => renderPanel(spec, backstage))
 };
 
-const noFormParts: any = {
-  field: (_name, spec) => spec
+const noFormParts: FormTypes.FormParts = {
+  // This is cast as we only actually want an alloy spec and don't need the actual part here
+  field: (_name: string, spec: SimpleOrSketchSpec) => spec as unknown as AlloyParts.ConfiguredPart,
+  record: Fun.constant([])
 };
 
-const interpretInForm = (parts, spec, oldBackstage) => {
+const interpretInForm = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, oldBackstage: UiFactoryBackstage) => {
   // Now, we need to update the backstage to use the parts variant.
   const newBackstage = Merger.deepMerge(
     oldBackstage,
@@ -96,17 +100,16 @@ const interpretInForm = (parts, spec, oldBackstage) => {
   return interpretParts(parts, spec, newBackstage);
 };
 
-const interpretParts: FormPartRenderer = (parts, spec, backstage) => Obj.get(factories, spec.type).fold(
-  () => {
-    console.error(`Unknown factory type "${spec.type}", defaulting to container: `, spec);
-    return spec as AlloySpec;
-  },
-  (factory: FormPartRenderer) => factory(parts, spec, backstage)
-);
+const interpretParts = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, backstage: UiFactoryBackstage) =>
+  Obj.get(factories, spec.type).fold(
+    () => {
+      console.error(`Unknown factory type "${spec.type}", defaulting to container: `, spec);
+      return spec as unknown as AlloySpec;
+    },
+    (factory) => factory(parts, spec, backstage)
+  );
 
-const interpretWithoutForm: NoFormRenderer = (spec, backstage: UiFactoryBackstage) => {
-  const parts = noFormParts;
-  return interpretParts(parts, spec, backstage);
-};
+const interpretWithoutForm = <T extends Dialog.BodyComponent>(spec: T, backstage: UiFactoryBackstage) =>
+  interpretParts(noFormParts, spec, backstage);
 
 export { interpretInForm, interpretWithoutForm };
