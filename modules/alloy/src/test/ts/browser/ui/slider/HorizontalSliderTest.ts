@@ -56,9 +56,9 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     })
   ), (doc, _body, _gui, component, _store) => {
 
-    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom.getBoundingClientRect());
+    const cGetBounds = Chain.mapper((elem: SugarElement<Element>) => elem.dom.getBoundingClientRect());
 
-    const cGetComponent = Chain.binder((elem: SugarElement) => component.getSystem().getByDom(elem));
+    const cGetComponent = Chain.binder((elem: SugarElement<Element>) => component.getSystem().getByDom(elem));
 
     const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element),

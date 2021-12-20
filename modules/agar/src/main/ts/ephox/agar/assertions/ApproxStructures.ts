@@ -5,7 +5,7 @@ import { Attribute, Classes, Css, Html, SugarElement, SugarNode, SugarText, Trav
 import * as ApproxComparisons from './ApproxComparisons';
 
 export interface StringAssert {
-  show: () => void;
+  show: () => string;
   strAssert: (label: TestLabel, actual: string) => void;
 }
 
@@ -16,9 +16,9 @@ export interface ArrayAssert {
 
 export interface ElementQueue {
   context(): string;
-  current(): Optional<SugarElement<any>>;
-  peek(): Optional<SugarElement<any>>;
-  take(): Optional<SugarElement<any>>;
+  current(): Optional<SugarElement<Node>>;
+  peek(): Optional<SugarElement<Node>>;
+  take(): Optional<SugarElement<Node>>;
   mark(): {
     reset: () => void ;
     atMark: () => boolean;
@@ -27,7 +27,7 @@ export interface ElementQueue {
 
 export interface StructAssertBasic {
   type?: 'basic';
-  doAssert: (actual: SugarElement<any>) => void;
+  doAssert: (actual: SugarElement<Node>) => void;
 }
 
 export interface StructAssertAdv {
@@ -46,7 +46,7 @@ export interface ElementFields {
   children?: StructAssert[];
 }
 
-const elementQueue = (items: SugarElement<any>[], container: Optional<SugarElement<any>>): ElementQueue => {
+const elementQueue = (items: SugarElement<Node>[], container: Optional<SugarElement<Node>>): ElementQueue => {
   let i = -1;
 
   const context = () => {
@@ -69,9 +69,9 @@ const elementQueue = (items: SugarElement<any>[], container: Optional<SugarEleme
     );
   };
 
-  const current = () => i >= 0 && i < items.length ? Optional.some(items[i]) : Optional.none<SugarElement<any>>();
+  const current = () => i >= 0 && i < items.length ? Optional.some(items[i]) : Optional.none<SugarElement<Node>>();
 
-  const peek = () => i + 1 < items.length ? Optional.some(items[i + 1]) : Optional.none<SugarElement<any>>();
+  const peek = () => i + 1 < items.length ? Optional.some(items[i + 1]) : Optional.none<SugarElement<Node>>();
 
   const take = () => {
     i += 1;
@@ -100,21 +100,25 @@ const elementQueue = (items: SugarElement<any>[], container: Optional<SugarEleme
 };
 
 const element = (tag: string, fields: ElementFields): StructAssert => {
-  const doAssert = (actual: SugarElement<any>): void => {
-    Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, SugarNode.name(actual));
-    const attrs = fields.attrs !== undefined ? fields.attrs : {};
-    const classes = fields.classes !== undefined ? fields.classes : [];
-    const styles = fields.styles !== undefined ? fields.styles : {};
-    const html = fields.html !== undefined ? Optional.some(fields.html) : Optional.none<StringAssert>();
-    const value = fields.value !== undefined ? Optional.some(fields.value) : Optional.none<StringAssert>();
-    const children = fields.children !== undefined ? Optional.some(fields.children) : Optional.none<StructAssert[]>();
-    assertAttrs(attrs, actual);
-    assertClasses(classes, actual);
-    assertStyles(styles, actual);
-    assertHtml(html, actual);
-    assertValue(value, actual);
+  const doAssert = (actual: SugarElement<Node>): void => {
+    if (SugarNode.isHTMLElement(actual)) {
+      Assert.eq(() => 'Incorrect node name for: ' + Truncate.getHtml(actual), tag, SugarNode.name(actual));
+      const attrs = fields.attrs !== undefined ? fields.attrs : {};
+      const classes = fields.classes !== undefined ? fields.classes : [];
+      const styles = fields.styles !== undefined ? fields.styles : {};
+      const html = fields.html !== undefined ? Optional.some(fields.html) : Optional.none<StringAssert>();
+      const value = fields.value !== undefined ? Optional.some(fields.value) : Optional.none<StringAssert>();
+      const children = fields.children !== undefined ? Optional.some(fields.children) : Optional.none<StructAssert[]>();
+      assertAttrs(attrs, actual);
+      assertClasses(classes, actual);
+      assertStyles(styles, actual);
+      assertHtml(html, actual);
+      assertValue(value, actual);
 
-    assertChildren(children, actual);
+      assertChildren(children, actual);
+    } else {
+      Assert.eq('Incorrect node type for: ' + Truncate.getHtml(actual), 1, SugarNode.type(actual));
+    }
   };
 
   return {
@@ -217,7 +221,7 @@ const anythingStruct: StructAssert = {
   doAssert: Fun.noop
 };
 
-const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<any>) => {
+const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarElement<Element>) => {
   Obj.each(expectedAttrs, (v, k) => {
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* attributes of ' + Truncate.getHtml(actual));
@@ -230,7 +234,7 @@ const assertAttrs = (expectedAttrs: Record<string, StringAssert>, actual: SugarE
   });
 };
 
-const assertClasses = (expectedClasses: ArrayAssert[], actual: SugarElement<any>) => {
+const assertClasses = (expectedClasses: ArrayAssert[], actual: SugarElement<Element>) => {
   const actualClasses = Classes.get(actual);
   Arr.each(expectedClasses, (eCls) => {
     if (eCls.arrAssert === undefined) {
@@ -240,7 +244,7 @@ const assertClasses = (expectedClasses: ArrayAssert[], actual: SugarElement<any>
   });
 };
 
-const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<any>) => {
+const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: SugarElement<Element>) => {
   Obj.each(expectedStyles, (v, k) => {
     const actualValue = Css.getRaw(actual, k).getOrThunk(ApproxComparisons.missing);
     if (v.strAssert === undefined) {
@@ -253,7 +257,7 @@ const assertStyles = (expectedStyles: Record<string, StringAssert>, actual: Suga
   });
 };
 
-const assertHtml = (expectedHtml: Optional<StringAssert>, actual: SugarElement<any>) => {
+const assertHtml = (expectedHtml: Optional<StringAssert>, actual: SugarElement<HTMLElement>) => {
   expectedHtml.each((expected) => {
     const actualHtml = Html.get(actual);
     if (expected.strAssert === undefined) {
@@ -263,19 +267,19 @@ const assertHtml = (expectedHtml: Optional<StringAssert>, actual: SugarElement<a
   });
 };
 
-const assertValue = (expectedValue: Optional<StringAssert>, actual: SugarElement<any>) => {
+const assertValue = (expectedValue: Optional<StringAssert>, actual: SugarElement<HTMLElement>) => {
   expectedValue.each((v) => {
     if (v.strAssert === undefined) {
       throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + Truncate.getHtml(actual));
     }
     v.strAssert(
       () => 'Checking value of ' + Truncate.getHtml(actual),
-      Value.get(actual)
+      Value.get(actual as SugarElement<any>)
     );
   });
 };
 
-const assertChildren = (expectedChildren: Optional<StructAssert[]>, actual) => {
+const assertChildren = (expectedChildren: Optional<StructAssert[]>, actual: SugarElement<Node>) => {
   expectedChildren.each((expected) => {
     const children = elementQueue(Traverse.children(actual), Optional.some(actual));
     Arr.each(expected, (structExpectation, i) => {

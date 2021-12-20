@@ -11,7 +11,7 @@ import * as Bridge from 'ephox/snooker/test/Bridge';
 
 UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
 
-  const getRowData = (table: SugarElement) => {
+  const getRowData = (table: SugarElement<HTMLTableElement>) => {
     const warehouse = Warehouse.fromTable(table);
     const model = Transitions.toGrid(warehouse, Bridge.generators, false);
     return Transitions.toDetails(model, Compare.eq);

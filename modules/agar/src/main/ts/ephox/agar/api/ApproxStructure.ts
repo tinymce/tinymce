@@ -44,7 +44,7 @@ const arrApi = {
 const build = <T>(f: Builder<T>): T =>
   f(structApi, strApi, arrApi);
 
-const getAttrsExcept = (node: SugarElement<any>, exclude: string[]): Record<string, string> =>
+const getAttrsExcept = (node: SugarElement<Element>, exclude: string[]): Record<string, string> =>
   Obj.bifilter(Attribute.clone(node), (value, key) => !Arr.contains(exclude, key)).t;
 
 const toAssertableObj = (obj: Record<string, string>): Record<string, CombinedAssert> =>
@@ -53,7 +53,7 @@ const toAssertableObj = (obj: Record<string, string>): Record<string, CombinedAs
 const toAssertableArr = (arr: string[]): (StringAssert & ArrayAssert)[] =>
   Arr.map(arr, ApproxComparisons.has);
 
-const fromElement = (node: SugarElement<any>): StructAssert => {
+const fromElement = (node: SugarElement<Node>): StructAssert => {
   if (SugarNode.isElement(node)) {
     return ApproxStructures.element(SugarNode.name(node), {
       children: Arr.map(Traverse.children(node), fromElement),

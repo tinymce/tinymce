@@ -14,7 +14,7 @@ const getBox = (left: number, top: number, width: number, height: number): Optio
   return Optional.some(Boxes.pointed(point, width, height));
 };
 
-const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: SugarElement): Optional<Anchoring> =>
+const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: SugarElement<Element>): Optional<Anchoring> =>
   optBox.map((box) => {
     const points = [ rootPoint, box.point ];
     const topLeft = Origins.cata(origin,

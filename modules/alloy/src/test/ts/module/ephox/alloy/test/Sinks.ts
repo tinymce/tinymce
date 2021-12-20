@@ -62,7 +62,7 @@ const popup = (): AlloyComponent => GuiFactory.build(
 );
 
 const isInside = (sinkComponent: AlloyComponent, popupComponent: AlloyComponent): boolean => {
-  const isSink = (el: SugarElement) => Compare.eq(el, sinkComponent.element);
+  const isSink = (el: SugarElement<Node>) => Compare.eq(el, sinkComponent.element);
 
   return PredicateExists.closest(popupComponent.element, isSink);
 };

@@ -19,7 +19,7 @@ interface Scenario {
 describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
 
   const getBounds = (selector: string) => {
-    const elem = UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+    const elem = UiFinder.findIn<HTMLElement>(SugarBody.body(), selector).getOrDie();
     return Boxes.box(elem);
   };
 

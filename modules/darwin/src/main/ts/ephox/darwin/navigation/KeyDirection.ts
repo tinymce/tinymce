@@ -9,9 +9,9 @@ import { Situs } from '../selection/Situs';
 import { BeforeAfter, BeforeAfterFailureConstructor } from './BeforeAfter';
 
 export interface KeyDirection {
-  traverse: (element: SugarElement) => Optional<SugarElement>;
-  gather: (element: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<SugarElement>;
-  relative: (element: SugarElement) => Situ;
+  traverse: (element: SugarElement<Node>) => Optional<SugarElement<Node & ChildNode>>;
+  gather: (element: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean) => Optional<SugarElement<Node>>;
+  relative: (element: SugarElement<Node>) => Situ;
   retry: (bridge: WindowBridge, caret: Carets) => Optional<Situs>;
   failure: BeforeAfterFailureConstructor;
 }

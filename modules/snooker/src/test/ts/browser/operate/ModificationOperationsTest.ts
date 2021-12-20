@@ -8,6 +8,8 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import * as ModificationOperations from 'ephox/snooker/operate/ModificationOperations';
 import BrowserTestGenerator from 'ephox/snooker/test/BrowserTestGenerator';
 
+type Grid = Structs.ElementNew<HTMLTableCellElement>[][];
+
 UnitTest.test('ModificationOperationsTest', () => {
   const r = Structs.rowcells;
   const re = () => SugarElement.fromTag('tr');
@@ -16,7 +18,7 @@ UnitTest.test('ModificationOperationsTest', () => {
     Html.set(elem, content);
     return Structs.elementnew(elem, isNew, false);
   };
-  const mapToStructGrid = (grid: Structs.ElementNew[][]) => {
+  const mapToStructGrid = (grid: Grid) => {
     return Arr.map(grid, (row) => {
       return Structs.rowcells(re(), row, 'tbody', false);
     });
@@ -36,7 +38,8 @@ UnitTest.test('ModificationOperationsTest', () => {
     });
   };
 
-  const compare = (a: SugarElement, b: SugarElement) => SugarNode.name(a) === SugarNode.name(b) && Html.get(a) === Html.get(b);
+  const compare = (a: SugarElement<HTMLElement>, b: SugarElement<HTMLElement>) =>
+    SugarNode.name(a) === SugarNode.name(b) && Html.get(a) === Html.get(b);
 
   // Test basic insert column
   (() => {
@@ -45,7 +48,7 @@ UnitTest.test('ModificationOperationsTest', () => {
       assertGrids(expected, actual, checkIsNew);
     };
 
-    const checkBody = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], example: number, index: number) => {
+    const checkBody = (expected: Grid, grid: Grid, example: number, index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, example, index, false);
@@ -139,7 +142,7 @@ UnitTest.test('ModificationOperationsTest', () => {
       assertGrids(expected, actual, checkIsNew);
     };
 
-    const checkBody = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], example: number, index: number) => {
+    const checkBody = (expected: Grid, grid: Grid, example: number, index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, example, index, false);
@@ -191,7 +194,7 @@ UnitTest.test('ModificationOperationsTest', () => {
       assertGrids(expected, actual, checkIsNew);
     };
 
-    const checkBody = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
+    const checkBody = (expected: Grid, grid: Grid, index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, index, false);
@@ -226,7 +229,7 @@ UnitTest.test('ModificationOperationsTest', () => {
       assertGrids(expected, actual, checkIsNew);
     };
 
-    const checkBody = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], indexes: number[]) => {
+    const checkBody = (expected: Grid, grid: Grid, indexes: number[]) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, indexes, false);
@@ -261,7 +264,7 @@ UnitTest.test('ModificationOperationsTest', () => {
       assertGrids(expected, actual, checkIsNew);
     };
 
-    const checkBody = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
+    const checkBody = (expected: Grid, grid: Grid, index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, index, false);
@@ -298,7 +301,7 @@ UnitTest.test('ModificationOperationsTest', () => {
       assertGrids(expected, actual, checkIsNew);
     };
 
-    const checkBody = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], exRow: number, exCol: number) => {
+    const checkBody = (expected: Grid, grid: Grid, exRow: number, exCol: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, exRow, exCol, false);
@@ -495,7 +498,7 @@ UnitTest.test('ModificationOperationsTest', () => {
       assertGrids(expected, actual, checkIsNew);
     };
 
-    const checkBody = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], exRow: number, exCol: number) => {
+    const checkBody = (expected: Grid, grid: Grid, exRow: number, exCol: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       check(structExpected, structGrid, exRow, exCol, false);

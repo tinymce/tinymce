@@ -8,9 +8,9 @@ import * as TableGrid from 'ephox/snooker/model/TableGrid';
 
 describe('TableGridTest', () => {
   const r = Structs.rowcells;
-  const re = () => 'row' as unknown as SugarElement;
-  const ce = () => 'colgroup' as unknown as SugarElement;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew, false);
+  const re = () => 'row' as unknown as SugarElement<any>;
+  const ce = () => 'colgroup' as unknown as SugarElement<any>;
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement<any>, isNew, false);
 
   const check = (expected: { colspan: number; rowspan: number }, row: number, column: number, grid: Structs.RowCells[]) => {
     const actual = TableGrid.subgrid(grid, row, column, Fun.tripleEquals);

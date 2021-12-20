@@ -166,7 +166,7 @@ export default (): void => {
         }
       },
       events: AlloyEvents.derive([
-        AlloyEvents.run<EventArgs>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
+        AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.contextmenu(), (component, simulatedEvent) => {
           simulatedEvent.event.kill();
           InlineView.showAt(inlineComp, inlineMenu, {
             anchor: {

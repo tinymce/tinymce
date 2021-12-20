@@ -4,7 +4,7 @@ import { Attribute, SugarElement, SugarPosition } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SnapsConfig } from '../common/DraggingTypes';
 
-const parseAttrToInt = (element: SugarElement, name: string): number => {
+const parseAttrToInt = (element: SugarElement<Element>, name: string): number => {
   const value = Attribute.get(element, name);
   return Type.isUndefined(value) ? NaN : parseInt(value, 10);
 };

@@ -6,6 +6,7 @@ import { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Blocks from '../lookup/Blocks';
 import * as CellUtils from '../util/CellUtils';
+import { CellElement } from '../util/TableTypes';
 import * as Util from '../util/Util';
 import { BarPositions, RowInfo, width } from './BarPositions';
 import * as Sizes from './Sizes';
@@ -47,7 +48,7 @@ const getDimension = <T extends HTMLElement, U>(
 const getWidthFrom = <T>(
   warehouse: Warehouse,
   table: SugarElement<HTMLTableElement>,
-  getWidth: (cell: SugarElement) => T,
+  getWidth: (cell: SugarElement<CellElement>) => T,
   fallback: (deduced: Optional<number>) => T
 ): T[] => {
   // Only treat a cell as being valid for a column representation if it has a raw width, otherwise we won't be able to calculate the expected width.
@@ -102,7 +103,13 @@ const getPixelWidths = (warehouse: Warehouse, table: SugarElement<HTMLTableEleme
   });
 };
 
-const getHeightFrom = <T> (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, direction: BarPositions<RowInfo>, getHeight: (cell: SugarElement) => T, fallback: (deduced: Optional<number>) => T): T[] => {
+const getHeightFrom = <T> (
+  warehouse: Warehouse,
+  table: SugarElement<HTMLTableElement>,
+  direction: BarPositions<RowInfo>,
+  getHeight: (cell: SugarElement<HTMLTableCellElement>) => T,
+  fallback: (deduced: Optional<number>) => T
+): T[] => {
   const rows = Blocks.rows(warehouse);
 
   const backups = [ Optional.some(direction.edge(table)) ].concat(Arr.map(direction.positions(rows, table), (pos) =>

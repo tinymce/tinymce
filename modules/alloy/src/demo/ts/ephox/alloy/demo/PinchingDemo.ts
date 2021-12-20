@@ -10,7 +10,7 @@ export default (): void => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   // Naive resize handler
-  const resize = (element: SugarElement, changeX: number, changeY: number) => {
+  const resize = (element: SugarElement<HTMLElement>, changeX: number, changeY: number) => {
     const width = Css.getRaw(element, 'width').map((w) => parseInt(w, 10)).getOrThunk(() => Width.get(element));
 
     const height = Css.getRaw(element, 'height').map((h) => parseInt(h, 10)).getOrThunk(() => Height.get(element));

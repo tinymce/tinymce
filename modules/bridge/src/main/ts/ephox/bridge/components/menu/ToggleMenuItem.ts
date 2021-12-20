@@ -1,6 +1,7 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Fun, Optional, Result } from '@ephox/katamari';
+import { StructureSchema } from '@ephox/boulder';
+import { Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { CommonMenuItem, CommonMenuItemSpec, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
 
 export interface ToggleMenuItemSpec extends CommonMenuItemSpec {
@@ -25,11 +26,11 @@ export interface ToggleMenuItem extends CommonMenuItem {
 }
 
 export const toggleMenuItemSchema = StructureSchema.objOf([
-  FieldSchema.requiredString('type'),
-  FieldSchema.optionString('icon'),
-  FieldSchema.defaultedBoolean('active', false),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
-  FieldSchema.requiredFunction('onAction')
+  ComponentSchema.type,
+  ComponentSchema.optionalIcon,
+  ComponentSchema.active,
+  ComponentSchema.onSetup,
+  ComponentSchema.onAction
 ].concat(commonMenuItemFields));
 
 export const createToggleMenuItem = (spec: ToggleMenuItemSpec): Result<ToggleMenuItem, StructureSchema.SchemaError<any>> =>

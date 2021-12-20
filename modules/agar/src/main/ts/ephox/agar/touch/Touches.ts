@@ -1,6 +1,6 @@
 import { SugarElement, SugarLocation, SugarNode, Traverse } from '@ephox/sugar';
 
-const point = (type: string, element: SugarElement<any>, x: number, y: number): void => {
+const point = (type: string, element: SugarElement<Node>, x: number, y: number): void => {
   const touch = {
     identifier: Date.now(),
     target: element.dom,
@@ -41,13 +41,16 @@ const point = (type: string, element: SugarElement<any>, x: number, y: number): 
   }
 };
 
-const touch = (eventType: string) => (element: SugarElement<any>): void => {
-  const position = SugarLocation.absolute(SugarNode.isText(element) ? Traverse.parent(element).getOrDie() : element);
+const findElement = (element: SugarElement<Node>): SugarElement<Element> =>
+  (SugarNode.isText(element) ? Traverse.parent(element).getOrDie() : element) as SugarElement<Element>;
+
+const touch = (eventType: string) => (element: SugarElement<Node>): void => {
+  const position = SugarLocation.absolute(findElement(element));
   point(eventType, element, position.left, position.top);
 };
 
-const touchAt = (eventType: string) => (dx: number, dy: number) => (element: SugarElement<any>): void => {
-  const position = SugarLocation.absolute(SugarNode.isText(element) ? Traverse.parent(element).getOrDie() : element);
+const touchAt = (eventType: string) => (dx: number, dy: number) => (element: SugarElement<Node>): void => {
+  const position = SugarLocation.absolute(findElement(element));
   point(eventType, element, position.left + dx, position.top + dy);
 };
 

@@ -10,7 +10,7 @@ import TestProviders from '../../../module/TestProviders';
 describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
   const sharedBackstage = {
     providers: TestProviders,
-    interpreter: Fun.identity
+    interpreter: Fun.identity as any
   };
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(

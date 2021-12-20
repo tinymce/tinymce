@@ -10,7 +10,7 @@ import * as DataTransfers from './DataTransfers';
 import { DragStartingConfig } from './DragnDropTypes';
 import { setImageClone } from './ImageClone';
 
-const dragStart = (component: AlloyComponent, target: SugarElement, config: DragStartingConfig, transfer: DataTransfer) => {
+const dragStart = (component: AlloyComponent, target: SugarElement<Node>, config: DragStartingConfig, transfer: DataTransfer) => {
   DataTransfers.setEffectAllowed(transfer, config.effectAllowed);
 
   config.getData.each((getData) => {

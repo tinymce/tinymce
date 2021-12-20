@@ -12,7 +12,7 @@ type EventHandler = (event: EventArgs<Event>) => Optional<boolean>;
 export interface TouchHistoryData {
   readonly x: number;
   readonly y: number;
-  readonly target: SugarElement;
+  readonly target: SugarElement<Node>;
 }
 
 interface Monitor {

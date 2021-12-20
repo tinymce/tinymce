@@ -62,7 +62,8 @@ const setToMax = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {
 };
 
 // get event data as a SugarPosition
-const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Optional<SugarPosition> => ModelCommon.getEventSource(simulatedEvent);
+const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent<MouseEvent | TouchEvent>): Optional<SugarPosition> =>
+  ModelCommon.getEventSource(simulatedEvent);
 
 // update the position of the thumb from the slider's current value
 const setPositionFromValue = (slider: AlloyComponent, thumb: AlloyComponent, detail: TwoDSliderDetail, edges: SliderModelDetailParts): void => {

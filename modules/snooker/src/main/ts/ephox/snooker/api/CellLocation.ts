@@ -7,10 +7,10 @@ import { SugarElement } from '@ephox/sugar';
  * when navigating past the last cell (e.g. create a new row).
  */
 
-type NoneHandler<T> = (current: SugarElement | undefined) => T;
-type FirstHandler<T> = (current: SugarElement) => T;
-type MiddleHandler<T> = (current: SugarElement, target: any) => T;
-type LastHandler<T> = (current: SugarElement) => T;
+type NoneHandler<T> = (current: SugarElement<HTMLTableCellElement> | undefined) => T;
+type FirstHandler<T> = (current: SugarElement<HTMLTableCellElement>) => T;
+type MiddleHandler<T> = (current: SugarElement<HTMLTableCellElement>, target: SugarElement<HTMLTableCellElement>) => T;
+type LastHandler<T> = (current: SugarElement<HTMLTableCellElement>) => T;
 
 export interface CellLocation {
   fold: <T> (
@@ -29,10 +29,10 @@ export interface CellLocation {
 }
 
 const adt: {
-  none: (current: SugarElement | undefined) => CellLocation;
-  first: (current: SugarElement) => CellLocation;
-  middle: (current: SugarElement, target: SugarElement) => CellLocation;
-  last: (current: SugarElement) => CellLocation;
+  none: (current: SugarElement<HTMLTableCellElement> | undefined) => CellLocation;
+  first: (current: SugarElement<HTMLTableCellElement>) => CellLocation;
+  middle: (current: SugarElement<HTMLTableCellElement>, target: SugarElement<HTMLTableCellElement>) => CellLocation;
+  last: (current: SugarElement<HTMLTableCellElement>) => CellLocation;
 } = Adt.generate([
   { none: [ 'current' ] },
   { first: [ 'current' ] },
@@ -40,7 +40,7 @@ const adt: {
   { last: [ 'current' ] }
 ]);
 
-const none = (current: SugarElement | undefined = undefined): CellLocation => adt.none(current);
+const none = (current?: SugarElement<HTMLTableCellElement>): CellLocation => adt.none(current);
 
 export const CellLocation = {
   ...adt,
