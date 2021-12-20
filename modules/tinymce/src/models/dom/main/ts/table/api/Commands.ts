@@ -17,7 +17,7 @@ import * as Utils from '../core/TableUtils';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
 import { Clipboard } from './Clipboard';
-import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Options';
+import * as Options from './Options';
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
 
@@ -50,7 +50,7 @@ const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clip
 
   const setSizingMode = (sizing: string) => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     // Do nothing if tables are forced to use a specific sizing mode
-    const isForcedSizing = isResponsiveForced(editor) || isPixelsForced(editor) || isPercentagesForced(editor);
+    const isForcedSizing = Options.isResponsiveForced(editor) || Options.isPixelsForced(editor) || Options.isPercentagesForced(editor);
     if (!isForcedSizing) {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
         if (sizing === 'relative' && !Sizes.isPercentSizing(table)) {

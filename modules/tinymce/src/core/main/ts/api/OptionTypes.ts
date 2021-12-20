@@ -153,6 +153,8 @@ interface BaseEditorOptions {
   menubar?: boolean | string;
   min_height?: number;
   min_width?: number;
+  model?: string;
+  model_url?: string;
   no_newline_selector?: string;
   nowrap?: boolean;
   object_resizing?: boolean | string;
@@ -181,12 +183,19 @@ interface BaseEditorOptions {
   style_formats_merge?: boolean;
   submit_patch?: boolean;
   suffix?: string;
+  table_clone_elements?: string[];
+  table_column_resizing?: TableColumnResizing;
+  table_default_attributes?: Record<string, string>;
+  table_default_styles?: Record<string, string>;
+  table_header_type?: TableHeaderType;
+  table_resize_bars?: boolean;
+  table_sizing_mode?: TableSizingMode;
+  table_tab_navigation?: boolean;
+  table_use_colgroups?: boolean;
   target?: HTMLElement;
   text_patterns?: RawPattern[] | false;
   theme?: string | ThemeInitFunc | false;
   theme_url?: string;
-  model?: string;
-  model_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar1?: string;
   toolbar2?: string;
@@ -219,17 +228,6 @@ interface BaseEditorOptions {
   forced_plugins?: string | string[];
   plugin_base_urls?: Record<string, string>;
   service_message?: string;
-
-  // Table specific options
-  table_clone_elements?: string[];
-  table_tab_navigation?: boolean;
-  table_resize_bars?: boolean;
-  table_sizing_mode?: TableSizingMode;
-  table_column_resizing?: TableColumnResizing;
-  table_default_attributes?: Record<string, string>;
-  table_default_styles?: Record<string, string>;
-  table_use_colgroups?: boolean;
-  table_header_type?: TableHeaderType;
 
   // Allow additional dynamic settings
   [key: string]: any;
