@@ -5,8 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
+import { Remove, SugarElement } from '@ephox/sugar';
+import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
+import * as NodeType from '../../dom/NodeType';
 import { cleanInvalidNodes } from '../../html/InvalidNodes';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
@@ -14,8 +17,7 @@ import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../..
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import AstNode from './Node';
-import SaxParser, { ParserFormat } from './SaxParser';
-import Schema, { SchemaElement, SchemaMap } from './Schema';
+import Schema, { SchemaElement } from './Schema';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -90,253 +92,107 @@ interface WalkResult {
   readonly matchedAttributes: Record<string, AstNode[]>;
 }
 
-const builder = (rootNode: AstNode, html: string, settings: DomParserSettings, schema: Schema, args: ParserArgs) => {
-  const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
-  const whiteSpaceElements = schema.getWhiteSpaceElements();
-  const nonEmptyElements = schema.getNonEmptyElements();
-  const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
-  const isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
-  const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
-  const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
-
-  let node = rootNode;
-  let isInWhiteSpacePreservedElement = Obj.has(whiteSpaceElements, args.context) || Obj.has(whiteSpaceElements, settings.root_name);
-
-  const removeWhitespaceBefore = (node: AstNode): void => {
-    const blockElements = schema.getBlockElements();
-
-    for (let textNode = node.prev; textNode && textNode.type === 3;) {
-      const textVal = textNode.value.replace(endWhiteSpaceRegExp, '');
-
-      // Found a text node with non whitespace then trim that and break
-      if (textVal.length > 0) {
-        textNode.value = textVal;
-        return;
-      }
-
-      const textNodeNext = textNode.next;
-
-      // Fix for bug #7543 where bogus nodes would produce empty
-      // text nodes and these would be removed if a nested list was before it
-      if (textNodeNext) {
-        if (textNodeNext.type === 3 && textNodeNext.value.length) {
-          textNode = textNode.prev;
-          continue;
-        }
-
-        if (!blockElements[textNodeNext.name] && textNodeNext.name !== 'script' && textNodeNext.name !== 'style') {
-          textNode = textNode.prev;
-          continue;
-        }
-      }
-
-      const sibling = textNode.prev;
-      textNode.remove();
-      textNode = sibling;
-    }
+const configurePurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
+  const purify = createDompurify();
+  let uid = 0;
+  const config: Config = {
+    RETURN_DOM: true,
+    ALLOW_DATA_ATTR: true,
+    ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|about|blob|file|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
   };
 
-  const cloneAndExcludeBlocks = (input: SchemaMap) => {
-    const output: SchemaMap = {};
+  if (settings.allow_html_data_urls) {
+    config.ADD_DATA_URI_TAGS = [ 'a', 'img' ];
+  }
 
-    for (const name in input) {
-      if (name !== 'li' && name !== 'p') {
-        output[name] = input[name];
-      }
+  // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
+  // #comment has to be added as an allowed tag here though, otherwise dompurify will remove it automatically
+  config.ALLOWED_TAGS = [ '#comment' ];
+  config.ALLOWED_ATTR = [];
+
+  // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
+  purify.addHook('uponSanitizeElement', (ele, evt) => {
+    const rule = schema.getElementRule(evt.tagName);
+    if (!rule) {
+      return;
+    }
+    if (!Obj.has(evt.allowedTags, evt.tagName)) {
+      evt.allowedTags[evt.tagName] = true;
     }
 
-    return output;
-  };
-
-  const parser = SaxParser({
-    validate: settings.validate,
-    document: settings.document,
-    allow_html_data_urls: settings.allow_html_data_urls,
-    allow_svg_data_urls: settings.allow_svg_data_urls,
-    allow_script_urls: settings.allow_script_urls,
-    allow_conditional_comments: settings.allow_conditional_comments,
-    preserve_cdata: settings.preserve_cdata,
-
-    // Exclude P and LI from DOM parsing since it's treated better by the DOM parser
-    self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),
-
-    cdata: (text) => {
-      node.append(new AstNode('#cdata', 4)).value = text;
-    },
-
-    text: (text, raw) => {
-      let textNode;
-
-      // Trim all redundant whitespace on non white space elements
-      if (!isInWhiteSpacePreservedElement) {
-        text = text.replace(allWhiteSpaceRegExp, ' ');
-
-        if (isLineBreakNode(node.lastChild, blockElements)) {
-          text = text.replace(startWhiteSpaceRegExp, '');
-        }
+    // Fix the attributes for the element, unwrapping it if we have to
+    Arr.each(rule.attributesForced ?? [], (attr) =>
+      ele.setAttribute(attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value)
+    );
+    Arr.each(rule.attributesDefault ?? [], (attr) => {
+      if (!ele.hasAttribute(attr.name)) {
+        ele.setAttribute(attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
       }
-
-      // Do we need to create the node
-      if (text.length !== 0) {
-        textNode = new AstNode('#text', 3);
-        textNode.raw = !!raw;
-        node.append(textNode).value = text;
-      }
-    },
-
-    comment: (text) => {
-      node.append(new AstNode('#comment', 8)).value = text;
-    },
-
-    pi: (name, text) => {
-      node.append(new AstNode(name, 7)).value = text;
-      removeWhitespaceBefore(node);
-    },
-
-    doctype: (text) => {
-      const newNode = node.append(new AstNode('#doctype', 10));
-      newNode.value = text;
-      removeWhitespaceBefore(node);
-    },
-
-    start: (name, attrs, empty) => {
-      const newNode = new AstNode(name, 1);
-      newNode.attributes = attrs;
-
-      node.append(newNode);
-
-      // Trim whitespace before block
-      if (blockElements[name]) {
-        removeWhitespaceBefore(newNode);
-      }
-
-      // Change current node if the element wasn't empty i.e not <br /> or <img />
-      if (!empty) {
-        node = newNode;
-      }
-
-      // Check if we are inside a whitespace preserved element
-      if (!isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
-        isInWhiteSpacePreservedElement = true;
-      }
-    },
-
-    end: (name) => {
-      let textNode, text, sibling, tempNode;
-
-      const elementRule = settings.validate && schema.getElementRule(node.name) || {} as SchemaElement;
-      if (blockElements[name]) {
-        if (!isInWhiteSpacePreservedElement) {
-          // Trim whitespace of the first node in a block
-          textNode = node.firstChild;
-          if (textNode && textNode.type === 3) {
-            text = textNode.value.replace(startWhiteSpaceRegExp, '');
-
-            // Any characters left after trim or should we remove it
-            if (text.length > 0) {
-              textNode.value = text;
-              textNode = textNode.next;
-            } else {
-              sibling = textNode.next;
-              textNode.remove();
-              textNode = sibling;
-
-              // Remove any pure whitespace siblings
-              while (textNode && textNode.type === 3) {
-                text = textNode.value;
-                sibling = textNode.next;
-
-                if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
-                  textNode.remove();
-                  textNode = sibling;
-                }
-
-                textNode = sibling;
-              }
-            }
-          }
-
-          // Trim whitespace of the last node in a block
-          textNode = node.lastChild;
-          if (textNode && textNode.type === 3) {
-            text = textNode.value.replace(endWhiteSpaceRegExp, '');
-
-            // Any characters left after trim or should we remove it
-            if (text.length > 0) {
-              textNode.value = text;
-              textNode = textNode.prev;
-            } else {
-              sibling = textNode.prev;
-              textNode.remove();
-              textNode = sibling;
-
-              // Remove any pure whitespace siblings
-              while (textNode && textNode.type === 3) {
-                text = textNode.value;
-                sibling = textNode.prev;
-
-                if (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {
-                  textNode.remove();
-                  textNode = sibling;
-                }
-
-                textNode = sibling;
-              }
-            }
-          }
-        }
-
-        // Trim start white space
-        // Removed due to: #5424
-        /* textNode = node.prev;
-        if (textNode && textNode.type === 3) {
-          text = textNode.value.replace(startWhiteSpaceRegExp, '');
-
-          if (text.length > 0)
-            textNode.value = text;
-          else
-            textNode.remove();
-        }*/
-      }
-
-      // Check if we exited a whitespace preserved element
-      if (isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {
-        isInWhiteSpacePreservedElement = false;
-      }
-
-      if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
-        tempNode = node.parent;
-
-        if (blockElements[node.name]) {
-          node.empty().remove();
-        } else {
-          node.unwrap();
-        }
-
-        node = tempNode;
+    });
+    if (rule.attributesRequired) {
+      if (!Arr.exists(rule.attributesRequired, (attr) => ele.hasAttribute(attr))) {
+        Remove.unwrap(SugarElement.fromDom(ele));
         return;
       }
+    }
+    if (rule.removeEmptyAttrs && ele.attributes.length === 0) {
+      Remove.unwrap(SugarElement.fromDom(ele));
+      return;
+    }
+  });
 
-      if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
-        paddEmptyNode(settings, args, blockElements, node);
+  // Let's do the same thing for attributes
+  purify.addHook('uponSanitizeAttribute', (ele, evt) => {
+    evt.keepAttr = evt.attrName.startsWith('data-') || schema.isValid(ele.tagName.toLowerCase(), evt.attrName);
+    if (evt.keepAttr) {
+      if (!Obj.has(evt.allowedAttributes, evt.attrName)) {
+        evt.allowedAttributes[evt.attrName] = true;
       }
 
-      node = node.parent;
+      if (evt.attrName in schema.getBoolAttrs()) {
+        evt.attrValue = evt.attrName;
+      }
     }
-  }, schema);
+  });
 
-  parser.parse(html, args.format as ParserFormat);
+  purify.setConfig(config);
+
+  return purify;
+};
+
+const transferChildren = (parent: AstNode, nativeParent: Node) => {
+  const isSpecial = Arr.contains([ 'script', 'style' ], parent.name);
+  Arr.each(nativeParent.childNodes, (nativeChild) => {
+    const child = new AstNode(nativeChild.nodeName.toLowerCase(), nativeChild.nodeType);
+
+    if (NodeType.isElement(nativeChild)) {
+      Arr.each(nativeChild.attributes, (attr) => {
+        child.attr(attr.name, attr.value);
+      });
+    } else if (NodeType.isComment(nativeChild) || NodeType.isText(nativeChild) || NodeType.isCData(nativeChild) || NodeType.isPi(nativeChild)) {
+      child.value = nativeChild.data;
+      if (isSpecial) {
+        child.raw = true;
+      }
+    } else {
+      // TODO: figure out if anything can arrive in this branch, before merging
+      return;
+    }
+
+    transferChildren(child, nativeChild);
+    parent.append(child);
+  });
 };
 
 const walker = (root: AstNode, settings: DomParserSettings, schema: Schema, nodeFilters: Record<string, ParserFilterCallback[]>, attributeFilters: ParserFilter[]): WalkResult => {
   const state = { invalidChildren: [], matchedNodes: {}, matchedAttributes: {}};
 
   let node = root;
-  while ((node = node.walk())) {
+  let previous: AstNode;
+  while ((previous = node), (node = node.walk())) {
     if (node.type === 1) {
       const elementRule = settings.validate ? schema.getElementRule(node.name) : {} as SchemaElement;
       if (!elementRule) {
-        const previous = node.walk(true);
         node.unwrap();
         node = previous;
         continue;
@@ -360,6 +216,131 @@ const walker = (root: AstNode, settings: DomParserSettings, schema: Schema, node
   }
 
   return state;
+};
+
+// All the dom operations we want to perform, regardless of whether we're trying to properly validate things
+// e.g. removing excess whitespace
+// e.g. removing empty nodes (or padding them with <br>)
+// e.g. handling data-mce-bogus
+const simplifyDom = (root: AstNode, schema: Schema, settings: DomParserSettings, args: ParserArgs) => {
+  const nonEmptyElements = schema.getNonEmptyElements();
+  const whitespaceElements = schema.getWhiteSpaceElements();
+  const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+  const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
+  const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
+  const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
+
+  const hasWhitespaceParent = (node: AstNode) => {
+    if (Obj.has(whitespaceElements, node.name)) {
+      return true;
+    } else if (node.parent) {
+      return hasWhitespaceParent(node.parent);
+    } else {
+      return false;
+    }
+  };
+
+  const isAtEdgeOfBlock = (node: AstNode, start: boolean): boolean => {
+    const neighbour = start ? node.prev : node.next;
+    if (Type.isNonNullable(neighbour)) {
+      return false;
+    }
+
+    // Make sure our parent is actually a block, and also make sure it isn't a temporary "context" element
+    // that we're probably going to unwrap as soon as we insert this content into the editor
+    return Obj.has(blockElements, node.parent.name) && (node.parent !== root || args.isRootContent);
+  };
+
+  // Remove leading whitespace here, so that all whitespace in nodes to the left of us has already been fixed
+  const preprocessText = (node: AstNode) => {
+    if (!hasWhitespaceParent(node)) {
+      let text = node.value;
+      text = text.replace(allWhiteSpaceRegExp, ' ');
+
+      if (isLineBreakNode(node.prev, blockElements) || isAtEdgeOfBlock(node, true)) {
+        text = text.replace(startWhiteSpaceRegExp, '');
+      }
+
+      if (text.length === 0) {
+        node.remove();
+      } else {
+        node.value = text;
+      }
+    }
+  };
+
+  // Removing trailing whitespace here, so that all whitespace in nodes to the right of us has already been fixed
+  const postprocessText = (node: AstNode) => {
+    if (!hasWhitespaceParent(node)) {
+      let text = node.value;
+      if (blockElements[node.next?.name] || isAtEdgeOfBlock(node, false)) {
+        text = text.replace(endWhiteSpaceRegExp, '');
+      }
+
+      if (text.length === 0) {
+        node.remove();
+      } else {
+        node.value = text;
+      }
+    }
+  };
+
+  // Check for invalid elements here, so we can remove them and avoid handling their children
+  const preprocessElement = (node: AstNode) => {
+    const bogus = node.attr('data-mce-bogus');
+    if (bogus === 'all') {
+      node.remove();
+      return;
+    } else if (bogus === '1' && !node.attr('data-mce-type')) {
+      node.unwrap();
+      return;
+    }
+  };
+
+  // Check for empty nodes here, because children will have been processed and (if necessary) emptied / removed already
+  const postprocessElement = (node: AstNode) => {
+    const elementRule = schema.getElementRule(node.name);
+    if (!elementRule) {
+      return;
+    }
+    const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
+    if (elementRule.removeEmpty && isNodeEmpty) {
+      if (blockElements[node.name]) {
+        node.remove();
+      } else {
+        node.unwrap();
+      }
+    } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
+      paddEmptyNode(settings, args, blockElements, node);
+    }
+  };
+
+  const nodes: AstNode[] = [];
+
+  // Walk over the tree forwards, calling preprocess methods
+  for (let node = root, lastNode = node; Type.isNonNullable(node); lastNode = node, node = node.walk()) {
+    if (node.type === 1) {
+      preprocessElement(node);
+    } else if (node.type === 3) {
+      preprocessText(node);
+    }
+
+    // check whether our preprocess methods removed the node
+    if (Type.isNullable(node.parent) && node !== root) {
+      node = lastNode;
+    } else {
+      nodes.push(node);
+    }
+  }
+
+  // Walk over the tree backwards, calling postprocess methods
+  Arr.eachr(nodes, (node) => {
+    if (node.type === 1) {
+      postprocessElement(node);
+    } else if (node.type === 3) {
+      postprocessText(node);
+    }
+  });
 };
 
 const filterNode = (node: AstNode, nodeFilters: Record<string, ParserFilterCallback[]>, attributeFilters: ParserFilter[], state: WalkResult): AstNode => {
@@ -403,6 +384,8 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
   settings = settings || {};
   settings.validate = 'validate' in settings ? settings.validate : true;
   settings.root_name = settings.root_name || 'body';
+
+  const purify = configurePurify(settings, schema);
 
   /**
    * Adds a node filter function to the parser, the parser will collect the specified nodes by name
@@ -484,8 +467,6 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
    * @return {tinymce.html.Node} Root node containing the tree.
    */
   const parse = (html: string, args?: ParserArgs): AstNode => {
-    let nodes, i, l, fi, fl, name;
-
     const getRootBlockName = (name: string | boolean) => {
       if (name === false) {
         return '';
@@ -554,7 +535,10 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     };
 
     const rootNode = new AstNode(args.context || settings.root_name, 11);
-    builder(rootNode, html, settings, schema, args);
+    // The settings object we pass to purify is completely ignored, because we called setConfig earlier, but it makes the type signatures work
+    const element = purify.sanitize(html, { RETURN_DOM: true });
+    transferChildren(rootNode, element);
+    simplifyDom(rootNode, schema, settings, args);
     const state = walker(rootNode, settings, schema, nodeFilters, attributeFilters);
 
     // Fix invalid children or report invalid children in a contextual parsing
@@ -576,42 +560,44 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     // Run filters only when the contents is valid
     if (!args.invalid) {
       // Run node filters
-      for (name in state.matchedNodes) {
+      for (const name in state.matchedNodes) {
         if (!Obj.has(state.matchedNodes, name)) {
           continue;
         }
         const list = nodeFilters[name];
-        nodes = state.matchedNodes[name];
+        const nodes = state.matchedNodes[name];
 
         // Remove already removed children
-        fi = nodes.length;
+        let fi = nodes.length;
         while (fi--) {
           if (!nodes[fi].parent) {
             nodes.splice(fi, 1);
           }
         }
 
-        for (i = 0, l = list.length; i < l; i++) {
+        const l = list.length;
+        for (let i = 0; i < l; i++) {
           list[i](nodes, name, args);
         }
       }
 
       // Run attribute filters
-      for (i = 0, l = attributeFilters.length; i < l; i++) {
+      const l = attributeFilters.length;
+      for (let i = 0; i < l; i++) {
         const list = attributeFilters[i];
 
         if (list.name in state.matchedAttributes) {
-          nodes = state.matchedAttributes[list.name];
+          const nodes = state.matchedAttributes[list.name];
 
           // Remove already removed children
-          fi = nodes.length;
+          let fi = nodes.length;
           while (fi--) {
             if (!nodes[fi].parent) {
               nodes.splice(fi, 1);
             }
           }
 
-          for (fi = 0, fl = list.callbacks.length; fi < fl; fi++) {
+          for (let fi = 0, fl = list.callbacks.length; fi < fl; fi++) {
             list.callbacks[fi](nodes, list.name, args);
           }
         }
