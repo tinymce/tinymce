@@ -16,7 +16,7 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
     renderColorPicker({
       label: Optional.some('ColorPicker label'),
       name: 'col1'
-    }, TestProviders)
+    }, TestProviders, Optional.none())
   ));
 
   const fireEvent = (elem: SugarElement<Node>, event: string) => {

@@ -7,7 +7,7 @@
 
 import { AlloyTriggers, Behaviour, Focusing, SimpleSpec, Slider, SliderTypes } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Fun } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -15,7 +15,7 @@ import { formChangeEvent } from '../general/FormEvents';
 
 type SliderSpec = Omit<Dialog.Slider, 'type'>;
 
-export const renderSlider = (spec: SliderSpec, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+export const renderSlider = (spec: SliderSpec, providerBackstage: UiFactoryBackstageProviders, initialData: Optional<number>): SimpleSpec => {
   const labelPart = Slider.parts.label({
     dom: {
       tag: 'label',
@@ -56,7 +56,7 @@ export const renderSlider = (spec: SliderSpec, providerBackstage: UiFactoryBacks
       mode: 'x',
       minX: spec.min,
       maxX: spec.max,
-      getInitialValue: Fun.constant((Math.abs(spec.max) - Math.abs(spec.min)) / 2)
+      getInitialValue: Fun.constant(initialData.getOrThunk(() => (Math.abs(spec.max) - Math.abs(spec.min)) / 2))
     },
     components: [
       labelPart,

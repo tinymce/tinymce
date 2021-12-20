@@ -6,7 +6,7 @@
  */
 
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec
 } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -77,7 +77,7 @@ const renderInlineHeader = (
   dialogId: string,
   titleId: string,
   providersBackstage: UiFactoryBackstageProviders
-): AlloySpec => Container.sketch({
+): SketchSpec => Container.sketch({
   dom: DomFactory.fromHtml('<div class="tox-dialog__header"></div>'),
   components: [
     renderTitle(spec, dialogId, Optional.some(titleId), providersBackstage),

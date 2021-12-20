@@ -23,7 +23,7 @@ describe('headless.tinymce.themes.silver.components.selectbox.SelectboxWithSizeT
         { value: 'four', text: 'Four' },
         { value: 'five', text: 'Five' }
       ]
-    }, TestProviders)
+    }, TestProviders, Optional.none())
   ));
 
   it('Check basic structure', () => {

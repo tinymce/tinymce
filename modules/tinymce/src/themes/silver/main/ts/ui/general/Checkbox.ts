@@ -7,35 +7,23 @@
 
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, Focusing, FormField as AlloyFormField, Keying, Memento,
-  NativeEvents, Representing, SimpleSpec, Tabstopping, Unselecting
+  NativeEvents, SimpleSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
+import { Checked } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import * as Icons from '../icons/Icons';
 import { formChangeEvent } from './FormEvents';
 
 type CheckboxSpec = Omit<Dialog.Checkbox, 'type'>;
 
-export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryBackstageProviders): SimpleSpec => {
-  const repBehaviour = Representing.config({
-    store: {
-      mode: 'manual',
-      getValue: (comp: AlloyComponent): boolean => {
-        const el = comp.element.dom as HTMLInputElement;
-        return el.checked;
-      },
-      setValue: (comp: AlloyComponent, value: boolean) => {
-        const el = comp.element.dom as HTMLInputElement;
-        el.checked = value;
-      }
-    }
-  });
-
-  const toggleCheckboxHandler = (comp) => {
+export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryBackstageProviders, initialData: Optional<boolean>): SimpleSpec => {
+  const toggleCheckboxHandler = (comp: AlloyComponent) => {
     comp.element.dom.click();
     return Optional.some(true);
   };
@@ -57,7 +45,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
       }),
       Tabstopping.config({}),
       Focusing.config({ }),
-      repBehaviour,
+      RepresentingConfigs.withElement(initialData, Checked.get, Checked.set),
       Keying.config({
         mode: 'special',
         onEnter: toggleCheckboxHandler,

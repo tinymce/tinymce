@@ -10,7 +10,7 @@ import {
   NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Class, EventArgs, Focus, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Entities from 'tinymce/core/api/html/Entities';
@@ -26,7 +26,11 @@ import { deriveCollectionMovement } from '../menus/menu/MenuMovement';
 
 type CollectionSpec = Omit<Dialog.Collection, 'type'>;
 
-export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderCollection = (
+  spec: CollectionSpec,
+  providersBackstage: UiFactoryBackstageProviders,
+  initialData: Optional<Dialog.CollectionItem[]>
+): SketchSpec => {
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
@@ -36,7 +40,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     });
   };
 
-  const setContents = (comp, items) => {
+  const setContents = (comp: AlloyComponent, items: Dialog.CollectionItem[]) => {
     const htmlLines = Arr.map(items, (item) => {
       const itemText = I18n.translate(item.text);
       const textContent = spec.columns === 1 ? `<div class="tox-collection__item-label">${itemText}</div>` : '';
@@ -133,7 +137,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
       Representing.config({
         store: {
           mode: 'memory',
-          initialValue: [ ]
+          initialValue: initialData.getOr([])
         },
         onSetValue: (comp, items) => {
           setContents(comp, items);

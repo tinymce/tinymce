@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SketchSpec } from '@ephox/alloy';
+import {
+  AlloyComponent, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SimpleSpec, SketchSpec
+} from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
@@ -53,7 +55,7 @@ const renderComponents = (_data: WindowFooterSpec, state: Optional<FooterState>)
   return [ startButtons, endButtons ];
 };
 
-const renderFooter = (initSpec: WindowFooterSpec, dialogId: string, backstage: UiFactoryBackstage) => {
+const renderFooter = (initSpec: WindowFooterSpec, dialogId: string, backstage: UiFactoryBackstage): SimpleSpec => {
   const updateState = (comp: AlloyComponent, data: WindowFooterSpec) => {
     const footerButtons: DialogMemButton[] = Arr.map(data.buttons, (button) => {
       const memButton = Memento.record(makeButton(button, backstage));

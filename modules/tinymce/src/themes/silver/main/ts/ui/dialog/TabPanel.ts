@@ -11,13 +11,14 @@ import {
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Cell, Fun, Merger } from '@ephox/katamari';
+import { Arr, Cell, Fun, Merger, Optional } from '@ephox/katamari';
 
 import { toValidValues } from 'tinymce/themes/silver/ui/general/FormValues';
 import { interpretInForm } from 'tinymce/themes/silver/ui/general/UiFactory';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { setMode } from '../alien/DialogTabHeight';
+import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formTabChangeEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
 
@@ -28,7 +29,7 @@ export type TabData = Record<string, any>;
 
 type TabPanelSpec = Omit<Dialog.TabPanel, 'type'>;
 
-export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage): SketchSpec => {
+export const renderTabPanel = (spec: TabPanelSpec, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage): SketchSpec => {
   const storedValue = Cell<TabData>({ });
 
   const updateDataWithForm = (form: AlloyComponent): void => {
@@ -62,7 +63,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
               tag: 'div',
               classes: [ 'tox-form' ]
             },
-            components: Arr.map(tab.items, (item) => interpretInForm(parts, item, backstage)),
+            components: Arr.map(tab.items, (item) => interpretInForm(parts, item, dialogData, backstage)),
             formBehaviours: Behaviour.derive([
               Keying.config({
                 mode: 'acyclic',
@@ -155,20 +156,18 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
         // TODO: Think about this
         find: (comp) => Arr.head(AlloyTabSection.getViewItems(comp))
       }),
-      Representing.config({
-        store: {
-          mode: 'manual',
-          getValue: (tsection: AlloyComponent) => {
-            // NOTE: Assumes synchronous updating of store.
-            tsection.getSystem().broadcastOn([ SendDataToSectionChannel ], { });
-            return storedValue.get();
-          },
-          setValue: (tsection: AlloyComponent, value: TabData) => {
-            storedValue.set(value);
-            tsection.getSystem().broadcastOn([ SendDataToViewChannel ], { });
-          }
+      RepresentingConfigs.withComp(
+        Optional.none(),
+        (tsection: AlloyComponent) => {
+          // NOTE: Assumes synchronous updating of store.
+          tsection.getSystem().broadcastOn([ SendDataToSectionChannel ], { });
+          return storedValue.get();
+        },
+        (tsection: AlloyComponent, value: TabData) => {
+          storedValue.set(value);
+          tsection.getSystem().broadcastOn([ SendDataToViewChannel ], { });
         }
-      })
+      )
     ])
   });
 };
