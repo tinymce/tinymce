@@ -76,7 +76,7 @@ export type CellData = {
 const rgbToHex = (value: string): string =>
   Strings.startsWith(value, 'rgb') ? Transformations.rgbaToHexString(value) : value;
 
-const extractAdvancedStyles = (dom: DOMUtils, elm: Node): AdvancedStyles => {
+const extractAdvancedStyles = (elm: Node): AdvancedStyles => {
   const element = SugarElement.fromDom(elm);
   return {
     borderwidth: Css.getRaw(element, 'border-width').getOr(''),
@@ -208,7 +208,7 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
     caption: !!dom.select('caption', elm)[0],
     class: dom.getAttrib(elm, 'class', ''),
     align: getHAlignment(editor, elm),
-    ...(hasAdvTableTab ? extractAdvancedStyles(dom, elm) : {})
+    ...(hasAdvTableTab ? extractAdvancedStyles(elm) : {})
   };
 };
 
@@ -219,7 +219,7 @@ const extractDataFromRowElement = (editor: Editor, elm: HTMLTableRowElement, has
     class: dom.getAttrib(elm, 'class', ''),
     type: getRowType(elm),
     align: getHAlignment(editor, elm),
-    ...(hasAdvancedRowTab ? extractAdvancedStyles(dom, elm) : {})
+    ...(hasAdvancedRowTab ? extractAdvancedStyles(elm) : {})
   };
 };
 
@@ -237,7 +237,7 @@ const extractDataFromCellElement = (editor: Editor, cell: HTMLTableCellElement, 
     class: dom.getAttrib(cell, 'class', ''),
     halign: getHAlignment(editor, cell),
     valign: getVAlignment(editor, cell),
-    ...(hasAdvancedCellTab ? extractAdvancedStyles(dom, cell) : {})
+    ...(hasAdvancedCellTab ? extractAdvancedStyles(cell) : {})
   };
 };
 
