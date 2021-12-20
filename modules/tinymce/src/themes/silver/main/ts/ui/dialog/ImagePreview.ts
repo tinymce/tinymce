@@ -8,7 +8,7 @@
 import { AlloyComponent, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Optional, Optionals, Singleton } from '@ephox/katamari';
-import { Attribute, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar';
+import { Attribute, Class, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 
@@ -91,6 +91,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
       const img = imageComponent.element;
       if (data.url !== Attribute.get(img, 'src')) {
         Attribute.set(img, 'src', data.url);
+        Class.remove(frameComponent.element, 'tox-imagepreview__loaded');
       }
 
       Optionals.lift2(data.cachedWidth, data.cachedHeight, (width, height) => {
@@ -101,6 +102,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
         // Ensure the component hasn't been removed while the image was loading
         // if it is disconnected, just do nothing
         if (frameComponent.getSystem().isConnected()) {
+          Class.add(frameComponent.element, 'tox-imagepreview__loaded');
           applyFramePositioning(img.dom.naturalWidth, img.dom.naturalHeight);
         }
       });
