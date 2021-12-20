@@ -418,7 +418,7 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         ),
 
         sCheckReplaceAt(
-          '.replaceAt 2 with noting',
+          '.replaceAt 2 of 3 with nothing',
           spec.comp,
           [ 'original1', 'original3' ],
           [ 'original1', 'original2', 'original3' ],

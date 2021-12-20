@@ -40,6 +40,11 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
   const classesToRemove = Arr.difference(existingClasses, definition.classes);
   const classesToAdd = Arr.difference(definition.classes, existingClasses);
 
+  const updateClasses = () => {
+    Classes.add(obsoleted, classesToAdd);
+    Classes.remove(obsoleted, classesToRemove);
+  };
+
   const updateHtml = (html: string) => {
     Html.set(obsoleted, html);
   };
@@ -47,11 +52,6 @@ const reconcileToDom = (definition: DomDefinitionDetail, obsoleted: SugarElement
   const updateChildren = () => {
     const children = definition.domChildren;
     patchDomChildren(obsoleted, children);
-  };
-
-  const updateClasses = () => {
-    Classes.add(obsoleted, classesToAdd);
-    Classes.remove(obsoleted, classesToRemove);
   };
 
   const updateValue = () => {

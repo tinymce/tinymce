@@ -8,9 +8,6 @@ import { patchSpecChildren } from '../../dom/Patching';
 import * as InternalAttachment from '../../system/InternalAttachment';
 
 const withoutReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
-  // NOTE: we may want to create a behaviour which allows you to switch
-  // between predefined layouts, which would make a noop detection easier.
-  // Until then, we'll just use AriaFocus like redesigning does.
   AriaFocus.preserve(() => {
     InternalAttachment.replaceChildren(parent, data, () => Arr.map(data, parent.getSystem().build));
   }, parent.element);

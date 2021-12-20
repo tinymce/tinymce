@@ -84,7 +84,8 @@ const replaceChildren = (component: AlloyComponent, newSpecs: AlloySpec[], build
 };
 
 const virtualReplaceChildren = (component: AlloyComponent, newSpecs: AlloySpec[], buildNewChildren: (newSpecs: AlloySpec[]) => AlloyComponent[]): void => {
-  // Detach all existing child components that aren't premade specs
+  // When replacing we don't want to fire detachedFromDom and attachedToDom again for a premade that has just had its position in the children moved around,
+  // so we only detach initially if we aren't a premade. Premades will be detached later, but only if they are no longer in the child list.
   const subs = component.components();
   const existingComps = Arr.bind(newSpecs, (spec) => GuiTypes.getPremade(spec).toArray());
   Arr.each(subs, (childComp) => {

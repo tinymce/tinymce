@@ -27,6 +27,8 @@ const buildFromSpec = (userSpec: SketchSpec, obsoleted: Optional<SugarElement<No
   const { events: specEvents, ...spec }: SketchSpec = CustomSpec.make(userSpec);
 
   // Build the subcomponents. A spec hierarchy is built from the bottom up.
+  // obsoleted is used to define which element we are attempting to replace
+  // so that it might be used to patch the DOM instead of recreate it.
   const components: AlloyComponent[] = buildSubcomponents(spec, obsoleted);
 
   const completeSpec = {
