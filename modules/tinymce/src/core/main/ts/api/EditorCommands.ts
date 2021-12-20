@@ -523,7 +523,7 @@ class EditorCommands {
       },
 
       'mceInsertTable': (_command, _ui, args) => {
-        InsertTable.insertTable(editor, args.rows, args.columns, args.options, 'Invalid values for mceInsertTable - rows and columns values are required to insert a table.');
+        InsertTable.insertTable(editor, args.rows, args.columns, args.options);
       },
 
       'selectAll': () => {

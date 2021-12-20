@@ -71,7 +71,7 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   }).getOr(null);
 };
 
-const insertTable = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}, errorMsg: string): HTMLTableElement | null => {
+const insertTable = (editor: Editor, rows: number, columns: number, options: Record<string, number> = {}): HTMLTableElement | null => {
   const checkInput = (val: any) => Type.isNumber(val) && val > 0;
 
   if (checkInput(rows) && checkInput(columns)) {
@@ -80,7 +80,7 @@ const insertTable = (editor: Editor, rows: number, columns: number, options: Rec
     return insert(editor, columns, rows, headerColumns, headerRows);
   } else {
     // eslint-disable-next-line no-console
-    console.error(errorMsg);
+    console.error('Invalid values for mceInsertTable - rows and columns values are required to insert a table.');
     return null;
   }
 };
