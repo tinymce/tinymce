@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { SugarElement, Width } from '@ephox/sugar';
 
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
@@ -47,6 +48,12 @@ const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (valu
   } else {
     return { valid: false as const, message: 'Must be a string.' };
   }
+};
+
+// Note: This is also specified in the table plugin Options.ts file
+const defaultTableStyles = {
+  'border-collapse': 'collapse',
+  'width': '100%'
 };
 
 const register = (editor: Editor) => {
@@ -687,6 +694,58 @@ const register = (editor: Editor) => {
     ]
   });
 
+  registerOption('table_clone_elements', {
+    processor: 'string[]'
+  });
+
+  registerOption('table_resize_bars', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('table_tab_navigation', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('table_use_colgroups', {
+    processor: 'boolean',
+    default: false
+  });
+
+  registerOption('table_header_type', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'section', 'cells', 'sectionCells', 'auto' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: section, cells, sectionCells or auto.' };
+    },
+    default: 'section'
+  });
+
+  registerOption('table_sizing_mode', {
+    processor: 'string',
+    default: 'auto'
+  });
+
+  registerOption('table_column_resizing', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'preservetable', 'resizetable' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be preservetable, or resizetable.' };
+    },
+    default: 'preservetable'
+  });
+
+  registerOption('table_default_attributes', {
+    processor: 'object',
+    default: {
+      border: '1'
+    }
+  });
+
+  registerOption('table_default_styles', {
+    processor: 'object',
+    default: defaultTableStyles
+  });
+
   // These options must be registered later in the init sequence due to their default values
   // TODO: TINY-8234 Should we have a way to lazily load the default values?
   editor.on('ScriptsLoaded', () => {
@@ -787,6 +846,45 @@ const isEncodingXml = (editor: Editor): boolean =>
 const hasForcedRootBlock = (editor: Editor): boolean =>
   getForcedRootBlock(editor) !== '';
 
+// Note: This is also contained in the table plugin Options.ts file
+const determineDefaultTableStyles = (editor: Editor): Record<string, string> => {
+  if (isTablePixelsForced(editor)) {
+    // Determine the inner size of the parent block element where the table will be inserted
+    const dom = editor.dom;
+    const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
+    const contentWidth = Width.getInner(SugarElement.fromDom(parentBlock));
+    return { ...defaultTableStyles, width: contentWidth + 'px' };
+  } else if (isTableResponsiveForced(editor)) {
+    return Obj.filter(defaultTableStyles, (_value, key) => key !== 'width');
+  } else {
+    return defaultTableStyles;
+  }
+};
+
+const getTableCloneElements = option('table_clone_elements');
+const hasTableTabNavigation = option('table_tab_navigation');
+const getTableSizingMode = option('table_sizing_mode');
+const getTableColumnResizingBehaviour = option('table_column_resizing');
+const hasTableObjectResizing = (editor: Editor): boolean => {
+  const objectResizing = editor.options.get('object_resizing');
+  return Arr.contains(objectResizing.split(','), 'table');
+};
+const hasTableResizeBars = option('table_resize_bars');
+const isTablePercentagesForced = (editor: Editor): boolean =>
+  getTableSizingMode(editor) === 'relative';
+const isTablePixelsForced = (editor: Editor): boolean =>
+  getTableSizingMode(editor) === 'fixed';
+const isTableResponsiveForced = (editor: Editor): boolean =>
+  getTableSizingMode(editor) === 'responsive';
+const getTableDefaultAttributes = option('table_default_attributes');
+const getTableDefaultStyles = (editor: Editor): Record<string, string> => {
+  // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
+  const options = editor.options;
+  return options.isSet('table_default_styles') ? options.get('table_default_styles') : determineDefaultTableStyles(editor);
+};
+const tableUseColumnGroup = option('table_use_colgroups');
+const getTableHeaderType = option('table_header_type');
+
 export {
   register,
 
@@ -864,5 +962,17 @@ export {
   shouldBrowserSpellcheck,
   getProtect,
   getContentEditableState,
-  getTextPatterns
+  getTextPatterns,
+  hasTableTabNavigation,
+  getTableCloneElements,
+  hasTableObjectResizing,
+  hasTableResizeBars,
+  getTableColumnResizingBehaviour,
+  isTablePercentagesForced,
+  isTablePixelsForced,
+  isTableResponsiveForced,
+  getTableDefaultAttributes,
+  getTableDefaultStyles,
+  tableUseColumnGroup,
+  getTableHeaderType
 };

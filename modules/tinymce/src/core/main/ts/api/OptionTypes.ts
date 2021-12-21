@@ -33,7 +33,7 @@ export type SetupCallback = (editor: Editor) => void;
 
 export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
-export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string}) => void) => void;
+export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string }) => void) => void;
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => string;
@@ -44,6 +44,10 @@ export interface ToolbarGroup {
 }
 
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
+
+export type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
+export type TableColumnResizing = 'preservetable' | 'resizetable';
+export type TableHeaderType = 'section' | 'cells' | 'sectionCells' | 'auto';
 
 interface BaseEditorOptions {
   a11y_advanced_options?: boolean;
@@ -149,6 +153,8 @@ interface BaseEditorOptions {
   menubar?: boolean | string;
   min_height?: number;
   min_width?: number;
+  model?: string;
+  model_url?: string;
   no_newline_selector?: string;
   nowrap?: boolean;
   object_resizing?: boolean | string;
@@ -177,12 +183,19 @@ interface BaseEditorOptions {
   style_formats_merge?: boolean;
   submit_patch?: boolean;
   suffix?: string;
+  table_clone_elements?: string[];
+  table_column_resizing?: TableColumnResizing;
+  table_default_attributes?: Record<string, string>;
+  table_default_styles?: Record<string, string>;
+  table_header_type?: TableHeaderType;
+  table_resize_bars?: boolean;
+  table_sizing_mode?: TableSizingMode;
+  table_tab_navigation?: boolean;
+  table_use_colgroups?: boolean;
   target?: HTMLElement;
   text_patterns?: RawPattern[] | false;
   theme?: string | ThemeInitFunc | false;
   theme_url?: string;
-  model?: string;
-  model_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar1?: string;
   toolbar2?: string;

@@ -15,7 +15,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
-import * as Util from '../core/Util';
+import * as Utils from '../core/Utils';
 import { ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
 import { getAdvancedTab } from './DialogAdvancedTab';
@@ -27,7 +27,7 @@ type RowData = Helpers.RowData;
 
 const updateSimpleProps = (modifier: DomModifier, data: RowData): void => {
   modifier.setAttrib('class', data.class);
-  modifier.setStyle('height', Util.addPxSuffix(data.height));
+  modifier.setStyle('height', Utils.addPxSuffix(data.height));
 };
 
 const updateAdvancedProps = (modifier: DomModifier, data: RowData): void => {
@@ -98,7 +98,7 @@ const onSubmitRowForm = (editor: Editor, rows: HTMLTableRowElement[], oldData: R
 };
 
 const open = (editor: Editor): void => {
-  const rows = TableSelection.getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
+  const rows = TableSelection.getRowsFromSelection(Utils.getSelectionStart(editor), ephemera.selected);
 
   // Check if there are any rows to operate on
   if (rows.length === 0) {

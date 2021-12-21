@@ -5,10 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { CellOpSelection, Selections, TableSelection } from '@ephox/darwin';
+/*
+ NOTE: This file is partially duplicated in the following locations:
+  - core/table/TableSelection.ts
+  - models/dom/table/selection/TableSelection.ts
+  - advtable
+ Make sure that if making changes to this file, the other files are updated as well
+ */
+
+import { TableSelection } from '@ephox/darwin';
 import { Arr, Fun, Optionals } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
+
+import { Editor } from 'tinymce/core/api/PublicApi';
 
 import { ephemera } from './Ephemera';
 
@@ -24,14 +34,12 @@ const getSelectionFromSelector = <T extends Element>(selector: string) =>
     return SelectorFind.closest<T>(cell, selector, isRoot);
   };
 
-const getSelectionCaption = getSelectionFromSelector<HTMLTableCaptionElement>('caption');
-
 const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
-const getCellsFromSelection = (selections: Selections): SugarElement<HTMLTableCellElement>[] =>
-  CellOpSelection.selection(selections);
+const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
+  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
 
 const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
   const cellOpt = getSelectionCell(selected);
@@ -47,9 +55,8 @@ const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): S
 };
 
 export {
-  getSelectionCaption,
   getSelectionCell,
   getSelectionCellOrCaption,
-  getCellsFromSelection,
-  getRowsFromSelection
+  getRowsFromSelection,
+  getCellsFromSelection
 };

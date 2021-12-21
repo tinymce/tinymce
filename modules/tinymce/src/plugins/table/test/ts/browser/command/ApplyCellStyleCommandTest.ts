@@ -6,8 +6,8 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.table.command.ApplyCellStyleCommandTest', () =
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce',
     setup: (editor: Editor) => {
-      editor.on('tablemodified', logEvent);
+      editor.on('TableModified', logEvent);
     }
   }, [ Plugin ], true);
 

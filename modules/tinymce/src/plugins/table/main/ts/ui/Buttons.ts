@@ -5,13 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
-
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
+import * as FakeClipboard from '../api/Clipboard';
 import * as Options from '../api/Options';
-import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, generateMenuItemsCallback } from './UiUtils';
@@ -23,7 +21,7 @@ interface AddButtonSpec {
   onSetup?: (api: Toolbar.ToolbarButtonInstanceApi) => () => void;
 }
 
-const addButtons = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
+const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
@@ -144,14 +142,14 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
     tooltip: 'Paste row before',
     command: 'mceTablePasteRowBefore',
     icon: 'paste-row-before',
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+    onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
   });
 
   addButtonIfRegistered('tablepasterowafter', {
     tooltip: 'Paste row after',
     command: 'mceTablePasteRowAfter',
     icon: 'paste-row-after',
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+    onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
   });
 
   addButtonIfRegistered('tablecutcol', {
@@ -172,19 +170,19 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
     tooltip: 'Paste column before',
     command: 'mceTablePasteColBefore',
     icon: 'paste-column-before',
-    onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onFirst)
+    onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onFirst)
   });
 
   addButtonIfRegistered('tablepastecolafter', {
     tooltip: 'Paste column after',
     command: 'mceTablePasteColAfter',
     icon: 'paste-column-after',
-    onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onLast)
+    onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onLast)
   });
 
   addButtonIfRegistered('tableinsertdialog', {
     tooltip: 'Insert table',
-    command: 'mceInsertTable',
+    command: 'mceInsertTableDialog',
     icon: 'table'
   });
 
@@ -195,7 +193,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Table styles',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         tableClassList,
         'tableclass',
         (value) => editor.execCommand('mceTableToggleClass', false, value)
@@ -211,7 +208,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Cell styles',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         tableCellClassList,
         'tablecellclass',
         (value) => editor.execCommand('mceTableCellToggleClass', false, value)
@@ -227,7 +223,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Vertical align',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         verticalAlignValues,
         'tablecellverticalalign',
         applyTableCellStyle(editor, 'vertical-align')
@@ -240,7 +235,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Border width',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         Options.getTableBorderWidths(editor),
         'tablecellborderwidth',
         applyTableCellStyle(editor, 'border-width')
@@ -253,7 +247,6 @@ const addButtons = (editor: Editor, selections: Selections, selectionTargets: Se
       tooltip: 'Border style',
       fetch: generateMenuItemsCallback(
         editor,
-        selections,
         Options.getTableBorderStyles(editor),
         'tablecellborderstyle',
         applyTableCellStyle(editor, 'border-style')

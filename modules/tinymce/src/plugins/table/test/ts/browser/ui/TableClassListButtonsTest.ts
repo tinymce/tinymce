@@ -5,8 +5,8 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 import { pAssertMenuPresence, pAssertNoCheckmarksInMenu, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
@@ -60,7 +60,7 @@ describe('browser.tinymce.plugins.table.ui.TableClassListButtonsTest', () => {
       }
     ],
     setup: (editor: Editor) => {
-      editor.on('tablemodified', logEvent);
+      editor.on('TableModified', logEvent);
     }
   }, [ Plugin ], true);
 

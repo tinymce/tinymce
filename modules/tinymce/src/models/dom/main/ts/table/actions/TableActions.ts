@@ -8,22 +8,22 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import {
-  CellMutations, ResizeBehaviour, ResizeWire, RunOperation, TableFill, TableGridSize, TableSection, TableOperations, TableLookup
+  CellMutations, ResizeBehaviour, RunOperation, TableFill, TableGridSize, TableSection, TableOperations, TableLookup
 } from '@ephox/snooker';
 import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { TableEventData } from 'tinymce/core/api/EventTypes';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
-import * as Util from '../core/Util';
+import * as Utils from '../core/TableUtils';
 import * as TableSize from '../queries/TableSize';
-import { CellSelectionApi } from '../selection/CellSelection';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T, noEvents?: boolean) => Optional<TableActionResult>;
 export interface TableActionResult {
   readonly rng: Range;
-  readonly effect: Events.TableEventData;
+  readonly effect: TableEventData;
 }
 export type CombinedTargetsTableAction = TableAction<RunOperation.CombinedTargets>;
 export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
@@ -59,9 +59,9 @@ export interface TableActions {
   readonly getTableColType: LookupAction;
 }
 
-export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, lazyWire: () => ResizeWire): TableActions => {
+export const TableActions = (editor: Editor): TableActions => {
   const isTableBody = (editor: Editor): boolean =>
-    SugarNode.name(Util.getBody(editor)) === 'table';
+    SugarNode.name(Utils.getBody(editor)) === 'table';
 
   const lastRowGuard = (table: SugarElement<HTMLTableElement>): boolean =>
     isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
@@ -70,9 +70,9 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
     isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
 
   // Optional.none gives the default cloneFormats.
-  const cloneFormats = Options.getCloneElements(editor);
+  const cloneFormats = Optional.from(Options.getCloneElements(editor));
 
-  const colMutationOp = Options.isResizeTableColumnResizing(editor) ? Fun.noop : CellMutations.halve;
+  const colMutationOp = Options.getColumnResizingBehaviour(editor) === 'resizetable' ? Fun.noop : CellMutations.halve;
 
   const getTableSectionType = (table: SugarElement<HTMLTableElement>) => {
     switch (Options.getTableHeaderType(editor)) {
@@ -95,7 +95,7 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
       // with noneditable cells, so lets check if we have a noneditable cell and if so place the selection
       const cells = TableLookup.cells(table);
       return Arr.head(cells).filter(SugarBody.inBody).map((firstCell) => {
-        cellSelection.clear(table);
+        editor.selection._tableCellSelection.clear(table.dom);
         const rng = editor.dom.createRng();
         rng.selectNode(firstCell.dom);
         editor.selection.setRng(rng);
@@ -108,22 +108,24 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
       rng.setStart(des.element.dom, des.offset);
       rng.setEnd(des.element.dom, des.offset);
       editor.selection.setRng(rng);
-      cellSelection.clear(table);
+      editor.selection._tableCellSelection.clear(table.dom);
       return Optional.some(rng);
     });
 
-  const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, lazyWire: () => ResizeWire, effect: Events.TableEventData) =>
+  const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, effect: TableEventData) =>
     (table: SugarElement<HTMLTableElement>, target: T, noEvents: boolean = false): Optional<TableActionResult> => {
-      Util.removeDataStyle(table);
-      const wire = lazyWire();
+      Utils.removeDataStyle(table);
       const doc = SugarElement.fromDom(editor.getDoc());
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const behaviours: RunOperation.OperationBehaviours = {
         sizing: TableSize.get(editor, table),
-        resize: Options.isResizeTableColumnResizing(editor) ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable(),
+        resize: Options.getColumnResizingBehaviour(editor) === 'resizetable' ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable(),
         section: getTableSectionType(table)
       };
-      return guard(table) ? operation(wire, table, target, generators, behaviours).bind((result) => {
+      return guard(table) ? operation(table, target, generators, behaviours).bind((result) => {
+        // Update the resize bars after the table opeation
+        editor.selection._tableResizeHandler.refresh(table.dom);
+
         // INVESTIGATE: Should "noEvents" prevent these from firing as well?
         Arr.each(result.newRows, (row) => {
           Events.fireNewRow(editor, row.dom);
@@ -135,7 +137,7 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
         const range = setSelectionFromAction(table, result);
 
         if (SugarBody.inBody(table)) {
-          Util.removeDataStyle(table);
+          Utils.removeDataStyle(table);
           if (!noEvents) {
             Events.fireTableModified(editor, table.dom, effect);
           }
@@ -148,41 +150,41 @@ export const TableActions = (editor: Editor, cellSelection: CellSelectionApi, la
       }) : Optional.none<TableActionResult>();
     };
 
-  const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire, Events.structureModified);
+  const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, Events.structureModified);
 
-  const deleteColumn = execute(TableOperations.eraseColumns, lastColumnGuard, Fun.noop, lazyWire, Events.structureModified);
+  const deleteColumn = execute(TableOperations.eraseColumns, lastColumnGuard, Fun.noop, Events.structureModified);
 
-  const insertRowsBefore = execute(TableOperations.insertRowsBefore, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const insertRowsBefore = execute(TableOperations.insertRowsBefore, Fun.always, Fun.noop, Events.structureModified);
 
-  const insertRowsAfter = execute(TableOperations.insertRowsAfter, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const insertRowsAfter = execute(TableOperations.insertRowsAfter, Fun.always, Fun.noop, Events.structureModified);
 
-  const insertColumnsBefore = execute(TableOperations.insertColumnsBefore, Fun.always, colMutationOp, lazyWire, Events.structureModified);
+  const insertColumnsBefore = execute(TableOperations.insertColumnsBefore, Fun.always, colMutationOp, Events.structureModified);
 
-  const insertColumnsAfter = execute(TableOperations.insertColumnsAfter, Fun.always, colMutationOp, lazyWire, Events.structureModified);
+  const insertColumnsAfter = execute(TableOperations.insertColumnsAfter, Fun.always, colMutationOp, Events.structureModified);
 
-  const mergeCells = execute(TableOperations.mergeCells, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const mergeCells = execute(TableOperations.mergeCells, Fun.always, Fun.noop, Events.structureModified);
 
-  const unmergeCells = execute(TableOperations.unmergeCells, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const unmergeCells = execute(TableOperations.unmergeCells, Fun.always, Fun.noop, Events.structureModified);
 
-  const pasteColsBefore = execute(TableOperations.pasteColsBefore, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const pasteColsBefore = execute(TableOperations.pasteColsBefore, Fun.always, Fun.noop, Events.structureModified);
 
-  const pasteColsAfter = execute(TableOperations.pasteColsAfter, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const pasteColsAfter = execute(TableOperations.pasteColsAfter, Fun.always, Fun.noop, Events.structureModified);
 
-  const pasteRowsBefore = execute(TableOperations.pasteRowsBefore, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const pasteRowsBefore = execute(TableOperations.pasteRowsBefore, Fun.always, Fun.noop, Events.structureModified);
 
-  const pasteRowsAfter = execute(TableOperations.pasteRowsAfter, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const pasteRowsAfter = execute(TableOperations.pasteRowsAfter, Fun.always, Fun.noop, Events.structureModified);
 
-  const pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, lazyWire, Events.styleAndStructureModified);
+  const pasteCells = execute(TableOperations.pasteCells, Fun.always, Fun.noop, Events.styleAndStructureModified);
 
-  const makeCellsHeader = execute(TableOperations.makeCellsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
-  const unmakeCellsHeader = execute(TableOperations.unmakeCellsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const makeCellsHeader = execute(TableOperations.makeCellsHeader, Fun.always, Fun.noop, Events.structureModified);
+  const unmakeCellsHeader = execute(TableOperations.unmakeCellsHeader, Fun.always, Fun.noop, Events.structureModified);
 
-  const makeColumnsHeader = execute(TableOperations.makeColumnsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
-  const unmakeColumnsHeader = execute(TableOperations.unmakeColumnsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const makeColumnsHeader = execute(TableOperations.makeColumnsHeader, Fun.always, Fun.noop, Events.structureModified);
+  const unmakeColumnsHeader = execute(TableOperations.unmakeColumnsHeader, Fun.always, Fun.noop, Events.structureModified);
 
-  const makeRowsHeader = execute(TableOperations.makeRowsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
-  const makeRowsBody = execute(TableOperations.makeRowsBody, Fun.always, Fun.noop, lazyWire, Events.structureModified);
-  const makeRowsFooter = execute(TableOperations.makeRowsFooter, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const makeRowsHeader = execute(TableOperations.makeRowsHeader, Fun.always, Fun.noop, Events.structureModified);
+  const makeRowsBody = execute(TableOperations.makeRowsBody, Fun.always, Fun.noop, Events.structureModified);
+  const makeRowsFooter = execute(TableOperations.makeRowsFooter, Fun.always, Fun.noop, Events.structureModified);
 
   const getTableCellType = TableOperations.getCellsType;
   const getTableColType = TableOperations.getColumnsType;

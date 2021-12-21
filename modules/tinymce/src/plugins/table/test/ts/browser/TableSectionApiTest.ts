@@ -6,8 +6,8 @@ import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { NewTableCellEvent, TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
@@ -169,11 +169,16 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
 </table>`;
 
   let events = [];
-  const logEvent = (event: EditorEvent<TableModifiedEvent>) => {
+  const logModifiedEvent = (event: EditorEvent<TableModifiedEvent>) => {
     events.push({
       type: event.type,
       structure: event.structure,
       style: event.style,
+    });
+  };
+  const logNewCellEvent = (event: EditorEvent<NewTableCellEvent>) => {
+    events.push({
+      type: event.type
     });
   };
 
@@ -235,8 +240,8 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
-      ed.on('tablemodified', logEvent);
-      ed.on('newcell', logEvent);
+      ed.on('TableModified', logModifiedEvent);
+      ed.on('NewCell', logNewCellEvent);
     }
   };
 

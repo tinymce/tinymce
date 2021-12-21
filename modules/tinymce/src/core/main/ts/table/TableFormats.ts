@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from 'tinymce/core/api/Editor';
+import { Fun } from '@ephox/katamari';
+
 const genericBase = {
   remove_similar: true,
   inherit: false
@@ -50,10 +51,8 @@ const cellFormats = {
   }
 };
 
-const registerFormats = (editor: Editor): void => {
-  editor.formatter.register(cellFormats);
-};
+const get = Fun.constant(cellFormats);
 
 export {
-  registerFormats
+  get
 };

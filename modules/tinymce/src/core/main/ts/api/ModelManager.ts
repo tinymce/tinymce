@@ -7,8 +7,7 @@
 
 import AddOnManager from './AddOnManager';
 
-export interface Model {
-}
+export interface Model { }
 
 type ModelManager = AddOnManager<Model>;
 const ModelManager: ModelManager = AddOnManager.ModelManager;

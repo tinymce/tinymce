@@ -1,5 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -71,7 +72,12 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>Text to be retrieved</p>');
     const text = editor.getContent({ format: 'text' });
-    Assertions.assertHtml('Should be expected text', 'Text to be retrieved', text);
+    // TODO: TINY-8367 The table plugin code has been moved to core so there is now always an extra DIV in the dom for the table resize bars
+    // Safari differs in behaviour compared to the other browsers when getting text content for inline mode.
+    // When the resize bar div is included in the DOM, editor.getBody().innerText includes two extra \n at the end
+    const isSafari = PlatformDetection.detect().browser.isSafari();
+    const expected = 'Text to be retrieved' + (isSafari ? '\n\n' : '');
+    Assertions.assertHtml('Should be expected text', expected, text);
     assertEventsFiredInOrder();
   });
 
