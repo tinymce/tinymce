@@ -40,7 +40,7 @@ const calculateImagePosition = (panelWidth: number, panelHeight: number, imageWi
 const zoomToFit = (panel: SugarElement<HTMLElement>, width: number, height: number) => {
   const panelW = Width.get(panel);
   const panelH = Height.get(panel);
-  return Math.min((panelW) / width, (panelH) / height, 1);
+  return Math.min(panelW / width, panelH / height, 1);
 };
 
 export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional<Dialog.ImagePreviewData>): SimpleSpec => {
