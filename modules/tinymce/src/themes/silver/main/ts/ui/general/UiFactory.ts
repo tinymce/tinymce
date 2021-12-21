@@ -74,7 +74,7 @@ const factories: Record<string, FormPartRenderer<any>> = {
   urlinput: make<Dialog.UrlInput, Dialog.UrlInputData>((spec, backstage, data) => renderUrlInput(spec, backstage, backstage.urlinput, data)),
   customeditor: make<Dialog.CustomEditor>(renderCustomEditor),
   htmlpanel: make<Dialog.HtmlPanel>(renderHtmlPanel),
-  imagepreview: make<Dialog.ImagePreview>(renderImagePreview),
+  imagepreview: make<Dialog.ImagePreview, Dialog.ImagePreviewData>((spec, _, data) => renderImagePreview(spec, data)),
   table: make<Dialog.Table>((spec, backstage) => renderTable(spec, backstage.shared.providers)),
   panel: make<Dialog.Panel>((spec, backstage) => renderPanel(spec, backstage))
 };

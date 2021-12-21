@@ -5,16 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Memento, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Optional, Optionals, Singleton } from '@ephox/katamari';
+import { Optional, Singleton } from '@ephox/katamari';
 import { Attribute, Class, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 
 type ImagePreviewSpec = Omit<Dialog.ImagePreview, 'type'>;
 
-export interface ImagePreviewData {
+export interface ImagePreviewDataSpec {
   readonly url: string;
   readonly zoom: Optional<number>;
   // not documented, but can be helpful when dynamically changing the URL
@@ -42,20 +43,22 @@ const zoomToFit = (panel: SugarElement<HTMLElement>, width: number, height: numb
   return Math.min((panelW) / width, (panelH) / height, 1);
 };
 
-export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
-  const cachedData = Singleton.value<ImagePreviewData>();
+export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional<Dialog.ImagePreviewData>): SimpleSpec => {
+  const cachedData = Singleton.value<Dialog.ImagePreviewData>();
+  initialData.each(cachedData.set);
 
   const memImage = Memento.record({
     dom: {
       tag: 'img',
-      classes: [ 'tox-imagepreview__image' ],
+      classes: ['tox-imagepreview__image'],
+      attributes: initialData.map((data) => ({ src: data.url })).getOr({})
     },
   });
 
   const memContainer = Memento.record({
     dom: {
       tag: 'div',
-      classes: [ 'tox-imagepreview__container' ],
+      classes: ['tox-imagepreview__container'],
       attributes: {
         role: 'presentation'
       },
@@ -65,14 +68,22 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
     ]
   });
 
-  const setValue = (frameComponent: AlloyComponent, data: ImagePreviewData) => {
+  const setValue = (frameComponent: AlloyComponent, data: ImagePreviewDataSpec) => {
+    const translatedData: Dialog.ImagePreviewData = {
+      url: data.url
+    };
+    data.zoom.each(z => translatedData.zoom = z);
+    data.cachedWidth.each(z => translatedData.cachedWidth = z);
+    data.cachedHeight.each(z => translatedData.cachedHeight = z);
+    cachedData.set(translatedData);
+
     const applyFramePositioning = (imageWidth: number, imageHeight: number) => {
       const zoom = data.zoom.getOrThunk(() => {
         const z = zoomToFit(frameComponent.element, imageWidth, imageHeight);
         // this is a bit unweildy to set twice but having zoom not be optional added a lot of complexity
         cachedData.set({
-          ...data,
-          zoom: Optional.some(z)
+          ...translatedData,
+          zoom: z
         });
         return z;
       });
@@ -87,8 +98,6 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
       });
     };
 
-    cachedData.set(data);
-
     memImage.getOpt(frameComponent).each((imageComponent) => {
       const img = imageComponent.element;
       if (data.url !== Attribute.get(img, 'src')) {
@@ -96,15 +105,20 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
         Class.remove(frameComponent.element, 'tox-imagepreview__loaded');
       }
 
-      Optionals.lift2(data.cachedWidth, data.cachedHeight, (width, height) => {
-        applyFramePositioning(width, height);
-      });
+      if (translatedData.cachedWidth !== undefined && translatedData.cachedHeight !== undefined) {
+        applyFramePositioning(translatedData.cachedWidth, translatedData.cachedHeight);
+      }
 
-      Ready.image(img).then((img: SugarElement<HTMLImageElement>) => {
+      Ready.image(img).then((img) => {
         // Ensure the component hasn't been removed while the image was loading
         // if it is disconnected, just do nothing
         if (frameComponent.getSystem().isConnected()) {
           Class.add(frameComponent.element, 'tox-imagepreview__loaded');
+          cachedData.set({
+            ...translatedData,
+            cachedWidth: img.dom.naturalWidth,
+            cachedHeight: img.dom.naturalHeight
+          })
           applyFramePositioning(img.dom.naturalWidth, img.dom.naturalHeight);
         }
       });
@@ -114,10 +128,18 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
   const styles: Record<string, string> = {};
   spec.height.each((h) => styles.height = h);
 
+  // TODO: Use the initial data properly once it's validated
+  const fakeValidatedData: Optional<ImagePreviewDataSpec> = initialData.map(d => ({
+    url: d.url,
+    zoom: Optional.from(d.zoom),
+    cachedWidth: Optional.from(d.cachedWidth),
+    cachedHeight: Optional.from(d.cachedHeight),
+  }))
+
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-imagepreview' ],
+      classes: ['tox-imagepreview'],
       styles,
       attributes: {
         role: 'presentation'
@@ -128,21 +150,20 @@ export const renderImagePreview = (spec: ImagePreviewSpec): SimpleSpec => {
     ],
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
-      Representing.config({
-        store: {
-          mode: 'manual',
-          getValue: () => {
-            const value: Record<string, string | number> = {};
+      RepresentingConfigs.withComp(
+        fakeValidatedData,
+        () =>
+          /*
+            NOTE: This is intentionally returning the cached image width and height.
+
+            Including those details in the dialog data helps when `setData` only changes the URL, as
+            the old image must continue to be displayed at the old size until the new image has loaded.
+          */
+          cachedData.get()
             // if data hasn't been set yet, it doesn't seem to matter what we return
-            cachedData.on((data) => {
-              value.url = data.url;
-              data.zoom.each((z) => value.zoom = z);
-            });
-            return value;
-          },
-          setValue
-        }
-      }),
+            .getOr({ url: '' }),
+        setValue
+      ),
     ])
   };
 };
