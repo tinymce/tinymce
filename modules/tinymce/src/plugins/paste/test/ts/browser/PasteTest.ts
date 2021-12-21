@@ -481,7 +481,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
         )
       });
 
-      TinyAssertions.assertContent(editor, '<p style="color: #ff0000;">abc</p>');
+      TinyAssertions.assertContent(editor, '<p style="color: rgb(255, 0, 0);">abc</p>');
     });
   });
 });

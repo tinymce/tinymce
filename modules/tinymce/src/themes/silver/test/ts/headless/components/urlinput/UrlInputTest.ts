@@ -48,7 +48,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
         store.adder('urlpicker')();
         return Future.pure({ value: 'http://tiny.cloud', meta: { before: entry.value }, fieldname: 'test' });
       })
-    })
+    }, Optional.none())
   ));
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [

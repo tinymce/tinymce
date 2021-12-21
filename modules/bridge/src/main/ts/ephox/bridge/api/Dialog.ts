@@ -3,7 +3,7 @@ import { Bar, BarSpec, createBarFields } from '../components/dialog/Bar';
 import { BodyComponent, BodyComponentSpec } from '../components/dialog/BodyComponent';
 import { Button, ButtonSpec, createButton } from '../components/dialog/Button';
 import { Checkbox, CheckboxSpec, createCheckbox } from '../components/dialog/Checkbox';
-import { Collection, collectionDataProcessor, CollectionSpec, createCollection } from '../components/dialog/Collection';
+import { Collection, collectionDataProcessor, CollectionItem, CollectionSpec, createCollection } from '../components/dialog/Collection';
 import { ColorInput, ColorInputSpec, createColorInput } from '../components/dialog/ColorInput';
 import { ColorPicker, ColorPickerSpec, createColorPicker } from '../components/dialog/ColorPicker';
 import {
@@ -38,7 +38,7 @@ import {
   createUrlDialog, UrlDialog, UrlDialogActionDetails, UrlDialogActionHandler, UrlDialogCancelHandler, UrlDialogCloseHandler, UrlDialogFooterButton,
   UrlDialogFooterButtonSpec, UrlDialogInstanceApi, UrlDialogMessage, UrlDialogMessageHandler, UrlDialogSpec
 } from '../components/dialog/UrlDialog';
-import { createUrlInput, UrlInput, UrlInputSpec } from '../components/dialog/UrlInput';
+import { createUrlInput, UrlInput, UrlInputData, UrlInputSpec } from '../components/dialog/UrlInput';
 
 // These are the types that are to be used internally in implementations
 export {
@@ -62,6 +62,7 @@ export {
   createCheckbox,
 
   Collection,
+  CollectionItem,
   CollectionSpec,
   createCollection,
   collectionDataProcessor,
@@ -188,6 +189,7 @@ export {
   createUrlDialog,
 
   UrlInput,
+  UrlInputData,
   UrlInputSpec,
   createUrlInput
 };

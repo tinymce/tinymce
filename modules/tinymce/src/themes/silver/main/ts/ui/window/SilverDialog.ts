@@ -33,7 +33,8 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
   const header = SilverDialogCommon.getHeader(internalDialog.title, dialogId, backstage);
 
   const body = renderModalBody({
-    body: dialogInit.internalDialog.body
+    body: internalDialog.body,
+    initialData: internalDialog.initialData
   }, dialogId, backstage);
 
   const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(internalDialog.buttons);

@@ -74,8 +74,8 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
     dom: {
       tag: 'div',
       classes: [ 'tox-bar' ],
-      attributes: {
-        style: `width: ${percent}%`
+      styles: {
+        width: `${percent}%`
       }
     }
   });

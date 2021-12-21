@@ -1,4 +1,4 @@
-import { Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 import { EventArgs, SugarElement } from '@ephox/sugar';
 
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
@@ -12,6 +12,7 @@ export interface AlloySystemApi {
   broadcastOn: (channels: string[], message: any) => void;
   broadcastEvent: (eventName: string, event: EventArgs) => void;
   build: (spec: AlloySpec) => AlloyComponent;
+  buildOrPatch: (spec: AlloySpec, optObsoleted: Optional<SugarElement<Node>>) => AlloyComponent;
   debugInfo: () => string;
   getByDom: (element: SugarElement<Node>) => Result<AlloyComponent, Error>;
   getByUid: (uid: string) => Result<AlloyComponent, Error>;

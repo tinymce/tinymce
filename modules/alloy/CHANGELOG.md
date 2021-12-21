@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added a new `buildOrPatch` function to the `SystemApi` to allow reusing the passed obsoleted dom element.
+
+### Improved
+- The `Replacing` and `Reflecting` behaviours will now attempt to reuse existing DOM elements when replacing components. The `reuseDom` config can be used to disable this behaviour for specific components.
+- The `GuiSetup` test helper will now keep the elements in the DOM on test failures.
+
 ### Changed
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
 - Firefox will now use the native `focusin` and `focusout` events instead of capturing the `focus` and `blur` events.

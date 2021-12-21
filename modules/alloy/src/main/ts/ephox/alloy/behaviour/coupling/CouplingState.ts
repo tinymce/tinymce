@@ -20,7 +20,6 @@ const init = (): CouplingState => {
         const spec = builder(component);
         const built = component.getSystem().build(spec);
         coupled[name] = built;
-        // console.log('coupled', name, coupled);
         return built;
       });
     }
