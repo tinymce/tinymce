@@ -27,7 +27,7 @@ const open = (editor: Editor): void => {
   editor.windowManager.open({
     title: 'Anchor',
     size: 'normal',
-      body: {
+    body: {
       type: 'panel',
       items: [
         {
