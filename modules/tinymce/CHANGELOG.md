@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `slider` dialog component #TINY-8304
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 - New `imagepreview` dialog component, allowing preview and zoom of any image URL #TINY-8333
-- New `editor.annotator.removeAll` API to remove all annotations by name. #TINY-8195
+- New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
@@ -52,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `GetContent` event was not fired when getting `tree` or `text` formats using the `editor.selection.getContent()` API #TINY-8018
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 - The aria labels for the color picker dialog were not translated #TINY-8381
+- The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
 
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326

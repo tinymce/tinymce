@@ -88,9 +88,11 @@ const Annotator = (editor: Editor): Annotator => {
      * @param {String} name the name of the annotation to remove
      */
     remove: (name: string): void => {
+      const bookmark = editor.selection.getBookmark();
       identify(editor, Optional.some(name)).each(({ elements }) => {
         Arr.each(elements, Remove.unwrap);
       });
+      editor.selection.moveToBookmark(bookmark);
     },
 
     /**

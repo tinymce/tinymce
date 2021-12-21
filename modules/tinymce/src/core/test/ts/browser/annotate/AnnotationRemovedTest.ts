@@ -151,7 +151,20 @@ describe('browser.tinymce.core.annotate.AnnotationRemovedTest', () => {
     }, 'alpha');
   });
 
-  it('TINY-8195: remove all alpha annotations and retain selection', () => {
+  it('TINY-8195: remove alpha annotation and keep selection', () => {
+    const editor = hook.editor();
+
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
+    editor.annotator.remove('alpha');
+
+    TinyAssertions.assertContentPresence(editor, {
+      'span[data-mce-annotation="alpha"]': 1,
+      'span[data-mce-annotation="beta"]': 1
+    });
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 2);
+  });
+
+  it('TINY-8195: remove all alpha annotations and keep selection', () => {
     const editor = hook.editor();
 
     TinySelections.setCursor(editor, [ 0, 2 ], 2);
