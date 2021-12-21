@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import { TableEventData } from 'tinymce/plugins/table/api/Events';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
@@ -17,7 +16,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ PastePlugin, TablePlugin ], true);
+  }, [ TablePlugin ], true);
 
   const cleanTableHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 

@@ -10,7 +10,9 @@ import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
+import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { ParserArgs } from './html/DomParser';
+import { EditorEvent } from './util/EventDispatcher';
 
 const firePreProcess = (editor: Editor, args: ParserArgs & { node: Element }) => editor.fire('PreProcess', args);
 
@@ -64,6 +66,15 @@ const fireAutocompleterUpdate = (editor: Editor, args: AutocompleterEventArgs) =
 
 const fireAutocompleterEnd = (editor: Editor) => editor.fire('AutocompleterEnd');
 
+const firePastePreProcess = (editor: Editor, html: string, internal: boolean): EditorEvent<PastePreProcessEvent> =>
+  editor.fire('PastePreProcess', { content: html, internal });
+
+const firePastePostProcess = (editor: Editor, node: HTMLElement, internal: boolean): EditorEvent<PastePostProcessEvent> =>
+  editor.fire('PastePostProcess', { node, internal });
+
+const firePastePlainTextToggle = (editor: Editor, state: boolean): EditorEvent<{ state: boolean }> =>
+  editor.fire('PastePlainTextToggle', { state });
+
 export {
   firePreProcess,
   firePostProcess,
@@ -85,5 +96,8 @@ export {
   fireGetContent,
   fireAutocompleterStart,
   fireAutocompleterUpdate,
-  fireAutocompleterEnd
+  fireAutocompleterEnd,
+  firePastePlainTextToggle,
+  firePastePostProcess,
+  firePastePreProcess
 };

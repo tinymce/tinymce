@@ -58,6 +58,16 @@ export interface LoadErrorEvent { message: string }
 export interface PreProcessEvent extends ParserArgs { node: Element }
 export interface PostProcessEvent extends ParserArgs { content: string }
 
+export interface PastePreProcessEvent {
+  content: string;
+  readonly internal: boolean;
+}
+
+export interface PastePostProcessEvent {
+  node: HTMLElement;
+  readonly internal: boolean;
+}
+
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
@@ -122,6 +132,8 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'AutocompleterStart': AutocompleterEventArgs;
   'AutocompleterUpdate': AutocompleterEventArgs;
   'AutocompleterEnd': { };
+  'PastePreProcess': PastePreProcessEvent;
+  'PastePostProcess': PastePostProcessEvent;
 }
 
 export interface EditorManagerEventMap {
