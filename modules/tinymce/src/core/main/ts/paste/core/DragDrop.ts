@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell } from '@ephox/katamari';
+import { Arr, Cell } from '@ephox/katamari';
 
 import RangeUtils from '../../api/dom/RangeUtils';
 import Editor from '../../api/Editor';
@@ -16,7 +16,8 @@ import * as InternalHtml from './InternalHtml';
 import * as PasteUtils from './PasteUtils';
 
 const getCaretRangeFromEvent = (editor: Editor, e: MouseEvent): Range | undefined =>
-  RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
+  // TODO: TINY-7075 Remove the "?? 0" here when agar passes valid client coords
+  RangeUtils.getCaretRangeFromPoint(e.clientX ?? 0, e.clientY ?? 0, editor.getDoc());
 
 const isPlainTextFileUrl = (content: Clipboard.ClipboardContents): boolean => {
   const plainTextContent = content['text/plain'];
@@ -27,6 +28,9 @@ const setFocusedRange = (editor: Editor, rng: Range): void => {
   editor.focus();
   editor.selection.setRng(rng);
 };
+
+const hasImage = (dataTransfer: DataTransfer): boolean =>
+  Arr.exists(dataTransfer.files, (file) => /^data:image\//.test(file.type));
 
 const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => {
   // Block all drag/drop events
@@ -42,7 +46,7 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
     editor.on('drop', (e) => {
       const dataTransfer = e.dataTransfer;
 
-      if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
+      if (dataTransfer && hasImage(dataTransfer)) {
         e.preventDefault();
       }
     });

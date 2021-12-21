@@ -10,6 +10,7 @@ import { Fun } from '@ephox/katamari';
 import Editor from '../../api/Editor';
 import Env from '../../api/Env';
 import Delay from '../../api/util/Delay';
+import { EditorEvent } from '../../api/util/EventDispatcher';
 import * as InternalHtml from './InternalHtml';
 
 interface SelectionContentData {
@@ -91,8 +92,8 @@ const isTableSelection = (editor: Editor): boolean =>
 const hasSelectedContent = (editor: Editor): boolean =>
   !editor.selection.isCollapsed() || isTableSelection(editor);
 
-const cut = (editor: Editor) => (evt: ClipboardEvent): void => {
-  if (hasSelectedContent(editor)) {
+const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
+  if (hasSelectedContent(editor) && !evt.isDefaultPrevented()) {
     setClipboardData(evt, getData(editor), fallback(editor), () => {
       if (Env.browser.isChromium() || Env.browser.isFirefox()) {
         const rng = editor.selection.getRng();
@@ -112,8 +113,8 @@ const cut = (editor: Editor) => (evt: ClipboardEvent): void => {
   }
 };
 
-const copy = (editor: Editor) => (evt: ClipboardEvent): void => {
-  if (hasSelectedContent(editor)) {
+const copy = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
+  if (hasSelectedContent(editor) && !evt.isDefaultPrevented()) {
     setClipboardData(evt, getData(editor), fallback(editor), Fun.noop);
   }
 };

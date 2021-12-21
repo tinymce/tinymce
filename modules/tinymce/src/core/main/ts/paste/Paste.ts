@@ -25,10 +25,10 @@ const setup = (editor: Editor) => {
   Quirks.setup(editor);
   Commands.register(editor, pasteFormat);
   PrePostProcess.setup(editor);
-  CutCopy.register(editor);
-  DragDrop.setup(editor, draggingInternallyState);
 
   editor.on('init', () => {
+    CutCopy.register(editor);
+    DragDrop.setup(editor, draggingInternallyState);
     Clipboard.registerEventsAndFilters(editor, pasteBin, pasteFormat);
   });
 };
