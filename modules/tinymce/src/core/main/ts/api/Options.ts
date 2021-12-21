@@ -29,6 +29,8 @@ const getHash = (value: string): Record<string, string> => {
   }, {} as Record<string, string>);
 };
 
+const isRegExp = (x: unknown): x is RegExp => Type.is(x, RegExp);
+
 const option = <K extends keyof EditorOptions>(name: K) => (editor: Editor) =>
   editor.options.get(name);
 
@@ -678,6 +680,29 @@ const register = (editor: Editor) => {
     ]
   });
 
+  registerOption('noneditable_class', {
+    processor: 'string',
+    default: 'mceNonEditable'
+  });
+
+  registerOption('editable_class', {
+    processor: 'string',
+    default: 'mceEditable'
+  });
+
+  registerOption('noneditable_regexp', {
+    processor: (value) => {
+      if (Type.isArrayOf(value, isRegExp)) {
+        return { value, valid: true };
+      } else if (isRegExp(value)) {
+        return { value: [ value ], valid: true };
+      } else {
+        return { valid: false, message: 'Must be a RegExp or an array of RegExp.' };
+      }
+    },
+    default: []
+  });
+
   // These options must be registered later in the init sequence due to their default values
   // TODO: TINY-8234 Should we have a way to lazily load the default values?
   editor.on('ScriptsLoaded', () => {
@@ -763,6 +788,9 @@ const shouldBrowserSpellcheck = option('browser_spellcheck');
 const getProtect = option('protect');
 const getContentEditableState = option('content_editable_state');
 const getTextPatterns = option('text_patterns');
+const getNonEditableClass = option('noneditable_class');
+const getEditableClass = option('editable_class');
+const getNonEditableRegExps = option('noneditable_regexp');
 
 const getFontStyleValues = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('font_size_style_values'));
@@ -851,5 +879,8 @@ export {
   shouldBrowserSpellcheck,
   getProtect,
   getContentEditableState,
-  getTextPatterns
+  getTextPatterns,
+  getNonEditableClass,
+  getNonEditableRegExps,
+  getEditableClass
 };

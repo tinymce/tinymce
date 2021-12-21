@@ -5,13 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from 'tinymce/core/api/Editor';
-import { SetContentEvent } from 'tinymce/core/api/EventTypes';
-import AstNode from 'tinymce/core/api/html/Node';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Tools from 'tinymce/core/api/util/Tools';
-
+import Editor from '../api/Editor';
+import { SetContentEvent } from '../api/EventTypes';
+import AstNode from '../api/html/Node';
 import * as Options from '../api/Options';
+import { EditorEvent } from '../api/util/EventDispatcher';
+import Tools from '../api/util/Tools';
 
 const hasClass = (checkClassName: string) => (node: AstNode): boolean =>
   (' ' + node.attr('class') + ' ').indexOf(checkClassName) !== -1;
@@ -70,46 +69,44 @@ const setup = (editor: Editor): void => {
   const hasNonEditClass = hasClass(nonEditClass);
   const nonEditableRegExps = Options.getNonEditableRegExps(editor);
 
-  editor.on('PreInit', () => {
-    if (nonEditableRegExps.length > 0) {
-      editor.on('BeforeSetContent', (e) => {
-        convertRegExpsToNonEditable(editor, nonEditableRegExps, e);
-      });
+  if (nonEditableRegExps.length > 0) {
+    editor.on('BeforeSetContent', (e) => {
+      convertRegExpsToNonEditable(editor, nonEditableRegExps, e);
+    });
+  }
+
+  editor.parser.addAttributeFilter('class', (nodes) => {
+    let i = nodes.length;
+
+    while (i--) {
+      const node = nodes[i];
+
+      if (hasEditClass(node)) {
+        node.attr(contentEditableAttrName, 'true');
+      } else if (hasNonEditClass(node)) {
+        node.attr(contentEditableAttrName, 'false');
+      }
     }
+  });
 
-    editor.parser.addAttributeFilter('class', (nodes) => {
-      let i = nodes.length, node;
+  editor.serializer.addAttributeFilter(contentEditableAttrName, (nodes) => {
+    let i = nodes.length;
 
-      while (i--) {
-        node = nodes[i];
-
-        if (hasEditClass(node)) {
-          node.attr(contentEditableAttrName, 'true');
-        } else if (hasNonEditClass(node)) {
-          node.attr(contentEditableAttrName, 'false');
-        }
+    while (i--) {
+      const node = nodes[i];
+      if (!hasEditClass(node) && !hasNonEditClass(node)) {
+        continue;
       }
-    });
 
-    editor.serializer.addAttributeFilter(contentEditableAttrName, (nodes) => {
-      let i = nodes.length, node;
-
-      while (i--) {
-        node = nodes[i];
-        if (!hasEditClass(node) && !hasNonEditClass(node)) {
-          continue;
-        }
-
-        if (nonEditableRegExps.length > 0 && node.attr('data-mce-content')) {
-          node.name = '#text';
-          node.type = 3;
-          node.raw = true;
-          node.value = node.attr('data-mce-content');
-        } else {
-          node.attr(contentEditableAttrName, null);
-        }
+      if (nonEditableRegExps.length > 0 && node.attr('data-mce-content')) {
+        node.name = '#text';
+        node.type = 3;
+        node.raw = true;
+        node.value = node.attr('data-mce-content');
+      } else {
+        node.attr(contentEditableAttrName, null);
       }
-    });
+    }
   });
 };
 
