@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import * as Newlines from 'tinymce/core/paste/core/Newlines';
+import * as Newlines from 'tinymce/core/paste/Newlines';
 
 describe('atomic.tinymce.core.paste.NewlinesTest', () => {
   it('isPlainText is true for text content', () => {

@@ -1,21 +1,12 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Obj } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import * as Whitespace from 'tinymce/core/paste/core/Whitespace';
+import * as Whitespace from 'tinymce/core/text/Whitespace';
 
-describe('atomic.tinymce.core.paste.WhitespaceTest', () => {
-  const options = { paste_tab_spaces: 2 };
-  const mockEditor = {
-    options: {
-      get: (name) => Obj.get(options, name).getOrUndefined()
-    }
-  } as Editor;
-
-  it('normalizeWhitespace', () => {
+describe('atomic.tinymce.core.text.WhitespaceTest', () => {
+  it('normalize', () => {
     const check = (label: string, expected: string, input: string) => {
-      assert.equal(Whitespace.normalizeWhitespace(mockEditor, input), expected, label);
+      assert.equal(Whitespace.normalize(input, 2), expected, label);
     };
 
     const single = 'onelineofsmashedtogetherwords';

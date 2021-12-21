@@ -7,9 +7,9 @@
 
 import { Type } from '@ephox/katamari';
 
-import Editor from '../../api/Editor';
-import * as Options from '../../api/Options';
-import { EditorEvent } from '../../api/util/EventDispatcher';
+import Editor from '../api/Editor';
+import * as Options from '../api/Options';
+import { EditorEvent } from '../api/util/EventDispatcher';
 
 const setup = (editor: Editor): void => {
   const processEvent = <T>(f: (editor: Editor, event: EditorEvent<T>) => void) => (e: EditorEvent<T>) => {

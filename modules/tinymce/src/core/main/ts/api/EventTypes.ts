@@ -58,6 +58,7 @@ export interface LoadErrorEvent { message: string }
 export interface PreProcessEvent extends ParserArgs { node: Element }
 export interface PostProcessEvent extends ParserArgs { content: string }
 
+export interface PastePlainTextToggleEvent { state: boolean }
 export interface PastePreProcessEvent {
   content: string;
   readonly internal: boolean;
@@ -132,6 +133,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'AutocompleterStart': AutocompleterEventArgs;
   'AutocompleterUpdate': AutocompleterEventArgs;
   'AutocompleterEnd': { };
+  'PastePlainTextToggle': PastePlainTextToggleEvent;
   'PastePreProcess': PastePreProcessEvent;
   'PastePostProcess': PastePostProcessEvent;
 }

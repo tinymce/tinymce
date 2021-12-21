@@ -7,9 +7,15 @@
 
 import { Arr, Strings } from '@ephox/katamari';
 
-import Editor from '../../api/Editor';
-import Tools from '../../api/util/Tools';
-import * as Options from '../../api/Options';
+import Editor from '../api/Editor';
+import * as Options from '../api/Options';
+import Tools from '../api/util/Tools';
+
+/*
+ * This module tries to be smart depending on what the user pastes if it looks like an url
+ * it will make a link out of the current selection. If it's an image url that looks like
+ * an image it will check if it's an image and insert it as an image.
+ */
 
 type PasteFn = (editor: Editor, html: string) => boolean;
 
@@ -21,14 +27,6 @@ const pasteHtml = (editor: Editor, html: string): boolean => {
 
   return true;
 };
-
-/**
- * Tries to be smart depending on what the user pastes if it looks like an url
- * it will make a link out of the current selection. If it's an image url that looks
- * like an image it will check if it's an image and insert it as an image.
- *
- * @private
- */
 
 const isAbsoluteUrl = (url: string): boolean =>
   /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
@@ -59,13 +57,11 @@ const createLink = (editor: Editor, url: string, pasteHtmlFn: PasteFn): boolean 
   return true;
 };
 
-const linkSelection = (editor: Editor, html: string, pasteHtmlFn: PasteFn): boolean => {
-  return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtmlFn) : false;
-};
+const linkSelection = (editor: Editor, html: string, pasteHtmlFn: PasteFn): boolean =>
+  !editor.selection.isCollapsed() && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtmlFn) : false;
 
-const insertImage = (editor: Editor, html: string, pasteHtmlFn: PasteFn): boolean => {
-  return isImageUrl(editor, html) ? createImage(editor, html, pasteHtmlFn) : false;
-};
+const insertImage = (editor: Editor, html: string, pasteHtmlFn: PasteFn): boolean =>
+  isImageUrl(editor, html) ? createImage(editor, html, pasteHtmlFn) : false;
 
 const smartInsertContent = (editor: Editor, html: string): void => {
   Tools.each([
@@ -78,7 +74,7 @@ const smartInsertContent = (editor: Editor, html: string): void => {
 };
 
 const insertContent = (editor: Editor, html: string, pasteAsText: boolean): void => {
-  if (pasteAsText || Options.isSmartPasteEnabled(editor) === false) {
+  if (pasteAsText || !Options.isSmartPasteEnabled(editor)) {
     pasteHtml(editor, html);
   } else {
     smartInsertContent(editor, html);

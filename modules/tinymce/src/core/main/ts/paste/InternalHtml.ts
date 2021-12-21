@@ -8,6 +8,7 @@
 import { Fun } from '@ephox/katamari';
 
 const internalMimeType = 'x-tinymce/html';
+const internalHtmlMime = Fun.constant(internalMimeType);
 const internalMark = '<!-- ' + internalMimeType + ' -->';
 
 const mark = (html: string): string =>
@@ -18,8 +19,6 @@ const unmark = (html: string): string =>
 
 const isMarked = (html: string): boolean =>
   html.indexOf(internalMark) !== -1;
-
-const internalHtmlMime = Fun.constant(internalMimeType);
 
 export {
   mark,

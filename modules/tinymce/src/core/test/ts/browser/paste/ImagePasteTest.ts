@@ -5,7 +5,7 @@ import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as Clipboard from 'tinymce/core/paste/core/Clipboard';
+import * as Clipboard from 'tinymce/core/paste/Clipboard';
 
 describe('browser.tinymce.core.paste.ImagePasteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

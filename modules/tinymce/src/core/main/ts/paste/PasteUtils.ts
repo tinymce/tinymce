@@ -5,25 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Unicode } from '@ephox/katamari';
+import { Type, Unicode } from '@ephox/katamari';
 
-import DomParser from '../../api/html/DomParser';
-import AstNode from '../../api/html/Node';
-import Schema from '../../api/html/Schema';
-import Tools from '../../api/util/Tools';
+import DomParser from '../api/html/DomParser';
+import AstNode from '../api/html/Node';
+import Schema from '../api/html/Schema';
+import Tools from '../api/util/Tools';
 
 type RegExpFilter = RegExp | [ RegExp, string ] | [ RegExp, (match: string, ...args: any[]) => string ];
 
-const isRegExp = (val: unknown): val is RegExp =>
-  val.constructor === RegExp;
-
-/**
- * This class contains various utility functions for the paste logic.
+/*
+ * This module contains various utility functions for the paste logic.
  */
 
 const filter = (content: string, items: RegExpFilter[]): string => {
   Tools.each(items, (v) => {
-    if (isRegExp(v)) {
+    if (Type.is(v, RegExp)) {
       content = content.replace(v, '');
     } else {
       content = content.replace(v[0], v[1] as any);
@@ -33,12 +30,9 @@ const filter = (content: string, items: RegExpFilter[]): string => {
   return content;
 };
 
-/**
+/*
  * Gets the innerText of the specified element. It will handle edge cases
  * and works better than textContent on Gecko.
- *
- * @param {String} html HTML string to get text from.
- * @return {String} String of text with line feeds.
  */
 const innerText = (html: string): string => {
   const schema = Schema();
@@ -104,11 +98,8 @@ const innerText = (html: string): string => {
   return text;
 };
 
-/**
+/*
  * Trims the specified HTML by removing all WebKit fragments, all elements wrapping the body trailing BR elements etc.
- *
- * @param {String} html Html string to trim contents on.
- * @return {String} Html contents that got trimmed.
  */
 const trimHtml = (html: string): string => {
   const trimSpaces = (all: string, s1?: string, s2?: string) => {

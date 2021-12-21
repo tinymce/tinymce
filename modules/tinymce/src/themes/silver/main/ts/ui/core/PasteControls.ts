@@ -6,12 +6,15 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import { PastePlainTextToggleEvent } from 'tinymce/core/api/EventTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
+import * as Options from '../../api/Options';
+
 const makeSetupHandler = (editor: Editor) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi) => {
-  api.setActive(editor.options.get('paste_as_text') === true);
-  const pastePlainTextToggleHandler = (e: EditorEvent<{ state: boolean }>) => api.setActive(e.state);
+  api.setActive(Options.getPasteAsText(editor) === true);
+  const pastePlainTextToggleHandler = (e: EditorEvent<PastePlainTextToggleEvent>) => api.setActive(e.state);
   editor.on('PastePlainTextToggle', pastePlainTextToggleHandler);
   return () => editor.off('PastePlainTextToggle', pastePlainTextToggleHandler);
 };

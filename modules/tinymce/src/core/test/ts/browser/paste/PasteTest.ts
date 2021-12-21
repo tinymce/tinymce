@@ -4,7 +4,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as PasteUtils from 'tinymce/core/paste/core/PasteUtils';
+import * as PasteUtils from 'tinymce/core/paste/PasteUtils';
 
 describe('browser.tinymce.core.paste.PasteTest', () => {
   const browser = PlatformDetection.detect().browser;

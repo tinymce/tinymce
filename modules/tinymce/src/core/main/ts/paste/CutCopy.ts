@@ -7,10 +7,10 @@
 
 import { Fun } from '@ephox/katamari';
 
-import Editor from '../../api/Editor';
-import Env from '../../api/Env';
-import Delay from '../../api/util/Delay';
-import { EditorEvent } from '../../api/util/EventDispatcher';
+import Editor from '../api/Editor';
+import Env from '../api/Env';
+import Delay from '../api/util/Delay';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import * as InternalHtml from './InternalHtml';
 
 interface SelectionContentData {
@@ -21,22 +21,14 @@ interface SelectionContentData {
 type DoneFn = () => void;
 type FallbackFn = (html: string, done: DoneFn) => void;
 
-const hasWorkingClipboardApi = (clipboardData: DataTransfer | null): clipboardData is DataTransfer =>
-  // iOS supports the clipboardData API but it doesn't do anything for cut operations
-  !Env.os.isiOS() && typeof clipboardData?.setData === 'function';
-
 const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, text: string): boolean => {
-  if (hasWorkingClipboardApi(clipboardData)) {
-    try {
-      clipboardData.clearData();
-      clipboardData.setData('text/html', html);
-      clipboardData.setData('text/plain', text);
-      clipboardData.setData(InternalHtml.internalHtmlMime(), html);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  } else {
+  try {
+    clipboardData.clearData();
+    clipboardData.setData('text/html', html);
+    clipboardData.setData('text/plain', text);
+    clipboardData.setData(InternalHtml.internalHtmlMime(), html);
+    return true;
+  } catch (e) {
     return false;
   }
 };
@@ -51,13 +43,11 @@ const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallb
 };
 
 const fallback = (editor: Editor): FallbackFn => (html, done) => {
-  const markedHtml = InternalHtml.mark(html);
-  const outer = editor.dom.create('div', {
-    'contenteditable': 'false',
-    'data-mce-bogus': 'all'
-  });
-  const inner = editor.dom.create('div', { contenteditable: 'true' }, markedHtml);
-  editor.dom.setStyles(outer, {
+  const { dom, selection } = editor;
+
+  const outer = dom.create('div', { 'contenteditable': 'false', 'data-mce-bogus': 'all' });
+  const inner = dom.create('div', { contenteditable: 'true' }, html);
+  dom.setStyles(outer, {
     position: 'fixed',
     top: '0',
     left: '-3000px',
@@ -65,24 +55,24 @@ const fallback = (editor: Editor): FallbackFn => (html, done) => {
     overflow: 'hidden'
   });
   outer.appendChild(inner);
-  editor.dom.add(editor.getBody(), outer);
+  dom.add(editor.getBody(), outer);
 
-  const range = editor.selection.getRng();
+  const range = selection.getRng();
   inner.focus();
 
-  const offscreenRange: Range = editor.dom.createRng();
+  const offscreenRange = dom.createRng();
   offscreenRange.selectNodeContents(inner);
-  editor.selection.setRng(offscreenRange);
+  selection.setRng(offscreenRange);
 
   Delay.setEditorTimeout(editor, () => {
-    editor.selection.setRng(range);
-    outer.parentNode.removeChild(outer);
+    selection.setRng(range);
+    dom.remove(outer);
     done();
   }, 0);
 };
 
 const getData = (editor: Editor): SelectionContentData => ({
-  html: editor.selection.getContent({ contextual: true }),
+  html: InternalHtml.mark(editor.selection.getContent({ contextual: true })),
   text: editor.selection.getContent({ format: 'text' })
 });
 
@@ -93,7 +83,7 @@ const hasSelectedContent = (editor: Editor): boolean =>
   !editor.selection.isCollapsed() || isTableSelection(editor);
 
 const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
-  if (hasSelectedContent(editor) && !evt.isDefaultPrevented()) {
+  if (!evt.isDefaultPrevented() && hasSelectedContent(editor)) {
     setClipboardData(evt, getData(editor), fallback(editor), () => {
       if (Env.browser.isChromium() || Env.browser.isFirefox()) {
         const rng = editor.selection.getRng();
@@ -114,7 +104,7 @@ const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
 };
 
 const copy = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
-  if (hasSelectedContent(editor) && !evt.isDefaultPrevented()) {
+  if (!evt.isDefaultPrevented() && hasSelectedContent(editor)) {
     setClipboardData(evt, getData(editor), fallback(editor), Fun.noop);
   }
 };

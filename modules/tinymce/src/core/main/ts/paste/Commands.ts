@@ -7,9 +7,9 @@
 
 import { Cell } from '@ephox/katamari';
 
-import Editor from '../../api/Editor';
-import * as Events from '../../api/Events';
-import * as Clipboard from '../core/Clipboard';
+import Editor from '../api/Editor';
+import * as Events from '../api/Events';
+import * as Clipboard from './Clipboard';
 
 const togglePlainTextPaste = (editor: Editor, pasteFormat: Cell<string>): void => {
   if (pasteFormat.get() === 'text') {

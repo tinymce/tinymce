@@ -10,7 +10,7 @@ import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
-import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
+import { PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { ParserArgs } from './html/DomParser';
 import { EditorEvent } from './util/EventDispatcher';
 
@@ -72,7 +72,7 @@ const firePastePreProcess = (editor: Editor, html: string, internal: boolean): E
 const firePastePostProcess = (editor: Editor, node: HTMLElement, internal: boolean): EditorEvent<PastePostProcessEvent> =>
   editor.fire('PastePostProcess', { node, internal });
 
-const firePastePlainTextToggle = (editor: Editor, state: boolean): EditorEvent<{ state: boolean }> =>
+const firePastePlainTextToggle = (editor: Editor, state: boolean): EditorEvent<PastePlainTextToggleEvent> =>
   editor.fire('PastePlainTextToggle', { state });
 
 export {

@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from '../../api/Editor';
-import * as Events from '../../api/Events';
-import DomParser from '../../api/html/DomParser';
-import HtmlSerializer from '../../api/html/Serializer';
-import Tools from '../../api/util/Tools';
+import Editor from '../api/Editor';
+import * as Events from '../api/Events';
+import DomParser from '../api/html/DomParser';
+import HtmlSerializer from '../api/html/Serializer';
+import Tools from '../api/util/Tools';
 
 interface ProcessResult {
   readonly content: string;

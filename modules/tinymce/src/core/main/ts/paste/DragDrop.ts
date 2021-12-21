@@ -7,10 +7,10 @@
 
 import { Arr, Cell } from '@ephox/katamari';
 
-import RangeUtils from '../../api/dom/RangeUtils';
-import Editor from '../../api/Editor';
-import * as Options from '../../api/Options';
-import Delay from '../../api/util/Delay';
+import RangeUtils from '../api/dom/RangeUtils';
+import Editor from '../api/Editor';
+import * as Options from '../api/Options';
+import Delay from '../api/util/Delay';
 import * as Clipboard from './Clipboard';
 import * as InternalHtml from './InternalHtml';
 import * as PasteUtils from './PasteUtils';
@@ -24,9 +24,11 @@ const isPlainTextFileUrl = (content: Clipboard.ClipboardContents): boolean => {
   return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
 };
 
-const setFocusedRange = (editor: Editor, rng: Range): void => {
+const setFocusedRange = (editor: Editor, rng: Range | undefined): void => {
   editor.focus();
-  editor.selection.setRng(rng);
+  if (rng) {
+    editor.selection.setRng(rng);
+  }
 };
 
 const hasImage = (dataTransfer: DataTransfer): boolean =>
@@ -53,12 +55,11 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
   }
 
   editor.on('drop', (e) => {
-    const rng = getCaretRangeFromEvent(editor, e);
-
     if (e.isDefaultPrevented() || draggingInternallyState.get()) {
       return;
     }
 
+    const rng = getCaretRangeFromEvent(editor, e);
     const dropContent = Clipboard.getDataTransferItems(e.dataTransfer);
     const internal = Clipboard.hasContentType(dropContent, InternalHtml.internalHtmlMime());
 
@@ -67,7 +68,8 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
     }
 
     if (rng && Options.shouldPasteFilterDrop(editor)) {
-      let content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
+      const internalContent = dropContent[InternalHtml.internalHtmlMime()];
+      const content = internalContent || dropContent['text/html'] || dropContent['text/plain'];
 
       if (content) {
         e.preventDefault();
@@ -75,18 +77,17 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
         // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
         Delay.setEditorTimeout(editor, () => {
           editor.undoManager.transact(() => {
-            if (dropContent['mce-internal']) {
+            if (internalContent) {
               editor.execCommand('Delete');
             }
 
             setFocusedRange(editor, rng);
 
-            content = PasteUtils.trimHtml(content);
-
-            if (!dropContent['text/html']) {
-              Clipboard.pasteText(editor, content);
+            const trimmedContent = PasteUtils.trimHtml(content);
+            if (dropContent['text/html']) {
+              Clipboard.pasteHtml(editor, trimmedContent, internal);
             } else {
-              Clipboard.pasteHtml(editor, content, internal);
+              Clipboard.pasteText(editor, trimmedContent);
             }
           });
         });

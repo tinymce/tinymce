@@ -6,7 +6,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import * as ProcessFilters from 'tinymce/core/paste/core/ProcessFilters';
+import * as ProcessFilters from 'tinymce/core/paste/ProcessFilters';
 
 type PreProcessHandler = (e: EditorEvent<PastePreProcessEvent>) => void;
 type PostProcessHandler = (e: EditorEvent<PastePostProcessEvent>) => void;

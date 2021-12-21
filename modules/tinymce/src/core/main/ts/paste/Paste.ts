@@ -9,13 +9,13 @@ import { Cell } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import * as Clipboard from './core/Clipboard';
-import * as Commands from './core/Commands';
-import * as CutCopy from './core/CutCopy';
-import * as DragDrop from './core/DragDrop';
-import { PasteBin } from './core/PasteBin';
-import * as PrePostProcess from './core/PrePostProcess';
-import * as Quirks from './core/Quirks';
+import * as Clipboard from './Clipboard';
+import * as Commands from './Commands';
+import * as CutCopy from './CutCopy';
+import * as DragDrop from './DragDrop';
+import { PasteBin } from './PasteBin';
+import * as PrePostProcess from './PrePostProcess';
+import * as Quirks from './Quirks';
 
 const setup = (editor: Editor) => {
   const draggingInternallyState = Cell(false);
@@ -26,7 +26,9 @@ const setup = (editor: Editor) => {
   Commands.register(editor, pasteFormat);
   PrePostProcess.setup(editor);
 
-  editor.on('init', () => {
+  // IMPORTANT: The following event hooks need to be setup later so that other things
+  // can hook in and prevent the event so core paste doesn't handle them.
+  editor.on('PreInit', () => {
     CutCopy.register(editor);
     DragDrop.setup(editor, draggingInternallyState);
     Clipboard.registerEventsAndFilters(editor, pasteBin, pasteFormat);

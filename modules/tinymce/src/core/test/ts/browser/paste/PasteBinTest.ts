@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
-import { PasteBin } from 'tinymce/core/paste/core/PasteBin';
+import { PasteBin } from 'tinymce/core/paste/PasteBin';
 
 interface TestCase {
   readonly label: string;

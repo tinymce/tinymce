@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import * as InternalHtml from 'tinymce/core/paste/core/InternalHtml';
+import * as InternalHtml from 'tinymce/core/paste/InternalHtml';
 
 describe('atomic.tinymce.core.paste.InternalHtmlTest', () => {
   it('mark', () => {

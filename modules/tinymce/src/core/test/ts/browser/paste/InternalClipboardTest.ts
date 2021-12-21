@@ -4,7 +4,7 @@ import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as InternalHtml from 'tinymce/core/paste/core/InternalHtml';
+import * as InternalHtml from 'tinymce/core/paste/InternalHtml';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
@@ -69,7 +69,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Copy simple text', () => {
       const editor = hook.editor();
       copy(editor, '<p>text</p>', [ 0, 0 ], 0, [ 0, 0 ], 4);
-      assertClipboardData('text', 'text');
+      assertClipboardData('<!-- x-tinymce/html -->text', 'text');
       TinyAssertions.assertContent(editor, '<p>text</p>');
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
     });
@@ -77,7 +77,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Copy inline elements', () => {
       const editor = hook.editor();
       copy(editor, '<p>te<em>x</em>t</p>', [ 0, 0 ], 0, [ 0, 2 ], 1);
-      assertClipboardData('te<em>x</em>t', 'text');
+      assertClipboardData('<!-- x-tinymce/html -->te<em>x</em>t', 'text');
       TinyAssertions.assertContent(editor, '<p>te<em>x</em>t</p>');
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 2 ], 1);
     });
@@ -85,7 +85,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Copy partially selected inline elements', () => {
       const editor = hook.editor();
       copy(editor, '<p>a<em>cd</em>e</p>', [ 0, 0 ], 0, [ 0, 1, 0 ], 1);
-      assertClipboardData('a<em>c</em>', 'ac');
+      assertClipboardData('<!-- x-tinymce/html -->a<em>c</em>', 'ac');
       TinyAssertions.assertContent(editor, '<p>a<em>cd</em>e</p>');
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 1, 0 ], 1);
     });
@@ -111,7 +111,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
           '</table>',
         [ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0);
       assertClipboardData(
-        '<table>\n' +
+        '<!-- x-tinymce/html --><table>\n' +
             '<tbody>\n' +
               '<tr>\n' +
                 '<td>a</td>\n' +
@@ -130,7 +130,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Cut simple text', async () => {
       const editor = hook.editor();
       cut(editor, '<p>text</p>', [ 0, 0 ], 0, [ 0, 0 ], 4);
-      assertClipboardData('text', 'text');
+      assertClipboardData('<!-- x-tinymce/html -->text', 'text');
       await pWaitUntilAssertContent(editor, '');
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
     });
@@ -138,7 +138,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Cut inline elements', async () => {
       const editor = hook.editor();
       cut(editor, '<p>te<em>x</em>t</p>', [ 0, 0 ], 0, [ 0, 2 ], 1);
-      assertClipboardData('te<em>x</em>t', 'text');
+      assertClipboardData('<!-- x-tinymce/html -->te<em>x</em>t', 'text');
       await pWaitUntilAssertContent(editor, '');
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
     });
@@ -146,7 +146,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
     it('TBA: Cut partially selected inline elements', async () => {
       const editor = hook.editor();
       cut(editor, '<p>a<em>cd</em>e</p>', [ 0, 0 ], 0, [ 0, 1, 0 ], 1);
-      assertClipboardData('a<em>c</em>', 'ac');
+      assertClipboardData('<!-- x-tinymce/html -->a<em>c</em>', 'ac');
       await pWaitUntilAssertContent(editor, '<p><em>d</em>e</p>');
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
     });

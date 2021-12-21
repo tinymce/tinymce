@@ -681,7 +681,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('paste_webkit_styles', {
-    processor: 'string'
+    processor: 'string',
+    default: 'none'
   });
 
   registerOption('paste_remove_styles_if_webkit', {

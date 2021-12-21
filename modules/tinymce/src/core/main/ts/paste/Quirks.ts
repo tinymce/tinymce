@@ -7,18 +7,16 @@
 
 import { Transformations } from '@ephox/acid';
 
-import Editor from '../../api/Editor';
-import Env from '../../api/Env';
-import * as Options from '../../api/Options';
+import Editor from '../api/Editor';
+import Env from '../api/Env';
+import * as Options from '../api/Options';
 
 type PreProcessFilter = (editor: Editor, content: string, internal: boolean) => string;
 
-/**
- * This class contains various fixes for browsers. These issues can not be feature
+/*
+ * This module contains various fixes for browsers. These issues can not be feature
  * detected since we have no direct control over the clipboard. However we might be able
  * to remove some of these fixes once the browsers gets updated/fixed.
- *
- * @private
  */
 
 const addPreProcessFilter = (editor: Editor, filterFunc: PreProcessFilter) => {
@@ -31,8 +29,8 @@ const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
 
 const rgbToHex = (value: string) => value.replace(rgbRegExp, Transformations.rgbaToHexString).toLowerCase();
 
-/**
- * WebKit has a nasty bug where the all computed styles gets added to style attributes when copy/pasting contents.
+/*
+ * WebKit has a nasty quirk where the all computed styles gets added to style attributes when copy/pasting contents.
  * This fix solves that by simply removing the whole style attribute.
  *
  * The paste_webkit_styles option can be set to specify what to keep:
@@ -40,35 +38,23 @@ const rgbToHex = (value: string) => value.replace(rgbRegExp, Transformations.rgb
  *  paste_webkit_styles: "all", // Keep all of them
  *  paste_webkit_styles: "font-weight color" // Keep specific ones
  */
-const removeWebKitStyles = (editor: Editor, content: string, internal: boolean): string => {
-  // Internal doesn't need any processing
-  if (internal) {
-    return content;
-  }
-
-  // Filter away styles that isn't matching the target node
+const removeWebKitStyles = (editor: Editor, content: string, internal: boolean): string => {// Filter away styles that isn't matching the target node
   const webKitStylesOption = Options.getPasteWebkitStyles(editor);
-  let webKitStyles: string[] | string;
 
-  if (Options.shouldPasteRemoveWebKitStyles(editor) === false || webKitStylesOption === 'all') {
+  // If the content is internal or if we're keeping all styles then we don't need any processing
+  if (internal || webKitStylesOption === 'all' || !Options.shouldPasteRemoveWebKitStyles(editor)) {
     return content;
   }
 
-  if (webKitStylesOption) {
-    webKitStyles = webKitStylesOption.split(/[, ]/);
-  }
+  const webKitStyles = webKitStylesOption ? webKitStylesOption.split(/[, ]/) : [];
 
   // Keep specific styles that doesn't match the current node computed style
-  if (webKitStyles) {
+  if (webKitStyles && webKitStylesOption !== 'none') {
     const dom = editor.dom, node = editor.selection.getNode();
 
     content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, (all, before, value, after) => {
       const inputStyles = dom.parseStyle(dom.decode(value));
       const outputStyles: Record<string, string | number> = {};
-
-      if (webKitStyles === 'none') {
-        return before + after;
-      }
 
       for (let i = 0; i < webKitStyles.length; i++) {
         const inputValue = inputStyles[webKitStyles[i]];
