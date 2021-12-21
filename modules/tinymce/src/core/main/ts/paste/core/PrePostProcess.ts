@@ -12,8 +12,8 @@ import * as Options from '../../api/Options';
 import { EditorEvent } from '../../api/util/EventDispatcher';
 
 const setup = (editor: Editor): void => {
-  const processEvent = <T>(f: (event: EditorEvent<T>) => void) => (e: EditorEvent<T>) => {
-    f.call(editor, e);
+  const processEvent = <T>(f: (editor: Editor, event: EditorEvent<T>) => void) => (e: EditorEvent<T>) => {
+    f(editor, e);
   };
 
   const preProcess = Options.getPastePreProcess(editor);

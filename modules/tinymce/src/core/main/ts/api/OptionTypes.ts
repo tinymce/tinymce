@@ -36,8 +36,8 @@ export type FilePickerCallback = (callback: Function, value: any, meta: Record<s
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
 export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string}) => void) => void;
 
-export type PastePreProcessFn = (args: PastePreProcessEvent) => void;
-export type PastePostProcessFn = (args: PastePostProcessEvent) => void;
+export type PastePreProcessFn = (editor: Editor, args: PastePreProcessEvent) => void;
+export type PastePostProcessFn = (editor: Editor, args: PastePostProcessEvent) => void;
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => string;
