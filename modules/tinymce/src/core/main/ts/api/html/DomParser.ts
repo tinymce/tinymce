@@ -6,7 +6,7 @@
  */
 
 import { Arr, Obj, Type } from '@ephox/katamari';
-import { Remove, SugarElement } from '@ephox/sugar';
+import { Attribute, Insert, InsertAll, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
@@ -17,7 +17,7 @@ import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../..
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import AstNode from './Node';
-import Schema, { SchemaElement } from './Schema';
+import Schema from './Schema';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -112,32 +112,59 @@ const configurePurify = (settings: DomParserSettings, schema: Schema): DOMPurify
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
-    const rule = schema.getElementRule(evt.tagName);
+    const element = SugarElement.fromDom(ele);
+    if (!SugarNode.isElement(element) || SugarNode.name(element) === 'body') {
+      return;
+    }
+    const rule = schema.getElementRule(evt.tagName.toLowerCase());
     if (!rule) {
+      Remove.unwrap(element);
       return;
     }
     if (!Obj.has(evt.allowedTags, evt.tagName)) {
       evt.allowedTags[evt.tagName] = true;
     }
 
+    const bogus = !Attribute.has(element, 'data-mce-type') && Attribute.get(element, 'data-mce-bogus');
+    if (bogus === 'all') {
+      Remove.remove(element);
+      return;
+    } else if (bogus === '1') {
+      Remove.unwrap(element);
+      return;
+    }
+
     // Fix the attributes for the element, unwrapping it if we have to
     Arr.each(rule.attributesForced ?? [], (attr) =>
-      ele.setAttribute(attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value)
+      Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value)
     );
     Arr.each(rule.attributesDefault ?? [], (attr) => {
-      if (!ele.hasAttribute(attr.name)) {
-        ele.setAttribute(attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
+      if (!Attribute.has(element, attr.name)) {
+        Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
       }
     });
     if (rule.attributesRequired) {
-      if (!Arr.exists(rule.attributesRequired, (attr) => ele.hasAttribute(attr))) {
-        Remove.unwrap(SugarElement.fromDom(ele));
+      if (!Arr.exists(rule.attributesRequired, (attr) => Attribute.has(element, attr))) {
+        Remove.unwrap(element);
         return;
       }
     }
-    if (rule.removeEmptyAttrs && ele.attributes.length === 0) {
-      Remove.unwrap(SugarElement.fromDom(ele));
+    if (rule.removeEmptyAttrs && Attribute.hasNone(element)) {
+      Remove.unwrap(element);
       return;
+    }
+
+    if (rule.outputName && rule.outputName !== SugarNode.name(element)) {
+      const replacement = SugarElement.fromTag(rule.outputName);
+
+      const allAttributes = Arr.map(element.dom.attributes, (attr) => attr.name);
+      Attribute.transfer(element, replacement, allAttributes);
+
+      const children = Traverse.children(element);
+      InsertAll.append(replacement, children);
+
+      Insert.after(element, replacement);
+      Remove.remove(element);
     }
   });
 
@@ -188,19 +215,7 @@ const walker = (root: AstNode, settings: DomParserSettings, schema: Schema, node
   const state = { invalidChildren: [], matchedNodes: {}, matchedAttributes: {}};
 
   let node = root;
-  let previous: AstNode;
-  while ((previous = node), (node = node.walk())) {
-    if (node.type === 1) {
-      const elementRule = settings.validate ? schema.getElementRule(node.name) : {} as SchemaElement;
-      if (!elementRule) {
-        node.unwrap();
-        node = previous;
-        continue;
-      }
-      if (elementRule.outputName) {
-        node.name = elementRule.outputName;
-      }
-    }
+  while ((node = node.walk())) {
     filterNode(node, nodeFilters, attributeFilters, state);
 
     const parent = node.parent;
@@ -285,18 +300,6 @@ const simplifyDom = (root: AstNode, schema: Schema, settings: DomParserSettings,
     }
   };
 
-  // Check for invalid elements here, so we can remove them and avoid handling their children
-  const preprocessElement = (node: AstNode) => {
-    const bogus = node.attr('data-mce-bogus');
-    if (bogus === 'all') {
-      node.remove();
-      return;
-    } else if (bogus === '1' && !node.attr('data-mce-type')) {
-      node.unwrap();
-      return;
-    }
-  };
-
   // Check for empty nodes here, because children will have been processed and (if necessary) emptied / removed already
   const postprocessElement = (node: AstNode) => {
     const elementRule = schema.getElementRule(node.name);
@@ -319,9 +322,7 @@ const simplifyDom = (root: AstNode, schema: Schema, settings: DomParserSettings,
 
   // Walk over the tree forwards, calling preprocess methods
   for (let node = root, lastNode = node; Type.isNonNullable(node); lastNode = node, node = node.walk()) {
-    if (node.type === 1) {
-      preprocessElement(node);
-    } else if (node.type === 3) {
+    if (node.type === 3) {
       preprocessText(node);
     }
 
