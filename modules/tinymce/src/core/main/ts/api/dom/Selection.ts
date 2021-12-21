@@ -474,6 +474,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const getSelectedBlocks = (startElm: Element, endElm: Element) =>
     ElementSelection.getSelectedBlocks(dom, getRng(), startElm, endElm);
 
+  // TODO: TINY-8386 Try and come up with a better and more integrated solution than this
   const getSelectedCells = (): HTMLTableCellElement[] =>
     SelectionTypes.fold<HTMLTableCellElement[]>(cellSelection.get(),
       // No fake selected cells
