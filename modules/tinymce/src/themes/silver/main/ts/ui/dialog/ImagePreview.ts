@@ -49,7 +49,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
   const memImage = Memento.record({
     dom: {
       tag: 'img',
-      classes: ['tox-imagepreview__image'],
+      classes: [ 'tox-imagepreview__image' ],
       attributes: initialData.map((data) => ({ src: data.url })).getOr({})
     },
   });
@@ -57,7 +57,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
   const memContainer = Memento.record({
     dom: {
       tag: 'div',
-      classes: ['tox-imagepreview__container'],
+      classes: [ 'tox-imagepreview__container' ],
       attributes: {
         role: 'presentation'
       },
@@ -72,9 +72,9 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
       url: data.url
     };
     // update properties that are set by the data
-    data.zoom.each(z => translatedData.zoom = z);
-    data.cachedWidth.each(z => translatedData.cachedWidth = z);
-    data.cachedHeight.each(z => translatedData.cachedHeight = z);
+    data.zoom.each((z) => translatedData.zoom = z);
+    data.cachedWidth.each((z) => translatedData.cachedWidth = z);
+    data.cachedHeight.each((z) => translatedData.cachedHeight = z);
     cachedData.set(translatedData);
 
     const applyFramePositioning = () => {
@@ -114,8 +114,8 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
         if (frameComponent.getSystem().isConnected()) {
           Class.add(frameComponent.element, 'tox-imagepreview__loaded');
           // sneaky mutation since we own the object
-          translatedData.cachedWidth = img.dom.naturalWidth,
-          translatedData.cachedHeight = img.dom.naturalHeight
+          translatedData.cachedWidth = img.dom.naturalWidth;
+          translatedData.cachedHeight = img.dom.naturalHeight;
           applyFramePositioning();
         }
       });
@@ -126,17 +126,17 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
   spec.height.each((h) => styles.height = h);
 
   // TODO: Use the initial data properly once it's validated
-  const fakeValidatedData: Optional<ImagePreviewDataSpec> = initialData.map(d => ({
+  const fakeValidatedData: Optional<ImagePreviewDataSpec> = initialData.map((d) => ({
     url: d.url,
     zoom: Optional.from(d.zoom),
     cachedWidth: Optional.from(d.cachedWidth),
     cachedHeight: Optional.from(d.cachedHeight),
-  }))
+  }));
 
   return {
     dom: {
       tag: 'div',
-      classes: ['tox-imagepreview'],
+      classes: [ 'tox-imagepreview' ],
       styles,
       attributes: {
         role: 'presentation'
