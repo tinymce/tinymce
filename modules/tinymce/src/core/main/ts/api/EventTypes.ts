@@ -5,10 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional } from '@ephox/katamari';
-import { OtherCells } from '@ephox/snooker';
-import { SugarElement } from '@ephox/sugar';
-
 import { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
 import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
@@ -71,14 +67,6 @@ export interface TableEventData {
 }
 export interface TableModifiedEvent extends TableEventData {
   readonly table: HTMLTableElement;
-}
-
-// TODO: TINY-8368 Remove the need for SugarElements and Optional
-export interface TableSelectionChangeEvent {
-  cells: SugarElement<HTMLTableCellElement>[];
-  start: SugarElement<HTMLTableCellElement>;
-  finish: SugarElement<HTMLTableCellElement>;
-  otherCells: Optional<OtherCells.OtherCells>;
 }
 
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
@@ -145,8 +133,6 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'AutocompleterStart': AutocompleterEventArgs;
   'AutocompleterUpdate': AutocompleterEventArgs;
   'AutocompleterEnd': { };
-  'TableSelectionChange': TableSelectionChangeEvent;
-  'TableSelectionClear': { };
   'TableModified': TableModifiedEvent;
   'NewRow': NewTableRowEvent;
   'NewCell': NewTableCellEvent;
