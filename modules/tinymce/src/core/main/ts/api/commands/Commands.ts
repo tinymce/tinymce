@@ -17,6 +17,7 @@ import * as LinkCommands from './LinkCommands';
 import * as ListCommands from './ListCommands';
 import * as NewlineCommands from './NewlineCommands';
 import * as SelectionCommands from './SelectionCommands';
+import * as TableCommands from './TableCommands';
 
 const registerExecCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
@@ -57,6 +58,7 @@ export const registerCommands = (editor: Editor): void => {
   NewlineCommands.registerCommands(editor);
   ListCommands.registerCommands(editor);
   FormatCommands.registerCommands(editor);
+  TableCommands.registerCommands(editor);
 
   registerExecCommands(editor);
 };

@@ -5,54 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional } from '@ephox/katamari';
-import { OtherCells } from '@ephox/snooker';
-import { SugarElement } from '@ephox/sugar';
+/*
+ NOTE: This file is duplicated in the following locations:
+  - core/api/TableEvents.ts
+  - models/dom/table/api/Events.ts
+  - advtable
+ Make sure that if making changes to this file, the other files are updated as well
+ */
 
 import Editor from 'tinymce/core/api/Editor';
+import { NewTableCellEvent, NewTableRowEvent, TableEventData } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-export interface TableEventData {
-  readonly structure: boolean;
-  readonly style: boolean;
-}
+const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<NewTableRowEvent> =>
+  editor.dispatch('NewRow', { node: row });
 
-export interface TableModifiedEvent extends TableEventData {
-  readonly table: HTMLTableElement;
-}
-
-const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<{ node: HTMLTableRowElement }> =>
-  editor.dispatch('newrow', { node: row });
-
-const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<{ node: HTMLTableCellElement }> =>
-  editor.dispatch('newcell', { node: cell });
-
-const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string): void => {
-  editor.dispatch('ObjectResizeStart', { target, width, height, origin });
-};
-
-const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string): void => {
-  editor.dispatch('ObjectResized', { target, width, height, origin });
-};
-
-const fireTableSelectionChange = (
-  editor: Editor,
-  cells: SugarElement<HTMLTableCellElement>[],
-  start: SugarElement<HTMLTableCellElement>,
-  finish: SugarElement<HTMLTableCellElement>,
-  otherCells: Optional<OtherCells.OtherCells>
-): void => {
-  editor.dispatch('TableSelectionChange', {
-    cells,
-    start,
-    finish,
-    otherCells
-  });
-};
-
-const fireTableSelectionClear = (editor: Editor): void => {
-  editor.dispatch('TableSelectionClear');
-};
+const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<NewTableCellEvent> =>
+  editor.dispatch('NewCell', { node: cell });
 
 const fireTableModified = (editor: Editor, table: HTMLTableElement, data: TableEventData): void => {
   editor.dispatch('TableModified', { ...data, table });
@@ -65,10 +34,6 @@ const styleAndStructureModified: TableEventData = { structure: true, style: true
 export {
   fireNewRow,
   fireNewCell,
-  fireObjectResizeStart,
-  fireObjectResized,
-  fireTableSelectionChange,
-  fireTableSelectionClear,
   fireTableModified,
   styleModified,
   structureModified,

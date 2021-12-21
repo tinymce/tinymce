@@ -351,8 +351,10 @@ const assertTableStructureWithSizes = (
 const insertTable = (editor: Editor, args: Record<string, any>): boolean =>
   editor.execCommand('mceInsertTable', false, args);
 
-const makeInsertTable = (editor: Editor, cols: number, rows: number): SugarElement<HTMLTableElement> =>
-  SugarElement.fromDom(editor.plugins.table.insertTable(cols, rows));
+const makeInsertTable = (editor: Editor, columns: number, rows: number, args: Record<string, any> = {}): SugarElement<HTMLTableElement> => {
+  insertTable(editor, { rows, columns, ...args });
+  return SugarElement.fromDom(editor.dom.getParent(editor.selection.getStart(), 'table'));
+};
 
 const pInsertTableViaGrid = async (editor: Editor, cols: number, rows: number) => {
   TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
@@ -367,7 +369,7 @@ const pInsertTableViaGrid = async (editor: Editor, cols: number, rows: number) =
 
 const insertTableTest = (editor: Editor, tableColumns: number, tableRows: number, widths: number[][], withColGroups: boolean): void => {
   editor.setContent('');
-  makeInsertTable(editor, tableColumns, tableRows);
+  insertTable(editor, { rows: tableRows, columns: tableColumns });
   assertTableStructureWithSizes(editor, tableColumns, tableRows, '%', 100, widths, withColGroups);
   TinyAssertions.assertCursor(editor, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0);
 };

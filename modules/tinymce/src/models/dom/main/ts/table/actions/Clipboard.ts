@@ -5,14 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections, SelectionTypes } from '@ephox/darwin';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Util from '../core/Util';
+import * as Utils from '../core/TableUtils';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
@@ -23,7 +22,7 @@ const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<
   return TableLookup.table(cells[0]).map(
     (table) => {
       const replica = CopySelected.extract(table, Ephemera.attributeSelector);
-      Util.removeDataStyle(replica);
+      Utils.removeDataStyle(replica);
       return [ replica ];
     }
   );
@@ -35,7 +34,7 @@ const serializeElements = (editor: Editor, elements: SugarElement[]): string =>
 const getTextContent = (elements: SugarElement[]): string =>
   Arr.map(elements, (element) => element.dom.innerText).join('');
 
-const registerEvents = (editor: Editor, selections: Selections, actions: TableActions): void => {
+const registerEvents = (editor: Editor, actions: TableActions): void => {
   editor.on('BeforeGetContent', (e) => {
     const multiCellContext = (cells: SugarElement<HTMLTableCellElement>[]) => {
       e.preventDefault();
@@ -45,13 +44,16 @@ const registerEvents = (editor: Editor, selections: Selections, actions: TableAc
     };
 
     if (e.selection === true) {
-      SelectionTypes.cata(selections.get(), Fun.noop, multiCellContext, Fun.noop);
+      const cells = TableSelection.getCellsFromSelection(editor);
+      if (cells.length >= 1) {
+        multiCellContext(cells);
+      }
     }
   });
 
   editor.on('BeforeSetContent', (e) => {
     if (e.selection === true && e.paste === true) {
-      const selectedCells = TableSelection.getCellsFromSelection(selections);
+      const selectedCells = TableSelection.getCellsFromSelection(editor);
       Arr.head(selectedCells).each((cell) => {
         TableLookup.table(cell).each((table) => {
 

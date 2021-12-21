@@ -5,15 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 
+import * as FakeClipboard from '../api/Clipboard';
 import * as Options from '../api/Options';
-import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, buildMenuItems } from './UiUtils';
@@ -25,7 +24,7 @@ interface AddMenuSpec {
   onSetup: (api: Menu.MenuItemInstanceApi) => () => void;
 }
 
-const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
+const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
   // TODO TINY-8172: unwind this before merging the feature branch
@@ -90,13 +89,13 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Paste row before',
       icon: 'paste-row-before',
       command: 'mceTablePasteRowBefore',
-      onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+      onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
     }),
     addMenuIfRegistered('tablepasterowafter', {
       text: 'Paste row after',
       icon: 'paste-row-after',
       command: 'mceTablePasteRowAfter',
-      onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+      onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
     }),
   ];
 
@@ -136,13 +135,13 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Paste column before',
       icon: 'paste-column-before',
       command: 'mceTablePasteColBefore',
-      onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onFirst)
+      onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onFirst)
     }),
     addMenuIfRegistered('tablepastecolumnafter', {
       text: 'Paste column after',
       icon: 'paste-column-after',
       command: 'mceTablePasteColAfter',
-      onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onLast)
+      onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onLast)
     }),
   ];
 
@@ -171,7 +170,7 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
     editor.ui.registry.addMenuItem('inserttable', {
       text: 'Table',
       icon: 'table',
-      onAction: cmd('mceInsertTable')
+      onAction: cmd('mceInsertTableDialog')
     });
   } else {
     editor.ui.registry.addNestedMenuItem('inserttable', {
@@ -187,7 +186,7 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
   editor.ui.registry.addMenuItem('inserttabledialog', {
     text: 'Insert table',
     icon: 'table',
-    onAction: cmd('mceInsertTable')
+    onAction: cmd('mceInsertTableDialog')
   });
 
   addMenuIfRegistered('tableprops', {
@@ -250,7 +249,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Table styles',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         tableClassList,
         'tableclass',
         (value) => editor.execCommand('mceTableToggleClass', false, value)
@@ -266,7 +264,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Cell styles',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         tableCellClassList,
         'tablecellclass',
         (value) => editor.execCommand('mceTableCellToggleClass', false, value)
@@ -282,7 +279,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Vertical align',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         verticalAlignValues,
         'tablecellverticalalign',
         applyTableCellStyle(editor, 'vertical-align')
@@ -295,7 +291,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Border width',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         Options.getTableBorderWidths(editor),
         'tablecellborderwidth',
         applyTableCellStyle(editor, 'border-width')
@@ -308,7 +303,6 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
       text: 'Border style',
       getSubmenuItems: () => buildMenuItems(
         editor,
-        selections,
         Options.getTableBorderStyles(editor),
         'tablecellborderstyle',
         applyTableCellStyle(editor, 'border-style')

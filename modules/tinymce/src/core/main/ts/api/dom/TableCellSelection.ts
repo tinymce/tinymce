@@ -8,35 +8,33 @@
 import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
-import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
+import { OtherCells, TableFill, TableLookup } from '@ephox/snooker';
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-
-import * as Events from '../api/Events';
-import * as Options from '../api/Options';
-import * as Util from '../core/Util';
-import { ephemera } from './Ephemera';
-import { SelectionTargets } from './SelectionTargets';
+import { ephemera } from '../../table/TableEphemera';
+import { getCellsFromSelection } from '../../table/TableSelection';
+import * as Utils from '../../table/TableUtils';
+import Editor from '../Editor';
+import * as Options from '../Options';
+import * as Events from '../TableEvents';
+import { EditorEvent } from '../util/EventDispatcher';
 
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
 
-export interface CellSelectionApi {
-  readonly clear: (container: SugarElement<Node>) => void;
+export interface TableCellSelection {
+  readonly clear: (container: Node) => void;
 }
 
-export default (editor: Editor, lazyResize: () => Optional<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi => {
+export const TableCellSelection = (editor: Editor): TableCellSelection => {
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
-    selectionTargets.targets().each((targets) => {
-      const tableOpt = TableLookup.table(start);
-      tableOpt.each((table) => {
-        const cloneFormats = Options.getCloneElements(editor);
-        const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
-        const otherCells = OtherCells.getOtherCells(table, targets, generators);
-        Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
-      });
+    const tableOpt = TableLookup.table(start);
+    tableOpt.each((table) => {
+      const cloneFormats = Optional.from(Options.getTableCloneElements(editor));
+      const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
+      const selectedCells = getCellsFromSelection(editor);
+      const otherCells = OtherCells.getOtherCells(table, { selection: selectedCells }, generators);
+      Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
     });
   };
 
@@ -46,8 +44,8 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
 
   editor.on('init', (_e) => {
     const win = editor.getWin();
-    const body = Util.getBody(editor);
-    const isRoot = Util.getIsRoot(editor);
+    const body = Utils.getBody(editor);
+    const isRoot = Utils.getIsRoot(editor);
 
     // When the selection changes through either the mouse or keyboard, and the selection is no longer within the table.
     // Remove the selection.
@@ -97,7 +95,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
 
     const keydown = (event: KeyboardEvent) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
-      lazyResize().each((resize) => resize.hideBars());
+      editor.selection._tableResizeHandler.hide();
 
       const rng = editor.selection.getRng();
       const start = SugarElement.fromDom(rng.startContainer);
@@ -106,7 +104,8 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
       keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each((response) => {
         handleResponse(wrappedEvent, response);
       });
-      lazyResize().each((resize) => resize.showBars());
+
+      editor.selection._tableResizeHandler.show();
     };
 
     const isLeftMouse = (raw: MouseEvent) => raw.button === 0;
@@ -178,7 +177,15 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
     editor.on('NodeChange', syncSelection);
   });
 
+  editor.on('PreInit', () => {
+    editor.serializer.addTempAttr(ephemera.firstSelected);
+    editor.serializer.addTempAttr(ephemera.lastSelected);
+  });
+
+  const clear = (container: Node) =>
+    annotations.clear(SugarElement.fromDom(container));
+
   return {
-    clear: annotations.clear
+    clear
   };
 };

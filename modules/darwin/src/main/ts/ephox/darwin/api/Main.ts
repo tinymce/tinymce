@@ -1,11 +1,11 @@
 import * as CellOpSelection from '../queries/CellOpSelection';
 import { Response } from '../selection/Response';
 import { Selections } from '../selection/Selections';
-import * as SelectionTypes from '../selection/SelectionTypes';
 import { Ephemera } from './Ephemera';
 import * as InputHandlers from './InputHandlers';
 import { SelectionAnnotation } from './SelectionAnnotation';
 import * as SelectionKeys from './SelectionKeys';
+import * as SelectionTypes from './SelectionTypes';
 import * as TableSelection from './TableSelection';
 import { WindowBridge } from './WindowBridge';
 

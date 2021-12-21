@@ -5,9 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { CellOpSelection, Selections } from '@ephox/darwin';
+/*
+ NOTE: This file is partially duplicated in the following locations:
+  - models/dom/table/queries/TableTargets.ts
+  - advtable
+ Make sure that if making changes to this file, the other files are updated as well
+ */
+
+import { CellOpSelection } from '@ephox/darwin';
 import { Optional } from '@ephox/katamari';
-import { RunOperation, SimpleGenerators } from '@ephox/snooker';
+import { RunOperation } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 
 import { ephemera } from '../selection/Ephemera';
@@ -19,24 +26,15 @@ const noMenu = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElemen
   selection: [ cell ]
 });
 
-const forMenu = (selections: Selections, table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
+const forMenu = (selectedCells: SugarElement<HTMLTableCellElement>[], table: SugarElement<HTMLTableElement>, cell: SugarElement<HTMLTableCellElement>): RunOperation.CombinedTargets => ({
   element: cell,
-  mergable: CellOpSelection.mergable(table, selections, ephemera),
-  unmergable: CellOpSelection.unmergable(selections),
-  selection: CellOpSelection.selection(selections)
+  mergable: CellOpSelection.mergable(table, selectedCells, ephemera),
+  unmergable: CellOpSelection.unmergable(selectedCells),
+  selection: CellOpSelection.selection(selectedCells)
 });
 
-const paste = (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>, clipboard: SugarElement<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
-  element,
-  clipboard,
-  generators
-});
-
-const pasteRows = (selections: Selections, cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
-  selection: CellOpSelection.selection(selections),
-  clipboard,
-  generators
-});
-
-export { noMenu, forMenu, paste, pasteRows };
+export {
+  noMenu,
+  forMenu
+};
 

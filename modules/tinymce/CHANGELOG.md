@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
 - New `Resource.unload` API to make it possible to unload resources #TINY-8431
 - New `dispatch()` function to replace the now deprecated `fire()` function in various APIs #TINY-8102
+- New `mceInsertTableDialog` command to open the insert table dialog #TINY-8273
 
 ### Improved
 - The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
@@ -83,6 +84,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `plugins` option now returns a `string` array instead of a space separated string #TINY-8455
 - Replaced 'Powered by Tiny' link text with logo #TINY-8371
 - Renamed the `getWhiteSpaceElements()` function to `getWhitespaceElements()` in the `Schema` API #TINY-8102
+- The `mceInsertTable` command can no longer open the insert table dialog. Use the `mceInsertTableDialog` command instead #TINY-8273
+- Moved non-UI table functionality to core #TINY-8273
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -137,6 +140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the undocumented `mceResetDesignMode`, `mceRepaint` and `mceBeginUndoLevel` commands #TINY-7829
 - Removed the `execCommand` handler function from the plugin and theme interfaces #TINY-7829
 - Removed the `SaxParser` API #TINY-8218
+- Removed the `table` plugin's API #TINY-8273
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

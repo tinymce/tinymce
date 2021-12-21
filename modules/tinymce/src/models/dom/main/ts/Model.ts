@@ -8,8 +8,11 @@
 import Editor from 'tinymce/core/api/Editor';
 import ModelManager, { Model } from 'tinymce/core/api/ModelManager';
 
-const DomModel = (_editor: Editor): Model => {
-  // TODO: Add table commands
+import * as Table from './table/Table';
+
+const DomModel = (editor: Editor): Model => {
+  Table.setupTable(editor);
+
   return {};
 };
 
