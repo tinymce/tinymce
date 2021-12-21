@@ -16,7 +16,7 @@ import * as Events from '../api/Events';
 import * as Utils from '../core/TableUtils';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
-import { Clipboard } from './Clipboard';
+import * as FakeClipboard from './Clipboard';
 import * as Options from './Options';
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
@@ -27,7 +27,7 @@ const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<H
 const getSelectionStartCell = (editor: Editor): Optional<SugarElement<HTMLTableCellElement>> =>
   TableSelection.getSelectionCell(Utils.getSelectionStart(editor), Utils.getIsRoot(editor));
 
-const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clipboard): void => {
+const registerCommands = (editor: Editor, actions: TableActions): void => {
   const isRoot = Utils.getIsRoot(editor);
   const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
@@ -142,7 +142,7 @@ const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clip
     });
 
   const pasteOnSelection = (execute: AdvancedPasteTableAction, getRows: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) =>
-    // If we have clipboard rows to paste
+    // If we have FakeClipboard rows to paste
     getRows().each((rows) => {
       const clonedRows = Arr.map(rows, (row) => Replication.deep<HTMLTableColElement | HTMLTableRowElement>(row));
       performActionOnSelection((table, startCell) => {
@@ -168,19 +168,19 @@ const registerCommands = (editor: Editor, actions: TableActions, clipboard: Clip
     mceTableDeleteCol: () => actOnSelection(actions.deleteColumn),
     mceTableDeleteRow: () => actOnSelection(actions.deleteRow),
     mceTableCutCol: () => copyColSelection().each((selection) => {
-      clipboard.setColumns(selection);
+      FakeClipboard.setColumns(selection);
       actOnSelection(actions.deleteColumn);
     }),
     mceTableCutRow: () => copyRowSelection().each((selection) => {
-      clipboard.setRows(selection);
+      FakeClipboard.setRows(selection);
       actOnSelection(actions.deleteRow);
     }),
-    mceTableCopyCol: () => copyColSelection().each((selection) => clipboard.setColumns(selection)),
-    mceTableCopyRow: () => copyRowSelection().each((selection) => clipboard.setRows(selection)),
-    mceTablePasteColBefore: () => pasteOnSelection(actions.pasteColsBefore, clipboard.getColumns),
-    mceTablePasteColAfter: () => pasteOnSelection(actions.pasteColsAfter, clipboard.getColumns),
-    mceTablePasteRowBefore: () => pasteOnSelection(actions.pasteRowsBefore, clipboard.getRows),
-    mceTablePasteRowAfter: () => pasteOnSelection(actions.pasteRowsAfter, clipboard.getRows),
+    mceTableCopyCol: () => copyColSelection().each((selection) => FakeClipboard.setColumns(selection)),
+    mceTableCopyRow: () => copyRowSelection().each((selection) => FakeClipboard.setRows(selection)),
+    mceTablePasteColBefore: () => pasteOnSelection(actions.pasteColsBefore, FakeClipboard.getColumns),
+    mceTablePasteColAfter: () => pasteOnSelection(actions.pasteColsAfter, FakeClipboard.getColumns),
+    mceTablePasteRowBefore: () => pasteOnSelection(actions.pasteRowsBefore, FakeClipboard.getRows),
+    mceTablePasteRowAfter: () => pasteOnSelection(actions.pasteRowsAfter, FakeClipboard.getRows),
     mceTableDelete: eraseTable,
     mceTableCellToggleClass: toggleTableCellClass,
     mceTableToggleClass: toggleTableClass,

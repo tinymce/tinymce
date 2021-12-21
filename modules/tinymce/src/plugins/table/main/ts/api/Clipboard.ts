@@ -7,7 +7,7 @@
 
 /*
  NOTE: This file is duplicated in the following locations:
-  - plugins/table/api/Clipboard.ts
+  - models/dom/table/api/Clipboard.ts
  Make sure that if making changes to this file, the other files are updated as well
  */
 
@@ -16,7 +16,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import FakeClipboard from 'tinymce/core/api/FakeClipboard';
 
-type RowElement = HTMLTableRowElement | HTMLTableColElement;
+ type RowElement = HTMLTableRowElement | HTMLTableColElement;
 
 const tableTypeBase = 'x-dom/mce-table-';
 const tableTypeRow = tableTypeBase + 'rows';

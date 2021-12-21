@@ -7,8 +7,8 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
-import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/api/Clipboard';
 
+import * as FakeClipboard from '../api/Clipboard';
 import * as Options from '../api/Options';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
@@ -21,7 +21,7 @@ interface AddButtonSpec {
   onSetup?: (api: Toolbar.ToolbarButtonInstanceApi) => () => void;
 }
 
-const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: FakeClipboard): void => {
+const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
@@ -142,14 +142,14 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Paste row before',
     command: 'mceTablePasteRowBefore',
     icon: 'paste-row-before',
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+    onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
   });
 
   addButtonIfRegistered('tablepasterowafter', {
     tooltip: 'Paste row after',
     command: 'mceTablePasteRowAfter',
     icon: 'paste-row-after',
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+    onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
   });
 
   addButtonIfRegistered('tablecutcol', {
@@ -170,14 +170,14 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Paste column before',
     command: 'mceTablePasteColBefore',
     icon: 'paste-column-before',
-    onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onFirst)
+    onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onFirst)
   });
 
   addButtonIfRegistered('tablepastecolafter', {
     tooltip: 'Paste column after',
     command: 'mceTablePasteColAfter',
     icon: 'paste-column-after',
-    onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onLast)
+    onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onLast)
   });
 
   addButtonIfRegistered('tableinsertdialog', {

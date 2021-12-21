@@ -10,8 +10,8 @@ import { SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import { Clipboard as FakeClipboard } from 'tinymce/models/dom/table/api/Clipboard';
 
+import * as FakeClipboard from '../api/Clipboard';
 import * as Options from '../api/Options';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
@@ -24,7 +24,7 @@ interface AddMenuSpec {
   onSetup: (api: Menu.MenuItemInstanceApi) => () => void;
 }
 
-const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: FakeClipboard): void => {
+const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
   // TODO TINY-8172: unwind this before merging the feature branch
@@ -89,13 +89,13 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       text: 'Paste row before',
       icon: 'paste-row-before',
       command: 'mceTablePasteRowBefore',
-      onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+      onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
     }),
     addMenuIfRegistered('tablepasterowafter', {
       text: 'Paste row after',
       icon: 'paste-row-after',
       command: 'mceTablePasteRowAfter',
-      onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+      onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
     }),
   ];
 
@@ -135,13 +135,13 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       text: 'Paste column before',
       icon: 'paste-column-before',
       command: 'mceTablePasteColBefore',
-      onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onFirst)
+      onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onFirst)
     }),
     addMenuIfRegistered('tablepastecolumnafter', {
       text: 'Paste column after',
       icon: 'paste-column-after',
       command: 'mceTablePasteColAfter',
-      onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onLast)
+      onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onLast)
     }),
   ];
 
