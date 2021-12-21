@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Behaviour, Memento, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Optional, Singleton } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import { Attribute, Class, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -44,8 +44,7 @@ const zoomToFit = (panel: SugarElement<HTMLElement>, width: number, height: numb
 };
 
 export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional<Dialog.ImagePreviewData>): SimpleSpec => {
-  const cachedData = Singleton.value<Dialog.ImagePreviewData>();
-  initialData.each(cachedData.set);
+  const cachedData = Cell<Dialog.ImagePreviewData>(initialData.getOr({ url: '' }));
 
   const memImage = Memento.record({
     dom: {
@@ -72,26 +71,26 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
     const translatedData: Dialog.ImagePreviewData = {
       url: data.url
     };
+    // update properties that are set by the data
     data.zoom.each(z => translatedData.zoom = z);
     data.cachedWidth.each(z => translatedData.cachedWidth = z);
     data.cachedHeight.each(z => translatedData.cachedHeight = z);
     cachedData.set(translatedData);
 
-    const applyFramePositioning = (imageWidth: number, imageHeight: number) => {
-      const zoom = data.zoom.getOrThunk(() => {
+    const applyFramePositioning = () => {
+      const imageWidth = translatedData.cachedWidth;
+      const imageHeight = translatedData.cachedHeight;
+
+      if (translatedData.zoom === undefined) {
         const z = zoomToFit(frameComponent.element, imageWidth, imageHeight);
-        // this is a bit unweildy to set twice but having zoom not be optional added a lot of complexity
-        cachedData.set({
-          ...translatedData,
-          zoom: z
-        });
-        return z;
-      });
+        // sneaky mutation since we own the object
+        translatedData.zoom = z;
+      }
       const position = calculateImagePosition(
         Width.get(frameComponent.element),
         Height.get(frameComponent.element),
         imageWidth, imageHeight,
-        zoom
+        translatedData.zoom
       );
       memContainer.getOpt(frameComponent).each((container) => {
         Css.setAll(container.element, position);
@@ -106,7 +105,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
       }
 
       if (translatedData.cachedWidth !== undefined && translatedData.cachedHeight !== undefined) {
-        applyFramePositioning(translatedData.cachedWidth, translatedData.cachedHeight);
+        applyFramePositioning();
       }
 
       Ready.image(img).then((img) => {
@@ -114,12 +113,10 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
         // if it is disconnected, just do nothing
         if (frameComponent.getSystem().isConnected()) {
           Class.add(frameComponent.element, 'tox-imagepreview__loaded');
-          cachedData.set({
-            ...translatedData,
-            cachedWidth: img.dom.naturalWidth,
-            cachedHeight: img.dom.naturalHeight
-          })
-          applyFramePositioning(img.dom.naturalWidth, img.dom.naturalHeight);
+          // sneaky mutation since we own the object
+          translatedData.cachedWidth = img.dom.naturalWidth,
+          translatedData.cachedHeight = img.dom.naturalHeight
+          applyFramePositioning();
         }
       });
     });
@@ -159,9 +156,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
             Including those details in the dialog data helps when `setData` only changes the URL, as
             the old image must continue to be displayed at the old size until the new image has loaded.
           */
-          cachedData.get()
-            // if data hasn't been set yet, it doesn't seem to matter what we return
-            .getOr({ url: '' }),
+          cachedData.get(),
         setValue
       ),
     ])
