@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory, Memento, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { Ready } from '@ephox/sugar';
@@ -10,6 +10,11 @@ import { ImagePreviewDataSpec, renderImagePreview } from 'tinymce/themes/silver/
 describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePreviewTest', () => {
   const testImageUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==';
 
+  const memImagePreview = Memento.record(renderImagePreview({
+    name: 'test-panel',
+    height: Optional.some('200px'),
+  }, Optional.none()));
+
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     {
       dom: {
@@ -19,10 +24,7 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
         }
       },
       components: [
-        renderImagePreview({
-          name: 'test-panel',
-          height: Optional.some('200px'),
-        }, Optional.none())
+        memImagePreview.asSpec()
       ]
     }
   ));
@@ -35,8 +37,7 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
   };
 
   const setPanelState = (component: AlloyComponent, state: ImagePreviewDataSpec) => {
-    // the component is a wrapper div just there to set a known width, the image preview is the child
-    const [ imagePreview ] = component.components();
+    const imagePreview = memImagePreview.get(component);
     Representing.setValue(imagePreview, state);
   };
 
