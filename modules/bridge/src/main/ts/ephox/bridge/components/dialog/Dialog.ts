@@ -48,7 +48,7 @@ export interface DialogSpec<T extends DialogData> {
   size?: DialogSize;
   body: TabPanel.TabPanelSpec | Panel.PanelSpec;
   buttons: FooterButton.DialogFooterButtonSpec[];
-  initialData?: T;
+  initialData?: Partial<T>;
 
   // Gets fired when a component within the dialog has an action used by some components
   onAction?: DialogActionHandler<T>;

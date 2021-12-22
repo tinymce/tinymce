@@ -11,14 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tabindex` attribute is now copied from the target element to the iframe #TINY-8315
 - New `AutocompleterStart`, `AutocompleterUpdate` and `AutocompleterEnd` events #TINY-8279
 - New `mceAutocompleterClose`, `mceAutocompleterReload` commands #TINY-8279
+- New `FakeClipboard` API on the `tinymce` global #TINY-8353
 - New `slider` dialog component #TINY-8304
-- New `FakeClipboard` API to the `tinymce` global #TINY-8353
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
+- New `imagepreview` dialog component, allowing preview and zoom of any image URL #TINY-8333
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
 - The `emoticon` plugin dialog, toolbar and menu item has been updated to use the more accurate `Emojis` term #TINY-7631
 - The dialog `redial` API will now only rerender the changed components instead of the whole dialog #TINY-8334
+- The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
+- The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
 
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
@@ -67,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
+- Removed the `imagetools` dialog component #TINY-8333
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163

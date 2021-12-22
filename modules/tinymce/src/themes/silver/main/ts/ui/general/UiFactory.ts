@@ -18,7 +18,7 @@ import { renderCustomEditor } from '../dialog/CustomEditor';
 import { renderDropZone } from '../dialog/Dropzone';
 import { renderGrid } from '../dialog/Grid';
 import { renderIFrame } from '../dialog/IFrame';
-import { renderImageTools } from '../dialog/imagetools/ImageTools';
+import { renderImagePreview } from '../dialog/ImagePreview';
 import { renderLabel } from '../dialog/Label';
 import { renderListBox } from '../dialog/ListBox';
 import { renderPanel } from '../dialog/Panel';
@@ -74,7 +74,7 @@ const factories: Record<string, FormPartRenderer<any>> = {
   urlinput: make<Dialog.UrlInput, Dialog.UrlInputData>((spec, backstage, data) => renderUrlInput(spec, backstage, backstage.urlinput, data)),
   customeditor: make<Dialog.CustomEditor>(renderCustomEditor),
   htmlpanel: make<Dialog.HtmlPanel>(renderHtmlPanel),
-  imagetools: make<Dialog.ImageTools>((spec, backstage) => renderImageTools(spec, backstage.shared.providers)),
+  imagepreview: make<Dialog.ImagePreview, Dialog.ImagePreviewData>((spec, _, data) => renderImagePreview(spec, data)),
   table: make<Dialog.Table>((spec, backstage) => renderTable(spec, backstage.shared.providers)),
   panel: make<Dialog.Panel>((spec, backstage) => renderPanel(spec, backstage))
 };
