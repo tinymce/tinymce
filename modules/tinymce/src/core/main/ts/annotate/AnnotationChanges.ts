@@ -10,8 +10,8 @@ import { Attribute } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import { AnnotationsRegistry } from './AnnotationsRegistry';
-import { findMarkers, identify } from './Identification';
-import { dataAnnotationActive } from './Markings';
+import * as Identification from './Identification';
+import * as Markings from './Markings';
 
 export interface AnnotationChanges {
   readonly addListener: (name: string, f: AnnotationListener) => void;
@@ -65,11 +65,11 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): AnnotationChanges
   };
 
   const toggleActiveAttr = (uid: string, state: boolean) => {
-    Arr.each(findMarkers(editor, uid), (span) => {
+    Arr.each(Identification.findMarkers(editor, uid), (span) => {
       if (state) {
-        Attribute.set(span, dataAnnotationActive(), 'true');
+        Attribute.set(span, Markings.dataAnnotationActive(), 'true');
       } else {
-        Attribute.remove(span, dataAnnotationActive());
+        Attribute.remove(span, Markings.dataAnnotationActive());
       }
     });
   };
@@ -80,7 +80,7 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): AnnotationChanges
     Arr.each(annotations, (name) => {
       updateCallbacks(name, (data) => {
         const prev = data.previous.get();
-        identify(editor, Optional.some(name)).fold(
+        Identification.identify(editor, Optional.some(name)).fold(
           () => {
             prev.each((uid) => {
               // Changed from something to nothing.
