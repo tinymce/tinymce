@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optionals, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optionals, Strings, Type } from '@ephox/katamari';
 import { Attribute, Class, Css, Html, Insert, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
 import * as NodeType from '../../dom/NodeType';
@@ -669,7 +669,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const decode = Entities.decode;
   const encode = Entities.encodeAllRaw;
 
-  const createHTML = (name: string, attrs?: Record<string, string>, html?: string): string => {
+  const createHTML = (name: string, attrs?: Record<string, string>, html: string = ''): string => {
     let outHtml = '', key;
 
     outHtml += '<' + name;
@@ -680,12 +680,11 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       }
     }
 
-    // A call to tinymce.is doesn't work for some odd reason on IE9 possible bug inside their JS runtime
-    if (!Type.isUndefined(html)) {
+    if (Strings.isEmpty(html) && Obj.has(schema.getShortEndedElements(), name)) {
+      return outHtml + ' />';
+    } else {
       return outHtml + '>' + html + '</' + name + '>';
     }
-
-    return outHtml + ' />';
   };
 
   const createFragment = (html?: string): DocumentFragment => {

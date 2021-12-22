@@ -40,6 +40,7 @@
     "@tinymce/eslint-plugin": "^1.9.1",
     "@tinymce/moxiedoc": "^0.1.0",
     "@types/chai": "^4.2.15",
+    "@types/dompurify": "^2.3.3",
     "@types/prismjs": "^1.16.6",
     "awesome-typescript-loader": "^5.2.0",
     "chai": "^4.3.3",
