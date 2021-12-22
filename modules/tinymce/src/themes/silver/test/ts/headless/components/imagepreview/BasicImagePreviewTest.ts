@@ -1,12 +1,11 @@
 import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Dialog } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import { Ready } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
+import { ImagePreviewDataSpec, renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
 
 describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePreviewTest', () => {
   const testImageUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==';
@@ -35,7 +34,7 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
     assert.equal(node.src, url, label + ' - checking "src" attribute');
   };
 
-  const setPanelState = (component: AlloyComponent, state: Dialog.ImagePreviewData) => {
+  const setPanelState = (component: AlloyComponent, state: ImagePreviewDataSpec) => {
     // the component is a wrapper div just there to set a known width, the image preview is the child
     const [ imagePreview ] = component.components();
     Representing.setValue(imagePreview, state);
@@ -75,6 +74,9 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
     assertImageState('Initial image panel state', component, '');
     setPanelState(component, {
       url: testImageUrl,
+      zoom: Optional.none(),
+      cachedWidth: Optional.none(),
+      cachedHeight: Optional.none(),
     });
     assertImageState('set URL state', component, testImageUrl);
   });
@@ -83,7 +85,9 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
     const component = hook.component();
     setPanelState(component, {
       url: testImageUrl,
-      zoom: 1.5,
+      zoom: Optional.some(1.5),
+      cachedWidth: Optional.none(),
+      cachedHeight: Optional.none(),
     });
     await Ready.image(findImage(component));
     Assertions.assertStructure(
