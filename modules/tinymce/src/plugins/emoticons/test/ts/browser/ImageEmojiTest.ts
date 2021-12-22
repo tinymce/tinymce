@@ -1,7 +1,6 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
-import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
+import { describe, it } from '@ephox/bedrock-client';
+import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -10,37 +9,31 @@ import Plugin from 'tinymce/plugins/emoticons/Plugin';
 
 import { fakeEvent } from '../module/test/Utils';
 
-describe('browser.tinymce.plugins.emoticons.SearchTest', () => {
-  before(function () {
-    // TODO: TINY-6905: Test is flaking on Chromium Edge 86, so we need to investigate
-    const platform = PlatformDetection.detect();
-    if (platform.browser.isChromium() && platform.os.isWindows()) {
-      this.skip();
-    }
-  });
-
+describe('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
     toolbar: 'emoticons',
     base_url: '/project/tinymce/js/tinymce',
-    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojis.js'
+    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojiimages.js'
   }, [ Plugin ], true);
 
-  it('TBA: Open dialog, Search for "rainbow", Rainbow should be first option', async () => {
+  it('TBA: Open dialog, Search for "dog", Dog should be first option', async () => {
     const editor = hook.editor();
     const doc = SugarDocument.getDocument();
 
     TinyUiActions.clickOnToolbar(editor, 'button');
     await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should start on input', doc, 'input');
-    const input = FocusTools.setActiveValue(doc, 'rainbow');
+    const input = FocusTools.setActiveValue(doc, 'dog');
     fakeEvent(input, 'input');
     await Waiter.pTryUntil(
-      'Wait until rainbow is the first choice (search should filter)',
+      'Wait until dog is the first choice (search should filter)',
       () => {
         const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first').getOrDie();
-        const value = Attribute.get(item, 'data-collection-item-value');
-        assert.equal(value, '🌈', 'Search should show rainbow');
+        const attr = Attribute.get(item, 'data-collection-item-value');
+        const img = SugarElement.fromHtml<HTMLImageElement>(attr);
+        const src = Attribute.get(img, 'src');
+        assert.equal(src, 'https://twemoji.maxcdn.com/v/13.0.1/72x72/1f436.png', 'Search should show a dog');
       }
     );
     TinyUiActions.keydown(editor, Keys.tab());
@@ -48,7 +41,13 @@ describe('browser.tinymce.plugins.emoticons.SearchTest', () => {
     TinyUiActions.keydown(editor, Keys.enter());
     await Waiter.pTryUntil(
       'Waiting for content update',
-      () => TinyAssertions.assertContent(editor, '<p>🌈</p>')
+      () => TinyAssertions.assertContentPresence(editor, {
+        'img[data-emoticon]': 1,
+        'img[data-mce-resize="false"]': 1,
+        'img[data-mce-placeholder="1"]': 1,
+        'img[alt="\ud83d\udc36"]': 1,
+        'img[src="https://twemoji.maxcdn.com/v/13.0.1/72x72/1f436.png"]': 1
+      })
     );
   });
 });

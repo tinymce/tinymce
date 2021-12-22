@@ -45,7 +45,6 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'lists', name: 'Lists' },
   { key: 'media', name: 'Media' },
   { key: 'nonbreaking', name: 'Nonbreaking' },
-  { key: 'noneditable', name: 'Noneditable' },
   { key: 'pagebreak', name: 'Page Break' },
   { key: 'paste', name: 'Paste' },
   { key: 'preview', name: 'Preview' },

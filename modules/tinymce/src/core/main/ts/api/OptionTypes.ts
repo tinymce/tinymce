@@ -93,6 +93,7 @@ interface BaseEditorOptions {
   directionality?: 'ltr' | 'rtl';
   doctype?: string;
   document_base_url?: string;
+  editable_class?: string;
   element_format?: 'xhtml' | 'html';
   elementpath?: boolean;
   encoding?: string;
@@ -156,6 +157,8 @@ interface BaseEditorOptions {
   model?: string;
   model_url?: string;
   no_newline_selector?: string;
+  noneditable_class?: string;
+  noneditable_regexp?: RegExp | RegExp[];
   nowrap?: boolean;
   object_resizing?: boolean | string;
   padd_empty_with_br?: boolean;
@@ -252,6 +255,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   contextmenu: string[];
   font_css: string[];
   forced_root_block: string;
+  noneditable_regexp: RegExp[];
   object_resizing?: string;
   preview_styles?: string;
   text_patterns?: RawPattern[];
