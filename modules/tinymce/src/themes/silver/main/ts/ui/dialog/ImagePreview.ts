@@ -7,7 +7,7 @@
 
 import { AlloyComponent, Behaviour, Memento, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Optional, Type } from '@ephox/katamari';
 import { Attribute, Class, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -81,7 +81,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
       const imageWidth = translatedData.cachedWidth;
       const imageHeight = translatedData.cachedHeight;
 
-      if (translatedData.zoom === undefined) {
+      if (Type.isUndefined(translatedData.zoom)) {
         const z = zoomToFit(frameComponent.element, imageWidth, imageHeight);
         // sneaky mutation since we own the object
         translatedData.zoom = z;
@@ -104,7 +104,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
         Class.remove(frameComponent.element, 'tox-imagepreview__loaded');
       }
 
-      if (translatedData.cachedWidth !== undefined && translatedData.cachedHeight !== undefined) {
+      if (!Type.isUndefined(translatedData.cachedWidth) && !Type.isUndefined(translatedData.cachedHeight)) {
         applyFramePositioning();
       }
 
