@@ -125,7 +125,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
   const styles: Record<string, string> = {};
   spec.height.each((h) => styles.height = h);
 
-  // TODO: Use the initial data properly once it's validated
+  // TODO: TINY-8393 Use the initial data properly once it's validated
   const fakeValidatedData: Optional<ImagePreviewDataSpec> = initialData.map((d) => ({
     url: d.url,
     zoom: Optional.from(d.zoom),
