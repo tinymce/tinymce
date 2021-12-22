@@ -6,7 +6,7 @@
  */
 
 import { Arr, Obj, Type } from '@ephox/katamari';
-import { Attribute, Insert, InsertAll, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Remove, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
@@ -155,16 +155,7 @@ const configurePurify = (settings: DomParserSettings, schema: Schema): DOMPurify
     }
 
     if (rule.outputName && rule.outputName !== SugarNode.name(element)) {
-      const replacement = SugarElement.fromTag(rule.outputName);
-
-      const allAttributes = Arr.map(element.dom.attributes, (attr) => attr.name);
-      Attribute.transfer(element, replacement, allAttributes);
-
-      const children = Traverse.children(element);
-      InsertAll.append(replacement, children);
-
-      Insert.after(element, replacement);
-      Remove.remove(element);
+      Replication.mutate(element, rule.outputName as keyof HTMLElementTagNameMap);
     }
   });
 
@@ -246,13 +237,14 @@ const simplifyDom = (root: AstNode, schema: Schema, settings: DomParserSettings,
   const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 
   const hasWhitespaceParent = (node: AstNode) => {
-    if (Obj.has(whitespaceElements, node.name)) {
-      return true;
-    } else if (node.parent) {
-      return hasWhitespaceParent(node.parent);
-    } else {
-      return false;
+    while (Type.isNonNullable(node)) {
+      if (Obj.has(whitespaceElements, node.name)) {
+        return true;
+      } else {
+        node = node.parent;
+      }
     }
+    return false;
   };
 
   const isAtEdgeOfBlock = (node: AstNode, start: boolean): boolean => {
