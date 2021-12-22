@@ -27,7 +27,7 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
     }
   ));
 
-  const findImage = (component) => UiFinder.findIn<HTMLImageElement>(component.element, 'img').getOrDie();
+  const findImage = (component: AlloyComponent) => UiFinder.findIn<HTMLImageElement>(component.element, 'img').getOrDie();
 
   const assertImageState = (label: string, component: AlloyComponent, url: string) => {
     const node = findImage(component).dom;
