@@ -295,14 +295,14 @@ describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {
     annotate(editor, 'beta', 'id-three', { something: 'comment-3' });
 
     // Content should not include the view only active state attributes
-    TinyAssertions.assertContent(editor, [
-      '<p>',
-      '<span class="mce-annotation" data-mce-annotation-uid="id-one" data-mce-annotation="alpha" data-test-anything="comment-1">one ',
-      '<span class="mce-annotation" data-mce-annotation-uid="id-two" data-mce-annotation="beta" data-test-something="comment-2">two ',
-      '<span class="mce-annotation" data-mce-annotation-uid="id-three" data-mce-annotation="beta" data-test-something="comment-3">three</span></span></span>',
+    assertHtmlContent(editor, [
+      '<p>' +
+        '<span class="mce-annotation" data-mce-annotation-uid="id-one" data-mce-annotation="alpha" data-test-anything="comment-1">one ' +
+        '<span class="mce-annotation" data-mce-annotation-uid="id-two" data-mce-annotation="beta" data-test-something="comment-2">two ' +
+        '<span class="mce-annotation" data-mce-annotation-uid="id-three" data-mce-annotation="beta" data-test-something="comment-3">three</span></span></span>' +
       '</p>',
       '<p>outside</p>'
-    ].join(''));
+    ]);
 
     await Waiter.pTryUntil(
       'The latest added annotation (nested beta) should be active and the parent alpha but not the parent beta',

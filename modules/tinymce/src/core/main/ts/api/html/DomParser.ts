@@ -92,9 +92,11 @@ interface WalkResult {
   readonly matchedAttributes: Record<string, AstNode[]>;
 }
 
-const configurePurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
-  const purify = createDompurify();
-  let uid = 0;
+// See https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+// for anything special excluding elements that use the RCDATA state
+const specialElements = new Set('style,xmp,iframe,noembed,noframes,script,noscript,plaintext'.split(','));
+
+const getPurifyConfig = (settings: DomParserSettings): Config => {
   const config: Config = {
     RETURN_DOM: true,
     ALLOW_DATA_ATTR: true,
@@ -106,25 +108,38 @@ const configurePurify = (settings: DomParserSettings, schema: Schema): DOMPurify
   }
 
   // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
-  // #comment has to be added as an allowed tag here though, otherwise dompurify will remove it automatically
-  config.ALLOWED_TAGS = [ '#comment' ];
+  // #comment and #cdata-section are always allowed as they aren't controlled via the schema
+  config.ALLOWED_TAGS = [ '#comment', '#cdata-section' ];
   config.ALLOWED_ATTR = [];
+
+  return config;
+};
+
+const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
+  const purify = createDompurify();
+  let uid = 0;
+
+  purify.setConfig(getPurifyConfig(settings));
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
     const element = SugarElement.fromDom(ele);
+    const tagName = evt.tagName;
+    // Just leave non-elements such as text and comments up to dompurify
     if (!SugarNode.isElement(element) || SugarNode.name(element) === 'body') {
       return;
     }
-    const rule = schema.getElementRule(evt.tagName.toLowerCase());
+
+    // Determine if the schema allows the element and either add it or remove it
+    const rule = schema.getElementRule(tagName.toLowerCase());
     if (!rule) {
       Remove.unwrap(element);
       return;
-    }
-    if (!Obj.has(evt.allowedTags, evt.tagName)) {
-      evt.allowedTags[evt.tagName] = true;
+    } else if (!Obj.has(evt.allowedTags, tagName)) {
+      evt.allowedTags[tagName] = true;
     }
 
+    // Cleanup bogus elements
     const bogus = !Attribute.has(element, 'data-mce-type') && Attribute.get(element, 'data-mce-bogus');
     if (bogus === 'all') {
       Remove.remove(element);
@@ -135,26 +150,29 @@ const configurePurify = (settings: DomParserSettings, schema: Schema): DOMPurify
     }
 
     // Fix the attributes for the element, unwrapping it if we have to
-    Arr.each(rule.attributesForced ?? [], (attr) =>
-      Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value)
-    );
+    Arr.each(rule.attributesForced ?? [], (attr) => {
+      Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
+    });
     Arr.each(rule.attributesDefault ?? [], (attr) => {
       if (!Attribute.has(element, attr.name)) {
         Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
       }
     });
-    if (rule.attributesRequired) {
-      if (!Arr.exists(rule.attributesRequired, (attr) => Attribute.has(element, attr))) {
-        Remove.unwrap(element);
-        return;
-      }
+
+    // If none of the required attributes were found then remove
+    if (rule.attributesRequired && !Arr.exists(rule.attributesRequired, (attr) => Attribute.has(element, attr))) {
+      Remove.unwrap(element);
+      return;
     }
+
+    // If there are no attributes then remove
     if (rule.removeEmptyAttrs && Attribute.hasNone(element)) {
       Remove.unwrap(element);
       return;
     }
 
-    if (rule.outputName && rule.outputName !== SugarNode.name(element)) {
+    // Change the node name if the schema says to
+    if (rule.outputName && rule.outputName !== tagName.toLowerCase()) {
       Replication.mutate(element, rule.outputName as keyof HTMLElementTagNameMap);
     }
   });
@@ -173,13 +191,11 @@ const configurePurify = (settings: DomParserSettings, schema: Schema): DOMPurify
     }
   });
 
-  purify.setConfig(config);
-
   return purify;
 };
 
 const transferChildren = (parent: AstNode, nativeParent: Node) => {
-  const isSpecial = Arr.contains([ 'script', 'style' ], parent.name);
+  const isSpecial = specialElements.has(parent.name);
   Arr.each(nativeParent.childNodes, (nativeChild) => {
     const child = new AstNode(nativeChild.nodeName.toLowerCase(), nativeChild.nodeType);
 
@@ -187,14 +203,13 @@ const transferChildren = (parent: AstNode, nativeParent: Node) => {
       Arr.each(nativeChild.attributes, (attr) => {
         child.attr(attr.name, attr.value);
       });
-    } else if (NodeType.isComment(nativeChild) || NodeType.isText(nativeChild) || NodeType.isCData(nativeChild) || NodeType.isPi(nativeChild)) {
+    } else if (NodeType.isText(nativeChild)) {
       child.value = nativeChild.data;
       if (isSpecial) {
         child.raw = true;
       }
-    } else {
-      // TODO: figure out if anything can arrive in this branch, before merging
-      return;
+    } else if (NodeType.isComment(nativeChild) || NodeType.isCData(nativeChild) || NodeType.isPi(nativeChild)) {
+      child.value = nativeChild.data;
     }
 
     transferChildren(child, nativeChild);
@@ -202,7 +217,7 @@ const transferChildren = (parent: AstNode, nativeParent: Node) => {
   });
 };
 
-const walker = (root: AstNode, settings: DomParserSettings, schema: Schema, nodeFilters: Record<string, ParserFilterCallback[]>, attributeFilters: ParserFilter[]): WalkResult => {
+const walker = (root: AstNode, schema: Schema, nodeFilters: Record<string, ParserFilterCallback[]>, attributeFilters: ParserFilter[]): WalkResult => {
   const state = { invalidChildren: [], matchedNodes: {}, matchedAttributes: {}};
 
   let node = root;
@@ -214,7 +229,7 @@ const walker = (root: AstNode, settings: DomParserSettings, schema: Schema, node
       continue;
     }
 
-    // Check if node is valid child of the parent node is the child is
+    // Check if the node is a valid child of the parent node. If the child is
     // unknown we don't collect it since it's probably a custom element
     if (schema.children[parent.name] && schema.children[node.name] && !schema.children[parent.name][node.name]) {
       state.invalidChildren.push(node);
@@ -378,7 +393,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
   settings.validate = 'validate' in settings ? settings.validate : true;
   settings.root_name = settings.root_name || 'body';
 
-  const purify = configurePurify(settings, schema);
+  const purify = setupPurify(settings, schema);
 
   /**
    * Adds a node filter function to the parser, the parser will collect the specified nodes by name
@@ -532,7 +547,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     const element = purify.sanitize(html, { RETURN_DOM: true });
     transferChildren(rootNode, element);
     simplifyDom(rootNode, schema, settings, args);
-    const state = walker(rootNode, settings, schema, nodeFilters, attributeFilters);
+    const state = walker(rootNode, schema, nodeFilters, attributeFilters);
 
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && state.invalidChildren.length) {
