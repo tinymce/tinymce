@@ -37,12 +37,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(serializer.serialize(root), '<b class="class" title="title">test</b>', 'Inline element');
     assert.equal(root.firstChild.type, 1, 'Element type');
     assert.equal(root.firstChild.name, 'b', 'Element name');
-    // TODO: TINY-4627/TINY-8202: dompurify shuffles attributes around for some reason
-    // assert.deepEqual(
-    //   root.firstChild.attributes, [{ name: 'title', value: 'title' },
-    //     { name: 'class', value: 'class' }],
-    //   'Element attributes'
-    // );
+    assert.deepEqual(
+      root.firstChild.attributes, [
+        { name: 'class', value: 'class' },
+        { name: 'title', value: 'title' },
+      ],
+      'Element attributes'
+    );
     assert.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
   });
 
@@ -93,7 +94,6 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     root = parser.parse(
       '\n<hr />\n<br />\n<div>\n<hr />\n<br />\n<img src="file.gif" data-mce-src="file.gif" />\n<hr />\n<br />\n</div>\n<hr />\n<br />\n'
     );
-    // TODO: TINY-4627/TINY-8202: DomPurify will remove and then re-add attributes (but not data attributes) changing the order they appear in
     assert.equal(
       serializer.serialize(root),
       '<div><img data-mce-src="file.gif" src="file.gif"></div>',
@@ -567,8 +567,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(serializer.serialize(root), '<a id="x">a</a><a href="x">x</a>');
   });
 
-  // TODO: TINY-4627/TINY-8202: dompurify re-ordering attributes again
-  it.skip('Parse contents with html5 self closing datalist options', () => {
+  it('Parse contents with html5 self closing datalist options', () => {
     const schema = Schema({ schema: 'html5' });
 
     const parser = DomParser({}, schema);
@@ -577,8 +576,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
     assert.equal(
       serializer.serialize(root),
-      '<datalist><option label="a1" value="b1"></option><option label="a2" value="b2"></option>' +
-      '<option label="a3" value="b3"></option></datalist>'
+      '<datalist><option value="b1" label="a1"></option><option value="b2" label="a2"></option>' +
+      '<option value="b3" label="a3"></option></datalist>'
     );
   });
 
