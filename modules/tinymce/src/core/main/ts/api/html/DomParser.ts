@@ -85,12 +85,13 @@ interface DomParser {
   parse: (html: string, args?: ParserArgs) => AstNode;
 }
 
-// For internal parser use only: a summary of the nodes that have been parsed
-interface WalkResult {
-  readonly invalidChildren: AstNode[];
-  readonly matchedNodes: Record<string, AstNode[]>;
-  readonly matchedAttributes: Record<string, AstNode[]>;
+// For internal parser use only - a summary of which nodes have been matched by which node/attribute filters
+interface FilterMatches {
+  readonly nodes: Record<string, AstNode[]>;
+  readonly attributes: Record<string, AstNode[]>;
 }
+
+type WalkerCallback = (node: AstNode) => void;
 
 // See https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
 // for anything special excluding elements that use the RCDATA state
@@ -217,33 +218,32 @@ const transferChildren = (parent: AstNode, nativeParent: Node) => {
   });
 };
 
-const walker = (root: AstNode, schema: Schema, nodeFilters: Record<string, ParserFilterCallback[]>, attributeFilters: ParserFilter[]): WalkResult => {
-  const state = { invalidChildren: [], matchedNodes: {}, matchedAttributes: {}};
+const walkTree = (root: AstNode, preprocessors: WalkerCallback[], postprocessors: WalkerCallback[]) => {
+  const traverseOrder: AstNode[] = [];
 
-  let node = root;
-  while ((node = node.walk())) {
-    filterNode(node, nodeFilters, attributeFilters, state);
+  for (let node = root, lastNode = node; Type.isNonNullable(node); lastNode = node, node = node.walk()) {
+    Arr.each(preprocessors, (preprocess) => preprocess(node));
 
-    const parent = node.parent;
-    if (!parent) {
-      continue;
-    }
-
-    // Check if the node is a valid child of the parent node. If the child is
-    // unknown we don't collect it since it's probably a custom element
-    if (schema.children[parent.name] && schema.children[node.name] && !schema.children[parent.name][node.name]) {
-      state.invalidChildren.push(node);
+    if (Type.isNullable(node.parent) && node !== root) {
+      // The node has been detached, so rewind a little and don't add it to our traversal
+      node = lastNode;
+    } else {
+      traverseOrder.push(node);
     }
   }
 
-  return state;
+  for (let i = traverseOrder.length - 1; i >= 0; i--) {
+    const node = traverseOrder[i];
+    Arr.each(postprocessors, (postprocess) => postprocess(node));
+  }
 };
 
 // All the dom operations we want to perform, regardless of whether we're trying to properly validate things
 // e.g. removing excess whitespace
 // e.g. removing empty nodes (or padding them with <br>)
-// e.g. handling data-mce-bogus
-const simplifyDom = (root: AstNode, schema: Schema, settings: DomParserSettings, args: ParserArgs) => {
+//
+// Returns [ preprocess, postprocess ]
+const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSettings, args: ParserArgs): [WalkerCallback, WalkerCallback] => {
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhiteSpaceElements();
   const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
@@ -252,6 +252,7 @@ const simplifyDom = (root: AstNode, schema: Schema, settings: DomParserSettings,
   const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 
   const hasWhitespaceParent = (node: AstNode) => {
+    node = node.parent;
     while (Type.isNonNullable(node)) {
       if (Obj.has(whitespaceElements, node.name)) {
         return true;
@@ -325,64 +326,32 @@ const simplifyDom = (root: AstNode, schema: Schema, settings: DomParserSettings,
     }
   };
 
-  const nodes: AstNode[] = [];
-
-  // Walk over the tree forwards, calling preprocess methods
-  for (let node = root, lastNode = node; Type.isNonNullable(node); lastNode = node, node = node.walk()) {
+  const preprocess = (node: AstNode) => {
     if (node.type === 3) {
       preprocessText(node);
     }
+  };
 
-    // check whether our preprocess methods removed the node
-    if (Type.isNullable(node.parent) && node !== root) {
-      node = lastNode;
-    } else {
-      nodes.push(node);
-    }
-  }
-
-  // Walk over the tree backwards, calling postprocess methods
-  Arr.eachr(nodes, (node) => {
+  const postprocess = (node: AstNode) => {
     if (node.type === 1) {
       postprocessElement(node);
     } else if (node.type === 3) {
       postprocessText(node);
     }
-  });
+  };
+
+  return [ preprocess, postprocess ];
 };
 
-const filterNode = (node: AstNode, nodeFilters: Record<string, ParserFilterCallback[]>, attributeFilters: ParserFilter[], state: WalkResult): AstNode => {
-  const name = node.name;
-  // Run element filters
-  if (name in nodeFilters) {
-    const list = state.matchedNodes[name];
-
-    if (list) {
-      list.push(node);
-    } else {
-      state.matchedNodes[name] = [ node ];
-    }
+const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
+  const name = 'forced_root_block' in args ? args.forced_root_block : settings.forced_root_block;
+  if (name === false) {
+    return '';
+  } else if (name === true) {
+    return 'p';
+  } else {
+    return name;
   }
-
-  // Run attribute filters
-  if (node.attributes) {
-    let i = attributeFilters.length;
-    while (i--) {
-      const attrName = attributeFilters[i].name;
-
-      if (attrName in node.attributes.map) {
-        const list = state.matchedAttributes[attrName];
-
-        if (list) {
-          list.push(node);
-        } else {
-          state.matchedAttributes[attrName] = [ node ];
-        }
-      }
-    }
-  }
-
-  return node;
 };
 
 const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser => {
@@ -464,6 +433,152 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
 
   const getAttributeFilters = (): ParserFilter[] => [].concat(attributeFilters);
 
+  // Test a single node against the current filters, and add it to any match lists if necessary
+  const filterNode = (node: AstNode, matches: FilterMatches): void => {
+    const name = node.name;
+    // Run element filters
+    if (name in nodeFilters) {
+      const list = matches.nodes[name];
+
+      if (list) {
+        list.push(node);
+      } else {
+        matches.nodes[name] = [ node ];
+      }
+    }
+
+    // Run attribute filters
+    if (node.attributes) {
+      let i = attributeFilters.length;
+      while (i--) {
+        const attrName = attributeFilters[i].name;
+
+        if (attrName in node.attributes.map) {
+          const list = matches.attributes[attrName];
+
+          if (list) {
+            list.push(node);
+          } else {
+            matches.attributes[attrName] = [ node ];
+          }
+        }
+      }
+    }
+  };
+
+  // Run all necessary node filters and attribute filters, based on a match set
+  const runFilters = (matches: FilterMatches, args: ParserArgs): void => {
+    // Run node filters
+    for (const name in matches.nodes) {
+      if (!Obj.has(matches.nodes, name)) {
+        continue;
+      }
+      const list = nodeFilters[name];
+      const nodes = matches.nodes[name];
+
+      // Remove already removed children
+      let fi = nodes.length;
+      while (fi--) {
+        if (!nodes[fi].parent) {
+          nodes.splice(fi, 1);
+        }
+      }
+
+      const l = list.length;
+      for (let i = 0; i < l; i++) {
+        list[i](nodes, name, args);
+      }
+    }
+
+    // Run attribute filters
+    const l = attributeFilters.length;
+    for (let i = 0; i < l; i++) {
+      const list = attributeFilters[i];
+
+      if (list.name in matches.attributes) {
+        const nodes = matches.attributes[list.name];
+
+        // Remove already removed children
+        let fi = nodes.length;
+        while (fi--) {
+          if (!nodes[fi].parent) {
+            nodes.splice(fi, 1);
+          }
+        }
+
+        for (let fi = 0, fl = list.callbacks.length; fi < fl; fi++) {
+          list.callbacks[fi](nodes, list.name, args);
+        }
+      }
+    }
+  };
+
+  const findInvalidChildren = (node: AstNode, invalidChildren: AstNode[]): void => {
+    const parent = node.parent;
+    if (!parent) {
+      return;
+    }
+
+    // Check if the node is a valid child of the parent node. If the child is
+    // unknown we don't collect it since it's probably a custom element
+    if (schema.children[parent.name] && schema.children[node.name] && !schema.children[parent.name][node.name]) {
+      invalidChildren.push(node);
+    }
+  };
+
+  const addRootBlocks = (rootNode: AstNode, rootBlockName: string): void => {
+    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+    const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
+    const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
+
+    let node = rootNode.firstChild, rootBlockNode: AstNode | null = null;
+
+    // Removes whitespace at beginning and end of block so:
+    // <p> x </p> -> <p>x</p>
+    const trim = (rootBlock: AstNode | null) => {
+      if (rootBlock) {
+        node = rootBlock.firstChild;
+        if (node && node.type === 3) {
+          node.value = node.value.replace(startWhiteSpaceRegExp, '');
+        }
+
+        node = rootBlock.lastChild;
+        if (node && node.type === 3) {
+          node.value = node.value.replace(endWhiteSpaceRegExp, '');
+        }
+      }
+    };
+
+    // Check if rootBlock is valid within rootNode for example if P is valid in H1 if H1 is the contentEditabe root
+    if (!schema.isValidChild(rootNode.name, rootBlockName.toLowerCase())) {
+      return;
+    }
+
+    while (node) {
+      const next = node.next;
+
+      if (node.type === 3 || (node.type === 1 && node.name !== 'p' &&
+        !blockElements[node.name] && !node.attr('data-mce-type'))) {
+        if (!rootBlockNode) {
+          // Create a new root block element
+          rootBlockNode = new AstNode(rootBlockName, 1);
+          rootBlockNode.attr(settings.forced_root_block_attrs);
+          rootNode.insert(rootBlockNode, node);
+          rootBlockNode.append(node);
+        } else {
+          rootBlockNode.append(node);
+        }
+      } else {
+        trim(rootBlockNode);
+        rootBlockNode = null;
+      }
+
+      node = next;
+    }
+
+    trim(rootBlockNode);
+  };
+
   /**
    * Parses the specified HTML string into a DOM like node tree and returns the result.
    *
@@ -475,141 +590,51 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
    * @return {tinymce.html.Node} Root node containing the tree.
    */
   const parse = (html: string, args?: ParserArgs): AstNode => {
-    const getRootBlockName = (name: string | boolean) => {
-      if (name === false) {
-        return '';
-      } else if (name === true) {
-        return 'p';
-      } else {
-        return name;
-      }
-    };
-
     args = args || {};
-    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
     const validate = settings.validate;
-    const forcedRootBlockName = 'forced_root_block' in args ? args.forced_root_block : settings.forced_root_block;
-    const rootBlockName = getRootBlockName(forcedRootBlockName);
-    const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
-    const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
-
-    const addRootBlocks = (): void => {
-      let node = rootNode.firstChild, rootBlockNode: AstNode | null = null;
-
-      // Removes whitespace at beginning and end of block so:
-      // <p> x </p> -> <p>x</p>
-      const trim = (rootBlock: AstNode | null) => {
-        if (rootBlock) {
-          node = rootBlock.firstChild;
-          if (node && node.type === 3) {
-            node.value = node.value.replace(startWhiteSpaceRegExp, '');
-          }
-
-          node = rootBlock.lastChild;
-          if (node && node.type === 3) {
-            node.value = node.value.replace(endWhiteSpaceRegExp, '');
-          }
-        }
-      };
-
-      // Check if rootBlock is valid within rootNode for example if P is valid in H1 if H1 is the contentEditabe root
-      if (!schema.isValidChild(rootNode.name, rootBlockName.toLowerCase())) {
-        return;
-      }
-
-      while (node) {
-        const next = node.next;
-
-        if (node.type === 3 || (node.type === 1 && node.name !== 'p' &&
-          !blockElements[node.name] && !node.attr('data-mce-type'))) {
-          if (!rootBlockNode) {
-            // Create a new root block element
-            rootBlockNode = new AstNode(rootBlockName, 1);
-            rootBlockNode.attr(settings.forced_root_block_attrs);
-            rootNode.insert(rootBlockNode, node);
-            rootBlockNode.append(node);
-          } else {
-            rootBlockNode.append(node);
-          }
-        } else {
-          trim(rootBlockNode);
-          rootBlockNode = null;
-        }
-
-        node = next;
-      }
-
-      trim(rootBlockNode);
-    };
+    const rootBlockName = getRootBlockName(settings, args);
 
     const rootNode = new AstNode(args.context || settings.root_name, 11);
     // The settings object we pass to purify is completely ignored, because we called setConfig earlier, but it makes the type signatures work
     const element = purify.sanitize(html, { RETURN_DOM: true });
     transferChildren(rootNode, element);
-    simplifyDom(rootNode, schema, settings, args);
-    const state = walker(rootNode, schema, nodeFilters, attributeFilters);
+
+    // Set up whitespace fixes
+    const [ whitespacePre, whitespacePost ] = whitespaceCleaner(rootNode, schema, settings, args);
+
+    // Find the invalid children in the tree
+    const invalidChildren: AstNode[] = [];
+    const invalidFinder = (node: AstNode) => findInvalidChildren(node, invalidChildren);
+
+    // Set up attribute and node matching
+    const matches: FilterMatches = { nodes: {}, attributes: {}};
+    const matchFinder = (node: AstNode) => filterNode(node, matches);
+
+    // Walk the dom, apply all of the above things
+    walkTree(rootNode, [ whitespacePre, matchFinder ], [ whitespacePost, invalidFinder ]);
+
+    // Because we collected invalid children while walking backwards, we need to reverse the list before operating on them
+    invalidChildren.reverse();
 
     // Fix invalid children or report invalid children in a contextual parsing
-    if (validate && state.invalidChildren.length) {
+    if (validate && invalidChildren.length) {
       if (args.context) {
-        const { pass: topLevelChildren, fail: otherChildren } = Arr.partition(state.invalidChildren, (child) => child.parent === rootNode);
-        cleanInvalidNodes(otherChildren, schema, (newNode) => filterNode(newNode, nodeFilters, attributeFilters, state));
+        const { pass: topLevelChildren, fail: otherChildren } = Arr.partition(invalidChildren, (child) => child.parent === rootNode);
+        cleanInvalidNodes(otherChildren, schema, (newNode) => filterNode(newNode, matches));
         args.invalid = topLevelChildren.length > 0;
       } else {
-        cleanInvalidNodes(state.invalidChildren, schema, (newNode) => filterNode(newNode, nodeFilters, attributeFilters, state));
+        cleanInvalidNodes(invalidChildren, schema, (newNode) => filterNode(newNode, matches));
       }
     }
 
     // Wrap nodes in the root into block elements if the root is body
     if (rootBlockName && (rootNode.name === 'body' || args.isRootContent)) {
-      addRootBlocks();
+      addRootBlocks(rootNode, rootBlockName);
     }
 
     // Run filters only when the contents is valid
     if (!args.invalid) {
-      // Run node filters
-      for (const name in state.matchedNodes) {
-        if (!Obj.has(state.matchedNodes, name)) {
-          continue;
-        }
-        const list = nodeFilters[name];
-        const nodes = state.matchedNodes[name];
-
-        // Remove already removed children
-        let fi = nodes.length;
-        while (fi--) {
-          if (!nodes[fi].parent) {
-            nodes.splice(fi, 1);
-          }
-        }
-
-        const l = list.length;
-        for (let i = 0; i < l; i++) {
-          list[i](nodes, name, args);
-        }
-      }
-
-      // Run attribute filters
-      const l = attributeFilters.length;
-      for (let i = 0; i < l; i++) {
-        const list = attributeFilters[i];
-
-        if (list.name in state.matchedAttributes) {
-          const nodes = state.matchedAttributes[list.name];
-
-          // Remove already removed children
-          let fi = nodes.length;
-          while (fi--) {
-            if (!nodes[fi].parent) {
-              nodes.splice(fi, 1);
-            }
-          }
-
-          for (let fi = 0, fl = list.callbacks.length; fi < fl; fi++) {
-            list.callbacks[fi](nodes, list.name, args);
-          }
-        }
-      }
+      runFilters(matches, args);
     }
 
     return rootNode;
