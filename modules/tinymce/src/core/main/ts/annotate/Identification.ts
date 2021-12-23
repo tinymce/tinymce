@@ -49,7 +49,7 @@ const identify = (editor: Editor, annotationName: Optional<string>): Optional<{u
 
 const isAnnotation = (elem: any): boolean => SugarNode.isElement(elem) && Class.has(elem, Markings.annotation());
 
-const findMarkers = (editor: Editor, uid: string): any[] => {
+const findMarkers = (editor: Editor, uid: string): Array<SugarElement<Element>> => {
   const body = SugarElement.fromDom(editor.getBody());
   return SelectorFilter.descendants(body, `[${Markings.dataAnnotationId()}="${uid}"]`);
 };
@@ -69,5 +69,6 @@ const findAll = (editor: Editor, name: string): Record<string, SugarElement[]> =
 export {
   identify,
   isAnnotation,
+  findMarkers,
   findAll
 };

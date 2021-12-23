@@ -17,6 +17,7 @@ export interface AnnotatorSettings {
 export interface AnnotationsRegistry {
   register: (name: string, settings: AnnotatorSettings) => void;
   lookup: (name: string) => Optional<AnnotatorSettings>;
+  getNames: () => string[];
 }
 
 interface Annotation {
@@ -37,9 +38,12 @@ const create = (): AnnotationsRegistry => {
   const lookup = (name: string): Optional<AnnotatorSettings> =>
     Obj.get(annotations, name).map((a) => a.settings);
 
+  const getNames = (): string[] => Obj.keys(annotations);
+
   return {
     register,
-    lookup
+    lookup,
+    getNames
   };
 };
 
