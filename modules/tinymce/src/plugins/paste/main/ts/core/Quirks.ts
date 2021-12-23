@@ -73,8 +73,7 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean):
       }
 
       for (let i = 0; i < webKitStyles.length; i++) {
-        const inputValue = inputStyles[webKitStyles[i]];
-        let compareInput = inputValue;
+        let compareInput = inputStyles[webKitStyles[i]];
         let currentValue = dom.getStyle(node, webKitStyles[i], true);
 
         if (/color/.test(webKitStyles[i])) {
@@ -83,7 +82,7 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean):
         }
 
         if (currentValue !== compareInput) {
-          outputStyles[webKitStyles[i]] = inputValue;
+          outputStyles[webKitStyles[i]] = compareInput;
         }
       }
 
