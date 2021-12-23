@@ -67,7 +67,7 @@ import I18n from './util/I18n';
  *     // Register a toolbar button that triggers an alert when clicked
  *     // To show this button in the editor, include it in the toolbar setting
  *     editor.ui.registry.addButton('myCustomToolbarButton', {
- *         text: 'My Custom Button',
+ *         text: 'My custom button',
  *         onAction: function() {
  *             alert('Button clicked!');
  *         }
@@ -76,7 +76,7 @@ import I18n from './util/I18n';
  *     // Register a menu item that triggers an alert when clicked
  *     // To show this menu item in the editor, include it in the menu setting
  *     editor.ui.registry.addMenuItem('myCustomMenuItem', {
- *         text: 'My Custom Menu Item',
+ *         text: 'My custom menu item',
  *         onAction: function() {
  *             alert('Menu item clicked');
  *         }
