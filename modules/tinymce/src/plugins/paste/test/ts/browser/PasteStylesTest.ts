@@ -67,6 +67,6 @@ describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
     editor.setContent('<p>test</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
     Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="color: rgb(224, 62, 45);">b</span>' });
-    TinyAssertions.assertContent(editor, `<p><span style="color: #e03e2d;">b</span></p>`);
+    TinyAssertions.assertContent(editor, `<p><span style="color: rgb(224, 62, 45);">b</span></p>`);
   });
 });
