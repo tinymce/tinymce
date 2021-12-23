@@ -60,7 +60,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p>1234</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: 'TEST' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: 'TEST' });
     TinyAssertions.assertContent(editor, '<p>1TEST4</p>');
   });
 
@@ -69,7 +69,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p>1&nbsp;</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 2);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<meta charset="utf-8">TEST' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<meta charset="utf-8">TEST' });
     TinyAssertions.assertContent(editor, '<p>1 TEST</p>');
   });
 
@@ -80,7 +80,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p>1234</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<strong><em><span style="color: red;">TEST</span></em></strong>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<strong><em><span style="color: red;">TEST</span></em></strong>' });
     TinyAssertions.assertContent(editor, '<p>1<strong><em><span style="color: red;">TEST</span></em></strong>4</p>');
   });
 
@@ -89,7 +89,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p>1234</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 3);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<p>TEST</p>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<p>TEST</p>' });
     TinyAssertions.assertContent(editor, '<p>1</p><p>TEST</p><p>4</p>');
   });
 
@@ -98,7 +98,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p><strong><em>1234</em></strong></p>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 3);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<p>TEST 1</p><p>TEST 2</p>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<p>TEST 1</p><p>TEST 2</p>' });
     TinyAssertions.assertContent(editor, '<p><strong><em>1</em></strong></p><p>TEST 1</p><p>TEST 2</p><p><strong><em>4</em></strong></p>');
   });
 
@@ -107,7 +107,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p>1234</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<span id="docs-internal-guid-94e46f1a-1c88-b42b-d502-1d19da30dde7"></span><p dir="ltr">Test</p>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<span id="docs-internal-guid-94e46f1a-1c88-b42b-d502-1d19da30dde7"></span><p dir="ltr">Test</p>' });
     TinyAssertions.assertContent(editor, '<p><span id="docs-internal-guid-94e46f1a-1c88-b42b-d502-1d19da30dde7"></span></p><p dir="ltr">Test</p>');
   });
 
@@ -117,7 +117,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p><strong>a</strong></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<em><strong>b</strong></em>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<em><strong>b</strong></em>' });
     TinyAssertions.assertContent(editor, '<p><strong>a<em>b</em></strong></p>');
   });
 
@@ -127,7 +127,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p><strong>a</strong></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<em><strong>b</strong></em>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<em><strong>b</strong></em>' });
     TinyAssertions.assertContent(editor, '<p><strong>a<em><strong>b</strong></em></strong></p>');
   });
 
@@ -138,7 +138,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent(startingContent);
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: insertedContent });
+    editor.execCommand('mceInsertClipboardContent', false, { html: insertedContent });
     TinyAssertions.assertContent(editor, insertedContent + startingContent);
   });
 
@@ -189,10 +189,12 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
   it('TBA: paste data image with paste_data_images: false', () => {
     const editor = hook.editor();
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
+    editor.options.set('paste_data_images', false);
+
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
     TinyAssertions.assertContent(editor, '');
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<img alt="alt" src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<img alt="alt" src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
     TinyAssertions.assertContent(editor, '');
   });
 
@@ -200,14 +202,14 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     const editor = hook.editor();
     editor.options.set('paste_data_images', true);
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
     TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" /></p>');
   });
 
   it('TBA: paste data with script', () => {
     const editor = hook.editor();
 
-    editor.execCommand('mceInsertClipboardContent', false, { content: `<p><img src="non-existent.png" onerror="alert('!')" /></p>` });
+    editor.execCommand('mceInsertClipboardContent', false, { html: `<p><img src="non-existent.png" onerror="alert('!')" /></p>` });
     TinyAssertions.assertContent(editor, '<p><img src="non-existent.png" /></p>');
   });
 
@@ -239,13 +241,13 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p>a</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     editor.on('PastePreProcess', callback);
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<em>b</em>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<em>b</em>' });
     TinyAssertions.assertContent(editor, '<p>PRE:<em>b</em></p>');
 
     editor.setContent('<p>a</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     editor.off('PastePreProcess', callback);
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<em>c</em>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<em>c</em>' });
     TinyAssertions.assertContent(editor, '<p><em>c</em></p>');
   });
 
@@ -258,13 +260,13 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     editor.setContent('<p>a</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     editor.on('PastePostProcess', callback);
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<em>b</em>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<em>b</em>' });
     TinyAssertions.assertContent(editor, '<p><em>b</em>:POST</p>');
 
     editor.setContent('<p>a</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     editor.off('PastePostProcess', callback);
-    editor.execCommand('mceInsertClipboardContent', false, { content: '<em>c</em>' });
+    editor.execCommand('mceInsertClipboardContent', false, { html: '<em>c</em>' });
     TinyAssertions.assertContent(editor, '<p><em>c</em></p>');
   });
 
@@ -348,88 +350,88 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     it('TBA: paste webkit retains text styles runtime styles internal', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'color');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;' });
       TinyAssertions.assertContent(editor, '<p>&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;</p>');
     });
 
     it('TBA: paste webkit remove runtime styles internal', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'color');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color:red; font-size: 42px" data-mce-style="color: red;">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span style="color:red; font-size: 42px" data-mce-style="color: red;">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="color: red;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (color)', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'color');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color:red; text-indent: 10px">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span style="color:red; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="color: red;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles keep before attr', () => {
       const editor = hook.editor();
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span class="c" style="color:red; text-indent: 10px">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span class="c" style="color:red; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span class="c">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles keep after attr', () => {
       const editor = hook.editor();
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color:red; text-indent: 10px" title="t">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span style="color:red; text-indent: 10px" title="t">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span title="t">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles keep before/after attr', () => {
       const editor = hook.editor();
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span class="c" style="color:red; text-indent: 10px" title="t">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span class="c" style="color:red; text-indent: 10px" title="t">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span class="c" title="t">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (background-color)', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'background-color');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="background-color:red; text-indent: 10px">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span style="background-color:red; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="background-color: red;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (font-size)', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'font-size');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="font-size:42px; text-indent: 10px">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span style="font-size:42px; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="font-size: 42px;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (font-family)', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'font-family');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="font-family:Arial; text-indent: 10px">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span style="font-family:Arial; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="font-family: Arial;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles font-family allowed but not specified', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'font-family');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<p title="x" style="text-indent: 10px">Test</p>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<p title="x" style="text-indent: 10px">Test</p>' });
       TinyAssertions.assertContent(editor, '<p title="x">Test</p>');
     });
 
     it('TBA: paste webkit remove runtime styles (custom styles)', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'color font-style');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style="color: red; font-style: italic;">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (all)', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'all');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p><span style=\"color: red; font-style: italic; text-indent: 10px;\">Test</span></p>');
     });
 
     it('TBA: paste webkit remove runtime styles (none)', () => {
       const editor = hook.editor();
       editor.options.set('paste_webkit_styles', 'none');
-      editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
+      editor.execCommand('mceInsertClipboardContent', false, { html: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
       TinyAssertions.assertContent(editor, '<p>Test</p>');
     });
 
@@ -441,7 +443,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
 
       editor.execCommand('mceInsertClipboardContent', false, {
-        content: (
+        html: (
           '<span style="color:#ff0000; text-indent: 10px">a</span>' +
           '<span style="color:rgb(255, 0, 0); text-indent: 10px">b</span>'
         )
@@ -456,7 +458,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
 
       editor.execCommand('mceInsertClipboardContent', false, {
-        content: (
+        html: (
           '<span style="color:red; text-indent: 10px">a</span>' +
           '<span style="color:#ff0000; text-indent: 10px">b</span>' +
           '<span style="color:rgb(255, 0, 0); text-indent: 10px">c</span>'
@@ -472,7 +474,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
 
       editor.execCommand('mceInsertClipboardContent', false, {
-        content: (
+        html: (
           '<span style="color:red; text-indent: 10px">a</span>' +
           '<span style="color:#ff0000; text-indent: 10px">b</span>' +
           '<span style="color:rgb(255, 0, 0); text-indent: 10px">c</span>'

@@ -664,7 +664,7 @@ const register = (editor: Editor) => {
 
   registerOption('paste_data_images', {
     processor: 'boolean',
-    default: false
+    default: true
   });
 
   registerOption('paste_filter_drop', {

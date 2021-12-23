@@ -28,8 +28,8 @@ const register = (editor: Editor, pasteFormat: Cell<string>): void => {
   });
 
   editor.addCommand('mceInsertClipboardContent', (ui, value) => {
-    if (value.content) {
-      Clipboard.pasteHtml(editor, value.content, value.internal);
+    if (value.html) {
+      Clipboard.pasteHtml(editor, value.html, value.internal);
     }
 
     if (value.text) {

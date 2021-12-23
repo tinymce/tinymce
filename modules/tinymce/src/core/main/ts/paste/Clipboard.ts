@@ -9,7 +9,7 @@ import { Arr, Cell, Strings, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
-import { BlobInfo } from '../api/file/BlobCache';
+import { BlobCache, BlobInfo } from '../api/file/BlobCache';
 import { ParserArgs } from '../api/html/DomParser';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
@@ -95,28 +95,27 @@ const extractFilename = (editor: Editor, str: string): string | null => {
   return Type.isNonNullable(m) ? editor.dom.encode(m[1]) : null;
 };
 
+const createBlobInfo = (editor: Editor, blobCache: BlobCache, file: File, base64: string): BlobInfo => {
+  const id = uniqueId();
+  const useFileName = Options.shouldReuseFileName(editor) && Type.isNonNullable(file.name);
+  const name = useFileName ? extractFilename(editor, file.name) : id;
+  const filename = useFileName ? file.name : undefined;
+
+  const blobInfo = blobCache.create(id, file, base64, name, filename);
+  blobCache.add(blobInfo);
+  return blobInfo;
+};
+
 const pasteImage = (editor: Editor, imageItem: FileResult): void => {
   const { data: base64, type } = Conversions.parseDataUri(imageItem.uri);
   const file = imageItem.file;
 
   // TODO: Move the bulk of the cache logic to EditorUpload
   const blobCache = editor.editorUpload.blobCache;
-  let blobInfo: BlobInfo;
-
   const existingBlobInfo = blobCache.getByData(base64, type);
-  if (!existingBlobInfo) {
-    const id = uniqueId();
-    const useFileName = Options.shouldReuseFileName(editor) && Type.isNonNullable(file.name);
-    const name = useFileName ? extractFilename(editor, file.name) : id;
-    const filename = useFileName ? file.name : undefined;
+  const blobInfo = existingBlobInfo ?? createBlobInfo(editor, blobCache, file, base64);
 
-    blobInfo = blobCache.create(id, file, base64, name, filename);
-    blobCache.add(blobInfo);
-  } else {
-    blobInfo = existingBlobInfo;
-  }
-
-  pasteHtml(editor, '<img src="' + blobInfo.blobUri() + '">', false);
+  pasteHtml(editor, `<img src="${blobInfo.blobUri()}">`, false);
 };
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent =>
