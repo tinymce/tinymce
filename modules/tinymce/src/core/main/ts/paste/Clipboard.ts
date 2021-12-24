@@ -288,7 +288,7 @@ const registerDataImageFilter = (editor: Editor) => {
  *
  * This by default will attempt to use the W3C clipboard API to get HTML content.
  * If that can't be used then fallback to letting the browser paste natively with
- * some logc to clean up what the browser generated, as it can mutate the content.
+ * some logic to clean up what the browser generated, as it can mutate the content.
  *
  * Current implementation steps:
  *  1. On keydown determine if we should paste as plain text.
