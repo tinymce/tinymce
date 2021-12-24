@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { PastePlainTextToggleEvent } from 'tinymce/core/api/EventTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -12,14 +14,18 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Options from '../../api/Options';
 
-const makeSetupHandler = (editor: Editor) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi) => {
-  api.setActive(Options.getPasteAsText(editor) === true);
-  const pastePlainTextToggleHandler = (e: EditorEvent<PastePlainTextToggleEvent>) => api.setActive(e.state);
+const makeSetupHandler = (editor: Editor, pasteAsText: Cell<boolean>) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi) => {
+  api.setActive(pasteAsText.get());
+  const pastePlainTextToggleHandler = (e: EditorEvent<PastePlainTextToggleEvent>) => {
+    pasteAsText.set(e.state);
+    api.setActive(e.state);
+  };
   editor.on('PastePlainTextToggle', pastePlainTextToggleHandler);
   return () => editor.off('PastePlainTextToggle', pastePlainTextToggleHandler);
 };
 
 const register = (editor: Editor): void => {
+  const pasteAsText = Cell(Options.getPasteAsText(editor));
   const onAction = () => editor.execCommand('mceTogglePlainTextPaste');
 
   editor.ui.registry.addToggleButton('pastetext', {
@@ -27,14 +33,14 @@ const register = (editor: Editor): void => {
     icon: 'paste-text',
     tooltip: 'Paste as text',
     onAction,
-    onSetup: makeSetupHandler(editor)
+    onSetup: makeSetupHandler(editor, pasteAsText)
   });
 
   editor.ui.registry.addToggleMenuItem('pastetext', {
     text: 'Paste as text',
     icon: 'paste-text',
     onAction,
-    onSetup: makeSetupHandler(editor)
+    onSetup: makeSetupHandler(editor, pasteAsText)
   });
 };
 

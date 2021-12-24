@@ -286,18 +286,17 @@ const registerDataImageFilter = (editor: Editor) => {
 /*
  * This class contains logic for getting HTML contents out of the clipboard.
  *
- * We need to make a lot of ugly hacks to get the contents out of the clipboard since
- * the W3C Clipboard API is broken in all browsers that have it: Gecko/WebKit/Blink.
- * We might rewrite this the way those API:s stabilize. Browsers doesn't handle pasting
- * from applications like Word the same way as it does when pasting into a contentEditable area
- * so we need to do lots of extra work to try to get to this clipboard data.
+ * This by default will attempt to use the W3C clipboard API to get HTML content.
+ * If that can't be used then fallback to letting the browser paste natively with
+ * some logc to clean up what the browser generated, as it can mutate the content.
  *
  * Current implementation steps:
- *  1. On keydown with paste keys Ctrl+V or Shift+Insert create
- *     a paste bin element and move focus to that element.
- *  2. Wait for the browser to fire a "paste" event and get the contents out of the paste bin.
- *  3. Check if the paste was successful if true, process the HTML.
- *  (4). If the paste was unsuccessful use IE execCommand, Clipboard API, document.dataTransfer old WebKit API etc.
+ *  1. On keydown determine if we should paste as plain text.
+ *  2. Wait for the browser to fire a "paste" event and get the contents out of clipboard.
+ *  3. If no content is available, then attach the paste bin and change the selection to be inside the bin.
+ *  4. Extract the contents from the bin in the next event loop.
+ *  5. If no HTML is found or we're using plain text paste mode then convert the HTML or lookup the clipboard to get the plain text.
+ *  6. Process the content from the clipboard or pastebin and insert it into the editor.
  */
 
 const registerEventsAndFilters = (editor: Editor, pasteBin: PasteBin, pasteFormat: Cell<string>): void => {

@@ -38,7 +38,7 @@ const rgbToHex = (value: string) => value.replace(rgbRegExp, Transformations.rgb
  *  paste_webkit_styles: "all", // Keep all of them
  *  paste_webkit_styles: "font-weight color" // Keep specific ones
  */
-const removeWebKitStyles = (editor: Editor, content: string, internal: boolean): string => {// Filter away styles that isn't matching the target node
+const removeWebKitStyles = (editor: Editor, content: string, internal: boolean): string => {
   const webKitStylesOption = Options.getPasteWebkitStyles(editor);
 
   // If the content is internal or if we're keeping all styles then we don't need any processing
@@ -48,7 +48,7 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean):
 
   const webKitStyles = webKitStylesOption ? webKitStylesOption.split(/[, ]/) : [];
 
-  // Keep specific styles that doesn't match the current node computed style
+  // Keep specific styles that don't match the current node computed style
   if (webKitStyles && webKitStylesOption !== 'none') {
     const dom = editor.dom, node = editor.selection.getNode();
 
