@@ -149,7 +149,7 @@ export const initializeTinyMCE = (options: EditorInitParams) => {
       }
 
       editor.ui.registry.addButton('reset', {
-        icon: 'undo',
+        icon: 'reset',
         onAction: () => {
           editor.setContent('');
           editor.focus();

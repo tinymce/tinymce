@@ -108,7 +108,7 @@ function initializeTinyMCE (options) {
               });
           }
           editor.ui.registry.addButton('reset', {
-              icon: 'undo',
+              icon: 'reset',
               onAction: function () {
                   editor.setContent('');
                   editor.focus();
