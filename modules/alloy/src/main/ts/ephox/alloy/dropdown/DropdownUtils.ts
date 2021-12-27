@@ -14,6 +14,7 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
 import { AlloySpec, SketchSpec } from '../api/component/SpecTypes';
 import { TieredData, tieredMenu as TieredMenu } from '../api/ui/TieredMenu';
+import * as AriaControls from '../aria/AriaControls';
 import * as InternalSink from '../parts/InternalSink';
 import { HotspotAnchorSpec } from '../positioning/mode/Anchoring';
 import * as Tagger from '../registry/Tagger';
@@ -212,8 +213,11 @@ const makeSandbox = (
   hotspot: AlloyComponent,
   extras?: SandboxExtras
 ): AlloySpec => {
+  const ariaControls = AriaControls.manager();
+
   const onOpen = (component: AlloyComponent, menu: AlloyComponent) => {
     const anchor = getAnchor(detail, hotspot);
+    ariaControls.link(hotspot.element);
     if (detail.matchWidth) {
       matchWidth(anchor.hotspot, menu, detail.useMinWidth);
     }
@@ -224,6 +228,7 @@ const makeSandbox = (
   };
 
   const onClose = (component: AlloyComponent, menu: AlloyComponent) => {
+    ariaControls.unlink(hotspot.element);
     if (extras !== undefined && extras.onClose !== undefined) {
       extras.onClose(component, menu);
     }
@@ -237,6 +242,7 @@ const makeSandbox = (
       classes: detail.sandboxClasses,
       // TODO: Add aria-selected attribute
       attributes: {
+        id: ariaControls.id,
         role: 'listbox'
       }
     },

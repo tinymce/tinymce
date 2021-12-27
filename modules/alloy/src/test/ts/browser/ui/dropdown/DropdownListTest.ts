@@ -140,6 +140,18 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
 
       FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains(Alpha)'),
 
+      Assertions.sAssertStructure(
+        'Initial structure of dropdown button',
+        ApproxStructure.build((s, str, _arr) => s.element('button', {
+          attrs: {
+            'aria-expanded': str.is('true'),
+            'aria-haspopup': str.is('true'),
+            'aria-controls': str.contains('aria-controls_')
+          }
+        })),
+        component.element
+      ),
+
       store.sClear,
       Chain.asStep(gui.element, [
         UiFinder.cFindIn('.my-test-sandbox'),
