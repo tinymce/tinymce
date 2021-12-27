@@ -146,7 +146,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
             s.element('div', {
               attrs: {
                 id: str.contains('aria-owns')
-              },  
+              },
               children: [
                 s.element('div', {
                   classes: [ arr.has('test-toolbar-overflow') ],
