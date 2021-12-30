@@ -6,19 +6,17 @@ import Schema from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 describe('browser.tinymce.core.html.SerializerTest', () => {
-  // TODO: TINY-4627/TINY-8202: most of the things in this test currently have issues
-  it.skip('Basic serialization', () => {
+  it('Basic serialization', () => {
     const serializer = HtmlSerializer();
 
-    assert.equal(serializer.serialize(DomParser().parse('text<text&')), 'text&lt;text&amp;');
+    assert.equal(serializer.serialize(DomParser().parse('text < text&')), 'text &lt; text&amp;');
     assert.equal(
       serializer.serialize(DomParser().parse('<B>text</B><IMG src="1.gif">')),
       '<strong>text</strong><img src="1.gif">'
     );
     assert.equal(serializer.serialize(DomParser().parse('<!-- comment -->')), '<!-- comment -->');
-    assert.equal(serializer.serialize(DomParser().parse('<![CDATA[cdata]]>', { format: 'xml' })), '<![CDATA[cdata]]>');
-    assert.equal(serializer.serialize(DomParser().parse('<?xml attr="value" ?>', { format: 'xml' })), '<?xml attr="value" ?>');
-    assert.equal(serializer.serialize(DomParser().parse('<!DOCTYPE html>')), '<!DOCTYPE html>');
+    assert.equal(serializer.serialize(DomParser().parse('<![CDATA[cdata]]>', { format: 'xhtml' })), '<![CDATA[cdata]]>');
+    assert.equal(serializer.serialize(DomParser().parse('<?xml-stylesheet attr="value" ?>', { format: 'xhtml' })), '<?xml-stylesheet attr="value" ?>');
   });
 
   it('Sorting of attributes', () => {
