@@ -271,8 +271,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(DOM.get('test'), { getInner: true }), '<span style="border: 1px solid red;">test</span>');
   });
 
-  // TODO: TINY-4672/TINY-8204
-  it.skip('Comments', () => {
+  it('Comments', () => {
     const ser = DomSerializer({ fix_list_elements: true });
 
     ser.setRules('*[*]');

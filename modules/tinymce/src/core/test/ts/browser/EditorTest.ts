@@ -190,8 +190,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(count, 0, 'setContent');
   });
 
-  // TODO: TINY-4627/TINY-8204
-  it.skip('TBA: setContent with comment bug #4409', () => {
+  it('TBA: setContent with comment bug #4409', () => {
     const editor = hook.editor();
     editor.setContent('<!-- x --><br>');
     editor.options.set('disable_nodechange', false);
@@ -324,8 +323,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(true, lastScope === editor, 'Scope is not editor');
   });
 
-  // TODO: TINY-4627/TINY-8204
-  it.skip('TBA: Block script execution', () => {
+  it('TBA: Block script execution', () => {
     const editor = hook.editor();
     editor.setContent('<script></script><script type="x"></script><script type="mce-x"></script><p>x</p>');
     assert.equal(

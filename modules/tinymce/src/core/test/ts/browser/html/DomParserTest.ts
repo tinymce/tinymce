@@ -47,11 +47,10 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
   });
 
-  // TODO: TINY-4627/TINY-8204
-  it.skip('Retains code inside a script', () => {
+  it('Retains code inside a script', () => {
     parser = DomParser({}, schema);
     root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   a < b > \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
-    assert.equal(serializer.serialize(root), '<script>  \t\r\n   a < b > \t\r\n   </s' + 'cript>', 'Retain code inside SCRIPT');
+    assert.equal(serializer.serialize(root), '<script>  \t\n   a < b > \t\n   </s' + 'cript>', 'Retain code inside SCRIPT');
     assert.deepEqual(countNodes(root), { 'body': 1, 'script': 1, '#text': 1 }, 'Retain code inside SCRIPT (count)');
   });
 
@@ -66,20 +65,19 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(serializer.serialize(root), '<p>test</p>', 'Redundant whitespace (block element)');
     assert.deepEqual(countNodes(root), { 'body': 1, 'p': 1, '#text': 1 }, 'Redundant whitespace (block element) (count)');
 
-    // TODO: TINY-4627/TINY-8204
-    // parser = DomParser({}, schema);
-    // root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   test  \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
-    // assert.equal(
-    //   serializer.serialize(root),
-    //   '<script>  \t\r\n   test  \t\r\n   </s' + 'cript>',
-    //   'Whitespace around and inside SCRIPT'
-    // );
-    // assert.deepEqual(countNodes(root), { 'body': 1, 'script': 1, '#text': 1 }, 'Whitespace around and inside SCRIPT (count)');
-    //
-    // parser = DomParser({}, schema);
-    // root = parser.parse('  \t\r\n  <STYLE>  \t\r\n   test  \t\r\n   </STYLE>   \t\r\n  ');
-    // assert.equal(serializer.serialize(root), '<style>  \t\r\n   test  \t\r\n   </style>', 'Whitespace around and inside STYLE');
-    // assert.deepEqual(countNodes(root), { 'body': 1, 'style': 1, '#text': 1 }, 'Whitespace around and inside STYLE (count)');
+    parser = DomParser({}, schema);
+    root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   test  \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
+    assert.equal(
+      serializer.serialize(root),
+      '<script>  \t\n   test  \t\n   </s' + 'cript>',
+      'Whitespace around and inside SCRIPT'
+    );
+    assert.deepEqual(countNodes(root), { 'body': 1, 'script': 1, '#text': 1 }, 'Whitespace around and inside SCRIPT (count)');
+
+    parser = DomParser({}, schema);
+    root = parser.parse('  \t\r\n  <STYLE>  \t\r\n   test  \t\r\n   </STYLE>   \t\r\n  ');
+    assert.equal(serializer.serialize(root), '<style>  \t\n   test  \t\n   </style>', 'Whitespace around and inside STYLE');
+    assert.deepEqual(countNodes(root), { 'body': 1, 'style': 1, '#text': 1 }, 'Whitespace around and inside STYLE (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<ul>\n<li>Item 1\n<ul>\n<li>\n \t Indented \t \n</li>\n</ul>\n</li>\n</ul>\n');
@@ -479,8 +477,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(serializer.serialize(root), '', 'Remove traling br elements.');
   });
 
-  // TODO: TINY-4627/TINY-8204
-  it.skip('Forced root blocks', () => {
+  it('Forced root blocks', () => {
     const schema = Schema();
 
     const parser = DomParser({ forced_root_block: 'p' }, schema);
@@ -501,8 +498,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
   });
 
-  // TODO: TINY-4627/TINY-8204
-  it.skip('Forced root blocks attrs', () => {
+  it('Forced root blocks attrs', () => {
     const schema = Schema();
 
     const parser = DomParser({ forced_root_block: 'p', forced_root_block_attrs: { class: 'class1' }}, schema);
