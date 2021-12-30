@@ -93,21 +93,26 @@ interface FilterMatches {
 
 type WalkerCallback = (node: AstNode) => void;
 
-const getPurifyConfig = (settings: DomParserSettings): Config => {
-  const config: Config = {
-    RETURN_DOM: true,
-    ALLOW_DATA_ATTR: true,
-    ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|about|blob|file|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
-  };
+const basePurifyConfig: Config & { RETURN_DOM: true } = {
+  RETURN_DOM: true,
+  ALLOW_DATA_ATTR: true,
+  ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|about|blob|file|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+  // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
+  // #comment and #cdata-section are always allowed as they aren't controlled via the schema
+  ALLOWED_TAGS: [ '#comment', '#cdata-section' ],
+  ALLOWED_ATTR: []
+};
+
+const getPurifyConfig = (settings: DomParserSettings, args: ParserArgs): Config & { RETURN_DOM: true } => {
+  const config = { ...basePurifyConfig };
+
+  if (args.format === 'xhtml') {
+    config.PARSER_MEDIA_TYPE = 'application/xhtml+xml';
+  }
 
   if (settings.allow_html_data_urls) {
     config.ADD_DATA_URI_TAGS = [ 'a', 'img' ];
   }
-
-  // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
-  // #comment and #cdata-section are always allowed as they aren't controlled via the schema
-  config.ALLOWED_TAGS = [ '#comment', '#cdata-section' ];
-  config.ALLOWED_ATTR = [];
 
   return config;
 };
@@ -115,8 +120,6 @@ const getPurifyConfig = (settings: DomParserSettings): Config => {
 const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
   const purify = createDompurify();
   let uid = 0;
-
-  purify.setConfig(getPurifyConfig(settings));
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
@@ -601,8 +604,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     // If the root requires special parsing rules then ensure it's wrapped it in that element
     const isSpecialRoot = Obj.has(specialElements, rootName.toLowerCase());
     const content = isSpecialRoot ? `<${rootName}>${html}</${rootName}>` : html;
-    // The settings object we pass to purify is completely ignored, because we called setConfig earlier, but it makes the type signatures work
-    const body = purify.sanitize(`<body>${content}</body>`, { RETURN_DOM: true });
+    const body = purify.sanitize(`<body>${content}</body>`, getPurifyConfig(settings, args));
     const element = isSpecialRoot ? body.firstChild : body;
     const rootNode = new AstNode(rootName, 11);
     transferChildren(rootNode, element, specialElements);
