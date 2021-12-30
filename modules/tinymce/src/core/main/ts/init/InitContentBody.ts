@@ -31,6 +31,7 @@ import * as DeleteCommands from '../delete/DeleteCommands';
 import * as NodeType from '../dom/NodeType';
 import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
+import * as NonEditableFilter from '../html/NonEditableFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
 import * as Rtc from '../Rtc';
@@ -432,6 +433,7 @@ const contentBodyLoaded = (editor: Editor): void => {
 
   TouchEvents.setup(editor);
   DetailsElement.setup(editor);
+  NonEditableFilter.setup(editor);
 
   if (!Rtc.isRtc(editor)) {
     MultiClickSelection.setup(editor);

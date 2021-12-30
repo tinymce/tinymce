@@ -5,7 +5,7 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiAc
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
 
-describe('browser.tinymce.plugins.emoticons.AutocompletionTest', () => {
+describe('browser.tinymce.plugins.emoticons.EmoticonAutocompletionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
     toolbar: 'emoticons',

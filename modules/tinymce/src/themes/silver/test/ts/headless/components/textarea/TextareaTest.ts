@@ -17,7 +17,7 @@ describe('headless.tinymce.themes.silver.components.textarea.TextareaTest', () =
       placeholder: Optional.none(),
       maximized: false,
       disabled: false
-    }, TestProviders)
+    }, TestProviders, Optional.none())
   ));
 
   // TODO: Fix dupe with Input test. Test Ctrl+Enter.

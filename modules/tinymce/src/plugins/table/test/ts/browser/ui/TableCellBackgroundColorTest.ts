@@ -31,7 +31,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
       subMenuRemoveTitle: 'Remove color',
       rows: 1,
       columns: 1,
-      customStyle: 'background-color: #51a951'
+      customStyle: 'background-color: rgb(81, 169, 81)'
     });
   });
 
@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellBackgroundColorTest', () => 
       subMenuRemoveTitle: 'Remove color',
       rows: 2,
       columns: 2,
-      customStyle: 'background-color: #51a951'
+      customStyle: 'background-color: rgb(81, 169, 81)'
     });
   });
 });

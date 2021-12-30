@@ -45,7 +45,6 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'lists', name: 'Lists' },
   { key: 'media', name: 'Media' },
   { key: 'nonbreaking', name: 'Nonbreaking' },
-  { key: 'noneditable', name: 'Noneditable' },
   { key: 'pagebreak', name: 'Page Break' },
   { key: 'paste', name: 'Paste' },
   { key: 'preview', name: 'Preview' },
@@ -65,8 +64,8 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'autocorrect', name: 'Autocorrect', type: PluginType.Premium },
   { key: 'casechange', name: 'Case Change', type: PluginType.Premium },
   { key: 'checklist', name: 'Checklist', type: PluginType.Premium },
+  { key: 'editimage', name: 'Edit Image', type: PluginType.Premium },
   { key: 'export', name: 'Export', type: PluginType.Premium },
-  { key: 'imagetools', name: 'Image Tools', type: PluginType.Premium },
   { key: 'mediaembed', name: 'Enhanced Media Embed', type: PluginType.Premium },
   { key: 'formatpainter', name: 'Format Painter', type: PluginType.Premium },
   { key: 'linkchecker', name: 'Link Checker', type: PluginType.Premium },
@@ -78,7 +77,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'tinymcespellchecker', name: 'Spell Checker Pro', type: PluginType.Premium },
   { key: 'tinycomments', name: 'Tiny Comments', type: PluginType.Premium, slug: 'comments' },
   { key: 'tinydrive', name: 'Tiny Drive', type: PluginType.Premium },
-  { key: 'toc', name: 'Table of Contents', type: PluginType.Premium },
+  { key: 'tableofcontents', name: 'Table of Contents', type: PluginType.Premium },
 ], (item) => ({
   ...item,
   // Set the defaults/fallbacks for the plugin urls

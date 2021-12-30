@@ -13,7 +13,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       name: 'frame-a',
       label: Optional.some('iframe label'),
       sandboxed: true
-    }, TestProviders)
+    }, TestProviders, Optional.none())
   ));
 
   const assertInitialIframeStructure = (component: AlloyComponent) => Assertions.assertStructure(

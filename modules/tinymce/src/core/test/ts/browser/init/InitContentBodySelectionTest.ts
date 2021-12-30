@@ -24,8 +24,8 @@ describe('browser.tinymce.core.init.InitContentBodySelectionTest', () => {
     initAndAssertContent('Test p', '<p>Initial Content</p>', [ 0, 0 ]);
     initAndAssertContent('Test h1', '<h1>Initial Content</h1>', [ 0, 0 ]);
     initAndAssertContent('Test p with inline styles', '<p><span style="font-weight: bold">Initial Content</span></p>', [ 0, 0, 0 ]);
-    initAndAssertContent('Test p with noneditable span', '<p><span class="mceNonEditable">Initial Content</span></p>', [ 0, 0, 0 ]);
-    initAndAssertContent('Test noneditable p', '<p class="mceNonEditable">Initial Content</p>', [ 0, 0 ]);
+    initAndAssertContent('Test p with noneditable span', '<p><span class="mceNonEditable">Initial Content</span></p>', [ 0, 0 ]);
+    initAndAssertContent('Test noneditable p', '<p class="mceNonEditable">Initial Content</p>', [ 0 ]);
     initAndAssertContent('Test cef p', '<p contenteditable="false">Initial Content</p>', [ 0 ]);
   });
 

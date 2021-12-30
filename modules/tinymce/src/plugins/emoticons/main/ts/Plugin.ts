@@ -24,8 +24,8 @@ import * as Buttons from './ui/Buttons';
 export default (): void => {
   PluginManager.add('emoticons', (editor, pluginUrl) => {
     Options.register(editor, pluginUrl);
-    const databaseUrl = Options.getEmoticonDatabaseUrl(editor);
-    const databaseId = Options.getEmoticonDatabaseId(editor);
+    const databaseUrl = Options.getEmojiDatabaseUrl(editor);
+    const databaseId = Options.getEmojiDatabaseId(editor);
 
     const database = initDatabase(editor, databaseUrl, databaseId);
 

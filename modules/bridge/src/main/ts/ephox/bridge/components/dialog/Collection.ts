@@ -15,6 +15,12 @@ export interface Collection extends FormComponentWithLabel {
   columns: number | 'auto';
 }
 
+export interface CollectionItem {
+  value: string;
+  text: string;
+  icon: string;
+}
+
 const collectionFields: FieldProcessor[] = formComponentWithLabelFields.concat([
   ComponentSchema.defaultedColumns('auto')
 ]);

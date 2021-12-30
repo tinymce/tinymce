@@ -9,7 +9,7 @@ import Plugin from 'tinymce/plugins/emoticons/Plugin';
 
 import { fakeEvent } from '../module/test/Utils';
 
-describe('browser.tinymce.plugins.emoticons.AppendTest', () => {
+describe('browser.tinymce.plugins.emoticons.EmojiAppendTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
     toolbar: 'emoticons',
@@ -39,7 +39,7 @@ describe('browser.tinymce.plugins.emoticons.AppendTest', () => {
       ]
     });
 
-  it('TBA: Open dialog, verify custom categories listed and search for custom emoticon', async () => {
+  it('TBA: Open dialog, verify custom categories listed and search for custom emoji', async () => {
     const editor = hook.editor();
     const doc = SugarDocument.getDocument();
 

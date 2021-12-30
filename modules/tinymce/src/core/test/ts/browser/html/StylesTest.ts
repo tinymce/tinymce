@@ -28,13 +28,13 @@ describe('browser.tinymce.core.html.StylesTest', () => {
   it('Colors force hex and lowercase', () => {
     const styles = Styles();
 
-    assert.equal(styles.serialize(styles.parse('color: rgb(1,2,3)')), 'color: #010203;');
-    assert.equal(styles.serialize(styles.parse('color: RGB(1,2,3)')), 'color: #010203;');
+    assert.equal(styles.serialize(styles.parse('color: rgb(1,2,3)')), 'color: rgb(1,2,3);');
+    assert.equal(styles.serialize(styles.parse('color: RGB(1,2,3)')), 'color: rgb(1,2,3);');
     assert.equal(styles.serialize(styles.parse('color: #FF0000')), 'color: #ff0000;');
-    assert.equal(styles.serialize(styles.parse('  color:   RGB  (  1  ,  2  ,  3  )  ')), 'color: #010203;');
+    assert.equal(styles.serialize(styles.parse('  color:   RGB  (  1  ,  2  ,  3  )  ')), 'color: rgb  (  1  ,  2  ,  3  );');
     assert.equal(
       styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RGB  (  1  ,  2  ,  3  )   ')),
-      'font-size: 10px; color: #010203;'
+      'font-size: 10px; color: rgb  (  1  ,  2  ,  3  );'
     );
     assert.equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RED   ')), 'font-size: 10px; color: red;');
   });

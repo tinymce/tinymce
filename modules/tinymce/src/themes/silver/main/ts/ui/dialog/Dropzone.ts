@@ -11,7 +11,7 @@ import {
   SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import Tools from 'tinymce/core/api/util/Tools';
@@ -33,7 +33,7 @@ const filterByExtension = (files: FileList, providersBackstage: UiFactoryBacksta
 
 type DropZoneSpec = Omit<Dialog.DropZone, 'type'>;
 
-export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string[]>): SimpleSpec => {
 
   // TODO: Consider moving to alloy
   const stopper: AlloyEvents.EventRunHandler<EventArgs> = (_: AlloyComponent, se: SimulatedEvent<EventArgs>): void => {
@@ -59,7 +59,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     handleFiles(component, input.files);
   };
 
-  const handleFiles = (component, files: FileList) => {
+  const handleFiles = (component: AlloyComponent, files: FileList) => {
     Representing.setValue(component, filterByExtension(files, providersBackstage));
     AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
   };
@@ -92,7 +92,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
       classes: [ 'tox-dropzone-container' ]
     },
     behaviours: Behaviour.derive([
-      RepresentingConfigs.memory([ ]),
+      RepresentingConfigs.memory(initialData.getOr([])),
       ComposingConfigs.self(),
       Disabling.config({}),
       Toggling.config({

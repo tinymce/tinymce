@@ -1,15 +1,20 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 
 import * as HexColour from 'ephox/acid/api/colour/HexColour';
 import * as RgbaColour from 'ephox/acid/api/colour/RgbaColour';
 
-UnitTest.test('ConversionsTest', () => {
-  const rgbaBlack = RgbaColour.rgbaColour(0, 0, 0, 1);
-  const rgbaWhite = RgbaColour.rgbaColour(255, 255, 255, 1);
+describe('browser.acid.api.ConversionsTest', () => {
 
-  const hexBlack = HexColour.fromRgba(rgbaBlack);
-  assert.eq('000000', hexBlack.value);
+  it('RGB to Hex Black', () => {
+    const rgbaBlack = RgbaColour.rgbaColour(0, 0, 0, 1);
+    const hexBlack = HexColour.fromRgba(rgbaBlack);
+    assert.equal(hexBlack.value, '000000');
+  });
 
-  const hexWhite = HexColour.fromRgba(rgbaWhite);
-  assert.eq('FFFFFF', hexWhite.value);
+  it('RGB to hex white', () => {
+    const rgbaWhite = RgbaColour.rgbaColour(255, 255, 255, 1);
+    const hexWhite = HexColour.fromRgba(rgbaWhite);
+    assert.equal(hexWhite.value, 'FFFFFF');
+  });
 });

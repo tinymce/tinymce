@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- New `Ready.image` function that returns a promise which will not resolve until the image element has loaded. Errors trigger promise rejection.
+
 ### Changed
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+- Renamed `Ready.execute` to `Ready.document`, for better clarity on what it does
 
 ### Removed
 - Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.

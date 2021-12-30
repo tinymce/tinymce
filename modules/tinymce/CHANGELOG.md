@@ -11,14 +11,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tabindex` attribute is now copied from the target element to the iframe #TINY-8315
 - New `AutocompleterStart`, `AutocompleterUpdate` and `AutocompleterEnd` events #TINY-8279
 - New `mceAutocompleterClose`, `mceAutocompleterReload` commands #TINY-8279
+- New `FakeClipboard` API on the `tinymce` global #TINY-8353
 - New `slider` dialog component #TINY-8304
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
+- New `imagepreview` dialog component, allowing preview and zoom of any image URL #TINY-8333
+- New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
 
 ### Improved
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
+- The `emoticon` plugin dialog, toolbar and menu item has been updated to use the more accurate `Emojis` term #TINY-7631
+- The dialog `redial` API will now only rerender the changed components instead of the whole dialog #TINY-8334
+- The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
+- The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
 
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
+- RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
 - The `tinymce.Env.os.isOSX` API has been renamed to `tinymce.Env.os.isMacOS` #TINY-8175
 - The `tinymce.Env.browser.isChrome` API has been renamed to `tinymce.Env.browser.isChromium` to better reflect its functionality #TINY-8300
 - The `editor.setContent()` API can now be prevented using the `BeforeSetContent` event. This makes it consistent with the `editor.selection.setContent()` API #TINY-8018
@@ -26,15 +34,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
-- Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
-- Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 - The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
+- Moved the `noneditable` plugin to TinyMCE core #TINY-8311
+- Renamed the `noneditable_noneditable_class` and `noneditable_editable_class` options to `noneditable_class` and `editable_class` #TINY-8311
 - Moved the `textpattern` plugin to TinyMCE core #TINY-8312
-- Renamed the `textpattern_patterns` setting to `text_patterns` #TINY-8312
+- Renamed the `textpattern_patterns` option to `text_patterns` #TINY-8312
+- Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
+- Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -42,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `GetContent` event was not fired when getting `tree` or `text` formats using the `editor.selection.getContent()` API #TINY-8018
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 - The aria labels for the color picker dialog were not translated #TINY-8381
+- The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
 
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
@@ -61,9 +72,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
+- Removed the `imagetools` dialog component #TINY-8333
 - Removed the `filterNode` method from `DomParser` #TINY-8249
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
+- Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
