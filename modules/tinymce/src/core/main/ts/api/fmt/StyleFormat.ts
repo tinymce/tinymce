@@ -7,7 +7,7 @@
 
 import { BlockFormat, InlineFormat, SelectorFormat } from './Format';
 
-// somewhat documented at https://www.tiny.cloud/docs/configure/content-formatting/#style_formats
+// somewhat documented at https://www.tiny.cloud/docs/content/user-formatting-options/#style_formats
 export type StyleFormat = BlockStyleFormat | InlineStyleFormat | SelectorStyleFormat;
 export type AllowedFormat = Separator | FormatReference | StyleFormat | NestedFormatting;
 

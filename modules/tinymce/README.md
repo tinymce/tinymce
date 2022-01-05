@@ -78,9 +78,9 @@ After you signed your pull request will automatically be ready for review & merg
 
 __How to Contribute to the Docs__
 
-Docs are hosted on Github in the [tinymce-docs](https://github.com/tinymce/tinymce-docs) repo.
+Docs are hosted on GitHub in the [tinymce-docs](https://github.com/tinymce/tinymce-docs) repo.
 
-[How to contribute](https://www.tiny.cloud/docs/advanced/contributing-docs/) to the docs, including a style guide, can be found on the TinyMCE website.
+[How to contribute](https://github.com/tinymce/tinymce-docs/blob/main/CONTRIBUTING.adoc) to the docs, including a style guide, can be found on the GitHub repo.
 
 [Documentation](https://www.tiny.cloud/docs/)
 

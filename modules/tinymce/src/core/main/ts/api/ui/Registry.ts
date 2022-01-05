@@ -23,7 +23,7 @@ const registry = () => {
      * Emoticons and Charmap use an autocompleter.
      * <br>
      * For information on creating an autocompleter, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/autocompleter/">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/autocompleter/">
      * UI Components - Autocompleter</a>.
      *
      * @method addAutocompleter
@@ -38,7 +38,7 @@ const registry = () => {
      * via keyboard navigation controls.
      * <br>
      * For information on creating a basic toolbar button, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#basicbutton">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/toolbar-buttons/custom-basic-toolbar-button/">
      * UI Components - Types of toolbar buttons: Basic button</a>.
      *
      * @method addButton
@@ -57,7 +57,7 @@ const registry = () => {
      * contextual input form appears allowing for quick changes to the url field.
      * <br>
      * For information on creating context forms, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/contextform/">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/contextform/">
      * UI Components - Context forms</a>.
      *
      * @method addContextForm
@@ -72,7 +72,7 @@ const registry = () => {
      * for example, the cursor is inside a table.
      * <br>
      * For information on creating context menus, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/contextmenu/">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/contextmenu/">
      * UI Components - Context Menu</a>.
      *
      * @method addContextMenu
@@ -87,7 +87,7 @@ const registry = () => {
      * the cursor is on an image element.
      * <br>
      * For information on creating context toolbars, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/contexttoolbar/">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/contexttoolbar/">
      * UI Components - Context Toolbar</a>.
      *
      * @method addContextToolbar
@@ -118,7 +118,7 @@ const registry = () => {
      * addNestedMenuItem or addToggleMenuItem.
      * <br>
      * For information on creating a toolbar menu button, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#menubutton">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/toolbar-buttons/custom-menu-toolbar-button/">
      * UI Components - Types of toolbar buttons: Menu button</a>.
      *
      * @method addMenuButton
@@ -133,7 +133,7 @@ const registry = () => {
      * via keyboard navigation controls.
      * <br>
      * For information on creating a basic menu item, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/menuitems/#basicmenuitems">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/menu-items/custom-basic-menu-items/">
      * UI Components - Custom menu items: Basic menu items</a>.
      *
      * @method addMenuItem
@@ -149,7 +149,7 @@ const registry = () => {
      * created by addMenuItem, addNestedMenuItem or addToggleMenuItem.
      * <br>
      * For information on creating a nested menu item, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/menuitems/#nestedmenuitems">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/menu-items/custom-nested-menu-items/">
      * UI Components - Custom menu items: Nested menu items</a>.
      *
      * @method addNestedMenuItem
@@ -169,7 +169,7 @@ const registry = () => {
      * sidebar for its Ui components.
      * <br>
      * For information on creating a custom sidebar, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/customsidebar/">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/customsidebar/">
      * UI Components - Custom sidebar</a>.
      *
      * @method addSidebar
@@ -184,7 +184,7 @@ const registry = () => {
      * a split button to simplify its functionality.
      * <br>
      * For information on creating a split toolbar button, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#splitbutton">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/toolbar-buttons/custom-split-toolbar-button/">
      * UI Components - Types of toolbar buttons: Split button</a>.
      *
      * @method addSplitButton
@@ -199,7 +199,7 @@ const registry = () => {
      * be set in the configuration.
      * <br>
      * For information on creating a toggle toolbar button, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#togglebutton">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/toolbar-buttons/custom-toggle-toolbar-button/">
      * UI Components - Types of toolbar buttons: Toggle button</a>.
      *
      * @method addToggleButton
@@ -218,7 +218,7 @@ const registry = () => {
      * <em>Added in TinyMCE 5.2</em>
      * <br>
      * For information on creating a group toolbar button, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/typesoftoolbarbuttons/#grouptoolbarbutton">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/toolbar-buttons/custom-group-toolbar-button/">
      * UI Components - Types of toolbar buttons: Group toolbar button</a>.
      *
      * @method addGroupToolbarButton
@@ -233,7 +233,7 @@ const registry = () => {
      * showing a tick in the menu item to represent state.
      * <br>
      * For information on creating a toggle menu item, see:
-     * <a href="https://www.tiny.cloud/docs/ui-components/menuitems/#togglemenuitems">
+     * <a href="https://www.tiny.cloud/docs/how-to-guides/creating-custom-ui-components/toolbar-buttons/custom-toggle-toolbar-button/">
      * UI Components - Custom menu items: Toggle menu items</a>.
      *
      * @method addToggleMenuItem
