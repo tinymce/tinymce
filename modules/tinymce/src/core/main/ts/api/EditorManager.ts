@@ -110,7 +110,6 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   releaseDate: string;
   activeEditor: Editor;
   focusedEditor: Editor;
-  settings: RawEditorOptions;
   baseURI: URI;
   baseURL: string;
   documentBaseURL: string;
@@ -188,8 +187,6 @@ const EditorManager: EditorManager = {
    */
   activeEditor: null,
   focusedEditor: null,
-
-  settings: {},
 
   setup() {
     const self: EditorManager = this;
@@ -629,8 +626,12 @@ const EditorManager: EditorManager = {
     // Manager commands
     switch (cmd) {
       case 'mceAddEditor':
-        if (!self.get(value)) {
-          new Editor(value, self.settings, self).render();
+        const isObj = Type.isObject(value);
+        const editorId = isObj ? value.id : value;
+
+        if (!self.get(editorId)) {
+          const editorOptions = isObj ? value.options : {};
+          new Editor(editorId, editorOptions, self).render();
         }
 
         return true;
