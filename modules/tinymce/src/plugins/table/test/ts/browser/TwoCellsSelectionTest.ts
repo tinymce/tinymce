@@ -60,10 +60,10 @@ describe('browser.tinymce.plugins.table.TwoCellsSelectionTest', () => {
     editor.execCommand('mceTableMergeCells');
     TinyAssertions.assertContent(editor,
       '<table>' +
-      '<colgroup><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>A1</td><td>B1</td><td>C1</td></tr>' +
-      '<tr><td colspan="2">A2<br />B2</td><td>C2</td></tr>' +
+      '<tr><td colspan="2">A2<br>B2</td><td>C2</td></tr>' +
       '</tbody>' +
       '</table>'
     );
@@ -75,9 +75,9 @@ describe('browser.tinymce.plugins.table.TwoCellsSelectionTest', () => {
     editor.execCommand('mceTableMergeCells');
     TinyAssertions.assertContent(editor,
       '<table>' +
-      '<colgroup><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
-      '<tr><td>A1</td><td rowspan="2">B1<br />B2</td><td>C1</td></tr>' +
+      '<tr><td>A1</td><td rowspan="2">B1<br>B2</td><td>C1</td></tr>' +
       '<tr><td>A2</td><td>C2</td></tr>' +
       '</tbody>' +
       '</table>'

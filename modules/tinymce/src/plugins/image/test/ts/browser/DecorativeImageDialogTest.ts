@@ -58,7 +58,7 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
       alt: ''
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="src" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="src"></p>');
   });
 
   it('TBA: Image update with decorative toggled on should produce empty alt and role=presentation', async () => {
@@ -74,7 +74,7 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
       decorative: true
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt="" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt=""></p>');
   });
 
   it('TBA: Image update with decorative toggled off should produce empty alt and role=presentation', async () => {
@@ -90,6 +90,6 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
       decorative: false
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="#1" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="#1"></p>');
   });
 });
