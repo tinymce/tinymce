@@ -557,7 +557,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('element_format', {
-    processor: 'string'
+    processor: 'string',
+    default: 'html'
   });
 
   registerOption('entities', {
