@@ -7,7 +7,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-describe('browser.tinymce.core.keyboard.EnterKey', () => {
+describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -63,7 +63,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.setContent('<p><img src="about:blank" /></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p>\u00a0</p><p><img src="about:blank" /></p>');
+    assert.equal(editor.getContent(), '<p>\u00a0</p><p><img src="about:blank"></p>');
   });
 
   it('Enter before first wrapped IMG in P', () => {
@@ -72,7 +72,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 0);
     pressEnter(editor);
     assert.equal((editor.getBody().firstChild as HTMLElement).innerHTML, '<br data-mce-bogus="1">');
-    assert.equal(editor.getContent(), '<p>\u00a0</p><p><b><img src="about:blank" /></b></p>');
+    assert.equal(editor.getContent(), '<p>\u00a0</p><p><b><img src="about:blank"></b></p>');
   });
 
   it('Enter before last IMG in P with text', () => {
@@ -80,7 +80,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.setContent('<p>abc<img src="about:blank" /></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p>abc</p><p><img src="about:blank" /></p>');
+    assert.equal(editor.getContent(), '<p>abc</p><p><img src="about:blank"></p>');
     const rng = editor.selection.getRng();
     assert.equal(rng.startContainer.nodeName, 'P');
     assert.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');
@@ -91,7 +91,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.setContent('<p><img src="about:blank" /><img src="about:blank" /></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p><img src="about:blank" /></p><p><img src="about:blank" /></p>');
+    assert.equal(editor.getContent(), '<p><img src="about:blank"></p><p><img src="about:blank"></p>');
     const rng = editor.selection.getRng();
     assert.equal(rng.startContainer.nodeName, 'P');
     assert.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');
@@ -102,7 +102,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.setContent('<p>abc<img src="about:blank" /></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 2);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p>abc<img src="about:blank" /></p><p>\u00a0</p>');
+    assert.equal(editor.getContent(), '<p>abc<img src="about:blank"></p><p>\u00a0</p>');
   });
 
   it('Enter before last INPUT in P with text', () => {
@@ -110,7 +110,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.setContent('<p>abc<input type="text" /></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p>abc</p><p><input type="text" /></p>');
+    assert.equal(editor.getContent(), '<p>abc</p><p><input type="text"></p>');
     const rng = editor.selection.getRng();
     assert.equal(rng.startContainer.nodeName, 'P');
     assert.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'INPUT');
@@ -121,7 +121,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.setContent('<p><input type="text" /><input type="text" /></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p><input type="text" /></p><p><input type="text" /></p>');
+    assert.equal(editor.getContent(), '<p><input type="text"></p><p><input type="text"></p>');
     const rng = editor.selection.getRng();
     assert.equal(rng.startContainer.nodeName, 'P');
     assert.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'INPUT');
@@ -132,7 +132,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.setContent('<p>abc<input type="text" /></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 2);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p>abc<input type="text" /></p><p>\u00a0</p>');
+    assert.equal(editor.getContent(), '<p>abc<input type="text"></p><p>\u00a0</p>');
   });
 
   it('Enter at end of P', () => {
@@ -321,7 +321,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p>ab<br />c</p>');
+    assert.equal(editor.getContent(), '<p>ab<br>c</p>');
   });
 
   it('Enter at the end of text in P with forced_root_block set to false', () => {
@@ -426,7 +426,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p><br />abc</p>');
+    assert.equal(editor.getContent(), '<p><br>abc</p>');
   });
 
   it('Shift+Enter in the middle of P', () => {
@@ -434,7 +434,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<p>abcd</p>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p>ab<br />cd</p>');
+    assert.equal(editor.getContent(), '<p>ab<br>cd</p>');
   });
 
   it('Shift+Enter at the end of P', () => {
@@ -442,7 +442,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<p>abcd</p>';
     LegacyUnit.setSelection(editor, 'p', 4);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p>abcd<br /><br /></p>');
+    assert.equal(editor.getContent(), '<p>abcd<br><br></p>');
   });
 
   it('Shift+Enter in the middle of B with a BR after it', () => {
@@ -450,7 +450,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<p><b>abcd</b><br></p>';
     LegacyUnit.setSelection(editor, 'b', 2);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p><b>ab<br />cd</b></p>');
+    assert.equal(editor.getContent(), '<p><b>ab<br>cd</b></p>');
   });
 
   it('Shift+Enter at the end of B with a BR after it', () => {
@@ -458,7 +458,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<p><b>abcd</b><br></p>';
     LegacyUnit.setSelection(editor, 'b', 4);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p><b>abcd<br /></b></p>');
+    assert.equal(editor.getContent(), '<p><b>abcd<br></b></p>');
   });
 
   it('Enter in beginning of PRE', () => {
@@ -466,7 +466,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<pre>abc</pre>';
     LegacyUnit.setSelection(editor, 'pre', 0);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<pre><br />abc</pre>');
+    assert.equal(editor.getContent(), '<pre><br>abc</pre>');
   });
 
   it('Enter in the middle of PRE', () => {
@@ -474,7 +474,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<pre>abcd</pre>';
     LegacyUnit.setSelection(editor, 'pre', 2);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<pre>ab<br />cd</pre>');
+    assert.equal(editor.getContent(), '<pre>ab<br>cd</pre>');
   });
 
   it('Enter at the end of PRE', () => {
@@ -482,7 +482,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<pre>abcd</pre>';
     LegacyUnit.setSelection(editor, 'pre', 4);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<pre>abcd<br /><br /></pre>');
+    assert.equal(editor.getContent(), '<pre>abcd<br><br></pre>');
   });
 
   it('Enter in beginning of PRE and br_in_pre: false', () => {
@@ -617,7 +617,7 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<p>a<br>b</p>';
     LegacyUnit.setSelection(editor, 'p', 1);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p>a</p><p><br />b</p>');
+    assert.equal(editor.getContent(), '<p>a</p><p><br>b</p>');
 
     const rng = editor.selection.getRng();
     assert.equal(rng.startContainer.nodeName, 'P');
@@ -743,6 +743,6 @@ describe('browser.tinymce.core.keyboard.EnterKey', () => {
     editor.getBody().innerHTML = '<details><summary>ab</summary></details>';
     LegacyUnit.setSelection(editor, 'summary', 1);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<details><summary>a<br />b</summary></details>');
+    assert.equal(editor.getContent(), '<details><summary>a<br>b</summary></details>');
   });
 });
