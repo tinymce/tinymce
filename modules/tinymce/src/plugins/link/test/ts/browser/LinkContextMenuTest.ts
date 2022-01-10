@@ -1,8 +1,7 @@
+import { FocusTools, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
-import {FocusTools, Keys } from '@ephox/agar';
 import { SugarDocument } from '@ephox/sugar';
-
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
@@ -16,7 +15,7 @@ describe('browser.tinymce.plugins.link.LinkContextMenuTest', () => {
 
   const pAssertFocusOnItem = (label: string, selector: string) =>
     FocusTools.pTryOnSelector(`Focus should be on: ${label}`, SugarDocument.getDocument(), selector);
-  
+
   const pressDownArrowKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.down());
 
   it('TBA: Context menu show up on link', async () => {
