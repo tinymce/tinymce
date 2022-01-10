@@ -69,6 +69,17 @@ export interface TableModifiedEvent extends TableEventData {
   readonly table: HTMLTableElement;
 }
 
+export interface PastePlainTextToggleEvent { state: boolean }
+export interface PastePreProcessEvent {
+  content: string;
+  readonly internal: boolean;
+}
+
+export interface PastePostProcessEvent {
+  node: HTMLElement;
+  readonly internal: boolean;
+}
+
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
@@ -136,6 +147,9 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'TableModified': TableModifiedEvent;
   'NewRow': NewTableRowEvent;
   'NewCell': NewTableCellEvent;
+  'PastePlainTextToggle': PastePlainTextToggleEvent;
+  'PastePreProcess': PastePreProcessEvent;
+  'PastePostProcess': PastePostProcessEvent;
 }
 
 export interface EditorManagerEventMap {

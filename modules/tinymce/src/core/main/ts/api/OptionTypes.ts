@@ -8,6 +8,7 @@
 import { UploadHandler } from '../file/Uploader';
 import { RawPattern } from '../textpatterns/core/PatternTypes';
 import Editor from './Editor';
+import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
@@ -34,6 +35,9 @@ export type SetupCallback = (editor: Editor) => void;
 export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
 export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string }) => void) => void;
+
+export type PastePreProcessFn = (editor: Editor, args: PastePreProcessEvent) => void;
+export type PastePostProcessFn = (editor: Editor, args: PastePostProcessEvent) => void;
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => string;
@@ -162,6 +166,16 @@ interface BaseEditorOptions {
   nowrap?: boolean;
   object_resizing?: boolean | string;
   padd_empty_with_br?: boolean;
+  paste_as_text?: boolean;
+  paste_block_drop?: boolean;
+  paste_data_images?: boolean;
+  paste_filter_drop?: boolean;
+  paste_merge_formats?: boolean;
+  paste_postprocess?: PastePostProcessFn;
+  paste_preprocess?: PastePreProcessFn;
+  paste_remove_styles_if_webkit?: boolean;
+  paste_tab_spaces?: number;
+  paste_webkit_styles?: string;
   placeholder?: string;
   preserve_cdata?: boolean;
   preview_styles?: false | string;
@@ -180,6 +194,7 @@ interface BaseEditorOptions {
   setup?: SetupCallback;
   skin?: boolean | string;
   skin_url?: string;
+  smart_paste?: boolean;
   statusbar?: boolean;
   style_formats?: AllowedFormat[];
   style_formats_autohide?: boolean;
@@ -255,6 +270,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   contextmenu: string[];
   font_css: string[];
   forced_root_block: string;
+  forced_root_block_attrs: Record<string, string>;
   noneditable_regexp: RegExp[];
   object_resizing?: string;
   preview_styles?: string;

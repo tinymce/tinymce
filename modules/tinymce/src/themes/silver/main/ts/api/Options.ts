@@ -303,6 +303,7 @@ const useStatusBar = option('statusbar');
 const useElementPath = option('elementpath');
 const useBranding = option('branding');
 const getResize = option('resize');
+const getPasteAsText = option('paste_as_text');
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
@@ -444,5 +445,6 @@ export {
   useStatusBar,
   useElementPath,
   useBranding,
-  getResize
+  getResize,
+  getPasteAsText
 };
