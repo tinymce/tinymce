@@ -29,7 +29,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(
       ser.serialize(DOM.get('test'), { getInner: true }),
       '<img title="test" class="test" src="tinymce/ui/img/raster.gif" ' +
-      'alt="test" border="0" /><span id="test2">test</span><hr />', 'Global rule'
+      'alt="test" border="0"><span id="test2">test</span><hr>', 'Global rule'
     );
 
     ser.setRules('*a[*],em/i[*],strong/b[*i*]');
@@ -42,19 +42,19 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
       '<span id="test2" class="no"><b class="no">abc</b><em class="no">123</em></span>123<a href="file.html" ' +
       'data-mce-href="file.html">link</a><a name="anchor"></a><a>no</a><img src="tinymce/ui/img/raster.gif" ' +
       'data-mce-src="tinymce/ui/img/raster.gif" />');
-    assert.equal(ser.serialize(DOM.get('test')), '<div id="test"><br /><hr /><input type="text" name="test" value="val" />' +
+    assert.equal(ser.serialize(DOM.get('test')), '<div id="test"><br><hr><input type="text" name="test" value="val">' +
       '<span id="test2"><strong>abc</strong><em>123</em></span>123<a href="file.html">link</a>' +
-      '<a name="anchor"></a>no<img src="tinymce/ui/img/raster.gif" border="0" title="mce_0" /></div>', 'Output name and attribute rules');
+      '<a name="anchor"></a>no<img src="tinymce/ui/img/raster.gif" border="0" title="mce_0"></div>', 'Output name and attribute rules');
 
     ser.setRules('img[src|border=0|alt=]');
     DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" border="0" alt="" />');
-    assert.equal(ser.serialize(DOM.get('test')), '<img src="tinymce/ui/img/raster.gif" border="0" alt="" />', 'Default attribute with empty value');
+    assert.equal(ser.serialize(DOM.get('test')), '<img src="tinymce/ui/img/raster.gif" border="0" alt="">', 'Default attribute with empty value');
 
     ser.setRules('img[src|border=0|alt=],div[style|id],*[*]');
     DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" /><hr />');
     assert.equal(
       ser.serialize(DOM.get('test'), { getInner: true }),
-      '<img src="tinymce/ui/img/raster.gif" border="0" alt="" /><hr />'
+      '<img src="tinymce/ui/img/raster.gif" border="0" alt=""><hr>'
     );
 
     ser = DomSerializer({
@@ -64,14 +64,14 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" alt="" />');
     assert.equal(
       ser.serialize(DOM.get('test')),
-      '<div id="test"><img src="tinymce/ui/img/raster.gif" alt="" /></div>'
+      '<div id="test"><img src="tinymce/ui/img/raster.gif" alt=""></div>'
     );
 
     ser = DomSerializer({ invalid_elements: 'hr,br' });
     DOM.setHTML('test', '<img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" /><hr /><br />');
     assert.equal(
       ser.serialize(DOM.get('test'), { getInner: true }),
-      '<img src="tinymce/ui/img/raster.gif" />'
+      '<img src="tinymce/ui/img/raster.gif">'
     );
   });
 
@@ -158,13 +158,13 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     );
 
     DOM.setHTML('test', '<input type="text" />');
-    assert.equal(ser.serialize(DOM.get('test')), '<input type="text" />');
+    assert.equal(ser.serialize(DOM.get('test')), '<input type="text">');
 
     DOM.setHTML('test', '<input type="text" value="text" length="128" maxlength="129" />');
-    assert.equal(ser.serialize(DOM.get('test')), '<input type="text" value="text" length="128" maxlength="129" />');
+    assert.equal(ser.serialize(DOM.get('test')), '<input type="text" value="text" length="128" maxlength="129">');
 
     DOM.setHTML('test', '<form method="post"><input type="hidden" name="formmethod" value="get" /></form>');
-    assert.equal(ser.serialize(DOM.get('test')), '<form method="post"><input type="hidden" name="formmethod" value="get" /></form>');
+    assert.equal(ser.serialize(DOM.get('test')), '<form method="post"><input type="hidden" name="formmethod" value="get"></form>');
 
     DOM.setHTML('test', '<label for="test">label</label>');
     assert.equal(ser.serialize(DOM.get('test')), '<label for="test">label</label>');
@@ -174,7 +174,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     // Edge will add an empty input value so remove that to normalize test since it doesn't break anything
     assert.equal(
       ser.serialize(DOM.get('test')).replace(/ value=""/g, ''),
-      '<input type="checkbox" value="test" /><input type="button" /><textarea></textarea>'
+      '<input type="checkbox" value="test"><input type="button"><textarea></textarea>'
     );
   });
 
@@ -184,16 +184,16 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     ser.setRules('form[method],label[for],input[type|name|value|checked|disabled|readonly|length|maxlength],select[multiple],option[value|selected]');
 
     DOM.setHTML('test', '<input type="checkbox" value="1">');
-    assert.equal(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" />');
+    assert.equal(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1">');
 
     DOM.setHTML('test', '<input type="checkbox" value="1" checked disabled readonly>');
-    assert.equal(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly" />');
+    assert.equal(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly">');
 
     DOM.setHTML('test', '<input type="checkbox" value="1" checked="1" disabled="1" readonly="1">');
-    assert.equal(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly" />');
+    assert.equal(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly">');
 
     DOM.setHTML('test', '<input type="checkbox" value="1" checked="true" disabled="true" readonly="true">');
-    assert.equal(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly" />');
+    assert.equal(ser.serialize(DOM.get('test')), '<input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly">');
   });
 
   it('Form elements (select)', () => {
@@ -308,9 +308,9 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     ser.setRules('#p,table,tr,#td,br');
 
     DOM.setHTML('test', '<p>a</p><p></p>');
-    assert.equal(ser.serialize(DOM.get('test')), '<p>a</p><p><br /></p>');
+    assert.equal(ser.serialize(DOM.get('test')), '<p>a</p><p><br></p>');
     DOM.setHTML('test', '<p>a</p><table><tr><td><br></td></tr></table>');
-    assert.equal(ser.serialize(DOM.get('test')), '<p>a</p><table><tr><td><br /></td></tr></table>');
+    assert.equal(ser.serialize(DOM.get('test')), '<p>a</p><table><tr><td><br></td></tr></table>');
   });
 
   it('Do not padd empty elements with padded children', () => {
@@ -669,7 +669,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     );
     assert.equal(
       ser.serialize(DOM.get('test')).toLowerCase(),
-      '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="sun" /></map>'
+      '<map id="planetmap" name="planetmap"><area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="sun"></map>'
     );
   });
 
