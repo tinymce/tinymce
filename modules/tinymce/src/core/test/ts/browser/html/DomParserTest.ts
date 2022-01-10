@@ -1,5 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import Env from 'tinymce/core/api/Env';
@@ -10,6 +11,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 describe('browser.tinymce.core.html.DomParserTest', () => {
+  const browser = PlatformDetection.detect().browser;
   const schema = Schema({ valid_elements: '*[class|title]' });
   const serializer = HtmlSerializer({}, schema);
   let parser: DomParser;
@@ -151,50 +153,50 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.deepEqual(countNodes(root), { 'body': 1, 'code': 1, '#text': 1 }, 'Whitespace inside code (count)');
   });
 
-  // TODO: TINY-4627/TINY-8202: Update tests to account for omitted </p>
-  it.skip('Parse invalid contents', () => {
+  it('Parse invalid contents', () => {
     let parser, root;
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a"><p class="b">123</p></p>');
-    assert.equal(serializer.serialize(root), '<p class="b">123</p>', 'P in P, no nodes before/after');
-    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 1, '#text': 1 }, 'P in P, no nodes before/after (count)');
+    assert.equal(serializer.serialize(root), '<p class="a"></p><p class="b">123</p><p></p>', 'P in P, splits outer P');
+    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 3, '#text': 1 }, 'P in P, splits outer P (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a">a<p class="b">b</p><p class="c">c</p>d</p>');
     assert.equal(
       serializer.serialize(root),
-      '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="a">d</p>',
-      'Two P in P, no nodes before/after'
+      '<p class="a">a</p><p class="b">b</p><p class="c">c</p>d<p></p>',
+      'Two P in P, splits outer P'
     );
-    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 4, '#text': 4 }, 'Two P in P, no nodes before/after (count)');
+    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 4, '#text': 4 }, 'Two P in P, splits outer P (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a">abc<p class="b">def</p></p>');
-    assert.equal(serializer.serialize(root), '<p class="a">abc</p><p class="b">def</p>', 'P in P with nodes before');
-    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 2, '#text': 2 }, 'P in P with nodes before (count)');
+    assert.equal(serializer.serialize(root), '<p class="a">abc</p><p class="b">def</p><p></p>', 'P in P with nodes before');
+    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 3, '#text': 2 }, 'P in P with nodes before (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a"><p class="b">abc</p>def</p>');
-    assert.equal(serializer.serialize(root), '<p class="b">abc</p><p class="a">def</p>', 'P in P with nodes after');
-    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 2, '#text': 2 }, 'P in P with nodes after (count)');
+    assert.equal(serializer.serialize(root), '<p class="a"></p><p class="b">abc</p>def<p></p>', 'P in P with nodes after');
+    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 3, '#text': 2 }, 'P in P with nodes after (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a"><p class="b">abc</p><br></p>');
-    assert.equal(serializer.serialize(root), '<p class="b">abc</p>', 'P in P with BR after');
-    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 1, '#text': 1 }, 'P in P with BR after (count)');
+    assert.equal(serializer.serialize(root), '<p class="a"></p><p class="b">abc</p><br><p></p>', 'P in P with BR after');
+    assert.deepEqual(countNodes(root), { 'body': 1, 'p': 3, 'br': 1, '#text': 1 }, 'P in P with BR after (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p class="a">a<strong>b<span>c<em>d<p class="b">e</p>f</em>g</span>h</strong>i</p>');
     assert.equal(
       serializer.serialize(root),
-      '<p class="a">a<strong>b<span>c<em>d</em></span></strong></p><p class="b">e</p>' +
-      '<p class="a"><strong><span><em>f</em>g</span>h</strong>i</p>',
+      '<p class="a">a<strong>b<span>c<em>d</em></span></strong></p>' +
+      '<p class="b"><strong><em>e</em></strong></p>' +
+      '<strong><em>f</em>gh</strong>i<p></p>',
       'P in P wrapped in inline elements'
     );
     assert.deepEqual(
       countNodes(root),
-      { 'body': 1, 'p': 3, '#text': 9, 'strong': 2, 'span': 2, 'em': 2 },
+      { 'body': 1, 'p': 3, '#text': 8, 'strong': 3, 'span': 1, 'em': 3 },
       'P in P wrapped in inline elements (count)'
     );
 
@@ -202,20 +204,20 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     root = parser.parse('<p class="a">a<p class="b">b<p class="c">c</p>d</p>e</p>');
     assert.equal(
       serializer.serialize(root),
-      '<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="b">d</p><p class="a">e</p>',
+      '<p class="a">a</p><p class="b">b</p><p class="c">c</p>d<p></p>e<p></p>',
       'P in P in P with text before/after'
     );
     assert.deepEqual(countNodes(root), { 'body': 1, 'p': 5, '#text': 5 }, 'P in P in P with text before/after (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<p>a<ul><li>b</li><li>c</li></ul>d</p>');
-    assert.equal(serializer.serialize(root), '<p>a</p><ul><li>b</li><li>c</li></ul><p>d</p>', 'UL inside P');
+    assert.equal(serializer.serialize(root), '<p>a</p><ul><li>b</li><li>c</li></ul>d<p></p>', 'UL inside P');
     assert.deepEqual(countNodes(root), { 'body': 1, 'p': 2, 'ul': 1, 'li': 2, '#text': 4 }, 'UL inside P (count)');
 
     parser = DomParser({}, schema);
     root = parser.parse('<table><tr><td><tr>a</tr></td></tr></table>');
-    assert.equal(serializer.serialize(root), '<table><tr><td>a</td></tr></table>', 'TR inside TD');
-    assert.deepEqual(countNodes(root), { 'body': 1, 'table': 1, 'tr': 1, 'td': 1, '#text': 1 }, 'TR inside TD (count)');
+    assert.equal(serializer.serialize(root), 'a<table><tbody><tr><td></td></tr><tr></tr></tbody></table>', 'TR inside TD');
+    assert.deepEqual(countNodes(root), { 'body': 1, 'table': 1, 'tbody': 1, 'tr': 2, 'td': 1, '#text': 1 }, 'TR inside TD (count)');
 
     parser = DomParser({}, Schema({ valid_elements: 'p,section,div' }));
     root = parser.parse('<div><section><p>a</p></section></div>');
@@ -243,8 +245,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(serializer.serialize(root), '<p>a\u00a0 \u00a0b</p>');
   });
 
-  // TODO: TINY-4627/TINY-8202: Update tests to account for omitted </p>
-  it.skip('Parse invalid contents with node filters', () => {
+  it('Parse invalid contents with node filters', () => {
     const parser = DomParser({}, schema);
     parser.addNodeFilter('p', (nodes) => {
       Arr.each(nodes, (node) => {
@@ -252,11 +253,10 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       });
     });
     const root = parser.parse('<p>a<p>123</p>b</p>');
-    assert.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p><p class="x">b</p>', 'P should have class x');
+    assert.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p>b<p class="x"></p>', 'P should have class x');
   });
 
-  // TODO: TINY-4627/TINY-8202: Update tests to account for omitted </p>
-  it.skip('Parse invalid contents with attribute filters', () => {
+  it('Parse invalid contents with attribute filters', () => {
     const parser = DomParser({}, schema);
     parser.addAttributeFilter('class', (nodes) => {
       Arr.each(nodes, (node) => {
@@ -264,7 +264,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       });
     });
     const root = parser.parse('<p class="y">a<p class="y">123</p>b</p>');
-    assert.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p><p class="x">b</p>', 'P should have class x');
+    assert.equal(serializer.serialize(root), '<p class="x">a</p><p class="x">123</p>b<p></p>', 'P should have class x');
   });
 
   it('addNodeFilter', () => {
@@ -680,13 +680,94 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
   });
 
-  // TODO: TINY-4627/TINY-8363
-  it.skip('parse iframe XSS', () => {
+  // TODO: TINY-4627/TINY-8363 - the iframe innerHTML on safari is `&lt;textarea&gt;` whereas on other browsers
+  //       is `<textarea>`. This causes the mXSS cleaner in DOMPurify to run and causes the different assertions below
+  it('parse iframe XSS', () => {
     const serializer = HtmlSerializer();
 
     assert.equal(
       serializer.serialize(DomParser().parse('<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')),
-      '<iframe><textarea></iframe><img src="a">'
+      browser.isSafari() ? '<iframe><textarea></iframe><img src="a">' : '<img src="a">'
+    );
+  });
+
+  it('allow_script_urls should allow any URIs', () => {
+    const parser = DomParser({ allow_script_urls: true });
+    const html = '<a href="javascript:alert(1)">1</a>' +
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">3</a>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<a href="javascript:alert(1)">1</a>' +
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">3</a>'
+    );
+  });
+
+  it('allow_html_data_urls should allow any data URIs, but not script URIs', () => {
+    const parser = DomParser({ allow_html_data_urls: true });
+    const html = '<a href="javascript:alert(1)">1</a>' +
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>' +
+      '<a href="data:image/svg+xml;base64,x">3</a>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<a>1</a>' +
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>' +
+      '<a href="data:image/svg+xml;base64,x">3</a>'
+    );
+  });
+
+  it('Parse svg urls (default)', () => {
+    const parser = DomParser();
+    const serializedHtml = serializer.serialize(parser.parse(
+      '<iframe src="data:image/svg+xml;base64,x"></iframe>' +
+      '<a href="data:image/svg+xml;base64,x">1</a>' +
+      '<object data="data:image/svg+xml;base64,x"></object>' +
+      '<img src="data:image/svg+xml;base64,x">' +
+      '<video poster="data:image/svg+xml;base64,x"></video>'
+    ));
+    assert.equal(serializedHtml,
+      '<iframe></iframe>' +
+      '<a>1</a>' +
+      '<object></object>' +
+      '<img src="data:image/svg+xml;base64,x">' +
+      '<video></video>'
+    );
+  });
+
+  it('Parse svg urls (allowed)', () => {
+    const parser = DomParser({ allow_svg_data_urls: true });
+    const serializedHtml = serializer.serialize(parser.parse(
+      '<iframe src="data:image/svg+xml;base64,x"></iframe>' +
+      '<a href="data:image/svg+xml;base64,x">1</a>' +
+      '<object data="data:image/svg+xml;base64,x"></object>' +
+      '<img src="data:image/svg+xml;base64,x">' +
+      '<video poster="data:image/svg+xml;base64,x"></video>'
+    ));
+    assert.equal(serializedHtml,
+      '<iframe src="data:image/svg+xml;base64,x"></iframe>' +
+      '<a href="data:image/svg+xml;base64,x">1</a>' +
+      '<object data="data:image/svg+xml;base64,x"></object>' +
+      '<img src="data:image/svg+xml;base64,x">' +
+      '<video poster="data:image/svg+xml;base64,x"></video>'
+    );
+  });
+
+  it('Parse svg urls (denied)', () => {
+    const parser = DomParser({ allow_svg_data_urls: false });
+    const serializedHtml = serializer.serialize(parser.parse(
+      '<iframe src="data:image/svg+xml;base64,x"></iframe>' +
+      '<a href="data:image/svg+xml;base64,x">1</a>' +
+      '<object data="data:image/svg+xml;base64,x"></object>' +
+      '<img src="data:image/svg+xml;base64,x">' +
+      '<video poster="data:image/svg+xml;base64,x"></video>'
+    ));
+    assert.equal(serializedHtml,
+      '<iframe></iframe>' +
+      '<a>1</a>' +
+      '<object></object>' +
+      '<img>' +
+      '<video></video>'
     );
   });
 
@@ -773,17 +854,16 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(serializedHtml, html, 'Should be html with base64 uri retained');
   });
 
-  // TODO: TINY-4627/TINY-8202: figure out why dompurify returns a different dom structure to us
-  it.skip('TINY-7756: Parsing invalid nested children', () => {
-    const parser = DomParser();
-    const html = '<table><button><a><meta></meta></a></button></table>';
+  it('TINY-7756: Parsing invalid nested children', () => {
+    const schema = Schema({ valid_children: '-td[button|a|div]' });
+    const parser = DomParser({}, schema);
+    const html = '<table><tr><td><button><a><meta /></a></button></td></tr></table>';
     const serializedHtml = serializer.serialize(parser.parse(html));
 
-    assert.equal(serializedHtml, '<table></table>', 'Should remove all invalid children but keep empty table');
+    assert.equal(serializedHtml, '<table><tbody><tr><td></td></tr></tbody></table>', 'Should remove all invalid children but keep empty table');
   });
 
-  // TODO: TINY-4627/TINY-8202: figure out why dompurify returns a different dom structure to us
-  it.skip('TINY-7756: Parsing invalid nested children with a valid child between', () => {
+  it('TINY-7756: Parsing invalid nested children with a valid child between', () => {
     const parser = DomParser();
     const html =
       '<table>' +
@@ -792,13 +872,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
             '<td>' +
               '<meta>' +
                 '<button>' +
-                  '<img/>' +
+                  '<img />' +
                   '<button>' +
                     '<a>' +
-                      '<meta></meta>' +
+                      '<meta />' +
                     '</a>' +
                   '</button>' +
-                  '<img/>' +
+                  '<img />' +
                 '</button>' +
               '</meta>' +
             '</td>' +
@@ -815,11 +895,11 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
             '<td>' +
               '<button>' +
                 '<img>' +
-                '<button>' +
-                  '<a></a>' +
-                '</button>' +
-                '<img>' +
               '</button>' +
+              '<button>' +
+                '<a></a>' +
+              '</button>' +
+              '<img>' +
             '</td>' +
           '</tr>' +
         '</tbody>' +

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { Attribute, Remove, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
@@ -16,6 +16,7 @@ import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
+import URI from '../util/URI';
 import AstNode from './Node';
 import Schema, { SchemaRegExpMap } from './Schema';
 
@@ -95,13 +96,15 @@ type WalkerCallback = (node: AstNode) => void;
 
 const basePurifyConfig: Config & { RETURN_DOM: true } = {
   RETURN_DOM: true,
-  ALLOW_DATA_ATTR: true,
-  ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|about|blob|file|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+  ALLOW_UNKNOWN_PROTOCOLS: true,
   // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
   // #comment and #cdata-section are always allowed as they aren't controlled via the schema
   ALLOWED_TAGS: [ '#comment', '#cdata-section' ],
   ALLOWED_ATTR: []
 };
+
+// A list of attributes that should be filtered further based on the parser settings
+const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
 
 const getPurifyConfig = (settings: DomParserSettings, args: ParserArgs): Config & { RETURN_DOM: true } => {
   const config = { ...basePurifyConfig };
@@ -110,8 +113,12 @@ const getPurifyConfig = (settings: DomParserSettings, args: ParserArgs): Config 
     config.PARSER_MEDIA_TYPE = 'application/xhtml+xml';
   }
 
-  if (settings.allow_html_data_urls) {
-    config.ADD_DATA_URI_TAGS = [ 'a', 'img' ];
+  // Allow any URI when allowing script urls
+  if (settings.allow_script_urls) {
+    config.ALLOWED_URI_REGEXP = /.*/;
+  // Allow anything except javascript (or similar) URIs if all html data urls are allowed
+  } else if (settings.allow_html_data_urls) {
+    config.ALLOWED_URI_REGEXP = /^(?!(\w+script|mhtml):)/i;
   }
 
   return config;
@@ -179,14 +186,26 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
 
   // Let's do the same thing for attributes
   purify.addHook('uponSanitizeAttribute', (ele, evt) => {
-    evt.keepAttr = evt.attrName.startsWith('data-') || schema.isValid(ele.tagName.toLowerCase(), evt.attrName);
+    const tagName = ele.tagName.toLowerCase();
+    const { attrName, attrValue } = evt;
+
+    evt.keepAttr = Strings.startsWith(attrName, 'data-') || schema.isValid(tagName, attrName);
+    if (attrName in filteredUrlAttrs && !URI.isDomSafe(attrValue, tagName, settings)) {
+      evt.keepAttr = false;
+    }
+
     if (evt.keepAttr) {
-      if (!Obj.has(evt.allowedAttributes, evt.attrName)) {
-        evt.allowedAttributes[evt.attrName] = true;
+      if (!Obj.has(evt.allowedAttributes, attrName)) {
+        evt.allowedAttributes[attrName] = true;
       }
 
-      if (evt.attrName in schema.getBoolAttrs()) {
-        evt.attrValue = evt.attrName;
+      if (attrName in schema.getBoolAttrs()) {
+        evt.attrValue = attrName;
+      }
+
+      // We need to tell DOMPurify to forcibly keep the attribute if it's an SVG data URI and svg data URIs are allowed
+      if (settings.allow_svg_data_urls && Strings.startsWith(attrValue, 'data:image/svg+xml')) {
+        evt.forceKeepAttr = true;
       }
     }
   });
