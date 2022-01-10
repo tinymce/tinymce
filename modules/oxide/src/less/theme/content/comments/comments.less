@@ -16,6 +16,6 @@
   background-color: @document-comment-background-color;
 }
 
-.tox-comments-visible .tox-comment--active {
+.tox-comments-visible .tox-comment[data-mce-annotation-active="true"]:not([data-mce-selected="inline-boundary"]) {
   background-color: @document-comment-active-background-color;
 }

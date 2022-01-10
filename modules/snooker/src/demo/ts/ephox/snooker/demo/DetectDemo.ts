@@ -9,7 +9,7 @@ import { TableResize } from 'ephox/snooker/api/TableResize';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { OperationCallback, TargetElement, TargetSelection } from 'ephox/snooker/model/RunOperation';
 
-Ready.execute(() => {
+Ready.document(() => {
 
   const tester = SugarElement.fromHtml<HTMLTableElement>(
     '<table border=1>' +
@@ -138,7 +138,7 @@ Ready.execute(() => {
 
   // For firefox.
   // eslint-disable-next-line @tinymce/prefer-fun
-  Ready.execute(() => {
+  Ready.document(() => {
     // document.execCommand("enableInlineTableEditing", null, false);
     // document.execCommand("enableObjectResizing", false, "false");
   });

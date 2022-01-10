@@ -8,7 +8,7 @@
 import { AlloyComponent, AlloyTriggers, Composing, Disabling, Focusing, Form, Reflecting, Representing, TabSection } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Cell, Obj, Optional, Type } from '@ephox/katamari';
+import { Cell, Merger, Obj, Optional, Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
@@ -73,7 +73,7 @@ const getDialogApi = <T extends Dialog.DialogData>(
     // Currently, the decision is to ignore setData calls that fire after the dialog is closed
     withRoot((_) => {
       const prevData = instanceApi.getData();
-      const mergedData = { ...prevData, ...newData };
+      const mergedData = Merger.deepMerge(prevData, newData);
       const newInternalData = validateData(access, mergedData);
       const form = access.getFormWrapper();
       Representing.setValue(form, newInternalData);

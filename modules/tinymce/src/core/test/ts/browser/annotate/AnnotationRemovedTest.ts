@@ -1,5 +1,5 @@
 import { Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -32,8 +32,9 @@ describe('browser.tinymce.core.annotate.AnnotationRemovedTest', () => {
     }
   }, [], true);
 
-  before(() => {
+  beforeEach(() => {
     const editor = hook.editor();
+
     // '<p>This |is the first paragraph</p><p>This is the second.</p><p>This is| the third.</p>'
     editor.setContent('<p>This was the first paragraph</p><p>This is the second.</p><p>This is the third.</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 'This '.length, [ 0, 0 ], 'This was'.length);
@@ -132,10 +133,8 @@ describe('browser.tinymce.core.annotate.AnnotationRemovedTest', () => {
 
     // There should be no beta annotations',
     assertGetAll(editor, {}, 'beta');
-  });
 
-  it('remove second alpha annotation - inside annotation', async () => {
-    const editor = hook.editor();
+    // remove second alpha annotation - inside annotation
     TinySelections.setSelection(editor, inside1.path, inside1.offset, inside1.path, inside1.offset);
     editor.annotator.remove('alpha');
 
@@ -150,5 +149,31 @@ describe('browser.tinymce.core.annotate.AnnotationRemovedTest', () => {
     assertGetAll(editor, {
       'id-two': 1
     }, 'alpha');
+  });
+
+  it('TINY-8195: remove alpha annotation and keep selection', () => {
+    const editor = hook.editor();
+
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
+    editor.annotator.remove('alpha');
+
+    TinyAssertions.assertContentPresence(editor, {
+      'span[data-mce-annotation="alpha"]': 1,
+      'span[data-mce-annotation="beta"]': 1
+    });
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 2);
+  });
+
+  it('TINY-8195: remove all alpha annotations and keep selection', () => {
+    const editor = hook.editor();
+
+    TinySelections.setCursor(editor, [ 0, 2 ], 2);
+    editor.annotator.removeAll('alpha');
+
+    TinyAssertions.assertContentPresence(editor, {
+      'span[data-mce-annotation="alpha"]': 0,
+      'span[data-mce-annotation="beta"]': 1
+    });
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 2);
   });
 });

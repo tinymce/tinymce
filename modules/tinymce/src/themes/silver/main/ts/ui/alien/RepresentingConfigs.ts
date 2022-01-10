@@ -34,7 +34,7 @@ const memento = (mem: MementoRecord, rawProcessors) => {
   });
 };
 
-const withComp = <D>(optInitialValue: Optional<D>, getter: (c: AlloyComponent) => D, setter: (c: AlloyComponent, v: D) => void) => Representing.config({
+const withComp = <D, I = D>(optInitialValue: Optional<I>, getter: (c: AlloyComponent) => D, setter: (c: AlloyComponent, v: I) => void) => Representing.config({
   store: {
     mode: 'manual' as 'manual',
     ...optInitialValue.map((initialValue) => ({ initialValue })).getOr({}),
@@ -43,7 +43,7 @@ const withComp = <D>(optInitialValue: Optional<D>, getter: (c: AlloyComponent) =
   }
 });
 
-const withElement = <D>(initialValue: Optional<D>, getter: (elem: SugarElement) => D, setter: (elem: SugarElement, v: D) => void) => withComp(
+const withElement = <D, I = D>(initialValue: Optional<I>, getter: (elem: SugarElement) => D, setter: (elem: SugarElement, v: I) => void) => withComp<D, I>(
   initialValue,
   (c) => getter(c.element),
   (c, v) => setter(c.element, v)

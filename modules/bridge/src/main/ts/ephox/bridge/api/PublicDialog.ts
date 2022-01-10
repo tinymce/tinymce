@@ -15,7 +15,7 @@ import { DropZoneSpec } from '../components/dialog/Dropzone';
 import { GridSpec } from '../components/dialog/Grid';
 import { HtmlPanelSpec } from '../components/dialog/HtmlPanel';
 import { IframeSpec } from '../components/dialog/Iframe';
-import { ImageToolsSpec } from '../components/dialog/ImageTools';
+import { ImagePreviewSpec } from '../components/dialog/ImagePreview';
 import { InputSpec } from '../components/dialog/Input';
 import { LabelSpec } from '../components/dialog/Label';
 import { ListBoxItemSpec, ListBoxSpec, ListBoxSingleItemSpec, ListBoxNestedItemSpec } from '../components/dialog/ListBox';
@@ -72,7 +72,7 @@ export {
 
   IframeSpec,
 
-  ImageToolsSpec,
+  ImagePreviewSpec,
 
   InputSpec,
 
