@@ -112,7 +112,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
     t.value.url.fold(
       () => resolve(t.value.content.getOr('')),
       (url) => window.fetch(url).then((res) => {
-        if (res.ok && res.status === 200) {
+        if (res.ok) {
           return resolve(res.text());
         } else {
           return reject();

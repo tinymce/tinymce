@@ -26,19 +26,22 @@ const getLinks = (editor: Editor): Promise<Optional<ListItem[]>> => {
   const extractor = (item: UserListItem) => editor.convertURL(item.value || item.url, 'href');
 
   const linkList = Options.getLinkList(editor);
-  return new Promise<Optional<UserListItem[]>>((callback) => {
+  return new Promise<Optional<UserListItem[]>>((resolve) => {
     // TODO - better handling of failure
     if (Type.isString(linkList)) {
       window.fetch(linkList)
-        .then((res) => res.text())
-        .then(
-          (text) => callback(parseJson(text)),
-          () => callback(Optional.none())
-        );
+        .then((res) => {
+          if (res.ok) {
+            res.text().then((text) => resolve(parseJson(text)));
+          } else {
+            resolve(Optional.none());
+          }
+        })
+        .catch(() => resolve(Optional.none()));
     } else if (Type.isFunction(linkList)) {
-      linkList((output) => callback(Optional.some(output)));
+      linkList((output) => resolve(Optional.some(output)));
     } else {
-      callback(Optional.from(linkList));
+      resolve(Optional.from(linkList));
     }
   }).then((optItems) => optItems.bind(ListOptions.sanitizeWith(extractor)).map((items) => {
     if (items.length > 0) {

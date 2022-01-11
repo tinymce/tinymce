@@ -22,8 +22,11 @@ const createTemplateList = (editor: Editor, callback: (templates: ExternalTempla
       templateList(callback);
     } else if (Type.isString(templateList)) {
       window.fetch(templateList)
-        .then((res) => res.json())
-        .then(callback);
+        .then((res) => {
+          if (res.ok) {
+            res.json().then(callback);
+          }
+        });
     } else {
       callback(templateList);
     }

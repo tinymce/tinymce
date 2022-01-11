@@ -114,8 +114,11 @@ const createImageList = (editor: Editor, callback: (imageList: false | UserListI
 
   if (Type.isString(imageList)) {
     window.fetch(imageList)
-      .then((val) => val.json())
-      .then(callback);
+      .then((res) => {
+        if (res.ok) {
+          res.json().then(callback);
+        }
+      });
   } else if (Type.isFunction(imageList)) {
     imageList(callback);
   } else {
