@@ -4,7 +4,7 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.keyboard.TableTableNavigationDisabledTest', () => {
+describe('browser.tinymce.core.keyboard.TableTabNavigationDisabledTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     table_tab_navigation: false,
     base_url: '/project/tinymce/js/tinymce'
