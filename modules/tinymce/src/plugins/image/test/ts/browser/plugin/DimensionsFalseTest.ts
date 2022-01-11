@@ -26,6 +26,6 @@ describe('browser.tinymce.plugins.image.plugin.DimensionsFalseTest', () => {
       alt: 'alt'
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="src" alt="alt" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="src" alt="alt"></p>');
   });
 });

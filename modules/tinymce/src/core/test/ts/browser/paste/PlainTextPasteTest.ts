@@ -20,9 +20,9 @@ describe('browser.tinymce.core.paste.PlainTextPaste', () => {
     }
   };
 
-  const expectedWithRootBlock = '<p>one<br />two</p><p>three</p><p><br />four</p><p>&nbsp;</p><p>.</p>';
-  const expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr"><br />four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
-  const expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.';
+  const expectedWithRootBlock = '<p>one<br>two</p><p>three</p><p><br>four</p><p>&nbsp;</p><p>.</p>';
+  const expectedWithRootBlockAndAttrs = '<p class="attr">one<br>two</p><p class="attr">three</p><p class="attr"><br>four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
+  const expectedWithoutRootBlock = 'one<br>two<br><br>three<br><br><br>four<br><br><br><br>.';
 
   const pCreateEditorFromSettings = (settings: RawEditorOptions) =>
     McEditor.pFromSettings<Editor>({
