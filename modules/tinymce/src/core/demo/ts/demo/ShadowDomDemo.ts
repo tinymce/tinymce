@@ -13,6 +13,6 @@ export default (init: ShadowRootInit) => {
 
   tinymce.init({
     target: node,
-    plugins: 'advlist charmap code codesample emoticons fullscreen image link lists media paste preview searchreplace table wordcount'
+    plugins: 'advlist charmap code codesample emoticons fullscreen image link lists media preview searchreplace table wordcount'
   });
 };

@@ -90,7 +90,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
     assert.equal(
       serializer.serialize(root),
-      '<div><img src="file.gif" data-mce-src="file.gif" /></div>',
+      '<div><img src="file.gif" data-mce-src="file.gif"></div>',
       'Whitespace where SaxParser will produce multiple whitespace nodes'
     );
     assert.deepEqual(
@@ -396,7 +396,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     root = parser.parse('<span></span><a href="#"><img src="about:blank" /></a>');
     assert.equal(
       serializer.serialize(root),
-      '<span></span><a href="#"><img src="about:blank" /></a>',
+      '<span></span><a href="#"><img src="about:blank"></a>',
       'Leave elements with img in it'
     );
   });
@@ -425,7 +425,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
     assert.equal(
       serializer.serialize(root),
-      '<p>a</p><p>a<br />b</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>',
+      '<p>a</p><p>a<br>b</p><p>a<br><br></p><p>a<br><br></p><p>a</p>',
       'Remove traling br elements.'
     );
   });
@@ -451,7 +451,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     const parser = DomParser({ remove_trailing_brs: true }, schema);
     const root = parser.parse('<strong><br /><br /></strong>');
-    assert.equal(serializer.serialize(root), '<strong><br /><br /></strong>');
+    assert.equal(serializer.serialize(root), '<strong><br><br></strong>');
   });
 
   it(`Don't replace br inside root element when there is siblings`, () => {
@@ -459,7 +459,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     const parser = DomParser({ remove_trailing_brs: true }, schema);
     const root = parser.parse('<strong><br /></strong><em>x</em>');
-    assert.equal(serializer.serialize(root), '<strong><br /></strong><em>x</em>');
+    assert.equal(serializer.serialize(root), '<strong><br></strong><em>x</em>');
   });
 
   it('Remove br in invalid parent bug', () => {
@@ -623,15 +623,15 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const parser = DomParser({ padd_empty_with_br: true }, schema);
     const serializer = HtmlSerializer({ }, schema);
     const root = parser.parse('<p>a</p><p></p>');
-    assert.equal(serializer.serialize(root), '<p>a</p><p><br /></p>');
+    assert.equal(serializer.serialize(root), '<p>a</p><p><br></p>');
   });
 
-  it('Pad empty and preffer br on insert', () => {
+  it('Pad empty and prefer br on insert', () => {
     const schema = Schema();
 
     const parser = DomParser({}, schema);
     const root = parser.parse('<ul><li></li><li> </li><li><br /></li><li>\u00a0</li><li>a</li></ul>', { insert: true });
-    assert.equal(serializer.serialize(root), '<ul><li><br /></li><li><br /></li><li><br /></li><li><br /></li><li>a</li></ul>');
+    assert.equal(serializer.serialize(root), '<ul><li><br></li><li><br></li><li><br></li><li><br></li><li>a</li></ul>');
   });
 
   it('Preserve space in inline span', () => {
@@ -669,7 +669,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     assert.equal(
       serializer.serialize(DomParser().parse('<p>a<br />\nb</p>')),
-      '<p>a<br />b</p>'
+      '<p>a<br>b</p>'
     );
   });
 
@@ -678,7 +678,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     assert.equal(
       serializer.serialize(DomParser().parse('<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')),
-      '<iframe><textarea></iframe><img src="a" />'
+      '<iframe><textarea></iframe><img src="a">'
     );
   });
 
@@ -708,7 +708,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
     assert.equal(
       serializedHtml,
-      `<p><img src="${blobUri}" /></p>`,
+      `<p><img src="${blobUri}"></p>`,
       'Should be html with blob uri'
     );
 
@@ -759,7 +759,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
   it('do not extract base64 uris if blob cache is not provided', () => {
     const parser = DomParser();
-    const html = '<p><img src="data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==" /></p>';
+    const html = '<p><img src="data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw=="></p>';
     const serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml, html, 'Should be html with base64 uri retained');
@@ -804,11 +804,11 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
           '<tr>' +
             '<td>' +
               '<button>' +
-                '<img />' +
+                '<img>' +
                 '<button>' +
                   '<a></a>' +
                 '</button>' +
-                '<img />' +
+                '<img>' +
               '</button>' +
             '</td>' +
           '</tr>' +

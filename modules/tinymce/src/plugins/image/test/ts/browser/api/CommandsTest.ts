@@ -120,7 +120,7 @@ describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
     updateImage(editor, {
       alt: null
     });
-    TinyAssertions.assertContent(editor, '<p><img src="#1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1"></p>');
   });
 
   it('TBA: Update image with empty alt value', () => {
@@ -130,7 +130,7 @@ describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
     updateImage(editor, {
       alt: ''
     });
-    TinyAssertions.assertContent(editor, '<p><img src="#1" alt="" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1" alt=""></p>');
   });
 
   it('TBA: Update image with empty title, width, height should not produce empty attributes', () => {
@@ -142,7 +142,7 @@ describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
       width: '',
       height: ''
     });
-    TinyAssertions.assertContent(editor, '<p><img src="#1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1"></p>');
   });
 
   it('TINY-7998: Update image with dangerous URL should remove the src attribute', () => {
@@ -152,6 +152,6 @@ describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
     updateImage(editor, {
       src: 'javascript:alert(1)'
     });
-    TinyAssertions.assertContent(editor, '<p><img alt="alt1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img alt="alt1"></p>');
   });
 });

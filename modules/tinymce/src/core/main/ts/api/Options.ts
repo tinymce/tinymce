@@ -557,7 +557,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('element_format', {
-    processor: 'string'
+    processor: 'string',
+    default: 'html'
   });
 
   registerOption('entities', {
@@ -655,6 +656,59 @@ const register = (editor: Editor) => {
 
   registerOption('api_key', {
     processor: 'string'
+  });
+
+  registerOption('paste_block_drop', {
+    processor: 'boolean',
+    default: false
+  });
+
+  registerOption('paste_data_images', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('paste_filter_drop', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('paste_preprocess', {
+    processor: 'function'
+  });
+
+  registerOption('paste_postprocess', {
+    processor: 'function'
+  });
+
+  registerOption('paste_webkit_styles', {
+    processor: 'string',
+    default: 'none'
+  });
+
+  registerOption('paste_remove_styles_if_webkit', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('paste_merge_formats', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('smart_paste', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('paste_as_text', {
+    processor: 'boolean',
+    default: false
+  });
+
+  registerOption('paste_tab_spaces', {
+    processor: 'number',
+    default: 4
   });
 
   registerOption('text_patterns', {
@@ -787,6 +841,18 @@ const getAutoFocus = option('auto_focus');
 const shouldBrowserSpellcheck = option('browser_spellcheck');
 const getProtect = option('protect');
 const getContentEditableState = option('content_editable_state');
+const shouldPasteBlockDrop = option('paste_block_drop');
+const shouldPasteDataImages = option('paste_data_images');
+const shouldPasteFilterDrop = option('paste_filter_drop');
+const getPastePreProcess = option('paste_preprocess');
+const getPastePostProcess = option('paste_postprocess');
+const getPasteWebkitStyles = option('paste_webkit_styles');
+const shouldPasteRemoveWebKitStyles = option('paste_remove_styles_if_webkit');
+const shouldPasteMergeFormats = option('paste_merge_formats');
+const isSmartPasteEnabled = option('smart_paste');
+const isPasteAsTextEnabled = option('paste_as_text');
+const getPasteTabSpaces = option('paste_tab_spaces');
+const shouldAllowHtmlDataUrls = option('allow_html_data_urls');
 const getTextPatterns = option('text_patterns');
 const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
@@ -803,6 +869,9 @@ const isEncodingXml = (editor: Editor): boolean =>
 
 const hasForcedRootBlock = (editor: Editor): boolean =>
   getForcedRootBlock(editor) !== '';
+
+const getAllowedImageFileTypes = (editor: Editor): string[] =>
+  Tools.explode(editor.options.get('images_file_types'));
 
 export {
   register,
@@ -879,6 +948,19 @@ export {
   shouldBrowserSpellcheck,
   getProtect,
   getContentEditableState,
+  shouldPasteBlockDrop,
+  shouldPasteDataImages,
+  shouldPasteFilterDrop,
+  getPastePreProcess,
+  getPastePostProcess,
+  getPasteWebkitStyles,
+  shouldPasteRemoveWebKitStyles,
+  shouldPasteMergeFormats,
+  isSmartPasteEnabled,
+  isPasteAsTextEnabled,
+  getPasteTabSpaces,
+  shouldAllowHtmlDataUrls,
+  getAllowedImageFileTypes,
   getTextPatterns,
   getNonEditableClass,
   getNonEditableRegExps,

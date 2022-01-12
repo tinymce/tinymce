@@ -31,6 +31,6 @@ describe('browser.tinymce.plugins.image.plugin.PrependAbsoluteTest', () => {
     const srcElem = UiFinder.findIn(SugarBody.body(), generalTabSelectors.src).getOrDie();
     fakeEvent(srcElem, 'change');
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="' + prependUrl + 'src" alt="alt" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="' + prependUrl + 'src" alt="alt"></p>');
   });
 });

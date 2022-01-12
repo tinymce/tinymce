@@ -37,8 +37,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
+- The `element_format` option has been set to `html` by default #TINY-8263
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
+- Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
+- The `paste_data_images` option now defaults to `true` #TINY-8310
+- The `mceInsertClipboardContent` command `content` property has been renamed to `html` to better reflect what data is passed #TINY-8310
 - Moved the `noneditable` plugin to TinyMCE core #TINY-8311
 - Renamed the `noneditable_noneditable_class` and `noneditable_editable_class` options to `noneditable_class` and `editable_class` #TINY-8311
 - Moved the `textpattern` plugin to TinyMCE core #TINY-8312
