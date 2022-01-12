@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
 
 ### Removed
+- Removed the old `plugin-tinycomments-tinymce4` skin from Oxide #TINY-8409
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
 - Removed the legacy browser detection properties from `Env` #TINY-8162
