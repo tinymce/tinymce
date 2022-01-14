@@ -30,7 +30,7 @@ const isHidden = (elm) => {
 
 const renderElementPath = (editor: Editor, settings, providersBackstage: UiFactoryBackstageProviders) => {
   if (!settings.delimiter) {
-    settings.delimiter = '\u00BB';
+    settings.delimiter = '\u203A';
   }
 
   const getDataPath = (data) => {
