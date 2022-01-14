@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
-- The `mceAddEditor` command can now take an object as its value to specify the id and editor options #TINY-8138
+- The `mceAddEditor` command now takes an object as its value to specify the id and editor options #TINY-8138
 - The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603

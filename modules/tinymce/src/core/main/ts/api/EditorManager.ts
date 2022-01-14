@@ -617,33 +617,35 @@ const EditorManager: EditorManager = {
    * @method execCommand
    * @param {String} cmd Command to perform for example Bold.
    * @param {Boolean} ui Optional boolean state if a UI should be presented for the command or not.
-   * @param {String} value Optional value parameter like for example an URL to a link.
+   * @param {any} value Optional value parameter like for example an URL to a link.
    * @return {Boolean} true/false if the command was executed or not.
    */
   execCommand(cmd, ui, value) {
-    const self = this, editor = self.get(value);
+    const self = this;
+    const editorId = Type.isObject(value) ? value.id ?? value.index : value;
 
     // Manager commands
     switch (cmd) {
-      case 'mceAddEditor':
-        const isObj = Type.isObject(value);
-        const editorId = isObj ? value.id : value;
-
+      case 'mceAddEditor': {
         if (!self.get(editorId)) {
-          const editorOptions = isObj ? value.options : {};
+          const editorOptions = value.options;
           new Editor(editorId, editorOptions, self).render();
         }
 
         return true;
+      }
 
-      case 'mceRemoveEditor':
+      case 'mceRemoveEditor': {
+        const editor = self.get(editorId);
         if (editor) {
           editor.remove();
         }
 
         return true;
+      }
 
-      case 'mceToggleEditor':
+      case 'mceToggleEditor': {
+        const editor = self.get(editorId);
         if (!editor) {
           self.execCommand('mceAddEditor', false, value);
           return true;
@@ -656,6 +658,7 @@ const EditorManager: EditorManager = {
         }
 
         return true;
+      }
     }
 
     // Run command on active editor
