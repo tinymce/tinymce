@@ -10,13 +10,13 @@
 //
 
 @menu-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
-@menu-border-color: @border-color;
+@menu-border-color: transparent;
 @menu-border-radius: @panel-border-radius;
-@menu-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
+@menu-box-shadow: 0 0 2px 0 fade(@color-black, 20%), 0 4px 8px 0 fade(@color-black, 15%);
 
-@menu-item-collection-list-padding: 0;
-@menu-item-collection-toolbar-padding: @pad-xs;
-@menu-item-collection-grid-padding: @pad-xs;
+@menu-item-collection-list-padding: @pad-xs;
+@menu-item-collection-toolbar-padding: @pad-sm;
+@menu-item-collection-grid-padding: @pad-sm;
 
 .tox {
   .tox-menu {
@@ -31,7 +31,7 @@
   }
 
   .tox-menu.tox-collection.tox-collection--list {
-    padding: @menu-item-collection-list-padding;
+    padding: 0 @menu-item-collection-list-padding;
   }
 
   .tox-menu.tox-collection.tox-collection--toolbar {

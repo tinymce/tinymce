@@ -11,10 +11,10 @@
 
 @toolbar-background-color: @background-color;
 @toolbar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_toolbar-height}' viewBox='0 0 40 @{_toolbar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_toolbar-divider-height}' width='100' height='1' fill='@{_toolbar-row-separator-color}'/%3E%3C/svg%3E") left 0 top @toolbar-padding-y @toolbar-background-color;
-@toolbar-row-separator-color: @toolbar-group-separator-color;
-@toolbar-separator-color: @border-color;
+@toolbar-row-separator-color: transparent;
+@toolbar-separator-color: transparent;
 @toolbar-padding-y: 0; // Note that a positive value doesn't work with toolbar collapsing into multiple rows. Will cause issues with the toolbar row separator
-@toolbar-padding-x: 0;
+@toolbar-padding-x: 10px;
 
 // private variables
 @_toolbar-row-separator-color: escape('@{toolbar-row-separator-color}');
@@ -90,8 +90,9 @@
 .tox.tox-tinymce-aux {
   .tox-toolbar__overflow {
     background-color: @pop-background-color;
-    border: 1px solid @pop-border-color;
+    border: none;
     border-radius: @pop-border-radius;
     box-shadow: @pop-box-shadow;
+    padding: @pad-xs 0;
   }
 }

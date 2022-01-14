@@ -11,7 +11,7 @@
 //
 
 @collection-item-padding: @pad-xs @pad-sm;
-@collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
+@collection-item-separator-color: fade(@toolbar-button-hover-background-color, 60);
 @collection-item-separator-margin-y: @pad-xs;
 
 @collection-item-label-font-size: @font-size-sm;
@@ -274,7 +274,7 @@
   }
 
   .tox-collection--horizontal .tox-collection__item {
-    height: @toolbar-button-height; // 24px
+    height: @toolbar-button-height; // 28px
     margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0; // 2px 0 3px 0
     padding: 0 4px;
   }

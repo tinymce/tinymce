@@ -27,7 +27,9 @@
   }
 
   &:not(.tox-tinymce-inline) .tox-editor-header {
+    background-color: @background-color;
     box-shadow: @editor-header-box-shadow;
+    padding: @pad-xs 0;
     transition: box-shadow .5s;
   }
 }
@@ -47,8 +49,9 @@
 
 .tox.tox-tinymce--toolbar-sticky-on {
   .tox-editor-header {
-    background-color: @editor-header-sticky-background-color;
+    background-color: @background-color;
     box-shadow: @editor-header-sticky-box-shadow;
+    padding: @pad-xs 0;
   }
 }
 
