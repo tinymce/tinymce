@@ -39,6 +39,7 @@ const get = (dom: DOMUtils) => {
         },
         inherit: false,
         preview: false,
+        // TODO: Look at deprecating this property?
         defaultBlock: 'div'
       },
       {

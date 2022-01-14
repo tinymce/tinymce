@@ -25,7 +25,7 @@ const getRemovedOptions = (options: RawEditorOptions): string[] => {
   const settingNames = Arr.filter(removedOptions, (setting) => Obj.has(options, setting));
   // Forced root block is a special case whereby only the empty/false value is deprecated
   const forcedRootBlock = options.forced_root_block;
-  if (forcedRootBlock === false || forcedRootBlock === '') {
+  if ((forcedRootBlock as any) === false || forcedRootBlock === '') {
     settingNames.push('forced_root_block (false only)');
   }
   return Arr.sort(settingNames);

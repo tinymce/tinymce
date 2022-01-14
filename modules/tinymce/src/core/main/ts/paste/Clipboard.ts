@@ -60,7 +60,7 @@ const pasteHtml = (editor: Editor, html: string, internalFlag: boolean): void =>
 const pasteText = (editor: Editor, text: string): void => {
   const encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
   const normalizedText = Whitespace.normalize(encodedText, Options.getPasteTabSpaces(editor));
-  const html = Newlines.convert(normalizedText, Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
+  const html = Newlines.toBlockElements(normalizedText, Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
   doPaste(editor, html, false, true);
 };
 

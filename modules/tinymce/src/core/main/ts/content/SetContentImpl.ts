@@ -64,12 +64,12 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
 
     const forcedRootBlockName = Options.getForcedRootBlock(editor);
 
-    // Check if forcedRootBlock is configured and that the block is a valid child of the body
-    if (forcedRootBlockName && editor.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
+    // Check if forcedRootBlock is a valid child of the body
+    if (editor.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
       content = padd;
       content = editor.dom.createHTML(forcedRootBlockName, Options.getForcedRootBlockAttrs(editor), content);
     } else if (!content) {
-      // We need to add a BR when forced_root_block is disabled to place the caret
+      // TODO: How should this be handled if we always want a root_block of some kind? Wrap this in a p?
       content = '<br data-mce-bogus="1">';
     }
 

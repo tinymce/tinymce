@@ -335,17 +335,6 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       }
     } else {
       if (!isCollapsed || !FormatUtils.isInlineFormat(format) || TableCellSelection.getCellsFromEditor(ed).length) {
-        // Obtain selection node before selection is unselected by applyRngStyle
-        const curSelNode = selection.getNode();
-
-        // If the formats have a default block and we can't find a parent block then
-        // start wrapping it with a DIV this is for forced_root_blocks: false
-        // It's kind of a hack but people should be using the default block type P since all desktop editors work that way
-        const firstFormat = formatList[0];
-        if (!Options.hasForcedRootBlock(ed) && firstFormat.defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {
-          applyFormat(ed, firstFormat.defaultBlock);
-        }
-
         // Apply formatting to selection
         selection.setRng(RangeNormalizer.normalize(selection.getRng()));
         SelectionUtils.preserve(selection, true, () => {

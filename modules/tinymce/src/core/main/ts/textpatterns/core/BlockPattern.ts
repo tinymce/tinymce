@@ -74,7 +74,7 @@ const findPatterns = (editor: Editor, patterns: BlockPattern[]): BlockPatternMat
 
   return Utils.getParentBlock(editor, rng).filter((block) => {
     const forcedRootBlock = Options.getForcedRootBlock(editor);
-    const matchesForcedRootBlock = forcedRootBlock === '' && dom.is(block, 'body') || dom.is(block, forcedRootBlock);
+    const matchesForcedRootBlock = dom.is(block, forcedRootBlock);
     return block !== null && matchesForcedRootBlock;
   }).bind((block) => {
     // Get the block text
