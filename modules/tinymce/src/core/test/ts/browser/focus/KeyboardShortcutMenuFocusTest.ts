@@ -6,7 +6,7 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
+describe('browser.tinymce.core.undo.KeyboardShortcutMenuFocusTest', () => {
 
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce'
