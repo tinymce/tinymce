@@ -227,13 +227,17 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
   // See: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
   const isSpecial = Obj.has(specialElements, parentName) && parentName !== 'title' && parentName !== 'textarea';
 
-  Arr.each(nativeParent.childNodes, (nativeChild) => {
+  const childNodes = nativeParent.childNodes;
+  for (let ni = 0, nl = childNodes.length; ni < nl; ni++) {
+    const nativeChild = childNodes[ni];
     const child = new AstNode(nativeChild.nodeName.toLowerCase(), nativeChild.nodeType);
 
     if (NodeType.isElement(nativeChild)) {
-      Arr.each(nativeChild.attributes, (attr) => {
+      const attributes = nativeChild.attributes;
+      for (let ai = 0, al = attributes.length; ai < al; ai++) {
+        const attr = attributes[ai];
         child.attr(attr.name, attr.value);
-      });
+      }
     } else if (NodeType.isText(nativeChild)) {
       child.value = nativeChild.data;
       if (isSpecial) {
@@ -245,7 +249,7 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
 
     transferChildren(child, nativeChild, specialElements);
     parent.append(child);
-  });
+  }
 };
 
 const walkTree = (root: AstNode, preprocessors: WalkerCallback[], postprocessors: WalkerCallback[]) => {
@@ -305,68 +309,56 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
     return Obj.has(blockElements, node.parent.name) && (node.parent !== root || args.isRootContent);
   };
 
-  // Remove leading whitespace here, so that all whitespace in nodes to the left of us has already been fixed
-  const preprocessText = (node: AstNode) => {
-    if (!hasWhitespaceParent(node)) {
-      let text = node.value;
-      text = text.replace(allWhiteSpaceRegExp, ' ');
-
-      if (isLineBreakNode(node.prev, blockElements) || isAtEdgeOfBlock(node, true)) {
-        text = text.replace(startWhiteSpaceRegExp, '');
-      }
-
-      if (text.length === 0) {
-        node.remove();
-      } else {
-        node.value = text;
-      }
-    }
-  };
-
-  // Removing trailing whitespace here, so that all whitespace in nodes to the right of us has already been fixed
-  const postprocessText = (node: AstNode) => {
-    if (!hasWhitespaceParent(node)) {
-      let text = node.value;
-      if (blockElements[node.next?.name] || isAtEdgeOfBlock(node, false)) {
-        text = text.replace(endWhiteSpaceRegExp, '');
-      }
-
-      if (text.length === 0) {
-        node.remove();
-      } else {
-        node.value = text;
-      }
-    }
-  };
-
-  // Check for empty nodes here, because children will have been processed and (if necessary) emptied / removed already
-  const postprocessElement = (node: AstNode) => {
-    const elementRule = schema.getElementRule(node.name);
-    if (validate && elementRule) {
-      const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
-      if (elementRule.removeEmpty && isNodeEmpty) {
-        if (blockElements[node.name]) {
-          node.remove();
-        } else {
-          node.unwrap();
-        }
-      } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
-        paddEmptyNode(settings, args, blockElements, node);
-      }
-    }
-  };
-
   const preprocess = (node: AstNode) => {
     if (node.type === 3) {
-      preprocessText(node);
+      // Remove leading whitespace here, so that all whitespace in nodes to the left of us has already been fixed
+      if (!hasWhitespaceParent(node)) {
+        let text = node.value;
+        text = text.replace(allWhiteSpaceRegExp, ' ');
+
+        if (isLineBreakNode(node.prev, blockElements) || isAtEdgeOfBlock(node, true)) {
+          text = text.replace(startWhiteSpaceRegExp, '');
+        }
+
+        if (text.length === 0) {
+          node.remove();
+        } else {
+          node.value = text;
+        }
+      }
     }
   };
 
   const postprocess = (node: AstNode) => {
     if (node.type === 1) {
-      postprocessElement(node);
+      // Check for empty nodes here, because children will have been processed and (if necessary) emptied / removed already
+      const elementRule = schema.getElementRule(node.name);
+      if (validate && elementRule) {
+        const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
+        if (elementRule.removeEmpty && isNodeEmpty) {
+          if (blockElements[node.name]) {
+            node.remove();
+          } else {
+            node.unwrap();
+          }
+        } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
+          paddEmptyNode(settings, args, blockElements, node);
+        }
+      }
     } else if (node.type === 3) {
-      postprocessText(node);
+      // Removing trailing whitespace here, so that all whitespace in nodes to the right of us has already been fixed
+      if (!hasWhitespaceParent(node)) {
+        let text = node.value;
+        if (blockElements[node.next?.name] || isAtEdgeOfBlock(node, false)) {
+          text = text.replace(endWhiteSpaceRegExp, '');
+        }
+
+        if (text.length === 0) {
+          node.remove();
+        } else {
+          node.value = text;
+        }
+      }
     }
   };
 
@@ -520,23 +512,22 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   const runFilters = (matches: FilterMatches, args: ParserArgs): void => {
     // Run node filters
     for (const name in matches.nodes) {
-      if (!Obj.has(matches.nodes, name)) {
-        continue;
-      }
-      const list = nodeFilters[name];
-      const nodes = matches.nodes[name];
+      if (Obj.has(matches.nodes, name)) {
+        const list = nodeFilters[name];
+        const nodes = matches.nodes[name];
 
-      // Remove already removed children
-      let fi = nodes.length;
-      while (fi--) {
-        if (!nodes[fi].parent) {
-          nodes.splice(fi, 1);
+        // Remove already removed children
+        let fi = nodes.length;
+        while (fi--) {
+          if (!nodes[fi].parent) {
+            nodes.splice(fi, 1);
+          }
         }
-      }
 
-      const l = list.length;
-      for (let i = 0; i < l; i++) {
-        list[i](nodes, name, args);
+        const l = list.length;
+        for (let i = 0; i < l; i++) {
+          list[i](nodes, name, args);
+        }
       }
     }
 
