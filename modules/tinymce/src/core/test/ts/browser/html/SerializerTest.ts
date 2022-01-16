@@ -28,14 +28,13 @@ describe('browser.tinymce.core.html.SerializerTest', () => {
     );
   });
 
-  // TODO: TINY-4627/TINY-8383
-  it.skip('Serialize with validate: true, when parsing with validate:false bug', () => {
+  it('Serialize with validate: true, when parsing with validate:false bug', () => {
     const schema = Schema({ valid_elements: 'b' });
     const serializer = HtmlSerializer({}, schema);
 
     assert.equal(
       serializer.serialize(DomParser({ validate: false }, schema).parse('<b a="1" b="2">a</b><i a="1" b="2">b</i>')),
-      '<b a="1" b="2">a</b><i a="1" b="2">b</i>'
+      '<b b="2" a="1">a</b><i b="2" a="1">b</i>'
     );
   });
 });
