@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 import { Attribute, Remove, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
@@ -94,24 +94,24 @@ interface FilterMatches {
 
 type WalkerCallback = (node: AstNode) => void;
 
-const basePurifyConfig: Config & { RETURN_DOM: true } = {
-  RETURN_DOM: true,
+const basePurifyConfig: Config = {
+  IN_PLACE: true,
   ALLOW_UNKNOWN_PROTOCOLS: true,
   // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
   // #comment and #cdata-section are always allowed as they aren't controlled via the schema
-  ALLOWED_TAGS: [ '#comment', '#cdata-section' ],
+  // body is also allowed due to the DOMPurify checking the root node before sanitizing
+  ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
   ALLOWED_ATTR: []
 };
 
 // A list of attributes that should be filtered further based on the parser settings
 const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
 
-const getPurifyConfig = (settings: DomParserSettings, args: ParserArgs): Config & { RETURN_DOM: true } => {
+const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config => {
   const config = { ...basePurifyConfig };
 
-  if (args.format === 'xhtml') {
-    config.PARSER_MEDIA_TYPE = 'application/xhtml+xml';
-  }
+  // Set the relevant parser mimetype
+  config.PARSER_MEDIA_TYPE = mimeType;
 
   // Allow any URI when allowing script urls
   if (settings.allow_script_urls) {
@@ -126,6 +126,7 @@ const getPurifyConfig = (settings: DomParserSettings, args: ParserArgs): Config 
 
 const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI => {
   const purify = createDompurify();
+  const validate = settings.validate;
   let uid = 0;
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
@@ -139,48 +140,55 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
 
     // Determine if the schema allows the element and either add it or remove it
     const rule = schema.getElementRule(tagName.toLowerCase());
-    if (!rule) {
+    if (validate && !rule) {
       Remove.unwrap(element);
       return;
     } else if (!Obj.has(evt.allowedTags, tagName)) {
       evt.allowedTags[tagName] = true;
     }
 
+    // Determine if we're dealing with an internal attribute
+    const isInternalElement = Attribute.has(element, 'data-mce-type');
+
     // Cleanup bogus elements
-    const bogus = !Attribute.has(element, 'data-mce-type') && Attribute.get(element, 'data-mce-bogus');
-    if (bogus === 'all') {
-      Remove.remove(element);
-      return;
-    } else if (bogus === '1') {
-      Remove.unwrap(element);
-      return;
-    }
-
-    // Fix the attributes for the element, unwrapping it if we have to
-    Arr.each(rule.attributesForced ?? [], (attr) => {
-      Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
-    });
-    Arr.each(rule.attributesDefault ?? [], (attr) => {
-      if (!Attribute.has(element, attr.name)) {
-        Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
+    const bogus = Attribute.get(element, 'data-mce-bogus');
+    if (!isInternalElement && Type.isString(bogus)) {
+      if (bogus === 'all') {
+        Remove.remove(element);
+      } else {
+        Remove.unwrap(element);
       }
-    });
-
-    // If none of the required attributes were found then remove
-    if (rule.attributesRequired && !Arr.exists(rule.attributesRequired, (attr) => Attribute.has(element, attr))) {
-      Remove.unwrap(element);
       return;
     }
 
-    // If there are no attributes then remove
-    if (rule.removeEmptyAttrs && Attribute.hasNone(element)) {
-      Remove.unwrap(element);
-      return;
-    }
+    // Validate the element using the attribute rules
+    if (validate && !isInternalElement) {
+      // Fix the attributes for the element, unwrapping it if we have to
+      Arr.each(rule.attributesForced ?? [], (attr) => {
+        Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
+      });
+      Arr.each(rule.attributesDefault ?? [], (attr) => {
+        if (!Attribute.has(element, attr.name)) {
+          Attribute.set(element, attr.name, attr.value === '{$uid}' ? `mce_${uid++}` : attr.value);
+        }
+      });
 
-    // Change the node name if the schema says to
-    if (rule.outputName && rule.outputName !== tagName.toLowerCase()) {
-      Replication.mutate(element, rule.outputName as keyof HTMLElementTagNameMap);
+      // If none of the required attributes were found then remove
+      if (rule.attributesRequired && !Arr.exists(rule.attributesRequired, (attr) => Attribute.has(element, attr))) {
+        Remove.unwrap(element);
+        return;
+      }
+
+      // If there are no attributes then remove
+      if (rule.removeEmptyAttrs && Attribute.hasNone(element)) {
+        Remove.unwrap(element);
+        return;
+      }
+
+      // Change the node name if the schema says to
+      if (rule.outputName && rule.outputName !== tagName.toLowerCase()) {
+        Replication.mutate(element, rule.outputName as keyof HTMLElementTagNameMap);
+      }
     }
   });
 
@@ -189,7 +197,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     const tagName = ele.tagName.toLowerCase();
     const { attrName, attrValue } = evt;
 
-    evt.keepAttr = Strings.startsWith(attrName, 'data-') || schema.isValid(tagName, attrName);
+    evt.keepAttr = !validate || Strings.startsWith(attrName, 'data-') || schema.isValid(tagName, attrName);
     if (attrName in filteredUrlAttrs && !URI.isDomSafe(attrValue, tagName, settings)) {
       evt.keepAttr = false;
     }
@@ -266,6 +274,7 @@ const walkTree = (root: AstNode, preprocessors: WalkerCallback[], postprocessors
 //
 // Returns [ preprocess, postprocess ]
 const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSettings, args: ParserArgs): [WalkerCallback, WalkerCallback] => {
+  const validate = settings.validate;
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhiteSpaceElements();
   const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
@@ -333,18 +342,17 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   // Check for empty nodes here, because children will have been processed and (if necessary) emptied / removed already
   const postprocessElement = (node: AstNode) => {
     const elementRule = schema.getElementRule(node.name);
-    if (!elementRule) {
-      return;
-    }
-    const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
-    if (elementRule.removeEmpty && isNodeEmpty) {
-      if (blockElements[node.name]) {
-        node.remove();
-      } else {
-        node.unwrap();
+    if (validate && elementRule) {
+      const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
+      if (elementRule.removeEmpty && isNodeEmpty) {
+        if (blockElements[node.name]) {
+          node.remove();
+        } else {
+          node.unwrap();
+        }
+      } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
+        paddEmptyNode(settings, args, blockElements, node);
       }
-    } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
-      paddEmptyNode(settings, args, blockElements, node);
     }
   };
 
@@ -366,7 +374,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
 };
 
 const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
-  const name = 'forced_root_block' in args ? args.forced_root_block : settings.forced_root_block;
+  const name = args.forced_root_block ?? settings.forced_root_block;
   if (name === false) {
     return '';
   } else if (name === true) {
@@ -376,15 +384,35 @@ const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
   }
 };
 
-const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser => {
+const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
   const nodeFilters: Record<string, ParserFilterCallback[]> = {};
   const attributeFilters: ParserFilter[] = [];
 
-  settings = settings || {};
-  settings.validate = 'validate' in settings ? settings.validate : true;
-  settings.root_name = settings.root_name || 'body';
+  // Apply setting defaults
+  const defaultedSettings = {
+    validate: true,
+    root_name: 'body',
+    ...settings
+  };
 
-  const purify = setupPurify(settings, schema);
+  const parser = new DOMParser();
+  const purify = setupPurify(defaultedSettings, schema);
+
+  const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html') => {
+    const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
+    // Determine the root element to wrap the HTML in when parsing. If we're dealing with a
+    // special element then we need to wrap it so the internal content is handled appropriately.
+    const isSpecialRoot = Obj.has(schema.getSpecialElements(), rootName.toLowerCase());
+    const content = isSpecialRoot ? `<${rootName}>${html}</${rootName}>` : html;
+    // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
+    const wrappedHtml = format === 'xhtml' ? `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>` : `<body>${content}</body>`;
+    const body = parser.parseFromString(wrappedHtml, mimeType).body;
+
+    // Sanitize the content
+    purify.sanitize(body, getPurifyConfig(defaultedSettings, mimeType));
+
+    return isSpecialRoot ? body.firstChild : body;
+  };
 
   /**
    * Adds a node filter function to the parser, the parser will collect the specified nodes by name
@@ -528,22 +556,19 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
           }
         }
 
-        for (let fi = 0, fl = list.callbacks.length; fi < fl; fi++) {
-          list.callbacks[fi](nodes, list.name, args);
+        const callbacks = list.callbacks;
+        for (let fi = 0, fl = callbacks.length; fi < fl; fi++) {
+          callbacks[fi](nodes, list.name, args);
         }
       }
     }
   };
 
   const findInvalidChildren = (node: AstNode, invalidChildren: AstNode[]): void => {
-    const parent = node.parent;
-    if (!parent) {
-      return;
-    }
-
     // Check if the node is a valid child of the parent node. If the child is
     // unknown we don't collect it since it's probably a custom element
-    if (schema.children[parent.name] && schema.children[node.name] && !schema.children[parent.name][node.name]) {
+    const parent = node.parent;
+    if (parent && schema.children[node.name] && !schema.isValidChild(parent.name, node.name)) {
       invalidChildren.push(node);
     }
   };
@@ -571,7 +596,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
       }
     };
 
-    // Check if rootBlock is valid within rootNode for example if P is valid in H1 if H1 is the contentEditabe root
+    // Check if rootBlock is valid within rootNode for example if P is valid in H1 if H1 is the contentEditable root
     if (!schema.isValidChild(rootNode.name, rootBlockName.toLowerCase())) {
       return;
     }
@@ -584,7 +609,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
         if (!rootBlockNode) {
           // Create a new root block element
           rootBlockNode = new AstNode(rootBlockName, 1);
-          rootBlockNode.attr(settings.forced_root_block_attrs);
+          rootBlockNode.attr(defaultedSettings.forced_root_block_attrs);
           rootNode.insert(rootBlockNode, node);
           rootBlockNode.append(node);
         } else {
@@ -611,29 +636,23 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
    * @param {Object} args Optional args object that gets passed to all filter functions.
    * @return {tinymce.html.Node} Root node containing the tree.
    */
-  const parse = (html: string, args?: ParserArgs): AstNode => {
-    args = args || {};
-    const validate = settings.validate;
-    const specialElements = schema.getSpecialElements();
-    const rootBlockName = getRootBlockName(settings, args);
+  const parse = (html: string, args: ParserArgs = {}): AstNode => {
+    const validate = defaultedSettings.validate;
+    const rootName = args.context ?? defaultedSettings.root_name;
 
-    // Determine the root element to wrap the HTML in when parsing. If we're dealing with a
-    // special element then we need to wrap it so the internal content is handled appropriately.
-    const rootName = args.context || settings.root_name;
-    // If the root requires special parsing rules then ensure it's wrapped it in that element
-    const isSpecialRoot = Obj.has(specialElements, rootName.toLowerCase());
-    const content = isSpecialRoot ? `<${rootName}>${html}</${rootName}>` : html;
-    const body = purify.sanitize(`<body>${content}</body>`, getPurifyConfig(settings, args));
-    const element = isSpecialRoot ? body.firstChild : body;
+    // Parse and sanitize the content
+    const element = parseAndSanitizeWithContext(html, rootName, args.format);
+
+    // Create the AST representation
     const rootNode = new AstNode(rootName, 11);
-    transferChildren(rootNode, element, specialElements);
+    transferChildren(rootNode, element, schema.getSpecialElements());
 
     // Set up whitespace fixes
-    const [ whitespacePre, whitespacePost ] = whitespaceCleaner(rootNode, schema, settings, args);
+    const [ whitespacePre, whitespacePost ] = whitespaceCleaner(rootNode, schema, defaultedSettings, args);
 
     // Find the invalid children in the tree
     const invalidChildren: AstNode[] = [];
-    const invalidFinder = (node: AstNode) => findInvalidChildren(node, invalidChildren);
+    const invalidFinder = validate ? (node: AstNode) => findInvalidChildren(node, invalidChildren) : Fun.noop;
 
     // Set up attribute and node matching
     const matches: FilterMatches = { nodes: {}, attributes: {}};
@@ -646,17 +665,18 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     invalidChildren.reverse();
 
     // Fix invalid children or report invalid children in a contextual parsing
-    if (validate && invalidChildren.length) {
+    if (validate && invalidChildren.length > 0) {
       if (args.context) {
         const { pass: topLevelChildren, fail: otherChildren } = Arr.partition(invalidChildren, (child) => child.parent === rootNode);
-        cleanInvalidNodes(otherChildren, schema, (newNode) => filterNode(newNode, matches));
+        cleanInvalidNodes(otherChildren, schema, matchFinder);
         args.invalid = topLevelChildren.length > 0;
       } else {
-        cleanInvalidNodes(invalidChildren, schema, (newNode) => filterNode(newNode, matches));
+        cleanInvalidNodes(invalidChildren, schema, matchFinder);
       }
     }
 
     // Wrap nodes in the root into block elements if the root is body
+    const rootBlockName = getRootBlockName(defaultedSettings, args);
     if (rootBlockName && (rootNode.name === 'body' || args.isRootContent)) {
       addRootBlocks(rootNode, rootBlockName);
     }
@@ -678,8 +698,8 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     parse
   };
 
-  ParserFilters.register(exports, settings);
-  LegacyFilter.register(exports, settings);
+  ParserFilters.register(exports, defaultedSettings);
+  LegacyFilter.register(exports, defaultedSettings);
 
   return exports;
 };
