@@ -17,7 +17,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
   const pAssertFocusOnItem = (label: string, selector: string) =>
     FocusTools.pTryOnSelector(`Focus should be on: ${label}`, SugarDocument.getDocument(), selector);
 
-  it('shoud undo and redo action', async () => {
+  it('should focus on first menu bar option and submenus', async () => {
     const editor = hook.editor();
     TinyContentActions.keystroke(editor, 120, { alt: true });
     await pAssertFocusOnItem('File', '.tox-mbtn--select:contains("File")');
