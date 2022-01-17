@@ -66,7 +66,7 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
         '<table>' +
           '<tbody>' +
           '<tr><td colspan="2" rowspan="2">' +
-          'a1<br />b1<br />a2<br />b2' +
+          'a1<br>b1<br>a2<br>b2' +
           '</td></tr><tr></tr>' +
           '</tbody>' +
           '</table>'
@@ -90,7 +90,7 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
       after: (
         '<table>' +
           '<tbody>' +
-          '<tr><td colspan="2" rowspan="2">a1<br />b1<br />a2<br />b2</td></tr>' +
+          '<tr><td colspan="2" rowspan="2">a1<br>b1<br>a2<br>b2</td></tr>' +
           '<tr></tr>' +
           '<tr><td>a3</td><td>b3</td></tr>' +
           '</tbody>' +
@@ -137,7 +137,7 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
               '<td>c2</td>' +
             '</tr>' +
             '<tr>' +
-              '<td colspan="2">b3<br />c3</td>' +
+              '<td colspan="2">b3<br>c3</td>' +
             '</tr>' +
           '</tbody>' +
         '</table>'
@@ -280,7 +280,7 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
           '<tbody>' +
           '<tr>' +
           '<td>a1</td>' +
-          '<td>b1<br />c1</td>' +
+          '<td>b1<br>c1</td>' +
           '</tr>' +
           '<tr>' +
           '<td colspan="2">a2</td>' +
@@ -316,7 +316,7 @@ describe('browser.tinymce.models.dom.table.command.MergeCellCommandTest', () => 
           '<td rowspan="2">b1</td>' +
           '</tr>' +
           '<tr>' +
-          '<td>a2<br />a3</td>' +
+          '<td>a2<br>a3</td>' +
           '</tr>' +
           '</tbody>' +
           '</table>'

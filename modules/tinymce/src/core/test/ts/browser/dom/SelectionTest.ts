@@ -101,7 +101,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.selection.setContent('<img src="a" onerror="alert(1)" />');
-    LegacyUnit.equal(editor.getContent(), '<img src="a" />', 'Set XSS at selection');
+    LegacyUnit.equal(editor.getContent(), '<img src="a">', 'Set XSS at selection');
 
     // Set contents at selection (collapsed)
     editor.setContent('<p>text</p>');
@@ -119,7 +119,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setEnd(editor.getBody().firstChild.firstChild, 'before'.length);
     editor.selection.setRng(rng);
     editor.selection.setContent('<br />');
-    LegacyUnit.equal(editor.getContent(), '<p>before<br />after</p>', 'Set contents at selection (inside paragraph)');
+    LegacyUnit.equal(editor.getContent(), '<p>before<br>after</p>', 'Set contents at selection (inside paragraph)');
 
     // Check the caret is left in the correct position.
     rng = editor.selection.getRng();

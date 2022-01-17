@@ -1266,7 +1266,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(
       editor.getContent(),
       '<ol><li><strong>a</strong></li><li><strong>b</strong><ul><li><strong>c</strong></li><li><strong>d</strong>' +
-      '<br /><ol><li><strong>e</strong></li><li><strong>f</strong></li></ol></li></ul></li><li><strong>g</strong>' +
+      '<br><ol><li><strong>e</strong></li><li><strong>f</strong></li></ol></li></ul></li><li><strong>g</strong>' +
       '</li></ol>',
       'should be applied to all sublists'
     );
@@ -2330,7 +2330,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<ul>' +
         '<li style="text-align: center;">a</li>' +
-        '<li style="text-align: center;">b<br />' +
+        '<li style="text-align: center;">b<br>' +
           '<ul>' +
             '<li style="text-align: center;">c</li>' +
             '<li style="text-align: center;">d</li>' +
@@ -2358,7 +2358,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<ol>' +
         '<li style="text-align: center;">a</li>' +
-        '<li style="text-align: center;">b<br />' +
+        '<li style="text-align: center;">b<br>' +
           '<ol>' +
             '<li style="text-align: center;">c</li>' +
             '<li>d</li>' +
@@ -2386,7 +2386,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<ul>' +
         '<li style="text-align: center;">a</li>' +
-        '<li style="text-align: center;"><strong>b</strong><br />' +
+        '<li style="text-align: center;"><strong>b</strong><br>' +
           '<ul>' +
             '<li style="text-align: center;">c</li>' +
             '<li style="text-align: center;">d</li>' +
@@ -2413,7 +2413,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<ul>' +
         '<li style="text-align: right;">a</li>' +
-        '<li style="text-align: right;">b<br />' +
+        '<li style="text-align: right;">b<br>' +
           '<ul>' +
             '<li>c</li>' +
           '</ul>' +
@@ -2477,7 +2477,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(getContent(editor),
       '<div>' +
         '<div style="text-align: center;">a</div>' +
-        '<div style="text-align: center;"><br />b' +
+        '<div style="text-align: center;"><br>b' +
           '<div style="text-align: center;">1</div>' +
         '</div>' +
         '<div>c</div>' +

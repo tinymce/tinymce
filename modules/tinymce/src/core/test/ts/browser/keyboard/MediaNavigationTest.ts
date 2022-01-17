@@ -27,10 +27,10 @@ describe('browser.tinymce.core.keyboard.MediaNavigationTest', () => {
   };
 
   Arr.each([
-    { type: 'video', content: '<video controls="controls"><source src="custom/video.mp4" /></video>', skip: false },
-    { type: 'audio', content: '<audio controls="controls"><source src="custom/audio.mp3" /></audio>', skip: false },
+    { type: 'video', content: '<video controls="controls"><source src="custom/video.mp4"></video>', skip: false },
+    { type: 'audio', content: '<audio controls="controls"><source src="custom/audio.mp3"></audio>', skip: false },
     // Firefox won't render without a valid embed/object, so skip
-    { type: 'embed', content: '<embed src="custom/video.mp4" />', skip: Env.browser.isFirefox() },
+    { type: 'embed', content: '<embed src="custom/video.mp4">', skip: Env.browser.isFirefox() },
     // TINY-7871: Safari 14.1 also appears to have a bug that causes it to freeze without a valid object
     { type: 'object', content: '<object data="custom/file.pdf"></object>', skip: Env.browser.isFirefox() || Env.browser.isSafari() }
   ], (test) => {
