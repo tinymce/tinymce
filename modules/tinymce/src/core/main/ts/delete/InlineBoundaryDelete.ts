@@ -41,11 +41,10 @@ const hasOnlyTwoOrLessPositionsLeft = (elm: Node): boolean =>
       return CaretFinder.nextPosition(elm, normalizedFirstPos).forall((pos) => pos.isEqual(normalizedLastPos));
     }).getOr(true);
 
-const setCaretLocation = (editor: Editor, caret: Cell<Text>) => (location: BoundaryLocation.LocationAdt): boolean =>
-  BoundaryCaret.renderCaret(caret, location).exists((pos) => {
-    BoundarySelection.setCaretPosition(editor, pos);
-    return true;
-  });
+const setCaretLocation = (editor: Editor, caret: Cell<Text>) => (location: BoundaryLocation.LocationAdt): Optional<() => void> =>
+  BoundaryCaret.renderCaret(caret, location).map((pos) =>
+    () => BoundarySelection.setCaretPosition(editor, pos)
+  );
 
 const deleteFromTo = (editor: Editor, caret: Cell<Text>, from: CaretPosition, to: CaretPosition): void => {
   const rootNode = editor.getBody();
@@ -57,7 +56,7 @@ const deleteFromTo = (editor: Editor, caret: Cell<Text>, from: CaretPosition, to
 
     BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
       .map(BoundaryLocation.inside)
-      .map(setCaretLocation(editor, caret));
+      .bind(setCaretLocation(editor, caret)).each((action) => action());
   });
 
   editor.nodeChanged();
@@ -68,12 +67,11 @@ const rescope = (rootNode: Node, node: Node): Node => {
   return parentBlock ? parentBlock : rootNode;
 };
 
-const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text>, forward: boolean, from: CaretPosition): boolean => {
+const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text>, forward: boolean, from: CaretPosition): Optional<() => void> => {
   const rootNode = rescope(editor.getBody(), from.container());
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
   const fromLocation = BoundaryLocation.readLocation(isInlineTarget, rootNode, from);
-
-  return fromLocation.bind((location) => {
+  const location = fromLocation.bind((location) => {
     if (forward) {
       return location.fold(
         Fun.constant(Optional.some(BoundaryLocation.inside(location))), // Before
@@ -89,42 +87,49 @@ const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text>, forward: bo
         Fun.constant(Optional.some(BoundaryLocation.inside(location)))  // After
       );
     }
-  })
-    .map(setCaretLocation(editor, caret))
-    .getOrThunk(() => {
-      const toPosition = CaretFinder.navigate(forward, rootNode, from);
-      const toLocation = toPosition.bind((pos) => BoundaryLocation.readLocation(isInlineTarget, rootNode, pos));
+  });
 
-      return Optionals.lift2(fromLocation, toLocation, () =>
-        InlineUtils.findRootInline(isInlineTarget, rootNode, from).exists((elm) => {
-          if (hasOnlyTwoOrLessPositionsLeft(elm)) {
+  const newLocation = location.map(setCaretLocation(editor, caret));
+
+  return newLocation.getOrThunk((): Optional<() => void> => {
+    const toPosition = CaretFinder.navigate(forward, rootNode, from);
+    const toLocation = toPosition.bind((pos) => BoundaryLocation.readLocation(isInlineTarget, rootNode, pos));
+
+    const liftResult = Optionals.lift2(fromLocation, toLocation, () =>
+      InlineUtils.findRootInline(isInlineTarget, rootNode, from).bind((elm) => {
+        if (hasOnlyTwoOrLessPositionsLeft(elm)) {
+          return Optional.some(() => {
             DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(elm));
-            return true;
-          } else {
-            return false;
-          }
-        })
-      ).orThunk(() => toLocation.bind((_) =>
-        toPosition.map((to) => {
+          });
+        } else {
+          return Optional.none();
+        }
+      })
+    );
+
+    const thunk = () => toLocation.bind(() =>
+      toPosition.map((to) => {
+        return () => {
           if (forward) {
             deleteFromTo(editor, caret, from, to);
           } else {
             deleteFromTo(editor, caret, to, from);
           }
+        };
+      })
+    );
 
-          return true;
-        })
-      )).getOr(false);
-    });
+    return liftResult.getOrThunk(thunk);
+  });
 };
 
-const backspaceDelete = (editor: Editor, caret: Cell<Text>, forward?: boolean): boolean => {
+const backspaceDelete = (editor: Editor, caret: Cell<Text>, forward?: boolean): Optional<() => void> => {
   if (editor.selection.isCollapsed() && Options.isInlineBoundariesEnabled(editor)) {
     const from = CaretPosition.fromRangeStart(editor.selection.getRng());
     return backspaceDeleteCollapsed(editor, caret, forward, from);
   }
 
-  return false;
+  return Optional.none();
 };
 
 export {

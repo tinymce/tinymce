@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -39,24 +39,23 @@ const deleteLastPosition = (forward: boolean, editor: Editor, target: SugarEleme
   }
 };
 
-const deleteCaret = (editor: Editor, forward: boolean): boolean => {
+const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => {
   const rootElm = SugarElement.fromDom(editor.getBody());
   const startElm = SugarElement.fromDom(editor.selection.getStart());
   const parentInlines = Arr.filter(getParentInlines(rootElm, startElm), hasOnlyOneChild);
 
-  return Arr.last(parentInlines).exists((target) => {
+  return Arr.last(parentInlines).bind((target) => {
     const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
     if (DeleteUtils.willDeleteLastPositionInElement(forward, fromPos, target.dom) && !CaretFormat.isEmptyCaretFormatElement(target)) {
-      deleteLastPosition(forward, editor, target, parentInlines);
-      return true;
+      return Optional.some(() => deleteLastPosition(forward, editor, target, parentInlines));
     } else {
-      return false;
+      return Optional.none();
     }
   });
 };
 
-const backspaceDelete = (editor: Editor, forward: boolean): boolean =>
-  editor.selection.isCollapsed() ? deleteCaret(editor, forward) : false;
+const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> =>
+  editor.selection.isCollapsed() ? deleteCaret(editor, forward) : Optional.none();
 
 export {
   backspaceDelete

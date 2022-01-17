@@ -20,12 +20,14 @@ import * as InlineFormatDelete from '../delete/InlineFormatDelete';
 import * as MediaDelete from '../delete/MediaDelete';
 import * as Outdent from '../delete/Outdent';
 import * as TableDelete from '../delete/TableDelete';
-import { fireFakeInputEvent } from './FakeInputEvents';
+import { fireFakeBeforeInputEvent, fireFakeInputEvent } from './FakeInputEvents';
 import * as MatchKeys from './MatchKeys';
 
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
-  MatchKeys.execute([
-    { keyCode: VK.BACKSPACE, action: MatchKeys.action(Outdent.backspaceDelete, editor, false) },
+  const inputType = evt.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward';
+
+  MatchKeys.executeWithDelayedAction([
+    { keyCode: VK.BACKSPACE, action: MatchKeys.action(Outdent.backspaceDelete, editor) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(CefDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(CaretBoundaryDelete.backspaceDelete, editor, false) },
@@ -44,9 +46,14 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     { keyCode: VK.DELETE, action: MatchKeys.action(BlockBoundaryDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) }
-  ], evt).each((value) => {
+  ], evt).each((applyAction) => {
     evt.preventDefault();
-    fireFakeInputEvent(editor, value.keyCode === VK.BACKSPACE ? 'deleteContentBackward' : 'deleteContentForward');
+    const beforeInput = fireFakeBeforeInputEvent(editor, inputType);
+
+    if (!beforeInput.defaultPrevented) {
+      applyAction();
+      fireFakeInputEvent(editor, inputType);
+    }
   });
 };
 

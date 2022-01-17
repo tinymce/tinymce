@@ -35,7 +35,7 @@ const setSelection = (editor: Editor) => (pos: CaretPosition) => {
   return true;
 };
 
-const insertSpaceOrNbspAtSelection = (editor: Editor): boolean => {
+const insertSpaceOrNbspAtSelection = (editor: Editor): Optional<() => void> => {
   const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
   const root = SugarElement.fromDom(editor.getBody());
 
@@ -45,10 +45,11 @@ const insertSpaceOrNbspAtSelection = (editor: Editor): boolean => {
 
     return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition)
       .bind(locationToCaretPosition(root))
-      .bind(insertInlineBoundarySpaceOrNbsp(root, pos))
-      .exists(setSelection(editor));
+      .map((checkPos) =>
+        () => insertInlineBoundarySpaceOrNbsp(root, pos)(checkPos)
+          .each(setSelection(editor)));
   } else {
-    return false;
+    return Optional.none();
   }
 };
 

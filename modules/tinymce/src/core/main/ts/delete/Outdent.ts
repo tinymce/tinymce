@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -12,19 +13,18 @@ import * as BlockBoundary from '../caret/BlockBoundary';
 import CaretPosition from '../caret/CaretPosition';
 import * as IndentOutdent from '../commands/IndentOutdent';
 
-const backspaceDelete = (editor: Editor, _forward?: boolean): boolean => {
+const backspaceDelete = (editor: Editor): Optional<() => void> => {
   if (editor.selection.isCollapsed() && IndentOutdent.canOutdent(editor)) {
     const dom = editor.dom;
     const rng = editor.selection.getRng();
     const pos = CaretPosition.fromRangeStart(rng);
     const block = dom.getParent(rng.startContainer, dom.isBlock);
     if (block !== null && BlockBoundary.isAtStartOfBlock(SugarElement.fromDom(block), pos)) {
-      IndentOutdent.handle(editor, 'outdent');
-      return true;
+      return Optional.some(() => IndentOutdent.handle(editor, 'outdent'));
     }
   }
 
-  return false;
+  return Optional.none();
 };
 
 export {

@@ -37,6 +37,32 @@ const fireFakeInputEvent = (editor: Editor, inputType: string, specifics: Specif
   editor.fire('input', { ...input, ...overrides, ...specifics });
 };
 
+const fireFakeBeforeInputEvent = (editor: Editor, inputType: string, specifics: SpecificsInput = {}): InputEvent => {
+  const target = editor.getBody();
+  const overrides = {
+    bubbles: true,
+    composed: true,
+    data: null,
+    isComposing: false,
+    detail: 0,
+    view: null,
+    target,
+    currentTarget: target,
+    eventPhase: Event.AT_TARGET,
+    originalTarget: target,
+    explicitOriginalTarget: target,
+    isTrusted: false,
+    srcElement: target,
+    cancelable: false,
+    inputType
+  };
+
+  const input = clone(new InputEvent('beforeinput'));
+
+  return editor.fire('beforeinput', { ...input, ...overrides, ...specifics });
+};
+
 export {
-  fireFakeInputEvent
+  fireFakeInputEvent,
+  fireFakeBeforeInputEvent
 };

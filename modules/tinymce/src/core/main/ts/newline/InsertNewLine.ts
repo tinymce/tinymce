@@ -9,7 +9,7 @@ import { Fun, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import { fireFakeInputEvent } from '../keyboard/FakeInputEvents';
+import { fireFakeBeforeInputEvent, fireFakeInputEvent } from '../keyboard/FakeInputEvents';
 import * as InsertBlock from './InsertBlock';
 import * as InsertBr from './InsertBr';
 import * as NewLineAction from './NewLineAction';
@@ -17,15 +17,23 @@ import * as NewLineAction from './NewLineAction';
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   NewLineAction.getAction(editor, evt).fold(
     () => {
-      InsertBr.insert(editor, evt);
-      if (Type.isNonNullable(evt)) {
-        fireFakeInputEvent(editor, 'insertLineBreak');
+      const event = fireFakeBeforeInputEvent(editor, 'insertLineBreak');
+
+      if (!event.defaultPrevented) {
+        InsertBr.insert(editor, evt);
+        if (Type.isNonNullable(evt)) {
+          fireFakeInputEvent(editor, 'insertLineBreak');
+        }
       }
     },
     () => {
-      InsertBlock.insert(editor, evt);
-      if (Type.isNonNullable(evt)) {
-        fireFakeInputEvent(editor, 'insertParagraph');
+      const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
+
+      if (!event.defaultPrevented) {
+        InsertBlock.insert(editor, evt);
+        if (Type.isNonNullable(evt)) {
+          fireFakeInputEvent(editor, 'insertParagraph');
+        }
       }
     },
     Fun.noop
