@@ -38,9 +38,7 @@ const get = (dom: DOMUtils) => {
           textAlign: 'left'
         },
         inherit: false,
-        preview: false,
-        // TODO: Look at deprecating this property?
-        defaultBlock: 'div'
+        preview: false
       },
       {
         selector: 'img,audio,video',
@@ -72,8 +70,7 @@ const get = (dom: DOMUtils) => {
           textAlign: 'center'
         },
         inherit: false,
-        preview: 'font-family font-size',
-        defaultBlock: 'div'
+        preview: 'font-family font-size'
       },
       {
         selector: 'figure.image',
@@ -117,8 +114,7 @@ const get = (dom: DOMUtils) => {
           textAlign: 'right'
         },
         inherit: false,
-        preview: 'font-family font-size',
-        defaultBlock: 'div'
+        preview: 'font-family font-size'
       },
       {
         selector: 'img,audio,video',
@@ -150,7 +146,6 @@ const get = (dom: DOMUtils) => {
           textAlign: 'justify'
         },
         inherit: false,
-        defaultBlock: 'div',
         preview: 'font-family font-size'
       }
     ],
@@ -182,7 +177,7 @@ const get = (dom: DOMUtils) => {
     hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
     fontname: { inline: 'span', toggle: false, styles: { fontFamily: '%value' }, clear_child_styles: true },
     fontsize: { inline: 'span', toggle: false, styles: { fontSize: '%value' }, clear_child_styles: true },
-    lineheight: { selector: 'h1,h2,h3,h4,h5,h6,p,li,td,th,div', defaultBlock: 'p', styles: { lineHeight: '%value' }},
+    lineheight: { selector: 'h1,h2,h3,h4,h5,h6,p,li,td,th,div', styles: { lineHeight: '%value' }},
     fontsize_class: { inline: 'span', attributes: { class: '%value' }},
     blockquote: { block: 'blockquote', wrapper: true, remove: 'all' },
     subscript: { inline: 'sub' },

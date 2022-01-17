@@ -62,7 +62,6 @@ export interface CommonFormat<T> extends BaseFormat<T> {
   clear_child_styles?: boolean;
   merge_siblings?: boolean;
   merge_with_parents?: boolean;
-  defaultBlock?: string;
 }
 
 export interface BlockFormat extends Block, CommonFormat<BlockFormat> {}
