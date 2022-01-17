@@ -628,7 +628,7 @@ const EditorManager: EditorManager = {
     switch (cmd) {
       case 'mceAddEditor': {
         if (!self.get(editorId)) {
-          const editorOptions = value.options;
+          const editorOptions = value.options ?? {};
           new Editor(editorId, editorOptions, self).render();
         }
 
