@@ -14,7 +14,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.KeyboardShortcutMenuFocus
       ...options,
       base_url: '/project/tinymce/js/tinymce'
     });
-    //currently for me i need to actually focus on the browser window for the test to pass, not sure if there's a bug somewhere
+    // currently for me i need to actually focus on the browser window for the test to pass, not sure if there's a bug somewhere
     editor.focus();
 
     // const editorDoc = TinyDom.document(editor);
@@ -24,7 +24,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.KeyboardShortcutMenuFocus
     setTimeout(() => {
       TinyContentActions.keystroke(editor, 120, { alt: true });
     }, 500);
-    
+
     await FocusTools.pTryOnSelector('Assert menubar is focused', doc, 'div[role=menubar] .tox-mbtn');
     TinyUiActions.keystroke(editor, Keys.escape());
     McEditor.remove(editor);
@@ -40,7 +40,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.KeyboardShortcutMenuFocus
     );
 
     it('class bottom', () =>
-      pTestFocus({  toolbar_location: 'bottom' })
+      pTestFocus({ toolbar_location: 'bottom' })
     );
   });
 });
