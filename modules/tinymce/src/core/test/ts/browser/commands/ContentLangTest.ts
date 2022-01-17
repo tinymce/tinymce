@@ -2,12 +2,11 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.ContentLangTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   context('lang format plays nicely with other formats', () => {
     beforeEach(() => {

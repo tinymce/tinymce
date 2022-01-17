@@ -1,6 +1,7 @@
-import { FieldPresence, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Id, Result } from '@ephox/katamari';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 import { itemSchema } from './Panel';
 
@@ -27,18 +28,13 @@ export interface TabPanel {
 }
 
 export const tabFields = [
-  FieldSchema.field(
-    'name',
-    'name',
-    FieldPresence.defaultedThunk(() => Id.generate('tab-name')),
-    ValueType.string
-  ),
-  FieldSchema.requiredString('title'),
+  ComponentSchema.generatedName('tab'),
+  ComponentSchema.title,
   FieldSchema.requiredArrayOf('items', itemSchema)
 ];
 
 export const tabPanelFields = [
-  FieldSchema.requiredString('type'),
+  ComponentSchema.type,
   FieldSchema.requiredArrayOfObj('tabs', tabFields)
 ];
 

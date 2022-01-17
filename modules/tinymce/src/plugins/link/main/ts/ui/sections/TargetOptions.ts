@@ -9,7 +9,7 @@ import { Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../../api/Settings';
+import * as Options from '../../api/Options';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem } from '../DialogTypes';
 
@@ -22,7 +22,7 @@ const fallbacks = [
 ];
 
 const getTargets = (editor: Editor): Optional<ListItem[]> => {
-  const list = Settings.getTargetList(editor);
+  const list = Options.getTargetList(editor);
   if (Type.isArray(list)) {
     return ListOptions.sanitize(list).orThunk(
       () => Optional.some(fallbacks)

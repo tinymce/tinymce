@@ -3,7 +3,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -11,7 +10,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
     plugins: 'lists',
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: ul to ol, cursor only in parent', () => {
     const editor = hook.editor();

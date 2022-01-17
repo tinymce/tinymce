@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const daysShort = 'Sun Mon Tue Wed Thu Fri Sat Sun'.split(' ');
 const daysLong = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday'.split(' ');
@@ -56,7 +56,7 @@ const updateElement = (editor: Editor, timeElm: HTMLTimeElement, computerTime: s
 };
 
 const insertDateTime = (editor: Editor, format: string): void => {
-  if (Settings.shouldInsertTimeElement(editor)) {
+  if (Options.shouldInsertTimeElement(editor)) {
     const userTime = getDateTime(editor, format);
     let computerTime;
 

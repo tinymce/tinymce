@@ -6,7 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Compare, SugarElement } from '@ephox/sugar';
+import { Compare, Remove, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
@@ -107,7 +107,7 @@ const mergeLiElements = (dom: DOMUtils, fromElm: Element, toElm: Element): void 
   }
 
   if (NodeType.isEmpty(dom, toElm, true)) {
-    dom.$(toElm).empty();
+    Remove.empty(SugarElement.fromDom(toElm));
   }
 
   moveChildren(dom, fromElm, toElm);
@@ -130,7 +130,7 @@ const mergeLiElements = (dom: DOMUtils, fromElm: Element, toElm: Element): void 
 };
 
 const mergeIntoEmptyLi = (editor: Editor, fromLi: HTMLLIElement, toLi: HTMLLIElement): void => {
-  editor.dom.$(toLi).empty();
+  Remove.empty(SugarElement.fromDom(toLi));
   mergeLiElements(editor.dom, fromLi, toLi);
   editor.selection.setCursorLocation(toLi, 0);
 };

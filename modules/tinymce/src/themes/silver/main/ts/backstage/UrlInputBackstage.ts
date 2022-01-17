@@ -11,7 +11,7 @@ import { Fun, Future, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { LinkTarget, LinkTargets } from '../ui/core/LinkTargets';
 import { addToHistory, getHistory } from './UrlInputHistory';
 
@@ -61,17 +61,17 @@ export interface UiFactoryBackstageForUrlInput {
 
 const isTruthy = (value: any) => !!value;
 
-const makeMap = (value: any): Record<string, boolean> => Obj.map(Tools.makeMap(value, /[, ]/), isTruthy);
+const makeMap = (value: string): Record<string, boolean> =>
+  Obj.map(Tools.makeMap(value, /[, ]/), isTruthy);
 
-const getPicker = (editor: Editor): Optional<Picker> => Optional.from(Settings.getFilePickerCallback(editor)).filter(Type.isFunction) as Optional<Picker>;
+const getPicker = (editor: Editor): Optional<Picker> =>
+  Optional.from(Options.getFilePickerCallback(editor));
 
 const getPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
-  const optFileTypes = Optional.some(Settings.getFilePickerTypes(editor)).filter(isTruthy);
-  const optLegacyTypes = Optional.some(Settings.getFileBrowserCallbackTypes(editor)).filter(isTruthy);
-  const optTypes = optFileTypes.or(optLegacyTypes).map(makeMap);
+  const optFileTypes = Optional.from(Options.getFilePickerTypes(editor)).filter(isTruthy).map(makeMap);
   return getPicker(editor).fold(
     Fun.never,
-    (_picker) => optTypes.fold<boolean | Record<string, boolean>>(
+    (_picker) => optFileTypes.fold<boolean | Record<string, boolean>>(
       Fun.always,
       (types) => Obj.keys(types).length > 0 ? types : false)
   );
@@ -106,22 +106,25 @@ const getUrlPicker = (editor: Editor, filetype: string): Optional<UrlPicker> => 
   picker.call(editor, handler, entry.value, meta);
 }));
 
-const getTextSetting = (value: string | boolean): string | undefined => Optional.from(value).filter(Type.isString).getOrUndefined();
+const getTextSetting = (value: string | boolean): string | undefined =>
+  Optional.from(value).filter(Type.isString).getOrUndefined();
 
 export const getLinkInformation = (editor: Editor): Optional<LinkInformation> => {
-  if (Settings.noTypeaheadUrls(editor)) {
+  if (!Options.useTypeaheadUrls(editor)) {
     return Optional.none();
   }
 
   return Optional.some({
     targets: LinkTargets.find(editor.getBody()),
-    anchorTop: getTextSetting(Settings.getAnchorTop(editor)),
-    anchorBottom: getTextSetting(Settings.getAnchorBottom(editor))
+    anchorTop: getTextSetting(Options.getAnchorTop(editor)),
+    anchorBottom: getTextSetting(Options.getAnchorBottom(editor))
   });
 };
-export const getValidationHandler = (editor: Editor): Optional<UrlValidationHandler> => Optional.from(Settings.getFilePickerValidatorHandler(editor));
+export const getValidationHandler = (editor: Editor): Optional<UrlValidationHandler> =>
+  Optional.from(Options.getFilePickerValidatorHandler(editor));
 
-export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> => getPickerTypes(editor);
+export const getUrlPickerTypes = (editor: Editor): boolean | Record<string, boolean> =>
+  getPickerTypes(editor);
 
 export const UrlInputBackstage = (editor: Editor): UiFactoryBackstageForUrlInput => ({
   getHistory,

@@ -7,12 +7,11 @@ import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as PageScroll from '../../../module/PageScroll';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest', () => {
-  const settings = {
+  const options = {
     inline: true,
     menubar: false,
     base_url: '/project/tinymce/js/tinymce'
@@ -205,9 +204,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
 
   context('Toolbar position with toolbar_location: "top"', () => {
     const hook = TinyHooks.bddSetup<Editor>({
-      ...settings,
+      ...options,
       toolbar_location: 'top'
-    }, [ Theme ]);
+    }, []);
 
     setupInitialContent(hook);
     getTopPositionTests(hook);
@@ -215,9 +214,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
 
   context('Toolbar position with toolbar_location: "bottom"', () => {
     const hook = TinyHooks.bddSetup<Editor>({
-      ...settings,
+      ...options,
       toolbar_location: 'bottom'
-    }, [ Theme ]);
+    }, []);
 
     setupInitialContent(hook);
     getBottomPositionTests(hook);
@@ -227,9 +226,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
   // in the document to show above the contentAreaContainer which we model here by using a fixed position container
   context('Toolbar position with toolbar_location: "auto"', () => {
     const hook = TinyHooks.bddSetup<Editor>({
-      ...settings,
+      ...options,
       toolbar_location: 'auto'
-    }, [ Theme ]);
+    }, []);
 
     setupInitialContent(hook);
     getTopPositionTests(hook);
@@ -267,9 +266,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
     });
 
     const hook = TinyHooks.bddSetup<Editor>({
-      ...settings,
+      ...options,
       fixed_toolbar_container: '#toolbar'
-    }, [ Theme ]);
+    }, []);
 
     setupInitialContent(hook);
 

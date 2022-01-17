@@ -1,9 +1,9 @@
 import { Fun, Merger } from '@ephox/katamari';
 import { PredicateFilter, SimRange, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
-import Jsc from '@ephox/wrap-jsverify';
+import * as fc from 'fast-check';
 
 export interface SelectionExclusions {
-  containers: (container: SugarElement<any>) => boolean;
+  containers: (container: SugarElement<Node>) => boolean;
 }
 
 const defaultExclusions: SelectionExclusions = {
@@ -11,24 +11,24 @@ const defaultExclusions: SelectionExclusions = {
   /* Maybe support offsets later if it makes sense to do so */
 };
 
-const getEnd = (target: SugarElement<any>): number =>
+const getEnd = (target: SugarElement<Node>): number =>
   // Probably do this more efficiently
   SugarNode.isText(target) ? SugarText.get(target).length : Traverse.children(target).length;
 
-const gChooseIn = (target: SugarElement<any>): any => {
+const gChooseIn = <T extends Node>(target: SugarElement<T>): fc.Arbitrary<{ element: SugarElement<T>; offset: number }> => {
   const offsets = getEnd(target);
-  return Jsc.integer(0, offsets).generator.map((offset: number) => ({ element: target, offset }));
+  return fc.integer({ min: 0, max: offsets }).map((offset) => ({ element: target, offset }));
 };
 
-const gChooseFrom = (root: SugarElement<any>, exclusions: SelectionExclusions) => {
+const gChooseFrom = (root: SugarElement<Node>, exclusions: SelectionExclusions) => {
   const self = exclusions.containers(root) ? [] : [ root ];
   const everything = PredicateFilter.descendants(root, Fun.not(exclusions.containers)).concat(self);
-  return Jsc.elements(everything.length > 0 ? everything : [ root ]).generator.flatMap(gChooseIn);
+  return fc.constantFrom(...(everything.length > 0 ? everything : [ root ])).chain(gChooseIn);
 };
 
-const selection = (root: SugarElement<any>, rawExclusions: SelectionExclusions): SimRange[] => {
+const selection = (root: SugarElement<Node>, rawExclusions: SelectionExclusions): fc.Arbitrary<SimRange> => {
   const exclusions: SelectionExclusions = Merger.deepMerge(defaultExclusions, rawExclusions);
-  return gChooseFrom(root, exclusions).flatMap((start) => gChooseFrom(root, exclusions).map((finish) => ({
+  return gChooseFrom(root, exclusions).chain((start) => gChooseFrom(root, exclusions).map((finish): SimRange => ({
     start: start.element,
     soffset: start.offset,
     finish: finish.element,

@@ -3,7 +3,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { insertTableTest } from '../module/test/TableTestUtils';
 
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.table.InsertTableWithColGroupsTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     statusbar: false,
     table_use_colgroups: true
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TINY-6050: insert 2x2 table', () =>
     insertTableTest(hook.editor(), 2, 2, [

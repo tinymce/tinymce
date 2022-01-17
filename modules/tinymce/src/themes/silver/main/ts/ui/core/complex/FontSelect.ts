@@ -15,24 +15,6 @@ import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 
-const defaultFontsFormats = 'Andale Mono=andale mono,monospace;' +
-  'Arial=arial,helvetica,sans-serif;' +
-  'Arial Black=arial black,sans-serif;' +
-  'Book Antiqua=book antiqua,palatino,serif;' +
-  'Comic Sans MS=comic sans ms,sans-serif;' +
-  'Courier New=courier new,courier,monospace;' +
-  'Georgia=georgia,palatino,serif;' +
-  'Helvetica=helvetica,arial,sans-serif;' +
-  'Impact=impact,sans-serif;' +
-  'Symbol=symbol;' +
-  'Tahoma=tahoma,arial,helvetica,sans-serif;' +
-  'Terminal=terminal,monaco,monospace;' +
-  'Times New Roman=times new roman,times,serif;' +
-  'Trebuchet MS=trebuchet ms,geneva,sans-serif;' +
-  'Verdana=verdana,geneva,sans-serif;' +
-  'Webdings=webdings;' +
-  'Wingdings=wingdings,zapf dingbats';
-
 // A list of fonts that must be in a font family for the font to be recognised as the system stack
 // Note: Don't include 'BlinkMacSystemFont', as Chrome on Mac converts it to different names
 const systemStackFonts = [ '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif' ];
@@ -106,7 +88,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const dataset = buildBasicSettingsDataset(editor, 'font_formats', defaultFontsFormats, Delimiter.SemiColon);
+  const dataset = buildBasicSettingsDataset(editor, 'font_formats', Delimiter.SemiColon);
 
   return {
     tooltip: 'Fonts',

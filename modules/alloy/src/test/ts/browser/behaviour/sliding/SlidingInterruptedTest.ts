@@ -1,4 +1,4 @@
-import { Assertions, Log, Logger, PhantomSkipper, Step } from '@ephox/agar';
+import { Assertions, Log, Logger, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Class, Width } from '@ephox/sugar';
 
@@ -9,11 +9,6 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
-
-  // Seems to have stopped working on phantomjs
-  if (PhantomSkipper.detect()) {
-    return success();
-  }
 
   const slidingStyles = [
     '.test-sliding-width-growing { transition: width 5.0s ease; }',

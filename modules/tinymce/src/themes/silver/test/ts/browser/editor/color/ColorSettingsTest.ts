@@ -5,9 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
-import Theme from 'tinymce/themes/silver/Theme';
-import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
-import * as Settings from 'tinymce/themes/silver/ui/core/color/Settings';
+import * as Options from 'tinymce/themes/silver/ui/core/color/Options';
 
 interface ExpectedColor {
   readonly type: string;
@@ -29,7 +27,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     toolbar: 'forecolor backcolor',
     base_url: '/project/tinymce/js/tinymce',
     color_map: colorSettings
-  }, [ Theme ]);
+  }, []);
 
   const resetLocalStorage = () => {
     LocalStorage.removeItem('tinymce-custom-colors');
@@ -50,7 +48,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
       ), 'Color value should match (within ' + delta + '). Expected: ' + expectedColor + ' Actual: ' + actualColor);
     };
 
-    const colors = Settings.mapColors(input);
+    const colors = Options.mapColors(input);
     assert.lengthOf(colors, expected.length, 'Colors length should match');
     Arr.each(expected, (item, i) => {
       const colorItem = colors[i];
@@ -61,12 +59,12 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
   };
 
   const assertCols = (editor: Editor, expected: number) => {
-    const colors = ColorSwatch.getColorCols(editor);
+    const colors = Options.getColorCols(editor);
     assert.equal(colors, expected, 'Color cols should be the same');
   };
 
   const assertCalcCols = (editor: Editor, colors: number, expected: number) => {
-    const sqrt = ColorSwatch.calcCols(colors);
+    const sqrt = Options.calcCols(colors);
     assert.equal(sqrt, expected, 'Calced cols should be the same');
   };
 
@@ -116,6 +114,10 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     const editor = hook.editor();
     assertColors(colorSettings, mappedColors);
     assertCols(editor, 5);
+  });
+
+  it('TBA: calcCols', () => {
+    const editor = hook.editor();
     assertCalcCols(editor, 1, 5);
     assertCalcCols(editor, 2, 5);
     assertCalcCols(editor, 3, 5);

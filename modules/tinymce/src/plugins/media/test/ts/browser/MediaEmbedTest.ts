@@ -3,7 +3,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.media.core.MediaEmbedTest', () => {
       });
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Embed content, open dialog, set size and assert custom media_url_resolver formatting', async () => {
     const editor = hook.editor();

@@ -5,7 +5,6 @@ import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../module/test/TableTestUtils';
 
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.table.InsertColumnTableSizeTest', () => {
     plugins: 'table',
     width: 400,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const emptyTable = {
     html: '<table style = "width: 100%;">' +
@@ -135,7 +134,7 @@ describe('browser.tinymce.plugins.table.InsertColumnTableSizeTest', () => {
   const insertTable = (editor: Editor, table: string) => {
     editor.setContent(table);
     const bodyElem = TinyDom.body(editor);
-    const tableElem = UiFinder.findIn(bodyElem, 'table').getOr(bodyElem);
+    const tableElem = UiFinder.findIn<HTMLTableElement>(bodyElem, 'table').getOrDie();
     SelectorFind.descendant(tableElem, 'td,th').each((cell) => {
       editor.selection.select(cell.dom, true);
       editor.selection.collapse(true);

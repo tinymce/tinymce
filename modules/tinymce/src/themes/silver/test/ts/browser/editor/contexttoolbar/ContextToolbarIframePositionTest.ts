@@ -1,14 +1,12 @@
 import { Keys, UiFinder, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Css, Scroll, SugarBody } from '@ephox/sugar';
 import { TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { getGreenImageDataUrl } from '../../../module/Assets';
 
@@ -23,7 +21,6 @@ interface Scenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFramePosition test', () => {
-  const browser = PlatformDetection.detect().browser;
   const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset):not(.tox-pop--transition)';
   const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset):not(.tox-pop--transition)';
   const rightSelector = '.tox-pop.tox-pop--left:not(.tox-pop--inset):not(.tox-pop--transition)';
@@ -70,7 +67,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
         position: 'node'
       });
     }
-  }, [ FullscreenPlugin, Theme ], true);
+  }, [ FullscreenPlugin ], true);
 
   beforeEach(() => {
     // Reset scroll position for each test
@@ -257,11 +254,10 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     editor.setContent('<p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p>text</p>');
     TinySelections.setSelection(editor, [ 3, 0 ], 1, [ 3, 0 ], 3);
     // Place the selected text right at the bottom of the editor so only ~1px of the selection is visible
-    // Note: IE 11 uses a different selection height (22px vs 17px)
-    scrollTo(editor, 0, browser.isIE() ? 65 : 67);
+    scrollTo(editor, 0, 67);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear above the content', SugarBody.body(), topSelector);
     // Moving 2px more the selected text is now offscreen so the context toolbar should hide
-    scrollTo(editor, 0, browser.isIE() ? 63 : 65);
+    scrollTo(editor, 0, 65);
     await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
   });
 

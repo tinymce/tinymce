@@ -16,7 +16,7 @@ import AstNode from '../api/html/Node';
 import Schema, { SchemaSettings } from '../api/html/Schema';
 import HtmlSerializer, { HtmlSerializerSettings } from '../api/html/Serializer';
 import { WriterSettings } from '../api/html/Writer';
-import { URLConverter } from '../api/SettingsTypes';
+import { URLConverter } from '../api/OptionTypes';
 import Tools from '../api/util/Tools';
 import * as Zwsp from '../text/Zwsp';
 import * as DomSerializerFilters from './DomSerializerFilters';

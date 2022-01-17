@@ -6,10 +6,12 @@
  */
 
 import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import { Content, ContentFormat, GetContentArgs, SetContentArgs } from './content/ContentTypes';
+import * as AutocompleteTag from './autocomplete/AutocompleteTag';
+import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
@@ -19,7 +21,7 @@ import { Format, FormatVars } from './fmt/FormatTypes';
 import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
-import { getSelectedContentInternal, GetSelectionContentArgs } from './selection/GetSelectionContentImpl';
+import { getSelectedContentInternal } from './selection/GetSelectionContentImpl';
 import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
@@ -27,6 +29,9 @@ import { addVisualInternal } from './view/VisualAidsImpl';
 
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
+  init: {
+    bindEvents: () => void;
+  };
   undoManager: {
     beforeChange: () => void;
     add: () => UndoLevel;
@@ -52,16 +57,20 @@ interface RtcRuntimeApi {
     formatChanged: (formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
-    getContent: (args: GetContentArgs) => Content;
-    setContent: (content: Content, args: SetContentArgs) => Content;
+    getContent: (args: Partial<GetContentArgs>) => Content;
+    setContent: (content: Content, args: Partial<SetContentArgs>) => Content;
     insertContent: (content: Content) => void;
     addVisual: () => void;
   };
   selection: {
-    getContent: (args: GetSelectionContentArgs) => Content;
+    getContent: (args: Partial<GetSelectionContentArgs>) => Content;
   };
   raw: {
     getRawModel: () => any;
+  };
+  autocompleter: {
+    addDecoration: (range: Range) => void;
+    removeDecoration: () => void;
   };
   rtc: {
     isRemote: boolean;
@@ -70,6 +79,9 @@ interface RtcRuntimeApi {
 
 /** A copy of the TinyMCE api definitions that the plugin overrides  */
 interface RtcAdaptor {
+  init: {
+    bindEvents: () => void;
+  };
   undoManager: {
     beforeChange: (locks: Locks, beforeBookmark: UndoBookmark) => void;
     add: (
@@ -102,13 +114,17 @@ interface RtcAdaptor {
     formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
-    getContent: (args: GetContentArgs, format: ContentFormat) => Content;
-    setContent: (content: Content, args: SetContentArgs) => Content;
+    getContent: (args: Partial<GetContentArgs>, format: ContentFormat) => Content;
+    setContent: (content: Content, args: Partial<SetContentArgs>) => Content;
     insertContent: (value: string, details) => void;
     addVisual: (elm?: HTMLElement) => void;
   };
   selection: {
-    getContent: (format: ContentFormat, args: GetSelectionContentArgs) => Content;
+    getContent: (format: ContentFormat, args: Partial<GetSelectionContentArgs>) => Content;
+  };
+  autocompleter: {
+    addDecoration: (range: Range) => void;
+    removeDecoration: () => void;
   };
   raw: {
     getModel: () => Optional<any>;
@@ -125,6 +141,9 @@ interface RtcEditor extends Editor {
 }
 
 const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
+  init: {
+    bindEvents: Fun.noop
+  },
   undoManager: {
     beforeChange: (locks, beforeBookmark) => Operations.beforeChange(editor, locks, beforeBookmark),
     add: (undoManager, index, locks, beforeBookmark, level, event) =>
@@ -160,6 +179,10 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   selection: {
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
   },
+  autocompleter: {
+    addDecoration: (range: Range) => AutocompleteTag.create(editor, range),
+    removeDecoration: () => AutocompleteTag.remove(SugarElement.fromDom(editor.getBody()))
+  },
   raw: {
     getModel: () => Optional.none()
   }
@@ -167,9 +190,12 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
 
 const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
   const defaultVars = (vars: Record<string, string>) => Type.isObject(vars) ? vars : {};
-  const { undoManager, formatter, editor, selection, raw } = rtcEditor;
+  const { init, undoManager, formatter, editor, selection, autocompleter, raw } = rtcEditor;
 
   return {
+    init: {
+      bindEvents: init.bindEvents
+    },
     undoManager: {
       beforeChange: undoManager.beforeChange,
       add: undoManager.add,
@@ -203,6 +229,10 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
     selection: {
       getContent: (_format, args) => selection.getContent(args)
     },
+    autocompleter: {
+      addDecoration: autocompleter.addDecoration,
+      removeDecoration: autocompleter.removeDecoration
+    },
     raw: {
       getModel: () => Optional.some(raw.getRawModel())
     }
@@ -214,6 +244,9 @@ const makeNoopAdaptor = (): RtcAdaptor => {
   const empty = Fun.constant('');
 
   return {
+    init: {
+      bindEvents: Fun.noop
+    },
     undoManager: {
       beforeChange: Fun.noop,
       add: nul,
@@ -246,6 +279,10 @@ const makeNoopAdaptor = (): RtcAdaptor => {
     },
     selection: {
       getContent: empty
+    },
+    autocompleter: {
+      addDecoration: Fun.noop,
+      removeDecoration: Fun.noop
     },
     raw: {
       getModel: Fun.constant(Optional.none())
@@ -396,17 +433,26 @@ export const toggleFormat = (editor: Editor, name: string, vars: Record<string, 
 export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars): UnbindFormatChanged =>
   getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar, vars);
 
-export const getContent = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content =>
+export const getContent = (editor: Editor, args: Partial<GetContentArgs>, format: ContentFormat): Content =>
   getRtcInstanceWithFallback(editor).editor.getContent(args, format);
 
-export const setContent = (editor: Editor, content: Content, args: SetContentArgs): Content =>
+export const setContent = (editor: Editor, content: Content, args: Partial<SetContentArgs>): Content =>
   getRtcInstanceWithFallback(editor).editor.setContent(content, args);
 
 export const insertContent = (editor: Editor, value: string, details): void =>
   getRtcInstanceWithFallback(editor).editor.insertContent(value, details);
 
-export const getSelectedContent = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs): Content =>
+export const getSelectedContent = (editor: Editor, format: ContentFormat, args: Partial<GetSelectionContentArgs>): Content =>
   getRtcInstanceWithError(editor).selection.getContent(format, args);
 
 export const addVisual = (editor: Editor, elm: HTMLElement): void =>
   getRtcInstanceWithError(editor).editor.addVisual(elm);
+
+export const bindEvents = (editor: Editor): void =>
+  getRtcInstanceWithError(editor).init.bindEvents();
+
+export const addAutocompleterDecoration = (editor: Editor, range: Range): void =>
+  getRtcInstanceWithError(editor).autocompleter.addDecoration(range);
+
+export const removeAutocompleterDecoration = (editor: Editor): void =>
+  getRtcInstanceWithError(editor).autocompleter.removeDecoration();

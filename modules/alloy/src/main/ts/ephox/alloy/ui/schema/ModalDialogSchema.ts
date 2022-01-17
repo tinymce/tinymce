@@ -34,7 +34,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           Dragging.config({
             mode: 'mouse',
             getTarget: (handle) => {
-              return SelectorFind.ancestor(handle, '[role="dialog"]').getOr(handle);
+              return SelectorFind.ancestor<HTMLElement>(handle, '[role="dialog"]').getOr(handle);
             },
             blockerClass: detail.dragBlockClass.getOrDie(
               // TODO: Support errors in Optional getOrDie.

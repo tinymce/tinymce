@@ -11,7 +11,7 @@ describe('browser.snooker.lookup.TypeTest', () => {
   const container = SugarElement.fromTag('div');
 
   const assertWithWarehouse = (assertions: (warehouse: Warehouse, table: SugarElement<HTMLTableElement>) => void) => {
-    const table = UiFinder.findIn(container, 'table').getOrDie();
+    const table = UiFinder.findIn<HTMLTableElement>(container, 'table').getOrDie();
     const warehouse = Warehouse.fromTable(table);
     assertions(warehouse, table);
   };
@@ -185,6 +185,21 @@ describe('browser.snooker.lookup.TypeTest', () => {
       assertRowTypes([ 'header', 'body', 'footer' ]);
       assertCommonRowType('');
     });
+
+    it('TINY-8104: tfoot > tr > th is detected correctly as a footer row', () => {
+      Html.set(container,
+        '<table>' +
+        '<tfoot>' +
+        '<tr class="foo">' +
+        '<th>text</th>' +
+        '</tr>' +
+        '</tfoot>' +
+        '</table>'
+      );
+      assertRowTypes([ 'footer' ]);
+      assertCommonRowType('footer');
+    });
+
   });
 
   context('findTableRowHeaderType', () => {

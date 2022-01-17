@@ -5,11 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const displayErrorMessage = (editor: Editor, message: string): void => {
   editor.notificationManager.open({
@@ -21,15 +23,16 @@ const displayErrorMessage = (editor: Editor, message: string): void => {
 const save = (editor: Editor): void => {
   const formObj = DOMUtils.DOM.getParent(editor.id, 'form');
 
-  if (Settings.enableWhenDirty(editor) && !editor.isDirty()) {
+  if (Options.enableWhenDirty(editor) && !editor.isDirty()) {
     return;
   }
 
   editor.save();
 
   // Use callback instead
-  if (Settings.hasOnSaveCallback(editor)) {
-    editor.execCallback('save_onsavecallback', editor);
+  const onSaveCallback = Options.getOnSaveCallback(editor);
+  if (Type.isFunction(onSaveCallback)) {
+    onSaveCallback.call(editor, editor);
     editor.nodeChanged();
     return;
   }
@@ -57,8 +60,9 @@ const cancel = (editor: Editor): void => {
   const h = Tools.trim(editor.startContent);
 
   // Use callback instead
-  if (Settings.hasOnCancelCallback(editor)) {
-    editor.execCallback('save_oncancelcallback', editor);
+  const onCancelCallback = Options.getOnCancelCallback(editor);
+  if (Type.isFunction(onCancelCallback)) {
+    onCancelCallback.call(editor, editor);
     return;
   }
 

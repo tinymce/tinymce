@@ -5,7 +5,6 @@ import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/template/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const dialogSelector = 'div.tox-dialog';
 const alertDialogSelector = 'div.tox-dialog.tox-alert-dialog';
@@ -16,12 +15,12 @@ describe('browser.tinymce.plugins.template.InvalidUrlTest', () => {
     plugins: 'template',
     toolbar: 'template',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Test loading in snippet from file that does not exist', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.settings.templates = [{ title: 'invalid', description: 'b', url: '/custom/404' }, { title: 'a', description: 'a', content: '<strong>c</strong>' }];
+    editor.options.set('templates', [{ title: 'invalid', description: 'b', url: '/custom/404' }, { title: 'a', description: 'a', content: '<strong>c</strong>' }]);
     TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
     await TinyUiActions.pWaitForDialog(editor);
     await TinyUiActions.pWaitForPopup(editor, alertDialogSelector);

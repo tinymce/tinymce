@@ -5,23 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
 
 import * as EditorContent from '../content/EditorContent';
+import * as Deprecations from '../Deprecations';
 import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
-import { getEditorSettings, getParam, ParamTypeMap } from '../EditorSettings';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
 import { NodeChange } from '../NodeChange';
+import { normalizeOptions } from '../options/NormalizeOptions';
 import SelectionOverrides from '../SelectionOverrides';
 import { UndoManager } from '../undo/UndoManagerTypes';
 import Quirks from '../util/Quirks';
 import * as VisualAids from '../view/VisualAids';
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
-import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
@@ -29,17 +29,18 @@ import DomSerializer from './dom/Serializer';
 import EditorCommands, { EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
+import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
 import EditorUpload, { UploadCallback, UploadResult } from './EditorUpload';
 import Env from './Env';
 import Formatter from './Formatter';
 import DomParser from './html/DomParser';
 import AstNode from './html/Node';
 import Schema from './html/Schema';
-import { create, EditorMode } from './Mode';
+import { create as createMode, EditorMode } from './Mode';
 import NotificationManager from './NotificationManager';
+import * as Options from './Options';
+import { NormalizedEditorOptions, RawEditorOptions } from './OptionTypes';
 import PluginManager, { Plugin } from './PluginManager';
-import * as Settings from './Settings';
-import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
 import { registry } from './ui/Registry';
@@ -73,14 +74,12 @@ import WindowManager from './WindowManager';
 export interface EditorConstructor {
   readonly prototype: Editor;
 
-  new (id: string, settings: RawEditorSettings, editorManager: EditorManager): Editor;
+  new (id: string, options: RawEditorOptions, editorManager: EditorManager): Editor;
 }
 
 // Shorten these names
 const DOM = DOMUtils.DOM;
 const extend = Tools.extend, each = Tools.each;
-const resolve = Tools.resolve;
-const ie = Env.ie;
 
 /**
  * Include Editor API docs.
@@ -91,17 +90,6 @@ const ie = Env.ie;
 class Editor implements EditorObservable {
   public documentBaseUrl: string;
   public baseUri: URI;
-
-  /**
-   * Name/value collection with editor settings.
-   *
-   * @property settings
-   * @type Object
-   * @example
-   * // Get the value of the theme setting
-   * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.settings.theme + " theme");
-   */
-  public settings: EditorSettings;
 
   /**
    * Editor instance id, normally the same as the div/textarea that was replaced.
@@ -183,29 +171,12 @@ class Editor implements EditorObservable {
   public mode: EditorMode;
 
   /**
-   * Sets the editor mode. For example: "design", "code" or "readonly".
-   * <br>
-   * <em>Deprecated in TinyMCE 5.0.4 and has been marked for removal in TinyMCE 6.0</em> - Use <code>editor.mode.set(mode)</code> instead.
+   * Editor options API
    *
-   * @method setMode
-   * @param {String} mode Mode to set the editor in.
-   * @deprecated now an alias for editor.mode.set()
+   * @property options
+   * @type tinymce.options.Options
    */
-  public setMode: (mode: string) => void;
-
-  /**
-   * Dom query instance with default scope to the editor document and default element is the body of the editor.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-   *
-   * @deprecated
-   * @property $
-   * @type tinymce.dom.DomQuery
-   * @example
-   * tinymce.activeEditor.$('p').css('color', 'red');
-   * tinymce.activeEditor.$().append('<p>new</p>');
-   */
-  public $: DomQueryConstructor;
+  public options: EditorOptions;
 
   public shortcuts: Shortcuts;
   public loadedCSS: Record<string, any> = {};
@@ -215,11 +186,6 @@ class Editor implements EditorObservable {
   public inline: boolean;
 
   public isNotDirty: boolean = false;
-
-  // TODO type these properties
-  public callbackLookup: any;
-  public _nodeChangeDispatcher: NodeChange;
-  public editorUpload: EditorUpload;
 
   // Arguments set later, for example by InitContentBody.ts
   public annotator: Annotator;
@@ -234,6 +200,7 @@ class Editor implements EditorObservable {
   public destroyed: boolean;
   public dom: DOMUtils;
   public editorContainer: HTMLElement;
+  public editorUpload: EditorUpload;
   public eventRoot?: Element;
   public formatter: Formatter;
   public formElement: HTMLElement;
@@ -258,11 +225,10 @@ class Editor implements EditorObservable {
   public targetElm: HTMLElement;
   public theme: Theme;
   public undoManager: UndoManager;
-  public validate: boolean;
   public windowManager: WindowManager;
   public _beforeUnload: () => void;
   public _eventDispatcher: EventDispatcher<NativeEventMap>;
-  public _mceOldSubmit: any;
+  public _nodeChangeDispatcher: NodeChange;
   public _pendingNativeEvents: string[];
   public _selectionOverrides: SelectionOverrides;
   public _skinLoaded: boolean;
@@ -283,51 +249,63 @@ class Editor implements EditorObservable {
    * @constructor
    * @method Editor
    * @param {String} id Unique id for the editor.
-   * @param {Object} settings Settings for the editor.
+   * @param {Object} options Options for the editor.
    * @param {tinymce.EditorManager} editorManager EditorManager instance.
    */
-  public constructor(id: string, settings: RawEditorSettings, editorManager: EditorManager) {
+  public constructor(id: string, options: RawEditorOptions, editorManager: EditorManager) {
     this.editorManager = editorManager;
     this.documentBaseUrl = editorManager.documentBaseURL;
 
     // Patch in the EditorObservable functions
     extend(this, EditorObservable);
+    const self = this;
 
-    this.settings = getEditorSettings(this, id, this.documentBaseUrl, editorManager.defaultSettings, settings);
+    this.id = id;
+    const normalizedOptions = normalizeOptions(editorManager.defaultOptions, options);
 
-    if (this.settings.suffix) {
-      editorManager.suffix = this.settings.suffix;
+    this.options = createOptions(self, normalizedOptions);
+    Options.register(self);
+    const getOption = this.options.get;
+
+    if (getOption('deprecation_warnings')) {
+      Deprecations.logWarnings(options, normalizedOptions);
+    }
+
+    const suffix = getOption('suffix');
+    if (suffix) {
+      editorManager.suffix = suffix;
     }
     this.suffix = editorManager.suffix;
 
-    if (this.settings.base_url) {
-      editorManager._setBaseUrl(this.settings.base_url);
+    const baseUrl = getOption('base_url');
+    if (baseUrl) {
+      editorManager._setBaseUrl(baseUrl);
     }
     this.baseUri = editorManager.baseURI;
 
-    if (this.settings.referrer_policy) {
-      ScriptLoader.ScriptLoader._setReferrerPolicy(this.settings.referrer_policy);
-      DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(this.settings.referrer_policy);
+    const referrerPolicy = Options.getReferrerPolicy(self);
+    if (referrerPolicy) {
+      ScriptLoader.ScriptLoader._setReferrerPolicy(referrerPolicy);
+      DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(referrerPolicy);
     }
 
-    AddOnManager.languageLoad = this.settings.language_load;
+    AddOnManager.languageLoad = getOption('language_load');
     AddOnManager.baseURL = editorManager.baseURL;
-
-    this.id = id;
 
     this.setDirty(false);
 
-    this.documentBaseURI = new URI(this.settings.document_base_url, {
+    this.documentBaseURI = new URI(Options.getDocumentBaseUrl(self), {
       base_uri: this.baseUri
     });
     this.baseURI = this.baseUri;
-    this.inline = !!this.settings.inline;
+    this.inline = Options.isInline(self);
 
     this.shortcuts = new Shortcuts(this);
     this.editorCommands = new EditorCommands(this);
 
-    if (this.settings.cache_suffix) {
-      Env.cacheSuffix = this.settings.cache_suffix.replace(/^[\?\&]+/, '');
+    const cacheSuffix = getOption('cache_suffix');
+    if (cacheSuffix) {
+      Env.cacheSuffix = cacheSuffix.replace(/^[\?\&]+/, '');
     }
 
     this.ui = {
@@ -340,19 +318,14 @@ class Editor implements EditorObservable {
       isDisabled: Fun.never
     };
 
-    const self = this;
-    const modeInstance = create(self);
-    this.mode = modeInstance;
-    this.setMode = modeInstance.set;
+    this.mode = createMode(self);
 
     // Call setup
     editorManager.fire('SetupEditor', { editor: this });
-    this.execCallback('setup', this);
-
-    this.$ = DomQuery.overrideDefaults(() => ({
-      context: this.inline ? this.getBody() : this.getDoc(),
-      element: this.getBody()
-    }));
+    const setupCallback = Options.getSetupCallback(self);
+    if (Type.isFunction(setupCallback)) {
+      setupCallback.call(self, self);
+    }
   }
 
   /**
@@ -386,42 +359,6 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Executes a legacy callback. This method is useful to call old 2.x option callbacks.
-   * There new event model is a better way to add callback so this method might be removed in the future.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-   *
-   * @deprecated
-   * @method execCallback
-   * @param {String} name Name of the callback to execute.
-   * @return {Object} Return value passed from callback function.
-   */
-  public execCallback(name: string, ...x: any[]): any {
-    const self = this;
-    let callback = self.settings[name], scope;
-
-    if (!callback) {
-      return;
-    }
-
-    // Look through lookup
-    if (self.callbackLookup && (scope = self.callbackLookup[name])) {
-      callback = scope.func;
-      scope = scope.scope;
-    }
-
-    if (typeof callback === 'string') {
-      scope = callback.replace(/\.\w+$/, '');
-      scope = scope ? resolve(scope) : 0;
-      callback = resolve(callback);
-      self.callbackLookup = self.callbackLookup || {};
-      self.callbackLookup[name] = { func: callback, scope };
-    }
-
-    return callback.apply(scope || self, x);
-  }
-
-  /**
    * Translates the specified string by replacing variables with language pack items it will also check if there is
    * a key matching the input.
    *
@@ -435,12 +372,15 @@ class Editor implements EditorObservable {
 
   /**
    * Returns a configuration parameter by name.
+   * <br>
+   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use the <code>editor.options.get<code> API instead.</em>
    *
    * @method getParam
-   * @param {String} name Configruation parameter to retrieve.
+   * @param {String} name Configuration parameter to retrieve.
    * @param {String} defaultVal Optional default value to return.
    * @param {String} type Optional type parameter.
    * @return {String} Configuration parameter value or default value.
+   * @deprecated Use editor.options.get instead
    * @example
    * // Returns a specific config value from the currently active editor
    * var someval = tinymce.activeEditor.getParam('myvalue');
@@ -448,11 +388,23 @@ class Editor implements EditorObservable {
    * // Returns a specific config value from a specific editor instance by id
    * var someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
-  public getParam <K extends keyof ParamTypeMap>(name: string, defaultVal: ParamTypeMap[K], type: K): ParamTypeMap[K];
-  public getParam <K extends keyof EditorSettings>(name: K, defaultVal?: EditorSettings[K], type?: string): EditorSettings[K];
-  public getParam <T>(name: string, defaultVal: T, type?: string): T;
-  public getParam(name: string, defaultVal?: any, type?: string): any {
-    return getParam(this, name, defaultVal, type);
+  public getParam <K extends BuiltInOptionType>(name: string, defaultVal: BuiltInOptionTypeMap[K], type: K): BuiltInOptionTypeMap[K];
+  public getParam <K extends keyof NormalizedEditorOptions>(name: K, defaultVal?: NormalizedEditorOptions[K], type?: BuiltInOptionType): NormalizedEditorOptions[K];
+  public getParam <T>(name: string, defaultVal: T, type?: BuiltInOptionType): T;
+  public getParam(name: string, defaultVal?: any, type?: BuiltInOptionType): any {
+    const options = this.options;
+
+    // To keep the legacy API we need to register the option if it's not already been registered
+    if (!options.isRegistered(name)) {
+      if (Type.isNonNullable(type)) {
+        options.register(name, { processor: type, default: defaultVal });
+      } else {
+        options.register(name, { processor: Fun.always, default: defaultVal });
+      }
+    }
+
+    // Attempt to use the passed default value if nothing has been set already
+    return !options.isSet(name) && !Type.isUndefined(defaultVal) ? defaultVal : options.get(name);
   }
 
   /**
@@ -471,7 +423,7 @@ class Editor implements EditorObservable {
    * tinymce.activeEditor.hasPlugin('table');
    */
   public hasPlugin(name: string, loaded?: boolean): boolean {
-    const hasPlugin = Arr.contains(Settings.getPlugins(this).split(/[ ,]/), name);
+    const hasPlugin = Arr.contains(Options.getPlugins(this).split(/[ ,]/), name);
     if (hasPlugin) {
       return loaded ? PluginManager.get(name) !== undefined : true;
     } else {
@@ -670,14 +622,9 @@ class Editor implements EditorObservable {
    * @method hide
    */
   public hide() {
-    const self = this, doc = self.getDoc();
+    const self = this;
 
     if (!self.hidden) {
-      // Fixed bug where IE has a blinking cursor left from the editor
-      if (ie && doc && !self.inline) {
-        doc.execCommand('SelectAll');
-      }
-
       // We must save before we hide so Safari doesn't crash
       self.save();
 
@@ -845,10 +792,10 @@ class Editor implements EditorObservable {
    * // Sets the content of the activeEditor editor using the specified format
    * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
    */
-  public setContent(content: string, args?: EditorContent.SetContentArgs): string;
-  public setContent(content: AstNode, args?: EditorContent.SetContentArgs): AstNode;
-  public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content;
-  public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
+  public setContent(content: string, args?: Partial<EditorContent.SetContentArgs>): string;
+  public setContent(content: AstNode, args?: Partial<EditorContent.SetContentArgs>): AstNode;
+  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content;
+  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content {
     return EditorContent.setContent(this, content, args);
   }
 
@@ -869,9 +816,9 @@ class Editor implements EditorObservable {
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()
    */
-  public getContent(args: { format: 'tree' } & EditorContent.GetContentArgs): AstNode;
-  public getContent(args?: EditorContent.GetContentArgs): string;
-  public getContent(args?: EditorContent.GetContentArgs): EditorContent.Content {
+  public getContent(args: { format: 'tree' } & Partial<EditorContent.GetContentArgs>): AstNode;
+  public getContent(args?: Partial<EditorContent.GetContentArgs>): string;
+  public getContent(args?: Partial<EditorContent.GetContentArgs>): EditorContent.Content {
     return EditorContent.getContent(this, args);
   }
 
@@ -1064,25 +1011,26 @@ class Editor implements EditorObservable {
    * @return {string} Converted URL string.
    */
   public convertURL(url: string, name: string, elm?): string {
-    const self = this, settings = self.settings;
+    const self = this, getOption = self.options.get;
 
     // Use callback instead
-    if (settings.urlconverter_callback) {
-      return self.execCallback('urlconverter_callback', url, elm, true, name);
+    const urlConverterCallback = Options.getUrlConverterCallback(self);
+    if (Type.isFunction(urlConverterCallback)) {
+      return urlConverterCallback.call(self, url, elm, true, name);
     }
 
     // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-    if (!settings.convert_urls || (elm && elm.nodeName === 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
+    if (!getOption('convert_urls') || (elm && elm.nodeName === 'LINK') || url.indexOf('file:') === 0 || url.length === 0) {
       return url;
     }
 
     // Convert to relative
-    if (settings.relative_urls) {
+    if (getOption('relative_urls')) {
       return self.documentBaseURI.toRelative(url);
     }
 
     // Convert to absolute
-    url = self.documentBaseURI.toAbsolute(url, settings.remove_script_host);
+    url = self.documentBaseURI.toAbsolute(url, getOption('remove_script_host'));
 
     return url;
   }
@@ -1133,34 +1081,6 @@ class Editor implements EditorObservable {
 
   public _scanForImages(): Promise<BlobInfoImagePair[]> {
     return this.editorUpload.scanForImages();
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addButton instead
-   */
-  public addButton() {
-    throw new Error('editor.addButton has been removed in tinymce 5x, use editor.ui.registry.addButton or editor.ui.registry.addToggleButton or editor.ui.registry.addSplitButton instead');
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addSidebar instead
-   */
-  public addSidebar() {
-    throw new Error('editor.addSidebar has been removed in tinymce 5x, use editor.ui.registry.addSidebar instead');
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addMenuItem instead
-   */
-  public addMenuItem() {
-    throw new Error('editor.addMenuItem has been removed in tinymce 5x, use editor.ui.registry.addMenuItem instead');
-  }
-
-  /**
-   * No longer supported, use editor.ui.registry.addContextMenu instead
-   */
-  public addContextToolbar() {
-    throw new Error('editor.addContextToolbar has been removed in tinymce 5x, use editor.ui.registry.addContextToolbar instead');
   }
 }
 

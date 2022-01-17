@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- Updated to Katamari 9.0, which is incompatible with Katamari 8.0 if used in the same bundle.
+
+### Removed
+- Removed usage of polyfill promises in favor of native promises.
+- Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.
+
 ## 3.0.0 - 2021-08-26
 
 ### Changed

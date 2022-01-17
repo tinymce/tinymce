@@ -129,11 +129,11 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
 export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMenu: () => MenuItems, backstage: UiFactoryBackstage, contextmenu: AlloyComponent, anchorType: Coords.AnchorType): void => {
   const detection = PlatformDetection.detect();
   const isiOS = detection.os.isiOS();
-  const isOSX = detection.os.isOSX();
+  const isMacOS = detection.os.isMacOS();
   const isAndroid = detection.os.isAndroid();
   const isTouch = detection.deviceType.isTouch();
 
-  const shouldHighlightImmediately = () => !(isAndroid || isiOS || (isOSX && isTouch));
+  const shouldHighlightImmediately = () => !(isAndroid || isiOS || (isMacOS && isTouch));
 
   const open = () => {
     const items = buildMenu();
@@ -143,7 +143,7 @@ export const initAndShow = (editor: Editor, e: EditorEvent<TouchEvent>, buildMen
   // On iOS/iPadOS if we've long pressed on a ranged selection then we've already selected the content
   // and just need to open the menu. Otherwise we need to wait for a selection change to occur as long
   // press triggers a ranged selection on iOS.
-  if ((isOSX || isiOS) && anchorType !== 'node') {
+  if ((isMacOS || isiOS) && anchorType !== 'node') {
     const openiOS = () => {
       setupiOSOverrides(editor);
       open();

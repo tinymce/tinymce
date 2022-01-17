@@ -96,7 +96,7 @@ const focusEditor = (editor: Editor) => {
 
   // Move focus to contentEditable=true child if needed
   const contentEditableHost = getContentEditableHost(editor, selection.getNode());
-  if (editor.$.contains(body, contentEditableHost)) {
+  if (editor.dom.isChildOf(contentEditableHost, body)) {
     focusBody(contentEditableHost);
     normalizeSelection(editor, rng);
     activateEditor(editor);
@@ -107,7 +107,7 @@ const focusEditor = (editor: Editor) => {
   if (!editor.inline) {
     // WebKit needs this call to fire focusin event properly see #5948
     // But Opera pre Blink engine will produce an empty selection so skip Opera
-    if (!Env.opera) {
+    if (!Env.browser.isOpera()) {
       focusBody(body);
     }
 
@@ -115,7 +115,7 @@ const focusEditor = (editor: Editor) => {
   }
 
   // Focus the body as well since it's contentEditable
-  if (Env.gecko || editor.inline) {
+  if (Env.browser.isFirefox() || editor.inline) {
     focusBody(body);
     normalizeSelection(editor, rng);
   }

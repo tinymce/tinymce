@@ -5,7 +5,7 @@ import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 import { pCloseMore, pOpenMore } from './MenuUtils';
 

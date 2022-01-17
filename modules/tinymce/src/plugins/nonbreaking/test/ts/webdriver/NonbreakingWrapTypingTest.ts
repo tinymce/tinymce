@@ -6,7 +6,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/nonbreaking/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
@@ -15,10 +14,9 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
     toolbar: 'nonbreaking',
     nonbreaking_wrap: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   const isGecko = Env.browser.isFirefox();
-  const isGeckoOrIE = isGecko || Env.browser.isIE();
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
 
@@ -109,7 +107,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + ' ' : Unicode.zeroWidth + Unicode.nbsp))
+            s.text(str.is(isGecko ? Unicode.zeroWidth + ' ' : Unicode.zeroWidth + Unicode.nbsp))
           ].concat(isGecko ? [ s.element('br', {}) ] : [])
         })
       ]
@@ -150,7 +148,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
+            s.text(str.is(isGecko ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
           ].concat(isGecko ? [ s.element('br', {}) ] : [])
         })
       ]
@@ -191,7 +189,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
+            s.text(str.is(isGecko ? Unicode.zeroWidth + 'test ' : Unicode.zeroWidth + 'test\u00a0'))
           ].concat(isGecko ? [ s.element('br', {}) ] : [])
         })
       ]
@@ -209,7 +207,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(isGeckoOrIE ? Unicode.zeroWidth + 'test test ' : Unicode.zeroWidth + 'test test\u00a0'))
+            s.text(str.is(isGecko ? Unicode.zeroWidth + 'test test ' : Unicode.zeroWidth + 'test test\u00a0'))
           ].concat(isGecko ? [ s.element('br', {}) ] : [])
         })
       ]

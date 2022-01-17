@@ -2,27 +2,27 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Env from 'tinymce/core/api/Env';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-describe('browser.tinymce.core.dom.DOMUtils', () => {
+describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
   const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
   it('parseStyle', () => {
     DOM.add(document.body, 'div', { id: 'test' });
 
     const dom = DOMUtils(document, {
-      hex_colors: true, keep_values: true, url_converter: (u) => {
+      keep_values: true,
+      url_converter: (u) => {
         return 'X' + u + 'Y';
       }
     });
 
     assert.equal(dom.serializeStyle(dom.parseStyle('border: 1px solid red; color: green')), 'border: 1px solid red; color: green;', 'incorrect parsing');
 
-    assert.equal(dom.serializeStyle(dom.parseStyle('border: 1px solid rgb(0, 255, 255); color: green')), 'border: 1px solid #00ffff; color: green;', 'incorrect parsing');
+    assert.equal(dom.serializeStyle(dom.parseStyle('border: 1px solid rgb(0, 255, 255); color: green')), 'border: 1px solid rgb(0, 255, 255); color: green;', 'incorrect parsing');
 
     assert.equal(dom.serializeStyle(
       dom.parseStyle('border-top: 1px solid red; border-left: 1px solid red; border-bottom: 1px solid red; border-right: 1px solid red;')
@@ -88,7 +88,7 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     );
     DOM.removeClass(DOM.select('span', 'test'), 'test1');
     assert.equal(DOM.get('test2').className, '', 'incorrect classname');
-    assert.equal(DOM.get('test3').className, 'test test', 'incorrect classname');
+    assert.equal(DOM.get('test3').className, 'test', 'incorrect classname');
     assert.equal(DOM.get('test4').className, 'test', 'incorrect classname');
 
     DOM.get('test').innerHTML = '<span id="test2" class="test"></span>';
@@ -163,7 +163,7 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     assert.equal(DOM.createHTML('span', { id: 'id1', class: 'abc 123' }), '<span id="id1" class="abc 123" />');
     assert.equal(DOM.createHTML('span', { id: null, class: undefined }), '<span />');
     assert.equal(DOM.createHTML('span'), '<span />');
-    assert.equal(DOM.createHTML('span', null, 'content <b>abc</b>'), '<span>content <b>abc</b></span>');
+    assert.equal(DOM.createHTML('span', {}, 'content <b>abc</b>'), '<span>content <b>abc</b></span>');
   });
 
   it('uniqueId', () => {
@@ -198,10 +198,6 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
 
     DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
     assert.equal(DOM.select('div.test2', 'test').length, 2);
-
-    DOM.setHTML('test', '<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>');
-    assert.equal(DOM.select('div div', 'test').length, 1, ''); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461
-    // alert(DOM.select('div div', 'test').length +","+DOM.get('test').querySelectorAll('div div').length);
 
     DOM.remove('test');
   });
@@ -459,13 +455,8 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     assert.equal(c, 3);
   });
 
-  it('loadCSS contentCssCors enabled', function () {
+  it('loadCSS contentCssCors enabled', () => {
     let c = 0;
-
-    // The crossorigin attribute isn't supported in IE11
-    if (Env.ie && Env.ie < 12) {
-      this.skip();
-    }
 
     // Create an iframe to load in, so that we are using a different document. Otherwise DOMUtils will fallback to using the default.
     const iframe = DOM.create('iframe', { src: `javascript=''` }) as HTMLIFrameElement;
@@ -536,14 +527,6 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     assert.equal(DOM.get('test2').innerHTML, '');
 
     DOM.remove('test');
-  });
-
-  it('toHex', () => {
-    assert.equal(DOM.toHex('rgb(0, 255, 255)'), '#00ffff');
-    assert.equal(DOM.toHex('rgb(255, 0, 0)'), '#ff0000');
-    assert.equal(DOM.toHex('rgb(0, 0, 255)'), '#0000ff');
-    assert.equal(DOM.toHex('rgb  (  0  , 0  , 255  )  '), '#0000ff');
-    assert.equal(DOM.toHex('   RGB  (  0  , 0  , 255  )  '), '#0000ff');
   });
 
   it('getOuterHTML', () => {
@@ -724,29 +707,29 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
   });
 
   it('isEmpty with list of elements considered non-empty', () => {
-    const elm = DOM.create('p', null, '<img>');
+    const elm = DOM.create('p', {}, '<img>');
     assert.isFalse(DOM.isEmpty(elm, { img: true }));
   });
 
   it('isEmpty on pre', () => {
-    const elm = DOM.create('pre', null, '  ');
+    const elm = DOM.create('pre', {}, '  ');
     assert.isFalse(DOM.isEmpty(elm));
   });
 
   it('isEmpty with list of elements considered non-empty without schema', () => {
     const domWithoutSchema = DOMUtils(document, { keep_values: true });
 
-    const elm = domWithoutSchema.create('p', null, '<img>');
+    const elm = domWithoutSchema.create('p', {}, '<img>');
     assert.isFalse(domWithoutSchema.isEmpty(elm, { img: true }));
   });
 
   it('isEmpty on P with BR in EM', () => {
-    const elm = DOM.create('p', null, '<em><br></em>');
+    const elm = DOM.create('p', {}, '<em><br></em>');
     assert.isTrue(DOM.isEmpty(elm));
   });
 
   it('isEmpty on P with two BR in EM', () => {
-    const elm = DOM.create('p', null, '<em><br><br></em>');
+    const elm = DOM.create('p', {}, '<em><br><br></em>');
     assert.equal(false, DOM.isEmpty(elm));
   });
 

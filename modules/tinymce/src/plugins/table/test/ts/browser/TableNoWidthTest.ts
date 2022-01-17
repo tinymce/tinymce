@@ -3,14 +3,13 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.TableNoWidthTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'table',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TINY-6051: Removing and adding a column doesn\'t add sizes', () => {
     const editor = hook.editor();
@@ -37,8 +36,8 @@ describe('browser.tinymce.plugins.table.TableNoWidthTest', () => {
     editor.setContent('<table><tbody><tr><td data-mce-selected="1" data-mce-first-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1" data-mce-last-selected="1">3</td><td>4</td></tr></tbody></table>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
     editor.execCommand('mceTableMergeCells');
-    TinyAssertions.assertContent(editor, '<table><tbody><tr><td rowspan="2">1<br />3</td><td>2</td></tr><tr><td>4</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table><tbody><tr><td rowspan="2">1<br>3</td><td>2</td></tr><tr><td>4</td></tr></tbody></table>');
     editor.execCommand('mceTableSplitCells');
-    TinyAssertions.assertContent(editor, '<table><tbody><tr><td>1<br />3</td><td>2</td></tr><tr><td>&nbsp;</td><td>4</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table><tbody><tr><td>1<br>3</td><td>2</td></tr><tr><td>&nbsp;</td><td>4</td></tr></tbody></table>');
   });
 });

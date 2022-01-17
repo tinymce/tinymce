@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import Promise from '@ephox/wrap-promise-polyfill';
 import fc from 'fast-check';
 
 import * as Arr from 'ephox/katamari/api/Arr';

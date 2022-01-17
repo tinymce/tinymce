@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -110,11 +112,9 @@ const setup = (editor: Editor): void => {
   editor.on('SetContent', () => {
     // TODO: This shouldn't be needed there should be a way to mark bogus
     // elements so they are never removed except external save
-    editor.$('span.mce-preview-object').each((index, elm) => {
-      const $elm = editor.$(elm);
-
-      if ($elm.find('span.mce-shim').length === 0) {
-        $elm.append('<span class="mce-shim"></span>');
+    Arr.each(editor.dom.select('span.mce-preview-object'), (elm) => {
+      if (editor.dom.select('span.mce-shim', elm).length === 0) {
+        editor.dom.add(elm, 'span', { class: 'mce-shim' });
       }
     });
   });

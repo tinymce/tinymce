@@ -11,20 +11,29 @@ export type Content = string | AstNode;
 export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';
 
 export interface GetContentArgs {
-  format?: ContentFormat;
-  get?: boolean;
-  content?: string;
-  getInner?: boolean;
+  format: ContentFormat;
+  get: boolean;
+  getInner: boolean;
+  content?: Content;
   no_events?: boolean;
   [key: string]: any;
 }
 
 export interface SetContentArgs {
-  format?: string;
-  set?: boolean;
-  content?: string;
+  format: string;
+  set: boolean;
+  content: string;
   no_events?: boolean;
   no_selection?: boolean;
+}
+
+export interface GetSelectionContentArgs extends GetContentArgs {
+  selection?: boolean;
+  contextual?: boolean;
+}
+
+export interface SetSelectionContentArgs extends SetContentArgs {
+  selection?: boolean;
 }
 
 export interface InsertContentDetails {

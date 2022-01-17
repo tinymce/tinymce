@@ -4,7 +4,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import * as LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
 import Plugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.link.ImageFigureLinkTest', () => {
     plugins: 'link',
     toolbar: 'link',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   before(() => {
     TestLinkUi.clearHistory();

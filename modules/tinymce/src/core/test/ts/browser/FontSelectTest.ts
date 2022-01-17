@@ -6,7 +6,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.FontSelectTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -18,7 +17,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       '.mce-content-body h1 { font-family: Arial; font-size: 32px; }'
     ].join(''),
     fontsize_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
-  }, [ Theme ]);
+  }, []);
 
   const systemFontStackVariants = [
     `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;`, // Oxide

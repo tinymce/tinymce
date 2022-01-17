@@ -3,7 +3,6 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -11,7 +10,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', () 
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, [ Theme ], true);
+  }, [], true);
 
   context('Arrow keys in figcaption', () => {
     it('Arrow up from start of figcaption to paragraph before figure', () => {
@@ -19,7 +18,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', () 
       editor.setContent('<figure><figcaption>a</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
       TinyContentActions.keystroke(editor, Keys.up());
-      TinyAssertions.assertContent(editor, '<br /><figure><figcaption>a</figcaption></figure>');
+      TinyAssertions.assertContent(editor, '<br><figure><figcaption>a</figcaption></figure>');
       TinyAssertions.assertSelection(editor, [], 0, [], 0);
     });
 

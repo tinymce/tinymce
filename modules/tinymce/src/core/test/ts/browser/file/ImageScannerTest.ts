@@ -16,13 +16,7 @@ describe('browser.tinymce.core.file.ImageScannerTest', () => {
   const invalidBlobUriSrc = 'blob:70BE8432-BA4D-4787-9AB9-86563351FBF7';
   let blobUriSrc;
 
-  before(function () {
-    if (!Env.fileApi) {
-      // eslint-disable-next-line no-console
-      console.log('File API not supported by browser.');
-      this.skip();
-    }
-
+  before(() => {
     return Conversions.uriToBlob(base64Src).then((blob) => {
       blobUriSrc = URL.createObjectURL(blob);
     });

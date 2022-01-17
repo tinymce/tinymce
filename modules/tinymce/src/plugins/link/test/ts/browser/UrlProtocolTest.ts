@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.link.UrlProtocolTest', () => {
     plugins: 'link',
     toolbar: 'link',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pTestProtocolConfirm = async (editor: Editor, url: string, expectedProtocol: string) => {
     const presence = {};
@@ -70,8 +69,8 @@ describe('browser.tinymce.plugins.link.UrlProtocolTest', () => {
 
   it('TBA: Test regex for non relative link with no protocol', async () => {
     const editor = hook.editor();
-    await pTestProtocolConfirm(editor, 'www.http.com', 'http://');
-    await pTestProtocolConfirm(editor, 'www3.http.com', 'http://');
+    await pTestProtocolConfirm(editor, 'www.http.com', 'https://');
+    await pTestProtocolConfirm(editor, 'www3.http.com', 'https://');
   });
 
   it('TBA: Test regex for relative link', async () => {

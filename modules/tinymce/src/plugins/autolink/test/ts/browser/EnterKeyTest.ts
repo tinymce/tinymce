@@ -5,13 +5,12 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.autolink.EnterKeyTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'autolink',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TINY-1202: Focus on editor, set content, set cursor at end of content, assert enter/return keystroke and keydown event', () => {
     const editor = hook.editor();

@@ -5,14 +5,13 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/preview/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.preview.PreviewSanityTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'preview',
     toolbar: 'preview',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   const dialogSelector = 'div[role="dialog"]';
   const docBody = SugarBody.body();

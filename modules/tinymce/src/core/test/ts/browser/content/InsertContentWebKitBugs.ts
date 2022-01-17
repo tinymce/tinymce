@@ -2,14 +2,13 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.InsertContentTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'blockquote { font-size: 12px }' // Needed to produce spans with runtime styles
-  }, [ Theme ]);
+  }, []);
 
   it('Insert contents on a triple click selection should not produce odd spans', () => {
     const editor = hook.editor();

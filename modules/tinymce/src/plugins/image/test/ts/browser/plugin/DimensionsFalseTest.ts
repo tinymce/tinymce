@@ -3,7 +3,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, fillActiveDialog } from '../../module/Helpers';
 
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.image.plugin.DimensionsFalseTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     image_dimensions: false
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: image dialog image_dimensions: false', async () => {
     const editor = hook.editor();
@@ -27,6 +26,6 @@ describe('browser.tinymce.plugins.image.plugin.DimensionsFalseTest', () => {
       alt: 'alt'
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="src" alt="alt" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="src" alt="alt"></p>');
   });
 });

@@ -11,7 +11,7 @@ import {
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Optional, Optionals, Result } from '@ephox/katamari';
 
-import { ToolbarMode } from '../../api/Settings';
+import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { HeaderSpec, renderHeader } from '../header/CommonHeader';
 import SilverMenubar, { SilverMenubarSpec } from '../menus/menubar/SilverMenubar';

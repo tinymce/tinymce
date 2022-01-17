@@ -9,7 +9,7 @@ import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Utils from './Utils';
 
 const removeEmptyNamedAnchorsInSelection = (editor: Editor): void => {
@@ -41,7 +41,7 @@ const getId = (editor: Editor): string => {
 
 const createAnchor = (editor: Editor, id: string): void => {
   editor.undoManager.transact(() => {
-    if (!Settings.allowHtmlInNamedAnchor(editor)) {
+    if (!Options.allowHtmlInNamedAnchor(editor)) {
       editor.selection.collapse(true);
     }
     if (editor.selection.isCollapsed()) {

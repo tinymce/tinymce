@@ -99,7 +99,8 @@ const spectrumPart = PartType.required({
     const modelDetail = detail.model;
     const model = modelDetail.manager;
 
-    const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => model.getValueFromEvent(simulatedEvent).map((value: number | SugarPosition) => model.setValueFrom(component, detail, value));
+    const setValueFrom = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent<MouseEvent | TouchEvent>) =>
+      model.getValueFromEvent(simulatedEvent).map((value: number | SugarPosition) => model.setValueFrom(component, detail, value));
 
     return {
       behaviours: Behaviour.derive([
@@ -120,7 +121,7 @@ const spectrumPart = PartType.required({
         AlloyEvents.run(NativeEvents.touchstart(), setValueFrom),
         AlloyEvents.run(NativeEvents.touchmove(), setValueFrom),
         AlloyEvents.run(NativeEvents.mousedown(), setValueFrom),
-        AlloyEvents.run<EventArgs>(NativeEvents.mousemove(), (spectrum, se) => {
+        AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousemove(), (spectrum, se) => {
           if (detail.mouseIsDown.get()) {
             setValueFrom(spectrum, se);
           }

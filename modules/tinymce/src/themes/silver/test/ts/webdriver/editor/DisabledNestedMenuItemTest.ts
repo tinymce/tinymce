@@ -4,7 +4,6 @@ import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import { Editor } from 'tinymce/core/api/PublicApi';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemTest', () => {
 
@@ -47,7 +46,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
         }]
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   const pOpenCodeMenu = () => {
     TinyUiActions.clickOnMenu(hook.editor(), codeMenuItemSelector);

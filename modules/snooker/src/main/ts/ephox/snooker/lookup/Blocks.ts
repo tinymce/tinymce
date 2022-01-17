@@ -31,7 +31,11 @@ const columns = (warehouse: Warehouse, isValidCell: ValidCellFn = Fun.always): O
   });
 };
 
-const decide = (getBlock: () => DetailExt[], isValid: (detail: DetailExt) => boolean, getFallback: () => Optional<DetailExt>): Optional<SugarElement> => {
+const decide = (
+  getBlock: () => DetailExt[],
+  isValid: (detail: DetailExt) => boolean,
+  getFallback: () => Optional<DetailExt>
+): Optional<SugarElement<HTMLTableCellElement>> => {
   const inBlock = getBlock();
   const validInBlock = Arr.find(inBlock, isValid);
   const detailOption = validInBlock.orThunk(() => Optional.from(inBlock[0]).orThunk(getFallback));

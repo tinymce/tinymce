@@ -9,7 +9,6 @@ import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import { getParentCaretContainer, isCaretNode } from 'tinymce/core/fmt/FormatContainer';
 import { FormatVars } from 'tinymce/core/fmt/FormatTypes';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -24,7 +23,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
         { selector: '*:not(tr,td,th,table)', attributes: [ 'style', 'class' ], split: false, expand: false, deep: true }
       ]
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const applyCaretFormat = (editor: Editor, name: string, vars: FormatVars) => {
     CaretFormat.applyCaretFormat(editor, name, vars);

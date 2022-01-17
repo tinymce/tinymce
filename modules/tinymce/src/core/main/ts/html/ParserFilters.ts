@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Type, Unicode } from '@ephox/katamari';
+import { Arr, Optional, Type, Unicode } from '@ephox/katamari';
 
 import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
@@ -22,22 +22,6 @@ const isBogusImage = (img: AstNode): boolean =>
 const isInternalImageSource = (img: AstNode): boolean =>
   img.attr('src') === Env.transparentSrc || Type.isNonNullable(img.attr('data-mce-placeholder'));
 
-const isValidDataImg = (img: AstNode, settings: DomParserSettings): boolean => {
-  if (settings.images_dataimg_filter) {
-    // Construct an image element
-    const imgElem = new Image();
-    imgElem.src = img.attr('src');
-    Obj.each(img.attributes.map, (value, key) => {
-      imgElem.setAttribute(key, value);
-    });
-
-    // Check if it should be excluded from being converted to a blob
-    return settings.images_dataimg_filter(imgElem);
-  } else {
-    return true;
-  }
-};
-
 const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSettings): void => {
   const { blob_cache: blobCache } = settings;
   const processImage = (img: AstNode): void => {
@@ -47,7 +31,7 @@ const registerBase64ImageFilter = (parser: DomParser, settings: DomParserSetting
       return;
     }
 
-    parseDataUri(inputSrc).filter(() => isValidDataImg(img, settings)).bind(({ type, data }) =>
+    parseDataUri(inputSrc).bind(({ type, data }) =>
       Optional.from(blobCache.getByData(data, type)).orThunk(() =>
         Conversions.buildBlob(type, data).map((blob) => {
           const blobInfo = blobCache.create(uniqueId(), blob, data);

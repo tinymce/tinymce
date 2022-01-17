@@ -5,36 +5,37 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Strings } from '@ephox/katamari';
+import { Strings, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
-const rangeEqualsDelimiterOrSpace = (rangeString: string, delimiter: string): boolean => {
-  return rangeString === delimiter || rangeString === ' ' || rangeString.charCodeAt(0) === 160;
-};
+const rangeEqualsBracketOrSpace = (rangeString: string): boolean =>
+  /^[(\[{ \u00a0]$/.test(rangeString);
 
-const handleEclipse = (editor: Editor): void => {
-  parseCurrentLine(editor, -1, '(');
-};
+const isTextNode = (node: Node): node is Text =>
+  node.nodeType === 3;
 
-const handleSpacebar = (editor: Editor): void => {
-  parseCurrentLine(editor, 0, '');
-};
+const isElement = (node: Node): node is Element =>
+  node.nodeType === 1;
 
-const handleEnter = (editor: Editor): void => {
-  parseCurrentLine(editor, -1, '');
-};
+const handleBracket = (editor: Editor): void =>
+  parseCurrentLine(editor, -1);
+
+const handleSpacebar = (editor: Editor): void =>
+  parseCurrentLine(editor, 0);
+
+const handleEnter = (editor: Editor): void =>
+  parseCurrentLine(editor, -1);
 
 const scopeIndex = (container: Node, index: number): number => {
   if (index < 0) {
     index = 0;
   }
 
-  if (container.nodeType === 3) {
-    const len = (container as Text).data.length;
+  if (isTextNode(container)) {
+    const len = container.data.length;
 
     if (index > len) {
       index = len;
@@ -45,7 +46,7 @@ const scopeIndex = (container: Node, index: number): number => {
 };
 
 const setStart = (rng: Range, container: Node, offset: number): void => {
-  if (container.nodeType !== 1 || container.hasChildNodes()) {
+  if (!isElement(container) || container.hasChildNodes()) {
     rng.setStart(container, scopeIndex(container, offset));
   } else {
     rng.setStartBefore(container);
@@ -53,7 +54,7 @@ const setStart = (rng: Range, container: Node, offset: number): void => {
 };
 
 const setEnd = (rng: Range, container: Node, offset: number): void => {
-  if (container.nodeType !== 1 || container.hasChildNodes()) {
+  if (!isElement(container) || container.hasChildNodes()) {
     rng.setEnd(container, scopeIndex(container, offset));
   } else {
     rng.setEndAfter(container);
@@ -68,13 +69,13 @@ const hasProtocol = (url: string): boolean =>
 const isPunctuation = (char: string) =>
   /[?!,.;:]/.test(char);
 
-const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string): void => {
+const parseCurrentLine = (editor: Editor, endOffset: number): void => {
   let end, endContainer, bookmark, text, prev, len, rngText;
-  const autoLinkPattern = Settings.getAutoLinkPattern(editor);
-  const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
+  const autoLinkPattern = Options.getAutoLinkPattern(editor);
+  const defaultLinkTarget = Options.getDefaultLinkTarget(editor);
 
   // Never create a link when we are inside a link
-  if (editor.selection.getNode().tagName === 'A') {
+  if (editor.dom.getParent(editor.selection.getNode(), 'a[href]') !== null) {
     return;
   }
 
@@ -107,13 +108,13 @@ const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string):
     endContainer = rng.endContainer;
 
     // Get a text node
-    if (endContainer.nodeType !== 3 && endContainer.firstChild) {
-      while (endContainer.nodeType !== 3 && endContainer.firstChild) {
+    if (!isTextNode(endContainer) && endContainer.firstChild) {
+      while (!isTextNode(endContainer) && endContainer.firstChild) {
         endContainer = endContainer.firstChild;
       }
 
       // Move range to text node
-      if (endContainer.nodeType === 3) {
+      if (isTextNode(endContainer)) {
         setStart(rng, endContainer, 0);
         setEnd(rng, endContainer, endContainer.nodeValue.length);
       }
@@ -135,10 +136,10 @@ const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string):
     end -= 1;
     rngText = rng.toString();
 
-    // Loop until one of the following is found: a blank space, &nbsp;, delimiter, (end-2) >= 0
-  } while (rngText !== ' ' && rngText !== '' && rngText.charCodeAt(0) !== 160 && (end - 2) >= 0 && rngText !== delimiter);
+    // Loop until one of the following is found: a blank space, &nbsp;, bracket, (end-2) >= 0
+  } while (!rangeEqualsBracketOrSpace(rngText) && (end - 2) >= 0);
 
-  if (rangeEqualsDelimiterOrSpace(rng.toString(), delimiter)) {
+  if (rangeEqualsBracketOrSpace(rng.toString())) {
     setStart(rng, endContainer, end);
     setEnd(rng, endContainer, start);
     end += 1;
@@ -159,7 +160,7 @@ const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string):
   text = rng.toString().trim();
   const matches = text.match(autoLinkPattern);
 
-  const protocol = Settings.getDefaultLinkProtocol(editor);
+  const protocol = Options.getDefaultLinkProtocol(editor);
 
   if (matches) {
     let url = matches[0];
@@ -174,7 +175,7 @@ const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string):
     editor.selection.setRng(rng);
     editor.execCommand('createlink', false, url);
 
-    if (defaultLinkTarget !== false) {
+    if (Type.isString(defaultLinkTarget)) {
       editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
     }
 
@@ -184,34 +185,16 @@ const parseCurrentLine = (editor: Editor, endOffset: number, delimiter: string):
 };
 
 const setup = (editor: Editor): void => {
-  let autoUrlDetectState: boolean | undefined;
-
   editor.on('keydown', (e) => {
     if (e.keyCode === 13) {
       return handleEnter(editor);
     }
   });
 
-  // Internet Explorer has built-in automatic linking for most cases
-  if (Env.browser.isIE()) {
-    editor.on('focus', () => {
-      if (!autoUrlDetectState) {
-        autoUrlDetectState = true;
-
-        try {
-          editor.execCommand('AutoUrlDetect', false, true);
-        } catch (ex) {
-          // Ignore
-        }
-      }
-    });
-
-    return;
-  }
-
   editor.on('keypress', (e) => {
-    if (e.keyCode === 41) {
-      return handleEclipse(editor);
+    // One of the closing bracket keys: ), ] or }
+    if (e.keyCode === 41 || e.keyCode === 93 || e.keyCode === 125) {
+      return handleBracket(editor);
     }
   });
 

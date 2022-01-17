@@ -8,9 +8,8 @@
 import { Obj } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import Promise from 'tinymce/core/api/util/Promise';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as DataToHtml from './DataToHtml';
 import { MediaData } from './Types';
 
@@ -53,7 +52,7 @@ const loadedData = (editor: Editor) => (data: MediaData): string =>
   DataToHtml.dataToHtml(editor, data);
 
 const getEmbedHtml = (editor: Editor, data: MediaData): Promise<EmbedResult> => {
-  const embedHandler = Settings.getUrlResolver(editor);
+  const embedHandler = Options.getUrlResolver(editor);
 
   return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
 };

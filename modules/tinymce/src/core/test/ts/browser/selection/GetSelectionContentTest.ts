@@ -1,20 +1,18 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { GetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { getContent, GetSelectionContentArgs } from 'tinymce/core/selection/GetSelectionContent';
-import Theme from 'tinymce/themes/silver/Theme';
+import { GetSelectionContentArgs } from 'tinymce/core/content/ContentTypes';
+import { getContent } from 'tinymce/core/selection/GetSelectionContent';
 
 describe('browser.tinymce.selection.GetSelectionContentTest', () => {
-  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
   const testDivId = 'testDiv1';
 
   const focusDiv = () => {
@@ -35,15 +33,15 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
     document.body.appendChild(div);
   };
 
-  const getSelectionContent = (editor: Editor, args: GetSelectionContentArgs) =>
+  const getSelectionContent = (editor: Editor, args: Partial<GetSelectionContentArgs>) =>
     getContent(editor, args).toString().replace(/[\r]+/g, '');
 
-  const assertGetContent = (label: string, editor: Editor, expectedContent: string, args: GetSelectionContentArgs = {}) => {
+  const assertGetContent = (label: string, editor: Editor, expectedContent: string, args: Partial<GetSelectionContentArgs> = {}) => {
     const content = getSelectionContent(editor, args);
     assert.equal(content, expectedContent, label + ': Should be expected contents');
   };
 
-  const assertGetContentOverrideBeforeGetContent = (label: string, editor: Editor, expectedContent: string, args: GetSelectionContentArgs = {}) => {
+  const assertGetContentOverrideBeforeGetContent = (label: string, editor: Editor, expectedContent: string, args: Partial<GetSelectionContentArgs> = {}) => {
     const handler = (e: EditorEvent<GetContentEvent>) => {
       if (e.selection === true) {
         e.preventDefault();
@@ -127,11 +125,7 @@ describe('browser.tinymce.selection.GetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><em> spaces </em></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
-    // Firefox, IE & Edge actually renders the trailing space within the editor in this case
-    // however Firefox reports via innerText that it doesn't render the trailing space. So
-    // as discussed we should use whatever it is returning for innerText
-    const expectedContent = browser.isIE() || browser.isEdge() ? 'spaces ' : 'spaces';
-    assertGetContent('Should be some content', editor, expectedContent, { format: 'text' });
+    assertGetContent('Should be some content', editor, 'spaces', { format: 'text' });
     editor.setContent('<p> spaces </p>');
     TinySelections.setSelection(editor, [], 0, [], 1);
     assertGetContent('Should be some content', editor, 'spaces', { format: 'text' });

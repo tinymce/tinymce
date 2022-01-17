@@ -10,7 +10,7 @@ import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { CustomTabSpecs, TabSpecs } from '../Plugin';
 import * as KeyboardNavTab from './KeyboardNavTab';
 import * as KeyboardShortcutsTab from './KeyboardShortcutsTab';
@@ -22,7 +22,7 @@ interface TabData {
   readonly names: string[];
 }
 
-const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, tabs: TabSpecs): TabData => {
+const parseHelpTabsSetting = (tabsFromSettings: Options.HelpTabsSetting, tabs: TabSpecs): TabData => {
   const newTabs = {};
   const names = Arr.map(tabsFromSettings, (t) => {
     if (typeof t === 'string') {
@@ -67,9 +67,9 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs): TabData =>
     ...customTabs.get()
   };
 
-  return Settings.getHelpTabs(editor).fold(
+  return Optional.from(Options.getHelpTabs(editor)).fold(
     () => getNamesFromTabs(tabs),
-    (tabsFromSettings: Settings.HelpTabsSetting) => parseHelpTabsSetting(tabsFromSettings, tabs)
+    (tabsFromSettings: Options.HelpTabsSetting) => parseHelpTabsSetting(tabsFromSettings, tabs)
   );
 };
 

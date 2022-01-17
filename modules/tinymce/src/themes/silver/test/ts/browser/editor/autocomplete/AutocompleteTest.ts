@@ -6,8 +6,6 @@ import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { getGreenImageDataUrl } from '../../../module/Assets';
 import {
@@ -39,7 +37,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         ch: '+',
         minChars: 0,
         columns: 1,
-        fetch: (_pattern, _maxResults) => new PromisePolyfill((resolve) => {
+        fetch: (_pattern, _maxResults) => new Promise((resolve) => {
           resolve(
             Arr.map([ 'aA', 'bB', 'cC', 'dD' ], (letter) => ({
               value: `plus-${letter}`,
@@ -59,7 +57,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         ch: ':',
         minChars: 0,
         columns: 2,
-        fetch: (_pattern, _maxResults) => new PromisePolyfill((resolve) => {
+        fetch: (_pattern, _maxResults) => new Promise((resolve) => {
           resolve(
             Arr.map([ 'a' ], (letter) => ({
               value: `colon1-${letter}`,
@@ -78,7 +76,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         ch: ':',
         minChars: 0,
         columns: 2,
-        fetch: (_pattern, _maxResults) => new PromisePolyfill((resolve) => {
+        fetch: (_pattern, _maxResults) => new Promise((resolve) => {
           resolve(
             Arr.map([ 'a', 'b' ], (letter) => ({
               value: `colon2-${letter}`,
@@ -97,7 +95,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         ch: '~',
         minChars: 0,
         columns: 'auto',
-        fetch: (_pattern, _maxResults) => new PromisePolyfill((resolve) => {
+        fetch: (_pattern, _maxResults) => new Promise((resolve) => {
           resolve(
             Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
               value: `tilde-${letter}`,
@@ -116,7 +114,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         ch: '!',
         minChars: 0,
         columns: 1,
-        fetch: (_pattern, _maxResults) => new PromisePolyfill((resolve) => {
+        fetch: (_pattern, _maxResults) => new Promise((resolve) => {
           resolve(
             Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
               value: `exclamation-${letter}`,
@@ -137,7 +135,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         matches: (rng, text, _pattern) =>
           // Check the '=' is in the middle of a word
           rng.startOffset !== 0 && !/\s/.test(text.charAt(rng.startOffset - 1)),
-        fetch: (pattern, _maxResults) => new PromisePolyfill((resolve) => {
+        fetch: (pattern, _maxResults) => new Promise((resolve) => {
           const filteredItems = Arr.filter([ 'two', 'three' ], (number) => number.indexOf(pattern) !== -1);
           resolve(
             Arr.map(filteredItems, (number) => ({
@@ -158,7 +156,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         ch: '*',
         minChars: 2,
         columns: 'auto',
-        fetch: (_pattern, _maxResults) => new PromisePolyfill((resolve) => {
+        fetch: (_pattern, _maxResults) => new Promise((resolve) => {
           resolve(
             Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
               value: `asterisk-${letter}`,
@@ -185,7 +183,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
             { text: 'equals sign', value: '=' },
             { text: 'some name', value: '`' }
           ], (item) => item.text.indexOf(pattern) !== -1);
-          return new PromisePolyfill((resolve) => {
+          return new Promise((resolve) => {
             resolve(
               Arr.map(filteredItems, (item) => ({
                 value: `hash-${item.value}`,
@@ -212,7 +210,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
             { text: 'equals sign', value: '=' },
             { text: 'plus sign', value: '+' }
           ], (item) => item.text.indexOf(pattern) !== -1);
-          return new PromisePolyfill((resolve) => {
+          return new Promise((resolve) => {
             resolve(
               Arr.map(filteredItems, (item) => ({
                 value: `euro-${item.value}`,
@@ -255,7 +253,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         }
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   beforeEach(() => {
     store.clear();

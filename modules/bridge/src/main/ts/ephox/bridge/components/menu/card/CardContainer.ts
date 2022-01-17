@@ -1,6 +1,7 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../../core/ComponentSchema';
 import { cardImageSchema } from './CardImage';
 import { CardItem, CardItemSpec } from './CardItem';
 import { cardTextSchema } from './CardText';
@@ -34,7 +35,7 @@ export const itemSchema = StructureSchema.valueThunkOf(
 );
 
 export const cardContainerSchema = StructureSchema.objOf([
-  FieldSchema.requiredString('type'),
+  ComponentSchema.type,
   FieldSchema.defaultedString('direction', 'horizontal'),
   FieldSchema.defaultedString('align', 'left'),
   FieldSchema.defaultedString('valign', 'middle'),

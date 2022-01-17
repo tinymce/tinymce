@@ -137,7 +137,7 @@ class EventDispatcher<T> {
    */
   public fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U): EditorEvent<U> {
     const lcName = name.toLowerCase();
-    const event = EventUtils.normalize<U>(lcName, args || {} as U, this.scope);
+    const event = EventUtils.normalize<U>(lcName, args ?? {} as U, this.scope);
 
     if (this.settings.beforeFire) {
       this.settings.beforeFire(event);

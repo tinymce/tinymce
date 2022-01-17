@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { EntityEncoding } from '../SettingsTypes';
+import { EntityEncoding } from '../OptionTypes';
 import Tools from '../util/Tools';
 import Entities from './Entities';
 
@@ -55,7 +55,7 @@ const Writer = (settings?: WriterSettings): Writer => {
   const indentBefore = makeMap(settings.indent_before || '');
   const indentAfter = makeMap(settings.indent_after || '');
   const encode = Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
-  const htmlOutput = settings.element_format === 'html';
+  const htmlOutput = settings.element_format !== 'xhtml';
 
   return {
     /**

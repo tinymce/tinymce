@@ -12,7 +12,7 @@ import { Scroll, SelectorFind, SugarBody, SugarElement, SugarNode, Traverse, Win
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../../api/Settings';
+import * as Options from '../../api/Options';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 // Note: We want to avoid including with small difference such as 0.001px
@@ -115,7 +115,7 @@ const getContextToolbarBounds = (
 ): Bounds => {
   const viewportBounds = WindowVisualViewport.getBounds(window);
   const contentAreaBox = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
-  const toolbarOrMenubarEnabled = Settings.isMenubarEnabled(editor) || Settings.isToolbarEnabled(editor) || Settings.isMultipleToolbars(editor);
+  const toolbarOrMenubarEnabled = Options.isMenubarEnabled(editor) || Options.isToolbarEnabled(editor) || Options.isMultipleToolbars(editor);
 
   const { x, width } = getHorizontalBounds(contentAreaBox, viewportBounds, margin);
 

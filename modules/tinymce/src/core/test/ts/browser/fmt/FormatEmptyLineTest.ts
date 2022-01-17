@@ -2,7 +2,6 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface TestConfig {
   readonly selector: string;
@@ -20,7 +19,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
     toolbar: 'forecolor backcolor | bold italic underline strikethrough | alignleft',
     format_empty_lines: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const tagHTML = (tag: string) => `<${tag}>a</${tag}><${tag}>&nbsp;</${tag}><${tag}>b</${tag}>`;
 

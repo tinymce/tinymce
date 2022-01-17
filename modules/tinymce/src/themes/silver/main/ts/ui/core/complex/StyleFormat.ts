@@ -11,7 +11,8 @@ import Editor from 'tinymce/core/api/Editor';
 import {
   AllowedFormat, BlockStyleFormat, FormatReference, InlineStyleFormat, NestedFormatting, SelectorStyleFormat, Separator, StyleFormat
 } from 'tinymce/core/api/fmt/StyleFormat';
-import { getUserStyleFormats, isMergeStyleFormats } from 'tinymce/themes/silver/api/Settings';
+
+import { getUserStyleFormats, shouldMergeStyleFormats } from '../../../api/Options';
 
 export const defaultStyleFormats: AllowedFormat[] = [
   {
@@ -121,5 +122,5 @@ export const getStyleFormats = (editor: Editor): FormatTypes[] => getUserStyleFo
   // Ensure that any custom formats specified by the user are registered with the editor
   const registeredUserFormats = registerCustomFormats(editor, userFormats);
   // Merge the default formats with the custom formats if required
-  return isMergeStyleFormats(editor) ? defaultStyleFormats.concat(registeredUserFormats) : registeredUserFormats;
+  return shouldMergeStyleFormats(editor) ? defaultStyleFormats.concat(registeredUserFormats) : registeredUserFormats;
 }).getOr(defaultStyleFormats);

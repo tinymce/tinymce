@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -17,7 +16,7 @@ describe('browser.tinymce.plugins.media.ReopenResizeTest', () => {
     forced_root_block: false,
     media_live_embeds: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pWaitForResizeHandles = (editor: Editor) =>
     Waiter.pTryUntil('Wait for new width value', () => {

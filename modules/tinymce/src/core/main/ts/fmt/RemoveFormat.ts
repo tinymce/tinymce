@@ -12,7 +12,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
@@ -179,8 +179,8 @@ const find = (dom: DOMUtils, node: Node, next: boolean, inc?: boolean): boolean 
  */
 const removeNode = (ed: Editor, node: Node, format: Format) => {
   const parentNode = node.parentNode;
-  let rootBlockElm: Node | null;
-  const dom = ed.dom, forcedRootBlock = Settings.getForcedRootBlock(ed);
+  let rootBlockElm: Element | null;
+  const dom = ed.dom, forcedRootBlock = Options.getForcedRootBlock(ed);
 
   if (FormatUtils.isBlockFormat(format)) {
     if (!forcedRootBlock) {
@@ -202,7 +202,7 @@ const removeNode = (ed: Editor, node: Node, format: Format) => {
             if (FormatUtils.isValid(ed, forcedRootBlock, node.nodeName.toLowerCase())) {
               if (!rootBlockElm) {
                 rootBlockElm = wrap(dom, node, forcedRootBlock);
-                dom.setAttribs(rootBlockElm, ed.settings.forced_root_block_attrs);
+                dom.setAttribs(rootBlockElm, Options.getForcedRootBlockAttrs(ed));
               } else {
                 rootBlockElm.appendChild(node);
               }
@@ -252,7 +252,7 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
   if (format.remove !== 'all') {
     // Remove styles
     each(format.styles as any, (value: FormatAttrOrStyleValue, name: string | number) => {
-      value = FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(value, vars), name + '');
+      value = FormatUtils.normalizeStyleValue(FormatUtils.replaceVars(value, vars), name + '');
 
       // Indexed array
       if (Type.isNumber(name)) {

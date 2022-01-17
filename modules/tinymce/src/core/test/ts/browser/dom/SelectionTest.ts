@@ -3,10 +3,8 @@ import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.dom.SelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -20,7 +18,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     custom_elements: 'custom1,~custom2',
     extended_valid_elements: 'custom1,custom2',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('getContent', () => {
     const editor = hook.editor();
@@ -103,7 +101,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.selection.setContent('<img src="a" onerror="alert(1)" />');
-    LegacyUnit.equal(editor.getContent(), '<img src="a" />', 'Set XSS at selection');
+    LegacyUnit.equal(editor.getContent(), '<img src="a">', 'Set XSS at selection');
 
     // Set contents at selection (collapsed)
     editor.setContent('<p>text</p>');
@@ -121,7 +119,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setEnd(editor.getBody().firstChild.firstChild, 'before'.length);
     editor.selection.setRng(rng);
     editor.selection.setContent('<br />');
-    LegacyUnit.equal(editor.getContent(), '<p>before<br />after</p>', 'Set contents at selection (inside paragraph)');
+    LegacyUnit.equal(editor.getContent(), '<p>before<br>after</p>', 'Set contents at selection (inside paragraph)');
 
     // Check the caret is left in the correct position.
     rng = editor.selection.getRng();
@@ -138,18 +136,10 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     editor.selection.setContent('');
     LegacyUnit.equal(editor.getContent(), '<p>text</p>', 'Set contents to empty at selection (collapsed)');
     rng = editor.selection.getRng();
-    if (!document.createRange) {
-      // The old IE selection can only be positioned in text nodes
-      LegacyUnit.equalDom(rng.startContainer, editor.getBody().firstChild.firstChild, 'Selection start container');
-      LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
-      LegacyUnit.equalDom(rng.endContainer, editor.getBody().firstChild.firstChild, 'Selection end container');
-      LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
-    } else {
-      LegacyUnit.equalDom(rng.startContainer, editor.getBody(), 'Selection start container');
-      LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
-      LegacyUnit.equalDom(rng.endContainer, editor.getBody(), 'Selection end container');
-      LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
-    }
+    LegacyUnit.equalDom(rng.startContainer, editor.getBody(), 'Selection start container');
+    LegacyUnit.equal(rng.startOffset, 0, 'Selection start offset');
+    LegacyUnit.equalDom(rng.endContainer, editor.getBody(), 'Selection end container');
+    LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
 
     // Set selected contents, onSetContent event
     eventObj = {};
@@ -518,39 +508,39 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('getBookmark/setBookmark on cE=false', () => {
     const editor = hook.editor();
     editor.setContent('text<span contentEditable="false">1</span>');
-    editor.selection.select(editor.$('span')[0]);
+    editor.selection.select(editor.dom.select('span')[0]);
     const bookmark = editor.selection.getBookmark(2);
     editor.setContent('text<span contentEditable="false">1</span>');
     editor.selection.moveToBookmark(bookmark);
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.dom.select('span')[0]);
   });
 
   it('getBookmark/setBookmark before cE=false', () => {
     const editor = hook.editor();
     editor.setContent('<p><input><span contentEditable="false">1</span></p>');
-    CaretContainer.insertInline(editor.$('span')[0], true);
+    CaretContainer.insertInline(editor.dom.select('span')[0], true);
     const rng = editor.dom.createRng();
-    rng.setStart(editor.$('span')[0].previousSibling, 0);
-    rng.setEnd(editor.$('span')[0].previousSibling, 0);
+    rng.setStart(editor.dom.select('span')[0].previousSibling, 0);
+    rng.setEnd(editor.dom.select('span')[0].previousSibling, 0);
     editor.selection.setRng(rng);
     const bookmark = editor.selection.getBookmark(2);
     editor.setContent('<p><input><span contentEditable="false">1</span></p>');
     editor.selection.moveToBookmark(bookmark);
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.dom.select('span')[0]);
   });
 
   it('getBookmark/setBookmark before cE=false block', () => {
     const editor = hook.editor();
     editor.setContent('<p contentEditable="false">1</p>');
-    CaretContainer.insertBlock('p', editor.$('p')[0], true);
+    CaretContainer.insertBlock('p', editor.dom.select('p')[0], true);
     const rng = editor.dom.createRng();
-    rng.setStart(editor.$('p')[0], 0);
-    rng.setEnd(editor.$('p')[0], 0);
+    rng.setStart(editor.dom.select('p')[0], 0);
+    rng.setEnd(editor.dom.select('p')[0], 0);
     editor.selection.setRng(rng);
     const bookmark = editor.selection.getBookmark(2);
     editor.setContent('<p contentEditable="false">1</p>');
     editor.selection.moveToBookmark(bookmark);
-    LegacyUnit.equalDom(editor.selection.getNode(), editor.$('p')[0]);
+    LegacyUnit.equalDom(editor.selection.getNode(), editor.dom.select('p')[0]);
   });
 
   it('select empty TD', () => {
@@ -646,11 +636,6 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    // if (tinymce.isOpera || tinymce.isIE) {
-    //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-    //  return;
-    // }
-
     editor.setContent('<p>text</p>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getDoc(), 0);
@@ -668,11 +653,6 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('normalize to br from document', () => {
     const editor = hook.editor();
     let rng;
-
-    // if (tinymce.isOpera || tinymce.isIE) {
-    //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-    //  return;
-    // }
 
     editor.setContent('<p><br /></p>');
     rng = editor.dom.createRng();
@@ -720,20 +700,6 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 0);
     editor.selection.setRng(rng);
-  });
-
-  it('normalize with contentEditable:true parent and contentEditable:false child element', () => {
-    const editor = hook.editor();
-    if (Env.browser.isIE()) {
-      editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
-      LegacyUnit.setSelection(editor, 'em', 0);
-      editor.selection.normalize();
-
-      const rng = editor.selection.getRng();
-
-      LegacyUnit.equal((rng.startContainer.parentNode as HTMLElement).contentEditable !== 'false', true);
-      LegacyUnit.equal(rng.startOffset, 0);
-    }
   });
 
   it('normalize to text node from body', () => {
@@ -1054,11 +1020,6 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     const editor = hook.editor();
     let rng;
 
-    // if (tinymce.isOpera || tinymce.isIE) {
-    //  ok(true, "Skipped on Opera/IE since Opera doesn't let you to set the range to document and IE will steal focus.");
-    //  return;
-    // }
-
     editor.setContent('a<table><tr><td>b</td></tr></table>');
     rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
@@ -1200,8 +1161,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     let rng = editor.dom.createRng();
 
     editor.setContent('<p>x</p>');
-    rng.setStart(editor.$('p')[0].firstChild, 0);
-    rng.setEnd(editor.$('p')[0].firstChild, 1);
+    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 
     editor.selection.setRng(rng);
     editor.selection.setRng(null);
@@ -1219,8 +1180,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
 
     editor.setContent('<p>x</p>');
 
-    rng.setStart(editor.$('p')[0].firstChild, 0);
-    rng.setEnd(editor.$('p')[0].firstChild, 1);
+    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
     editor.selection.setRng(rng);
 
     const tmpNode = document.createTextNode('y');
@@ -1240,7 +1201,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('setRng invalid range removed parent context', () => {
     const editor = hook.editor();
     editor.setContent('<p><strong><em>x</em></strong></p>');
-    const textNode = editor.$('em')[0].firstChild;
+    const textNode = editor.dom.select('em')[0].firstChild;
 
     editor.setContent('');
 
@@ -1264,8 +1225,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
 
     editor.setContent('<p>x</p>');
 
-    rng.setStart(editor.$('p')[0].firstChild, 0);
-    rng.setEnd(editor.$('p')[0].firstChild, 1);
+    rng.setStart(editor.dom.select('p')[0].firstChild, 0);
+    rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
 
     editor.selection.setRng(rng);
     editor.selection.setRng(null);

@@ -1,17 +1,13 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinyAssertions, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertNewline from 'tinymce/core/newline/InsertNewLine';
-import Theme from 'tinymce/themes/silver/Theme';
 
 // With a few exceptions, it is considered invalid for the cursor to be immediately before a block level element. These tests address
 // known cases where it was possible to position the cursor in one of those locations.
 describe('browser.tinymce.core.selection.SelectBeforeBlock', () => {
-  before(() => {
-    Theme();
-  });
 
   const settings = {
     base_url: '/project/tinymce/js/tinymce'

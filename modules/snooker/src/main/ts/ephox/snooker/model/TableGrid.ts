@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import { ElementNew, RowCells } from '../api/Structs';
+import { CompElm } from '../util/TableTypes';
 import * as GridRow from './GridRow';
 
 const getColumn = (grid: RowCells[], index: number): ElementNew[] => {
@@ -14,7 +14,7 @@ const getRow = (grid: RowCells[], index: number) => {
   return grid[index];
 };
 
-const findDiff = (xs: ElementNew[], comp: (a: SugarElement, b: SugarElement) => boolean) => {
+const findDiff = (xs: ElementNew[], comp: CompElm) => {
   if (xs.length === 0) {
     return 0;
   }
@@ -34,7 +34,7 @@ const findDiff = (xs: ElementNew[], comp: (a: SugarElement, b: SugarElement) => 
  *   colspan: column span of the cell at (row, column)
  *   rowspan: row span of the cell at (row, column)
  */
-const subgrid = (grid: RowCells[], row: number, column: number, comparator: (a: SugarElement, b: SugarElement) => boolean): { colspan: number; rowspan: number } => {
+const subgrid = (grid: RowCells[], row: number, column: number, comparator: CompElm): { colspan: number; rowspan: number } => {
   const gridRow = getRow(grid, row);
   const isColRow = gridRow.section === 'colgroup';
 

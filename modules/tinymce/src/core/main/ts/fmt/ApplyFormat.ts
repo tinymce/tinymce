@@ -11,7 +11,7 @@ import { PredicateExists, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as Empty from '../dom/Empty';
@@ -39,7 +39,7 @@ const isElementNode = (node: Node): node is Element => {
 
 const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, parentName: string) => {
   // TINY-6483: Can format 'br' if it is contained in a valid empty block and an inline format is being applied
-  if (Settings.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
+  if (Options.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
     // A curated list using the textBlockElements map and parts of the blockElements map from the schema
     const validBRParentElements: Record<string, {}> = {
       ...editor.schema.getTextBlockElements(),
@@ -68,7 +68,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
   const dom = ed.dom;
   const selection = ed.selection;
 
-  const setElementFormat = (elm: Node, fmt: ApplyFormat = format) => {
+  const setElementFormat = (elm: Element, fmt: ApplyFormat = format) => {
     if (Type.isFunction(fmt.onformat)) {
       fmt.onformat(elm, fmt as any, vars, node);
     }
@@ -115,7 +115,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       }
 
       if (dom.is(node, format.selector) && !isCaretNode(node)) {
-        setElementFormat(node, format);
+        setElementFormat(node as Element, format);
         found = true;
         return false;
       }
@@ -243,7 +243,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
       Arr.each(newWrappers, (node) => {
         const process = (node: Node) => {
           if (node.nodeName === 'A') {
-            setElementFormat(node, format);
+            setElementFormat(node as HTMLAnchorElement, format);
           }
 
           Arr.each(Arr.from(node.childNodes), process);
@@ -312,7 +312,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     for (let i = 0, l = formatList.length; i < l; i++) {
       const formatItem = formatList[i];
       if (formatItem.ceFalseOverride && FormatUtils.isSelectorFormat(formatItem) && dom.is(node, formatItem.selector)) {
-        setElementFormat(node, formatItem);
+        setElementFormat(node as Element, formatItem);
         break;
       }
     }
@@ -342,7 +342,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         // start wrapping it with a DIV this is for forced_root_blocks: false
         // It's kind of a hack but people should be using the default block type P since all desktop editors work that way
         const firstFormat = formatList[0];
-        if (!ed.settings.forced_root_block && firstFormat.defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {
+        if (!Options.hasForcedRootBlock(ed) && firstFormat.defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {
           applyFormat(ed, firstFormat.defaultBlock);
         }
 

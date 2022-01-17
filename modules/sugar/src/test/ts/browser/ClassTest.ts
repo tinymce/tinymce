@@ -54,6 +54,12 @@ UnitTest.test('ClassTest', () => {
   check(false, false, false, false);
   assert.eq(false, Attribute.has(c, 'class'), 'empty class attribute was not removed');
 
+  Class.toggle(c, 'spot');
+  check(false, true, false, false);
+  Class.toggle(c, 'spot');
+  check(false, false, false, false);
+  assert.eq(false, Attribute.has(c, 'class'), 'empty class attribute was not removed');
+
   const incorrect = SugarElement.fromText('a');
   assert.eq(false, Class.has(incorrect, 'anything'));
 

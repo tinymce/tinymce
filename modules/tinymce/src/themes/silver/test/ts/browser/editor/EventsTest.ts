@@ -5,7 +5,6 @@ import { McEditor, TinyContentActions, TinyDom, TinyUiActions } from '@ephox/wra
 
 import Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
   const settings = {
@@ -21,7 +20,6 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
   const editMenuButtonSelector = 'button:contains("Edit")';
 
   before(() => {
-    Theme();
     LinkPlugin();
   });
 

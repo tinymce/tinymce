@@ -51,7 +51,7 @@ UnitTest.asynctest('InputTest', (success, failure) => {
       );
     });
 
-    const defaultCursor = platform.browser.isChrome() || platform.browser.isSafari() || platform.browser.isFirefox() ? 'Initial Value'.length : 0;
+    const defaultCursor = platform.browser.isChromium() || platform.browser.isSafari() || platform.browser.isFirefox() ? 'Initial Value'.length : 0;
 
     const testFocus = Logger.t(
       'Testing input.focus selects text inside',

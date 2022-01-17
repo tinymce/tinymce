@@ -5,13 +5,12 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { getText } from 'tinymce/plugins/wordcount/core/GetText';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.wordcount.GetTextTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'wordcount',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const assertGetText = (node: Node, expected: string[]) => {
     const editor = hook.editor();

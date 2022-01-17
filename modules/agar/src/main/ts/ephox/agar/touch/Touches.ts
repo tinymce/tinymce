@@ -1,6 +1,6 @@
 import { SugarElement, SugarLocation, SugarNode, Traverse } from '@ephox/sugar';
 
-const point = (type: string, element: SugarElement<any>, x: number, y: number): void => {
+const point = (type: string, element: SugarElement<Node>, x: number, y: number): void => {
   const touch = {
     identifier: Date.now(),
     target: element.dom,
@@ -28,18 +28,11 @@ const point = (type: string, element: SugarElement<any>, x: number, y: number): 
     element.dom.dispatchEvent(ev);
   } else {
     // No native touch event support, so we need to simulate with a UIEvent
-    let ev: any;
-    if (typeof UIEvent === 'function') {
-      ev = new UIEvent(type, {
-        cancelable: true,
-        bubbles: true,
-        view: window
-      } as any);
-    } else {
-      // IE 11 doesn't support the UIEvent constructor, so we need to fallback to using createEvent
-      ev = element.dom.ownerDocument.createEvent('UIEvent');
-      ev.initUIEvent(type, true, true, window, null);
-    }
+    const ev: any = new UIEvent(type, {
+      cancelable: true,
+      bubbles: true,
+      view: window
+    });
     // Patch in the touch properties
     ev.touches = [ touch ];
     ev.targetTouches = [];
@@ -48,13 +41,16 @@ const point = (type: string, element: SugarElement<any>, x: number, y: number): 
   }
 };
 
-const touch = (eventType: string) => (element: SugarElement<any>): void => {
-  const position = SugarLocation.absolute(SugarNode.isText(element) ? Traverse.parent(element).getOrDie() : element);
+const findElement = (element: SugarElement<Node>): SugarElement<Element> =>
+  (SugarNode.isText(element) ? Traverse.parent(element).getOrDie() : element) as SugarElement<Element>;
+
+const touch = (eventType: string) => (element: SugarElement<Node>): void => {
+  const position = SugarLocation.absolute(findElement(element));
   point(eventType, element, position.left, position.top);
 };
 
-const touchAt = (eventType: string) => (dx: number, dy: number) => (element: SugarElement<any>): void => {
-  const position = SugarLocation.absolute(SugarNode.isText(element) ? Traverse.parent(element).getOrDie() : element);
+const touchAt = (eventType: string) => (dx: number, dy: number) => (element: SugarElement<Node>): void => {
+  const position = SugarLocation.absolute(findElement(element));
   point(eventType, element, position.left + dx, position.top + dy);
 };
 

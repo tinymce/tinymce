@@ -13,7 +13,7 @@ export type RootNode = SugarElement<Document | ShadowRoot>;
  * Note: this is insufficient to test if any element is a shadow root, but it is sufficient to differentiate between
  * a Document and a ShadowRoot.
  */
-export const isShadowRoot = (dos: RootNode): dos is SugarElement<ShadowRoot> =>
+export const isShadowRoot = (dos: SugarElement<Node>): dos is SugarElement<ShadowRoot> =>
   SugarNode.isDocumentFragment(dos) && Type.isNonNullable((dos.dom as ShadowRoot).host);
 
 /* eslint-disable @tinymce/no-implicit-dom-globals, @typescript-eslint/unbound-method */

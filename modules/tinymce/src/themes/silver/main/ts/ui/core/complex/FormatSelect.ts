@@ -18,17 +18,6 @@ import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest } from './utils/FormatDetection';
 
-const defaultBlocks = (
-  'Paragraph=p;' +
-  'Heading 1=h1;' +
-  'Heading 2=h2;' +
-  'Heading 3=h3;' +
-  'Heading 4=h4;' +
-  'Heading 5=h5;' +
-  'Heading 6=h6;' +
-  'Preformatted=pre'
-);
-
 const getSpec = (editor: Editor): SelectSpec => {
   const fallbackFormat = 'Paragraph';
 
@@ -50,7 +39,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const dataset = buildBasicSettingsDataset(editor, 'block_formats', defaultBlocks, Delimiter.SemiColon);
+  const dataset = buildBasicSettingsDataset(editor, 'block_formats', Delimiter.SemiColon);
 
   return {
     tooltip: 'Blocks',

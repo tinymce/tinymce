@@ -1,30 +1,25 @@
 import { Mouse, UiFinder } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
-import { before, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 interface Scenario {
-  readonly settings: RawEditorSettings;
+  readonly options: RawEditorOptions;
   readonly initial: Array<{ clickOn: string; waitFor: string }>;
   readonly assertAbove: string;
   readonly assertBelow: string;
 }
 
 describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const getBounds = (selector: string) => {
-    const elem = UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+    const elem = UiFinder.findIn<HTMLElement>(SugarBody.body(), selector).getOrDie();
     return Boxes.box(elem);
   };
 
@@ -32,13 +27,13 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     const editor = await McEditor.pFromSettings<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       toolbar_location: 'bottom',
-      ...scenario.settings
+      ...scenario.options
     });
 
     await Arr.foldl(scenario.initial, (p, init) => p.then(async () => {
       Mouse.clickOn(SugarBody.body(), init.clickOn);
       await UiFinder.pWaitForVisible(`Wait for "${init.waitFor}" to be visible`, SugarBody.body(), init.waitFor);
-    }), PromisePolyfill.resolve());
+    }), Promise.resolve());
 
     const upperBoxBounds = getBounds(scenario.assertAbove);
     const lowerBoxBounds = getBounds(scenario.assertBelow);
@@ -48,7 +43,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
 
   context('Check the direction that menus open in when toolbar_location: "bottom"', () => {
     it('Bespoke select menu should open above button', () => pTest({
-      settings: {
+      options: {
         toolbar: 'styleselect'
       },
       initial: [{
@@ -60,7 +55,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('SplitButton menu should open above button', () => pTest({
-      settings: {
+      options: {
         toolbar: 'splitbutton',
         setup: (editor) => {
           editor.ui.registry.addSplitButton('splitbutton', {
@@ -87,7 +82,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('Floating overflow should open above overflow button', () => pTest({
-      settings: {
+      options: {
         width: 500,
         toolbar_mode: 'floating',
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('')
@@ -101,7 +96,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('Menu button in overflow toolbar should open up', () => pTest({
-      settings: {
+      options: {
         width: 500,
         toolbar_mode: 'floating',
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('') + 'align'
@@ -120,7 +115,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('Menubar menu should open above button', () => pTest({
-      settings: {
+      options: {
         width: 500,
         toolbar_mode: 'floating',
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('') + 'align'
@@ -134,7 +129,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
     }));
 
     it('Dropdown menu used in a dialog (i.e. not in the toolbar) should open downwards', () => pTest({
-      settings: {
+      options: {
         setup: (editor) => {
           editor.on('init', () => {
             editor.windowManager.open({

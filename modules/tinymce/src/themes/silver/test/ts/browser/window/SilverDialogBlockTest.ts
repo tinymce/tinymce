@@ -9,7 +9,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as DialogUtils from '../../module/DialogUtils';
 
@@ -17,7 +16,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
   const store = TestHelpers.TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const dialogSpec: Dialog.DialogSpec<{ fred: string }> = {
     title: 'Test dialog',

@@ -11,7 +11,7 @@ import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';
 import * as ListUtils from '../core/ListUtils';
 
@@ -106,8 +106,8 @@ const addControl = (editor: Editor, id: string, tooltip: string, cmd: string, no
 };
 
 const register = (editor: Editor): void => {
-  addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', ListType.OrderedList, Settings.getNumberStyles(editor));
-  addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
+  addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', ListType.OrderedList, Options.getNumberStyles(editor));
+  addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Options.getBulletStyles(editor));
 };
 
 export {

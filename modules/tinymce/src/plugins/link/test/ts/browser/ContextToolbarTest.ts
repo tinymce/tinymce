@@ -5,7 +5,6 @@ import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
     plugins: 'link',
     toolbar: 'link',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   before(() => {
     TestLinkUi.clearHistory();
@@ -35,30 +34,30 @@ describe('browser.tinymce.plugins.link.ContextToolbarTest', () => {
 
   it('TBA: only after setting set to true', async () => {
     const editor = hook.editor();
-    editor.settings.link_context_toolbar = true;
+    editor.options.set('link_context_toolbar', true);
     editor.setContent('<a href="http://www.google.com">google</a>');
     Mouse.trueClickOn(TinyDom.body(editor), 'a');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Link"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Remove link"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Open link"]');
-    await UiFinder.pWaitForState('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com');
+    await UiFinder.pWaitForState<HTMLInputElement>('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com');
   });
 
   it('TBA: shows relative link urls', async () => {
     const editor = hook.editor();
-    editor.settings.link_context_toolbar = true;
+    editor.options.set('link_context_toolbar', true);
     editor.setContent('<a href="#heading-1">heading</a>');
     Mouse.trueClickOn(TinyDom.body(editor), 'a');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Link"]');
-    await UiFinder.pWaitForState('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === '#heading-1');
+    await UiFinder.pWaitForState<HTMLInputElement>('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === '#heading-1');
   });
 
   it('TBA: works with non text elements (e.g. images)', async () => {
     const editor = hook.editor();
-    editor.settings.link_context_toolbar = true;
+    editor.options.set('link_context_toolbar', true);
     editor.setContent('<a href="http://www.google.com/"><img src="image.jpg"></a>');
     Mouse.trueClickOn(TinyDom.body(editor), 'a');
     await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Link"]');
-    await UiFinder.pWaitForState('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com/');
+    await UiFinder.pWaitForState<HTMLInputElement>('check link content', SugarBody.body(), '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com/');
   });
 });

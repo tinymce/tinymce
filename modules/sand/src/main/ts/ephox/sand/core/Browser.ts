@@ -4,7 +4,7 @@ import { Version } from '../detect/Version';
 import { UaInfo } from '../info/UaInfo';
 
 const edge = 'Edge';
-const chrome = 'Chrome';
+const chromium = 'Chromium';
 const ie = 'IE';
 const opera = 'Opera';
 const firefox = 'Firefox';
@@ -12,7 +12,7 @@ const safari = 'Safari';
 
 export interface Browser extends UaInfo {
   readonly isEdge: () => boolean;
-  readonly isChrome: () => boolean;
+  readonly isChromium: () => boolean;
   readonly isIE: () => boolean;
   readonly isOpera: () => boolean;
   readonly isFirefox: () => boolean;
@@ -37,7 +37,7 @@ const nu = (info: UaInfo): Browser => {
     version,
 
     isEdge: isBrowser(edge),
-    isChrome: isBrowser(chrome),
+    isChromium: isBrowser(chromium),
     // NOTE: isIe just looks too weird
     isIE: isBrowser(ie),
     isOpera: isBrowser(opera),
@@ -50,7 +50,7 @@ export const Browser = {
   unknown,
   nu,
   edge: Fun.constant(edge),
-  chrome: Fun.constant(chrome),
+  chromium: Fun.constant(chromium),
   ie: Fun.constant(ie),
   opera: Fun.constant(opera),
   firefox: Fun.constant(firefox),

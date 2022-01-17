@@ -1,25 +1,24 @@
 import { ApproxStructure, Keys, StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
   const BEFORE = true;
   const AFTER = false;
   const START = true;
   const END = false;
 
   const addGeckoBr = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, children: StructAssert[]) => {
-    if (Env.gecko) {
+    if (PlatformDetection.detect().browser.isFirefox()) {
       return [].concat(children).concat(s.element('br', { attrs: { 'data-mce-bogus': str.is('1') }}));
     } else {
       return children;

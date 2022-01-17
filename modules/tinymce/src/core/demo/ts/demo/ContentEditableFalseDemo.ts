@@ -8,8 +8,8 @@ export default () => {
 
   const paintClientRect = (rect, color, id) => {
     const editor: Editor = tinymce.activeEditor;
-    const $ = editor.$;
-    let rectDiv;
+    const dom = editor.dom;
+    let rectDiv: HTMLElement;
     const viewPort = editor.dom.getViewPort();
 
     if (!rect) {
@@ -18,13 +18,14 @@ export default () => {
 
     color = color || 'red';
     id = id || color;
-    rectDiv = $('#' + id);
+    rectDiv = dom.get(id);
 
-    if (!rectDiv[0]) {
-      rectDiv = $('<div></div>').appendTo(editor.getBody());
+    if (!rectDiv) {
+      rectDiv = dom.add(editor.getBody(), 'div');
     }
 
-    rectDiv.attr('id', id).css({
+    dom.setAttrib(rectDiv, 'id', id);
+    dom.setStyles(rectDiv, {
       position: 'absolute',
       left: (rect.left + viewPort.x) + 'px',
       top: (rect.top + viewPort.y) + 'px',
@@ -65,8 +66,8 @@ export default () => {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     add_unload_trigger: false,
     toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
-    ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
-    plugins: [ 'paste', 'list' ],
+    ' | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample',
+    plugins: [ 'list' ],
     content_css: '../css/content_editable.css',
     height: 400
   });
@@ -77,8 +78,8 @@ export default () => {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     add_unload_trigger: false,
     toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
-    ' | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample',
-    plugins: [ 'paste', 'list' ],
+    ' | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample',
+    plugins: [ 'list' ],
     content_css: '../css/content_editable.css'
   });
 

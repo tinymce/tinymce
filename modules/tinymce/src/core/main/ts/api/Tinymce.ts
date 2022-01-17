@@ -11,14 +11,12 @@ import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import BookmarkManager from './dom/BookmarkManager';
 import ControlSelection from './dom/ControlSelection';
-import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils, { DOMUtilsSettings } from './dom/DOMUtils';
 import EventUtils, { EventUtilsConstructor } from './dom/EventUtils';
 import RangeUtils from './dom/RangeUtils';
 import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer, { DomSerializerSettings } from './dom/Serializer';
-import Sizzle from './dom/Sizzle';
 import StyleSheetLoader, { StyleSheetLoaderSettings } from './dom/StyleSheetLoader';
 import TextSeeker from './dom/TextSeeker';
 import DomTreeWalker, { DomTreeWalkerConstructor } from './dom/TreeWalker';
@@ -27,6 +25,7 @@ import EditorCommands, { EditorCommandsConstructor } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import Env from './Env';
+import FakeClipboard from './FakeClipboard';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
 import Rect from './geom/Rect';
@@ -45,18 +44,12 @@ import Resource from './Resource';
 import Shortcuts, { ShortcutsConstructor } from './Shortcuts';
 import ThemeManager from './ThemeManager';
 import UndoManager from './UndoManager';
-import Class from './util/Class';
-import Color, { ColorConstructor } from './util/Color';
 import Delay from './util/Delay';
 import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
 import ImageUploader from './util/ImageUploader';
-import JSON from './util/JSON';
-import JSONP from './util/JSONP';
-import JSONRequest, { JSONRequestConstructor } from './util/JSONRequest';
 import LocalStorage from './util/LocalStorage';
 import Observable from './util/Observable';
-import Promise from './util/Promise';
 import Tools from './util/Tools';
 import URI, { URIConstructor } from './util/URI';
 import VK from './util/VK';
@@ -64,14 +57,14 @@ import XHR from './util/XHR';
 import WindowManager from './WindowManager';
 
 interface DOMUtilsNamespace {
-  new (doc: Document, settings: Partial<DOMUtilsSettings>): DOMUtils;
+  (doc: Document, settings: Partial<DOMUtilsSettings>): DOMUtils;
 
   DOM: DOMUtils;
   nodeIndex: (node: Node, normalized?: boolean) => number;
 }
 
 interface RangeUtilsNamespace {
-  new (dom: DOMUtils): RangeUtils;
+  (dom: DOMUtils): RangeUtils;
 
   compareRanges: (rng1: RangeLikeObject, rng2: RangeLikeObject) => boolean;
   getCaretRangeFromPoint: (clientX: number, clientY: number, doc: Document) => Range;
@@ -80,7 +73,7 @@ interface RangeUtilsNamespace {
 }
 
 interface AddOnManagerNamespace {
-  new <T>(): AddOnManager<T>;
+  <T>(): AddOnManager<T>;
 
   language: string | undefined;
   languageLoad: boolean;
@@ -96,7 +89,7 @@ interface BookmarkManagerNamespace {
 }
 
 interface SaxParserNamespace {
-  new (settings?: SaxParserSettings, schema?: Schema): SaxParser;
+  (settings?: SaxParserSettings, schema?: Schema): SaxParser;
 
   findEndTag: (schema: Schema, html: string, startIndex: number) => number;
 }
@@ -108,65 +101,57 @@ interface TinyMCE extends EditorManager {
   };
 
   util: {
-    Promise: PromiseConstructor;
     Delay: Delay;
     Tools: Tools;
     VK: VK;
     URI: URIConstructor;
-    Class: Class;
     EventDispatcher: EventDispatcherConstructor<any>;
     Observable: Observable<any>;
     I18n: I18n;
     XHR: XHR;
-    JSON: JSON;
-    JSONRequest: JSONRequestConstructor;
-    JSONP: JSONP;
     LocalStorage: Storage;
-    Color: ColorConstructor;
     ImageUploader: ImageUploader;
   };
 
   dom: {
     EventUtils: EventUtilsConstructor;
-    Sizzle: any;
-    DomQuery: DomQueryConstructor;
     TreeWalker: DomTreeWalkerConstructor;
-    TextSeeker: new (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
+    TextSeeker: (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
     DOMUtils: DOMUtilsNamespace;
     ScriptLoader: ScriptLoaderConstructor;
     RangeUtils: RangeUtilsNamespace;
-    Serializer: new (settings: DomSerializerSettings, editor?: Editor) => DomSerializer;
+    Serializer: (settings: DomSerializerSettings, editor?: Editor) => DomSerializer;
     ControlSelection: (selection: EditorSelection, editor: Editor) => ControlSelection;
     BookmarkManager: BookmarkManagerNamespace;
-    Selection: new (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor) => EditorSelection;
-    StyleSheetLoader: new (documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings) => StyleSheetLoader;
+    Selection: (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor) => EditorSelection;
+    StyleSheetLoader: (documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings) => StyleSheetLoader;
     Event: EventUtils;
   };
 
   html: {
-    Styles: new (settings?: StylesSettings, schema?: Schema) => Styles;
+    Styles: (settings?: StylesSettings, schema?: Schema) => Styles;
     Entities: Entities;
     Node: AstNodeConstructor;
-    Schema: new (settings?: SchemaSettings) => Schema;
+    Schema: (settings?: SchemaSettings) => Schema;
     SaxParser: SaxParserNamespace;
-    DomParser: new (settings?: DomParserSettings, schema?: Schema) => DomParser;
-    Writer: new (settings?: WriterSettings) => Writer;
-    Serializer: new (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
+    DomParser: (settings?: DomParserSettings, schema?: Schema) => DomParser;
+    Writer: (settings?: WriterSettings) => Writer;
+    Serializer: (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
   };
 
   AddOnManager: AddOnManagerNamespace;
-  Annotator: new (editor: Editor) => Annotator;
+  Annotator: (editor: Editor) => Annotator;
   Editor: EditorConstructor;
   EditorCommands: EditorCommandsConstructor;
   EditorManager: EditorManager;
   EditorObservable: EditorObservable;
   Env: Env;
   FocusManager: FocusManager;
-  Formatter: new (editor: Editor) => Formatter;
-  NotificationManager: new (editor: Editor) => NotificationManager;
+  Formatter: (editor: Editor) => Formatter;
+  NotificationManager: (editor: Editor) => NotificationManager;
   Shortcuts: ShortcutsConstructor;
-  UndoManager: new (editor: Editor) => UndoManagerType;
-  WindowManager: new (editor: Editor) => WindowManager;
+  UndoManager: (editor: Editor) => UndoManagerType;
+  WindowManager: (editor: Editor) => WindowManager;
 
   // Global instances
   DOM: DOMUtils;
@@ -175,6 +160,7 @@ interface TinyMCE extends EditorManager {
   ThemeManager: ThemeManager;
   IconManager: IconManager;
   Resource: Resource;
+  FakeClipboard: FakeClipboard;
 
   // Global utility functions
   trim: Tools['trim'];
@@ -187,19 +173,10 @@ interface TinyMCE extends EditorManager {
   grep: Tools['grep'];
   inArray: Tools['inArray'];
   extend: Tools['extend'];
-  create: Tools['create'];
   walk: Tools['walk'];
-  createNS: Tools['createNS'];
   resolve: Tools['resolve'];
   explode: Tools['explode'];
   _addCacheSuffix: Tools['_addCacheSuffix'];
-
-  // Legacy browser detection
-  isOpera: boolean;
-  isWebKit: boolean;
-  isIE: false | number;
-  isGecko: boolean;
-  isMac: boolean;
 }
 
 /**
@@ -220,28 +197,20 @@ const publicApi = {
   },
 
   util: {
-    Promise,
     Delay,
     Tools,
     VK,
     URI,
-    Class,
     EventDispatcher,
     Observable,
     I18n,
     XHR,
-    JSON,
-    JSONRequest,
-    JSONP,
     LocalStorage,
-    Color,
     ImageUploader
   },
 
   dom: {
     EventUtils,
-    Sizzle,
-    DomQuery,
     TreeWalker: DomTreeWalker,
     TextSeeker,
     DOMUtils,
@@ -287,6 +256,7 @@ const publicApi = {
   ThemeManager,
   IconManager,
   Resource,
+  FakeClipboard,
 
   // Global utility functions
   trim: Tools.trim,
@@ -299,19 +269,10 @@ const publicApi = {
   grep: Tools.grep,
   inArray: Tools.inArray,
   extend: Tools.extend,
-  create: Tools.create,
   walk: Tools.walk,
-  createNS: Tools.createNS,
   resolve: Tools.resolve,
   explode: Tools.explode,
-  _addCacheSuffix: Tools._addCacheSuffix,
-
-  // Legacy browser detection
-  isOpera: Env.opera,
-  isWebKit: Env.webkit,
-  isIE: Env.ie,
-  isGecko: Env.gecko,
-  isMac: Env.mac
+  _addCacheSuffix: Tools._addCacheSuffix
 };
 
 const tinymce: TinyMCE = Tools.extend(EditorManager, publicApi);

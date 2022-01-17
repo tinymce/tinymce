@@ -5,7 +5,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('Init events order test', () => {
   const events: string[] = [];
@@ -23,7 +22,7 @@ describe('Init events order test', () => {
     setup: (editor) => {
       editor.on('preinit addeditor scriptsloaded init visualaid loadcontent beforesetcontent setcontent postrender', addEvent);
     }
-  }, [ Theme ]);
+  }, []);
 
   after(() => {
     EditorManager.off('setupeditor addeditor', addEvent);

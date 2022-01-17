@@ -1,5 +1,4 @@
 import { Optionals, Results } from '@ephox/katamari';
-import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as Conversions from '../util/Conversions';
 import { BinaryReader } from './BinaryReader';

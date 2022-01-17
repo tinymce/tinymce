@@ -35,11 +35,9 @@ const dfreeBodyConfig = {
   plugins: [
     'autolink',
     'codesample',
-    'contextmenu',
     'link',
     'lists',
     'table',
-    'textcolor',
     'image',
     'quickbars'
   ],

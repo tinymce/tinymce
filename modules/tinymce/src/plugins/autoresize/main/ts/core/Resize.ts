@@ -15,7 +15,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 /**
  * This class contains all core logic for the autoresize plugin.
@@ -88,8 +88,9 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   }
 
   const docEle = doc.documentElement;
-  const resizeBottomMargin = Settings.getAutoResizeBottomMargin(editor);
-  let resizeHeight = Settings.getAutoResizeMinHeight(editor);
+  const resizeBottomMargin = Options.getAutoResizeBottomMargin(editor);
+  const minHeight = Options.getMinHeight(editor) ?? editor.getElement().offsetHeight;
+  let resizeHeight = minHeight;
 
   // Calculate outer height of the doc element using CSS styles
   const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
@@ -97,8 +98,6 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   let contentHeight = docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
 
   // Make sure we have a valid height
-  // Note: Previously we had to do some fallbacks here for IE/Webkit, as the height calculation above didn't work.
-  //       However using the latest supported browsers (IE 11 & Safari 11), the fallbacks were no longer needed and were removed.
   if (contentHeight < 0) {
     contentHeight = 0;
   }
@@ -109,12 +108,12 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   const chromeHeight = containerHeight - contentAreaHeight;
 
   // Don't make it smaller than the minimum height
-  if (contentHeight + chromeHeight > Settings.getAutoResizeMinHeight(editor)) {
+  if (contentHeight + chromeHeight > minHeight) {
     resizeHeight = contentHeight + chromeHeight;
   }
 
   // If a maximum height has been defined don't exceed this height
-  const maxHeight = Settings.getAutoResizeMaxHeight(editor);
+  const maxHeight = Options.getMaxHeight(editor);
   if (maxHeight && resizeHeight > maxHeight) {
     resizeHeight = maxHeight;
     toggleScrolling(editor, true);
@@ -131,7 +130,7 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 
     // iPadOS has an issue where it won't rerender the body when the iframe is resized
     // however if we reset the scroll position then it re-renders correctly
-    if (Env.browser.isSafari() && Env.mac) {
+    if (Env.browser.isSafari() && (Env.os.isMacOS() || Env.os.isiOS())) {
       const win = editor.getWin();
       win.scrollTo(win.pageXOffset, win.pageYOffset);
     }
@@ -143,7 +142,7 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
     // So we need to continue to resize the iframe down until the size gets fixed
-    if (Env.webkit && deltaSize < 0) {
+    if ((Env.browser.isSafari() || Env.browser.isChromium()) && deltaSize < 0) {
       resize(editor, oldSize, trigger);
     }
   }
@@ -151,7 +150,7 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
 
 const setup = (editor: Editor, oldSize: Cell<number>): void => {
   editor.on('init', () => {
-    const overflowPadding = Settings.getAutoResizeOverflowPadding(editor);
+    const overflowPadding = Options.getAutoResizeOverflowPadding(editor);
     const dom = editor.dom;
 
     // Disable height 100% on the root document element otherwise we'll end up resizing indefinitely
@@ -171,7 +170,7 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
     resize(editor, oldSize, e);
   });
 
-  if (Settings.shouldAutoResizeOnInit(editor)) {
+  if (Options.shouldAutoResizeOnInit(editor)) {
     editor.on('init', () => {
       // Hit it 20 times in 100 ms intervals
       wait(editor, oldSize, 20, 100, () => {

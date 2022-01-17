@@ -104,10 +104,9 @@ describe('ResizeTest', () => {
     const warehouse = Warehouse.fromTable(table);
     const widths = tableSize.getWidths(warehouse, tableSize);
 
-    // percentage width of this table is 100% but phantom treats this as around 804 pixels when we're doing conversions
-    // we have pixel width cells of 400px, so the actual widths of the cells in percentages
+    // percentage width of this table is 100% but pixel maths can lead to rounding errors
     // in order for us to pass this test, we ensure that the difference between what we wanted (50%)
-    // and the actual (50.125% and 49.825% respectively) are within a tolerance of 1%
+    // and the actual are within a tolerance of 1%
     Arr.each([ 50, 50 ], (expected, i) => {
       assert.approximately(widths[i], expected, 1);
     });

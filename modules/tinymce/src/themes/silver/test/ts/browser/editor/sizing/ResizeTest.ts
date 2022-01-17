@@ -5,7 +5,6 @@ import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { resizeToPos } from '../../../module/UiUtils';
 
@@ -19,7 +18,7 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
     width: 400,
     max_height: 500,
     max_width: 500
-  }, [ Theme ]);
+  }, []);
 
   const assertEditorSize = (container: SugarElement<HTMLElement>, expectedWidth: number, expectedHeight: number) => {
     assert.equal(container.dom.offsetHeight, expectedHeight, `Editor should be ${expectedHeight}px high`);
@@ -39,8 +38,8 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
     const editor = hook.editor();
     const container = TinyDom.container(editor);
     Css.setAll(container, {
-      width: editor.getParam('width') + 'px',
-      height: editor.getParam('height') + 'px',
+      width: editor.options.get('width') + 'px',
+      height: editor.options.get('height') + 'px',
     });
   });
 

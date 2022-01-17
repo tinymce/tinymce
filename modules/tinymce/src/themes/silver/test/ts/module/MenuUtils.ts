@@ -4,8 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 export interface OpenNestedMenus {
   readonly label: string;
@@ -51,10 +50,10 @@ const pOpenMenu = (label: string, menuText: string) => {
 const pOpenNestedMenus = (menus: OpenNestedMenus[]) =>
   Arr.foldl(menus, (p, menu) => p.then(async () => {
     await pOpenMenuWithSelector(menu.label, menu.selector);
-  }), PromisePolyfill.resolve());
+  }), Promise.resolve());
 
 const assertMoreDrawerInViewport = (type: ToolbarMode) => {
-  const toolbar = UiFinder.findIn(SugarBody.body(), getToolbarSelector(type, true)).getOrDie();
+  const toolbar = UiFinder.findIn<HTMLDivElement>(SugarBody.body(), getToolbarSelector(type, true)).getOrDie();
   const winBox = Boxes.win();
   const drawerBox = Boxes.box(toolbar);
   // -1 from the bottom to account for the negative margin

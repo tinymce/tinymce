@@ -22,15 +22,15 @@ A webserver to run demos, npm, webpack is required to run and develop alloy
 There are four kinds of tests that alloy runs:
 
 * atomic tests
-* phantomjs tests
+* headless tests
 * browser tests
 * webdriver tests
 
-### Running PhantomJS Tests
+### Running Console Tests
 
 `$ yarn run test`
 
-Note, will run phantomjs tests.
+This will run the console tests in chrome-headless.
 
 ### Running Browser Tests
 

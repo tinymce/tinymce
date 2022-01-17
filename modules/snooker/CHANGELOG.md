@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+
+### Fixed
+- All `th` rows in `tfoot` sections were incorrectly detected as header rows.
+
+### Removed
+- Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.
+
 ## 10.0.0 - 2021-10-11
 
 ### Changed

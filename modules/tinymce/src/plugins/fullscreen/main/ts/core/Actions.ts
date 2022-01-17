@@ -5,16 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
+import { Cell, Fun, Optional, Singleton, Throttler } from '@ephox/katamari';
 import { Css, DomEvent, EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Delay from 'tinymce/core/api/util/Delay';
 
 import * as Events from '../api/Events';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { exitFullscreen, getFullscreenchangeEventName, getFullscreenRoot, isFullscreenElement, requestFullscreen } from './NativeFullscreen';
 import * as Thor from './Thor';
 
@@ -65,16 +64,16 @@ const viewportUpdate = WindowVisualViewport.get().fold(
       });
     };
 
-    const update = Delay.throttle(() => {
+    const update = Throttler.first(() => {
       refreshScroll();
       refreshVisualViewport();
     }, 50);
 
     const bind = (element: SugarElement<HTMLElement>) => {
       editorContainer.set(element);
-      update();
-      resizeBinder.set(WindowVisualViewport.bind('resize', update));
-      scrollBinder.set(WindowVisualViewport.bind('scroll', update));
+      update.throttle();
+      resizeBinder.set(WindowVisualViewport.bind('resize', update.throttle));
+      scrollBinder.set(WindowVisualViewport.bind('scroll', update.throttle));
     };
 
     const unbind = () => {
@@ -134,7 +133,7 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
 
   if (!fullscreenInfo) {
     const fullscreenChangeHandler = DomEvent.bind(Traverse.owner(fullscreenRoot), getFullscreenchangeEventName(), (_evt) => {
-      if (Settings.getFullscreenNative(editor)) {
+      if (Options.getFullscreenNative(editor)) {
         // if we have exited browser fullscreen with Escape then exit editor fullscreen too
         if (!isFullscreenElement(fullscreenRoot) && fullscreenState.get() !== null) {
           toggleFullscreen(editor, fullscreenState);
@@ -167,13 +166,13 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editor.on('remove', cleanup);
 
     fullscreenState.set(newFullScreenInfo);
-    if (Settings.getFullscreenNative(editor)) {
+    if (Options.getFullscreenNative(editor)) {
       requestFullscreen(fullscreenRoot);
     }
     Events.fireFullscreenStateChanged(editor, true);
   } else {
     fullscreenInfo.fullscreenChangeHandler.unbind();
-    if (Settings.getFullscreenNative(editor) && isFullscreenElement(fullscreenRoot)) {
+    if (Options.getFullscreenNative(editor) && isFullscreenElement(fullscreenRoot)) {
       exitFullscreen(Traverse.owner(fullscreenRoot));
     }
     iframeStyle.width = fullscreenInfo.iframeWidth;

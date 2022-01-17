@@ -71,7 +71,6 @@ export interface DomParserSettings {
   inline_styles?: boolean;
   blob_cache?: BlobCache;
   document?: Document;
-  images_dataimg_filter?: (img: HTMLImageElement) => boolean;
 }
 
 interface DomParser {

@@ -7,13 +7,11 @@ import { McEditor } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.advlist.ToolbarButtonStructureTest', () => {
   before(() => {
     AdvListPlugin();
     ListsPlugin();
-    Theme();
   });
 
   Arr.each([

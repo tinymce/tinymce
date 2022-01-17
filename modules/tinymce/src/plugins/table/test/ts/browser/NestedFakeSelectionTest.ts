@@ -5,7 +5,6 @@ import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertSelectedCells, selectWithKeyboard, selectWithMouse } from '../module/test/TableTestUtils';
 
@@ -24,7 +23,7 @@ describe('browser.tinymce.plugins.table.NestedFakeSelectionTest', () => {
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const basicNestedTable =
   '<table>' +

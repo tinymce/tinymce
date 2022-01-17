@@ -4,12 +4,10 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', () => {
   before(() => {
     Plugin();
-    Theme();
   });
 
   const testingPrefix = Math.random().toString(36).substring(7);

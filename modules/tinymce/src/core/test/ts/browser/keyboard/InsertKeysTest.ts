@@ -1,26 +1,18 @@
-import { Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, Insert, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
-  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const fireInsert = (editor: Editor) => {
     editor.fire('input', { isComposing: false } as InputEvent);
-  };
-
-  const fireKeyPress = (editor: Editor) => {
-    editor.fire('keypress');
   };
 
   const insertEmptyTextNodesAt = (editor: Editor, count: number, path: number[], insert: (marker: SugarElement, element: SugarElement) => void) => {
@@ -82,7 +74,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 2 ], 0);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
-        TinyAssertions.assertContent(editor, '<p>a<br />&nbsp;b</p>');
+        TinyAssertions.assertContent(editor, '<p>a<br>&nbsp;b</p>');
       });
 
       it('Insert at beginning of text node with leading nbsp within inline element followed by br', () => {
@@ -91,7 +83,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 2, 0 ], 0, [ 0, 2, 0 ], 0);
-        TinyAssertions.assertContent(editor, '<p>a<br /><em>&nbsp;b</em></p>');
+        TinyAssertions.assertContent(editor, '<p>a<br><em>&nbsp;b</em></p>');
       });
     });
 
@@ -189,7 +181,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
-        TinyAssertions.assertContent(editor, '<p>&nbsp;<img src="about:blank" /></p>');
+        TinyAssertions.assertContent(editor, '<p>&nbsp;<img src="about:blank"></p>');
       });
 
       it('Insert nbsp between two images should remove nbsp', () => {
@@ -198,7 +190,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 1 ], 1);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
-        TinyAssertions.assertContent(editor, '<p><img src="about:blank" /> <img src="about:blank" /></p>');
+        TinyAssertions.assertContent(editor, '<p><img src="about:blank"> <img src="about:blank"></p>');
       });
 
       it('Insert nbsp after an image at the end of a block should not remove the nbsp', () => {
@@ -207,20 +199,8 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 1 ], 1);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
-        TinyAssertions.assertContent(editor, '<p><img src="about:blank" />&nbsp;</p>');
+        TinyAssertions.assertContent(editor, '<p><img src="about:blank">&nbsp;</p>');
       });
-    });
-
-    it('Insert in text on IE using keypress', async function () {
-      if (!browser.isIE()) {
-        this.skip();
-      }
-      const editor = hook.editor();
-      editor.setContent('<p>a&nbsp;b</p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 3);
-      fireKeyPress(editor);
-      await Waiter.pTryUntil('', () => TinyAssertions.assertContent(editor, '<p>a b</p>'), 10, 1000);
-      TinyAssertions.assertSelection(editor, [ 0, 0 ], 3, [ 0, 0 ], 3);
     });
 
     context('Nbsp in pre', () => {

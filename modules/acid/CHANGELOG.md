@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added a new `rgbaToHexString` API, to convert RGBA to Hex.
+
+### Changed
+- Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+
+### Fixed
+- Fix RGBA and RGB parsing to account for whitespace.
+
+### Removed
+- Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.
+
 ## 4.0.0 - 2021-08-26
 
 ### Added

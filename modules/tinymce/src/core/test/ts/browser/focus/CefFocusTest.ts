@@ -1,15 +1,11 @@
 import { Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.focus.CefFocusTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const pCreateInlineEditor = (html: string) => McEditor.pFromHtml<Editor>(html, {
     menubar: false,

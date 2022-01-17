@@ -5,13 +5,12 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
-import Theme from 'tinymce/themes/silver/Theme';
 
-describe('browser.tinymce.core.newline.InsertNewLine', () => {
+describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const bookmarkSpan = '<span data-mce-type="bookmark" id="mce_2_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>';
 
@@ -83,11 +82,11 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
 
   context('br_newline_selector', () => {
     before(() => {
-      hook.editor().settings.br_newline_selector = 'p,div.test';
+      hook.editor().options.set('br_newline_selector', 'p,div.test');
     });
 
     after(() => {
-      delete hook.editor().settings.br_newline_selector;
+      hook.editor().options.unset('br_newline_selector');
     });
 
     it('Insert newline where br is forced (paragraph)', () => {
@@ -96,7 +95,7 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       insertNewline(editor, { });
       editor.nodeChanged();
-      TinyAssertions.assertContent(editor, '<p>a<br />b</p>');
+      TinyAssertions.assertContent(editor, '<p>a<br>b</p>');
     });
 
     it('Insert newline where br is forced (div)', () => {
@@ -105,7 +104,7 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       insertNewline(editor, { });
       editor.nodeChanged();
-      TinyAssertions.assertContent(editor, '<div class="test">a<br />b</div>');
+      TinyAssertions.assertContent(editor, '<div class="test">a<br>b</div>');
     });
 
     it('Insert newline where br is not forced', () => {
@@ -120,11 +119,11 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
 
   context('no_newline_selector', () => {
     before(() => {
-      hook.editor().settings.no_newline_selector = 'p,div.test';
+      hook.editor().options.set('no_newline_selector', 'p,div.test');
     });
 
     after(() => {
-      delete hook.editor().settings.no_newline_selector;
+      hook.editor().options.unset('no_newline_selector');
     });
 
     it('Insert newline where newline is blocked (paragraph)', () => {
@@ -160,7 +159,7 @@ describe('browser.tinymce.core.newline.InsertNewLine', () => {
     editor.setContent('<p><a href="#">a<img src="about:blank" /></a></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     insertNewline(editor, { });
-    TinyAssertions.assertContent(editor, '<p><a href="#">a</a></p><p><a href="#"><img src="about:blank" /></a></p>');
+    TinyAssertions.assertContent(editor, '<p><a href="#">a</a></p><p><a href="#"><img src="about:blank"></a></p>');
     TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
   });
 });

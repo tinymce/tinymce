@@ -5,17 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Type } from '@ephox/katamari';
-import { Selectors, SugarElement } from '@ephox/sugar';
+import { Arr, Obj, Throttler, Type } from '@ephox/katamari';
+import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 
-import * as CefUtils from '../../dom/CefUtils';
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';
 import Editor from '../Editor';
 import Env from '../Env';
 import * as Events from '../Events';
-import * as Settings from '../Settings';
-import Delay from '../util/Delay';
+import * as Options from '../Options';
 import { EditorEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
@@ -57,8 +55,6 @@ interface SelectedResizeHandle extends ResizeHandle {
  * @private
  * @class tinymce.dom.ControlSelection
  */
-
-const isContentEditableFalse = NodeType.isContentEditableFalse;
 
 const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSelection => {
   const elementSelectionAttr = 'data-mce-selected';
@@ -119,7 +115,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   };
 
   const isResizable = (elm: Element) => {
-    const selector = Settings.getObjectResizing(editor);
+    const selector = Options.getObjectResizing(editor);
 
     if (!selector) {
       return false;
@@ -183,7 +179,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     width = width < 5 ? 5 : width;
     height = height < 5 ? 5 : height;
 
-    if ((isImage(selectedElm) || isMedia(selectedElm)) && Settings.getResizeImgProportional(editor) !== false) {
+    if ((isImage(selectedElm) || isMedia(selectedElm)) && Options.getResizeImgProportional(editor) !== false) {
       proportional = !VK.modifierPressed(e);
     } else {
       proportional = VK.modifierPressed(e);
@@ -380,13 +376,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
           'style': 'cursor:' + name + '-resize; margin:0; padding:0'
         });
 
-        // Hides IE move layer cursor
-        // If we set it on Chrome we get this wounderful bug: #6725
-        // Edge doesn't have this issue however setting contenteditable will move the selection to that element on Edge 17 see #TINY-1679
-        if (Env.ie === 11) {
-          handleElm.contentEditable = false;
-        }
-
         dom.bind(handleElm, 'mousedown', (e) => {
           e.stopImmediatePropagation();
           e.preventDefault();
@@ -450,7 +439,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     });
 
     controlElm = e.type === 'mousedown' ? e.target : selection.getNode();
-    controlElm = dom.$(controlElm).closest('table,img,figure.image,hr,video,span.mce-preview-object')[0];
+    controlElm = SelectorFind.closest(SugarElement.fromDom(controlElm), 'table,img,figure.image,hr,video,span.mce-preview-object').getOrUndefined()?.dom;
 
     if (isChildOrEqual(controlElm, rootElement)) {
       disableGeckoResize();
@@ -463,10 +452,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
 
     hideResizeRect();
-  };
-
-  const isWithinContentEditableFalse = (elm) => {
-    return isContentEditableFalse(CefUtils.getContentEditableRoot(editor.getBody(), elm));
   };
 
   const unbindResizeHandleEvents = () => {
@@ -490,64 +475,19 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   editor.on('init', () => {
     disableGeckoResize();
 
-    // Sniff sniff, hard to feature detect this stuff
-    if (Env.browser.isIE() || Env.browser.isEdge()) {
-      // Needs to be mousedown for drag/drop to work on IE 11
-      // Needs to be click on Edge to properly select images
-      editor.on('mousedown click', (e) => {
-        const target = e.target, nodeName = target.nodeName;
-
-        if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName) && !isWithinContentEditableFalse(target)) {
-          if (e.button !== 2) {
-            editor.selection.select(target, nodeName === 'TABLE');
-          }
-
-          // Only fire once since nodeChange is expensive
-          if (e.type === 'mousedown') {
-            editor.nodeChanged();
-          }
-        }
-      });
-
-      const handleMSControlSelect = (e) => {
-        const delayedSelect = (node: Node) => {
-          Delay.setEditorTimeout(editor, () => editor.selection.select(node));
-        };
-
-        if (isWithinContentEditableFalse(e.target) || NodeType.isMedia(e.target)) {
-          e.preventDefault();
-          delayedSelect(e.target);
-          return;
-        }
-
-        if (/^(TABLE|IMG|HR)$/.test(e.target.nodeName)) {
-          e.preventDefault();
-
-          // This moves the selection from being a control selection to a text like selection like in WebKit #6753
-          // TODO: Fix this the day IE works like other browsers without this nasty native ugly control selections.
-          if (e.target.tagName === 'IMG') {
-            delayedSelect(e.target);
-          }
-        }
-      };
-
-      dom.bind(rootElement, 'mscontrolselect', handleMSControlSelect);
-      editor.on('remove', () => dom.unbind(rootElement, 'mscontrolselect', handleMSControlSelect));
-    }
-
-    const throttledUpdateResizeRect = Delay.throttle((e) => {
+    const throttledUpdateResizeRect = Throttler.first((e) => {
       if (!editor.composing) {
         updateResizeRect(e);
       }
-    });
+    }, 0);
 
-    editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect);
+    editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect.throttle);
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', (e) => {
       // Don't update the resize rect while composing since it blows away the IME see: #2710
       if (selectedElm && selectedElm.nodeName === 'TABLE') {
-        throttledUpdateResizeRect(e);
+        throttledUpdateResizeRect.throttle(e);
       }
     });
 

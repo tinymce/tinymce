@@ -1,5 +1,5 @@
 import { Optional, Type } from '@ephox/katamari';
-import Promise from '@ephox/wrap-promise-polyfill';
+import { Ready, SugarElement } from '@ephox/sugar';
 
 import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
@@ -15,35 +15,12 @@ const imageToBlob = (image: HTMLImageElement): Promise<Blob> => {
 };
 
 const blobToImage = (blob: Blob): Promise<HTMLImageElement> => {
-  return new Promise((resolve, reject) => {
-    const blobUrl = URL.createObjectURL(blob);
+  const blobUrl = URL.createObjectURL(blob);
 
-    const image = new Image();
-
-    const removeListeners = () => {
-      image.removeEventListener('load', loaded);
-      image.removeEventListener('error', error);
-    };
-
-    const loaded = () => {
-      removeListeners();
-      resolve(image);
-    };
-
-    const error = () => {
-      removeListeners();
-      reject('Unable to load data of type ' + blob.type + ': ' + blobUrl);
-    };
-
-    image.addEventListener('load', loaded);
-    image.addEventListener('error', error);
-    image.src = blobUrl;
-
-    if (image.complete) {
-      // Need a timeout due to IE 11 not setting the complete state correctly
-      setTimeout(loaded, 0);
-    }
-  });
+  const image = new Image();
+  image.src = blobUrl;
+  // I guess this is a good starting point to use sugar more in this library
+  return Ready.image(SugarElement.fromDom<HTMLImageElement>(image)).then((s) => s.dom);
 };
 
 const anyUriToBlob = (url: string): Promise<Blob> => {

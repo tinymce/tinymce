@@ -6,16 +6,16 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { SetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import { SetSelectionContentArgs } from 'tinymce/core/content/ContentTypes';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.selection.SetSelectionContentTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
-  const setContentOverride = (editor: Editor, content: string, overrideContent: string, args: SetSelectionContent.SelectionSetContentArgs) => {
+  const setContentOverride = (editor: Editor, content: string, overrideContent: string, args: Partial<SetSelectionContentArgs>) => {
     const handler = (e: EditorEvent<SetContentEvent>) => {
       if (e.selection === true) {
         e.preventDefault();
@@ -292,6 +292,6 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
 
     SetSelectionContent.setContent(editor, '<img src="" onload="alert(1)">');
 
-    assert.equal(lastSetContent.content, '<img src="" />');
+    assert.equal(lastSetContent.content, '<img src="">');
   });
 });

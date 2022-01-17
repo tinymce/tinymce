@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -13,7 +12,7 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     toolbar: 'tableprops',
     base_url: '/project/tinymce/js/tinymce',
     table_advtab: true
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   // Table html structure
   const htmlEmptyTable = '<table><tr><td>X</td></tr></table>';

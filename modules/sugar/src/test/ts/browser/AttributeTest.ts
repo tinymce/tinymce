@@ -6,15 +6,15 @@ import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import Div from 'ephox/sugar/test/Div';
 
-type AttrFn<K, V> = (element: SugarElement<any>, k: K, v: V) => void;
+type AttrFn<K, V> = (element: SugarElement<HTMLElement>, k: K, v: V) => void;
 type InvalidValue<V> = V | null | undefined | {};
 
 UnitTest.test('AttributeTest', () => {
   const c = Div();
 
-  const checkErr = <K, V>(f: AttrFn<K, V>, element: SugarElement, k: K, v?: InvalidValue<V>) => {
+  const checkErr = <K, V>(f: AttrFn<K, V>, element: SugarElement<Node>, k: K, v?: InvalidValue<V>) => {
     try {
-      f(element, k, v as V);
+      f(element as SugarElement<HTMLElement>, k, v as V);
     } catch (e) {
       // expected
       return;

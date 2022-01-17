@@ -4,12 +4,10 @@ import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.themes.silver.editor.SilverEditorDirectionalityTest', () => {
   before(() => {
-    Theme();
     EditorManager.addI18n('ar', {
       Bold: 'Bold test',
       _dir: 'rtl'
@@ -19,7 +17,7 @@ describe('browser.tinymce.themes.silver.editor.SilverEditorDirectionalityTest', 
   const setContent = (editor: Editor, content: string) =>
     editor.editorCommands.execCommand('mceSetContent', false, content);
 
-  const pTest = async (config: RawEditorSettings, label: string, editorStructure: StructAssert) => {
+  const pTest = async (config: RawEditorOptions, label: string, editorStructure: StructAssert) => {
     const editor = await McEditor.pFromSettings<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       ...config

@@ -4,7 +4,6 @@ import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/template/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pInsertTemplate } from '../module/InsertTemplate';
 import { Settings } from '../module/Settings';
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     plugins: 'template',
     toolbar: 'template',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const { addSettings, cleanupSettings } = Settings(hook);
 
@@ -52,7 +51,7 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
       templates: [{ title: 'a', description: '<strong>b</strong>', url: '/project/tinymce/src/plugins/template/test/html/test_template.html' }]
     });
     await pInsertTemplate(editor, async (dialogEl) => {
-      await UiFinder.pWaitForState('iframe is loaded', dialogEl, 'iframe', (elm) => {
+      await UiFinder.pWaitForState<HTMLIFrameElement>('iframe is loaded', dialogEl, 'iframe', (elm) => {
         const iframeDoc = elm.dom.contentDocument || elm.dom.contentWindow.document;
         return iframeDoc.body.firstChild !== null;
       });

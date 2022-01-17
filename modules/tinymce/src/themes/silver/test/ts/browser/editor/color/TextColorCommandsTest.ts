@@ -1,25 +1,16 @@
 import { afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorCommandsTest', () => {
-  before(function () {
-    const browser = PlatformDetection.detect().browser;
-    if (browser.isIE()) {
-      this.skip();
-    }
-  });
-
   const state = Cell(null);
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   before(() => {
     const editor = hook.editor();

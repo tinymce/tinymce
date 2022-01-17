@@ -11,8 +11,7 @@ import { Focus, SugarElement } from '@ephox/sugar';
 import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
-import * as Settings from './Settings';
-import Delay from './util/Delay';
+import * as Options from './Options';
 
 export interface NotificationManagerImpl {
   open: (spec: NotificationSpec, closeCallback?: () => void) => NotificationApi;
@@ -144,7 +143,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
 
   const registerEvents = (editor: Editor) => {
     editor.on('SkinLoaded', () => {
-      const serviceMessage = Settings.getServiceMessage(editor);
+      const serviceMessage = Options.getServiceMessage(editor);
 
       if (serviceMessage) {
         // Ensure we pass false for fireEvent so that service message cannot be altered.
@@ -163,7 +162,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
     // NodeChange is needed for inline mode and autoresize as the positioning is done
     // from the bottom up, which changes when the content in the editor changes.
     editor.on('show ResizeEditor ResizeWindow NodeChange', () => {
-      Delay.requestAnimationFrame(reposition);
+      requestAnimationFrame(reposition);
     });
 
     editor.on('remove', () => {

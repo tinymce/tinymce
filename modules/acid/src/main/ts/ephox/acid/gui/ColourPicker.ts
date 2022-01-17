@@ -69,7 +69,7 @@ const makeFactory = (
 
     const updateSlider = (anyInSystem: AlloyComponent, _hex: Hex, hue: number) => {
       memSlider.getOpt(anyInSystem).each((slider) => {
-        Slider.setValue(slider, { y: hueDegreesToSlider(hue) });
+        Slider.setValue(slider, hueDegreesToSlider(hue));
       });
     };
 
@@ -107,7 +107,7 @@ const makeFactory = (
     const onSliderUpdate = () => {
       const updates = [ updatePalette, updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>) => {
-        const hue = hueSliderToDegrees(simulatedEvent.event.value.y);
+        const hue = hueSliderToDegrees(simulatedEvent.event.value);
         const oldRgb = state.paletteRgba.get();
         const oldHsv = HsvColour.fromRgb(oldRgb);
         const newHsv = HsvColour.hsvColour(hue, oldHsv.saturation, oldHsv.value);

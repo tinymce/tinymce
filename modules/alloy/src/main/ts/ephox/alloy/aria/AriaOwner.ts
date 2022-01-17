@@ -2,8 +2,8 @@ import { build, LinkableAttribute } from "./AriaManager";
 import { Optional } from '@ephox/katamari';
 import { Attribute, PredicateFind, SelectorFind, SugarElement, SugarNode, SugarShadowDom } from '@ephox/sugar';
 
-const find = (queryElem: SugarElement): Optional<SugarElement> => {
-  const dependent: Optional<SugarElement> = PredicateFind.closest(queryElem, (elem) => {
+const find = (queryElem: SugarElement<Node>): Optional<SugarElement<Element>> => {
+  const dependent = PredicateFind.closest(queryElem, (elem): elem is SugarElement<Element> => {
     if (!SugarNode.isElement(elem)) {
       return false;
     }

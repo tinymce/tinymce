@@ -25,7 +25,7 @@ A module for creating a basic testing environment where an editor with specified
 
 ## TinyScenarios
 
-A `Scenario` is a combination of initial content and selection. `TinyScenarios` uses `agar`'s generators based on [`jsverify`](https://www.npmjs.com/package/jsverify) structures. It can generate random content and selections for property-based testing.
+A `Scenario` is a combination of initial content and selection. `TinyScenarios` uses `agar`'s generators based on [`fast-check`](https://github.com/dubzzz/fast-check) structures. It can generate random content and selections for property-based testing.
 
 ## TinyUi
 

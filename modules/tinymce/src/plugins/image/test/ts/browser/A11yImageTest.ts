@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { fillActiveDialog, generalTabSelectors, ImageDialogData } from '../module/Helpers';
 
@@ -16,11 +15,11 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     a11y_advanced_options: true
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pInitAndOpenDialog = async (editor: Editor, content: string, cursorPos: Cursors.RangeSpec | Cursors.CursorSpec) => {
-    editor.settings.image_advtab = true;
-    editor.settings.image_dimensions = false;
+    editor.options.set('image_advtab', true);
+    editor.options.set('image_dimensions', false);
     editor.setContent(content);
     TinySelections.setSelectionFrom(editor, cursorPos);
     editor.execCommand('mceImage');
@@ -48,7 +47,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
   const pTestUiStateEnabled = async (editor: Editor, alt: string) => {
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    const altElem = UiFinder.findIn(SugarBody.body(), generalTabSelectors.alt).getOrDie();
+    const altElem = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), generalTabSelectors.alt).getOrDie();
     const value = Value.get(altElem);
     assert.equal(value, alt, 'Assert input value');
     TinyUiActions.submitDialog(editor);
@@ -77,7 +76,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
           value: 'src'
         }
       },
-      '<p><img src="src" alt="alt" /></p>'
+      '<p><img src="src" alt="alt"></p>'
     );
     await pTestUiStateEnabled(editor, 'alt');
   });
@@ -92,7 +91,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
         },
         decorative: true
       },
-      '<p><img role="presentation" src="src" alt="" /></p>'
+      '<p><img role="presentation" src="src" alt=""></p>'
     );
     await pTestUiStateDisabled(editor);
   });
@@ -108,7 +107,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
         },
         decorative: true
       },
-      '<p><img role="presentation" src="src" alt="" /></p>'
+      '<p><img role="presentation" src="src" alt=""></p>'
     );
     await pTestUiStateDisabled(editor);
   });
@@ -129,7 +128,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
         finish: { element: [ 0 ], offset: 1 }
       },
       '<p><img role="presentation" src="src" alt="" /></p>',
-      '<p><img src="src" alt="alt" /></p>'
+      '<p><img src="src" alt="alt"></p>'
     );
     await pTestUiStateEnabled(editor, 'alt');
   });
@@ -150,7 +149,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
         finish: { element: [ 0 ], offset: 1 }
       },
       '<p><img src="src" alt="alt" /></p>',
-      '<p><img role="presentation" src="src" alt="" /></p>'
+      '<p><img role="presentation" src="src" alt=""></p>'
     );
     await pTestUiStateDisabled(editor);
   });

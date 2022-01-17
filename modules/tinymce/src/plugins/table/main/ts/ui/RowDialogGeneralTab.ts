@@ -10,11 +10,11 @@ import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import { getRowClassList } from '../api/Settings';
+import * as Options from '../api/Options';
 import * as UiUtils from './UiUtils';
 
 const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
-  const classes = UiUtils.buildListItems(getRowClassList(editor));
+  const classes = UiUtils.buildListItems(Options.getRowClassList(editor));
   if (classes.length > 0) {
     return Optional.some({
       name: 'class',

@@ -159,7 +159,7 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
   };
 
   editor.on('ProgressState', (e) => {
-    timer.on(Delay.clearTimeout);
+    timer.on(clearTimeout);
     if (Type.isNumber(e.time)) {
       const timerId = Delay.setEditorTimeout(editor, () => toggle(e.state), e.time);
       timer.set(timerId);

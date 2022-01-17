@@ -16,7 +16,7 @@ const sImportToClipboard = <T>(filename: string): Step<T, T> =>
   Step.fromPromise(() => pImportToClipboard(filename));
 
 const pCopy = (selector: string): Promise<{}> => {
-  const modifiers: KeyModifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
+  const modifiers: KeyModifiers = platform.os.isMacOS() ? { metaKey: true } : { ctrlKey: true };
   return RealKeys.pSendKeysOn(selector, [
     RealKeys.combo(modifiers, 'c')
   ]);
@@ -26,7 +26,7 @@ const sCopy = <T>(selector: string): Step<T, T> =>
   Step.fromPromise<T>(() => pCopy(selector));
 
 const pPaste = (selector: string): Promise<{}> => {
-  const modifiers: KeyModifiers = platform.os.isOSX() ? { metaKey: true } : { ctrlKey: true };
+  const modifiers: KeyModifiers = platform.os.isMacOS() ? { metaKey: true } : { ctrlKey: true };
   return RealKeys.pSendKeysOn(selector, [
     RealKeys.combo(modifiers, 'v')
   ]);

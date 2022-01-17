@@ -13,7 +13,7 @@ import * as DomContainers from 'ephox/agar/test/DomContainers';
 
 UnitTest.asynctest('FocusToolsTest', (success, failure) => {
 
-  const sTestFocusTools = (doc: SugarElement, docNode: SugarElement) =>
+  const sTestFocusTools = (doc: SugarElement<Document>, docNode: SugarElement<HTMLElement>) =>
     GeneralSteps.sequence([
       FocusTools.sSetFocus('Focusing div', docNode, 'div[test-id]'),
       FocusTools.sIsOnSelector('Should be on div[test-id]', doc, 'div[test-id]'),

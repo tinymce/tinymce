@@ -6,7 +6,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.IndentListsInTableTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.table.IndentListsInTableTest', () => {
     toolbar: 'table numlist',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ ListsPlugin, TablePlugin, Theme ], true);
+  }, [ ListsPlugin, TablePlugin ], true);
 
   const assertTableInnerHTML = (editor: Editor, expected: string) => {
     const table = editor.getBody().firstChild as HTMLTableElement;

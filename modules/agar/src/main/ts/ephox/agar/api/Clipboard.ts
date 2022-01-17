@@ -33,13 +33,13 @@ const pasteFiles = (target: SugarElement<Element>, files: File[]): void =>
     });
   });
 
-const cPasteDataTransfer = (mutator: (dataTransfer: DataTransfer) => void): Chain<SugarElement<any>, SugarElement<any>> =>
+const cPasteDataTransfer = <T extends Element>(mutator: (dataTransfer: DataTransfer) => void): Chain<SugarElement<T>, SugarElement<T>> =>
   Chain.op((target) => pasteDataTransfer(target, mutator));
 
-const cPasteItems = (items: Record<string, string>): Chain<SugarElement<any>, SugarElement<any>> =>
+const cPasteItems = <T extends Element>(items: Record<string, string>): Chain<SugarElement<T>, SugarElement<T>> =>
   Chain.op((target) => pasteItems(target, items));
 
-const cPasteFiles = (files: File[]): Chain<SugarElement<any>, SugarElement<any>> =>
+const cPasteFiles = <T extends Element>(files: File[]): Chain<SugarElement<T>, SugarElement<T>> =>
   Chain.op((target) => pasteFiles(target, files));
 
 const sPasteDataTransfer = <T>(mutator: (dataTransfer: DataTransfer) => void, selector: string): Step<T, T> =>
@@ -83,10 +83,10 @@ const copy = (target: SugarElement<Element>): DataTransfer => {
   return dataTransfer;
 };
 
-const cCut: Chain<SugarElement<any>, DataTransfer> =
+const cCut: Chain<SugarElement<Element>, DataTransfer> =
   Chain.mapper(cut);
 
-const cCopy: Chain<SugarElement<any>, DataTransfer> =
+const cCopy: Chain<SugarElement<Element>, DataTransfer> =
   Chain.mapper(copy);
 
 export {

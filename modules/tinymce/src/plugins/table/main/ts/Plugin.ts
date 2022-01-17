@@ -15,8 +15,8 @@ import { getResizeHandler } from './actions/ResizeHandler';
 import { TableActions } from './actions/TableActions';
 import { Api, getApi } from './api/Api';
 import * as Commands from './api/Commands';
+import * as Options from './api/Options';
 import * as QueryCommands from './api/QueryCommands';
-import { hasTabNavigation } from './api/Settings';
 import { Clipboard as FakeClipboard } from './core/Clipboard';
 import * as TableFormats from './core/TableFormats';
 import * as Util from './core/Util';
@@ -29,6 +29,8 @@ import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 
 const Plugin = (editor: Editor): Api => {
+  Options.register(editor);
+
   const selections = Selections(() => Util.getBody(editor), () => getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor)), ephemera.selectedSelector);
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
@@ -50,7 +52,7 @@ const Plugin = (editor: Editor): Api => {
     TableFormats.registerFormats(editor);
   });
 
-  if (hasTabNavigation(editor)) {
+  if (Options.hasTabNavigation(editor)) {
     editor.on('keydown', (e: KeyboardEvent) => {
       TabContext.handle(e, editor, cellSelection);
     });

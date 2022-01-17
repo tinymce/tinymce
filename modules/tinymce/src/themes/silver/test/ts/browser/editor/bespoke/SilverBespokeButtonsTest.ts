@@ -5,8 +5,6 @@ import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as MenuUtils from '../../../module/MenuUtils';
 
@@ -15,7 +13,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     toolbar: 'align fontselect fontsizeselect formatselect styleselect',
     base_url: '/project/tinymce/js/tinymce',
     content_css: '/project/tinymce/src/themes/silver/test/css/content.css'
-  }, [ Theme ]);
+  }, []);
 
   const pAssertFocusOnItem = (itemText: string) => FocusTools.pTryOnSelector(
     `Focus should be on ${itemText}`,
@@ -59,7 +57,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       UiFinder.notExists(SugarBody.body(), '[role="menu"]');
     };
 
-  const pNoop = () => PromisePolyfill.resolve();
+  const pNoop = () => Promise.resolve();
   const pCheckItemsAtLocation = pCheckItemsAtLocationPlus(pNoop, pNoop, (text) => MenuUtils.pOpenMenu('', text));
   const pCheckAlignItemsAtLocation = pCheckItemsAtLocationPlus(pNoop, pNoop, () => MenuUtils.pOpenAlignMenu(''));
 
@@ -71,7 +69,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     // Afterwards, escape the submenu
     () => {
       Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape());
-      return PromisePolyfill.resolve();
+      return Promise.resolve();
     },
     (text) => MenuUtils.pOpenMenu('', text)
   );

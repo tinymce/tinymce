@@ -1,4 +1,4 @@
-import { Mouse, PhantomSkipper } from '@ephox/agar';
+import { Mouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Scroll, SugarElement, Traverse } from '@ephox/sugar';
@@ -8,7 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { isCaretContainerBlock } from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.SelectionOverridesTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -19,7 +18,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     indent: false,
     content_style: 'body { margin: 16px; }',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const getScrollTop = (editor: Editor) => Scroll.get(TinyDom.document(editor)).top;
 
@@ -48,7 +47,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
   it('click on link in cE=false', () => {
     const editor = hook.editor();
     editor.setContent('<p contentEditable="false"><a href="#"><strong>link</strong></a></p>');
-    const evt = editor.fire('click', { target: editor.$('strong')[0] } as any);
+    const evt = editor.fire('click', { target: editor.dom.select('strong')[0] } as any);
 
     assert.equal(evt.isDefaultPrevented(), true);
   });
@@ -106,19 +105,12 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     selectBesideContentEditable(editor, noneditableDiv, 'before', 2);
   });
 
-  it('offscreen copy of cE=false block remains offscreen', function () {
-    // Chrome and Safari behave correctly, and PhantomJS also declares itself as WebKit but does not
-    // put the off-screen selection off-screen, so fails the above tests. However, it has no visible UI,
-    // so everything is off-screen anyway :-)
-    if (PhantomSkipper.detect()) {
-      this.skip();
-    }
-
+  it('offscreen copy of cE=false block remains offscreen', () => {
     const editor = hook.editor();
     editor.setContent(
       '<table contenteditable="false" style="width: 100%; table-layout: fixed">' +
-      '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
-      '</table>'
+        '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
+        '</table>'
     );
 
     editor.selection.select(editor.dom.select('table')[0]);
@@ -128,8 +120,8 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     assert.isBelow(offscreenSelection.offsetLeft, 0, `The offscreen selection's left border is onscreen`);
     assert.isBelow(offscreenSelection.offsetWidth + offscreenSelection.offsetLeft, 0,
       'The cE=false offscreen selection is visible on-screen. Right edge: ' +
-      offscreenSelection.offsetLeft + '+' + offscreenSelection.offsetWidth + '=' +
-      (offscreenSelection.offsetLeft + offscreenSelection.offsetWidth) + 'px'
+        offscreenSelection.offsetLeft + '+' + offscreenSelection.offsetWidth + '=' +
+        (offscreenSelection.offsetLeft + offscreenSelection.offsetWidth) + 'px'
     );
   });
 

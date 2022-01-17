@@ -18,7 +18,7 @@ import { interpretInForm } from '../general/UiFactory';
 
 export type BodyPanelSpec = Omit<Dialog.Panel, 'type'>;
 
-const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): SimpleSpec => {
+const renderBodyPanel = (spec: BodyPanelSpec, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage): SimpleSpec => {
   const memForm = Memento.record(
     AlloyForm.sketch((parts) => ({
       dom: {
@@ -27,7 +27,7 @@ const renderBodyPanel = (spec: BodyPanelSpec, backstage: UiFactoryBackstage): Si
       },
       // All of the items passed through the form need to be put through the interpreter
       // with their form part preserved.
-      components: Arr.map(spec.items, (item) => interpretInForm(parts, item, backstage))
+      components: Arr.map(spec.items, (item) => interpretInForm(parts, item, dialogData, backstage))
     }))
   );
 

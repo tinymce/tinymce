@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomQuery from './api/dom/DomQuery';
+import { Arr, Fun } from '@ephox/katamari';
+
 import Editor from './api/Editor';
-import Env from './api/Env';
-import * as Settings from './api/Settings';
+import * as Options from './api/Options';
 import Delay from './api/util/Delay';
 import * as RangeCompare from './selection/RangeCompare';
 import { hasAnyRanges } from './selection/SelectionUtils';
@@ -22,7 +22,7 @@ import { hasAnyRanges } from './selection/SelectionUtils';
 
 class NodeChange {
   private readonly editor: Editor;
-  private lastPath: DomQuery | [] = [];
+  private lastPath: Node[] = [];
 
   public constructor(editor: Editor) {
     this.editor = editor;
@@ -62,10 +62,8 @@ class NodeChange {
     editor.on('SelectionChange', () => {
       const startElm = editor.selection.getStart(true);
 
-      // When focusout from after cef element to other input element the startelm can be undefined.
-      // IE 8 will fire a selectionchange event with an incorrect selection
-      // when focusing out of table cells. Click inside cell -> toolbar = Invalid SelectionChange event
-      if (!startElm || (!Env.range && editor.selection.isCollapsed())) {
+      // When focusout from after cef element to other input element the startelm can be undefined
+      if (!startElm) {
         return;
       }
 
@@ -102,7 +100,7 @@ class NodeChange {
     let node, parents, root;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-    if (this.editor.initialized && selection && !Settings.shouldDisableNodeChange(this.editor) && !this.editor.mode.isReadOnly()) {
+    if (this.editor.initialized && selection && !Options.shouldDisableNodeChange(this.editor) && !this.editor.mode.isReadOnly()) {
       // Get start node
       root = this.editor.getBody();
       node = selection.getStart(true) || root;
@@ -136,10 +134,11 @@ class NodeChange {
    * @private
    * @return {Boolean} True if the element path is the same false if it's not.
    */
-  private isSameElementPath(startElm) {
+  private isSameElementPath(startElm: Node) {
     let i;
+    const editor = this.editor;
 
-    const currentPath = this.editor.$(startElm).parentsUntil(this.editor.getBody()).add(startElm);
+    const currentPath = Arr.reverse(editor.dom.getParents(startElm, Fun.always, editor.getBody()));
     if (currentPath.length === this.lastPath.length) {
       for (i = currentPath.length; i >= 0; i--) {
         if (currentPath[i] !== this.lastPath[i]) {

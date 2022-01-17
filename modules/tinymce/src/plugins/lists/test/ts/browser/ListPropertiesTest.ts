@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/PublicApi';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -21,7 +20,7 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     toolbar: false,
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const contentMenuSelector = '.tox-tinymce-aux .tox-menu .tox-collection__item:contains("List properties...")';
   const inputSelector = 'label:contains(Start list at number) + input.tox-textfield';

@@ -10,7 +10,7 @@ import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { ListOptions } from '../core/ListOptions';
 import * as Utils from '../core/Utils';
 import { DialogChanges } from './DialogChanges';
@@ -108,7 +108,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     }
   ] : [];
 
-  const defaultTarget: Optional<string> = Optional.from(Settings.getDefaultLinkTarget(editor));
+  const defaultTarget: Optional<string> = Optional.from(Options.getDefaultLinkTarget(editor));
 
   const initialData = getInitialData(settings, defaultTarget);
   const catalogs = settings.catalogs;

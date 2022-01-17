@@ -5,10 +5,8 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import { TableEventData } from 'tinymce/plugins/table/api/Events';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -18,12 +16,12 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ PastePlugin, TablePlugin, Theme ], true);
+  }, [ TablePlugin ], true);
 
   const cleanTableHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 
   const selectOne = (editor: Editor, start: string) => {
-    const startElm = editor.$(start)[0];
+    const startElm = editor.dom.select(start)[0];
 
     editor.fire('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
     editor.fire('mouseup', { target: startElm, button: 0 } as unknown as MouseEvent);
@@ -32,8 +30,8 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   };
 
   const selectRangeXY = (editor: Editor, start: string, end: string) => {
-    const startElm = editor.$(start)[0];
-    const endElm = editor.$(end)[0];
+    const startElm = editor.dom.select(start)[0];
+    const endElm = editor.dom.select(end)[0];
 
     editor.fire('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
     editor.fire('mouseover', { target: endElm, button: 0 } as unknown as MouseEvent);
@@ -581,7 +579,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       cleanTableHtml(editor.getContent()),
 
       '<table>' +
-      '<colgroup><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>2</td><td>1</td><td>2</td></tr>' +
       '<tr><td>3</td><td>2</td><td>3</td></tr>' +
@@ -611,7 +609,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       cleanTableHtml(editor.getContent()),
 
       '<table>' +
-      '<colgroup><col /><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>1</td><td>2</td><td>1</td><td>3</td></tr>' +
       '<tr><td>2</td><td>3</td><td>2</td><td>4</td></tr>' +
@@ -642,7 +640,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       cleanTableHtml(editor.getContent()),
 
       '<table data-snooker-locked-cols="0">' +
-      '<colgroup><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>1</td><td>2</td><td>2</td></tr>' +
       '<tr><td>2</td><td>3</td><td>3</td></tr>' +
@@ -673,7 +671,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       cleanTableHtml(editor.getContent()),
 
       '<table data-snooker-locked-cols="2">' +
-      '<colgroup><col /><col /><col /></colgroup>' +
+      '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
       '<tr><td>1</td><td>1</td><td>2</td></tr>' +
       '<tr><td>2</td><td>2</td><td>3</td></tr>' +

@@ -1,15 +1,14 @@
-import { PhantomSkipper, RealMouse, Waiter } from '@ephox/agar';
+import { RealMouse, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { getFullscreenElement } from 'tinymce/plugins/fullscreen/core/NativeFullscreen';
 import Plugin from 'tinymce/plugins/fullscreen/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.plugins.fullscreen.FullScreenPluginNativeModeTest', () => {
   before(function () {
-    if (PhantomSkipper.detect() || /HeadlessChrome/.test(window.navigator.userAgent)) {
+    if (/HeadlessChrome/.test(window.navigator.userAgent)) {
       this.skip();
     }
   });
@@ -19,7 +18,7 @@ describe('webdriver.tinymce.plugins.fullscreen.FullScreenPluginNativeModeTest', 
     toolbar: 'fullscreen',
     base_url: '/project/tinymce/js/tinymce',
     fullscreen_native: true
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pIsFullscreen = (fullscreen: boolean) => Waiter.pTryUntilPredicate('Waiting for fullscreen mode to ' + (fullscreen ? 'start' : 'end'), () => {
     if (fullscreen) {

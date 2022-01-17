@@ -4,7 +4,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.table.TableDefaultAttributesTest', () => {
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce',
     statusbar: false
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   beforeEach(() => {
     hook.editor().setContent('');
@@ -37,7 +36,7 @@ describe('browser.tinymce.plugins.table.TableDefaultAttributesTest', () => {
 
   it('TBA: test default title attribute', async () => {
     const editor = hook.editor();
-    editor.settings.table_default_attributes = { title: 'x' };
+    editor.options.set('table_default_attributes', { title: 'x' });
     await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
     TableTestUtils.assertTableStructure(editor, ApproxStructure.build((s, str) => s.element('table', {
       styles: {

@@ -12,7 +12,6 @@ import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
 import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
-import Promise from 'tinymce/core/api/util/Promise';
 
 import { getStyleValue, ImageData } from '../core/ImageData';
 import { normalizeCss as doNormalizeCss } from '../core/ImageSelection';

@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -24,7 +23,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     setup: (editor: Editor) => {
       editor.on('tablemodified', logEvent);
     }
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const generalSelectors = {
     type: 'label.tox-label:contains(Row type) + div.tox-listboxfield > .tox-listbox',
@@ -82,7 +81,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
   it('TBA: Table row properties dialog (get data from plain cell)', async () => {
     const editor = hook.editor();
     assertEvents([]);
-    editor.settings.table_row_advtab = false;
+    editor.options.set('table_row_advtab', false);
     editor.setContent(baseHtml);
     TinySelections.select(editor, 'td', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -124,7 +123,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
 
   it('TBA: Table row properties dialog (get data from complex row)', async () => {
     const editor = hook.editor();
-    editor.settings.table_row_advtab = true;
+    editor.options.set('table_row_advtab', true);
     editor.setContent(advHtml);
     TinySelections.select(editor, 'td', [ 0 ]);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -158,7 +157,8 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     TinyAssertions.assertContent(editor,
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
       '<tbody>' +
-      '<tr style="border-color: blue; border-style: dotted; background-color: #ff0000;">' +
+      '<tr style="border-color: blue; border-style: dotted; background-color: rgb(255, 0, 0);">' +
+
       '<td>a</td>' +
       '</tr>' +
       '</tbody>' +

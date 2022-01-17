@@ -6,11 +6,10 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/template/Plugin';
 import { getPreviewContent } from 'tinymce/plugins/template/ui/Dialog';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { Settings } from '../module/Settings';
 
-const metaKey = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
+const metaKey = Env.os.isMacOS() || Env.os.isiOS() ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
 
 const noCorsNoStyle = '<!DOCTYPE html><html><head>' +
   '<base href="http://localhost:8000/">' +
@@ -64,7 +63,7 @@ describe('browser.tinymce.plugins.template.Dialog.getPreviewContent', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'template',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const checkPreview = (expected: string, html: string = '') => {
     const editor = hook.editor();

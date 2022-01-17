@@ -9,33 +9,31 @@ import { Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import {
-  getHeightSetting, getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting, getWidthSetting
-} from '../../api/Settings';
+import * as Options from '../../api/Options';
 import * as Utils from './Utils';
 
 export const getHeight = (editor: Editor) => {
-  const baseHeight = getHeightSetting(editor);
-  const minHeight = getMinHeightSetting(editor);
-  const maxHeight = getMaxHeightSetting(editor);
+  const baseHeight = Options.getHeightOption(editor);
+  const minHeight = Options.getMinHeightOption(editor);
+  const maxHeight = Options.getMaxHeightOption(editor);
 
   return Utils.parseToInt(baseHeight).map((height) => Utils.calcCappedSize(height, minHeight, maxHeight));
 };
 
 export const getHeightWithFallback = (editor: Editor) => {
   const height: Optional<string | number> = getHeight(editor);
-  return height.getOr(getHeightSetting(editor));
+  return height.getOr(Options.getHeightOption(editor));
 };
 
 export const getWidth = (editor: Editor) => {
-  const baseWidth = getWidthSetting(editor);
-  const minWidth = getMinWidthSetting(editor);
-  const maxWidth = getMaxWidthSetting(editor);
+  const baseWidth = Options.getWidthOption(editor);
+  const minWidth = Options.getMinWidthOption(editor);
+  const maxWidth = Options.getMaxWidthOption(editor);
 
   return Utils.parseToInt(baseWidth).map((width) => Utils.calcCappedSize(width, minWidth, maxWidth));
 };
 
 export const getWidthWithFallback = (editor: Editor) => {
   const width: Optional<string | number> = getWidth(editor);
-  return width.getOr(getWidthSetting(editor));
+  return width.getOr(Options.getWidthOption(editor));
 };

@@ -1,23 +1,18 @@
 import { Keys, UiFinder, Waiter } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
 import { Css, SugarBody, SugarLocation } from '@ephox/sugar';
 import { McEditor, TinyContentActions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 import { pAssertFloatingToolbarPosition, pOpenFloatingToolbarAndAssertPosition } from '../../../module/ToolbarUtils';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloatingPositionTest', () => {
   const toolbarHeight = 39;
   const lineHeight = 30;
-
-  before(() => {
-    Theme();
-  });
 
   const getUiContainerTop = (editor: Editor) => {
     const uiContainer = TinyDom.container(editor);
@@ -31,7 +26,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloati
     });
   };
 
-  const pWithEditor = async (settings: RawEditorSettings, pRunTests: (editor: Editor) => Promise<void>) => {
+  const pWithEditor = async (options: RawEditorOptions, pRunTests: (editor: Editor) => Promise<void>) => {
     const editor = await McEditor.pFromSettings<Editor>({
       theme: 'silver',
       inline: true,
@@ -40,7 +35,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloati
       base_url: '/project/tinymce/js/tinymce',
       toolbar: 'undo redo | styleselect | bold italic underline | strikethrough superscript subscript | alignleft aligncenter alignright aligncenter | outdent indent | cut copy paste | selectall remove',
       toolbar_mode: 'floating',
-      ...settings
+      ...options
     });
     const uiContainer = TinyDom.container(editor);
     Css.set(uiContainer, 'margin-left', '100px');

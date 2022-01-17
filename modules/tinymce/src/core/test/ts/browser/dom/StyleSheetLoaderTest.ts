@@ -4,7 +4,6 @@ import { Attribute, SelectorFilter, SugarElement, SugarHead } from '@ephox/sugar
 import { assert } from 'chai';
 
 import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 describe('browser.tinymce.core.dom.StyleSheetLoaderTest', () => {
   const contentCss = '/project/tinymce/js/tinymce/skins/content/default/content.css';
@@ -22,11 +21,11 @@ describe('browser.tinymce.core.dom.StyleSheetLoaderTest', () => {
 
   const linkNotExists = (url: string) => UiFinder.notExists(SugarHead.head(), `link[href="${url}"]`);
 
-  const pLoadUrl = (url: string): Promise<void> => new PromisePolyfill((resolve, reject) => {
+  const pLoadUrl = (url: string): Promise<void> => new Promise((resolve, reject) => {
     loader.load(url, resolve, () => reject('Failed to load url: ' + url));
   });
 
-  const pLoadAllUrls = (urls: string[]): Promise<string[]> => new PromisePolyfill((resolve, reject) => {
+  const pLoadAllUrls = (urls: string[]): Promise<string[]> => new Promise((resolve, reject) => {
     loader.loadAll(urls, resolve, (failedUrls) => reject('Failed to load urls: ' + failedUrls.join(', ')));
   });
 

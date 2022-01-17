@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.link.SelectedImageTest', () => {
     plugins: 'link',
     toolbar: 'link',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const doc = SugarDocument.getDocument();
 

@@ -3,7 +3,6 @@ import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import $ from 'tinymce/core/api/dom/DomQuery';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as CaretUtils from 'tinymce/core/caret/CaretUtils';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
@@ -38,7 +37,7 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
     });
   };
 
-  const findElm = (selector: string) => $(selector, getRoot())[0];
+  const findElm = (selector: string) => getRoot().querySelector(selector);
 
   it('isForwards', () => {
     assert.isTrue(CaretUtils.isForwards(1));
@@ -86,9 +85,9 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
   it('getParentBlock', () => {
     setupHtml('<p>abc</p><div><p><table><tr><td>X</td></tr></p></div>');
 
-    LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('p:first')), findElm('p:first'));
-    LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('td:first').firstChild), findElm('td:first'));
-    LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('td:first')), findElm('td:first'));
+    LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('p:first-of-type')), findElm('p:first-of-type'));
+    LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('td:first-of-type').firstChild), findElm('td:first-of-type'));
+    LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('td:first-of-type')), findElm('td:first-of-type'));
     LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('table')), findElm('table'));
   });
 
@@ -96,17 +95,17 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
     setupHtml('<p>abc</p><p>def<b>ghj</b></p>');
 
     assert.isFalse(CaretUtils.isInSameBlock(
-      CaretPosition(findElm('p:first').firstChild, 0),
-      CaretPosition(findElm('p:last').firstChild, 0)
+      CaretPosition(findElm('p:first-of-type').firstChild, 0),
+      CaretPosition(findElm('p:last-of-type').firstChild, 0)
     ));
 
     assert.isTrue(CaretUtils.isInSameBlock(
-      CaretPosition(findElm('p:first').firstChild, 0),
-      CaretPosition(findElm('p:first').firstChild, 0)
+      CaretPosition(findElm('p:first-of-type').firstChild, 0),
+      CaretPosition(findElm('p:first-of-type').firstChild, 0)
     ));
 
     assert.isTrue(CaretUtils.isInSameBlock(
-      CaretPosition(findElm('p:last').firstChild, 0),
+      CaretPosition(findElm('p:last-of-type').firstChild, 0),
       CaretPosition(findElm('b').firstChild, 0)
     ));
   });
@@ -122,28 +121,28 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
     );
 
     assert.isTrue(CaretUtils.isInSameEditingHost(
-      CaretPosition(findElm('p:first').firstChild, 0),
-      CaretPosition(findElm('p:first').firstChild, 1)
+      CaretPosition(findElm('p:first-of-type').firstChild, 0),
+      CaretPosition(findElm('p:first-of-type').firstChild, 1)
     ));
 
     assert.isTrue(CaretUtils.isInSameEditingHost(
-      CaretPosition(findElm('p:first').firstChild, 0),
+      CaretPosition(findElm('p:first-of-type').firstChild, 0),
       CaretPosition(getRoot().childNodes[1], 1)
     ));
 
     assert.isTrue(CaretUtils.isInSameEditingHost(
-      CaretPosition(findElm('span span:first').firstChild, 0),
-      CaretPosition(findElm('span span:first').firstChild, 1)
+      CaretPosition(findElm('span span:first-of-type').firstChild, 0),
+      CaretPosition(findElm('span span:first-of-type').firstChild, 1)
     ));
 
     assert.isFalse(CaretUtils.isInSameEditingHost(
-      CaretPosition(findElm('p:first').firstChild, 0),
-      CaretPosition(findElm('span span:first').firstChild, 1)
+      CaretPosition(findElm('p:first-of-type').firstChild, 0),
+      CaretPosition(findElm('span span:first-of-type').firstChild, 1)
     ));
 
     assert.isFalse(CaretUtils.isInSameEditingHost(
-      CaretPosition(findElm('span span:first').firstChild, 0),
-      CaretPosition(findElm('span span:last').firstChild, 1)
+      CaretPosition(findElm('span span:first-of-type').firstChild, 0),
+      CaretPosition(findElm('span span:last-of-type').firstChild, 1)
     ));
   });
 
@@ -169,10 +168,10 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
     );
     assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('b').firstChild, 3)), createRange(getRoot(), 1));
     assertRange(
-      CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('b:last').firstChild, 1)),
-      createRange(findElm('b:last').firstChild, 1)
+      CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('i:last-of-type b').firstChild, 1)),
+      createRange(findElm('i:last-of-type b').firstChild, 1)
     );
-    assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('b:last').firstChild, 0)), createRange(getRoot(), 2));
+    assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('i:last-of-type b').firstChild, 0)), createRange(getRoot(), 2));
   });
 
   it('normalizeRange break at candidate', () => {
@@ -185,8 +184,8 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
       createRange(findElm('b').firstChild, 3)
     );
     assertRange(
-      CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('b:last').lastChild, 0)),
-      createRange(findElm('b:last').lastChild, 0)
+      CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('b:last-of-type').lastChild, 0)),
+      createRange(findElm('b:last-of-type').lastChild, 0)
     );
   });
 
@@ -195,10 +194,10 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
       '<p data-mce-caret="before">\u00a0</p><p contentEditable="false">1</p><p data-mce-caret="after">\u00a0</p>'
     );
 
-    assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('p:first').firstChild, 0)), createRange(getRoot(), 1));
-    assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('p:first').firstChild, 1)), createRange(getRoot(), 1));
-    assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('p:last').firstChild, 0)), createRange(getRoot(), 2));
-    assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('p:last').firstChild, 1)), createRange(getRoot(), 2));
+    assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('p:first-of-type').firstChild, 0)), createRange(getRoot(), 1));
+    assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(findElm('p:first-of-type').firstChild, 1)), createRange(getRoot(), 1));
+    assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('p:last-of-type').firstChild, 0)), createRange(getRoot(), 2));
+    assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('p:last-of-type').firstChild, 1)), createRange(getRoot(), 2));
   });
 
   it('normalizeRange at inline caret container', () => {

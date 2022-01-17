@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, FormTypes, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
+import { AlloyComponent, AlloySpec, HotspotAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { Dialog, Menu } from '@ephox/bridge';
 import { Cell, Optional, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -23,22 +23,19 @@ import { HeaderBackstage, UiFactoryBackstageForHeader } from './HeaderBackstage'
 import { init as initStyleFormatBackstage } from './StyleFormatsBackstage';
 import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 
-// INVESTIGATE: Make this a body component API ?
-export type BridgedType = any;
-
 export interface UiFactoryBackstageProviders {
   icons: IconProvider;
   menuItems: () => Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
   translate: (any) => TranslatedString;
   isDisabled: () => boolean;
-  getSetting: Editor['getParam'];
+  getOption: Editor['options']['get'];
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
 
 export interface UiFactoryBackstageShared {
   providers?: UiFactoryBackstageProviders;
-  interpreter?: (spec: BridgedType) => AlloySpec;
+  interpreter?: (spec: Dialog.BodyComponent) => AlloySpec;
   anchors?: {
     inlineDialog: () => HotspotAnchorSpec | NodeAnchorSpec;
     banner: () => HotspotAnchorSpec | NodeAnchorSpec;
@@ -46,7 +43,6 @@ export interface UiFactoryBackstageShared {
     node: (elem: Optional<SugarElement>) => NodeAnchorSpec;
   };
   header?: UiFactoryBackstageForHeader;
-  formInterpreter?: (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
   getSink?: () => Result<AlloyComponent, any>;
 }
 
@@ -70,13 +66,9 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         menuItems: () => editor.ui.registry.getAll().menuItems,
         translate: I18n.translate,
         isDisabled: () => editor.mode.isReadOnly() || editor.ui.isDisabled(),
-        /*
-          TODO: Remove bind when TINY-6621 is complete
-          This bind is important to ensure we don't lose reference to the editor in getParam
-        */
-        getSetting: editor.getParam.bind(editor)
+        getOption: editor.options.get
       },
-      interpreter: (s) => UiFactory.interpretWithoutForm(s, backstage),
+      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, backstage),
       anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),
       header: toolbar,
       getSink: () => Result.value(sink)

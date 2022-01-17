@@ -9,7 +9,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Promise from 'tinymce/core/api/util/Promise';
 
 const pickFile = (editor: Editor): Promise<File[]> => new Promise((resolve) => {
   const fileInput: HTMLInputElement = document.createElement('input');

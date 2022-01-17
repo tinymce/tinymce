@@ -1,19 +1,14 @@
 import { UiFinder } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as UiUtils from '../../module/UiUtils';
 
 describe('browser.tinymce.themes.silver.editor.ShowHideTest', () => {
   const base_url = '/project/tinymce/js/tinymce';
-
-  before(() => {
-    Theme();
-  });
 
   const pWaitForVisible = (label: string, selector: string) => UiFinder.pWaitForVisible(label, SugarBody.body(), selector);
   const pWaitForHidden = (label: string, selector: string) => UiFinder.pWaitForHidden(label, SugarBody.body(), selector);

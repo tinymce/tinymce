@@ -1,6 +1,5 @@
 import { Failure } from '@ephox/bedrock-common';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';

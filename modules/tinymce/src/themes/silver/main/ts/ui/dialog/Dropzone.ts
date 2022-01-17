@@ -11,7 +11,7 @@ import {
   SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import Tools from 'tinymce/core/api/util/Tools';
@@ -24,10 +24,8 @@ import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
 
-const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';
-
 const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders) => {
-  const allowedImageFileTypes = Tools.explode(providersBackstage.getSetting('images_file_types', defaultImageFileTypes, 'string'));
+  const allowedImageFileTypes = Tools.explode(providersBackstage.getOption('images_file_types'));
   const isFileInAllowedTypes = (file: File) => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name.toLowerCase(), `.${type.toLowerCase()}`));
 
   return Arr.filter(Arr.from(files), isFileInAllowedTypes);
@@ -35,7 +33,7 @@ const filterByExtension = (files: FileList, providersBackstage: UiFactoryBacksta
 
 type DropZoneSpec = Omit<Dialog.DropZone, 'type'>;
 
-export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string[]>): SimpleSpec => {
 
   // TODO: Consider moving to alloy
   const stopper: AlloyEvents.EventRunHandler<EventArgs> = (_: AlloyComponent, se: SimulatedEvent<EventArgs>): void => {
@@ -61,7 +59,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     handleFiles(component, input.files);
   };
 
-  const handleFiles = (component, files: FileList) => {
+  const handleFiles = (component: AlloyComponent, files: FileList) => {
     Representing.setValue(component, filterByExtension(files, providersBackstage));
     AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
   };
@@ -94,7 +92,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
       classes: [ 'tox-dropzone-container' ]
     },
     behaviours: Behaviour.derive([
-      RepresentingConfigs.memory([ ]),
+      RepresentingConfigs.memory(initialData.getOr([])),
       ComposingConfigs.self(),
       Disabling.config({}),
       Toggling.config({

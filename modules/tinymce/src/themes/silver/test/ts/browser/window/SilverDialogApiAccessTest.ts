@@ -8,8 +8,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
-import Delay from 'tinymce/core/api/util/Delay';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as DialogUtils from '../../module/DialogUtils';
 
@@ -17,7 +15,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
   const store = TestHelpers.TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const dialogSpec: Dialog.DialogSpec<{ fieldA: string }> = {
     title: 'Silver Test Access Dialog',
@@ -44,7 +42,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
       fieldA: 'Init Value'
     },
     onAction: (api, _actionData) => {
-      Delay.setTimeout(() => {
+      setTimeout(() => {
         const currentData = api.getData();
         store.adder('currentData: ' + currentData.fieldA)();
         // Currently, this will be ignored once the dialog is closed.

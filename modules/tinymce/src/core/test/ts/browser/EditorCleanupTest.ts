@@ -5,16 +5,15 @@ import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const assertPageLinkPresence = (url: string, exists: boolean): void => {
   const links = document.head.querySelectorAll(`link[href="${url}"]`);
   assert.equal(links.length > 0, exists, `Should have link with url="${url}"`);
 };
 
-const testCleanup = (comment: string, settings: RawEditorSettings, html: string = '<div></div>', fn: (editor) => void = Fun.noop) => {
+const testCleanup = (comment: string, settings: RawEditorOptions, html: string = '<div></div>', fn: (editor) => void = Fun.noop) => {
   it(comment, async () => {
     // spin the editor up and down, getting a reference to its target element in between
     const editor = await McEditor.pFromHtml<Editor>(html, { base_url: '/project/tinymce/js/tinymce', ...settings });
@@ -33,7 +32,6 @@ const testCleanup = (comment: string, settings: RawEditorSettings, html: string 
 
 describe('browser.tinymce.core.EditorCleanupTest', () => {
   before(() => {
-    Theme();
     VisualBlocksPlugin();
   });
 

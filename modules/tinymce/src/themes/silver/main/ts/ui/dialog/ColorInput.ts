@@ -18,7 +18,7 @@ import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBacks
 import * as ReadOnly from '../../ReadOnly';
 import { renderLabel } from '../alien/FieldLabeller';
 import * as ColorSwatch from '../core/color/ColorSwatch';
-import * as Settings from '../core/color/Settings';
+import * as Options from '../core/color/Options';
 import { formChangeEvent } from '../general/FormEvents';
 import { renderPanelButton } from '../general/PanelButton';
 
@@ -40,10 +40,16 @@ interface ColorPickerCancelEvent extends CustomEvent {
 
 type ColorInputSpec = Omit<Dialog.ColorInput, 'type'>;
 
-export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactoryBackstageShared, colorInputBackstage: UiFactoryBackstageForColorInput): SimpleSpec => {
+export const renderColorInput = (
+  spec: ColorInputSpec,
+  sharedBackstage: UiFactoryBackstageShared,
+  colorInputBackstage: UiFactoryBackstageForColorInput,
+  initialData: Optional<string>
+): SimpleSpec => {
   const pField = FormField.parts.field({
     factory: Input,
     inputClasses: [ 'tox-textfield' ],
+    data: initialData,
 
     onSetValue: (c) => Invalidating.run(c).get(Fun.noop),
 
@@ -55,7 +61,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
       Tabstopping.config({ }),
       Invalidating.config({
         invalidClass: 'tox-textbox-field-invalid',
-        getRoot: (comp) => Traverse.parent(comp.element),
+        getRoot: (comp) => Traverse.parentElement(comp.element),
         notify: {
           onValid: (comp) => {
             // onValid should pass through the value here
@@ -100,7 +106,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
     });
   };
 
-  const onItemAction = (comp: AlloyComponent, value) => {
+  const onItemAction = (comp: AlloyComponent, value: string) => {
     memColorButton.getOpt(comp).each((colorBit) => {
       if (value === 'custom') {
         colorInputBackstage.colorPicker((valueOpt) => {
@@ -108,7 +114,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
             () => AlloyTriggers.emit(colorBit, colorPickerCancelEvent),
             (value) => {
               emitSwatchChange(colorBit, value);
-              Settings.addColor(value);
+              Options.addColor(value);
             }
           );
         }, '#ffffff');

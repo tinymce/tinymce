@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const stringRepeat = (string: string, repeats: number): string => {
   let str = '';
@@ -25,7 +25,7 @@ const insertNbsp = (editor: Editor, times: number): void => {
   const classes = () => isVisualCharsEnabled(editor) ? 'mce-nbsp-wrap mce-nbsp' : 'mce-nbsp-wrap';
   const nbspSpan = () => `<span class="${classes()}" contenteditable="false">${stringRepeat('&nbsp;', times)}</span>`;
 
-  const shouldWrap = Settings.wrapNbsps(editor);
+  const shouldWrap = Options.wrapNbsps(editor);
   const html = shouldWrap || editor.plugins.visualchars ? nbspSpan() : stringRepeat('&nbsp;', times);
 
   editor.undoManager.transact(() => editor.insertContent(html));

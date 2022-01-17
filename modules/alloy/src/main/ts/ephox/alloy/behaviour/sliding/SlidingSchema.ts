@@ -21,11 +21,11 @@ export default [
     'property', {
       width: [
         Fields.output('property', 'width'),
-        Fields.output('getDimension', (elem: SugarElement) => Width.get(elem) + 'px')
+        Fields.output('getDimension', (elem: SugarElement<HTMLElement>) => Width.get(elem) + 'px')
       ],
       height: [
         Fields.output('property', 'height'),
-        Fields.output('getDimension', (elem: SugarElement) => Height.get(elem) + 'px')
+        Fields.output('getDimension', (elem: SugarElement<HTMLElement>) => Height.get(elem) + 'px')
       ]
     }
   ))

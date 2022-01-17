@@ -3,7 +3,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.WindowManagerTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -12,7 +11,7 @@ describe('browser.tinymce.core.WindowManagerTest', () => {
     indent: false,
     entities: 'raw',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('OpenWindow/CloseWindow events', () => {
     const editor = hook.editor();

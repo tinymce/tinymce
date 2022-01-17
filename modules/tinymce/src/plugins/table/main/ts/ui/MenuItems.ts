@@ -12,7 +12,7 @@ import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 
-import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableBackgroundColorMap, getTableBorderColorMap, getTableClassList, hasTableGrid } from '../api/Settings';
+import * as Options from '../api/Options';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
@@ -172,7 +172,7 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
     getSubmenuItems: Fun.constant('tablecellprops tablemergecells tablesplitcells')
   };
 
-  if (hasTableGrid(editor) === false) {
+  if (!Options.hasTableGrid(editor)) {
     editor.ui.registry.addMenuItem('inserttable', {
       text: 'Table',
       icon: 'table',
@@ -217,7 +217,7 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
     }
   });
 
-  const tableClassList = filterNoneItem(getTableClassList(editor));
+  const tableClassList = filterNoneItem(Options.getTableClassList(editor));
   if (tableClassList.length !== 0) {
     editor.ui.registry.addNestedMenuItem('tableclass', {
       icon: 'table-classes',
@@ -233,7 +233,7 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
     });
   }
 
-  const tableCellClassList = filterNoneItem(getCellClassList(editor));
+  const tableCellClassList = filterNoneItem(Options.getCellClassList(editor));
   if (tableCellClassList.length !== 0) {
     editor.ui.registry.addNestedMenuItem('tablecellclass', {
       icon: 'table-cell-classes',
@@ -268,7 +268,7 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
     getSubmenuItems: () => buildMenuItems(
       editor,
       selections,
-      getTableBorderWidths(editor),
+      Options.getTableBorderWidths(editor),
       'tablecellborderwidth',
       applyTableCellStyle(editor, 'border-width')
     ),
@@ -281,7 +281,7 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
     getSubmenuItems: () => buildMenuItems(
       editor,
       selections,
-      getTableBorderStyles(editor),
+      Options.getTableBorderStyles(editor),
       'tablecellborderstyle',
       applyTableCellStyle(editor, 'border-style')
     ),
@@ -298,14 +298,14 @@ const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: 
   editor.ui.registry.addNestedMenuItem('tablecellbackgroundcolor', {
     icon: 'cell-background-color',
     text: 'Background color',
-    getSubmenuItems: () => buildColorMenu(editor, getTableBackgroundColorMap(editor), 'background-color'),
+    getSubmenuItems: () => buildColorMenu(editor, Options.getTableBackgroundColorMap(editor), 'background-color'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   editor.ui.registry.addNestedMenuItem('tablecellbordercolor', {
     icon: 'cell-border-color',
     text: 'Border color',
-    getSubmenuItems: () => buildColorMenu(editor, getTableBorderColorMap(editor), 'border-color'),
+    getSubmenuItems: () => buildColorMenu(editor, Options.getTableBorderColorMap(editor), 'border-color'),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 

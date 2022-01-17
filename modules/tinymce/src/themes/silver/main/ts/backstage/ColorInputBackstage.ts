@@ -10,7 +10,7 @@ import { Menu } from '@ephox/bridge';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as ColorSwatch from '../ui/core/color/ColorSwatch';
-import * as Settings from '../ui/core/color/Settings';
+import * as Options from '../ui/core/color/Options';
 
 export interface UiFactoryBackstageForColorInput {
   colorPicker: (callback: ColorSwatch.ColorInputCallback, value: string) => void;
@@ -24,11 +24,11 @@ const colorPicker = (editor: Editor) => (callback: ColorSwatch.ColorInputCallbac
   dialog(callback, value);
 };
 
-const hasCustomColors = (editor: Editor) => (): boolean => Settings.hasCustomColors(editor);
+const hasCustomColors = (editor: Editor) => (): boolean => Options.hasCustomColors(editor);
 
-const getColors = (editor: Editor) => (): Menu.ChoiceMenuItemSpec[] => Settings.getColors(editor);
+const getColors = (editor: Editor) => (): Menu.ChoiceMenuItemSpec[] => Options.getColors(editor);
 
-const getColorCols = (editor: Editor) => (): number => ColorSwatch.getColorCols(editor);
+const getColorCols = (editor: Editor) => (): number => Options.getColorCols(editor);
 
 export const ColorInputBackstage = (editor: Editor): UiFactoryBackstageForColorInput => ({
   colorPicker: colorPicker(editor),

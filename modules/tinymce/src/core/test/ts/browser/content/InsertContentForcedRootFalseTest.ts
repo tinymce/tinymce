@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as InsertContent from 'tinymce/core/content/InsertContent';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.InsertContentForcedRootBlockFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,7 +13,7 @@ describe('browser.tinymce.core.content.InsertContentForcedRootBlockFalseTest', (
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const trimBrs = (string: string) => {
     return string.replace(/<br>/g, '');

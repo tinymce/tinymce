@@ -1,4 +1,4 @@
-import { Fun, Type } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Class, Css, DomEvent, Insert, SugarElement } from '@ephox/sugar';
 
@@ -12,7 +12,7 @@ import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { SliderValue, SliderValueX, SliderValueY } from 'ephox/alloy/ui/types/SliderTypes';
+import { SliderValue, SliderValueXY } from 'ephox/alloy/ui/types/SliderTypes';
 
 export default (): void => {
   const gui = Gui.create();
@@ -31,7 +31,7 @@ export default (): void => {
         mode: 'x',
         minX: 20,
         maxX: 100,
-        getInitialValue: Fun.constant({ x: 80 })
+        getInitialValue: Fun.constant(80)
       },
       stepSize: 10,
       snapToGrid: true,
@@ -70,7 +70,7 @@ export default (): void => {
       dom: { tag: 'div', styles: { 'margin-bottom': '40px' }},
       model: {
         mode: 'y',
-        getInitialValue: Fun.constant({ y: 35 })
+        getInitialValue: Fun.constant(35)
       },
 
       stepSize: 40,
@@ -84,18 +84,14 @@ export default (): void => {
       },
 
       onChange: (_slider, thumb, value: SliderValue) => {
-        if (isValueY(value)) {
-          Replacing.set(thumb, [
-            GuiFactory.text(value.y.toString())
-          ]);
-        }
+        Replacing.set(thumb, [
+          GuiFactory.text(value.toString())
+        ]);
       },
       onInit: (_slider, thumb, _spectrum, value: SliderValue) => {
-        if (isValueY(value)) {
-          Replacing.set(thumb, [
-            GuiFactory.text(value.y.toString())
-          ]);
-        }
+        Replacing.set(thumb, [
+          GuiFactory.text(value.toString())
+        ]);
       },
 
       components: [
@@ -130,14 +126,6 @@ export default (): void => {
     })
   );
 
-  const isValueX = (v: SliderValue): v is SliderValueX => {
-    return Type.isFunction((v as SliderValueX).x);
-  };
-
-  const isValueY = (v: SliderValue): v is SliderValueY => {
-    return Type.isFunction((v as SliderValueY).y);
-  };
-
   const getColor = (hue: number) => {
     if (hue < 0) {
       return 'black';
@@ -170,15 +158,11 @@ export default (): void => {
       stepSize: 10,
 
       onChange: (_slider, thumb, value: SliderValue) => {
-        if (isValueX(value)) {
-          setColor(thumb, value.x);
-        }
+        setColor(thumb, (value as SliderValueXY).x);
       },
 
       onInit: (_slider, thumb, _spectrum, value: SliderValue) => {
-        if (isValueX(value)) {
-          setColor(thumb, value.x);
-        }
+        setColor(thumb, (value as SliderValueXY).x);
       },
 
       components: [

@@ -3,14 +3,13 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.ToolbarButtonDisplayTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     toolbar: 'tablecaption',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const pDisplayTest = async (startPath: number[], startOffset: number, endPath: number[], endOffset: number, shouldBeEnabled: boolean) => {
     const editor = hook.editor();

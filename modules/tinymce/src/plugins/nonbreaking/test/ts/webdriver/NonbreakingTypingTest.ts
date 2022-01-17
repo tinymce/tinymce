@@ -5,7 +5,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/nonbreaking/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
   // Note: Uses RealKeys, so needs a browser. Headless won't work.
@@ -14,10 +13,9 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
     toolbar: 'nonbreaking',
     nonbreaking_wrap: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const isGecko = Env.browser.isFirefox();
-  const isGeckoOrIE = isGecko || Env.browser.isIE();
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
 
@@ -89,7 +87,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is(isGeckoOrIE ? '\u00a0 ' : '\u00a0\u00a0'))
+              s.text(str.is(isGecko ? '\u00a0 ' : '\u00a0\u00a0'))
             ].concat(isGecko ? [ s.element('br', {}) ] : [])
           })
         ]
@@ -108,7 +106,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is(isGeckoOrIE ? 'test test ' : 'test test\u00a0'))
+              s.text(str.is(isGecko ? 'test test ' : 'test test\u00a0'))
             ].concat(isGecko ? [ s.element('br', {}) ] : [])
           })
         ]

@@ -5,18 +5,17 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, assertInputCheckbox, assertInputValue, fillActiveDialog, generalTabSelectors } from '../module/Helpers';
 
-describe('browser.tinymce.plugins.image.DescriptiveImageDialogTest', () => {
+describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     a11y_advanced_options: true
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pressTab = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
   const pressEsc = (editor: Editor) => TinyUiActions.keydown(editor, Keys.escape());
@@ -59,7 +58,7 @@ describe('browser.tinymce.plugins.image.DescriptiveImageDialogTest', () => {
       alt: ''
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="src" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="src"></p>');
   });
 
   it('TBA: Image update with decorative toggled on should produce empty alt and role=presentation', async () => {
@@ -75,7 +74,7 @@ describe('browser.tinymce.plugins.image.DescriptiveImageDialogTest', () => {
       decorative: true
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt="" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt=""></p>');
   });
 
   it('TBA: Image update with decorative toggled off should produce empty alt and role=presentation', async () => {
@@ -91,6 +90,6 @@ describe('browser.tinymce.plugins.image.DescriptiveImageDialogTest', () => {
       decorative: false
     });
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="#1" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="#1"></p>');
   });
 });

@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -7,18 +6,15 @@ import Editor from 'tinymce/core/api/Editor';
 import { SetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertContent from 'tinymce/core/content/InsertContent';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.InsertContentTest', () => {
-  const browser = PlatformDetection.detect().browser;
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('TBA: insertAtCaret - i inside text, converts to em', () => {
     const editor = hook.editor();
@@ -289,13 +285,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     InsertContent.insertAtCaret(editor, ' c ');
-    TinyAssertions.assertContent(editor, '<p>a c\u00a0<br />b</p>');
+    TinyAssertions.assertContent(editor, '<p>a c\u00a0<br>b</p>');
 
     editor.setContent('<p>a&nbsp;<br>&nbsp;b</p>');
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, 'c');
-    TinyAssertions.assertContent(editor, '<p>a c<br />\u00a0b</p>');
+    TinyAssertions.assertContent(editor, '<p>a c<br>\u00a0b</p>');
   });
 
   it('TINY-5966:  insertAtCaret - html content at a text node before br', () => {
@@ -304,7 +300,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
     InsertContent.insertAtCaret(editor, '<em>c</em>');
-    TinyAssertions.assertContent(editor, '<p>a <em>c</em><br />\u00a0b</p>');
+    TinyAssertions.assertContent(editor, '<p>a <em>c</em><br>\u00a0b</p>');
   });
 
   it('TINY-5966:  insertAtCaret - text content at a text node after br', () => {
@@ -313,13 +309,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     InsertContent.insertAtCaret(editor, ' c ');
-    TinyAssertions.assertContent(editor, '<p>a<br />\u00a0c b</p>');
+    TinyAssertions.assertContent(editor, '<p>a<br>\u00a0c b</p>');
 
     editor.setContent('<p>a&nbsp;<br>&nbsp;b</p>');
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     InsertContent.insertAtCaret(editor, 'c');
-    TinyAssertions.assertContent(editor, '<p>a\u00a0<br />c b</p>');
+    TinyAssertions.assertContent(editor, '<p>a\u00a0<br>c b</p>');
   });
 
   it('TINY-5966:  insertAtCaret - html content at a text node after br', () => {
@@ -328,7 +324,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.focus();
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     InsertContent.insertAtCaret(editor, '<em>c</em>');
-    TinyAssertions.assertContent(editor, '<p>a\u00a0<br /><em>c</em> b</p>');
+    TinyAssertions.assertContent(editor, '<p>a\u00a0<br><em>c</em> b</p>');
   });
 
   it('TINY-5966:  insertAtCaret - text content with spaces in pre', () => {
@@ -585,42 +581,22 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       '</table>'
     );
 
-    if (browser.isIE()) {
-      // IE renders this verbatim and other browsers remove nested buttons
-      TinyAssertions.assertContent(
-        editor,
-        '<table>' +
-          '<tbody>' +
-            '<tr>' +
-              '<td>' +
-                '<button>' +
-                  '<img />' +
-                  '<button></button>' +
-                  '<img />' +
-                '</button>' +
-              '</td>' +
-            '</tr>' +
-          '</tbody>' +
-        '</table>'
-      );
-    } else {
-      TinyAssertions.assertContent(
-        editor,
-        '<table>' +
-          '<tbody>' +
-            '<tr>' +
-              '<td>' +
-                '<button>' +
-                  '<img />' +
-                '</button>' +
-                '<button></button>' +
-                '<img />' +
-              '</td>' +
-            '</tr>' +
-          '</tbody>' +
-        '</table>'
-      );
-    }
+    TinyAssertions.assertContent(
+      editor,
+      '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>' +
+              '<button>' +
+                '<img>' +
+              '</button>' +
+              '<button></button>' +
+              '<img>' +
+            '</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>'
+    );
   });
 
   it('TINY-7842: Inserting content into a contenteditable=true block within a contenteditable=false parent', () => {

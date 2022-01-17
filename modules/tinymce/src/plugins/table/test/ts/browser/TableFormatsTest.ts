@@ -5,7 +5,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../module/test/TableTestUtils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.plugins.table.TableFormatsTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const beforeTable = (selectedCells: SelectedCells = {}) => {
     const { cell1, cell2, cell3, cell4 } = selectedCells;

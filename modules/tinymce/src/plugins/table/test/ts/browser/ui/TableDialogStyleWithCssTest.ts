@@ -6,7 +6,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -98,7 +97,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
         base_url: '/project/tinymce/js/tinymce',
         toolbar: 'tableprops',
         table_style_by_css: spec.style_by_css
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-4926: falls back to cellpadding attribute if no CSS is defined', async () => {
         const editor = hook.editor();

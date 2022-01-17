@@ -9,7 +9,7 @@ import { Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../../api/Settings';
+import * as Options from '../../api/Options';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem } from '../DialogTypes';
 
@@ -17,7 +17,7 @@ import { ListItem } from '../DialogTypes';
 // let you choose from one.
 
 const getClasses = (editor: Editor): Optional<ListItem[]> => {
-  const list = Settings.getLinkClassList(editor);
+  const list = Options.getLinkClassList(editor);
   if (list.length > 0) {
     return ListOptions.sanitize(list);
   }

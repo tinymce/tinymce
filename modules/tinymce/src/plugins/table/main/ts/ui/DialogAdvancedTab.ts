@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import { getTableBorderStyles } from '../api/Settings';
+import * as Options from '../api/Options';
 import { buildListItems } from './UiUtils';
 
 const getAdvancedTab = (editor: Editor, dialogName: 'table' | 'row' | 'cell'): Dialog.TabSpec => {
@@ -19,7 +19,7 @@ const getAdvancedTab = (editor: Editor, dialogName: 'table' | 'row' | 'cell'): D
       name: 'borderstyle',
       type: 'listbox',
       label: 'Border style',
-      items: emptyBorderStyle.concat(buildListItems(getTableBorderStyles(editor)))
+      items: emptyBorderStyle.concat(buildListItems(Options.getTableBorderStyles(editor)))
     },
     {
       name: 'bordercolor',

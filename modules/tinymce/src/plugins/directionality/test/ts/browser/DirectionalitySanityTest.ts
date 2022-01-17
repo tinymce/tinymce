@@ -2,7 +2,6 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Plugin from 'tinymce/plugins/directionality/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () => {
   const hook = TinyHooks.bddSetupLight({
@@ -10,7 +9,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     toolbar: 'ltr rtl',
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Set and select content, click on the Right to left toolbar button and assert direction is right to left', () => {
     const editor = hook.editor();

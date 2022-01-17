@@ -9,7 +9,6 @@ import { Arr, Fun } from '@ephox/katamari';
 
 import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';
-import Promise from '../api/util/Promise';
 import * as Conversions from './Conversions';
 import { UploadStatus } from './UploadStatus';
 
@@ -104,10 +103,6 @@ export const ImageScanner = (uploadStatus: UploadStatus, blobCache: BlobCache): 
 
     const images = Arr.filter(getAllImages(elm), (img) => {
       const src = img.src;
-
-      if (!Env.fileApi) {
-        return false;
-      }
 
       if (img.hasAttribute('data-mce-bogus')) {
         return false;

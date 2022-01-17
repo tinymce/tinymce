@@ -1,4 +1,4 @@
-import { Arbitraries, Assertions, PhantomSkipper, Pipeline, Step } from '@ephox/agar';
+import { Arbitraries, Assertions, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarNode } from '@ephox/sugar';
@@ -11,12 +11,6 @@ import { TinyScenarios } from 'ephox/mcagar/api/pipeline/TinyScenarios';
 UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
 
   const platform = PlatformDetection.detect();
-  if (PhantomSkipper.detect()) {
-    // eslint-disable-next-line no-console
-    console.log('Skipping TinyScenariosTest as PhantomJS has dodgy selection/style implementation and returns false positives.');
-    success();
-    return;
-  }
   if (platform.browser.isFirefox()) {
     // eslint-disable-next-line no-console
     console.log('Skipping TinyScenariosTest as it triggers a tinymce bug in Firefox');
@@ -45,9 +39,9 @@ UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
 
     Pipeline.async({}, [
       apis.sFocus(),
-      scenarios.sAsyncProperty('Test', Arbitraries.content('inline', {}).generator, sAssertion(editor), {
+      scenarios.sAsyncProperty('Test', Arbitraries.content('inline', {}), sAssertion(editor), {
         property: {
-          tests: 100
+          numRuns: 100
           // Rename to seed.
           // rngState: '8cce615fb3d2a47809'
         },

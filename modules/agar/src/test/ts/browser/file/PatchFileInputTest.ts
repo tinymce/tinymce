@@ -14,7 +14,7 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
   const files = [ createFile('a.txt', 0, new Blob([ 'x' ])) ];
   const filesState = Singleton.value<FileList>();
 
-  const pickFiles = (body: SugarElement<any>, next: (files: FileList) => void) => {
+  const pickFiles = (body: SugarElement<Node>, next: (files: FileList) => void) => {
     const elm = SugarElement.fromHtml<HTMLInputElement>('<input type="file">');
     elm.dom.onchange = () => {
       Remove.remove(elm);
@@ -24,7 +24,7 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
     elm.dom.click();
   };
 
-  const cPickFiles = Chain.async<SugarElement, FileList>((input, next, _die) => pickFiles(input, next));
+  const cPickFiles = Chain.async<SugarElement<Node>, FileList>((input, next, _die) => pickFiles(input, next));
   const sPickFiles = Step.async((next, _die) => pickFiles(SugarBody.body(), (files) => {
     filesState.set(files);
     next();
@@ -36,7 +36,7 @@ UnitTest.asynctest('PatchFileInputTest', (success, failure) => {
     Assert.eq('Should be expected file size', 1, files[0].size);
   };
 
-  Pipeline.async({}, /phantom/i.test(navigator.userAgent) ? [] : [
+  Pipeline.async({}, [
     Logger.t('Patch file input step', GeneralSteps.sequence([
       sRunOnPatchedFileInput(files, sPickFiles),
       Step.sync(() => {

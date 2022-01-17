@@ -12,19 +12,19 @@ import { GeneralKeyingConfig, KeyRuleHandler } from './KeyingModeTypes';
 
 const doDefaultExecute = (
   component: AlloyComponent,
-  _simulatedEvent: NativeSimulatedEvent,
-  focused: SugarElement
+  _simulatedEvent: NativeSimulatedEvent<KeyboardEvent>,
+  focused: SugarElement<HTMLElement>
 ): Optional<boolean> => {
   // Note, we use to pass through simulatedEvent here and make target: component. This simplification
   // may be a problem
   AlloyTriggers.dispatch(component, focused, SystemEvents.execute());
-  return Optional.some<boolean>(true);
+  return Optional.some(true);
 };
 
 const defaultExecute = (
   component: AlloyComponent,
-  simulatedEvent: NativeSimulatedEvent,
-  focused: SugarElement
+  simulatedEvent: NativeSimulatedEvent<KeyboardEvent>,
+  focused: SugarElement<HTMLElement>
 ): Optional<boolean> => {
   const isComplex = EditableFields.inside(focused) && KeyMatch.inSet(Keys.SPACE)(simulatedEvent.event);
   return isComplex ? Optional.none() : doDefaultExecute(component, simulatedEvent, focused);
@@ -36,7 +36,7 @@ const defaultExecute = (
 // keyup also. This does make the name confusing, though.
 const stopEventForFirefox: KeyRuleHandler<GeneralKeyingConfig, any> = (
   _component: AlloyComponent,
-  _simulatedEvent: NativeSimulatedEvent
+  _simulatedEvent: NativeSimulatedEvent<KeyboardEvent>
 ) => Optional.some<boolean>(true);
 
 export {

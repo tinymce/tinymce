@@ -5,13 +5,12 @@ import { SugarBody } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.InlineEditorSaveTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     inline: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const assertBogusNotExist = () => {
     UiFinder.findIn(SugarBody.body(), '[data-mce-bogus]').fold(() => {

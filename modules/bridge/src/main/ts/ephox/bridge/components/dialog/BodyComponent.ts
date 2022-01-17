@@ -10,13 +10,14 @@ import { DropZone, DropZoneSpec } from './Dropzone';
 import { Grid, GridSpec } from './Grid';
 import { HtmlPanel, HtmlPanelSpec } from './HtmlPanel';
 import { Iframe, IframeSpec } from './Iframe';
-import { ImageTools, ImageToolsSpec } from './ImageTools';
+import { ImagePreview, ImagePreviewSpec } from './ImagePreview';
 import { Input, InputSpec } from './Input';
 import { Label, LabelSpec } from './Label';
 import { ListBox, ListBoxSpec } from './ListBox';
 import { Panel, PanelSpec } from './Panel';
 import { SelectBox, SelectBoxSpec } from './SelectBox';
 import { SizeInput, SizeInputSpec } from './SizeInput';
+import { Slider, SliderSpec } from './Slider';
 import { Table, TableSpec } from './Table';
 import { TextArea, TextAreaSpec } from './Textarea';
 import { UrlInput, UrlInputSpec } from './UrlInput';
@@ -30,6 +31,7 @@ export type BodyComponentSpec
   | ListBoxSpec
   | SelectBoxSpec
   | SizeInputSpec
+  | SliderSpec
   | IframeSpec
   | HtmlPanelSpec
   | UrlInputSpec
@@ -37,7 +39,7 @@ export type BodyComponentSpec
   | ColorInputSpec
   | GridSpec
   | ColorPickerSpec
-  | ImageToolsSpec
+  | ImagePreviewSpec
   | AlertBannerSpec
   | CollectionSpec
   | LabelSpec
@@ -54,6 +56,7 @@ export type BodyComponent
   | ListBox
   | SelectBox
   | SizeInput
+  | Slider
   | Iframe
   | HtmlPanel
   | UrlInput
@@ -61,7 +64,7 @@ export type BodyComponent
   | ColorInput
   | Grid
   | ColorPicker
-  | ImageTools
+  | ImagePreview
   | AlertBanner
   | Collection
   | Label

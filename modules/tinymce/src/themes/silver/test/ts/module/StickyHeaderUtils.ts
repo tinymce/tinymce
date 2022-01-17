@@ -3,8 +3,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Css, Focus, Scroll, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import { ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
+import { ToolbarLocation } from 'tinymce/themes/silver/api/Options';
 
 const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change
@@ -129,7 +128,7 @@ const pAssertMenuStructure = (label: string, container: SugarElement<HTMLElement
 
 // Assume editor height 400
 const pTestMenuScroll = async (top: boolean) => {
-  const menu = UiFinder.findIn(SugarBody.body(), '[role="menu"]').getOrDie();
+  const menu = UiFinder.findIn<HTMLElement>(SugarBody.body(), '[role="menu"]').getOrDie();
   await pAssertMenuStructure('Checking the opened menus default positioning', menu, 'absolute');
   scrollRelativeEditor(200, top);
   await pAssertMenuStructure('When the top of the editor scrolls off screen, menus should become sticky', menu, 'fixed');
@@ -210,7 +209,7 @@ const pCloseMenus = (numOpenedMenus: number) => {
     await Waiter.pTryUntil('Wait for menu to be closed', () => {
       assert.isFalse(SugarBody.inBody(menuElem), 'Assert menu has been closed');
     });
-  }), PromisePolyfill.resolve());
+  }), Promise.resolve());
 };
 
 const pOpenMenuAndTestScrolling = async (pOpenMenu: () => Promise<void>, numMenusToClose: number, top: boolean) => {

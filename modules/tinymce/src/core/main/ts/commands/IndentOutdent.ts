@@ -10,7 +10,7 @@ import { Css, PredicateFind, SugarElement, SugarElements, Traverse } from '@epho
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 
@@ -43,7 +43,7 @@ const indentElement = (dom: DOMUtils, command: string, useMargin: boolean, value
 
 const validateBlocks = (editor: Editor, blocks: SugarElement<HTMLElement>[]): boolean =>
   Arr.forall(blocks, (block) => {
-    const indentStyleName = getIndentStyleName(Settings.shouldIndentUseMargin(editor), block);
+    const indentStyleName = getIndentStyleName(Options.shouldIndentUseMargin(editor), block);
     const intentValue = Css.getRaw(block, indentStyleName).map(parseIndentValue).getOr(0);
     const contentEditable = editor.dom.getContentEditable(block.dom);
     return contentEditable !== 'false' && intentValue > 0;
@@ -67,11 +67,11 @@ const getBlocksToIndent = (editor: Editor): SugarElement<HTMLElement>[] =>
 
 const handle = (editor: Editor, command: string): void => {
   const { dom, selection, formatter } = editor;
-  const indentation = Settings.getIndentation(editor);
+  const indentation = Options.getIndentation(editor);
   const indentUnit = /[a-z%]+$/i.exec(indentation)[0];
   const indentValue = parseInt(indentation, 10);
-  const useMargin = Settings.shouldIndentUseMargin(editor);
-  const forcedRootBlock = Settings.getForcedRootBlock(editor);
+  const useMargin = Options.shouldIndentUseMargin(editor);
+  const forcedRootBlock = Options.getForcedRootBlock(editor);
 
   // If forced_root_blocks is set to false we don't have a block to indent so lets create a div
   if (!editor.queryCommandState('InsertUnorderedList') && !editor.queryCommandState('InsertOrderedList')) {

@@ -3,7 +3,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/anchor/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pAddAnchor, pAssertAnchorPresence } from '../module/Helpers';
 
@@ -12,7 +11,7 @@ describe('browser.tinymce.plugins.anchor.AnchorSanityTest', () => {
     plugins: 'anchor',
     toolbar: 'anchor',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: Add text and anchor, then check if that anchor is present in the editor', async () => {
     const editor = hook.editor();

@@ -17,7 +17,7 @@ export interface DragEvents {
 }
 
 export interface DragState {
-  readonly onEvent: (event: EventArgs, mode: DragMode) => void;
+  readonly onEvent: <T>(event: EventArgs<T>, mode: DragMode<T>) => void;
   readonly reset: () => void;
   readonly events: DragEvents['registry'];
 }

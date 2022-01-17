@@ -7,14 +7,13 @@ import Editor from 'tinymce/core/api/Editor';
 import * as DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
 import { MediaData } from 'tinymce/plugins/media/core/Types';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.media.core.DataToHtmlTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: [ 'media' ],
     toolbar: 'media',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pTestDataToHtml = async (editor: Editor, data: MediaData, expected: StructAssert) => {
     const actual = SugarElement.fromHtml(DataToHtml.dataToHtml(editor, data));

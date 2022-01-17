@@ -6,7 +6,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { ImageData } from 'tinymce/plugins/image/core/ImageData';
 import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
     indent: false,
     inline: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const updateImageOrFigure = (editor: Editor, data: Partial<ImageData>) => {
     insertOrUpdateImage(editor, {

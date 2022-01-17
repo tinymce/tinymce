@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/searchreplace/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
@@ -15,7 +14,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePluginTest', () => 
     valid_elements: 'p,b,i,br,span[contenteditable]',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TBA: SearchReplace: Find no match', () => {
     const editor = hook.editor();
@@ -121,7 +120,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePluginTest', () => 
     editor.setContent('a&nbsp; &nbsp;b<br/><br/>ab&nbsp;c');
     editor.plugins.searchreplace.find(' ');
     assert.isFalse(editor.plugins.searchreplace.replace('x', true, true));
-    TinyAssertions.assertContent(editor, '<p>axxxb<br /><br />abxc</p>');
+    TinyAssertions.assertContent(editor, '<p>axxxb<br><br>abxc</p>');
   });
 
   it('TBA: SearchReplace: Find multiple matches, move to next and replace', () => {

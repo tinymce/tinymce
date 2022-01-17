@@ -55,8 +55,8 @@ const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   }
 };
 
-const buildBasicSettingsDataset = (editor: Editor, settingName: string, defaults: string, delimiter: Delimiter): BasicSelectDataset => {
-  const rawFormats = editor.getParam(settingName, defaults, 'string');
+const buildBasicSettingsDataset = (editor: Editor, settingName: string, delimiter: Delimiter): BasicSelectDataset => {
+  const rawFormats = editor.options.get(settingName);
   const data = process(split(rawFormats, delimiter));
   return {
     type: 'basic',

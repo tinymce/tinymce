@@ -7,7 +7,6 @@
 
 import { Arr, Obj } from '@ephox/katamari';
 
-import { DomQueryConstructor } from './dom/DomQuery';
 import ScriptLoader from './dom/ScriptLoader';
 import Editor from './Editor';
 import I18n from './util/I18n';
@@ -25,7 +24,7 @@ import I18n from './util/I18n';
  *
  * @class tinymce.Theme
  * @example
- * tinymce.ThemeManager.add('MyTheme', function(editor) {
+ * tinymce.ThemeManager.add('MyTheme', (editor) => {
  *     // Setup up custom UI elements in the dom
  *     var div = document.createElement('div');
  *     var iframe = document.createElement('iframe');
@@ -64,11 +63,11 @@ import I18n from './util/I18n';
  *
  * @class tinymce.Plugin
  * @example
- * tinymce.PluginManager.add('MyPlugin', function(editor, url) {
+ * tinymce.PluginManager.add('MyPlugin', (editor, url) => {
  *     // Register a toolbar button that triggers an alert when clicked
  *     // To show this button in the editor, include it in the toolbar setting
  *     editor.ui.registry.addButton('myCustomToolbarButton', {
- *         text: 'My Custom Button',
+ *         text: 'My custom button',
  *         onAction: function() {
  *             alert('Button clicked!');
  *         }
@@ -77,7 +76,7 @@ import I18n from './util/I18n';
  *     // Register a menu item that triggers an alert when clicked
  *     // To show this menu item in the editor, include it in the menu setting
  *     editor.ui.registry.addMenuItem('myCustomMenuItem', {
- *         text: 'My Custom Menu Item',
+ *         text: 'My custom menu item',
  *         onAction: function() {
  *             alert('Menu item clicked');
  *         }
@@ -102,23 +101,18 @@ export interface UrlObject { prefix: string; resource: string; suffix: string }
 
 type WaitState = 'added' | 'loaded';
 
-// This is a work around as constructors will only work with classes,
-// but our plugins are all functions.
-type AddOnCallback<T> = (editor: Editor, url: string, $?: DomQueryConstructor) => void | T;
-export type AddOnConstructor<T> = new (editor: Editor, url: string, $?: DomQueryConstructor) => T;
+export type AddOnConstructor<T> = (editor: Editor, url: string) => void | T;
 
 interface AddOnManager<T> {
   items: AddOnConstructor<T>[];
   urls: Record<string, string>;
-  lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }>;
+  lookup: Record<string, { instance: AddOnConstructor<T> }>;
   _listeners: { name: string; state: WaitState; callback: () => void }[];
   get: (name: string) => AddOnConstructor<T>;
-  dependencies: (name: string) => string[]; // TODO: deprecated in 5.7
   requireLangPack: (name: string, languages: string) => void;
-  add: (id: string, addOn: AddOnCallback<T>, dependencies?: string[]) => AddOnConstructor<T>;
+  add: (id: string, addOn: AddOnConstructor<T>) => AddOnConstructor<T>;
   remove: (name: string) => void;
   createUrl: (baseUrl: UrlObject, dep: string | UrlObject) => UrlObject;
-  addComponents: (pluginName: string, scripts: string[]) => void;
   load: (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void) => void;
   waitFor: (name: string, callback: () => void, state?: WaitState) => void;
 }
@@ -126,7 +120,7 @@ interface AddOnManager<T> {
 const AddOnManager = <T>(): AddOnManager<T> => {
   const items: AddOnConstructor<T>[] = [];
   const urls: Record<string, string> = {};
-  const lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }> = {};
+  const lookup: Record<string, { instance: AddOnConstructor<T> }> = {};
   const _listeners: { name: string; state: WaitState; callback: () => void }[] = [];
 
   const runListeners = (name: string, state: WaitState) => {
@@ -140,16 +134,6 @@ const AddOnManager = <T>(): AddOnManager<T> => {
     }
 
     return undefined;
-  };
-
-  const dependencies = (name: string) => {
-    let result;
-
-    if (lookup[name]) {
-      result = lookup[name].dependencies;
-    }
-
-    return result || [];
   };
 
   const requireLangPack = (name: string, languages: string) => {
@@ -167,14 +151,13 @@ const AddOnManager = <T>(): AddOnManager<T> => {
     }
   };
 
-  const add = (id: string, addOn: AddOnCallback<T>, dependencies?: string[]) => {
-    const addOnConstructor = addOn as unknown as AddOnConstructor<T>;
-    items.push(addOnConstructor);
-    lookup[id] = { instance: addOnConstructor, dependencies };
+  const add = (id: string, addOn: AddOnConstructor<T>) => {
+    items.push(addOn);
+    lookup[id] = { instance: addOn };
 
     runListeners(id, 'added');
 
-    return addOnConstructor;
+    return addOn;
   };
 
   const remove = (name: string) => {
@@ -192,32 +175,6 @@ const AddOnManager = <T>(): AddOnManager<T> => {
       { prefix: baseUrl.prefix, resource: dep, suffix: baseUrl.suffix };
   };
 
-  const addComponents = (pluginName: string, scripts: string[]) => {
-    const pluginUrl = urls[pluginName];
-
-    Arr.each(scripts, (script) => {
-      ScriptLoader.ScriptLoader.add(pluginUrl + '/' + script);
-    });
-  };
-
-  const loadDependencies = (name: string, addOnUrl: string | UrlObject, success: () => void, scope: any) => {
-    const deps = dependencies(name);
-
-    Arr.each(deps, (dep) => {
-      const newUrl = createUrl(addOnUrl, dep);
-
-      load(newUrl.resource, newUrl, undefined, undefined);
-    });
-
-    if (success) {
-      if (scope) {
-        success.call(scope);
-      } else {
-        success.call(ScriptLoader);
-      }
-    }
-  };
-
   const load = (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void) => {
     if (urls[name]) {
       return;
@@ -233,7 +190,6 @@ const AddOnManager = <T>(): AddOnManager<T> => {
 
     const done = () => {
       runListeners(name, 'loaded');
-      loadDependencies(name, addOnUrl, success, scope);
     };
 
     if (lookup[name]) {
@@ -266,16 +222,6 @@ const AddOnManager = <T>(): AddOnManager<T> => {
      * @return {tinymce.Theme/tinymce.Plugin} Theme or plugin add-on instance or undefined.
      */
     get,
-
-    /**
-     * <em>Deprecated in TinyMCE 5.7 and has been marked for removal in TinyMCE 6.0.</em>
-     *
-     * @method dependencies
-     * @param {String} pluginName Name of the plugin to lookup dependencies for.
-     * @return {Array} An array of dependencies for the specified plugin.
-     * @deprecated
-     */
-    dependencies,
 
     /**
      * Loads a language pack for the specified add-on.
@@ -317,20 +263,6 @@ const AddOnManager = <T>(): AddOnManager<T> => {
     remove,
 
     createUrl,
-
-    /**
-     * Add a set of components that will make up the add-on. Using the url of the add-on name as the base url.
-     * This should be used in development mode.  A new compressor/javascript munger process will ensure that the
-     * components are put together into the plugin.js file and compressed correctly.
-     * <br>
-     * <em>Deprecated in TinyMCE 5.7 and has been marked for removal in TinyMCE 6.0.</em>
-     *
-     * @method addComponents
-     * @param {String} pluginName name of the plugin to load scripts from (will be used to get the base url for the plugins).
-     * @param {Array} scripts Array containing the names of the scripts to load.
-     * @deprecated in 5.7
-     */
-    addComponents,
 
     /**
      * Loads an add-on from a specific url.

@@ -1,4 +1,4 @@
-import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, PhantomSkipper, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -8,14 +8,10 @@ import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
+import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) => {
 
-  // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
-  // viewed as an invalid value.
-  if (PhantomSkipper.detect()) {
-    return success();
-  }
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
     Slider.sketch({
       dom: {
@@ -94,9 +90,9 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
     })
   ), (doc, _body, _gui, component, _store) => {
 
-    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom.getBoundingClientRect());
+    const cGetBounds = Chain.mapper((elem: SugarElement<Element>) => elem.dom.getBoundingClientRect());
 
-    const cGetComponent = Chain.binder((elem: SugarElement) => component.getSystem().getByDom(elem));
+    const cGetComponent = Chain.binder((elem: SugarElement<Element>) => component.getSystem().getByDom(elem));
 
     const cGetParts = NamedChain.asChain([
       NamedChain.writeValue('slider', component.element),
@@ -185,15 +181,8 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
 
     const cCheckValue = (expected: { x: number; y: number }) => Chain.op((parts: any) => {
       const v = Representing.getValue(parts.sliderComp);
-      Assert.eq('Checking slider value', expected.x, v.x());
-      Assert.eq('Checking slider value', expected.y, v.y());
+      Assert.eq('Checking slider value', expected, v);
     });
-
-    const sAssertValue = (label: string, expected: { x: number; y: number }) => Logger.t(label, Step.sync(() => {
-      const v = Representing.getValue(component);
-      Assert.eq(label, expected.x, v.x());
-      Assert.eq(label, expected.y, v.y());
-    }));
 
     return [
 
@@ -307,16 +296,16 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       ),
 
       Keyboard.sKeydown(doc, Keys.left(), {}),
-      sAssertValue('200 -> 190 (step size)', { x: 190, y: 201 }),
+      RepresentPipes.sAssertValue('200 -> 190 (step size)', { x: 190, y: 201 }, component),
 
       Keyboard.sKeydown(doc, Keys.left(), {}),
-      sAssertValue('200 -> 180 (step size)', { x: 180, y: 201 }),
+      RepresentPipes.sAssertValue('200 -> 180 (step size)', { x: 180, y: 201 }, component),
 
       Step.sync(() => {
         Slider.resetToMin(component);
       }),
 
-      sAssertValue('min: 50', { x: 50, y: 50 }),
+      RepresentPipes.sAssertValue('min: 50', { x: 50, y: 50 }, component),
 
       Keyboard.sKeydown(doc, Keys.left(), {}),
       Logger.t(
@@ -363,10 +352,13 @@ UnitTest.asynctest('Browser Test: ui.slider.TwoDSliderTest', (success, failure) 
       ),
 
       Keyboard.sKeydown(doc, Keys.down(), {}),
-      sAssertValue('Checking that the thumb is now one step further right', { x: 49, y: 60 }),
+      RepresentPipes.sAssertValue('Checking that the thumb is now one step further right', { x: 49, y: 60 }, component),
 
       Keyboard.sKeydown(doc, Keys.down(), {}),
-      sAssertValue('Checking that the thumb is now one step further right', { x: 49, y: 70 })
+      RepresentPipes.sAssertValue('Checking that the thumb is now one step further right', { x: 49, y: 70 }, component),
+
+      RepresentPipes.sSetValue(component, { x: 99, y: 99 }),
+      RepresentPipes.sAssertValue('Check that Representing.setValue does something', { x: 99, y: 99 }, component),
     ];
   }, success, (err, logs) => {
     failure(err, logs);

@@ -12,14 +12,14 @@ import * as Channels from '../api/messages/Channels';
 import { ReceivingChannelSpec, ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 interface DismissalReceivingDetail {
-  isExtraPart: (sandbox: AlloyComponent, target: SugarElement) => boolean;
+  isExtraPart: (sandbox: AlloyComponent, target: SugarElement<Node>) => boolean;
   fireEventInstead: Optional<{
     event: string;
   }>;
 }
 
 export interface DismissalReceivingSpec {
-  isExtraPart?: (sandbox: AlloyComponent, target: SugarElement) => boolean;
+  isExtraPart?: (sandbox: AlloyComponent, target: SugarElement<Node>) => boolean;
   fireEventInstead?: {
     event?: string;
   };
@@ -46,7 +46,7 @@ const receivingChannel = (rawSpec: DismissalReceivingSpec): Record<string, Recei
       schema: StructureSchema.objOfOnly([
         FieldSchema.required('target')
       ]),
-      onReceive: (sandbox: AlloyComponent, data: { target: SugarElement }) => {
+      onReceive: (sandbox: AlloyComponent, data: { target: SugarElement<Node> }) => {
         if (Sandboxing.isOpen(sandbox)) {
           const isPart = Sandboxing.isPartOf(sandbox, data.target) || detail.isExtraPart(sandbox, data.target);
           if (!isPart) {

@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import { hasAppearanceOptions } from '../api/Settings';
+import * as Options from '../api/Options';
 
 const getItems = (editor: Editor, classes: Dialog.ListBoxItemSpec[], insertNewTable: boolean): Dialog.BodyComponentSpec[] => {
   const rowColCountItems: Dialog.BodyComponentSpec[] = !insertNewTable ? [] : [
@@ -39,7 +39,7 @@ const getItems = (editor: Editor, classes: Dialog.ListBoxItemSpec[], insertNewTa
     }
   ];
 
-  const appearanceItems: Dialog.BodyComponentSpec[] = hasAppearanceOptions(editor) ? [
+  const appearanceItems: Dialog.BodyComponentSpec[] = Options.hasAppearanceOptions(editor) ? [
     {
       type: 'input',
       name: 'cellspacing',

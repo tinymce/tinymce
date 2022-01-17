@@ -8,13 +8,9 @@ import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { CustomEvent, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
-export interface SliderValueX {
-  readonly x: number;
-}
+export type SliderValueX = number;
 
-export interface SliderValueY {
-  readonly y: number;
-}
+export type SliderValueY = number;
 
 export interface SliderValueXY {
   readonly x: number;
@@ -50,7 +46,7 @@ export interface Manager {
   setValueFrom: (spectrum: AlloyComponent, detail: SliderDetail, value: number | SugarPosition) => void;
   setToMin: (spectrum: AlloyComponent, detail: SliderDetail) => void;
   setToMax: (spectrum: AlloyComponent, detail: SliderDetail) => void;
-  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent) => Optional<number | SugarPosition>;
+  getValueFromEvent: (simulatedEvent: NativeSimulatedEvent<MouseEvent | TouchEvent>) => Optional<number | SugarPosition>;
   setPositionFromValue: (slider: AlloyComponent, thumb: AlloyComponent, detail: SliderDetail, parts: SliderModelDetailParts) => void;
   onLeft: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;
   onRight: (spectrum: AlloyComponent, detail: SliderDetail) => Optional<boolean>;

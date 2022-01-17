@@ -3,14 +3,13 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, [ Theme ], true);
+  }, [], true);
 
   context('Arrow keys in figcaption', () => {
     it('Arrow up from start of figcaption to paragraph before figure', () => {
@@ -54,7 +53,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', () => {
       editor.setContent('<figure><figcaption>a<br />b</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 2 ], 0);
       TinyContentActions.keystroke(editor, Keys.up());
-      TinyAssertions.assertContent(editor, '<figure><figcaption>a<br />b</figcaption></figure>');
+      TinyAssertions.assertContent(editor, '<figure><figcaption>a<br>b</figcaption></figure>');
       TinyAssertions.assertSelection(editor, [ 0, 0, 2 ], 0, [ 0, 0, 2 ], 0);
     });
 
@@ -63,19 +62,19 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', () => {
       editor.setContent('<figure><figcaption>a<br />b</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.down());
-      TinyAssertions.assertContent(editor, '<figure><figcaption>a<br />b</figcaption></figure>');
+      TinyAssertions.assertContent(editor, '<figure><figcaption>a<br>b</figcaption></figure>');
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
     });
 
     it('Arrow down at figcaption with forced_root_block_attrs set', () => {
       const editor = hook.editor();
-      editor.settings.forced_root_block_attrs = { class: 'x' };
+      editor.options.set('forced_root_block_attrs', { class: 'x' });
       editor.setContent('<figure><figcaption>a</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertContent(editor, '<figure><figcaption>a</figcaption></figure><p class="x">&nbsp;</p>');
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
-      delete editor.settings.forced_root_block_attrs;
+      editor.options.unset('forced_root_block_attrs');
     });
   });
 });

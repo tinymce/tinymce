@@ -3,8 +3,6 @@ import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wr
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
@@ -19,7 +17,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
         'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const getContent = (editor: Editor) => {
     return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
@@ -72,7 +70,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><span style="color: #ff0000; font-weight: bold;">' +
-      '<em>1</em></span><span style="color: #ff0000;"><em>23</em></span>' +
+      '<em>1</em></span><span style="color: rgb(255, 0, 0);"><em>23</em></span>' +
       '<span style=\"color: #ff0000; font-weight: bold;\"><em>4' +
       '</em></span></p>', 'Inline element style where element is format root');
   });
@@ -111,7 +109,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span>' +
-      '</em></span><em><span style="color: #ff0000;">34</span></em></p>', 'Partially selected inline element text with complex children');
+      '</em></span><em><span style="color: rgb(255, 0, 0);">34</span></em></p>', 'Partially selected inline element text with complex children');
   });
 
   it('Inline elements with exact flag', () => {
@@ -354,12 +352,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     assert.equal(editor.getContent(), '<table><tbody><tr><td>one two</td></tr></tbody></table>');
   });
 
-  it('contentEditable: false on start and contentEditable: true on end', function () {
-    if (Env.ie) {
-      // Skipped since IE doesn't support selection of parts of a cE=false element
-      this.skip();
-    }
-
+  it('contentEditable: false on start and contentEditable: true on end', () => {
     const editor = hook.editor();
     editor.formatter.register('format', { inline: 'b' });
     editor.setContent('<p>abc</p><p contenteditable="false"><b>def</b></p><p><b>ghj</b></p>');
@@ -375,7 +368,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     const editor = hook.editor();
     editor.formatter.register('format', { inline: 'b' });
     editor.setContent('<p>abc</p><p><b>def</b></p><p contenteditable="false"><b>ghj</b></p>');
-    LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last b', 3);
+    LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last-of-type b', 3);
     editor.formatter.remove('format');
     assert.equal(editor.getContent(), '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>', 'Text in first paragraph is not bold');
   });

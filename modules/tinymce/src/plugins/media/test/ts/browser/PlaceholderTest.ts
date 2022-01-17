@@ -5,7 +5,6 @@ import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
       { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
     ],
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pTestPlaceholder = async (editor: Editor, url: string, expected: string, struct: StructAssert) => {
     await Utils.pOpenDialog(editor);
@@ -112,7 +111,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   context('media_live_embeds=false', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.media_live_embeds = false;
+      editor.options.set('media_live_embeds', false);
     });
 
     it('TBA: Set and assert script placeholder structure', () => pTestScriptPlaceholder(hook.editor(),
@@ -132,7 +131,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     it('TBA: Set and assert video placeholder structure', () => pTestPlaceholder(hook.editor(),
       '/custom/video.mp4',
       '<p><video controls="controls" width="300" height="150">\n' +
-      '<source src="custom/video.mp4" type="video/mp4" /></video></p>',
+      '<source src="custom/video.mp4" type="video/mp4"></video></p>',
       placeholderStructure
     ));
 
@@ -146,7 +145,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   context('media_live_embeds=true', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.media_live_embeds = true;
+      editor.options.set('media_live_embeds', true);
     });
 
     it('TBA: Set and assert live iframe embed structure', () => pTestPlaceholder(hook.editor(),

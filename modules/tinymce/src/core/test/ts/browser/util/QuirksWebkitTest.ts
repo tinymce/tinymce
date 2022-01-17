@@ -4,13 +4,12 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
   before(function () {
-    if (!Env.webkit) {
+    if (!Env.browser.isChromium() && !Env.browser.isSafari()) {
       this.skip();
     }
   });
@@ -20,7 +19,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     indent: false,
     disable_nodechange: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   it('Delete from beginning of P into H1', () => {
     const editor = hook.editor();
@@ -34,9 +33,9 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
   it('Delete between empty paragraphs', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a</p><p><br></p><p><br></p><p>b</p>';
-    LegacyUnit.setSelection(editor, 'p:last', 0);
+    LegacyUnit.setSelection(editor, 'p:last-of-type', 0);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br /></p><p>b</p>');
+    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br></p><p>b</p>');
     assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
@@ -57,7 +56,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a<input type="text"></h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(editor.getContent(), '<h1>a<input type="text" />b<span style="color: red;">c</span></h1>');
+    assert.equal(editor.getContent(), '<h1>a<input type="text">b<span style="color: red;">c</span></h1>');
     assert.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
@@ -111,7 +110,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b<br>c</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<br />c</h1>');
+    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<br>c</h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -123,7 +122,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     rng.setEndAfter(editor.dom.select('img')[0]);
     editor.selection.setRng(rng);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br /></p>');
+    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br></p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -159,7 +158,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p><input type="text"><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    assert.equal(editor.getContent(), '<h1>a<input type="text" /><span style="color: red;">b</span></h1>');
+    assert.equal(editor.getContent(), '<h1>a<input type="text"><span style="color: red;">b</span></h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -168,12 +167,12 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a<br>b</h1><p>c</p>';
 
     const rng = editor.selection.getRng();
-    rng.setStart(editor.$('h1')[0].lastChild, 1);
-    rng.setEnd(editor.$('h1')[0].lastChild, 1);
+    rng.setStart(editor.dom.select('h1')[0].lastChild, 1);
+    rng.setEnd(editor.dom.select('h1')[0].lastChild, 1);
     editor.selection.setRng(rng);
 
     editor.execCommand('ForwardDelete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<br />bc</h1>');
+    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<br>bc</h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 

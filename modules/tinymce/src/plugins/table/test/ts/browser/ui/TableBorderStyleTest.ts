@@ -3,7 +3,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pAssertStyleCanBeToggledOnAndOff, setEditorContentTableAndSelection } from '../../module/test/TableModifiersTestUtils';
 import * as TableTestUtils from '../../module/test/TableTestUtils';
@@ -28,7 +27,7 @@ describe('browser.tinymce.plugins.table.ui.TableBorderStyleTest', () => {
         value: ''
       },
     ]
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('TINY-7478: Ensure the table border style adds and removes it as expected for a single cell', async () =>
     await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {

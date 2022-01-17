@@ -1,20 +1,10 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.dom.ContentCssCorsTest', () => {
-  before(function () {
-    // The crossorigin attribute isn't supported in IE11
-    if (Env.ie && Env.ie < 12) {
-      this.skip();
-    }
-    Theme();
-  });
-
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
     menubar: false,

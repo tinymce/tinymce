@@ -1,20 +1,17 @@
 import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { Css, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
-import Theme from 'tinymce/themes/silver/Theme';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 import { pOpenMore } from '../../module/MenuUtils';
 
 describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () => {
-  before(() => {
-    Theme();
-  });
 
   const structureTest = (editor: Editor, container: SugarElement<Node>, maxWidth: number) =>
     Assertions.assertStructure(
@@ -58,14 +55,14 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () 
     assert.isAtLeast(width, minWidth, `Toolbar with should be greater than ${minWidth}px - ${width}>=${minWidth}`);
   };
 
-  const testRender = (settings: Record<string, any>, expectedWidth: number, pActions?: (editor: Editor) => Promise<void>) => async () => {
+  const testRender = (options: RawEditorOptions, expectedWidth: number, pActions?: (editor: Editor) => Promise<void>) => async () => {
     Scroll.to(0, 0);
     const editor = await McEditor.pFromSettings<Editor>({
       menubar: false,
       inline: true,
       base_url: '/project/tinymce/js/tinymce',
       toolbar_mode: 'floating',
-      ...settings
+      ...options
     });
     editor.focus();
     await UiFinder.pWaitForVisible('Wait for the editor to show', SugarBody.body(), '.tox-editor-header');

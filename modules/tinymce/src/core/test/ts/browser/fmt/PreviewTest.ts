@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Preview from 'tinymce/core/fmt/Preview';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
@@ -182,7 +181,7 @@ describe('browser.tinymce.core.fmt.PreviewTest', () => {
         '}'
       ),
       base_url: '/project/tinymce/js/tinymce'
-    }, [ Theme ], true);
+    }, [], true);
 
     it('Check initial styles were loaded', () => {
       const editor = hook.editor();

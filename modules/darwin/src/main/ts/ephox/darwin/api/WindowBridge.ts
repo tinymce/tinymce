@@ -5,9 +5,9 @@ import { Situs } from '../selection/Situs';
 import * as Util from '../selection/Util';
 
 export interface WindowBridge {
-  elementFromPoint: (x: number, y: number) => Optional<SugarElement>;
-  getRect: (element: SugarElement) => ClientRect | DOMRect;
-  getRangedRect: (start: SugarElement, soffset: number, finish: SugarElement, foffset: number) => Optional<RawRect>;
+  elementFromPoint: (x: number, y: number) => Optional<SugarElement<Element>>;
+  getRect: (element: SugarElement<Element>) => ClientRect | DOMRect;
+  getRangedRect: (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => Optional<RawRect>;
   getSelection: () => Optional<SimRange>;
   fromSitus: (situs: Situs) => SimRange;
   situsFromPoint: (x: number, y: number) => Optional<Situs>;
@@ -31,7 +31,7 @@ export const WindowBridge = (win: Window): WindowBridge => {
     return element.dom.getBoundingClientRect();
   };
 
-  const getRangedRect = (start: SugarElement, soffset: number, finish: SugarElement, foffset: number): Optional<RawRect> => {
+  const getRangedRect = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number): Optional<RawRect> => {
     const sel = SimSelection.exact(start, soffset, finish, foffset);
     return WindowSelection.getFirstRect(win, sel);
   };

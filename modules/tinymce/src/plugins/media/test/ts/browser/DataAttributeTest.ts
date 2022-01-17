@@ -3,7 +3,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -15,7 +14,7 @@ describe('browser.tinymce.plugins.media.DataAttributeTest', () => {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pTestEmbedContentFromUrlWithAttribute = async (editor: Editor, url: string, content: string) => {
     editor.setContent('');

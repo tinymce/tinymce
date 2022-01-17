@@ -16,7 +16,7 @@ import { Class, Compare, Css, Focus, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 
-import { getToolbarMode, ToolbarMode } from '../../api/Settings';
+import { getToolbarMode, ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
 import { identifyButtons } from '../toolbar/Integration';

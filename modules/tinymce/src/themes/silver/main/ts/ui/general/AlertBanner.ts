@@ -16,7 +16,7 @@ import * as Icons from '../icons/Icons';
 type AlertBannerSpec = Omit<Dialog.AlertBanner, 'type'>;
 
 export interface AlertBannerWrapper extends AlertBannerSpec {
-  iconTooltip: string;
+  iconTooltip?: string;
 }
 
 export const renderAlertBanner = (spec: AlertBannerWrapper, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>

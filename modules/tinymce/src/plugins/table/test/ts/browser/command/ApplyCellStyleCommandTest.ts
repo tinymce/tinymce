@@ -9,7 +9,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -20,7 +19,7 @@ describe('browser.tinymce.plugins.table.command.ApplyCellStyleCommandTest', () =
     setup: (editor: Editor) => {
       editor.on('tablemodified', logEvent);
     }
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   let events: Array<EditorEvent<TableModifiedEvent>> = [];
   const logEvent = (event: EditorEvent<TableModifiedEvent>) => {

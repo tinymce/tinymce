@@ -1,12 +1,10 @@
 import { RealKeys, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
   const togglePlaceholderCount = Cell(0);
@@ -20,7 +18,7 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
         togglePlaceholderCount.set(togglePlaceholderCount.get() + 1);
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   before(() => hook.editor().focus());
 
@@ -53,12 +51,7 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
     await pAssertPlaceholderExists(editor);
   };
 
-  it('TINY-3917: Check placeholder restores when deleting content via command', function () {
-    // The Delete command doesn't work on IE 11 so skip it
-    if (PlatformDetection.detect().browser.isIE()) {
-      this.skip();
-    }
-
+  it('TINY-3917: Check placeholder restores when deleting content via command', () => {
     const editor = hook.editor();
     setContent(editor, '<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);

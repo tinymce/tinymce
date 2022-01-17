@@ -4,14 +4,13 @@ import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 type Alignment = 'left' | 'center' | 'right' | 'justify';
 
 describe('browser.tinymce.core.fmt.MediaAlignTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const mediaApproxStructure = (tag: string, alignment: Alignment) => {
     const alignStyles = (str: ApproxStructure.StringApi) => {
@@ -42,8 +41,8 @@ describe('browser.tinymce.core.fmt.MediaAlignTest', () => {
   };
 
   Arr.each([
-    { type: 'video', content: '<p><video controls="controls"><source src="custom/video.mp4" /></video></p>' },
-    { type: 'audio', content: '<p><audio controls="controls"><source src="custom/audio.mp3" /></audio></p>' },
+    { type: 'video', content: '<p><video controls="controls"><source src="custom/video.mp4"></video></p>' },
+    { type: 'audio', content: '<p><audio controls="controls"><source src="custom/audio.mp3"></audio></p>' },
   ], (test) => {
     const { type, content } = test;
 

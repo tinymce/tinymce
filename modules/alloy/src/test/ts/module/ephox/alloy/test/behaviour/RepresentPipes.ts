@@ -5,17 +5,17 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 const cGetValue = Chain.mapper((component: AlloyComponent) => Representing.getValue(component));
 
-const cSetValue = (value: string): Chain<AlloyComponent, AlloyComponent> =>
+const cSetValue = (value: any): Chain<AlloyComponent, AlloyComponent> =>
   Chain.op((component: AlloyComponent) => {
     Representing.setValue(component, value);
   });
 
-const sSetValue = <T>(component: AlloyComponent, value: string): Step<T, T> =>
+const sSetValue = <T>(component: AlloyComponent, value: any): Step<T, T> =>
   Step.sync(() => {
     Representing.setValue(component, value);
   });
 
-const sAssertValue = <T>(label: string, expected: string, component: AlloyComponent): Step<T, T> =>
+const sAssertValue = <T>(label: string, expected: any, component: AlloyComponent): Step<T, T> =>
   Chain.asStep(component, [
     cGetValue,
     Assertions.cAssertEq(label, expected)

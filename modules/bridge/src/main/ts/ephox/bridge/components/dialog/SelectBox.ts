@@ -1,6 +1,7 @@
 import { FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
 export interface SelectBoxItemSpec {
@@ -29,11 +30,11 @@ export interface SelectBox extends FormComponentWithLabel {
 
 const selectBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
   FieldSchema.requiredArrayOfObj('items', [
-    FieldSchema.requiredString('text'),
-    FieldSchema.requiredString('value')
+    ComponentSchema.text,
+    ComponentSchema.value
   ]),
   FieldSchema.defaultedNumber('size', 1),
-  FieldSchema.defaultedBoolean('disabled', false)
+  ComponentSchema.disabled
 ]);
 
 export const selectBoxSchema = StructureSchema.objOf(selectBoxFields);

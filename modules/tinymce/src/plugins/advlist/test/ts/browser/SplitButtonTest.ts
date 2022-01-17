@@ -6,7 +6,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -15,7 +14,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     advlist_number_styles: 'default,circle,square',
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ AdvListPlugin, ListsPlugin, Theme ]);
+  }, [ AdvListPlugin, ListsPlugin ]);
 
   const pClickOnSplitBtnFor = async (editor: Editor, label: string) => {
     TinyUiActions.clickOnToolbar(editor, '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron');

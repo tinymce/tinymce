@@ -4,7 +4,6 @@ import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.SwitchTableSectionTest', () => {
   const basicContent = `<table>
@@ -202,7 +201,7 @@ describe('browser.tinymce.plugins.table.SwitchTableSectionTest', () => {
       plugins: 'table',
       base_url: '/project/tinymce/js/tinymce',
       table_header_type: 'section'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6007: Switch from body to header', () =>
       switchToHeader(hook.editor(), basicContent, theadExpected)
@@ -238,7 +237,7 @@ describe('browser.tinymce.plugins.table.SwitchTableSectionTest', () => {
       plugins: 'table',
       base_url: '/project/tinymce/js/tinymce',
       table_header_type: 'cells'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6007: Switch from body to header', () =>
       switchToHeader(hook.editor(), basicContent, thsExpected)
@@ -274,7 +273,7 @@ describe('browser.tinymce.plugins.table.SwitchTableSectionTest', () => {
       plugins: 'table',
       base_url: '/project/tinymce/js/tinymce',
       table_header_type: 'sectionCells'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6007: Switch from body to header', () =>
       switchToHeader(hook.editor(), basicContent, bothExpected)
@@ -314,7 +313,7 @@ describe('browser.tinymce.plugins.table.SwitchTableSectionTest', () => {
       plugins: 'table',
       base_url: '/project/tinymce/js/tinymce',
       table_header_type: 'auto'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6007: switch to a header when one already exists using detection (section)', () =>
       switchExistingHeader(hook.editor(), theadExpected, existingTheadExpected)
@@ -350,7 +349,7 @@ describe('browser.tinymce.plugins.table.SwitchTableSectionTest', () => {
       plugins: 'table',
       base_url: '/project/tinymce/js/tinymce',
       table_header_type: 'foo'
-    }, [ Plugin, Theme ]);
+    }, [ Plugin ]);
 
     it('TINY-6007: Setting an invalid option defaults to section when switching header', () =>
       switchToHeader(hook.editor(), basicContent, theadExpected)

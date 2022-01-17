@@ -10,7 +10,7 @@ import { UploadStatus } from '../../file/UploadStatus';
 import Editor from '../Editor';
 import { BlobInfo } from '../file/BlobCache';
 import { NotificationApi } from '../NotificationManager';
-import * as Settings from '../Settings';
+import * as Options from '../Options';
 
 export type UploadResult = Uploader.UploadResult;
 
@@ -27,10 +27,10 @@ export const openNotification = (editor: Editor) => (): NotificationApi => edito
 
 export const createUploader = (editor: Editor, uploadStatus: UploadStatus) =>
   Uploader.Uploader(uploadStatus, {
-    url: Settings.getImageUploadUrl(editor),
-    basePath: Settings.getImageUploadBasePath(editor),
-    credentials: Settings.getImagesUploadCredentials(editor),
-    handler: Settings.getImagesUploadHandler(editor)
+    url: Options.getImageUploadUrl(editor),
+    basePath: Options.getImageUploadBasePath(editor),
+    credentials: Options.getImagesUploadCredentials(editor),
+    handler: Options.getImagesUploadHandler(editor)
   });
 
 /**

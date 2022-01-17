@@ -1,23 +1,19 @@
 import { FocusTools, Keys } from '@ephox/agar';
-import { before, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarDocument } from '@ephox/sugar';
 import { McEditor, TinyContentActions, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import Theme from 'tinymce/themes/silver/Theme';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarFocusTest', () => {
-  before(() => {
-    Theme();
-  });
 
-  const pTestFocus = async (settings: RawEditorSettings) => {
+  const pTestFocus = async (options: RawEditorOptions) => {
     const editor = await McEditor.pFromSettings<Editor>({
       toolbar: 'undo redo | bold italic',
       menubar: false,
       statusbar: false,
-      ...settings,
+      ...options,
       base_url: '/project/tinymce/js/tinymce'
     });
     editor.focus();

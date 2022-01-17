@@ -5,12 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
 import { Obj, Optionals } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 
 /**
@@ -190,7 +191,7 @@ const getCssText = (editor: Editor, format: any) => {
   let name, previewFrag;
   let previewCss = '', parentFontSize;
 
-  let previewStyles: string = Settings.getPreviewStyles(editor);
+  let previewStyles = Options.getPreviewStyles(editor);
 
   // No preview forced
   if (previewStyles === '') {
@@ -284,7 +285,7 @@ const getCssText = (editor: Editor, format: any) => {
 
       // Ignore white since it's the default color, not the nicest fix
       // TODO: Fix this by detecting runtime style
-      if (dom.toHex(value).toLowerCase() === '#ffffff') {
+      if (Transformations.rgbaToHexString(value).toLowerCase() === '#ffffff') {
         return;
       }
     }
@@ -292,7 +293,7 @@ const getCssText = (editor: Editor, format: any) => {
     if (name === 'color') {
       // Ignore black since it's the default color, not the nicest fix
       // TODO: Fix this by detecting runtime style
-      if (dom.toHex(value).toLowerCase() === '#000000') {
+      if (Transformations.rgbaToHexString(value).toLowerCase() === '#000000') {
         return;
       }
     }

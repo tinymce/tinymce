@@ -6,17 +6,13 @@ let gruntWebPack = require('./tools/modules/grunt-webpack');
 let swag = require('@ephox/swag');
 
 let plugins = [
-  'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'bbcode', 'charmap', 'code', 'codesample',
-  'colorpicker', 'contextmenu', 'directionality', 'emoticons', 'help', 'fullpage',
-  'fullscreen', 'hr', 'image', 'imagetools', 'importcss', 'insertdatetime', 'legacyoutput', 'link',
-  'lists', 'media', 'nonbreaking', 'noneditable', 'pagebreak', 'paste', 'preview', 'print', 'save',
-  'searchreplace', 'spellchecker', 'tabfocus', 'table', 'template', 'textcolor', 'textpattern', 'toc',
-  'visualblocks', 'visualchars', 'wordcount', 'quickbars',
+  'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 'code', 'codesample',
+  'directionality', 'emoticons', 'help', 'fullscreen', 'image', 'importcss', 'insertdatetime',
+  'link', 'lists', 'media', 'nonbreaking', 'pagebreak', 'preview', 'save', 'searchreplace',
+  'table', 'template', 'visualblocks', 'visualchars', 'wordcount', 'quickbars'
 ];
 
 let themes = [
-  'mobile',
-  // 'modern', 'mobile', 'inlite', 'silver'
   'silver'
 ];
 
@@ -48,6 +44,7 @@ module.exports = function (grunt) {
     pkg: packageData,
 
     shell: {
+      prismjs: { command: 'node ./bin/build-prism.js', cwd: '../../' },
       tsc: { command: 'tsc -b' },
       moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' }
     },
@@ -179,17 +176,16 @@ module.exports = function (grunt) {
       }
     },
 
-    uglify: Object.assign(
+    terser: Object.assign(
       {
         options: {
+          ecma: 2018,
           output: {
             comments: 'all',
             ascii_only: true
           },
           compress: {
-            passes: 2,
-            // TINY-7720: Disable merge_vars as it has a bug that causes errors on IE 11
-            merge_vars: false
+            passes: 2
           }
         },
         core: {
@@ -204,7 +200,7 @@ module.exports = function (grunt) {
           options: {
             mangle: false,
             compress: false,
-            beautify: {
+            output: {
               indent_level: 2
             }
           },
@@ -895,9 +891,10 @@ module.exports = function (grunt) {
   });
   grunt.loadTasks('tools/tasks');
 
-  grunt.registerTask('emoji', ['emojis', 'uglify:emoticons-raw']);
+  grunt.registerTask('emoji', ['emojis', 'terser:emoticons-raw']);
 
   grunt.registerTask('prodBuild', [
+    'shell:prismjs',
     'shell:tsc',
     'eslint',
     'globals',
@@ -905,7 +902,7 @@ module.exports = function (grunt) {
     'rollup',
     'concat',
     'copy',
-    'uglify'
+    'terser'
   ]);
 
   grunt.registerTask('prod', [
@@ -918,6 +915,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('dev', [
+    'shell:prismjs',
     'globals',
     'emoji',
     // TODO: Make webpack use the oxide CSS directly

@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/visualblocks/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -21,11 +20,11 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
         border: 13px solid black;
       }
     `
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const pWaitForVisualBlocks = (editor: Editor, waitUntilEnabled: boolean = true) =>
     Waiter.pTryUntil('Wait for background css to be applied to first element', () => {
-      const p = TinyDom.fromDom(editor.getBody().firstChild);
+      const p = SugarElement.fromDom(editor.getBody().firstElementChild);
       const background = Css.get(p, 'background-image');
       if (waitUntilEnabled) {
         assert.include(background, 'url(', 'Paragraph should have a url background');

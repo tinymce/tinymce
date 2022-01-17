@@ -54,7 +54,7 @@ const pTestSink = async (sinkName: string, sink: AlloyComponent, popup: AlloyCom
   await pTestPopupPosition(sinkName, popup, sink);
 };
 
-const pTestSinkWithin = async (sinkName: string, sink: AlloyComponent, popup: AlloyComponent, placementSpec: PlacementSpec, elem: SugarElement): Promise<void> => {
+const pTestSinkWithin = async (sinkName: string, sink: AlloyComponent, popup: AlloyComponent, placementSpec: PlacementSpec, elem: SugarElement<HTMLElement>): Promise<void> => {
   addPopupToSinkWithin(popup, placementSpec, sink, elem);
   await pTestPopupPosition(sinkName, popup, sink);
 };
@@ -74,7 +74,7 @@ const cAddPopupToSink = (sinkName: string): NamedChain => NamedChain.bundle((dat
   return Result.value(data);
 });
 
-const cAddPopupToSinkWithin = (sinkName: string, elem: SugarElement): NamedChain => NamedChain.bundle((data) => {
+const cAddPopupToSinkWithin = (sinkName: string, elem: SugarElement<HTMLElement>): NamedChain => NamedChain.bundle((data) => {
   addPopupToSinkWithin(data.popup, { anchor: data.anchor }, data[sinkName], elem);
   return Result.value(data);
 });
@@ -129,7 +129,7 @@ const cTestSink = (label: string, sinkName: string): NamedChain => ChainUtils.cL
   ]
 );
 
-const cTestSinkWithin = (label: string, sinkName: string, elem: SugarElement): NamedChain => ChainUtils.cLogging(
+const cTestSinkWithin = (label: string, sinkName: string, elem: SugarElement<HTMLElement>): NamedChain => ChainUtils.cLogging(
   label,
   [
     cAddPopupToSinkWithin(sinkName, elem),

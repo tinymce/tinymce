@@ -11,7 +11,7 @@ import { SimSelection, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { useFixedContainer } from '../api/Settings';
+import { useFixedContainer } from '../api/Options';
 
 const bubbleAlignments = {
   valignCentre: [],

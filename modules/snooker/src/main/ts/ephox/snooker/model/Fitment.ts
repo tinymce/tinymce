@@ -1,8 +1,10 @@
 import { Arr, Fun, Obj, Result } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
+import { CellElement } from '../util/TableTypes';
 import * as GridRow from './GridRow';
 
 export interface Delta {
@@ -62,7 +64,7 @@ const measureHeight = (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): De
 
 const generateElements = (amount: number, row: Structs.RowCells, generators: SimpleGenerators, isLocked: (idx: number) => boolean): Structs.ElementNew[] => {
   const generator = row.section === 'colgroup' ? generators.col : generators.cell;
-  return Arr.range(amount, (idx) => Structs.elementnew(generator(), true, isLocked(idx)));
+  return Arr.range(amount, (idx) => Structs.elementnew(generator() as SugarElement<CellElement>, true, isLocked(idx)));
 };
 
 const rowFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators, lockedColumns: Record<string, boolean>): Structs.RowCells[] => {

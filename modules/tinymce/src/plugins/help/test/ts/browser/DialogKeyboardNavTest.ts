@@ -5,14 +5,13 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/help/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.help.DialogKeyboardNavTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'help',
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   // Tab key press
   const pressTabKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());

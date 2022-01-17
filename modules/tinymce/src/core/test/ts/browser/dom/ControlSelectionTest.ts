@@ -7,7 +7,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   const eventCounter = Cell<Record<string, number>>({ });
@@ -22,7 +21,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
         counter[e.type] = (counter[e.type] || 0) + 1;
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const contextMenuClickInMiddleOf = (editor: Editor, elementPath: number[]) => {
     const element = Hierarchy.follow(TinyDom.body(editor), elementPath).getOrDie().dom as HTMLElement;

@@ -4,7 +4,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,7 +13,7 @@ describe('browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest', () => 
       'data-custom1': 'a',
       'data-custom2': 'b'
     }
-  }, [ Theme ]);
+  }, []);
 
   it('Check if iframe element has the right custom attributes', () => {
     const editor = hook.editor();

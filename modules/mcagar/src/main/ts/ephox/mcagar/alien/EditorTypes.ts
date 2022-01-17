@@ -15,7 +15,7 @@ export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';
 export interface GetContentArgs {
   format?: ContentFormat;
   get?: boolean;
-  content?: string;
+  content?: any;
   getInner?: boolean;
   no_events?: boolean;
   [key: string]: any;
@@ -23,7 +23,8 @@ export interface GetContentArgs {
 
 export interface Editor {
   id: string;
-  settings: Record<string, any>;
+  settings?: Record<string, any>;
+  options?: any;
   inline: boolean;
 
   dom: any;

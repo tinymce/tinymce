@@ -4,7 +4,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, assertInputValue, generalTabSelectors, setInputValue } from '../module/Helpers';
 
@@ -18,7 +17,7 @@ describe('browser.tinymce.plugins.image.ImageResizeTest', () => {
       console.log('file picker pressed');
       callback('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
     }
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: image proportion constrains should work directly', async () => {
     const editor = hook.editor();
@@ -29,6 +28,6 @@ describe('browser.tinymce.plugins.image.ImageResizeTest', () => {
     setInputValue(generalTabSelectors.height, '5');
     await Waiter.pTryUntil('did not find width input with value 5', () => assertInputValue(generalTabSelectors.width, '5'));
     TinyUiActions.submitDialog(editor);
-    assertCleanHtml('Checking output', editor, '<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="5" height="5" /></p>');
+    assertCleanHtml('Checking output', editor, '<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="5" height="5"></p>');
   });
 });

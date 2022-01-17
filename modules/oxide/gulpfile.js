@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 
 const autoprefix = new lessAutoprefix({
-  browsers: ['IE 11', 'last 2 Safari versions', 'iOS 9.0', 'last 2 Chrome versions', 'Firefox ESR'],
+  browsers: ['last 2 Safari versions', 'iOS 14.0', 'last 2 Chrome versions', 'Firefox ESR'],
   grid: 'no-autoplace'
 });
 
@@ -77,6 +77,7 @@ gulp.task('buildSkinSwitcher', (done) => {
 gulp.task('less', function() {
   return gulp.src('./src/less/skins/**/*.less')
     .pipe(less({
+      math: 'always',
       relativeUrls: true,
       plugins: [autoprefix]
     }))
@@ -95,17 +96,6 @@ gulp.task('minifyCss', function() {
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./build/skins'))
     .pipe(connect.reload());
-});
-
-//
-// Copy icon font used by the mobile skin to each skin folder in /build
-//
-gulp.task('copyFonts', function() {
-  let base = './build/skins/ui';
-
-  return fs.readdirSync(base).reduce((stream, skin) => {
-    return stream.pipe(gulp.dest(base + '/' + skin + '/fonts/'));
-  }, gulp.src('./src/fonts/**'));
 });
 
 //
@@ -138,7 +128,7 @@ gulp.task('clean', function () {
 // Build project and watch LESS file changes
 //
 gulp.task('css', gulp.series('lint', 'less', 'minifyCss'));
-gulp.task('build', gulp.series('clean', 'css', 'copyFonts'));
+gulp.task('build', gulp.series('clean', 'css'));
 gulp.task('default', gulp.series('build'));
 
 gulp.task('demo-build', gulp.series('css', 'less', 'minifyCss', 'buildDemos', 'buildSkinSwitcher'));

@@ -2,9 +2,7 @@ import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Delay from 'tinymce/core/api/util/Delay';
 import Plugin from 'tinymce/plugins/media/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -13,10 +11,10 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
     plugins: [ 'media' ],
     toolbar: 'media',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const mediaUrlResolver = (data: { url: string }, resolve: (data: { html: string }) => void) => {
-    Delay.setTimeout(() => {
+    setTimeout(() => {
       resolve({
         html: '<span id="fake">' + data.url + '</span>'
       });
@@ -55,7 +53,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
 
   it('TBA: Open dialog, set url, submit dialog and assert content', async () => {
     const editor = hook.editor();
-    editor.settings.media_url_resolver = mediaUrlResolver;
+    editor.options.set('media_url_resolver', mediaUrlResolver);
     await pTestResolvedEmbedContentSubmit(editor,
       'https://www.youtube.com/watch?v=IcgmSRJHu_8',
       '<p><span id="fake">https://www.youtube.com/watch?v=IcgmSRJHu_8</span></p>'
@@ -64,7 +62,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
 
   it('TBA: Remove media_url_resolver setting and assert changed content', async () => {
     const editor = hook.editor();
-    delete editor.settings.media_url_resolver;
+    editor.options.unset('media_url_resolver');
     await pTestResolvedEmbedContentSubmit(editor,
       'https://www.youtube.com/watch?v=IcgmSRJHu_8',
       '<p><iframe src="https://www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>'
@@ -73,9 +71,9 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
 
   it('TBA: Open dialog, set embed content, submit dialog and assert content', async () => {
     const editor = hook.editor();
-    editor.settings.media_url_resolver = mediaUrlResolver;
+    editor.options.set('media_url_resolver', mediaUrlResolver);
     await pTestManualEmbedContentSubmit(editor, customEmbed, customEmbed);
-    delete editor.settings.media_url_resolver;
+    editor.options.unset('media_url_resolver');
     await pTestEmbedUnchangedAfterOpenCloseDialog(editor, customEmbed);
   });
 });

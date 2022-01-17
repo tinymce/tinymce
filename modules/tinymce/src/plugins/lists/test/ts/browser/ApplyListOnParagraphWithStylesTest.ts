@@ -3,7 +3,6 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -11,7 +10,7 @@ describe('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', () 
     plugins: 'lists',
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: remove margin from p when applying list on it, but leave other styles', () => {
     const editor = hook.editor();

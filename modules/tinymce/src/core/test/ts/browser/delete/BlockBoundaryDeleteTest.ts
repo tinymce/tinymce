@@ -6,13 +6,12 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as BlockBoundaryDelete from 'tinymce/core/delete/BlockBoundaryDelete';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.delete.BlockBoundaryDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, [ Theme ], true);
+  }, [], true);
 
   const doDelete = (editor: Editor) => {
     const returnVal = BlockBoundaryDelete.backspaceDelete(editor, true);

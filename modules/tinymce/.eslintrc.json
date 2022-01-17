@@ -7,6 +7,7 @@
     {
       "files": [ "src/**/main/**/*.ts" ],
       "rules": {
+        "@tinymce/no-implicit-dom-globals": [ "error", { "allowed": [ "requestAnimationFrame" ], "appendDefaults": true }],
         "notice/notice":[ "error", { "templateFile": "copyright-header.js", "chars": 300, "onNonMatchingHeader": "replace" }]
       }
     }

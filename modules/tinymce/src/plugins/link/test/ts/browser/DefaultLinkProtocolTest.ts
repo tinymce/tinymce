@@ -3,7 +3,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
@@ -12,12 +11,12 @@ describe('browser.tinymce.plugins.link.DefaultLinkProtocolTest', () => {
     plugins: 'link',
     toolbar: 'link',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   context('link_default_protocol: "http"', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.link_default_protocol = 'http';
+      editor.options.set('link_default_protocol', 'http');
     });
 
     it('TBA: www-urls are prompted to add http:// prefix, accept', async () => {
@@ -46,7 +45,7 @@ describe('browser.tinymce.plugins.link.DefaultLinkProtocolTest', () => {
   context('link_default_protocol: "https"', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.link_default_protocol = 'https';
+      editor.options.set('link_default_protocol', 'https');
     });
 
     it('TBA: www-urls are prompted to add https:// prefix, accept', async () => {

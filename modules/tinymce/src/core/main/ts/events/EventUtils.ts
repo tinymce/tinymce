@@ -96,8 +96,6 @@ const normalize = <T extends PartialEvent>(type: string, originalEvent: T, fallb
       // Execute preventDefault on the original event object
       if (Type.isFunction(originalEvent.preventDefault)) {
         originalEvent.preventDefault();
-      } else if (isNativeEvent(originalEvent)) {
-        originalEvent.returnValue = false; // IE
       }
     };
 
@@ -109,8 +107,6 @@ const normalize = <T extends PartialEvent>(type: string, originalEvent: T, fallb
       // Execute stopPropagation on the original event object
       if (Type.isFunction(originalEvent.stopPropagation)) {
         originalEvent.stopPropagation();
-      } else if (isNativeEvent(originalEvent)) {
-        originalEvent.cancelBubble = true; // IE
       }
     };
 

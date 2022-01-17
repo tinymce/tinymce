@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as CodeSample from './CodeSample';
 
 export interface LanguageSpec {
@@ -29,7 +29,7 @@ const getLanguages = (editor: Editor): LanguageSpec[] => {
     { text: 'C++', value: 'cpp' }
   ];
 
-  const customLanguages = Settings.getLanguages(editor);
+  const customLanguages = Options.getLanguages(editor);
   return customLanguages ? customLanguages : defaultLanguages;
 };
 

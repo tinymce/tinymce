@@ -8,7 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as Readonly from 'tinymce/core/mode/Readonly';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const tOptional = OptionalInstances.tOptional;
 
@@ -18,7 +17,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     toolbar: 'bold',
     plugins: 'table',
     statusbar: false
-  }, [ Theme, TablePlugin ]);
+  }, [ TablePlugin ]);
 
   const setMode = (editor: Editor, mode: string) => {
     editor.mode.set(mode);

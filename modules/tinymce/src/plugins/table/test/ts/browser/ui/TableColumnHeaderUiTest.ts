@@ -3,7 +3,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { clickOnButton, makeCell, pClickOnMenuItem } from '../../module/test/TableModifiersTestUtils';
 
@@ -17,7 +16,7 @@ describe('browser.tinymce.plugins.table.ui.TableColumnHeaderUiTest', () => {
     menubar: 'table',
     toolbar: 'tablecolheader',
     indent: false,
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const setEditorAndSelectionForOn = (editor: Editor, type: 'th' | 'td') => {
     editor.setContent(

@@ -4,14 +4,13 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.dom.SerializerEventsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     inline: true,
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('Pre/post process events', () => {
     const editor = hook.editor();

@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.NewCellRowEventsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.table.NewCellRowEventsTest', () => {
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Table newcell/newrow events', () => {
     const editor = hook.editor();

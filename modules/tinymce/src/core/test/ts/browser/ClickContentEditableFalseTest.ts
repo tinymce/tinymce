@@ -3,7 +3,6 @@ import { Hierarchy } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 const clickMiddleOf = (editor: Editor, elementPath: number[]) => {
   const element = Hierarchy.follow(TinyDom.body(editor), elementPath).getOrDie().dom as HTMLElement;
@@ -21,7 +20,7 @@ describe('browser.tinymce.core.ClickContentEditableFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, [ Theme ], true);
+  }, [], true);
 
   it('Click on content editable false', () => {
     const editor = hook.editor();

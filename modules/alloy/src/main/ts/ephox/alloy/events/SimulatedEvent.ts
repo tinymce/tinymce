@@ -2,7 +2,7 @@ import { Cell, Fun } from '@ephox/katamari';
 import { EventArgs, SugarElement } from '@ephox/sugar';
 
 export interface EventFormat {
-  readonly target: SugarElement;
+  readonly target: SugarElement<Node>;
   readonly kill: () => void;
   readonly prevent: () => void;
 }
@@ -14,11 +14,11 @@ export interface SimulatedEvent<T extends EventFormat> {
   readonly isCut: () => boolean;
   readonly event: T;
 
-  readonly getSource: () => SugarElement;
-  readonly setSource: (elem: SugarElement) => void;
+  readonly getSource: () => SugarElement<Node>;
+  readonly setSource: (elem: SugarElement<Node>) => void;
 }
 
-export type NativeSimulatedEvent<T = any> = SimulatedEvent<EventArgs<T>>;
+export type NativeSimulatedEvent<T = Event> = SimulatedEvent<EventArgs<T>>;
 export type CustomSimulatedEvent = SimulatedEvent<CustomEvent>;
 
 export interface CustomEvent extends EventFormat {
@@ -45,10 +45,10 @@ export interface ReceivingEvent extends EventFormat {
 }
 
 export interface FocusingEvent extends EventFormat {
-  readonly originator: SugarElement;
+  readonly originator: SugarElement<Node>;
 }
 
-const fromSource = <T extends EventFormat>(event: T, source: Cell<SugarElement>): SimulatedEvent<T> => {
+const fromSource = <T extends EventFormat>(event: T, source: Cell<SugarElement<Node>>): SimulatedEvent<T> => {
   const stopper = Cell(false);
 
   const cutter = Cell(false);
@@ -93,7 +93,7 @@ const fromExternal = <T extends EventFormat>(event: T): SimulatedEvent<T> => {
   };
 };
 
-const fromTarget = <T extends EventFormat>(event: T, target: SugarElement): SimulatedEvent<T> => {
+const fromTarget = <T extends EventFormat>(event: T, target: SugarElement<Node>): SimulatedEvent<T> => {
   const source = Cell(target);
   return fromSource(event, source);
 };

@@ -4,7 +4,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertCleanHtml, fillActiveDialog } from '../../module/Helpers';
 
@@ -23,7 +22,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
       { title: 'class1', value: 'class1' },
       { title: 'class2', value: 'class2' }
     ]
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: all image dialog ui options on empty editor', async () => {
     const editor = hook.editor();
@@ -43,7 +42,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, (
       '<figure class="image">' +
-      '<img class="class1" src="src" alt="alt" width="100" height="200" />' +
+      '<img class="class1" src="src" alt="alt" width="100" height="200">' +
       '<figcaption>Caption</figcaption>' +
       '</figure>'
     ));
@@ -64,7 +63,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
 
   it('TINY-6400: render image_class_list as Dialog type "panel"', async () => {
     const editor = hook.editor();
-    editor.settings.image_caption = false;
+    editor.options.set('image_caption', false);
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     const expected = {
@@ -74,12 +73,12 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
 
     Assertions.assertPresence('Does not have columns for the class but a group', expected, dialog);
     TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
-    editor.settings.image_caption = true;
+    editor.options.set('image_caption', true);
   });
 
   it('TINY-6400: render image_caption as Dialog type "panel"', async () => {
     const editor = hook.editor();
-    delete editor.settings.image_class_list;
+    editor.options.unset('image_class_list');
 
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
@@ -90,10 +89,10 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
 
     Assertions.assertPresence('Does not have columns but a checkbox group', expected, dialog);
     TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
-    editor.settings.image_class_list = [
+    editor.options.set('image_class_list', [
       { title: 'None', value: '' },
       { title: 'class1', value: 'class1' },
       { title: 'class2', value: 'class2' }
-    ];
+    ]);
   });
 });

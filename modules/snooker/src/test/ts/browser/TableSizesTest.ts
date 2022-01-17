@@ -105,7 +105,7 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
 
   assert.eq([[ '1px', '2px' ], [ '1px', '2px' ]], readWidth(generateW([[ '1px', '2px' ], [ '1px', '2px' ]], '3px')));
 
-  const checkWidth = (expected: string[][], table: SugarElement, newWidth: string) => {
+  const checkWidth = (expected: string[][], table: SugarElement<HTMLTableElement>, newWidth: string) => {
     Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Optional.some(newWidth), Optional.none());
     assert.eq(expected, readWidth(table));
@@ -117,7 +117,7 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
     checkWidth(expected, table, newWidth);
   };
 
-  const checkHeight = (expected: string[][], table: SugarElement, newHeight: string) => {
+  const checkHeight = (expected: string[][], table: SugarElement<HTMLTableElement>, newHeight: string) => {
     Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Optional.none(), Optional.some(newHeight));
     assert.eq(expected, readHeight(table));

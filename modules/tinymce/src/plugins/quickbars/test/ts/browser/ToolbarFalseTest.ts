@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.quickbars.ToolbarFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -15,7 +14,7 @@ describe('browser.tinymce.plugins.quickbars.ToolbarFalseTest', () => {
     quickbars_selection_toolbar: false,
     quickbars_image_toolbar: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   const pAssertToolbarNotVisible = async () => {
     // We can't wait for something to happen, as nothing will change. So instead, just wait some time for when the toolbar would have normally shown

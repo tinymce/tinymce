@@ -4,14 +4,13 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as DeleteCommands from 'tinymce/core/delete/DeleteCommands';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.delete.DeleteCommandsTest', () => {
   const caret = Cell<Text>(null);
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, [ Theme ], true);
+  }, [], true);
 
   it('Delete should merge blocks', () => {
     const editor = hook.editor();

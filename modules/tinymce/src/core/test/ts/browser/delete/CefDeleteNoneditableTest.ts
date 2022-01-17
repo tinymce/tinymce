@@ -4,15 +4,12 @@ import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
-import NoneditablePlugin from 'tinymce/plugins/noneditable/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'noneditable'
-  }, [ Theme, NoneditablePlugin ], true);
+  }, [], true);
 
   it('TINY-3868: Should not backspace cef inside cef with ranged selection', () => {
     const editor = hook.editor();
@@ -108,12 +105,7 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     );
   });
 
-  // IE selects the offscreen cloned element somehow, which causes all kinds of problems. So skip.
-  const shouldSkip = Env.browser.isIE();
-  it('TINY-3868: Should not backspace cef inside cef with collapsed selection after inner cef', function () {
-    if (shouldSkip) {
-      this.skip();
-    }
+  it('TINY-3868: Should not backspace cef inside cef with collapsed selection after inner cef', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);
@@ -144,10 +136,7 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     );
   });
 
-  it('TINY-3868: Should not delete cef inside cef with collapsed selection before inner cef', function () {
-    if (shouldSkip) {
-      this.skip();
-    }
+  it('TINY-3868: Should not delete cef inside cef with collapsed selection before inner cef', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);

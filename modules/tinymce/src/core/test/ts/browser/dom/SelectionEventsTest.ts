@@ -7,7 +7,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface HandlerAndArgs {
   readonly eventArgs: Cell<EditorEvent<any>>;
@@ -17,7 +16,7 @@ interface HandlerAndArgs {
 describe('browser.tinymce.core.dom.SelectionEventsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const bindEventMutator = (editor: Editor, eventName: string, mutator: (editor: Editor, e: EditorEvent<any>) => void): HandlerAndArgs => {
     const eventArgs = Cell(null);

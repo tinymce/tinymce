@@ -5,7 +5,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.skin.OxideBlockedDialogTest', () => {
   let testDialogApi: Dialog.DialogInstanceApi<{}>;
@@ -39,7 +38,7 @@ describe('browser.tinymce.themes.silver.skin.OxideBlockedDialogTest', () => {
         }
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   it('Check structure of font format', async () => {
     const editor = hook.editor();

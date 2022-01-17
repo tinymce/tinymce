@@ -4,7 +4,6 @@ import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerPriorityTest', () => {
   const toolbar: SugarElement<HTMLDivElement> = SugarElement.fromHtml('<div style="margin: 50px 0;"></div>');
@@ -26,7 +25,7 @@ describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerPriori
     menubar: 'file',
     toolbar: 'undo bold',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('Check priority of fixed_toolbar_container(_target) setting', async () => {
     const editor = hook.editor();

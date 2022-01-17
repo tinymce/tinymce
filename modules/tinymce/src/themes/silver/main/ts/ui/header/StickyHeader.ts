@@ -12,7 +12,7 @@ import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, Suga
 import Editor from 'tinymce/core/api/Editor';
 import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
 
-import * as Settings from '../../api/Settings';
+import * as Options from '../../api/Options';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as EditorChannels from '../../Channels';
 
@@ -237,7 +237,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
       },
       lazyViewport: (comp) => {
         const win = Boxes.win();
-        const offset = Settings.getStickyToolbarOffset(editor);
+        const offset = Options.getStickyToolbarOffset(editor);
         const top = win.y + (isDockedMode(comp, 'top') ? offset : 0);
         const height = win.height - (isDockedMode(comp, 'bottom') ? offset : 0);
         return Boxes.bounds(win.x, top, win.width, height);

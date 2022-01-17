@@ -128,7 +128,7 @@ const createBogusBr = (): Element => {
   return br;
 };
 
-const insertBlock = (blockName: string, node: Node, before: boolean): Node => {
+const insertBlock = (blockName: string, node: Node, before: boolean): HTMLElement => {
   const doc = node.ownerDocument;
   const blockNode = doc.createElement(blockName);
   blockNode.setAttribute('data-mce-caret', before ? 'before' : 'after');
@@ -169,6 +169,7 @@ const showCaretContainerBlock = (caretContainer: Element): Element | null => {
     caretContainer.removeAttribute('data-mce-caret');
     caretContainer.removeAttribute('data-mce-bogus');
     caretContainer.removeAttribute('style');
+    caretContainer.removeAttribute('data-mce-style');
     caretContainer.removeAttribute('_moz_abspos');
     return caretContainer;
   }

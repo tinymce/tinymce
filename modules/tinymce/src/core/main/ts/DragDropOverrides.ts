@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Singleton } from '@ephox/katamari';
+import { Arr, Singleton, Throttler } from '@ephox/katamari';
 
 import DOMUtils from './api/dom/DOMUtils';
 import { EventUtilsEvent } from './api/dom/EventUtils';
 import EditorSelection from './api/dom/Selection';
 import Editor from './api/Editor';
-import * as Settings from './api/Settings';
+import * as Options from './api/Options';
 import Delay from './api/util/Delay';
 import { EditorEvent } from './api/util/EventDispatcher';
 import VK from './api/util/VK';
@@ -64,7 +64,7 @@ const cloneElement = (elm: HTMLElement) => {
 
 const createGhost = (editor: Editor, elm: HTMLElement, width: number, height: number) => {
   const dom = editor.dom;
-  const clonedElm = elm.cloneNode(true);
+  const clonedElm = elm.cloneNode(true) as HTMLElement;
 
   dom.setStyles(clonedElm, { width, height });
   dom.setAttrib(clonedElm, 'data-mce-selected', null);
@@ -169,11 +169,11 @@ const start = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent
 
 const move = (state: Singleton.Value<State>, editor: Editor) => {
   // Reduces laggy drag behavior on Gecko
-  const throttledPlaceCaretAt = Delay.throttle((clientX: number, clientY: number) => {
+  const throttledPlaceCaretAt = Throttler.first((clientX: number, clientY: number) => {
     editor._selectionOverrides.hideFakeCaret();
     editor.selection.placeCaretAt(clientX, clientY);
   }, 0);
-  editor.on('remove', throttledPlaceCaretAt.stop);
+  editor.on('remove', throttledPlaceCaretAt.cancel);
 
   return (e: EditorEvent<MouseEvent>) => state.on((state) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
@@ -194,7 +194,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
       appendGhostToBody(state.ghost, editor.getBody());
       moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY);
 
-      throttledPlaceCaretAt(e.clientX, e.clientY);
+      throttledPlaceCaretAt.throttle(e.clientX, e.clientY);
     }
   });
 };
@@ -279,17 +279,6 @@ const bindFakeDragEvents = (editor: Editor) => {
   });
 };
 
-const blockIeDrop = (editor: Editor) => {
-  editor.on('drop', (e) => {
-    // FF doesn't pass out clientX/clientY for drop since this is for IE we just use null instead
-    const realTarget = typeof e.clientX !== 'undefined' ? editor.getDoc().elementFromPoint(e.clientX, e.clientY) : null;
-
-    if (isContentEditableFalse(realTarget) || editor.dom.getContentEditableParent(realTarget) === 'false') {
-      e.preventDefault();
-    }
-  });
-};
-
 // Block files being dropped within the editor to prevent accidentally navigating away
 // while editing. Note that we can't use the `editor.on` API here, as we want these
 // to run after the editor event handlers have run. We also bind to the document
@@ -342,9 +331,8 @@ const blockUnsupportedFileDrop = (editor: Editor) => {
 
 const init = (editor: Editor) => {
   bindFakeDragEvents(editor);
-  blockIeDrop(editor);
 
-  if (Settings.shouldBlockUnsupportedDrop(editor)) {
+  if (Options.shouldBlockUnsupportedDrop(editor)) {
     blockUnsupportedFileDrop(editor);
   }
 };

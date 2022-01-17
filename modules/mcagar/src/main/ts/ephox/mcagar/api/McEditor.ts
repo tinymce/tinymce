@@ -1,7 +1,6 @@
 import { Chain } from '@ephox/agar';
 import { Global, Id, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Selectors, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
-import Promise from '@ephox/wrap-promise-polyfill';
 
 import { Editor as EditorType } from '../alien/EditorTypes';
 import { loadScript } from '../loader/Loader';
@@ -9,7 +8,7 @@ import { detectTinymceBaseUrl, setupTinymceBaseUrl } from '../loader/Urls';
 
 const errorMessageEditorRemoved = 'Editor Removed';
 
-const pFromElement = <T extends EditorType = EditorType>(element: SugarElement, settings: Record<string, any>): Promise<T> => {
+const pFromElement = <T extends EditorType = EditorType>(element: SugarElement<Element>, settings: Record<string, any>): Promise<T> => {
   return new Promise((resolve, reject) => {
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
@@ -69,7 +68,7 @@ const pFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
 };
 
 const pFromHtml = <T extends EditorType = EditorType>(html: string | null, settings: Record<string, any>): Promise<T> => {
-  const element = html ? SugarElement.fromHtml(html) : SugarElement.fromTag(settings.inline ? 'div' : 'textarea');
+  const element = html ? SugarElement.fromHtml<Element>(html) : SugarElement.fromTag(settings.inline ? 'div' : 'textarea');
   return pFromElement(element, settings);
 };
 
@@ -77,7 +76,7 @@ const pFromSettings = <T extends EditorType = EditorType>(settings: Record<strin
   return pFromHtml<T>(null, settings);
 };
 
-const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, settings: Record<string, any>): Chain<unknown, T> => {
+const cFromElement = <T extends EditorType = EditorType>(element: SugarElement<Element>, settings: Record<string, any>): Chain<unknown, T> => {
   return Chain.fromPromise(() => pFromElement(element, settings));
 };
 

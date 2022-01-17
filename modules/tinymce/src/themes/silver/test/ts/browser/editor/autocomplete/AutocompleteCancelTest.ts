@@ -1,12 +1,9 @@
 import { ApproxStructure, Keys, Mouse, StructAssert, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pWaitForAutocompleteToClose } from '../../../module/AutocompleterUtils';
 
@@ -18,7 +15,6 @@ interface Scenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTest', () => {
-  const platform = PlatformDetection.detect();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
@@ -28,7 +24,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
         columns: 'auto',
         fetch: (pattern, _maxResults) => {
           const filteredItems = Arr.filter([ 'a', 'b', 'c', 'd' ], (item) => item.indexOf(pattern) !== -1);
-          return new PromisePolyfill((resolve) => {
+          return new Promise((resolve) => {
             resolve(
               Arr.map(filteredItems, (item) => ({
                 value: `colon-${item}`,
@@ -43,7 +39,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
         }
       });
     }
-  }, [ Theme ], true);
+  }, [], true);
 
   const expectedSimplePara = (content: string) => (s, str): StructAssert => s.element('p', {
     children: [ s.text(str.is(content), true) ]
@@ -114,26 +110,20 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
     ]
   }));
 
-  it('Checking deleting trigger char cancels the autocompleter', function () {
-    // TODO: IE 11 doesn't send the keydown event (works outside tests), so investigate why that's happening
-    if (platform.browser.isIE()) {
-      this.skip();
-    }
-    return pTestAutocompleter({
-      action: (editor) => {
-        editor.execCommand('delete');
-        editor.execCommand('delete');
-        TinyContentActions.keydown(editor, Keys.backspace());
-      },
-      assertion: (s) => [
-        s.element('p', {
-          children: [
-            s.element('br', { })
-          ]
-        })
-      ]
-    });
-  });
+  it('Checking deleting trigger char cancels the autocompleter', () => pTestAutocompleter({
+    action: (editor) => {
+      editor.execCommand('delete');
+      editor.execCommand('delete');
+      TinyContentActions.keydown(editor, Keys.backspace());
+    },
+    assertion: (s) => [
+      s.element('p', {
+        children: [
+          s.element('br', { })
+        ]
+      })
+    ]
+  }));
 
   it('Checking pressing down cancels the autocompleter', () => pTestAutocompleter({
     setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p></p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str) => [

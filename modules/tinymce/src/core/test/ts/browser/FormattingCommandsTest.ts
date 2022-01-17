@@ -3,7 +3,6 @@ import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.FormattingCommandsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -17,7 +16,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
         'float,margin,margin-top,margin-right,margin-bottom,margin-left,padding-left,text-align,display'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('Justify - multiple block elements selected - queryCommandState', () => {
     const editor = hook.editor();
@@ -76,12 +75,12 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('ForeColor', false, '#FF0000');
-    assert.equal(editor.getContent(), '<p><span style="color: #ff0000;">test 123</span></p>');
+    assert.equal(editor.getContent(), '<p><span style="color: rgb(255, 0, 0);">test 123</span></p>');
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('HiliteColor', false, '#FF0000');
-    assert.equal(editor.getContent(), '<p><span style="background-color: #ff0000;">test 123</span></p>');
+    assert.equal(editor.getContent(), '<p><span style="background-color: rgb(255, 0, 0);">test 123</span></p>');
 
     editor.setContent('<p><span style="text-decoration: underline;">test 123</span></p>');
     assert.equal(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
@@ -146,20 +145,20 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
     editor.selection.select(editor.dom.select('img')[0]);
     editor.execCommand('JustifyLeft');
-    assert.equal(editor.getContent(), '<p><img style="float: left;" src="tinymce/ui/img/raster.gif" /></p>');
+    assert.equal(editor.getContent(), '<p><img style="float: left;" src="tinymce/ui/img/raster.gif"></p>');
 
     editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
     editor.selection.select(editor.dom.select('img')[0]);
     editor.execCommand('JustifyCenter');
     assert.equal(
       editor.getContent(),
-      '<p><img style="margin-right: auto; margin-left: auto; display: block;" src="tinymce/ui/img/raster.gif" /></p>'
+      '<p><img style="margin-right: auto; margin-left: auto; display: block;" src="tinymce/ui/img/raster.gif"></p>'
     );
 
     editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
     editor.selection.select(editor.dom.select('img')[0]);
     editor.execCommand('JustifyRight');
-    assert.equal(editor.getContent(), '<p><img style="float: right;" src="tinymce/ui/img/raster.gif" /></p>');
+    assert.equal(editor.getContent(), '<p><img style="float: right;" src="tinymce/ui/img/raster.gif"></p>');
   });
 
   it('mceBlockQuote', () => {
@@ -267,7 +266,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, 'link');
-    assert.equal(editor.getContent(), '<p><a href="link"><img style="float: right;" src="about:blank" /></a></p>');
+    assert.equal(editor.getContent(), '<p><a href="link"><img style="float: right;" src="about:blank"></a></p>');
   });
 
   it('mceInsertLink (link adjacent text)', () => {
@@ -340,7 +339,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     const editor = hook.editor();
     editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
     const rng = editor.dom.createRng();
-    rng.setStart(editor.$('td')[1].firstChild, 0);
+    rng.setStart(editor.dom.select('td')[1].firstChild, 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertLink', false, { href: 'x' });

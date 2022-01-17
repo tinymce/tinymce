@@ -7,13 +7,12 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as InsertBr from 'tinymce/core/newline/InsertBr';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.newline.InsertBrTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   beforeEach(() => {
     hook.editor().focus();
@@ -27,7 +26,7 @@ describe('browser.tinymce.core.newline.InsertBrTest', () => {
       editor.nodeChanged();
       InsertBr.insert(editor);
       TinyAssertions.assertSelection(editor, [ 0, 2, 0 ], 1, [ 0, 2, 0 ], 1);
-      TinyAssertions.assertContent(editor, '<p>a<br /><a href="#">b</a>c</p>');
+      TinyAssertions.assertContent(editor, '<p>a<br><a href="#">b</a>c</p>');
     });
 
     it('Insert br in middle inline boundary link', () => {
@@ -37,7 +36,7 @@ describe('browser.tinymce.core.newline.InsertBrTest', () => {
       editor.nodeChanged();
       InsertBr.insert(editor);
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
-      TinyAssertions.assertContent(editor, '<p>a<a href="#">b<br />c</a>d</p>');
+      TinyAssertions.assertContent(editor, '<p>a<a href="#">b<br>c</a>d</p>');
     });
 
     it('Insert br at end of inline boundary link', () => {
@@ -47,7 +46,7 @@ describe('browser.tinymce.core.newline.InsertBrTest', () => {
       editor.nodeChanged();
       InsertBr.insert(editor);
       TinyAssertions.assertSelection(editor, [ 0 ], 3, [ 0 ], 3);
-      TinyAssertions.assertContent(editor, '<p>a<a href="#">b</a><br /><br />c</p>');
+      TinyAssertions.assertContent(editor, '<p>a<a href="#">b</a><br><br>c</p>');
     });
 
     it('Insert br at end of inline boundary link with trailing br', () => {
@@ -57,7 +56,7 @@ describe('browser.tinymce.core.newline.InsertBrTest', () => {
       editor.nodeChanged();
       InsertBr.insert(editor);
       TinyAssertions.assertSelection(editor, [ 0 ], 3, [ 0 ], 3);
-      TinyAssertions.assertContent(editor, '<p>a<a href="#">b</a><br /><br /></p>');
+      TinyAssertions.assertContent(editor, '<p>a<a href="#">b</a><br><br></p>');
     });
   });
 
@@ -69,7 +68,7 @@ describe('browser.tinymce.core.newline.InsertBrTest', () => {
       editor.nodeChanged();
       InsertBr.insert(editor);
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
-      TinyAssertions.assertContent(editor, '<p>a<code><br />b</code>c</p>');
+      TinyAssertions.assertContent(editor, '<p>a<code><br>b</code>c</p>');
     });
 
     it('Insert br at middle of boundary code', () => {
@@ -79,7 +78,7 @@ describe('browser.tinymce.core.newline.InsertBrTest', () => {
       editor.nodeChanged();
       InsertBr.insert(editor);
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
-      TinyAssertions.assertContent(editor, '<p>a<code>b<br />c</code>d</p>');
+      TinyAssertions.assertContent(editor, '<p>a<code>b<br>c</code>d</p>');
     });
 
     it('Insert br at end of boundary code', () => {
@@ -89,7 +88,7 @@ describe('browser.tinymce.core.newline.InsertBrTest', () => {
       editor.nodeChanged();
       InsertBr.insert(editor);
       TinyAssertions.assertSelection(editor, [ 0, 1, 2 ], 0, [ 0, 1, 2 ], 0);
-      TinyAssertions.assertContent(editor, '<p>a<code>b<br /></code>c</p>');
+      TinyAssertions.assertContent(editor, '<p>a<code>b<br></code>c</p>');
     });
   });
 

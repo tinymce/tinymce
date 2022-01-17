@@ -9,9 +9,8 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import Promise from 'tinymce/core/api/util/Promise';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { AssumeExternalTargets } from '../api/Types';
 import * as Utils from '../core/Utils';
 import { LinkDialogOutput } from './DialogTypes';
@@ -56,7 +55,7 @@ const tryProtocolTransform = (assumeExternalTargets: AssumeExternalTargets, defa
 };
 
 const preprocess = (editor: Editor, data: LinkDialogOutput): Promise<LinkDialogOutput> => Arr.findMap(
-  [ tryEmailTransform, tryProtocolTransform(Settings.assumeExternalTargets(editor), Settings.getDefaultLinkProtocol(editor)) ],
+  [ tryEmailTransform, tryProtocolTransform(Options.assumeExternalTargets(editor), Options.getDefaultLinkProtocol(editor)) ],
   (f) => f(data)
 ).fold(
   () => Promise.resolve(data),

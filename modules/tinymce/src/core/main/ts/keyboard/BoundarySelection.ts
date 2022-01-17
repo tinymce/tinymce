@@ -10,8 +10,7 @@ import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
-import Env from '../api/Env';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as CaretContainerRemove from '../caret/CaretContainerRemove';
 import CaretPosition from '../caret/CaretPosition';
 import * as WordSelection from '../selection/WordSelection';
@@ -82,21 +81,17 @@ const renderInsideInlineCaret = (isInlineTarget: NodePredicate, editor: Editor, 
 };
 
 const move = (editor: Editor, caret: Cell<Text>, forward: boolean) =>
-  Settings.isInlineBoundariesEnabled(editor) ? findLocation(editor, caret, forward).isSome() : false;
+  Options.isInlineBoundariesEnabled(editor) ? findLocation(editor, caret, forward).isSome() : false;
 
 const moveWord = (forward: boolean, editor: Editor, _caret: Cell<Text>) =>
-  Settings.isInlineBoundariesEnabled(editor) ? WordSelection.moveByWord(forward, editor) : false;
+  Options.isInlineBoundariesEnabled(editor) ? WordSelection.moveByWord(forward, editor) : false;
 
 const setupSelectedState = (editor: Editor): Cell<Text> => {
   const caret = Cell(null);
   const isInlineTarget: NodePredicate = Fun.curry(InlineUtils.isInlineTarget, editor);
 
   editor.on('NodeChange', (e) => {
-    // IE will steal the focus when changing the selection since it uses a single selection model
-    // as such we should ignore the first node change, as we don't want the editor to steal focus
-    // during the initial load. If the content is changed afterwords then we are okay with it
-    // stealing focus since it likely means the editor is being interacted with.
-    if (Settings.isInlineBoundariesEnabled(editor) && !(Env.browser.isIE() && e.initial)) {
+    if (Options.isInlineBoundariesEnabled(editor)) {
       toggleInlines(isInlineTarget, editor.dom, e.parents);
       safeRemoveCaretContainer(editor, caret);
       renderInsideInlineCaret(isInlineTarget, editor, caret, e.parents);
@@ -110,7 +105,7 @@ const moveNextWord = Fun.curry(moveWord, true);
 const movePrevWord = Fun.curry(moveWord, false);
 
 const moveToLineEndPoint = (editor: Editor, forward: boolean, caret: Cell<Text>): boolean => {
-  if (Settings.isInlineBoundariesEnabled(editor)) {
+  if (Options.isInlineBoundariesEnabled(editor)) {
     // Try to find the line endpoint, however if one isn't found then assume we're already at the end point
     const linePoint = NavigationUtils.getLineEndPoint(editor, forward).getOrThunk(() => {
       const rng = editor.selection.getRng();

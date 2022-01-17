@@ -10,15 +10,13 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
 import AddOnManager from './AddOnManager';
-import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import Env from './Env';
 import { EditorManagerEventMap } from './EventTypes';
-import { RawEditorSettings } from './SettingsTypes';
+import { RawEditorOptions } from './OptionTypes';
 import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Observable from './util/Observable';
-import Promise from './util/Promise';
 import Tools from './util/Tools';
 import URI from './util/URI';
 
@@ -38,17 +36,10 @@ declare const window: Window & { tinymce: any; tinyMCEPreInit: any };
  */
 
 const DOM = DOMUtils.DOM;
-const explode = Tools.explode, each = Tools.each, extend = Tools.extend;
-let instanceCounter = 0, boundGlobalEvents = false;
+const each = Tools.each;
+let boundGlobalEvents = false;
 let beforeUnloadDelegate: (e: BeforeUnloadEvent) => any;
-const legacyEditors = [];
 let editors = [];
-
-const isValidLegacyKey = (id) => {
-  // In theory we could filter out any editor id:s that clash
-  // with array prototype items but that could break existing integrations
-  return id !== 'length';
-};
 
 const globalEventDelegate = (e) => {
   const type = e.type;
@@ -64,12 +55,15 @@ const globalEventDelegate = (e) => {
   });
 };
 
-const toggleGlobalEvents = (state) => {
+const toggleGlobalEvents = (state: boolean) => {
   if (state !== boundGlobalEvents) {
+    const DOM = DOMUtils.DOM;
     if (state) {
-      DomQuery(window).on('resize scroll', globalEventDelegate);
+      DOM.bind(window, 'resize', globalEventDelegate);
+      DOM.bind(window, 'scroll', globalEventDelegate);
     } else {
-      DomQuery(window).off('resize scroll', globalEventDelegate);
+      DOM.unbind(window, 'resize', globalEventDelegate);
+      DOM.unbind(window, 'scroll', globalEventDelegate);
     }
 
     boundGlobalEvents = state;
@@ -78,14 +72,6 @@ const toggleGlobalEvents = (state) => {
 
 const removeEditorFromList = (targetEditor: Editor) => {
   const oldEditors = editors;
-
-  delete legacyEditors[targetEditor.id];
-  for (let i = 0; i < legacyEditors.length; i++) {
-    if (legacyEditors[i] === targetEditor) {
-      legacyEditors.splice(i, 1);
-      break;
-    }
-  }
 
   editors = Arr.filter(editors, (editor) => {
     return targetEditor !== editor;
@@ -104,7 +90,7 @@ const removeEditorFromList = (targetEditor: Editor) => {
   return oldEditors.length !== editors.length;
 };
 
-const purgeDestroyedEditor = (editor) => {
+const purgeDestroyedEditor = (editor: Editor) => {
   // User has manually destroyed the editor lets clean up the mess
   if (editor && editor.initialized && !(editor.getContainer() || editor.getBody()).parentNode) {
     removeEditorFromList(editor);
@@ -118,15 +104,12 @@ const purgeDestroyedEditor = (editor) => {
 };
 
 interface EditorManager extends Observable<EditorManagerEventMap> {
-  $: DomQueryConstructor;
-  defaultSettings: RawEditorSettings;
+  defaultOptions: RawEditorOptions;
   majorVersion: string;
   minorVersion: string;
   releaseDate: string;
-  editors: Editor[];
   activeEditor: Editor;
   focusedEditor: Editor;
-  settings: RawEditorSettings;
   baseURI: URI;
   baseURL: string;
   documentBaseURL: string;
@@ -135,12 +118,12 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
 
   add (this: EditorManager, editor: Editor): Editor;
   addI18n: (code: string, item: Record<string, string>) => void;
-  createEditor (this: EditorManager, id: string, settings: RawEditorSettings): Editor;
+  createEditor (this: EditorManager, id: string, options: RawEditorOptions): Editor;
   execCommand (this: EditorManager, cmd: string, ui: boolean, value: any): boolean;
   get (this: EditorManager): Editor[];
   get (this: EditorManager, id: number | string): Editor;
-  init (this: EditorManager, settings: RawEditorSettings): Promise<Editor[]>;
-  overrideDefaults (this: EditorManager, defaultSettings: Partial<RawEditorSettings>): void;
+  init (this: EditorManager, options: RawEditorOptions): Promise<Editor[]>;
+  overrideDefaults (this: EditorManager, defaultOptions: Partial<RawEditorOptions>): void;
   remove (this: EditorManager): void;
   remove (this: EditorManager, selector: string | Editor): Editor | void;
   setActive (this: EditorManager, editor: Editor): void;
@@ -157,20 +140,9 @@ const EditorManager: EditorManager = {
 
   baseURI: null,
   baseURL: null,
-  defaultSettings: {},
+  defaultOptions: {},
   documentBaseURL: null,
   suffix: null,
-
-  /**
-   * Dom query instance.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-   *
-   * @deprecated
-   * @property $
-   * @type tinymce.dom.DomQuery
-   */
-  $: DomQuery,
 
   /**
    * Major version of TinyMCE build.
@@ -197,17 +169,6 @@ const EditorManager: EditorManager = {
   releaseDate: '@@releaseDate@@',
 
   /**
-   * Collection of editor instances.
-   * <br>
-   * <em>Deprecated in TinyMCE 4.7 and has been marked for removal in TinyMCE 6.0</em> - Use tinymce.get() instead.
-   *
-   * @property editors
-   * @type Object
-   * @deprecated
-   */
-  editors: legacyEditors,
-
-  /**
    * Collection of language pack data.
    *
    * @property i18n
@@ -226,8 +187,6 @@ const EditorManager: EditorManager = {
    */
   activeEditor: null,
   focusedEditor: null,
-
-  settings: {},
 
   setup() {
     const self: EditorManager = this;
@@ -324,25 +283,25 @@ const EditorManager: EditorManager = {
   },
 
   /**
-   * Overrides the default settings for editor instances.
+   * Overrides the default options for editor instances.
    *
    * @method overrideDefaults
-   * @param {Object} defaultSettings Defaults settings object.
+   * @param {Object} defaultOptions Defaults options object.
    */
-  overrideDefaults(defaultSettings) {
-    const baseUrl = defaultSettings.base_url;
+  overrideDefaults(defaultOptions) {
+    const baseUrl = defaultOptions.base_url;
     if (baseUrl) {
       this._setBaseUrl(baseUrl);
     }
 
-    const suffix = defaultSettings.suffix;
-    if (defaultSettings.suffix) {
+    const suffix = defaultOptions.suffix;
+    if (defaultOptions.suffix) {
       this.suffix = suffix;
     }
 
-    this.defaultSettings = defaultSettings;
+    this.defaultOptions = defaultOptions;
 
-    const pluginBaseUrls = defaultSettings.plugin_base_urls;
+    const pluginBaseUrls = defaultOptions.plugin_base_urls;
     if (pluginBaseUrls !== undefined) {
       Obj.each(pluginBaseUrls, (pluginBaseUrl, pluginName) => {
         AddOnManager.PluginManager.urls[pluginName] = pluginBaseUrl;
@@ -356,7 +315,7 @@ const EditorManager: EditorManager = {
    * For information on basic usage of <code>init</code>, see: <a href="https://www.tiny.cloud/docs/general-configuration-guide/basic-setup/">Basic setup</a>.
    *
    * @method init
-   * @param {Object} settings Settings object to be passed to each editor instance.
+   * @param {Object} options Options object to be passed to each editor instance.
    * @return {Promise} Promise that gets resolved with an array of editors when all editor instances are initialized.
    * @example
    * // Initializes a editor using the longer method
@@ -371,7 +330,7 @@ const EditorManager: EditorManager = {
    *    ...
    * });
    */
-  init(settings: RawEditorSettings) {
+  init(options: RawEditorOptions) {
     const self: EditorManager = this;
     let result;
 
@@ -381,8 +340,8 @@ const EditorManager: EditorManager = {
       ' '
     );
 
-    const isInvalidInlineTarget = (settings: RawEditorSettings, elm: HTMLElement) =>
-      settings.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
+    const isInvalidInlineTarget = (options: RawEditorOptions, elm: HTMLElement) =>
+      options.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
 
     const createId = (elm: HTMLElement & { name?: string }): string => {
       let id = elm.id;
@@ -395,7 +354,7 @@ const EditorManager: EditorManager = {
     };
 
     const execCallback = (name: string) => {
-      const callback = settings[name];
+      const callback = options[name];
 
       if (!callback) {
         return;
@@ -404,14 +363,8 @@ const EditorManager: EditorManager = {
       return callback.apply(self, []);
     };
 
-    const hasClass = (elm, className) => {
-      return className.constructor === RegExp ? className.test(elm.className) : DOM.hasClass(elm, className);
-    };
-
-    const findTargets = (settings: RawEditorSettings): HTMLElement[] => {
-      let targets: HTMLElement[] = [];
-
-      if (Env.browser.isIE() && Env.browser.version.major < 11) {
+    const findTargets = (options: RawEditorOptions): HTMLElement[] => {
+      if (Env.browser.isIE() || Env.browser.isEdge()) {
         ErrorReporter.initError(
           'TinyMCE does not support the browser you are using. For a list of supported' +
           ' browsers please see: https://www.tinymce.com/docs/get-started/system-requirements/'
@@ -423,61 +376,13 @@ const EditorManager: EditorManager = {
           'TinyMCE requires standards mode.'
         );
         return [];
+      } else if (Type.isString(options.selector)) {
+        return DOM.select(options.selector);
+      } else if (Type.isNonNullable(options.target)) {
+        return [ options.target ];
+      } else {
+        return [];
       }
-
-      if (settings.types) {
-        each(settings.types, (type) => {
-          targets = targets.concat(DOM.select(type.selector));
-        });
-
-        return targets;
-      } else if (settings.selector) {
-        return DOM.select(settings.selector);
-      } else if (settings.target) {
-        return [ settings.target ];
-      }
-
-      // Fallback to old setting
-      switch (settings.mode) {
-        case 'exact':
-          const l = settings.elements || '';
-
-          if (l.length > 0) {
-            each(explode(l), (id) => {
-              const elm = DOM.get(id);
-
-              if (elm) {
-                targets.push(elm);
-              } else {
-                each(document.forms, (f: HTMLFormElement) => {
-                  each(f.elements, (e: HTMLFormElement) => {
-                    if (e.name === id) {
-                      id = 'mce_editor_' + instanceCounter++;
-                      DOM.setAttrib(e, 'id', id);
-                      targets.push(e);
-                    }
-                  });
-                });
-              }
-            });
-          }
-          break;
-
-        case 'textareas':
-        case 'specific_textareas':
-          each(DOM.select('textarea'), (elm) => {
-            if (settings.editor_deselector && hasClass(elm, settings.editor_deselector)) {
-              return;
-            }
-
-            if (!settings.editor_selector || hasClass(elm, settings.editor_selector)) {
-              targets.push(elm);
-            }
-          });
-          break;
-      }
-
-      return targets;
     };
 
     let provideResults = (editors) => {
@@ -489,8 +394,8 @@ const EditorManager: EditorManager = {
       const editors = [];
       let targets: HTMLElement[];
 
-      const createEditor = (id: string, settings: RawEditorSettings, targetElm: HTMLElement) => {
-        const editor: Editor = new Editor(id, settings, self);
+      const createEditor = (id: string, options: RawEditorOptions, targetElm: HTMLElement) => {
+        const editor: Editor = new Editor(id, options, self);
         editors.push(editor);
 
         editor.on('init', () => {
@@ -506,23 +411,7 @@ const EditorManager: EditorManager = {
       DOM.unbind(window, 'ready', initEditors);
       execCallback('onpageload');
 
-      targets = DomQuery.unique(findTargets(settings));
-
-      // TODO: Deprecate this one
-      if (settings.types) {
-        each(settings.types, (type) => {
-          Tools.each(targets, (elm: HTMLElement) => {
-            if (DOM.is(elm, type.selector)) {
-              createEditor(createId(elm), extend({}, settings, type), elm);
-              return false;
-            }
-
-            return true;
-          });
-        });
-
-        return;
-      }
+      targets = Arr.unique(findTargets(options));
 
       Tools.each(targets, (elm) => {
         purgeDestroyedEditor(self.get(elm.id));
@@ -536,16 +425,15 @@ const EditorManager: EditorManager = {
         provideResults([]);
       } else {
         each(targets, (elm) => {
-          if (isInvalidInlineTarget(settings, elm)) {
+          if (isInvalidInlineTarget(options, elm)) {
             ErrorReporter.initError('Could not initialize inline editor on invalid inline target element', elm);
           } else {
-            createEditor(createId(elm), settings, elm);
+            createEditor(createId(elm), options, elm);
           }
         });
       }
     };
 
-    self.settings = settings;
     DOM.bind(window, 'ready', initEditors);
 
     return new Promise((resolve) => {
@@ -608,20 +496,12 @@ const EditorManager: EditorManager = {
 
     // Prevent existing editors from being added again this could happen
     // if a user calls createEditor then render or add multiple times.
-    const existingEditor = legacyEditors[editor.id];
+    const existingEditor = self.get(editor.id);
     if (existingEditor === editor) {
       return editor;
     }
 
-    if (self.get(editor.id) === null) {
-      // Add to legacy editors array, this is what breaks in HTML5 where ID:s with numbers are valid
-      // We can't get rid of this strange object and array at the same time since it seems to be used all over the web
-      if (isValidLegacyKey(editor.id)) {
-        legacyEditors[editor.id] = editor;
-      }
-
-      legacyEditors.push(editor);
-
+    if (existingEditor === null) {
       editors.push(editor);
     }
 
@@ -655,11 +535,11 @@ const EditorManager: EditorManager = {
    *
    * @method createEditor
    * @param {String} id Instance id to use for editor.
-   * @param {Object} settings Editor instance settings.
+   * @param {Object} options Editor instance options.
    * @return {tinymce.Editor} Editor instance that got created.
    */
-  createEditor(id, settings) {
-    return this.add(new Editor(id, settings, this));
+  createEditor(id, options) {
+    return this.add(new Editor(id, options, this));
   },
 
   /**
@@ -737,29 +617,35 @@ const EditorManager: EditorManager = {
    * @method execCommand
    * @param {String} cmd Command to perform for example Bold.
    * @param {Boolean} ui Optional boolean state if a UI should be presented for the command or not.
-   * @param {String} value Optional value parameter like for example an URL to a link.
+   * @param {Object/String/Number/Boolean} value Optional value parameter like for example an URL to a link.
    * @return {Boolean} true/false if the command was executed or not.
    */
   execCommand(cmd, ui, value) {
-    const self = this, editor = self.get(value);
+    const self = this;
+    const editorId = Type.isObject(value) ? value.id ?? value.index : value;
 
     // Manager commands
     switch (cmd) {
-      case 'mceAddEditor':
-        if (!self.get(value)) {
-          new Editor(value, self.settings, self).render();
+      case 'mceAddEditor': {
+        if (!self.get(editorId)) {
+          const editorOptions = value.options;
+          new Editor(editorId, editorOptions, self).render();
         }
 
         return true;
+      }
 
-      case 'mceRemoveEditor':
+      case 'mceRemoveEditor': {
+        const editor = self.get(editorId);
         if (editor) {
           editor.remove();
         }
 
         return true;
+      }
 
-      case 'mceToggleEditor':
+      case 'mceToggleEditor': {
+        const editor = self.get(editorId);
         if (!editor) {
           self.execCommand('mceAddEditor', false, value);
           return true;
@@ -772,6 +658,7 @@ const EditorManager: EditorManager = {
         }
 
         return true;
+      }
     }
 
     // Run command on active editor

@@ -1,16 +1,8 @@
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { SliderValue, SliderValueX, SliderValueXY, SliderValueY, TwoDSliderDetail } from '../types/SliderTypes';
+import { SliderValue, SliderValueXY, TwoDSliderDetail } from '../types/SliderTypes';
 import * as ModelCommon from './ModelCommon';
 import { halfX, halfY, max1X, max1Y, min1X, min1Y } from './SliderValues';
-
-const xValue = (x: number): SliderValueX => ({
-  x
-});
-
-const yValue = (y: number): SliderValueY => ({
-  y
-});
 
 const xyValue = (x: number, y: number): SliderValueXY => ({
   x,
@@ -28,7 +20,7 @@ const setToTLEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => 
 
 // North
 const setToTEdge = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
-  fireSliderChange(edge, yValue(min1Y(detail)));
+  fireSliderChange(edge, min1Y(detail));
 };
 
 // North XY
@@ -43,7 +35,7 @@ const setToTREdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => 
 
 // East
 const setToREdge = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
-  fireSliderChange(edge, xValue(max1X(detail)));
+  fireSliderChange(edge, max1X(detail));
 };
 
 // East XY
@@ -58,7 +50,7 @@ const setToBREdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => 
 
 // South
 const setToBEdge = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
-  fireSliderChange(edge, yValue(max1Y(detail)));
+  fireSliderChange(edge, max1Y(detail));
 };
 
 // South XY
@@ -73,7 +65,7 @@ const setToBLEdgeXY = (edge: AlloyComponent, detail: TwoDSliderDetail): void => 
 
 // West
 const setToLEdge = (edge: AlloyComponent, detail: TwoDSliderDetail): void => {
-  fireSliderChange(edge, xValue(min1X(detail)));
+  fireSliderChange(edge, min1X(detail));
 };
 
 // West XY

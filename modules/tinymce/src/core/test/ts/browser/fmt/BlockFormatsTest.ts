@@ -5,7 +5,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.BlockFormatsTest', () => {
   context('Testing that the selection is still collapsed after a formatting operation', () => {
@@ -13,7 +12,7 @@ describe('browser.tinymce.core.fmt.BlockFormatsTest', () => {
       statusbar: false,
       menubar: false,
       base_url: '/project/tinymce/js/tinymce'
-    }, [ Theme ]);
+    }, []);
 
     it('apply heading format at the end of paragraph should not expand selection', () => {
       const editor = hook.editor();
@@ -58,7 +57,7 @@ describe('browser.tinymce.core.fmt.BlockFormatsTest', () => {
         { title: 'Div', block: 'div' },
         { title: 'Pre', block: 'pre' }
       ]
-    }, [ Theme ]);
+    }, []);
 
     it('Using default style formats config, the Block formatting dropdown should show the correct format selection ', async () => {
       const editor = hook.editor();

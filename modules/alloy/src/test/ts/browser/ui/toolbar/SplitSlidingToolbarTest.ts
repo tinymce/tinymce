@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, PhantomSkipper, Step, StructAssert, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, StructAssert, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
@@ -10,11 +10,6 @@ import { SplitSlidingToolbar } from 'ephox/alloy/api/ui/SplitSlidingToolbar';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
 UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
-  // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
-  // viewed as an invalid value.
-  if (PhantomSkipper.detect()) {
-    return success();
-  }
 
   GuiSetup.setup((store, _doc, _body) => {
     const pPrimary = SplitSlidingToolbar.parts.primary({

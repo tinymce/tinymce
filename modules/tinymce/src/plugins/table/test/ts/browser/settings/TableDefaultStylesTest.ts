@@ -4,7 +4,6 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.table.TableDefaultStylesTest', () => {
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce',
     statusbar: false
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   it('no styles without setting', async () => {
     const editor = hook.editor();
@@ -51,7 +50,7 @@ describe('browser.tinymce.plugins.table.TableDefaultStylesTest', () => {
 
   it('test default style border attribute', async () => {
     const editor = hook.editor();
-    editor.settings.table_default_styles = { border: '3px solid blue' };
+    editor.options.set('table_default_styles', { border: '3px solid blue' });
     editor.setContent('');
     await TableTestUtils.pInsertTableViaGrid(editor, 1, 1);
     TableTestUtils.assertTableStructure(editor, ApproxStructure.build((s, str, _arr) => s.element('table', {

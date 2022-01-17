@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Attribute, SugarElement } from '@ephox/sugar';
-import { McEditor } from '@ephox/wrap-mcagar';
+import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,7 +14,9 @@ describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
       base_url: '/project/tinymce/js/tinymce'
     });
     const iframe = SugarElement.fromDom(editor.iframeElement);
-    assert.equal(Attribute.get(iframe, 'title'), defaultIframeTitle);
+    const iframeBody = TinyDom.body(editor);
+    assert.equal(Attribute.get(iframe, 'title'), 'Rich Text Area');
+    assert.equal(Attribute.get(iframeBody, 'aria-label'), defaultIframeTitle);
     McEditor.remove(editor);
   });
 
@@ -24,7 +26,9 @@ describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
       iframe_aria_text: customIframeTitle
     });
     const iframe = SugarElement.fromDom(editor.iframeElement);
-    assert.equal(Attribute.get(iframe, 'title'), customIframeTitle);
+    const iframeBody = TinyDom.body(editor);
+    assert.equal(Attribute.get(iframe, 'title'), 'Rich Text Area');
+    assert.equal(Attribute.get(iframeBody, 'aria-label'), customIframeTitle);
     McEditor.remove(editor);
   });
 });

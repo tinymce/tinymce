@@ -4,7 +4,6 @@ import { Obj } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.newline.ForcedRootBlockTest', () => {
   const forcedRootBlock = 'p';
@@ -14,7 +13,7 @@ describe('browser.tinymce.core.newline.ForcedRootBlockTest', () => {
     forced_root_block_attrs: forcedRootBlockAttrs,
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ], true);
+  }, [], true);
 
   const bookmarkSpan = '<span data-mce-type="bookmark" id="mce_2_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>';
   const baseExpectedHTML = (innerHTML: string) => `<p class="${forcedRootBlockAttrs.class}" style="${forcedRootBlockAttrs.style}">${innerHTML}</p>`;
@@ -136,7 +135,7 @@ describe('browser.tinymce.core.newline.ForcedRootBlockTest', () => {
   context('With paragraph forced root block and additional data forced root block attribute', () => {
     const additionalForcedRootBlockAttrs = { ...forcedRootBlockAttrs, 'data-test': '1' };
     before(() => {
-      hook.editor().settings.forced_root_block_attrs = additionalForcedRootBlockAttrs;
+      hook.editor().options.set('forced_root_block_attrs', additionalForcedRootBlockAttrs);
     });
 
     assertNewLine(
@@ -158,8 +157,8 @@ describe('browser.tinymce.core.newline.ForcedRootBlockTest', () => {
   context('With div forced root block element', () => {
     before(() => {
       const editor = hook.editor();
-      editor.settings.forced_root_block_attrs = { ...forcedRootBlockAttrs, 'data-test': '1' };
-      editor.settings.forced_root_block = 'div';
+      editor.options.set('forced_root_block_attrs', { ...forcedRootBlockAttrs, 'data-test': '1' });
+      editor.options.set('forced_root_block', 'div');
     });
 
     assertNewLine(

@@ -13,7 +13,7 @@ import {
 import { Arr, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
-import { ToolbarMode } from '../../api/Settings';
+import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Channels from '../../Channels';
 import * as ReadOnly from '../../ReadOnly';
@@ -116,6 +116,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         disabled: false,
         tooltip: Optional.some('More...'),
         primary: false,
+        buttonType: Optional.none(),
         borderless: false
       }, Optional.none(), toolbarSpec.providers)
     },

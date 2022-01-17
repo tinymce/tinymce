@@ -1,8 +1,8 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { Html, SugarElement } from '@ephox/sugar';
 import { LegacyUnit } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import $ from 'tinymce/core/api/dom/DomQuery';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as LineWalker from 'tinymce/core/caret/LineWalker';
 
@@ -23,7 +23,7 @@ describe('browser.tinymce.core.LineWalkerTest', () => {
       return false;
     };
 
-    $(getRoot()).html('<span contentEditable="false">a</span><span>b</span>');
+    Html.set(SugarElement.fromDom(getRoot()), '<span contentEditable="false">a</span><span>b</span>');
     result = LineWalker.positionsUntil(1, getRoot(), predicate, getRoot().firstChild);
     assert.lengthOf(result, 3);
     LegacyUnit.equalDom(result[0].position.getNode(), getRoot().lastChild);
@@ -32,7 +32,7 @@ describe('browser.tinymce.core.LineWalkerTest', () => {
     assert.equal(predicateCallCount, 3);
 
     predicateCallCount = 0;
-    $(getRoot()).html('<span>a</span><span contentEditable="false">b</span>');
+    Html.set(SugarElement.fromDom(getRoot()), '<span>a</span><span contentEditable="false">b</span>');
     result = LineWalker.positionsUntil(-1, getRoot(), predicate, getRoot().lastChild);
     assert.lengthOf(result, 3);
     LegacyUnit.equalDom(result[0].position.getNode(), getRoot().lastChild);
@@ -49,7 +49,7 @@ describe('browser.tinymce.core.LineWalkerTest', () => {
       return false;
     };
 
-    $(getRoot()).html('<p>a</p><p>b</p><p>c</p>');
+    Html.set(SugarElement.fromDom(getRoot()), '<p>a</p><p>b</p><p>c</p>');
 
     const caretPosition = CaretPosition(getRoot().lastChild.lastChild, 1);
     const result = LineWalker.upUntil(getRoot(), predicate, caretPosition);
@@ -69,7 +69,7 @@ describe('browser.tinymce.core.LineWalkerTest', () => {
       return false;
     };
 
-    $(getRoot()).html('<p>a</p><p>b</p><p>c</p>');
+    Html.set(SugarElement.fromDom(getRoot()), '<p>a</p><p>b</p><p>c</p>');
 
     const caretPosition = CaretPosition(getRoot().firstChild.firstChild, 0);
     const result = LineWalker.downUntil(getRoot(), predicate, caretPosition);

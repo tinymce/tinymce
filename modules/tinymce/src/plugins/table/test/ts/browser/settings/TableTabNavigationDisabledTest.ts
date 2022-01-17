@@ -4,14 +4,13 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.TableTableNavigationDisabledTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     table_tab_navigation: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const tableHtml = '<table><tbody><tr><td>a</td></tr><tr><td>a</td></tr></tbody></table>';
 

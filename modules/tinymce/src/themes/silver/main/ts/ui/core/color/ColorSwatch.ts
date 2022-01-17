@@ -12,7 +12,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Events from '../../../api/Events';
-import * as Settings from './Settings';
+import * as Options from './Options';
 
 export type ColorInputCallback = (valueOpt: Optional<string>) => void;
 
@@ -20,8 +20,12 @@ export interface ColorSwatchDialogData {
   colorpicker: string;
 }
 
-const getCurrentColor = (editor: Editor, format) => {
-  let color;
+type ColorFormat = 'forecolor' | 'hilitecolor';
+
+const fallbackColor = '#000000';
+
+const getCurrentColor = (editor: Editor, format: ColorFormat): Optional<string> => {
+  let color: string | undefined;
 
   editor.dom.getParents(editor.selection.getStart(), (elm) => {
     let value;
@@ -31,7 +35,7 @@ const getCurrentColor = (editor: Editor, format) => {
     }
   });
 
-  return color;
+  return Optional.from(color);
 };
 
 const applyFormat = (editor: Editor, format, value) => {
@@ -60,14 +64,6 @@ const registerCommands = (editor: Editor) => {
   });
 };
 
-const calcCols = (colors: number) => Math.max(5, Math.ceil(Math.sqrt(colors)));
-
-const getColorCols = (editor: Editor) => {
-  const colors = Settings.getColors(editor);
-  const defaultCols = calcCols(colors.length);
-  return Settings.getColorCols(editor, defaultCols);
-};
-
 const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
   const type: 'choiceitem' = 'choiceitem';
   const remove = {
@@ -93,11 +89,11 @@ const applyColor = (editor: Editor, format, value, onChoice: (v: string) => void
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {
       colorOpt.each((color) => {
-        Settings.addColor(color);
+        Options.addColor(color);
         editor.execCommand('mceApplyTextcolor', format, color);
         onChoice(color);
       });
-    }, '#000000');
+    }, fallbackColor);
   } else if (value === 'remove') {
     onChoice('');
     editor.execCommand('mceRemoveTextcolor', format);
@@ -107,7 +103,7 @@ const applyColor = (editor: Editor, format, value, onChoice: (v: string) => void
   }
 };
 
-const getColors = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => colors.concat(Settings.getCurrentColors().concat(getAdditionalColors(hasCustom)));
+const getColors = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => colors.concat(Options.getCurrentColors().concat(getAdditionalColors(hasCustom)));
 
 const getFetch = (colors: Menu.ChoiceMenuItemSpec[], hasCustom: boolean) => (callback) => {
   callback(getColors(colors, hasCustom));
@@ -118,26 +114,23 @@ const setIconColor = (splitButtonApi: Toolbar.ToolbarSplitButtonInstanceApi, nam
   splitButtonApi.setIconFill(id, newColor);
 };
 
-const registerTextColorButton = (editor: Editor, name: string, format: string, tooltip: string, lastColor: Cell<string>) => {
+const registerTextColorButton = (editor: Editor, name: string, format: ColorFormat, tooltip: string, lastColor: Cell<string>) => {
   editor.ui.registry.addSplitButton(name, {
     tooltip,
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: (value) => {
-      const optCurrentRgb = Optional.from(getCurrentColor(editor, format));
+      const optCurrentRgb = getCurrentColor(editor, format);
       return optCurrentRgb.bind((currentRgb) => RgbaColour.fromString(currentRgb).map((rgba) => {
         const currentHex = HexColour.fromRgba(rgba).value;
         // note: value = '#FFFFFF', currentHex = 'ffffff'
         return Strings.contains(value.toLowerCase(), currentHex);
       })).getOr(false);
     },
-    columns: getColorCols(editor),
-    fetch: getFetch(Settings.getColors(editor), Settings.hasCustomColors(editor)),
+    columns: Options.getColorCols(editor),
+    fetch: getFetch(Options.getColors(editor), Options.hasCustomColors(editor)),
     onAction: (_splitButtonApi) => {
-      // do something with last color
-      if (lastColor.get() !== null) {
-        applyColor(editor, format, lastColor.get(), Fun.noop);
-      }
+      applyColor(editor, format, lastColor.get(), Fun.noop);
     },
     onItemAction: (_splitButtonApi, value) => {
       applyColor(editor, format, value, (newColor) => {
@@ -150,9 +143,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
       });
     },
     onSetup: (splitButtonApi) => {
-      if (lastColor.get() !== null) {
-        setIconColor(splitButtonApi, name, lastColor.get());
-      }
+      setIconColor(splitButtonApi, name, lastColor.get());
 
       const handler = (e) => {
         if (e.name === name) {
@@ -169,7 +160,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
   });
 };
 
-const registerTextColorMenuItem = (editor: Editor, name: string, format: string, text: string) => {
+const registerTextColorMenuItem = (editor: Editor, name: string, format: ColorFormat, text: string) => {
   editor.ui.registry.addNestedMenuItem(name, {
     text,
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
@@ -247,8 +238,8 @@ const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, val
 
 const register = (editor: Editor) => {
   registerCommands(editor);
-  const lastForeColor = Cell(null);
-  const lastBackColor = Cell(null);
+  const lastForeColor = Cell(fallbackColor);
+  const lastBackColor = Cell(fallbackColor);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 
@@ -262,7 +253,5 @@ export {
   getFetch,
   colorPickerDialog,
   getCurrentColor,
-  getColorCols,
-  getAdditionalColors,
-  calcCols
+  getAdditionalColors
 };

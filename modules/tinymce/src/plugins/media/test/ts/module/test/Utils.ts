@@ -1,5 +1,5 @@
 import { Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Focus, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -21,21 +21,21 @@ const pOpenDialog = async (editor: Editor) => {
   return await TinyUiActions.pWaitForDialog(editor);
 };
 
-const findInDialog = (dialog: SugarElement<HTMLElement>, selector: string) =>
-  UiFinder.findIn(dialog, selector).getOrDie();
+const findInDialog = <T extends HTMLElement>(dialog: SugarElement<Element>, selector: string) =>
+  UiFinder.findIn<T>(dialog, selector).getOrDie();
 
-const pFindInDialog = (selector: string) => async (editor: Editor) => {
+const pFindInDialog = <T extends HTMLElement>(selector: string) => async (editor: Editor) => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
-  return findInDialog(dialog, selector);
+  return findInDialog<T>(dialog, selector);
 };
 
-const getValueOn = (dialog: SugarElement<HTMLElement>, selector: string) => {
-  const elem = findInDialog(dialog, selector);
+const getValueOn = (dialog: SugarElement<Element>, selector: string) => {
+  const elem = findInDialog<HTMLInputElement>(dialog, selector);
   return UiControls.getValue(elem);
 };
 
-const setValueOn = (dialog: SugarElement<HTMLElement>, selector: string, newValue: string) => {
-  const elem = findInDialog(dialog, selector);
+const setValueOn = (dialog: SugarElement<Element>, selector: string, newValue: string) => {
+  const elem = findInDialog<HTMLInputElement>(dialog, selector);
   UiControls.setValue(elem, newValue);
 };
 
@@ -115,21 +115,15 @@ const pAssertSizeRecalcUnconstrained = async (editor: Editor) => {
 const fakeEvent = (elem: SugarElement<HTMLElement>, name: string) => {
   const element: HTMLElement = elem.dom;
   // NOTE we can't fake a paste event here.
-  let event: Event;
-  if (Type.isFunction(Event)) {
-    event = new Event(name, {
-      bubbles: true,
-      cancelable: true
-    });
-  } else { // support IE
-    event = document.createEvent('Event');
-    event.initEvent(name, true, true);
-  }
+  const event = new Event(name, {
+    bubbles: true,
+    cancelable: true
+  });
   element.dispatchEvent(event);
 };
 
-const pFindFilepickerInput = pFindInDialog(selectors.source);
-const pFindTextarea = pFindInDialog(selectors.embed);
+const pFindFilepickerInput = pFindInDialog<HTMLInputElement>(selectors.source);
+const pFindTextarea = pFindInDialog<HTMLTextAreaElement>(selectors.embed);
 
 const pSetSourceInput = async (editor: Editor, value: string) => {
   const input = await pFindFilepickerInput(editor);
@@ -140,7 +134,7 @@ const pSetSourceInput = async (editor: Editor, value: string) => {
 const pPasteTextareaValue = async (editor: Editor, value: string) => {
   const button = await pFindInDialog(selectors.embedButton)(editor);
   Mouse.click(button);
-  const embed = await pFindInDialog(selectors.embed)(editor);
+  const embed = await pFindTextarea(editor);
   UiControls.setValue(embed, value);
   fakeEvent(embed, 'paste');
   // Need to wait for the post paste event to fire
@@ -152,7 +146,7 @@ const pAssertEmbedData = async (editor: Editor, content: string) => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
   await Waiter.pTryUntil('Textarea should have a proper value',
     () => {
-      const elem = findInDialog(dialog, selectors.embed);
+      const elem = findInDialog<HTMLTextAreaElement>(dialog, selectors.embed);
       const value = UiControls.getValue(elem);
       assert.equal(value, content, 'embed content');
     }

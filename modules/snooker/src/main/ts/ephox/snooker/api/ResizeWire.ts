@@ -1,5 +1,5 @@
-import { Fun, Optional } from '@ephox/katamari';
-import { SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
+import { SugarElement, SugarLocation, SugarNode, SugarPosition, Traverse } from '@ephox/sugar';
 
 // parent: the container where the resize bars are appended
 //         this gets mouse event handlers only if it is not a child of 'view' (eg, detached/inline mode)
@@ -12,15 +12,15 @@ import { SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
 type ResizeCallback = (elm: SugarElement<Element>) => boolean;
 
 export interface ResizeWire {
-  parent: () => SugarElement;
-  view: () => SugarElement;
+  parent: () => SugarElement<Node>;
+  view: () => SugarElement<Node>;
   origin: () => SugarPosition;
   isResizable: ResizeCallback;
 }
 
-const only = (element: SugarElement, isResizable: ResizeCallback): ResizeWire => {
+const only = (element: SugarElement<Document | Element>, isResizable: ResizeCallback): ResizeWire => {
   // If element is a 'document', use the document element ('HTML' tag) for appending.
-  const parent = Optional.from(element.dom.documentElement).map(SugarElement.fromDom).getOr(element);
+  const parent = SugarNode.isDocument(element) ? Traverse.documentElement(element) : element;
   return {
     parent: Fun.constant(parent),
     view: Fun.constant(element),
@@ -29,7 +29,7 @@ const only = (element: SugarElement, isResizable: ResizeCallback): ResizeWire =>
   };
 };
 
-const detached = (editable: SugarElement, chrome: SugarElement, isResizable: ResizeCallback): ResizeWire => {
+const detached = (editable: SugarElement<Element>, chrome: SugarElement<Element>, isResizable: ResizeCallback): ResizeWire => {
   const origin = () => SugarLocation.absolute(chrome);
   return {
     parent: Fun.constant(chrome),
@@ -39,7 +39,7 @@ const detached = (editable: SugarElement, chrome: SugarElement, isResizable: Res
   };
 };
 
-const body = (editable: SugarElement, chrome: SugarElement, isResizable: ResizeCallback): ResizeWire => {
+const body = (editable: SugarElement<Element>, chrome: SugarElement<Element>, isResizable: ResizeCallback): ResizeWire => {
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),

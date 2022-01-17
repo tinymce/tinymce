@@ -1,12 +1,11 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Optional, Type } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFilter, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () => {
@@ -17,7 +16,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
     context(tester.label, () => {
       const hook = tester.setup<Editor>({
         base_url: '/project/tinymce/js/tinymce'
-      }, [ Theme ]);
+      }, []);
       const dialogSelector = 'div[role="dialog"]';
       let currentColor = '';
 
@@ -25,16 +24,10 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor)));
 
       const fireEvent = (elem: SugarElement<Node>, event: string) => {
-        let evt: Event;
-        if (Type.isFunction(Event)) {
-          evt = new Event(event, {
-            bubbles: true,
-            cancelable: true
-          });
-        } else { // support IE
-          evt = document.createEvent('Event');
-          evt.initEvent(event, true, true);
-        }
+        const evt = new Event(event, {
+          bubbles: true,
+          cancelable: true
+        });
         elem.dom.dispatchEvent(evt);
       };
 

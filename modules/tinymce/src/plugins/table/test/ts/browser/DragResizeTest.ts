@@ -7,7 +7,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.DragResizeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -15,8 +14,8 @@ describe('browser.tinymce.plugins.table.DragResizeTest', () => {
     content_style: 'table {border: 0;padding:0;} td {border: 0;padding:0;}',
     height: 400,
     base_url: '/project/tinymce/js/tinymce',
-    table_responsive_width: false
-  }, [ Plugin, Theme ], true);
+    table_sizing_mode: 'fixed'
+  }, [ Plugin ], true);
 
   const dragDrop = (container: SugarElement<HTMLElement>, selector: string, dx: number, dy: number) => {
     const elem = UiFinder.findIn(container, selector).getOrDie();

@@ -1,5 +1,5 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute } from '@ephox/sugar';
@@ -7,7 +7,6 @@ import { McEditor, TinyAssertions, TinyHooks, TinySelections, TinyUiActions } fr
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface ToolbarOrMenuSpec {
   readonly name: string;
@@ -70,7 +69,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
     context('Default settings', () => {
       const hook = TinyHooks.bddSetup<Editor>({
         ...baseSettings
-      }, [ Theme ]);
+      }, []);
 
       Arr.each([ menuSpec, toolbarSpec ], (spec) => {
         it(`TINY-4843: ${spec.name} lists correct line heights`, async () => {
@@ -151,7 +150,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
       const hook = TinyHooks.bddSetup<Editor>({
         ...baseSettings,
         lineheight_formats: '1 1.1 1.11 1.111'
-      }, [ Theme ]);
+      }, []);
 
       Arr.each([ menuSpec, toolbarSpec ], (spec) => {
         it(`TINY-4843: ${spec.name} lists specified line heights`, async () => {
@@ -167,7 +166,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
       const hook = TinyHooks.bddSetup<Editor>({
         ...baseSettings,
         lineheight_formats: '1.000 20px 22.0px 1.5e2%'
-      }, [ Theme ]);
+      }, []);
 
       beforeEach(() => {
         hook.editor().setContent('');
@@ -210,7 +209,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
           { title: 'Portuguese', code: 'pt' },
           { title: 'Chinese', code: 'zh' }
         ]
-      }, [ Theme ]);
+      }, []);
 
       const defaultLanguages = [ 'English', 'Spanish', 'French', 'German', 'Portuguese', 'Chinese' ];
 
@@ -290,10 +289,6 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
     });
 
     context('Advanced settings', () => {
-      before(() => {
-        Theme();
-      });
-
       Arr.each([ menuSpec, toolbarSpec ], (spec) => {
         it(`TINY-6149: ${spec.name} applies custom language attributes`, async () => {
           const editor = await McEditor.pFromSettings<Editor>({

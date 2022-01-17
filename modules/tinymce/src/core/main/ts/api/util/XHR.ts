@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Delay from './Delay';
 import Observable from './Observable';
 import Tools from './Tools';
 
@@ -246,7 +245,7 @@ const XHR: XHR = {
 
         xhr = null;
       } else {
-        Delay.setTimeout(ready, 10);
+        setTimeout(ready, 10);
       }
     };
 
@@ -292,7 +291,7 @@ const XHR: XHR = {
     }
 
     // Wait for response, onReadyStateChange can not be used since it leaks memory in IE
-    Delay.setTimeout(ready, 10);
+    setTimeout(ready, 10);
   }
 };
 

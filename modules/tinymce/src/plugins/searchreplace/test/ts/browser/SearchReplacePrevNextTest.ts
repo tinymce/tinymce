@@ -5,7 +5,6 @@ import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/searchreplace/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', () =
     plugins: 'searchreplace',
     toolbar: 'searchreplace',
     base_url: '/project/tinymce/js/tinymce',
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   const body = SugarBody.body();
 

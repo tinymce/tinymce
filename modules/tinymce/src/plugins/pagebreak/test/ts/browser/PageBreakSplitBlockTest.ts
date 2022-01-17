@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/pagebreak/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -13,13 +12,13 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
     toolbar: 'pagebreak',
     pagebreak_split_block: false, // default
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme, Plugin ]);
+  }, [ Plugin ]);
 
   const clickPageBreak = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Page break"]');
 
   it('TINY-3388: Pagebreak should insert inline when `pagebreak_split_block` is `false`', () => {
     const editor = hook.editor();
-    editor.settings.pagebreak_split_block = false;
+    editor.options.set('pagebreak_split_block', false);
 
     editor.setContent('<p>sometext</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
@@ -46,7 +45,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
 
   it('TINY-3388: Pagebreak should split block element when `pagebreak_split_block` is `true`', () => {
     const editor = hook.editor();
-    editor.settings.pagebreak_split_block = true;
+    editor.options.set('pagebreak_split_block', true);
 
     editor.setContent('<p>sometext</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
@@ -82,7 +81,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
   context('Editor content', () => {
     it('TINY-3388: source_view with `pagebreak_split_block=true`', () => {
       const editor = hook.editor();
-      editor.settings.pagebreak_split_block = true;
+      editor.options.set('pagebreak_split_block', true);
 
       editor.setContent('<p>sometext</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
@@ -95,7 +94,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
 
     it('TINY-3388: source_view with `pagebreak_split_block=false`', () => {
       const editor = hook.editor();
-      editor.settings.pagebreak_split_block = false;
+      editor.options.set('pagebreak_split_block', false);
 
       editor.setContent('<p>sometext</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
@@ -107,7 +106,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
 
     it('TINY-3388: getContent with `pagebreak_split_block=true`', () => {
       const editor = hook.editor();
-      editor.settings.pagebreak_split_block = true;
+      editor.options.set('pagebreak_split_block', true);
 
       editor.setContent('<p>sometext</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
@@ -118,7 +117,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
 
     it('TINY-3388: getContent with `pagebreak_split_block=false`', () => {
       const editor = hook.editor();
-      editor.settings.pagebreak_split_block = false;
+      editor.options.set('pagebreak_split_block', false);
 
       editor.setContent('<p>sometext</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);

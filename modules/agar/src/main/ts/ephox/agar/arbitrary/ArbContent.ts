@@ -1,13 +1,18 @@
 import { Merger, Obj } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+import * as fc from 'fast-check';
 
-import * as ArbSchema from './ArbSchema';
+import { ArbSchema } from './ArbSchema';
+import { Schema, SchemaDetail } from './ArbSchemaTypes';
 import * as ArbSchemaTypes from './ArbSchemaTypes';
 
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+interface ContentSchema {
+  [key: string]: <T extends Node>(rawDepth: number | undefined) => fc.Arbitrary<SugarElement<T>>;
+}
 
 const unknownDepth = undefined;
 
-const makeArbOf = (component, schema, depth): any => {
+const makeArbOf = <T extends Node>(component: string, schema: ContentSchema, depth: number | undefined): fc.Arbitrary<SugarElement<T>> => {
   const arbitrary = schema[component];
   if (arbitrary === undefined) {
     const message =
@@ -20,28 +25,24 @@ const makeArbOf = (component, schema, depth): any => {
   return arbitrary(depth);
 };
 
-const createSchema = (factory, extras): any => {
+const createSchema = (factory: Schema, extras: Record<string, Partial<SchemaDetail>>): ContentSchema => {
   const base = ArbSchema;
   const schema = Merger.deepMerge(base, extras);
   return Obj.map(schema, (s, k) => {
-    const type = s.type;
+    const type: string = s.type;
     if (factory[type] === undefined && base[k] !== undefined) {
       throw new Error('Component: ' + k + ' has invalid type: ' + type);
-    // deprecate `custom` function
-    } else if (factory[type] === undefined) {
-      return factory.custom(s);
     } else {
       return factory[type](s);
     }
   });
 };
 
-const arbOf = (component, _schema?) => {
+const arbOf = <T extends Node>(component: string, extras: Record<string, Partial<SchemaDetail>> = {}): fc.Arbitrary<SugarElement<T>> => {
   // For the schema to create other components;
-  const constructor = (comp, newDepth) => makeArbOf(comp, schema, newDepth);
+  const constructor = (comp: string, newDepth: number) => makeArbOf(comp, schema, newDepth);
 
   const factory = ArbSchemaTypes.create(constructor);
-  const extras = _schema !== undefined ? _schema : { };
   const schema = createSchema(factory, extras);
 
   return makeArbOf(component, schema, unknownDepth);

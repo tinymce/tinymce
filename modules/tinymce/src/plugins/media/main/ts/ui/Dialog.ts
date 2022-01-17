@@ -10,7 +10,7 @@ import { Arr, Cell, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
 import { isMediaElement } from '../core/Selection';
@@ -93,14 +93,14 @@ const handleError = (editor: Editor) => (error?: { msg: string }): void => {
 };
 
 const snippetToData = (editor: Editor, embedSnippet: string): MediaData =>
-  HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet);
+  HtmlToData.htmlToData(Options.getScripts(editor), embedSnippet);
 
 const getEditorData = (editor: Editor): MediaData => {
   const element = editor.selection.getNode();
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
   return {
     embed: snippet,
-    ...HtmlToData.htmlToData(Settings.getScripts(editor), snippet)
+    ...HtmlToData.htmlToData(Options.getScripts(editor), snippet)
   };
 };
 
@@ -195,7 +195,7 @@ const showDialog = (editor: Editor): void => {
     filetype: 'media',
     label: 'Source'
   }];
-  const sizeInput: Dialog.SizeInputSpec[] = !Settings.hasDimensions(editor) ? [] : [{
+  const sizeInput: Dialog.SizeInputSpec[] = !Options.hasDimensions(editor) ? [] : [{
     type: 'sizeinput',
     name: 'dimensions',
     label: 'Constrain proportions',
@@ -222,7 +222,7 @@ const showDialog = (editor: Editor): void => {
 
   const advancedFormItems: Dialog.BodyComponentSpec[] = [];
 
-  if (Settings.hasAltSource(editor)) {
+  if (Options.hasAltSource(editor)) {
     advancedFormItems.push({
       name: 'altsource',
       type: 'urlinput',
@@ -232,7 +232,7 @@ const showDialog = (editor: Editor): void => {
     );
   }
 
-  if (Settings.hasPoster(editor)) {
+  if (Options.hasPoster(editor)) {
     advancedFormItems.push({
       name: 'poster',
       type: 'urlinput',

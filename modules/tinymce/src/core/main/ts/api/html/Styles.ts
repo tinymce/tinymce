@@ -9,7 +9,7 @@
  * This class is used to parse CSS styles it also compresses styles to reduce the output size.
  *
  * @example
- * var Styles = new tinymce.html.Styles({
+ * var Styles = tinymce.html.Styles({
  *    url_converter: function(url) {
  *       return url;
  *    }
@@ -26,10 +26,10 @@
 
 import { Obj, Unicode } from '@ephox/katamari';
 
-import { URLConverter } from '../SettingsTypes';
+import { URLConverter } from '../OptionTypes';
 import Schema from './Schema';
 
-export interface StyleMap { [s: string]: string | number }
+export type StyleMap = Record<string, string | number>;
 
 export interface StylesSettings {
   allow_script_urls?: boolean;
@@ -39,25 +39,13 @@ export interface StylesSettings {
 }
 
 interface Styles {
-  toHex: (color: string) => string;
   parse: (css: string) => Record<string, string>;
   serialize: (styles: StyleMap, elementName?: string) => string;
 }
 
-const toHex = (match: string, r: string, g: string, b: string) => {
-  const hex = (val: string) => {
-    val = parseInt(val, 10).toString(16);
-
-    return val.length > 1 ? val : '0' + val; // 0 -> 00
-  };
-
-  return '#' + hex(r) + hex(g) + hex(b);
-};
-
-const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
+const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
   /* jshint maxlen:255 */
   /* eslint max-len:0 */
-  const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
   const trimRightRegExp = /\s+$/;
@@ -80,21 +68,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
     encodingLookup[invisibleChar + i] = encodingItems[i];
   }
 
-  return {
-    /**
-     * Parses the specified RGB color value and returns a hex version of that color.
-     * <br>
-     * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
-     *
-     * @deprecated
-     * @method toHex
-     * @param {String} color RGB string value like rgb(1,2,3)
-     * @return {String} Hex version of that RGB value like #FF00FF.
-     */
-    toHex: (color: string): string => {
-      return color.replace(rgbRegExp, toHex);
-    },
-
+  const self: Styles = {
     /**
      * Parses the specified style value into an object collection. This parser will also
      * merge and remove any redundant items that browsers might have added. It will also convert non hex
@@ -108,7 +82,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
       const styles: any = {};
       let matches, name, value, isEncoded;
       const urlConverter = settings.url_converter;
-      const urlConverterScope = settings.url_converter_scope || this;
+      const urlConverterScope = settings.url_converter_scope || self;
 
       const compress = (prefix, suffix, noJoin?) => {
         const top = styles[prefix + '-top' + suffix];
@@ -298,9 +272,6 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
               value = value.toLowerCase();
             }
 
-            // Convert RGB colors to HEX
-            value = value.replace(rgbRegExp, toHex);
-
             // Convert URLs and force them into url('value') format
             value = value.replace(urlOrStrRegExp, processUrl);
             styles[name] = isEncoded ? decode(value, true) : value;
@@ -384,6 +355,8 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
       return css;
     }
   };
+
+  return self;
 };
 
 export default Styles;

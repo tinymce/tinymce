@@ -9,7 +9,7 @@ import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ep
 import { InlineContent } from '@ephox/bridge';
 import { Id, Optional } from '@ephox/katamari';
 
-import { ToolbarMode } from '../../api/Settings';
+import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar, ToolbarGroup } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';

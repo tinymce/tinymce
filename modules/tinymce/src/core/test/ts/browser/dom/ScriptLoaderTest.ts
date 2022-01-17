@@ -3,7 +3,6 @@ import { Arr } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
-import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
 describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   const testScript = '/project/tinymce/src/core/test/assets/js/test.js';
@@ -12,7 +11,7 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
 
   const pLoadScript = (url: string): Promise<void> => {
     loadedScripts.push(url);
-    return new PromisePolyfill((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       ScriptLoader.ScriptLoader.loadScript(url, () => {
         loadedCount++;
         resolve();
@@ -23,7 +22,7 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   const pLoadScripts = (urls: string[]): Promise<void> => {
     loadedScripts.push(...urls);
     const scriptCount = urls.length;
-    return new PromisePolyfill((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       ScriptLoader.ScriptLoader.loadScripts(urls, () => {
         loadedCount += scriptCount;
         resolve();
@@ -36,7 +35,7 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     ScriptLoader.ScriptLoader.add(url, () => loadedCount++);
   };
 
-  const pLoadQueue = (): Promise<void> => new PromisePolyfill((resolve, reject) => {
+  const pLoadQueue = (): Promise<void> => new Promise((resolve, reject) => {
     ScriptLoader.ScriptLoader.loadQueue(resolve, undefined, () => reject('Failed to load queued scripts'));
   });
 

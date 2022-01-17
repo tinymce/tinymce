@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import EditorManager from 'tinymce/core/api/EditorManager';
 import I18n from 'tinymce/core/api/util/I18n';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.EditorRtlTest', () => {
   before(() => {
@@ -24,7 +23,7 @@ describe('browser.tinymce.core.EditorRtlTest', () => {
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('I18n.isRtl', () => {
     assert.isTrue(I18n.isRtl(), 'Should be in rtl mode after creating an editor in arabic');

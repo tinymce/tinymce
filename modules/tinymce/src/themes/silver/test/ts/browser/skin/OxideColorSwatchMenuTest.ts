@@ -7,7 +7,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const store = TestHelpers.TestStore();
@@ -46,7 +45,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
         onItemAction: store.adder('onItemAction')
       });
     }
-  }, [ Theme ]);
+  }, []);
 
   const structColor = (value: string): ApproxStructure.Builder<StructAssert> =>
     (s, str, arr) => s.element('div', {

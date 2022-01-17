@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.ApplyDlTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -22,7 +21,7 @@ describe('browser.tinymce.plugins.lists.ApplyDlTest', () => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Apply DL list to multiple Ps', () => {
     const editor = hook.editor();
@@ -34,7 +33,7 @@ describe('browser.tinymce.plugins.lists.ApplyDlTest', () => {
     );
     editor.focus();
 
-    LegacyUnit.setSelection(editor, 'p', 0, 'p:last', 0);
+    LegacyUnit.setSelection(editor, 'p', 0, 'p:last-of-type', 0);
     editor.execCommand('InsertDefinitionList');
 
     TinyAssertions.assertContent(

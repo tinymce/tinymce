@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import Promise from '@ephox/wrap-promise-polyfill';
 import { assert } from 'chai';
 
 import * as Throttler from 'ephox/katamari/api/Throttler';
@@ -35,7 +34,7 @@ describe('atomic.katamari.api.fun.ThrottlerTest', () => {
       if (value === 'retry') {
         throttler.throttle('retried');
       }
-    }, 100);
+    }, 75);
 
     throttler.throttle('retry');
 

@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as DialogUtils from '../../module/DialogUtils';
 import * as PageScroll from '../../module/PageScroll';
@@ -54,7 +53,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       width: 600,
       toolbar_sticky: false,
       toolbar_mode: 'wrap'
-    }, [ Theme ]);
+    }, []);
 
     it('Test position when resizing', async () => {
       const editor = hook.editor();
@@ -127,7 +126,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       width: 600,
       toolbar_sticky: true,
       toolbar_location: 'bottom'
-    }, [ Theme ]);
+    }, []);
 
     PageScroll.bddSetup(hook.editor, 1000);
 
@@ -179,7 +178,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
         element: div,
         teardown: () => Remove.remove(div)
       };
-    }, [ Theme ]);
+    }, []);
 
     PageScroll.bddSetup(hook.editor, 1000);
 

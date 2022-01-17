@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -23,7 +22,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     },
     base_url: '/project/tinymce/js/tinymce',
     forced_root_block: false
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('TBA: Remove UL with single LI in BR mode', () => {
     const editor = hook.editor();
@@ -51,11 +50,11 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     );
 
     editor.focus();
-    LegacyUnit.setSelection(editor, 'li:first', 1, 'li:last', 1);
+    LegacyUnit.setSelection(editor, 'li:first-of-type', 1, 'li:last-of-type', 1);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,
-      'a<br />' +
+      'a<br>' +
       'b'
     );
     assert.equal(editor.selection.getStart().nodeName, 'BODY');
@@ -72,12 +71,12 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     );
 
     editor.focus();
-    LegacyUnit.setSelection(editor, 'li:first', 0);
+    LegacyUnit.setSelection(editor, 'li:first-of-type', 0);
     editor.execCommand('InsertUnorderedList');
 
     TinyAssertions.assertContent(editor,
       '<div>a</div>' +
-      '<br />' +
+      '<br>' +
       '<div>b</div>'
     );
     assert.equal(editor.selection.getStart().nodeName, 'BR');

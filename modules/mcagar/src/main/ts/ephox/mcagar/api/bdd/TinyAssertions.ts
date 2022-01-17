@@ -6,7 +6,7 @@ import { Editor, GetContentArgs } from '../../alien/EditorTypes';
 import { Presence } from '../pipeline/TinyApis';
 import { TinyDom } from '../TinyDom';
 
-const assertPath = (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
+const assertPath = (label: string, root: SugarElement<Node>, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
   const expected = Cursors.calculateOne(root, expPath);
   const message = () => {
     const actual = SugarElement.fromDom(actElement);

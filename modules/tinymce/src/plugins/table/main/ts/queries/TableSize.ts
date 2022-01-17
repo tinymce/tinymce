@@ -10,14 +10,14 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { isPercentagesForced, isPixelsForced } from '../api/Settings';
+import * as Options from '../api/Options';
 
 export const get = (editor: Editor, table: SugarElement<HTMLTableElement>): TableSize => {
   // Note: We can't enforce none (responsive), as if someone manually resizes a table
   // then it must switch to either pixel (fixed) or percentage (relative) sizing
-  if (isPercentagesForced(editor)) {
+  if (Options.isPercentagesForced(editor)) {
     return TableSize.percentageSize(table);
-  } else if (isPixelsForced(editor)) {
+  } else if (Options.isPixelsForced(editor)) {
     return TableSize.pixelSize(table);
   } else {
     // Detect based on the table width

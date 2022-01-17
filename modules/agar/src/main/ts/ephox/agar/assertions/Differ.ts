@@ -121,8 +121,8 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
       }
     } else {
       if (out.n[0].text == null) {
-        for (n = 0; n < out.o.length && out.o[n].text == null; n++) {
-          str += '<del>' + out.o[n] + oSpace[n] + '</del>';
+        for (let j = 0; j < out.o.length && out.o[j].text == null; j++) {
+          str += '<del>' + out.o[j] + oSpace[j] + '</del>';
         }
       }
 
@@ -133,8 +133,8 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
           // `pre` initialized at top of scope
           pre = '';
 
-          for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++) {
-            pre += '<del>' + out.o[n] + oSpace[n] + '</del>';
+          for (let j = out.n[i].row + 1; j < out.o.length && out.o[j].text == null; j++) {
+            pre += '<del>' + out.o[j] + oSpace[j] + '</del>';
           }
           str += ' ' + out.n[i].text + nSpace[i] + pre;
         }

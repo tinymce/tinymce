@@ -36,8 +36,7 @@ const parent = (element: SugarElement<Node>): Optional<SugarElement<Node & Paren
 const parentNode = (element: SugarElement<Node>): Optional<SugarElement<Node>> =>
   parent(element) as any;
 
-// Note: This requires an Element since IE 11 doesn't support using `parentElement` on a `Node`
-const parentElement = (element: SugarElement<Element>): Optional<SugarElement<HTMLElement>> =>
+const parentElement = (element: SugarElement<Node>): Optional<SugarElement<HTMLElement>> =>
   Optional.from(element.dom.parentElement).map(SugarElement.fromDom);
 
 const findIndex = (element: SugarElement<Node>): Optional<number> =>

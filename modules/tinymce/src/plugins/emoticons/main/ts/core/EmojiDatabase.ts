@@ -9,10 +9,8 @@ import { Merger, Obj, Optional, Singleton, Strings } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
-import Delay from 'tinymce/core/api/util/Delay';
-import Promise from 'tinymce/core/api/util/Promise';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const ALL_CATEGORY = 'All';
 
@@ -49,8 +47,8 @@ const categoryNameMap = {
 const translateCategory = (categories: Record<string, string>, name: string): string =>
   Obj.has(categories, name) ? categories[name] : name;
 
-const getUserDefinedEmoticons = (editor: Editor): Record<string, RawEmojiEntry> => {
-  const userDefinedEmoticons = Settings.getAppendedEmoticons(editor);
+const getUserDefinedEmoji = (editor: Editor): Record<string, RawEmojiEntry> => {
+  const userDefinedEmoticons = Options.getAppendedEmoji(editor);
   return Obj.map(userDefinedEmoticons, (value) =>
     // Set some sane defaults for the custom emoji entry
     ({ keywords: [], category: 'user', ...value })
@@ -62,7 +60,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
   const categories = Singleton.value<Record<string, EmojiEntry[]>>();
   const all = Singleton.value<EmojiEntry[]>();
 
-  const emojiImagesUrl = Settings.getEmotionsImageUrl(editor);
+  const emojiImagesUrl = Options.getEmojiImageUrl(editor);
 
   const getEmoji = (lib: RawEmojiEntry) => {
     // Note: This is a little hacky, but the database doesn't provide a way for us to tell what sort of database is being used
@@ -96,11 +94,11 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
 
   editor.on('init', () => {
     Resource.load(databaseId, databaseUrl).then((emojis) => {
-      const userEmojis = getUserDefinedEmoticons(editor);
+      const userEmojis = getUserDefinedEmoji(editor);
       processEmojis(Merger.merge(emojis, userEmojis));
     }, (err) => {
       // eslint-disable-next-line no-console
-      console.log(`Failed to load emoticons: ${err}`);
+      console.log(`Failed to load emojis: ${err}`);
       categories.set({});
       all.set([]);
     });
@@ -125,16 +123,16 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
     } else {
       return new Promise((resolve, reject) => {
         let numRetries = 15;
-        const interval = Delay.setInterval(() => {
+        const interval = setInterval(() => {
           if (hasLoaded()) {
-            Delay.clearInterval(interval);
+            clearInterval(interval);
             resolve(true);
           } else {
             numRetries--;
             if (numRetries < 0) {
               // eslint-disable-next-line no-console
               console.log('Could not load emojis from url: ' + databaseUrl);
-              Delay.clearInterval(interval);
+              clearInterval(interval);
               reject(false);
             }
           }

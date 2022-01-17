@@ -5,9 +5,8 @@ import { SugarDocument } from '@ephox/sugar';
 import { McEditor, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { Navigation, pProcessNavigation } from '../module/MenuNavigationTestUtils';
 
@@ -22,10 +21,9 @@ interface Assertion {
 describe('browser.tinymce.plugins.importcss.ImportCssGroupsTest', () => {
   before(() => {
     Plugin();
-    Theme();
   });
 
-  const pTestEditorWithSettings = async (assertion: Assertion, pluginSettings: RawEditorSettings) => {
+  const pTestEditorWithSettings = async (assertion: Assertion, pluginSettings: RawEditorOptions) => {
     const editor = await McEditor.pFromSettings<Editor>({
       plugins: 'importcss',
       toolbar: 'styleselect',

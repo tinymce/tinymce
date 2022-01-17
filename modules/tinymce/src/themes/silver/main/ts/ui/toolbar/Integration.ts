@@ -12,7 +12,7 @@ import { Arr, Obj, Optional, Result, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { getToolbarMode, ToolbarGroupSetting, ToolbarMode } from '../../api/Settings';
+import { getToolbarMode, ToolbarGroupOption, ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RenderToolbarConfig } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';
@@ -105,7 +105,7 @@ const types = {
     Toolbar.createGroupToolbarButton,
     (s: Toolbar.GroupToolbarButton, extras, editor: Editor) => {
       const buttons = editor.ui.registry.getAll().buttons;
-      const identify = (toolbar: string | ToolbarGroupSetting[]) =>
+      const identify = (toolbar: string | ToolbarGroupOption[]) =>
         identifyButtons(editor, { buttons, toolbar, allowToolbarGroups: false }, extras, Optional.none());
       const attributes = {
         [VerticalDir.Attribute]: extras.backstage.shared.header.isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop
@@ -165,7 +165,7 @@ const convertStringToolbar = (strToolbar) => {
   }));
 };
 
-const isToolbarGroupSettingArray = (toolbar): toolbar is ToolbarGroupSetting[] => Type.isArrayOf(toolbar, (t): t is ToolbarGroupSetting => Obj.has(t, 'name') && Obj.has(t, 'items'));
+const isToolbarGroupSettingArray = (toolbar): toolbar is ToolbarGroupOption[] => Type.isArrayOf(toolbar, (t): t is ToolbarGroupOption => Obj.has(t, 'name') && Obj.has(t, 'items'));
 
 // Toolbar settings
 // false = disabled
@@ -173,7 +173,7 @@ const isToolbarGroupSettingArray = (toolbar): toolbar is ToolbarGroupSetting[] =
 // string = enabled with specified buttons and groups
 // string array = enabled with specified buttons and groups
 // object array = enabled with specified buttons, groups and group titles
-const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupSetting[] => {
+const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupOption[] => {
   const toolbar = toolbarConfig.toolbar;
   const buttons = toolbarConfig.buttons;
   if (toolbar === false) {

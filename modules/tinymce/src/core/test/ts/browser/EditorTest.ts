@@ -1,20 +1,20 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import Env from 'tinymce/core/api/Env';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import URI from 'tinymce/core/api/util/URI';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.EditorTest', () => {
+  const browser = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetup<Editor>({
     selector: 'textarea',
     add_unload_trigger: false,
@@ -23,8 +23,10 @@ describe('browser.tinymce.core.EditorTest', () => {
     extended_valid_elements: 'custom1,custom2,script[*]',
     entities: 'raw',
     indent: false,
+    custom_prop1: 5,
+    custom_prop2: 5,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('TBA: Event: change', () => {
     const editor = hook.editor();
@@ -70,7 +72,7 @@ describe('browser.tinymce.core.EditorTest', () => {
 
   it('TBA: urls - relativeURLs', () => {
     const editor = hook.editor();
-    editor.settings.relative_urls = true;
+    editor.options.set('relative_urls', true);
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
     editor.setContent('<a href="test.html">test</a>');
@@ -97,8 +99,8 @@ describe('browser.tinymce.core.EditorTest', () => {
 
   it('TBA: urls - absoluteURLs', () => {
     const editor = hook.editor();
-    editor.settings.relative_urls = false;
-    editor.settings.remove_script_host = true;
+    editor.options.set('relative_urls', false);
+    editor.options.set('remove_script_host', true);
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
     editor.setContent('<a href="test.html">test</a>');
@@ -113,8 +115,8 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
     assert.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
 
-    editor.settings.relative_urls = false;
-    editor.settings.remove_script_host = false;
+    editor.options.set('relative_urls', false);
+    editor.options.set('remove_script_host', false);
 
     editor.setContent('<a href="test.html">test</a>');
     assert.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>', 'urls - absoluteURLs');
@@ -135,34 +137,33 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
   });
 
-  it('TBA: WebKit Serialization range bug', () => {
-    if (Env.webkit) {
-      const editor = hook.editor();
-      // Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
-      // wind up testing the serialization functionality we were aiming for and the test fails.
-      const p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
-      editor.dom.replace(p, editor.getBody().firstChild);
-
-      assert.equal(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>', 'WebKit Serialization range bug');
+  it('TBA: WebKit Serialization range bug', function () {
+    if (!(browser.isChromium() || browser.isSafari())) {
+      this.skip();
     }
+
+    const editor = hook.editor();
+    // Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
+    // wind up testing the serialization functionality we were aiming for and the test fails.
+    const p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
+    editor.dom.replace(p, editor.getBody().firstChild);
+
+    assert.equal(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>', 'WebKit Serialization range bug');
   });
 
   it('TBA: editor_methods - getParam', () => {
     const editor = hook.editor();
-    editor.settings.test = 'a,b,c';
-    assert.equal(editor.getParam('test', '', 'hash').c, 'c', 'editor_methods - getParam');
 
-    editor.settings.test = 'a';
-    assert.equal(editor.getParam('test', '', 'hash').a, 'a', 'editor_methods - getParam');
+    assert.isUndefined(editor.getParam('test1'), 'unregistered with no default');
+    assert.equal(editor.getParam('test2', ''), '', 'unregistered with default');
+    assert.equal(editor.getParam('test2', 'blah'), 'blah', 'unregistered with different default');
 
-    editor.settings.test = 'a=b';
-    assert.equal(editor.getParam('test', '', 'hash').a, 'b', 'editor_methods - getParam');
+    assert.equal(editor.getParam('custom_prop1', 10, 'number'), 5, 'unregistered with correct type');
+    assert.equal(editor.getParam('custom_prop2', '10', 'string'), '10', 'unregistered with incorrect type');
 
-    editor.settings.test = 'a=b;c=d,e';
-    assert.equal(editor.getParam('test', '', 'hash').c, 'd,e', 'editor_methods - getParam');
-
-    editor.settings.test = 'a=b,c=d';
-    assert.equal(editor.getParam('test', '', 'hash').c, 'd', 'editor_methods - getParam');
+    editor.options.register('test4', { processor: 'string', default: 'default' });
+    assert.equal(editor.getParam('test4'), 'default', 'registered with no passed default');
+    assert.equal(editor.getParam('test4', 'override'), 'override', 'registered with passed default');
   });
 
   it('TBA: setContent', () => {
@@ -192,9 +193,9 @@ describe('browser.tinymce.core.EditorTest', () => {
   it('TBA: setContent with comment bug #4409', () => {
     const editor = hook.editor();
     editor.setContent('<!-- x --><br>');
-    editor.settings.disable_nodechange = false;
+    editor.options.set('disable_nodechange', false);
     editor.nodeChanged();
-    editor.settings.disable_nodechange = true;
+    editor.options.set('disable_nodechange', true);
     assert.equal(editor.getContent(), '<!-- x --><p>\u00a0</p>', 'setContent with comment bug #4409');
   });
 
@@ -408,14 +409,14 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.dom.fire(editor.getBody(), 'click');
     assert.equal(clickCount, 1, 'setMode');
 
-    editor.setMode('readonly');
-    assert.isTrue(isDisabled('.tox-editor-container button:last'), 'setMode');
+    editor.mode.set('readonly');
+    assert.isTrue(isDisabled('.tox-editor-container button:last-of-type'), 'setMode');
     editor.dom.fire(editor.getBody(), 'click');
     assert.equal(clickCount, 1, 'setMode');
 
-    editor.setMode('design');
+    editor.mode.set('design');
     editor.dom.fire(editor.getBody(), 'click');
-    assert.isFalse(isDisabled('.tox-editor-container button:last'), 'setMode');
+    assert.isFalse(isDisabled('.tox-editor-container button:last-of-type'), 'setMode');
     assert.equal(clickCount, 2, 'setMode');
   });
 
@@ -471,7 +472,7 @@ describe('browser.tinymce.core.EditorTest', () => {
   context('hasPlugin', () => {
     const checkWithoutManager = (title: string, plugins: string, plugin: string, expected: boolean) => {
       const editor = hook.editor();
-      editor.settings.plugins = plugins;
+      editor.options.set('plugins', plugins);
       assert.equal(editor.hasPlugin(plugin), expected, title);
     };
 
@@ -481,7 +482,7 @@ describe('browser.tinymce.core.EditorTest', () => {
         PluginManager.add('ParticularPlugin', Fun.noop);
       }
 
-      editor.settings.plugins = plugins;
+      editor.options.set('plugins', plugins);
       assert.equal(editor.hasPlugin(plugin, true), expected, title);
 
       if (addToManager) {

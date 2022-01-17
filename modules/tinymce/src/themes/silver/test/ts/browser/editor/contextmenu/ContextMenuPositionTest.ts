@@ -3,7 +3,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertContentMenuPosition, pOpenContextMenu } from '../../../module/ContextMenuUtils';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.ContextMenuPositionTe
     height: 200,
     base_url: '/project/tinymce/js/tinymce',
     contextmenu_avoid_overlap: '.mce-spellchecker-word'
-  }, [ LinkPlugin, Theme ], true);
+  }, [ LinkPlugin ], true);
 
   it('TINY-6036: Context menu opened on node should open at right click position', async () => {
     const editor = hook.editor();

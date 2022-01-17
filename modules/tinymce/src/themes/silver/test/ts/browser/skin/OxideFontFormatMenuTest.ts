@@ -1,15 +1,12 @@
 import { ApproxStructure, Assertions, FocusTools, Keys } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.skin.OxideFontFormatMenuTest', () => {
-  const isIE = PlatformDetection.detect().browser.isIE();
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'styleselect',
@@ -31,7 +28,7 @@ describe('browser.tinymce.themes.silver.skin.OxideFontFormatMenuTest', () => {
       { title: 'Red paragraph', block: 'p', styles: { color: 'rgb(255, 0, 0)' }},
       { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
     ]
-  }, [ Theme ]);
+  }, []);
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     ':focus { background-color: rgb(222, 224, 226); }',
@@ -157,7 +154,7 @@ describe('browser.tinymce.themes.silver.skin.OxideFontFormatMenuTest', () => {
                       s.element('span', {
                         html: str.is('Red text'),
                         styles: {
-                          color: (isIE ? str.is('#ff0000') : str.is('rgb(255, 0, 0)'))
+                          color: str.is('rgb(255, 0, 0)')
                         }
                       })
                     ]
@@ -174,7 +171,7 @@ describe('browser.tinymce.themes.silver.skin.OxideFontFormatMenuTest', () => {
                       s.element('p', {
                         html: str.is('Red paragraph'),
                         styles: {
-                          color: (isIE ? str.is('#ff0000') : str.is('rgb(255, 0, 0)'))
+                          color: str.is('rgb(255, 0, 0)')
                         }
                       })
                     ]

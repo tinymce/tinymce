@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { insertTable, getWidths } from '../module/test/TableTestUtils';
 
@@ -19,7 +18,7 @@ describe('browser.tinymce.plugins.table.InsertTableWidthsTest', () => {
         width: 800,
         height: 400,
         base_url: '/project/tinymce/js/tinymce'
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       beforeEach(() => {
         hook.editor().setContent('');

@@ -4,7 +4,6 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -12,13 +11,13 @@ describe('browser.tinymce.plugins.table.TableAppearanceTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
   it('TBA: test that settings for appearance can be disabled', async () => {
     const editor = hook.editor();
-    editor.settings.table_appearance_options = false;
+    editor.options.set('table_appearance_options', false);
     editor.setContent(tableHtml);
     TinySelections.select(editor, 'table td', [ 0 ]);
     editor.execCommand('mceTableProps');
@@ -38,7 +37,7 @@ describe('browser.tinymce.plugins.table.TableAppearanceTest', () => {
 
   it('TBA: test that settings for appearance can be enabled', async () => {
     const editor = hook.editor();
-    editor.settings.table_appearance_options = true;
+    editor.options.set('table_appearance_options', true);
     editor.setContent(tableHtml);
     TinySelections.select(editor, 'table td', [ 0 ]);
     editor.execCommand('mceTableProps');

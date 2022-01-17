@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Hooks from 'tinymce/core/fmt/Hooks';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.HooksTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -13,7 +12,7 @@ describe('browser.tinymce.core.fmt.HooksTest', () => {
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('pre - postProcessHook', () => {
     const editor = hook.editor();
@@ -27,7 +26,7 @@ describe('browser.tinymce.core.fmt.HooksTest', () => {
     assertPreHook(
       '<pre>a</pre><pre>b</pre>',
       [ 'pre:nth-child(1)', 0, 'pre:nth-child(2)', 1 ],
-      '<pre>a<br /><br />b</pre>'
+      '<pre>a<br><br>b</pre>'
     );
 
     assertPreHook(
@@ -45,7 +44,7 @@ describe('browser.tinymce.core.fmt.HooksTest', () => {
     assertPreHook(
       '<pre>a</pre><pre>b</pre><pre>c</pre>',
       [ 'pre:nth-child(1)', 0, 'pre:nth-child(3)', 1 ],
-      '<pre>a<br /><br />b<br /><br />c</pre>'
+      '<pre>a<br><br>b<br><br>c</pre>'
     );
 
     assertPreHook(
@@ -63,7 +62,7 @@ describe('browser.tinymce.core.fmt.HooksTest', () => {
     assertPreHook(
       '<pre>a</pre><pre>b</pre><p>c</p><pre>d</pre><pre>e</pre>',
       [ 'pre:nth-child(1)', 0, 'pre:nth-child(5)', 1 ],
-      '<pre>a<br /><br />b</pre><p>c</p><pre>d<br /><br />e</pre>'
+      '<pre>a<br><br>b</pre><p>c</p><pre>d<br><br>e</pre>'
     );
   });
 });

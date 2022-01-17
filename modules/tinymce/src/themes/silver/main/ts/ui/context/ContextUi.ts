@@ -11,8 +11,6 @@ import {
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
 import { Class, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
 
-import Delay from 'tinymce/core/api/util/Delay';
-
 const forwardSlideEvent = Id.generate('forward-slide');
 export interface ForwardSlideEvent extends CustomEvent {
   readonly forwardContents: AlloySpec;
@@ -78,7 +76,7 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
               return Focus.active(SugarShadowDom.getRootNode(elem));
             });
           });
-          Delay.setTimeout(() => {
+          setTimeout(() => {
             Css.set(comp.element, 'width', newWidth + 'px');
           }, 0);
         }),

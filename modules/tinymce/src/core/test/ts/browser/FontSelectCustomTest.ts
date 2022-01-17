@@ -6,7 +6,6 @@ import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.FontSelectCustomTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -19,7 +18,7 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     ].join(''),
     font_formats: 'Arial=arial; Arial Black=arial black; Arial Narrow=arial narrow; Bauhaus 93="bauhaus 93"; Bookman Old Style=bookman old style; Bookshelf Symbol 7=bookshelf symbol 7; Times New Roman=times new roman, times;',
     fontsize_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
-  }, [ Theme ]);
+  }, []);
 
   const assertSelectBoxDisplayValue = (editor, title, expectedValue) => {
     const selectBox = UiFinder.findIn(SugarBody.body(), '*[title="' + title + '"]').getOrDie();

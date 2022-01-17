@@ -22,7 +22,7 @@ const register = (editor: Editor): void => {
     onSetup: (buttonApi) => {
       // Set the initial state and then bind to selection changes to update the state when the selection changes
       buttonApi.setActive(Type.isNonNullable(ImageSelection.getSelectedImage(editor)));
-      return editor.selection.selectorChangedWithUnbind('img:not([data-mce-object],[data-mce-placeholder]),figure.image', buttonApi.setActive).unbind;
+      return editor.selection.selectorChangedWithUnbind('img:not([data-mce-object]):not([data-mce-placeholder]),figure.image', buttonApi.setActive).unbind;
     }
   });
 

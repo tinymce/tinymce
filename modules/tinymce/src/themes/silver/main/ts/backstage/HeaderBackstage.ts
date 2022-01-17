@@ -9,7 +9,7 @@ import { Cell } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 export interface UiFactoryBackstageForHeader {
   isPositionedAtTop: () => boolean;
@@ -18,7 +18,7 @@ export interface UiFactoryBackstageForHeader {
 }
 
 export const HeaderBackstage = (editor: Editor): UiFactoryBackstageForHeader => {
-  const mode = Cell<'top' | 'bottom'>(Settings.isToolbarLocationBottom(editor) ? 'bottom' : 'top');
+  const mode = Cell<'top' | 'bottom'>(Options.isToolbarLocationBottom(editor) ? 'bottom' : 'top');
 
   return {
     isPositionedAtTop: () => mode.get() === 'top',

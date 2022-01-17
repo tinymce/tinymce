@@ -4,13 +4,12 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.commands.LineHeightTest', () => {
   const platform = PlatformDetection.detect();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const assertHeight = (editor: Editor, value: string) => {
     const current = editor.queryCommandValue('LineHeight');

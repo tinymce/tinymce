@@ -1,5 +1,3 @@
-import Promise from '@ephox/wrap-promise-polyfill';
-
 import * as Errors from '../proxy/Errors';
 import * as Utils from '../proxy/Utils';
 

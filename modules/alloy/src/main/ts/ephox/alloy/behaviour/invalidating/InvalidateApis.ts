@@ -10,7 +10,7 @@ const ariaElements = [
   'textarea'
 ];
 
-const isAriaElement = (elem: SugarElement) => {
+const isAriaElement = (elem: SugarElement<Node>): elem is SugarElement<HTMLInputElement | HTMLTextAreaElement> => {
   const name = SugarNode.name(elem);
   return Arr.contains(ariaElements, name);
 };

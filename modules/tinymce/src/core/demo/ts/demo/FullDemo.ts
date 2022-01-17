@@ -2,7 +2,7 @@
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
+import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -29,7 +29,7 @@ export default () => {
     });
   };
 
-  const settings: RawEditorSettings = {
+  const settings: RawEditorOptions = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     content_langs: [
@@ -76,23 +76,6 @@ export default () => {
         callback('movie.mp4', { embed: '<p>test</p>' });
       }
     },
-    spellchecker_callback(method, text, success, _failure) {
-      const words = text.match(this.getWordCharPattern());
-
-      if (method === 'spellcheck') {
-        const suggestions = {};
-
-        for (let i = 0; i < words.length; i++) {
-          suggestions[words[i]] = [ 'First', 'Second' ];
-        }
-
-        success(suggestions);
-      }
-
-      if (method === 'addToDictionary') {
-        success();
-      }
-    },
     templates: [
       { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
       { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
@@ -101,35 +84,29 @@ export default () => {
     template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
     image_caption: true,
     theme: 'silver',
-    mobile: {
-      plugins: [
-        'autosave lists'
-      ]
-    },
     setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'autosave advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker toc',
-      'searchreplace wordcount visualblocks visualchars code fullscreen fullpage insertdatetime media nonbreaking',
-      'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
-      'codesample help noneditable print'
+      'autosave advlist autolink link image lists charmap preview anchor pagebreak',
+      'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+      'save table directionality emoticons template importcss codesample help'
     ],
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
     toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
-    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code language | ltr rtl',
-    contextmenu: 'link linkchecker image imagetools table lists spellchecker configurepermanentpen',
+    'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
+    contextmenu: 'link linkchecker image table lists configurepermanentpen',
 
     // Multiple toolbar array
     // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
-    // 'alignleft aligncenter alignright alignjustify | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    // 'alignleft aligncenter alignright alignjustify | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     // 'bullist numlist outdent indent | link image'],
 
     // Toolbar<n>
     // toolbar1: 'undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
-    // toolbar2: 'alignleft aligncenter alignright alignjustify | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    // toolbar2: 'alignleft aligncenter alignright alignjustify | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     // toolbar3: 'bullist numlist outdent indent | link image',
 
     // Toolbar with group names

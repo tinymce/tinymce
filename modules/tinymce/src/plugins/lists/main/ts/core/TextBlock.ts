@@ -7,21 +7,21 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as NodeType from './NodeType';
 
 const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment => {
   const dom = editor.dom;
   const blockElements = editor.schema.getBlockElements();
   const fragment = dom.createFragment();
-  const blockName = Settings.getForcedRootBlock(editor);
+  const blockName = Options.getForcedRootBlock(editor);
   let node, textBlock, hasContentNode;
 
   if (blockName) {
     textBlock = dom.create(blockName);
 
     if (textBlock.tagName === blockName.toUpperCase()) {
-      dom.setAttribs(textBlock, Settings.getForcedRootBlockAttrs(editor));
+      dom.setAttribs(textBlock, Options.getForcedRootBlockAttrs(editor));
     }
 
     if (!NodeType.isBlock(contentNode.firstChild, blockElements)) {

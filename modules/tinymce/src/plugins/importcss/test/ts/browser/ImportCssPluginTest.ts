@@ -5,9 +5,8 @@ import { SugarBody } from '@ephox/sugar';
 import { McEditor, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface MenuDetails {
   readonly tag?: string;
@@ -24,7 +23,6 @@ interface Assertion {
 describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
   before(() => {
     Plugin();
-    Theme();
   });
 
   const pAssertMenu = async (label: string, expected: MenuDetails[]) => {
@@ -53,7 +51,7 @@ describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
     })), menu);
   };
 
-  const pTestEditorWithSettings = async (assertion: Assertion, pluginSettings: RawEditorSettings) => {
+  const pTestEditorWithSettings = async (assertion: Assertion, pluginSettings: RawEditorOptions) => {
     const editor = await McEditor.pFromSettings<Editor>({
       plugins: 'importcss',
       toolbar: 'styleselect',
@@ -314,6 +312,24 @@ describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
         { title: 'Advanced', filter: /.adv/ },
         { title: 'Other', custom: 'B' }
       ]
+    }
+  ));
+
+  it('TINY-8238: content_css with two files, basic and internal CSS classes', () => pTestEditorWithSettings(
+    {
+      menuContents: [
+        { tag: 'h1', html: 'h1.red', submenu: false },
+        { tag: 'p', html: 'p.other', submenu: false },
+        { tag: 'span', html: 'span.inline', submenu: false }
+      ],
+      choice: Optional.some('h1.red')
+    },
+    {
+      content_css: [
+        '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+        '/project/tinymce/src/plugins/importcss/test/css/internal.css'
+      ],
+      importcss_append: undefined
     }
   ));
 });

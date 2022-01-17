@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- Upgraded to Katamari 9.0, which is incompatible with Katamari 8.0 if used in the same bundle.
+
+### Removed
+- Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.
+
 ## 9.0.2 - 2021-10-11
 
 ### Fixed

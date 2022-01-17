@@ -7,7 +7,7 @@ import * as AlloyLogger from '../log/AlloyLogger';
 import * as Tagger from './Tagger';
 
 export interface Registry {
-  readonly find: (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement) => Optional<ElementAndHandler>;
+  readonly find: (isAboveRoot: (elem: SugarElement<Node>) => boolean, type: string, target: SugarElement<Node>) => Optional<ElementAndHandler>;
   readonly filter: (type: string) => UidAndHandler[];
   readonly register: (component: AlloyComponent) => void;
   readonly unregister: (component: AlloyComponent) => void;
@@ -60,7 +60,7 @@ export const Registry = (): Registry => {
 
   const filter = (type: string): UidAndHandler[] => events.filterByType(type);
 
-  const find = (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement): Optional<ElementAndHandler> =>
+  const find = (isAboveRoot: (elem: SugarElement<Node>) => boolean, type: string, target: SugarElement<Node>): Optional<ElementAndHandler> =>
     events.find(isAboveRoot, type, target);
 
   const getById = (id: string): Optional<AlloyComponent> => Obj.get(components, id);

@@ -8,16 +8,16 @@
 import { Arr } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 
 const isContentCssSkinName = (url: string) => /^[a-z0-9\-]+$/i.test(url);
 
 const getContentCssUrls = (editor: Editor): string[] => {
-  return transformToUrls(editor, Settings.getContentCss(editor));
+  return transformToUrls(editor, Options.getContentCss(editor));
 };
 
 const getFontCssUrls = (editor: Editor): string[] => {
-  return transformToUrls(editor, Settings.getFontCss(editor));
+  return transformToUrls(editor, Options.getFontCss(editor));
 };
 
 const transformToUrls = (editor: Editor, cssLinks: string[]): string[] => {

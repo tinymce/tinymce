@@ -5,14 +5,13 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.init.ContentStylePositionTest', () => {
   const contentStyle = '.class {color: blue;}';
   const hook = TinyHooks.bddSetupLight<Editor>({
     content_style: contentStyle,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   it('content styles should be after content css', () => {
     const editor = hook.editor();

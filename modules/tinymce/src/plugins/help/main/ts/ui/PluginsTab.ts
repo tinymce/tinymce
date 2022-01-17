@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as PluginUrls from '../data/PluginUrls';
 
 const tab = (editor: Editor): Dialog.TabSpec => {
@@ -45,11 +45,11 @@ const tab = (editor: Editor): Dialog.TabSpec => {
 
   const getPluginKeys = (editor: Editor) => {
     const keys = Obj.keys(editor.plugins);
-    const forced_plugins = Settings.getForcedPlugins(editor);
+    const forcedPlugins = Options.getForcedPlugins(editor);
 
-    return forced_plugins === undefined ?
+    return Type.isUndefined(forcedPlugins) ?
       keys :
-      Arr.filter(keys, (k) => !Arr.contains(forced_plugins, k));
+      Arr.filter(keys, (k) => !Arr.contains(forcedPlugins, k));
   };
 
   const pluginLister = (editor: Editor) => {

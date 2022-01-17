@@ -3,9 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/anchor/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pAddAnchor, pAssertAnchorPresence } from '../module/Helpers';
 
@@ -15,7 +13,7 @@ describe('browser.tinymce.plugins.anchor.AnchorAllowHtmlTest', () => {
     toolbar: 'anchor',
     allow_html_in_named_anchor: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   const assertContentStructure = (editor: Editor, id: string, isContentEditable: boolean, innerContent: string) =>
     TinyAssertions.assertContentStructure(editor,
@@ -64,12 +62,7 @@ describe('browser.tinymce.plugins.anchor.AnchorAllowHtmlTest', () => {
     await pAddAnchor(editor, 'abc');
     assertContentStructure(editor, 'abc', true, 'abc');
     // Latest html: <p><a id="abc">abc</a></p>
-    // Note: Browser check since selection is unstable on IE11 due to TINY-3799
-    if (Env.browser.isIE()) {
-      TinySelections.select(editor, 'a', []);
-    } else {
-      TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
-    }
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
     await pAddAnchor(editor, 'def');
     assertContentStructure(editor, 'def', true, 'abc');
   });

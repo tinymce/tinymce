@@ -1,12 +1,10 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { SelectorFind, Width } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 interface TableCommandMap {
   readonly mceTableInsertColBefore: number;
@@ -25,8 +23,6 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   };
 
-  const platform = PlatformDetection.detect();
-
   const getTableWidth = (editor: Editor) =>
     SelectorFind.child<HTMLTableElement>(TinyDom.body(editor), 'table').map(Width.get).getOrDie();
 
@@ -38,8 +34,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
       TinyAssertions.assertContent(editor, '');
     } else {
       const afterWidth = getTableWidth(editor);
-      // 2px margin of error, 30px margin of error for IE
-      assert.approximately(afterWidth, beforeWidth * multiplier, platform.browser.isIE() ? 30 : 2, 'Assert table width');
+      assert.approximately(afterWidth, beforeWidth * multiplier, 2, 'Assert table width');
     }
   };
 
@@ -59,7 +54,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'responsive',
         table_column_resizing: 'preservetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: will resize table because responsive tables cannot honour this setting', () => {
         const editor = hook.editor();
@@ -162,7 +157,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'responsive',
         table_column_resizing: 'resizetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should resize table when inserting a column', () => {
         const editor = hook.editor();
@@ -271,7 +266,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'fixed',
         table_column_resizing: 'preservetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should preserve table width when inserting a column', () => {
         const editor = hook.editor();
@@ -374,7 +369,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'fixed',
         table_column_resizing: 'resizetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should resize table when inserting a column', () => {
         const editor = hook.editor();
@@ -480,7 +475,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'relative',
         table_column_resizing: 'preservetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should preserve table width when inserting a column', () => {
         const editor = hook.editor();
@@ -583,7 +578,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'relative',
         table_column_resizing: 'resizetable',
-      }, [ Plugin, Theme ]);
+      }, [ Plugin ]);
 
       it('TINY-6711: should resize table when inserting a column', () => {
         const editor = hook.editor();

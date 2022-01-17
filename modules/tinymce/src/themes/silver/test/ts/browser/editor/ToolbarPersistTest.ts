@@ -4,14 +4,13 @@ import { Focus, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.ToolbarPersistTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,
     base_url: '/project/tinymce/js/tinymce',
     toolbar_persist: true
-  }, [ Theme ]);
+  }, []);
 
   const unfocusEditor = () => {
     const div = SugarElement.fromTag('input');

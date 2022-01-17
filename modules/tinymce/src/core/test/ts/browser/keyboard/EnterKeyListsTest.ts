@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -15,8 +14,9 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd',
     entities: 'raw',
     indent: false,
+    text_patterns: false, // TODO TINY-8341 investigate why this is needed
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Theme ]);
+  }, []);
 
   const pressEnter = (editor: Editor, evt?: any) => {
     const dom = editor.dom;
@@ -45,7 +45,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
   it('Enter inside empty li at the end of ol', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
-    LegacyUnit.setSelection(editor, 'li:last', 0);
+    LegacyUnit.setSelection(editor, 'li:last-of-type', 0);
     pressEnter(editor);
     assert.equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
@@ -80,35 +80,35 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
 
   it('Enter inside empty li in the middle of ol with forced_root_block: false', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li:nth-child(2)')[0], 0);
     pressEnter(editor);
     assert.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br><ol><li>b</li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'BODY');
-    editor.settings.forced_root_block = 'p';
+    editor.options.set('forced_root_block', 'p');
   });
 
   it('Enter inside empty li in beginning of ol with forced_root_block: false', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
     editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[0], 0);
     pressEnter(editor);
     assert.equal(editor.getBody().innerHTML, '<br><ol><li>a</li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'BODY');
-    editor.settings.forced_root_block = 'p';
+    editor.options.set('forced_root_block', 'p');
   });
 
   it('Enter inside empty li at the end of ol with forced_root_block: false', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[1], 0);
     pressEnter(editor);
     assert.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br>');
     assert.equal(editor.selection.getNode().nodeName, 'BODY');
-    editor.settings.forced_root_block = 'p';
+    editor.options.set('forced_root_block', 'p');
   });
 
   it('Enter inside empty li in the middle of ol', () => {
@@ -202,7 +202,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'li li:last', 0);
+    LegacyUnit.setSelection(editor, 'li li:last-of-type', 0);
     editor.focus();
     pressEnter(editor);
 
@@ -328,7 +328,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
       '</ol>'
     );
 
-    LegacyUnit.setSelection(editor, 'ol ol li:last', 0);
+    LegacyUnit.setSelection(editor, 'ol ol li:last-of-type', 0);
     editor.focus();
     pressEnter(editor);
 
@@ -449,7 +449,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<ol><li><p><br />abcd</p></li></ol>');
+    assert.equal(editor.getContent(), '<ol><li><p><br>abcd</p></li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -458,7 +458,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<ol><li><p>ab<br />cd</p></li></ol>');
+    assert.equal(editor.getContent(), '<ol><li><p>ab<br>cd</p></li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -469,7 +469,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     pressEnter(editor, { shiftKey: true });
     assert.equal(
       editor.getContent(),
-      '<ol><li><p>abcd<br /><br /></p></li></ol>'
+      '<ol><li><p>abcd<br><br></p></li></ol>'
     );
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
@@ -503,12 +503,12 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
 
   it('Shift+enter in LI when forced_root_block: false', () => {
     const editor = hook.editor();
-    editor.settings.forced_root_block = false;
+    editor.options.set('forced_root_block', false);
     editor.getBody().innerHTML = '<ul><li>text</li></ul>';
     LegacyUnit.setSelection(editor, 'li', 2);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<ul><li>te<br />xt</li></ul>');
-    editor.settings.forced_root_block = 'p';
+    assert.equal(editor.getContent(), '<ul><li>te<br>xt</li></ul>');
+    editor.options.set('forced_root_block', 'p');
   });
 
   it('TINY-5974: Should be able to outdent empty list using enter key', () => {

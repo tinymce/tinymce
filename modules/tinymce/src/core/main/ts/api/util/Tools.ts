@@ -34,9 +34,7 @@ interface Tools {
     <T, R>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, R>): R[];
   };
   extend: (obj: Object, ext: Object, ...objs: Object[]) => any;
-  create: (name: string, p: Object, root?: Object) => void;
   walk: <T = any>(obj: T, f: Function, n?: keyof T, scope?: any) => void;
-  createNS: (name: string, o?: Object) => any;
   resolve: (path: string, o?: Object) => any;
   explode: (s: string, d?: string | RegExp) => string[];
   _addCacheSuffix: (url: string) => string;
@@ -123,142 +121,6 @@ const makeMap = (items, delim?, map?) => {
  */
 const hasOwnProperty = Obj.has;
 
-/**
- * Creates a class, subclass or static singleton.
- * <br>
- * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
- *
- * @deprecated
- * @method create
- * @param {String} s Class name, inheritance and prefix.
- * @param {Object} p Collection of methods to add to the class.
- * @param {Object} root Optional root object defaults to the global window object.
- * @example
- * // Creates a basic class
- * tinymce.create('tinymce.somepackage.SomeClass', {
- *     SomeClass: function() {
- *         // Class constructor
- *     },
- *
- *     method: function() {
- *         // Some method
- *     }
- * });
- *
- * // Creates a basic subclass class
- * tinymce.create('tinymce.somepackage.SomeSubClass:tinymce.somepackage.SomeClass', {
- *     SomeSubClass: function() {
- *         // Class constructor
- *         this.parent(); // Call parent constructor
- *     },
- *
- *     method: function() {
- *         // Some method
- *         this.parent(); // Call parent method
- *     },
- *
- *     'static': {
- *         staticMethod: function() {
- *             // Static method
- *         }
- *     }
- * });
- *
- * // Creates a singleton/static class
- * tinymce.create('static tinymce.somepackage.SomeSingletonClass', {
- *     method: function() {
- *         // Some method
- *     }
- * });
- */
-const create = function (s, p, root?) {
-  const self = this;
-  let sp, scn, c, de = 0;
-
-  // Parse : <prefix> <class>:<super class>
-  s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec(s);
-  const cn = s[3].match(/(^|\.)(\w+)$/i)[2]; // Class name
-
-  // Create namespace for new class
-  const ns = self.createNS(s[3].replace(/\.\w+$/, ''), root);
-
-  // Class already exists
-  if (ns[cn]) {
-    return;
-  }
-
-  // Make pure static class
-  if (s[2] === 'static') {
-    ns[cn] = p;
-
-    if (this.onCreate) {
-      this.onCreate(s[2], s[3], ns[cn]);
-    }
-
-    return;
-  }
-
-  // Create default constructor
-  if (!p[cn]) {
-    // eslint-disable-next-line @tinymce/prefer-fun,prefer-arrow/prefer-arrow-functions
-    p[cn] = function () {};
-    de = 1;
-  }
-
-  // Add constructor and methods
-  ns[cn] = p[cn];
-  self.extend(ns[cn].prototype, p);
-
-  // Extend
-  if (s[5]) {
-    sp = self.resolve(s[5]).prototype;
-    scn = s[5].match(/\.(\w+)$/i)[1]; // Class name
-
-    // Extend constructor
-    c = ns[cn];
-    if (de) {
-      // Add passthrough constructor
-      ns[cn] = function () {
-        return sp[scn].apply(this, arguments);
-      };
-    } else {
-      // Add inherit constructor
-      ns[cn] = function () {
-        this.parent = sp[scn];
-        return c.apply(this, arguments);
-      };
-    }
-    ns[cn].prototype[cn] = ns[cn];
-
-    // Add super methods
-    self.each(sp, (f, n) => {
-      ns[cn].prototype[n] = sp[n];
-    });
-
-    // Add overridden methods
-    self.each(p, (f, n) => {
-      // Extend methods if needed
-      if (sp[n]) {
-        ns[cn].prototype[n] = function () {
-          this.parent = sp[n];
-          return f.apply(this, arguments);
-        };
-      } else {
-        if (n !== cn) {
-          ns[cn].prototype[n] = f;
-        }
-      }
-    });
-  }
-
-  // Add static methods
-  /* jshint sub:true*/
-  /* eslint dot-notation:0*/
-  self.each(p.static, (f, n) => {
-    ns[cn][n] = f;
-  });
-};
-
 const extend = (obj, ...exts: any[]) => {
   for (let i = 0; i < exts.length; i++) {
     const ext = exts[i];
@@ -299,46 +161,6 @@ const walk = function (o, f, n?, s?) {
       walk(o, f, n, s);
     });
   }
-};
-
-/**
- * Creates a namespace on a specific object.
- * <br>
- * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
- *
- * @deprecated
- * @method createNS
- * @param {String} n Namespace to create for example a.b.c.d.
- * @param {Object} o Optional object to add namespace to, defaults to window.
- * @return {Object} New namespace object the last item in path.
- * @example
- * // Create some namespace
- * tinymce.createNS('tinymce.somepackage.subpackage');
- *
- * // Add a singleton
- * var tinymce.somepackage.subpackage.SomeSingleton = {
- *     method: function() {
- *         // Some method
- *     }
- * };
- */
-const createNS = (n, o?) => {
-  let i, v;
-
-  o = o || window;
-
-  n = n.split('.');
-  for (i = 0; i < n.length; i++) {
-    v = n[i];
-
-    if (!o[v]) {
-      o[v] = {};
-    }
-
-    o = o[v];
-  }
-
-  return o;
 };
 
 /**
@@ -481,9 +303,7 @@ const Tools: Tools = {
   hasOwn: hasOwnProperty,
 
   extend,
-  create,
   walk,
-  createNS,
   resolve,
   explode,
   _addCacheSuffix

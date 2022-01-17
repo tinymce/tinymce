@@ -11,12 +11,12 @@ import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';
 
 const register = (editor: Editor): void => {
-  const formats = Settings.getFormats(editor);
-  const defaultFormat = Cell(Settings.getDefaultDateTime(editor));
+  const formats = Options.getFormats(editor);
+  const defaultFormat = Cell(Options.getDefaultDateTime(editor));
 
   const insertDateTime = (format: string) => editor.execCommand('mceInsertDate', false, format);
 

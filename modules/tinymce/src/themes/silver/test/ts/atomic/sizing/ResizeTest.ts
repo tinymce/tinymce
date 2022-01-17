@@ -8,7 +8,7 @@ import { getDimensions, ResizeTypes } from 'tinymce/themes/silver/ui/sizing/Resi
 import * as Utils from 'tinymce/themes/silver/ui/sizing/Utils';
 
 const mockEditor = (containerHeight: number, contentAreaHeight: number): Editor => {
-  const settings = {
+  const options = {
     min_height: 400,
     max_height: 600,
     min_width: 400,
@@ -16,8 +16,9 @@ const mockEditor = (containerHeight: number, contentAreaHeight: number): Editor 
   };
 
   return {
-    settings,
-    getParam: (param, _fallback, _type) => settings[param],
+    options: {
+      get: (param) => options[param]
+    },
     getContainer: () => ({ offsetHeight: containerHeight }),
     getContentAreaContainer: () => ({ offsetHeight: contentAreaHeight })
   } as Editor;

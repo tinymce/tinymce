@@ -3,7 +3,6 @@ import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.FormatterRemoveForcedRootBlockFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -16,7 +15,7 @@ describe('browser.tinymce.core.FormatterRemoveForcedRootBlockFalseTest', () => {
     },
     base_url: '/project/tinymce/js/tinymce',
     forced_root_block: false
-  }, [ Theme ]);
+  }, []);
 
   const getContent = (editor: Editor) => editor.getContent().toLowerCase().replace(/[\r]+/g, '');
 
@@ -26,6 +25,6 @@ describe('browser.tinymce.core.FormatterRemoveForcedRootBlockFalseTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1>b';
     LegacyUnit.setSelection(editor, 'h1', 0, 'h1', 1);
     editor.formatter.remove('format');
-    assert.equal(getContent(editor), 'a<br />b', 'Lines should be separated with br');
+    assert.equal(getContent(editor), 'a<br>b', 'Lines should be separated with br');
   });
 });

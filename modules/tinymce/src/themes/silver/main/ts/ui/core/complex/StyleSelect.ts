@@ -11,6 +11,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 
+import * as Options from '../../../api/Options';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat } from '../ControlUtils';
@@ -54,7 +55,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
     updateText: updateSelectMenuText,
-    shouldHide: editor.getParam('style_formats_autohide', false, 'boolean'),
+    shouldHide: Options.shouldAutoHideStyleFormats(editor),
     isInvalid: (item) => !editor.formatter.canApply(item.format),
     dataset
   } as SelectSpec;

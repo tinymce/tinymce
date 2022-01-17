@@ -87,7 +87,7 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
     uiMothership.add(notificationWrapper);
 
     if (settings.timeout > 0) {
-      Delay.setTimeout(() => {
+      Delay.setEditorTimeout(editor, () => {
         close();
       }, settings.timeout);
     }

@@ -16,8 +16,6 @@ import { createMenuItems, createSelectButton, FormatterFormatItem, SelectSpec } 
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
-const defaultFontsizeFormats = '8pt 10pt 12pt 14pt 18pt 24pt 36pt';
-
 // See https://websemantics.uk/articles/font-size-conversion/ for conversions
 const legacyFontSizes: Record<string, string> = {
   '8pt': '1',
@@ -99,7 +97,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', defaultFontsizeFormats, Delimiter.Space);
+  const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', Delimiter.Space);
 
   return {
     tooltip: 'Font sizes',

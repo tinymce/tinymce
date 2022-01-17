@@ -9,7 +9,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Attribute, Compare, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import * as Settings from '../api/Settings';
+import * as Options from '../api/Options';
 import CaretPosition from '../caret/CaretPosition';
 import { isAtFirstLine, isAtLastLine } from '../caret/LineReader';
 import * as ElementType from '../dom/ElementType';
@@ -66,8 +66,8 @@ const isAtFirstOrLastLine = (root: SugarElement, forward: boolean, pos: CaretPos
 const moveCaretToNewEmptyLine = (editor: Editor, forward: boolean) => {
   const root = SugarElement.fromDom(editor.getBody());
   const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
-  const rootBlock = Settings.getForcedRootBlock(editor);
-  const rootBlockAttrs = Settings.getForcedRootBlockAttrs(editor);
+  const rootBlock = Options.getForcedRootBlock(editor);
+  const rootBlockAttrs = Options.getForcedRootBlockAttrs(editor);
 
   return getClosestTargetBlock(pos, root).exists(() => {
     if (isAtFirstOrLastLine(root, forward, pos)) {

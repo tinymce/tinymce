@@ -5,7 +5,6 @@ import { Css, Insert, Remove, Scroll, SugarBody, SugarElement, SugarLocation } f
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { pAssertFloatingToolbarHeight, pOpenFloatingToolbarAndAssertPosition } from '../../../module/ToolbarUtils';
 
@@ -34,7 +33,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerFloatingPosi
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'undo redo | styleselect | bold italic underline | strikethrough superscript subscript | alignleft aligncenter alignright aligncenter | outdent indent | cut copy paste | selectall remove',
     toolbar_mode: 'floating'
-  }, setupElement, [ Theme ]);
+  }, setupElement, []);
 
   before(async () => {
     // Firefox requires a small wait, otherwise the initial toolbar position is incorrect

@@ -3,6 +3,7 @@ import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
+import { CellElement } from '../util/TableTypes';
 
 export type RowHeaderType = 'section' | 'cells' | 'sectionCells';
 export type RowType = 'header' | 'body' | 'footer';
@@ -13,7 +14,7 @@ interface RowDetails {
 }
 
 interface CommonCellDetails {
-  readonly element: SugarElement;
+  readonly element: SugarElement<CellElement>;
 }
 
 interface CommonRowDetails {
@@ -40,10 +41,10 @@ const getRowType = (row: CommonRowDetails): RowDetails => {
   // Header rows can use a combination of theads and ths - want to detect the different combinations
   const isHeaderRow = row.section === 'thead';
   const isHeaderCells = Optionals.is(findCommonCellType(row.cells), 'th');
-  if (isHeaderRow || isHeaderCells) {
-    return { type: 'header', subType: getRowHeaderType(isHeaderRow, isHeaderCells) };
-  } else if (row.section === 'tfoot') {
+  if (row.section === 'tfoot') {
     return { type: 'footer' };
+  } else if (isHeaderRow || isHeaderCells) {
+    return { type: 'header', subType: getRowHeaderType(isHeaderRow, isHeaderCells) };
   } else {
     return { type: 'body' };
   }

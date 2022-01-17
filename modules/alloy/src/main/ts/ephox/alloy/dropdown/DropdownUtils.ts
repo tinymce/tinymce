@@ -1,5 +1,5 @@
 import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
-import { Css, SugarElement, Width } from '@ephox/sugar';
+import { Css, Width } from '@ephox/sugar';
 
 import * as ComponentStructure from '../alien/ComponentStructure';
 import { Composing } from '../api/behaviour/Composing';
@@ -258,7 +258,7 @@ const makeSandbox = (
         Sandboxing.config({
           onOpen,
           onClose,
-          isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement): boolean => {
+          isPartOf: (container, data, queryElem): boolean => {
             return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(hotspot, queryElem);
           },
           getAttachPoint: () => {

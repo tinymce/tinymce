@@ -9,7 +9,7 @@ import { TableResize } from 'ephox/snooker/api/TableResize';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { OperationCallback, TargetElement, TargetSelection } from 'ephox/snooker/model/RunOperation';
 
-Ready.execute(() => {
+Ready.document(() => {
 
   const tester = SugarElement.fromHtml<HTMLTableElement>(
     '<table border=1>' +
@@ -123,9 +123,9 @@ Ready.execute(() => {
     '</table>');
 
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
-  const ltrs = SugarElement.fromHtml('<div class="ltrs"></div>');
+  const ltrs = SugarElement.fromHtml<HTMLDivElement>('<div class="ltrs"></div>');
   InsertAll.append(ltrs, [ SugarElement.fromHtml('<p>Left to Right tables</p>'), tester, SugarElement.fromTag('p'), subject2 ]);
-  const rtls = SugarElement.fromHtml('<div dir="rtl"></div>');
+  const rtls = SugarElement.fromHtml<HTMLDivElement>('<div dir="rtl"></div>');
   InsertAll.append(rtls, [ SugarElement.fromHtml('<p>Right to Left table</p>'), subject3 ]);
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
@@ -138,7 +138,7 @@ Ready.execute(() => {
 
   // For firefox.
   // eslint-disable-next-line @tinymce/prefer-fun
-  Ready.execute(() => {
+  Ready.document(() => {
     // document.execCommand("enableInlineTableEditing", null, false);
     // document.execCommand("enableObjectResizing", false, "false");
   });

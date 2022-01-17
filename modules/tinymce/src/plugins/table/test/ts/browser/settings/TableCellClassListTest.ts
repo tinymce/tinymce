@@ -3,7 +3,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
@@ -11,7 +10,7 @@ describe('browser.tinymce.plugins.table.TableCellClassListTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ Plugin ], true);
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
@@ -32,7 +31,7 @@ describe('browser.tinymce.plugins.table.TableCellClassListTest', () => {
 
   it('TBA: class input with setting', async () => {
     const editor = hook.editor();
-    editor.settings.table_cell_class_list = [{ title: 'test', value: 'test' }];
+    editor.options.set('table_cell_class_list', [{ title: 'test', value: 'test' }]);
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
     editor.execCommand('mceTableCellProps');

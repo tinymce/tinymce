@@ -4,7 +4,6 @@ import { TinyAssertions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-m
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
-import Theme from 'tinymce/themes/silver/Theme';
 
 import { assertNbspStruct, assertSpanStruct } from '../module/test/Utils';
 
@@ -14,7 +13,7 @@ describe('browser.tinymce.plugins.visualchars.DefaultStateTest', () => {
     toolbar: 'visualchars',
     base_url: '/project/tinymce/js/tinymce',
     visualchars_default_state: true
-  }, [ Plugin, Theme ]);
+  }, [ Plugin ]);
 
   it('tests the default visualchars state', async () => {
     const editor = hook.editor();
