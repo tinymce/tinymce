@@ -83,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
+- Removed the `editor.settings` property as it's been replaced by the new Options API #TINY-8236
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
