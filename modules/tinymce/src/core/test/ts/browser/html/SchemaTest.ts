@@ -290,7 +290,8 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       'title',
       'style',
       'textarea',
-      'xmp'
+      'xmp',
+      'plaintext'
     ], 'special elements');
   });
 

@@ -464,7 +464,8 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
     'dfn code mark q sup sub samp');
 
-  each(('script noscript iframe noframes noembed title style textarea xmp').split(' '), (name) => {
+  // See https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+  each(('script noscript iframe noframes noembed title style textarea xmp plaintext').split(' '), (name) => {
     specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
   });
 
@@ -934,13 +935,11 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * Returns a map with special elements. These are elements that needs to be parsed
    * in a special way such as script, style, textarea etc. The map object values
    * are regexps used to find the end of the element.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em>.
    *
    * @method getSpecialElements
-   * @deprecated
    * @return {Object} Name/value lookup map for special elements.
    */
+  // TODO: TINY-4627/TINY-8382 - Special elements are part of a fixed list in the parser spec and shouldn't be able to be changed, so this probably should be frozen
   const getSpecialElements = Fun.constant(specialElements);
 
   /**
