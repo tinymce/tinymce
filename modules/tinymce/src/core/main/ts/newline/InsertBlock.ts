@@ -173,7 +173,6 @@ const setForcedBlockAttrs = (editor: Editor, node) => {
 // Wraps any text nodes or inline elements in the specified forced root block name
 const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string, rng, container, offset) => {
   let newBlock, parentBlock, startNode, node, next, rootBlockName;
-  const blockName = newBlockName;
   const dom = editor.dom, editableRoot = getEditableRoot(dom, container);
 
   // Not in a block element or in a table cell or caption
@@ -188,7 +187,7 @@ const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string,
     }
 
     if (!parentBlock.hasChildNodes()) {
-      newBlock = dom.create(blockName);
+      newBlock = dom.create(newBlockName);
       setForcedBlockAttrs(editor, newBlock);
       parentBlock.appendChild(newBlock);
       rng.setStart(newBlock, 0);
@@ -208,8 +207,8 @@ const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string,
       node = node.previousSibling;
     }
 
-    if (startNode && editor.schema.isValidChild(rootBlockName, blockName.toLowerCase())) {
-      newBlock = dom.create(blockName);
+    if (startNode && editor.schema.isValidChild(rootBlockName, newBlockName.toLowerCase())) {
+      newBlock = dom.create(newBlockName);
       setForcedBlockAttrs(editor, newBlock);
       startNode.parentNode.insertBefore(newBlock, startNode);
 
