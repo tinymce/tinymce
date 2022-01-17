@@ -14,7 +14,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.KeyboardShortcutMenuFocus
       ...options,
       base_url: '/project/tinymce/js/tinymce'
     });
-    //currently
+    //currently for me i need to actually focus on the browser window for the test to pass, not sure if there's a bug somewhere
     editor.focus();
 
     // const editorDoc = TinyDom.document(editor);
