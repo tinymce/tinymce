@@ -17,7 +17,7 @@ import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../..
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import AstNode from './Node';
-import Schema from './Schema';
+import Schema, { SchemaRegExpMap } from './Schema';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -92,10 +92,6 @@ interface FilterMatches {
 }
 
 type WalkerCallback = (node: AstNode) => void;
-
-// See https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
-// for anything special excluding elements that use the RCDATA state
-const specialElements = new Set('style,xmp,iframe,noembed,noframes,script,noscript,plaintext'.split(','));
 
 const getPurifyConfig = (settings: DomParserSettings): Config => {
   const config: Config = {
@@ -195,8 +191,12 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
   return purify;
 };
 
-const transferChildren = (parent: AstNode, nativeParent: Node) => {
-  const isSpecial = specialElements.has(parent.name);
+const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: SchemaRegExpMap) => {
+  const parentName = parent.name;
+  // Exclude the special elements where the content is RCDATA as their content needs to be parsed instead of being left as plain text
+  // See: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+  const isSpecial = Obj.has(specialElements, parentName) && parentName !== 'title' && parentName !== 'textarea';
+
   Arr.each(nativeParent.childNodes, (nativeChild) => {
     const child = new AstNode(nativeChild.nodeName.toLowerCase(), nativeChild.nodeType);
 
@@ -213,7 +213,7 @@ const transferChildren = (parent: AstNode, nativeParent: Node) => {
       child.value = nativeChild.data;
     }
 
-    transferChildren(child, nativeChild);
+    transferChildren(child, nativeChild, specialElements);
     parent.append(child);
   });
 };
@@ -592,12 +592,20 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
   const parse = (html: string, args?: ParserArgs): AstNode => {
     args = args || {};
     const validate = settings.validate;
+    const specialElements = schema.getSpecialElements();
     const rootBlockName = getRootBlockName(settings, args);
 
-    const rootNode = new AstNode(args.context || settings.root_name, 11);
+    // Determine the root element to wrap the HTML in when parsing. If we're dealing with a
+    // special element then we need to wrap it so the internal content is handled appropriately.
+    const rootName = args.context || settings.root_name;
+    // If the root requires special parsing rules then ensure it's wrapped it in that element
+    const isSpecialRoot = Obj.has(specialElements, rootName.toLowerCase());
+    const content = isSpecialRoot ? `<${rootName}>${html}</${rootName}>` : html;
     // The settings object we pass to purify is completely ignored, because we called setConfig earlier, but it makes the type signatures work
-    const element = purify.sanitize(html, { RETURN_DOM: true });
-    transferChildren(rootNode, element);
+    const body = purify.sanitize(`<body>${content}</body>`, { RETURN_DOM: true });
+    const element = isSpecialRoot ? body.firstChild : body;
+    const rootNode = new AstNode(rootName, 11);
+    transferChildren(rootNode, element, specialElements);
 
     // Set up whitespace fixes
     const [ whitespacePre, whitespacePost ] = whitespaceCleaner(rootNode, schema, settings, args);
