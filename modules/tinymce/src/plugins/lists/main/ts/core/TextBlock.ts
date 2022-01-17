@@ -24,25 +24,23 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
     fragment.appendChild(textBlock);
   }
 
-  if (contentNode) {
-    while ((node = contentNode.firstChild)) {
-      const nodeName = node.nodeName;
+  while ((node = contentNode.firstChild)) {
+    const nodeName = node.nodeName;
 
-      if (!hasContentNode && (nodeName !== 'SPAN' || (node as Element).getAttribute('data-mce-type') !== 'bookmark')) {
-        hasContentNode = true;
+    if (!hasContentNode && (nodeName !== 'SPAN' || (node as Element).getAttribute('data-mce-type') !== 'bookmark')) {
+      hasContentNode = true;
+    }
+
+    if (NodeType.isBlock(node, blockElements)) {
+      fragment.appendChild(node);
+      textBlock = null;
+    } else {
+      if (!textBlock) {
+        textBlock = dom.create(blockName, blockAttrs);
+        fragment.appendChild(textBlock);
       }
 
-      if (NodeType.isBlock(node, blockElements)) {
-        fragment.appendChild(node);
-        textBlock = null;
-      } else {
-        if (!textBlock) {
-          textBlock = dom.create(blockName, blockAttrs);
-          fragment.appendChild(textBlock);
-        }
-
-        textBlock.appendChild(node);
-      }
+      textBlock.appendChild(node);
     }
   }
 

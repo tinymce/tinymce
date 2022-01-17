@@ -69,8 +69,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
       content = padd;
       content = editor.dom.createHTML(forcedRootBlockName, Options.getForcedRootBlockAttrs(editor), content);
     } else if (!content) {
-      // TODO: How should this be handled if we always want a root_block of some kind? Wrap this in a p?
-      content = '<br data-mce-bogus="1">';
+      content = padd;
     }
 
     setEditorHtml(editor, content, args.no_selection);
