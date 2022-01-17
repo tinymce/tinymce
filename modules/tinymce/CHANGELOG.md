@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `element_format` option has been set to `html` by default #TINY-8263
+- The `schema` option has been set to `html5` by default #TINY-8261
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310

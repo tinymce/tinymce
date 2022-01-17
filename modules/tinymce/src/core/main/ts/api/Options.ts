@@ -566,7 +566,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('schema', {
-    processor: 'string'
+    processor: 'string',
+    default: 'html5'
   });
 
   registerOption('convert_urls', {

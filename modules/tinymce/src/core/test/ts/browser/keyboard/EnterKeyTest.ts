@@ -68,11 +68,11 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
 
   it('Enter before first wrapped IMG in P', () => {
     const editor = hook.editor();
-    editor.setContent('<p><b><img src="about:blank" /></b></p>');
+    editor.setContent('<p><strong><img src="about:blank" /></strong></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 0);
     pressEnter(editor);
     assert.equal((editor.getBody().firstChild as HTMLElement).innerHTML, '<br data-mce-bogus="1">');
-    assert.equal(editor.getContent(), '<p>\u00a0</p><p><b><img src="about:blank"></b></p>');
+    assert.equal(editor.getContent(), '<p>\u00a0</p><p><strong><img src="about:blank"></strong></p>');
   });
 
   it('Enter before last IMG in P with text', () => {
@@ -447,18 +447,18 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
 
   it('Shift+Enter in the middle of B with a BR after it', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p><b>abcd</b><br></p>';
-    LegacyUnit.setSelection(editor, 'b', 2);
+    editor.getBody().innerHTML = '<p><strong>abcd</strong><br></p>';
+    LegacyUnit.setSelection(editor, 'strong', 2);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p><b>ab<br>cd</b></p>');
+    assert.equal(editor.getContent(), '<p><strong>ab<br>cd</strong></p>');
   });
 
   it('Shift+Enter at the end of B with a BR after it', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p><b>abcd</b><br></p>';
-    LegacyUnit.setSelection(editor, 'b', 4);
+    editor.getBody().innerHTML = '<p><strong>abcd</strong><br></p>';
+    LegacyUnit.setSelection(editor, 'strong', 4);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p><b>abcd<br></b></p>');
+    assert.equal(editor.getContent(), '<p><strong>abcd<br></strong></p>');
   });
 
   it('Enter in beginning of PRE', () => {
@@ -704,13 +704,13 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
 
   it('Enter after span with space', () => {
     const editor = hook.editor();
-    editor.setContent('<p><b>abc </b></p>');
-    LegacyUnit.setSelection(editor, 'b', 3);
+    editor.setContent('<p><strong>abc </strong></p>');
+    LegacyUnit.setSelection(editor, 'strong', 3);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p><b>abc</b></p><p>\u00a0</p>');
+    assert.equal(editor.getContent(), '<p><strong>abc</strong></p><p>\u00a0</p>');
 
     const rng = editor.selection.getRng();
-    assert.equal(rng.startContainer.nodeName, 'B');
+    assert.equal(rng.startContainer.nodeName, 'STRONG');
     assert.equal(rng.startContainer.textContent !== ' ', true);
   });
 
