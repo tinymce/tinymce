@@ -23,6 +23,8 @@ describe('browser.tinymce.core.EditorTest', () => {
     extended_valid_elements: 'custom1,custom2,script[*]',
     entities: 'raw',
     indent: false,
+    custom_prop1: 5,
+    custom_prop2: 5,
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
@@ -149,24 +151,19 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>', 'WebKit Serialization range bug');
   });
 
-  it('TBA: editor_methods - getParam', function () {
-    // TODO: TINY-8236 (TINY-8234) Remove the skip once getParam uses the options API internally
-    this.skip();
+  it('TBA: editor_methods - getParam', () => {
     const editor = hook.editor();
-    editor.options.set('test', 'a,b,c');
-    assert.equal(editor.getParam('test', '', 'hash').c, 'c', 'editor_methods - getParam');
 
-    editor.options.set('test', 'a');
-    assert.equal(editor.getParam('test', '', 'hash').a, 'a', 'editor_methods - getParam');
+    assert.isUndefined(editor.getParam('test1'), 'unregistered with no default');
+    assert.equal(editor.getParam('test2', ''), '', 'unregistered with default');
+    assert.equal(editor.getParam('test2', 'blah'), 'blah', 'unregistered with different default');
 
-    editor.options.set('test', 'a=b');
-    assert.equal(editor.getParam('test', '', 'hash').a, 'b', 'editor_methods - getParam');
+    assert.equal(editor.getParam('custom_prop1', 10, 'number'), 5, 'unregistered with correct type');
+    assert.equal(editor.getParam('custom_prop2', '10', 'string'), '10', 'unregistered with incorrect type');
 
-    editor.options.set('test', 'a=b;c=d,e');
-    assert.equal(editor.getParam('test', '', 'hash').c, 'd,e', 'editor_methods - getParam');
-
-    editor.options.set('test', 'a=b,c=d');
-    assert.equal(editor.getParam('test', '', 'hash').c, 'd', 'editor_methods - getParam');
+    editor.options.register('test4', { processor: 'string', default: 'default' });
+    assert.equal(editor.getParam('test4'), 'default', 'registered with no passed default');
+    assert.equal(editor.getParam('test4', 'override'), 'override', 'registered with passed default');
   });
 
   it('TBA: setContent', () => {

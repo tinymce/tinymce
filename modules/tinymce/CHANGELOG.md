@@ -34,10 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
+- The `mceAddEditor` and `mceToggleEditor` commands now take an object as their value to specify the id and editor options #TINY-8138
 - The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `element_format` option has been set to `html` by default #TINY-8263
+- The `schema` option has been set to `html5` by default #TINY-8261
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
@@ -83,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
+- Removed the `editor.settings` property as it's been replaced by the new Options API #TINY-8236
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
 - Removed the `mceInsertRawHTML` command #TINY-8214
 - Removed the `elements` property from `Schema` #TINY-8214

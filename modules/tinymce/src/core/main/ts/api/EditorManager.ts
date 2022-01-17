@@ -110,7 +110,6 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   releaseDate: string;
   activeEditor: Editor;
   focusedEditor: Editor;
-  settings: RawEditorOptions;
   baseURI: URI;
   baseURL: string;
   documentBaseURL: string;
@@ -188,8 +187,6 @@ const EditorManager: EditorManager = {
    */
   activeEditor: null,
   focusedEditor: null,
-
-  settings: {},
 
   setup() {
     const self: EditorManager = this;
@@ -620,29 +617,35 @@ const EditorManager: EditorManager = {
    * @method execCommand
    * @param {String} cmd Command to perform for example Bold.
    * @param {Boolean} ui Optional boolean state if a UI should be presented for the command or not.
-   * @param {String} value Optional value parameter like for example an URL to a link.
+   * @param {Object/String/Number/Boolean} value Optional value parameter like for example an URL to a link.
    * @return {Boolean} true/false if the command was executed or not.
    */
   execCommand(cmd, ui, value) {
-    const self = this, editor = self.get(value);
+    const self = this;
+    const editorId = Type.isObject(value) ? value.id ?? value.index : value;
 
     // Manager commands
     switch (cmd) {
-      case 'mceAddEditor':
-        if (!self.get(value)) {
-          new Editor(value, self.settings, self).render();
+      case 'mceAddEditor': {
+        if (!self.get(editorId)) {
+          const editorOptions = value.options;
+          new Editor(editorId, editorOptions, self).render();
         }
 
         return true;
+      }
 
-      case 'mceRemoveEditor':
+      case 'mceRemoveEditor': {
+        const editor = self.get(editorId);
         if (editor) {
           editor.remove();
         }
 
         return true;
+      }
 
-      case 'mceToggleEditor':
+      case 'mceToggleEditor': {
+        const editor = self.get(editorId);
         if (!editor) {
           self.execCommand('mceAddEditor', false, value);
           return true;
@@ -655,6 +658,7 @@ const EditorManager: EditorManager = {
         }
 
         return true;
+      }
     }
 
     // Run command on active editor

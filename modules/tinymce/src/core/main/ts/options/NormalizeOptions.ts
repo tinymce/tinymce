@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Merger, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Merger, Obj, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-import Editor from '../api/Editor';
 import { NormalizedEditorOptions, RawEditorOptions } from '../api/OptionTypes';
 import Tools from '../api/util/Tools';
 
@@ -150,53 +149,8 @@ const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOption
 const normalizeOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalizedEditorOptions =>
   combineOptions(isPhone || isTablet, isPhone, options, defaultOverrideOptions, options);
 
-const getFiltered = <K extends keyof NormalizedEditorOptions> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<NormalizedEditorOptions[K]> => Optional.from(editor.settings[name]).filter(predicate);
-
-const getParamObject = (value: string) => {
-  let output = {};
-
-  if (typeof value === 'string') {
-    Arr.each(value.indexOf('=') > 0 ? value.split(/[;,](?![^=;,]*(?:[;,]|$))/) : value.split(','), (val: string) => {
-      const arr = val.split('=');
-
-      if (arr.length > 1) {
-        output[Tools.trim(arr[0])] = Tools.trim(arr[1]);
-      } else {
-        output[Tools.trim(arr[0])] = Tools.trim(arr[0]);
-      }
-    });
-  } else {
-    output = value;
-  }
-
-  return output;
+export {
+  normalizeOptions,
+  combineOptions,
+  getMobileOverrideOptions
 };
-
-const isArrayOf = (p: (a: any) => boolean) => (a: any) => Type.isArray(a) && Arr.forall(a, p);
-
-// TODO: TINY-8236 (TINY-8234) Remove this once all settings are converted
-const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string) => {
-  const value = name in editor.settings ? editor.settings[name] : defaultVal;
-
-  if (type === 'hash') {
-    return getParamObject(value);
-  } else if (type === 'string') {
-    return getFiltered(Type.isString, editor, name).getOr(defaultVal);
-  } else if (type === 'number') {
-    return getFiltered(Type.isNumber, editor, name).getOr(defaultVal);
-  } else if (type === 'boolean') {
-    return getFiltered(Type.isBoolean, editor, name).getOr(defaultVal);
-  } else if (type === 'object') {
-    return getFiltered(Type.isObject, editor, name).getOr(defaultVal);
-  } else if (type === 'array') {
-    return getFiltered(Type.isArray, editor, name).getOr(defaultVal);
-  } else if (type === 'string[]') {
-    return getFiltered(isArrayOf(Type.isString), editor, name).getOr(defaultVal);
-  } else if (type === 'function') {
-    return getFiltered(Type.isFunction, editor, name).getOr(defaultVal);
-  } else {
-    return value;
-  }
-};
-
-export { normalizeOptions, getParam, combineOptions, getMobileOverrideOptions };

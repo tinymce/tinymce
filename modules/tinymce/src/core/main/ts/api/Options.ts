@@ -566,7 +566,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('schema', {
-    processor: 'string'
+    processor: 'string',
+    default: 'html5'
   });
 
   registerOption('convert_urls', {
@@ -758,7 +759,6 @@ const register = (editor: Editor) => {
   });
 
   // These options must be registered later in the init sequence due to their default values
-  // TODO: TINY-8234 Should we have a way to lazily load the default values?
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
       processor: 'string',
