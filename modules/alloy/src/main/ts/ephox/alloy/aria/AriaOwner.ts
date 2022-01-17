@@ -1,4 +1,4 @@
-import * as AriaManager from "./AriaManager";
+import * as AriaManager from './AriaManager';
 import { Optional } from '@ephox/katamari';
 import { Attribute, PredicateFind, SelectorFind, SugarElement, SugarNode, SugarShadowDom } from '@ephox/sugar';
 

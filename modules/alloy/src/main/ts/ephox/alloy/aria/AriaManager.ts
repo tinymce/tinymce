@@ -1,5 +1,5 @@
-import { Id } from "@ephox/katamari";
-import { Attribute, SugarElement } from "@ephox/sugar";
+import { Id } from '@ephox/katamari';
+import { Attribute, SugarElement } from '@ephox/sugar';
 
 export interface AriaManager {
   id: string;
