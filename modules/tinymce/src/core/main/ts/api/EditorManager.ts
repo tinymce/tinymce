@@ -617,7 +617,7 @@ const EditorManager: EditorManager = {
    * @method execCommand
    * @param {String} cmd Command to perform for example Bold.
    * @param {Boolean} ui Optional boolean state if a UI should be presented for the command or not.
-   * @param {any} value Optional value parameter like for example an URL to a link.
+   * @param {Object/String/Number/Boolean} value Optional value parameter like for example an URL to a link.
    * @return {Boolean} true/false if the command was executed or not.
    */
   execCommand(cmd, ui, value) {
