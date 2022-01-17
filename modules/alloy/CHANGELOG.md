@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Fixed
-- Menu buttons now get an "aria-controls" attribute rather than an "aria-owns" attirbute when activated.
+- Menu buttons now get an "aria-controls" attribute rather than an "aria-owns" attribute when activated.
 
 ### Added
 - Added a new `buildOrPatch` function to the `SystemApi` to allow reusing the passed obsoleted dom element.
