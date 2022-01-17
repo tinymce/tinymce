@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
@@ -14,8 +14,6 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   const browser = PlatformDetection.detect().browser;
   const schema = Schema({ valid_elements: '*[class|title]' });
   const serializer = HtmlSerializer({}, schema);
-  let parser: DomParser;
-  let root: AstNode;
 
   const countNodes = (node: AstNode, counter: Record<string, number> = {}) => {
     if (node.name in counter) {
@@ -34,8 +32,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   schema.addValidChildren('+body[style]');
 
   it('Parse element', () => {
-    parser = DomParser({}, schema);
-    root = parser.parse('<B title="title" class="class">test</B>');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('<B title="title" class="class">test</B>');
     assert.equal(serializer.serialize(root), '<b class="class" title="title">test</b>', 'Inline element');
     assert.equal(root.firstChild.type, 1, 'Element type');
     assert.equal(root.firstChild.name, 'b', 'Element name');
@@ -50,15 +48,15 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('Retains code inside a script', () => {
-    parser = DomParser({}, schema);
-    root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   a < b > \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('  \t\r\n  <SCRIPT>  \t\r\n   a < b > \t\r\n   </S' + 'CRIPT>   \t\r\n  ');
     assert.equal(serializer.serialize(root), '<script>  \t\n   a < b > \t\n   </s' + 'cript>', 'Retain code inside SCRIPT');
     assert.deepEqual(countNodes(root), { 'body': 1, 'script': 1, '#text': 1 }, 'Retain code inside SCRIPT (count)');
   });
 
   it('Whitespace', () => {
-    parser = DomParser({}, schema);
-    root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
+    let parser = DomParser({}, schema);
+    let root = parser.parse('  \t\r\n  <B>  \t\r\n   test  \t\r\n   </B>   \t\r\n  ');
     assert.equal(serializer.serialize(root), ' <b> test </b> ', 'Redundant whitespace (inline element)');
     assert.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 3 }, 'Redundant whitespace (inline element) (count)');
 
@@ -107,20 +105,20 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('Whitespace before/after invalid element with text in block', () => {
-    parser = DomParser({}, Schema({ invalid_elements: 'em' }));
-    root = parser.parse('<p>a <em>b</em> c</p>');
+    const parser = DomParser({}, Schema({ invalid_elements: 'em' }));
+    const root = parser.parse('<p>a <em>b</em> c</p>');
     assert.equal(serializer.serialize(root), '<p>a b c</p>');
   });
 
   it('Whitespace before/after invalid element whitespace element in block', () => {
-    parser = DomParser({}, Schema({ invalid_elements: 'span' }));
-    root = parser.parse('<p> <span></span> </p>');
+    const parser = DomParser({}, Schema({ invalid_elements: 'span' }));
+    const root = parser.parse('<p> <span></span> </p>');
     assert.equal(serializer.serialize(root), '<p>\u00a0</p>');
   });
 
   it('Whitespace preserved in PRE', () => {
-    parser = DomParser({}, schema);
-    root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
+    let parser = DomParser({}, schema);
+    let root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
     assert.equal(serializer.serialize(root), '<pre>  \t\n   test  \t\n   </pre>', 'Whitespace around and inside PRE');
     assert.deepEqual(countNodes(root), { 'body': 1, 'pre': 1, '#text': 1 }, 'Whitespace around and inside PRE (count)');
 
@@ -131,8 +129,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('Whitespace preserved in SPAN inside PRE', () => {
-    parser = DomParser({}, schema);
-    root = parser.parse('  \t\r\n  <PRE>  \t\r\n  <span>    test    </span> \t\r\n   </PRE>   \t\r\n  ');
+    const parser = DomParser({}, schema);
+    const root = parser.parse('  \t\r\n  <PRE>  \t\r\n  <span>    test    </span> \t\r\n   </PRE>   \t\r\n  ');
     assert.equal(
       serializer.serialize(root),
       '<pre>  \t\n  <span>    test    </span> \t\n   </pre>',
@@ -142,8 +140,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('Whitespace preserved in code', () => {
-    parser = DomParser({}, schema);
-    root = parser.parse('<code>  a  </code>');
+    let parser = DomParser({}, schema);
+    let root = parser.parse('<code>  a  </code>');
     assert.equal(serializer.serialize(root), '<code>  a  </code>', 'Whitespace inside code');
     assert.deepEqual(countNodes(root), { 'body': 1, 'code': 1, '#text': 1 }, 'Whitespace inside code (count)');
 
@@ -154,10 +152,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('Parse invalid contents', () => {
-    let parser, root;
-
-    parser = DomParser({}, schema);
-    root = parser.parse('<p class="a"><p class="b">123</p></p>');
+    let parser = DomParser({}, schema);
+    let root = parser.parse('<p class="a"><p class="b">123</p></p>');
     assert.equal(serializer.serialize(root), '<p class="a"></p><p class="b">123</p><p></p>', 'P in P, splits outer P');
     assert.deepEqual(countNodes(root), { 'body': 1, 'p': 3, '#text': 1 }, 'P in P, splits outer P (count)');
 
@@ -226,8 +222,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('Remove empty nodes', () => {
-    parser = DomParser({}, Schema({ valid_elements: '-p,-span[id|style],-strong' }));
-    root = parser.parse(
+    const parser = DomParser({}, Schema({ valid_elements: '-p,-span[id|style],-strong' }));
+    let root = parser.parse(
       '<p>a<span></span><span> </span><span id="x">b</span><span id="y"></span></p><p></p><p><span></span></p><p> </p>'
     );
     assert.equal(serializer.serialize(root), '<p>a <span id="x">b</span><span id="y"></span></p>');
@@ -367,7 +363,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
   it('Fix orphan LI elements', () => {
     let parser = DomParser({}, schema);
-    root = parser.parse('<ul><li>a</li></ul><li>b</li>');
+    let root = parser.parse('<ul><li>a</li></ul><li>b</li>');
     assert.equal(serializer.serialize(root), '<ul><li>a</li><li>b</li></ul>', 'LI moved to previous sibling UL');
 
     parser = DomParser({}, schema);
@@ -388,11 +384,10 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
   });
 
   it('Remove empty elements', () => {
-    let parser;
     const schema = Schema({ valid_elements: 'span,-a,img' });
 
-    parser = DomParser({}, schema);
-    root = parser.parse('<span></span><a href="#"></a>');
+    let parser = DomParser({}, schema);
+    let root = parser.parse('<span></span><a href="#"></a>');
     assert.equal(serializer.serialize(root), '<span></span>', 'Remove empty a element');
 
     parser = DomParser({}, Schema({ valid_elements: 'span,a[name],img' }));
@@ -913,5 +908,63 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const serializedHtml = serializer.serialize(parser.parse(html, { context: 'p' }));
 
     assert.equal(serializedHtml, '<p>Hello world! <button>This is a button with a meta tag in it</button></p>');
+  });
+
+  context('validate: false', () => {
+    it('invalid elements and attributes should not be removed', () => {
+      const parser = DomParser({ validate: false }, Schema({ valid_elements: 'span[id]' }));
+      const html = '<p>Hello world! <strong>This is bold</strong> and <span style="text-decoration: underline">this is underlined content</span>.</p>';
+      const serializedHtml = serializer.serialize(parser.parse(html));
+
+      assert.equal(serializedHtml, html);
+    });
+
+    it('empty elements should not be removed', () => {
+      const customSchema = Schema({ valid_elements: 'span[style],strong' });
+      customSchema.getElementRule('span').removeEmptyAttrs = true;
+      customSchema.getElementRule('strong').removeEmpty = true;
+      const parser = DomParser({ validate: false }, customSchema);
+      const html = '<p>Hello world! This should keep empty <strong></strong>elements <span></span>.</p>';
+      const serializedHtml = serializer.serialize(parser.parse(html));
+
+      assert.equal(serializedHtml, html);
+    });
+
+    it('empty elements should not be padded', () => {
+      const customSchema = Schema({ valid_elements: 'span' });
+      customSchema.getElementRule('span').paddEmpty = true;
+      const parser = DomParser({ validate: false }, customSchema);
+      const html = '<p>Hello world! <span></span></p>';
+      const serializedHtml = serializer.serialize(parser.parse(html));
+
+      assert.equal(serializedHtml, html);
+    });
+
+    it('bogus elements should be removed', () => {
+      const parser = DomParser({ validate: false }, schema);
+      const html = '<p>Hello world! <span data-mce-bogus="1">This is inside a bogus element.</span></p><div data-mce-bogus="all"><strong>This is bogus content</strong></div>';
+      const serializedHtml = serializer.serialize(parser.parse(html));
+
+      assert.equal(serializedHtml, '<p>Hello world! This is inside a bogus element.</p>');
+    });
+
+    it('redundant whitespace should still be removed', () => {
+      const parser = DomParser({ validate: false }, schema);
+      let root = parser.parse('  \t\r\n  <P>  \t\r\n   test  \t\r\n   </P>   \t\r\n  ');
+      assert.equal(serializer.serialize(root), '<p>test</p>', 'Redundant whitespace (block element)');
+      assert.deepEqual(countNodes(root), { 'body': 1, 'p': 1, '#text': 1 }, 'Redundant whitespace (block element) (count)');
+
+      root = parser.parse('  \t\r\n  <PRE>  \t\r\n   test  \t\r\n   </PRE>   \t\r\n  ');
+      assert.equal(serializer.serialize(root), '<pre>  \t\n   test  \t\n   </pre>', 'Whitespace around and inside PRE');
+      assert.deepEqual(countNodes(root), { 'body': 1, 'pre': 1, '#text': 1 }, 'Whitespace around and inside PRE (count)');
+    });
+
+    it('unsafe content should still be removed', () => {
+      const parser = DomParser({ validate: false }, schema);
+      const html = '<p>Hello world!<a href="javascript:alert(1)">XSS</a></p>';
+      const serializedHtml = serializer.serialize(parser.parse(html));
+
+      assert.equal(serializedHtml, '<p>Hello world!<a>XSS</a></p>');
+    });
   });
 });
