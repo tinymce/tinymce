@@ -14,6 +14,7 @@
 @dialog-border-radius: @panel-border-radius;
 @dialog-border-width: 1px;
 @dialog-footer-separator-border: 1px solid @dialog-border-color;
+@editor-header-sticky-box-shadow: 0 4px 4px -3px rgba(0, 0, 0, .25);
 @textfield-focus-outline: none;
 @menu-border-color: @border-color;
 @menu-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
@@ -39,6 +40,10 @@
 @tinymce-border-radius: 0;
 @tinymce-border-width: 1px;
 @tinymce-box-shadow: none;
+@textfield-focus-box-shadow: none;
+@textfield-focus-outline: 2px solid fade(@color-tint, 25%);
+@menubar-separator-color: @border-color;
+@menubar-row-separator-color: @border-color;
 
 .tox {
   &:not(.tox-tinymce-inline) .tox-editor-header {
@@ -46,9 +51,17 @@
     padding: 0;
   }
 
-  &.tox-tinymce--toolbar-sticky-on .tox-editor-header {
-    background-color: @editor-header-sticky-background-color;
-    padding: 0;
+  &.tox-tinymce--toolbar-sticky-on {
+    .tox-editor-header {
+      background-color: @editor-header-sticky-background-color;
+      padding: 0;
+    }
+
+    &.tox-tinymce--toolbar-bottom {
+      .tox-editor-header {
+        box-shadow: @editor-header-sticky-box-shadow;
+      }
+    }
   }
 
   .tox-collection--list .tox-collection__group .tox-insert-table-picker {
