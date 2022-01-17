@@ -17,7 +17,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.KeyboardShortcutElementPa
     // currently for me i need to actually focus on the browser window for the test to pass, not sure if there's a bug somewhere
     editor.focus();
 
-    // const editorDoc = TinyDom.document(editor);
     const doc = SugarDocument.getDocument();
 
     TinyContentActions.keystroke(editor, 122, { alt: true });
