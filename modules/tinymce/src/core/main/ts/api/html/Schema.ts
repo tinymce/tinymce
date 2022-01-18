@@ -350,6 +350,13 @@ const compileSchema = (type: SchemaType = 'html5'): SchemaLookupTable => {
   }
 
   // Special: iframe, ruby, video, audio, label
+  if (type !== 'html4') {
+    // Video/audio elements cannot have nested children
+    Arr.each([ schema.video, schema.audio ], (item) => {
+      delete item.children.audio;
+      delete item.children.video;
+    });
+  }
 
   // Delete children of the same name from it's parent
   // For example: form can't have a child of the name form

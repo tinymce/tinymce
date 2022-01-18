@@ -168,8 +168,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"><img src="x"></video></p>');
     testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x"></video></p>');
     testXss('<p><audio src=x onerror=alert(1)></audio></p>', '<p><audio src="x"></audio></p>');
-    // TODO: TINY-4627/TINY-8382
-    // testXss('<p><html><audio><br /><audio src=x onerror=alert(1)></p>', '');
+    testXss('<p><html><audio><br /><audio src=x onerror=alert(1)></p>', '<p><audio><br></audio><audio src="x"></audio></p>');
     testXss('<p><audio><img src="javascript:alert(1)"></audio>', '<p><audio><img></audio></p>');
     testXss(
       '<p><video><noscript><svg onload="javascript:alert(1)"></svg></noscript></video>',
