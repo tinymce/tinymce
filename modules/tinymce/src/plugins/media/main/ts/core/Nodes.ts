@@ -10,6 +10,7 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import DomParser from 'tinymce/core/api/html/DomParser';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import AstNode from 'tinymce/core/api/html/Node';
 
 import * as Options from '../api/Options';
@@ -144,10 +145,13 @@ const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targe
 
   // Place the inner HTML contents inside an escaped attribute
   // This enables us to copy/paste the fake object
-  const innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
+  const serializer = HtmlSerializer({ validate: false, element_format: editor.options.get('element_format'), inner: true }, editor.schema);
+  const tempNode = new AstNode('div', 1);
+  Arr.each(sourceNode.children(), (child) => tempNode.append(child));
+  const innerHtml = serializer.serialize(tempNode);
   if (innerHtml) {
     targetNode.attr('data-mce-html', escape(Sanitize.sanitize(editor, innerHtml)));
-    targetNode.firstChild = null;
+    targetNode.empty();
   }
 };
 

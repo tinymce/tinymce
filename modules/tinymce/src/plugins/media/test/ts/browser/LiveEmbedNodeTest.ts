@@ -106,8 +106,7 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
     assertStructure(editor, 'iframe', [ ], { }, { width: '100%', height: '100%' });
   });
 
-  // TODO: TINY-4627/TINY-8382
-  it.skip('TINY-7674: video with source child elements', () => {
+  it('TINY-7674: video with source child elements', () => {
     const editor = hook.editor();
     editor.setContent('<video class="test-class" style="height: 250px; width: 500px;"><source src="about:blank" type="video/mp4" /></video>');
     assertStructure(editor, 'video', [ 'test-class' ], { }, { width: '500px', height: '250px' }, (s, str) => [
@@ -120,8 +119,7 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
     ]);
   });
 
-  // TODO: TINY-4627/TINY-8382
-  it.skip('TINY-7674: audio with source child elements', () => {
+  it('TINY-7674: audio with source child elements', () => {
     const editor = hook.editor();
     editor.setContent('<audio controls="controls"><source src="about:blank" type="audio/mp3"></audio>');
     assertStructure(editor, 'audio', [ ], { controls: 'controls' }, { }, (s, str) => [

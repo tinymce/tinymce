@@ -60,8 +60,7 @@ describe('browser.tinymce.plugins.media.MediaPluginSanityTest', () => {
     TinyUiActions.closeDialog(editor);
   });
 
-  // TODO: TINY-4627/TINY-8382
-  it.skip('TINY-4857: Test embed with XSS attack sanitized', async () => {
+  it('TINY-4857: Test embed with XSS attack sanitized', async () => {
     const editor = hook.editor();
     await Utils.pOpenDialog(editor);
     await Utils.pPasteTextareaValue(editor, '<video controls="controls" width="300" height="150"><source src="a" onerror="alert(1)" /></video>');
