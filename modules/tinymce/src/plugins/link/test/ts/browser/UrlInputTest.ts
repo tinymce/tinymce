@@ -1,7 +1,7 @@
 import { FocusTools } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyUiActions, TinyContentActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
@@ -15,9 +15,25 @@ describe('browser.tinymce.plugins.link.UrlInputTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
+  const pOpenLinkDialogWithKeyboard = async (editor: Editor) => {
+    TinyContentActions.keystroke(editor, 75, { meta: true });
+    await TinyUiActions.pWaitForDialog(editor);
+  };
+
   it('TBA: insert url by typing', async () => {
     const editor = hook.editor();
     await TestLinkUi.pOpenLinkDialog(editor);
+    const focused = FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.test.com/');
+    TestLinkUi.fireEvent(focused, 'input');
+    TestLinkUi.assertDialogContents({
+      href: 'http://www.test.com/',
+      text: 'http://www.test.com/'
+    });
+    TinyUiActions.closeDialog(editor);
+  });
+  it('TBA: insert url by oh', async () => {
+    const editor = hook.editor();
+    await pOpenLinkDialogWithKeyboard(editor);
     const focused = FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.test.com/');
     TestLinkUi.fireEvent(focused, 'input');
     TestLinkUi.assertDialogContents({
