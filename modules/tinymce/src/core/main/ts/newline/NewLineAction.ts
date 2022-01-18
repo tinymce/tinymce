@@ -23,13 +23,6 @@ const shouldBlockNewLine = (editor: Editor, _shiftKey) => {
   return ContextSelectors.shouldBlockNewLine(editor);
 };
 
-const isBrMode = (requiredState) => {
-  return (editor: Editor, _shiftKey) => {
-    const brMode = Options.getForcedRootBlock(editor) === '';
-    return brMode === requiredState;
-  };
-};
-
 const inListBlock = (requiredState) => {
   return (editor: Editor, _shiftKey) => {
     return NewLineUtils.isListItemParentBlock(editor) === requiredState;
@@ -62,7 +55,7 @@ const canInsertIntoEditableRoot = (editor: Editor) => {
   const forcedRootBlock = Options.getForcedRootBlock(editor);
   const rootEditable = NewLineUtils.getEditableRoot(editor.dom, editor.selection.getStart());
 
-  return rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock ? forcedRootBlock : 'P');
+  return rootEditable && editor.schema.isValidChild(rootEditable.nodeName, forcedRootBlock);
 };
 
 const match = (predicates, action) => {
@@ -85,10 +78,8 @@ const getAction = (editor: Editor, evt?) => {
     match([ inPreBlock(true), shouldPutBrInPre(true) ], newLineAction.br()),
     match([ inListBlock(true), hasShiftKey ], newLineAction.br()),
     match([ inListBlock(true) ], newLineAction.block()),
-    match([ isBrMode(true), hasShiftKey, canInsertIntoEditableRoot ], newLineAction.block()),
-    match([ isBrMode(true) ], newLineAction.br()),
     match([ inBrContext ], newLineAction.br()),
-    match([ isBrMode(false), hasShiftKey ], newLineAction.br()),
+    match([ hasShiftKey ], newLineAction.br()),
     match([ canInsertIntoEditableRoot ], newLineAction.block())
   ], [ editor, !!(evt && evt.shiftKey) ]).getOr(newLineAction.none());
 };

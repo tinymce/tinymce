@@ -6,7 +6,7 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, Form as AlloyForm, Keying, Receiving, Representing,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, Form as AlloyForm, GuiFactory, Keying, Receiving, Representing,
   SketchSpec, Tabbar as AlloyTabbar, TabbarTypes, TabSection as AlloyTabSection, Tabstopping
 } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
@@ -52,9 +52,11 @@ export const renderTabPanel = (spec: TabPanelSpec, dialogData: Dialog.DialogData
       value: tab.name,
       dom: {
         tag: 'div',
-        classes: [ 'tox-dialog__body-nav-item' ],
-        innerHtml: backstage.shared.providers.translate(tab.title)
+        classes: [ 'tox-dialog__body-nav-item' ]
       },
+      components: [
+        GuiFactory.text(backstage.shared.providers.translate(tab.title))
+      ],
       view: () => {
         return [
           // Dupe with SilverDialog

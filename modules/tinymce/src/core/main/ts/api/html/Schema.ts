@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 
 import Tools from '../util/Tools';
 
@@ -91,6 +91,14 @@ interface Schema {
   addValidChildren: (validChildren: any) => void;
 }
 
+interface SchemaLookupTable {
+  [key: string]: {
+    attributes: Record<string, {}>;
+    attributesOrder: string[];
+    children: Record<string, {}>;
+  };
+}
+
 /**
  * Schema validator class.
  *
@@ -106,7 +114,7 @@ interface Schema {
  * @version 3.4
  */
 
-const mapCache: any = {}, dummyObj = {};
+const mapCache: Record<string, SchemaLookupTable> = {}, dummyObj = {};
 const makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;
 
 const split = (items: string, delim?: string): string[] => {
@@ -121,57 +129,33 @@ const split = (items: string, delim?: string): string[] => {
  * @param {String} type html4, html5 or html5-strict schema type.
  * @return {Object} Schema lookup table.
  */
-// TODO: Improve return type
-const compileSchema = (type: SchemaType): Record<string, any> => {
-  const schema: Record<string, any> = {};
+const compileSchema = (type: SchemaType = 'html5'): SchemaLookupTable => {
+  const schema: SchemaLookupTable = {};
   let globalAttributes, blockContent;
   let phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
 
-  const add = (name: string, attributes?: string, children?: string | string[]) => {
-    let ni, attributesOrder, element;
-
-    const arrayToMap = (array, obj?) => {
-      const map = {};
-      let i, l;
-
-      for (i = 0, l = array.length; i < l; i++) {
-        map[array[i]] = obj || {};
-      }
-
-      return map;
-    };
-
-    children = children || [];
-    attributes = attributes || '';
-
-    if (typeof children === 'string') {
-      children = split(children);
-    }
-
+  const add = (name: string, attributes: string = '', children: string = '') => {
+    const childNames = split(children);
     const names = split(name);
-    ni = names.length;
+    let ni = names.length;
     while (ni--) {
-      attributesOrder = split([ globalAttributes, attributes ].join(' '));
+      const attributesOrder = split([ globalAttributes, attributes ].join(' '));
 
-      element = {
-        attributes: arrayToMap(attributesOrder),
+      schema[names[ni]] = {
+        attributes: Arr.mapToObject(attributesOrder, () => ({})),
         attributesOrder,
-        children: arrayToMap(children, dummyObj)
+        children: Arr.mapToObject(childNames, Fun.constant(dummyObj))
       };
-
-      schema[names[ni]] = element;
     }
   };
 
   const addAttrs = (name: string, attributes?: string) => {
-    let ni, schemaItem, i, l;
-
     const names = split(name);
-    ni = names.length;
     const attrs = split(attributes);
+    let ni = names.length;
     while (ni--) {
-      schemaItem = schema[names[ni]];
-      for (i = 0, l = attrs.length; i < l; i++) {
+      const schemaItem = schema[names[ni]];
+      for (let i = 0, l = attrs.length; i < l; i++) {
         schemaItem.attributes[attrs[i]] = {};
         schemaItem.attributesOrder.push(attrs[i]);
       }
@@ -762,13 +746,11 @@ const Schema = (settings?: SchemaSettings): Schema => {
       children[name] = element.children;
     });
 
-    // Switch these on HTML4
-    if (settings.schema !== 'html5') {
-      each(split('strong/b em/i'), (item) => {
-        const items = split(item, '/');
-        elements[items[1]].outputName = items[0];
-      });
-    }
+    // Prefer strong/em over b/i
+    each(split('strong/b em/i'), (item) => {
+      const items = split(item, '/');
+      elements[items[1]].outputName = items[0];
+    });
 
     // Add default alt attribute for images, removed since alt="" is treated as presentational.
     // elements.img.attributesDefault = [{name: 'alt', value: ''}];

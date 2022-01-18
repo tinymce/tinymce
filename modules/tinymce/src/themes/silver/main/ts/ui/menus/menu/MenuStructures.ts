@@ -71,7 +71,7 @@ const preprocessCollection = (items: ItemTypes.ItemSpec[], isSeparator: (a: Item
         allSplits.push(currentSplit);
       }
       currentSplit = [ ];
-      if (Obj.has(item.dom, 'innerHtml')) {
+      if (Obj.has(item.dom, 'innerHtml') || item.components.length > 0) {
         currentSplit.push(item);
       }
     } else {

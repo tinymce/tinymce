@@ -81,29 +81,25 @@ const getTable = (previous: boolean, pos: CaretPosition): Optional<HTMLElement> 
   return NodeType.isElement(node) && node.nodeName === 'TABLE' ? Optional.some(node) : Optional.none();
 };
 
-const renderBlock = (down: boolean, editor: Editor, table: HTMLElement, pos: CaretPosition) => {
+const renderBlock = (down: boolean, editor: Editor, table: HTMLElement) => {
   const forcedRootBlock = Options.getForcedRootBlock(editor);
 
-  if (forcedRootBlock) {
-    editor.undoManager.transact(() => {
-      const element = SugarElement.fromTag(forcedRootBlock);
-      Attribute.setAll(element, Options.getForcedRootBlockAttrs(editor));
-      Insert.append(element, SugarElement.fromTag('br'));
+  editor.undoManager.transact(() => {
+    const element = SugarElement.fromTag(forcedRootBlock);
+    Attribute.setAll(element, Options.getForcedRootBlockAttrs(editor));
+    Insert.append(element, SugarElement.fromTag('br'));
 
-      if (down) {
-        Insert.after(SugarElement.fromDom(table), element);
-      } else {
-        Insert.before(SugarElement.fromDom(table), element);
-      }
+    if (down) {
+      Insert.after(SugarElement.fromDom(table), element);
+    } else {
+      Insert.before(SugarElement.fromDom(table), element);
+    }
 
-      const rng = editor.dom.createRng();
-      rng.setStart(element.dom, 0);
-      rng.setEnd(element.dom, 0);
-      NavigationUtils.moveToRange(editor, rng);
-    });
-  } else {
-    NavigationUtils.moveToRange(editor, pos.toRange());
-  }
+    const rng = editor.dom.createRng();
+    rng.setStart(element.dom, 0);
+    rng.setEnd(element.dom, 0);
+    NavigationUtils.moveToRange(editor, rng);
+  });
 };
 
 const moveCaret = (editor: Editor, down: boolean, pos: CaretPosition) => {
@@ -114,7 +110,7 @@ const moveCaret = (editor: Editor, down: boolean, pos: CaretPosition) => {
     () => NavigationUtils.moveToRange(editor, pos.toRange()),
     (table) => CaretFinder.positionIn(last, editor.getBody()).filter((lastPos) => lastPos.isEqual(pos)).fold(
       () => NavigationUtils.moveToRange(editor, pos.toRange()),
-      (_) => renderBlock(down, editor, table, pos)
+      (_) => renderBlock(down, editor, table)
     )
   );
 };

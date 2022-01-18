@@ -35,11 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
-- The `mceAddEditor` command can now take an object as its value to specify the id and editor options #TINY-8138
+- The `mceAddEditor` and `mceToggleEditor` commands now take an object as their value to specify the id and editor options #TINY-8138
 - The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `element_format` option has been set to `html` by default #TINY-8263
+- The `schema` option has been set to `html5` by default #TINY-8261
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
@@ -61,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 - The aria labels for the color picker dialog were not translated #TINY-8381
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
+- Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
 
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
@@ -75,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `file_browser_callback_types`, `force_hex_style_colors` and `images_dataimg_filter` settings #TINY-7823
 - Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
+- Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
 - The legacy `mobile` theme has been removed #TINY-7832
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
 - Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192
@@ -87,6 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 - Removed the `table` plugin's API #TINY-8273
+- Removed the `editor.settings` property as it's been replaced by the new Options API #TINY-8236
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

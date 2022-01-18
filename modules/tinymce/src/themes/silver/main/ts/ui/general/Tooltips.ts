@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Tooltipping } from '@ephox/alloy';
+import { GuiFactory, Tooltipping } from '@ephox/alloy';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
@@ -29,9 +29,11 @@ const upConfig = (item, sharedBackstage: UiFactoryBackstageShared) => Tooltippin
     {
       dom: {
         tag: 'div',
-        classes: [ 'tox-tooltip__body' ],
-        innerHtml: item.text
-      }
+        classes: [ 'tox-tooltip__body' ]
+      },
+      components: [
+        GuiFactory.text(item.text)
+      ]
     },
     {
       dom: {

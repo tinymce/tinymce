@@ -20,9 +20,6 @@ const isPlainText = (text: string): boolean => {
   return !/<(?:\/?(?!(?:div|p|br|span)>)\w+|(?:(?!(?:span style="white-space:\s?pre;?">)|br\s?\/>))\w+\s[^>]+)>/i.test(text);
 };
 
-const toBRs = (text: string): string =>
-  text.replace(/\r?\n/g, '<br>');
-
 const openContainer = (rootTag: string, rootAttrs: Record<string, string>): string => {
   let tag = '<' + rootTag;
 
@@ -50,12 +47,7 @@ const toBlockElements = (text: string, rootTag: string, rootAttrs: Record<string
   return paragraphs.length === 1 ? paragraphs[0] : Arr.map(paragraphs, stitch).join('');
 };
 
-const convert = (text: string, rootTag: string, rootAttrs: Record<string, string>): string =>
-  rootTag ? toBlockElements(text, rootTag, rootAttrs) : toBRs(text);
-
 export {
   isPlainText,
-  convert,
-  toBRs,
   toBlockElements
 };
