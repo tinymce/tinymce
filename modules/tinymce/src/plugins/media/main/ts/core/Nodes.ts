@@ -10,11 +10,10 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import DomParser from 'tinymce/core/api/html/DomParser';
-import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import AstNode from 'tinymce/core/api/html/Node';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 import * as Options from '../api/Options';
-import * as Sanitize from './Sanitize';
 import * as VideoScript from './VideoScript';
 
 declare let escape: any;
@@ -145,12 +144,12 @@ const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targe
 
   // Place the inner HTML contents inside an escaped attribute
   // This enables us to copy/paste the fake object
-  const serializer = HtmlSerializer({ validate: false, element_format: editor.options.get('element_format'), inner: true }, editor.schema);
+  const serializer = HtmlSerializer({ inner: true }, editor.schema);
   const tempNode = new AstNode('div', 1);
   Arr.each(sourceNode.children(), (child) => tempNode.append(child));
   const innerHtml = serializer.serialize(tempNode);
   if (innerHtml) {
-    targetNode.attr('data-mce-html', escape(Sanitize.sanitize(editor, innerHtml)));
+    targetNode.attr('data-mce-html', escape(innerHtml));
     targetNode.empty();
   }
 };

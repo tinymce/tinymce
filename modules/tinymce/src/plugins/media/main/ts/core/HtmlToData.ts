@@ -5,28 +5,28 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Obj } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import SaxParser from 'tinymce/core/api/html/SaxParser';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import AstNode from 'tinymce/core/api/html/Node';
+import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import { MediaData } from './Types';
 import { getVideoScriptMatch, VideoScript } from './VideoScript';
-
-type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const DOM = DOMUtils.DOM;
 
 const trimPx = (value: string): string =>
   value.replace(/px$/, '');
 
-const getEphoxEmbedData = (attrs: AttrList): MediaData => {
-  const style = attrs.map.style;
+const getEphoxEmbedData = (node: AstNode): MediaData => {
+  const style = node.attr('style');
   const styles = style ? DOM.parseStyle(style) : { };
   return {
     type: 'ephox-embed-iri',
-    source: attrs.map['data-ephox-embed-iri'],
+    source: node.attr('data-ephox-embed-iri'),
     altsource: '',
     poster: '',
     width: Obj.get(styles, 'max-width').map(trimPx).getOr(''),
@@ -34,22 +34,23 @@ const getEphoxEmbedData = (attrs: AttrList): MediaData => {
   };
 };
 
-const htmlToData = (prefixes: VideoScript[], html: string): MediaData => {
-  const isEphoxEmbed = Cell<boolean>(false);
+const htmlToData = (prefixes: VideoScript[], html: string, schema?: Schema): MediaData => {
   let data: any = {};
 
-  SaxParser({
-    validate: false,
-    allow_conditional_comments: true,
-    start: (name, attrs) => {
-      if (isEphoxEmbed.get()) {
-        // Ignore any child elements if handling an EME embed
-      } else if (Obj.has(attrs.map, 'data-ephox-embed-iri')) {
-        isEphoxEmbed.set(true);
-        data = getEphoxEmbedData(attrs);
+  const parser = DomParser({ validate: false, forced_root_block: false }, schema);
+  const rootNode = parser.parse(html);
+
+  for (let node = rootNode; node; node = node.walk()) {
+    if (node.type === 1) {
+      const name = node.name;
+
+      if (node.attr('data-ephox-embed-iri')) {
+        data = getEphoxEmbedData(node);
+        // Don't continue to collect if we find an EME embed
+        break;
       } else {
         if (!data.source && name === 'param') {
-          data.source = attrs.map.movie;
+          data.source = node.attr('movie');
         }
 
         if (name === 'iframe' || name === 'object' || name === 'embed' || name === 'video' || name === 'audio') {
@@ -57,18 +58,18 @@ const htmlToData = (prefixes: VideoScript[], html: string): MediaData => {
             data.type = name;
           }
 
-          data = Tools.extend(attrs.map, data);
+          data = Tools.extend(node.attributes.map, data);
         }
 
         if (name === 'script') {
-          const videoScript = getVideoScriptMatch(prefixes, attrs.map.src);
+          const videoScript = getVideoScriptMatch(prefixes, node.attr('src'));
           if (!videoScript) {
             return;
           }
 
           data = {
             type: 'script',
-            source: attrs.map.src,
+            source: node.attr('src'),
             width: String(videoScript.width),
             height: String(videoScript.height)
           };
@@ -76,18 +77,18 @@ const htmlToData = (prefixes: VideoScript[], html: string): MediaData => {
 
         if (name === 'source') {
           if (!data.source) {
-            data.source = attrs.map.src;
+            data.source = node.attr('src');
           } else if (!data.altsource) {
-            data.altsource = attrs.map.src;
+            data.altsource = node.attr('src');
           }
         }
 
         if (name === 'img' && !data.poster) {
-          data.poster = attrs.map.src;
+          data.poster = node.attr('src');
         }
       }
     }
-  }).parse(html);
+  }
 
   data.source = data.source || data.src || data.data;
   data.altsource = data.altsource || '';

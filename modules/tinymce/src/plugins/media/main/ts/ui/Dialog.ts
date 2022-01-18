@@ -93,14 +93,14 @@ const handleError = (editor: Editor) => (error?: { msg: string }): void => {
 };
 
 const snippetToData = (editor: Editor, embedSnippet: string): MediaData =>
-  HtmlToData.htmlToData(Options.getScripts(editor), embedSnippet);
+  HtmlToData.htmlToData(Options.getScripts(editor), embedSnippet, editor.schema);
 
 const getEditorData = (editor: Editor): MediaData => {
   const element = editor.selection.getNode();
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
   return {
     embed: snippet,
-    ...HtmlToData.htmlToData(Options.getScripts(editor), snippet)
+    ...HtmlToData.htmlToData(Options.getScripts(editor), snippet, editor.schema)
   };
 };
 
@@ -143,7 +143,7 @@ const handleInsert = (editor: Editor, html: string): void => {
 };
 
 const submitForm = (prevData: MediaData, newData: MediaData, editor: Editor): void => {
-  newData.embed = UpdateHtml.updateHtml(newData.embed, newData);
+  newData.embed = UpdateHtml.updateHtml(newData.embed, newData, false, editor.schema);
 
   // Only fetch the embed HTML content if the URL has changed from what it previously was
   if (newData.embed && (prevData.source === newData.source || Service.isCached(newData.source))) {

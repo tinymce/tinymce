@@ -88,10 +88,8 @@ const setup = (editor: Editor): void => {
         // Inject innerhtml
         const innerHtml = node.attr('data-mce-html');
         if (innerHtml) {
-          const innerNode = new AstNode('#text', 3);
-          innerNode.raw = true;
-          innerNode.value = Sanitize.sanitize(editor, unescape(innerHtml));
-          realElm.append(innerNode);
+          const fragment = Sanitize.parseAndSanitize(editor, realElmName, unescape(innerHtml));
+          Arr.each(fragment.children(), (child) => realElm.append(child));
         }
 
         node.replace(realElm);
