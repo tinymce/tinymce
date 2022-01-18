@@ -13,7 +13,6 @@ describe('browser.tinymce.plugins.media.ReopenResizeTest', () => {
     plugins: [ 'media' ],
     toolbar: 'media',
     indent: false,
-    forced_root_block: false,
     media_live_embeds: false,
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);

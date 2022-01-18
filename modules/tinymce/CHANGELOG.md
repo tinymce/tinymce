@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 - The aria labels for the color picker dialog were not translated #TINY-8381
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
+- Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
 
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
@@ -73,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `file_browser_callback_types`, `force_hex_style_colors` and `images_dataimg_filter` settings #TINY-7823
 - Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
+- Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
 - The legacy `mobile` theme has been removed #TINY-7832
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
 - Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192

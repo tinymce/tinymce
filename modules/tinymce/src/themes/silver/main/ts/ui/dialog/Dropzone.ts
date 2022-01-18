@@ -7,7 +7,7 @@
 
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling,
-  FormField as AlloyFormField, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent,
+  FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent,
   SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
@@ -117,20 +117,22 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
         components: [
           {
             dom: {
-              tag: 'p',
-              innerHtml: providersBackstage.translate('Drop an image here')
-            }
+              tag: 'p'
+            },
+            components: [
+              GuiFactory.text(providersBackstage.translate('Drop an image here'))
+            ]
           },
           Button.sketch({
             dom: {
               tag: 'button',
-              innerHtml: providersBackstage.translate('Browse for an image'),
               styles: {
                 position: 'relative'
               },
               classes: [ 'tox-button', 'tox-button--secondary' ]
             },
             components: [
+              GuiFactory.text(providersBackstage.translate('Browse for an image')),
               memInput.asSpec()
             ],
             action: (comp) => {

@@ -60,7 +60,6 @@ const shouldAskBeforeUnload = option<boolean>('autosave_ask_before_unload');
 const shouldRestoreWhenEmpty = option<boolean>('autosave_restore_when_empty');
 const getAutoSaveInterval = option<number>('autosave_interval');
 const getAutoSaveRetention = option<number>('autosave_retention');
-const getForcedRootBlock = option('forced_root_block');
 
 const getAutoSavePrefix = (editor: Editor): string => {
   const location = document.location;
@@ -76,6 +75,5 @@ export {
   getAutoSavePrefix,
   shouldRestoreWhenEmpty,
   getAutoSaveInterval,
-  getAutoSaveRetention,
-  getForcedRootBlock
+  getAutoSaveRetention
 };
