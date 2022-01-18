@@ -114,7 +114,7 @@ interface BaseEditorOptions {
   font_size_legacy_values?: string;
   font_size_style_values?: string;
   fontsize_formats?: string;
-  forced_root_block?: boolean | string;
+  forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
   height?: number | string;

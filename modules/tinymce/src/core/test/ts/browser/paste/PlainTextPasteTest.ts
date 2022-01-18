@@ -22,7 +22,6 @@ describe('browser.tinymce.core.paste.PlainTextPaste', () => {
 
   const expectedWithRootBlock = '<p>one<br>two</p><p>three</p><p><br>four</p><p>&nbsp;</p><p>.</p>';
   const expectedWithRootBlockAndAttrs = '<p class="attr">one<br>two</p><p class="attr">three</p><p class="attr"><br>four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
-  const expectedWithoutRootBlock = 'one<br>two<br><br>three<br><br><br>four<br><br><br><br>.';
 
   const pCreateEditorFromSettings = (settings: RawEditorOptions) =>
     McEditor.pFromSettings<Editor>({
@@ -56,14 +55,6 @@ describe('browser.tinymce.core.paste.PlainTextPaste', () => {
       }
     });
     await pAssertClipboardPaste(editor, expectedWithRootBlockAndAttrs, pasteData);
-    McEditor.remove(editor);
-  });
-
-  it('TBA: Assert forced_root_block is not added to the pasted data', async () => {
-    const editor = await pCreateEditorFromSettings({
-      forced_root_block: false
-    });
-    await pAssertClipboardPaste(editor, expectedWithoutRootBlock, pasteData);
     McEditor.remove(editor);
   });
 });

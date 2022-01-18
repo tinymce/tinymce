@@ -61,10 +61,10 @@ const addRootBlocks = (editor: Editor) => {
   const schema = editor.schema, blockElements = schema.getBlockElements();
   let node: Node = selection.getStart();
   const rootNode = editor.getBody();
-  let rootBlockNode, tempNode, wrapped;
+  let rootBlockNode: Node, tempNode: Node, wrapped: boolean;
 
   const forcedRootBlock = Options.getForcedRootBlock(editor);
-  if (!node || !NodeType.isElement(node) || !forcedRootBlock) {
+  if (!node || !NodeType.isElement(node)) {
     return;
   }
 
@@ -117,9 +117,7 @@ const addRootBlocks = (editor: Editor) => {
 };
 
 const setup = (editor: Editor) => {
-  if (Options.getForcedRootBlock(editor)) {
-    editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
-  }
+  editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
 };
 
 export {
