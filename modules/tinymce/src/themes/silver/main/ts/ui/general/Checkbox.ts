@@ -6,7 +6,7 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, Focusing, FormField as AlloyFormField, Keying, Memento,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, Focusing, FormField as AlloyFormField, GuiFactory, Keying, Memento,
   NativeEvents, SimpleSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
@@ -63,9 +63,11 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
   const pLabel = AlloyFormField.parts.label({
     dom: {
       tag: 'span',
-      classes: [ 'tox-checkbox__label' ],
-      innerHtml: providerBackstage.translate(spec.label)
+      classes: [ 'tox-checkbox__label' ]
     },
+    components: [
+      GuiFactory.text(providerBackstage.translate(spec.label))
+    ],
     behaviours: Behaviour.derive([
       Unselecting.config({})
     ])

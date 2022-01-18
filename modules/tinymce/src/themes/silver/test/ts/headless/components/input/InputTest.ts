@@ -13,7 +13,8 @@ describe('headless.tinymce.themes.silver.components.input.InputTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderInput({
       name: 'input',
-      label: Optional.some('LabelA'),
+      // Note: The label is intentionally HTML like to ensure the label is rendered as plain text
+      label: Optional.some('Solid<Liquid<Gas'),
       inputMode: Optional.none(),
       placeholder: Optional.none(),
       maximized: false,
@@ -29,7 +30,9 @@ describe('headless.tinymce.themes.silver.components.input.InputTest', () => {
         children: [
           s.element('label', {
             classes: [ arr.has('tox-label') ],
-            html: str.is('LabelA')
+            children: [
+              s.text(str.is('Solid<Liquid<Gas'))
+            ]
           }),
           s.element('input', {
             classes: [ arr.has('tox-textfield') ],

@@ -15,11 +15,11 @@ import Env from 'tinymce/core/api/Env';
 const convertText = (source: string) => {
   const isMac = Env.os.isMacOS() || Env.os.isiOS();
   const mac = {
-    alt: '&#x2325;',
-    ctrl: '&#x2303;',
-    shift: '&#x21E7;',
-    meta: '&#x2318;',
-    access: '&#x2303;&#x2325;'
+    alt: '\u2325',
+    ctrl: '\u2303',
+    shift: '\u21E7',
+    meta: '\u2318',
+    access: '\u2303\u2325'
   };
   const other = {
     meta: 'Ctrl',
