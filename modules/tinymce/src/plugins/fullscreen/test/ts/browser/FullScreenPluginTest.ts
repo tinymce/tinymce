@@ -2,7 +2,7 @@ import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
 import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarShadowDom, Traverse } from '@ephox/sugar';
-import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -73,6 +73,10 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
     assertShadowHostState(editor, shouldExist);
   };
 
+  const keystokes = (editor: Editor) => {
+    TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { meta: true, shift: true });
+  };
+
   Arr.each([
     { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
@@ -102,6 +106,29 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         editor.execCommand('mceFullScreen');
         assertApiAndLastEvent(editor, false);
         assertPageState(editor, false);
+      });
+
+      it('TBA: Toggle fullscreen on with keyboard, open link dialog, insert link, close dialog and toggle fullscreen off', async () => {
+        const editor = hook.editor();
+        assertPageState(editor, false);
+        keystokes(editor);
+        assertApiAndLastEvent(editor, true);
+        assertPageState(editor, true);
+        editor.execCommand('mceLink');
+        await pWaitForDialog(editor, 'Insert/Edit Link');
+        closeOnlyWindow(editor);
+        assertPageState(editor, true);
+        keystokes(editor);
+        assertApiAndLastEvent(editor, false);
+        assertPageState(editor, false);
+      });
+
+      it('TBA: Toggle fullscreen with keyboard and cleanup editor should clean up classes', () => {
+        const editor = hook.editor();
+        keystokes(editor);
+        assertApiAndLastEvent(editor, true);
+        assertPageState(editor, true);
+        keystokes(editor);
       });
 
       it('TBA: Toggle fullscreen and cleanup editor should clean up classes', () => {
