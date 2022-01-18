@@ -15,7 +15,7 @@ import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
 import { NodeChange } from '../NodeChange';
-import { normalizeOptions, getParam } from '../options/NormalizeOptions';
+import { normalizeOptions } from '../options/NormalizeOptions';
 import SelectionOverrides from '../SelectionOverrides';
 import { UndoManager } from '../undo/UndoManagerTypes';
 import Quirks from '../util/Quirks';
@@ -90,17 +90,6 @@ const extend = Tools.extend, each = Tools.each;
 class Editor implements EditorObservable {
   public documentBaseUrl: string;
   public baseUri: URI;
-
-  /**
-   * Name/value collection with editor settings.
-   *
-   * @property settings
-   * @type Object
-   * @example
-   * // Get the value of the theme setting
-   * tinymce.activeEditor.windowManager.alert("You are using the " + tinymce.activeEditor.options.get('theme') + " theme");
-   */
-  public settings: NormalizedEditorOptions;
 
   /**
    * Editor instance id, normally the same as the div/textarea that was replaced.
@@ -273,7 +262,6 @@ class Editor implements EditorObservable {
 
     this.id = id;
     const normalizedOptions = normalizeOptions(editorManager.defaultOptions, options);
-    this.settings = normalizedOptions;
 
     this.options = createOptions(self, normalizedOptions);
     Options.register(self);
@@ -384,12 +372,15 @@ class Editor implements EditorObservable {
 
   /**
    * Returns a configuration parameter by name.
+   * <br>
+   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use the <code>editor.options.get<code> API instead.</em>
    *
    * @method getParam
-   * @param {String} name Configruation parameter to retrieve.
+   * @param {String} name Configuration parameter to retrieve.
    * @param {String} defaultVal Optional default value to return.
    * @param {String} type Optional type parameter.
    * @return {String} Configuration parameter value or default value.
+   * @deprecated Use editor.options.get instead
    * @example
    * // Returns a specific config value from the currently active editor
    * var someval = tinymce.activeEditor.getParam('myvalue');
@@ -397,11 +388,23 @@ class Editor implements EditorObservable {
    * // Returns a specific config value from a specific editor instance by id
    * var someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
-  public getParam <K extends Exclude<BuiltInOptionType, 'function'>>(name: string, defaultVal: BuiltInOptionTypeMap[K], type: K): BuiltInOptionTypeMap[K];
-  public getParam <K extends keyof NormalizedEditorOptions>(name: K, defaultVal?: NormalizedEditorOptions[K], type?: string): NormalizedEditorOptions[K];
-  public getParam <T>(name: string, defaultVal: T, type?: string): T;
-  public getParam(name: string, defaultVal?: any, type?: string): any {
-    return getParam(this, name, defaultVal, type);
+  public getParam <K extends BuiltInOptionType>(name: string, defaultVal: BuiltInOptionTypeMap[K], type: K): BuiltInOptionTypeMap[K];
+  public getParam <K extends keyof NormalizedEditorOptions>(name: K, defaultVal?: NormalizedEditorOptions[K], type?: BuiltInOptionType): NormalizedEditorOptions[K];
+  public getParam <T>(name: string, defaultVal: T, type?: BuiltInOptionType): T;
+  public getParam(name: string, defaultVal?: any, type?: BuiltInOptionType): any {
+    const options = this.options;
+
+    // To keep the legacy API we need to register the option if it's not already been registered
+    if (!options.isRegistered(name)) {
+      if (Type.isNonNullable(type)) {
+        options.register(name, { processor: type, default: defaultVal });
+      } else {
+        options.register(name, { processor: Fun.always, default: defaultVal });
+      }
+    }
+
+    // Attempt to use the passed default value if nothing has been set already
+    return !options.isSet(name) && !Type.isUndefined(defaultVal) ? defaultVal : options.get(name);
   }
 
   /**
