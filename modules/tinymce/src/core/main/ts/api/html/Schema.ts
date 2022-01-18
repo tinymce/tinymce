@@ -450,7 +450,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const voidElementsMap = createLookupTable('void_elements', 'area base basefont br col frame hr img input isindex link ' +
     'meta param embed source wbr track');
   const boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' +
-    'noshade nowrap readonly selected autoplay loop controls');
+    'noshade nowrap readonly selected autoplay loop controls allowfullscreen');
 
   const nonEmptyOrMoveCaretBeforeOnEnter = 'td th iframe video audio object script code';
   const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre', voidElementsMap);
@@ -939,8 +939,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getSpecialElements
    * @return {Object} Name/value lookup map for special elements.
    */
-  // TODO: TINY-4627/TINY-8382 - Special elements are part of a fixed list in the parser spec and shouldn't be able to be changed, so this probably should be frozen
-  const getSpecialElements = Fun.constant(specialElements);
+  const getSpecialElements = Fun.constant(Object.seal(specialElements));
 
   /**
    * Returns true/false if the specified element and it's child is valid or not

@@ -139,9 +139,11 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
       }
     };
 
-    // Serialize element and treat all non elements as fragments
+    // Serialize element or text nodes and treat all other nodes as fragments
     if (node.type === 1 && !settings.inner) {
       walk(node);
+    } else if (node.type === 3) {
+      handlers[3](node);
     } else {
       handlers[11](node);
     }

@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `textpattern_patterns` option to `text_patterns` #TINY-8312
 - Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
+- The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 
 ### Fixed
