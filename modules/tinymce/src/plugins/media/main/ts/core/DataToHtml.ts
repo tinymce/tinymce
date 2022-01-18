@@ -76,7 +76,7 @@ const dataToHtml = (editor: Editor, dataIn: MediaData): string => {
   const data: MediaData = Tools.extend({}, dataIn);
 
   if (!data.source) {
-    Tools.extend(data, HtmlToData.htmlToData(Options.getScripts(editor), data.embed));
+    Tools.extend(data, HtmlToData.htmlToData(Options.getScripts(editor), data.embed, editor.schema));
     if (!data.source) {
       return '';
     }
@@ -107,7 +107,7 @@ const dataToHtml = (editor: Editor, dataIn: MediaData): string => {
   }
 
   if (data.embed) {
-    return UpdateHtml.updateHtml(data.embed, data, true);
+    return UpdateHtml.updateHtml(data.embed, data, true, editor.schema);
   } else {
     const videoScript = VideoScript.getVideoScriptMatch(Options.getScripts(editor), data.source);
     if (videoScript) {
