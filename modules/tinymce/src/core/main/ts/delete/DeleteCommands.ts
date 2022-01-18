@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Optional } from '@ephox/katamari';
+import { Arr, Cell } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as BlockBoundaryDelete from './BlockBoundaryDelete';
@@ -24,60 +24,48 @@ const nativeCommand = (editor: Editor, command: string): void => {
   editor.getDoc().execCommand(command, false, null);
 };
 
-const checkAndRun = (action: Optional<() => void>) => {
-  action.each((apply) => apply());
-  return action.isSome();
-};
-
 const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
-  if (checkAndRun(Outdent.backspaceDelete(editor))) {
-    return;
-  } else if (checkAndRun(CefDelete.backspaceDelete(editor, false))) {
-    return;
-  } else if (checkAndRun(CaretBoundaryDelete.backspaceDelete(editor, false))) {
-    return;
-  } else if (checkAndRun(InlineBoundaryDelete.backspaceDelete(editor, caret, false))) {
-    return;
-  } else if (checkAndRun(BlockBoundaryDelete.backspaceDelete(editor, false))) {
-    return;
-  } else if (checkAndRun(TableDelete.backspaceDelete(editor))) {
-    return;
-  } else if (checkAndRun(ImageBlockDelete.backspaceDelete(editor, false))) {
-    return;
-  } else if (checkAndRun(MediaDelete.backspaceDelete(editor, false))) {
-    return;
-  } else if (checkAndRun(BlockRangeDelete.backspaceDelete(editor, false))) {
-    return;
-  } else if (checkAndRun(InlineFormatDelete.backspaceDelete(editor, false))) {
-    return;
-  } else {
-    nativeCommand(editor, 'Delete');
-    DeleteUtils.paddEmptyBody(editor);
-  }
+  const result = Arr.findMap([
+    Outdent.backspaceDelete,
+    CefDelete.backspaceDelete,
+    CaretBoundaryDelete.backspaceDelete,
+    (editor: Editor, forward: boolean) => InlineBoundaryDelete.backspaceDelete(editor, caret, forward),
+    BlockBoundaryDelete.backspaceDelete,
+    TableDelete.backspaceDelete,
+    ImageBlockDelete.backspaceDelete,
+    MediaDelete.backspaceDelete,
+    BlockRangeDelete.backspaceDelete,
+    InlineFormatDelete.backspaceDelete,
+  ], (item) => item(editor, false));
+
+  result.fold(
+    () => {
+      nativeCommand(editor, 'Delete');
+      DeleteUtils.paddEmptyBody(editor);
+    },
+    (item) => item()
+  );
 };
 
 const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>): void => {
-  if (checkAndRun(CefDelete.backspaceDelete(editor, true))) {
-    return;
-  } else if (checkAndRun(CaretBoundaryDelete.backspaceDelete(editor, true))) {
-    return;
-  } else if (checkAndRun(InlineBoundaryDelete.backspaceDelete(editor, caret, true))) {
-    return;
-  } else if (checkAndRun(BlockBoundaryDelete.backspaceDelete(editor, true))) {
-    return;
-  } else if (checkAndRun(TableDelete.backspaceDelete(editor))) {
-    return;
-  } else if (checkAndRun(ImageBlockDelete.backspaceDelete(editor, true))) {
-    return;
-  } else if (checkAndRun(MediaDelete.backspaceDelete(editor, true))) {
-    return;
-  } else if (checkAndRun(BlockRangeDelete.backspaceDelete(editor, true))) {
-    return;
-  } else if (checkAndRun(InlineFormatDelete.backspaceDelete(editor, true))) {
-    return;
-  } else {
-    nativeCommand(editor, 'ForwardDelete');
-  }
+  const result = Arr.findMap([
+    CefDelete.backspaceDelete,
+    CaretBoundaryDelete.backspaceDelete,
+    (editor: Editor, forward: boolean) => InlineBoundaryDelete.backspaceDelete(editor, caret, forward),
+    BlockBoundaryDelete.backspaceDelete,
+    TableDelete.backspaceDelete,
+    ImageBlockDelete.backspaceDelete,
+    MediaDelete.backspaceDelete,
+    BlockRangeDelete.backspaceDelete,
+    InlineFormatDelete.backspaceDelete
+  ], (item) => item(editor, true));
+
+  result.fold(
+    () => {
+      nativeCommand(editor, 'ForwardDelete');
+    },
+    (item) => item()
+  );
 };
 
 const setup = (editor: Editor, caret: Cell<Text>): void => {
