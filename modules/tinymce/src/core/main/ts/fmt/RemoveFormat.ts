@@ -154,11 +154,6 @@ const matchName = (dom: DOMUtils, node: Node, format: Format) => {
 
 const isColorFormatAndAnchor = (node: Node, format: Format) => format.links && node.nodeName === 'A';
 
-const find = (dom: DOMUtils, node: Node, next: boolean, inc?: boolean): boolean => {
-  const sibling = FormatUtils.getNonWhiteSpaceSibling(node, next, inc);
-  return Type.isNullable(sibling) || sibling.nodeName === 'BR' || dom.isBlock(sibling);
-};
-
 /**
  * Removes the node and wrap it's children in paragraphs before doing so or
  * appends BR elements to the beginning/end of the block element if forcedRootBlocks is disabled.
@@ -180,37 +175,25 @@ const find = (dom: DOMUtils, node: Node, next: boolean, inc?: boolean): boolean 
 const removeNode = (ed: Editor, node: Node, format: Format) => {
   const parentNode = node.parentNode;
   let rootBlockElm: Element | null;
-  const dom = ed.dom, forcedRootBlock = Options.getForcedRootBlock(ed);
+  const dom = ed.dom;
+  const forcedRootBlock = Options.getForcedRootBlock(ed);
 
   if (FormatUtils.isBlockFormat(format)) {
-    if (!forcedRootBlock) {
-      // Append BR elements if needed before we remove the block
-      if (dom.isBlock(node) && !dom.isBlock(parentNode)) {
-        if (!find(dom, node, false) && !find(dom, node.firstChild, true, true)) {
-          node.insertBefore(dom.create('br'), node.firstChild);
-        }
-
-        if (!find(dom, node, true) && !find(dom, node.lastChild, false, true)) {
-          node.appendChild(dom.create('br'));
-        }
-      }
-    } else {
-      // Wrap the block in a forcedRootBlock if we are at the root of document
-      if (parentNode === dom.getRoot()) {
-        if (!format.list_block || !isEq(node, format.list_block)) {
-          Arr.each(Arr.from(node.childNodes), (node) => {
-            if (FormatUtils.isValid(ed, forcedRootBlock, node.nodeName.toLowerCase())) {
-              if (!rootBlockElm) {
-                rootBlockElm = wrap(dom, node, forcedRootBlock);
-                dom.setAttribs(rootBlockElm, Options.getForcedRootBlockAttrs(ed));
-              } else {
-                rootBlockElm.appendChild(node);
-              }
+    // Wrap the block in a forcedRootBlock if we are at the root of document
+    if (parentNode === dom.getRoot()) {
+      if (!format.list_block || !isEq(node, format.list_block)) {
+        Arr.each(Arr.from(node.childNodes), (node) => {
+          if (FormatUtils.isValid(ed, forcedRootBlock, node.nodeName.toLowerCase())) {
+            if (!rootBlockElm) {
+              rootBlockElm = wrap(dom, node, forcedRootBlock);
+              dom.setAttribs(rootBlockElm, Options.getForcedRootBlockAttrs(ed));
             } else {
-              rootBlockElm = null;
+              rootBlockElm.appendChild(node);
             }
-          });
-        }
+          } else {
+            rootBlockElm = null;
+          }
+        });
       }
     }
   }

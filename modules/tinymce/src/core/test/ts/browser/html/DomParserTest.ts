@@ -574,8 +574,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const schema = Schema({ schema: 'html5' });
 
     const parser = DomParser({}, schema);
-    const root = parser.parse('<b>1</b> 2<p>3</p>');
-    assert.equal(serializer.serialize(root), '<b>1</b> 2<p>3</p>');
+    const root = parser.parse('<strong>1</strong> 2<p>3</p>');
+    assert.equal(serializer.serialize(root), '<strong>1</strong> 2<p>3</p>');
   });
 
   it('Invalid text blocks within a li', () => {

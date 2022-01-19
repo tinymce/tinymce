@@ -68,11 +68,11 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
 
   it('Enter before first wrapped IMG in P', () => {
     const editor = hook.editor();
-    editor.setContent('<p><b><img src="about:blank" /></b></p>');
+    editor.setContent('<p><strong><img src="about:blank" /></strong></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 0);
     pressEnter(editor);
     assert.equal((editor.getBody().firstChild as HTMLElement).innerHTML, '<br data-mce-bogus="1">');
-    assert.equal(editor.getContent(), '<p>\u00a0</p><p><b><img src="about:blank"></b></p>');
+    assert.equal(editor.getContent(), '<p>\u00a0</p><p><strong><img src="about:blank"></strong></p>');
   });
 
   it('Enter before last IMG in P with text', () => {
@@ -315,58 +315,6 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  it('Enter in the middle of text in P with forced_root_block set to false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = '<p>abc</p>';
-    LegacyUnit.setSelection(editor, 'p', 2);
-    pressEnter(editor);
-    assert.equal(editor.getContent(), '<p>ab<br>c</p>');
-  });
-
-  it('Enter at the end of text in P with forced_root_block set to false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = '<p>abc</p>';
-    LegacyUnit.setSelection(editor, 'p', 3);
-    pressEnter(editor);
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abc<br><br></p>');
-    editor.options.set('forced_root_block', 'p');
-  });
-
-  it('Enter at the middle of text in BODY with forced_root_block set to false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = 'abcd';
-    LegacyUnit.setSelection(editor, 'body', 2);
-    editor.focus();
-    pressEnter(editor);
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), 'ab<br>cd');
-    editor.options.set('forced_root_block', 'p');
-  });
-
-  it('Enter at the beginning of text in BODY with forced_root_block set to false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = 'abcd';
-    LegacyUnit.setSelection(editor, 'body', 0);
-    editor.focus();
-    pressEnter(editor);
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<br>abcd');
-    editor.options.set('forced_root_block', 'p');
-  });
-
-  it('Enter at the end of text in BODY with forced_root_block set to false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = 'abcd';
-    LegacyUnit.setSelection(editor, 'body', 4);
-    editor.focus();
-    pressEnter(editor);
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), 'abcd<br><br>');
-    editor.options.set('forced_root_block', 'p');
-  });
-
   it('Enter in empty P at the end of a blockquote and end_container_on_empty_block: true', () => {
     const editor = hook.editor();
     editor.options.set('end_container_on_empty_block', true);
@@ -447,18 +395,18 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
 
   it('Shift+Enter in the middle of B with a BR after it', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p><b>abcd</b><br></p>';
-    LegacyUnit.setSelection(editor, 'b', 2);
+    editor.getBody().innerHTML = '<p><strong>abcd</strong><br></p>';
+    LegacyUnit.setSelection(editor, 'strong', 2);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p><b>ab<br>cd</b></p>');
+    assert.equal(editor.getContent(), '<p><strong>ab<br>cd</strong></p>');
   });
 
   it('Shift+Enter at the end of B with a BR after it', () => {
     const editor = hook.editor();
-    editor.getBody().innerHTML = '<p><b>abcd</b><br></p>';
-    LegacyUnit.setSelection(editor, 'b', 4);
+    editor.getBody().innerHTML = '<p><strong>abcd</strong><br></p>';
+    LegacyUnit.setSelection(editor, 'strong', 4);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p><b>abcd<br></b></p>');
+    assert.equal(editor.getContent(), '<p><strong>abcd<br></strong></p>');
   });
 
   it('Enter in beginning of PRE', () => {
@@ -537,49 +485,6 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
     LegacyUnit.setSelection(editor, 'pre', 4);
     pressEnter(editor, { shiftKey: true });
     assert.equal(editor.getContent(), '<pre>abcd</pre><p>\u00a0</p>');
-  });
-
-  it('Shift+Enter in beginning of P with forced_root_block set to false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = '<p>abc</p>';
-    LegacyUnit.setSelection(editor, 'p', 0);
-    pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p>\u00a0</p><p>abc</p>');
-    editor.options.set('forced_root_block', 'p');
-  });
-
-  it('Shift+Enter in middle of P with forced_root_block set to false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = '<p>abcd</p>';
-    LegacyUnit.setSelection(editor, 'p', 2);
-    pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p>ab</p><p>cd</p>');
-    editor.options.set('forced_root_block', 'p');
-  });
-
-  it('Shift+Enter at the end of P with forced_root_block set to false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = '<p>abc</p>';
-    LegacyUnit.setSelection(editor, 'p', 3);
-    pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p>abc</p><p>\u00a0</p>');
-    editor.options.set('forced_root_block', 'p');
-  });
-
-  it('Shift+Enter in body with forced_root_block set to false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = 'abcd';
-    const rng = editor.dom.createRng();
-    rng.setStart(editor.getBody().firstChild, 2);
-    rng.setEnd(editor.getBody().firstChild, 2);
-    editor.selection.setRng(rng);
-    pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<p>ab</p><p>cd</p>');
-    editor.options.set('forced_root_block', 'p');
   });
 
   it('Enter at the end of DIV layer', () => {
@@ -704,13 +609,13 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
 
   it('Enter after span with space', () => {
     const editor = hook.editor();
-    editor.setContent('<p><b>abc </b></p>');
-    LegacyUnit.setSelection(editor, 'b', 3);
+    editor.setContent('<p><strong>abc </strong></p>');
+    LegacyUnit.setSelection(editor, 'strong', 3);
     pressEnter(editor);
-    assert.equal(editor.getContent(), '<p><b>abc</b></p><p>\u00a0</p>');
+    assert.equal(editor.getContent(), '<p><strong>abc</strong></p><p>\u00a0</p>');
 
     const rng = editor.selection.getRng();
-    assert.equal(rng.startContainer.nodeName, 'B');
+    assert.equal(rng.startContainer.nodeName, 'STRONG');
     assert.equal(rng.startContainer.textContent !== ' ', true);
   });
 

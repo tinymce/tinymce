@@ -15,7 +15,6 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     extended_valid_elements: 'b[id|style|title],i[id|style|title],span[id|class|style|title|contenteditable],font[face|size]',
     entities: 'raw',
     convert_fonts_to_spans: false,
-    forced_root_block: false,
     valid_styles: {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
         'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
@@ -1781,7 +1780,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       wrapper: true
     });
     editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<del><p>a</p></del>');
+    assert.equal(getContent(editor), '<p><del><p>a</p></del></p>');
   });
 
   it('Del element replacing block', () => {
@@ -1792,7 +1791,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       block: 'del'
     });
     editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<del>a</del>');
+    assert.equal(getContent(editor), '<p><del>a</del></p>');
   });
 
   it('Del element as inline', () => {
@@ -1902,7 +1901,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(getContent(editor), '', 'empty TinyMCE');
     editor.selection.setContent('a');
-    assert.equal(getContent(editor), '<strong>a</strong>', 'bold text inside TinyMCE');
+    assert.equal(getContent(editor), '<p><strong>a</strong></p>', 'bold text inside TinyMCE');
   });
 
   it('Bug #5134 - TinyMCE removes formatting tags in the getContent - typing', () => {
@@ -1915,7 +1914,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(getContent(editor), '', 'empty TinyMCE');
     KeyUtils.type(editor, 'a');
-    assert.equal(getContent(editor), '<strong>a</strong>', 'bold text inside TinyMCE');
+    assert.equal(getContent(editor), '<p><strong>a</strong></p>', 'bold text inside TinyMCE');
   });
 
   it('Bug #5453 - TD contents with BR gets wrapped in block format', () => {
@@ -2222,15 +2221,6 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       getContent(editor),
       '<p contenteditable="false">a</p><div class="a" contenteditable="false">b</div>'
     );
-  });
-
-  it('Apply defaultBlock format', () => {
-    const editor = hook.editor();
-    editor.getBody().innerHTML = 'a<br>b';
-    editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: [ 'a' ] });
-    editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
-    editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<div class="a">a</div>b');
   });
 
   it('Apply format including trailing space', () => {

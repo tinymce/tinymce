@@ -58,9 +58,11 @@ const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
 const renderShortcut = (shortcut: string): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.accessoryClass ],
-    innerHtml: ConvertShortcut.convertText(shortcut)
-  }
+    classes: [ ItemClasses.accessoryClass ]
+  },
+  components: [
+    GuiFactory.text(ConvertShortcut.convertText(shortcut))
+  ]
 });
 
 const renderCheckmark = (icons: Icons.IconProvider): AlloySpec =>

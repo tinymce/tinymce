@@ -7,10 +7,10 @@
 
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Disabling, FormCoupledInputs as AlloyFormCoupledInputs,
-  FormField as AlloyFormField, Input as AlloyInput, NativeEvents, Representing, SketchSpec, Tabstopping
+  FormField as AlloyFormField, GuiFactory, Input as AlloyInput, NativeEvents, Representing, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Id } from '@ephox/katamari';
+import { Id, Unicode } from '@ephox/katamari';
 
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
@@ -86,9 +86,11 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
   const getLabel = (label: string) => ({
     dom: {
       tag: 'label',
-      classes: [ 'tox-label' ],
-      innerHtml: providersBackstage.translate(label)
-    }
+      classes: [ 'tox-label' ]
+    },
+    components: [
+      GuiFactory.text(providersBackstage.translate(label))
+    ]
   });
 
   const widthField = AlloyFormCoupledInputs.parts.field1(
@@ -115,7 +117,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
           widthField,
           heightField,
           formGroup([
-            getLabel('&nbsp;'),
+            getLabel(Unicode.nbsp),
             pLock
           ])
         ]
