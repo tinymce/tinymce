@@ -240,12 +240,15 @@ const isDeleteOfLastCharPos = (fromCaption: SugarElement<HTMLTableCaptionElement
         from.isEqual(last) && to.isEqual(first))
   ).getOr(true);
 
-const emptyCaretCaption = (editor: Editor, elm: SugarElement<Node>): Optional<Optional<() => void>> =>
-  Optional.some(emptyElement(editor, elm));
+const emptyCaretCaption = (editor: Editor, elm: SugarElement<Node>): Optional<() => void> =>
+  emptyElement(editor, elm);
 
-const validateCaretCaption = (rootElm: SugarElement<Node>, fromCaption: SugarElement<HTMLTableCaptionElement>, to: CaretPosition): Optional<Optional<() => void>> =>
+const validateCaretCaption = (rootElm: SugarElement<Node>, fromCaption: SugarElement<HTMLTableCaptionElement>, to: CaretPosition): Optional<() => void> =>
   getParentCaption(rootElm, SugarElement.fromDom(to.getNode()))
-    .map((toCaption) => Compare.eq(toCaption, fromCaption) ? Optional.none() : Optional.some(Fun.noop));
+    .fold(
+      () => Optional.some(Fun.noop),
+      (toCaption) => Compare.eq(toCaption, fromCaption) ? Optional.none() : Optional.some(Fun.noop)
+    );
 
 const deleteCaretInsideCaption = (
   editor: Editor,
@@ -254,11 +257,12 @@ const deleteCaretInsideCaption = (
   fromCaption: SugarElement<HTMLTableCaptionElement>,
   from: CaretPosition
 ): Optional<() => void> =>
-  CaretFinder.navigate(forward, editor.getBody(), from).bind(
+  CaretFinder.navigate(forward, editor.getBody(), from).fold(
+    () => Optional.some(Fun.noop),
     (to) => isDeleteOfLastCharPos(fromCaption, forward, from, to) ?
       emptyCaretCaption(editor, fromCaption) :
       validateCaretCaption(rootElm, fromCaption, to)
-  ).getOr(Optional.some(Fun.noop));
+  );
 
 const deleteCaretCells = (editor: Editor, forward: boolean, rootElm: SugarElement<Node>, startElm: SugarElement<Node>): Optional<() => void> => {
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
@@ -281,24 +285,22 @@ const deleteCaretCaption = (
     deleteCaretInsideCaption(editor, rootElm, forward, fromCaption, from);
 };
 
-const isNearTable = (forward: boolean, pos: CaretPosition): Optional<() => void> => {
-  const isNear = forward ? isBeforeTable(pos) : isAfterTable(pos);
-  return isNear ? Optional.some(Fun.noop) : Optional.none();
-};
+const isNearTable = (forward: boolean, pos: CaretPosition): boolean =>
+  forward ? isBeforeTable(pos) : isAfterTable(pos);
 
-const isBeforeOrAfterTable = (editor: Editor, forward: boolean): Optional<() => void> => {
+const isBeforeOrAfterTable = (editor: Editor, forward: boolean): boolean => {
   const fromPos = CaretPosition.fromRangeStart(editor.selection.getRng());
 
-  return isNearTable(forward, fromPos).orThunk(() =>
-    CaretFinder.fromPosition(forward, editor.getBody(), fromPos)
-      .bind((pos) => isNearTable(forward, pos)));
+  return isNearTable(forward, fromPos) || CaretFinder.fromPosition(forward, editor.getBody(), fromPos)
+    .exists((pos) => isNearTable(forward, pos));
 };
 
 const deleteCaret = (editor: Editor, forward: boolean, startElm: SugarElement<Node>): Optional<() => void> => {
   const rootElm = SugarElement.fromDom(editor.getBody());
 
   return getParentCaption(rootElm, startElm).fold(
-    () => deleteCaretCells(editor, forward, rootElm, startElm).orThunk(() => isBeforeOrAfterTable(editor, forward)),
+    () => deleteCaretCells(editor, forward, rootElm, startElm)
+      .orThunk(() => isBeforeOrAfterTable(editor, forward) ? Optional.some(Fun.noop) : Optional.none()),
     (fromCaption) => deleteCaretCaption(editor, forward, rootElm, fromCaption)
   );
 };
