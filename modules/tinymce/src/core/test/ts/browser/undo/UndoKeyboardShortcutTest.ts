@@ -12,11 +12,11 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
   it('shoud undo and redo action', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
-    TinyContentActions.keystroke(editor, 65, { meta: true });
+    TinyContentActions.keystroke(editor, 'A'.charCodeAt(0), { meta: true });
     editor.execCommand('Delete');
-    TinyContentActions.keystroke(editor, 90, { meta: true });
+    TinyContentActions.keystroke(editor, 'Z'.charCodeAt(0), { meta: true });
     TinyAssertions.assertContent(editor, '<p>abc</p>');
-    TinyContentActions.keystroke(editor, 89, { meta: true });
+    TinyContentActions.keystroke(editor, 'Y'.charCodeAt(0), { meta: true });
     TinyAssertions.assertContent(editor, '');
   });
 });
