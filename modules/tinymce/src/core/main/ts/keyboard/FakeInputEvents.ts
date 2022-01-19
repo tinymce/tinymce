@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import { clone } from '../events/EventUtils';
 
@@ -54,6 +56,7 @@ const fireFakeBeforeInputEvent = (editor: Editor, inputType: string, specifics: 
     isTrusted: false,
     srcElement: target,
     cancelable: false,
+    preventDefault: Fun.noop,
     inputType
   };
 

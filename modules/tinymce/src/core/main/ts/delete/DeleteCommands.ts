@@ -61,9 +61,7 @@ const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>): void => {
   ], (item) => item(editor, true));
 
   result.fold(
-    () => {
-      nativeCommand(editor, 'ForwardDelete');
-    },
+    () => nativeCommand(editor, 'ForwardDelete'),
     (item) => item()
   );
 };
