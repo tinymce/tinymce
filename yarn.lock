@@ -200,7 +200,7 @@
     "@babel/helper-validator-identifier" "^7.14.0"
     to-fast-properties "^2.0.0"
 
-"@ephox/bedrock-client@^11.0.0", "@ephox/bedrock-client@^11.3.2":
+"@ephox/bedrock-client@11 || 12 || 13", "@ephox/bedrock-client@^11.0.0", "@ephox/bedrock-client@^11.3.2":
   version "11.3.2"
   resolved "https://registry.yarnpkg.com/@ephox/bedrock-client/-/bedrock-client-11.3.2.tgz#b358d6f9857e751e115c19eb0f9d89bb4135eaf2"
   integrity sha512-tpsOMSfKPhzHBksyz5ZtM4gUjZsUw51i2cCaMuwSysOtiEbB4IKPceYyg4NxsbysSvHY8xAVrzobgj71MJDJvQ==
@@ -208,7 +208,7 @@
     "@ephox/bedrock-common" "^11.3.2"
     "@ephox/dispute" "^1.0.3"
 
-"@ephox/bedrock-common@^11.0.0", "@ephox/bedrock-common@^11.3.2":
+"@ephox/bedrock-common@11 || 12 || 13", "@ephox/bedrock-common@^11.3.2":
   version "11.3.2"
   resolved "https://registry.yarnpkg.com/@ephox/bedrock-common/-/bedrock-common-11.3.2.tgz#91ac9b9b959d50acf7198463e5eddff692eceed0"
   integrity sha512-LmkoXqX8NZAr/hoWnuAcbrzKNb562/6G/g/xFF3Sul1By0XEJnW36FbYZo2LMffKB1DlsHS+OMhuqPKHQXhjSw==
