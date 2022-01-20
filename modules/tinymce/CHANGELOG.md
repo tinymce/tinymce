@@ -82,6 +82,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
 
+
+## 6.0.0 - 2022-01-20
+### Added
+- Auto test script for context menu check on links
 ## 5.10.2 - 2021-11-17
 
 ### Fixed
