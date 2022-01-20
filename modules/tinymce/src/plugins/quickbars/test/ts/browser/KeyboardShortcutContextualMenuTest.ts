@@ -6,7 +6,7 @@ import { TinyHooks, TinySelections, TinyContentActions, McEditor, TinyUiActions 
 import Editor from 'tinymce/core/api/Editor';
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';
 
-describe('browser.tinymce.core.focus.MediaFocusTest', () => {
+describe('browser.tinymce.core.focus.KeyboardShortcutContextualMenuTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'quickbars',
     quickbars_insert_toolbar: 'quicktable image media codesample',
@@ -17,7 +17,7 @@ describe('browser.tinymce.core.focus.MediaFocusTest', () => {
 
   const doc = SugarDocument.getDocument();
 
-  it('TINY-4211: Focus media will select the object', async () => {
+  it('TINY-2884: keypress should focus on contextual menu', async () => {
     const editor = hook.editor();
     editor.setContent('<p>aaaaaaa</p>');
     editor.focus();

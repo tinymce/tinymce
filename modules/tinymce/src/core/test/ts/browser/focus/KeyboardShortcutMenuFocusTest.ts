@@ -30,7 +30,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.KeyboardShortcutMenuFocus
     McEditor.remove(editor);
   };
 
-  context('Pressing Alt+F9 focuses the menubar and escape from the toolbar will focus the editor', () => {
+  context('TINY-2884: Pressing Alt+F9 focuses the menubar and escape from the toolbar will focus the editor', () => {
     it('classic mode', () =>
       pTestFocus({ })
     );

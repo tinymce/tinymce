@@ -9,7 +9,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
-  it('shoud undo and redo action', () => {
+  it('TINY-2884: shoud undo and redo action', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinyContentActions.keystroke(editor, 'A'.charCodeAt(0), { meta: true });

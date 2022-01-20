@@ -94,9 +94,10 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     findAndAssertFound(editor, 2);
     TinyUiActions.closeDialog(editor);
   });
-  // keyboard
 
-  it('TBA: Test no content selected with keyboard', async () => {
+  // keyboard shortcut
+
+  it('TINY-2884: Test no content selected with keyboard', async () => {
     const editor = hook.editor();
     editor.setContent('<p>fish fish fish</p>');
     await Utils.pOpenDialogWKeyboard(editor);
@@ -104,7 +105,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     TinyUiActions.closeDialog(editor);
   });
 
-  it('TBA: Test some content selected with keyboard', async () => {
+  it('TINY-2884: Test some content selected with keyboard', async () => {
     const editor = hook.editor();
     editor.setContent('<p>fish fish fish</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 9);

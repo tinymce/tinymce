@@ -108,7 +108,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         assertPageState(editor, false);
       });
 
-      it('TBA: Toggle fullscreen on with keyboard, open link dialog, insert link, close dialog and toggle fullscreen off', async () => {
+      it('TINY-2884: Toggle fullscreen on with keyboard, open link dialog, insert link, close dialog and toggle fullscreen off', async () => {
         const editor = hook.editor();
         assertPageState(editor, false);
         keystokes(editor);
@@ -123,7 +123,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         assertPageState(editor, false);
       });
 
-      it('TBA: Toggle fullscreen with keyboard and cleanup editor should clean up classes', () => {
+      it('TINY-2884: Toggle fullscreen with keyboard and cleanup editor should clean up classes', () => {
         const editor = hook.editor();
         keystokes(editor);
         assertApiAndLastEvent(editor, true);

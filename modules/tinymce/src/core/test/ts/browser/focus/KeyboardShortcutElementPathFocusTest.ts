@@ -26,7 +26,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.KeyboardShortcutElementPa
     McEditor.remove(editor);
   };
 
-  context('Pressing Alt+F11 focuses the element path and escape from the toolbar will focus the editor', () => {
+  context('TINY-2884: Pressing Alt+F11 focuses the element path and escape from the toolbar will focus the editor', () => {
     it('classic mode', () =>
       pTestFocus({ })
     );
