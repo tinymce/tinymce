@@ -77,7 +77,7 @@ class ScriptLoader {
   /**
    * Loads a specific script directly without adding it to the load queue.
    *
-   * @method load
+   * @method loadScript
    * @param {String} url Absolute URL to script to add.
    * @param {function} success Optional success callback function when the script loaded successfully.
    * @param {function} failure Optional failure callback function when the script failed to load.
