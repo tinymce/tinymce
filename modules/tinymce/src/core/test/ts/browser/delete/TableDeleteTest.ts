@@ -1,4 +1,3 @@
-/* eslint-disable mocha/no-exclusive-tests */
 import { Assertions, Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';

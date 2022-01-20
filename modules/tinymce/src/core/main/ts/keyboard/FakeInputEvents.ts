@@ -14,56 +14,36 @@ interface SpecificsInput {
   data?: null | string;
 }
 
-const fireFakeInputEvent = (editor: Editor, inputType: string, specifics: SpecificsInput = {}) => {
-  const target = editor.getBody();
-  const overrides = {
-    bubbles: true,
-    composed: true,
-    data: null,
-    isComposing: false,
-    detail: 0,
-    view: null,
-    target,
-    currentTarget: target,
-    eventPhase: Event.AT_TARGET,
-    originalTarget: target,
-    explicitOriginalTarget: target,
-    isTrusted: false,
-    srcElement: target,
-    cancelable: false,
-    inputType
+const createAndFireInputEvent = (eventType: string) =>
+  (editor: Editor, inputType: string, specifics: SpecificsInput = {}): InputEvent => {
+    const target = editor.getBody();
+    const overrides = {
+      bubbles: true,
+      composed: true,
+      data: null,
+      isComposing: false,
+      detail: 0,
+      view: null,
+      target,
+      currentTarget: target,
+      eventPhase: Event.AT_TARGET,
+      originalTarget: target,
+      explicitOriginalTarget: target,
+      isTrusted: false,
+      srcElement: target,
+      cancelable: false,
+      preventDefault: Fun.noop,
+      inputType
+    };
+
+    const input = clone(new InputEvent(eventType));
+
+    return editor.fire(eventType, { ...input, ...overrides, ...specifics });
   };
 
-  const input = clone(new InputEvent('input'));
+const fireFakeInputEvent = createAndFireInputEvent('input');
 
-  editor.fire('input', { ...input, ...overrides, ...specifics });
-};
-
-const fireFakeBeforeInputEvent = (editor: Editor, inputType: string, specifics: SpecificsInput = {}): InputEvent => {
-  const target = editor.getBody();
-  const overrides = {
-    bubbles: true,
-    composed: true,
-    data: null,
-    isComposing: false,
-    detail: 0,
-    view: null,
-    target,
-    currentTarget: target,
-    eventPhase: Event.AT_TARGET,
-    originalTarget: target,
-    explicitOriginalTarget: target,
-    isTrusted: false,
-    srcElement: target,
-    cancelable: false,
-    preventDefault: Fun.noop,
-    inputType
-  };
-
-  const input = clone(new InputEvent('beforeinput'));
-
-  return editor.fire('beforeinput', { ...input, ...overrides, ...specifics });
-};
+const fireFakeBeforeInputEvent = createAndFireInputEvent('beforeinput');
 
 export {
   fireFakeInputEvent,

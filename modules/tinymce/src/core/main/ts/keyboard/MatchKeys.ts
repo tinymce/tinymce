@@ -22,25 +22,27 @@ export interface KeyPatternDelayed extends KeyPatternBase {
   action: () => Optional<() => void>;
 }
 
-const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] => Arr.map(patterns, (pattern) => ({
+const baseKeyPattern = {
   shiftKey: false,
   altKey: false,
   ctrlKey: false,
   metaKey: false,
-  keyCode: 0,
-  action: Fun.noop,
-  ...pattern
-}));
+  keyCode: 0
+};
 
-const defaultDelayedPatterns = (patterns: KeyPatternDelayed[]): KeyPatternDelayed[] => Arr.map(patterns, (pattern) => ({
-  shiftKey: false,
-  altKey: false,
-  ctrlKey: false,
-  metaKey: false,
-  keyCode: 0,
-  action: Fun.noop,
-  ...pattern
-}));
+const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] =>
+  Arr.map(patterns, (pattern) => ({
+    ...baseKeyPattern,
+    action: Fun.noop,
+    ...pattern
+  }));
+
+const defaultDelayedPatterns = (patterns: KeyPatternDelayed[]): KeyPatternDelayed[] =>
+  Arr.map(patterns, (pattern) => ({
+    ...baseKeyPattern,
+    action: () => Optional.none(),
+    ...pattern
+  }));
 
 const matchesEvent = <T extends KeyPatternBase>(pattern: T, evt: KeyboardEvent) => (
   evt.keyCode === pattern.keyCode &&

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as BlockBoundaryDelete from './BlockBoundaryDelete';
@@ -24,8 +24,8 @@ const nativeCommand = (editor: Editor, command: string): void => {
   editor.getDoc().execCommand(command, false, null);
 };
 
-const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
-  const result = Arr.findMap([
+const findAction = (editor: Editor, caret: Cell<Text>, forward: boolean) =>
+  Arr.findMap([
     Outdent.backspaceDelete,
     CefDelete.backspaceDelete,
     CaretBoundaryDelete.backspaceDelete,
@@ -36,7 +36,10 @@ const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
     MediaDelete.backspaceDelete,
     BlockRangeDelete.backspaceDelete,
     InlineFormatDelete.backspaceDelete,
-  ], (item) => item(editor, false));
+  ], (item) => item(editor, forward));
+
+const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
+  const result = findAction(editor, caret, false);
 
   result.fold(
     () => {
@@ -48,17 +51,7 @@ const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
 };
 
 const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>): void => {
-  const result = Arr.findMap([
-    CefDelete.backspaceDelete,
-    CaretBoundaryDelete.backspaceDelete,
-    (editor: Editor, forward: boolean) => InlineBoundaryDelete.backspaceDelete(editor, caret, forward),
-    BlockBoundaryDelete.backspaceDelete,
-    TableDelete.backspaceDelete,
-    ImageBlockDelete.backspaceDelete,
-    MediaDelete.backspaceDelete,
-    BlockRangeDelete.backspaceDelete,
-    InlineFormatDelete.backspaceDelete
-  ], (item) => item(editor, true));
+  const result = findAction(editor, caret, true);
 
   result.fold(
     () => nativeCommand(editor, 'ForwardDelete'),

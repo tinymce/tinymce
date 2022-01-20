@@ -42,8 +42,6 @@ describe('browser.tinymce.core.delete.BeforeInputTest', () => {
     TinyAssertions.assertContent(editor, expectedHtml);
 
     assert.deepEqual(inputEvents, cancelBeforeInput ? [ 'deleteContentBackward' ] : [ 'deleteContentBackward', 'deleteContentBackward' ]);
-
-    editor.getBody().normalize();
   };
 
   it('Gets beforeInput', () => {
