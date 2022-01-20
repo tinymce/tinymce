@@ -24,8 +24,8 @@
   "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/bedrock-client": "^11.0.0",
-    "@ephox/bedrock-common": "^11.0.0",
+    "@ephox/bedrock-client": "11 || 12 || 13",
+    "@ephox/bedrock-common": "11 || 12 || 13",
     "@ephox/jax": "^7.0.0-alpha.2",
     "@ephox/sand": "^6.0.0-alpha.2",
     "@ephox/sugar": "^9.0.0-alpha.2",
