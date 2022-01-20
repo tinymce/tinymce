@@ -55,7 +55,7 @@ const backspaceDeleteCaret = (editor: Editor, forward: boolean): Optional<() => 
           moveToPosition(editor)
         )
     ),
-    Fun.constant(Optional.some(Fun.noop))
+    () => Optional.some(Fun.noop)
   );
 };
 
@@ -81,7 +81,7 @@ const backspaceDeleteRange = (editor: Editor, forward: boolean): Optional<() => 
           DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(editor.selection.getNode()));
           DeleteUtils.paddEmptyBody(editor);
         }),
-      Fun.constant(Optional.some(Fun.noop))
+      () => Optional.some(Fun.noop)
     );
   }
   return Optional.none();

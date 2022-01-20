@@ -56,7 +56,8 @@ const deleteFromTo = (editor: Editor, caret: Cell<Text>, from: CaretPosition, to
 
     BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
       .map(BoundaryLocation.inside)
-      .bind(setCaretLocation(editor, caret)).each((action) => action());
+      .bind(setCaretLocation(editor, caret))
+      .each((action) => action());
   });
 
   editor.nodeChanged();
@@ -89,38 +90,33 @@ const backspaceDeleteCollapsed = (editor: Editor, caret: Cell<Text>, forward: bo
     }
   });
 
-  const newLocation = location.map(setCaretLocation(editor, caret));
+  return location.map(setCaretLocation(editor, caret))
+    .getOrThunk((): Optional<() => void> => {
+      const toPosition = CaretFinder.navigate(forward, rootNode, from);
+      const toLocation = toPosition.bind((pos) => BoundaryLocation.readLocation(isInlineTarget, rootNode, pos));
 
-  return newLocation.getOrThunk((): Optional<() => void> => {
-    const toPosition = CaretFinder.navigate(forward, rootNode, from);
-    const toLocation = toPosition.bind((pos) => BoundaryLocation.readLocation(isInlineTarget, rootNode, pos));
-
-    const liftResult = Optionals.lift2(fromLocation, toLocation, () =>
-      InlineUtils.findRootInline(isInlineTarget, rootNode, from).bind((elm) => {
-        if (hasOnlyTwoOrLessPositionsLeft(elm)) {
-          return Optional.some(() => {
-            DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(elm));
-          });
-        } else {
-          return Optional.none();
-        }
-      })
-    );
-
-    const thunk = () => toLocation.bind(() =>
-      toPosition.map((to) => {
-        return () => {
-          if (forward) {
-            deleteFromTo(editor, caret, from, to);
+      return Optionals.lift2(fromLocation, toLocation, () =>
+        InlineUtils.findRootInline(isInlineTarget, rootNode, from).bind((elm) => {
+          if (hasOnlyTwoOrLessPositionsLeft(elm)) {
+            return Optional.some(() => {
+              DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(elm));
+            });
           } else {
-            deleteFromTo(editor, caret, to, from);
+            return Optional.none();
           }
-        };
-      })
-    );
-
-    return liftResult.getOrThunk(thunk);
-  });
+        })
+      ).getOrThunk(() => toLocation.bind(() =>
+        toPosition.map((to) => {
+          return () => {
+            if (forward) {
+              deleteFromTo(editor, caret, from, to);
+            } else {
+              deleteFromTo(editor, caret, to, from);
+            }
+          };
+        })
+      ));
+    });
 };
 
 const backspaceDelete = (editor: Editor, caret: Cell<Text>, forward?: boolean): Optional<() => void> => {

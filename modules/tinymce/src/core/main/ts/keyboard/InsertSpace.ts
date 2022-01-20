@@ -45,9 +45,8 @@ const insertSpaceOrNbspAtSelection = (editor: Editor): Optional<() => void> => {
 
     return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), caretPosition)
       .bind(locationToCaretPosition(root))
-      .map((checkPos) =>
-        () => insertInlineBoundarySpaceOrNbsp(root, pos)(checkPos)
-          .each(setSelection(editor)));
+      .map((checkPos) => () =>
+        insertInlineBoundarySpaceOrNbsp(root, pos)(checkPos).each(setSelection(editor)));
   } else {
     return Optional.none();
   }

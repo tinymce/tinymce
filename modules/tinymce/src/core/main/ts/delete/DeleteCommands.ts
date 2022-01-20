@@ -43,7 +43,7 @@ const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
       nativeCommand(editor, 'Delete');
       DeleteUtils.paddEmptyBody(editor);
     },
-    (item) => item()
+    Fun.call
   );
 };
 
@@ -62,7 +62,7 @@ const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>): void => {
 
   result.fold(
     () => nativeCommand(editor, 'ForwardDelete'),
-    (item) => item()
+    Fun.call
   );
 };
 

@@ -33,8 +33,7 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
   } else {
     return Optional.from(InlineUtils.normalizePosition(forward, fromPos))
       .filter((pos) => isNearMedia(pos) && CaretUtils.isMoveInsideSameBlock(fromPos, pos))
-      .map((pos) =>
-        () => deleteElement(editor, forward, pos.getNode(!forward)));
+      .map((pos) => () => deleteElement(editor, forward, pos.getNode(!forward)));
   }
 };
 

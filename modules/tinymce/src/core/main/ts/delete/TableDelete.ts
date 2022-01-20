@@ -247,7 +247,7 @@ const validateCaretCaption = (rootElm: SugarElement<Node>, fromCaption: SugarEle
   getParentCaption(rootElm, SugarElement.fromDom(to.getNode()))
     .fold(
       () => Optional.some(Fun.noop),
-      (toCaption) => Compare.eq(toCaption, fromCaption) ? Optional.none() : Optional.some(Fun.noop)
+      (toCaption) => Optionals.someIf(Compare.eq(toCaption, fromCaption), Fun.noop)
     );
 
 const deleteCaretInsideCaption = (
@@ -300,7 +300,7 @@ const deleteCaret = (editor: Editor, forward: boolean, startElm: SugarElement<No
 
   return getParentCaption(rootElm, startElm).fold(
     () => deleteCaretCells(editor, forward, rootElm, startElm)
-      .orThunk(() => isBeforeOrAfterTable(editor, forward) ? Optional.some(Fun.noop) : Optional.none()),
+      .orThunk(() => Optionals.someIf(!isBeforeOrAfterTable(editor, forward), Fun.noop)),
     (fromCaption) => deleteCaretCaption(editor, forward, rootElm, fromCaption)
   );
 };

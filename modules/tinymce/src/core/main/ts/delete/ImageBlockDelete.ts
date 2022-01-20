@@ -18,9 +18,7 @@ const deleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => 
   return CaretFinder.fromPosition(forward, editor.getBody(), fromPos)
     .filter((pos) => forward ? isBeforeImageBlock(pos) : isAfterImageBlock(pos))
     .bind((pos) => Optional.from(getChildNodeAtRelativeOffset(forward ? 0 : -1, pos)))
-    .map((elm) =>
-      () => editor.selection.select(elm)
-    );
+    .map((elm) => () => editor.selection.select(elm));
 };
 
 const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> =>
