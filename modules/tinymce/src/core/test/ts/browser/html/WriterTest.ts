@@ -97,11 +97,11 @@ describe('browser.tinymce.core.html.WriterTest', () => {
 
     writer = Writer();
     writer.start('img', [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }], true);
-    assert.equal(writer.getContent(), '<img attr1="value1" attr2="value2" />');
+    assert.equal(writer.getContent(), '<img attr1="value1" attr2="value2">');
 
     writer = Writer();
     writer.start('br', null, true);
-    assert.equal(writer.getContent(), '<br />');
+    assert.equal(writer.getContent(), '<br>');
   });
 
   it('End', () => {

@@ -35,7 +35,7 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
             { type: 'choiceitem', text: 'Navy Blue', value: '#34495E' }
           ],
           getColorCols: Fun.constant(3)
-        })
+        }, Optional.none())
       ]
     })
   ));

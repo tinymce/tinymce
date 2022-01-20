@@ -14,6 +14,11 @@ import { Optional } from '@ephox/katamari';
  * @class tinymce.file.Conversions
  */
 
+interface DataUriResult {
+  readonly type: string | undefined;
+  readonly data: string;
+}
+
 const blobUriToBlob = (url: string): Promise<Blob> => {
   return new Promise((resolve, reject) => {
 
@@ -47,8 +52,8 @@ const blobUriToBlob = (url: string): Promise<Blob> => {
   });
 };
 
-const parseDataUri = (uri: string) => {
-  let type;
+const parseDataUri = (uri: string): DataUriResult => {
+  let type: string | undefined;
 
   const uriParts = decodeURIComponent(uri).split(',');
 

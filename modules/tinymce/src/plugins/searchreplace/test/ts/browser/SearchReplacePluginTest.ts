@@ -120,7 +120,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePluginTest', () => 
     editor.setContent('a&nbsp; &nbsp;b<br/><br/>ab&nbsp;c');
     editor.plugins.searchreplace.find(' ');
     assert.isFalse(editor.plugins.searchreplace.replace('x', true, true));
-    TinyAssertions.assertContent(editor, '<p>axxxb<br /><br />abxc</p>');
+    TinyAssertions.assertContent(editor, '<p>axxxb<br><br>abxc</p>');
   });
 
   it('TBA: SearchReplace: Find multiple matches, move to next and replace', () => {

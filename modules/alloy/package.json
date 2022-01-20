@@ -1,13 +1,13 @@
 {
   "name": "@ephox/alloy",
-  "version": "10.0.0-alpha.1",
+  "version": "10.0.0-alpha.2",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^7.0.0-alpha.1",
-    "@ephox/boulder": "^7.0.0-alpha.1",
-    "@ephox/katamari": "^9.0.0-alpha.1",
-    "@ephox/sand": "^6.0.0-alpha.1",
-    "@ephox/sugar": "^9.0.0-alpha.1",
+    "@ephox/agar": "^7.0.0-alpha.2",
+    "@ephox/boulder": "^7.0.0-alpha.2",
+    "@ephox/katamari": "^9.0.0-alpha.2",
+    "@ephox/sand": "^6.0.0-alpha.2",
+    "@ephox/sugar": "^9.0.0-alpha.2",
     "tslib": "^2.0.0"
   },
   "files": [

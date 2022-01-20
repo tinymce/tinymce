@@ -439,11 +439,9 @@ const Quirks = (editor: Editor): Quirks => {
    * default we want to change that behavior.
    */
   const setDefaultBlockType = () => {
-    if (Options.getForcedRootBlock(editor)) {
-      editor.on('init', () => {
-        setEditorCommandState('DefaultParagraphSeparator', Options.getForcedRootBlock(editor));
-      });
-    }
+    editor.on('init', () => {
+      setEditorCommandState('DefaultParagraphSeparator', Options.getForcedRootBlock(editor));
+    });
   };
 
   /**

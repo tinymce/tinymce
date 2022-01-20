@@ -42,7 +42,7 @@ const register = (editor: Editor): void => {
         return { valid: false, message: 'Must be false or a string.' };
       }
     },
-    default: 'link linkchecker image imagetools table spellchecker configurepermanentpen'
+    default: 'link linkchecker image editimage table spellchecker configurepermanentpen'
   });
 };
 

@@ -164,16 +164,15 @@ const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Re
 const setForcedBlockAttrs = (editor: Editor, node) => {
   const forcedRootBlockName = Options.getForcedRootBlock(editor);
 
-  if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
+  if (forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
     const forcedRootBlockAttrs = Options.getForcedRootBlockAttrs(editor);
     applyAttributes(editor, node, forcedRootBlockAttrs);
   }
 };
 
 // Wraps any text nodes or inline elements in the specified forced root block name
-const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName, rng, container, offset) => {
+const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName: string, rng, container, offset) => {
   let newBlock, parentBlock, startNode, node, next, rootBlockName;
-  const blockName = newBlockName || 'P';
   const dom = editor.dom, editableRoot = getEditableRoot(dom, container);
 
   // Not in a block element or in a table cell or caption
@@ -188,7 +187,7 @@ const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName, rng, co
     }
 
     if (!parentBlock.hasChildNodes()) {
-      newBlock = dom.create(blockName);
+      newBlock = dom.create(newBlockName);
       setForcedBlockAttrs(editor, newBlock);
       parentBlock.appendChild(newBlock);
       rng.setStart(newBlock, 0);
@@ -208,8 +207,8 @@ const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName, rng, co
       node = node.previousSibling;
     }
 
-    if (startNode && editor.schema.isValidChild(rootBlockName, blockName.toLowerCase())) {
-      newBlock = dom.create(blockName);
+    if (startNode && editor.schema.isValidChild(rootBlockName, newBlockName.toLowerCase())) {
+      newBlock = dom.create(newBlockName);
       setForcedBlockAttrs(editor, newBlock);
       startNode.parentNode.insertBefore(newBlock, startNode);
 
@@ -245,10 +244,11 @@ const addBrToBlockIfNeeded = (dom, block) => {
 
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   let tmpRng, container, offset, parentBlock;
-  let newBlock, fragment, containerBlock, parentBlockName, newBlockName, isAfterLastNodeInContainer;
+  let newBlock, fragment, containerBlock, parentBlockName, isAfterLastNodeInContainer;
   const dom = editor.dom;
   const schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
   const rng = editor.selection.getRng();
+  const newBlockName = Options.getForcedRootBlock(editor);
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
@@ -386,7 +386,6 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
   container = rng.startContainer;
   offset = rng.startOffset;
-  newBlockName = Options.getForcedRootBlock(editor);
   const shiftKey = !!(evt && evt.shiftKey);
   const ctrlKey = !!(evt && evt.ctrlKey);
 
@@ -413,7 +412,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   // Wrap the current node and it's sibling in a default block if it's needed.
   // for example this <td>text|<b>text2</b></td> will become this <td><p>text|<b>text2</p></b></td>
   // This won't happen if root blocks are disabled or the shiftKey is pressed
-  if ((newBlockName && !shiftKey) || (!newBlockName && shiftKey)) {
+  if (!shiftKey) {
     container = wrapSelfAndSiblingsInDefaultBlock(editor, newBlockName, rng, container, offset);
   }
 
@@ -442,12 +441,9 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   }
 
   // If parent block is root then never insert new blocks
-  if (newBlockName && parentBlock === editor.getBody()) {
+  if (parentBlock === editor.getBody()) {
     return;
   }
-
-  // Default block name if it's not configured
-  newBlockName = newBlockName || 'P';
 
   // Insert new block before/after the parent block depending on caret location
   if (CaretContainer.isCaretContainerBlock(parentBlock)) {

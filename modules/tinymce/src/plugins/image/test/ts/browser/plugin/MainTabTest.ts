@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, (
       '<figure class="image">' +
-      '<img class="class1" src="src" alt="alt" width="100" height="200" />' +
+      '<img class="class1" src="src" alt="alt" width="100" height="200">' +
       '<figcaption>Caption</figcaption>' +
       '</figure>'
     ));

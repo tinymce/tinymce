@@ -64,7 +64,6 @@ const isTypingKeyboardEvent = (e: EditorEvent<unknown>) =>
 const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: string): boolean => {
   // Note: Don't use DOMUtils.isEmpty() here as it treats empty format caret nodes as non empty nodes
   if (Empty.isEmpty(SugarElement.fromDom(rootElm), false)) {
-    const isForcedRootBlockFalse = forcedRootBlock === '';
     // Ensure the node matches the forced_root_block setting, as the content could be an empty list, etc...
     // and also check that the content isn't indented
     const firstElement = rootElm.firstElementChild;
@@ -73,7 +72,7 @@ const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: strin
     } else if (dom.getStyle(rootElm.firstElementChild, 'padding-left') || dom.getStyle(rootElm.firstElementChild, 'padding-right')) {
       return false;
     } else {
-      return isForcedRootBlockFalse ? !dom.isBlock(firstElement) : forcedRootBlock === firstElement.nodeName.toLowerCase();
+      return forcedRootBlock === firstElement.nodeName.toLowerCase();
     }
   } else {
     return false;

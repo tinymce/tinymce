@@ -5,26 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ItemTypes } from '@ephox/alloy';
+import { GuiFactory, ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 
 import * as ItemClasses from '../ItemClasses';
 
-const renderSeparatorItem = (spec: Menu.SeparatorMenuItem): ItemTypes.ItemSpec => {
-  const innerHtml = spec.text.fold(
-    () => ({ }),
-    (text) => ({ innerHtml: text })
-  );
-  return {
-    type: 'separator',
-    dom: {
-      tag: 'div',
-      classes: [ ItemClasses.selectableClass, ItemClasses.groupHeadingClass ],
-      ...innerHtml
-    },
-    components: [ ]
-  };
-};
+const renderSeparatorItem = (spec: Menu.SeparatorMenuItem): ItemTypes.ItemSpec => ({
+  type: 'separator',
+  dom: {
+    tag: 'div',
+    classes: [ ItemClasses.selectableClass, ItemClasses.groupHeadingClass ]
+  },
+  components: spec.text.map(GuiFactory.text).toArray()
+});
 
 export {
   renderSeparatorItem

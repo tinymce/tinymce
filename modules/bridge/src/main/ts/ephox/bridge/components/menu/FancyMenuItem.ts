@@ -1,6 +1,7 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Result, Fun, Optional } from '@ephox/katamari';
+import { Result, Optional } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { ChoiceMenuItemSpec } from './ChoiceMenuItem';
 
 export interface FancyActionArgsMap {
@@ -53,9 +54,9 @@ export interface ColorSwatchMenuItem extends BaseFancyMenuItem<'colorswatch'> {
 export type FancyMenuItem = InsertTableMenuItem | ColorSwatchMenuItem;
 
 const baseFields = [
-  FieldSchema.requiredString('type'),
+  ComponentSchema.type,
   FieldSchema.requiredString('fancytype'),
-  FieldSchema.defaultedFunction('onAction', Fun.noop)
+  ComponentSchema.defaultedOnAction
 ];
 
 const insertTableFields = [

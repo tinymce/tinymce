@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 
 import { renderSlider } from 'tinymce/themes/silver/ui/dialog/Slider';
 
@@ -13,7 +14,7 @@ describe('headless.tinymce.themes.silver.components.slider.SliderTest', () => {
       label: 'test label',
       min: 0,
       max: 100,
-    }, TestProviders)
+    }, TestProviders, Optional.none())
   ));
 
   it('TINY-8304: Check basic structure', () => {

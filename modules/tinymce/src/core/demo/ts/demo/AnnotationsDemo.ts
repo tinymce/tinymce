@@ -4,23 +4,22 @@ import Editor from 'tinymce/core/api/Editor';
 
 declare let tinymce: any;
 
+const contentStyles = `
+.mce-annotation { background-color: lightgreen; }
+[data-mce-annotation-active] { outline: 2px solid red }
+[data-mce-annotation="beta"][data-mce-annotation-active] { background-color: yellow; }
+`;
+
 export default () => {
-
-  const button = document.createElement('button');
-  button.innerHTML = 'Get all annotations';
-  button.addEventListener('click', () => {
-    // eslint-disable-next-line no-console
-    console.log('annotations', tinymce.activeEditor.annotator.getAll('alpha'));
-  });
-  document.body.appendChild(button);
-
   tinymce.init({
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
-    selector: 'textarea.tinymce',
-    toolbar: 'annotate-alpha',
+    selector: 'div.tinymce',
+    toolbar: 'annotate-alpha get-all-alpha remove-all-alpha remove-alpha',
     plugins: [ ],
 
-    content_style: '.mce-annotation { background-color: darkgreen; color: white; }',
+    inline_boundaries: false,
+    height: 400,
+    content_style: contentStyles,
 
     setup: (editor: Editor) => {
       editor.ui.registry.addButton('annotate-alpha', {
@@ -40,6 +39,37 @@ export default () => {
         }
       });
 
+      editor.ui.registry.addButton('get-all-alpha', {
+        text: 'Get all',
+        onAction: () => {
+          // eslint-disable-next-line no-console
+          console.log('annotations', editor.annotator.getAll('alpha'));
+        }
+      });
+
+      editor.ui.registry.addButton('remove-all-alpha', {
+        text: 'Remove all',
+        onAction: () => {
+          editor.annotator.removeAll('alpha');
+          editor.focus();
+        }
+      });
+
+      editor.ui.registry.addButton('remove-alpha', {
+        text: 'Remove closest',
+        onAction: () => {
+          editor.annotator.remove('alpha');
+          editor.focus();
+        },
+        disabled: true,
+        onSetup: (btnApi) => {
+          editor.annotator.annotationChanged('alpha', (state, _name, _obj) => {
+            btnApi.setDisabled(!state);
+          });
+          return Fun.noop;
+        }
+      });
+
       editor.on('init', () => {
         editor.annotator.register('alpha', {
           persistent: true,
@@ -48,6 +78,13 @@ export default () => {
               'data-mce-comment': data.comment ? data.comment : '',
               'data-mce-author': data.author ? data.author : 'anonymous'
             }
+          })
+        });
+
+        editor.annotator.register('beta', {
+          persistent: true,
+          decorate: (_uid, _data) => ({
+            attributes: {}
           })
         });
       });

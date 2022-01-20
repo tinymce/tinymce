@@ -45,7 +45,7 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     editor.setContent('<p><img src="#1"><img src="#2"></p>');
     TinySelections.setCursor(editor, [ 0 ], 0);
     deleteElementPath(editor, true, [ 0, 0 ]);
-    TinyAssertions.assertContent(editor, '<p><img src="#2" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#2"></p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
   });
 
@@ -54,7 +54,7 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     editor.setContent('<p><img src="#1"><img src="#2"></p>');
     TinySelections.setCursor(editor, [ 0 ], 1);
     deleteElementPath(editor, true, [ 0, 0 ]);
-    TinyAssertions.assertContent(editor, '<p><img src="#2" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#2"></p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
   });
 
@@ -63,7 +63,7 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     editor.setContent('<p><img src="#1"><img src="#2"></p>');
     TinySelections.setCursor(editor, [ 0 ], 2);
     deleteElementPath(editor, false, [ 0, 0 ]);
-    TinyAssertions.assertContent(editor, '<p><img src="#2" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#2"></p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
   });
 
@@ -72,7 +72,7 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     editor.setContent('<p><img src="#1"><img src="#2"></p>');
     TinySelections.setCursor(editor, [ 0 ], 1);
     deleteElementPath(editor, true, [ 0, 1 ]);
-    TinyAssertions.assertContent(editor, '<p><img src="#1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1"></p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 1);
   });
 
@@ -81,7 +81,7 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     editor.setContent('<p><img src="#1"><img src="#2"></p>');
     TinySelections.setCursor(editor, [ 0 ], 2);
     deleteElementPath(editor, true, [ 0, 1 ]);
-    TinyAssertions.assertContent(editor, '<p><img src="#1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1"></p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 1);
   });
 
@@ -90,7 +90,7 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     editor.setContent('<p><img src="#1"><img src="#2"></p>');
     TinySelections.setCursor(editor, [ 0 ], 1);
     deleteElementPath(editor, false, [ 0, 1 ]);
-    TinyAssertions.assertContent(editor, '<p><img src="#1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1"></p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 1);
   });
 
@@ -99,7 +99,7 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     editor.setContent('<p><img src="#1"><img src="#2"></p>');
     TinySelections.setCursor(editor, [ 0 ], 2);
     deleteElementPath(editor, false, [ 0, 1 ]);
-    TinyAssertions.assertContent(editor, '<p><img src="#1" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#1"></p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 1);
   });
 
@@ -144,7 +144,7 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     editor.setContent('<p><img src="#1" /></p><p><img src="#2" /></p>');
     TinySelections.setCursor(editor, [ 0 ], 1);
     deleteElementPath(editor, true, [ 0 ]);
-    TinyAssertions.assertContent(editor, '<p><img src="#2" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#2"></p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
   });
 
@@ -153,7 +153,7 @@ describe('browser.tinymce.core.delete.DeleteElementTest', () => {
     editor.setContent('<p><img src="#1" /></p><p><img src="#2" /></p>');
     TinySelections.setCursor(editor, [ 1 ], 0);
     deleteElementPath(editor, false, [ 0 ]);
-    TinyAssertions.assertContent(editor, '<p><img src="#2" /></p>');
+    TinyAssertions.assertContent(editor, '<p><img src="#2"></p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
   });
 

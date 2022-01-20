@@ -24,8 +24,8 @@ describe('browser.tinymce.core.init.InitContentBodySelectionTest', () => {
     initAndAssertContent('Test p', '<p>Initial Content</p>', [ 0, 0 ]);
     initAndAssertContent('Test h1', '<h1>Initial Content</h1>', [ 0, 0 ]);
     initAndAssertContent('Test p with inline styles', '<p><span style="font-weight: bold">Initial Content</span></p>', [ 0, 0, 0 ]);
-    initAndAssertContent('Test p with noneditable span', '<p><span class="mceNonEditable">Initial Content</span></p>', [ 0, 0, 0 ]);
-    initAndAssertContent('Test noneditable p', '<p class="mceNonEditable">Initial Content</p>', [ 0, 0 ]);
+    initAndAssertContent('Test p with noneditable span', '<p><span class="mceNonEditable">Initial Content</span></p>', [ 0, 0 ]);
+    initAndAssertContent('Test noneditable p', '<p class="mceNonEditable">Initial Content</p>', [ 0 ]);
     initAndAssertContent('Test cef p', '<p contenteditable="false">Initial Content</p>', [ 0 ]);
   });
 
@@ -41,10 +41,6 @@ describe('browser.tinymce.core.init.InitContentBodySelectionTest', () => {
   context('TINY-4139: div and forced_root_block tests', () => {
     initAndAssertContent('Test div with br', '<div><br /></div>', [ 0 ]);
     initAndAssertContent('Test div', '<div>Initial Content</div>', [ 0, 0 ]);
-    initAndAssertContent('Test p with br with forced_root_block=false', '<p><br /></p>', [ 0 ], 0, { forced_root_block: false });
-    initAndAssertContent('Test p with forced_root_block=false', '<p>Initial Content</p>', [ 0, 0 ], 0, { forced_root_block: false });
-    initAndAssertContent('Test div with br with forced_root_block=false', '<div><br /></div>', [ 0 ], 0, { forced_root_block: false });
-    initAndAssertContent('Test div with forced_root_block=false', '<div>Initial Content</div>', [ 0, 0 ], 0, { forced_root_block: false });
     initAndAssertContent('Test div with br with forced_root_block=div', '<div><br /></div>', [ 0 ], 0, { forced_root_block: 'div' });
     initAndAssertContent('Test div with forced_root_block=div', '<div>Initial Content</div>', [ 0, 0 ], 0, { forced_root_block: 'div' });
   });

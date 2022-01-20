@@ -220,8 +220,6 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     const result = processValue(value, processor);
     if (isValidResult(result)) {
       values[name] = result.value;
-      // TODO: TINY-8236 (TINY-8234) Remove this later once all settings have been converted
-      editor.settings[name] = result.value;
       return true;
     } else {
       // eslint-disable-next-line no-console
@@ -277,8 +275,6 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     const registered = isRegistered(name);
     if (registered) {
       delete values[name];
-      // TODO: TINY-8236 (TINY-8234) Remove this later once all settings have been converted
-      delete editor.settings[name];
     }
     return registered;
   };

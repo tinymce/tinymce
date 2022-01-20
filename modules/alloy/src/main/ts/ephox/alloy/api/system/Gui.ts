@@ -103,6 +103,7 @@ const takeover = (root: AlloyComponent): GuiSystem => {
       return getByDom(elem);
     },
     build: GuiFactory.build,
+    buildOrPatch: GuiFactory.buildOrPatch,
     addToGui: (c) => {
       add(c);
     },

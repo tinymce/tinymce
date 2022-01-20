@@ -22,8 +22,8 @@ interface IFrameSourcing {
 
 type IframeSpec = Omit<Dialog.Iframe, 'type'>;
 
-const getDynamicSource = (): IFrameSourcing => {
-  const cachedValue = Cell('');
+const getDynamicSource = (initialData: Optional<string>): IFrameSourcing => {
+  const cachedValue = Cell(initialData.getOr(''));
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Cors errors
@@ -31,21 +31,24 @@ const getDynamicSource = (): IFrameSourcing => {
     setValue: (frameComponent: AlloyComponent, html: string) => {
       // TINY-3769: We need to use srcdoc here, instead of src with a data URI, otherwise browsers won't retain the Origin.
       // See https://bugs.chromium.org/p/chromium/issues/detail?id=58999#c11
-      Attribute.set(frameComponent.element, 'srcdoc', html);
+      if (cachedValue.get() !== html) {
+        Attribute.set(frameComponent.element, 'srcdoc', html);
+      }
       cachedValue.set(html);
     }
   };
 };
 
-const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders) => {
+const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>) => {
   const isSandbox = spec.sandboxed;
 
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
+    ...initialData.map((html) => ({ srcdoc: html })).getOr({}),
     ...isSandbox ? { sandbox: 'allow-scripts allow-same-origin' } : { }
   };
 
-  const sourcing = getDynamicSource();
+  const sourcing = getDynamicSource(initialData);
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
@@ -60,7 +63,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
       behaviours: Behaviour.derive([
         Tabstopping.config({ }),
         Focusing.config({ }),
-        RepresentingConfigs.withComp(Optional.none(), sourcing.getValue, sourcing.setValue)
+        RepresentingConfigs.withComp(initialData, sourcing.getValue, sourcing.setValue)
       ])
     }
   );
