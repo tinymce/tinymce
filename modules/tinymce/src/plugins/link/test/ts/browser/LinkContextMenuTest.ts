@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.link.LinkContextMenuTest', () => {
 
   const pressDownArrowKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.down());
 
-  it('TBA: Context menu show up on link', async () => {
+  it('TINY-2293: Context menu shows up on links', async () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tiny.cloud">tiny</a></p>');
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]');
