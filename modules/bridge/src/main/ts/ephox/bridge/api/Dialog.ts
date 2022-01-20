@@ -3,7 +3,7 @@ import { Bar, BarSpec, createBarFields } from '../components/dialog/Bar';
 import { BodyComponent, BodyComponentSpec } from '../components/dialog/BodyComponent';
 import { Button, ButtonSpec, createButton } from '../components/dialog/Button';
 import { Checkbox, CheckboxSpec, createCheckbox } from '../components/dialog/Checkbox';
-import { Collection, collectionDataProcessor, CollectionSpec, createCollection } from '../components/dialog/Collection';
+import { Collection, collectionDataProcessor, CollectionItem, CollectionSpec, createCollection } from '../components/dialog/Collection';
 import { ColorInput, ColorInputSpec, createColorInput } from '../components/dialog/ColorInput';
 import { ColorPicker, ColorPickerSpec, createColorPicker } from '../components/dialog/ColorPicker';
 import {
@@ -21,7 +21,7 @@ import { createDropZone, DropZone, DropZoneSpec } from '../components/dialog/Dro
 import { createGridFields, Grid, GridSpec } from '../components/dialog/Grid';
 import { createHtmlPanel, HtmlPanel, HtmlPanelSpec } from '../components/dialog/HtmlPanel';
 import { createIframe, Iframe, IframeSpec } from '../components/dialog/Iframe';
-import { createImageTools, ImageTools, ImageToolsSpec, ImageToolsState } from '../components/dialog/ImageTools';
+import { ImagePreview, ImagePreviewData, ImagePreviewSpec } from '../components/dialog/ImagePreview';
 import { createInput, Input, InputSpec } from '../components/dialog/Input';
 import { createLabelFields, Label, LabelSpec } from '../components/dialog/Label';
 import {
@@ -38,7 +38,7 @@ import {
   createUrlDialog, UrlDialog, UrlDialogActionDetails, UrlDialogActionHandler, UrlDialogCancelHandler, UrlDialogCloseHandler, UrlDialogFooterButton,
   UrlDialogFooterButtonSpec, UrlDialogInstanceApi, UrlDialogMessage, UrlDialogMessageHandler, UrlDialogSpec
 } from '../components/dialog/UrlDialog';
-import { createUrlInput, UrlInput, UrlInputSpec } from '../components/dialog/UrlInput';
+import { createUrlInput, UrlInput, UrlInputData, UrlInputSpec } from '../components/dialog/UrlInput';
 
 // These are the types that are to be used internally in implementations
 export {
@@ -62,6 +62,7 @@ export {
   createCheckbox,
 
   Collection,
+  CollectionItem,
   CollectionSpec,
   createCollection,
   collectionDataProcessor,
@@ -124,10 +125,9 @@ export {
   IframeSpec,
   createIframe,
 
-  ImageTools,
-  ImageToolsSpec,
-  ImageToolsState,
-  createImageTools,
+  ImagePreview,
+  ImagePreviewData,
+  ImagePreviewSpec,
 
   Input,
   InputSpec,
@@ -190,6 +190,7 @@ export {
   createUrlDialog,
 
   UrlInput,
+  UrlInputData,
   UrlInputSpec,
   createUrlInput
 };

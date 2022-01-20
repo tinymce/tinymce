@@ -1,6 +1,7 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { BaseToolbarButton, BaseToolbarButtonSpec, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
 
 export interface BaseToolbarToggleButtonSpec<I extends BaseToolbarButtonInstanceApi> extends BaseToolbarButtonSpec<I> {
@@ -32,13 +33,13 @@ export interface ToolbarToggleButtonInstanceApi extends BaseToolbarToggleButtonI
 }
 
 export const baseToolbarToggleButtonFields = [
-  FieldSchema.defaultedBoolean('active', false)
+  ComponentSchema.active
 ].concat(baseToolbarButtonFields);
 
 export const toggleButtonSchema = StructureSchema.objOf(
   baseToolbarToggleButtonFields.concat([
-    FieldSchema.requiredString('type'),
-    FieldSchema.requiredFunction('onAction')
+    ComponentSchema.type,
+    ComponentSchema.onAction
   ])
 );
 

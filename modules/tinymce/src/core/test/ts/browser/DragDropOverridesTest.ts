@@ -34,13 +34,13 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     return Object.freeze(newBlob);
   };
 
-  const assertNotification = (message: string, editor: Editor) => async () => {
-    const body = TinyDom.body(editor);
-    const notification = await UiFinder.pWaitForVisible('Wait for notification to appear', body, '.tox-notification');
+  const pAssertNotification = async (message: string) => {
+    const notification = await UiFinder.pWaitForVisible('Wait for notification to appear', SugarBody.body(), '.tox-notification');
     Assertions.assertPresence('Verify message content', {
       ['.tox-notification__body:contains(' + message + ')']: 1
     }, notification);
     Mouse.clickOn(notification, '.tox-notification__dismiss');
+    await Waiter.pTryUntil('Wait for the notification to close', () => UiFinder.notExists(SugarBody.body(), '.tox-notification'));
   };
 
   it('drop draggable element outside of editor', () => {
@@ -102,15 +102,19 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     await DragnDrop.pDropFiles(TinyDom.body(editor), [
       createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }))
     ]);
-    assertNotification('Dropped file type is not supported', editor);
+    await pAssertNotification('Dropped file type is not supported');
+
+    // Note: The paste logic will handle this
     await DragnDrop.pDropItems(TinyDom.body(editor), [
       { data: 'Some content', type: 'text/plain' }
-    ], false);
+    ], true);
+    await Waiter.pWait(50); // Wait a small amount of time as we are asserting nothing happened
+    UiFinder.notExists(SugarBody.body(), '.tox-notification');
 
     const toolbar = UiFinder.findIn(SugarBody.body(), '.tox-toolbar__primary').getOrDie();
     await DragnDrop.pDropFiles(toolbar, [
       createFile('test.js', 123, new Blob([ 'var a = "content";' ], { type: 'application/javascript' }))
     ]);
-    assertNotification('Dropped file type is not supported', editor);
+    await pAssertNotification('Dropped file type is not supported');
   });
 });

@@ -1,6 +1,7 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Fun, Optional, Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { itemSchema } from './card/CardContainer';
 import { CardItem, CardItemSpec } from './card/CardItem';
 import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, CommonMenuItemSpec } from './CommonMenuItem';
@@ -24,11 +25,11 @@ export interface CardMenuItem extends Omit<CommonMenuItem, 'text' | 'shortcut'> 
 }
 
 const cardMenuItemSchema = StructureSchema.objOf([
-  FieldSchema.requiredString('type'),
-  FieldSchema.optionString('label'),
+  ComponentSchema.type,
+  ComponentSchema.optionalLabel,
   FieldSchema.requiredArrayOf('items', itemSchema),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
-  FieldSchema.defaultedFunction('onAction', Fun.noop)
+  ComponentSchema.onSetup,
+  ComponentSchema.defaultedOnAction
 ].concat(commonMenuItemFields));
 
 export const createCardMenuItem = (spec: CardMenuItemSpec): Result<CardMenuItem, StructureSchema.SchemaError<any>> =>

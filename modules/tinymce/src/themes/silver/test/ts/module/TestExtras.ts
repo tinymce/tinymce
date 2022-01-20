@@ -1,5 +1,5 @@
 import { Attachment, Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
-import { after, before } from '@ephox/bedrock-client';
+import { after, afterEach, before } from '@ephox/bedrock-client';
 import { Fun, Obj, Optional } from '@ephox/katamari';
 import { Class, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -90,14 +90,23 @@ export const TestExtras = (): TestExtras => {
 
 export const bddSetup = (): BddTestExtras => {
   let helpers: Optional<TestExtras> = Optional.none();
+  let hasFailure = false;
 
   before(() => {
     helpers = Optional.some(TestExtras());
   });
 
+  afterEach(function () {
+    if (this.currentTest?.isFailed() === true) {
+      hasFailure = true;
+    }
+  });
+
   after(() => {
-    helpers.each((h) => h.destroy());
-    helpers = Optional.none();
+    if (!hasFailure) {
+      helpers.each((h) => h.destroy());
+      helpers = Optional.none();
+    }
   });
 
   const get = <K extends keyof BddTestExtras>(name: K) => (): TestExtras[K] => helpers

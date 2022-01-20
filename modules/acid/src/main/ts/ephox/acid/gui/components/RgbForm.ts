@@ -1,5 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, Input, Invalidating,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, GuiFactory, Input, Invalidating,
   Memento, Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher
 } from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Optional, Result } from '@ephox/katamari';
@@ -90,7 +90,8 @@ const rgbFormFactory = (
     const helptext = translate(translatePrefix + 'range');
 
     const pLabel = FormField.parts.label({
-      dom: { tag: 'label', innerHtml: label, attributes: { 'aria-label': description }}
+      dom: { tag: 'label', attributes: { 'aria-label': description }},
+      components: [ GuiFactory.text(label) ]
     });
 
     const pField = FormField.parts.field({

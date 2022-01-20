@@ -10,12 +10,12 @@ interface DialogManager {
   redial: <T extends DialogData>(structure: DialogSpec<T>) => DialogInit<T>;
 }
 
-export type DialogFactory<T extends DialogData> = (internalDialog: Dialog<T>, initialData: T, dataValidator: StructureProcessor) => DialogInstanceApi<T>;
+export type DialogFactory<T extends DialogData> = (internalDialog: Dialog<T>, initialData: Partial<T>, dataValidator: StructureProcessor) => DialogInstanceApi<T>;
 export type UrlDialogFactory = (internalDialog: UrlDialog) => UrlDialogInstanceApi;
 
 export interface DialogInit<T extends DialogData> {
   internalDialog: Dialog<T>;
-  initialData: T;
+  initialData: Partial<T>;
   dataValidator: StructureProcessor;
 }
 

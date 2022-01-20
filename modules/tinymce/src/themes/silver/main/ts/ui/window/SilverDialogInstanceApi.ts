@@ -8,10 +8,11 @@
 import { AlloyComponent, AlloyTriggers, Composing, Disabling, Focusing, Form, Reflecting, Representing, TabSection } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog, DialogManager } from '@ephox/bridge';
-import { Cell, Obj, Optional, Type } from '@ephox/katamari';
+import { Cell, Merger, Obj, Optional, Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
+import { FooterState } from './SilverDialogFooter';
 
 const getCompByName = (access: DialogAccess, name: string): Optional<AlloyComponent> => {
   // TODO: Add API to alloy to find the inner most component of a Composing chain.
@@ -20,11 +21,11 @@ const getCompByName = (access: DialogAccess, name: string): Optional<AlloyCompon
   // while developing (probably), and put it back in for the real thing.
   if (root.getSystem().isConnected()) {
     const form = Composing.getCurrent(access.getFormWrapper()).getOr(access.getFormWrapper());
-    return Form.getField(form, name).fold(() => {
+    return Form.getField(form, name).orThunk(() => {
       const footer = access.getFooter();
-      const footerState = Reflecting.getState(footer);
-      return footerState.get().bind((f) => f.lookupByName(form, name));
-    }, (comp) => Optional.some(comp));
+      const footerState: Optional<FooterState> = Reflecting.getState(footer).get();
+      return footerState.bind((f) => f.lookupByName(name));
+    });
   } else {
     return Optional.none();
   }
@@ -38,6 +39,7 @@ const validateData = <T>(access: DialogAccess, data) => {
 };
 
 export interface DialogAccess {
+  getId: () => string;
   getRoot: () => AlloyComponent;
   getBody: () => AlloyComponent;
   getFooter: () => AlloyComponent;
@@ -71,7 +73,7 @@ const getDialogApi = <T extends Dialog.DialogData>(
     // Currently, the decision is to ignore setData calls that fire after the dialog is closed
     withRoot((_) => {
       const prevData = instanceApi.getData();
-      const mergedData = { ...prevData, ...newData };
+      const mergedData = Merger.deepMerge(prevData, newData);
       const newInternalData = validateData(access, mergedData);
       const form = access.getFormWrapper();
       Representing.setValue(form, newInternalData);
@@ -124,12 +126,13 @@ const getDialogApi = <T extends Dialog.DialogData>(
 
   const redial = (d: Dialog.DialogSpec<T>): void => {
     withRoot((root) => {
+      const id = access.getId();
       const dialogInit = doRedial(d);
-      root.getSystem().broadcastOn([ dialogChannel ], dialogInit);
+      root.getSystem().broadcastOn([ `${dialogChannel}-${id}` ], dialogInit);
 
-      root.getSystem().broadcastOn([ titleChannel ], dialogInit.internalDialog);
-      root.getSystem().broadcastOn([ bodyChannel ], dialogInit.internalDialog);
-      root.getSystem().broadcastOn([ footerChannel ], dialogInit.internalDialog);
+      root.getSystem().broadcastOn([ `${titleChannel}-${id}` ], dialogInit.internalDialog);
+      root.getSystem().broadcastOn([ `${bodyChannel}-${id}` ], dialogInit.internalDialog);
+      root.getSystem().broadcastOn([ `${footerChannel}-${id}` ], dialogInit.internalDialog);
 
       instanceApi.setData(dialogInit.initialData);
     });

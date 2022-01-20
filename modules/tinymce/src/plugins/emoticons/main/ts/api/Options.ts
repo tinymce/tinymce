@@ -32,7 +32,7 @@ const register = (editor: Editor, pluginUrl: string): void => {
 
   registerOption('emoticons_database_url', {
     processor: 'string',
-    default: `${pluginUrl}/js/${getEmoticonDatabase(editor)}${editor.suffix}.js`
+    default: `${pluginUrl}/js/${getEmojiDatabase(editor)}${editor.suffix}.js`
   });
 
   registerOption('emoticons_database_id', {
@@ -51,17 +51,17 @@ const register = (editor: Editor, pluginUrl: string): void => {
   });
 };
 
-const getEmoticonDatabase = option<string>('emoticons_database');
-const getEmoticonDatabaseUrl = option<string>('emoticons_database_url');
-const getEmoticonDatabaseId = option<string>('emoticons_database_id');
-const getAppendedEmoticons = option<Record<string, UserEmojiEntry>>('emoticons_append');
-const getEmotionsImageUrl = option('emoticons_images_url');
+const getEmojiDatabase = option<string>('emoticons_database');
+const getEmojiDatabaseUrl = option<string>('emoticons_database_url');
+const getEmojiDatabaseId = option<string>('emoticons_database_id');
+const getAppendedEmoji = option<Record<string, UserEmojiEntry>>('emoticons_append');
+const getEmojiImageUrl = option('emoticons_images_url');
 
 export {
   register,
-  getEmoticonDatabase,
-  getEmoticonDatabaseUrl,
-  getEmoticonDatabaseId,
-  getAppendedEmoticons,
-  getEmotionsImageUrl
+  getEmojiDatabase,
+  getEmojiDatabaseUrl,
+  getEmojiDatabaseId,
+  getAppendedEmoji,
+  getEmojiImageUrl
 };

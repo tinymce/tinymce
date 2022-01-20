@@ -15,8 +15,10 @@ export interface ReplacingBehaviour extends Behaviour.AlloyBehaviour<ReplacingCo
   contents: (component: AlloyComponent) => AlloyComponent[];
 }
 
-export interface ReplacingConfigSpec extends Behaviour.BehaviourConfigSpec { }
+export interface ReplacingConfigSpec extends Behaviour.BehaviourConfigSpec {
+  reuseDom?: boolean;
+}
 
 export interface ReplacingConfig extends Behaviour.BehaviourConfigDetail {
-  // Intentionally Blank
+  reuseDom: boolean;
 }

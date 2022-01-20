@@ -55,7 +55,7 @@ const isFirstOrLastLi = (containerBlock, parentBlock, first) => {
 };
 
 // Inserts a block or br before/after or in the middle of a split list of the LI is empty
-const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, newBlockName) => {
+const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, newBlockName: string) => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
 
@@ -67,7 +67,7 @@ const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, new
     newBlockName = 'LI';
   }
 
-  let newBlock = newBlockName ? createNewBlock(newBlockName) : dom.create('BR');
+  let newBlock = createNewBlock(newBlockName);
 
   if (isFirstOrLastLi(containerBlock, parentBlock, true) && isFirstOrLastLi(containerBlock, parentBlock, false)) {
     if (hasParent(containerBlock, 'LI')) {

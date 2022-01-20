@@ -83,8 +83,8 @@ describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
   });
 
   it('Backspace key on image', () => {
-    testBackspace('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 2 ], 0, '<p>a<a href="#"><img src="#" /></a>c</p>', 'end', [ 0, 1, 1 ], 0);
-    testBackspace('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 1 ], 0, '<p>a<a href="#"><img src="#" /></a>c</p>', 'before', [ 0, 0 ], 1);
+    testBackspace('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 2 ], 0, '<p>a<a href="#"><img src="#"></a>c</p>', 'end', [ 0, 1, 1 ], 0);
+    testBackspace('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 1 ], 0, '<p>a<a href="#"><img src="#"></a>c</p>', 'before', [ 0, 0 ], 1);
     testBackspace('<p>a<a href="#"><img src="#" />c</a>d</p>', [ 0, 1 ], 1, '<p>a<a href="#">c</a>d</p>', 'start', [ 0, 1, 0 ], 1);
   });
 
@@ -95,15 +95,15 @@ describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
   });
 
   it('Delete key on image', () => {
-    testDelete('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 0 ], 1, '<p>a<a href="#"><img src="#" /></a>c</p>', 'start', [ 0, 1, 0 ], 1);
-    testDelete('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 1 ], 1, '<p>a<a href="#"><img src="#" /></a>c</p>', 'after', [ 0, 2 ], 1);
+    testDelete('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 0 ], 1, '<p>a<a href="#"><img src="#"></a>c</p>', 'start', [ 0, 1, 0 ], 1);
+    testDelete('<p>a<a href="#"><img src="#" /></a>c</p>', [ 0, 1 ], 1, '<p>a<a href="#"><img src="#"></a>c</p>', 'after', [ 0, 2 ], 1);
     testDelete('<p>a<a href="#">b<img src="#" /></a>d</p>', [ 0, 1, 0 ], 1, '<p>a<a href="#">b</a>d</p>', 'end', [ 0, 1, 0 ], 1);
   });
 
   it('Backspace/delete last character', () => {
     const editor = hook.editor();
     testDelete('<p>a<a href="#">b</a>c</p>', [ 0, 1, 0 ], 0, '<p>ac</p>', 'none', [ 0, 0 ], 1);
-    testDelete('<p><img src="#1" /><a href="#">b</a><img src="#2" /></p>', [ 0, 1, 0 ], 0, '<p><img src="#1" /><img src="#2" /></p>', 'none', [ 0 ], 1);
+    testDelete('<p><img src="#1" /><a href="#">b</a><img src="#2" /></p>', [ 0, 1, 0 ], 0, '<p><img src="#1"><img src="#2"></p>', 'none', [ 0 ], 1);
     testDelete('<p>a<a href="#">b</a>c</p>', [ 0, 1, 0 ], 0, '<p>ac</p>', 'none', [ 0, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, paragraphWithText('ac'));
     testBackspace('<p>a<a href="#">b</a>c</p>', [ 0, 1, 0 ], 1, '<p>ac</p>', 'none', [ 0, 0 ], 1);

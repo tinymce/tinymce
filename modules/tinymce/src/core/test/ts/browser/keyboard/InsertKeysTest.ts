@@ -74,7 +74,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 2 ], 0);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
-        TinyAssertions.assertContent(editor, '<p>a<br />&nbsp;b</p>');
+        TinyAssertions.assertContent(editor, '<p>a<br>&nbsp;b</p>');
       });
 
       it('Insert at beginning of text node with leading nbsp within inline element followed by br', () => {
@@ -83,7 +83,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 2, 0 ], 0, [ 0, 2, 0 ], 0);
-        TinyAssertions.assertContent(editor, '<p>a<br /><em>&nbsp;b</em></p>');
+        TinyAssertions.assertContent(editor, '<p>a<br><em>&nbsp;b</em></p>');
       });
     });
 
@@ -181,7 +181,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
-        TinyAssertions.assertContent(editor, '<p>&nbsp;<img src="about:blank" /></p>');
+        TinyAssertions.assertContent(editor, '<p>&nbsp;<img src="about:blank"></p>');
       });
 
       it('Insert nbsp between two images should remove nbsp', () => {
@@ -190,7 +190,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 1 ], 1);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
-        TinyAssertions.assertContent(editor, '<p><img src="about:blank" /> <img src="about:blank" /></p>');
+        TinyAssertions.assertContent(editor, '<p><img src="about:blank"> <img src="about:blank"></p>');
       });
 
       it('Insert nbsp after an image at the end of a block should not remove the nbsp', () => {
@@ -199,7 +199,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
         TinySelections.setCursor(editor, [ 0, 1 ], 1);
         fireInsert(editor);
         TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
-        TinyAssertions.assertContent(editor, '<p><img src="about:blank" />&nbsp;</p>');
+        TinyAssertions.assertContent(editor, '<p><img src="about:blank">&nbsp;</p>');
       });
     });
 

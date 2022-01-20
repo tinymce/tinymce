@@ -1,6 +1,6 @@
 import { StructureSchema } from '@ephox/boulder';
 import { Arr, Cell, Optional, Type } from '@ephox/katamari';
-import { Traverse } from '@ephox/sugar';
+import { SugarElement, Traverse } from '@ephox/sugar';
 
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
@@ -54,7 +54,7 @@ const getEvents = (
   return ComponentEvents.combine(bData, info.eventOrder, bList, baseEvents).getOrDie();
 };
 
-const build = (spec: ComponentDetail): AlloyComponent => {
+const build = (spec: ComponentDetail, obsoleted: Optional<SugarElement<Node>>): AlloyComponent => {
   const getMe = () => me;
 
   const systemApi = Cell(singleton);
@@ -67,7 +67,7 @@ const build = (spec: ComponentDetail): AlloyComponent => {
 
   const modDefinition = getDomDefinition(info, bList, bData);
 
-  const item = DomRender.renderToDom(modDefinition);
+  const item = DomRender.renderToDom(modDefinition, obsoleted);
   const events = getEvents(info, bList, bData);
 
   const subcomponents = Cell(info.components);

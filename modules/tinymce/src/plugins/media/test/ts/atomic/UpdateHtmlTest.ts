@@ -20,7 +20,7 @@ describe('atomic.tinymce.plugins.media.core.UpdateHtmlTest', () => {
       poster: 'poster'
     },
     false,
-    '<video><source src="oldValue" /></video>'
+    '<video><source src="oldValue"></video>'
   ));
 
   it('If updating all, add missing sources and attributes', () => testHtmlUpdate(
@@ -33,6 +33,6 @@ describe('atomic.tinymce.plugins.media.core.UpdateHtmlTest', () => {
       poster: 'poster'
     },
     true,
-    '<video poster="poster"><source src="source1" type="source1mime" /><source src="source2" type="source2mime" /></video>'
+    '<video poster="poster"><source src="source1" type="source1mime"><source src="source2" type="source2mime"></video>'
   ));
 });

@@ -13,6 +13,7 @@ import * as ChoiceControls from './ChoiceControls';
 import * as ColorSwatch from './color/ColorSwatch';
 import * as ComplexControls from './ComplexControls';
 import * as IndentOutdent from './IndentOutdent';
+import * as PasteControls from './PasteControls';
 import * as SimpleControls from './SimpleControls';
 import * as UndoRedo from './UndoRedo';
 import * as VisualAid from './VisualAid';
@@ -26,6 +27,7 @@ const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
   VisualAid.register(editor);
   IndentOutdent.register(editor);
   ChoiceControls.register(editor);
+  PasteControls.register(editor);
 };
 
 export {

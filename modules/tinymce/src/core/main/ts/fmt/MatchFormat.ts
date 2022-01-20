@@ -94,7 +94,7 @@ const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string,
             return false;
           }
 
-          if ((!similar || format.exact) && !isEq(value, FormatUtils.normalizeStyleValue(dom, expectedValue, key))) {
+          if ((!similar || format.exact) && !isEq(value, FormatUtils.normalizeStyleValue(expectedValue, key))) {
             return false;
           }
         }
@@ -202,8 +202,7 @@ const canApply = (editor: Editor, name: string) => {
       const format = formatList[x];
 
       // Format is not selector based then always return TRUE
-      // If it has a defaultBlock then it's likely it can be applied, for example align on a non block element line
-      if (!FormatUtils.isSelectorFormat(format) || Type.isNonNullable(format.defaultBlock)) {
+      if (!FormatUtils.isSelectorFormat(format)) {
         return true;
       }
 

@@ -1,6 +1,7 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { FormChangeEvent, formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
@@ -17,7 +18,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.CheckboxFormChangeT
         label: 'TestCheckbox',
         name: 'test-check-box',
         disabled: false
-      }, TestProviders)
+      }, TestProviders, Optional.none())
     ],
     behaviours: Behaviour.derive([
       AddEventsBehaviour.config('test-checkbox', [

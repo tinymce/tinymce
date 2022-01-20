@@ -6,8 +6,8 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, Memento,
-  SimpleOrSketchSpec, SketchSpec, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento,
+  RawDomSchema, SimpleOrSketchSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
@@ -32,7 +32,7 @@ export interface IconButtonWrapper extends Omit<ButtonSpec, 'text'> {
   tooltip: Optional<string>;
 }
 
-const renderCommonSpec = (spec, actionOpt: Optional<(comp: AlloyComponent) => void>, extraBehaviours = [], dom, components, providersBackstage: UiFactoryBackstageProviders) => {
+const renderCommonSpec = (spec, actionOpt: Optional<(comp: AlloyComponent) => void>, extraBehaviours = [], dom: RawDomSchema, components: AlloySpec[], providersBackstage: UiFactoryBackstageProviders) => {
   const action = actionOpt.fold(() => ({}), (action) => ({
     action
   }));
@@ -96,12 +96,8 @@ const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondary' | 't
 export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: AlloyComponent) => void>, providersBackstage: UiFactoryBackstageProviders, extraBehaviours = [], extraClasses = []) => {
   const translatedText = providersBackstage.translate(spec.text);
 
-  const icon: Optional<AlloySpec> = spec.icon ? spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)) : Optional.none();
-  const components = icon.isSome() ? componentRenderPipeline([ icon ]) : [];
-
-  const innerHtml = icon.isSome() ? {} : {
-    innerHtml: translatedText
-  };
+  const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
+  const components = [ icon.getOrThunk(() => GuiFactory.text(translatedText)) ];
 
   // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
   const buttonType = spec.buttonType.getOr(!spec.primary && !spec.borderless ? 'secondary' : 'primary');
@@ -118,7 +114,6 @@ export const renderButtonSpec = (spec: ButtonSpec, action: Optional<(comp: Alloy
   const dom = {
     tag: 'button',
     classes,
-    ...innerHtml,
     attributes: {
       title: translatedText // TODO: tooltips AP-213
     }

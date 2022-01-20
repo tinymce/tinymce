@@ -1,6 +1,7 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
+import * as ComponentSchema from '../../core/ComponentSchema';
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
 export interface UrlInputSpec extends FormComponentWithLabelSpec {
@@ -15,16 +16,23 @@ export interface UrlInput extends FormComponentWithLabel {
   disabled: boolean;
 }
 
+export interface UrlInputData {
+  value: string;
+  meta: {
+    text?: string;
+  };
+}
+
 const urlInputFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedStringEnum('filetype', 'file', [ 'image', 'media', 'file' ]),
-  FieldSchema.defaulted('disabled', false)
+  ComponentSchema.disabled
 ]);
 
 export const urlInputSchema = StructureSchema.objOf(urlInputFields);
 
 export const urlInputDataProcessor = StructureSchema.objOf([
-  FieldSchema.requiredString('value'),
-  FieldSchema.defaulted('meta', { })
+  ComponentSchema.value,
+  ComponentSchema.defaultedMeta
 ]);
 
 export const createUrlInput = (spec: UrlInputSpec): Result<UrlInput, StructureSchema.SchemaError<any>> =>

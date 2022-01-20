@@ -4,13 +4,12 @@ import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import NoneditablePlugin from 'tinymce/plugins/noneditable/Plugin';
 
 describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'noneditable'
-  }, [ NoneditablePlugin ], true);
+  }, [], true);
 
   it('TINY-3868: Should not backspace cef inside cef with ranged selection', () => {
     const editor = hook.editor();

@@ -1,7 +1,9 @@
+import { Arr } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 import * as DomEvent from './DomEvent';
 
-const execute = (f: () => void): void => {
+const documentReady = (f: () => void): void => {
   /*
    * We only use this in one place, so creating one listener per ready request is more optimal than managing
    * a single event with a queue of functions.
@@ -28,6 +30,27 @@ const execute = (f: () => void): void => {
   }
 };
 
+const image = (image: SugarElement<HTMLImageElement>): Promise<SugarElement<HTMLImageElement>> => new Promise((resolve, reject) => {
+  const loaded = () => {
+    destroy();
+    resolve(image);
+  };
+  const listeners = [
+    DomEvent.bind(image, 'load', loaded),
+    DomEvent.bind(image, 'error', () => {
+      destroy();
+      reject('Unable to load data from image: ' + image.dom.src);
+    }),
+  ];
+
+  const destroy = () => Arr.each(listeners, (l) => l.unbind());
+
+  if (image.dom.complete) {
+    loaded();
+  }
+});
+
 export {
-  execute
+  documentReady as document,
+  image
 };

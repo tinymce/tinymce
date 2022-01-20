@@ -39,6 +39,7 @@
       "tinymce.core.api.Shortcuts",
       "tinymce.core.api.ThemeManager",
       "tinymce.core.api.UndoManager",
+      "tinymce.core.api.FakeClipboard",
       "tinymce.core.api.util.Delay",
       "tinymce.core.api.util.EventDispatcher",
       "tinymce.core.api.util.I18n",

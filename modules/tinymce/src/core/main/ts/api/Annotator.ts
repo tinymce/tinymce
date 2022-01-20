@@ -33,6 +33,7 @@ interface Annotator {
   annotate: (name: string, data: DecoratorData) => void;
   annotationChanged: (name: string, f: AnnotationListenerApi) => void;
   remove: (name: string) => void;
+  removeAll: (name: string) => void;
   getAll: (name: string) => Record<string, Element[]>;
 }
 
@@ -87,9 +88,23 @@ const Annotator = (editor: Editor): Annotator => {
      * @param {String} name the name of the annotation to remove
      */
     remove: (name: string): void => {
+      const bookmark = editor.selection.getBookmark();
       identify(editor, Optional.some(name)).each(({ elements }) => {
         Arr.each(elements, Remove.unwrap);
       });
+      editor.selection.moveToBookmark(bookmark);
+    },
+
+    /**
+     * Removes all annotations that match the specified name from the entire document.
+     *
+     * @method removeAll
+     * @param {String} name the name of the annotation to remove
+     */
+    removeAll: (name: string): void => {
+      const bookmark = editor.selection.getBookmark();
+      Obj.each(findAll(editor, name), (spans, _) => Arr.each(spans, Remove.unwrap));
+      editor.selection.moveToBookmark(bookmark);
     },
 
     /**

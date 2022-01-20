@@ -57,7 +57,6 @@
       "tinymce/plugins/nonbreaking/*": ["modules/tinymce/src/plugins/nonbreaking/main/ts/*"],
       "tinymce/plugins/noneditable/*": ["modules/tinymce/src/plugins/noneditable/main/ts/*"],
       "tinymce/plugins/pagebreak/*": ["modules/tinymce/src/plugins/pagebreak/main/ts/*"],
-      "tinymce/plugins/paste/*": ["modules/tinymce/src/plugins/paste/main/ts/*"],
       "tinymce/plugins/preview/*": ["modules/tinymce/src/plugins/preview/main/ts/*"],
       "tinymce/plugins/quickbars/*": ["modules/tinymce/src/plugins/quickbars/main/ts/*"],
       "tinymce/plugins/save/*": ["modules/tinymce/src/plugins/save/main/ts/*"],

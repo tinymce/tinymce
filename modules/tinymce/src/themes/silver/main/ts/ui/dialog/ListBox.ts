@@ -15,6 +15,7 @@ import { Attribute } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderLabel } from '../alien/FieldLabeller';
+import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { renderCommonDropdown, updateMenuText } from '../dropdown/CommonDropdown';
 import { formChangeEvent } from '../general/FormEvents';
 import ItemResponse from '../menus/item/ItemResponse';
@@ -49,7 +50,7 @@ const fetchItems = (dropdownComp: AlloyComponent, name: string, items: Dialog.Li
     }
   });
 
-const findItemByValue = (items: Dialog.ListBoxItemSpec[], value: string) =>
+const findItemByValue = (items: Dialog.ListBoxItemSpec[], value: string): Optional<Dialog.ListBoxSingleItemSpec> =>
   Arr.findMap(items, (item) => {
     if (!isSingleListItem(item)) {
       return findItemByValue(item.items, value);
@@ -58,9 +59,11 @@ const findItemByValue = (items: Dialog.ListBoxItemSpec[], value: string) =>
     }
   });
 
-export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage): SketchSpec => {
+export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, initialData: Optional<string>): SketchSpec => {
   const providersBackstage = backstage.shared.providers;
-  const initialItem = Arr.head(spec.items).filter(isSingleListItem);
+  const initialItem = initialData
+    .bind((value) => findItemByValue(spec.items, value))
+    .orThunk(() => Arr.head(spec.items).filter(isSingleListItem));
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
@@ -86,22 +89,18 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage):
         classes: [],
         dropdownBehaviours: [
           Tabstopping.config({}),
-          Representing.config({
-            store: {
-              // Need to use "manual" here as we only want to update the saved
-              // value if the value set is a valid property
-              mode: 'manual',
-              initialValue: initialItem.map((item) => item.value).getOr(''),
-              getValue: (comp) => Attribute.get(comp.element, dataAttribute),
-              setValue: (comp, data) => {
-                findItemByValue(spec.items, data)
-                  .each((item) => {
-                    Attribute.set(comp.element, dataAttribute, item.value);
-                    AlloyTriggers.emitWith(comp, updateMenuText, { text: item.text });
-                  });
-              }
+          RepresentingConfigs.withComp(
+            initialItem.map((item) => item.value),
+            (comp) => Attribute.get(comp.element, dataAttribute),
+            (comp, data) => {
+              // We only want to update the saved value if the value set is a valid property
+              findItemByValue(spec.items, data)
+                .each((item) => {
+                  Attribute.set(comp.element, dataAttribute, item.value);
+                  AlloyTriggers.emitWith(comp, updateMenuText, { text: item.text });
+                });
             }
-          })
+          )
         ]
       },
       'tox-listbox',
