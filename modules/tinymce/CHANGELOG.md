@@ -82,6 +82,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
 
+## 6.0.0 - 2020-01-20
+### Added
+- keyboard shortcut test for:
+  - Text format (bold/underline/italic/H1-H6/Div/Paragraph/Address)
+  - Undo redo test
+  - Focus on:
+    - menu
+    - element path
+    - contextual menu
+  - insert link
+  - full screen
+  - find
 ## 5.10.2 - 2021-11-17
 
 ### Fixed
