@@ -20,7 +20,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, []);
+  }, [], true);
 
   const getContent = (editor: Editor) => {
     return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
@@ -1771,27 +1771,16 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>', 'Text is bold');
   });
 
-  it('Del element wrapping blocks', () => {
+  it('Div element wrapping blocks', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.register('format', {
-      block: 'del',
+      block: 'div',
       wrapper: true
     });
     editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<p><del><p>a</p></del></p>');
-  });
-
-  it('Del element replacing block', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>a</p>');
-    LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
-    editor.formatter.register('format', {
-      block: 'del'
-    });
-    editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<p><del>a</del></p>');
+    assert.equal(getContent(editor), '<div><p>a</p></div>');
   });
 
   it('Del element as inline', () => {
