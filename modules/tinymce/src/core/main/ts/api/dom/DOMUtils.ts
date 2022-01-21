@@ -680,7 +680,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       }
     }
 
-    if (Strings.isEmpty(html) && Obj.has(schema.getShortEndedElements(), name)) {
+    if (Strings.isEmpty(html) && Obj.has(schema.getVoidElements(), name)) {
       return outHtml + ' />';
     } else {
       return outHtml + '>' + html + '</' + name + '>';

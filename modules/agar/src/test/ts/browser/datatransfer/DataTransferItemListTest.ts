@@ -1,5 +1,6 @@
-import { assert, Assert, UnitTest } from '@ephox/bedrock-client';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
+import { assert } from 'chai';
 
 import { createFile } from 'ephox/agar/api/Files';
 import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
@@ -11,18 +12,18 @@ UnitTest.test('DataTransferItemListTest', () => {
   const testAdding = () => {
     const items = createDataTransferItemList(createDataTransfer());
 
-    Assert.eq('Should not be an array', false, Type.isArray(items));
+    assert.isFalse(Type.isArray(items), 'Should not be an array');
 
     items.add(createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/html' })));
-    Assert.eq('Should be expected kind', 'file', items[0].kind);
-    Assert.eq('Should be expected length', 1, items.length);
+    assert.equal(items[0].kind, 'file', 'Should be expected kind');
+    assert.lengthOf(items, 1, 'Should be expected length');
 
     items.add('123', 'text/plain');
-    Assert.eq('Should be expected kind', 'string', items[1].kind);
-    Assert.eq('Should be expected length', 2, items.length);
-    Assert.eq('Should be expected data', '123', getData(items[1]).getOr(''));
+    assert.equal(items[1].kind, 'string', 'Should be expected kind');
+    assert.lengthOf(items, 2, 'Should be expected length');
+    assert.equal(getData(items[1]).getOr(''), '123', 'Should be expected data');
 
-    assert.throwsError(() => {
+    assert.throws(() => {
       items.add('123', 'text/plain');
     }, `Failed to execute 'add' on 'DataTransferItemList': An item already exists for type 'text/plain'.`);
   };
@@ -36,9 +37,9 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     items.remove(1);
 
-    Assert.eq('Should be expected length', 2, items.length);
-    Assert.eq('Should be expected kind', 'file', items[0].kind);
-    Assert.eq('Should be expected kind', 'string', items[1].kind);
+    assert.lengthOf(items, 2, 'Should be expected length');
+    assert.equal(items[0].kind, 'file', 'Should be expected kind');
+    assert.equal(items[1].kind, 'string', 'Should be expected kind');
   };
 
   const testClearing = () => {
@@ -50,7 +51,7 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     items.clear();
 
-    Assert.eq('Should be expected length', 0, items.length);
+    assert.lengthOf(items, 0, 'Should be expected length');
   };
 
   const testMutationWhileInProtectedMode = () => {
@@ -59,15 +60,15 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     setProtectedMode(dataTransfer);
 
-    assert.throwsError(() => {
+    assert.throws(() => {
       items.add('123', 'text/plain');
     }, 'Invalid state dataTransfer is not in read/write mode');
 
-    assert.throwsError(() => {
+    assert.throws(() => {
       items.remove(0);
     }, 'Invalid state dataTransfer is not in read/write mode');
 
-    assert.throwsError(() => {
+    assert.throws(() => {
       items.clear();
     }, 'Invalid state dataTransfer is not in read/write mode');
   };
@@ -78,15 +79,15 @@ UnitTest.test('DataTransferItemListTest', () => {
 
     setReadOnlyMode(dataTransfer);
 
-    assert.throwsError(() => {
+    assert.throws(() => {
       items.add('123', 'text/plain');
     }, 'Invalid state dataTransfer is not in read/write mode');
 
-    assert.throwsError(() => {
+    assert.throws(() => {
       items.remove(0);
     }, 'Invalid state dataTransfer is not in read/write mode');
 
-    assert.throwsError(() => {
+    assert.throws(() => {
       items.clear();
     }, 'Invalid state dataTransfer is not in read/write mode');
   };

@@ -113,7 +113,7 @@ const isPartOfFragment = (node: Element): boolean => {
 };
 
 const canHaveChildren = (editor: Editor, node: Node | undefined): boolean => {
-  return node && !editor.schema.getShortEndedElements()[node.nodeName];
+  return node && !editor.schema.getVoidElements()[node.nodeName];
 };
 
 const moveSelectionToMarker = (editor: Editor, marker: HTMLElement | null): void => {

@@ -89,7 +89,7 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
 
       if (!handler) {
         const name = node.name;
-        const isEmpty = name in schema.getShortEndedElements();
+        const isEmpty = name in schema.getVoidElements();
         let attrs = node.attributes;
 
         // Sort attributes

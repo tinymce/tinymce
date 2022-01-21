@@ -71,7 +71,7 @@ interface Schema {
   getValidClasses: () => Record<string, SchemaMap> | undefined;
   getBlockElements: () => SchemaMap;
   getInvalidStyles: () => Record<string, SchemaMap> | undefined;
-  getShortEndedElements: () => SchemaMap;
+  getVoidElements: () => SchemaMap;
   getTextBlockElements: () => SchemaMap;
   getTextInlineElements: () => SchemaMap;
   getBoolAttrs: () => SchemaMap;
@@ -447,14 +447,14 @@ const Schema = (settings?: SchemaSettings): Schema => {
     'pre script noscript style textarea video audio iframe object code'
   );
   const selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li option p td tfoot th thead tr');
-  const shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link ' +
+  const voidElementsMap = createLookupTable('void_elements', 'area base basefont br col frame hr img input isindex link ' +
     'meta param embed source wbr track');
   const boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' +
     'noshade nowrap readonly selected autoplay loop controls');
 
   const nonEmptyOrMoveCaretBeforeOnEnter = 'td th iframe video audio object script code';
-  const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre', shortEndedElementsMap);
-  const moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' table', shortEndedElementsMap);
+  const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre', voidElementsMap);
+  const moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' table', voidElementsMap);
 
   const textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' +
     'blockquote center dir fieldset header footer article section hgroup aside main nav figure');
@@ -890,12 +890,12 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const getTextInlineElements = Fun.constant(textInlineElementsMap);
 
   /**
-   * Returns a map with short ended elements. For example: <code>&#60;br&#62;</code> or <code>&#60;img&#62;</code>.
+   * Returns a map with void elements. For example: <code>&#60;br&#62;</code> or <code>&#60;img&#62;</code>.
    *
-   * @method getShortEndedElements
-   * @return {Object} Name/value lookup map for short ended elements.
+   * @method getVoidElements
+   * @return {Object} Name/value lookup map for void elements.
    */
-  const getShortEndedElements = Fun.constant(shortEndedElementsMap);
+  const getVoidElements = Fun.constant(Object.seal(voidElementsMap));
 
   /**
    * Returns a map with self closing tags. For example: <code>&#60;li&#62;</code>.
@@ -1052,7 +1052,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
     getValidClasses,
     getBlockElements,
     getInvalidStyles,
-    getShortEndedElements,
+    getVoidElements,
     getTextBlockElements,
     getTextInlineElements,
     getBoolAttrs,
