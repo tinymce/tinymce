@@ -113,7 +113,7 @@ const createImageList = (editor: Editor, callback: (imageList: false | UserListI
   const imageList = Options.getImageList(editor);
 
   if (Type.isString(imageList)) {
-    window.fetch(imageList)
+    fetch(imageList)
       .then((res) => {
         if (res.ok) {
           res.json().then(callback);

@@ -29,15 +29,9 @@ const getLinks = (editor: Editor): Promise<Optional<ListItem[]>> => {
   return new Promise<Optional<UserListItem[]>>((resolve) => {
     // TODO - better handling of failure
     if (Type.isString(linkList)) {
-      window.fetch(linkList)
-        .then((res) => {
-          if (res.ok) {
-            res.text().then((text) => resolve(parseJson(text)));
-          } else {
-            resolve(Optional.none());
-          }
-        })
-        .catch(() => resolve(Optional.none()));
+      fetch(linkList)
+        .then((res) => res.ok ? res.text().then(parseJson) : Promise.reject())
+        .then(resolve, () => resolve(Optional.none()));
     } else if (Type.isFunction(linkList)) {
       linkList((output) => resolve(Optional.some(output)));
     } else {

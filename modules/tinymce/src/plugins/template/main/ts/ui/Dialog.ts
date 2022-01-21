@@ -108,18 +108,11 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
     editor.windowManager.alert('Could not load the specified template.', () => api.focus('template'));
   };
 
-  const getTemplateContent = (t: InternalTemplate) => new Promise<string>((resolve, reject) => {
+  const getTemplateContent = (t: InternalTemplate): Promise<string> =>
     t.value.url.fold(
-      () => resolve(t.value.content.getOr('')),
-      (url) => window.fetch(url).then((res) => {
-        if (res.ok) {
-          return resolve(res.text());
-        } else {
-          return reject();
-        }
-      }).catch(reject)
+      () => Promise.resolve(t.value.content.getOr('')),
+      (url) => fetch(url).then((res) => res.ok ? res.text() : Promise.reject())
     );
-  });
 
   const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) =>
     (api: Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
