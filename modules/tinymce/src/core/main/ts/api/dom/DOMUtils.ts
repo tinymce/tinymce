@@ -786,7 +786,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
     Arr.each(urls.split(','), (url) => {
       files[url] = true;
-      styleSheetLoader.load(url, Fun.noop);
+      styleSheetLoader.load(url).catch(Fun.noop);
     });
   };
 

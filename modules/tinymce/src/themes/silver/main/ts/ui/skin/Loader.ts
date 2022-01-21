@@ -15,12 +15,11 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Options from '../../api/Options';
 import * as SkinLoaded from './SkinLoaded';
 
-const loadStylesheet = (editor: Editor, stylesheetUrl: string, styleSheetLoader: StyleSheetLoader): Promise<void> => new Promise((resolve, reject) => {
-  styleSheetLoader.load(stylesheetUrl, resolve, reject);
-
+const loadStylesheet = (editor: Editor, stylesheetUrl: string, styleSheetLoader: StyleSheetLoader): Promise<void> => {
   // Ensure the stylesheet is cleaned up when the editor is destroyed
   editor.on('remove', () => styleSheetLoader.unload(stylesheetUrl));
-});
+  return styleSheetLoader.load(stylesheetUrl);
+};
 
 const loadUiSkins = (editor: Editor, skinUrl: string): Promise<void> => {
   const skinUiCss = skinUrl + '/skin.min.css';
