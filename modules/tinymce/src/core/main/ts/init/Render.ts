@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
-import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
 import ScriptLoader from '../api/dom/ScriptLoader';
@@ -46,23 +45,22 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   }
 };
 
-const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string, callback: () => void) => {
+const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string): Promise<void> => {
   const theme = Options.getTheme(editor);
 
   if (Type.isString(theme)) {
     if (!hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
       const themeUrl = Options.getThemeUrl(editor);
-
-      if (themeUrl) {
-        ThemeManager.load(theme, editor.documentBaseURI.toAbsolute(themeUrl));
-      } else {
-        ThemeManager.load(theme, 'themes/' + theme + '/theme' + suffix + '.js');
-      }
+      const url = themeUrl ? editor.documentBaseURI.toAbsolute(themeUrl) : 'themes/' + theme + '/theme' + suffix + '.js';
+      ThemeManager.load(theme, url).catch(() => {
+        ErrorReporter.themeLoadError(editor, url, theme);
+      });
     }
 
-    scriptLoader.loadQueue().then(() => ThemeManager.waitFor(theme, callback), Fun.noop);
+    const waitForTheme = () => ThemeManager.waitFor(theme);
+    return scriptLoader.loadQueue().then(waitForTheme, waitForTheme);
   } else {
-    callback();
+    return Promise.resolve();
   }
 };
 
@@ -97,27 +95,23 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
 };
 
 const loadPlugins = (editor: Editor, suffix: string) => {
-  Tools.each(Options.getExternalPlugins(editor), (url: string, name: string): void => {
-    PluginManager.load(name, url, Fun.noop, undefined, () => {
+  const loadPlugin = (name: string, url: string) => {
+    PluginManager.load(name, url).catch(() => {
       ErrorReporter.pluginLoadError(editor, url, name);
     });
+  };
+
+  Obj.each(Options.getExternalPlugins(editor), (url, name) => {
+    loadPlugin(name, url);
     editor.options.set('plugins', Options.getPlugins(editor) + ' ' + name);
   });
 
-  Tools.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {
+  Arr.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {
     plugin = Tools.trim(plugin);
 
     if (plugin && !PluginManager.urls[plugin]) {
       if (!hasSkipLoadPrefix(plugin)) {
-        const url: UrlObject = {
-          prefix: 'plugins/',
-          resource: plugin,
-          suffix: '/plugin' + suffix + '.js'
-        };
-
-        PluginManager.load(plugin, url, Fun.noop, undefined, () => {
-          ErrorReporter.pluginLoadError(editor, url.prefix + url.resource + url.suffix, plugin);
-        });
+        loadPlugin(plugin, 'plugins/' + plugin + '/plugin' + suffix + '.js');
       }
     }
   });
@@ -126,17 +120,16 @@ const loadPlugins = (editor: Editor, suffix: string) => {
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
-  loadTheme(scriptLoader, editor, suffix, () => {
+  const initIfNotRemoved = () => {
+    if (!editor.removed) {
+      Init.init(editor);
+    }
+  };
+
+  loadTheme(scriptLoader, editor, suffix).then(() => {
     loadLanguage(scriptLoader, editor);
     loadIcons(scriptLoader, editor, suffix);
     loadPlugins(editor, suffix);
-
-    const initIfNotRemoved = () => {
-      if (!editor.removed) {
-        Init.init(editor);
-      }
-    };
-
     scriptLoader.loadQueue().then(initIfNotRemoved, initIfNotRemoved);
   });
 };
