@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 
 import ScriptLoader from './dom/ScriptLoader';
 import Editor from './Editor';
@@ -190,12 +190,15 @@ const AddOnManager = <T>(): AddOnManager<T> => {
 
     const done = () => {
       runListeners(name, 'loaded');
+      if (Type.isFunction(success)) {
+        success();
+      }
     };
 
     if (lookup[name]) {
       done();
     } else {
-      ScriptLoader.ScriptLoader.add(urlString, done, scope, failure);
+      ScriptLoader.ScriptLoader.add(urlString).then(done, failure ?? Fun.noop);
     }
   };
 
