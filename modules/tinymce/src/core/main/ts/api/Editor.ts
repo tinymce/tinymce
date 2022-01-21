@@ -546,7 +546,7 @@ class Editor implements EditorObservable {
 
   /**
    * Executes a command on the current instance. These commands can be TinyMCE internal commands prefixed with "mce" or
-   * they can be build in browser commands such as "Bold". A compleate list of browser commands is available on MSDN or Mozilla.org.
+   * they can be build in browser commands such as "Bold". A complete list of browser commands is available on MSDN or Mozilla.org.
    * This function will dispatch the execCommand function on each plugin, theme or the execcommand_callback option if none of these
    * return true it will handle the command as a internal browser command.
    *
