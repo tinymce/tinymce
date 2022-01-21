@@ -33,20 +33,20 @@ const hasSkipLoadPrefix = (name) => {
   return name.charAt(0) === '-';
 };
 
-const loadLanguage = (scriptLoader, editor: Editor) => {
+const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   const languageCode = Options.getLanguageCode(editor);
   const languageUrl = Options.getLanguageUrl(editor);
 
   if (I18n.hasCode(languageCode) === false && languageCode !== 'en') {
     const url = languageUrl !== '' ? languageUrl : editor.editorManager.baseURL + '/langs/' + languageCode + '.js';
 
-    scriptLoader.add(url, Fun.noop, undefined, () => {
+    scriptLoader.add(url).catch(() => {
       ErrorReporter.languageLoadError(editor, url, languageCode);
     });
   }
 };
 
-const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix, callback) => {
+const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string, callback: () => void) => {
   const theme = Options.getTheme(editor);
 
   if (Type.isString(theme)) {
@@ -60,9 +60,7 @@ const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix, callback)
       }
     }
 
-    scriptLoader.loadQueue(() => {
-      ThemeManager.waitFor(theme, callback);
-    });
+    scriptLoader.loadQueue().then(() => ThemeManager.waitFor(theme, callback), Fun.noop);
   } else {
     callback();
   }
@@ -92,7 +90,7 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
   const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Options.getIconPackName(editor), ''));
 
   Arr.each(Optionals.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
-    scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
+    scriptLoader.add(urlMeta.url).catch(() => {
       ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
   });
@@ -133,15 +131,13 @@ const loadScripts = (editor: Editor, suffix: string) => {
     loadIcons(scriptLoader, editor, suffix);
     loadPlugins(editor, suffix);
 
-    scriptLoader.loadQueue(() => {
+    const initIfNotRemoved = () => {
       if (!editor.removed) {
         Init.init(editor);
       }
-    }, editor, () => {
-      if (!editor.removed) {
-        Init.init(editor);
-      }
-    });
+    };
+
+    scriptLoader.loadQueue().then(initIfNotRemoved, initIfNotRemoved);
   });
 };
 
