@@ -18,8 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
 
 ### Improved
-- The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
+- The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
 - A `ThemeLoadError` event is now fired if the theme fails to load #TINY-8325
+- The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
 - The `emoticon` plugin dialog, toolbar and menu item has been updated to use the more accurate `Emojis` term #TINY-7631
 - The dialog `redial` API will now only rerender the changed components instead of the whole dialog #TINY-8334
 - The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
@@ -27,8 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
-- The `ScriptLoader` API will now return a `Promise` when load scripts instead of using callbacks #TINY-8325
-- The `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading instead of using callbacks #TINY-8325
 - RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
 - The `tinymce.Env.os.isOSX` API has been renamed to `tinymce.Env.os.isMacOS` #TINY-8175
 - The `tinymce.Env.browser.isChrome` API has been renamed to `tinymce.Env.browser.isChromium` to better reflect its functionality #TINY-8300
