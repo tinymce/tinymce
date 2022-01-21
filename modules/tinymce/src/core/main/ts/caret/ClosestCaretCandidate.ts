@@ -62,23 +62,23 @@ const horizontalDistance: distanceFn = (rect, x, _y) => Math.min(Math.abs(rect.l
 
 const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: number, clientY: number): Optional<NodeClientRect> => {
   const findClosestCaretCandidateNodeRect = (rects: NodeClientRect[], distance: distanceFn): Optional<NodeClientRect> => {
-    const helper = (i: number, rects: NodeClientRect[]): Optional<NodeClientRect> => {
-      if (i === rects.length) {
-        return Optional.none();
-      } else {
-        const rect = rects[i];
-        const node = rect.node;
+    const sortedRects = Arr.sort(rects, (r1, r2) => distance(r1, clientX, clientY) - distance(r2, clientX, clientY));
 
-        if (CaretCandidate.isCaretCandidate(node)) {
-          return Optional.some(rect);
-        } else if (NodeType.isElement(node)) {
-          const childRect = closestChildCaretCandidateNodeRect(Arr.from(node.childNodes), clientX, clientY);
-          return childRect.isSome() ? childRect : helper(i + 1, rects);
+    for (let i = 0; i < sortedRects.length; i++) {
+      const rect = sortedRects[i];
+      const node = rect.node;
+
+      if (CaretCandidate.isCaretCandidate(node)) {
+        return Optional.some(rect);
+      } else if (NodeType.isElement(node)) {
+        const childRect = closestChildCaretCandidateNodeRect(Arr.from(node.childNodes), clientX, clientY);
+        if (childRect.isSome()) {
+          return childRect;
         }
       }
-    };
+    }
 
-    return helper(0, rects.sort((r1, r2) => distance(r1, clientX, clientY) - distance(r2, clientX, clientY)));
+    return Optional.none();
   };
 
   const [ horizontalRects, verticalRects ] = splitRectsPerAxis(getClientRects(children), clientY);
