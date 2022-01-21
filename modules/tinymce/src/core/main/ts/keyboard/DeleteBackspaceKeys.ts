@@ -50,7 +50,7 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     evt.preventDefault();
     const beforeInput = fireFakeBeforeInputEvent(editor, inputType);
 
-    if (!beforeInput.defaultPrevented) {
+    if (!beforeInput.isDefaultPrevented()) {
       applyAction();
       fireFakeInputEvent(editor, inputType);
     }

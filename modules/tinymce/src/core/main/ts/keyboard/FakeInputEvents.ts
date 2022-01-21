@@ -7,6 +7,8 @@
 
 import { Fun } from '@ephox/katamari';
 
+import { EditorEvent } from 'tinymce/src/core/main/ts/api/PublicApi';
+
 import Editor from '../api/Editor';
 import { clone } from '../events/EventUtils';
 
@@ -15,7 +17,7 @@ interface SpecificsInput {
 }
 
 const createAndFireInputEvent = (eventType: string) =>
-  (editor: Editor, inputType: string, specifics: SpecificsInput = {}): InputEvent => {
+  (editor: Editor, inputType: string, specifics: SpecificsInput = {}): EditorEvent<InputEvent> => {
     const target = editor.getBody();
     const overrides = {
       bubbles: true,

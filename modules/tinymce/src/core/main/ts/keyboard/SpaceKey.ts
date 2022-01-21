@@ -19,7 +19,7 @@ const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
     evt.preventDefault();
     const event = fireFakeBeforeInputEvent(editor, 'insertText', { data: ' ' });
 
-    if (!event.defaultPrevented) {
+    if (!event.isDefaultPrevented()) {
       applyAction();
       // Browsers sends space in data even if the dom ends up with a nbsp so we should always be sending a space
       fireFakeInputEvent(editor, 'insertText', { data: ' ' });

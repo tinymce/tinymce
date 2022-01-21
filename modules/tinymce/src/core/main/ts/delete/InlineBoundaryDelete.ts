@@ -57,7 +57,7 @@ const deleteFromTo = (editor: Editor, caret: Cell<Text>, from: CaretPosition, to
     BoundaryLocation.readLocation(isInlineTarget, rootNode, CaretPosition.fromRangeStart(editor.selection.getRng()))
       .map(BoundaryLocation.inside)
       .bind(setCaretLocation(editor, caret))
-      .each((action) => action());
+      .each(Fun.call);
   });
 
   editor.nodeChanged();
