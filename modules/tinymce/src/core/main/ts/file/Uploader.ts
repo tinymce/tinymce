@@ -145,7 +145,7 @@ export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
           }
         };
 
-        const success = (url) => {
+        const success = (url: string) => {
           closeNotification();
           uploadStatus.markUploaded(blobInfo.blobUri(), url);
           resolvePending(blobInfo.blobUri(), handlerSuccess(blobInfo, url));
