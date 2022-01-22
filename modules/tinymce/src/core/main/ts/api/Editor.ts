@@ -30,7 +30,7 @@ import EditorCommands, { EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
-import EditorUpload, { UploadCallback, UploadResult } from './EditorUpload';
+import EditorUpload, { UploadResult } from './EditorUpload';
 import Env from './Env';
 import Formatter from './Formatter';
 import DomParser from './html/DomParser';
@@ -1070,11 +1070,10 @@ class Editor implements EditorObservable {
    * Uploads all data uri/blob uri images in the editor contents to server.
    *
    * @method uploadImages
-   * @param {function} callback Optional callback with images and status for each image.
-   * @return {Promise} Promise instance.
+   * @return {Promise} Promise instance with images and status for each image.
    */
-  public uploadImages(callback?: UploadCallback): Promise<UploadResult[]> {
-    return this.editorUpload.uploadImages(callback);
+  public uploadImages(): Promise<UploadResult[]> {
+    return this.editorUpload.uploadImages();
   }
 
   // Internal functions
