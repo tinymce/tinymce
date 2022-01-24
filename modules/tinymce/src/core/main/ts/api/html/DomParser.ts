@@ -11,7 +11,6 @@ import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
 import { cleanInvalidNodes } from '../../html/InvalidNodes';
-import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { BlobCache } from '../file/BlobCache';
@@ -62,7 +61,6 @@ export interface DomParserSettings {
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
   allow_unsafe_link_target?: boolean;
-  convert_fonts_to_spans?: boolean;
   fix_list_elements?: boolean;
   font_size_legacy_values?: string;
   forced_root_block?: boolean | string;
@@ -72,7 +70,6 @@ export interface DomParserSettings {
   remove_trailing_brs?: boolean;
   root_name?: string;
   validate?: boolean;
-  inline_styles?: boolean;
   blob_cache?: BlobCache;
   document?: Document;
 }
@@ -691,7 +688,6 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   ParserFilters.register(exports, defaultedSettings);
-  LegacyFilter.register(exports, defaultedSettings);
 
   return exports;
 };

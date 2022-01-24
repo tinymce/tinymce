@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -278,10 +278,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<strike>strike</strike><font size="7">font</font>');
-    assert.equal(
-      editor.getContent(),
-      '<p><span style="text-decoration: line-through;">strike</span><span style="font-size: 300%;">font</span></p>'
-    );
+    TinyAssertions.assertContent(editor, '<p><strike>strike</strike><font size="7">font</font></p>');
   });
 
   it('mceInsertContent - hr', () => {
