@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog `redial` API will now only rerender the changed components instead of the whole dialog #TINY-8334
 - The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
 - The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
-- Improved support for placing the caret before/after noneditable elements within the editor #TINY-8169
+- Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
 
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018

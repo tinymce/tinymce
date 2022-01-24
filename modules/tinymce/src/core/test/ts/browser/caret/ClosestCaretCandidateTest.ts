@@ -7,16 +7,16 @@ import { assert } from 'chai';
 import { FakeCaretPosition, closestCaretCandidateNodeRect, closestFakeCaretCandidate } from 'tinymce/core/caret/ClosestCaretCandidate';
 
 interface TestCaretInfo {
-  path: number[];
-  position: FakeCaretPosition;
+  readonly path: number[];
+  readonly position: FakeCaretPosition;
 }
 
 interface TestArgs<T> {
-  html: string;
-  targetPath: number[];
-  dx: number;
-  dy: number;
-  expected: Optional<T>;
+  readonly html: string;
+  readonly targetPath: number[];
+  readonly dx: number;
+  readonly dy: number;
+  readonly expected: Optional<T>;
 }
 
 describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {

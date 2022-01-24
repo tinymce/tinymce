@@ -26,7 +26,7 @@ export interface FakeCaretInfo {
   position: FakeCaretPosition;
 }
 
-type distanceFn = <T extends GeomClientRect>(rect: T, x: number, y: number) => number;
+type DistanceFn = <T extends GeomClientRect>(rect: T, x: number, y: number) => number;
 
 const distanceToRectLeft = (clientRect: GeomClientRect, clientX: number) => Math.abs(clientRect.left - clientX);
 const distanceToRectRight = (clientRect: GeomClientRect, clientX: number) => Math.abs(clientRect.right - clientX);
@@ -58,10 +58,10 @@ const clientInfo = (rect: NodeClientRect, clientX: number): FakeCaretInfo => {
   };
 };
 
-const horizontalDistance: distanceFn = (rect, x, _y) => Math.min(Math.abs(rect.left - x), Math.abs(rect.right - x));
+const horizontalDistance: DistanceFn = (rect, x, _y) => Math.min(Math.abs(rect.left - x), Math.abs(rect.right - x));
 
 const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: number, clientY: number): Optional<NodeClientRect> => {
-  const findClosestCaretCandidateNodeRect = (rects: NodeClientRect[], distance: distanceFn): Optional<NodeClientRect> => {
+  const findClosestCaretCandidateNodeRect = (rects: NodeClientRect[], distance: DistanceFn): Optional<NodeClientRect> => {
     return Arr.findMap(
       Arr.sort(rects, (r1, r2) => distance(r1, clientX, clientY) - distance(r2, clientX, clientY)),
       (rect) => {
