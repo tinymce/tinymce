@@ -98,6 +98,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
 
   it('Keyboard events', () => {
     const component = hook.component();
+    setCheckboxState(component, true);
     pressKeyOnCheckbox(component, Keys.space());
     assertCheckboxState('checked > unchecked', component, false);
     pressKeyOnCheckbox(component, Keys.space());
