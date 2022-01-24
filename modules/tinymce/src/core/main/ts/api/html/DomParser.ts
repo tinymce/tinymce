@@ -6,7 +6,7 @@
  */
 
 import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
-import { Attribute, Remove, Replication, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
 import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
@@ -16,7 +16,7 @@ import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
-import URI from '../util/URI';
+import * as URI from '../util/URI';
 import AstNode from './Node';
 import Schema, { SchemaRegExpMap } from './Schema';
 
@@ -131,19 +131,21 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
-    const element = SugarElement.fromDom(ele);
-    const tagName = evt.tagName;
     // Just leave non-elements such as text and comments up to dompurify
-    if (!SugarNode.isElement(element) || SugarNode.name(element) === 'body') {
+    const tagName = evt.tagName;
+    if (ele.nodeType !== NodeTypes.ELEMENT || tagName === 'body') {
       return;
     }
+
+    // Construct the sugar element wrapper
+    const element = SugarElement.fromDom(ele);
 
     // Determine if the schema allows the element and either add it or remove it
     const rule = schema.getElementRule(tagName.toLowerCase());
     if (validate && !rule) {
       Remove.unwrap(element);
       return;
-    } else if (!Obj.has(evt.allowedTags, tagName)) {
+    } else {
       evt.allowedTags[tagName] = true;
     }
 
@@ -198,14 +200,12 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     const { attrName, attrValue } = evt;
 
     evt.keepAttr = !validate || Strings.startsWith(attrName, 'data-') || schema.isValid(tagName, attrName);
-    if (attrName in filteredUrlAttrs && !URI.isDomSafe(attrValue, tagName, settings)) {
+    if (!settings.allow_script_urls && attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) {
       evt.keepAttr = false;
     }
 
     if (evt.keepAttr) {
-      if (!Obj.has(evt.allowedAttributes, attrName)) {
-        evt.allowedAttributes[attrName] = true;
-      }
+      evt.allowedAttributes[attrName] = true;
 
       if (attrName in schema.getBoolAttrs()) {
         evt.attrValue = attrName;
@@ -225,7 +225,7 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
   const parentName = parent.name;
   // Exclude the special elements where the content is RCDATA as their content needs to be parsed instead of being left as plain text
   // See: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
-  const isSpecial = Obj.has(specialElements, parentName) && parentName !== 'title' && parentName !== 'textarea';
+  const isSpecial = parentName in specialElements && parentName !== 'title' && parentName !== 'textarea';
 
   const childNodes = nativeParent.childNodes;
   for (let ni = 0, nl = childNodes.length; ni < nl; ni++) {
@@ -289,7 +289,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   const hasWhitespaceParent = (node: AstNode) => {
     node = node.parent;
     while (Type.isNonNullable(node)) {
-      if (Obj.has(whitespaceElements, node.name)) {
+      if (node.name in whitespaceElements) {
         return true;
       } else {
         node = node.parent;
@@ -306,7 +306,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
 
     // Make sure our parent is actually a block, and also make sure it isn't a temporary "context" element
     // that we're probably going to unwrap as soon as we insert this content into the editor
-    return Obj.has(blockElements, node.parent.name) && (node.parent !== root || args.isRootContent);
+    return node.parent.name in blockElements && (node.parent !== root || args.isRootContent);
   };
 
   const preprocess = (node: AstNode) => {
@@ -402,6 +402,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
     // Sanitize the content
     purify.sanitize(body, getPurifyConfig(defaultedSettings, mimeType));
+    purify.removed = [];
 
     return isSpecialRoot ? body.firstChild : body;
   };

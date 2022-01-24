@@ -54,7 +54,7 @@ const blockSvgDataUris = (allowSvgDataUrls: boolean | undefined, tagName?: strin
   }
 };
 
-const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: string) => {
+export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: string) => {
   if (settings.allow_html_data_urls) {
     return false;
   } else if (/^data:image\//i.test(uri)) {

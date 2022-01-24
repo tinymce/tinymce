@@ -1,5 +1,5 @@
 diff --git a/node_modules/dompurify/dist/purify.es.js b/node_modules/dompurify/dist/purify.es.js
-index 899e471..5844faf 100644
+index 899e471..414c5d8 100644
 --- a/node_modules/dompurify/dist/purify.es.js
 +++ b/node_modules/dompurify/dist/purify.es.js
 @@ -617,6 +617,12 @@ function createDOMPurify() {
@@ -50,8 +50,62 @@ index 899e471..5844faf 100644
        _forceRemove(currentNode);
        return true;
      }
+@@ -1073,6 +1073,7 @@ function createDOMPurify() {
+ 
+       value = stringTrim(attr.value);
+       lcName = transformCaseFunc(name);
++      var initValue = value;
+ 
+       /* Execute a hook if present */
+       hookEvent.attrName = lcName;
+@@ -1086,11 +1087,9 @@ function createDOMPurify() {
+         continue;
+       }
+ 
+-      /* Remove attribute */
+-      _removeAttribute(name, currentNode);
+-
+       /* Did the hooks approve of the attribute? */
+       if (!hookEvent.keepAttr) {
++        _removeAttribute(name, currentNode);
+         continue;
+       }
+ 
+@@ -1109,20 +1108,23 @@ function createDOMPurify() {
+       /* Is `value` valid for this attribute? */
+       var lcTag = transformCaseFunc(currentNode.nodeName);
+       if (!_isValidAttribute(lcTag, lcName, value)) {
++        _removeAttribute(name, currentNode);
+         continue;
+       }
+ 
+       /* Handle invalid data-* attribute set by try-catching it */
+-      try {
+-        if (namespaceURI) {
+-          currentNode.setAttributeNS(namespaceURI, name, value);
+-        } else {
+-          /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
+-          currentNode.setAttribute(name, value);
++      if (value !== initValue) {
++        try {
++          if (namespaceURI) {
++            currentNode.setAttributeNS(namespaceURI, name, value);
++          } else {
++            /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
++            currentNode.setAttribute(name, value);
++          }
++        } catch (_) {
++          _removeAttribute(name, currentNode);
+         }
+-
+-        arrayPop(DOMPurify.removed);
+-      } catch (_) {}
++      }
+     }
+ 
+     /* Execute a hook if present */
 diff --git a/node_modules/dompurify/dist/purify.js b/node_modules/dompurify/dist/purify.js
-index 68bc40f..03bd803 100644
+index 68bc40f..f759fa8 100644
 --- a/node_modules/dompurify/dist/purify.js
 +++ b/node_modules/dompurify/dist/purify.js
 @@ -623,6 +623,12 @@
@@ -102,3 +156,57 @@ index 68bc40f..03bd803 100644
          _forceRemove(currentNode);
          return true;
        }
+@@ -1079,6 +1079,7 @@
+ 
+         value = stringTrim(attr.value);
+         lcName = transformCaseFunc(name);
++        var initValue = value;
+ 
+         /* Execute a hook if present */
+         hookEvent.attrName = lcName;
+@@ -1092,11 +1093,9 @@
+           continue;
+         }
+ 
+-        /* Remove attribute */
+-        _removeAttribute(name, currentNode);
+-
+         /* Did the hooks approve of the attribute? */
+         if (!hookEvent.keepAttr) {
++          _removeAttribute(name, currentNode);
+           continue;
+         }
+ 
+@@ -1115,20 +1114,23 @@
+         /* Is `value` valid for this attribute? */
+         var lcTag = transformCaseFunc(currentNode.nodeName);
+         if (!_isValidAttribute(lcTag, lcName, value)) {
++          _removeAttribute(name, currentNode);
+           continue;
+         }
+ 
+         /* Handle invalid data-* attribute set by try-catching it */
+-        try {
+-          if (namespaceURI) {
+-            currentNode.setAttributeNS(namespaceURI, name, value);
+-          } else {
+-            /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
+-            currentNode.setAttribute(name, value);
++        if (value !== initValue) {
++          try {
++            if (namespaceURI) {
++              currentNode.setAttributeNS(namespaceURI, name, value);
++            } else {
++              /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
++              currentNode.setAttribute(name, value);
++            }
++          } catch (_) {
++            _removeAttribute(name, currentNode);
+           }
+-
+-          arrayPop(DOMPurify.removed);
+-        } catch (_) {}
++        }
+       }
+ 
+       /* Execute a hook if present */

@@ -39,8 +39,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(root.firstChild.name, 'b', 'Element name');
     assert.deepEqual(
       root.firstChild.attributes, [
-        { name: 'class', value: 'class' },
         { name: 'title', value: 'title' },
+        { name: 'class', value: 'class' },
       ],
       'Element attributes'
     );
@@ -94,7 +94,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
     assert.equal(
       serializer.serialize(root),
-      '<div><img data-mce-src="file.gif" src="file.gif"></div>',
+      '<div><img src="file.gif" data-mce-src="file.gif"></div>',
       'Whitespace where SaxParser will produce multiple whitespace nodes'
     );
     assert.deepEqual(
@@ -567,8 +567,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
     assert.equal(
       serializer.serialize(root),
-      '<datalist><option value="b1" label="a1"></option><option value="b2" label="a2"></option>' +
-      '<option value="b3" label="a3"></option></datalist>'
+      '<datalist><option label="a1" value="b1"></option><option label="a2" value="b2"></option>' +
+      '<option label="a3" value="b3"></option></datalist>'
     );
   });
 

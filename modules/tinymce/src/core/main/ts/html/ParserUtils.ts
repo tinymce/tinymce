@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj, Unicode } from '@ephox/katamari';
+import { Unicode } from '@ephox/katamari';
 
 import { DomParserSettings, ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
@@ -36,7 +36,7 @@ const isEmpty = (schema: Schema, nonEmptyElements: SchemaMap, whitespaceElements
   node.isEmpty(nonEmptyElements, whitespaceElements, (node) => isPadded(schema, node));
 
 const isLineBreakNode = (node: AstNode | undefined, blockElements: SchemaMap): boolean =>
-  node && (Obj.has(blockElements, node.name) || node.name === 'br');
+  node && (node.name in blockElements || node.name === 'br');
 
 export {
   paddEmptyNode,
