@@ -18,12 +18,21 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
 
   const platform = PlatformDetection.detect();
 
+  // idk why chrome need this but it works, otherwise first 3 will fail on Mac
   const Bold = async (editor: Editor) => {
-    // idk why safari need this but it works
     if (platform.browser.isChromium()) {
       TinyContentActions.keystroke(editor, 66, platform.os.isMacOS ? { meta: true } : { ctrl: true });
     } else {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { ctrlKey: true }, 'b') ]);
+    }
+  };
+
+  // safari need this, no touching unless workaround
+  const Heading = async (editor: Editor, number: string) => {
+    if (platform.browser.isSafari()) {
+      TinyContentActions.keystroke(editor, number.charCodeAt(0), { ctrl: true, alt: true });
+    } else {
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, number) ]);
     }
   };
 
@@ -52,63 +61,63 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, '1') ]);
+    await Heading(editor, '1');
     TinyAssertions.assertContent(editor, '<h1>abc</h1>');
   });
   it('TINY-2884: should set the selection to be H2', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, '2') ]);
+    await Heading(editor, '2');
     TinyAssertions.assertContent(editor, '<h2>abc</h2>');
   });
   it('TINY-2884: should set the selection to be H3', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, '3') ]);
+    await Heading(editor, '3');
     TinyAssertions.assertContent(editor, '<h3>abc</h3>');
   });
   it('TINY-2884: should set the selection to be H4', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, '4') ]);
+    await Heading(editor, '4');
     TinyAssertions.assertContent(editor, '<h4>abc</h4>');
   });
   it('TINY-2884: should set the selection to be H5', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, '5') ]);
+    await Heading(editor, '5');
     TinyAssertions.assertContent(editor, '<h5>abc</h5>');
   });
   it('TINY-2884: should set the selection to be H6', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, '6') ]);
+    await Heading(editor, '6');
     TinyAssertions.assertContent(editor, '<h6>abc</h6>');
   });
   it('TINY-2884: should set the selection to be Paragraph', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, '7') ]);
+    await Heading(editor, '7');
     TinyAssertions.assertContent(editor, '<p>abc</p>');
   });
   it('TINY-2884: should set the selection to be Div', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, '8') ]);
+    await Heading(editor, '8');
     TinyAssertions.assertContent(editor, '<div>abc</div>');
   });
   it('TINY-2884: should set the selection to be address', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, '9') ]);
+    await Heading(editor, '9');
     TinyAssertions.assertContent(editor, '<address>abc</address>');
   });
 });
