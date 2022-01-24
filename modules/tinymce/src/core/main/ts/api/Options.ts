@@ -644,11 +644,6 @@ const register = (editor: Editor) => {
     default: false
   });
 
-  registerOption('content_editable_state', {
-    processor: 'boolean',
-    default: true
-  });
-
   registerOption('api_key', {
     processor: 'string'
   });
@@ -834,7 +829,6 @@ const getUrlConverterCallback = option('urlconverter_callback');
 const getAutoFocus = option('auto_focus');
 const shouldBrowserSpellcheck = option('browser_spellcheck');
 const getProtect = option('protect');
-const getContentEditableState = option('content_editable_state');
 const shouldPasteBlockDrop = option('paste_block_drop');
 const shouldPasteDataImages = option('paste_data_images');
 const shouldPasteFilterDrop = option('paste_filter_drop');
@@ -937,7 +931,6 @@ export {
   getAutoFocus,
   shouldBrowserSpellcheck,
   getProtect,
-  getContentEditableState,
   shouldPasteBlockDrop,
   shouldPasteDataImages,
   shouldPasteFilterDrop,
