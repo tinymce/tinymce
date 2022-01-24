@@ -38,7 +38,7 @@ const innerText = (html: string): string => {
   const schema = Schema();
   const domParser = DomParser({}, schema);
   let text = '';
-  const shortEndedElements = schema.getShortEndedElements();
+  const voidElements = schema.getVoidElements();
   const ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
   const blockElements = schema.getBlockElements();
 
@@ -56,7 +56,7 @@ const innerText = (html: string): string => {
     }
 
     // img/input/hr but ignore wbr as it's just a potential word break
-    if (shortEndedElements[name]) {
+    if (voidElements[name]) {
       text += ' ';
     }
 
