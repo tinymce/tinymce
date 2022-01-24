@@ -19,7 +19,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { ctrlKey: true }, 'z') ]);
   };
   const Redo = async () => {
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { ctrlKey: true }, 'y') ]);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { shiftKey: true, ctrlKey: true }, 'y') ]);
   };
   const Delete = async (editor: Editor) => {
     // idk why safari need this but it works
