@@ -32,12 +32,13 @@ import { UploadStatus } from './UploadStatus';
  * });
  */
 
-export interface UploadFailureOptions {
+export interface UploadFailure {
+  message: string;
   remove?: boolean;
 }
 
 type ProgressFn = (percent: number) => void;
-export type UploadHandler = (blobInfo: BlobInfo, success: (url: string) => void, failure: (err: string, options?: UploadFailureOptions) => void, progress: ProgressFn) => void;
+export type UploadHandler = (blobInfo: BlobInfo, progress: ProgressFn) => Promise<string>;
 
 type ResolveFn<T> = (result?: T | Promise<T>) => void;
 
@@ -45,10 +46,7 @@ export interface UploadResult {
   url: string;
   blobInfo: BlobInfo;
   status: boolean;
-  error?: {
-    options: UploadFailureOptions;
-    message: string;
-  };
+  error?: UploadFailure;
 }
 
 export interface Uploader {
@@ -66,40 +64,41 @@ export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
     return path2;
   };
 
-  const defaultHandler: UploadHandler = (blobInfo, success, failure, progress) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', settings.url);
-    xhr.withCredentials = settings.credentials;
+  const defaultHandler: UploadHandler = (blobInfo, progress) =>
+    new Promise((success, failure) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', settings.url);
+      xhr.withCredentials = settings.credentials;
 
-    xhr.upload.onprogress = (e) => {
-      progress(e.loaded / e.total * 100);
-    };
+      xhr.upload.onprogress = (e) => {
+        progress(e.loaded / e.total * 100);
+      };
 
-    xhr.onerror = () => {
-      failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
-    };
+      xhr.onerror = () => {
+        failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
+      };
 
-    xhr.onload = () => {
-      if (xhr.status < 200 || xhr.status >= 300) {
-        failure('HTTP Error: ' + xhr.status);
-        return;
-      }
+      xhr.onload = () => {
+        if (xhr.status < 200 || xhr.status >= 300) {
+          failure('HTTP Error: ' + xhr.status);
+          return;
+        }
 
-      const json = JSON.parse(xhr.responseText);
+        const json = JSON.parse(xhr.responseText);
 
-      if (!json || typeof json.location !== 'string') {
-        failure('Invalid JSON: ' + xhr.responseText);
-        return;
-      }
+        if (!json || !Type.isString(json.location)) {
+          failure('Invalid JSON: ' + xhr.responseText);
+          return;
+        }
 
-      success(pathJoin(settings.basePath, json.location));
-    };
+        success(pathJoin(settings.basePath, json.location));
+      };
 
-    const formData = new FormData();
-    formData.append('file', blobInfo.blob(), blobInfo.filename());
+      const formData = new FormData();
+      formData.append('file', blobInfo.blob(), blobInfo.filename());
 
-    xhr.send(formData);
-  };
+      xhr.send(formData);
+    });
 
   const noUpload = (): Promise<UploadResult[]> =>
     new Promise((resolve) => {
@@ -112,17 +111,14 @@ export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
     status: true
   });
 
-  const handlerFailure = (blobInfo: BlobInfo, message: string, options: UploadFailureOptions): UploadResult => ({
+  const handlerFailure = (blobInfo: BlobInfo, error: UploadFailure): UploadResult => ({
     url: '',
     blobInfo,
     status: false,
-    error: {
-      message,
-      options
-    }
+    error
   });
 
-  const resolvePending = (blobUri: string, result) => {
+  const resolvePending = (blobUri: string, result: UploadResult) => {
     Tools.each(pendingPromises[blobUri], (resolve) => {
       resolve(result);
     });
@@ -152,13 +148,11 @@ export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
           resolve(handlerSuccess(blobInfo, url));
         };
 
-        const failure = (error: string, options?: UploadFailureOptions): void => {
-          const failureOptions = options ? options : {};
-
+        const failure = (error: UploadFailure): void => {
           closeNotification();
           uploadStatus.removeFailed(blobInfo.blobUri());
-          resolvePending(blobInfo.blobUri(), handlerFailure(blobInfo, error, failureOptions));
-          resolve(handlerFailure(blobInfo, error, failureOptions));
+          resolvePending(blobInfo.blobUri(), handlerFailure(blobInfo, error));
+          resolve(handlerFailure(blobInfo, error));
         };
 
         progress = (percent: number) => {
@@ -174,9 +168,11 @@ export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
             });
         };
 
-        handler(blobInfo, success, failure, progress);
+        handler(blobInfo, progress).then(success, (err) => {
+          failure(Type.isString(err) ? { message: err } : err);
+        });
       } catch (ex) {
-        resolve(handlerFailure(blobInfo, ex.message, {}));
+        resolve(handlerFailure(blobInfo, ex));
       }
     });
   };
