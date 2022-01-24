@@ -32,7 +32,7 @@ describe('browser.tinymce.themes.silver.editor.DisableTest', () => {
       })),
       TinyDom.container(editor)
     );
-    assert.equal(editor.ui.isDisabled(), disabled, 'Editor isDisabled should return current disabled state');
+    assert.equal(!editor.ui.isEnabled(), disabled, 'Editor isEnabled should return current disabled state');
   };
 
   context('Test disable/enable APIs', () => {

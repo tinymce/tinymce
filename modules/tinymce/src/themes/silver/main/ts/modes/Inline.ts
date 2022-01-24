@@ -147,7 +147,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     disable: () => {
       ReadOnly.broadcastReadonly(uiComponents, true);
     },
-    isDisabled: () => Disabling.isDisabled(outerContainer)
+    isEnabled: () => !Disabling.isDisabled(outerContainer)
   };
 
   return {

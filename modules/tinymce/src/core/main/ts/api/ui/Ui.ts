@@ -19,7 +19,7 @@ export interface EditorUiApi {
   hide: () => void;
   enable: () => void;
   disable: () => void;
-  isDisabled: () => boolean;
+  isEnabled: () => boolean;
 }
 
 export interface EditorUi extends EditorUiApi {
