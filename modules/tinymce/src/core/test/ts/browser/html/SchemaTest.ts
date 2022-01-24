@@ -216,9 +216,9 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     });
   });
 
-  it('getShortEndedElements', () => {
+  it('getVoidElements', () => {
     const schema = Schema();
-    assert.deepEqual(schema.getShortEndedElements(), {
+    assert.deepEqual(schema.getVoidElements(), {
       EMBED: {}, PARAM: {}, META: {}, LINK: {}, ISINDEX: {},
       INPUT: {}, IMG: {}, HR: {}, FRAME: {}, COL: {}, BR: {},
       BASEFONT: {}, BASE: {}, AREA: {}, SOURCE: {}, WBR: {}, TRACK: {},

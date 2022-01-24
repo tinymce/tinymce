@@ -122,7 +122,7 @@ const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: numbe
   // TODO: TINY-7658: this regex does not support CDATA
   const startTagRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)/g;
   const endTagRegExp = /(?:\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/g;
-  const shortEndedElements = schema.getShortEndedElements();
+  const voidElements = schema.getVoidElements();
   let count = 1, index = startIndex;
 
   // keep finding HTML tags (opening, closing, or neither like comments or <br>s)
@@ -155,7 +155,7 @@ const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: numbe
 
         if (startMatch[1] === '/') { // end of element
           count -= 1;
-        } else if (!Obj.has(shortEndedElements, startMatch[2])) { // start of element, specifically not a shortEndedElement like <br>
+        } else if (!Obj.has(voidElements, startMatch[2])) { // start of element, specifically not a shortEndedElement like <br>
           count += 1;
         }
 
@@ -231,7 +231,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
     let matches: RegExpExecArray, index = 0, value, endRegExp;
     const stack = [];
     let attrList, i, textData, name;
-    let isInternalElement, isShortEnded;
+    let isInternalElement, isVoid;
     let elementRule, isValidElement, attr, attribsValue: string, validAttributesMap, validAttributePatterns;
     let attributesRequired, attributesDefault, attributesForced;
     let anyAttributesRequired, attrValue, idCount = 0;
@@ -375,7 +375,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
     const attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
 
     // Setup lookup tables for empty elements and boolean attributes
-    const shortEndedElements = schema.getShortEndedElements();
+    const voidElements = schema.getVoidElements();
     const selfClosing = settings.self_closing_elements || schema.getSelfClosingElements();
     const fillAttrsMap = schema.getBoolAttrs();
     const validate = settings.validate;
@@ -417,7 +417,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
           value = value.substr(1);
         }
 
-        isShortEnded = value in shortEndedElements;
+        isVoid = value in voidElements;
 
         // Is self closing tag for example an <li> after an open <li>
         if (fixSelfClosing && selfClosing[value] && stack.length > 0 && stack[stack.length - 1].name === value) {
@@ -544,7 +544,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
           }
 
           if (isValidElement) {
-            start(value, attrList, isShortEnded);
+            start(value, attrList, isVoid);
           }
         } else {
           isValidElement = false;
@@ -578,7 +578,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
         }
 
         // Push value on to stack
-        if (!isShortEnded) {
+        if (!isVoid) {
           if (!attribsValue || attribsValue.indexOf('/') !== attribsValue.length - 1) {
             stack.push({ name: value, valid: isValidElement });
           } else if (isValidElement) {

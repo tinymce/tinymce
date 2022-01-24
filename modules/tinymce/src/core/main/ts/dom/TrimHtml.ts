@@ -22,7 +22,7 @@ const trimInternal = (serializer: DomSerializer, html: string): string => {
   const schema = serializer.schema;
 
   let content = trimHtml(serializer.getTempAttrs(), html);
-  const shortEndedElements = schema.getShortEndedElements();
+  const voidElements = schema.getVoidElements();
 
   // Remove all bogus elements marked with "all"
   let matches: RegExpExecArray;
@@ -31,7 +31,7 @@ const trimInternal = (serializer: DomSerializer, html: string): string => {
     const matchLength = matches[0].length;
 
     let endTagIndex: number;
-    if (shortEndedElements[matches[1]]) {
+    if (voidElements[matches[1]]) {
       endTagIndex = index;
     } else {
       endTagIndex = SaxParser.findEndTag(schema, content, index);

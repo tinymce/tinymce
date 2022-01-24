@@ -25,7 +25,7 @@ interface CollectCallbacks {
   readonly text: (node: Text, section: TextSection) => void;
 }
 
-const isSimpleBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Obj.has(dom.schema.getShortEndedElements(), node.nodeName);
+const isSimpleBoundary = (dom: DOMUtils, node: Node) => dom.isBlock(node) || Obj.has(dom.schema.getVoidElements(), node.nodeName);
 const isContentEditableFalse = (dom: DOMUtils, node: Node) => dom.getContentEditable(node) === 'false';
 const isContentEditableTrueInCef = (dom: DOMUtils, node: Node) => dom.getContentEditable(node) === 'true' && dom.getContentEditableParent(node.parentNode) === 'false';
 const isHidden = (dom: DOMUtils, node: Node) => !dom.isBlock(node) && Obj.has(dom.schema.getWhiteSpaceElements(), node.nodeName);

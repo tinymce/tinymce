@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `textpattern_patterns` option to `text_patterns` #TINY-8312
 - Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
+- Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -65,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
+- Removed the deprecated `XHR` API #TINY-8164
 - Removed the legacy browser detection properties from `Env` #TINY-8162
 - Removed the deprecated `setIconStroke` Split Toolbar Button API #TINY-8162
 - Removed the deprecated `editors` property from `EditorManager` #TINY-8162
