@@ -521,11 +521,6 @@ const register = (editor: Editor) => {
     default: false
   });
 
-  registerOption('convert_fonts_to_spans', {
-    processor: 'boolean',
-    default: true
-  });
-
   registerOption('fix_list_elements', {
     processor: 'boolean',
     default: false
@@ -543,11 +538,6 @@ const register = (editor: Editor) => {
 
   registerOption('remove_trailing_brs', {
     processor: 'boolean'
-  });
-
-  registerOption('inline_styles', {
-    processor: 'boolean',
-    default: true
   });
 
   registerOption('element_format', {
