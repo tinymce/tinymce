@@ -162,7 +162,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
               replaceImageUriInView(image, uploadInfo.url);
             }
           } else if (uploadInfo.error) {
-            if (uploadInfo.error.options.remove) {
+            if (uploadInfo.error.remove) {
               replaceUrlInUndoStack(image.getAttribute('src'), Env.transparentSrc);
               imagesToRemove.push(image);
               removed = true;

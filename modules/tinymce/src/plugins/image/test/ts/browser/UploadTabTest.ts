@@ -77,7 +77,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     editor.setContent('<p><img src="' + src + '" /></p>');
     TinySelections.select(editor, 'img', []);
     editor.options.set('image_uploadtab', false);
-    editor.options.set('images_upload_handler', (blobInfo, success) => success('file.jpg'));
+    editor.options.set('images_upload_handler', (_blobInfo) => Promise.resolve('file.jpg'));
     await pAssertImageTab(editor, 'Upload', false);
     editor.options.set('image_advtab', true);
     editor.options.unset('image_uploadtab');
@@ -89,7 +89,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     editor.setContent('<p><img src="' + src + '" /></p>');
     TinySelections.select(editor, 'img', []);
     editor.options.set('image_advtab', false); // make sure that Advanced tab appears separately
-    editor.options.set('images_upload_handler', (blobInfo, success) => success('file.jpg'));
+    editor.options.set('images_upload_handler', (_blobInfo) => Promise.resolve('file.jpg'));
     await pAssertImageTab(editor, 'Upload', true);
     await pAssertImageTab(editor, 'Advanced', false);
     editor.options.set('image_advtab', true);
@@ -115,7 +115,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   it('TBA: Image uploader test with images_upload_handler', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.options.set('images_upload_handler', (blobInfo, success) => success('file.jpg'));
+    editor.options.set('images_upload_handler', (_blobInfo) => Promise.resolve('file.jpg'));
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
@@ -128,7 +128,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   it('TBA: Test that we get full base64 string in images_upload_handler', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.options.set('images_upload_handler', (blobInfo, success) => success(blobInfo.base64()));
+    editor.options.set('images_upload_handler', (blobInfo) => Promise.resolve(blobInfo.base64()));
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
@@ -141,7 +141,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   it('TNY-6020: Image uploader test with upload error', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.options.set('images_upload_handler', (blobInfo, success, failure) => failure('Error occurred'));
+    editor.options.set('images_upload_handler', (_blobInfo) => Promise.reject('Error occurred'));
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
@@ -172,7 +172,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   it('TINY-6224: Image uploader respects `images_file_types` setting', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.options.set('images_upload_handler', (_blobInfo, success) => success('logo.svg'));
+    editor.options.set('images_upload_handler', (_blobInfo) => Promise.resolve('logo.svg'));
     editor.options.set('images_file_types', 'svg');
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
@@ -187,7 +187,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   it('TINY-6622: Image uploader retains the file name/extension', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.options.set('images_upload_handler', (blobInfo, success) => success(blobInfo.filename()));
+    editor.options.set('images_upload_handler', (blobInfo) => Promise.resolve(blobInfo.filename()));
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
