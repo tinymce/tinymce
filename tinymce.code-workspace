@@ -255,5 +255,56 @@
       "dbaeumer.vscode-eslint",
       "editorconfig.editorconfig"
     ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "bedrock-manual current file",
+        "command": "yarn",
+        "type": "process",
+        "args": [
+          "bedrock",
+          "-f",
+          "${file}"
+        ],
+        "isBackground": true,
+        "options": {
+          "cwd": "${workspaceFolder:entire project}"
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": false,
+          "clear": true
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "bedrock-manual current dir",
+        "command": "yarn",
+        "type": "process",
+        "args": [
+          "bedrock",
+          "-d",
+          "${fileDirname}"
+        ],
+        "isBackground": true,
+        "options": {
+          "cwd": "${workspaceFolder:entire project}"
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": false,
+          "clear": true
+        },
+        "problemMatcher": []
+      }
+    ]
   }
 }
