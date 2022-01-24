@@ -12,9 +12,7 @@ import AstNode from '../api/html/Node';
 import Schema, { SchemaMap } from '../api/html/Schema';
 
 const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, blockElements: SchemaMap, node: AstNode): void => {
-  const brPreferred = settings.padd_empty_with_br || args.insert;
-
-  if (brPreferred && blockElements[node.name]) {
+  if (args.insert && blockElements[node.name]) {
     node.empty().append(new AstNode('br', 1));
   } else {
     node.empty().append(new AstNode('#text', 3)).value = Unicode.nbsp;

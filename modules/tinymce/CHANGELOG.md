@@ -84,7 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
 - Removed the deprecated `media_scripts` option in the `media` plugin #TINY-8421
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
-- Removed the deprecated `content_editable_state`, `convert_fonts_to_spans` and `inline_styles` options #TINY-8400
+- Removed the deprecated `content_editable_state`, `convert_fonts_to_spans`, `inline_styles` and `padd_empty_with_br` options #TINY-8400
 - Removed the deprecated `autoresize_on_init` option from the `autoresize` plugin #TINY-8400
 - Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
 - Removed the callback for the `EditorUpload` APIs #TINY-8325

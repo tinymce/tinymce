@@ -80,7 +80,6 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     font_size_legacy_values: getOption('font_size_legacy_values'),
     forced_root_block: getOption('forced_root_block'),
     forced_root_block_attrs: getOption('forced_root_block_attrs'),
-    padd_empty_with_br: getOption('padd_empty_with_br'),
     preserve_cdata: getOption('preserve_cdata'),
     remove_trailing_brs: getOption('remove_trailing_brs'),
     root_name: getRootName(editor),
