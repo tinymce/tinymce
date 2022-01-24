@@ -156,7 +156,6 @@ interface BaseEditorOptions {
   noneditable_regexp?: RegExp | RegExp[];
   nowrap?: boolean;
   object_resizing?: boolean | string;
-  padd_empty_with_br?: boolean;
   paste_as_text?: boolean;
   paste_block_drop?: boolean;
   paste_data_images?: boolean;

@@ -620,14 +620,6 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(serializer.serialize(root), '<ul><li>\u00a0</li></ul><ul><li>\u00a0</li></ul>');
   });
 
-  it('Pad empty with br', () => {
-    const schema = Schema();
-    const parser = DomParser({ padd_empty_with_br: true }, schema);
-    const serializer = HtmlSerializer({ }, schema);
-    const root = parser.parse('<p>a</p><p></p>');
-    assert.equal(serializer.serialize(root), '<p>a</p><p><br></p>');
-  });
-
   it('Pad empty and prefer br on insert', () => {
     const schema = Schema();
 

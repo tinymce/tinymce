@@ -526,11 +526,6 @@ const register = (editor: Editor) => {
     default: false
   });
 
-  registerOption('padd_empty_with_br', {
-    processor: 'boolean',
-    default: false
-  });
-
   registerOption('preserve_cdata', {
     processor: 'boolean',
     default: false
