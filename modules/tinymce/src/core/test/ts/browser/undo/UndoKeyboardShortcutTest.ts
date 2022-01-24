@@ -1,5 +1,6 @@
+import { RealKeys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions } from '@ephox/mcagar';
+import { TinyAssertions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
@@ -9,38 +10,35 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
-  const SelectAll = (editor: Editor) => {
-    const platform = PlatformDetection.detect().os.current;
-    if (platform === 'macOS') {
-      TinyContentActions.keystroke(editor, 'A'.charCodeAt(0), { meta: true });
+  const platform = PlatformDetection.detect();
+
+  const SelectAll = async () => {
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { ctrlKey: true }, 'a') ]);
+  };
+  const Undo = async () => {
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { ctrlKey: true }, 'z') ]);
+  };
+  const Redo = async () => {
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { ctrlKey: true }, 'y') ]);
+  };
+  const Delete = async (editor: Editor) => {
+    // idk why safari need this but it works
+    if (platform.browser.isSafari()) {
+      editor.execCommand('Delete');
     } else {
-      TinyContentActions.keystroke(editor, 'A'.charCodeAt(0), { ctrl: true });
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
     }
   };
-  const Undo = (editor: Editor) => {
-    const platform = PlatformDetection.detect().os.current;
-    if (platform === 'macOS') {
-      TinyContentActions.keystroke(editor, 'Z'.charCodeAt(0), { meta: true });
-    } else {
-      TinyContentActions.keystroke(editor, 'Z'.charCodeAt(0), { ctrl: true });
-    }
-  };
-  const Redo = (editor: Editor) => {
-    const platform = PlatformDetection.detect().os.current;
-    if (platform === 'macOS') {
-      TinyContentActions.keystroke(editor, 'Y'.charCodeAt(0), { meta: true });
-    } else {
-      TinyContentActions.keystroke(editor, 'Y'.charCodeAt(0), { ctrl: true });
-    }
-  };
-  it('TINY-2884: shoud undo and redo action', () => {
+
+  it('TINY-2884: shoud undo and redo action', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
-    SelectAll(editor);
-    editor.execCommand('Delete');
-    Undo(editor);
+    await SelectAll();
+    await Delete(editor);
+    TinyAssertions.assertContent(editor, '');
+    await Undo();
     TinyAssertions.assertContent(editor, '<p>abc</p>');
-    Redo(editor);
+    await Redo();
     TinyAssertions.assertContent(editor, '');
   });
 });
