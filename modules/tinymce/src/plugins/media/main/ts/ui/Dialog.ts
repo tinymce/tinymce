@@ -93,14 +93,14 @@ const handleError = (editor: Editor) => (error?: { msg: string }): void => {
 };
 
 const snippetToData = (editor: Editor, embedSnippet: string): MediaData =>
-  HtmlToData.htmlToData(Options.getScripts(editor), embedSnippet);
+  HtmlToData.htmlToData(embedSnippet);
 
 const getEditorData = (editor: Editor): MediaData => {
   const element = editor.selection.getNode();
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
   return {
     embed: snippet,
-    ...HtmlToData.htmlToData(Options.getScripts(editor), snippet)
+    ...HtmlToData.htmlToData(snippet)
   };
 };
 
