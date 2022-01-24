@@ -53,7 +53,6 @@ import Observable from './util/Observable';
 import Tools from './util/Tools';
 import URI, { URIConstructor } from './util/URI';
 import VK from './util/VK';
-import XHR from './util/XHR';
 import WindowManager from './WindowManager';
 
 interface DOMUtilsNamespace {
@@ -108,7 +107,6 @@ interface TinyMCE extends EditorManager {
     EventDispatcher: EventDispatcherConstructor<any>;
     Observable: Observable<any>;
     I18n: I18n;
-    XHR: XHR;
     LocalStorage: Storage;
     ImageUploader: ImageUploader;
   };
@@ -204,7 +202,6 @@ const publicApi = {
     EventDispatcher,
     Observable,
     I18n,
-    XHR,
     LocalStorage,
     ImageUploader
   },

@@ -4,7 +4,6 @@ const runsHeadless = [
   '@ephox/mcagar',
   '@ephox/katamari',
   '@ephox/katamari-test',
-  '@ephox/imagetools',
   '@ephox/jax'
 ];
 
