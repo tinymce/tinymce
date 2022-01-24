@@ -399,7 +399,7 @@ const contentBodyLoaded = (editor: Editor): void => {
       body.style.position = 'relative';
     }
 
-    body.contentEditable = '' + Options.getContentEditableState(editor);
+    body.contentEditable = 'true';
   }
 
   (body as any).disabled = false;
