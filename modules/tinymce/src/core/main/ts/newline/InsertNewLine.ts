@@ -17,23 +17,33 @@ import * as NewLineAction from './NewLineAction';
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   NewLineAction.getAction(editor, evt).fold(
     () => {
-      InsertBr.insert(editor, evt);
       if (Type.isNonNullable(evt)) {
         const event = fireFakeBeforeInputEvent(editor, 'insertLineBreak');
 
-        if (!event.isDefaultPrevented()) {
-          fireFakeInputEvent(editor, 'insertLineBreak');
+        if (event.isDefaultPrevented()) {
+          return;
         }
+      }
+
+      InsertBr.insert(editor, evt);
+
+      if (Type.isNonNullable(evt)) {
+        fireFakeInputEvent(editor, 'insertLineBreak');
       }
     },
     () => {
-      InsertBlock.insert(editor, evt);
       if (Type.isNonNullable(evt)) {
         const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
 
-        if (!event.isDefaultPrevented()) {
-          fireFakeInputEvent(editor, 'insertParagraph');
+        if (event.isDefaultPrevented()) {
+          return;
         }
+      }
+
+      InsertBlock.insert(editor, evt);
+
+      if (Type.isNonNullable(evt)) {
+        fireFakeInputEvent(editor, 'insertParagraph');
       }
     },
     Fun.noop

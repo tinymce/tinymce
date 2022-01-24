@@ -17,6 +17,6 @@ describe('browser.tinymce.core.delete.NewlineBeforeInputEventTest', () => {
   });
 
   it('Can prevent beforeInput', () => {
-    testNewline(hook.editor(), '<p><a href="#">a<img src="about:blank"></a></p>', [ 0, 0 ], 1, '<p><a href="#">a</a></p>\n<p><a href="#"><img src="about:blank"></a></p>', true);
+    testNewline(hook.editor(), '<p><a href="#">a<img src="about:blank"></a></p>', [ 0, 0 ], 1, '<p><a href="#">a<img src="about:blank"></a></p>', true);
   });
 });
