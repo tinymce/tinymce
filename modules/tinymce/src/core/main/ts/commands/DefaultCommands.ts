@@ -21,6 +21,7 @@ import * as InsertBr from '../newline/InsertBr';
 import * as InsertNewLine from '../newline/InsertNewLine';
 import * as AlignCommands from './AlignCommands';
 import * as ClipboardCommands from './ClipboardCommands';
+import * as HistoryCommands from './HistoryCommands';
 
 export const setupCommands = (editor: Editor) => {
   const selectionBookmarkState = Singleton.value<Bookmark>();
@@ -59,12 +60,7 @@ export const setupCommands = (editor: Editor) => {
   // Add execCommand overrides
   editor.editorCommands.addCommands({
     // Ignore these, added for compatibility
-    'mceResetDesignMode,mceBeginUndoLevel': Fun.noop,
-
-    // Add undo manager logic
-    'mceEndUndoLevel,mceAddUndoLevel': () => {
-      editor.undoManager.add();
-    },
+    'mceResetDesignMode': Fun.noop,
 
     'mceFocus': (_command, _ui, value?: boolean) => {
       EditorFocus.focus(editor, value);
@@ -281,21 +277,11 @@ export const setupCommands = (editor: Editor) => {
     }
   }, 'state');
 
-  // Add undo manager logic
-  editor.editorCommands.addCommands({
-    Undo: () => {
-      editor.undoManager.undo();
-    },
-
-    Redo: () => {
-      editor.undoManager.redo();
-    }
-  });
-
   editor.editorCommands.addQueryValueHandler('FontName', () => FontCommands.fontNameQuery(editor), this);
   editor.editorCommands.addQueryValueHandler('FontSize', () => FontCommands.fontSizeQuery(editor), this);
   editor.editorCommands.addQueryValueHandler('LineHeight', () => LineHeightCommands.lineHeightQuery(editor), this);
 
   AlignCommands.registerCommands(editor);
   ClipboardCommands.registerCommands(editor);
+  HistoryCommands.registerCommands(editor);
 };
