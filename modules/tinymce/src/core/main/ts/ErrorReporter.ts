@@ -68,7 +68,7 @@ const pluginInitError = (editor: Editor, name: string, err) => {
 };
 
 const modelInitError = (editor: Editor, name: string, err) => {
-  // TODO: Will need translation for this
+  // TODO: TINY-8427 Add translation for this
   const message = I18n.translate([ 'Failed to initialize model: {0}', name ]);
   fireError(editor, 'ModelLoadError', { message });
   initError(message, err);

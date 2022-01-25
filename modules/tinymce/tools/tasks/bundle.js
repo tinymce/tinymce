@@ -51,7 +51,7 @@ module.exports = function (grunt) {
     themes = grunt.option("themes");
     plugins = grunt.option("plugins");
     icons = grunt.option("icons") || 'default';
-    models = grunt.option("themes") || 'dom';
+    models = grunt.option("models") || 'dom';
 
     if (!themes && !plugins) {
       grunt.log.writeln("Use: grunt bundle --themes <comma separated list of themes> --plugins <comma separated list of plugins> --icons <comma separated list of icons> --models  <comma separated list of models>");
