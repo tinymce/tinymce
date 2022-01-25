@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Singleton, Type } from '@ephox/katamari';
+import { Fun, Singleton } from '@ephox/katamari';
 
 import type Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -20,6 +20,7 @@ import { FormatVars } from '../fmt/FormatTypes';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as InsertBr from '../newline/InsertBr';
 import * as InsertNewLine from '../newline/InsertNewLine';
+import * as AlignCommands from './AlignCommands';
 
 export const setupCommands = (editor: Editor) => {
   const selectionBookmarkState = Singleton.value<Bookmark>();
@@ -113,26 +114,6 @@ export const setupCommands = (editor: Editor) => {
       }
 
       editor.formatter.remove('link');
-    },
-
-    // Override justify commands to use the text formatter engine
-    'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull,JustifyNone': (command) => {
-      let align = command.substring(7);
-
-      if (align === 'full') {
-        align = 'justify';
-      }
-
-      // Remove all other alignments first
-      Arr.each('left,center,right,justify'.split(','), (name) => {
-        if (align !== name) {
-          editor.formatter.remove('align' + name);
-        }
-      });
-
-      if (align !== 'none') {
-        toggleFormat('align' + align);
-      }
     },
 
     // Override list commands to fix WebKit bug
@@ -313,21 +294,8 @@ export const setupCommands = (editor: Editor) => {
     }
   });
 
-  const alignStates = (name: string) => () => {
-    const selection = editor.selection;
-    const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
-    const matches = Arr.map(nodes, (node) => Type.isNonNullable(editor.formatter.matchNode(node, name)));
-    return Arr.contains(matches, true);
-  };
-
   // Add queryCommandState overrides
   editor.editorCommands.addCommands({
-    // Override justify commands
-    'JustifyLeft': alignStates('alignleft'),
-    'JustifyCenter': alignStates('aligncenter'),
-    'JustifyRight': alignStates('alignright'),
-    'JustifyFull': alignStates('alignjustify'),
-
     'Bold,Italic,Underline,Strikethrough,Superscript,Subscript': (command) => isFormatMatch(command),
 
     'mceBlockQuote': () => isFormatMatch('blockquote'),
@@ -359,4 +327,6 @@ export const setupCommands = (editor: Editor) => {
   editor.editorCommands.addQueryValueHandler('FontName', () => FontCommands.fontNameQuery(editor), this);
   editor.editorCommands.addQueryValueHandler('FontSize', () => FontCommands.fontSizeQuery(editor), this);
   editor.editorCommands.addQueryValueHandler('LineHeight', () => LineHeightCommands.lineHeightQuery(editor), this);
+
+  AlignCommands.registerCommands(editor);
 };
