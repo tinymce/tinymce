@@ -5,22 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Type, Unicode } from '@ephox/katamari';
+import { Arr, Obj, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Css, Focus, Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import VK from './api/util/VK';
 import * as CaretContainer from './caret/CaretContainer';
-import CaretPosition from './caret/CaretPosition';
-import { isAfterContentEditableFalse, isAfterMedia, isBeforeContentEditableFalse, isBeforeMedia } from './caret/CaretPositionPredicates';
 import * as CaretUtils from './caret/CaretUtils';
-import { CaretWalker } from './caret/CaretWalker';
+import * as ClosestCaretCandidate from './caret/ClosestCaretCandidate';
 import { FakeCaret, isFakeCaretTarget } from './caret/FakeCaret';
 import * as FakeCaretUtils from './caret/FakeCaretUtils';
-import * as LineUtils from './caret/LineUtils';
 import * as CefUtils from './dom/CefUtils';
 import * as NodeType from './dom/NodeType';
-import * as RangePoint from './dom/RangePoint';
 import * as DragDropOverrides from './DragDropOverrides';
 import * as EditorView from './EditorView';
 import * as CefFocus from './focus/CefFocus';
@@ -28,7 +24,6 @@ import * as EditorFocus from './focus/EditorFocus';
 import * as MediaFocus from './focus/MediaFocus';
 import * as Rtc from './Rtc';
 
-const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
 interface SelectionOverrides {
@@ -54,8 +49,6 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   // Note: isChildOf will return true if node === rootNode, so we need an additional check for that
   const isFakeSelectionTargetElement = (node: Node): node is HTMLElement =>
     node !== rootNode && (isContentEditableFalse(node) || NodeType.isMedia(node)) && dom.isChildOf(node, rootNode);
-  const isNearFakeSelectionElement = (pos: CaretPosition) =>
-    isBeforeContentEditableFalse(pos) || isAfterContentEditableFalse(pos) || isBeforeMedia(pos) || isAfterMedia(pos);
 
   const getRealSelectionElement = () => {
     const container = dom.get(realSelectionId);
@@ -67,8 +60,6 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       selection.setRng(range);
     }
   };
-
-  const getRange = selection.getRng;
 
   const showCaret = (direction: number, node: HTMLElement, before: boolean, scrollIntoView: boolean = true): Range => {
     const e = editor.fire('ShowCaret', {
@@ -96,16 +87,6 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   };
 
   const registerEvents = () => {
-    // Some browsers (Chrome) lets you place the caret after a cE=false
-    // Make sure we render the caret container in this case
-    editor.on('mouseup', (e) => {
-      const range = getRange();
-
-      if (range.collapsed && EditorView.isXYInContentArea(editor, e.clientX, e.clientY)) {
-        FakeCaretUtils.renderCaretAtRange(editor, range, false).each(setRange);
-      }
-    });
-
     editor.on('click', (e) => {
       const contentEditableRoot = getContentEditableRoot(editor, e.target);
       if (contentEditableRoot) {
@@ -114,61 +95,12 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
           e.preventDefault();
           editor.focus();
         }
-
-        // Removes fake selection if a cE=true is clicked within a cE=false like the toc title
-        if (isContentEditableTrue(contentEditableRoot)) {
-          if (dom.isChildOf(contentEditableRoot, selection.getNode())) {
-            removeElementSelection();
-          }
-        }
       }
     });
 
     editor.on('blur NewBlock', removeElementSelection);
 
     editor.on('ResizeWindow FullscreenStateChanged', fakeCaret.reposition);
-
-    const hasNormalCaretPosition = (elm: Element) => {
-      const start = elm.firstChild;
-      if (Type.isNullable(start)) {
-        return false;
-      }
-
-      const startPos = CaretPosition.before(start);
-      // If the element has a single br as a child (i.e. is empty), then the start position is a valid cursor position
-      if (NodeType.isBr(startPos.getNode()) && elm.childNodes.length === 1) {
-        return !isNearFakeSelectionElement(startPos);
-      } else {
-        const caretWalker = CaretWalker(elm);
-        const newPos = caretWalker.next(startPos);
-        return newPos && !isNearFakeSelectionElement(newPos);
-      }
-    };
-
-    const isInSameBlock = (node1: Node, node2: Node) => {
-      const block1 = dom.getParent(node1, isBlock);
-      const block2 = dom.getParent(node2, isBlock);
-      return block1 === block2;
-    };
-
-    // Checks if the target node is in a block and if that block has a caret position better than the
-    // suggested caretNode this is to prevent the caret from being sucked in towards a cE=false block if
-    // they are adjacent on the vertical axis
-    const hasBetterMouseTarget = (targetNode: Node, caretNode: Node) => {
-      const targetBlock = dom.getParent(targetNode, isBlock);
-      const caretBlock = dom.getParent(caretNode, isBlock);
-
-      if (Type.isNullable(targetBlock)) {
-        return false;
-      }
-
-      // Click inside the suggested caret element
-      if (targetNode !== caretBlock && dom.isChildOf(targetBlock, caretBlock) && (isContentEditableFalse(getContentEditableRoot(editor, targetBlock)) === false)) {
-        return true;
-      }
-
-      return !dom.isChildOf(caretBlock, targetBlock) && !isInSameBlock(targetBlock, caretBlock) && hasNormalCaretPosition(targetBlock);
-    };
 
     editor.on('tap', (e) => {
       const targetElm = e.target;
@@ -192,38 +124,28 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
         return;
       }
 
-      const contentEditableRoot = getContentEditableRoot(editor, targetElm);
-      if (contentEditableRoot) {
-        if (isContentEditableFalse(contentEditableRoot)) {
+      // Remove needs to be called here since the mousedown might alter the selection without calling selection.setRng
+      // and therefore not fire the AfterSetSelectionRange event.
+      removeElementSelection();
+      hideFakeCaret();
+
+      const closestContentEditable = getContentEditableRoot(editor, targetElm);
+      if (isContentEditableFalse(closestContentEditable)) {
+        e.preventDefault();
+        FakeCaretUtils.selectNode(editor, closestContentEditable).each(setElementSelection);
+      } else {
+        ClosestCaretCandidate.closestFakeCaretCandidate(rootNode, e.clientX, e.clientY).each((caretInfo) => {
           e.preventDefault();
-          FakeCaretUtils.selectNode(editor, contentEditableRoot).each(setElementSelection);
-        } else {
-          removeElementSelection();
+          const range = showCaret(1, caretInfo.node as HTMLElement, caretInfo.position === ClosestCaretCandidate.FakeCaretPosition.Before, false);
+          setRange(range);
 
-          // Check that we're not attempting a shift + click select within a contenteditable='true' element
-          if (!(isContentEditableTrue(contentEditableRoot) && e.shiftKey) && !RangePoint.isXYWithinRange(e.clientX, e.clientY, selection.getRng())) {
-            hideFakeCaret();
-            selection.placeCaretAt(e.clientX, e.clientY);
-          }
-        }
-      } else if (isFakeSelectionTargetElement(targetElm)) {
-        FakeCaretUtils.selectNode(editor, targetElm).each(setElementSelection);
-      } else if (isFakeCaretTarget(targetElm) === false) {
-        // Remove needs to be called here since the mousedown might alter the selection without calling selection.setRng
-        // and therefore not fire the AfterSetSelectionRange event.
-        removeElementSelection();
-        hideFakeCaret();
-
-        const fakeCaretInfo = LineUtils.closestFakeCaret(rootNode, e.clientX, e.clientY);
-        if (fakeCaretInfo) {
-          if (!hasBetterMouseTarget(targetElm, fakeCaretInfo.node)) {
-            e.preventDefault();
-            const range = showCaret(1, fakeCaretInfo.node as HTMLElement, fakeCaretInfo.before, false);
-            setRange(range);
-            // Set the focus after the range has been set to avoid potential issues where the body has no selection
+          // Set the focus after the range has been set to avoid potential issues where the body has no selection
+          if (NodeType.isElement(closestContentEditable)) {
+            closestContentEditable.focus();
+          } else {
             editor.getBody().focus();
           }
-        }
+        });
       }
     });
 

@@ -92,15 +92,12 @@ const handleError = (editor: Editor) => (error?: { msg: string }): void => {
   editor.notificationManager.open({ type: 'error', text: errorMessage });
 };
 
-const snippetToData = (editor: Editor, embedSnippet: string): MediaData =>
-  HtmlToData.htmlToData(Options.getScripts(editor), embedSnippet, editor.schema);
-
 const getEditorData = (editor: Editor): MediaData => {
   const element = editor.selection.getNode();
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
   return {
     embed: snippet,
-    ...HtmlToData.htmlToData(Options.getScripts(editor), snippet, editor.schema)
+    ...HtmlToData.htmlToData(snippet, editor.schema)
   };
 };
 
@@ -108,7 +105,7 @@ const addEmbedHtml = (api: Dialog.DialogInstanceApi<MediaDialogData>, editor: Ed
   // Only set values if a URL has been defined
   if (Type.isString(response.url) && response.url.trim().length > 0) {
     const html = response.html;
-    const snippetData = snippetToData(editor, html);
+    const snippetData = HtmlToData.htmlToData(html, editor.schema);
     const nuData: MediaData = {
       ...snippetData,
       source: response.url,
@@ -176,7 +173,7 @@ const showDialog = (editor: Editor): void => {
 
   const handleEmbed = (api: Dialog.DialogInstanceApi<MediaDialogData>): void => {
     const data = unwrap(api.getData());
-    const dataFromEmbed = snippetToData(editor, data.embed);
+    const dataFromEmbed = HtmlToData.htmlToData(data.embed, editor.schema);
     api.setData(wrap(dataFromEmbed));
   };
 

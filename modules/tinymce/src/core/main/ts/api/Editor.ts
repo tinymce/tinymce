@@ -30,7 +30,7 @@ import EditorCommands, { EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
-import EditorUpload, { UploadCallback, UploadResult } from './EditorUpload';
+import EditorUpload, { UploadResult } from './EditorUpload';
 import Env from './Env';
 import Formatter from './Formatter';
 import DomParser from './html/DomParser';
@@ -546,7 +546,7 @@ class Editor implements EditorObservable {
 
   /**
    * Executes a command on the current instance. These commands can be TinyMCE internal commands prefixed with "mce" or
-   * they can be build in browser commands such as "Bold". A compleate list of browser commands is available on MSDN or Mozilla.org.
+   * they can be build in browser commands such as "Bold". A complete list of browser commands is available on MSDN or Mozilla.org.
    * This function will dispatch the execCommand function on each plugin, theme or the execcommand_callback option if none of these
    * return true it will handle the command as a internal browser command.
    *
@@ -1070,11 +1070,10 @@ class Editor implements EditorObservable {
    * Uploads all data uri/blob uri images in the editor contents to server.
    *
    * @method uploadImages
-   * @param {function} callback Optional callback with images and status for each image.
-   * @return {Promise} Promise instance.
+   * @return {Promise} Promise instance with images and status for each image.
    */
-  public uploadImages(callback?: UploadCallback): Promise<UploadResult[]> {
-    return this.editorUpload.uploadImages(callback);
+  public uploadImages(): Promise<UploadResult[]> {
+    return this.editorUpload.uploadImages();
   }
 
   // Internal functions

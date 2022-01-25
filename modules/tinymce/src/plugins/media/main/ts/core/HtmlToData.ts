@@ -14,7 +14,6 @@ import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import { MediaData } from './Types';
-import { getVideoScriptMatch, VideoScript } from './VideoScript';
 
 const DOM = DOMUtils.DOM;
 
@@ -34,7 +33,7 @@ const getEphoxEmbedData = (node: AstNode): MediaData => {
   };
 };
 
-const htmlToData = (prefixes: VideoScript[], html: string, schema?: Schema): MediaData => {
+const htmlToData = (html: string, schema?: Schema): MediaData => {
   let data: any = {};
 
   const parser = DomParser({ validate: false, forced_root_block: false }, schema);
@@ -62,16 +61,9 @@ const htmlToData = (prefixes: VideoScript[], html: string, schema?: Schema): Med
         }
 
         if (name === 'script') {
-          const videoScript = getVideoScriptMatch(prefixes, node.attr('src'));
-          if (!videoScript) {
-            return;
-          }
-
           data = {
             type: 'script',
-            source: node.attr('src'),
-            width: String(videoScript.width),
-            height: String(videoScript.height)
+            source: node.attr('src')
           };
         }
 

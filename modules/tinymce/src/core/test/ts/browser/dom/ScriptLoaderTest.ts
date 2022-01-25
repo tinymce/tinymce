@@ -11,33 +11,26 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
 
   const pLoadScript = (url: string): Promise<void> => {
     loadedScripts.push(url);
-    return new Promise((resolve, reject) => {
-      ScriptLoader.ScriptLoader.loadScript(url, () => {
-        loadedCount++;
-        resolve();
-      }, () => reject('Failed to load script'));
+    return ScriptLoader.ScriptLoader.loadScript(url).then(() => {
+      loadedCount++;
     });
   };
 
   const pLoadScripts = (urls: string[]): Promise<void> => {
     loadedScripts.push(...urls);
     const scriptCount = urls.length;
-    return new Promise((resolve, reject) => {
-      ScriptLoader.ScriptLoader.loadScripts(urls, () => {
-        loadedCount += scriptCount;
-        resolve();
-      }, () => reject('Failed to load scripts'));
+    return ScriptLoader.ScriptLoader.loadScripts(urls).then(() => {
+      loadedCount += scriptCount;
     });
   };
 
   const addToQueue = (url: string): void => {
     loadedScripts.push(url);
-    ScriptLoader.ScriptLoader.add(url, () => loadedCount++);
+    ScriptLoader.ScriptLoader.add(url).then(() => loadedCount++);
   };
 
-  const pLoadQueue = (): Promise<void> => new Promise((resolve, reject) => {
-    ScriptLoader.ScriptLoader.loadQueue(resolve, undefined, () => reject('Failed to load queued scripts'));
-  });
+  const pLoadQueue = (): Promise<void> =>
+    ScriptLoader.ScriptLoader.loadQueue();
 
   const assertQueueLoadedCount = (count: number) => {
     assert.equal(loadedCount, count, 'Loaded script count');

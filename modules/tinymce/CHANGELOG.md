@@ -18,14 +18,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
 
 ### Improved
+- The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
+- A `ThemeLoadError` event is now fired if the theme fails to load #TINY-8325
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
 - The `emoticon` plugin dialog, toolbar and menu item has been updated to use the more accurate `Emojis` term #TINY-7631
 - The dialog `redial` API will now only rerender the changed components instead of the whole dialog #TINY-8334
 - The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
 - The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
+- Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
 
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
+- The `images_upload_handler` option is no longer passed a `success` or `failure` callback and instead requires a `Promise` to be returned with the upload result #TINY-8325
 - RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
 - The `tinymce.Env.os.isOSX` API has been renamed to `tinymce.Env.os.isMacOS` #TINY-8175
 - The `tinymce.Env.browser.isChrome` API has been renamed to `tinymce.Env.browser.isChromium` to better reflect its functionality #TINY-8300
@@ -66,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
+- Removed the deprecated `XHR` API #TINY-8164
 - Removed the legacy browser detection properties from `Env` #TINY-8162
 - Removed the deprecated `setIconStroke` Split Toolbar Button API #TINY-8162
 - Removed the deprecated `editors` property from `EditorManager` #TINY-8162
@@ -75,8 +80,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `Schema` settings #TINY-7821
 - Removed the deprecated `file_browser_callback_types`, `force_hex_style_colors` and `images_dataimg_filter` settings #TINY-7823
 - Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
+- Removed the deprecated `media_scripts` option in the `media` plugin #TINY-8421
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
 - Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
+- Removed the callback for the `EditorUpload` APIs #TINY-8325
 - The legacy `mobile` theme has been removed #TINY-7832
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
 - Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192

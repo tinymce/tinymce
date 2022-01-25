@@ -1,6 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -13,10 +12,6 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     media_live_embeds: false,
     document_base_url: '/tinymce/tinymce/trunk/tests/',
     extended_valid_elements: 'script[src|type]',
-    media_scripts: [
-      { filter: 'http://media1.tinymce.com' },
-      { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
-    ]
   }, [ Plugin ]);
 
   it('TBA: Object retained as is', () => {
@@ -132,29 +127,6 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
 
     editor.options.unset('media_filter_html');
     editor.options.unset('media_live_embeds');
-  });
-
-  it('TBA: Media script elements', () => {
-    const editor = hook.editor();
-    editor.setContent(
-      '<script src="http://media1.tinymce.com/123456"></sc' + 'ript>' +
-      '<script src="http://media2.tinymce.com/123456"></sc' + 'ript>'
-    );
-
-    const imgs = editor.getBody().getElementsByTagName('img');
-    assert.equal(imgs[0].className, 'mce-object mce-object-script');
-    assert.equal(imgs[0].width, 300);
-    assert.equal(imgs[0].height, 150);
-    assert.equal(imgs[1].className, 'mce-object mce-object-script');
-    assert.equal(imgs[1].width, 100);
-    assert.equal(imgs[1].height, 200);
-
-    TinyAssertions.assertContent(editor,
-      '<p>\n' +
-      '<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
-      '<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
-      '</p>'
-    );
   });
 
   it('TBA: XSS content', () => {
