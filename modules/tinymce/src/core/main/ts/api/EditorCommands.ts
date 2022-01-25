@@ -185,7 +185,6 @@ class EditorCommands {
     }
 
     const lowerCaseCommand = command.toLowerCase();
-
     if (this.commands.exec[lowerCaseCommand]) {
       return true;
     }
@@ -203,7 +202,7 @@ class EditorCommands {
    * @param {Object} scope Optional scope to execute the function in.
    */
   public addQueryStateHandler(command: string, callback: () => boolean, scope?: any) {
-    this.commands.state[command.toLowerCase()] = () => callback.call(scope || this.editor);
+    this.commands.state[command.toLowerCase()] = () => callback.call(scope ?? this.editor);
   }
 
   /**
@@ -216,7 +215,7 @@ class EditorCommands {
    * @param {Object} scope Optional scope to execute the function in.
    */
   public addQueryValueHandler(command: string, callback: () => string, scope?: any) {
-    this.commands.value[command.toLowerCase()] = () => callback.call(scope || this.editor);
+    this.commands.value[command.toLowerCase()] = () => callback.call(scope ?? this.editor);
   }
 }
 

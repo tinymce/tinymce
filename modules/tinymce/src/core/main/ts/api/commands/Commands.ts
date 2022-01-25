@@ -21,7 +21,7 @@ import * as SelectionCommands from './SelectionCommands';
 const registerSimpleCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
     mceRemoveNode: (_command, _ui, value) => {
-      const node = value || editor.selection.getNode();
+      const node = value ?? editor.selection.getNode();
 
       // Make sure that the body node isn't removed
       if (node !== editor.getBody()) {
