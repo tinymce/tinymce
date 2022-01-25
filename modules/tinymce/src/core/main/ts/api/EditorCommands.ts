@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
+import { Fun, Obj, Type } from '@ephox/katamari';
 
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
@@ -249,7 +249,7 @@ class EditorCommands {
 
   public hasCustomCommand(command: string): boolean {
     command = command.toLowerCase();
-    return !!this.commands.exec[command];
+    return Obj.has(this.commands.exec, command);
   }
 
   // Private methods
@@ -548,7 +548,7 @@ class EditorCommands {
       const selection = editor.selection;
       const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
       const matches = map(nodes, (node) => {
-        return !!editor.formatter.matchNode(node, name);
+        return Type.isNonNullable(editor.formatter.matchNode(node, name));
       });
       return inArray(matches, true) !== -1;
     };
