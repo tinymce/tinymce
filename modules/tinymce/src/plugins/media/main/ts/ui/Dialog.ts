@@ -92,23 +92,20 @@ const handleError = (editor: Editor) => (error?: { msg: string }): void => {
   editor.notificationManager.open({ type: 'error', text: errorMessage });
 };
 
-const snippetToData = (editor: Editor, embedSnippet: string): MediaData =>
-  HtmlToData.htmlToData(Options.getScripts(editor), embedSnippet);
-
 const getEditorData = (editor: Editor): MediaData => {
   const element = editor.selection.getNode();
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
   return {
     embed: snippet,
-    ...HtmlToData.htmlToData(Options.getScripts(editor), snippet)
+    ...HtmlToData.htmlToData(snippet)
   };
 };
 
-const addEmbedHtml = (api: Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) => (response: Service.EmbedResult): void => {
+const addEmbedHtml = (api: Dialog.DialogInstanceApi<MediaDialogData>) => (response: Service.EmbedResult): void => {
   // Only set values if a URL has been defined
   if (Type.isString(response.url) && response.url.trim().length > 0) {
     const html = response.html;
-    const snippetData = snippetToData(editor, html);
+    const snippetData = HtmlToData.htmlToData(html);
     const nuData: MediaData = {
       ...snippetData,
       source: response.url,
@@ -166,17 +163,17 @@ const showDialog = (editor: Editor): void => {
 
     // If a new URL is entered, then clear the embed html and fetch the new data
     if (prevData.source !== serviceData.source) {
-      addEmbedHtml(win, editor)({ url: serviceData.source, html: '' });
+      addEmbedHtml(win)({ url: serviceData.source, html: '' });
 
       Service.getEmbedHtml(editor, serviceData)
-        .then(addEmbedHtml(win, editor))
+        .then(addEmbedHtml(win))
         .catch(handleError(editor));
     }
   };
 
   const handleEmbed = (api: Dialog.DialogInstanceApi<MediaDialogData>): void => {
     const data = unwrap(api.getData());
-    const dataFromEmbed = snippetToData(editor, data.embed);
+    const dataFromEmbed = HtmlToData.htmlToData(data.embed);
     api.setData(wrap(dataFromEmbed));
   };
 
