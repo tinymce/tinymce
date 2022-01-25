@@ -15,27 +15,27 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
   const SelectAll = async (editor: Editor) => {
     if (platform.os.isMacOS()) {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo( { metaKey: true }, 'a') ]);
-    } else if (!platform.browser.isFirefox()){
-      TinyContentActions.keystroke(editor, 'A'.charCodeAt(0),{ctrl: true});
-    } else{
+    } else if (!platform.browser.isFirefox()) {
+      TinyContentActions.keystroke(editor, 'A'.charCodeAt(0), { ctrl: true });
+    } else {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo( { ctrlKey: true }, 'a') ]);
     }
   };
   const Undo = async (editor: Editor) => {
     if (platform.os.isMacOS()) {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo( { metaKey: true }, 'z') ]);
-    } else if (!platform.browser.isFirefox()){
-      TinyContentActions.keystroke(editor, 'Z'.charCodeAt(0),{ctrl: true});
-    } else{
+    } else if (!platform.browser.isFirefox()) {
+      TinyContentActions.keystroke(editor, 'Z'.charCodeAt(0), { ctrl: true });
+    } else {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo( { ctrlKey: true }, 'z') ]);
     }
   };
   const Redo = async (editor: Editor) => {
     if (platform.os.isMacOS()) {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ metaKey: true }, 'y') ]);
-    } else if (!platform.browser.isFirefox()){
-      TinyContentActions.keystroke(editor, 'Y'.charCodeAt(0),{ctrl: true});
-    } else{
+    } else if (!platform.browser.isFirefox()) {
+      TinyContentActions.keystroke(editor, 'Y'.charCodeAt(0), { ctrl: true });
+    } else {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo( { ctrlKey: true }, 'y') ]);
     }
   };
