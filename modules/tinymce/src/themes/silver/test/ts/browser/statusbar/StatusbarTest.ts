@@ -19,7 +19,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           classes: [ arr.has('tox-statusbar__path') ],
           children: [
             s.element('div', { children: [ s.text(str.is('p')) ] }),
-            s.element('div', { children: [ s.text(str.is(' » ')) ] }),
+            s.element('div', { children: [ s.text(str.is(' › ')) ] }),
             s.element('div', { children: [ s.text(str.is('strong')) ] })
           ]
         }),
@@ -48,7 +48,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           classes: [ arr.has('tox-statusbar__path') ],
           children: [
             s.element('div', { children: [ s.text(str.is('p')) ] }),
-            s.element('div', { children: [ s.text(str.is(' » ')) ] }),
+            s.element('div', { children: [ s.text(str.is(' › ')) ] }),
             s.element('div', { children: [ s.text(str.is('strong')) ] })
           ]
         }),
@@ -73,7 +73,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           classes: [ arr.has('tox-statusbar__path') ],
           children: [
             s.element('div', { children: [ s.text(str.is('p')) ] }),
-            s.element('div', { children: [ s.text(str.is(' » ')) ] }),
+            s.element('div', { children: [ s.text(str.is(' › ')) ] }),
             s.element('div', { children: [ s.text(str.is('strong')) ] })
           ]
         }),
@@ -187,7 +187,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
                     classes: [ arr.has('tox-statusbar__path') ],
                     children: [
                       s.element('div', { children: [ s.text(str.is('p')) ] }),
-                      s.element('div', { children: [ s.text(str.is(' » ')) ] }),
+                      s.element('div', { children: [ s.text(str.is(' › ')) ] }),
                       s.element('div', { children: [ s.text(str.is('strong')) ] })
                     ]
                   })
