@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.core.FontSelectTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'fontsizeselect fontselect',
+    toolbar: 'fontsizeselect fontfamily',
     content_style: [
       '.mce-content-body { font-family: Helvetica; font-size: 42px; }',
       '.mce-content-body p { font-family: Arial; font-size: 12px; }',

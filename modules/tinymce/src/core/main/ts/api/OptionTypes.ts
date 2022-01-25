@@ -109,7 +109,7 @@ interface BaseEditorOptions {
   fixed_toolbar_container?: string;
   fixed_toolbar_container_target?: HTMLElement;
   font_css?: string | string[];
-  font_formats?: string;
+  font_family_formats?: string;
   font_size_classes?: string;
   font_size_legacy_values?: string;
   font_size_style_values?: string;

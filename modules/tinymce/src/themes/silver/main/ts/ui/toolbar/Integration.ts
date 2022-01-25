@@ -142,7 +142,7 @@ const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Optio
 const bespokeButtons: Record<string, (editor: Editor, extras: Extras) => SketchSpec> = {
   styleselect: types.styleSelectButton,
   fontsizeselect: types.fontsizeSelectButton,
-  fontselect: types.fontSelectButton,
+  fontfamily: types.fontSelectButton,
   formatselect: types.formatButton,
   align: types.alignMenuButton
 };

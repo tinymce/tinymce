@@ -10,13 +10,13 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.core.FontSelectCustomTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'fontsizeselect fontselect',
+    toolbar: 'fontsizeselect fontfamily',
     content_style: [
       '.mce-content-body { font-family: Helvetica; font-size: 42px; }',
       '.mce-content-body p { font-family: Arial; font-size: 12px; }',
       '.mce-content-body h1 { font-family: Arial; font-size: 32px; }'
     ].join(''),
-    font_formats: 'Arial=arial; Arial Black=arial black; Arial Narrow=arial narrow; Bauhaus 93="bauhaus 93"; Bookman Old Style=bookman old style; Bookshelf Symbol 7=bookshelf symbol 7; Times New Roman=times new roman, times;',
+    font_family_formats: 'Arial=arial; Arial Black=arial black; Arial Narrow=arial narrow; Bauhaus 93="bauhaus 93"; Bookman Old Style=bookman old style; Bookshelf Symbol 7=bookshelf symbol 7; Times New Roman=times new roman, times;',
     fontsize_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
   }, []);
 

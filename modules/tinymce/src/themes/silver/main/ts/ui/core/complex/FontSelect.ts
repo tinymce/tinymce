@@ -88,7 +88,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const dataset = buildBasicSettingsDataset(editor, 'font_formats', Delimiter.SemiColon);
+  const dataset = buildBasicSettingsDataset(editor, 'font_family_formats', Delimiter.SemiColon);
 
   return {
     tooltip: 'Fonts',
@@ -110,7 +110,7 @@ const createFontSelect = (editor: Editor, backstage: UiFactoryBackstage) => crea
 // TODO: Test this!
 const fontSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
-  editor.ui.registry.addNestedMenuItem('fontformats', {
+  editor.ui.registry.addNestedMenuItem('fontfamily', {
     text: backstage.shared.providers.translate('Fonts'),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

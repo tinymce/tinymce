@@ -90,16 +90,16 @@ const settings = {
   // rtl_ui: true,
   add_unload_trigger: false,
   autosave_ask_before_unload: false,
-  toolbar: 'undo redo sidebar1 align fontsizeselect fontselect formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+  toolbar: 'undo redo sidebar1 align fontsizeselect fontfamily formatselect styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
   'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl | fullscreen',
 
   // Multiple toolbar array
-  // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
+  // toolbar: ['undo redo sidebar1 align fontsizeselect insertfile | fontfamily formatselect styleselect insertfile | styleselect | bold italic',
   // 'alignleft aligncenter alignright alignjustify | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
   // 'bullist numlist outdent indent | link image'],
 
   // Toolbar<n>
-  // toolbar1: 'undo redo sidebar1 align fontsizeselect insertfile | fontselect formatselect styleselect insertfile | styleselect | bold italic',
+  // toolbar1: 'undo redo sidebar1 align fontsizeselect insertfile | fontfamily formatselect styleselect insertfile | styleselect | bold italic',
   // toolbar2: 'alignleft aligncenter alignright alignjustify | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
   // toolbar3: 'bullist numlist outdent indent | link image',
 

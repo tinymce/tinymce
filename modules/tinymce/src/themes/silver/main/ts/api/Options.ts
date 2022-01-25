@@ -100,7 +100,7 @@ const register = (editor: Editor): void => {
     default: '1 1.1 1.2 1.3 1.4 1.5 2'
   });
 
-  registerOption('font_formats', {
+  registerOption('font_family_formats', {
     processor: 'string',
     default: 'Andale Mono=andale mono,monospace;' +
       'Arial=arial,helvetica,sans-serif;' +
