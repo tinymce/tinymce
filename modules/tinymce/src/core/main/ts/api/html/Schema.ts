@@ -67,6 +67,7 @@ export interface SchemaRegExpMap { [name: string]: RegExp }
 
 interface Schema {
   children: Record<string, SchemaMap>;
+  elements: Record<string, SchemaElement>;
   getValidStyles: () => Record<string, string[]> | undefined;
   getValidClasses: () => Record<string, SchemaMap> | undefined;
   getBlockElements: () => SchemaMap;
@@ -409,7 +410,7 @@ const compileElementMap = (value: string | Record<string, string>, mode?: string
 };
 
 const Schema = (settings?: SchemaSettings): Schema => {
-  let elements: Record<string, SchemaElement> = {};
+  const elements: Record<string, SchemaElement> = {};
   const children: Record<string, {}> = {};
   let patternElements = [];
   const customElementsMap = {}, specialElements = {} as SchemaRegExpMap;
@@ -631,8 +632,12 @@ const Schema = (settings?: SchemaSettings): Schema => {
   };
 
   const setValidElements = (validElements: string) => {
-    elements = {};
+    // Clear any existing rules. Note that since `elements` is exposed we can't
+    // overwrite it, so instead we delete all the properties
     patternElements = [];
+    Arr.each(Obj.keys(elements), (name) => {
+      delete elements[name];
+    });
 
     addValidElements(validElements);
 
@@ -1054,6 +1059,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
 
   return {
     children,
+    elements,
     getValidStyles,
     getValidClasses,
     getBlockElements,
