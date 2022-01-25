@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import type Editor from '../api/Editor';
-import Env from '../api/Env';
+import type Editor from '../Editor';
+import Env from '../Env';
 
 export const registerCommands = (editor: Editor) => {
   const execNativeCommand = (command: string, ui?: boolean, value?: any) => {

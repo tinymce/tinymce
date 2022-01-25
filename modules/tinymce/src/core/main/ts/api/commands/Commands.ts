@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import type Editor from '../api/Editor';
-import * as EditorFocus from '../focus/EditorFocus';
+import * as EditorFocus from '../../focus/EditorFocus';
+import type Editor from '../Editor';
 import * as AlignCommands from './AlignCommands';
 import * as ClipboardCommands from './ClipboardCommands';
 import * as ContentCommands from './ContentCommands';
@@ -18,7 +18,7 @@ import * as ListCommands from './ListCommands';
 import * as NewlineCommands from './NewlineCommands';
 import * as SelectionCommands from './SelectionCommands';
 
-export const setupCommands = (editor: Editor) => {
+export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
     mceRemoveNode: (_command, _ui, value) => {
       const node = value || editor.selection.getNode();

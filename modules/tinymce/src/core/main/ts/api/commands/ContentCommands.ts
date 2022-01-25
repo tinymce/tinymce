@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import type Editor from '../api/Editor';
-import * as InsertContent from '../content/InsertContent';
+import * as InsertContent from '../../content/InsertContent';
+import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({

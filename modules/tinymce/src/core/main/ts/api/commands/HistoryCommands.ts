@@ -7,7 +7,7 @@
 
 import { Fun } from '@ephox/katamari';
 
-import type Editor from '../api/Editor';
+import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({

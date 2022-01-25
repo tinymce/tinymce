@@ -7,7 +7,6 @@
 
 import { Arr, Fun, Type } from '@ephox/katamari';
 
-import * as DefaultCommands from '../commands/DefaultCommands';
 import * as EditorContent from '../content/EditorContent';
 import * as Deprecations from '../Deprecations';
 import * as NodeType from '../dom/NodeType';
@@ -23,6 +22,7 @@ import Quirks from '../util/Quirks';
 import * as VisualAids from '../view/VisualAids';
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
+import * as Commands from './commands/Commands';
 import DOMUtils from './dom/DOMUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
@@ -304,7 +304,7 @@ class Editor implements EditorObservable {
 
     this.shortcuts = new Shortcuts(this);
     this.editorCommands = new EditorCommands(this);
-    DefaultCommands.setupCommands(this);
+    Commands.registerCommands(this);
 
     const cacheSuffix = getOption('cache_suffix');
     if (cacheSuffix) {

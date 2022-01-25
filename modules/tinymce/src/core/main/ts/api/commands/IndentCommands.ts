@@ -5,18 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import type Editor from '../api/Editor';
-import * as InsertBr from '../newline/InsertBr';
-import * as InsertNewLine from '../newline/InsertNewLine';
+import * as IndentOutdent from '../../commands/IndentOutdent';
+import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
-    mceInsertNewLine: (_command, _ui, value) => {
-      InsertNewLine.insert(editor, value);
+    'Indent,Outdent': (command) => {
+      IndentOutdent.handle(editor, command);
     },
-
-    InsertLineBreak: (_command, _ui, value) => {
-      InsertBr.insert(editor, value);
-    }
   });
+
+  editor.editorCommands.addCommands({
+    Outdent: () => IndentOutdent.canOutdent(editor),
+  }, 'state');
 };

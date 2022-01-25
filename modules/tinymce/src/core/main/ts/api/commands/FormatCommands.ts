@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import type Editor from '../api/Editor';
-import { ContentLanguage } from '../api/OptionTypes';
-import * as FontCommands from '../commands/FontCommands';
-import * as LineHeightCommands from '../commands/LineHeight';
-import { FormatVars } from '../fmt/FormatTypes';
+import * as Font from '../../commands/Font';
+import * as LineHeight from '../../commands/LineHeight';
+import { FormatVars } from '../../fmt/FormatTypes';
+import type Editor from '../Editor';
+import { ContentLanguage } from '../OptionTypes';
 
 const registerExecCommands = (editor: Editor) => {
   const toggleFormat = (name: string, value?: FormatVars) => {
@@ -27,15 +27,15 @@ const registerExecCommands = (editor: Editor) => {
     },
 
     'FontName': (_command, _ui, value) => {
-      FontCommands.fontNameAction(editor, value);
+      Font.fontNameAction(editor, value);
     },
 
     'FontSize': (_command, _ui, value) => {
-      FontCommands.fontSizeAction(editor, value);
+      Font.fontSizeAction(editor, value);
     },
 
     'LineHeight': (_command, _ui, value) => {
-      LineHeightCommands.lineHeightAction(editor, value);
+      LineHeight.lineHeightAction(editor, value);
     },
 
     'Lang': (command, _ui, lang: ContentLanguage) => {
@@ -70,9 +70,9 @@ const registerQueryCommands = (editor: Editor) => {
     'mceBlockQuote': () => isFormatMatch('blockquote')
   }, 'state');
 
-  editor.editorCommands.addQueryValueHandler('FontName', () => FontCommands.fontNameQuery(editor), this);
-  editor.editorCommands.addQueryValueHandler('FontSize', () => FontCommands.fontSizeQuery(editor), this);
-  editor.editorCommands.addQueryValueHandler('LineHeight', () => LineHeightCommands.lineHeightQuery(editor), this);
+  editor.editorCommands.addQueryValueHandler('FontName', () => Font.fontNameQuery(editor), this);
+  editor.editorCommands.addQueryValueHandler('FontSize', () => Font.fontSizeQuery(editor), this);
+  editor.editorCommands.addQueryValueHandler('LineHeight', () => LineHeight.lineHeightQuery(editor), this);
 };
 
 export const registerCommands = (editor: Editor) => {
