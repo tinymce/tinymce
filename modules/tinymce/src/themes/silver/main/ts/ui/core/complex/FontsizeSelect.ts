@@ -97,7 +97,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', Delimiter.Space);
+  const dataset = buildBasicSettingsDataset(editor, 'font_size_formats', Delimiter.Space);
 
   return {
     tooltip: 'Font sizes',
@@ -119,7 +119,7 @@ const createFontsizeSelect = (editor: Editor, backstage: UiFactoryBackstage) => 
 // TODO: Test this!
 const fontsizeSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
-  editor.ui.registry.addNestedMenuItem('fontsizes', {
+  editor.ui.registry.addNestedMenuItem('fontsize', {
     text: 'Font sizes',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

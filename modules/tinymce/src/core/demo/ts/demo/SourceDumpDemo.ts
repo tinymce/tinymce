@@ -17,7 +17,7 @@ export default () => {
     ],
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'fontsizeselect fontfamily insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'fontsize fontfamily insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     init_instance_callback: (editor) => {
       editor.on('init keyup change', () => dumpSource(editor));

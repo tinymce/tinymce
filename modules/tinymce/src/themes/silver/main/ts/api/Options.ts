@@ -121,7 +121,7 @@ const register = (editor: Editor): void => {
       'Wingdings=wingdings,zapf dingbats'
   });
 
-  registerOption('fontsize_formats', {
+  registerOption('font_size_formats', {
     processor: 'string',
     default: '8pt 10pt 12pt 14pt 18pt 24pt 36pt'
   });

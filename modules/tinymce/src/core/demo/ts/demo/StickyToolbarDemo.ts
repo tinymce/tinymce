@@ -79,7 +79,7 @@ export default () => {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 align fontsizeselect fontfamily blocks styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'undo redo sidebar1 align fontsize fontfamily blocks styleselect insertfile | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
       'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     toolbar_mode: 'floating',
     toolbar_sticky: true
