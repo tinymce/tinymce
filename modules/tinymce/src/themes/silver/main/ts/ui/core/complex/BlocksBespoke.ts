@@ -56,10 +56,10 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFormatSelect = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createBlocksButton = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
 
 // FIX: Test this!
-const formatSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const blocksMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('blocks', {
     text: 'Blocks',
@@ -67,4 +67,4 @@ const formatSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   });
 };
 
-export { createFormatSelect, formatSelectMenu };
+export { createBlocksButton, blocksMenu };

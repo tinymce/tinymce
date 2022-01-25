@@ -114,10 +114,10 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createFontsizeSelect = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
 
 // TODO: Test this!
-const fontsizeSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const fontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontsize', {
     text: 'Font sizes',
@@ -125,4 +125,4 @@ const fontsizeSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   });
 };
 
-export { createFontsizeSelect, fontsizeSelectMenu };
+export { createFontSizeButton, fontSizeMenu };
