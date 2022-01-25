@@ -1,8 +1,11 @@
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { SugarElement } from '@ephox/sugar';
 import { TinyContentActions, TinyUiActions } from '@ephox/wrap-mcagar';
+import { PlatformDetection } from '@ephox/sand';
 
 import Editor from 'tinymce/core/api/Editor';
+
+const platform = PlatformDetection.detect();
 
 // TODO: Move into shared library
 const fakeEvent = (elm: SugarElement<HTMLElement>, name: string) => {
@@ -37,7 +40,11 @@ const pOpenDialog = async (editor: Editor) => {
 };
 
 const pOpenDialogWKeyboard = async (editor: Editor) => {
-  TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { meta: true });
+  if (platform.os.isMacOS()) {
+    TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { meta: true });
+  } else {
+    TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { ctrl: true });
+  }
   return await TinyUiActions.pWaitForDialog(editor);
 };
 
