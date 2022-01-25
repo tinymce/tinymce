@@ -25,7 +25,6 @@
     "node_modules/@ephox/bridge": true,
     "node_modules/@ephox/darwin": true,
     "node_modules/@ephox/dragster": true,
-    "node_modules/@ephox/imagetools": true,
     "node_modules/@ephox/jax": true,
     "node_modules/@ephox/katamari": true,
     "node_modules/@ephox/mcagar": true,

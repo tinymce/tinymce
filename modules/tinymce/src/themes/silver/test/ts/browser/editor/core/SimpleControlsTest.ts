@@ -98,6 +98,7 @@ describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
 
   it('TINY-8313: Click on the horizontal rule toolbar button and assert hr is added to the editor', () => {
     const editor = hook.editor();
+    editor.setContent('');
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Horizontal line"]');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s) => {
       return s.element('body', {

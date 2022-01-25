@@ -67,7 +67,7 @@ export default () => {
     add_unload_trigger: false,
     toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
     ' | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample',
-    plugins: [ 'list' ],
+    plugins: [ 'code' ],
     content_css: '../css/content_editable.css',
     height: 400
   });
@@ -79,7 +79,7 @@ export default () => {
     add_unload_trigger: false,
     toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
     ' | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample',
-    plugins: [ 'list' ],
+    plugins: [ 'code' ],
     content_css: '../css/content_editable.css'
   });
 

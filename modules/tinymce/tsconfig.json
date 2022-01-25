@@ -70,7 +70,6 @@
     { "path": "../boulder" },
     { "path": "../bridge" },
     { "path": "../darwin" },
-    { "path": "../imagetools" },
     { "path": "../katamari" },
     { "path": "../katamari-assertions" },
     { "path": "../mcagar" },

@@ -56,6 +56,10 @@ const modelLoadError = (editor: Editor, url: string, name: string) => {
   logError(editor, 'ModelLoadError', createLoadError('model', url, name));
 };
 
+const themeLoadError = (editor: Editor, url: string, name: string) => {
+  logError(editor, 'ThemeLoadError', createLoadError('theme', url, name));
+};
+
 const pluginInitError = (editor: Editor, name: string, err) => {
   const message = I18n.translate([ 'Failed to initialize plugin: {0}', name ]);
   fireError(editor, 'PluginLoadError', { message });
@@ -87,6 +91,7 @@ export {
   iconsLoadError,
   languageLoadError,
   modelLoadError,
+  themeLoadError,
   pluginInitError,
   modelInitError,
   uploadError,

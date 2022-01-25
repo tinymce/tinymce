@@ -101,6 +101,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'SkinLoadError': LoadErrorEvent;
   'PluginLoadError': LoadErrorEvent;
   'IconsLoadError': LoadErrorEvent;
+  'ThemeLoadError': LoadErrorEvent;
   'LanguageLoadError': LoadErrorEvent;
   'BeforeExecCommand': ExecCommandEvent;
   'ExecCommand': ExecCommandEvent;

@@ -1,4 +1,5 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { UnitTest } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 
 import * as Assertions from 'ephox/agar/api/Assertions';
 
@@ -15,7 +16,7 @@ UnitTest.test('AssertionsTest', () => {
   try {
     Assertions.assertEq('test 1 (assert.eq)', 10, 5);
   } catch (err) {
-    assert.eq('test 1 (assert.eq)', err.message);
+    assert.equal(err.message, 'test 1 (assert.eq)');
   }
 
   try {

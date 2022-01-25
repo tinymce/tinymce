@@ -49,8 +49,7 @@
       "tinymce.core.api.util.Observable",
       "tinymce.core.api.util.Tools",
       "tinymce.core.api.util.URI",
-      "tinymce.core.api.util.VK",
-      "tinymce.core.api.util.XHR"
+      "tinymce.core.api.util.VK"
     ]
   }
 }

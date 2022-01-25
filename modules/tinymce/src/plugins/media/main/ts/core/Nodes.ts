@@ -14,7 +14,6 @@ import AstNode from 'tinymce/core/api/html/Node';
 
 import * as Options from '../api/Options';
 import * as Sanitize from './Sanitize';
-import * as VideoScript from './VideoScript';
 
 declare let escape: any;
 
@@ -170,7 +169,6 @@ const isWithinEmbedWrapper = (node: AstNode): boolean => {
 const placeHolderConverter = (editor: Editor) => (nodes: AstNode[]): void => {
   let i = nodes.length;
   let node: AstNode;
-  let videoScript: VideoScript.VideoScript | undefined;
 
   while (i--) {
     node = nodes[i];
@@ -180,23 +178,6 @@ const placeHolderConverter = (editor: Editor) => (nodes: AstNode[]): void => {
 
     if (node.parent.attr('data-mce-object')) {
       continue;
-    }
-
-    if (node.name === 'script') {
-      videoScript = VideoScript.getVideoScriptMatch(Options.getScripts(editor), node.attr('src'));
-      if (!videoScript) {
-        continue;
-      }
-    }
-
-    if (videoScript) {
-      if (videoScript.width) {
-        node.attr('width', videoScript.width.toString());
-      }
-
-      if (videoScript.height) {
-        node.attr('height', videoScript.height.toString());
-      }
     }
 
     if (isLiveEmbedNode(node) && Options.hasLiveEmbeds(editor)) {

@@ -57,7 +57,6 @@ import Observable from './util/Observable';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import VK from './util/VK';
-import XHR, { XHRSettings } from './util/XHR';
 import WindowManager from './WindowManager';
 
 export default tinymce;
@@ -98,7 +97,6 @@ export {
   Observable,
   Tools,
   URI,
-  XHR,
   VK,
 
   // ui
@@ -143,6 +141,5 @@ export {
   SchemaSettings,
   Theme,
   Model,
-  WriterSettings,
-  XHRSettings
+  WriterSettings
 };

@@ -12,9 +12,9 @@ import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';
 
 const getText = (node: Node, schema: Schema): string[] => {
   const blockElements: SchemaMap = schema.getBlockElements();
-  const shortEndedElements: SchemaMap = schema.getShortEndedElements();
+  const voidElements: SchemaMap = schema.getVoidElements();
 
-  const isNewline = (node: Node) => blockElements[node.nodeName] || shortEndedElements[node.nodeName];
+  const isNewline = (node: Node) => blockElements[node.nodeName] || voidElements[node.nodeName];
 
   const textBlocks: string[] = [];
   let txt = '';

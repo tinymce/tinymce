@@ -9,7 +9,6 @@ boulder@7.0.0
 bridge@4.0.0
 darwin@8.0.0
 dragster@7.0.0
-imagetools@6.0.0
 jax@7.0.0
 katamari@9.0.0
 katamari-assertions@4.0.0

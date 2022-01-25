@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Future, Futures, Obj, Result, Results } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SelectorFind, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 
 import Tools from '../util/Tools';
@@ -17,8 +17,8 @@ import Tools from '../util/Tools';
  */
 
 interface StyleSheetLoader {
-  load: (url: string, success: () => void, failure?: () => void) => void;
-  loadAll: (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) => void;
+  load: (url: string) => Promise<void>;
+  loadAll: (urls: string[]) => Promise<string[]>;
   unload: (url: string) => void;
   unloadAll: (urls: string[]) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
@@ -73,129 +73,117 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
    *
    * @method load
    * @param {String} url Url to be loaded.
-   * @param {Function} success Callback to be executed when loaded.
-   * @param {Function} failure Callback to be executed when failed loading.
+   * @return {Promise} A promise that will resolve when the stylesheet is loaded successfully or reject if it failed to load.
    */
-  const load = (url: string, success: () => void, failure?: () => void) => {
-    let link: HTMLLinkElement;
+  const load = (url: string): Promise<void> =>
+    new Promise((success, failure) => {
+      let link: HTMLLinkElement;
 
-    const urlWithSuffix = Tools._addCacheSuffix(url);
+      const urlWithSuffix = Tools._addCacheSuffix(url);
 
-    const state = getOrCreateState(urlWithSuffix);
-    loadedStates[urlWithSuffix] = state;
-    state.count++;
+      const state = getOrCreateState(urlWithSuffix);
+      loadedStates[urlWithSuffix] = state;
+      state.count++;
 
-    const resolve = (callbacks: Array<() => void>, status: number) => {
-      let i = callbacks.length;
-      while (i--) {
-        callbacks[i]();
-      }
+      const resolve = (callbacks: Array<() => void>, status: number) => {
+        Arr.each(callbacks, Fun.call);
 
-      state.status = status;
-      state.passed = [];
-      state.failed = [];
+        state.status = status;
+        state.passed = [];
+        state.failed = [];
 
-      if (link) {
-        link.onload = null;
-        link.onerror = null;
-        link = null;
-      }
-    };
-
-    const passed = () => resolve(state.passed, 2);
-    const failed = () => resolve(state.failed, 3);
-
-    // Calls the waitCallback until the test returns true or the timeout occurs
-    const wait = (testCallback: () => boolean, waitCallback: () => void) => {
-      if (!testCallback()) {
-        // Wait for timeout
-        if ((Date.now()) - startTime < maxLoadTime) {
-          setTimeout(waitCallback);
-        } else {
-          failed();
+        if (link) {
+          link.onload = null;
+          link.onerror = null;
+          link = null;
         }
-      }
-    };
+      };
 
-    // Workaround for WebKit that doesn't properly support the onload event for link elements
-    // Or WebKit that fires the onload event before the StyleSheet is added to the document
-    const waitForWebKitLinkLoaded = () => {
-      wait(() => {
-        const styleSheets = documentOrShadowRoot.styleSheets;
-        let i = styleSheets.length;
+      const passed = () => resolve(state.passed, 2);
+      const failed = () => resolve(state.failed, 3);
 
-        while (i--) {
-          const styleSheet = styleSheets[i];
-          const owner = styleSheet.ownerNode;
-          if (owner && (owner as Element).id === link.id) {
-            passed();
-            return true;
+      // Calls the waitCallback until the test returns true or the timeout occurs
+      const wait = (testCallback: () => boolean, waitCallback: () => void) => {
+        if (!testCallback()) {
+          // Wait for timeout
+          if ((Date.now()) - startTime < maxLoadTime) {
+            setTimeout(waitCallback);
+          } else {
+            failed();
           }
         }
+      };
 
-        return false;
-      }, waitForWebKitLinkLoaded);
-    };
+      // Workaround for WebKit that doesn't properly support the onload event for link elements
+      // Or WebKit that fires the onload event before the StyleSheet is added to the document
+      const waitForWebKitLinkLoaded = () => {
+        wait(() => {
+          const styleSheets = documentOrShadowRoot.styleSheets;
+          let i = styleSheets.length;
 
-    if (success) {
-      state.passed.push(success);
-    }
+          while (i--) {
+            const styleSheet = styleSheets[i];
+            const owner = styleSheet.ownerNode;
+            if (owner && (owner as Element).id === link.id) {
+              passed();
+              return true;
+            }
+          }
 
-    if (failure) {
-      state.failed.push(failure);
-    }
+          return false;
+        }, waitForWebKitLinkLoaded);
+      };
 
-    // Is loading wait for it to pass
-    if (state.status === 1) {
-      return;
-    }
+      if (success) {
+        state.passed.push(success);
+      }
 
-    // Has finished loading and was success
-    if (state.status === 2) {
-      passed();
-      return;
-    }
+      if (failure) {
+        state.failed.push(failure);
+      }
 
-    // Has finished loading and was a failure
-    if (state.status === 3) {
-      failed();
-      return;
-    }
+      // Is loading wait for it to pass
+      if (state.status === 1) {
+        return;
+      }
 
-    // Start loading
-    state.status = 1;
-    const linkElem = SugarElement.fromTag('link', doc.dom);
-    Attribute.setAll(linkElem, {
-      rel: 'stylesheet',
-      type: 'text/css',
-      id: state.id
-    });
-    const startTime = Date.now();
+      // Has finished loading and was success
+      if (state.status === 2) {
+        passed();
+        return;
+      }
 
-    if (settings.contentCssCors) {
-      Attribute.set(linkElem, 'crossOrigin', 'anonymous');
-    }
+      // Has finished loading and was a failure
+      if (state.status === 3) {
+        failed();
+        return;
+      }
 
-    if (settings.referrerPolicy) {
-      // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
-      Attribute.set(linkElem, 'referrerpolicy', settings.referrerPolicy);
-    }
+      // Start loading
+      state.status = 1;
+      const linkElem = SugarElement.fromTag('link', doc.dom);
+      Attribute.setAll(linkElem, {
+        rel: 'stylesheet',
+        type: 'text/css',
+        id: state.id
+      });
+      const startTime = Date.now();
 
-    link = linkElem.dom;
-    link.onload = waitForWebKitLinkLoaded;
-    link.onerror = failed;
+      if (settings.contentCssCors) {
+        Attribute.set(linkElem, 'crossOrigin', 'anonymous');
+      }
 
-    addStyle(linkElem);
-    Attribute.set(linkElem, 'href', urlWithSuffix);
-  };
+      if (settings.referrerPolicy) {
+        // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
+        Attribute.set(linkElem, 'referrerpolicy', settings.referrerPolicy);
+      }
 
-  const loadF = (url: string): Future<Result<string, string>> =>
-    Future.nu((resolve) => {
-      load(
-        url,
-        Fun.compose(resolve, Fun.constant(Result.value(url))),
-        Fun.compose(resolve, Fun.constant(Result.error(url)))
-      );
+      link = linkElem.dom;
+      link.onload = waitForWebKitLinkLoaded;
+      link.onerror = failed;
+
+      addStyle(linkElem);
+      Attribute.set(linkElem, 'href', urlWithSuffix);
     });
 
   /**
@@ -203,17 +191,17 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
    *
    * @method loadAll
    * @param {Array} urls URLs to be loaded.
-   * @param {Function} success Callback to be executed when the style sheets have been successfully loaded.
-   * @param {Function} failure Callback to be executed when the style sheets fail to load.
+   * @return {Promise} A promise that is resolved when all stylesheets are loaded or rejected if any failed to load.
    */
-  const loadAll = (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) => {
-    Futures.par(Arr.map(urls, loadF)).get((result) => {
-      const parts = Arr.partition(result, (r) => r.isValue());
+  const loadAll = (urls: string[]) => {
+    const loadedUrls = Promise.allSettled(Arr.map(urls, (url) => load(url).then(Fun.constant(url))));
+    return loadedUrls.then((results) => {
+      const parts = Arr.partition(results, (r) => r.status === 'fulfilled');
 
       if (parts.fail.length > 0) {
-        failure(parts.fail.map(Results.unite));
+        return Promise.reject(Arr.map(parts.fail, (result: PromiseRejectedResult) => result.reason));
       } else {
-        success(parts.pass.map(Results.unite));
+        return Arr.map(parts.pass, (result: PromiseFulfilledResult<string>) => result.value);
       }
     });
   };

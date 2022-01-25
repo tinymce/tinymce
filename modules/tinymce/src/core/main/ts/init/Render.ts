@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
-import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
 import ScriptLoader from '../api/dom/ScriptLoader';
@@ -45,7 +44,7 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   if (I18n.hasCode(languageCode) === false && languageCode !== 'en') {
     const url = languageUrl !== '' ? languageUrl : editor.editorManager.baseURL + '/langs/' + languageCode + '.js';
 
-    scriptLoader.add(url, Fun.noop, undefined, () => {
+    scriptLoader.add(url).catch(() => {
       ErrorReporter.languageLoadError(editor, url, languageCode);
     });
   }
@@ -56,39 +55,38 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
  *
  * Each has their own special case where nothing needs to be waited for.
  */
-const loadThemeAndModel = (scriptLoader: ScriptLoader, editor: Editor, suffix: string, callback: () => void) => {
+const loadThemeAndModel = (scriptLoader: ScriptLoader, editor: Editor, suffix: string): Promise<void> => {
   const theme = Options.getTheme(editor);
 
   // Special case the 'wait for model' code if RTC is loading, as it will provide a model instead
-  let waitForModel: () => void;
+  let waitForModel: () => Promise<void>;
   if (!Rtc.isRtc(editor)) {
     const model = Options.getModel(editor);
     const modelUrl = Options.getModelUrl(editor);
     const url = Type.isString(modelUrl) ? editor.documentBaseURI.toAbsolute(modelUrl) : `models/${model}/model${suffix}.js`;
-    ModelManager.load(model, url, Fun.noop, undefined, () => {
+    ModelManager.load(model, url).catch(() => {
       ErrorReporter.modelLoadError(editor, url, model);
     });
 
-    waitForModel = () => ModelManager.waitFor(model, callback);
+    waitForModel = () => ModelManager.waitFor(model);
   } else {
-    waitForModel = callback;
+    waitForModel = () => Promise.resolve();
   }
 
   if (Type.isString(theme)) {
     if (!hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
       const themeUrl = Options.getThemeUrl(editor);
-
-      if (themeUrl) {
-        ThemeManager.load(theme, editor.documentBaseURI.toAbsolute(themeUrl));
-      } else {
-        ThemeManager.load(theme, 'themes/' + theme + '/theme' + suffix + '.js');
-      }
+      const url = themeUrl ? editor.documentBaseURI.toAbsolute(themeUrl) : 'themes/' + theme + '/theme' + suffix + '.js';
+      ThemeManager.load(theme, url).catch(() => {
+        ErrorReporter.themeLoadError(editor, url, theme);
+      });
     }
-    scriptLoader.loadQueue(() => {
-      ThemeManager.waitFor(theme, waitForModel);
-    });
+
+    const waitForTheme = () => ThemeManager.waitFor(theme);
+    const waitForBoth = () => Promise.allSettled([ waitForTheme(), waitForModel() ]).then(() => Promise.resolve());
+    return scriptLoader.loadQueue().then(waitForBoth, waitForBoth);
   } else {
-    waitForModel();
+    return scriptLoader.loadQueue().then(waitForModel, waitForModel);
   }
 };
 
@@ -116,34 +114,30 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
   const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Options.getIconPackName(editor), ''));
 
   Arr.each(Optionals.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
-    scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
+    scriptLoader.add(urlMeta.url).catch(() => {
       ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
   });
 };
 
 const loadPlugins = (editor: Editor, suffix: string) => {
-  Tools.each(Options.getExternalPlugins(editor), (url: string, name: string): void => {
-    PluginManager.load(name, url, Fun.noop, undefined, () => {
+  const loadPlugin = (name: string, url: string) => {
+    PluginManager.load(name, url).catch(() => {
       ErrorReporter.pluginLoadError(editor, url, name);
     });
+  };
+
+  Obj.each(Options.getExternalPlugins(editor), (url, name) => {
+    loadPlugin(name, url);
     editor.options.set('plugins', Options.getPlugins(editor) + ' ' + name);
   });
 
-  Tools.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {
+  Arr.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {
     plugin = Tools.trim(plugin);
 
     if (plugin && !PluginManager.urls[plugin]) {
       if (!hasSkipLoadPrefix(plugin)) {
-        const url: UrlObject = {
-          prefix: 'plugins/',
-          resource: plugin,
-          suffix: '/plugin' + suffix + '.js'
-        };
-
-        PluginManager.load(plugin, url, Fun.noop, undefined, () => {
-          ErrorReporter.pluginLoadError(editor, url.prefix + url.resource + url.suffix, plugin);
-        });
+        loadPlugin(plugin, 'plugins/' + plugin + '/plugin' + suffix + '.js');
       }
     }
   });
@@ -152,20 +146,17 @@ const loadPlugins = (editor: Editor, suffix: string) => {
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
-  loadThemeAndModel(scriptLoader, editor, suffix, () => {
+  const initIfNotRemoved = () => {
+    if (!editor.removed) {
+      Init.init(editor);
+    }
+  };
+
+  loadThemeAndModel(scriptLoader, editor, suffix).then(() => {
     loadLanguage(scriptLoader, editor);
     loadIcons(scriptLoader, editor, suffix);
     loadPlugins(editor, suffix);
-
-    scriptLoader.loadQueue(() => {
-      if (!editor.removed) {
-        Init.init(editor);
-      }
-    }, editor, () => {
-      if (!editor.removed) {
-        Init.init(editor);
-      }
-    });
+    scriptLoader.loadQueue().then(initIfNotRemoved, initIfNotRemoved);
   });
 };
 
