@@ -26,7 +26,7 @@ import DOMUtils from './dom/DOMUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer from './dom/Serializer';
-import EditorCommands, { EditorCommandCallback } from './EditorCommands';
+import EditorCommands, { EditorCommandArgs, EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
@@ -557,7 +557,7 @@ class Editor implements EditorObservable {
    * @param {mixed} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
    */
-  public execCommand(cmd: string, ui?: boolean, value?: any, args?: any): boolean {
+  public execCommand(cmd: string, ui?: boolean, value?: any, args?: EditorCommandArgs): boolean {
     return this.editorCommands.execCommand(cmd, ui, value, args);
   }
 

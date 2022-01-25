@@ -66,6 +66,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
 - Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
 - Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
+- The `editor.editorCommands.queryCommandSupported` will now return `false` on removed editors #TINY-7829
+- The `editor.editorCommands.queryCommandState` will now return `false` on removed editors #TINY-7829
+- The `editor.editorCommands.queryCommandValue` will now return empty strings on removed editors #TINY-7829
+- The `editor.editorCommands.execCommand` will now return false on removed editors #TINY-7829
+- The `editor.queryCommandSupported` will now return `false` on removed editors #TINY-7829
+- The `editor.queryCommandState` will now return `false` on removed editors #TINY-7829
+- The `editor.queryCommandValue` will now return empty strings on removed editors #TINY-7829
+- The `editor.execCommand` will now return false on removed editors #TINY-7829
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -110,6 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `editor.settings` property as it's been replaced by the new Options API #TINY-8236
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
 - Removed the `mceInsertRawHTML` command #TINY-8214
+- Removed the undocumented `editor.editorCommands.hasCustomCommand` API #TINY-7829
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

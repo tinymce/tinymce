@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
@@ -21,7 +21,6 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 import Editor from './Editor';
 import Env from './Env';
 import { ContentLanguage } from './OptionTypes';
-import Tools from './util/Tools';
 
 /**
  * This class enables you to add custom editor commands and it contains
@@ -31,17 +30,17 @@ import Tools from './util/Tools';
  * @class tinymce.EditorCommands
  */
 
-// Added for compression purposes
-const each = Tools.each;
-const map = Tools.map, inArray = Tools.inArray;
-
-export type EditorCommandCallback = (ui: boolean, value: any, args: any) => void;
-export type EditorCommandsCallback = (command: string, ui: boolean, value: any, args: any) => void;
+export type EditorCommandCallback = (ui: boolean, value: any) => void;
+export type EditorCommandsCallback = (command: string, ui: boolean, value: any) => void;
 
 interface Commands {
   state: Record<string, (command: string) => boolean>;
   exec: Record<string, EditorCommandsCallback>;
   value: Record<string, (command: string) => string>;
+}
+
+export interface EditorCommandArgs {
+  skip_focus?: boolean;
 }
 
 export interface EditorCommandsConstructor {
@@ -71,62 +70,64 @@ class EditorCommands {
    * @param {Object} args Optional extra arguments to the execCommand.
    * @return {Boolean} true/false if the command was found or not.
    */
-  public execCommand(command: string, ui?: boolean, value?: any, args?: any): boolean {
-    let func, state = false;
-    const self = this;
+  public execCommand(command: string, ui?: boolean, value?: any, args?: EditorCommandArgs): boolean {
+    const editor = this.editor;
 
-    if (self.editor.removed) {
-      return;
+    if (editor.removed) {
+      return false;
     }
 
     if (command.toLowerCase() !== 'mcefocus') {
       if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
-        self.editor.focus();
+        editor.focus();
       } else {
-        SelectionBookmark.restore(self.editor);
+        SelectionBookmark.restore(editor);
       }
     }
 
-    args = self.editor.fire('BeforeExecCommand', { command, ui, value });
-    if (args.isDefaultPrevented()) {
+    const eventArgs = editor.fire('BeforeExecCommand', { command, ui, value });
+    if (eventArgs.isDefaultPrevented()) {
       return false;
     }
 
     const customCommand = command.toLowerCase();
-    if ((func = self.commands.exec[customCommand])) {
+    const func = this.commands.exec[customCommand];
+    if (func) {
       func(customCommand, ui, value);
-      self.editor.fire('ExecCommand', { command, ui, value });
+      editor.fire('ExecCommand', { command, ui, value });
       return true;
     }
 
-    // Plugin commands
-    each(this.editor.plugins, (p) => {
+    // Plugin commands (should this be removed seems very legacy) to have execCommand functions on the plugins
+    const wasExecuted = Obj.find(this.editor.plugins, (p) => {
       if (p.execCommand && p.execCommand(command, ui, value)) {
-        self.editor.fire('ExecCommand', { command, ui, value });
-        state = true;
+        editor.fire('ExecCommand', { command, ui, value });
+        return true;
+      } else {
         return false;
       }
-    });
+    }).isSome();
 
-    if (state) {
-      return state;
+    if (wasExecuted) {
+      return wasExecuted;
     }
 
-    // Theme commands
-    if (self.editor.theme && self.editor.theme.execCommand && self.editor.theme.execCommand(command, ui, value)) {
-      self.editor.fire('ExecCommand', { command, ui, value });
+    // Theme commands (should this be removed seems very legacy) to have execCommand functions on the themes
+    if (editor.theme && editor.theme.execCommand && editor.theme.execCommand(command, ui, value)) {
+      editor.fire('ExecCommand', { command, ui, value });
       return true;
     }
 
     // Browser commands
+    let state: boolean;
     try {
-      state = self.editor.getDoc().execCommand(command, ui, value);
+      state = editor.getDoc().execCommand(command, ui, value);
     } catch (ex) {
       // Ignore old IE errors
     }
 
     if (state) {
-      self.editor.fire('ExecCommand', { command, ui, value });
+      editor.fire('ExecCommand', { command, ui, value });
       return true;
     }
 
@@ -141,20 +142,19 @@ class EditorCommands {
    * @return {Boolean} true/false - For example: If the selected contents is bold or not.
    */
   public queryCommandState(command: string): boolean {
-    let func;
-
     if (this.editor.quirks.isHidden() || this.editor.removed) {
-      return;
+      return false;
     }
 
-    command = command.toLowerCase();
-    if ((func = this.commands.state[command])) {
-      return func(command);
+    const lowerCaseCommand = command.toLowerCase();
+    const func = this.commands.state[lowerCaseCommand];
+    if (func) {
+      return func(lowerCaseCommand);
     }
 
     // Browser commands
     try {
-      return this.editor.getDoc().queryCommandState(command);
+      return this.editor.getDoc().queryCommandState(lowerCaseCommand);
     } catch (ex) {
       // Fails sometimes see bug: 1896577
     }
@@ -170,23 +170,24 @@ class EditorCommands {
    * @return {String} Command value or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(command: string): string {
-    let func;
-
     if (this.editor.quirks.isHidden() || this.editor.removed) {
-      return;
+      return '';
     }
 
-    command = command.toLowerCase();
-    if ((func = this.commands.value[command])) {
-      return func(command);
+    const lowerCaseCommand = command.toLowerCase();
+    const func = this.commands.value[lowerCaseCommand];
+    if (func) {
+      return func(lowerCaseCommand);
     }
 
     // Browser commands
     try {
-      return this.editor.getDoc().queryCommandValue(command);
+      return this.editor.getDoc().queryCommandValue(lowerCaseCommand);
     } catch (ex) {
       // Fails sometimes see bug: 1896577
     }
+
+    return '';
   }
 
   /**
@@ -198,19 +199,19 @@ class EditorCommands {
    */
   public addCommands<K extends keyof Commands>(commandList: Commands[K], type: K): void;
   public addCommands(commandList: Record<string, EditorCommandsCallback>): void;
-  public addCommands(commandList: Commands[keyof Commands], type: 'exec' | 'state' | 'query' = 'exec') {
-    const self = this;
+  public addCommands(commandList: Commands[keyof Commands], type: 'exec' | 'state' | 'value' = 'exec') {
+    const commands = this.commands;
 
-    each(commandList, (callback, command) => {
-      each(command.toLowerCase().split(','), (command) => {
-        self.commands[type][command] = callback;
+    Obj.each(commandList, (callback, command) => {
+      Arr.each(command.toLowerCase().split(','), (command) => {
+        commands[type][command] = callback;
       });
     });
   }
 
   public addCommand(command: string, callback: EditorCommandCallback, scope?: any) {
-    command = command.toLowerCase();
-    this.commands.exec[command] = (command, ui, value, args) => callback.call(scope || this.editor, ui, value, args);
+    const lowerCaseCommand = command.toLowerCase();
+    this.commands.exec[lowerCaseCommand] = (_command, ui, value) => callback.call(scope ?? this.editor, ui, value);
   }
 
   /**
@@ -221,15 +222,19 @@ class EditorCommands {
    * @return {Boolean} true/false if the command is supported or not.
    */
   public queryCommandSupported(command: string): boolean {
-    command = command.toLowerCase();
+    if (this.editor.quirks.isHidden() || this.editor.removed) {
+      return false;
+    }
 
-    if (this.commands.exec[command]) {
+    const lowerCaseCommand = command.toLowerCase();
+
+    if (this.commands.exec[lowerCaseCommand]) {
       return true;
     }
 
     // Browser commands
     try {
-      return this.editor.getDoc().queryCommandSupported(command);
+      return this.editor.getDoc().queryCommandSupported(lowerCaseCommand);
     } catch (ex) {
       // Fails sometimes see bug: 1896577
     }
@@ -237,19 +242,30 @@ class EditorCommands {
     return false;
   }
 
+  /**
+   * Adds a custom query state command to the editor, you can also override existing commands with this method.
+   * The command that you add can be executed with queryCommandState function.
+   *
+   * @method addQueryStateHandler
+   * @param {String} name Command name to add/override.
+   * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrieval occurs.
+   * @param {Object} scope Optional scope to execute the function in.
+   */
   public addQueryStateHandler(command: string, callback: () => boolean, scope?: any) {
-    command = command.toLowerCase();
-    this.commands.state[command] = () => callback.call(scope || this.editor);
+    this.commands.state[command.toLowerCase()] = () => callback.call(scope || this.editor);
   }
 
+  /**
+   * Adds a custom query value command to the editor, you can also override existing commands with this method.
+   * The command that you add can be executed with queryCommandValue function.
+   *
+   * @method addQueryValueHandler
+   * @param {String} name Command name to add/override.
+   * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrieval occurs.
+   * @param {Object} scope Optional scope to execute the function in.
+   */
   public addQueryValueHandler(command: string, callback: () => string, scope?: any) {
-    command = command.toLowerCase();
-    this.commands.value[command] = () => callback.call(scope || this.editor);
-  }
-
-  public hasCustomCommand(command: string): boolean {
-    command = command.toLowerCase();
-    return Obj.has(this.commands.exec, command);
+    this.commands.value[command.toLowerCase()] = () => callback.call(scope || this.editor);
   }
 
   // Private methods
@@ -355,7 +371,7 @@ class EditorCommands {
         }
 
         // Remove all other alignments first
-        each('left,center,right,justify'.split(','), (name) => {
+        Arr.each('left,center,right,justify'.split(','), (name) => {
           if (align !== name) {
             editor.formatter.remove('align' + name);
           }
@@ -541,10 +557,8 @@ class EditorCommands {
     const alignStates = (name: string) => () => {
       const selection = editor.selection;
       const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
-      const matches = map(nodes, (node) => {
-        return Type.isNonNullable(editor.formatter.matchNode(node, name));
-      });
-      return inArray(matches, true) !== -1;
+      const matches = Arr.map(nodes, (node) => Type.isNonNullable(editor.formatter.matchNode(node, name)));
+      return Arr.contains(matches, true);
     };
 
     // Add queryCommandState overrides
