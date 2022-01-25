@@ -143,7 +143,7 @@ const bespokeButtons: Record<string, (editor: Editor, extras: Extras) => SketchS
   styleselect: types.styleSelectButton,
   fontsizeselect: types.fontsizeSelectButton,
   fontfamily: types.fontSelectButton,
-  formatselect: types.formatButton,
+  blocks: types.formatButton,
   align: types.alignMenuButton
 };
 

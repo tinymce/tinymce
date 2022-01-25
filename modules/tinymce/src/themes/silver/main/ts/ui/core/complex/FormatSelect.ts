@@ -61,7 +61,7 @@ const createFormatSelect = (editor: Editor, backstage: UiFactoryBackstage) => cr
 // FIX: Test this!
 const formatSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
-  editor.ui.registry.addNestedMenuItem('blockformats', {
+  editor.ui.registry.addNestedMenuItem('blocks', {
     text: 'Blocks',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

@@ -19,7 +19,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
     const hook = TinyHooks.bddSetup<Editor>({
       plugins: 'fullscreen',
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'align | fontsizeselect | fontfamily | formatselect | styleselect | insertfile | forecolor | backcolor ',
+      toolbar: 'align | fontsizeselect | fontfamily | blocks | styleselect | insertfile | forecolor | backcolor ',
       resize: 'both',
       min_height: 300,
       min_width: 300,
