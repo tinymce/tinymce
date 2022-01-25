@@ -104,7 +104,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><font size="7">x</font></p>', { format: 'raw' });
     const tree = editor.getContent({ format: 'tree' });
-    Assertions.assertHtml('Should be expected tree filtered html', '<p><font size="7">x</font></p>', toHtml(tree));
+    Assertions.assertHtml('Should be expected tree filtered html', '<p><span style="font-size: 300%;">x</span></p>', toHtml(tree));
     assertEventsFiredInOrder();
   });
 
@@ -154,7 +154,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>tree</p>');
     editor.setContent(getFontTree());
-    Assertions.assertHtml('Should be expected filtered html', '<font size="7">x</font>', editor.getContent());
+    Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', editor.getContent());
     assertEventsFiredInOrder([
       'beforesetcontent',
       'setcontent',
@@ -169,7 +169,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>tree</p>');
     editor.setContent(getFontTree());
-    Assertions.assertHtml('Should be expected filtered html', '<font size="7">x</font>', editor.getContent());
+    Assertions.assertHtml('Should be expected filtered html', '<span style="font-size: 300%;">x</span>', editor.getContent());
     assertEventsFiredInOrder([
       'beforesetcontent',
       'setcontent',

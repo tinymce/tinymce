@@ -95,25 +95,25 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     assert.equal(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
 
     editor.setContent('<p><strike>test 123</strike></p>');
-    assert.equal(editor.getContent(), '<p><strike>test 123</strike></p>');
+    assert.equal(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
 
     editor.setContent('<p><font face="Arial">test 123</font></p>');
-    assert.equal(editor.getContent(), '<p><font face="Arial">test 123</font></p>');
+    assert.equal(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');
 
     editor.setContent('<p><font size="7">test 123</font></p>');
-    assert.equal(editor.getContent(), '<p><font size="7">test 123</font></p>');
+    assert.equal(editor.getContent(), '<p><span style="font-size: 300%;">test 123</span></p>');
 
     editor.setContent('<p><font face="Arial" size="7">test 123</font></p>');
-    assert.equal(editor.getContent(), '<p><font size="7" face="Arial">test 123</font></p>');
+    assert.equal(editor.getContent(), '<p><span style="font-size: 300%; font-family: Arial;">test 123</span></p>');
 
     editor.setContent('<font style="background-color: #ff0000" color="#ff0000">test</font><font face="Arial">test</font>');
     assert.equal(
       editor.getContent(),
-      '<p><font style="background-color: #ff0000;" color="#ff0000">test</font><font face="Arial">test</font></p>'
+      '<p><span style="color: #ff0000; background-color: #ff0000;">test</span><span style="font-family: Arial;">test</span></p>'
     );
 
     editor.setContent('<p><font face="Arial" style="color: #ff0000">test 123</font></p>');
-    assert.equal(editor.getContent(), '<p><font style="color: #ff0000;" face="Arial">test 123</font></p>');
+    assert.equal(editor.getContent(), '<p><span style="color: #ff0000; font-family: Arial;">test 123</span></p>');
   });
 
   it('Formatting commands (alignInline)', () => {

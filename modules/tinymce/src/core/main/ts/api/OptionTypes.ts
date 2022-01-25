@@ -82,6 +82,7 @@ interface BaseEditorOptions {
   content_langs?: ContentLanguage[];
   contextmenu?: string | string[] | false;
   contextmenu_never_use_native?: boolean;
+  convert_fonts_to_spans?: boolean;
   convert_urls?: boolean;
   custom_colors?: boolean;
   custom_elements?: string;
@@ -138,6 +139,7 @@ interface BaseEditorOptions {
   inline?: boolean;
   inline_boundaries?: boolean;
   inline_boundaries_selector?: string;
+  inline_styles?: boolean;
   invalid_elements?: string;
   invalid_styles?: string | Record<string, string>;
   keep_styles?: boolean;
