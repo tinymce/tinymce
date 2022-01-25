@@ -1,5 +1,6 @@
 import { FocusTools } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions, TinyContentActions } from '@ephox/wrap-mcagar';
 
@@ -15,8 +16,14 @@ describe('browser.tinymce.plugins.link.UrlInputTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
+  const platform = PlatformDetection.detect();
+
   const pOpenLinkDialogWithKeyboard = async (editor: Editor) => {
-    TinyContentActions.keystroke(editor, 75, { meta: true });
+    if (platform.os.isMacOS()) {
+      TinyContentActions.keystroke(editor, 'K'.charCodeAt(0), { meta: true });
+    } else {
+      TinyContentActions.keystroke(editor, 'K'.charCodeAt(0), { ctrl: true });
+    }
     await TinyUiActions.pWaitForDialog(editor);
   };
 
