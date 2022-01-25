@@ -12,6 +12,7 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
   }, [], true);
   const platform = PlatformDetection.detect();
 
+  // idk why but it works, seperate test command for macOS, Firefox, and the rest
   const SelectAll = async (editor: Editor) => {
     if (platform.os.isMacOS()) {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo( { metaKey: true }, 'a') ]);
