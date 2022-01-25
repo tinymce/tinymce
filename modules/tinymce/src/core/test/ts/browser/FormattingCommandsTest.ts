@@ -221,6 +221,14 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     assert.equal(editor.getContent(), '<pre>test 123</pre>');
   });
 
+  it('createLink', () => {
+    const editor = hook.editor();
+    editor.setContent('test 123');
+    editor.execCommand('SelectAll');
+    editor.execCommand('createLink', false, 'http://www.site.com');
+    assert.equal(editor.getContent(), '<p><a href="http://www.site.com">test 123</a></p>');
+  });
+
   it('mceInsertLink (relative)', () => {
     const editor = hook.editor();
     editor.setContent('test 123');

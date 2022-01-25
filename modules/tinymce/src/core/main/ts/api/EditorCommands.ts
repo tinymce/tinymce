@@ -103,19 +103,6 @@ class EditorCommands {
       return true;
     }
 
-    // Browser commands
-    let state: boolean;
-    try {
-      state = editor.getDoc().execCommand(command, ui, value);
-    } catch (ex) {
-      // Ignore old IE errors
-    }
-
-    if (state) {
-      editor.fire('ExecCommand', { command, ui, value });
-      return true;
-    }
-
     return false;
   }
 
@@ -137,13 +124,6 @@ class EditorCommands {
       return func(lowerCaseCommand);
     }
 
-    // Browser commands
-    try {
-      return this.editor.getDoc().queryCommandState(lowerCaseCommand);
-    } catch (ex) {
-      // Fails sometimes see bug: 1896577
-    }
-
     return false;
   }
 
@@ -163,13 +143,6 @@ class EditorCommands {
     const func = this.commands.value[lowerCaseCommand];
     if (func) {
       return func(lowerCaseCommand);
-    }
-
-    // Browser commands
-    try {
-      return this.editor.getDoc().queryCommandValue(lowerCaseCommand);
-    } catch (ex) {
-      // Fails sometimes see bug: 1896577
     }
 
     return '';
@@ -215,13 +188,6 @@ class EditorCommands {
 
     if (this.commands.exec[lowerCaseCommand]) {
       return true;
-    }
-
-    // Browser commands
-    try {
-      return this.editor.getDoc().queryCommandSupported(lowerCaseCommand);
-    } catch (ex) {
-      // Fails sometimes see bug: 1896577
     }
 
     return false;

@@ -16,6 +16,10 @@ export const registerCommands = (editor: Editor) => {
       editor.selection.moveToBookmark(bm);
     },
 
+    insertHTML: (_command, _ui, value) => {
+      InsertContent.insertAtCaret(editor, value);
+    },
+
     mceInsertContent: (_command, _ui, value) => {
       InsertContent.insertAtCaret(editor, value);
     },

@@ -66,6 +66,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
 - Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
 - Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
+- The `editor.editorCommands.queryCommandSupported` will no longer fallback to the browsers native command #TINY-7829
+- The `editor.editorCommands.queryCommandState` will no longer fallback to the browsers native command #TINY-7829
+- The `editor.editorCommands.queryCommandValue` will no longer fallback to the browsers native command #TINY-7829
+- The `editor.editorCommands.execCommand` will no longer fallback to the browsers native command #TINY-7829
+- The `editor.queryCommandSupported` will no longer fallback to the browsers native command #TINY-7829
+- The `editor.queryCommandState` will no longer fallback to the browsers native command #TINY-7829
+- The `editor.queryCommandValue` will no longer fallback to the browsers native command #TINY-7829
+- The `editor.execCommand` will no longer fallback to the browsers native command #TINY-7829
 - The `editor.editorCommands.queryCommandSupported` will now return `false` on removed editors #TINY-7829
 - The `editor.editorCommands.queryCommandState` will now return `false` on removed editors #TINY-7829
 - The `editor.editorCommands.queryCommandValue` will now return empty strings on removed editors #TINY-7829

@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyHooks, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -37,6 +37,15 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
 
     return rng;
   };
+
+  it('insertHTML command alias', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.execCommand('insertHTML', false, '<em>b</em>');
+    TinyAssertions.assertContent(editor, '<p>a<em>b</em></p>');
+  });
 
   it('mceInsertContent - p inside text of p', () => {
     const editor = hook.editor();

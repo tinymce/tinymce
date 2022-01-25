@@ -24,24 +24,26 @@ export const registerCommands = (editor: Editor) => {
       editor.formatter.remove('link');
     },
 
-    mceInsertLink: (_command, _ui, value) => {
-      if (Type.isString(value)) {
-        value = { href: value };
-      }
+    createLink: (_command, _ui, value) => {
+      // TODO: Autolink plugin fails if we use the formatter based link action
+      editor.getDoc().execCommand('createLink', false, value);
+    },
 
+    mceInsertLink: (_command, _ui, value) => {
+      const linkDetails = Type.isString(value) ? { href: value } : value;
       const anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
 
       // Spaces are never valid in URLs and it's a very common mistake for people to make so we fix it here.
-      value.href = value.href.replace(/ /g, '%20');
+      linkDetails.href = linkDetails.href.replace(/ /g, '%20');
 
       // Remove existing links if there could be child links or that the href isn't specified
-      if (!anchor || !value.href) {
+      if (!anchor || !linkDetails.href) {
         editor.formatter.remove('link');
       }
 
       // Apply new link to selection
-      if (value.href) {
-        editor.formatter.apply('link', value, anchor);
+      if (linkDetails.href) {
+        editor.formatter.apply('link', linkDetails, anchor);
       }
     }
   });
