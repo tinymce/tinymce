@@ -95,7 +95,7 @@ const register = (editor: Editor): void => {
     default: false
   });
 
-  registerOption('lineheight_formats', {
+  registerOption('line_height_formats', {
     processor: 'string',
     default: '1 1.1 1.2 1.3 1.4 1.5 2'
   });
@@ -327,7 +327,7 @@ const getSkinUrl = (editor: Editor): string | undefined => {
 };
 
 const getLineHeightFormats = (editor: Editor): string[] =>
-  editor.options.get('lineheight_formats').split(' ');
+  editor.options.get('line_height_formats').split(' ');
 
 const isToolbarEnabled = (editor: Editor): boolean => {
   const toolbar = getToolbar(editor);

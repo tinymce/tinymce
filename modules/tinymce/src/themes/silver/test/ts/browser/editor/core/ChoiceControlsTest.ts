@@ -149,7 +149,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
     context('Float line height detection', () => {
       const hook = TinyHooks.bddSetup<Editor>({
         ...baseSettings,
-        lineheight_formats: '1 1.1 1.11 1.111'
+        line_height_formats: '1 1.1 1.11 1.111'
       }, []);
 
       Arr.each([ menuSpec, toolbarSpec ], (spec) => {
@@ -165,7 +165,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
     context('normalisation tests', () => {
       const hook = TinyHooks.bddSetup<Editor>({
         ...baseSettings,
-        lineheight_formats: '1.000 20px 22.0px 1.5e2%'
+        line_height_formats: '1.000 20px 22.0px 1.5e2%'
       }, []);
 
       beforeEach(() => {

@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `font_formats` option to `font_family_formats`, `fontselect` toolbar button to `fontfamily`, and `fontformats` menu item to `fontfamily` #TINY-8328
 - Renamed `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
 - Renamed `fontsize_formats` option to `font_size_formats`, and `fontsizeselect` toolbar button and `fontsizes` menu item to `fontsize` #TINY-8328
+- Renamed `lineheight_formats` option to `line_height_formats` #TINY-8328
 
 
 ### Fixed
