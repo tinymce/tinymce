@@ -18,7 +18,11 @@ let themes = [
 
 let oxideUiSkinMap = {
   'dark': 'oxide-dark',
-  'default': 'oxide'
+  'dark-no-shadow': 'oxide-no-shadow-dark',
+  'default': 'oxide',
+  'default-no-shadow': 'oxide-no-shadow',
+  'tinymce-5': 'tinymce-5',
+  'tinymce-5-dark': 'tinymce-5-dark'
 };
 
 const stripSourceMaps = function (data) {
