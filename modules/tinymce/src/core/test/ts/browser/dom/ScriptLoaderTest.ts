@@ -67,4 +67,25 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     await pLoadQueue();
     assertQueueLoadedCount(2);
   });
+
+  it('TINY-8325: Resolves load queue calls in order', async () => {
+    const loadOrder = [];
+
+    // Start loading but don't wait for it to finish
+    addToQueue(testScript);
+    const loadQueuePromises = [
+      pLoadQueue().then(() => loadOrder.push('first')),
+    ];
+
+    // Trigger another load for the same resources
+    addToQueue(testScript);
+    loadQueuePromises.push(
+      pLoadQueue().then(() => loadOrder.push('second'))
+    );
+
+    // Verify that the second queue load waited for the first
+    await Promise.all(loadQueuePromises);
+    assertQueueLoadedCount(2);
+    assert.deepEqual(loadOrder, [ 'first', 'second' ]);
+  });
 });
