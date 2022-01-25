@@ -313,8 +313,7 @@ class Editor implements EditorObservable {
       styleSheetLoader: undefined,
       show: Fun.noop,
       hide: Fun.noop,
-      enable: Fun.noop,
-      disable: Fun.noop,
+      setEnabled: Fun.noop,
       isEnabled: Fun.never
     };
 

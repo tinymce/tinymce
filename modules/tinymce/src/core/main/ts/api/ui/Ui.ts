@@ -17,8 +17,7 @@ type Registry = BridgeRegistry.Registry;
 export interface EditorUiApi {
   show: () => void;
   hide: () => void;
-  enable: () => void;
-  disable: () => void;
+  setEnabled: (state: boolean) => void;
   isEnabled: () => boolean;
 }
 

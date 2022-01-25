@@ -155,11 +155,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
   }
 
   const api: Partial<EditorUiApi> = {
-    enable: () => {
-      ReadOnly.broadcastReadonly(uiComponents, false);
-    },
-    disable: () => {
-      ReadOnly.broadcastReadonly(uiComponents, true);
+    setEnabled: (state) => {
+      ReadOnly.broadcastReadonly(uiComponents, !state);
     },
     isEnabled: () => !Disabling.isDisabled(outerContainer)
   };

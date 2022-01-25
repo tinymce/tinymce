@@ -156,11 +156,11 @@ const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
   const uiApiFacade: EditorUiApi = {
     show: Optional.from(api.show).getOr(Fun.noop),
     hide: Optional.from(api.hide).getOr(Fun.noop),
-    disable: Optional.from(api.disable).getOr(Fun.noop),
+    // disable: Optional.from(api.disable).getOr(Fun.noop),
     isEnabled: Optional.from(api.isEnabled).getOr(Fun.never),
-    enable: () => {
+    setEnabled: (state) => {
       if (!editor.mode.isReadOnly()) {
-        Optional.from(api.enable).map(Fun.call);
+        Optional.from(api.setEnabled).map((f) => f(state));
       }
     }
   };

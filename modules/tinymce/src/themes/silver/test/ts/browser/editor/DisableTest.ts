@@ -38,18 +38,18 @@ describe('browser.tinymce.themes.silver.editor.DisableTest', () => {
   context('Test disable/enable APIs', () => {
     it('TINY-6397: Should be able to enable and disable the UI', async () => {
       const editor = hook.editor();
-      editor.ui.disable();
+      editor.ui.setEnabled(false);
       await pAssertUiDisabled(editor, true);
-      editor.ui.enable();
+      editor.ui.setEnabled(true);
       await pAssertUiDisabled(editor, false);
     });
 
     it('TINY-6397: Should not be able to enable the UI when in readonly mode', async () => {
       const editor = hook.editor();
-      editor.ui.disable();
+      editor.ui.setEnabled(false);
       editor.mode.set('readonly');
       await pAssertUiDisabled(editor, true);
-      editor.ui.enable();
+      editor.ui.setEnabled(true);
       await pAssertUiDisabled(editor, true);
       editor.mode.set('design');
     });
