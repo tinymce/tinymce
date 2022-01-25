@@ -47,7 +47,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   };
 
   return {
-    tooltip: 'Styles',
+    tooltip: 'Formats',
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,
