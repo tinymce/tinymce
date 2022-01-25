@@ -1,7 +1,7 @@
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 import { TinyContentActions, TinyUiActions } from '@ephox/wrap-mcagar';
-import { PlatformDetection } from '@ephox/sand';
 
 import Editor from 'tinymce/core/api/Editor';
 
