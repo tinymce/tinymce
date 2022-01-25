@@ -69,7 +69,7 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   });
 
   it('TINY-8325: Resolves load queue calls in order', async () => {
-    const loadOrder = [];
+    const loadOrder: string[] = [];
 
     // Start loading but don't wait for it to finish
     addToQueue(testScript);
