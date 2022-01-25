@@ -9,8 +9,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { pAssertFloatingToolbarHeight, pOpenFloatingToolbarAndAssertPosition } from '../../../module/ToolbarUtils';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerFloatingPositionTest', () => {
-  const toolbarHeight = 39;
-  const toolbarDrawerHeight = 80;
+  const toolbarHeight = 33;
+  const toolbarDrawerHeight = 74;
   const windowBottomOffset = window.innerHeight - 100;
   let rootElement: SugarElement<HTMLDivElement>;
 
@@ -29,7 +29,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerFloatingPosi
 
   const hook = TinyHooks.bddSetupFromElement<Editor>({
     menubar: false,
-    width: 400,
+    width: 450,
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'undo redo | styleselect | bold italic underline | strikethrough superscript subscript | alignleft aligncenter alignright aligncenter | outdent indent | cut copy paste | selectall remove',
     toolbar_mode: 'floating'

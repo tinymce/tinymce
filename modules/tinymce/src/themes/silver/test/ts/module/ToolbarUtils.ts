@@ -30,7 +30,7 @@ const pAssertFloatingToolbarHeight = async (editor: Editor, expectedHeight: numb
 
 const pOpenFloatingToolbarAndAssertPosition = async (editor: Editor, getTop: () => number, pActions?: () => Promise<void>) => {
   await pOpenMore(ToolbarMode.floating);
-  await pAssertFloatingToolbarPosition(editor, getTop, 105, 465);
+  await pAssertFloatingToolbarPosition(editor, getTop, 105, 495);
   if (Type.isNonNullable(pActions)) {
     await pActions();
   }

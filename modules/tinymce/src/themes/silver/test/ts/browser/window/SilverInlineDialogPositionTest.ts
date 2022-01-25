@@ -50,7 +50,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       base_url: '/project/tinymce/js/tinymce',
       resize: 'both',
       height: 400,
-      width: 600,
+      width: 650,
       toolbar_sticky: false,
       toolbar_mode: 'wrap'
     }, []);
@@ -59,22 +59,22 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       const editor = hook.editor();
       const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
       const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'absolute', 105, -310);
+      await pAssertPos(dialog, 'absolute', 158, -318);
 
       // Shrink the editor to 300px
       Mouse.mouseDown(resizeHandle);
-      resizeToPos(600, 400, 500, 300);
-      await pAssertPos(dialog, 'absolute', 5, -171); // Toolbar wraps so y diff is 100 + toolbar height
+      resizeToPos(650, 400, 500, 300);
+      await pAssertPos(dialog, 'absolute', 5, -185); // Toolbar wraps so y diff is 100 + toolbar height
 
       // Enlarge the editor to 500px
       Mouse.mouseDown(resizeHandle);
-      resizeToPos(500, 300, 700, 500);
-      await pAssertPos(dialog, 'absolute', 205, -410);
+      resizeToPos(500, 300, 750, 500);
+      await pAssertPos(dialog, 'absolute', 258, -418);
 
       // Resize back to the original size
       Mouse.mouseDown(resizeHandle);
-      resizeToPos(700, 500, 600, 400);
-      await pAssertPos(dialog, 'absolute', 105, -310);
+      resizeToPos(750, 500, 650, 400);
+      await pAssertPos(dialog, 'absolute', 158, -318);
 
       DialogUtils.close(editor);
     });
@@ -86,15 +86,15 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       // Enlarge the editor to 2000px
       Height.set(TinyDom.container(editor), 2000);
       editor.fire('ResizeEditor');
-      await pAssertPos(dialog, 'absolute', 105, -1910);
+      await pAssertPos(dialog, 'absolute', 158, -1918);
 
       // Scroll to 1500px and assert docked
       Scroll.to(0, 1500);
-      await pAssertPos(dialog, 'fixed', 105, 0);
+      await pAssertPos(dialog, 'fixed', 158, 0);
 
       // Scroll back to top and assert not docked
       Scroll.to(0, 0);
-      await pAssertPos(dialog, 'absolute', 105, -1910);
+      await pAssertPos(dialog, 'absolute', 158, -1918);
 
       DialogUtils.close(editor);
     });
@@ -109,11 +109,11 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       // Scroll to 1500px, open the dialog and assert docked
       Scroll.to(0, 1500);
       const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'fixed', 105, 0);
+      await pAssertPos(dialog, 'fixed', 158, 0);
 
       // Scroll back to top and assert not docked
       Scroll.to(0, 0);
-      await pAssertPos(dialog, 'absolute', 105, -1910);
+      await pAssertPos(dialog, 'absolute', 158, -1918);
 
       DialogUtils.close(editor);
     });
@@ -136,15 +136,15 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       // Scroll so that the editor is fully in view
       scrollRelativeEditor(editor, 'top', -100);
       const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'absolute', 105, -1387);
+      await pAssertPos(dialog, 'absolute', 108, -1387);
 
       // Scroll so that bottom of window overlaps bottom of editor
       scrollRelativeEditor(editor, 'bottom', -200);
-      await pAssertPos(dialog, 'absolute', 105, -1387);
+      await pAssertPos(dialog, 'absolute', 108, -1387);
 
       // Scroll so that top of window overlaps top of editor
       scrollRelativeEditor(editor, 'top', 200);
-      await pAssertPos(dialog, 'fixed', 105, 0);
+      await pAssertPos(dialog, 'fixed', 108, 0);
 
       DialogUtils.close(editor);
     });
@@ -155,12 +155,12 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
       scrollRelativeEditor(editor, 'top', -100);
       const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'absolute', 105, -1387);
+      await pAssertPos(dialog, 'absolute', 108, -1387);
 
       // Shrink the editor to 300px
       Mouse.mouseDown(resizeHandle);
       resizeToPos(600, 400, 600, 300);
-      await pAssertPos(dialog, 'absolute', 105, -1287);
+      await pAssertPos(dialog, 'absolute', 108, -1287);
 
       DialogUtils.close(editor);
     });

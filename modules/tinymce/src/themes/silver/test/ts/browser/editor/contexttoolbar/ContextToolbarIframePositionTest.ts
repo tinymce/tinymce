@@ -126,7 +126,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     // Position the link at the top of the viewport, just below the toolbar
     scrollTo(editor, 0, 300);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector + scenario.classes);
-    await pAssertPosition('top', -289);
+    await pAssertPosition('top', -295);
 
     // Position the behind the menu/toolbar and check the context toolbar is hidden
     scrollTo(editor, 0, 400);
@@ -180,7 +180,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     editor.setContent(`<p><img src="${getGreenImageDataUrl()}" style="height: 380px; width: 100px"></p>`);
     TinySelections.select(editor, 'img', []);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear to top inside content', SugarBody.body(), topInsetSelector);
-    await pAssertPosition('top', -315);
+    await pAssertPosition('top', -324);
     TinySelections.setCursor(editor, [ 0 ], 1);
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyContentActions.keystroke(editor, Keys.enter());
@@ -188,7 +188,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     editor.nodeChanged();
     TinySelections.select(editor, 'img', []);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector);
-    await pAssertPosition('top', -76);
+    await pAssertPosition('top', -92);
   });
 
   it(`TINY-4586: Line context toolbar remains inside iframe container and doesn't overlap the header`, async () => {
@@ -254,10 +254,10 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     editor.setContent('<p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p>text</p>');
     TinySelections.setSelection(editor, [ 3, 0 ], 1, [ 3, 0 ], 3);
     // Place the selected text right at the bottom of the editor so only ~1px of the selection is visible
-    scrollTo(editor, 0, 67);
+    scrollTo(editor, 0, 75);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear above the content', SugarBody.body(), topSelector);
     // Moving 2px more the selected text is now offscreen so the context toolbar should hide
-    scrollTo(editor, 0, 65);
+    scrollTo(editor, 0, 73);
     await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
   });
 
@@ -275,17 +275,17 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     scrollTo(editor, 0, 400);
     assertToolbarIsNotTransitioning();
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), topInsetSelector);
-    await pAssertPosition('top', -315);
+    await pAssertPosition('top', -324);
 
     scrollTo(editor, 0, 700);
     await pAssertToolbarIsTransitioning();
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom outside content', SugarBody.body(), bottomSelector);
-    await pAssertPosition('top', -234);
+    await pAssertPosition('top', -248);
 
     scrollTo(editor, 0, 400);
     assertToolbarIsNotTransitioning();
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), bottomInsetSelector);
-    await pAssertPosition('bottom', 24);
+    await pAssertPosition('bottom', 34);
 
     scrollTo(editor, 0, 0);
     await pAssertToolbarIsTransitioning();

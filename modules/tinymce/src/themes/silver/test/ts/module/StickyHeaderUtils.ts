@@ -61,7 +61,7 @@ const expectedHalfView = (s: ApproxStructure.StructApi, str: ApproxStructure.Str
     ],
     styles: {
       position: str.contains('fixed'),
-      width: str.is('398px') // 400px - 1px for each border
+      width: str.is('450px')
       // testing left value maybe flaky
     },
     children: staticPartsInner(s, str, arr)
@@ -77,7 +77,7 @@ const expectedEditorHidden = (s: ApproxStructure.StructApi, str: ApproxStructure
     ],
     styles: {
       position: str.contains('fixed'),
-      width: str.is('398px') // 400px - 1px for each border
+      width: str.is('450px')
       // testing left value maybe flaky
     },
     children: staticPartsInner(s, str, arr)
