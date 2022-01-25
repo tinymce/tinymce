@@ -10,6 +10,24 @@ import { Type } from '@ephox/katamari';
 import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
+  const applyLinkToSelection = (_command: string, _ui: boolean, value: string) => {
+    const linkDetails = Type.isString(value) ? { href: value } : value;
+    const anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
+
+    // Spaces are never valid in URLs and it's a very common mistake for people to make so we fix it here.
+    linkDetails.href = linkDetails.href.replace(/ /g, '%20');
+
+    // Remove existing links if there could be child links or that the href isn't specified
+    if (!anchor || !linkDetails.href) {
+      editor.formatter.remove('link');
+    }
+
+    // Apply new link to selection
+    if (linkDetails.href) {
+      editor.formatter.apply('link', linkDetails, anchor);
+    }
+  };
+
   editor.editorCommands.addCommands({
     unlink: () => {
       if (editor.selection.isCollapsed()) {
@@ -24,27 +42,7 @@ export const registerCommands = (editor: Editor) => {
       editor.formatter.remove('link');
     },
 
-    createLink: (_command, _ui, value) => {
-      // TODO: Autolink plugin fails if we use the formatter based link action
-      editor.getDoc().execCommand('createLink', false, value);
-    },
-
-    mceInsertLink: (_command, _ui, value) => {
-      const linkDetails = Type.isString(value) ? { href: value } : value;
-      const anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
-
-      // Spaces are never valid in URLs and it's a very common mistake for people to make so we fix it here.
-      linkDetails.href = linkDetails.href.replace(/ /g, '%20');
-
-      // Remove existing links if there could be child links or that the href isn't specified
-      if (!anchor || !linkDetails.href) {
-        editor.formatter.remove('link');
-      }
-
-      // Apply new link to selection
-      if (linkDetails.href) {
-        editor.formatter.apply('link', linkDetails, anchor);
-      }
-    }
+    mceInsertLink: applyLinkToSelection,
+    createLink: applyLinkToSelection
   });
 };
