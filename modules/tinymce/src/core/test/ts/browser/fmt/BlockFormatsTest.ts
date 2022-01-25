@@ -43,7 +43,7 @@ describe('browser.tinymce.core.fmt.BlockFormatsTest', () => {
   context('When a user has defined style_formats, applying formatting should update the dropdown to show the correct content formatting', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'styleselect',
+      toolbar: 'styles',
       statusbar: false,
       menubar: false,
       style_formats: [

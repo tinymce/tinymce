@@ -47,7 +47,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   };
 
   return {
-    tooltip: 'Formats',
+    tooltip: 'Styles',
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,
@@ -62,14 +62,14 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
 };
 
 const createStyleSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
-  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styleselect };
+  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   return createSelectButton(editor, backstage, getSpec(editor, dataset));
 };
 
 const styleSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
-  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styleselect };
+  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
-  editor.ui.registry.addNestedMenuItem('formats', {
+  editor.ui.registry.addNestedMenuItem('styles', {
     text: 'Formats',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });

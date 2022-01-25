@@ -10,7 +10,7 @@ import * as MenuUtils from '../../../module/MenuUtils';
 
 describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
-    toolbar: 'align fontfamily fontsize blocks styleselect',
+    toolbar: 'align fontfamily fontsize blocks styles',
     base_url: '/project/tinymce/js/tinymce',
     content_css: '/project/tinymce/src/themes/silver/test/css/content.css'
   }, []);

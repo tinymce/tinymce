@@ -41,7 +41,7 @@ const defaultToolbar = [
     name: 'history', items: [ 'undo', 'redo' ]
   },
   {
-    name: 'styles', items: [ 'styleselect' ]
+    name: 'styles', items: [ 'styles' ]
   },
   {
     name: 'formatting', items: [ 'bold', 'italic' ]
@@ -140,7 +140,7 @@ const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Optio
 );
 
 const bespokeButtons: Record<string, (editor: Editor, extras: Extras) => SketchSpec> = {
-  styleselect: types.styleSelectButton,
+  styles: types.styleSelectButton,
   fontsize: types.fontsizeSelectButton,
   fontfamily: types.fontSelectButton,
   blocks: types.formatButton,

@@ -95,17 +95,17 @@ export default () => {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styleselect insertfile | styleselect | ' +
+    toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
     'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
     contextmenu: 'link linkchecker image table lists configurepermanentpen',
 
     // Multiple toolbar array
-    // toolbar: ['undo redo sidebar1 align fontsize insertfile | fontfamily blocks styleselect insertfile | styleselect | bold italic',
+    // toolbar: ['undo redo sidebar1 align fontsize insertfile | fontfamily blocks styles insertfile | styles | bold italic',
     // 'alignleft aligncenter alignright alignjustify | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     // 'bullist numlist outdent indent | link image'],
 
     // Toolbar<n>
-    // toolbar1: 'undo redo sidebar1 align fontsize insertfile | fontfamily blocks styleselect insertfile | styleselect | bold italic',
+    // toolbar1: 'undo redo sidebar1 align fontsize insertfile | fontfamily blocks styles insertfile | styles | bold italic',
     // toolbar2: 'alignleft aligncenter alignright alignjustify | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     // toolbar3: 'bullist numlist outdent indent | link image',
 
@@ -115,7 +115,7 @@ export default () => {
     //     name: 'history', items: [ 'undo', 'redo' ]
     //   },
     //   {
-    //     name: 'styles', items: [ 'styleselect' ]
+    //     name: 'styles', items: [ 'styles' ]
     //   },
     //   {
     //     name: 'formatting', items: [ 'bold', 'italic']
