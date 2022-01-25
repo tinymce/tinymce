@@ -64,7 +64,7 @@ interface GeneralToolbarButton<T> {
   text: Optional<string>;
   tooltip: Optional<string>;
   onAction: (api: T) => void;
-  disabled: boolean;
+  enabled: boolean;
 }
 
 const focusButtonEvent = Id.generate('focus-button');
@@ -163,7 +163,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           onControlAttached(specialisation, editorOffCell),
           onControlDetached(specialisation, editorOffCell)
         ]),
-        DisablingConfigs.toolbarButton(() => spec.disabled || providersBackstage.isDisabled()),
+        DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
         ReadOnly.receivingConfig()
       ].concat(specialisation.toolbarButtonBehaviours)
     )

@@ -10,7 +10,7 @@ const editor = {
 export const registerVisualBlocksItems = (): void => {
   getDemoRegistry().addToggleButton('visualblocks', {
     type: 'togglebutton',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       editor.on('VisualBlocks', (e) => {
         buttonApi.setActive(e);

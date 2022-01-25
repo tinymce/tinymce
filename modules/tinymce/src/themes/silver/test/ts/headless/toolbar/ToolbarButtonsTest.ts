@@ -30,7 +30,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         components: [
           renderToolbarButton({
             type: 'button',
-            disabled: false,
+            enabled: true,
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
             text: Optional.some('button1'),
@@ -54,7 +54,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         components: [
           renderToolbarToggleButton({
             type: 'togglebutton',
-            disabled: false,
+            enabled: true,
             active: false,
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),

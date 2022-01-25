@@ -10,7 +10,7 @@ const editor = {
 export const registerTocItems = (): void => {
   getDemoRegistry().addButton('toc', {
     type: 'button',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       editor.on('LoadContent SetContent change', (e) => {
         buttonApi.setDisabled(e);

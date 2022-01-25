@@ -10,7 +10,7 @@ const editor = {
 export const registerVisualCharsItems = (): void => {
   getDemoRegistry().addToggleButton('visualchars', {
     type: 'togglebutton',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       editor.on('VisualChars', (e) => {
         buttonApi.setActive(e);

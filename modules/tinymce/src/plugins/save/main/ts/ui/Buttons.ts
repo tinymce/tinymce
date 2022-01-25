@@ -24,7 +24,7 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addButton('save', {
     icon: 'save',
     tooltip: 'Save',
-    disabled: true,
+    enabled: false,
     onAction: () => editor.execCommand('mceSave'),
     onSetup: stateToggle(editor)
   });
@@ -32,7 +32,7 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addButton('cancel', {
     icon: 'cancel',
     tooltip: 'Cancel',
-    disabled: true,
+    enabled: false,
     onAction: () => editor.execCommand('mceCancel'),
     onSetup: stateToggle(editor)
   });

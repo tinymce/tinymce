@@ -8,7 +8,7 @@ const editor = {
 export const registerAutosaveItems = (): void => {
   getDemoRegistry().addButton('restoredraft', {
     type: 'button',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       const editorOffCallback = (e) => {
         // Set the disabled state based on something

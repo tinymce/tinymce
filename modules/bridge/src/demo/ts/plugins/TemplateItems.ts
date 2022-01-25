@@ -3,7 +3,7 @@ import { getDemoRegistry } from '../buttons/DemoRegistry';
 export const registerTemplateItems = (): void => {
   getDemoRegistry().addButton('template', {
     type: 'button',
-    disabled: false,
+    enabled: true,
     onAction: (_buttonApi) => {
       // show dialog
     }
