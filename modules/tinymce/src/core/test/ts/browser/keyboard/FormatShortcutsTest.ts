@@ -19,11 +19,13 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
   const platform = PlatformDetection.detect();
 
   // idk why chrome need this but it works, otherwise first 3 will fail on Mac
-  const Bold = async (editor: Editor) => {
-    if (platform.browser.isChromium()) {
-      TinyContentActions.keystroke(editor, 66, platform.os.isMacOS ? { meta: true } : { ctrl: true });
+  const testFormat = async (editor: Editor, style: string) => {
+    if (platform.browser.isChromium() && platform.os.isMacOS()) {
+      TinyContentActions.keystroke(editor, 66, { meta: true } );
+    } else if (platform.os.isMacOS()) {
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo( { metaKey: true }, style) ]);
     } else {
-      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { ctrlKey: true }, 'b') ]);
+      TinyContentActions.keystroke(editor, style.charCodeAt(0), { ctrl: true } );
     }
   };
 
@@ -31,6 +33,8 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
   const Heading = async (editor: Editor, number: string) => {
     if (platform.browser.isSafari()) {
       TinyContentActions.keystroke(editor, number.charCodeAt(0), { ctrl: true, alt: true });
+    } else if (platform.os.isWindows()) {
+      TinyContentActions.keystroke(editor, number.charCodeAt(0), { shift: true, alt: true });
     } else {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ ctrlKey: true, altKey: true }, number) ]);
     }
@@ -40,21 +44,21 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await Bold(editor);
+    await testFormat(editor, 'B');
     TinyAssertions.assertContent(editor, '<p><strong>abc</strong></p>');
   });
   it('TINY-2884: should set the selection to be italic', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { ctrlKey: true }, 'i') ]);
+    await testFormat(editor, 'I');
     TinyAssertions.assertContent(editor, '<p><em>abc</em></p>');
   });
   it('TINY-2884: should set the selection to be underline', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo(platform.os.isMacOS ? { metaKey: true } : { ctrlKey: true }, 'u') ]);
+    await testFormat(editor, 'U');
     TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;">abc</span></p>');
   });
   it('TINY-2884: should set the selection to be H1', async () => {
