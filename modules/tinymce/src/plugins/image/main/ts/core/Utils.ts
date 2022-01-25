@@ -10,7 +10,6 @@ import { Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import URI from 'tinymce/core/api/util/URI';
-import XHR from 'tinymce/core/api/util/XHR';
 
 import * as Options from '../api/Options';
 import { UserListItem } from '../ui/DialogTypes';
@@ -114,12 +113,12 @@ const createImageList = (editor: Editor, callback: (imageList: false | UserListI
   const imageList = Options.getImageList(editor);
 
   if (Type.isString(imageList)) {
-    XHR.send({
-      url: imageList,
-      success: (text) => {
-        callback(JSON.parse(text));
-      }
-    });
+    fetch(imageList)
+      .then((res) => {
+        if (res.ok) {
+          res.json().then(callback);
+        }
+      });
   } else if (Type.isFunction(imageList)) {
     imageList(callback);
   } else {

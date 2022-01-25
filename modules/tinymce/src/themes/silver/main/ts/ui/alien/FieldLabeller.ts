@@ -5,8 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, FormField as AlloyFormField, RawDomSchema, SketchSpec } from '@ephox/alloy';
-// TODO: Export properly from alloy.
+import { AlloySpec, Behaviour, FormField as AlloyFormField, GuiFactory, RawDomSchema, SketchSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -39,9 +38,11 @@ const renderFormFieldDomWith = (extraClasses): RawDomSchema => ({
 const renderLabel = (label: string, providersBackstage: UiFactoryBackstageProviders): AlloySpec => AlloyFormField.parts.label({
   dom: {
     tag: 'label',
-    classes: [ 'tox-label' ],
-    innerHtml: providersBackstage.translate(label)
-  }
+    classes: [ 'tox-label' ]
+  },
+  components: [
+    GuiFactory.text(providersBackstage.translate(label))
+  ]
 });
 
 export {

@@ -265,14 +265,14 @@ const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
 
 const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFonts: string[]): Promise<unknown>[] => {
   const promises = [
-    new Promise((resolve, reject) => getStyleSheetLoader(editor).loadAll(css, resolve, reject)),
+    getStyleSheetLoader(editor).loadAll(css)
   ];
 
   if (editor.inline) {
     return promises;
   } else {
     return promises.concat([
-      new Promise((resolve, reject) => editor.ui.styleSheetLoader.loadAll(framedFonts, resolve, reject)),
+      editor.ui.styleSheetLoader.loadAll(framedFonts)
     ]);
   }
 };

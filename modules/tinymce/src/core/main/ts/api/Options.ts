@@ -130,17 +130,11 @@ const register = (editor: Editor) => {
 
   registerOption('forced_root_block', {
     processor: (value) => {
-      const valid = Type.isString(value) || Type.isBoolean(value);
+      const valid = Type.isString(value) && Strings.isNotEmpty(value);
       if (valid) {
-        if (value === false) {
-          return { value: '', valid };
-        } else if (value === true) {
-          return { value: 'p', valid };
-        } else {
-          return { value, valid };
-        }
+        return { value, valid };
       } else {
-        return { valid: false, message: 'Must be a string or a boolean.' };
+        return { valid: false, message: 'Must be a non-empty string.' };
       }
     },
     default: 'p'
@@ -566,7 +560,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('schema', {
-    processor: 'string'
+    processor: 'string',
+    default: 'html5'
   });
 
   registerOption('convert_urls', {
@@ -758,7 +753,6 @@ const register = (editor: Editor) => {
   });
 
   // These options must be registered later in the init sequence due to their default values
-  // TODO: TINY-8234 Should we have a way to lazily load the default values?
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
       processor: 'string',
@@ -867,9 +861,6 @@ const getFontSizeClasses = (editor: Editor): string[] =>
 const isEncodingXml = (editor: Editor): boolean =>
   editor.options.get('encoding') === 'xml';
 
-const hasForcedRootBlock = (editor: Editor): boolean =>
-  getForcedRootBlock(editor) !== '';
-
 const getAllowedImageFileTypes = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('images_file_types'));
 
@@ -928,7 +919,6 @@ export {
   isEncodingXml,
   shouldAddFormSubmitTrigger,
   shouldAddUnloadTrigger,
-  hasForcedRootBlock,
   getCustomUndoRedoLevels,
   shouldDisableNodeChange,
   isReadOnly,

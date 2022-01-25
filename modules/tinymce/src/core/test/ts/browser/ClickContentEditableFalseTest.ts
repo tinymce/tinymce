@@ -1,14 +1,14 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Hierarchy } from '@ephox/sugar';
-import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinySelections, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const clickMiddleOf = (editor: Editor, elementPath: number[]) => {
+const clickMiddleOf = (editor: Editor, elementPath: number[], dx: number = 0, dy: number = 0) => {
   const element = Hierarchy.follow(TinyDom.body(editor), elementPath).getOrDie().dom as HTMLElement;
   const rect = element.getBoundingClientRect();
-  const clientX = rect.left + rect.width / 2;
-  const clientY = rect.top + rect.height / 2;
+  const clientX = (rect.left + rect.width / 2) + dx;
+  const clientY = (rect.top + rect.height / 2) + dy;
 
   const event = { target: element as EventTarget, clientX, clientY } as MouseEvent;
   editor.fire('mousedown', { ...event });
@@ -29,18 +29,30 @@ describe('browser.tinymce.core.ClickContentEditableFalseTest', () => {
     TinyAssertions.assertSelection(editor, [], 0, [], 1);
   });
 
+  it('TINY-8169: Click on normal paragraph should not move caret to noneditable', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p contenteditable="false">b</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    clickMiddleOf(editor, [ 0 ]);
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+  });
+
+  it('TINY-8169: Click above left of noneditable should place the fake caret before the noneditable', () => {
+    const editor = hook.editor();
+    editor.setContent('<div style="width: 30px; height: 30px; margin-bottom: 10px">a</div><div contenteditable="false">b</div>');
+    clickMiddleOf(editor, [ 0 ], -15, 20);
+    TinyAssertions.assertCursor(editor, [ 1 ], 0);
+    TinyAssertions.assertContentPresence(editor, {
+      'p[data-mce-caret="before"]': 1,
+      'div.mce-visual-caret': 1
+    });
+  });
+
   it('Click on content editable false inside content editable true', () => {
     const editor = hook.editor();
     editor.setContent('<div contenteditable="true"><p contenteditable="false">a</p></div>');
     clickMiddleOf(editor, [ 0, 1 ]);
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
-  });
-
-  it('Click on content editable true inside content editable false', () => {
-    const editor = hook.editor();
-    editor.setContent('<div contenteditable="false"><p contenteditable="true">a</p></div>');
-    clickMiddleOf(editor, [ 1, 0 ]);
-    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
   });
 
   it('Click on content editable false inside content editable true and then on content editable true and type', () => {

@@ -1,4 +1,4 @@
-import { Assert, assert, TestLabel } from '@ephox/bedrock-client';
+import { Assert, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Classes, Css, Html, SugarElement, SugarNode, SugarText, Traverse, Truncate, Value } from '@ephox/sugar';
 
@@ -129,10 +129,10 @@ const element = (tag: string, fields: ElementFields): StructAssert => {
 const text = (s: StringAssert, combineSiblings = false): StructAssert => {
   const doAssert = (queue: ElementQueue): void => {
     queue.take().fold(() => {
-      assert.fail('No more nodes, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
+      Assert.fail('No more nodes, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
     }, (actual) => {
       SugarText.getOption(actual).fold(() => {
-        assert.fail('Node is not a text node, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
+        Assert.fail('Node is not a text node, so cannot check if its text is: ' + s.show() + ' for ' + queue.context());
       }, (t: string) => {
         let text = t;
         if (combineSiblings) {
@@ -159,7 +159,7 @@ const applyAssert = (structAssert: StructAssert, queue: ElementQueue) => {
     structAssert.doAssert(queue);
   } else {
     queue.take().fold(() => {
-      assert.fail('Expected more children to satisfy assertion for ' + queue.context());
+      Assert.fail('Expected more children to satisfy assertion for ' + queue.context());
     }, (item) => {
       structAssert.doAssert(item);
     });
@@ -291,14 +291,14 @@ const assertChildren = (expectedChildren: Optional<StructAssert[]>, actual: Suga
         structExpectation.doAssert(children);
       } else {
         children.take().fold(() => {
-          assert.fail('Expected more children to satisfy assertion ' + i + ' for ' + children.context());
+          Assert.fail('Expected more children to satisfy assertion ' + i + ' for ' + children.context());
         }, (item) => {
           structExpectation.doAssert(item);
         });
       }
     });
     if (children.peek().isSome()) {
-      assert.fail('More children than expected for ' + children.context());
+      Assert.fail('More children than expected for ' + children.context());
     }
   });
 };

@@ -1,4 +1,5 @@
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import 'tinymce';
@@ -26,48 +27,42 @@ describe('browser.tinymce.core.EditorManagerCommandsTest', () => {
     }, 0);
   });
 
-  it('mceToggleEditor', (done) => {
-    viewBlock.update('<textarea class="tinymce"></textarea>');
-    EditorManager.init({
-      selector: 'textarea.tinymce',
-      init_instance_callback: (editor1) => {
-        assert.isFalse(editor1.isHidden(), 'editor should be visible');
-        EditorManager.execCommand('mceToggleEditor', false, 0);
-        assert.isTrue(editor1.isHidden(), 'editor should be hidden');
-        EditorManager.execCommand('mceToggleEditor', false, 0);
-        assert.isFalse(editor1.isHidden(), 'editor should be visible');
-        done();
-      }
+  Arr.each([
+    { label: 'index', value: 0 },
+    { label: 'id', value: 'ed_1' },
+    { label: 'object with index', value: { index: 0 }},
+    { label: 'object with id', value: { id: 'ed_1' }}
+  ], (test) => {
+    it(`mceToggleEditor (${test.label})`, (done) => {
+      viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea>');
+      EditorManager.init({
+        selector: 'textarea.tinymce',
+        init_instance_callback: (editor1) => {
+          assert.isFalse(editor1.isHidden(), 'editor should be visible');
+          EditorManager.execCommand('mceToggleEditor', false, test.value);
+          assert.isTrue(editor1.isHidden(), 'editor should be hidden');
+          EditorManager.execCommand('mceToggleEditor', false, test.value);
+          assert.isFalse(editor1.isHidden(), 'editor should be visible');
+          done();
+        }
+      });
+    });
+
+    it(`mceRemoveEditor (${test.label})`, (done) => {
+      viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea>');
+      EditorManager.init({
+        selector: 'textarea.tinymce',
+        init_instance_callback: (_editor1) => {
+          assert.lengthOf(EditorManager.get(), 1);
+          EditorManager.execCommand('mceRemoveEditor', false, test.value);
+          assert.lengthOf(EditorManager.get(), 0);
+          done();
+        }
+      });
     });
   });
 
-  it('mceRemoveEditor', (done) => {
-    viewBlock.update('<textarea class="tinymce"></textarea>');
-    EditorManager.init({
-      selector: 'textarea.tinymce',
-      init_instance_callback: (_editor1) => {
-        assert.lengthOf(EditorManager.get(), 1);
-        EditorManager.execCommand('mceRemoveEditor', false, 0);
-        assert.lengthOf(EditorManager.get(), 0);
-        done();
-      }
-    });
-  });
-
-  it('mceAddEditor - passing id directly as value', (done) => {
-    viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea><textarea id="ed_2" class="tinymce"></textarea>');
-    EditorManager.init({
-      selector: 'textarea#ed_1',
-      init_instance_callback: (_editor1) => {
-        assert.lengthOf(EditorManager.get(), 1);
-        EditorManager.execCommand('mceAddEditor', false, 'ed_2');
-        assert.lengthOf(EditorManager.get(), 2);
-        done();
-      }
-    });
-  });
-
-  it('mceAddEditor - passing id and options as value', (done) => {
+  it('mceAddEditor', (done) => {
     viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea><textarea id="ed_2" class="tinymce"></textarea>');
     EditorManager.init({
       selector: 'textarea#ed_1',

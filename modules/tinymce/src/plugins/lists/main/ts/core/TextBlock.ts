@@ -15,53 +15,38 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
   const blockElements = editor.schema.getBlockElements();
   const fragment = dom.createFragment();
   const blockName = Options.getForcedRootBlock(editor);
-  let node, textBlock, hasContentNode;
+  const blockAttrs = Options.getForcedRootBlockAttrs(editor);
+  let node: Node, textBlock: Element, hasContentNode: boolean;
 
-  if (blockName) {
-    textBlock = dom.create(blockName);
+  textBlock = dom.create(blockName, blockAttrs);
 
-    if (textBlock.tagName === blockName.toUpperCase()) {
-      dom.setAttribs(textBlock, Options.getForcedRootBlockAttrs(editor));
+  if (!NodeType.isBlock(contentNode.firstChild, blockElements)) {
+    fragment.appendChild(textBlock);
+  }
+
+  while ((node = contentNode.firstChild)) {
+    const nodeName = node.nodeName;
+
+    if (!hasContentNode && (nodeName !== 'SPAN' || (node as Element).getAttribute('data-mce-type') !== 'bookmark')) {
+      hasContentNode = true;
     }
 
-    if (!NodeType.isBlock(contentNode.firstChild, blockElements)) {
-      fragment.appendChild(textBlock);
+    if (NodeType.isBlock(node, blockElements)) {
+      fragment.appendChild(node);
+      textBlock = null;
+    } else {
+      if (!textBlock) {
+        textBlock = dom.create(blockName, blockAttrs);
+        fragment.appendChild(textBlock);
+      }
+
+      textBlock.appendChild(node);
     }
   }
 
-  if (contentNode) {
-    while ((node = contentNode.firstChild)) {
-      const nodeName = node.nodeName;
-
-      if (!hasContentNode && (nodeName !== 'SPAN' || node.getAttribute('data-mce-type') !== 'bookmark')) {
-        hasContentNode = true;
-      }
-
-      if (NodeType.isBlock(node, blockElements)) {
-        fragment.appendChild(node);
-        textBlock = null;
-      } else {
-        if (blockName) {
-          if (!textBlock) {
-            textBlock = dom.create(blockName);
-            fragment.appendChild(textBlock);
-          }
-
-          textBlock.appendChild(node);
-        } else {
-          fragment.appendChild(node);
-        }
-      }
-    }
-  }
-
-  if (!blockName) {
-    fragment.appendChild(dom.create('br'));
-  } else {
-    // BR is needed in empty blocks
-    if (!hasContentNode) {
-      textBlock.appendChild(dom.create('br', { 'data-mce-bogus': '1' }));
-    }
+  // BR is needed in empty blocks
+  if (!hasContentNode) {
+    textBlock.appendChild(dom.create('br', { 'data-mce-bogus': '1' }));
   }
 
   return fragment;

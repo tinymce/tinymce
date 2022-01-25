@@ -6,7 +6,7 @@ import { MediaData } from 'tinymce/plugins/media/core/Types';
 
 describe('atomic.tinymce.plugins.media.core.HtmlToDataTest', () => {
   const testHtmlToData = (html: string, expected: MediaData) => {
-    const actual = HtmlToData.htmlToData([], html);
+    const actual = HtmlToData.htmlToData(html);
     assert.deepEqual(actual, expected);
   };
 

@@ -21,13 +21,11 @@ describe('browser.tinymce.core.dom.StyleSheetLoaderTest', () => {
 
   const linkNotExists = (url: string) => UiFinder.notExists(SugarHead.head(), `link[href="${url}"]`);
 
-  const pLoadUrl = (url: string): Promise<void> => new Promise((resolve, reject) => {
-    loader.load(url, resolve, () => reject('Failed to load url: ' + url));
-  });
+  const pLoadUrl = (url: string): Promise<void> =>
+    loader.load(url);
 
-  const pLoadAllUrls = (urls: string[]): Promise<string[]> => new Promise((resolve, reject) => {
-    loader.loadAll(urls, resolve, (failedUrls) => reject('Failed to load urls: ' + failedUrls.join(', ')));
-  });
+  const pLoadAllUrls = (urls: string[]): Promise<string[]> =>
+    loader.loadAll(urls);
 
   const unloadUrl = (url: string) => loader.unload(url);
 

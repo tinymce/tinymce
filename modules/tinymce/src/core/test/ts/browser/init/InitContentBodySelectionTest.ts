@@ -41,10 +41,6 @@ describe('browser.tinymce.core.init.InitContentBodySelectionTest', () => {
   context('TINY-4139: div and forced_root_block tests', () => {
     initAndAssertContent('Test div with br', '<div><br /></div>', [ 0 ]);
     initAndAssertContent('Test div', '<div>Initial Content</div>', [ 0, 0 ]);
-    initAndAssertContent('Test p with br with forced_root_block=false', '<p><br /></p>', [ 0 ], 0, { forced_root_block: false });
-    initAndAssertContent('Test p with forced_root_block=false', '<p>Initial Content</p>', [ 0, 0 ], 0, { forced_root_block: false });
-    initAndAssertContent('Test div with br with forced_root_block=false', '<div><br /></div>', [ 0 ], 0, { forced_root_block: false });
-    initAndAssertContent('Test div with forced_root_block=false', '<div>Initial Content</div>', [ 0, 0 ], 0, { forced_root_block: false });
     initAndAssertContent('Test div with br with forced_root_block=div', '<div><br /></div>', [ 0 ], 0, { forced_root_block: 'div' });
     initAndAssertContent('Test div with forced_root_block=div', '<div>Initial Content</div>', [ 0, 0 ], 0, { forced_root_block: 'div' });
   });
