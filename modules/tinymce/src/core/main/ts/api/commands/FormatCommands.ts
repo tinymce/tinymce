@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
+
 import * as Font from '../../commands/Font';
 import * as LineHeight from '../../commands/LineHeight';
 import { FormatVars } from '../../fmt/FormatTypes';
@@ -51,7 +53,7 @@ const registerExecCommands = (editor: Editor) => {
     },
 
     'FormatBlock': (_command, _ui, value) => {
-      return toggleFormat(value || 'p');
+      return toggleFormat(Type.isString(value) ? value : 'p');
     },
 
     'mceToggleFormat': (_command, _ui, value) => {
@@ -70,9 +72,9 @@ const registerQueryCommands = (editor: Editor) => {
     'mceBlockQuote': () => isFormatMatch('blockquote')
   }, 'state');
 
-  editor.editorCommands.addQueryValueHandler('FontName', () => Font.fontNameQuery(editor), this);
-  editor.editorCommands.addQueryValueHandler('FontSize', () => Font.fontSizeQuery(editor), this);
-  editor.editorCommands.addQueryValueHandler('LineHeight', () => LineHeight.lineHeightQuery(editor), this);
+  editor.editorCommands.addQueryValueHandler('FontName', () => Font.fontNameQuery(editor));
+  editor.editorCommands.addQueryValueHandler('FontSize', () => Font.fontSizeQuery(editor));
+  editor.editorCommands.addQueryValueHandler('LineHeight', () => LineHeight.lineHeightQuery(editor));
 };
 
 export const registerCommands = (editor: Editor) => {

@@ -18,7 +18,7 @@ import * as ListCommands from './ListCommands';
 import * as NewlineCommands from './NewlineCommands';
 import * as SelectionCommands from './SelectionCommands';
 
-export const registerCommands = (editor: Editor) => {
+const registerSimpleCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
     mceRemoveNode: (_command, _ui, value) => {
       const node = value || editor.selection.getNode();
@@ -44,7 +44,9 @@ export const registerCommands = (editor: Editor) => {
       editor.addVisual();
     }
   });
+};
 
+export const registerCommands = (editor: Editor) => {
   AlignCommands.registerCommands(editor);
   ClipboardCommands.registerCommands(editor);
   HistoryCommands.registerCommands(editor);
@@ -55,4 +57,5 @@ export const registerCommands = (editor: Editor) => {
   NewlineCommands.registerCommands(editor);
   ListCommands.registerCommands(editor);
   FormatCommands.registerCommands(editor);
+  registerSimpleCommands(editor);
 };

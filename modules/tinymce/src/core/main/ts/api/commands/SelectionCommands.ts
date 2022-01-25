@@ -10,7 +10,7 @@ import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
-    mceSelectNodeDepth: (command, ui, value) => {
+    mceSelectNodeDepth: (_command, _ui, value) => {
       let counter = 0;
 
       editor.dom.getParent(editor.selection.getNode(), (node) => {
@@ -21,7 +21,7 @@ export const registerCommands = (editor: Editor) => {
       }, editor.getBody());
     },
 
-    mceSelectNode: (command, ui, value) => {
+    mceSelectNode: (_command, _ui, value) => {
       editor.selection.select(value);
     },
 

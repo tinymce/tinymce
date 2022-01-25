@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
+
 import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
@@ -23,7 +25,7 @@ export const registerCommands = (editor: Editor) => {
     },
 
     mceInsertLink: (_command, _ui, value) => {
-      if (typeof value === 'string') {
+      if (Type.isString(value)) {
         value = { href: value };
       }
 

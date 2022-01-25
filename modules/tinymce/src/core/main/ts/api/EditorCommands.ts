@@ -63,7 +63,7 @@ class EditorCommands {
     }
 
     if (command.toLowerCase() !== 'mcefocus') {
-      if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
+      if (!/^(mceAddUndoLevel|mceEndUndoLevel)$/.test(command) && (!args || !args.skip_focus)) {
         editor.focus();
       } else {
         SelectionBookmark.restore(editor);

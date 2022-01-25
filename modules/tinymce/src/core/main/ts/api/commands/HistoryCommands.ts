@@ -5,14 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
-
 import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
-    mceBeginUndoLevel: Fun.noop,
-
     mceAddUndoLevel: () => {
       editor.undoManager.add();
     },

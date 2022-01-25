@@ -10,8 +10,12 @@ import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
-    'Indent,Outdent': (command) => {
-      IndentOutdent.handle(editor, command);
+    Indent: () => {
+      IndentOutdent.indent(editor);
+    },
+
+    Outdent: () => {
+      IndentOutdent.outdent(editor);
     },
   });
 
