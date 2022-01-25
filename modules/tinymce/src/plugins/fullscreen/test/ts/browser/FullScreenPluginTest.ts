@@ -1,6 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -11,6 +12,7 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
 describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   const lastEventArgs = Cell(null);
+  const platform = PlatformDetection.detect();
 
   const getContentContainer = (editor: Editor) =>
     SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor)));
@@ -74,7 +76,11 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   };
 
   const keystokes = (editor: Editor) => {
-    TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { meta: true, shift: true });
+    if (platform.os.isMacOS()) {
+      TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { meta: true, shift: true });
+    } else {
+      TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { ctrl: true, shift: true });
+    }
   };
 
   Arr.each([
