@@ -14,7 +14,6 @@ import * as FontCommands from '../commands/FontCommands';
 import * as IndentOutdent from '../commands/IndentOutdent';
 import * as LineHeightCommands from '../commands/LineHeight';
 import * as InsertContent from '../content/InsertContent';
-import * as NodeType from '../dom/NodeType';
 import { FormatVars } from '../fmt/FormatTypes';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as InsertBr from '../newline/InsertBr';
@@ -22,6 +21,7 @@ import * as InsertNewLine from '../newline/InsertNewLine';
 import * as AlignCommands from './AlignCommands';
 import * as ClipboardCommands from './ClipboardCommands';
 import * as HistoryCommands from './HistoryCommands';
+import * as SelectionCommands from './SelectionCommands';
 
 export const setupCommands = (editor: Editor) => {
   const selectionBookmarkState = Singleton.value<Bookmark>();
@@ -158,21 +158,6 @@ export const setupCommands = (editor: Editor) => {
       }
     },
 
-    'mceSelectNodeDepth': (command, ui, value) => {
-      let counter = 0;
-
-      editor.dom.getParent(editor.selection.getNode(), (node) => {
-        if (node.nodeType === 1 && counter++ === value) {
-          editor.selection.select(node);
-          return false;
-        }
-      }, editor.getBody());
-    },
-
-    'mceSelectNode': (command, ui, value) => {
-      editor.selection.select(value);
-    },
-
     'mceInsertContent': (command, ui, value) => {
       InsertContent.insertAtCaret(editor, value);
     },
@@ -235,15 +220,6 @@ export const setupCommands = (editor: Editor) => {
       }
     },
 
-    'selectAll': () => {
-      const editingHost = editor.dom.getParent(editor.selection.getStart(), NodeType.isContentEditableTrue);
-      if (editingHost) {
-        const rng = editor.dom.createRng();
-        rng.selectNodeContents(editingHost);
-        editor.selection.setRng(rng);
-      }
-    },
-
     'mceNewDocument': () => {
       editor.setContent('');
     },
@@ -284,4 +260,5 @@ export const setupCommands = (editor: Editor) => {
   AlignCommands.registerCommands(editor);
   ClipboardCommands.registerCommands(editor);
   HistoryCommands.registerCommands(editor);
+  SelectionCommands.registerCommands(editor);
 };
