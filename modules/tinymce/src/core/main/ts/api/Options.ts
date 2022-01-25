@@ -523,7 +523,8 @@ const register = (editor: Editor) => {
 
   registerOption('convert_fonts_to_spans', {
     processor: 'boolean',
-    default: true
+    default: true,
+    deprecated: true
   });
 
   registerOption('fix_list_elements', {
@@ -542,7 +543,8 @@ const register = (editor: Editor) => {
 
   registerOption('inline_styles', {
     processor: 'boolean',
-    default: true
+    default: true,
+    deprecated: true
   });
 
   registerOption('element_format', {
