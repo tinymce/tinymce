@@ -20,8 +20,8 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
 
   // idk why chrome need this but it works, otherwise first 3 will fail on Mac
   const testFormat = async (editor: Editor, style: string) => {
-    if (platform.browser.isChromium() && platform.os.isMacOS()) {
-      TinyContentActions.keystroke(editor, 66, { meta: true } );
+    if (!platform.browser.isFirefox() && platform.os.isMacOS()) {
+      TinyContentActions.keystroke(editor, style.charCodeAt(0), { meta: true } );
     } else if (platform.os.isMacOS()) {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo( { metaKey: true }, style) ]);
     } else {
