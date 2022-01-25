@@ -8,7 +8,6 @@
 import { Fun, Singleton } from '@ephox/katamari';
 
 import type Editor from '../api/Editor';
-import Env from '../api/Env';
 import { ContentLanguage } from '../api/OptionTypes';
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
@@ -21,6 +20,7 @@ import * as EditorFocus from '../focus/EditorFocus';
 import * as InsertBr from '../newline/InsertBr';
 import * as InsertNewLine from '../newline/InsertNewLine';
 import * as AlignCommands from './AlignCommands';
+import * as ClipboardCommands from './ClipboardCommands';
 
 export const setupCommands = (editor: Editor) => {
   const selectionBookmarkState = Singleton.value<Bookmark>();
@@ -68,38 +68,6 @@ export const setupCommands = (editor: Editor) => {
 
     'mceFocus': (_command, _ui, value?: boolean) => {
       EditorFocus.focus(editor, value);
-    },
-
-    'Cut,Copy,Paste': (command) => {
-      const doc = editor.getDoc();
-      let failed;
-
-      // Try executing the native command
-      try {
-        execNativeCommand(command);
-      } catch (ex) {
-        // Command failed
-        failed = true;
-      }
-
-      // Chrome reports the paste command as supported however older IE:s will return false for cut/paste
-      if (command === 'paste' && !doc.queryCommandEnabled(command)) {
-        failed = true;
-      }
-
-      // Present alert message about clipboard access not being available
-      if (failed || !doc.queryCommandSupported(command)) {
-        let msg = editor.translate(
-          `Your browser doesn't support direct access to the clipboard. ` +
-          'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
-        );
-
-        if (Env.os.isMacOS() || Env.os.isiOS()) {
-          msg = msg.replace(/Ctrl\+/g, '\u2318+');
-        }
-
-        editor.notificationManager.open({ text: msg, type: 'error' });
-      }
     },
 
     // Override unlink command
@@ -329,4 +297,5 @@ export const setupCommands = (editor: Editor) => {
   editor.editorCommands.addQueryValueHandler('LineHeight', () => LineHeightCommands.lineHeightQuery(editor), this);
 
   AlignCommands.registerCommands(editor);
+  ClipboardCommands.registerCommands(editor);
 };
