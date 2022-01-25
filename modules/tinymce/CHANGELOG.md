@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
 
 ### Changed
+- The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
 - The `images_upload_handler` option is no longer passed a `success` or `failure` callback and instead requires a `Promise` to be returned with the upload result #TINY-8325
 - RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
