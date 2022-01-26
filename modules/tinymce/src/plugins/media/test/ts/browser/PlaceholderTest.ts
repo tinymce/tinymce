@@ -13,10 +13,6 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     plugins: [ 'media' ],
     toolbar: 'media',
     extended_valid_elements: 'script[src|type]',
-    media_scripts: [
-      { filter: 'http://media1.tinymce.com' },
-      { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
-    ],
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
@@ -26,19 +22,6 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     TinyUiActions.submitDialog(editor);
     await Utils.pAssertEditorContent(editor, expected);
     await Waiter.pTryUntil('Wait for structure check', () => TinyAssertions.assertContentStructure(editor, struct));
-    editor.setContent('');
-  };
-
-  const pTestScriptPlaceholder = async (editor: Editor, expected: string, struct: StructAssert) => {
-    editor.setContent(
-      '<script src="http://media1.tinymce.com/123456"></script>' +
-      '<script src="http://media2.tinymce.com/123456"></script>'
-    );
-    editor.nodeChanged();
-    await Waiter.pTryUntil('Wait for structure check',
-      () => TinyAssertions.assertContentStructure(editor, struct)
-    );
-    await Utils.pAssertEditorContent(editor, expected);
     editor.setContent('');
   };
 
@@ -77,49 +60,11 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     });
   });
 
-  const scriptStruct = ApproxStructure.build((s, str, arr) => {
-    return s.element('body', {
-      children: [
-        s.element('p', {
-          children: [
-            s.element('img', {
-              classes: [
-                arr.has('mce-object'),
-                arr.has('mce-object-script')
-              ],
-              attrs: {
-                height: str.is('150'),
-                width: str.is('300')
-              }
-            }),
-            s.element('img', {
-              classes: [
-                arr.has('mce-object'),
-                arr.has('mce-object-script')
-              ],
-              attrs: {
-                height: str.is('200'),
-                width: str.is('100')
-              }
-            })
-          ]
-        })
-      ]
-    });
-  });
-
   context('media_live_embeds=false', () => {
     before(() => {
       const editor = hook.editor();
       editor.options.set('media_live_embeds', false);
     });
-
-    it('TBA: Set and assert script placeholder structure', () => pTestScriptPlaceholder(hook.editor(),
-      '<p>\n' +
-      '<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
-      '<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
-      '</p>', scriptStruct
-    ));
 
     it('TBA: Set and assert iframe placeholder structure', () => pTestPlaceholder(hook.editor(),
       'https://www.youtube.com/watch?v=P_205ZY52pY',
@@ -131,7 +76,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     it('TBA: Set and assert video placeholder structure', () => pTestPlaceholder(hook.editor(),
       '/custom/video.mp4',
       '<p><video controls="controls" width="300" height="150">\n' +
-      '<source src="custom/video.mp4" type="video/mp4" /></video></p>',
+      '<source src="custom/video.mp4" type="video/mp4"></video></p>',
       placeholderStructure
     ));
 

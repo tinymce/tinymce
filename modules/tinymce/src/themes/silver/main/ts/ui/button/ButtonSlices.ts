@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
+import { Behaviour, GuiFactory, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
@@ -27,9 +27,11 @@ const renderReplacableIconFromPack = (iconName: string, iconsProvider: Icons.Ico
 const renderLabel = (text: string, prefix: string, providersBackstage: UiFactoryBackstageProviders) => ({
   dom: {
     tag: 'span',
-    innerHtml: providersBackstage.translate(text),
     classes: [ `${prefix}__select-label` ]
   },
+  components: [
+    GuiFactory.text(providersBackstage.translate(text))
+  ],
   behaviours: Behaviour.derive([
     Replacing.config({ })
   ])

@@ -31,13 +31,7 @@ const insertElement = (root: SugarElement, elm: SugarElement, forward: boolean) 
   }
 };
 
-const insertBr = (root: SugarElement, forward: boolean) => {
-  const br = SugarElement.fromTag('br');
-  insertElement(root, br, forward);
-  return rangeBefore(br);
-};
-
-const insertBlock = (root: SugarElement, forward: boolean, blockName: string, attrs: Record<string, string>) => {
+const insertEmptyLine = (root: SugarElement, forward: boolean, blockName: string, attrs: Record<string, string>) => {
   const block = SugarElement.fromTag(blockName);
   const br = SugarElement.fromTag('br');
 
@@ -46,14 +40,6 @@ const insertBlock = (root: SugarElement, forward: boolean, blockName: string, at
   insertElement(root, block, forward);
 
   return rangeBefore(br);
-};
-
-const insertEmptyLine = (root: SugarElement, rootBlockName: string, attrs: Record<string, string>, forward: boolean) => {
-  if (rootBlockName === '') {
-    return insertBr(root, forward);
-  } else {
-    return insertBlock(root, forward, rootBlockName, attrs);
-  }
 };
 
 const getClosestTargetBlock = (pos: CaretPosition, root: SugarElement) => {
@@ -71,7 +57,7 @@ const moveCaretToNewEmptyLine = (editor: Editor, forward: boolean) => {
 
   return getClosestTargetBlock(pos, root).exists(() => {
     if (isAtFirstOrLastLine(root, forward, pos)) {
-      const rng = insertEmptyLine(root, rootBlock, rootBlockAttrs, forward);
+      const rng = insertEmptyLine(root, forward, rootBlock, rootBlockAttrs);
       editor.selection.setRng(rng);
       return true;
     } else {

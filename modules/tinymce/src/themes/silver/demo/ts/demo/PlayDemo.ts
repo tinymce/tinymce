@@ -29,7 +29,6 @@ export default () => {
       'wordcount',
       'table',
       'code',
-      'paste',
       'image',
       'charmap',
       'emoticons',

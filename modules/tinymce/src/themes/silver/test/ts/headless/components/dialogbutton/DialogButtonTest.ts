@@ -12,7 +12,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
     const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
         name: 'test-button',
-        text: 'ButtonText',
+        text: 'Button<Text',
         disabled: false,
         primary: true,
         buttonType: Optional.some('primary'),
@@ -27,7 +27,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
         ApproxStructure.build((s, str, arr) => s.element('button', {
           classes: [ arr.has('tox-button'), arr.not('tox-button--secondary'), arr.not('tox-tbtn') ],
           children: [
-            s.text(str.is('ButtonText'))
+            s.text(str.is('Button<Text'))
           ]
         })),
         hook.component().element

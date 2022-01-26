@@ -66,19 +66,11 @@ const getBlocksToIndent = (editor: Editor): SugarElement<HTMLElement>[] =>
   );
 
 const handle = (editor: Editor, command: string): void => {
-  const { dom, selection, formatter } = editor;
+  const { dom } = editor;
   const indentation = Options.getIndentation(editor);
   const indentUnit = /[a-z%]+$/i.exec(indentation)[0];
   const indentValue = parseInt(indentation, 10);
   const useMargin = Options.shouldIndentUseMargin(editor);
-  const forcedRootBlock = Options.getForcedRootBlock(editor);
-
-  // If forced_root_blocks is set to false we don't have a block to indent so lets create a div
-  if (!editor.queryCommandState('InsertUnorderedList') && !editor.queryCommandState('InsertOrderedList')) {
-    if (forcedRootBlock === '' && !dom.getParent(selection.getNode(), dom.isBlock)) {
-      formatter.apply('div');
-    }
-  }
 
   Arr.each(getBlocksToIndent(editor), (block) => {
     indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom);

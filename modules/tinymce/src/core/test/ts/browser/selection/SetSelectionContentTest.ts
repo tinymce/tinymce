@@ -292,6 +292,6 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
 
     SetSelectionContent.setContent(editor, '<img src="" onload="alert(1)">');
 
-    assert.equal(lastSetContent.content, '<img src="" />');
+    assert.equal(lastSetContent.content, '<img src="">');
   });
 });

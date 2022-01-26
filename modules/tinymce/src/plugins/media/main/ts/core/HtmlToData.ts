@@ -12,7 +12,6 @@ import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import { MediaData } from './Types';
-import { getVideoScriptMatch, VideoScript } from './VideoScript';
 
 type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
@@ -34,7 +33,7 @@ const getEphoxEmbedData = (attrs: AttrList): MediaData => {
   };
 };
 
-const htmlToData = (prefixes: VideoScript[], html: string): MediaData => {
+const htmlToData = (html: string): MediaData => {
   const isEphoxEmbed = Cell<boolean>(false);
   let data: any = {};
 
@@ -61,16 +60,9 @@ const htmlToData = (prefixes: VideoScript[], html: string): MediaData => {
         }
 
         if (name === 'script') {
-          const videoScript = getVideoScriptMatch(prefixes, attrs.map.src);
-          if (!videoScript) {
-            return;
-          }
-
           data = {
             type: 'script',
-            source: attrs.map.src,
-            width: String(videoScript.width),
-            height: String(videoScript.height)
+            source: attrs.map.src
           };
         }
 

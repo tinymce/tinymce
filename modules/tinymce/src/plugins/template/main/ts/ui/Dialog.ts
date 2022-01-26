@@ -11,7 +11,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
-import XHR from 'tinymce/core/api/util/XHR';
 
 import * as Options from '../api/Options';
 import * as Templates from '../core/Templates';
@@ -109,17 +108,11 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
     editor.windowManager.alert('Could not load the specified template.', () => api.focus('template'));
   };
 
-  const getTemplateContent = (t: InternalTemplate) => new Promise<string>((resolve, reject) => {
-    t.value.url.fold(() => resolve(t.value.content.getOr('')), (url) => XHR.send({
-      url,
-      success: (html: string) => {
-        resolve(html);
-      },
-      error: (e) => {
-        reject(e);
-      }
-    }));
-  });
+  const getTemplateContent = (t: InternalTemplate): Promise<string> =>
+    t.value.url.fold(
+      () => Promise.resolve(t.value.content.getOr('')),
+      (url) => fetch(url).then((res) => res.ok ? res.text() : Promise.reject())
+    );
 
   const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) =>
     (api: Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {

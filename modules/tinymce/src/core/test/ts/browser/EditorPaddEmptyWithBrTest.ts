@@ -19,7 +19,7 @@ describe('browser.tinymce.core.EditorPaddEmptyWithBrTest', () => {
   it('Padd empty elements with br', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p><p></p>');
-    assert.equal(editor.getContent(), '<p>a</p><p><br /></p>');
+    assert.equal(editor.getContent(), '<p>a</p><p><br></p>');
   });
 
   it('Padd empty elements with br on insert at caret', () => {
@@ -27,6 +27,6 @@ describe('browser.tinymce.core.EditorPaddEmptyWithBrTest', () => {
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.insertContent('<p>b</p><p></p>');
-    assert.equal(editor.getContent(), '<p>a</p><p>b</p><p><br /></p>');
+    assert.equal(editor.getContent(), '<p>a</p><p>b</p><p><br></p>');
   });
 });

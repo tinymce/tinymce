@@ -1,6 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -13,10 +12,6 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     live_embeds: false,
     document_base_url: '/tinymce/tinymce/trunk/tests/',
     extended_valid_elements: 'script[src|type]',
-    media_scripts: [
-      { filter: 'http://media1.tinymce.com' },
-      { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
-    ]
   }, [ Plugin ]);
 
   it('TBA: Object retained as is', () => {
@@ -31,9 +26,9 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
 
     TinyAssertions.assertContent(editor,
       '<p><object width="425" height="355" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">' +
-      '<param name="movie" value="someurl" />' +
-      '<param name="wmode" value="transparent" />' +
-      '<embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355" />' +
+      '<param name="movie" value="someurl">' +
+      '<param name="wmode" value="transparent">' +
+      '<embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355">' +
       '</object></p>'
     );
   });
@@ -84,8 +79,8 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     TinyAssertions.assertContent(editor,
       '<p>' +
       '<audio src="sound.mp3">' +
-      '<track kind="captions" src="foo.en.vtt" srclang="en" label="English" />' +
-      '<track kind="captions" src="foo.sv.vtt" srclang="sv" label="Svenska" />' +
+      '<track kind="captions" src="foo.en.vtt" srclang="en" label="English">' +
+      '<track kind="captions" src="foo.sv.vtt" srclang="sv" label="Svenska">' +
       'text<a href="#">link</a>' +
       '</audio>' +
       '</p>'
@@ -116,11 +111,11 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     TinyAssertions.assertContent(editor,
       '<p>' +
       '<video controls="controls" width="100" height="200">' +
-      '<source src="s" />' +
+      '<source src="s">' +
       '<object type="application/x-shockwave-flash" data="../../js/tinymce/plugins/media/moxieplayer.swf" width="100" height="200">' +
-      '<param name="allowfullscreen" value="true" />' +
-      '<param name="allowscriptaccess" value="always" />' +
-      '<param name="flashvars" value="video_src=s" />' +
+      '<param name="allowfullscreen" value="true">' +
+      '<param name="allowscriptaccess" value="always">' +
+      '<param name="flashvars" value="video_src=s">' +
       '<!-- [if IE]>' +
       '<param name="movie" value="../../js/tinymce/plugins/media/moxieplayer.swf" />' +
       '<![endif]-->' +
@@ -133,29 +128,6 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     editor.options.unset('media_live_embeds');
   });
 
-  it('TBA: Media script elements', () => {
-    const editor = hook.editor();
-    editor.setContent(
-      '<script src="http://media1.tinymce.com/123456"></sc' + 'ript>' +
-      '<script src="http://media2.tinymce.com/123456"></sc' + 'ript>'
-    );
-
-    const imgs = editor.getBody().getElementsByTagName('img');
-    assert.equal(imgs[0].className, 'mce-object mce-object-script');
-    assert.equal(imgs[0].width, 300);
-    assert.equal(imgs[0].height, 150);
-    assert.equal(imgs[1].className, 'mce-object mce-object-script');
-    assert.equal(imgs[1].width, 100);
-    assert.equal(imgs[1].height, 200);
-
-    TinyAssertions.assertContent(editor,
-      '<p>\n' +
-      '<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
-      '<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc' + 'ript>\n' +
-      '</p>'
-    );
-  });
-
   it('TBA: XSS content', () => {
     const editor = hook.editor();
     const testXss = (input: string, expectedOutput: string) => {
@@ -164,13 +136,13 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     };
 
     testXss('<video><a href="javascript:alert(1);">a</a></video>', '<p><video width="300" height="150"><a>a</a></video></p>');
-    testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"><img src="x" /></video></p>');
-    testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x" /></video></p>');
+    testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"><img src="x"></video></p>');
+    testXss('<video><img src="x"></video>', '<p><video width="300" height="150"><img src="x"></video></p>');
     testXss('<video><!--[if IE]><img src="x"><![endif]--></video>', '<p><video width="300" height="150"><!-- [if IE]><img src="x"><![endif]--></video></p>');
     testXss('<p><p><audio src=x onerror=alert(1)></audio>', '<p><audio src="x"></audio></p>');
     testXss('<p><html><audio><br /><audio src=x onerror=alert(1)></p>', '');
-    testXss('<p><audio><img src="javascript:alert(1)"></audio>', '<p><audio><img /></audio></p>');
-    testXss('<p><audio><img src="x" style="behavior:url(x); width: 1px"></audio>', '<p><audio><img src="x" style="width: 1px;" /></audio></p>');
+    testXss('<p><audio><img src="javascript:alert(1)"></audio>', '<p><audio><img></audio></p>');
+    testXss('<p><audio><img src="x" style="behavior:url(x); width: 1px"></audio>', '<p><audio><img src="x" style="width: 1px;"></audio></p>');
     testXss(
       '<p><video><noscript><svg onload="javascript:alert(1)"></svg></noscript></video>',
       '<p><video width="300" height="150"></video></p>'

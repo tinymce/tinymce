@@ -78,39 +78,6 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('Enter inside empty li in the middle of ol with forced_root_block: false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
-    editor.selection.setCursorLocation(editor.dom.select('li:nth-child(2)')[0], 0);
-    pressEnter(editor);
-    assert.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br><ol><li>b</li></ol>');
-    assert.equal(editor.selection.getNode().nodeName, 'BODY');
-    editor.options.set('forced_root_block', 'p');
-  });
-
-  it('Enter inside empty li in beginning of ol with forced_root_block: false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
-    editor.selection.setCursorLocation(editor.dom.select('li')[0], 0);
-    pressEnter(editor);
-    assert.equal(editor.getBody().innerHTML, '<br><ol><li>a</li></ol>');
-    assert.equal(editor.selection.getNode().nodeName, 'BODY');
-    editor.options.set('forced_root_block', 'p');
-  });
-
-  it('Enter inside empty li at the end of ol with forced_root_block: false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
-    editor.selection.setCursorLocation(editor.dom.select('li')[1], 0);
-    pressEnter(editor);
-    assert.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br>');
-    assert.equal(editor.selection.getNode().nodeName, 'BODY');
-    editor.options.set('forced_root_block', 'p');
-  });
-
   it('Enter inside empty li in the middle of ol', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
@@ -449,7 +416,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<ol><li><p><br />abcd</p></li></ol>');
+    assert.equal(editor.getContent(), '<ol><li><p><br>abcd</p></li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -458,7 +425,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<ol><li><p>ab<br />cd</p></li></ol>');
+    assert.equal(editor.getContent(), '<ol><li><p>ab<br>cd</p></li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -469,7 +436,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     pressEnter(editor, { shiftKey: true });
     assert.equal(
       editor.getContent(),
-      '<ol><li><p>abcd<br /><br /></p></li></ol>'
+      '<ol><li><p>abcd<br><br></p></li></ol>'
     );
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
@@ -499,16 +466,6 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     pressEnter(editor, { ctrlKey: true });
     assert.equal(editor.getContent(), '<ol><li><p>abcd</p><p>\u00a0</p></li></ol>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
-  });
-
-  it('Shift+enter in LI when forced_root_block: false', () => {
-    const editor = hook.editor();
-    editor.options.set('forced_root_block', false);
-    editor.getBody().innerHTML = '<ul><li>text</li></ul>';
-    LegacyUnit.setSelection(editor, 'li', 2);
-    pressEnter(editor, { shiftKey: true });
-    assert.equal(editor.getContent(), '<ul><li>te<br />xt</li></ul>');
-    editor.options.set('forced_root_block', 'p');
   });
 
   it('TINY-5974: Should be able to outdent empty list using enter key', () => {

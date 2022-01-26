@@ -76,7 +76,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
           value: 'src'
         }
       },
-      '<p><img src="src" alt="alt" /></p>'
+      '<p><img src="src" alt="alt"></p>'
     );
     await pTestUiStateEnabled(editor, 'alt');
   });
@@ -91,7 +91,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
         },
         decorative: true
       },
-      '<p><img role="presentation" src="src" alt="" /></p>'
+      '<p><img role="presentation" src="src" alt=""></p>'
     );
     await pTestUiStateDisabled(editor);
   });
@@ -107,7 +107,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
         },
         decorative: true
       },
-      '<p><img role="presentation" src="src" alt="" /></p>'
+      '<p><img role="presentation" src="src" alt=""></p>'
     );
     await pTestUiStateDisabled(editor);
   });
@@ -128,7 +128,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
         finish: { element: [ 0 ], offset: 1 }
       },
       '<p><img role="presentation" src="src" alt="" /></p>',
-      '<p><img src="src" alt="alt" /></p>'
+      '<p><img src="src" alt="alt"></p>'
     );
     await pTestUiStateEnabled(editor, 'alt');
   });
@@ -149,7 +149,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
         finish: { element: [ 0 ], offset: 1 }
       },
       '<p><img src="src" alt="alt" /></p>',
-      '<p><img role="presentation" src="src" alt="" /></p>'
+      '<p><img role="presentation" src="src" alt=""></p>'
     );
     await pTestUiStateDisabled(editor);
   });

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers, Behaviour, Focusing, SimpleSpec, Slider, SliderTypes } from '@ephox/alloy';
+import { AlloyTriggers, Behaviour, Focusing, GuiFactory, SimpleSpec, Slider, SliderTypes } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 
@@ -19,9 +19,11 @@ export const renderSlider = (spec: SliderSpec, providerBackstage: UiFactoryBacks
   const labelPart = Slider.parts.label({
     dom: {
       tag: 'label',
-      classes: [ 'tox-label' ],
-      innerHtml: providerBackstage.translate(spec.label)
-    }
+      classes: [ 'tox-label' ]
+    },
+    components: [
+      GuiFactory.text(providerBackstage.translate(spec.label))
+    ]
   });
 
   const spectrum = Slider.parts.spectrum({

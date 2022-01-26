@@ -105,8 +105,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
   const lastVisualCaret = Singleton.value<CaretState>();
   let cursorInterval: number | undefined;
   let caretContainerNode: Node | null;
-  const rootBlock = Options.getForcedRootBlock(editor);
-  const caretBlock = rootBlock.length > 0 ? rootBlock : 'p';
+  const caretBlock = Options.getForcedRootBlock(editor);
   const dom = editor.dom;
 
   const show = (before: boolean, element: Element): Range | null => {

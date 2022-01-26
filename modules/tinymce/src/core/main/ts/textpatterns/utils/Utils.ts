@@ -9,7 +9,6 @@ import { Optional } from '@ephox/katamari';
 
 import DOMUtils from '../../api/dom/DOMUtils';
 import Editor from '../../api/Editor';
-import * as Options from '../../api/Options';
 import * as NodeType from '../../dom/NodeType';
 
 const cleanEmptyNodes = (dom: DOMUtils, node: Node, isRoot: (e: Node) => boolean): void => {
@@ -41,14 +40,8 @@ const deleteRng = (dom: DOMUtils, rng: Range, isRoot: (e: Node) => boolean, clea
   }
 };
 
-const getParentBlock = (editor: Editor, rng: Range): Optional<Element> => {
-  const parentBlockOpt = Optional.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
-  if (Options.getForcedRootBlock(editor) === '') {
-    return parentBlockOpt.orThunk(() => Optional.some(editor.getBody()));
-  } else {
-    return parentBlockOpt;
-  }
-};
+const getParentBlock = (editor: Editor, rng: Range): Optional<Element> =>
+  Optional.from(editor.dom.getParent(rng.startContainer, editor.dom.isBlock));
 
 export {
   cleanEmptyNodes,

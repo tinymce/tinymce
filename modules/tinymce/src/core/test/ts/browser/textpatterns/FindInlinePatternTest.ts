@@ -19,7 +19,6 @@ interface ExpectedPatternMatch {
 
 describe('browser.tinymce.core.textpatterns.FindInlinePatternTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    forced_root_block: false,
     plugins: 'lists',
     text_patterns: [
       { start: '*', end: '*', format: 'italic' },

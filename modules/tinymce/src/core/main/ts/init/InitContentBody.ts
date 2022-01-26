@@ -34,6 +34,7 @@ import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
+import * as Paste from '../paste/Paste';
 import * as Rtc from '../Rtc';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
@@ -264,14 +265,14 @@ const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
 
 const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFonts: string[]): Promise<unknown>[] => {
   const promises = [
-    new Promise((resolve, reject) => getStyleSheetLoader(editor).loadAll(css, resolve, reject)),
+    getStyleSheetLoader(editor).loadAll(css)
   ];
 
   if (editor.inline) {
     return promises;
   } else {
     return promises.concat([
-      new Promise((resolve, reject) => editor.ui.styleSheetLoader.loadAll(framedFonts, resolve, reject)),
+      editor.ui.styleSheetLoader.loadAll(framedFonts)
     ]);
   }
 };
@@ -444,6 +445,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   DeleteCommands.setup(editor, caret);
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
+  Paste.setup(editor);
 
   const setupRtcThunk = Rtc.setup(editor);
 
