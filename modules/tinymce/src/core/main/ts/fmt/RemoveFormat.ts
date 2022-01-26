@@ -484,8 +484,9 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
       const removed = removeNodeFormat(node);
 
       // TINY-6567/TINY-7393: Include the parent if using an expanded selector format and no match was found for the current node
+      const currentNodeMatches = Arr.exists(formatList, (f) => matchName(dom, node, f));
       const parentNode = node.parentNode;
-      if (!removed && Type.isNonNullable(parentNode) && FormatUtils.shouldExpandToSelector(format)) {
+      if (!removed && !currentNodeMatches && Type.isNonNullable(parentNode) && FormatUtils.shouldExpandToSelector(format)) {
         removeNodeFormat(parentNode);
       }
     }
