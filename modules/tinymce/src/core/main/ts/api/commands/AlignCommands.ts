@@ -43,8 +43,7 @@ const registerStateCommands = (editor: Editor) => {
   const alignStates = (name: string) => () => {
     const selection = editor.selection;
     const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
-    const matches = Arr.map(nodes, (node) => Type.isNonNullable(editor.formatter.matchNode(node, name)));
-    return Arr.contains(matches, true);
+    return Arr.exists(nodes, (node) => Type.isNonNullable(editor.formatter.matchNode(node, name)));
   };
 
   editor.editorCommands.addCommands({

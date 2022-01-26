@@ -9,15 +9,7 @@ import type Editor from '../Editor';
 import Env from '../Env';
 
 export const registerCommands = (editor: Editor) => {
-  const execNativeCommand = (command: string, ui?: boolean, value?: any) => {
-    if (ui === undefined) {
-      ui = false;
-    }
-
-    if (value === undefined) {
-      value = null;
-    }
-
+  const execNativeCommand = (command: string, ui: boolean = false, value: any = null) => {
     return editor.getDoc().execCommand(command, ui, value);
   };
 

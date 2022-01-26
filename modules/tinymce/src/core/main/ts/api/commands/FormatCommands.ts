@@ -28,6 +28,10 @@ const registerExecCommands = (editor: Editor) => {
       toggleFormat(command, { value });
     },
 
+    'BackColor': (_command, _ui, value) => {
+      toggleFormat('hilitecolor', { value });
+    },
+
     'FontName': (_command, _ui, value) => {
       Font.fontNameAction(editor, value);
     },
@@ -53,7 +57,7 @@ const registerExecCommands = (editor: Editor) => {
     },
 
     'FormatBlock': (_command, _ui, value) => {
-      return toggleFormat(Type.isString(value) ? value : 'p');
+      toggleFormat(Type.isString(value) ? value : 'p');
     },
 
     'mceToggleFormat': (_command, _ui, value) => {
@@ -63,9 +67,7 @@ const registerExecCommands = (editor: Editor) => {
 };
 
 const registerQueryCommands = (editor: Editor) => {
-  const isFormatMatch = (name: string) => {
-    return editor.formatter.match(name);
-  };
+  const isFormatMatch = (name: string) => editor.formatter.match(name);
 
   editor.editorCommands.addCommands({
     'Bold,Italic,Underline,Strikethrough,Superscript,Subscript': (command) => isFormatMatch(command),
