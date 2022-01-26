@@ -6,7 +6,7 @@ import Resource from 'tinymce/core/api/Resource';
 
 declare const tinymce: { Resource: Resource };
 
-describe('Scripts test', () => {
+describe('browser.tinymce.core.ResourceTest', () => {
   const origTiny = Global.tinymce;
 
   before(() => {
@@ -28,8 +28,12 @@ describe('Scripts test', () => {
   const loadScript = (id: string, url: string): Promise<any> =>
     tinymce.Resource.load(id, url);
 
+  const unloadScript = (id: string) => {
+    tinymce.Resource.unload(id);
+  };
+
   const assertLoadSuccess = (actual: Promise<string>, expectedData: string) => {
-    actual.then((data) => {
+    return actual.then((data) => {
       assert.equal(data, expectedData, 'Load succeeded but data did not match expected');
     }, (err) => {
       assert.fail('Load failed with error: ' + err);
@@ -55,9 +59,19 @@ describe('Scripts test', () => {
     return assertLoadSuccess(load, 'value.2');
   });
 
-  it('return cached value', () => {
+  it('return cached value', async () => {
+    await loadScript('script.2', testScript('script.2', 'value.2'));
+
     const load = loadScript('script.2', testScript('script.2', 'value.3'));
     return assertLoadSuccess(load, 'value.2');
+  });
+
+  it('unload cached value', async () => {
+    await loadScript('script.2', testScript('script.2', 'value.2'));
+    unloadScript('script.2');
+
+    const load = loadScript('script.2', testScript('script.2', 'value.3'));
+    return assertLoadSuccess(load, 'value.3');
   });
 
   it('invalid URL fails', () => {

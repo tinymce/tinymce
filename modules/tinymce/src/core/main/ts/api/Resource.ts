@@ -10,6 +10,7 @@ import ScriptLoader from './dom/ScriptLoader';
 interface Resource {
   load: <T = any>(id: string, url: string) => Promise<T>;
   add: (id: string, data: any) => void;
+  unload: (id: string) => void;
 }
 
 const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, timeout = 1000) => {
@@ -67,9 +68,14 @@ const create = (): Resource => {
     tasks[id] = Promise.resolve(data);
   };
 
+  const unload = (id: string) => {
+    delete tasks[id];
+  };
+
   return {
     load,
-    add
+    add,
+    unload
   };
 };
 
