@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -9,6 +9,8 @@ describe('browser.tinymce.core.FakeClipboardTest', () => {
   TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, []);
+
+  afterEach(() => FakeClipboard.clear());
 
   it('TINY-8353: fake clipboard returns undefined when not set', () => {
     assert.isUndefined(FakeClipboard.read());
