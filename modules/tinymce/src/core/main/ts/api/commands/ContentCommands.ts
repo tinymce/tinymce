@@ -24,12 +24,6 @@ export const registerCommands = (editor: Editor) => {
       InsertContent.insertAtCaret(editor, value);
     },
 
-    mceInsertRawHTML: (_command, _ui, value) => {
-      editor.selection.setContent('tiny_mce_marker');
-      const content = editor.getContent();
-      editor.setContent(content.replace(/tiny_mce_marker/g, () => value));
-    },
-
     mceSetContent: (_command, _ui, value) => {
       editor.setContent(value);
     },
