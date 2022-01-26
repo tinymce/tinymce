@@ -19,7 +19,6 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
     () => {
       if (Type.isNonNullable(evt)) {
         const event = fireFakeBeforeInputEvent(editor, 'insertLineBreak');
-
         if (event.isDefaultPrevented()) {
           return;
         }
@@ -34,7 +33,6 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
     () => {
       if (Type.isNonNullable(evt)) {
         const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
-
         if (event.isDefaultPrevented()) {
           return;
         }
