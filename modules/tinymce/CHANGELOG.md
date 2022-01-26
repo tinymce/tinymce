@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
 - The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
 - Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
+- New default theme styling for TinyMCE 6 facelift with old skin available as `tinymce-5` and `tinymce-5-dark` #TINY-8373
 
 ### Changed
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
@@ -57,7 +58,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
-- Updated default theme styling for TinyMCE 6 facelift #TINY-8373
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
