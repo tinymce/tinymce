@@ -4,9 +4,10 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
+import Env from 'tinymce/src/core/main/ts/api/Env';
 import { NormalizedEvent } from 'tinymce/src/core/main/ts/events/EventUtils';
 
-export const testBeforeInputEvent = (performEditAction: (editor: Editor) => void, eventType: string) =>
+export const testBeforeInputEvent = (performEditAction: (editor: Editor) => void, eventType: string, expectMoreEventsIfSafari: boolean) =>
   (
     editor: Editor,
     setupHtml: string,
@@ -17,9 +18,6 @@ export const testBeforeInputEvent = (performEditAction: (editor: Editor) => void
   ) => {
     const inputEvents: string[] = [];
     const collect = (event: NormalizedEvent<InputEvent, any>) => {
-      if (event.isImmediatePropagationStopped()) {
-        return;
-      }
       inputEvents.push(event.inputType);
     };
     const beforeInputCollect = (event: NormalizedEvent<InputEvent, any>) => {
@@ -40,7 +38,9 @@ export const testBeforeInputEvent = (performEditAction: (editor: Editor) => void
 
     TinyAssertions.assertContent(editor, expectedHtml);
 
-    assert.deepEqual(inputEvents, cancelBeforeInput ? [ eventType ] : [ eventType, eventType ]);
+    const moreEvents = expectMoreEventsIfSafari && Env.browser.isSafari();
+    const expectedNoCancelEvents = moreEvents ? [ eventType, eventType, eventType ] : [ eventType, eventType ];
+    assert.deepEqual(inputEvents, cancelBeforeInput ? [ eventType ] : expectedNoCancelEvents);
   };
 
 export const pressKeyAction = (key: number) =>
