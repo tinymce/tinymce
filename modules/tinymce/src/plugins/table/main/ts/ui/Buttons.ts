@@ -30,162 +30,164 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
 
   const cmd = (command: string) => () => editor.execCommand(command);
 
-  // TODO: TINY-8172 Look at solution to make sure user can't use buttons that won't do anything
-  const addButton = (name: string, spec: AddButtonSpec) => {
-    editor.ui.registry.addButton(name, {
-      ...spec,
-      onAction: cmd(spec.command)
-    });
+  // TODO: TINY-8172 Unwind this when alternative solution is found
+  const addButtonIfRegistered = (name: string, spec: AddButtonSpec) => {
+    if (editor.editorCommands.hasCustomCommand(spec.command)) {
+      editor.ui.registry.addButton(name, {
+        ...spec,
+        onAction: cmd(spec.command)
+      });
+    }
   };
 
-  addButton('tableprops', {
+  addButtonIfRegistered('tableprops', {
     tooltip: 'Table properties',
     command: 'mceTableProps',
     icon: 'table',
     onSetup: selectionTargets.onSetupTable
   });
 
-  addButton('tabledelete', {
+  addButtonIfRegistered('tabledelete', {
     tooltip: 'Delete table',
     command: 'mceTableDelete',
     icon: 'table-delete-table',
     onSetup: selectionTargets.onSetupTable
   });
 
-  addButton('tablecellprops', {
+  addButtonIfRegistered('tablecellprops', {
     tooltip: 'Cell properties',
     command: 'mceTableCellProps',
     icon: 'table-cell-properties',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  addButton('tablemergecells', {
+  addButtonIfRegistered('tablemergecells', {
     tooltip: 'Merge cells',
     command: 'mceTableMergeCells',
     icon: 'table-merge-cells',
     onSetup: selectionTargets.onSetupMergeable
   });
 
-  addButton('tablesplitcells', {
+  addButtonIfRegistered('tablesplitcells', {
     tooltip: 'Split cell',
     command: 'mceTableSplitCells',
     icon: 'table-split-cells',
     onSetup: selectionTargets.onSetupUnmergeable
   });
 
-  addButton('tableinsertrowbefore', {
+  addButtonIfRegistered('tableinsertrowbefore', {
     tooltip: 'Insert row before',
     command: 'mceTableInsertRowBefore',
     icon: 'table-insert-row-above',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  addButton('tableinsertrowafter', {
+  addButtonIfRegistered('tableinsertrowafter', {
     tooltip: 'Insert row after',
     command: 'mceTableInsertRowAfter',
     icon: 'table-insert-row-after',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  addButton('tabledeleterow', {
+  addButtonIfRegistered('tabledeleterow', {
     tooltip: 'Delete row',
     command: 'mceTableDeleteRow',
     icon: 'table-delete-row',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  addButton('tablerowprops', {
+  addButtonIfRegistered('tablerowprops', {
     tooltip: 'Row properties',
     command: 'mceTableRowProps',
     icon: 'table-row-properties',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  addButton('tableinsertcolbefore', {
+  addButtonIfRegistered('tableinsertcolbefore', {
     tooltip: 'Insert column before',
     command: 'mceTableInsertColBefore',
     icon: 'table-insert-column-before',
     onSetup: selectionTargets.onSetupColumn(LockedDisable.onFirst)
   });
 
-  addButton('tableinsertcolafter', {
+  addButtonIfRegistered('tableinsertcolafter', {
     tooltip: 'Insert column after',
     command: 'mceTableInsertColAfter',
     icon: 'table-insert-column-after',
     onSetup: selectionTargets.onSetupColumn(LockedDisable.onLast)
   });
 
-  addButton('tabledeletecol', {
+  addButtonIfRegistered('tabledeletecol', {
     tooltip: 'Delete column',
     command: 'mceTableDeleteCol',
     icon: 'table-delete-column',
     onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 
-  addButton('tablecutrow', {
+  addButtonIfRegistered('tablecutrow', {
     tooltip: 'Cut row',
     command: 'mceTableCutRow',
     icon: 'cut-row',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  addButton('tablecopyrow', {
+  addButtonIfRegistered('tablecopyrow', {
     tooltip: 'Copy row',
     command: 'mceTableCopyRow',
     icon: 'duplicate-row',
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
-  addButton('tablepasterowbefore', {
+  addButtonIfRegistered('tablepasterowbefore', {
     tooltip: 'Paste row before',
     command: 'mceTablePasteRowBefore',
     icon: 'paste-row-before',
     onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
   });
 
-  addButton('tablepasterowafter', {
+  addButtonIfRegistered('tablepasterowafter', {
     tooltip: 'Paste row after',
     command: 'mceTablePasteRowAfter',
     icon: 'paste-row-after',
     onSetup: selectionTargets.onSetupPasteable(FakeClipboard.getRows)
   });
 
-  addButton('tablecutcol', {
+  addButtonIfRegistered('tablecutcol', {
     tooltip: 'Cut column',
     command: 'mceTableCutCol',
     icon: 'cut-column',
     onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 
-  addButton('tablecopycol', {
+  addButtonIfRegistered('tablecopycol', {
     tooltip: 'Copy column',
     command: 'mceTableCopyCol',
     icon: 'duplicate-column',
     onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 
-  addButton('tablepastecolbefore', {
+  addButtonIfRegistered('tablepastecolbefore', {
     tooltip: 'Paste column before',
     command: 'mceTablePasteColBefore',
     icon: 'paste-column-before',
     onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onFirst)
   });
 
-  addButton('tablepastecolafter', {
+  addButtonIfRegistered('tablepastecolafter', {
     tooltip: 'Paste column after',
     command: 'mceTablePasteColAfter',
     icon: 'paste-column-after',
     onSetup: selectionTargets.onSetupPasteableColumn(FakeClipboard.getColumns, LockedDisable.onLast)
   });
 
-  addButton('tableinsertdialog', {
+  addButtonIfRegistered('tableinsertdialog', {
     tooltip: 'Insert table',
     command: 'mceInsertTableDialog',
     icon: 'table'
   });
 
   const tableClassList = filterNoneItem(Options.getTableClassList(editor));
-  if (tableClassList.length !== 0) {
+  if (tableClassList.length !== 0 && editor.editorCommands.hasCustomCommand('mceTableToggleClass')) {
     editor.ui.registry.addMenuButton('tableclass', {
       icon: 'table-classes',
       tooltip: 'Table styles',
@@ -200,7 +202,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
   }
 
   const tableCellClassList = filterNoneItem(Options.getCellClassList(editor));
-  if (tableCellClassList.length !== 0) {
+  if (tableCellClassList.length !== 0 && editor.editorCommands.hasCustomCommand('mceTableCellToggleClass')) {
     editor.ui.registry.addMenuButton('tablecellclass', {
       icon: 'table-cell-classes',
       tooltip: 'Cell styles',
@@ -214,76 +216,88 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
     });
   }
 
-  editor.ui.registry.addMenuButton('tablecellvalign', {
-    icon: 'vertical-align',
-    tooltip: 'Vertical align',
-    fetch: generateMenuItemsCallback(
-      editor,
-      verticalAlignValues,
-      'tablecellverticalalign',
-      applyTableCellStyle(editor, 'vertical-align')
-    ),
-    onSetup: selectionTargets.onSetupCellOrRow
-  });
+  // TODO: TINY-8172 Unwind this when alternative solution is found
+  if (editor.editorCommands.hasCustomCommand('mceTableApplyCellStyle')) {
+    editor.ui.registry.addMenuButton('tablecellvalign', {
+      icon: 'vertical-align',
+      tooltip: 'Vertical align',
+      fetch: generateMenuItemsCallback(
+        editor,
+        verticalAlignValues,
+        'tablecellverticalalign',
+        applyTableCellStyle(editor, 'vertical-align')
+      ),
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
 
-  editor.ui.registry.addMenuButton('tablecellborderwidth', {
-    icon: 'border-width',
-    tooltip: 'Border width',
-    fetch: generateMenuItemsCallback(
-      editor,
-      Options.getTableBorderWidths(editor),
-      'tablecellborderwidth',
-      applyTableCellStyle(editor, 'border-width')
-    ),
-    onSetup: selectionTargets.onSetupCellOrRow
-  });
+    editor.ui.registry.addMenuButton('tablecellborderwidth', {
+      icon: 'border-width',
+      tooltip: 'Border width',
+      fetch: generateMenuItemsCallback(
+        editor,
+        Options.getTableBorderWidths(editor),
+        'tablecellborderwidth',
+        applyTableCellStyle(editor, 'border-width')
+      ),
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
 
-  editor.ui.registry.addMenuButton('tablecellborderstyle', {
-    icon: 'border-style',
-    tooltip: 'Border style',
-    fetch: generateMenuItemsCallback(
-      editor,
-      Options.getTableBorderStyles(editor),
-      'tablecellborderstyle',
-      applyTableCellStyle(editor, 'border-style')
-    ),
-    onSetup: selectionTargets.onSetupCellOrRow
-  });
+    editor.ui.registry.addMenuButton('tablecellborderstyle', {
+      icon: 'border-style',
+      tooltip: 'Border style',
+      fetch: generateMenuItemsCallback(
+        editor,
+        Options.getTableBorderStyles(editor),
+        'tablecellborderstyle',
+        applyTableCellStyle(editor, 'border-style')
+      ),
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
 
-  editor.ui.registry.addMenuButton('tablecellbackgroundcolor', {
-    icon: 'cell-background-color',
-    tooltip: 'Background color',
-    fetch: (callback) => callback(buildColorMenu(editor, Options.getTableBackgroundColorMap(editor), 'background-color')),
-    onSetup: selectionTargets.onSetupCellOrRow
-  });
+    editor.ui.registry.addMenuButton('tablecellbackgroundcolor', {
+      icon: 'cell-background-color',
+      tooltip: 'Background color',
+      fetch: (callback) => callback(buildColorMenu(editor, Options.getTableBackgroundColorMap(editor), 'background-color')),
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
 
-  editor.ui.registry.addMenuButton('tablecellbordercolor', {
-    icon: 'cell-border-color',
-    tooltip: 'Border color',
-    fetch: (callback) => callback(buildColorMenu(editor, Options.getTableBorderColorMap(editor), 'border-color')),
-    onSetup: selectionTargets.onSetupCellOrRow
-  });
+    editor.ui.registry.addMenuButton('tablecellbordercolor', {
+      icon: 'cell-border-color',
+      tooltip: 'Border color',
+      fetch: (callback) => callback(buildColorMenu(editor, Options.getTableBorderColorMap(editor), 'border-color')),
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
+  }
 
-  editor.ui.registry.addToggleButton('tablecaption', {
-    tooltip: 'Table caption',
-    onAction: cmd('mceTableToggleCaption'),
-    icon: 'table-caption',
-    onSetup: selectionTargets.onSetupTableWithCaption
-  });
+  // TODO: TINY-8172 Unwind this when alternative solution is found
+  if (editor.editorCommands.hasCustomCommand('mceTableToggleCaption')) {
+    editor.ui.registry.addToggleButton('tablecaption', {
+      tooltip: 'Table caption',
+      onAction: cmd('mceTableToggleCaption'),
+      icon: 'table-caption',
+      onSetup: selectionTargets.onSetupTableWithCaption
+    });
+  }
 
-  editor.ui.registry.addToggleButton('tablerowheader', {
-    tooltip: 'Row header',
-    icon: 'table-top-header',
-    onAction: changeRowHeader(editor),
-    onSetup: selectionTargets.onSetupTableRowHeaders
-  });
+  // TODO: TINY-8172 Unwind this when alternative solution is found
+  if (editor.editorCommands.hasCustomCommand('mceTableRowType')) {
+    editor.ui.registry.addToggleButton('tablerowheader', {
+      tooltip: 'Row header',
+      icon: 'table-top-header',
+      onAction: changeRowHeader(editor),
+      onSetup: selectionTargets.onSetupTableRowHeaders
+    });
+  }
 
-  editor.ui.registry.addToggleButton('tablecolheader', {
-    tooltip: 'Column header',
-    icon: 'table-left-header',
-    onAction: changeColumnHeader(editor),
-    onSetup: selectionTargets.onSetupTableColumnHeaders
-  });
+  // TODO: TINY-8172 Unwind this when alternative solution is found
+  if (editor.editorCommands.hasCustomCommand('mceTableColType')) {
+    editor.ui.registry.addToggleButton('tablecolheader', {
+      tooltip: 'Column header',
+      icon: 'table-left-header',
+      onAction: changeColumnHeader(editor),
+      onSetup: selectionTargets.onSetupTableColumnHeaders
+    });
+  }
 };
 
 const addToolbars = (editor: Editor): void => {
