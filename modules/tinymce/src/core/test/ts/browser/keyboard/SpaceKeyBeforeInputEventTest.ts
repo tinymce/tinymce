@@ -11,7 +11,7 @@ describe('browser.tinymce.core.delete.SpaceKeyBeforeInputEventTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
-  const testSpace = testBeforeInputEvent(pressKeyAction(Keys.space()), 'insertText', false);
+  const testSpace = testBeforeInputEvent(pressKeyAction(Keys.space()), 'insertText');
 
   it('Gets beforeInput', () => {
     testSpace(hook.editor(), '<p>a <a href="#">b</a> c</p>', [ 0, 1, 0 ], 0, '<p>a <a href="#">&nbsp;b</a> c</p>', false);

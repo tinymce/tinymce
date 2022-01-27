@@ -11,7 +11,7 @@ describe('browser.tinymce.core.delete.DeleteBeforeInputEventTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
-  const testBackspace = testBeforeInputEvent(pressKeyAction(Keys.backspace()), 'deleteContentBackward', true);
+  const testBackspace = testBeforeInputEvent(pressKeyAction(Keys.backspace()), 'deleteContentBackward');
 
   it('Gets beforeInput', () => {
     testBackspace(hook.editor(), '<p>a<a href="#">bc</a>d</p>', [ 0, 1, 0 ], 1, '<p>a<a href="#">c</a>d</p>', false);

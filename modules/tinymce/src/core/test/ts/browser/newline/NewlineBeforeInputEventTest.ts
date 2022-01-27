@@ -10,7 +10,7 @@ describe('browser.tinymce.core.delete.NewlineBeforeInputEventTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
-  const testNewline = testBeforeInputEvent(insertNewLineAction, 'insertParagraph', false);
+  const testNewline = testBeforeInputEvent(insertNewLineAction, 'insertParagraph');
 
   it('Gets beforeInput', () => {
     testNewline(hook.editor(), '<p><a href="#">a<img src="about:blank"></a></p>', [ 0, 0 ], 1, '<p><a href="#">a</a></p>\n<p><a href="#"><img src="about:blank"></a></p>', false);

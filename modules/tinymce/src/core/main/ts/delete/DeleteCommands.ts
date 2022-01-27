@@ -20,10 +20,6 @@ import * as MediaDelete from './MediaDelete';
 import * as Outdent from './Outdent';
 import * as TableDelete from './TableDelete';
 
-const nativeCommand = (editor: Editor, command: string): void => {
-  editor.getDoc().execCommand(command, false, null);
-};
-
 const findAction = (editor: Editor, caret: Cell<Text>, forward: boolean) =>
   Arr.findMap([
     Outdent.backspaceDelete,
@@ -43,7 +39,7 @@ const deleteCommand = (editor: Editor, caret: Cell<Text>): void => {
 
   result.fold(
     () => {
-      nativeCommand(editor, 'Delete');
+      DeleteUtils.execDeleteCommand(editor);
       DeleteUtils.paddEmptyBody(editor);
     },
     Fun.call
@@ -54,7 +50,7 @@ const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>): void => {
   const result = findAction(editor, caret, true);
 
   result.fold(
-    () => nativeCommand(editor, 'ForwardDelete'),
+    () => DeleteUtils.execForwardDeleteCommand(editor),
     Fun.call
   );
 };
