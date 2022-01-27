@@ -46,24 +46,27 @@ class EditorCommands {
   }
 
   /**
-   * Executes the specified command.
+   * Executes a registered command on the current instance. A list of available commands can be found in
+   * the <a href="https://www.tiny.cloud/docs/advanced/editor-command-identifiers/">command identifiers</a> documentation.
    *
    * @method execCommand
-   * @param {String} command Command to execute.
-   * @param {Boolean} ui Optional user interface state.
-   * @param {Object} value Optional value for command.
-   * @param {Object} args Optional extra arguments to the execCommand.
-   * @return {Boolean} true/false if the command was found or not.
+   * @param {String} cmd Command name to execute, for example mceLink or Bold.
+   * @param {Boolean} ui True/false state if a UI (dialog) should be presented or not.
+   * @param {mixed} value Optional command value, this can be anything.
+   * @param {Object} args Optional arguments object.
+   * @return {Boolean} true or false if the command was supported or not.
    */
   public execCommand(command: string, ui?: boolean, value?: any, args?: EditorCommandArgs): boolean {
     const editor = this.editor;
+    const lowerCaseCommand = command.toLowerCase();
+    const skipFocus = args?.skip_focus;
 
     if (editor.removed) {
       return false;
     }
 
-    if (command.toLowerCase() !== 'mcefocus') {
-      if (!/^(mceAddUndoLevel|mceEndUndoLevel)$/.test(command) && (!args || !args.skip_focus)) {
+    if (lowerCaseCommand !== 'mcefocus') {
+      if (!/^(mceAddUndoLevel|mceEndUndoLevel)$/i.test(lowerCaseCommand) && !skipFocus) {
         editor.focus();
       } else {
         SelectionBookmark.restore(editor);
@@ -75,30 +78,9 @@ class EditorCommands {
       return false;
     }
 
-    const customCommand = command.toLowerCase();
-    const func = this.commands.exec[customCommand];
+    const func = this.commands.exec[lowerCaseCommand];
     if (func) {
-      func(customCommand, ui, value);
-      editor.fire('ExecCommand', { command, ui, value });
-      return true;
-    }
-
-    // Plugin commands (should this be removed seems very legacy) to have execCommand functions on the plugins
-    const wasExecuted = Obj.find(this.editor.plugins, (p) => {
-      if (p.execCommand && p.execCommand(command, ui, value)) {
-        editor.fire('ExecCommand', { command, ui, value });
-        return true;
-      } else {
-        return false;
-      }
-    }).isSome();
-
-    if (wasExecuted) {
-      return wasExecuted;
-    }
-
-    // Theme commands (should this be removed seems very legacy) to have execCommand functions on the themes
-    if (editor.theme && editor.theme.execCommand && editor.theme.execCommand(command, ui, value)) {
+      func(lowerCaseCommand, ui, value);
       editor.fire('ExecCommand', { command, ui, value });
       return true;
     }
@@ -128,11 +110,11 @@ class EditorCommands {
   }
 
   /**
-   * Queries the command value. For example: The current fontsize.
+   * Returns a command specific value, for example the current font size.
    *
    * @method queryCommandValue
-   * @param {String} command Command to check the value of.
-   * @return {String} Command value or an empty string (`""`) if the query command is not found.
+   * @param {string} cmd Command to query value from.
+   * @return {string} Command value, for example the current font size or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(command: string): string {
     if (this.editor.quirks.isHidden() || this.editor.removed) {

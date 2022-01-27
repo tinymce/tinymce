@@ -130,6 +130,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the undocumented `mceResetDesignMode` command #TINY-7829
 - Removed the undocumented `mceRepaint` command #TINY-7829
 - Removed the undocumented `mceBeginUndoLevel` command #TINY-7829
+- Removed the `execCommand` handler function from the plugin interface #TINY-7829
+- Removed the `execCommand` handler function from the theme interface #TINY-7829
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

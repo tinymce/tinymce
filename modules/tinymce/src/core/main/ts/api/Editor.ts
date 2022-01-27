@@ -548,16 +548,15 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Executes a command on the current instance. These commands can be TinyMCE internal commands prefixed with "mce" or
-   * they can be build in browser commands such as "Bold". A complete list of browser commands is available on MSDN or Mozilla.org.
-   * This function will dispatch the execCommand function on each plugin, theme or the execcommand_callback option if none of these
-   * return true it will handle the command as a internal browser command.
+   * Executes a registered command on the current instance. A list of available commands can be found in
+   * the <a href="https://www.tiny.cloud/docs/advanced/editor-command-identifiers/">command identifiers</a> documentation.
    *
    * @method execCommand
    * @param {String} cmd Command name to execute, for example mceLink or Bold.
    * @param {Boolean} ui True/false state if a UI (dialog) should be presented or not.
    * @param {mixed} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
+   * @return {Boolean} true or false if the command was supported or not.
    */
   public execCommand(cmd: string, ui?: boolean, value?: any, args?: EditorCommandArgs): boolean {
     return this.editorCommands.execCommand(cmd, ui, value, args);
@@ -579,7 +578,7 @@ class Editor implements EditorObservable {
    *
    * @method queryCommandValue
    * @param {string} cmd Command to query value from.
-   * @return {Object} Command specific value, for example the current font size.
+   * @return {string} Command value, for example the current font size or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(cmd: string): string {
     return this.editorCommands.queryCommandValue(cmd);
