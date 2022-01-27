@@ -1,5 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Singleton } from '@ephox/katamari';
+import { Focus, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyAssertions, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -19,6 +20,11 @@ describe('browser.tinymce.core.api.EditorCommandsTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
   }, []);
+
+  const blurEditor = () => {
+    Focus.active(SugarDocument.getDocument()).each(Focus.blur); // Firefox needs to blur the active element
+    window.focus(); // Safari needs to focus the window
+  };
 
   context('execCommand', () => {
     it('execCommand for existing command', () => {
@@ -121,6 +127,38 @@ describe('browser.tinymce.core.api.EditorCommandsTest', () => {
       editor.editorCommands.execCommand('CustomCommand1', true, 'value');
 
       assert.equal(state.get().getOrDie('Should exist a state').scope, scope);
+    });
+
+    it('execCommand with skip_focus: true', () => {
+      const editor = hook.editor();
+
+      blurEditor();
+
+      assert.equal(editor.hasFocus(), false);
+
+      editor.setContent('<p>a</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.editorCommands.execCommand('mceInsertContent', false, 'b', { skip_focus: true });
+      TinyAssertions.assertContent(editor, '<p>ab</p>');
+
+      assert.equal(editor.hasFocus(), false);
+    });
+
+    it('execCommand mceAddUndoLevel/mceEndUndoLevel should skip focus', () => {
+      const editor = hook.editor();
+
+      blurEditor();
+
+      assert.equal(editor.hasFocus(), false);
+
+      editor.setContent('<p>a</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.editorCommands.execCommand('mceAddUndoLevel');
+      editor.editorCommands.execCommand('mceEndUndoLevel');
+      editor.editorCommands.execCommand('MceAddUndoLevel');
+      editor.editorCommands.execCommand('MceEndUndoLevel');
+
+      assert.equal(editor.hasFocus(), false);
     });
   });
 
