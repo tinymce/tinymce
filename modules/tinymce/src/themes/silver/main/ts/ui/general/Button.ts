@@ -155,7 +155,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const fixedSpec = {
       ...spec,
       onSetup: (api) => {
-        api.setDisabled(spec.disabled);
+        api.setEnabled(!spec.disabled);
         return Fun.noop;
       },
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)
