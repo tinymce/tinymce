@@ -160,10 +160,11 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
       id: 'id1',
       class: 'abc 123'
     }, 'content <b>abc</b>'), '<span id="id1" class="abc 123">content <b>abc</b></span>');
-    assert.equal(DOM.createHTML('span', { id: 'id1', class: 'abc 123' }), '<span id="id1" class="abc 123" />');
-    assert.equal(DOM.createHTML('span', { id: null, class: undefined }), '<span />');
-    assert.equal(DOM.createHTML('span'), '<span />');
+    assert.equal(DOM.createHTML('span', { id: 'id1', class: 'abc 123' }), '<span id="id1" class="abc 123"></span>');
+    assert.equal(DOM.createHTML('span', { id: null, class: undefined }), '<span></span>');
+    assert.equal(DOM.createHTML('span'), '<span></span>');
     assert.equal(DOM.createHTML('span', {}, 'content <b>abc</b>'), '<span>content <b>abc</b></span>');
+    assert.equal(DOM.createHTML('img', {}), '<img />');
   });
 
   it('uniqueId', () => {
