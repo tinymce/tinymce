@@ -12,7 +12,7 @@ export interface BaseToolbarButtonSpec<I extends BaseToolbarButtonInstanceApi> {
 }
 
 export interface BaseToolbarButtonInstanceApi {
-  isDisabled: () => boolean;
+  isEnabled: () => boolean;
   setDisabled: (state: boolean) => void;
 }
 

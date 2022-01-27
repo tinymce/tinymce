@@ -18,7 +18,7 @@ import { buildData, renderCommonItem } from './CommonMenuItem';
 // Note, this does not create a valid SketchSpec.
 const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemTypes.ItemSpec => {
   const getApi = (component: AlloyComponent): Menu.MenuItemInstanceApi => ({
-    isDisabled: () => Disabling.isDisabled(component),
+    isEnabled: () => !Disabling.isDisabled(component),
     setDisabled: (state: boolean) => Disabling.set(component, state)
   });
 

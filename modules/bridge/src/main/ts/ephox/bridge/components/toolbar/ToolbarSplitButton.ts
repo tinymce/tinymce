@@ -42,7 +42,7 @@ export interface ToolbarSplitButton {
 }
 
 export interface ToolbarSplitButtonInstanceApi {
-  isDisabled: () => boolean;
+  isEnabled: () => boolean;
   setDisabled: (state: boolean) => void;
   setIconFill: (id: string, value: string) => void;
   isActive: () => boolean;

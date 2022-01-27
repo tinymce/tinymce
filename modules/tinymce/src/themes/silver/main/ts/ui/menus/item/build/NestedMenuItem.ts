@@ -20,7 +20,7 @@ import { buildData, renderCommonItem } from './CommonMenuItem';
 const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true, downwardsCaret: boolean = false): ItemTypes.ItemSpec => {
   const caret = downwardsCaret ? renderDownwardsCaret(providersBackstage.icons) : renderSubmenuCaret(providersBackstage.icons);
   const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => ({
-    isDisabled: () => Disabling.isDisabled(component),
+    isEnabled: () => !Disabling.isDisabled(component),
     setDisabled: (state: boolean) => Disabling.set(component, state)
   });
 

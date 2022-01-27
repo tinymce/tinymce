@@ -51,7 +51,7 @@ export const renderCardMenuItem = (
   extras: CardExtras
 ) => {
   const getApi = (component: AlloyComponent): Menu.CardMenuItemInstanceApi => ({
-    isDisabled: () => Disabling.isDisabled(component),
+    isEnabled: () => !Disabling.isDisabled(component),
     setDisabled: (state: boolean) => {
       Disabling.set(component, state);
 

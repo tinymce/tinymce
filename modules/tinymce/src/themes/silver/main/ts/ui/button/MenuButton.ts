@@ -21,7 +21,7 @@ import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
 const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => ({
-  isDisabled: () => Disabling.isDisabled(component),
+  isEnabled: () => !Disabling.isDisabled(component),
   setDisabled: (state: boolean) => Disabling.set(component, state),
   setActive: (state: boolean) => {
     // Note: We can't use the toggling behaviour here, as the dropdown for the menu also relies on it.

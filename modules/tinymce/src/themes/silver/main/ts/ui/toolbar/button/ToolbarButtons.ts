@@ -41,7 +41,7 @@ interface Specialisation<T> {
 }
 
 const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
-  isDisabled: () => Disabling.isDisabled(component),
+  isEnabled: () => !Disabling.isDisabled(component),
   setDisabled: (state: boolean) => Disabling.set(component, state)
 });
 
@@ -50,7 +50,7 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
     Toggling.set(component, state);
   },
   isActive: () => Toggling.isOn(component),
-  isDisabled: () => Disabling.isDisabled(component),
+  isEnabled: () => !Disabling.isDisabled(component),
   setDisabled: (state: boolean) => Disabling.set(component, state)
 });
 
@@ -242,7 +242,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   const displayChannel = Id.generate('channel-update-split-dropdown-display');
 
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
-    isDisabled: () => Disabling.isDisabled(comp),
+    isEnabled: () => !Disabling.isDisabled(comp),
     setDisabled: (state: boolean) => Disabling.set(comp, state),
     setIconFill: (id, value) => {
       SelectorFind.descendant(comp.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {

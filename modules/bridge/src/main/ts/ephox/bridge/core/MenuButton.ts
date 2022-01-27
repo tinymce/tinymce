@@ -23,7 +23,7 @@ export interface BaseMenuButton {
 }
 
 export interface BaseMenuButtonInstanceApi {
-  isDisabled: () => boolean;
+  isEnabled: () => boolean;
   setDisabled: (state: boolean) => void;
   isActive: () => boolean;
   setActive: (state: boolean) => void;
