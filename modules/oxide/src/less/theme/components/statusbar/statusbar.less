@@ -79,36 +79,11 @@
   }
 
   .tox-statusbar__branding {
-    /* stylelint-disable-next-line no-descending-specificity */
-    a {
-      display: flex;
-      flex-direction: row;
-
-      &:hover {
-        @{statusbar-not-disabled-selector} {
-          span {
-            font-size: @statusbar-font-size;
-            opacity: 1;
-            transition: font-size .2s, opacity .1s .2s;
-          }
-        }
-      }
-    }
-
     svg {
       fill: currentColor;
-      height: 1.2em;
-      margin-inline-end: .3em;
-      vertical-align: -.2em;
-      width: 1.1em;
-    }
-
-    span {
-      display: inline-block;
-      font-size: 0;
-      opacity: 0;
-      transition: font-size .1s .1s, opacity .1s;
-      white-space: nowrap;
+      height: 1.3em;
+      vertical-align: -.3em;
+      width: 4.0625em;
     }
   }
 
