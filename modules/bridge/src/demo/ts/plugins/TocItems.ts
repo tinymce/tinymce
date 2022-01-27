@@ -13,7 +13,7 @@ export const registerTocItems = (): void => {
     enabled: true,
     onSetup: (buttonApi) => {
       editor.on('LoadContent SetContent change', (e) => {
-        buttonApi.setDisabled(e);
+        buttonApi.setEnabled(!e);
       });
       return Fun.noop;
     },

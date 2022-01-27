@@ -21,7 +21,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
   const caret = downwardsCaret ? renderDownwardsCaret(providersBackstage.icons) : renderSubmenuCaret(providersBackstage.icons);
   const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(component),
-    setDisabled: (state: boolean) => Disabling.set(component, state)
+    setEnabled: (state: boolean) => Disabling.set(component, !state)
   });
 
   const structure = renderItemStructure({

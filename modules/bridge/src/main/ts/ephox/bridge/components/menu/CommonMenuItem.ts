@@ -13,7 +13,7 @@ export interface CommonMenuItemSpec {
 
 export interface CommonMenuItemInstanceApi {
   isEnabled: () => boolean;
-  setDisabled: (state: boolean) => void;
+  setEnabled: (state: boolean) => void;
 }
 
 export interface CommonMenuItem {

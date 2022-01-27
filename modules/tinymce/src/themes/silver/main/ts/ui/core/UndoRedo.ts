@@ -12,7 +12,7 @@ import { onActionExecCommand, onSetupEvent } from './ControlUtils';
 
 const onSetupUndoRedoState = (editor: Editor, type: 'hasUndo' | 'hasRedo') =>
   onSetupEvent(editor, 'Undo Redo AddUndo TypingUndo ClearUndos SwitchMode', (api: Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi) => {
-    api.setDisabled(editor.mode.isReadOnly() || !editor.undoManager[type]());
+    api.setEnabled(!editor.mode.isReadOnly() || editor.undoManager[type]());
   });
 
 const registerMenuItems = (editor: Editor) => {

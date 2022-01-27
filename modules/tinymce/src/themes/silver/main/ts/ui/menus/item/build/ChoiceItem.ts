@@ -32,7 +32,7 @@ const renderChoiceItem = (
     },
     isActive: () => Toggling.isOn(component),
     isEnabled: () => !Disabling.isDisabled(component),
-    setDisabled: (state: boolean) => Disabling.set(component, state)
+    setEnabled: (state: boolean) => Disabling.set(component, !state)
   });
 
   const structure = renderItemStructure({

@@ -40,7 +40,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             },
             onAction: (api: Toolbar.ToolbarButtonInstanceApi) => {
               store.adder('onAction.1')();
-              api.setDisabled(shouldDisable.get());
+              api.setEnabled(!shouldDisable.get());
             }
           }, TestProviders)
         ]
@@ -65,7 +65,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             },
             onAction: (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
               store.adder('onToggleAction.2')();
-              api.setDisabled(shouldDisable.get());
+              api.setEnabled(!shouldDisable.get());
               api.setActive(shouldActivate.get());
             }
           }, TestProviders)
@@ -100,7 +100,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             },
             onAction: (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
               store.adder('onToggleAction.3')();
-              api.setDisabled(shouldDisable.get());
+              api.setEnabled(!shouldDisable.get());
               api.setActive(shouldActivate.get());
             },
             onItemAction: (api: Toolbar.ToolbarToggleButtonInstanceApi, _value: string) => {

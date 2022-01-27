@@ -42,7 +42,7 @@ interface Specialisation<T> {
 
 const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
-  setDisabled: (state: boolean) => Disabling.set(component, state)
+  setEnabled: (state: boolean) => Disabling.set(component, !state)
 });
 
 const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => ({
@@ -51,7 +51,7 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
   },
   isActive: () => Toggling.isOn(component),
   isEnabled: () => !Disabling.isDisabled(component),
-  setDisabled: (state: boolean) => Disabling.set(component, state)
+  setEnabled: (state: boolean) => Disabling.set(component, !state)
 });
 
 const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
@@ -243,7 +243,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(comp),
-    setDisabled: (state: boolean) => Disabling.set(comp, state),
+    setEnabled: (state: boolean) => Disabling.set(comp, !state),
     setIconFill: (id, value) => {
       SelectorFind.descendant(comp.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
         Attribute.set(underlinePath, 'fill', value);

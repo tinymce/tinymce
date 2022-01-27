@@ -14,7 +14,7 @@ export const registerSaveItems = (): void => {
     enabled: true,
     onSetup: (buttonApi) => {
       const editorOffCallback = () => {
-        buttonApi.setDisabled(editor.isDirty());
+        buttonApi.setEnabled(!editor.isDirty());
       };
       editor.on('nodeChange dirty', editorOffCallback);
       return () => editor.off('nodeChange dirty', editorOffCallback);
