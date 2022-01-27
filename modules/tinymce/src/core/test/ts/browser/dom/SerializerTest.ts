@@ -339,7 +339,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(DOM.get('test')).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
   });
 
-  it('Script with tags inside a comment with element_format: xhtml', () => {
+  // TODO: TINY-4627/TINY-8363
+  it.skip('Script with tags inside a comment with element_format: xhtml', () => {
     const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
 
@@ -350,7 +351,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     );
   });
 
-  it('Script with tags inside a comment', () => {
+  // TODO: TINY-4627/TINY-8363
+  it.skip('Script with tags inside a comment', () => {
     const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
 
@@ -753,7 +755,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(TrimHtml.trimExternal(ser2, '<p data-x="1" data-z="3">a</p>'), '<p data-z="3">a</p>');
   });
 
-  it('trim data-mce-bougs="all"', () => {
+  it('trim data-mce-bogus="all"', () => {
     const ser = DomSerializer({});
 
     DOM.setHTML('test', 'a<p data-mce-bogus="all">b</p>c');
