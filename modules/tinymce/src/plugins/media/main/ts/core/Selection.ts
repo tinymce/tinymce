@@ -45,7 +45,7 @@ const setup = (editor: Editor): void => {
           UpdateHtml.updateHtml(html, {
             width: String(e.width),
             height: String(e.height)
-          })
+          }, false, editor.schema)
         ));
       }
     }

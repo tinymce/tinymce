@@ -6,78 +6,17 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import SaxParser from 'tinymce/core/api/html/SaxParser';
-import Schema from 'tinymce/core/api/html/Schema';
-import Writer from 'tinymce/core/api/html/Writer';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import AstNode from 'tinymce/core/api/html/Node';
 
 import * as Options from '../api/Options';
 
-const sanitize = (editor: Editor, html: string): string => {
-  if (!Options.shouldFilterHtml(editor)) {
-    return html;
-  }
-
-  const writer = Writer();
-  let blocked: boolean;
-
-  SaxParser({
-    validate: false,
-    allow_conditional_comments: false,
-
-    comment: (text) => {
-      if (!blocked) {
-        writer.comment(text);
-      }
-    },
-
-    cdata: (text) => {
-      if (!blocked) {
-        writer.cdata(text);
-      }
-    },
-
-    text: (text, raw) => {
-      if (!blocked) {
-        writer.text(text, raw);
-      }
-    },
-
-    start: (name, attrs, empty) => {
-      blocked = true;
-
-      if (name === 'script' || name === 'noscript' || name === 'svg') {
-        return;
-      }
-
-      for (let i = attrs.length - 1; i >= 0; i--) {
-        const attrName = attrs[i].name;
-
-        if (attrName.indexOf('on') === 0) {
-          delete attrs.map[attrName];
-          attrs.splice(i, 1);
-        }
-
-        if (attrName === 'style') {
-          attrs[i].value = editor.dom.serializeStyle(editor.dom.parseStyle(attrs[i].value), name);
-        }
-      }
-
-      writer.start(name, attrs, empty);
-      blocked = false;
-    },
-
-    end: (name) => {
-      if (blocked) {
-        return;
-      }
-
-      writer.end(name);
-    }
-  }, Schema({})).parse(html);
-
-  return writer.getContent();
+const parseAndSanitize = (editor: Editor, context: string, html: string): AstNode => {
+  const validate = Options.shouldFilterHtml(editor);
+  const parser = DomParser({ validate, forced_root_block: false }, editor.schema);
+  return parser.parse(html, { context });
 };
 
 export {
-  sanitize
+  parseAndSanitize
 };

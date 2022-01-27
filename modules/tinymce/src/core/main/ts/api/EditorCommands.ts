@@ -464,12 +464,6 @@ class EditorCommands {
         InsertContent.insertAtCaret(editor, value);
       },
 
-      'mceInsertRawHTML': (command, ui, value) => {
-        editor.selection.setContent('tiny_mce_marker');
-        const content = editor.getContent();
-        editor.setContent(content.replace(/tiny_mce_marker/g, () => value));
-      },
-
       'mceInsertNewLine': (command, ui, value) => {
         InsertNewLine.insert(editor, value);
       },

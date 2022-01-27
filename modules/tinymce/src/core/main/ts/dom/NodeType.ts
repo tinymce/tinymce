@@ -93,6 +93,8 @@ const hasContentEditableState = (value: string) => {
 const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>([ 'textarea', 'input' ]);
 
 const isText = isNodeType<Text>(3);
+const isCData = isNodeType<CDATASection>(4);
+const isPi = isNodeType<ProcessingInstruction>(7);
 const isComment = isNodeType<Comment>(8);
 const isDocument = isNodeType<Document>(9);
 const isDocumentFragment = isNodeType<DocumentFragment>(11);
@@ -107,6 +109,8 @@ const isMedia = matchNodeNames<HTMLElement>([ 'video', 'audio', 'object', 'embed
 export {
   isText,
   isElement,
+  isCData,
+  isPi,
   isComment,
   isDocument,
   isDocumentFragment,

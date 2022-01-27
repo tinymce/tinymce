@@ -183,7 +183,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   },
   autocompleter: {
     addDecoration: (range: Range) => AutocompleteTag.create(editor, range),
-    removeDecoration: () => AutocompleteTag.remove(SugarElement.fromDom(editor.getBody()))
+    removeDecoration: () => AutocompleteTag.remove(editor, SugarElement.fromDom(editor.getBody()))
   },
   raw: {
     getModel: () => Optional.none()

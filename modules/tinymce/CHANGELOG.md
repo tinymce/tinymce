@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
 
 ### Changed
+- The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
 - The `images_upload_handler` option is no longer passed a `success` or `failure` callback and instead requires a `Promise` to be returned with the upload result #TINY-8325
 - RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
@@ -58,7 +59,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 - The `mceInsertTable` command can no longer open the insert table dialog. Use the `mceInsertTableDialog` command instead #TINY-8273
 - Moved non-UI table functionality to core #TINY-8273
+- The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
+- Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -92,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `imagetools` dialog component #TINY-8333
+- Removed the `filterNode` method from `DomParser` #TINY-8249
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163
@@ -99,6 +103,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 - Removed the `table` plugin's API #TINY-8273
 - Removed the `editor.settings` property as it's been replaced by the new Options API #TINY-8236
+- Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
+- Removed the `mceInsertRawHTML` command #TINY-8214
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
