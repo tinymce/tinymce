@@ -9,10 +9,6 @@ import type Editor from '../Editor';
 import Env from '../Env';
 
 export const registerCommands = (editor: Editor) => {
-  const execNativeCommand = (command: string, ui: boolean = false, value: any = null) => {
-    return editor.getDoc().execCommand(command, ui, value);
-  };
-
   editor.editorCommands.addCommands({
     'Cut,Copy,Paste': (command) => {
       const doc = editor.getDoc();
@@ -20,7 +16,7 @@ export const registerCommands = (editor: Editor) => {
 
       // Try executing the native command
       try {
-        execNativeCommand(command);
+        doc.execCommand(command);
       } catch (ex) {
         // Command failed
         failed = true;

@@ -16,26 +16,25 @@ const registerExecCommands = (editor: Editor) => {
     editor.nodeChanged();
   };
 
-  // Add execCommand overrides
-  editor.editorCommands.addCommands({
-    'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull,JustifyNone': (command) => {
-      let align = command.substring(7);
-
-      if (align === 'full') {
-        align = 'justify';
+  const toggleAlign = (align: string) => () => {
+    // Remove all other alignments first
+    Arr.each('left,center,right,justify'.split(','), (name) => {
+      if (align !== name) {
+        editor.formatter.remove('align' + name);
       }
+    });
 
-      // Remove all other alignments first
-      Arr.each('left,center,right,justify'.split(','), (name) => {
-        if (align !== name) {
-          editor.formatter.remove('align' + name);
-        }
-      });
-
-      if (align !== 'none') {
-        toggleFormat('align' + align);
-      }
+    if (align !== 'none') {
+      toggleFormat('align' + align);
     }
+  };
+
+  editor.editorCommands.addCommands({
+    JustifyLeft: toggleAlign('left'),
+    JustifyCenter: toggleAlign('center'),
+    JustifyRight: toggleAlign('right'),
+    JustifyFull: toggleAlign('justify'),
+    JustifyNone: toggleAlign('none')
   });
 };
 

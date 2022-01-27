@@ -9,9 +9,8 @@ import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
-    // Override list commands to fix WebKit bug
     'InsertUnorderedList,InsertOrderedList': (command) => {
-      editor.getDoc().execCommand(command, false, null);
+      editor.getDoc().execCommand(command);
 
       // WebKit produces lists within block elements so we need to split them
       // we will replace the native list creation logic to custom logic later on

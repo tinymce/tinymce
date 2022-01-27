@@ -27,7 +27,7 @@ import DOMUtils from './dom/DOMUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer from './dom/Serializer';
-import EditorCommands, { EditorCommandArgs, EditorCommandCallback } from './EditorCommands';
+import EditorCommands, { ExecCommandArgs, EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
@@ -558,7 +558,7 @@ class Editor implements EditorObservable {
    * @param {Object} args Optional arguments object.
    * @return {Boolean} true or false if the command was supported or not.
    */
-  public execCommand(cmd: string, ui?: boolean, value?: any, args?: EditorCommandArgs): boolean {
+  public execCommand(cmd: string, ui?: boolean, value?: any, args?: ExecCommandArgs): boolean {
     return this.editorCommands.execCommand(cmd, ui, value, args);
   }
 

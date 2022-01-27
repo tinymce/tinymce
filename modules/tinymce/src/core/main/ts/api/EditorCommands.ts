@@ -27,7 +27,7 @@ interface Commands {
   value: Record<string, (command: string) => string>;
 }
 
-export interface EditorCommandArgs {
+export interface ExecCommandArgs {
   skip_focus?: boolean;
 }
 
@@ -56,7 +56,7 @@ class EditorCommands {
    * @param {Object} args Optional arguments object.
    * @return {Boolean} true or false if the command was supported or not.
    */
-  public execCommand(command: string, ui?: boolean, value?: any, args?: EditorCommandArgs): boolean {
+  public execCommand(command: string, ui?: boolean, value?: any, args?: ExecCommandArgs): boolean {
     const editor = this.editor;
     const lowerCaseCommand = command.toLowerCase();
     const skipFocus = args?.skip_focus;
