@@ -52,9 +52,11 @@
     padding: 0;
   }
 
-  &.tox-tinymce--toolbar-sticky-on {
+  // Double .tox selector to increase specificity over `:not(.tox-tinymce-inline)` from new style
+  &.tox.tox-tinymce--toolbar-sticky-on {
     .tox-editor-header {
       background-color: @editor-header-sticky-background-color;
+      box-shadow: @editor-header-sticky-box-shadow;
       padding: 0;
     }
 

@@ -13,3 +13,16 @@
 
 @tinymce-border-width: 1px;
 @tinymce-box-shadow: none;
+
+.tox.tox-tinymce--toolbar-sticky-on {
+  .tox-editor-header {
+    background-color: @background-color;
+    box-shadow: @editor-header-sticky-box-shadow;
+  }
+
+  &.tox-tinymce--toolbar-bottom {
+    .tox-editor-header {
+      box-shadow: @editor-bottom-header-sticky-box-shadow;
+    }
+  }
+}
