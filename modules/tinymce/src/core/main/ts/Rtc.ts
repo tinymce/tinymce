@@ -10,10 +10,12 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
+import AstNode from './api/html/Node';
 import * as AutocompleteTag from './autocomplete/AutocompleteTag';
 import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
+import { postProcessSetContent, preProcessSetContent, postProcessGetContent, preProcessGetContent } from './content/PrePostProcess';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
@@ -188,7 +190,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   }
 });
 
-const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
+const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi, tinymceEditor: Editor): RtcAdaptor => {
   const defaultVars = (vars: Record<string, string>) => Type.isObject(vars) ? vars : {};
   const { init, undoManager, formatter, editor, selection, autocompleter, raw } = rtcEditor;
 
@@ -221,9 +223,27 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
       formatChanged: (_rfl, formats, callback, similar, vars) => formatter.formatChanged(formats, callback, similar, vars)
     },
     editor: {
-      getContent: (args, _format) => editor.getContent(args),
-      setContent: (content, args) => editor.setContent(content, args),
-      insertContent: (content, _details) => editor.insertContent(content),
+      getContent: (args, format) => {
+        const defaultedArgs = { ...args, format, get: true, getInner: true };
+        return preProcessGetContent(tinymceEditor, defaultedArgs).fold(Fun.identity, (updatedArgs) => {
+          const content = editor.getContent(args);
+          return postProcessGetContent(tinymceEditor, content, updatedArgs);
+        });
+      },
+      setContent: (content, args) => {
+        const defaultedArgs = { format: 'html', ...args, set: true, content: content instanceof AstNode ? '' : content };
+        return preProcessSetContent(tinymceEditor, defaultedArgs).map((updatedArgs) => {
+          const result = editor.setContent(content, updatedArgs);
+          postProcessSetContent(tinymceEditor, updatedArgs.content, updatedArgs);
+          return result;
+        }).getOr(content);
+      },
+      insertContent: (content, details) => {
+        return preProcessSetContent(tinymceEditor, { content, format: 'html', set: false, selection: true, paste: details.paste }).each((args) => {
+          editor.insertContent(content);
+          postProcessSetContent(tinymceEditor, content, args);
+        });
+      },
       addVisual: editor.addVisual
     },
     selection: {
@@ -311,7 +331,7 @@ export const setup = (editor: Editor): Optional<() => Promise<boolean>> => {
 
       return Optional.some(
         () => setup().then((rtcEditor) => {
-          editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
+          editorCast.rtcInstance = makeRtcAdaptor(rtcEditor, editor);
           return rtcEditor.rtc.isRemote;
         })
       );
