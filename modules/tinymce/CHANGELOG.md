@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `textpattern_patterns` option to `text_patterns` #TINY-8312
 - Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
+- Replaced 'Powered by Tiny' link text with logo #TINY-8371
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
