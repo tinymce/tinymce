@@ -27,7 +27,6 @@ const execDeleteCommand = (editor: Editor) => execCommandIgnoreInputEvents(edito
 
 const execForwardDeleteCommand = (editor: Editor) => execCommandIgnoreInputEvents(editor, 'ForwardDelete');
 
-
 const isBeforeRoot = (rootNode: SugarElement<Node>) => (elm: SugarElement<Node>): boolean =>
   Compare.eq(rootNode, SugarElement.fromDom(elm.dom.parentNode));
 
