@@ -8,18 +8,18 @@
 import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { alignMenu } from './complex/AlignBespoke';
-import { blocksMenu } from './complex/BlocksBespoke';
-import { fontFamilyMenu } from './complex/FontFamilyBespoke';
-import { fontSizeMenu } from './complex/FontSizeBespoke';
-import { stylesMenu } from './complex/StylesBespoke';
+import { createAlignMenu } from './complex/AlignBespoke';
+import { createBlocksMenu } from './complex/BlocksBespoke';
+import { createFontFamilyMenu } from './complex/FontFamilyBespoke';
+import { createFontSizeMenu } from './complex/FontSizeBespoke';
+import { createStylesMenu } from './complex/StylesBespoke';
 
 const register = (editor: Editor, backstage: UiFactoryBackstage) => {
-  alignMenu(editor, backstage);
-  fontFamilyMenu(editor, backstage);
-  stylesMenu(editor, backstage);
-  blocksMenu(editor, backstage);
-  fontSizeMenu(editor, backstage);
+  createAlignMenu(editor, backstage);
+  createFontFamilyMenu(editor, backstage);
+  createStylesMenu(editor, backstage);
+  createBlocksMenu(editor, backstage);
+  createFontSizeMenu(editor, backstage);
 };
 
 export {

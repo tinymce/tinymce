@@ -66,7 +66,7 @@ const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage) => {
   return createSelectButton(editor, backstage, getSpec(editor, dataset));
 };
 
-const stylesMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
   editor.ui.registry.addNestedMenuItem('styles', {
@@ -75,4 +75,4 @@ const stylesMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   });
 };
 
-export { createStylesButton, stylesMenu };
+export { createStylesButton, createStylesMenu };

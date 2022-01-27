@@ -108,7 +108,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 const createFontFamilyButton = (editor: Editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
 
 // TODO: Test this!
-const fontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('fontfamily', {
     text: backstage.shared.providers.translate('Fonts'),
@@ -116,4 +116,4 @@ const fontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   });
 };
 
-export { createFontFamilyButton, fontFamilyMenu };
+export { createFontFamilyButton, createFontFamilyMenu };
