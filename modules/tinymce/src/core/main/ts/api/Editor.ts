@@ -314,7 +314,7 @@ class Editor implements EditorObservable {
       show: Fun.noop,
       hide: Fun.noop,
       setEnabled: Fun.noop,
-      isEnabled: Fun.never
+      isEnabled: Fun.always
     };
 
     this.mode = createMode(self);
