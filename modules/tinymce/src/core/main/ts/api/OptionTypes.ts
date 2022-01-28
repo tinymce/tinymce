@@ -75,7 +75,6 @@ interface BaseEditorOptions {
   cache_suffix?: string;
   color_cols?: number;
   color_map?: string[];
-  content_editable_state?: boolean;
   content_css?: boolean | string | string[];
   content_css_cors?: boolean;
   content_security_policy?: string;
@@ -109,12 +108,12 @@ interface BaseEditorOptions {
   fixed_toolbar_container?: string;
   fixed_toolbar_container_target?: HTMLElement;
   font_css?: string | string[];
-  font_formats?: string;
+  font_family_formats?: string;
   font_size_classes?: string;
   font_size_legacy_values?: string;
   font_size_style_values?: string;
-  fontsize_formats?: string;
-  forced_root_block?: boolean | string;
+  font_size_formats?: string;
+  forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
   height?: number | string;
@@ -147,7 +146,7 @@ interface BaseEditorOptions {
   language?: string;
   language_load?: boolean;
   language_url?: string;
-  lineheight_formats?: string;
+  line_height_formats?: string;
   max_height?: number;
   max_width?: number;
   menu?: Record<string, { title: string; items: string }>;
@@ -159,7 +158,6 @@ interface BaseEditorOptions {
   noneditable_regexp?: RegExp | RegExp[];
   nowrap?: boolean;
   object_resizing?: boolean | string;
-  padd_empty_with_br?: boolean;
   paste_as_text?: boolean;
   paste_block_drop?: boolean;
   paste_data_images?: boolean;

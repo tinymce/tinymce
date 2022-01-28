@@ -10,6 +10,7 @@ import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
+import * as NodeType from '../dom/NodeType';
 import { Format, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
@@ -50,21 +51,23 @@ const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars
   return !!matchNode(editor, node, name, vars, similar);
 };
 
-const matchName = (dom: DOMUtils, node: Node, format) => {
+const matchName = (dom: DOMUtils, node: Node, format: Format): boolean => {
   // Check for inline match
-  if (isEq(node, format.inline)) {
+  if (FormatUtils.isInlineFormat(format) && isEq(node, format.inline)) {
     return true;
   }
 
   // Check for block match
-  if (isEq(node, format.block)) {
+  if (FormatUtils.isBlockFormat(format) && isEq(node, format.block)) {
     return true;
   }
 
   // Check for selector match
-  if (format.selector) {
-    return node.nodeType === 1 && dom.is(node, format.selector);
+  if (FormatUtils.isSelectorFormat(format)) {
+    return NodeType.isElement(node) && dom.is(node, format.selector);
   }
+
+  return false;
 };
 
 const matchItems = (dom: DOMUtils, node: Node, format: Format, itemName: string, similar: boolean, vars: FormatVars): boolean => {
@@ -202,8 +205,7 @@ const canApply = (editor: Editor, name: string) => {
       const format = formatList[x];
 
       // Format is not selector based then always return TRUE
-      // If it has a defaultBlock then it's likely it can be applied, for example align on a non block element line
-      if (!FormatUtils.isSelectorFormat(format) || Type.isNonNullable(format.defaultBlock)) {
+      if (!FormatUtils.isSelectorFormat(format)) {
         return true;
       }
 

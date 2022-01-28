@@ -15,13 +15,12 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     extended_valid_elements: 'b[id|style|title],i[id|style|title],span[id|class|style|title|contenteditable],font[face|size]',
     entities: 'raw',
     convert_fonts_to_spans: false,
-    forced_root_block: false,
     valid_styles: {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
         'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, []);
+  }, [], true);
 
   const getContent = (editor: Editor) => {
     return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
@@ -497,7 +496,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         fontWeight: 'bold'
       }
     });
-    editor.getBody().innerHTML = '<p>a<span id="id" style="font-weight:bold">1234</span>b</p>';
+    editor.getBody().innerHTML = '<p>a<span id="test-id" style="font-weight:bold">1234</span>b</p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
@@ -505,7 +504,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<p><span style=\"font-weight: bold;\">a<span id=\"id\">1234</span>b</span></p>',
+      '<p><span style=\"font-weight: bold;\">a<span id=\"test-id\">1234</span>b</span></p>',
       'Inline element merged with child 3'
     );
   });
@@ -1772,27 +1771,16 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     assert.equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>', 'Text is bold');
   });
 
-  it('Del element wrapping blocks', () => {
+  it('Div element wrapping blocks', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.register('format', {
-      block: 'del',
+      block: 'div',
       wrapper: true
     });
     editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<del><p>a</p></del>');
-  });
-
-  it('Del element replacing block', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>a</p>');
-    LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
-    editor.formatter.register('format', {
-      block: 'del'
-    });
-    editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<del>a</del>');
+    assert.equal(getContent(editor), '<div><p>a</p></div>');
   });
 
   it('Del element as inline', () => {
@@ -1902,7 +1890,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(getContent(editor), '', 'empty TinyMCE');
     editor.selection.setContent('a');
-    assert.equal(getContent(editor), '<strong>a</strong>', 'bold text inside TinyMCE');
+    assert.equal(getContent(editor), '<p><strong>a</strong></p>', 'bold text inside TinyMCE');
   });
 
   it('Bug #5134 - TinyMCE removes formatting tags in the getContent - typing', () => {
@@ -1915,7 +1903,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(getContent(editor), '', 'empty TinyMCE');
     KeyUtils.type(editor, 'a');
-    assert.equal(getContent(editor), '<strong>a</strong>', 'bold text inside TinyMCE');
+    assert.equal(getContent(editor), '<p><strong>a</strong></p>', 'bold text inside TinyMCE');
   });
 
   it('Bug #5453 - TD contents with BR gets wrapped in block format', () => {
@@ -2222,15 +2210,6 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       getContent(editor),
       '<p contenteditable="false">a</p><div class="a" contenteditable="false">b</div>'
     );
-  });
-
-  it('Apply defaultBlock format', () => {
-    const editor = hook.editor();
-    editor.getBody().innerHTML = 'a<br>b';
-    editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: [ 'a' ] });
-    editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
-    editor.formatter.apply('format');
-    assert.equal(getContent(editor), '<div class="a">a</div>b');
   });
 
   it('Apply format including trailing space', () => {

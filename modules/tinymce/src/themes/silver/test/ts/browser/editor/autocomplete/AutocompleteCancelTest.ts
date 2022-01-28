@@ -126,7 +126,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
   }));
 
   it('Checking pressing down cancels the autocompleter', () => pTestAutocompleter({
-    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p></p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str) => [
+    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str) => [
       s.element('p', {}),
       expectedAutocompletePara(':a')(s, str),
       s.element('p', {})
@@ -141,7 +141,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
   }));
 
   it('Checking pressing up cancels the autocompleter', () => pTestAutocompleter({
-    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p></p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str) => [
+    setup: (editor) => pTriggerAndAssertInitialContent(editor, '<p></p><p>CONTENT</p><p></p>', [ 1, 0 ], (s, str) => [
       s.element('p', {}),
       expectedAutocompletePara(':a')(s, str),
       s.element('p', {})

@@ -46,7 +46,7 @@ const copy = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Ele
 const mutate = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementTagNameMap[K]> => {
   const nu = shallowAs(original, tag);
 
-  Insert.before(original, nu);
+  Insert.after(original, nu);
   const children = Traverse.children(original);
   InsertAll.append(nu, children);
   Remove.remove(original);

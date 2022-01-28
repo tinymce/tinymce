@@ -95,12 +95,12 @@ const register = (editor: Editor): void => {
     default: false
   });
 
-  registerOption('lineheight_formats', {
+  registerOption('line_height_formats', {
     processor: 'string',
     default: '1 1.1 1.2 1.3 1.4 1.5 2'
   });
 
-  registerOption('font_formats', {
+  registerOption('font_family_formats', {
     processor: 'string',
     default: 'Andale Mono=andale mono,monospace;' +
       'Arial=arial,helvetica,sans-serif;' +
@@ -121,7 +121,7 @@ const register = (editor: Editor): void => {
       'Wingdings=wingdings,zapf dingbats'
   });
 
-  registerOption('fontsize_formats', {
+  registerOption('font_size_formats', {
     processor: 'string',
     default: '8pt 10pt 12pt 14pt 18pt 24pt 36pt'
   });
@@ -327,7 +327,7 @@ const getSkinUrl = (editor: Editor): string | undefined => {
 };
 
 const getLineHeightFormats = (editor: Editor): string[] =>
-  editor.options.get('lineheight_formats').split(' ');
+  editor.options.get('line_height_formats').split(' ');
 
 const isToolbarEnabled = (editor: Editor): boolean => {
   const toolbar = getToolbar(editor);

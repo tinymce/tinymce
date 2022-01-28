@@ -52,7 +52,7 @@ const create = (): Resource => {
       const task = new Promise<any>((resolve, reject) => {
         const waiter = awaiter(resolve, reject);
         resultFns[id] = waiter.resolve;
-        ScriptLoader.ScriptLoader.loadScript(url, () => waiter.start(runErrMsg), () => waiter.reject(loadErrMsg));
+        ScriptLoader.ScriptLoader.loadScript(url).then(() => waiter.start(runErrMsg), () => waiter.reject(loadErrMsg));
       });
       tasks[id] = task;
       return task;

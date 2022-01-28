@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Disabling, Keying, Replacing, Tabstopping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Button, Disabling, GuiFactory, Keying, Replacing, Tabstopping } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -30,7 +30,7 @@ const isHidden = (elm) => {
 
 const renderElementPath = (editor: Editor, settings, providersBackstage: UiFactoryBackstageProviders) => {
   if (!settings.delimiter) {
-    settings.delimiter = '\u00BB';
+    settings.delimiter = '\u203A';
   }
 
   const getDataPath = (data) => {
@@ -45,9 +45,11 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
           'data-index': index,
           'tab-index': -1,
           'aria-level': index + 1
-        },
-        innerHtml: part.name
+        }
       },
+      components: [
+        GuiFactory.text(part.name)
+      ],
       action: (_btn) => {
         editor.focus();
         editor.selection.select(part.element);
@@ -65,9 +67,11 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
         classes: [ 'tox-statusbar__path-divider' ],
         attributes: {
           'aria-hidden': true
-        },
-        innerHtml: ` ${settings.delimiter} `
-      }
+        }
+      },
+      components: [
+        GuiFactory.text(` ${settings.delimiter} `)
+      ]
     };
 
     return Arr.foldl(newPathElements.slice(1), (acc, element) => {

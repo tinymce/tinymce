@@ -44,9 +44,11 @@ describe('browser.tinymce.plugins.anchor.AnchorSanityTest', () => {
     await pAddAnchor(editor, 'abc');
     await pAssertAnchorPresence(editor, 1);
     TinyAssertions.assertContent(editor, '<p><a id="abc"></a></p>');
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
     await pAddAnchor(editor, 'def');
     await pAssertAnchorPresence(editor, 2);
     TinyAssertions.assertContent(editor, '<p><a id="abc"></a><a id="def"></a></p>');
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
   });
 
   it('TINY-6236: Check bare anchor can be converted to a named anchor', async () => {

@@ -23,6 +23,7 @@ const findBlockCaretContainer = (editor: Editor): HTMLElement | null =>
 const showBlockCaretContainer = (editor: Editor, blockCaretContainer: HTMLElement): void => {
   if (blockCaretContainer.hasAttribute('data-mce-caret')) {
     CaretContainer.showCaretContainerBlock(blockCaretContainer);
+    editor.selection.setRng(editor.selection.getRng()); // Clears the fake caret state
     editor.selection.scrollIntoView(blockCaretContainer);
   }
 };

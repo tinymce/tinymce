@@ -24,10 +24,8 @@ const register = (editor: Editor): void => {
 };
 
 const isEnabledByDefault = option<string>('visualchars_default_state');
-const getForcedRootBlock = option('forced_root_block');
 
 export {
   register,
-  isEnabledByDefault,
-  getForcedRootBlock
+  isEnabledByDefault
 };

@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `isOSX` API has been renamed to `isMacOS` #TINY-8175
 - The `isChrome` API has been renamed to `isChromium` to better reflect its functionality #TINY-8300
 
+### Fixed
+- The `SandHTMLElement.isPrototypeOf` API would throw an illegal invocation error on Chromium based browsers #TINY-8414
+
 ## 5.0.0 - 2021-08-26
 
 ### Improved

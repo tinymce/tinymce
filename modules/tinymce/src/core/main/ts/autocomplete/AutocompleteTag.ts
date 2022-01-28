@@ -35,7 +35,12 @@ const detect = (elm: SugarElement<Node>): Optional<SugarElement<Element>> => Sel
 
 const findIn = (elm: SugarElement<Element>): Optional<SugarElement> => SelectorFind.descendant(elm, autocompleteSelector);
 
-const remove = (elm: SugarElement<Element>): void => findIn(elm).each(Remove.unwrap);
+const remove = (editor: Editor, elm: SugarElement<Element>): void =>
+  findIn(elm).each((wrapper) => {
+    const bookmark = editor.selection.getBookmark();
+    Remove.unwrap(wrapper);
+    editor.selection.moveToBookmark(bookmark);
+  });
 
 export {
   create,
