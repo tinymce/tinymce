@@ -10,8 +10,6 @@ import Plugin from 'tinymce/plugins/emoticons/Plugin';
 
 import { fakeEvent } from '../module/test/Utils';
 
-declare const tinymce: { Resource: Resource };
-
 describe('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
@@ -19,7 +17,7 @@ describe('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojiimages.js',
     setup: () => {
-      tinymce.Resource.unload('tinymce.plugins.emoticons');
+      Resource.unload('tinymce.plugins.emoticons');
     }
   }, [ Plugin ], true);
 

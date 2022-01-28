@@ -10,7 +10,9 @@ describe('browser.tinymce.core.FakeClipboardTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
-  afterEach(() => FakeClipboard.clear());
+  afterEach(() => {
+    FakeClipboard.clear();
+  });
 
   it('TINY-8353: fake clipboard returns undefined when not set', () => {
     assert.isUndefined(FakeClipboard.read());
