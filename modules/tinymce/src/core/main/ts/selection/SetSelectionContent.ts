@@ -102,7 +102,7 @@ const cleanContent = (editor: Editor, args: SetSelectionContentArgs) => {
     const contextBlock = editor.dom.getParent(rng.commonAncestorContainer, editor.dom.isBlock);
     const contextArgs = contextBlock ? { context: contextBlock.nodeName.toLowerCase() } : { };
 
-    const node = editor.parser.parse(args.content, { isRootContent: true, forced_root_block: false, ...contextArgs, ...args });
+    const node = editor.parser.parse(args.content, { forced_root_block: false, ...contextArgs, ...args });
     return HtmlSerializer({ validate: false }, editor.schema).serialize(node);
   } else {
     return args.content;

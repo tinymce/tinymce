@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
-import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Nodes from './Nodes';
 import * as Sanitize from './Sanitize';
@@ -17,52 +16,43 @@ import * as Sanitize from './Sanitize';
 declare let unescape: any;
 
 const setup = (editor: Editor): void => {
-  editor.on('preInit', () => {
-    // Make sure that any messy HTML is retained inside these
-    const specialElements = editor.schema.getSpecialElements();
-    Tools.each('video audio iframe object'.split(' '), (name) => {
-      specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
-    });
-
-    // Allow elements
-    // editor.schema.addValidElements(
-    //  'object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]'
-    // );
-
-    // Set allowFullscreen attribs as boolean
-    const boolAttrs = editor.schema.getBoolAttrs();
-    Tools.each('webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '), (name) => {
+  editor.on('PreInit', () => {
+    const { schema, serializer, parser } = editor;
+    // Set browser specific allowFullscreen attribs as boolean
+    const boolAttrs = schema.getBoolAttrs();
+    Arr.each('webkitallowfullscreen mozallowfullscreen'.split(' '), (name) => {
       boolAttrs[name] = {};
     });
 
+    // Add some non-standard attributes to the schema
+    Obj.each({
+      embed: [ 'wmode' ]
+    }, (attrs, name) => {
+      const rule = schema.getElementRule(name);
+      Arr.each(attrs, (attr) => {
+        rule.attributes[attr] = {};
+        rule.attributesOrder.push(attr);
+      });
+    });
+
     // Converts iframe, video etc into placeholder images
-    editor.parser.addNodeFilter('iframe,video,audio,object,embed,script',
-      Nodes.placeHolderConverter(editor));
+    parser.addNodeFilter('iframe,video,audio,object,embed,script', Nodes.placeHolderConverter(editor));
 
     // Replaces placeholder images with real elements for video, object, iframe etc
-    editor.serializer.addAttributeFilter('data-mce-object', (nodes, name) => {
+    serializer.addAttributeFilter('data-mce-object', (nodes, name) => {
       let i = nodes.length;
-      let node;
-      let realElm;
-      let ai;
-      let attribs;
-      let innerHtml;
-      let innerNode;
-      let realElmName;
-      let className;
-
       while (i--) {
-        node = nodes[i];
+        const node = nodes[i];
         if (!node.parent) {
           continue;
         }
 
-        realElmName = node.attr(name);
-        realElm = new AstNode(realElmName, 1);
+        const realElmName = node.attr(name);
+        const realElm = new AstNode(realElmName, 1);
 
         // Add width/height to everything but audio
         if (realElmName !== 'audio' && realElmName !== 'script') {
-          className = node.attr('class');
+          const className = node.attr('class');
           if (className && className.indexOf('mce-preview-object') !== -1) {
             realElm.attr({
               width: node.firstChild.attr('width'),
@@ -81,8 +71,8 @@ const setup = (editor: Editor): void => {
         });
 
         // Unprefix all placeholder attributes
-        attribs = node.attributes;
-        ai = attribs.length;
+        const attribs = node.attributes;
+        let ai = attribs.length;
         while (ai--) {
           const attrName = attribs[ai].name;
 
@@ -96,12 +86,10 @@ const setup = (editor: Editor): void => {
         }
 
         // Inject innerhtml
-        innerHtml = node.attr('data-mce-html');
+        const innerHtml = node.attr('data-mce-html');
         if (innerHtml) {
-          innerNode = new AstNode('#text', 3);
-          innerNode.raw = true;
-          innerNode.value = Sanitize.sanitize(editor, unescape(innerHtml));
-          realElm.append(innerNode);
+          const fragment = Sanitize.parseAndSanitize(editor, realElmName, unescape(innerHtml));
+          Arr.each(fragment.children(), (child) => realElm.append(child));
         }
 
         node.replace(realElm);
@@ -112,9 +100,10 @@ const setup = (editor: Editor): void => {
   editor.on('SetContent', () => {
     // TODO: This shouldn't be needed there should be a way to mark bogus
     // elements so they are never removed except external save
-    Arr.each(editor.dom.select('span.mce-preview-object'), (elm) => {
-      if (editor.dom.select('span.mce-shim', elm).length === 0) {
-        editor.dom.add(elm, 'span', { class: 'mce-shim' });
+    const dom = editor.dom;
+    Arr.each(dom.select('span.mce-preview-object'), (elm) => {
+      if (dom.select('span.mce-shim', elm).length === 0) {
+        dom.add(elm, 'span', { class: 'mce-shim' });
       }
     });
   });

@@ -33,7 +33,7 @@ describe('browser.tinymce.plugins.media.UpdateMediaPosterAttributeTest', () => {
     await pOpenAdvTab(editor);
     await Utils.pPastePosterValue(editor, poster1);
     await Utils.pAssertEmbedData(editor,
-      `<video width="200" height="100" controls="controls" poster="${poster1}">\n` +
+      `<video poster="${poster1}" controls="controls" width="200" height="100">\n` +
       `<source src="${source}">\n</video>`
     );
     TinyUiActions.submitDialog(editor);

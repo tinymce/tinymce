@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
 
 ### Changed
+- The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
 - The `images_upload_handler` option is no longer passed a `success` or `failure` callback and instead requires a `Promise` to be returned with the upload result #TINY-8325
 - RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
@@ -55,8 +56,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `textpattern_patterns` option to `text_patterns` #TINY-8312
 - Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
+- The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
+- Renamed the `font_formats` option to `font_family_formats` #TINY-8328
+- Renamed the `fontselect` toolbar button and `fontformats` menu item to `fontfamily` #TINY-8328
+- Renamed the `fontsize_formats` option to `font_size_formats` #TINY-8328
+- Renamed the `fontsizeselect` toolbar button and `fontsizes` menu item to `fontsize` #TINY-8328
+- Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
+- Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
+- Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -83,6 +92,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
 - Removed the deprecated `media_scripts` option in the `media` plugin #TINY-8421
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
+- Removed the deprecated `content_editable_state` and `padd_empty_with_br` options #TINY-8400
+- Removed the deprecated `autoresize_on_init` option from the `autoresize` plugin #TINY-8400
 - Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
 - Removed the callback for the `EditorUpload` APIs #TINY-8325
 - The legacy `mobile` theme has been removed #TINY-7832
@@ -91,12 +102,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `imagetools` dialog component #TINY-8333
+- Removed the `filterNode` method from `DomParser` #TINY-8249
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 - Removed the `editor.settings` property as it's been replaced by the new Options API #TINY-8236
+- Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
+- Removed the `mceInsertRawHTML` command #TINY-8214
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

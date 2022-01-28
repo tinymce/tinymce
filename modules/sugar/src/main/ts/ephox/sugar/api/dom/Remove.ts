@@ -27,7 +27,7 @@ const remove = (element: SugarElement<Node>): void => {
 const unwrap = (wrapper: SugarElement<Node>): void => {
   const children = Traverse.children(wrapper);
   if (children.length > 0) {
-    InsertAll.before(wrapper, children);
+    InsertAll.after(wrapper, children);
   }
   remove(wrapper);
 };
