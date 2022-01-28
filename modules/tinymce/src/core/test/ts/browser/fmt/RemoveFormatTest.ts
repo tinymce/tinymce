@@ -249,5 +249,16 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       TinyAssertions.assertContent(editor, '<p style="text-align: right;">Test text<img src="link" width="40" height="40"></p>');
       TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
     });
+
+    it('TINY-8308: Change format on selected img element when the same format is present on both', () => {
+      const editor = hook.editor();
+      editor.setContent('<p style="text-align: right;">Test text<img src="link" width="40" height="40" style="float: right"></p>');
+      TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2);
+
+      RemoveFormat.remove(editor, 'alignright');
+
+      TinyAssertions.assertContent(editor, '<p style="text-align: right;">Test text<img src="link" width="40" height="40"></p>');
+      TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
+    });
   });
 });
