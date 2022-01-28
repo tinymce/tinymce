@@ -75,7 +75,6 @@ interface BaseEditorOptions {
   cache_suffix?: string;
   color_cols?: number;
   color_map?: string[];
-  content_editable_state?: boolean;
   content_css?: boolean | string | string[];
   content_css_cors?: boolean;
   content_security_policy?: string;
@@ -159,7 +158,6 @@ interface BaseEditorOptions {
   noneditable_regexp?: RegExp | RegExp[];
   nowrap?: boolean;
   object_resizing?: boolean | string;
-  padd_empty_with_br?: boolean;
   paste_as_text?: boolean;
   paste_block_drop?: boolean;
   paste_data_images?: boolean;

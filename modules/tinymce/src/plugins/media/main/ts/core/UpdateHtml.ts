@@ -5,92 +5,45 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Obj } from '@ephox/katamari';
-
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import SaxParser from 'tinymce/core/api/html/SaxParser';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
-import Writer from 'tinymce/core/api/html/Writer';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 import { MediaData } from './Types';
-
-type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const DOM = DOMUtils.DOM;
 
 const addPx = (value: string): string =>
   /^[0-9.]+$/.test(value) ? (value + 'px') : value;
 
-const setAttributes = (attrs: AttrList, updatedAttrs: Record<string, string>): void => {
-  Obj.each(updatedAttrs, (val, name) => {
-    const value = '' + val;
-
-    if (attrs.map[name]) {
-      let i = attrs.length;
-      while (i--) {
-        const attr = attrs[i];
-
-        if (attr.name === name) {
-          if (value) {
-            attrs.map[name] = value;
-            attr.value = value;
-          } else {
-            delete attrs.map[name];
-            attrs.splice(i, 1);
-          }
-        }
-      }
-    } else if (value) {
-      attrs.push({
-        name,
-        value
-      });
-
-      attrs.map[name] = value;
-    }
-  });
-};
-
-const updateEphoxEmbed = (data: Partial<MediaData>, attrs: AttrList) => {
-  const style = attrs.map.style;
+const updateEphoxEmbed = (data: Partial<MediaData>, node: AstNode) => {
+  const style = node.attr('style');
   const styleMap = style ? DOM.parseStyle(style) : { };
   styleMap['max-width'] = addPx(data.width);
   styleMap['max-height'] = addPx(data.height);
-  setAttributes(attrs, {
-    style: DOM.serializeStyle(styleMap)
-  });
+  node.attr('style', DOM.serializeStyle(styleMap));
 };
 
 const sources = [ 'source', 'altsource' ];
 
-const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean): string => {
-  const writer = Writer();
-  const isEphoxEmbed = Cell<boolean>(false);
+const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean, schema?: Schema): string => {
+  let numSources = 0;
   let sourceCount = 0;
-  let hasImage: boolean;
 
-  SaxParser({
-    validate: false,
-    allow_conditional_comments: true,
+  const parser = DomParser({ validate: false, forced_root_block: false }, schema);
+  parser.addNodeFilter('source', (nodes) => numSources = nodes.length);
+  const rootNode = parser.parse(html);
 
-    comment: (text) => {
-      writer.comment(text);
-    },
+  for (let node = rootNode; node; node = node.walk()) {
+    if (node.type === 1) {
+      const name = node.name;
 
-    cdata: (text) => {
-      writer.cdata(text);
-    },
-
-    text: (text, raw) => {
-      writer.text(text, raw);
-    },
-
-    start: (name, attrs, empty) => {
-      if (isEphoxEmbed.get()) {
-        // Don't make any changes to children of an EME embed
-      } else if (Obj.has(attrs.map, 'data-ephox-embed-iri')) {
-        isEphoxEmbed.set(true);
-        updateEphoxEmbed(data, attrs);
+      if (node.attr('data-ephox-embed-iri')) {
+        updateEphoxEmbed(data, node);
+        // Don't continue to update if we find an EME embed
+        break;
       } else {
         switch (name) {
           case 'video':
@@ -99,10 +52,8 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean)
           case 'img':
           case 'iframe':
             if (data.height !== undefined && data.width !== undefined) {
-              setAttributes(attrs, {
-                width: data.width,
-                height: data.height
-              });
+              node.attr('width', data.width);
+              node.attr('height', data.height);
             }
             break;
         }
@@ -110,33 +61,45 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean)
         if (updateAll) {
           switch (name) {
             case 'video':
-              setAttributes(attrs, {
-                poster: data.poster,
-                src: ''
-              });
+              node.attr('poster', data.poster);
+              node.attr('src', null);
 
-              if (data.altsource) {
-                setAttributes(attrs, {
-                  src: ''
-                });
+              // Add <source> child elements
+              for (let index = numSources; index < 2; index++) {
+                if (data[sources[index]]) {
+                  const source = new AstNode('source', 1);
+                  source.attr('src', data[sources[index]]);
+                  source.attr('type', data[sources[index] + 'mime'] || null);
+                  node.append(source);
+                }
               }
               break;
 
             case 'iframe':
-              setAttributes(attrs, {
-                src: data.source
-              });
+              node.attr('src', data.src);
+              break;
+
+            case 'object':
+              const hasImage = node.getAll('img').length > 0;
+              if (data.poster && !hasImage) {
+                node.attr('src', data.poster);
+
+                const img = new AstNode('img', 1);
+                img.attr('src', data.poster);
+                img.attr('width', data.width);
+                img.attr('height', data.height);
+                node.append(img);
+              }
               break;
 
             case 'source':
               if (sourceCount < 2) {
-                setAttributes(attrs, {
-                  src: data[sources[sourceCount]],
-                  type: data[sources[sourceCount] + 'mime']
-                });
+                node.attr('src', data[sources[sourceCount]]);
+                node.attr('type', data[sources[sourceCount] + 'mime'] || null);
 
                 if (!data[sources[sourceCount]]) {
-                  return;
+                  node.remove();
+                  continue;
                 }
               }
               sourceCount++;
@@ -144,57 +107,16 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean)
 
             case 'img':
               if (!data.poster) {
-                return;
+                node.remove();
               }
-
-              hasImage = true;
               break;
           }
         }
       }
-
-      writer.start(name, attrs, empty);
-    },
-
-    end: (name) => {
-      if (!isEphoxEmbed.get()) {
-        if (name === 'video' && updateAll) {
-          for (let index = 0; index < 2; index++) {
-            if (data[sources[index]]) {
-              const attrs: any = [];
-              attrs.map = {};
-
-              if (sourceCount <= index) {
-                setAttributes(attrs, {
-                  src: data[sources[index]],
-                  type: data[sources[index] + 'mime']
-                });
-
-                writer.start('source', attrs, true);
-              }
-            }
-          }
-        }
-
-        if (data.poster && name === 'object' && updateAll && !hasImage) {
-          const imgAttrs: any = [];
-          imgAttrs.map = {};
-
-          setAttributes(imgAttrs, {
-            src: data.poster,
-            width: data.width,
-            height: data.height
-          });
-
-          writer.start('img', imgAttrs, true);
-        }
-      }
-
-      writer.end(name);
     }
-  }, Schema({})).parse(html);
+  }
 
-  return writer.getContent();
+  return HtmlSerializer({}, schema).serialize(rootNode);
 };
 
 export {

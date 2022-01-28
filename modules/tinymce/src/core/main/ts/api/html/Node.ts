@@ -117,14 +117,12 @@ class AstNode {
   public type: number;
   public attributes?: Attributes;
   public value?: string;
-  public shortEnded?: boolean;
   public parent?: AstNode;
   public firstChild?: AstNode;
   public lastChild?: AstNode;
   public next?: AstNode;
   public prev?: AstNode;
   public raw?: boolean;
-  public fixed?: boolean;
 
   /**
    * Constructs a new Node instance.
@@ -273,7 +271,6 @@ class AstNode {
     }
 
     clone.value = self.value;
-    clone.shortEnded = self.shortEnded;
 
     return clone;
   }
