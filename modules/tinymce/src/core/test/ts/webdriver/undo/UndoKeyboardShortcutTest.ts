@@ -1,12 +1,11 @@
 import { RealKeys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyAssertions, TinyContentActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
+describe('webdriver.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);

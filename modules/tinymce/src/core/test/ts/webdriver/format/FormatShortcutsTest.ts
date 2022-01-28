@@ -11,7 +11,7 @@ import { TinyHooks, TinySelections, TinyAssertions, TinyContentActions } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
+describe('webdriver.tinymce.core.keyboard.FormatShortcutsTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
   }, []);
