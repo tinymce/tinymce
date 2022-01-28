@@ -10,7 +10,7 @@ import * as MenuUtils from '../../../module/MenuUtils';
 
 describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
-    toolbar: 'align fontselect fontsizeselect formatselect styleselect',
+    toolbar: 'align fontfamily fontsize blocks styles',
     base_url: '/project/tinymce/js/tinymce',
     content_css: '/project/tinymce/src/themes/silver/test/css/content.css'
   }, []);
@@ -110,7 +110,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     );
   });
 
-  it('TBA: Checking fontselect ticks and updating', async () => {
+  it('TBA: Checking fontfamily ticks and updating', async () => {
     const editor = hook.editor();
     editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);

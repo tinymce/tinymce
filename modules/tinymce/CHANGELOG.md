@@ -18,14 +18,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
 
 ### Improved
+- The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
+- A `ThemeLoadError` event is now fired if the theme fails to load #TINY-8325
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
 - The `emoticon` plugin dialog, toolbar and menu item has been updated to use the more accurate `Emojis` term #TINY-7631
 - The dialog `redial` API will now only rerender the changed components instead of the whole dialog #TINY-8334
 - The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
 - The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
+- Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
 
 ### Changed
+- The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
+- The `images_upload_handler` option is no longer passed a `success` or `failure` callback and instead requires a `Promise` to be returned with the upload result #TINY-8325
 - RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
 - The `tinymce.Env.os.isOSX` API has been renamed to `tinymce.Env.os.isMacOS` #TINY-8175
 - The `tinymce.Env.browser.isChrome` API has been renamed to `tinymce.Env.browser.isChromium` to better reflect its functionality #TINY-8300
@@ -34,17 +39,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tinymce.settings` global property is no longer set upon initialization #TINY-7359
 - Add-ons such as plugins and themes are no longer constructed using the `new` operator #TINY-8256
 - A number of APIs that were not proper classes, are no longer constructed using the `new` operator #TINY-8322
+- The `mceAddEditor` and `mceToggleEditor` commands now take an object as their value to specify the id and editor options #TINY-8138
 - The `default_link_target` option has been renamed to `link_default_target` for both `link` and `autolink` plugins #TINY-4603
 - The `rel_list` option has been renamed to `link_rel_list` for the `link` plugin #TINY-4603
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
+- The `element_format` option has been set to `html` by default #TINY-8263
+- The `schema` option has been set to `html5` by default #TINY-8261
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
+- Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
+- The `paste_data_images` option now defaults to `true` #TINY-8310
+- The `mceInsertClipboardContent` command `content` property has been renamed to `html` to better reflect what data is passed #TINY-8310
 - Moved the `noneditable` plugin to TinyMCE core #TINY-8311
 - Renamed the `noneditable_noneditable_class` and `noneditable_editable_class` options to `noneditable_class` and `editable_class` #TINY-8311
 - Moved the `textpattern` plugin to TinyMCE core #TINY-8312
 - Renamed the `textpattern_patterns` option to `text_patterns` #TINY-8312
 - Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
+- The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
+- Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
+- Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
+- Renamed the `font_formats` option to `font_family_formats` #TINY-8328
+- Renamed the `fontselect` toolbar button and `fontformats` menu item to `fontfamily` #TINY-8328
+- Renamed the `fontsize_formats` option to `font_size_formats` #TINY-8328
+- Renamed the `fontsizeselect` toolbar button and `fontsizes` menu item to `fontsize` #TINY-8328
+- Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
+- Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
+- Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -53,10 +74,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 - The aria labels for the color picker dialog were not translated #TINY-8381
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
+- Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
 
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
+- Removed the deprecated `XHR` API #TINY-8164
 - Removed the legacy browser detection properties from `Env` #TINY-8162
 - Removed the deprecated `setIconStroke` Split Toolbar Button API #TINY-8162
 - Removed the deprecated `editors` property from `EditorManager` #TINY-8162
@@ -66,18 +89,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `Schema` settings #TINY-7821
 - Removed the deprecated `file_browser_callback_types`, `force_hex_style_colors` and `images_dataimg_filter` settings #TINY-7823
 - Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
+- Removed the deprecated `media_scripts` option in the `media` plugin #TINY-8421
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
+- Removed the deprecated `content_editable_state` and `padd_empty_with_br` options #TINY-8400
+- Removed the deprecated `autoresize_on_init` option from the `autoresize` plugin #TINY-8400
+- Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
+- Removed the callback for the `EditorUpload` APIs #TINY-8325
 - The legacy `mobile` theme has been removed #TINY-7832
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
 - Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `imagetools` dialog component #TINY-8333
+- Removed the `filterNode` method from `DomParser` #TINY-8249
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
+- Removed the `editor.settings` property as it's been replaced by the new Options API #TINY-8236
+- Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
+- Removed the `mceInsertRawHTML` command #TINY-8214
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

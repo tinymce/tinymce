@@ -10,7 +10,6 @@ import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
 import { DataToHtmlCallback } from '../core/DataToHtml';
 import { MediaResolver } from '../core/Service';
-import { VideoScript } from '../core/VideoScript';
 
 const option: {
   <K extends keyof EditorOptions>(name: K): (editor: Editor) => EditorOptions[K] | undefined;
@@ -20,10 +19,6 @@ const option: {
 
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
-
-  registerOption('media_scripts', {
-    processor: 'object[]'
-  });
 
   registerOption('audio_template_callback', {
     processor: 'function'
@@ -63,7 +58,6 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getScripts = option<VideoScript[]>('media_scripts');
 const getAudioTemplateCallback = option<DataToHtmlCallback>('audio_template_callback');
 const getVideoTemplateCallback = option<DataToHtmlCallback>('video_template_callback');
 const hasLiveEmbeds = option<boolean>('media_live_embeds');
@@ -75,7 +69,6 @@ const hasDimensions = option<boolean>('media_dimensions');
 
 export {
   register,
-  getScripts,
   getAudioTemplateCallback,
   getVideoTemplateCallback,
   hasLiveEmbeds,

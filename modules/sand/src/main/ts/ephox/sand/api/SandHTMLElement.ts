@@ -21,7 +21,7 @@ const isPrototypeOf = (x: any): x is HTMLElement => {
 
   // TINY-7374: We can't rely on looking at the owner window HTMLElement as the element may have
   // been constructed in a different window and then appended to the current window document.
-  return Type.isObject(x) && (sandHTMLElement(scope).prototype.isPrototypeOf(x) || /^\[object HTML\w*Element\]$/.test(getPrototypeOf(x).toString()));
+  return Type.isObject(x) && (sandHTMLElement(scope).prototype.isPrototypeOf(x) || /^HTML\w*Element$/.test(getPrototypeOf(x).constructor.name));
 };
 
 export {

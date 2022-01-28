@@ -189,10 +189,10 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   it('getBoolAttrs', () => {
     const schema = Schema();
     assert.deepEqual(schema.getBoolAttrs(), {
-      CONTROLS: {}, LOOP: {}, AUTOPLAY: {}, SELECTED: {}, READONLY: {}, NOWRAP: {},
+      ALLOWFULLSCREEN: {}, CONTROLS: {}, LOOP: {}, AUTOPLAY: {}, SELECTED: {}, READONLY: {}, NOWRAP: {},
       NOSHADE: {}, NORESIZE: {}, NOHREF: {}, MULTIPLE: {}, ISMAP: {}, DISABLED: {}, DEFER: {},
       DECLARE: {}, COMPACT: {}, CHECKED: {},
-      controls: {}, loop: {}, autoplay: {}, selected: {}, readonly: {}, nowrap: {},
+      allowfullscreen: {}, controls: {}, loop: {}, autoplay: {}, selected: {}, readonly: {}, nowrap: {},
       noshade: {}, noresize: {}, nohref: {}, multiple: {}, ismap: {}, disabled: {}, defer: {},
       declare: {}, compact: {}, checked: {}
     });
@@ -216,9 +216,9 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     });
   });
 
-  it('getShortEndedElements', () => {
+  it('getVoidElements', () => {
     const schema = Schema();
-    assert.deepEqual(schema.getShortEndedElements(), {
+    assert.deepEqual(schema.getVoidElements(), {
       EMBED: {}, PARAM: {}, META: {}, LINK: {}, ISINDEX: {},
       INPUT: {}, IMG: {}, HR: {}, FRAME: {}, COL: {}, BR: {},
       BASEFONT: {}, BASE: {}, AREA: {}, SOURCE: {}, WBR: {}, TRACK: {},
@@ -290,7 +290,8 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       'title',
       'style',
       'textarea',
-      'xmp'
+      'xmp',
+      'plaintext'
     ], 'special elements');
   });
 

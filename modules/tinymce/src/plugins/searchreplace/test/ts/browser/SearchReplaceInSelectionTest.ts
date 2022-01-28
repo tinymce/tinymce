@@ -192,7 +192,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceInSelectionTest', (
     matches: 2,
     replace: 'x',
     replaceAll: true,
-    expectedContent: '<p>a&nbsp; xb<br /><br />abxc</p>',
+    expectedContent: '<p>a&nbsp; xb<br><br>abxc</p>',
     moreMatches: false,
     sel: { sPath: [ 0, 0 ], sOffset: 3, fPath: [ 0, 3 ], fOffset: 4 }
   }));

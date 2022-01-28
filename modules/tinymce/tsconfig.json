@@ -7,6 +7,7 @@
     "rootDir": "src",
     "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "tinymce": ["src/core/main/ts/api/Main"],
       "tinymce/core/*": ["src/core/main/ts/*"],
@@ -32,7 +33,6 @@
       "tinymce/plugins/media/*": ["src/plugins/media/main/ts/*"],
       "tinymce/plugins/nonbreaking/*": ["src/plugins/nonbreaking/main/ts/*"],
       "tinymce/plugins/pagebreak/*": ["src/plugins/pagebreak/main/ts/*"],
-      "tinymce/plugins/paste/*": ["src/plugins/paste/main/ts/*"],
       "tinymce/plugins/preview/*": ["src/plugins/preview/main/ts/*"],
       "tinymce/plugins/quickbars/*": ["src/plugins/quickbars/main/ts/*"],
       "tinymce/plugins/save/*": ["src/plugins/save/main/ts/*"],
@@ -66,7 +66,6 @@
     { "path": "../boulder" },
     { "path": "../bridge" },
     { "path": "../darwin" },
-    { "path": "../imagetools" },
     { "path": "../katamari" },
     { "path": "../katamari-assertions" },
     { "path": "../mcagar" },

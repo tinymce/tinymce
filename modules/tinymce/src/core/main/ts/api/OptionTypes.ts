@@ -8,6 +8,7 @@
 import { UploadHandler } from '../file/Uploader';
 import { RawPattern } from '../textpatterns/core/PatternTypes';
 import Editor from './Editor';
+import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
@@ -34,6 +35,9 @@ export type SetupCallback = (editor: Editor) => void;
 export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
 export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string}) => void) => void;
+
+export type PastePreProcessFn = (editor: Editor, args: PastePreProcessEvent) => void;
+export type PastePostProcessFn = (editor: Editor, args: PastePostProcessEvent) => void;
 
 export type URLConverter = (url: string, name: string, elm?: HTMLElement) => string;
 export type URLConverterCallback = (url: string, node: Node, on_save: boolean, name: string) => string;
@@ -71,7 +75,6 @@ interface BaseEditorOptions {
   cache_suffix?: string;
   color_cols?: number;
   color_map?: string[];
-  content_editable_state?: boolean;
   content_css?: boolean | string | string[];
   content_css_cors?: boolean;
   content_security_policy?: string;
@@ -105,12 +108,12 @@ interface BaseEditorOptions {
   fixed_toolbar_container?: string;
   fixed_toolbar_container_target?: HTMLElement;
   font_css?: string | string[];
-  font_formats?: string;
+  font_family_formats?: string;
   font_size_classes?: string;
   font_size_legacy_values?: string;
   font_size_style_values?: string;
-  fontsize_formats?: string;
-  forced_root_block?: boolean | string;
+  font_size_formats?: string;
+  forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
   height?: number | string;
@@ -143,7 +146,7 @@ interface BaseEditorOptions {
   language?: string;
   language_load?: boolean;
   language_url?: string;
-  lineheight_formats?: string;
+  line_height_formats?: string;
   max_height?: number;
   max_width?: number;
   menu?: Record<string, { title: string; items: string }>;
@@ -155,7 +158,16 @@ interface BaseEditorOptions {
   noneditable_regexp?: RegExp | RegExp[];
   nowrap?: boolean;
   object_resizing?: boolean | string;
-  padd_empty_with_br?: boolean;
+  paste_as_text?: boolean;
+  paste_block_drop?: boolean;
+  paste_data_images?: boolean;
+  paste_filter_drop?: boolean;
+  paste_merge_formats?: boolean;
+  paste_postprocess?: PastePostProcessFn;
+  paste_preprocess?: PastePreProcessFn;
+  paste_remove_styles_if_webkit?: boolean;
+  paste_tab_spaces?: number;
+  paste_webkit_styles?: string;
   placeholder?: string;
   preserve_cdata?: boolean;
   preview_styles?: false | string;
@@ -174,6 +186,7 @@ interface BaseEditorOptions {
   setup?: SetupCallback;
   skin?: boolean | string;
   skin_url?: string;
+  smart_paste?: boolean;
   statusbar?: boolean;
   style_formats?: AllowedFormat[];
   style_formats_autohide?: boolean;
@@ -240,6 +253,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   contextmenu: string[];
   font_css: string[];
   forced_root_block: string;
+  forced_root_block_attrs: Record<string, string>;
   noneditable_regexp: RegExp[];
   object_resizing?: string;
   preview_styles?: string;

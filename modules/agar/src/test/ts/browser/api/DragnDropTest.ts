@@ -1,5 +1,6 @@
-import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { UnitTest } from '@ephox/bedrock-client';
 import { DomEvent, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import { dragnDrop, dropFiles, isDraggable, sDragnDrop, sDropFiles, sDropItems } from 'ephox/agar/api/DragnDrop';
 import { createFile } from 'ephox/agar/api/Files';
@@ -10,7 +11,7 @@ import { Step } from 'ephox/agar/api/Step';
 
 UnitTest.test('DragDrop.isDraggable', () => {
   const check = (expected: boolean, html: string) => {
-    assert.eq(expected, isDraggable(SugarElement.fromHtml(html)));
+    assert.equal(isDraggable(SugarElement.fromHtml(html)), expected);
   };
   check(false, '<div/>');
   check(false, '<a/>');
@@ -33,7 +34,7 @@ UnitTest.asynctest('DragnDropTest', (success, failure) => {
   });
 
   const sAssertStoreItems = (expectedStoreItems: string[]) => Step.sync(() => {
-    Assert.eq('Should have the expetec items', expectedStoreItems, store);
+    assert.deepEqual(store, expectedStoreItems, 'Should have the expected items');
   });
 
   const dragStartUnbinder = DomEvent.bind(draggable, 'dragstart', (evt) => {

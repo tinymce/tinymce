@@ -34,6 +34,7 @@ import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
 import { NodeChange } from '../NodeChange';
+import * as Paste from '../paste/Paste';
 import * as Rtc from '../Rtc';
 import * as DetailsElement from '../selection/DetailsElement';
 import * as MultiClickSelection from '../selection/MultiClickSelection';
@@ -80,7 +81,6 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     font_size_legacy_values: getOption('font_size_legacy_values'),
     forced_root_block: getOption('forced_root_block'),
     forced_root_block_attrs: getOption('forced_root_block_attrs'),
-    padd_empty_with_br: getOption('padd_empty_with_br'),
     preserve_cdata: getOption('preserve_cdata'),
     remove_trailing_brs: getOption('remove_trailing_brs'),
     inline_styles: getOption('inline_styles'),
@@ -203,7 +203,7 @@ const createParser = (editor: Editor): DomParser => {
       const node = nodes[i];
 
       if (node.isEmpty(nonEmptyElements) && node.getAll('br').length === 0) {
-        node.append(new AstNode('br', 1)).shortEnded = true;
+        node.append(new AstNode('br', 1));
       }
     }
   });
@@ -264,14 +264,14 @@ const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
 
 const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFonts: string[]): Promise<unknown>[] => {
   const promises = [
-    new Promise((resolve, reject) => getStyleSheetLoader(editor).loadAll(css, resolve, reject)),
+    getStyleSheetLoader(editor).loadAll(css)
   ];
 
   if (editor.inline) {
     return promises;
   } else {
     return promises.concat([
-      new Promise((resolve, reject) => editor.ui.styleSheetLoader.loadAll(framedFonts, resolve, reject)),
+      editor.ui.styleSheetLoader.loadAll(framedFonts)
     ]);
   }
 };
@@ -398,7 +398,7 @@ const contentBodyLoaded = (editor: Editor): void => {
       body.style.position = 'relative';
     }
 
-    body.contentEditable = '' + Options.getContentEditableState(editor);
+    body.contentEditable = 'true';
   }
 
   (body as any).disabled = false;
@@ -444,6 +444,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   DeleteCommands.setup(editor, caret);
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
+  Paste.setup(editor);
 
   const setupRtcThunk = Rtc.setup(editor);
 

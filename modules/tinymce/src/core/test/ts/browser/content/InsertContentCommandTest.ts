@@ -66,7 +66,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     rng.setEnd(editor.getBody(), 0);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, 'x');
-    assert.equal(editor.getContent(), '<p>x</p><hr />');
+    assert.equal(editor.getContent(), '<p>x</p><hr>');
   });
 
   it('mceInsertContent HR at end of H1', () => {
@@ -76,7 +76,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.execCommand('mceInsertContent', false, '<hr>');
     LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild);
     assert.equal(editor.selection.getNode().nodeName, 'H1');
-    assert.equal(editor.getContent(), '<h1>abc</h1><hr /><h1>\u00a0</h1>');
+    assert.equal(editor.getContent(), '<h1>abc</h1><hr><h1>\u00a0</h1>');
   });
 
   it('mceInsertContent HR at end of H1 with P sibling', () => {
@@ -86,7 +86,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.execCommand('mceInsertContent', false, '<hr>');
     LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild);
     assert.equal(editor.selection.getNode().nodeName, 'P');
-    assert.equal(editor.getContent(), '<h1>abc</h1><hr /><p>def</p>');
+    assert.equal(editor.getContent(), '<h1>abc</h1><hr><p>def</p>');
   });
 
   it('mceInsertContent HR at end of H1 with inline elements with P sibling', () => {
@@ -96,7 +96,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.execCommand('mceInsertContent', false, '<hr>');
     LegacyUnit.equalDom(editor.selection.getNode(), editor.getBody().lastChild);
     assert.equal(editor.selection.getNode().nodeName, 'P');
-    assert.equal(editor.getContent(), '<h1><strong>abc</strong></h1><hr /><p>def</p>');
+    assert.equal(editor.getContent(), '<h1><strong>abc</strong></h1><hr><p>def</p>');
   });
 
   it('mceInsertContent empty block', () => {
@@ -260,7 +260,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<img src="about:blank" />');
-    assert.equal(editor.getContent(), '<p><img src="about:blank" /></p>');
+    assert.equal(editor.getContent(), '<p><img src="about:blank"></p>');
     rng = normalizeRng(editor.selection.getRng());
     assert.isTrue(rng.collapsed);
     assert.equal(rng.startContainer.nodeName, 'P');
@@ -294,7 +294,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     rng.setEnd(editor.dom.select('p')[0].firstChild, 2);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<hr />');
-    assert.equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
+    assert.equal(editor.getContent(), '<p>1</p><hr><p>3</p>');
     rng = normalizeRng(editor.selection.getRng());
     assert.isTrue(rng.collapsed);
     LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild);
@@ -422,28 +422,5 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
     editor.execCommand('mceInsertContent', false, 'X');
     assert.equal(JSON.stringify(editor.getContent()), '"<p>a X c</p>"');
-  });
-
-  it('mceInsertRawHTML - insert p at start', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>abc</p>');
-    editor.execCommand('mceInsertRawHTML', false, '<p>Hello world!</p>');
-    assert.equal(editor.getContent(), '<p>Hello world!</p><p>abc</p>');
-  });
-
-  it('mceInsertRawHTML - insert link inside p', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>abc</p>');
-    LegacyUnit.setSelection(editor, 'p', 3);
-    editor.execCommand('mceInsertRawHTML', false, ' <a href="#">Hello world!</a>');
-    assert.equal(editor.getContent(), '<p>abc <a href="#">Hello world!</a></p>');
-  });
-
-  it('mceInsertRawHTML - insert char at char surrounded by spaces', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>a b c</p>');
-    LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
-    editor.execCommand('mceInsertRawHTML', false, '<strong>X</strong>');
-    assert.equal(JSON.stringify(editor.getContent()), '"<p>a <strong>X</strong> c</p>"');
   });
 });

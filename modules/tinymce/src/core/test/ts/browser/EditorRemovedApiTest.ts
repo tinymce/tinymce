@@ -33,7 +33,7 @@ describe('browser.tinymce.core.EditorRemovedApiTest', () => {
     editor.queryCommandState('bold');
     editor.queryCommandValue('bold');
     editor.queryCommandSupported('bold');
-    editor.uploadImages(Fun.noop);
+    editor.uploadImages();
     editor.setContent('a');
     editor.insertContent('a');
     editor.execCommand('bold');

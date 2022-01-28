@@ -130,17 +130,11 @@ const register = (editor: Editor) => {
 
   registerOption('forced_root_block', {
     processor: (value) => {
-      const valid = Type.isString(value) || Type.isBoolean(value);
+      const valid = Type.isString(value) && Strings.isNotEmpty(value);
       if (valid) {
-        if (value === false) {
-          return { value: '', valid };
-        } else if (value === true) {
-          return { value: 'p', valid };
-        } else {
-          return { value, valid };
-        }
+        return { value, valid };
       } else {
-        return { valid: false, message: 'Must be a string or a boolean.' };
+        return { valid: false, message: 'Must be a non-empty string.' };
       }
     },
     default: 'p'
@@ -529,15 +523,11 @@ const register = (editor: Editor) => {
 
   registerOption('convert_fonts_to_spans', {
     processor: 'boolean',
-    default: true
+    default: true,
+    deprecated: true
   });
 
   registerOption('fix_list_elements', {
-    processor: 'boolean',
-    default: false
-  });
-
-  registerOption('padd_empty_with_br', {
     processor: 'boolean',
     default: false
   });
@@ -553,11 +543,13 @@ const register = (editor: Editor) => {
 
   registerOption('inline_styles', {
     processor: 'boolean',
-    default: true
+    default: true,
+    deprecated: true
   });
 
   registerOption('element_format', {
-    processor: 'string'
+    processor: 'string',
+    default: 'html'
   });
 
   registerOption('entities', {
@@ -565,7 +557,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('schema', {
-    processor: 'string'
+    processor: 'string',
+    default: 'html5'
   });
 
   registerOption('convert_urls', {
@@ -648,13 +641,61 @@ const register = (editor: Editor) => {
     default: false
   });
 
-  registerOption('content_editable_state', {
+  registerOption('api_key', {
+    processor: 'string'
+  });
+
+  registerOption('paste_block_drop', {
+    processor: 'boolean',
+    default: false
+  });
+
+  registerOption('paste_data_images', {
     processor: 'boolean',
     default: true
   });
 
-  registerOption('api_key', {
-    processor: 'string'
+  registerOption('paste_filter_drop', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('paste_preprocess', {
+    processor: 'function'
+  });
+
+  registerOption('paste_postprocess', {
+    processor: 'function'
+  });
+
+  registerOption('paste_webkit_styles', {
+    processor: 'string',
+    default: 'none'
+  });
+
+  registerOption('paste_remove_styles_if_webkit', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('paste_merge_formats', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('smart_paste', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('paste_as_text', {
+    processor: 'boolean',
+    default: false
+  });
+
+  registerOption('paste_tab_spaces', {
+    processor: 'number',
+    default: 4
   });
 
   registerOption('text_patterns', {
@@ -704,7 +745,6 @@ const register = (editor: Editor) => {
   });
 
   // These options must be registered later in the init sequence due to their default values
-  // TODO: TINY-8234 Should we have a way to lazily load the default values?
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
       processor: 'string',
@@ -786,7 +826,18 @@ const getUrlConverterCallback = option('urlconverter_callback');
 const getAutoFocus = option('auto_focus');
 const shouldBrowserSpellcheck = option('browser_spellcheck');
 const getProtect = option('protect');
-const getContentEditableState = option('content_editable_state');
+const shouldPasteBlockDrop = option('paste_block_drop');
+const shouldPasteDataImages = option('paste_data_images');
+const shouldPasteFilterDrop = option('paste_filter_drop');
+const getPastePreProcess = option('paste_preprocess');
+const getPastePostProcess = option('paste_postprocess');
+const getPasteWebkitStyles = option('paste_webkit_styles');
+const shouldPasteRemoveWebKitStyles = option('paste_remove_styles_if_webkit');
+const shouldPasteMergeFormats = option('paste_merge_formats');
+const isSmartPasteEnabled = option('smart_paste');
+const isPasteAsTextEnabled = option('paste_as_text');
+const getPasteTabSpaces = option('paste_tab_spaces');
+const shouldAllowHtmlDataUrls = option('allow_html_data_urls');
 const getTextPatterns = option('text_patterns');
 const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
@@ -801,8 +852,8 @@ const getFontSizeClasses = (editor: Editor): string[] =>
 const isEncodingXml = (editor: Editor): boolean =>
   editor.options.get('encoding') === 'xml';
 
-const hasForcedRootBlock = (editor: Editor): boolean =>
-  getForcedRootBlock(editor) !== '';
+const getAllowedImageFileTypes = (editor: Editor): string[] =>
+  Tools.explode(editor.options.get('images_file_types'));
 
 export {
   register,
@@ -859,7 +910,6 @@ export {
   isEncodingXml,
   shouldAddFormSubmitTrigger,
   shouldAddUnloadTrigger,
-  hasForcedRootBlock,
   getCustomUndoRedoLevels,
   shouldDisableNodeChange,
   isReadOnly,
@@ -878,7 +928,19 @@ export {
   getAutoFocus,
   shouldBrowserSpellcheck,
   getProtect,
-  getContentEditableState,
+  shouldPasteBlockDrop,
+  shouldPasteDataImages,
+  shouldPasteFilterDrop,
+  getPastePreProcess,
+  getPastePostProcess,
+  getPasteWebkitStyles,
+  shouldPasteRemoveWebKitStyles,
+  shouldPasteMergeFormats,
+  isSmartPasteEnabled,
+  isPasteAsTextEnabled,
+  getPasteTabSpaces,
+  shouldAllowHtmlDataUrls,
+  getAllowedImageFileTypes,
   getTextPatterns,
   getNonEditableClass,
   getNonEditableRegExps,

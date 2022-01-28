@@ -13,11 +13,11 @@ export default () => {
     plugins: [
       'autosave advlist autolink link image lists charmap preview anchor pagebreak',
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-      'save table directionality emoticons template paste importcss codesample help'
+      'save table directionality emoticons template importcss codesample help'
     ],
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'fontsizeselect fontselect insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+    toolbar: 'fontsize fontfamily insertfile undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',
     init_instance_callback: (editor) => {
       editor.on('init keyup change', () => dumpSource(editor));

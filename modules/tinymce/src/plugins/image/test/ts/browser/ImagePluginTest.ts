@@ -59,7 +59,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
         },
         vspace: '10'
       },
-      '<p><img style="margin: 10px;" src="src" alt="alt" /></p>'
+      '<p><img style="margin: 10px;" src="src" alt="alt"></p>'
     )
   );
 
@@ -73,7 +73,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
         },
         style: 'border-width: 10px; border-style: solid;'
       },
-      '<p><img style="border-width: 10px; border-style: solid;" src="src" alt="alt" /></p>'
+      '<p><img style="border-width: 10px; border-style: solid;" src="src" alt="alt"></p>'
     )
   );
 
@@ -87,7 +87,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
         },
         style: 'margin: 10px;'
       },
-      '<p><img style="margin: 10px;" src="src" alt="alt" /></p>'
+      '<p><img style="margin: 10px;" src="src" alt="alt"></p>'
     )
   );
 
@@ -102,7 +102,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
         },
         style: 'border-width: 15px;'
       },
-      '<p><img style="border-width: 10px;" src="src" alt="alt" /></p>'
+      '<p><img style="border-width: 10px;" src="src" alt="alt"></p>'
     )
   );
 
@@ -118,7 +118,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
         style: 'margin-left: 15px; margin-top: 20px;',
         vspace: '10'
       },
-      '<p><img style="margin: 10px;" src="src" alt="alt" /></p>'
+      '<p><img style="margin: 10px;" src="src" alt="alt"></p>'
     )
   );
 
@@ -138,7 +138,8 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
           value: 'src'
         }
       },
-      '<p>a<img style="border-width: 10px; border-style: dashed;" src="src" alt="alt" /></p>')
+      '<p>a<img style="border-width: 10px; border-style: dashed;" src="src" alt="alt"></p>'
+    )
   );
 
   it('TBA: Advanced image dialog non-shorthand horizontal margin style change test', () =>

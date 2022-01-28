@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
+import { AlloySpec, Behaviour, GuiFactory, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
@@ -16,13 +16,15 @@ import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 type LabelSpec = Omit<Dialog.Label, 'type'>;
 
 export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstageShared): SimpleSpec => {
-  const label = {
+  const label: AlloySpec = {
     dom: {
       tag: 'label',
-      innerHtml: backstageShared.providers.translate(spec.label),
       classes: [ 'tox-label' ]
-    }
-  } as AlloySpec;
+    },
+    components: [
+      GuiFactory.text(backstageShared.providers.translate(spec.label))
+    ]
+  };
   const comps = Arr.map(spec.items, backstageShared.interpreter);
   return {
     dom: {
@@ -30,8 +32,9 @@ export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstage
       classes: [ 'tox-form__group' ]
     },
     components: [
-      label
-    ].concat(comps),
+      label,
+      ...comps
+    ],
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
       Replacing.config({}),

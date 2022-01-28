@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Strings, Type } from '@ephox/katamari';
+import { Obj, Strings, Type } from '@ephox/katamari';
 
 import Editor from './Editor';
 import { EditorOptions, NormalizedEditorOptions } from './OptionTypes';
@@ -208,20 +208,10 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
   const registry: Record<string, OptionSpec<any, any>> = {};
   const values: Record<string, any> = {};
 
-  editor.on('init', () => {
-    const unregisteredOptions = Arr.filter(Obj.keys(initialOptions), (option) => !isRegistered(option) && option !== 'mobile');
-    if (unregisteredOptions.length > 0) {
-      // eslint-disable-next-line no-console
-      console.warn('The following options were specified but have not been registered:\n - ' + unregisteredOptions.join('\n - '));
-    }
-  });
-
   const setValue = <T, U>(name: string, value: T, processor: SimpleProcessor | Processor<U>): boolean => {
     const result = processValue(value, processor);
     if (isValidResult(result)) {
       values[name] = result.value;
-      // TODO: TINY-8236 (TINY-8234) Remove this later once all settings have been converted
-      editor.settings[name] = result.value;
       return true;
     } else {
       // eslint-disable-next-line no-console
@@ -277,8 +267,6 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
     const registered = isRegistered(name);
     if (registered) {
       delete values[name];
-      // TODO: TINY-8236 (TINY-8234) Remove this later once all settings have been converted
-      delete editor.settings[name];
     }
     return registered;
   };
