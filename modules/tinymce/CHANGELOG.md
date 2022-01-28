@@ -59,6 +59,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
+- Renamed the `font_formats` option to `font_family_formats` #TINY-8328
+- Renamed the `fontselect` toolbar button and `fontformats` menu item to `fontfamily` #TINY-8328
+- Renamed the `fontsize_formats` option to `font_size_formats` #TINY-8328
+- Renamed the `fontsizeselect` toolbar button and `fontsizes` menu item to `fontsize` #TINY-8328
+- Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
+- Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
+- Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018

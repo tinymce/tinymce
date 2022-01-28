@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.themes.silver.editor.MenuGroupHeadingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'styleselect',
+    toolbar: 'styles',
     style_formats: [
       { title: 'Bold text', inline: 'b' },
       { title: 'Table styles' },

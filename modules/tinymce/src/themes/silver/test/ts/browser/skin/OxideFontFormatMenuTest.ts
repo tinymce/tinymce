@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.themes.silver.skin.OxideFontFormatMenuTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'styleselect',
+    toolbar: 'styles',
     style_formats: [
       { title: 'Title', format: 'h1' },
       { title: 'Main heading', format: 'h2' },
