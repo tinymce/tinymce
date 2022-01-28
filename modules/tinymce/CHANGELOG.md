@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 - New `imagepreview` dialog component, allowing preview and zoom of any image URL #TINY-8333
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
+- New `Resource.unload` API to make it possible to unload resources #TINY-8431
 
 ### Improved
 - The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
