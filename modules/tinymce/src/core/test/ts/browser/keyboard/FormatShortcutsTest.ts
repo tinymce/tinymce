@@ -18,15 +18,12 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
 
   const platform = PlatformDetection.detect();
 
-  // idk why chrome need this but it works, otherwise first 3 will fail on Mac
   const testFormat = (editor: Editor, style: string) => {
     TinyContentActions.keystroke(editor, style.charCodeAt(0), platform.os.isMacOS() ? { meta: true } : { ctrl: true } );
   };
 
-  // safari need this, no touching unless workaround
   const Heading = (editor: Editor, number: string) => {
     TinyContentActions.keystroke(editor, number.charCodeAt(0), platform.os.isMacOS() ? { ctrl: true, alt: true } : { shift: true, alt: true });
-
   };
 
   it('TINY-2884: should set the selection to be bold', () => {
