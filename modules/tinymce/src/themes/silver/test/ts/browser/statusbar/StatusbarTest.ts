@@ -31,6 +31,9 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           classes: [ arr.has('tox-statusbar__branding') ],
           children: [
             s.element('a', {
+              attrs: {
+                'aria-label': str.is('Powered by Tiny')
+              },
               children: [
                 s.element('svg', {
                   attrs: {
@@ -64,6 +67,9 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           classes: [ arr.has('tox-statusbar__branding') ],
           children: [
             s.element('a', {
+              attrs: {
+                'aria-label': str.is('Powered by Tiny')
+              },
               children: [
                 s.element('svg', {
                   attrs: {
@@ -97,6 +103,9 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           classes: [ arr.has('tox-statusbar__branding') ],
           children: [
             s.element('a', {
+              attrs: {
+                'aria-label': str.is('Powered by Tiny')
+              },
               children: [
                 s.element('svg', {
                   attrs: {
