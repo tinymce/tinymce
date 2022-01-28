@@ -9,7 +9,7 @@
 // Toolbar group
 //
 
-@toolbar-group-padding-x: 4px;
+@toolbar-group-padding-x: 22px;
 @toolbar-group-spacing-y: 0;
 @toolbar-group-separator-color: transparent;
 
@@ -19,7 +19,11 @@
     display: flex;
     flex-wrap: wrap;
     margin: @toolbar-group-spacing-y 0;
-    padding: 0 @toolbar-group-padding-x 0 (@toolbar-group-padding-x + @toolbar-button-spacing-x);
+    padding: 0;
+
+    &:not(:last-child) {
+      padding-inline-end: @toolbar-group-padding-x;
+    }
   }
 
   // Align toolbar group to the right

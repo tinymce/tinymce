@@ -45,6 +45,7 @@
 @menubar-separator-color: @border-color;
 @menubar-row-separator-color: @border-color;
 @statusbar-padding-x: @pad-sm;
+@toolbar-group-padding-x: 4px;
 
 .tox {
   &:not(.tox-tinymce-inline) .tox-editor-header {
@@ -82,5 +83,18 @@
   &.tox-tinymce-aux .tox-toolbar__overflow {
     border: 1px solid @pop-border-color;
     padding: 0;
+  }
+
+  .tox-menubar + .tox-toolbar,
+  .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary {
+    margin-top: -1px; // Fix to hide menubar bottom border below the toolbar
+  }
+
+  .tox-toolbar__group {
+    padding: 0 @toolbar-group-padding-x 0 (@toolbar-group-padding-x + @toolbar-button-spacing-x);
+  }
+
+  .tox-collection__item {
+    border-radius: 0;
   }
 }
