@@ -12,7 +12,8 @@ describe('browser.tinymce.models.dom.table.command.TableSizingModeCommandTest', 
     width: 850,
     content_css: false,
     content_style: 'body { margin: 10px; max-width: 800px }',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    table_use_colgroups: false
   }, [ Plugin ]);
 
   it('TINY-6000: Percent (relative) to pixel (fixed) sizing', () => tableSizingModeScenarioTest(hook.editor(), false, {

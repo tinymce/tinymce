@@ -375,11 +375,12 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     });
   });
 
-  context('table_column_resizing="resizetable" and table_sizing_mode="relative"', () => {
+  context('table_column_resizing="resizetable" and table_sizing_mode="relative" and table_use_colgroups=false', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       ...defaultSettings,
       table_column_resizing: 'resizetable',
-      table_sizing_mode: 'relative'
+      table_sizing_mode: 'relative',
+      table_use_colgroups: false
     }, []);
 
     it('TINY-6242: adjusting the entire table should not resize more than the last column width', async () => {

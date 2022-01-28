@@ -45,7 +45,7 @@ const register = (editor: Editor): void => {
 
   registerOption('table_use_colgroups', {
     processor: 'boolean',
-    default: false
+    default: true
   });
 
   registerOption('table_header_type', {

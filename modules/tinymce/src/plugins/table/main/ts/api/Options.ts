@@ -87,7 +87,7 @@ const register = (editor: Editor): void => {
 
   registerOption('table_style_by_css', {
     processor: 'boolean',
-    default: false
+    default: true
   });
 
   registerOption('table_cell_class_list', {
