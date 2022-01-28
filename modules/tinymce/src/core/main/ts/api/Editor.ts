@@ -263,6 +263,7 @@ class Editor implements EditorObservable {
     const self = this;
 
     this.id = id;
+    this.hidden = false;
     const normalizedOptions = normalizeOptions(editorManager.defaultOptions, options);
 
     this.options = createOptions(self, normalizedOptions);
@@ -654,7 +655,7 @@ class Editor implements EditorObservable {
    * @return {Boolean} True/false if the editor is hidden or not.
    */
   public isHidden() {
-    return !!this.hidden;
+    return this.hidden;
   }
 
   /**

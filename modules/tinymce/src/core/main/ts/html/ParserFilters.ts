@@ -57,29 +57,24 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
   // these elements and keep br elements that where intended to be there intact
   if (settings.remove_trailing_brs) {
     parser.addNodeFilter('br', (nodes, _, args) => {
-      let i;
-      const l = nodes.length;
-      let node;
       const blockElements = Tools.extend({}, schema.getBlockElements());
       const nonEmptyElements = schema.getNonEmptyElements();
-      let parent, lastParent, prev, prevName;
       const whiteSpaceElements = schema.getWhiteSpaceElements();
-      let elementRule, textNode;
 
       // Remove brs from body element as well
       blockElements.body = 1;
 
       // Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>
-      for (i = 0; i < l; i++) {
-        node = nodes[i];
-        parent = node.parent;
+      for (let i = 0, l = nodes.length; i < l; i++) {
+        let node = nodes[i];
+        let parent = node.parent;
 
         if (blockElements[node.parent.name] && node === parent.lastChild) {
           // Loop all nodes to the left of the current node and check for other BR elements
           // excluding bookmarks since they are invisible
-          prev = node.prev;
+          let prev = node.prev;
           while (prev) {
-            prevName = prev.name;
+            const prevName = prev.name;
 
             // Ignore bookmarks
             if (prevName !== 'span' || prev.attr('data-mce-type') !== 'bookmark') {
@@ -98,7 +93,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
 
             // Is the parent to be considered empty after we removed the BR
             if (isEmpty(schema, nonEmptyElements, whiteSpaceElements, parent)) {
-              elementRule = schema.getElementRule(parent.name);
+              const elementRule = schema.getElementRule(parent.name);
 
               // Remove or padd the element depending on schema rule
               if (elementRule) {
@@ -113,7 +108,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
         } else {
           // Replaces BR elements inside inline elements like <p><b><i><br></i></b></p>
           // so they become <p><b><i>&nbsp;</i></b></p>
-          lastParent = node;
+          let lastParent = node;
           while (parent && parent.firstChild === lastParent && parent.lastChild === lastParent) {
             lastParent = parent;
 
@@ -124,8 +119,8 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
             parent = parent.parent;
           }
 
-          if (lastParent === parent && settings.padd_empty_with_br !== true) {
-            textNode = new AstNode('#text', 3);
+          if (lastParent === parent) {
+            const textNode = new AstNode('#text', 3);
             textNode.value = Unicode.nbsp;
             node.replace(textNode);
           }

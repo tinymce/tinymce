@@ -127,31 +127,6 @@ const wrapWithSiblings = (dom: DOMUtils, node: Node, next: boolean, name: string
   return wrapper.dom;
 };
 
-/**
- * Checks if the specified nodes name matches the format inline/block or selector.
- *
- * @private
- * @param {Node} node Node to match against the specified format.
- * @param {Object} format Format object o match with.
- * @return {boolean} true/false if the format matches.
- */
-const matchName = (dom: DOMUtils, node: Node, format: Format) => {
-  // Check for inline match
-  if (FormatUtils.isInlineFormat(format) && isEq(node, format.inline)) {
-    return true;
-  }
-
-  // Check for block match
-  if (FormatUtils.isBlockFormat(format) && isEq(node, format.block)) {
-    return true;
-  }
-
-  // Check for selector match
-  if (FormatUtils.isSelectorFormat(format)) {
-    return NodeType.isElement(node) && dom.is(node, format.selector);
-  }
-};
-
 const isColorFormatAndAnchor = (node: Node, format: Format) => format.links && node.nodeName === 'A';
 
 /**
@@ -211,7 +186,7 @@ const removeFormatInternal = (ed: Editor, format: Format, vars?: FormatVars, nod
   const dom = ed.dom;
 
   // Check if node matches format
-  if (!matchName(dom, node, format) && !isColorFormatAndAnchor(node, format)) {
+  if (!MatchFormat.matchName(dom, node, format) && !isColorFormatAndAnchor(node, format)) {
     return removeResult.keep();
   }
 
