@@ -14,10 +14,13 @@ describe('browser.tinymce.themes.silver.editor.toolbar.KeyboardShortcutMenuFocus
       ...options,
       base_url: '/project/tinymce/js/tinymce'
     });
+    // currently for me i need to actually focus on the browser window for the test to pass, not sure if there's a bug somewhere
+    editor.focus();
 
+    // const editorDoc = TinyDom.document(editor);
     const doc = SugarDocument.getDocument();
 
-    // Timeout before shortcut, inline mode seems to have a slower render time, which leads to failed test
+    // Timeout before shortcut, inline mode seems to have a slower render time
     setTimeout(() => {
       TinyContentActions.keystroke(editor, 120, { alt: true });
     }, 500);
