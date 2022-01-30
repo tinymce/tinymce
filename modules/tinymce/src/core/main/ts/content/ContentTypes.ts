@@ -27,6 +27,11 @@ export interface SetContentArgs {
   no_selection?: boolean;
 }
 
+export interface SetContentResult {
+  content: Content;
+  html: string;
+}
+
 export interface GetSelectionContentArgs extends GetContentArgs {
   selection?: boolean;
   contextual?: boolean;

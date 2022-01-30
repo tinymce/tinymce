@@ -10,12 +10,11 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import AstNode from './api/html/Node';
 import * as AutocompleteTag from './autocomplete/AutocompleteTag';
-import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs } from './content/ContentTypes';
+import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs, SetContentResult } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
-import { postProcessSetContent, preProcessSetContent, postProcessGetContent, preProcessGetContent } from './content/PrePostProcess';
+import { postProcessSetContent, preProcessSetContent } from './content/PrePostProcess';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
@@ -59,8 +58,8 @@ interface RtcRuntimeApi {
     formatChanged: (formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
-    getContent: (args: Partial<GetContentArgs>) => Content;
-    setContent: (content: Content, args: Partial<SetContentArgs>) => Content;
+    getContent: (args: GetContentArgs) => Content;
+    setContent: (content: Content, args: SetContentArgs) => SetContentResult;
     insertContent: (content: Content) => void;
     addVisual: () => void;
   };
@@ -116,8 +115,8 @@ interface RtcAdaptor {
     formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
-    getContent: (args: Partial<GetContentArgs>, format: ContentFormat) => Content;
-    setContent: (content: Content, args: Partial<SetContentArgs>) => Content;
+    getContent: (args: GetContentArgs) => Content;
+    setContent: (content: Content, args: SetContentArgs) => SetContentResult;
     insertContent: (value: string, details) => void;
     addVisual: (elm?: HTMLElement) => void;
   };
@@ -173,7 +172,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     formatChanged: (registeredFormatListeners, formats, callback, similar, vars) => formatChangedInternal(editor, registeredFormatListeners, formats, callback, similar, vars)
   },
   editor: {
-    getContent: (args, format) => getContentInternal(editor, args, format),
+    getContent: (args) => getContentInternal(editor, args),
     setContent: (content, args) => setContentInternal(editor, content, args),
     insertContent: (value, details) => insertHtmlAtCaret(editor, value, details),
     addVisual: (elm) => addVisualInternal(editor, elm)
@@ -223,21 +222,8 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi, tinymceEditor: Editor): RtcAda
       formatChanged: (_rfl, formats, callback, similar, vars) => formatter.formatChanged(formats, callback, similar, vars)
     },
     editor: {
-      getContent: (args, format) => {
-        const defaultedArgs = { ...args, format, get: true, getInner: true };
-        return preProcessGetContent(tinymceEditor, defaultedArgs).fold(Fun.identity, (updatedArgs) => {
-          const content = editor.getContent(args);
-          return postProcessGetContent(tinymceEditor, content, updatedArgs);
-        });
-      },
-      setContent: (content, args) => {
-        const defaultedArgs = { format: 'html', ...args, set: true, content: content instanceof AstNode ? '' : content };
-        return preProcessSetContent(tinymceEditor, defaultedArgs).map((updatedArgs) => {
-          const result = editor.setContent(content, updatedArgs);
-          postProcessSetContent(tinymceEditor, updatedArgs.content, updatedArgs);
-          return result;
-        }).getOr(content);
-      },
+      getContent: (args) => editor.getContent(args),
+      setContent: (content, args) => editor.setContent(content, args),
       insertContent: (content, details) => {
         return preProcessSetContent(tinymceEditor, { content, format: 'html', set: false, selection: true, paste: details.paste }).each((args) => {
           editor.insertContent(content);
@@ -293,7 +279,7 @@ const makeNoopAdaptor = (): RtcAdaptor => {
     },
     editor: {
       getContent: empty,
-      setContent: empty,
+      setContent: Fun.constant({ content: '', html: '' }),
       insertContent: Fun.noop,
       addVisual: Fun.noop
     },
@@ -453,10 +439,10 @@ export const toggleFormat = (editor: Editor, name: string, vars: Record<string, 
 export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars): UnbindFormatChanged =>
   getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar, vars);
 
-export const getContent = (editor: Editor, args: Partial<GetContentArgs>, format: ContentFormat): Content =>
-  getRtcInstanceWithFallback(editor).editor.getContent(args, format);
+export const getContent = (editor: Editor, args: GetContentArgs): Content =>
+  getRtcInstanceWithFallback(editor).editor.getContent(args);
 
-export const setContent = (editor: Editor, content: Content, args: Partial<SetContentArgs>): Content =>
+export const setContent = (editor: Editor, content: Content, args: SetContentArgs): SetContentResult =>
   getRtcInstanceWithFallback(editor).editor.setContent(content, args);
 
 export const insertContent = (editor: Editor, value: string, details): void =>
