@@ -34,7 +34,6 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     checkMark: Optional.none(),
     shortcutContent: spec.shortcut
   }, providersBackstage, renderIcons);
-  console.log("nested menu item spec ", spec);
   return renderCommonItem({
     data: buildData(spec),
     getApi,
