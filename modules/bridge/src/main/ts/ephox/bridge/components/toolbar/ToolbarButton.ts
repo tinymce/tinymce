@@ -40,7 +40,7 @@ export interface ToolbarButton extends BaseToolbarButton<ToolbarButtonInstanceAp
 }
 
 export const baseToolbarButtonFields = [
-  ComponentSchema.disabled,
+  ComponentSchema.enabled,
   ComponentSchema.optionalTooltip,
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalText,
