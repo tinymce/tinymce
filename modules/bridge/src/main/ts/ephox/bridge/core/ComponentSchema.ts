@@ -27,7 +27,7 @@ export const borderless = FieldSchema.defaultedBoolean('borderless', false);
 // TODO: replace `disabled` with `enabled` field
 // keep both to avoid breaking other components
 export const disabled = FieldSchema.defaultedBoolean('disabled', false);
-export const enabled = FieldSchema.defaultedBoolean('enabled', false);
+export const enabled = FieldSchema.defaultedBoolean('enabled', true);
 export const primary = FieldSchema.defaultedBoolean('primary', false);
 export const defaultedColumns = (num: number | 'auto'): FieldProcessor => FieldSchema.defaulted('columns', num);
 export const defaultedMeta = FieldSchema.defaulted('meta', {});

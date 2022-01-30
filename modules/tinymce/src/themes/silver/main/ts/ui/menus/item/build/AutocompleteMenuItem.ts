@@ -91,7 +91,7 @@ const renderAutocompleteItem = (
 
   return renderCommonItem({
     data: buildData(spec),
-    disabled: spec.disabled,
+    enabled: !spec.disabled,
     getApi: Fun.constant({}),
     onAction: (_api) => onItemValueHandler(spec.value, spec.meta),
     onSetup: Fun.constant(Fun.noop),

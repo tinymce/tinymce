@@ -49,7 +49,7 @@ const renderToggleMenuItem = (
   return Merger.deepMerge(
     renderCommonItem({
       data: buildData(spec),
-      disabled: spec.disabled,
+      enabled: spec.enabled,
       getApi,
       onAction: spec.onAction,
       onSetup: spec.onSetup,

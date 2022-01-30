@@ -4,7 +4,7 @@ import { Optional } from '@ephox/katamari';
 import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface CommonMenuItemSpec {
-  disabled?: boolean;
+  enabled?: boolean;
   text?: string;
   value?: string;
   meta?: Record<string, any>;
@@ -17,7 +17,7 @@ export interface CommonMenuItemInstanceApi {
 }
 
 export interface CommonMenuItem {
-  disabled: boolean;
+  enabled: boolean;
   text: Optional<string>;
   value: string;
   meta: Record<string, any>;
@@ -25,7 +25,7 @@ export interface CommonMenuItem {
 }
 
 export const commonMenuItemFields: FieldProcessor[] = [
-  ComponentSchema.disabled,
+  ComponentSchema.enabled,
   ComponentSchema.optionalText,
   ComponentSchema.optionalShortcut,
   ComponentSchema.generatedValue('menuitem'),

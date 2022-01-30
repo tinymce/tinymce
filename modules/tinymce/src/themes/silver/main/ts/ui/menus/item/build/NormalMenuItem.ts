@@ -36,7 +36,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
   return renderCommonItem({
     data: buildData(spec),
     getApi,
-    disabled: spec.disabled,
+    enabled: spec.enabled,
     onAction: spec.onAction,
     onSetup: spec.onSetup,
     triggersSubmenu: false,

@@ -97,7 +97,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
         return Optional.some<Menu.NestedMenuItemSpec>({
           type: 'nestedmenuitem',
           text: translatedText,
-          disabled: items.length <= 0,
+          enabled: !(items.length <= 0),
           getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response, value))
         });
       }
@@ -110,7 +110,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
         text: translatedText,
         icon: rawItem.icon,
         active: rawItem.isSelected(value),
-        disabled,
+        enabled: !disabled,
         onAction: spec.onAction(rawItem),
         ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: { style: preview } as any }))
       });
