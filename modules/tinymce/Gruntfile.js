@@ -1,4 +1,8 @@
 /*eslint-env node */
+const { string: PluginString } = require('rollup-plugin-string');
+const FilesAsStrings = PluginString({
+  include: '**/*.svg'
+});
 
 let zipUtils = require('./tools/modules/zip-helper');
 let gruntUtils = require('./tools/modules/grunt-utils');
@@ -69,6 +73,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              FilesAsStrings,
               swag.nodeResolve({
                 basedir: __dirname,
                 prefixes: {
@@ -96,6 +101,7 @@ module.exports = function (grunt) {
               }
             },
             plugins: [
+              FilesAsStrings,
               swag.dts({
                 respectExternal: true,
                 keepVariables: [ 'tinymce' ],
@@ -118,6 +124,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              FilesAsStrings,
               swag.nodeResolve({
                 basedir: __dirname,
                 prefixes: gruntUtils.prefixes({
@@ -143,12 +150,14 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              FilesAsStrings,
               swag.nodeResolve({
                 basedir: __dirname,
                 prefixes: gruntUtils.prefixes({
                   'tinymce/core': 'lib/globals/tinymce/core',
                   'tinymce/ui': 'lib/ui/main/ts'
                 }, [
+                  [`tinymce/themes/${name}/resources`, `src/themes/${name}/main/resources`],
                   [`tinymce/themes/${name}`, `lib/themes/${name}/main/ts`]
                 ]),
                 mappers: [
@@ -887,7 +896,7 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
     config: "../../package.json",
-    pattern: ['grunt-*', '@ephox/bedrock', '@ephox/swag', 'rollup']
+    pattern: ['grunt-*', '@ephox/bedrock', '@ephox/swag']
   });
   grunt.loadTasks('tools/tasks');
 
