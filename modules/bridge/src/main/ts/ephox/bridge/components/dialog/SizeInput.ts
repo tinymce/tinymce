@@ -7,18 +7,18 @@ import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLa
 export interface SizeInputSpec extends FormComponentWithLabelSpec {
   type: 'sizeinput';
   constrain?: boolean;
-  disabled?: boolean;
+  enabled?: boolean;
 }
 
 export interface SizeInput extends FormComponentWithLabel {
   type: 'sizeinput';
   constrain: boolean;
-  disabled: boolean;
+  enabled: boolean;
 }
 
 const sizeInputFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('constrain', true),
-  ComponentSchema.disabled
+  ComponentSchema.enabled
 ]);
 
 export const sizeInputSchema = StructureSchema.objOf(sizeInputFields);

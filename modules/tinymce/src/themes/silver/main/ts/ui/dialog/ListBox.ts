@@ -124,7 +124,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
     components: Arr.flatten<AlloySpec>([ pLabel.toArray(), [ listBoxWrap ]]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: Fun.constant(spec.disabled),
+        disabled: Fun.constant(!spec.enabled),
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
         },

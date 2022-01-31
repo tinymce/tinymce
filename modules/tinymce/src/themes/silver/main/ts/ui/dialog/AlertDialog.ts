@@ -28,7 +28,7 @@ export const setup = (extras) => {
         text: 'OK',
         primary: true,
         align: 'end',
-        disabled: false,
+        enabled: true,
         icon: Optional.none()
       }, 'cancel', extras.backstage)
     );

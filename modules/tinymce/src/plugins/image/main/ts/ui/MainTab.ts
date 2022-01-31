@@ -28,7 +28,7 @@ const makeItems = (info: ImageDialogInfo): Dialog.BodyComponentSpec[] => {
     name: 'alt',
     type: 'input',
     label: 'Alternative description',
-    disabled: info.hasAccessibilityOptions && info.image.isDecorative
+    enabled: !info.hasAccessibilityOptions || !info.image.isDecorative
   };
   const imageTitle = {
     name: 'title',

@@ -39,7 +39,7 @@ const renderCommonSpec = (spec, actionOpt: Optional<(comp: AlloyComponent) => vo
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(() => spec.disabled || providersBackstage.isDisabled()),
+      DisablingConfigs.button(() => !spec.enabled || providersBackstage.isDisabled()),
       ReadOnly.receivingConfig(),
       Tabstopping.config({}),
       AddEventsBehaviour.config('button press', [
@@ -155,7 +155,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const fixedSpec = {
       ...spec,
       onSetup: (api) => {
-        api.setEnabled(!spec.disabled);
+        api.setEnabled(spec.enabled);
         return Fun.noop;
       },
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)

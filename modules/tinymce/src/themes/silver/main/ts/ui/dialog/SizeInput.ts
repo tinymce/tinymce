@@ -47,7 +47,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     ],
     buttonBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => spec.disabled || providersBackstage.isDisabled()
+        disabled: () => !spec.enabled || providersBackstage.isDisabled()
       }),
       ReadOnly.receivingConfig(),
       Tabstopping.config({})
@@ -67,7 +67,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     inputClasses: [ 'tox-textfield' ],
     inputBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => spec.disabled || providersBackstage.isDisabled()
+        disabled: () => !spec.enabled || providersBackstage.isDisabled()
       }),
       ReadOnly.receivingConfig(),
       Tabstopping.config({}),
@@ -139,7 +139,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     },
     coupledFieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => spec.disabled || providersBackstage.isDisabled(),
+        disabled: () => !spec.enabled || providersBackstage.isDisabled(),
         onDisabled: (comp) => {
           AlloyFormCoupledInputs.getField1(comp).bind(AlloyFormField.getField).each(Disabling.disable);
           AlloyFormCoupledInputs.getField2(comp).bind(AlloyFormField.getField).each(Disabling.disable);

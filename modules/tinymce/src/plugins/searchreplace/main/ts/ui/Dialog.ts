@@ -131,7 +131,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
               name: 'prev',
               text: 'Previous',
               icon: 'action-prev',
-              disabled: true,
+              enabled: false,
               borderless: true
             },
             {
@@ -139,7 +139,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
               name: 'next',
               text: 'Next',
               icon: 'action-next',
-              disabled: true,
+              enabled: false,
               borderless: true
             }
           ]
@@ -186,13 +186,13 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
         type: 'custom',
         name: 'replace',
         text: 'Replace',
-        disabled: true
+        enabled: false
       },
       {
         type: 'custom',
         name: 'replaceall',
         text: 'Replace all',
-        disabled: true
+        enabled: false,
       }
     ],
     initialData,

@@ -24,7 +24,7 @@ export interface AutocompleterItem {
   text: Optional<string>;
   icon: Optional<string>;
   active: boolean;
-  disabled: boolean;
+  enabled: boolean;
   meta: Record<string, any>;
 }
 
@@ -61,7 +61,7 @@ const autocompleterItemSchema = StructureSchema.objOf([
   // Currently, autocomplete items don't support configuring type, active, disabled, meta
   ComponentSchema.defaultedType('autocompleteitem'),
   ComponentSchema.active,
-  ComponentSchema.disabled,
+  ComponentSchema.enabled,
   ComponentSchema.defaultedMeta,
   ComponentSchema.value,
   ComponentSchema.optionalText,
