@@ -33,6 +33,7 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
     testFormat(editor, 'B');
     TinyAssertions.assertContent(editor, '<p><strong>abc</strong></p>');
   });
+
   it('TINY-2884: should set the selection to be italic', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
