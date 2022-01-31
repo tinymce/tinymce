@@ -95,8 +95,6 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     TinyUiActions.closeDialog(editor);
   });
 
-  // keyboard shortcut
-
   it('TINY-2884: Test no content selected with keyboard', async () => {
     const editor = hook.editor();
     editor.setContent('<p>fish fish fish</p>');
