@@ -76,10 +76,8 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   };
 
   const keystokes = (editor: Editor) => {
-    if (platform.os.isMacOS()) {
-      TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { meta: true, shift: true });
-    } else {
-      TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { ctrl: true, shift: true });
+    const modifiers = platform.os.isMacOS() ? { meta: true, shift: true } :  { ctrl: true, shift: true };
+    TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), modifiers);
     }
   };
 
