@@ -13,18 +13,15 @@ describe('browser.tinymce.plugins.quickbars.KeyboardShortcutContextualMenuTest',
     quickbars_selection_toolbar: 'bold italic underline | formatselect | bullist numlist | blockquote quicklink',
     contextmenu: 'undo redo | inserttable | cell row column deletetable | help',
     base_url: '/project/tinymce/js/tinymce',
-  }, [ Plugin ]);
+  }, [ Plugin ], true);
 
   const doc = SugarDocument.getDocument();
 
   it('TINY-2884: keypress should focus on contextual menu', async () => {
     const editor = hook.editor();
     editor.setContent('<p>aaaaaaa</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
-    setTimeout(() => {
-      TinyContentActions.keystroke(editor, 120, { ctrl: true });
-    }, 500);
+    TinyContentActions.keystroke(editor, 120, { ctrl: true });
     await FocusTools.pTryOnSelector('Assert toolbar is focused', doc, 'div[role=toolbar] .tox-tbtn');
     TinyUiActions.keystroke(editor, Keys.escape());
     await FocusTools.pTryOnSelector('Assert editor is focused', doc, 'iframe');
