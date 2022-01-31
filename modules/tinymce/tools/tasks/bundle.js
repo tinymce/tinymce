@@ -54,7 +54,7 @@ module.exports = function (grunt) {
     models = grunt.option("models") || 'dom';
 
     if (!themes && !plugins) {
-      grunt.log.writeln("Use: grunt bundle --themes <comma separated list of themes> --plugins <comma separated list of plugins> --icons <comma separated list of icons> --models  <comma separated list of models>");
+      grunt.log.writeln("Use: grunt bundle --themes <comma separated list of themes> --plugins <comma separated list of plugins> --icons <comma separated list of icons> --models <comma separated list of models>");
       process.exit(-1);
       return;
     }

@@ -27,9 +27,9 @@ interface AddMenuSpec {
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
-  // TODO: TINY-8172 Unwind this when alternative solution is found
+  // TODO: TINY-8172 Unwind this when an alternative solution is found
   const addMenuIfRegistered = (name: string, spec: AddMenuSpec) => {
-    if (editor.editorCommands.hasCustomCommand(spec.command)) {
+    if (editor.editorCommands.queryCommandSupported(spec.command)) {
       editor.ui.registry.addMenuItem(name, {
         ...spec,
         onAction: cmd(spec.command)
@@ -243,7 +243,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
   });
 
   const tableClassList = filterNoneItem(Options.getTableClassList(editor));
-  if (tableClassList.length !== 0 && editor.editorCommands.hasCustomCommand('mceTableToggleClass')) {
+  if (tableClassList.length !== 0 && editor.editorCommands.queryCommandSupported('mceTableToggleClass')) {
     editor.ui.registry.addNestedMenuItem('tableclass', {
       icon: 'table-classes',
       text: 'Table styles',
@@ -258,7 +258,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
   }
 
   const tableCellClassList = filterNoneItem(Options.getCellClassList(editor));
-  if (tableCellClassList.length !== 0 && editor.editorCommands.hasCustomCommand('mceTableCellToggleClass')) {
+  if (tableCellClassList.length !== 0 && editor.editorCommands.queryCommandSupported('mceTableCellToggleClass')) {
     editor.ui.registry.addNestedMenuItem('tablecellclass', {
       icon: 'table-cell-classes',
       text: 'Cell styles',
@@ -272,8 +272,8 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
     });
   }
 
-  // TODO: TINY-8172 Unwind this when alternative solution is found
-  if (editor.editorCommands.hasCustomCommand('mceTableApplyCellStyle')) {
+  // TODO: TINY-8172 Unwind this when an alternative solution is found
+  if (editor.editorCommands.queryCommandSupported('mceTableApplyCellStyle')) {
     editor.ui.registry.addNestedMenuItem('tablecellvalign', {
       icon: 'vertical-align',
       text: 'Vertical align',
@@ -325,8 +325,8 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
     });
   }
 
-  // TODO: TINY-8172 Unwind this when alternative solution is found
-  if (editor.editorCommands.hasCustomCommand('mceTableToggleCaption')) {
+  // TODO: TINY-8172 Unwind this when an alternative solution is found
+  if (editor.editorCommands.queryCommandSupported('mceTableToggleCaption')) {
     editor.ui.registry.addToggleMenuItem('tablecaption', {
       icon: 'table-caption',
       text: 'Table caption',
@@ -335,8 +335,8 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
     });
   }
 
-  // TODO: TINY-8172 Unwind this when alternative solution is found
-  if (editor.editorCommands.hasCustomCommand('mceTableRowType')) {
+  // TODO: TINY-8172 Unwind this when an alternative solution is found
+  if (editor.editorCommands.queryCommandSupported('mceTableRowType')) {
     editor.ui.registry.addToggleMenuItem('tablerowheader', {
       text: 'Row header',
       icon: 'table-top-header',
@@ -345,8 +345,8 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
     });
   }
 
-  // TODO: TINY-8172 Unwind this when alternative solution is found
-  if (editor.editorCommands.hasCustomCommand('mceTableColType')) {
+  // TODO: TINY-8172 Unwind this when an alternative solution is found
+  if (editor.editorCommands.queryCommandSupported('mceTableColType')) {
     editor.ui.registry.addToggleMenuItem('tablecolheader', {
       text: 'Column header',
       icon: 'table-left-header',
