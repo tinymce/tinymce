@@ -34,7 +34,8 @@ describe('browser.tinymce.plugins.link.UrlInputTest', () => {
     });
     TinyUiActions.closeDialog(editor);
   });
-  it('TINY-2884: insert url by keybord shortcut', async () => {
+
+  it('TINY-2884: insert url by keyboard shortcut', async () => {
     const editor = hook.editor();
     await pOpenLinkDialogWithKeyboard(editor);
     const focused = FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.test.com/');
