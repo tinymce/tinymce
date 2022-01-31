@@ -45,7 +45,7 @@ const pOpenDialogWKeyboard = async (editor: Editor) => {
   } else {
     TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), { ctrl: true });
   }
-  return await TinyUiActions.pWaitForDialog(editor);
+  await TinyUiActions.pWaitForDialog(editor);
 };
 
 const clickFind = (editor: Editor) => TinyUiActions.clickOnUi(editor, '[role=dialog] button[title="Find"]');
