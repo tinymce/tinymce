@@ -112,11 +112,11 @@ interface BaseEditorOptions {
   fixed_toolbar_container?: string;
   fixed_toolbar_container_target?: HTMLElement;
   font_css?: string | string[];
-  font_formats?: string;
+  font_family_formats?: string;
   font_size_classes?: string;
   font_size_legacy_values?: string;
   font_size_style_values?: string;
-  fontsize_formats?: string;
+  font_size_formats?: string;
   forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
@@ -150,7 +150,7 @@ interface BaseEditorOptions {
   language?: string;
   language_load?: boolean;
   language_url?: string;
-  lineheight_formats?: string;
+  line_height_formats?: string;
   max_height?: number;
   max_width?: number;
   menu?: Record<string, { title: string; items: string }>;

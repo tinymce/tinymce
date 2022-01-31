@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `mceInsertTableDialog` command to open the insert table dialog #TINY-8273
 - New `imagepreview` dialog component, allowing preview and zoom of any image URL #TINY-8333
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
+- New `Resource.unload` API to make it possible to unload resources #TINY-8431
 
 ### Improved
 - The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
@@ -62,6 +63,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
+- Renamed the `font_formats` option to `font_family_formats` #TINY-8328
+- Renamed the `fontselect` toolbar button and `fontformats` menu item to `fontfamily` #TINY-8328
+- Renamed the `fontsize_formats` option to `font_size_formats` #TINY-8328
+- Renamed the `fontsizeselect` toolbar button and `fontsizes` menu item to `fontsize` #TINY-8328
+- Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
+- Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
+- Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -71,8 +79,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The aria labels for the color picker dialog were not translated #TINY-8381
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
+- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308 
 
 ### Removed
+- Removed the jQuery integration #TINY-4518
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
 - Removed the deprecated `XHR` API #TINY-8164

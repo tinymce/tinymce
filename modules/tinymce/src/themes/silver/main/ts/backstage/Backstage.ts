@@ -48,7 +48,7 @@ export interface UiFactoryBackstageShared {
 
 export interface UiFactoryBackstage {
   urlinput?: UiFactoryBackstageForUrlInput;
-  styleselect?: UiFactoryBackstageForStyleButton;
+  styles?: UiFactoryBackstageForStyleButton;
   shared?: UiFactoryBackstageShared;
   colorinput?: UiFactoryBackstageForColorInput;
   dialog?: UiFactoryBackstageForDialog;
@@ -74,7 +74,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
       getSink: () => Result.value(sink)
     },
     urlinput: UrlInputBackstage(editor),
-    styleselect: initStyleFormatBackstage(editor),
+    styles: initStyleFormatBackstage(editor),
     colorinput: ColorInputBackstage(editor),
     dialog: DialogBackstage(editor),
     isContextMenuOpen: () => contextMenuState.get(),

@@ -59,9 +59,9 @@ const getSpec = (editor: Editor): SelectSpec => {
   };
 };
 
-const createAlignSelect = (editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
+const createAlignButton = (editor, backstage: UiFactoryBackstage) => createSelectButton(editor, backstage, getSpec(editor));
 
-const alignSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+const createAlignMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   const menuItems = createMenuItems(editor, backstage, getSpec(editor));
   editor.ui.registry.addNestedMenuItem('align', {
     text: backstage.shared.providers.translate('Align'),
@@ -69,4 +69,4 @@ const alignSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
   });
 };
 
-export { createAlignSelect, alignSelectMenu };
+export { createAlignButton, createAlignMenu };
