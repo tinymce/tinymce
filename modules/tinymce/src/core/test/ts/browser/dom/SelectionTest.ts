@@ -18,14 +18,12 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     custom_elements: 'custom1,~custom2',
     extended_valid_elements: 'custom1,custom2',
     base_url: '/project/tinymce/js/tinymce'
-  }, []);
+  }, [], true);
 
   it('getContent', () => {
     const editor = hook.editor();
     let rng = editor.dom.createRng();
     let eventObj;
-
-    editor.focus();
 
     // Get selected contents
     editor.setContent('<p>text</p>');
@@ -1173,6 +1171,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
 
   it('setRng invalid range removed parent context', () => {
     const editor = hook.editor();
+
     editor.setContent('<p><strong><em>x</em></strong></p>');
     const textNode = editor.dom.select('em')[0].firstChild;
 
@@ -1184,9 +1183,9 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     editor.selection.setRng(rng);
 
     const curRng = editor.selection.getRng();
-    LegacyUnit.equal(curRng.startContainer.nodeName, 'BODY');
+    LegacyUnit.equal(curRng.startContainer.nodeName, 'P');
     LegacyUnit.equal(curRng.startOffset, 0);
-    LegacyUnit.equal(curRng.endContainer.nodeName, 'BODY');
+    LegacyUnit.equal(curRng.endContainer.nodeName, 'P');
     LegacyUnit.equal(curRng.endOffset, 0);
   });
   /*

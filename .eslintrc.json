@@ -14,6 +14,7 @@
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-shadow": "off",
     "@typescript-eslint/no-this-alias": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",
     "no-empty": "off",

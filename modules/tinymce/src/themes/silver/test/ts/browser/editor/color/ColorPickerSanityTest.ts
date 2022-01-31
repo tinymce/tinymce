@@ -95,8 +95,14 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         assertColorBlack();
       });
 
-      it('TBA: Open dialog, pick a different color, click Cancel and assert color does not change', async () => {
+      it('TBA: Open dialog, pick black, reopen the dialog, pick a different color, click Cancel and assert color does not change', async () => {
         const editor = hook.editor();
+        // Change color to black
+        await pOpenDialog(editor);
+        await pSetHexBlack(editor);
+        TinyUiActions.submitDialog(editor);
+        await pWaitForDialogClose(editor);
+        // Change color in the dialog but cancel
         await pOpenDialog(editor);
         await pSetHexWhite(editor);
         await pCancelDialog(editor);

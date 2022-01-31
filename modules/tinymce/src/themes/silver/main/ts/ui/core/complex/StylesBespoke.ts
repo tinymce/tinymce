@@ -61,18 +61,18 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
   } as SelectSpec;
 };
 
-const createStyleSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
-  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styleselect };
+const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage) => {
+  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   return createSelectButton(editor, backstage, getSpec(editor, dataset));
 };
 
-const styleSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
-  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styleselect };
+const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
   const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
-  editor.ui.registry.addNestedMenuItem('formats', {
+  editor.ui.registry.addNestedMenuItem('styles', {
     text: 'Formats',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };
 
-export { createStyleSelect, styleSelectMenu };
+export { createStylesButton, createStylesMenu };

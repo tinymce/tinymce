@@ -36,13 +36,11 @@ export interface UploadResult {
   removed: boolean;
 }
 
-export type UploadCallback = (results: UploadResult[]) => void;
-
 interface EditorUpload {
   blobCache: BlobCache;
   addFilter: (filter: (img: HTMLImageElement) => boolean) => void;
-  uploadImages: (callback?: UploadCallback) => Promise<UploadResult[]>;
-  uploadImagesAuto: (callback?: UploadCallback) => void | Promise<UploadResult[]>;
+  uploadImages: () => Promise<UploadResult[]>;
+  uploadImagesAuto: () => Promise<UploadResult[]>;
   scanForImages: () => Promise<BlobInfoImagePair[]>;
   destroy: () => void;
 }
@@ -140,7 +138,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
     });
   };
 
-  const uploadImages = (callback?: UploadCallback): Promise<UploadResult[]> => {
+  const uploadImages = (): Promise<UploadResult[]> => {
     if (!uploader) {
       uploader = createUploader(editor, uploadStatus);
     }
@@ -164,7 +162,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
               replaceImageUriInView(image, uploadInfo.url);
             }
           } else if (uploadInfo.error) {
-            if (uploadInfo.error.options.remove) {
+            if (uploadInfo.error.remove) {
               replaceUrlInUndoStack(image.getAttribute('src'), Env.transparentSrc);
               imagesToRemove.push(image);
               removed = true;
@@ -195,20 +193,13 @@ const EditorUpload = (editor: Editor): EditorUpload => {
           });
         }
 
-        if (callback) {
-          callback(filteredResult);
-        }
-
         return filteredResult;
       }));
     }));
   };
 
-  const uploadImagesAuto = (callback?: UploadCallback) => {
-    if (Options.isAutomaticUploadsEnabled(editor)) {
-      return uploadImages(callback);
-    }
-  };
+  const uploadImagesAuto = () =>
+    Options.isAutomaticUploadsEnabled(editor) ? uploadImages() : Promise.resolve([]);
 
   const isValidDataUriImage = (imgElm: HTMLImageElement) =>
     Arr.forall(urlFilters, (filter) => filter(imgElm));
