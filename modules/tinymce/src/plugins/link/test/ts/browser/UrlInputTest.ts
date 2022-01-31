@@ -19,11 +19,7 @@ describe('browser.tinymce.plugins.link.UrlInputTest', () => {
   const platform = PlatformDetection.detect();
 
   const pOpenLinkDialogWithKeyboard = async (editor: Editor) => {
-    if (platform.os.isMacOS()) {
-      TinyContentActions.keystroke(editor, 'K'.charCodeAt(0), { meta: true });
-    } else {
-      TinyContentActions.keystroke(editor, 'K'.charCodeAt(0), { ctrl: true });
-    }
+    TinyContentActions.keystroke(editor, 'K'.charCodeAt(0), platform.os.isMacOS() ? { meta: true } : { ctrl: true });
     await TinyUiActions.pWaitForDialog(editor);
   };
 
