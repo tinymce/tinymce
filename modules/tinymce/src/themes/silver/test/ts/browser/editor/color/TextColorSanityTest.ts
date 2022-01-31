@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    toolbar: 'forecolor backcolor fontsizeselect',
+    toolbar: 'forecolor backcolor fontsize',
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 

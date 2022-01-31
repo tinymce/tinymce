@@ -39,10 +39,11 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
           // Hook the function called when stylesheets are loaded
           // so we can remove the editor right after starting to load them.
           const realLoadAll = editor.ui.styleSheetLoader.loadAll;
-          editor.ui.styleSheetLoader.loadAll = (...args) => {
-            realLoadAll.apply(editor.ui.styleSheetLoader, args);
+          editor.ui.styleSheetLoader.loadAll = (urls: string[]) => {
+            const result = realLoadAll.call(editor.ui.styleSheetLoader, urls);
             editor.ui.styleSheetLoader.loadAll = realLoadAll;
             editor.remove();
+            return result;
           };
         });
       }
@@ -95,6 +96,6 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
         });
       }
     });
-    editor.remove();
+    McEditor.remove(editor);
   });
 });

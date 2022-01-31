@@ -56,11 +56,9 @@ describe('browser.tinymce.core.AddOnManagerTest', () => {
     return languagePackUrl;
   };
 
-  before(() => patch(ScriptLoader.ScriptLoader, 'add', (origFunc, url, scriptSuccess) => {
+  before(() => patch(ScriptLoader.ScriptLoader, 'add', (origFunc, url) => {
     languagePackUrl = url;
-    if (scriptSuccess) {
-      scriptSuccess();
-    }
+    return Promise.resolve();
   }));
 
   after(() => unpatch(ScriptLoader.ScriptLoader));

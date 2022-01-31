@@ -6,7 +6,7 @@ import { MediaData } from 'tinymce/plugins/media/core/Types';
 
 describe('atomic.tinymce.plugins.media.core.HtmlToDataTest', () => {
   const testHtmlToData = (html: string, expected: MediaData) => {
-    const actual = HtmlToData.htmlToData([], html);
+    const actual = HtmlToData.htmlToData(html);
     assert.deepEqual(actual, expected);
   };
 
@@ -43,7 +43,7 @@ describe('atomic.tinymce.plugins.media.core.HtmlToDataTest', () => {
         src: 'www.youtube.com/embed/b3XFjWInBog',
         width: '560',
         height: '314',
-        allowfullscreen: '1',
+        allowfullscreen: 'allowfullscreen',
         type: 'iframe',
         source: 'www.youtube.com/embed/b3XFjWInBog',
         altsource: '',
@@ -57,7 +57,7 @@ describe('atomic.tinymce.plugins.media.core.HtmlToDataTest', () => {
         src: '//www.youtube.com/embed/b3XFjWInBog',
         width: '560',
         height: '314',
-        allowfullscreen: '1',
+        allowfullscreen: 'allowfullscreen',
         type: 'iframe',
         source: '//www.youtube.com/embed/b3XFjWInBog',
         altsource: '',
@@ -71,7 +71,7 @@ describe('atomic.tinymce.plugins.media.core.HtmlToDataTest', () => {
         src: 'http://www.youtube.com/embed/b3XFjWInBog',
         width: '560',
         height: '314',
-        allowfullscreen: '1',
+        allowfullscreen: 'allowfullscreen',
         type: 'iframe',
         source: 'http://www.youtube.com/embed/b3XFjWInBog',
         altsource: '',
@@ -85,7 +85,7 @@ describe('atomic.tinymce.plugins.media.core.HtmlToDataTest', () => {
         src: 'https://www.youtube.com/embed/b3XFjWInBog',
         width: '560',
         height: '314',
-        allowfullscreen: '1',
+        allowfullscreen: 'allowfullscreen',
         type: 'iframe',
         source: 'https://www.youtube.com/embed/b3XFjWInBog',
         altsource: '',

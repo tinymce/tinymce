@@ -28,7 +28,7 @@ export interface Attribute {
   required?: boolean;
   defaultValue?: string;
   forcedValue?: string;
-  validValues?: any;
+  validValues?: Record<string, {}>;
 }
 
 export interface DefaultAttribute {
@@ -41,7 +41,7 @@ export interface AttributePattern {
   forcedValue?: string;
   pattern: RegExp;
   required?: boolean;
-  validValues?: Record<string, string>;
+  validValues?: Record<string, {}>;
 }
 
 export interface ElementRule {
@@ -351,6 +351,13 @@ const compileSchema = (type: SchemaType = 'html5'): SchemaLookupTable => {
   }
 
   // Special: iframe, ruby, video, audio, label
+  if (type !== 'html4') {
+    // Video/audio elements cannot have nested children
+    Arr.each([ schema.video, schema.audio ], (item) => {
+      delete item.children.audio;
+      delete item.children.video;
+    });
+  }
 
   // Delete children of the same name from it's parent
   // For example: form can't have a child of the name form
@@ -403,7 +410,7 @@ const compileElementMap = (value: string | Record<string, string>, mode?: string
 };
 
 const Schema = (settings?: SchemaSettings): Schema => {
-  let elements: Record<string, SchemaElement> = {};
+  const elements: Record<string, SchemaElement> = {};
   const children: Record<string, {}> = {};
   let patternElements = [];
   const customElementsMap = {}, specialElements = {} as SchemaRegExpMap;
@@ -451,7 +458,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const voidElementsMap = createLookupTable('void_elements', 'area base basefont br col frame hr img input isindex link ' +
     'meta param embed source wbr track');
   const boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' +
-    'noshade nowrap readonly selected autoplay loop controls');
+    'noshade nowrap readonly selected autoplay loop controls allowfullscreen');
 
   const nonEmptyOrMoveCaretBeforeOnEnter = 'td th iframe video audio object script code';
   const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre', voidElementsMap);
@@ -465,7 +472,8 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
     'dfn code mark q sup sub samp');
 
-  each(('script noscript iframe noframes noembed title style textarea xmp').split(' '), (name) => {
+  // See https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+  each(('script noscript iframe noframes noembed title style textarea xmp plaintext').split(' '), (name) => {
     specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
   });
 
@@ -624,8 +632,12 @@ const Schema = (settings?: SchemaSettings): Schema => {
   };
 
   const setValidElements = (validElements: string) => {
-    elements = {};
+    // Clear any existing rules. Note that since `elements` is exposed we can't
+    // overwrite it, so instead we delete all the properties
     patternElements = [];
+    Arr.each(Obj.keys(elements), (name) => {
+      delete elements[name];
+    });
 
     addValidElements(validElements);
 
@@ -935,14 +947,11 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * Returns a map with special elements. These are elements that needs to be parsed
    * in a special way such as script, style, textarea etc. The map object values
    * are regexps used to find the end of the element.
-   * <br>
-   * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0</em>.
    *
    * @method getSpecialElements
-   * @deprecated
    * @return {Object} Name/value lookup map for special elements.
    */
-  const getSpecialElements = Fun.constant(specialElements);
+  const getSpecialElements = Fun.constant(Object.seal(specialElements));
 
   /**
    * Returns true/false if the specified element and it's child is valid or not
@@ -984,7 +993,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
         if (attrPatterns) {
           i = attrPatterns.length;
           while (i--) {
-            if (attrPatterns[i].pattern.test(name)) {
+            if (attrPatterns[i].pattern.test(attr)) {
               return true;
             }
           }

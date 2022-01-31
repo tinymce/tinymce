@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
-import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import EventUtils from '../api/dom/EventUtils';
 import ScriptLoader from '../api/dom/ScriptLoader';
@@ -33,38 +32,35 @@ const hasSkipLoadPrefix = (name) => {
   return name.charAt(0) === '-';
 };
 
-const loadLanguage = (scriptLoader, editor: Editor) => {
+const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   const languageCode = Options.getLanguageCode(editor);
   const languageUrl = Options.getLanguageUrl(editor);
 
   if (I18n.hasCode(languageCode) === false && languageCode !== 'en') {
     const url = languageUrl !== '' ? languageUrl : editor.editorManager.baseURL + '/langs/' + languageCode + '.js';
 
-    scriptLoader.add(url, Fun.noop, undefined, () => {
+    scriptLoader.add(url).catch(() => {
       ErrorReporter.languageLoadError(editor, url, languageCode);
     });
   }
 };
 
-const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix, callback) => {
+const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string): Promise<void> => {
   const theme = Options.getTheme(editor);
 
   if (Type.isString(theme)) {
     if (!hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
       const themeUrl = Options.getThemeUrl(editor);
-
-      if (themeUrl) {
-        ThemeManager.load(theme, editor.documentBaseURI.toAbsolute(themeUrl));
-      } else {
-        ThemeManager.load(theme, 'themes/' + theme + '/theme' + suffix + '.js');
-      }
+      const url = themeUrl ? editor.documentBaseURI.toAbsolute(themeUrl) : 'themes/' + theme + '/theme' + suffix + '.js';
+      ThemeManager.load(theme, url).catch(() => {
+        ErrorReporter.themeLoadError(editor, url, theme);
+      });
     }
 
-    scriptLoader.loadQueue(() => {
-      ThemeManager.waitFor(theme, callback);
-    });
+    const waitForTheme = () => ThemeManager.waitFor(theme);
+    return scriptLoader.loadQueue().then(waitForTheme, waitForTheme);
   } else {
-    callback();
+    return Promise.resolve();
   }
 };
 
@@ -92,34 +88,30 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
   const customIconsUrl = getIconsUrlMetaFromUrl(editor).orThunk(() => getIconsUrlMetaFromName(editor, Options.getIconPackName(editor), ''));
 
   Arr.each(Optionals.cat([ defaultIconsUrl, customIconsUrl ]), (urlMeta) => {
-    scriptLoader.add(urlMeta.url, Fun.noop, undefined, () => {
+    scriptLoader.add(urlMeta.url).catch(() => {
       ErrorReporter.iconsLoadError(editor, urlMeta.url, urlMeta.name.getOrUndefined());
     });
   });
 };
 
 const loadPlugins = (editor: Editor, suffix: string) => {
-  Tools.each(Options.getExternalPlugins(editor), (url: string, name: string): void => {
-    PluginManager.load(name, url, Fun.noop, undefined, () => {
+  const loadPlugin = (name: string, url: string) => {
+    PluginManager.load(name, url).catch(() => {
       ErrorReporter.pluginLoadError(editor, url, name);
     });
+  };
+
+  Obj.each(Options.getExternalPlugins(editor), (url, name) => {
+    loadPlugin(name, url);
     editor.options.set('plugins', Options.getPlugins(editor) + ' ' + name);
   });
 
-  Tools.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {
+  Arr.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {
     plugin = Tools.trim(plugin);
 
     if (plugin && !PluginManager.urls[plugin]) {
       if (!hasSkipLoadPrefix(plugin)) {
-        const url: UrlObject = {
-          prefix: 'plugins/',
-          resource: plugin,
-          suffix: '/plugin' + suffix + '.js'
-        };
-
-        PluginManager.load(plugin, url, Fun.noop, undefined, () => {
-          ErrorReporter.pluginLoadError(editor, url.prefix + url.resource + url.suffix, plugin);
-        });
+        loadPlugin(plugin, 'plugins/' + plugin + '/plugin' + suffix + '.js');
       }
     }
   });
@@ -128,20 +120,17 @@ const loadPlugins = (editor: Editor, suffix: string) => {
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
-  loadTheme(scriptLoader, editor, suffix, () => {
+  const initIfNotRemoved = () => {
+    if (!editor.removed) {
+      Init.init(editor);
+    }
+  };
+
+  loadTheme(scriptLoader, editor, suffix).then(() => {
     loadLanguage(scriptLoader, editor);
     loadIcons(scriptLoader, editor, suffix);
     loadPlugins(editor, suffix);
-
-    scriptLoader.loadQueue(() => {
-      if (!editor.removed) {
-        Init.init(editor);
-      }
-    }, editor, () => {
-      if (!editor.removed) {
-        Init.init(editor);
-      }
-    });
+    scriptLoader.loadQueue().then(initIfNotRemoved, initIfNotRemoved);
   });
 };
 
