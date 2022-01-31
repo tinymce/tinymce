@@ -6,10 +6,11 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
+  const platform = PlatformDetection.detect();
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
-  const platform = PlatformDetection.detect();
 
   // idk why but it works, seperate test command for macOS, Firefox, and the rest
   const selectAll = (editor: Editor) => {
