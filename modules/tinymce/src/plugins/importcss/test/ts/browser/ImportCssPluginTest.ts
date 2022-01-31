@@ -54,7 +54,7 @@ describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
   const pTestEditorWithSettings = async (assertion: Assertion, pluginSettings: RawEditorOptions) => {
     const editor = await McEditor.pFromSettings<Editor>({
       plugins: 'importcss',
-      toolbar: 'styleselect',
+      toolbar: 'styles',
       content_css: pluginSettings.content_css,
       importcss_append: pluginSettings.importcss_append,
       importcss_selector_filter: pluginSettings.importcss_selector_filter,

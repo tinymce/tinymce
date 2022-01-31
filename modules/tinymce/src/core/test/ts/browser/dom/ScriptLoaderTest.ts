@@ -11,33 +11,26 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
 
   const pLoadScript = (url: string): Promise<void> => {
     loadedScripts.push(url);
-    return new Promise((resolve, reject) => {
-      ScriptLoader.ScriptLoader.loadScript(url, () => {
-        loadedCount++;
-        resolve();
-      }, () => reject('Failed to load script'));
+    return ScriptLoader.ScriptLoader.loadScript(url).then(() => {
+      loadedCount++;
     });
   };
 
   const pLoadScripts = (urls: string[]): Promise<void> => {
     loadedScripts.push(...urls);
     const scriptCount = urls.length;
-    return new Promise((resolve, reject) => {
-      ScriptLoader.ScriptLoader.loadScripts(urls, () => {
-        loadedCount += scriptCount;
-        resolve();
-      }, () => reject('Failed to load scripts'));
+    return ScriptLoader.ScriptLoader.loadScripts(urls).then(() => {
+      loadedCount += scriptCount;
     });
   };
 
   const addToQueue = (url: string): void => {
     loadedScripts.push(url);
-    ScriptLoader.ScriptLoader.add(url, () => loadedCount++);
+    ScriptLoader.ScriptLoader.add(url).then(() => loadedCount++);
   };
 
-  const pLoadQueue = (): Promise<void> => new Promise((resolve, reject) => {
-    ScriptLoader.ScriptLoader.loadQueue(resolve, undefined, () => reject('Failed to load queued scripts'));
-  });
+  const pLoadQueue = (): Promise<void> =>
+    ScriptLoader.ScriptLoader.loadQueue();
 
   const assertQueueLoadedCount = (count: number) => {
     assert.equal(loadedCount, count, 'Loaded script count');
@@ -73,5 +66,26 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     addToQueue(testScript);
     await pLoadQueue();
     assertQueueLoadedCount(2);
+  });
+
+  it('TINY-8325: Resolves load queue calls in order', async () => {
+    const loadOrder: string[] = [];
+
+    // Start loading but don't wait for it to finish
+    addToQueue(testScript);
+    const loadQueuePromises = [
+      pLoadQueue().then(() => loadOrder.push('first')),
+    ];
+
+    // Trigger another load for the same resources
+    addToQueue(testScript);
+    loadQueuePromises.push(
+      pLoadQueue().then(() => loadOrder.push('second'))
+    );
+
+    // Verify that the second queue load waited for the first
+    await Promise.all(loadQueuePromises);
+    assertQueueLoadedCount(2);
+    assert.deepEqual(loadOrder, [ 'first', 'second' ]);
   });
 });

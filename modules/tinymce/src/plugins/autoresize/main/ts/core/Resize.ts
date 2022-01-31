@@ -11,7 +11,6 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { SetContentEvent } from 'tinymce/core/api/EventTypes';
-import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../api/Events';
@@ -26,22 +25,6 @@ import * as Options from '../api/Options';
 
 const isFullscreen = (editor: Editor): boolean =>
   editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
-
-/**
- * Calls the resize x times in 100ms intervals. We can't wait for load events since
- * the CSS files might load async.
- */
-const wait = (editor: Editor, oldSize: Cell<number>, times: number, interval: number, callback?: () => void): void => {
-  Delay.setEditorTimeout(editor, () => {
-    resize(editor, oldSize);
-
-    if (times--) {
-      wait(editor, oldSize, times, interval, callback);
-    } else if (callback) {
-      callback();
-    }
-  }, interval);
-};
 
 const toggleScrolling = (editor: Editor, state: boolean): void => {
   const body = editor.getBody();
@@ -169,16 +152,6 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
   editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {
     resize(editor, oldSize, e);
   });
-
-  if (Options.shouldAutoResizeOnInit(editor)) {
-    editor.on('init', () => {
-      // Hit it 20 times in 100 ms intervals
-      wait(editor, oldSize, 20, 100, () => {
-        // Hit it 5 times in 1 sec intervals
-        wait(editor, oldSize, 5, 1000);
-      });
-    });
-  }
 };
 
 export {

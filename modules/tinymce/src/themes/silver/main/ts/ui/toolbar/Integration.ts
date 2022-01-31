@@ -16,11 +16,11 @@ import { getToolbarMode, ToolbarGroupOption, ToolbarMode } from '../../api/Optio
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { RenderToolbarConfig } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';
-import { createAlignSelect } from '../core/complex/AlignSelect';
-import { createFontSelect } from '../core/complex/FontSelect';
-import { createFontsizeSelect } from '../core/complex/FontsizeSelect';
-import { createFormatSelect } from '../core/complex/FormatSelect';
-import { createStyleSelect } from '../core/complex/StyleSelect';
+import { createAlignButton } from '../core/complex/AlignBespoke';
+import { createBlocksButton } from '../core/complex/BlocksBespoke';
+import { createFontFamilyButton } from '../core/complex/FontFamilyBespoke';
+import { createFontSizeButton } from '../core/complex/FontSizeBespoke';
+import { createStylesButton } from '../core/complex/StylesBespoke';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from './button/ToolbarButtons';
 import { ToolbarGroup } from './CommonToolbar';
@@ -41,7 +41,7 @@ const defaultToolbar = [
     name: 'history', items: [ 'undo', 'redo' ]
   },
   {
-    name: 'styles', items: [ 'styleselect' ]
+    name: 'styles', items: [ 'styles' ]
   },
   {
     name: 'formatting', items: [ 'bold', 'italic' ]
@@ -121,11 +121,11 @@ const types = {
     }
   ),
 
-  styleSelectButton: (editor: Editor, extras: Extras) => createStyleSelect(editor, extras.backstage),
-  fontsizeSelectButton: (editor: Editor, extras: Extras) => createFontsizeSelect(editor, extras.backstage),
-  fontSelectButton: (editor: Editor, extras: Extras) => createFontSelect(editor, extras.backstage),
-  formatButton: (editor: Editor, extras: Extras) => createFormatSelect(editor, extras.backstage),
-  alignMenuButton: (editor: Editor, extras: Extras) => createAlignSelect(editor, extras.backstage)
+  styleSelectButton: (editor: Editor, extras: Extras) => createStylesButton(editor, extras.backstage),
+  fontsizeSelectButton: (editor: Editor, extras: Extras) => createFontSizeButton(editor, extras.backstage),
+  fontSelectButton: (editor: Editor, extras: Extras) => createFontFamilyButton(editor, extras.backstage),
+  formatButton: (editor: Editor, extras: Extras) => createBlocksButton(editor, extras.backstage),
+  alignMenuButton: (editor: Editor, extras: Extras) => createAlignButton(editor, extras.backstage)
 };
 
 const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Optional<AlloySpec> => Obj.get(types, spec.type).fold(
@@ -140,10 +140,10 @@ const extractFrom = (spec: ToolbarButton, extras: Extras, editor: Editor): Optio
 );
 
 const bespokeButtons: Record<string, (editor: Editor, extras: Extras) => SketchSpec> = {
-  styleselect: types.styleSelectButton,
-  fontsizeselect: types.fontsizeSelectButton,
-  fontselect: types.fontSelectButton,
-  formatselect: types.formatButton,
+  styles: types.styleSelectButton,
+  fontsize: types.fontsizeSelectButton,
+  fontfamily: types.fontSelectButton,
+  blocks: types.formatButton,
   align: types.alignMenuButton
 };
 

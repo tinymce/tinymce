@@ -26,24 +26,17 @@ const register = (editor: Editor): void => {
     processor: 'number',
     default: 50
   });
-
-  registerOption('autoresize_on_init', {
-    processor: 'boolean',
-    default: true
-  });
 };
 
 const getMinHeight = option('min_height');
 const getMaxHeight = option('max_height');
 const getAutoResizeOverflowPadding = option<number>('autoresize_overflow_padding');
 const getAutoResizeBottomMargin = option<number>('autoresize_bottom_margin');
-const shouldAutoResizeOnInit = option<boolean>('autoresize_on_init');
 
 export {
   register,
   getMinHeight,
   getMaxHeight,
   getAutoResizeOverflowPadding,
-  getAutoResizeBottomMargin,
-  shouldAutoResizeOnInit
+  getAutoResizeBottomMargin
 };

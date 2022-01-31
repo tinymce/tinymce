@@ -16,7 +16,7 @@ interface StyleSelectMenuItem {
 
 describe('browser.tinymce.themes.silver.editor.bespoke.StyleSelectFormatNamesTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    toolbar: 'styleselect',
+    toolbar: 'styles',
     base_url: '/project/tinymce/js/tinymce',
     style_formats: [
       {
@@ -90,7 +90,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.StyleSelectFormatNamesTes
     assert.isTrue(editor.formatter.has(formatName), `Expected format: ${formatName} to exist`);
   };
 
-  it('Configured style_formats are included in the styleselect toolbar button', async () => {
+  it('Configured style_formats are included in the styles toolbar button', async () => {
     await MenuUtils.pOpenMenu('Format', 'Paragraph:last');
     assertStyleSelectMenuItems('Checking style select items', [
       { title: 'Named inline format', element: 'span' },

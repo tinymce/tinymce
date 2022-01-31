@@ -81,12 +81,38 @@ describe('browser.tinymce.core.geom.ClientRectTest', () => {
     assert.isTrue(ClientRect.containsXY(rect(10, 70, 10, 40), 15, 75));
   });
 
-  it('getOverflow', () => {
-    assert.deepEqual(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(10, 10, 10, 10)), { x: 0, y: 0 });
-    assert.deepEqual(ClientRect.getOverflow(rect(10, 10, 20, 20), rect(15, 15, 10, 10)), { x: 0, y: 0 });
-    assert.deepEqual(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(5, 10, 10, 10)), { x: -5, y: 0 });
-    assert.deepEqual(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(10, 5, 10, 10)), { x: 0, y: -5 });
-    assert.deepEqual(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(15, 10, 10, 10)), { x: 5, y: 0 });
-    assert.deepEqual(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(10, 15, 10, 10)), { x: 0, y: 5 });
+  it('overlapX', () => {
+    assert.equal(ClientRect.overlapX(rect(10, 10, 20, 30), rect(10, 10, 20, 30)), 20, 'overlaps 100%');
+    assert.equal(ClientRect.overlapX(rect(10, 10, 20, 30), rect(10, 10, 30, 30)), 20, 'r1 overlaps r2 by 20 pixels');
+    assert.equal(ClientRect.overlapX(rect(10, 10, 30, 30), rect(10, 10, 20, 30)), 20, 'r2 overlaps r1 by 20 pixels');
+    assert.equal(ClientRect.overlapX(rect(10, 10, 20, 30), rect(15, 10, 20, 30)), 15, 'r1 overlaps r2 by 15 pixels');
+    assert.equal(ClientRect.overlapX(rect(15, 10, 20, 30), rect(10, 10, 20, 30)), 15, 'r2 overlaps r1 by 15 pixels');
+    assert.equal(ClientRect.overlapX(rect(10, 10, 20, 30), rect(30, 10, 20, 30)), 0, 'no overlap');
+  });
+
+  it('overlapY', () => {
+    assert.equal(ClientRect.overlapY(rect(10, 10, 20, 30), rect(10, 10, 20, 30)), 30, 'overlaps 100%');
+    assert.equal(ClientRect.overlapY(rect(10, 10, 30, 20), rect(10, 10, 30, 30)), 20, 'r1 overlaps r2 by 20 pixels');
+    assert.equal(ClientRect.overlapY(rect(10, 10, 30, 30), rect(10, 10, 30, 20)), 20, 'r2 overlaps r1 by 20 pixels');
+    assert.equal(ClientRect.overlapY(rect(10, 10, 20, 30), rect(10, 15, 20, 30)), 25, 'r1 overlaps r2 by 25 pixels');
+    assert.equal(ClientRect.overlapY(rect(10, 15, 20, 30), rect(10, 10, 20, 30)), 25, 'r2 overlaps r1 by 25 pixels');
+    assert.equal(ClientRect.overlapY(rect(10, 10, 20, 30), rect(10, 40, 20, 30)), 0, 'no overlap');
+  });
+
+  it('boundingClientRectFromRects', () => {
+    assert.isTrue(ClientRect.boundingClientRectFromRects([]).isNone(), 'no rects no bounding rect');
+    assert.deepEqual(ClientRect.boundingClientRectFromRects([ rect(11, 12, 13, 14) ]).getOrDie(), rect(11, 12, 13, 14), 'should be the same rect');
+    assert.deepEqual(ClientRect.boundingClientRectFromRects([ rect(10, 10, 10, 10), rect(30, 30, 10, 10) ]).getOrDie(), rect(10, 10, 30, 30), 'expand bottom right');
+    assert.deepEqual(ClientRect.boundingClientRectFromRects([ rect(10, 10, 10, 10), rect(5, 5, 10, 10) ]).getOrDie(), rect(5, 5, 15, 15), 'expand top left');
+    assert.deepEqual(ClientRect.boundingClientRectFromRects([ rect(10, 10, 10, 10), rect(5, 5, 10, 10), rect(30, 30, 10, 10) ]).getOrDie(), rect(5, 5, 35, 35), 'expand all directions');
+  });
+
+  it('distanceToRectEdgeFromXY', () => {
+    assert.equal(ClientRect.distanceToRectEdgeFromXY(rect(10, 10, 20, 20), 15, 15), 0, 'should be 0 when point is inside rect');
+    assert.equal(Math.round(ClientRect.distanceToRectEdgeFromXY(rect(10, 10, 20, 20), 0, 0)), 14, 'should be the distance at a 45 degree angle');
+    assert.equal(Math.round(ClientRect.distanceToRectEdgeFromXY(rect(10, 10, 20, 20), 15, 5)), 5, 'above and closer to the top');
+    assert.equal(Math.round(ClientRect.distanceToRectEdgeFromXY(rect(10, 10, 20, 20), 5, 15)), 5, 'left and closer to the left');
+    assert.equal(Math.round(ClientRect.distanceToRectEdgeFromXY(rect(10, 10, 20, 20), 15, 35)), 5, 'below and closer to the below');
+    assert.equal(Math.round(ClientRect.distanceToRectEdgeFromXY(rect(10, 10, 20, 20), 35, 15)), 5, 'right and closer to the right');
   });
 });
