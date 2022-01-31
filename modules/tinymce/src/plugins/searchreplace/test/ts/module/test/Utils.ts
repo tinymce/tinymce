@@ -63,7 +63,7 @@ export {
   clickReplace,
   clickClose,
   pOpenDialog,
-  pOpenDialogWKeyboard,
+  pOpenDialogWithKeyboard,
   pAssertFieldValue,
   pSelectPreference,
   pSetFieldValue

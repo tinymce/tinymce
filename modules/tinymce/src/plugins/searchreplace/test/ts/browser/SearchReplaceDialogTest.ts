@@ -100,7 +100,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
   it('TINY-2884: Test no content selected with keyboard', async () => {
     const editor = hook.editor();
     editor.setContent('<p>fish fish fish</p>');
-    await Utils.pOpenDialogWKeyboard(editor);
+    await Utils.pOpenDialogWithKeyboard(editor);
     await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', '');
     TinyUiActions.closeDialog(editor);
   });
@@ -109,7 +109,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogTest', () => 
     const editor = hook.editor();
     editor.setContent('<p>fish fish fish</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 9);
-    await Utils.pOpenDialogWKeyboard(editor);
+    await Utils.pOpenDialogWithKeyboard(editor);
     await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
     findAndAssertFound(editor, 3);
     TinyUiActions.closeDialog(editor);
