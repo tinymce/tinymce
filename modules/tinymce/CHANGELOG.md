@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `element_format` option has been set to `html` by default #TINY-8263
 - The `schema` option has been set to `html5` by default #TINY-8261
-- The `:` control chracter has been changed to `~` for the schema `valid_elements` and `extended_valid_elements` options #TINY-6726
+- The `:` control character has been changed to `~` for the schema `valid_elements` and `extended_valid_elements` options #TINY-6726
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
@@ -77,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The aria labels for the color picker dialog were not translated #TINY-8381
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
-- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308 
+- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308
 
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
