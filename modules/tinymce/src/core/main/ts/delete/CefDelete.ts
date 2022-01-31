@@ -36,7 +36,7 @@ const moveToPosition = (editor: Editor) => (pos: CaretPosition): boolean => {
 const getAncestorCe = (editor: Editor, node: Node): Optional<Node> =>
   Optional.from(CefUtils.getContentEditableRoot(editor.getBody(), node));
 
-const backspaceDeleteCaret = (editor: Editor, forward: boolean): boolean => {
+const backspaceDeleteCaret = (editor: Editor, forward: boolean): Optional<() => void> => {
   const selectedNode = editor.selection.getNode(); // is the parent node if cursor before/after cef
 
   // Cases:
@@ -47,14 +47,15 @@ const backspaceDeleteCaret = (editor: Editor, forward: boolean): boolean => {
   // 5. CEF ancestor -> return true
 
   return getAncestorCe(editor, selectedNode).filter(NodeType.isContentEditableFalse).fold(
-    () => CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).exists((deleteAction) =>
-      deleteAction.fold(
-        deleteElement(editor, forward),
-        moveToElement(editor, forward),
-        moveToPosition(editor)
-      )
+    () => CefDeleteAction.read(editor.getBody(), forward, editor.selection.getRng()).map((deleteAction) =>
+      () =>
+        deleteAction.fold(
+          deleteElement(editor, forward),
+          moveToElement(editor, forward),
+          moveToPosition(editor)
+        )
     ),
-    Fun.always
+    () => Optional.some(Fun.noop)
   );
 };
 
@@ -62,7 +63,7 @@ const deleteOffscreenSelection = (rootElement: SugarElement<Node>): void => {
   Arr.each(SelectorFilter.descendants(rootElement, '.mce-offscreen-selection'), Remove.remove);
 };
 
-const backspaceDeleteRange = (editor: Editor, forward: boolean): boolean => {
+const backspaceDeleteRange = (editor: Editor, forward: boolean): Optional<() => void> => {
   const selectedNode = editor.selection.getNode(); // is the cef node if cef is selected
 
   // Cases:
@@ -74,16 +75,16 @@ const backspaceDeleteRange = (editor: Editor, forward: boolean): boolean => {
   if (NodeType.isContentEditableFalse(selectedNode) && !NodeType.isTableCell(selectedNode)) {
     const hasCefAncestor = getAncestorCe(editor, selectedNode.parentNode).filter(NodeType.isContentEditableFalse);
     return hasCefAncestor.fold(
-      () => {
-        deleteOffscreenSelection(SugarElement.fromDom(editor.getBody()));
-        DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(editor.selection.getNode()));
-        DeleteUtils.paddEmptyBody(editor);
-        return true;
-      },
-      Fun.always
+      () =>
+        Optional.some(() => {
+          deleteOffscreenSelection(SugarElement.fromDom(editor.getBody()));
+          DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(editor.selection.getNode()));
+          DeleteUtils.paddEmptyBody(editor);
+        }),
+      () => Optional.some(Fun.noop)
     );
   }
-  return false;
+  return Optional.none();
 };
 
 const paddEmptyElement = (editor: Editor): boolean => {
@@ -100,7 +101,7 @@ const paddEmptyElement = (editor: Editor): boolean => {
   return true;
 };
 
-const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
+const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> => {
   if (editor.selection.isCollapsed()) {
     return backspaceDeleteCaret(editor, forward);
   } else {

@@ -15,13 +15,17 @@ import CaretPosition from '../caret/CaretPosition';
 import { isListItem, isTextBlock } from '../dom/ElementType';
 import * as InlineUtils from '../keyboard/InlineUtils';
 
-const execDeleteCommand = (editor: Editor) => {
-  // We need to prevent the input event from being fired by execCommand when delete is used internally
+const execCommandIgnoreInputEvents = (editor: Editor, command: string) => {
+  // We need to prevent the input events from being fired by execCommand when delete is used internally
   const inputBlocker = (e: EditorEvent<InputEvent>) => e.stopImmediatePropagation();
-  editor.on('input', inputBlocker, true);
-  editor.execCommand('Delete');
-  editor.off('input', inputBlocker);
+  editor.on('beforeinput input', inputBlocker, true);
+  editor.getDoc().execCommand(command);
+  editor.off('beforeinput input', inputBlocker);
 };
+
+const execDeleteCommand = (editor: Editor) => execCommandIgnoreInputEvents(editor, 'Delete');
+
+const execForwardDeleteCommand = (editor: Editor) => execCommandIgnoreInputEvents(editor, 'ForwardDelete');
 
 const isBeforeRoot = (rootNode: SugarElement<Node>) => (elm: SugarElement<Node>): boolean =>
   Compare.eq(rootNode, SugarElement.fromDom(elm.dom.parentNode));
@@ -72,6 +76,7 @@ const willDeleteLastPositionInElement = (forward: boolean, fromPos: CaretPositio
 
 export {
   execDeleteCommand,
+  execForwardDeleteCommand,
   getParentBlock,
   paddEmptyBody,
   willDeleteLastPositionInElement

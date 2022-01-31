@@ -61,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The aria labels for the color picker dialog were not translated #TINY-8381
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
-- Deleting content would sometimes not fire `input` events as expected #TINY-8168
+- Deleting content would sometimes not fire `beforeinput` and `input` events as expected #TINY-8168  #TINY-8329
 
 ### Removed
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
