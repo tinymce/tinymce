@@ -10,13 +10,14 @@ import Plugin from 'tinymce/plugins/link/Plugin';
 import { TestLinkUi } from '../module/TestLinkUi';
 
 describe('browser.tinymce.plugins.link.UrlInputTest', () => {
+
+  const platform = PlatformDetection.detect();
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
-
-  const platform = PlatformDetection.detect();
 
   const pOpenLinkDialogWithKeyboard = async (editor: Editor) => {
     TinyContentActions.keystroke(editor, 'K'.charCodeAt(0), platform.os.isMacOS() ? { meta: true } : { ctrl: true });
