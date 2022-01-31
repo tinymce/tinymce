@@ -21,7 +21,9 @@ describe('browser.tinymce.core.focus.KeyboardShortcutMenuFocusTest', () => {
       it('TINY-2884: Pressing Alt+F9 focuses the element path and escape from the toolbar will focus the editor', async () => {
         const editor = hook.editor();
         const doc = SugarDocument.getDocument();
-        TinyContentActions.keystroke(editor, 120, { alt: true });
+        setTimeout(() => {
+          TinyContentActions.keystroke(editor, 120, { alt: true });
+        }, 40);
         await FocusTools.pTryOnSelector('Assert menubar is focused', doc, 'div[role=menubar] .tox-mbtn');
         TinyUiActions.keystroke(editor, Keys.escape());
       });
