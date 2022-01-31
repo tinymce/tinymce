@@ -83,7 +83,6 @@ const loadThemeAndModel = (scriptLoader: ScriptLoader, editor: Editor, suffix: s
     }
 
     const waitForTheme = () => ThemeManager.waitFor(theme);
-    // TODO: I am not sure if this is the correct way to do it to make sure the theme and model are loaded in parallel and both waited for
     const waitForBoth = () => Promise.allSettled([ waitForTheme(), waitForModel() ]).then(() => Promise.resolve());
     return scriptLoader.loadQueue().then(waitForBoth, waitForBoth);
   } else {
