@@ -66,22 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
 - Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
 - Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
-- The `editor.editorCommands.queryCommandSupported` function will no longer fallback to the browsers native command #TINY-7829
-- The `editor.editorCommands.queryCommandState` function will no longer fallback to the browsers native command #TINY-7829
-- The `editor.editorCommands.queryCommandValue` function will no longer fallback to the browsers native command #TINY-7829
-- The `editor.editorCommands.execCommand` function will no longer fallback to the browsers native command #TINY-7829
-- The `editor.queryCommandSupported` function will no longer fallback to the browsers native command #TINY-7829
-- The `editor.queryCommandState` function will no longer fallback to the browsers native command #TINY-7829
-- The `editor.queryCommandValue` function will no longer fallback to the browsers native command #TINY-7829
-- The `editor.execCommand` function will no longer fallback to the browsers native command #TINY-7829
-- The `editor.editorCommands.queryCommandSupported` function will now return `false` on removed editors #TINY-7829
-- The `editor.editorCommands.queryCommandState` function will now return `false` on removed editors #TINY-7829
-- The `editor.editorCommands.queryCommandValue` function will now return empty strings on removed editors #TINY-7829
-- The `editor.editorCommands.execCommand` function will now return false on removed editors #TINY-7829
-- The `editor.queryCommandSupported` function will now return `false` on removed editors #TINY-7829
-- The `editor.queryCommandState` function will now return `false` on removed editors #TINY-7829
-- The `editor.queryCommandValue` function will now return empty strings on removed editors #TINY-7829
-- The `editor.execCommand` function will now return false on removed editors #TINY-7829
+- The Editor commands APIs will no longer fallback to executing the browsers native command functionality #TINY-7829
+- The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -127,11 +113,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
 - Removed the `mceInsertRawHTML` command #TINY-8214
 - Removed the undocumented `editor.editorCommands.hasCustomCommand` API #TINY-7829
-- Removed the undocumented `mceResetDesignMode` command #TINY-7829
-- Removed the undocumented `mceRepaint` command #TINY-7829
-- Removed the undocumented `mceBeginUndoLevel` command #TINY-7829
-- Removed the `execCommand` handler function from the plugin interface #TINY-7829
-- Removed the `execCommand` handler function from the theme interface #TINY-7829
+- Removed the undocumented `mceResetDesignMode`, `mceRepaint` and `mceBeginUndoLevel` commands #TINY-7829
+- Removed the `execCommand` handler function from the plugin and theme interface #TINY-7829
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
