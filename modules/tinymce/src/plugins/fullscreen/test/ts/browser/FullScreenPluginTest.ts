@@ -75,10 +75,9 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
     assertShadowHostState(editor, shouldExist);
   };
 
-  const keystokes = (editor: Editor) => {
-    const modifiers = platform.os.isMacOS() ? { meta: true, shift: true } :  { ctrl: true, shift: true };
+  const keyStokes = (editor: Editor) => {
+    const modifiers = platform.os.isMacOS() ? { meta: true, shift: true } : { ctrl: true, shift: true };
     TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), modifiers);
-    }
   };
 
   Arr.each([
@@ -115,24 +114,24 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
       it('TINY-2884: Toggle fullscreen on with keyboard, open link dialog, insert link, close dialog and toggle fullscreen off', async () => {
         const editor = hook.editor();
         assertPageState(editor, false);
-        keystokes(editor);
+        keyStokes(editor);
         assertApiAndLastEvent(editor, true);
         assertPageState(editor, true);
         editor.execCommand('mceLink');
         await pWaitForDialog(editor, 'Insert/Edit Link');
         closeOnlyWindow(editor);
         assertPageState(editor, true);
-        keystokes(editor);
+        keyStokes(editor);
         assertApiAndLastEvent(editor, false);
         assertPageState(editor, false);
       });
 
       it('TINY-2884: Toggle fullscreen with keyboard and cleanup editor should clean up classes', () => {
         const editor = hook.editor();
-        keystokes(editor);
+        keyStokes(editor);
         assertApiAndLastEvent(editor, true);
         assertPageState(editor, true);
-        keystokes(editor);
+        keyStokes(editor);
       });
 
       it('TBA: Toggle fullscreen and cleanup editor should clean up classes', () => {
