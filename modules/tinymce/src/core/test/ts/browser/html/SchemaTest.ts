@@ -97,7 +97,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   });
 
   it('Forced attribute values', () => {
-    const schema = Schema({ valid_elements: 'img[border:0]' });
+    const schema = Schema({ valid_elements: 'img[border~0]' });
     assert.deepEqual(
       schema.getElementRule('img'),
       {
@@ -160,7 +160,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
 
   it(`addValidElements when there's a colon in an attribute name`, () => {
     const schema = Schema({ valid_elements: '@[xml\\:space]' });
-    schema.addValidElements('pre[xml\\:lang]');
+    schema.addValidElements('pre[xml:lang]');
     assert.deepEqual(
       schema.getElementRule('pre'),
       {
