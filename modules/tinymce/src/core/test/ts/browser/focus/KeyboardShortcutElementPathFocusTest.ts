@@ -6,7 +6,7 @@ import { McEditor, TinyContentActions, TinyUiActions } from '@ephox/wrap-mcagar'
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
-describe('browser.tinymce.themes.silver.editor.toolbar.KeyboardShortcutElementPathFocusTest ', () => {
+describe('browser.tinymce.core.focus.KeyboardShortcutElementPathFocusTest ', () => {
 
   const pTestFocus = async (options: RawEditorOptions) => {
     const editor = await McEditor.pFromSettings<Editor>({
