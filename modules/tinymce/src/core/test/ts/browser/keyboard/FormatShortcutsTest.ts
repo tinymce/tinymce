@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
- 
+
 import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks, TinySelections, TinyAssertions, TinyContentActions } from '@ephox/wrap-mcagar';
@@ -22,7 +22,7 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
     TinyContentActions.keystroke(editor, style.charCodeAt(0), platform.os.isMacOS() ? { meta: true } : { ctrl: true } );
   };
 
-  const Heading = (editor: Editor, number: string) => {
+  const heading = (editor: Editor, number: string) => {
     TinyContentActions.keystroke(editor, number.charCodeAt(0), platform.os.isMacOS() ? { ctrl: true, alt: true } : { shift: true, alt: true });
   };
 
@@ -52,63 +52,63 @@ describe('browser.tinymce.core.keyboard.FormatShortcutsTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    Heading(editor, '1');
+    heading(editor, '1');
     TinyAssertions.assertContent(editor, '<h1>abc</h1>');
   });
   it('TINY-2884: should set the selection to be H2', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    Heading(editor, '2');
+    heading(editor, '2');
     TinyAssertions.assertContent(editor, '<h2>abc</h2>');
   });
   it('TINY-2884: should set the selection to be H3', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    Heading(editor, '3');
+    heading(editor, '3');
     TinyAssertions.assertContent(editor, '<h3>abc</h3>');
   });
   it('TINY-2884: should set the selection to be H4', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    Heading(editor, '4');
+    heading(editor, '4');
     TinyAssertions.assertContent(editor, '<h4>abc</h4>');
   });
   it('TINY-2884: should set the selection to be H5', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    Heading(editor, '5');
+    heading(editor, '5');
     TinyAssertions.assertContent(editor, '<h5>abc</h5>');
   });
   it('TINY-2884: should set the selection to be H6', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    Heading(editor, '6');
+    heading(editor, '6');
     TinyAssertions.assertContent(editor, '<h6>abc</h6>');
   });
   it('TINY-2884: should set the selection to be Paragraph', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    Heading(editor, '7');
+    heading(editor, '7');
     TinyAssertions.assertContent(editor, '<p>abc</p>');
   });
   it('TINY-2884: should set the selection to be Div', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    Heading(editor, '8');
+    heading(editor, '8');
     TinyAssertions.assertContent(editor, '<div>abc</div>');
   });
   it('TINY-2884: should set the selection to be address', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
-    Heading(editor, '9');
+    heading(editor, '9');
     TinyAssertions.assertContent(editor, '<address>abc</address>');
   });
 });
