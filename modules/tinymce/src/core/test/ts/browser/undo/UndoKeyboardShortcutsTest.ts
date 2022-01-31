@@ -16,15 +16,15 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
   const selectAll = (editor: Editor) => {
     editor.execCommand('SelectAll');
   };
-  const Undo = (editor: Editor) => {
+  const undoCommand = (editor: Editor) => {
     TinyContentActions.keystroke(editor, 'Z'.charCodeAt(0), platform.os.isMacOS() ? { metaKey: true } : { ctrl: true });
 
   };
-  const Redo = (editor: Editor) => {
+  const redoCommand = (editor: Editor) => {
     TinyContentActions.keystroke(editor, 'Y'.charCodeAt(0), platform.os.isMacOS() ? { metaKey: true } : { ctrl: true });
 
   };
-  const Delete = (editor: Editor) => {
+  const deleteCommand = (editor: Editor) => {
     editor.execCommand('Delete');
   };
 
@@ -32,11 +32,11 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     selectAll(editor);
-    Delete(editor);
+    deleteCommand(editor);
     TinyAssertions.assertContent(editor, '');
-    Undo(editor);
+    undoCommand(editor);
     TinyAssertions.assertContent(editor, '<p>abc</p>');
-    Redo(editor);
+    redoCommand(editor);
     TinyAssertions.assertContent(editor, '');
   });
 });
