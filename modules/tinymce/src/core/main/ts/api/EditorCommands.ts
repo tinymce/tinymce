@@ -47,7 +47,7 @@ class EditorCommands {
 
   /**
    * Executes a registered command on the current instance. A list of available commands can be found in
-   * the <a href="https://www.tiny.cloud/docs/advanced/editor-command-identifiers/">command identifiers</a> documentation.
+   * the tinymce command identifiers documentation.
    *
    * @method execCommand
    * @param {String} cmd Command name to execute, for example mceLink or Bold.
