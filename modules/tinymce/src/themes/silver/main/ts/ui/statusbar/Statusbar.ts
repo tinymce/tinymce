@@ -20,14 +20,26 @@ import { renderWordCount } from './WordCount';
 const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
 
   const renderBranding = (): SimpleSpec => {
-    const label = I18n.translate([ 'Powered by {0}', 'Tiny' ]);
-    const linkHtml = `<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" tabindex="-1" aria-label="${label}">${Logo}</a>`;
     return {
       dom: {
         tag: 'span',
         classes: [ 'tox-statusbar__branding' ],
-        innerHtml: linkHtml
-      }
+      },
+      components: [
+        {
+          dom: {
+            tag: 'a',
+            attributes: {
+              'href': 'https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5',
+              'rel': 'noopener',
+              'target': '_blank',
+              'tabindex': '-1',
+              'aria-label': I18n.translate([ 'Powered by {0}', 'Tiny' ])
+            },
+            innerHtml: Logo.trim()
+          }
+        }
+      ]
     };
   };
 
