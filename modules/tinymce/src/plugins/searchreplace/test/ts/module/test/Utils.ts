@@ -39,7 +39,7 @@ const pOpenDialog = async (editor: Editor) => {
   return await TinyUiActions.pWaitForDialog(editor);
 };
 
-const pOpenDialogWKeyboard = async (editor: Editor) => {
+const pOpenDialogWithKeyboard = async (editor: Editor) => {
   TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), platform.os.isMacOS() ? { meta: true } : { ctrl: true });
   await TinyUiActions.pWaitForDialog(editor);
 };
