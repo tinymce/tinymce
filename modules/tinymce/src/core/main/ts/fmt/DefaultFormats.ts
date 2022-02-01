@@ -5,12 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DOMUtils from '../api/dom/DOMUtils';
+import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as NodeType from '../dom/NodeType';
-import { Formats, FormatVars } from './FormatTypes';
+import { Format, Formats, FormatVars } from './FormatTypes';
 
-const get = (dom: DOMUtils) => {
+const get = (editor: Editor) => {
+  const dom = editor.dom;
+  const schemaType = editor.schema.type;
+
   const formats: Formats = {
     valigntop: [
       { selector: 'td,th', styles: { verticalAlign: 'top' }}
@@ -167,11 +170,12 @@ const get = (dom: DOMUtils) => {
       { inline: 'u', remove: 'all', preserve_attributes: [ 'class', 'style' ] }
     ],
 
-    strikethrough: [
-      { inline: 'span', styles: { textDecoration: 'line-through' }, exact: true },
-      { inline: 'strike', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
-      { inline: 's', remove: 'all', preserve_attributes: [ 'class', 'style' ] }
-    ],
+    strikethrough: (() => {
+      const span: Format = { inline: 'span', styles: { textDecoration: 'line-through' }, exact: true };
+      const strike: Format = { inline: 'strike', remove: 'all', preserve_attributes: [ 'class', 'style' ] };
+      const s: Format = { inline: 's', remove: 'all', preserve_attributes: [ 'class', 'style' ] };
+      return schemaType !== 'html4' ? [ s, span, strike ] : [ span, s, strike ];
+    })(),
 
     forecolor: { inline: 'span', styles: { color: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
     hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true },

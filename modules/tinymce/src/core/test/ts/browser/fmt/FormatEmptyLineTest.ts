@@ -92,7 +92,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
 
       testFormat(testId, 'Strikethrough', {
         ...config,
-        selector: 'span[style*="text-decoration: line-through;"]',
+        selector: 's',
         apply: toggleInlineStyle('Strikethrough'),
         remove: toggleInlineStyle('Strikethrough')
       });

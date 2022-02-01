@@ -22,7 +22,11 @@ describe('browser.tinymce.core.fmt.TextDecorationColorTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor | bold italic underline strikethrough',
     formats: {
-      custom_format: { inline: 'span', classes: 'abc', styles: { textDecoration: 'underline' }}
+      custom_format: { inline: 'span', classes: 'abc', styles: { textDecoration: 'underline' }},
+      // Overwrite the default strikethrough format from an "s" tag to the "span" variant to be able to test the merging logic in RemoveFormat.ts
+      strikethrough: [
+        { inline: 'span', styles: { textDecoration: 'line-through' }, exact: true }
+      ],
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);

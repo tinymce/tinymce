@@ -690,7 +690,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   ParserFilters.register(exports, defaultedSettings);
-  LegacyFilter.register(exports, defaultedSettings);
+  LegacyFilter.register(exports, defaultedSettings, schema);
 
   return exports;
 };
