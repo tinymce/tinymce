@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 - New `imagepreview` dialog component, allowing preview and zoom of any image URL #TINY-8333
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
+- New `Resource.unload` API to make it possible to unload resources #TINY-8431
 
 ### Improved
 - The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
@@ -76,9 +77,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 - The aria labels for the color picker dialog were not translated #TINY-8381
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
+- The `silver` theme UI was incorrectly rendered before plugins had initialized #TINY-8288
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
+- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308 
 
 ### Removed
+- Removed the jQuery integration #TINY-4518
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
 - Removed the deprecated `XHR` API #TINY-8164
