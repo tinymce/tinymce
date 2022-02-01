@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import Editor from './Editor';
@@ -79,7 +79,7 @@ class EditorCommands {
     }
 
     const func = this.commands.exec[lowerCaseCommand];
-    if (func) {
+    if (Type.isFunction(func)) {
       func(lowerCaseCommand, ui, value);
       editor.fire('ExecCommand', { command, ui, value });
       return true;
@@ -102,7 +102,7 @@ class EditorCommands {
 
     const lowerCaseCommand = command.toLowerCase();
     const func = this.commands.state[lowerCaseCommand];
-    if (func) {
+    if (Type.isFunction(func)) {
       return func(lowerCaseCommand);
     }
 
@@ -123,7 +123,7 @@ class EditorCommands {
 
     const lowerCaseCommand = command.toLowerCase();
     const func = this.commands.value[lowerCaseCommand];
-    if (func) {
+    if (Type.isFunction(func)) {
       return func(lowerCaseCommand);
     }
 
