@@ -58,7 +58,7 @@ const UploadChangeHandler = (editor: Editor) => {
       return !Levels.isEq(lastChangedLevel.get(), level);
     }).each((level) => {
       editor.setDirty(true);
-      editor.fire('change', {
+      editor.dispatch('change', {
         level,
         lastLevel: Arr.get(data, data.length - 2).getOrNull()
       });

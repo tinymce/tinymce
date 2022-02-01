@@ -94,7 +94,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   }, [], true);
 
   const openToolbar = (editor: Editor, toolbarKey: string) => {
-    editor.fire('contexttoolbar-show', {
+    editor.dispatch('contexttoolbar-show', {
       toolbarKey
     });
   };
@@ -182,21 +182,21 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   it('TBA: Launching context form does not work if the context toolbar launcher is disabled', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-toolbar');
-    editor.fire('test.updateButtonABC', { disable: true });
+    editor.dispatch('test.updateButtonABC', { disable: true });
     checkLastButtonGroup('Checking button is disabled after event', (s, str, arr) => [
       s.element('button', {
         classes: [ arr.has('tox-tbtn--disabled') ],
         attrs: { 'aria-disabled': str.is('true') }
       })
     ]);
-    editor.fire('test.updateButtonABC', { disable: false });
+    editor.dispatch('test.updateButtonABC', { disable: false });
     checkLastButtonGroup('Checking button is re-enabled after event', (s, _str, arr) => [
       s.element('button', {
         classes: [ arr.not('tox-tbtn--disabled') ]
       })
     ]);
 
-    editor.fire('test.updateButtonABC', { active: true });
+    editor.dispatch('test.updateButtonABC', { active: true });
     checkLastButtonGroup('Checking button is pressed after event', (s, str, _arr) => [
       s.element('button', {
         attrs: {
@@ -205,7 +205,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
       })
     ]);
 
-    editor.fire('test.updateButtonABC', { active: false });
+    editor.dispatch('test.updateButtonABC', { active: false });
     checkLastButtonGroup('Checking button is *not* pressed after event', (s, str, _arr) => [
       s.element('button', {
         attrs: {
@@ -218,8 +218,8 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   it('TBA: Checking that context form buttons have a working disabled/active api', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
-    editor.fire('test.updateButtonA', { disable: true });
-    editor.fire('test.updateButtonC', { active: true });
+    editor.dispatch('test.updateButtonA', { disable: true });
+    editor.dispatch('test.updateButtonC', { active: true });
     checkLastButtonGroup('Checking buttons have right state', (s, str, arr) => [
       s.element('button', { classes: [ arr.has('tox-tbtn--disabled') ], attrs: { 'aria-disabled': str.is('true') }}),
       s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),

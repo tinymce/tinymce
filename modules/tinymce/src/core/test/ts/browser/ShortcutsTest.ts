@@ -32,7 +32,7 @@ describe('browser.tinymce.core.ShortcutsTest', () => {
         metaKey: false
       }, args);
 
-      editor.fire('keydown', args);
+      editor.dispatch('keydown', args);
 
       if (assertState) {
         assert.isTrue(called, `Shortcut wasn't called: ` + shortcut);
@@ -91,12 +91,12 @@ describe('browser.tinymce.core.ShortcutsTest', () => {
         called = true;
       });
 
-      editor.fire('keydown', eventArgs() as KeyboardEvent);
+      editor.dispatch('keydown', eventArgs() as KeyboardEvent);
       assert.isTrue(called, `Shortcut wasn't called when it should have been.`);
 
       called = false;
       editor.shortcuts.remove(pattern);
-      editor.fire('keydown', eventArgs() as KeyboardEvent);
+      editor.dispatch('keydown', eventArgs() as KeyboardEvent);
       assert.isFalse(called, `Shortcut was called when it shouldn't.`);
     };
 

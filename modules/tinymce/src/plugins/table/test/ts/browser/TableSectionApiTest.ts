@@ -195,9 +195,9 @@ describe('browser.tinymce.plugins.table.TableSectionApiTest', () => {
   };
 
   const selectRangeXY = (editor: Editor, startTd: EventTarget, endTd: EventTarget) => {
-    editor.fire('mousedown', { target: startTd, button: 0 } as MouseEvent);
-    editor.fire('mouseover', { target: endTd, button: 0 } as MouseEvent);
-    editor.fire('mouseup', { target: endTd, button: 0 } as MouseEvent);
+    editor.dispatch('mousedown', { target: startTd, button: 0 } as MouseEvent);
+    editor.dispatch('mouseover', { target: endTd, button: 0 } as MouseEvent);
+    editor.dispatch('mouseup', { target: endTd, button: 0 } as MouseEvent);
   };
 
   const defaultEvents = [ 'tablemodified' ];

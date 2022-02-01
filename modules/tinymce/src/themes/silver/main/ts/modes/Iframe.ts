@@ -121,7 +121,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     });
 
     const limit = Throttler.first(() => {
-      editor.fire('ScrollContent');
+      editor.dispatch('ScrollContent');
     }, 20);
 
     const unbinder = DomEvent.bind(socket.element, 'scroll', limit.throttle);
@@ -132,7 +132,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(outerContainer, value);
-    editor.fire('ToggleSidebar');
+    editor.dispatch('ToggleSidebar');
   });
 
   editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer));

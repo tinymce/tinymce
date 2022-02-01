@@ -377,7 +377,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     KeyUtils.type(editor, '\b');
 
     assert.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some text</p>');
-    editor.fire('blur');
+    editor.dispatch('blur');
     assert.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some</p>');
 
     editor.execCommand('FormatBlock', false, 'h1');

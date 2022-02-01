@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.autolink.EnterKeyTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 'abcdefghijk'.length);
     TinyContentActions.keydown(editor, Keys.enter());
     assert.doesNotThrow(() => {
-      editor.fire('keydown', { keyCode: Keys.enter() } as KeyboardEvent);
+      editor.dispatch('keydown', { keyCode: Keys.enter() } as KeyboardEvent);
     }, 'should not throw error');
   });
 });

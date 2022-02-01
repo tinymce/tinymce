@@ -52,7 +52,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   const onContentMousedown = () => {
     Arr.each(editor.editorManager.get(), (loopEditor) => {
       if (editor !== loopEditor) {
-        loopEditor.fire('DismissPopups', { relatedTarget: editor });
+        loopEditor.dispatch('DismissPopups', { relatedTarget: editor });
       }
     });
   };

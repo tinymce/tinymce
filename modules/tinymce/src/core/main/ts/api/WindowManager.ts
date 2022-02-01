@@ -72,13 +72,13 @@ const WindowManager = (editor: Editor): WindowManager => {
   };
 
   const fireOpenEvent = <T>(dialog: InstanceApi<T>) => {
-    editor.fire('OpenWindow', {
+    editor.dispatch('OpenWindow', {
       dialog
     });
   };
 
   const fireCloseEvent = <T>(dialog: InstanceApi<T>) => {
-    editor.fire('CloseWindow', {
+    editor.dispatch('CloseWindow', {
       dialog
     });
   };

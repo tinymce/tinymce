@@ -122,7 +122,7 @@ const show = (editor: Editor, e: EditorEvent<TouchEvent>, items: MenuItems, back
     }, () => Optional.some(getContextToolbarBounds(editor, backstage.shared, anchorType === 'node' ? 'node' : 'selection')));
 
     // Ensure the context toolbar is hidden
-    editor.fire(hideContextToolbarEvent);
+    editor.dispatch(hideContextToolbarEvent);
   });
 };
 

@@ -279,7 +279,7 @@ const setup = (editor: Editor): void => {
     });
 
     const items = model.toFormats();
-    editor.fire('addStyleModifications', {
+    editor.dispatch('addStyleModifications', {
       items,
       replace: !Options.shouldAppend(editor)
     });

@@ -45,7 +45,7 @@ class NodeChange {
         // Always treat nodechange as a selectionchange since applying
         // formatting to the current range wouldn't update the range but it's parent
         if (e.type === 'nodechange' || !RangeCompare.isEq(fakeRng, lastRng)) {
-          editor.fire('SelectionChange');
+          editor.dispatch('SelectionChange');
         }
 
         lastRng = fakeRng;
@@ -55,7 +55,7 @@ class NodeChange {
     // IE has a bug where it fires a selectionchange on right click that has a range at the start of the body
     // When the contextmenu event fires the selection is located at the right location
     editor.on('contextmenu', () => {
-      editor.fire('SelectionChange');
+      editor.dispatch('SelectionChange');
     });
 
     // Selection change is delayed ~200ms on IE when you click inside the current range
@@ -124,7 +124,7 @@ class NodeChange {
       args.element = node;
       args.parents = parents;
 
-      this.editor.fire('NodeChange', args);
+      this.editor.dispatch('NodeChange', args);
     }
   }
 

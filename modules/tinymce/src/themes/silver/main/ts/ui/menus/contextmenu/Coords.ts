@@ -55,7 +55,7 @@ const transposeContentAreaContainer = (element: HTMLElement, pos: Position) => {
 };
 
 export const getPointAnchor = (editor: Editor, e: MouseEvent | TouchEvent) => {
-  // If the contextmenu event is fired via the editor.fire() API or some other means, fall back to selection anchor
+  // If the contextmenu event is fired via the editor.dispatch() API or some other means, fall back to selection anchor
   if (e.type === 'contextmenu' || e.type === 'longpress') {
     if (editor.inline) {
       return fromPageXY(e);

@@ -23,10 +23,10 @@ describe('browser.tinymce.core.init.EditorCustomThemeTest', () => {
       targetnode.parentNode.insertBefore(editorContainer, targetnode);
 
       if (editor.initialized) {
-        editor.fire('SkinLoaded');
+        editor.dispatch('SkinLoaded');
       } else {
         editor.on('init', () => {
-          editor.fire('SkinLoaded');
+          editor.dispatch('SkinLoaded');
         });
       }
 

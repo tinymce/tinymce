@@ -26,7 +26,7 @@ describe('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest', () => {
 
   it('TBA: Prevent default and other handlers on insert tab', () => {
     const editor = hook.editor();
-    const args = editor.fire('keydown', { keyCode: VK.TAB } as KeyboardEvent);
+    const args = editor.dispatch('keydown', { keyCode: VK.TAB } as KeyboardEvent);
     assert.isTrue(args.isDefaultPrevented());
     assert.isTrue(args.isImmediatePropagationStopped());
   });

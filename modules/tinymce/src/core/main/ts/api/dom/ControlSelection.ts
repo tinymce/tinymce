@@ -292,7 +292,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
 
     // Makes it possible to disable resizing
-    const e = editor.fire('ObjectSelected', { target: targetElm });
+    const e = editor.dispatch('ObjectSelected', { target: targetElm });
 
     // Store the original data-mce-selected value or fallback to '1' if not set
     const selectedValue = dom.getAttrib(selectedElm, elementSelectionAttr, '1');

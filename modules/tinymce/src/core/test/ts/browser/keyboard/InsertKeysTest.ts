@@ -12,7 +12,7 @@ describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
   }, []);
 
   const fireInsert = (editor: Editor) => {
-    editor.fire('input', { isComposing: false } as InputEvent);
+    editor.dispatch('input', { isComposing: false } as InputEvent);
   };
 
   const insertEmptyTextNodesAt = (editor: Editor, count: number, path: number[], insert: (marker: SugarElement, element: SugarElement) => void) => {

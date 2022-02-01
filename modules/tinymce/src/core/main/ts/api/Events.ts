@@ -14,66 +14,66 @@ import { PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent 
 import { ParserArgs } from './html/DomParser';
 import { EditorEvent } from './util/EventDispatcher';
 
-const firePreProcess = (editor: Editor, args: ParserArgs & { node: Element }) => editor.fire('PreProcess', args);
+const firePreProcess = (editor: Editor, args: ParserArgs & { node: Element }) => editor.dispatch('PreProcess', args);
 
-const firePostProcess = (editor: Editor, args: ParserArgs & { content: string }) => editor.fire('PostProcess', args);
+const firePostProcess = (editor: Editor, args: ParserArgs & { content: string }) => editor.dispatch('PostProcess', args);
 
-const fireRemove = (editor: Editor) => editor.fire('remove');
+const fireRemove = (editor: Editor) => editor.dispatch('remove');
 
-const fireDetach = (editor: Editor) => editor.fire('detach');
+const fireDetach = (editor: Editor) => editor.dispatch('detach');
 
-const fireSwitchMode = (editor: Editor, mode: string) => editor.fire('SwitchMode', { mode });
+const fireSwitchMode = (editor: Editor, mode: string) => editor.dispatch('SwitchMode', { mode });
 
 const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string) => {
-  editor.fire('ObjectResizeStart', { target, width, height, origin });
+  editor.dispatch('ObjectResizeStart', { target, width, height, origin });
 };
 
 const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string) => {
-  editor.fire('ObjectResized', { target, width, height, origin });
+  editor.dispatch('ObjectResized', { target, width, height, origin });
 };
 
-const firePreInit = (editor: Editor) => editor.fire('PreInit');
+const firePreInit = (editor: Editor) => editor.dispatch('PreInit');
 
-const firePostRender = (editor: Editor) => editor.fire('PostRender');
+const firePostRender = (editor: Editor) => editor.dispatch('PostRender');
 
-const fireInit = (editor: Editor) => editor.fire('Init');
+const fireInit = (editor: Editor) => editor.dispatch('Init');
 
-const firePlaceholderToggle = (editor: Editor, state: boolean) => editor.fire('PlaceholderToggle', { state });
+const firePlaceholderToggle = (editor: Editor, state: boolean) => editor.dispatch('PlaceholderToggle', { state });
 
-const fireError = (editor: Editor, errorType: string, error: { message: string }) => editor.fire(errorType, error);
+const fireError = (editor: Editor, errorType: string, error: { message: string }) => editor.dispatch(errorType, error);
 
 const fireFormatApply = (editor: Editor, format: string, node: Node | RangeLikeObject, vars: FormatVars | undefined) =>
-  editor.fire('FormatApply', { format, node, vars });
+  editor.dispatch('FormatApply', { format, node, vars });
 
 const fireFormatRemove = (editor: Editor, format: string, node: Node | RangeLikeObject, vars: FormatVars | undefined) =>
-  editor.fire('FormatRemove', { format, node, vars });
+  editor.dispatch('FormatRemove', { format, node, vars });
 
 const fireBeforeSetContent = <T extends SetContentArgs>(editor: Editor, args: T) =>
-  editor.fire('BeforeSetContent', args);
+  editor.dispatch('BeforeSetContent', args);
 
 const fireSetContent = <T extends SetContentArgs>(editor: Editor, args: T) =>
-  editor.fire('SetContent', args);
+  editor.dispatch('SetContent', args);
 
 const fireBeforeGetContent = <T extends GetContentArgs>(editor: Editor, args: T) =>
-  editor.fire('BeforeGetContent', args);
+  editor.dispatch('BeforeGetContent', args);
 
 const fireGetContent = <T extends GetContentArgs & { content: Content }>(editor: Editor, args: T) =>
-  editor.fire('GetContent', args);
+  editor.dispatch('GetContent', args);
 
-const fireAutocompleterStart = (editor: Editor, args: AutocompleterEventArgs) => editor.fire('AutocompleterStart', args);
+const fireAutocompleterStart = (editor: Editor, args: AutocompleterEventArgs) => editor.dispatch('AutocompleterStart', args);
 
-const fireAutocompleterUpdate = (editor: Editor, args: AutocompleterEventArgs) => editor.fire('AutocompleterUpdate', args);
+const fireAutocompleterUpdate = (editor: Editor, args: AutocompleterEventArgs) => editor.dispatch('AutocompleterUpdate', args);
 
-const fireAutocompleterEnd = (editor: Editor) => editor.fire('AutocompleterEnd');
+const fireAutocompleterEnd = (editor: Editor) => editor.dispatch('AutocompleterEnd');
 
 const firePastePreProcess = (editor: Editor, html: string, internal: boolean): EditorEvent<PastePreProcessEvent> =>
-  editor.fire('PastePreProcess', { content: html, internal });
+  editor.dispatch('PastePreProcess', { content: html, internal });
 
 const firePastePostProcess = (editor: Editor, node: HTMLElement, internal: boolean): EditorEvent<PastePostProcessEvent> =>
-  editor.fire('PastePostProcess', { node, internal });
+  editor.dispatch('PastePostProcess', { node, internal });
 
 const firePastePlainTextToggle = (editor: Editor, state: boolean): EditorEvent<PastePlainTextToggleEvent> =>
-  editor.fire('PastePlainTextToggle', { state });
+  editor.dispatch('PastePlainTextToggle', { state });
 
 export {
   firePreProcess,

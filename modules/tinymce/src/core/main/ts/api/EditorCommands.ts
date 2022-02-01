@@ -87,7 +87,7 @@ class EditorCommands {
       }
     }
 
-    args = self.editor.fire('BeforeExecCommand', { command, ui, value });
+    args = self.editor.dispatch('BeforeExecCommand', { command, ui, value });
     if (args.isDefaultPrevented()) {
       return false;
     }
@@ -95,14 +95,14 @@ class EditorCommands {
     const customCommand = command.toLowerCase();
     if ((func = self.commands.exec[customCommand])) {
       func(customCommand, ui, value);
-      self.editor.fire('ExecCommand', { command, ui, value });
+      self.editor.dispatch('ExecCommand', { command, ui, value });
       return true;
     }
 
     // Plugin commands
     each(this.editor.plugins, (p) => {
       if (p.execCommand && p.execCommand(command, ui, value)) {
-        self.editor.fire('ExecCommand', { command, ui, value });
+        self.editor.dispatch('ExecCommand', { command, ui, value });
         state = true;
         return false;
       }
@@ -114,7 +114,7 @@ class EditorCommands {
 
     // Theme commands
     if (self.editor.theme && self.editor.theme.execCommand && self.editor.theme.execCommand(command, ui, value)) {
-      self.editor.fire('ExecCommand', { command, ui, value });
+      self.editor.dispatch('ExecCommand', { command, ui, value });
       return true;
     }
 
@@ -126,7 +126,7 @@ class EditorCommands {
     }
 
     if (state) {
-      self.editor.fire('ExecCommand', { command, ui, value });
+      self.editor.dispatch('ExecCommand', { command, ui, value });
       return true;
     }
 

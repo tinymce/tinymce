@@ -597,7 +597,7 @@ const Quirks = (editor: Editor): Quirks => {
           args[key] = endTouch[key];
         });
 
-        args = editor.fire('click', args);
+        args = editor.dispatch('click', args);
 
         if (!args.isDefaultPrevented()) {
           // iOS WebKit can't place the caret properly once

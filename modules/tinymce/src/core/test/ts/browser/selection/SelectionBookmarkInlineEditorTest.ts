@@ -88,7 +88,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false);
-    editor.fire('keyup', { } as KeyboardEvent);
+    editor.dispatch('keyup', { } as KeyboardEvent);
     assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
   });
 
@@ -98,7 +98,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false);
-    editor.fire('mouseup', { } as MouseEvent);
+    editor.dispatch('mouseup', { } as MouseEvent);
     return pWaitForBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
   });
 
@@ -108,7 +108,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false);
-    editor.fire('touchend', { } as TouchEvent);
+    editor.dispatch('touchend', { } as TouchEvent);
     return pWaitForBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
   });
 

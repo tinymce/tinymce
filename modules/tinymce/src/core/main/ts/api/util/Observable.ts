@@ -9,7 +9,7 @@ import * as EventUtils from '../../events/EventUtils';
 import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
 
 interface Observable<T> {
-  fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;
+  dispatch <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;
   on <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void, prepend?: boolean): EventDispatcher<T>;
   off <K extends string>(name?: K, callback?: (event: EditorEvent<MappedEvent<T, K>>) => void): EventDispatcher<T>;
   once <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void): EventDispatcher<T>;
@@ -39,18 +39,18 @@ const getEventDispatcher = (obj): EventDispatcher<any> => {
 
 const Observable: Observable<any> = {
   /**
-   * Fires the specified event by name. Consult the
+   * Dispatches the specified event by name. Consult the
    * <a href="/docs/advanced/events">event reference</a> for more details on each event.
    *
-   * @method fire
+   * @method dispatch
    * @param {String} name Name of the event to fire.
    * @param {Object?} args Event arguments.
    * @param {Boolean?} bubble True/false if the event is to be bubbled.
    * @return {Object} Event args instance passed in.
    * @example
-   * instance.fire('event', {...});
+   * instance.dispatch('event', {...});
    */
-  fire<K extends string, U extends MappedEvent<any, K>>(name: K, args?: U, bubble?: boolean) {
+  dispatch<K extends string, U extends MappedEvent<any, K>>(name: K, args?: U, bubble?: boolean) {
     const self = this;
 
     // Prevent all events except the remove/detach event after the instance has been removed
@@ -64,7 +64,7 @@ const Observable: Observable<any> = {
     if (bubble !== false && self.parent) {
       let parent = self.parent();
       while (parent && !dispatcherArgs.isPropagationStopped()) {
-        parent.fire(name, dispatcherArgs, false);
+        parent.dispatch(name, dispatcherArgs, false);
         parent = parent.parent();
       }
     }

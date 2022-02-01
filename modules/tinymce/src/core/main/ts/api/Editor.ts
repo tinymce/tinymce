@@ -237,7 +237,7 @@ class Editor implements EditorObservable {
   public bindPendingEventDelegates: EditorObservable['bindPendingEventDelegates'];
   public toggleNativeEvent: EditorObservable['toggleNativeEvent'];
   public unbindAllNativeEvents: EditorObservable['unbindAllNativeEvents'];
-  public fire: EditorObservable['fire'];
+  public dispatch: EditorObservable['dispatch'];
   public on: EditorObservable['on'];
   public off: EditorObservable['off'];
   public once: EditorObservable['once'];
@@ -322,7 +322,7 @@ class Editor implements EditorObservable {
     this.mode = createMode(self);
 
     // Call setup
-    editorManager.fire('SetupEditor', { editor: this });
+    editorManager.dispatch('SetupEditor', { editor: this });
     const setupCallback = Options.getSetupCallback(self);
     if (Type.isFunction(setupCallback)) {
       setupCallback.call(self, self);
@@ -613,7 +613,7 @@ class Editor implements EditorObservable {
       }
 
       self.load();
-      self.fire('show');
+      self.dispatch('show');
     }
   }
 
@@ -642,7 +642,7 @@ class Editor implements EditorObservable {
       }
 
       self.hidden = true;
-      self.fire('hide');
+      self.dispatch('hide');
     }
   }
 
@@ -675,7 +675,7 @@ class Editor implements EditorObservable {
    * tinymce.activeEditor.setProgressState(true, 3000);
    */
   public setProgressState(state: boolean, time?: number) {
-    this.fire('ProgressState', { state, time });
+    this.dispatch('ProgressState', { state, time });
   }
 
   /**
@@ -705,7 +705,7 @@ class Editor implements EditorObservable {
       args.element = elm;
 
       if (!args.no_events) {
-        self.fire('LoadContent', args);
+        self.dispatch('LoadContent', args);
       }
 
       args.element = elm = null;
@@ -738,12 +738,12 @@ class Editor implements EditorObservable {
     html = args.content = self.getContent(args);
 
     if (!args.no_events) {
-      self.fire('SaveContent', args);
+      self.dispatch('SaveContent', args);
     }
 
     // Always run this internal event
     if (args.format === 'raw') {
-      self.fire('RawSaveContent', args);
+      self.dispatch('RawSaveContent', args);
     }
 
     html = args.content;
@@ -900,7 +900,7 @@ class Editor implements EditorObservable {
     this.isNotDirty = !state;
 
     if (state && state !== oldState) {
-      this.fire('dirty');
+      this.dispatch('dirty');
     }
   }
 
