@@ -446,7 +446,7 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Adds a custom command to the editor, you can also override existing commands with this method.
+   * Adds a custom command to the editor. This function can also be used to override existing commands.
    * The command that you add can be executed with execCommand.
    *
    * @method addCommand
@@ -479,7 +479,7 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Adds a custom query state command to the editor, you can also override existing commands with this method.
+   * Adds a custom query state command to the editor. This function can also be used to override existing commands.
    * The command that you add can be executed with queryCommandState function.
    *
    * @method addQueryStateHandler
@@ -498,7 +498,7 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Adds a custom query value command to the editor, you can also override existing commands with this method.
+   * Adds a custom query value command to the editor. This function can also be used to override existing commands.
    * The command that you add can be executed with queryCommandValue function.
    *
    * @method addQueryValueHandler
@@ -553,8 +553,8 @@ class Editor implements EditorObservable {
    *
    * @method execCommand
    * @param {String} cmd Command name to execute, for example mceLink or Bold.
-   * @param {Boolean} ui True/false state if a UI (dialog) should be presented or not.
-   * @param {mixed} value Optional command value, this can be anything.
+   * @param {Boolean} ui Specifies if a UI (dialog) should be presented or not.
+   * @param {{Object/Array/String/Number/Boolean} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
    * @return {Boolean} true or false if the command was supported or not.
    */

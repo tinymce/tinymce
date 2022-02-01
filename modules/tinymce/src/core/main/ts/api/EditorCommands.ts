@@ -51,8 +51,8 @@ class EditorCommands {
    *
    * @method execCommand
    * @param {String} cmd Command name to execute, for example mceLink or Bold.
-   * @param {Boolean} ui True/false state if a UI (dialog) should be presented or not.
-   * @param {mixed} value Optional command value, this can be anything.
+   * @param {Boolean} ui Specifies if a UI (dialog) should be presented or not.
+   * @param {{Object/Array/String/Number/Boolean} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
    * @return {Boolean} true or false if the command was supported or not.
    */
@@ -175,12 +175,11 @@ class EditorCommands {
   }
 
   /**
-   * Adds a custom query state command to the editor, you can also override existing commands with this method.
-   * The command that you add can be executed with queryCommandState function.
+   * Adds a custom query state command to the editor. This function can also be used to override existing commands.
    *
    * @method addQueryStateHandler
    * @param {String} name Command name to add/override.
-   * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrieval occurs.
+   * @param {Function} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
   public addQueryStateHandler(command: string, callback: () => boolean, scope?: any) {
@@ -188,12 +187,12 @@ class EditorCommands {
   }
 
   /**
-   * Adds a custom query value command to the editor, you can also override existing commands with this method.
+   * Adds a custom query value command to the editor. This function can also be used to override existing commands.
    * The command that you add can be executed with queryCommandValue function.
    *
    * @method addQueryValueHandler
    * @param {String} name Command name to add/override.
-   * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrieval occurs.
+   * @param {Function} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
   public addQueryValueHandler(command: string, callback: () => string, scope?: any) {
