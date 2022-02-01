@@ -90,11 +90,6 @@ const loadThemeAndModel = (scriptLoader: ScriptLoader, editor: Editor, suffix: s
   }
 };
 
-interface UrlMeta {
-  url: string;
-  name: Optional<string>;
-}
-
 const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.from(Options.getIconsUrl(editor))
   .filter((url) => url.length > 0)
   .map((url) => ({
