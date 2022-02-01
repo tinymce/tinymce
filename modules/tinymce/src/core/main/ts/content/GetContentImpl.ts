@@ -39,8 +39,7 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
 
   // Trim if not using a whitespace preserve format/element
   const shouldTrim = args.format !== 'text' && !isWsPreserveElement(SugarElement.fromDom(body));
-  const trimmedContent = shouldTrim && Type.isString(content) ? Tools.trim(content) : content;
-  return trimmedContent;
+  return shouldTrim && Type.isString(content) ? Tools.trim(content) : content;
 };
 
 export const getContentInternal = (editor: Editor, args: GetContentArgs): Content => Optional.from(editor.getBody())

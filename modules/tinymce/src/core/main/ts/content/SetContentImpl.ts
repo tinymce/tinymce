@@ -18,12 +18,7 @@ import { isWsPreserveElement } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as FilterNode from '../html/FilterNode';
-import { Content, SetContentArgs } from './ContentTypes';
-
-interface SetContentResult {
-  readonly content: Content;
-  readonly html: string;
-}
+import { Content, SetContentArgs, SetContentResult } from './ContentTypes';
 
 const isTreeNode = (content: unknown): content is AstNode =>
   content instanceof AstNode;

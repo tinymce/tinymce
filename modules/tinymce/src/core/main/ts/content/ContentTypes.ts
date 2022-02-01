@@ -28,8 +28,8 @@ export interface SetContentArgs {
 }
 
 export interface SetContentResult {
-  content: Content;
-  html: string;
+  readonly content: Content;
+  readonly html: string;
 }
 
 export interface GetSelectionContentArgs extends GetContentArgs {

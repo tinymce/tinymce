@@ -29,8 +29,8 @@ export const setContent = (editor: Editor, content: Content, args: Partial<SetCo
   return preProcessSetContent(editor, defaultedArgs).map((updatedArgs) => {
     // Don't use the content from the args for tree, as it'll be an empty string
     const updatedContent = isTreeNode(content) ? content : updatedArgs.content;
-    const { content: _content, html } = Rtc.setContent(editor, updatedContent, updatedArgs);
-    postProcessSetContent(editor, html, updatedArgs);
-    return _content;
+    const result = Rtc.setContent(editor, updatedContent, updatedArgs);
+    postProcessSetContent(editor, result.html, updatedArgs);
+    return result.content;
   }).getOr(content);
 };
