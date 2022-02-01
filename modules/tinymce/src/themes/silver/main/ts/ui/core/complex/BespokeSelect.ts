@@ -97,7 +97,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
         return Optional.some<Menu.NestedMenuItemSpec>({
           type: 'nestedmenuitem',
           text: translatedText,
-          enabled: !(items.length <= 0),
+          enabled: items.length > 0,
           getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response, value))
         });
       }
