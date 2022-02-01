@@ -45,14 +45,14 @@ describe('browser.tinymce.plugins.table.InsertTableWidthsTest', () => {
         Obj.each(styles, (_, name) => Css.remove(TinyDom.body(editor), name));
       };
 
-      it('TINY-7991: with default styles', testTableSize(mode, 608));
+      it('TINY-7991: with default styles', testTableSize(mode, 768));
 
       Arr.each([ 'border-box', 'content-box' ], (boxSizing) => {
         context(`box-sizing: ${boxSizing}`, () => {
-          it('TINY-7991: with only box-sizing', testTableSize(mode, 608, { 'box-sizing': boxSizing }));
+          it('TINY-7991: with only box-sizing', testTableSize(mode, 768, { 'box-sizing': boxSizing }));
           it('TINY-7991: with margins', testTableSize(mode, 740, { 'box-sizing': boxSizing, 'margin': '30px' }));
-          it('TINY-7991: with padding', testTableSize(mode, 568, { 'box-sizing': boxSizing, 'padding': '20px' }));
-          it('TINY-7991: with borders', testTableSize(mode, 598, { 'box-sizing': boxSizing, 'border': '5px black solid' }));
+          it('TINY-7991: with padding', testTableSize(mode, 728, { 'box-sizing': boxSizing, 'padding': '20px' }));
+          it('TINY-7991: with borders', testTableSize(mode, 758, { 'box-sizing': boxSizing, 'border': '5px black solid' }));
         });
       });
     });

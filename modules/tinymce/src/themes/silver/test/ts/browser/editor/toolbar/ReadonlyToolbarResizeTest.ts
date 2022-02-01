@@ -107,7 +107,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       s.theRest()
     ]);
 
-    resizeTo(300, 400, 450, 400);
+    resizeTo(300, 400, 500, 400);
 
     await pAssertToolbarButtonState('Assert the toolbar buttons are disabled after resizing the editor', true, (s, str, arr) => [
       disabledButtonStruct(s, str, arr, 'Bold'),
@@ -124,7 +124,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
 
   it('TINY-6014: Test buttons become enabled again when disabling readonly mode and resizing', async () => {
     const editor = hook.editor();
-    Css.set(TinyDom.container(editor), 'width', '450px');
+    Css.set(TinyDom.container(editor), 'width', '500px');
     await pAssertToolbarButtonState('Assert the first toolbar button, Bold is disabled', true, (s, str, arr) => [
       disabledButtonStruct(s, str, arr, 'Bold'),
       s.theRest()
@@ -149,7 +149,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       s.theRest()
     ]);
 
-    resizeTo(400, 400, 450, 400);
+    resizeTo(400, 400, 500, 400);
 
     await pAssertToolbarButtonState('Assert the toolbar buttons are enabled and now include subscript', false, (s, str, arr) => [
       enabledButtonStruct(s, str, arr, 'Bold'),

@@ -59,22 +59,22 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       const editor = hook.editor();
       const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
       const dialog = openDialog(editor);
-      await pAssertPos(dialog, 'absolute', 158, -318);
+      await pAssertPos(dialog, 'absolute', 158, -306);
 
       // Shrink the editor to 300px
       Mouse.mouseDown(resizeHandle);
       resizeToPos(650, 400, 500, 300);
-      await pAssertPos(dialog, 'absolute', 5, -185); // Toolbar wraps so y diff is 100 + toolbar height
+      await pAssertPos(dialog, 'absolute', 5, -173); // Toolbar wraps so y diff is 100 + toolbar height
 
       // Enlarge the editor to 500px
       Mouse.mouseDown(resizeHandle);
       resizeToPos(500, 300, 750, 500);
-      await pAssertPos(dialog, 'absolute', 258, -418);
+      await pAssertPos(dialog, 'absolute', 258, -406);
 
       // Resize back to the original size
       Mouse.mouseDown(resizeHandle);
       resizeToPos(750, 500, 650, 400);
-      await pAssertPos(dialog, 'absolute', 158, -318);
+      await pAssertPos(dialog, 'absolute', 158, -306);
 
       DialogUtils.close(editor);
     });
@@ -86,7 +86,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       // Enlarge the editor to 2000px
       Height.set(TinyDom.container(editor), 2000);
       editor.fire('ResizeEditor');
-      await pAssertPos(dialog, 'absolute', 158, -1918);
+      await pAssertPos(dialog, 'absolute', 158, -1906);
 
       // Scroll to 1500px and assert docked
       Scroll.to(0, 1500);
@@ -94,7 +94,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
       // Scroll back to top and assert not docked
       Scroll.to(0, 0);
-      await pAssertPos(dialog, 'absolute', 158, -1918);
+      await pAssertPos(dialog, 'absolute', 158, -1906);
 
       DialogUtils.close(editor);
     });
@@ -113,7 +113,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
       // Scroll back to top and assert not docked
       Scroll.to(0, 0);
-      await pAssertPos(dialog, 'absolute', 158, -1918);
+      await pAssertPos(dialog, 'absolute', 158, -1906);
 
       DialogUtils.close(editor);
     });

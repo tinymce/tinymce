@@ -121,12 +121,12 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     scrollTo(editor, 0, 200);
     TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
-    await pAssertPosition('bottom', 232);
+    await pAssertPosition('bottom', 224);
 
     // Position the link at the top of the viewport, just below the toolbar
     scrollTo(editor, 0, 300);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear below content', SugarBody.body(), bottomSelector + scenario.classes);
-    await pAssertPosition('top', -295);
+    await pAssertPosition('top', -283);
 
     // Position the behind the menu/toolbar and check the context toolbar is hidden
     scrollTo(editor, 0, 400);
@@ -135,7 +135,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     // Position the element back into view
     scrollTo(editor, 0, 200);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
-    await pAssertPosition('bottom', 232);
+    await pAssertPosition('bottom', 224);
 
     // Position the element off the top of the screen and check the context toolbar is hidden
     scrollTo(editor, 0, 600);
@@ -180,7 +180,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     editor.setContent(`<p><img src="${getGreenImageDataUrl()}" style="height: 380px; width: 100px"></p>`);
     TinySelections.select(editor, 'img', []);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear to top inside content', SugarBody.body(), topInsetSelector);
-    await pAssertPosition('top', -324);
+    await pAssertPosition('top', -312);
     TinySelections.setCursor(editor, [ 0 ], 1);
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyContentActions.keystroke(editor, Keys.enter());
@@ -203,7 +203,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
 
     // Middle
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear', SugarBody.body(), rightSelector);
-    await pAssertPosition('top', -155);
+    await pAssertPosition('top', -145);
 
     // Scroll so div is below the status bar
     scrollTo(editor, 0, 50);
@@ -212,7 +212,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     // Bottom
     scrollTo(editor, 0, 105);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear', SugarBody.body(), rightSelector);
-    await pAssertPosition('top', -40);
+    await pAssertPosition('top', -34);
 
     // Scroll so div is behind header
     scrollTo(editor, 0, 450);
@@ -221,7 +221,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     // Top
     scrollTo(editor, 0, 400);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear', SugarBody.body(), rightSelector);
-    await pAssertPosition('top', -321);
+    await pAssertPosition('top', -314);
   });
 
   it('TINY-4023: Context toolbar is visible in fullscreen mode', async () => {
@@ -231,7 +231,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     editor.setContent(`<p><img src="${getGreenImageDataUrl()}" style="height: 380px; width: 100px"></p>`);
     TinySelections.select(editor, 'img', []);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear to below the content', SugarBody.body(), bottomSelector);
-    await pAssertFullscreenPosition('top', 470);
+    await pAssertFullscreenPosition('top', 478);
     await UiFinder.pWaitForVisible('Check toolbar is still visible', SugarBody.body(), bottomSelector);
     TinyUiActions.clickOnToolbar(editor, fullscreenButtonSelector);
     await Waiter.pTryUntil('Wait for fullscreen to turn off', () => UiFinder.notExists(SugarBody.body(), fullscreenSelector));
@@ -270,12 +270,12 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     );
     TinySelections.select(editor, 'img', []);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top outside content', SugarBody.body(), topSelector);
-    await pAssertPosition('bottom', 111);
+    await pAssertPosition('bottom', 104);
 
     scrollTo(editor, 0, 400);
     assertToolbarIsNotTransitioning();
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), topInsetSelector);
-    await pAssertPosition('top', -324);
+    await pAssertPosition('top', -312);
 
     scrollTo(editor, 0, 700);
     await pAssertToolbarIsTransitioning();
@@ -290,7 +290,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     scrollTo(editor, 0, 0);
     await pAssertToolbarIsTransitioning();
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), topSelector);
-    await pAssertPosition('bottom', 111);
+    await pAssertPosition('bottom', 104);
   });
 
   it('TINY-7545: Moving from different anchor points should reset the placement', async () => {
