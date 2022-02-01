@@ -31,7 +31,7 @@ const registerExecCommands = (editor: Editor): void => {
       }
     },
 
-    mcePrint: (_command, _ui, _value?: boolean) => {
+    mcePrint: () => {
       editor.getWin().print();
     },
 
@@ -39,7 +39,7 @@ const registerExecCommands = (editor: Editor): void => {
       EditorFocus.focus(editor, value);
     },
 
-    mceToggleVisualAid: (_command, _ui, _value?: boolean) => {
+    mceToggleVisualAid: () => {
       editor.hasVisual = !editor.hasVisual;
       editor.addVisual();
     }
