@@ -1,7 +1,7 @@
-import { Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -11,12 +11,12 @@ import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
 
   const resizeEventsCount = Cell(0);
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'autoresize fullscreen',
+    menubar: false,
     toolbar: 'autoresize',
     base_url: '/project/tinymce/js/tinymce',
     autoresize_bottom_margin: 50,
-    autoresize_on_init: false,
     // Override the content css margins, so they don't come into play
     content_style: 'body { margin: 0; margin-top: 10px; }',
     setup: (editor: Editor) => {
@@ -55,6 +55,24 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
 
   beforeEach(() => {
     resizeEventsCount.set(0);
+  });
+
+  it('TBA: Should not have a resize handle visible by default', async () => {
+    const editor = hook.editor();
+    const statusbar = await TinyUiActions.pWaitForUi(editor, '.tox-statusbar');
+    Assertions.assertStructure('Check the statusbar does not have a resize handle', ApproxStructure.build((s, str, arr) => {
+      return s.element('div', {
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-statusbar__text-container') ],
+            children: [
+              s.element('div', { classes: [ arr.has('tox-statusbar__path') ] }),
+              s.element('span', { classes: [ arr.has('tox-statusbar__branding') ] })
+            ]
+          })
+        ]
+      });
+    }), statusbar);
   });
 
   it('TBA: Fullscreen toggle scroll state', () => {
