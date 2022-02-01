@@ -9,8 +9,8 @@ import { Type } from '@ephox/katamari';
 
 import Editor from '../Editor';
 
-export const registerCommands = (editor: Editor) => {
-  const applyLinkToSelection = (_command: string, _ui: boolean, value: string | { href: string }) => {
+export const registerCommands = (editor: Editor): void => {
+  const applyLinkToSelection = (_command: string, _ui: boolean, value: string | { href: string }): void => {
     const linkDetails = Type.isString(value) ? { href: value } : value;
     const anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
 

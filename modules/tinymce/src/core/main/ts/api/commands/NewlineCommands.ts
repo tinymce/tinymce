@@ -9,7 +9,7 @@ import * as InsertBr from '../../newline/InsertBr';
 import * as InsertNewLine from '../../newline/InsertNewLine';
 import Editor from '../Editor';
 
-export const registerCommands = (editor: Editor) => {
+export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     mceInsertNewLine: (_command, _ui, value) => {
       InsertNewLine.insert(editor, value);

@@ -13,7 +13,7 @@ import { FormatVars } from '../../fmt/FormatTypes';
 import Editor from '../Editor';
 import { ContentLanguage } from '../OptionTypes';
 
-const registerExecCommands = (editor: Editor) => {
+const registerExecCommands = (editor: Editor): void => {
   const toggleFormat = (name: string, value?: FormatVars) => {
     editor.formatter.toggle(name, value);
     editor.nodeChanged();
@@ -66,7 +66,7 @@ const registerExecCommands = (editor: Editor) => {
   });
 };
 
-const registerQueryValueCommands = (editor: Editor) => {
+const registerQueryValueCommands = (editor: Editor): void => {
   const isFormatMatch = (name: string) => editor.formatter.match(name);
 
   editor.editorCommands.addCommands({
@@ -79,7 +79,7 @@ const registerQueryValueCommands = (editor: Editor) => {
   editor.editorCommands.addQueryValueHandler('LineHeight', () => LineHeight.lineHeightQuery(editor));
 };
 
-export const registerCommands = (editor: Editor) => {
+export const registerCommands = (editor: Editor): void => {
   registerExecCommands(editor);
   registerQueryValueCommands(editor);
 };

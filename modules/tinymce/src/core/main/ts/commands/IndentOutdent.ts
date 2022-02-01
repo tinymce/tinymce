@@ -77,8 +77,8 @@ const handle = (editor: Editor, command: string): void => {
   });
 };
 
-const indent = (editor: Editor) => handle(editor, 'indent');
-const outdent = (editor: Editor) => handle(editor, 'outdent');
+const indent = (editor: Editor): void => handle(editor, 'indent');
+const outdent = (editor: Editor): void => handle(editor, 'outdent');
 
 export {
   canOutdent,

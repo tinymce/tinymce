@@ -7,7 +7,7 @@
 
 import Editor from '../Editor';
 
-export const registerCommands = (editor: Editor) => {
+export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     mceAddUndoLevel: () => {
       editor.undoManager.add();

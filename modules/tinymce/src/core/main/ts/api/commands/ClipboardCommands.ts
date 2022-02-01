@@ -8,7 +8,7 @@
 import Editor from '../Editor';
 import Env from '../Env';
 
-export const registerCommands = (editor: Editor) => {
+export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     'Cut,Copy,Paste': (command) => {
       const doc = editor.getDoc();

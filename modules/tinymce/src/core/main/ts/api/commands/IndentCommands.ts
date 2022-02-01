@@ -8,7 +8,7 @@
 import * as IndentOutdent from '../../commands/IndentOutdent';
 import Editor from '../Editor';
 
-export const registerCommands = (editor: Editor) => {
+export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     Indent: () => {
       IndentOutdent.indent(editor);

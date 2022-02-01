@@ -8,7 +8,7 @@
 import * as InsertContent from '../../content/InsertContent';
 import Editor from '../Editor';
 
-export const registerCommands = (editor: Editor) => {
+export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     mceCleanup: () => {
       const bm = editor.selection.getBookmark();

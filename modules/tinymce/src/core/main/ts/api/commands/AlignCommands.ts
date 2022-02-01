@@ -10,7 +10,7 @@ import { Arr, Type } from '@ephox/katamari';
 import { FormatVars } from '../../fmt/FormatTypes';
 import Editor from '../Editor';
 
-const registerExecCommands = (editor: Editor) => {
+const registerExecCommands = (editor: Editor): void => {
   const toggleFormat = (name: string, value?: FormatVars) => {
     editor.formatter.toggle(name, value);
     editor.nodeChanged();
@@ -38,7 +38,7 @@ const registerExecCommands = (editor: Editor) => {
   });
 };
 
-const registerQueryStateCommands = (editor: Editor) => {
+const registerQueryStateCommands = (editor: Editor): void => {
   const alignStates = (name: string) => () => {
     const selection = editor.selection;
     const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
@@ -53,7 +53,7 @@ const registerQueryStateCommands = (editor: Editor) => {
   }, 'state');
 };
 
-export const registerCommands = (editor: Editor) => {
+export const registerCommands = (editor: Editor): void => {
   registerExecCommands(editor);
   registerQueryStateCommands(editor);
 };

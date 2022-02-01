@@ -8,7 +8,7 @@
 import * as NodeType from '../../dom/NodeType';
 import Editor from '../Editor';
 
-export const registerCommands = (editor: Editor) => {
+export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     mceSelectNodeDepth: (_command, _ui, value) => {
       let counter = 0;
