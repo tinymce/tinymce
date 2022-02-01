@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308 
+
 ## 5.10.2 - 2021-11-17
 
 ### Fixed
