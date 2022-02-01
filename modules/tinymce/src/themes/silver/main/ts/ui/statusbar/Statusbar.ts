@@ -30,7 +30,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
           dom: {
             tag: 'a',
             attributes: {
-              'href': 'https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5',
+              'href': 'https://www.tiny.cloud/powered-by-tiny?utm_campaign=editor_referral&utm_medium=poweredby&utm_source=tinymce&utm_content=v6',
               'rel': 'noopener',
               'target': '_blank',
               'tabindex': '-1',
