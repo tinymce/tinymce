@@ -6,7 +6,7 @@
  */
 
 import * as InsertContent from '../../content/InsertContent';
-import type Editor from '../Editor';
+import Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({

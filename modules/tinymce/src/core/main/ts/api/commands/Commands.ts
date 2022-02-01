@@ -6,7 +6,7 @@
  */
 
 import * as EditorFocus from '../../focus/EditorFocus';
-import type Editor from '../Editor';
+import Editor from '../Editor';
 import * as AlignCommands from './AlignCommands';
 import * as ClipboardCommands from './ClipboardCommands';
 import * as ContentCommands from './ContentCommands';

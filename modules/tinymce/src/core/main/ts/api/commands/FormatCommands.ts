@@ -10,7 +10,7 @@ import { Type } from '@ephox/katamari';
 import * as Font from '../../commands/Font';
 import * as LineHeight from '../../commands/LineHeight';
 import { FormatVars } from '../../fmt/FormatTypes';
-import type Editor from '../Editor';
+import Editor from '../Editor';
 import { ContentLanguage } from '../OptionTypes';
 
 const registerExecCommands = (editor: Editor) => {

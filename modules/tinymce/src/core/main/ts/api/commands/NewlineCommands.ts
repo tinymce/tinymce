@@ -7,7 +7,7 @@
 
 import * as InsertBr from '../../newline/InsertBr';
 import * as InsertNewLine from '../../newline/InsertNewLine';
-import type Editor from '../Editor';
+import Editor from '../Editor';
 
 export const registerCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({

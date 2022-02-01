@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import type Editor from '../Editor';
+import Editor from '../Editor';
 import Env from '../Env';
 
 export const registerCommands = (editor: Editor) => {
