@@ -38,7 +38,7 @@ const registerExecCommands = (editor: Editor) => {
   });
 };
 
-const registerStateCommands = (editor: Editor) => {
+const registerQueryStateCommands = (editor: Editor) => {
   const alignStates = (name: string) => () => {
     const selection = editor.selection;
     const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
@@ -55,5 +55,5 @@ const registerStateCommands = (editor: Editor) => {
 
 export const registerCommands = (editor: Editor) => {
   registerExecCommands(editor);
-  registerStateCommands(editor);
+  registerQueryStateCommands(editor);
 };

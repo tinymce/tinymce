@@ -7,7 +7,7 @@
 
 import Editor from '../Editor';
 
-export const registerCommands = (editor: Editor) => {
+const registerExecCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
     'InsertUnorderedList,InsertOrderedList': (command) => {
       editor.getDoc().execCommand(command);
@@ -28,7 +28,9 @@ export const registerCommands = (editor: Editor) => {
       }
     }
   });
+};
 
+const registerQueryStateCommands = (editor: Editor) => {
   editor.editorCommands.addCommands({
     'InsertUnorderedList,InsertOrderedList': (command) => {
       const list = editor.dom.getParent(editor.selection.getNode(), 'ul,ol') as HTMLElement;
@@ -40,4 +42,9 @@ export const registerCommands = (editor: Editor) => {
         );
     }
   }, 'state');
+};
+
+export const registerCommands = (editor: Editor) => {
+  registerExecCommands(editor);
+  registerQueryStateCommands(editor);
 };

@@ -66,7 +66,7 @@ const registerExecCommands = (editor: Editor) => {
   });
 };
 
-const registerQueryCommands = (editor: Editor) => {
+const registerQueryValueCommands = (editor: Editor) => {
   const isFormatMatch = (name: string) => editor.formatter.match(name);
 
   editor.editorCommands.addCommands({
@@ -81,5 +81,5 @@ const registerQueryCommands = (editor: Editor) => {
 
 export const registerCommands = (editor: Editor) => {
   registerExecCommands(editor);
-  registerQueryCommands(editor);
+  registerQueryValueCommands(editor);
 };
