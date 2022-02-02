@@ -7,8 +7,8 @@
 
 import Promise from 'tinymce/core/api/util/Promise';
 
-const blobToBase64 = (blob: Blob) => {
-  return new Promise<string>((resolve) => {
+const blobToBase64 = (blob: Blob): Promise<string> => {
+  return new Promise((resolve) => {
     const reader = new FileReader();
 
     reader.onloadend = () => {

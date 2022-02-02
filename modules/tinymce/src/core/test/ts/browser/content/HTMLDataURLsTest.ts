@@ -1,11 +1,13 @@
 import { before, describe, it } from '@ephox/bedrock-client';
-import { McEditor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.HTMLDataURLsTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const initialContent = '<p><a href="data:text/plain;base64,SGVsbG8sIHdvcmxkCg==">Click me</a></p>';
 

@@ -6,12 +6,12 @@
  */
 
 export interface VideoScript {
-  filter: string;
-  width?: number;
-  height?: number;
+  readonly filter: string;
+  readonly width?: number;
+  readonly height?: number;
 }
 
-const getVideoScriptMatch = (prefixes: VideoScript[], src: string): VideoScript => {
+const getVideoScriptMatch = (prefixes: VideoScript[] | undefined, src: string): VideoScript => {
   // var prefixes = Settings.getScripts(editor);
   if (prefixes) {
     for (let i = 0; i < prefixes.length; i++) {

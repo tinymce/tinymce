@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import { Cleaner } from 'ephox/agar/api/Cleaner';
 
 UnitTest.test('Cleaner', () => {

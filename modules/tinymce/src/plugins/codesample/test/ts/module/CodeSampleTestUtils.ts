@@ -1,7 +1,8 @@
 import { ApproxStructure, Assertions, UiFinder, Waiter } from '@ephox/agar';
-import { TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const dialogSelector = 'div.tox-dialog';

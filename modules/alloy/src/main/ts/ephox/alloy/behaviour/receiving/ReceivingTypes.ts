@@ -1,4 +1,4 @@
-import { Processor } from '@ephox/boulder';
+import { StructureProcessor } from '@ephox/boulder';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -8,12 +8,12 @@ export interface ReceivingBehaviour extends Behaviour.AlloyBehaviour<ReceivingCo
 }
 
 export interface ReceivingChannelSpec {
-  schema?: Processor;
+  schema?: StructureProcessor;
   onReceive: (comp: AlloyComponent, message: any) => void;
 }
 
 export interface ReceivingChannel {
-  schema: Processor;
+  schema: StructureProcessor;
   onReceive: (comp: AlloyComponent, message: any) => void;
 }
 

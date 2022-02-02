@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
+
 import { WordScope } from '../data/WordScope';
 import * as Identify from '../words/Identify';
 import { ZoneDetails } from './LanguageZones';

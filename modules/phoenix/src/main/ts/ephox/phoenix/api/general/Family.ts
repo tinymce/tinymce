@@ -1,4 +1,5 @@
 import { Universe } from '@ephox/boss';
+
 import * as Group from '../../family/Group';
 import * as Range from '../../family/Range';
 import { TypedItem } from '../data/TypedItem';

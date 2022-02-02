@@ -1,4 +1,5 @@
 import { Fun, Optional } from '@ephox/katamari';
+
 import { Bounds, DetailExt } from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 

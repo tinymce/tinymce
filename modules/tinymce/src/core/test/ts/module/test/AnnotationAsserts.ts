@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
 import { Arr, Obj } from '@ephox/katamari';
-import { TinyAssertions } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
+import { TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

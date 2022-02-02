@@ -7,9 +7,13 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getCharMap = (editor: Editor) => editor.getParam('charmap');
+type UserChar = [ number, string ];
 
-const getCharMapAppend = (editor: Editor) => editor.getParam('charmap_append');
+const getCharMap = (editor: Editor): UserChar[] | (() => UserChar[]) | undefined =>
+  editor.getParam('charmap');
+
+const getCharMapAppend = (editor: Editor): UserChar[] | undefined =>
+  editor.getParam('charmap_append');
 
 export {
   getCharMap,

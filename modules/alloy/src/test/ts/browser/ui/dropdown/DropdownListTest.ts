@@ -2,8 +2,8 @@ import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard,
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { Compare, Focus } from '@ephox/sugar';
-import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 
+import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';

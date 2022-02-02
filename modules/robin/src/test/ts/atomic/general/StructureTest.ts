@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
+
 import * as Structure from 'ephox/robin/api/general/Structure';
 
 UnitTest.test('StructureTest', () => {

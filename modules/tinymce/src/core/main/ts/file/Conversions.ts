@@ -6,6 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Promise from '../api/util/Promise';
 
 /**

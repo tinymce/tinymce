@@ -1,6 +1,6 @@
 export interface Version {
-  major: number;
-  minor: number;
+  readonly major: number;
+  readonly minor: number;
 }
 
 const firstMatch = (regexes: RegExp[], s: string): RegExp | undefined => {

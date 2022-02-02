@@ -24,7 +24,7 @@ const onLoad = (component: AlloyComponent, repConfig: ManualRepresentingConfig, 
 };
 
 export default [
-  FieldSchema.strict('getValue'),
+  FieldSchema.required('getValue'),
   FieldSchema.defaulted('setValue', Fun.noop),
   FieldSchema.option('initialValue'),
   Fields.output('manager', {

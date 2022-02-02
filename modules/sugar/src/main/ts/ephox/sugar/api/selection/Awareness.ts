@@ -1,4 +1,5 @@
 import { Arr, Unicode } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 import * as SugarNode from '../node/SugarNode';
 import * as SugarText from '../node/SugarText';

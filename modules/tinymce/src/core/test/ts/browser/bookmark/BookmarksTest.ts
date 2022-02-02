@@ -1,8 +1,8 @@
 import { Assertions } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/mcagar';
 import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -15,7 +15,9 @@ import * as ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.bookmark.BookmarksTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const bookmarkTest = (runTests: (editor: Editor) => void) => async () => {
     const editor = await McEditor.pFromSettings<Editor>({

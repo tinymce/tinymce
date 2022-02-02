@@ -1,4 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as StyleConversions from 'tinymce/themes/mobile/util/StyleConversions';
 
 UnitTest.test('Atomic Test: styles.StyleConversionsTest', () => {

@@ -1,6 +1,6 @@
 import { Keys, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -8,6 +8,7 @@ import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as NodeType from 'tinymce/core/dom/NodeType';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as KeyUtils from '../../module/test/KeyUtils';
 
 describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
@@ -148,7 +149,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<p>Line 1</p><p><video height="400" width="200" src="custom/video.mp4" contenteditable="false"></video> Line 2</p><p>Line 3 with some more text</p>');
     await pMediaWait();
     scrollTo(editor, 0, 400);
-    TinySelections.setCursor(editor, [ 2, 0 ], 26);
+    TinySelections.setCursor(editor, [ 2, 0 ], 22);
     resetScrollCount();
     TinyContentActions.keystroke(editor, Keys.up());
     assertScrollCount(1);

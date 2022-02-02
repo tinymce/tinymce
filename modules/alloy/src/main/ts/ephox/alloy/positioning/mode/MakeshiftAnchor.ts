@@ -37,8 +37,8 @@ const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origi
 };
 
 export default [
-  FieldSchema.strict('x'),
-  FieldSchema.strict('y'),
+  FieldSchema.required('x'),
+  FieldSchema.required('y'),
   FieldSchema.defaulted('height', 0),
   FieldSchema.defaulted('width', 0),
   FieldSchema.defaulted('bubble', Bubble.fallback()),

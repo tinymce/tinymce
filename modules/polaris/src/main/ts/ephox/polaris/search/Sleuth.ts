@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import { PRange, PRegExp } from '../pattern/Types';
 import * as Find from './Find';
 

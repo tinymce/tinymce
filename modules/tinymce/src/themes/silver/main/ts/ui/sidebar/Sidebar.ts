@@ -9,10 +9,11 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, Sliding, SlotContainer,
   SlotContainerTypes, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Id, Obj, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Id, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
@@ -27,7 +28,7 @@ const setup = (editor: Editor) => {
   // Setup each registered sidebar
   Arr.each(Obj.keys(sidebars), (name) => {
     const spec = sidebars[name];
-    const isActive = () => Optional.from(editor.queryCommandValue('ToggleSidebar')).is(name);
+    const isActive = () => Optionals.is(Optional.from(editor.queryCommandValue('ToggleSidebar')), name);
     editor.ui.registry.addToggleButton(name, {
       icon: spec.icon,
       tooltip: spec.tooltip,
@@ -53,7 +54,7 @@ const getApi = (comp: AlloyComponent): BridgeSidebar.SidebarInstanceApi => ({
 const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: SidebarConfig) => {
   const specs = Arr.map(Obj.keys(panelConfigs), (name) => {
     const spec = panelConfigs[name];
-    const bridged = ValueSchema.getOrDie(BridgeSidebar.createSidebar(spec));
+    const bridged = StructureSchema.getOrDie(BridgeSidebar.createSidebar(spec));
     return {
       name,
       getApi,

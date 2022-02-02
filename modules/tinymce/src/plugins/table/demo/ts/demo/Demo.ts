@@ -3,7 +3,8 @@ declare let tinymce: any;
 tinymce.init({
   selector: 'div.tinymce',
   plugins: 'table',
-  toolbar: 'table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter',
+  toolbar: 'table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter |' +
+  ' tableclass tablecellclass | tablecellvalign | tablecellborderwidth tablecellborderstyle | tablecaption | tablecellbackgroundcolor tablecellbordercolor | tablerowheader tablecolheader',
   media_dimensions: false,
   table_class_list: [
     { title: 'None', value: '' },

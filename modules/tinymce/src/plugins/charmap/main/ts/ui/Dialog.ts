@@ -6,15 +6,17 @@
  */
 
 import { Arr, Cell, Throttler } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import * as Actions from '../core/Actions';
 import { CharMap, UserDefined } from '../core/CharMap';
 import * as Scan from '../core/Scan';
 
 const patternName = 'pattern';
 
-const open = (editor: Editor, charMap: CharMap[]) => {
+const open = (editor: Editor, charMap: CharMap[]): void => {
   const makeGroupItems = (): Dialog.BodyComponentSpec[] => [
     {
       label: 'Search',

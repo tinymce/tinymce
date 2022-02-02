@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+
 import { copyRows } from 'ephox/snooker/api/CopyRows';
 import * as Bridge from 'ephox/snooker/test/Bridge';
 

@@ -1,6 +1,7 @@
 import { DomUniverse } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { TypedItem } from '../data/TypedItem';
 import { SpotPoint } from '../data/Types';
 import * as Extract from '../general/Extract';

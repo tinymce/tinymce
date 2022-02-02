@@ -7,6 +7,7 @@
 
 import { Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+
 import Editor from '../api/Editor';
 import { normalizeNbspsInEditor } from './Nbsps';
 

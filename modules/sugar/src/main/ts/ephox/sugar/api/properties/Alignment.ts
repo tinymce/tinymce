@@ -1,4 +1,5 @@
 import { Obj } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 import * as Node from '../node/SugarNode';
 import * as Css from './Css';

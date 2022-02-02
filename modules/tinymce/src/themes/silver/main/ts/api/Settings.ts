@@ -7,10 +7,12 @@
 
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { SelectorFind, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { AllowedFormat } from 'tinymce/core/api/fmt/StyleFormat';
+import { ContentLanguage } from 'tinymce/core/api/SettingsTypes';
 
 export interface ToolbarGroupSetting {
   name?: string;
@@ -48,6 +50,9 @@ const getUserStyleFormats = (editor: Editor): Optional<AllowedFormat[]> => Optio
 const isMergeStyleFormats = (editor: Editor): boolean => editor.getParam('style_formats_merge', false, 'boolean');
 const getLineHeightFormats = (editor: Editor): string[] =>
   editor.getParam('lineheight_formats', '1 1.1 1.2 1.3 1.4 1.5 2', 'string').split(' ');
+
+const getContentLanguages = (editor: Editor): ContentLanguage[] | undefined =>
+  editor.getParam('content_langs', undefined, 'array');
 
 const getRemovedMenuItems = (editor: Editor): string => editor.getParam('removed_menuitems', '');
 const isMenubarEnabled = (editor: Editor): boolean => editor.getParam('menubar', true, 'boolean') !== false;
@@ -141,6 +146,9 @@ const isStickyToolbar = (editor: Editor) => {
   return (isStickyToolbar || editor.inline) && !useFixedContainer(editor) && !isDistractionFree(editor);
 };
 
+const getStickyToolbarOffset = (editor: Editor) =>
+  editor.getParam('toolbar_sticky_offset', 0, 'number');
+
 const isDraggableModal = (editor: Editor): boolean =>
   editor.getParam('draggable_modal', false, 'boolean');
 
@@ -193,6 +201,7 @@ export {
   getUserStyleFormats,
   isMergeStyleFormats,
   getLineHeightFormats,
+  getContentLanguages,
   getRemovedMenuItems,
   isMenubarEnabled,
   isMultipleToolbars,
@@ -205,6 +214,7 @@ export {
   isDraggableModal,
   isDistractionFree,
   isStickyToolbar,
+  getStickyToolbarOffset,
   getToolbarLocation,
   isToolbarLocationBottom,
   getToolbarGroups,

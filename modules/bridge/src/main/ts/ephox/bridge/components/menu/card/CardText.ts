@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 export interface CardTextSpec {
@@ -16,13 +16,13 @@ export interface CardText {
 }
 
 const cardTextFields = [
-  FieldSchema.strictString('type'),
-  FieldSchema.strictString('text'),
+  FieldSchema.requiredString('type'),
+  FieldSchema.requiredString('text'),
   FieldSchema.optionString('name'),
-  FieldSchema.defaultedArrayOf('classes', [ 'tox-collection__item-label' ], ValueSchema.string)
+  FieldSchema.defaultedArrayOf('classes', [ 'tox-collection__item-label' ], ValueType.string)
 ];
 
-export const cardTextSchema = ValueSchema.objOf(cardTextFields);
+export const cardTextSchema = StructureSchema.objOf(cardTextFields);
 
-export const createCardText = (spec: CardTextSpec): Result<CardText, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<CardText>('cardtext', cardTextSchema, spec);
+export const createCardText = (spec: CardTextSpec): Result<CardText, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<CardText>('cardtext', cardTextSchema, spec);

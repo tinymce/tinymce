@@ -1,17 +1,19 @@
-import { ValueSchema } from '@ephox/boulder';
-import { Fun, Optional } from '@ephox/katamari';
+import { StructureSchema } from '@ephox/boulder';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Css, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import { Bounds, box } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AriaFocus from '../../aria/AriaFocus';
 import * as Anchor from '../../positioning/layout/Anchor';
+import { PlacerResult } from '../../positioning/layout/LayoutTypes';
 import * as Origins from '../../positioning/layout/Origins';
+import * as Placement from '../../positioning/layout/Placement';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
-import { AnchorDetail, Anchoring, AnchorSpec } from '../../positioning/mode/Anchoring';
-import AnchorSchema from '../../positioning/mode/AnchorSchema';
-import { Stateless } from '../common/BehaviourState';
-import { PositioningConfig } from './PositioningTypes';
+import { Anchoring } from '../../positioning/mode/Anchoring';
+import { Transition } from '../../positioning/view/Transitions';
+import { PlacementDetail, PlacementSpec, PositioningConfig, PositioningState } from './PositioningTypes';
+import { PlacementSchema } from './PositionSchema';
 
 const getFixedOrigin = (): Origins.OriginAdt => {
   // Don't use window.innerWidth/innerHeight here, as we don't want to include scrollbars
@@ -29,31 +31,34 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
   return Origins.relative(position.left, position.top, bounds.width, bounds.height);
 };
 
-const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent): void => {
+const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent, lastPlace: Optional<PlacerResult>, transition: Optional<Transition>): PlacerResult => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
-  SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, getBounds, anchoring.overrides);
+  return SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, lastPlace, getBounds, anchoring.overrides, transition);
 };
 
-const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
-  positionWithin(component, posConfig, posState, anchor, placee, Optional.none());
+const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec): void => {
+  positionWithin(component, posConfig, posState, placee, placementSpec, Optional.none());
 };
 
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Optional<SugarElement>): void => {
+const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, boxElement: Optional<SugarElement>): void => {
   const boundsBox = boxElement.map(box);
-  return positionWithinBounds(component, posConfig, posState, anchor, placee, boundsBox);
+  return positionWithinBounds(component, posConfig, posState, placee, placementSpec, boundsBox);
 };
 
-const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, bounds: Optional<Bounds>): void => {
-  const anchorage: AnchorDetail<any> = ValueSchema.asRawOrDie('positioning anchor.info', AnchorSchema, anchor);
+const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent, placementSpec: PlacementSpec, bounds: Optional<Bounds>): void => {
+  const placeeDetail: PlacementDetail = StructureSchema.asRawOrDie('placement.info', StructureSchema.objOf(PlacementSchema), placementSpec);
+  const anchorage = placeeDetail.anchor;
+  const element = placee.element;
+  const placeeState = posState.get(placee.uid);
 
   // Preserve the focus as IE 11 loses it when setting visibility to hidden
   AriaFocus.preserve(() => {
     // We set it to be fixed, so that it doesn't interfere with the layout of anything
     // when calculating anchors
-    Css.set(placee.element, 'position', 'fixed');
+    Css.set(element, 'position', 'fixed');
 
-    const oldVisibility = Css.getRaw(placee.element, 'visibility');
-    Css.set(placee.element, 'visibility', 'hidden');
+    const oldVisibility = Css.getRaw(element, 'visibility');
+    Css.set(element, 'visibility', 'hidden');
 
     // We need to calculate the origin (esp. the bounding client rect) *after* we have done
     // all the preprocessing of the component and placee. Otherwise, the relative positions
@@ -65,34 +70,45 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
     const getBounds = bounds.map(Fun.constant).or(posConfig.getBounds);
 
     placer(component, anchorage, origin).each((anchoring) => {
+      // Place the element and then update the state for the placee
       const doPlace = anchoring.placer.getOr(place);
-      doPlace(component, origin, anchoring, getBounds, placee);
+      const newState = doPlace(component, origin, anchoring, getBounds, placee, placeeState, placeeDetail.transition);
+      posState.set(placee.uid, newState);
     });
 
     oldVisibility.fold(() => {
-      Css.remove(placee.element, 'visibility');
+      Css.remove(element, 'visibility');
     }, (vis) => {
-      Css.set(placee.element, 'visibility', vis);
+      Css.set(element, 'visibility', vis);
     });
 
     // We need to remove position: fixed put on by above code if it is not needed.
     if (
-      Css.getRaw(placee.element, 'left').isNone() &&
-      Css.getRaw(placee.element, 'top').isNone() &&
-      Css.getRaw(placee.element, 'right').isNone() &&
-      Css.getRaw(placee.element, 'bottom').isNone() &&
-      Css.getRaw(placee.element, 'position').is('fixed')
+      Css.getRaw(element, 'left').isNone() &&
+      Css.getRaw(element, 'top').isNone() &&
+      Css.getRaw(element, 'right').isNone() &&
+      Css.getRaw(element, 'bottom').isNone() &&
+      Optionals.is(Css.getRaw(element, 'position'), 'fixed')
     ) {
-      Css.remove(placee.element, 'position');
+      Css.remove(element, 'position');
     }
-  }, placee.element);
+  }, element);
 };
 
-const getMode = (component: AlloyComponent, pConfig: PositioningConfig, _pState: Stateless): string => pConfig.useFixed() ? 'fixed' : 'absolute';
+const getMode = (component: AlloyComponent, pConfig: PositioningConfig, _pState: PositioningState): string =>
+  pConfig.useFixed() ? 'fixed' : 'absolute';
+
+const reset = (component: AlloyComponent, pConfig: PositioningConfig, posState: PositioningState, placee: AlloyComponent): void => {
+  const element = placee.element;
+  Arr.each([ 'position', 'left', 'right', 'top', 'bottom' ], (prop) => Css.remove(element, prop));
+  Placement.reset(element);
+  posState.clear(placee.uid);
+};
 
 export {
   position,
   positionWithin,
   positionWithinBounds,
-  getMode
+  getMode,
+  reset
 };

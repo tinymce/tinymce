@@ -9,7 +9,6 @@ import * as EdgeActions from './EdgeActions';
 import * as ModelCommon from './ModelCommon';
 import * as SliderModel from './SliderModel';
 import { getMaxXBounds, getMinXBounds, getXCenterOffSetOf, getXScreenRange } from './SliderOffsets';
-
 import { currentValue, hasLEdge, hasREdge, maxX, minX, rounded, snap, snapStart, step, xRange } from './SliderValues';
 
 // fire slider change event with x value

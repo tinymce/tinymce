@@ -1,4 +1,5 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
+
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import * as Compare from '../dom/Compare';
 import * as SugarBody from '../node/SugarBody';

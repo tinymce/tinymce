@@ -1,6 +1,6 @@
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { McEditor } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -13,7 +13,9 @@ import Theme from 'tinymce/themes/silver/Theme';
 // via dom elements. For now we're just loading a script to make sure it doesn't completely die when loading.
 describe('browser.tinymce.core.dom.ReferrerPolicyTest', () => {
   const platform = PlatformDetection.detect();
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
@@ -26,7 +28,7 @@ describe('browser.tinymce.core.dom.ReferrerPolicyTest', () => {
     assert.equal(links.length > 0, expected, `should have link with referrerpolicy="${referrerPolicy}"`);
   };
 
-  const pLoadScript = (url: string) => new PromisePolyfill((resolve, reject) => {
+  const pLoadScript = (url: string): Promise<void> => new PromisePolyfill((resolve, reject) => {
     ScriptLoader.ScriptLoader.loadScript(url, resolve, () => reject('Failed to load script'));
   });
 

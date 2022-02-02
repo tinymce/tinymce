@@ -57,11 +57,11 @@ const setDragImage = (transfer: DataTransfer, image: Element, x: number, y: numb
   }
 };
 
-const setDropEffect = (transfer: DataTransfer, effect: string): void => {
+const setDropEffect = (transfer: DataTransfer, effect: DataTransfer['dropEffect']): void => {
   transfer.dropEffect = effect;
 };
 
-const setEffectAllowed = (transfer: DataTransfer, effect: string): void => {
+const setEffectAllowed = (transfer: DataTransfer, effect: DataTransfer['effectAllowed']): void => {
   transfer.effectAllowed = effect;
 };
 
@@ -81,7 +81,7 @@ const getDataTransferFromEvent = (simulatedEvent: NativeSimulatedEvent<DragEvent
   return rawEvent.dataTransfer as DataTransfer;
 };
 
-const setDropEffectOnEvent = (simulatedEvent: NativeSimulatedEvent<DragEvent>, dropEffect: string): void => {
+const setDropEffectOnEvent = (simulatedEvent: NativeSimulatedEvent<DragEvent>, dropEffect: DataTransfer['dropEffect']): void => {
   setDropEffect(getDataTransferFromEvent(simulatedEvent), dropEffect);
 };
 

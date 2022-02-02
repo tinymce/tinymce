@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { getAll as getDefaultIcons } from '@tinymce/oxide-icons-default';
 import { assert } from 'chai';
 

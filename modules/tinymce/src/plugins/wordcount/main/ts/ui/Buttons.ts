@@ -6,20 +6,20 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { WordCountApi } from '../api/Api';
-import * as Dialog from './Dialog';
 
-const register = (editor: Editor, api: WordCountApi) => {
+const register = (editor: Editor): void => {
+  const onAction = () => editor.execCommand('mceWordCount');
+
   editor.ui.registry.addButton('wordcount', {
     tooltip: 'Word count',
     icon: 'character-count',
-    onAction: () => Dialog.open(editor, api)
+    onAction
   });
 
   editor.ui.registry.addMenuItem('wordcount', {
     text: 'Word count',
     icon: 'character-count',
-    onAction: () => Dialog.open(editor, api)
+    onAction
   });
 };
 

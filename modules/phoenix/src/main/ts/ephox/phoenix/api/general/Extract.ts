@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
+
 import * as Extract from '../../extract/Extract';
 import * as ExtractText from '../../extract/ExtractText';
 import * as Find from '../../extract/Find';

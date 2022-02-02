@@ -6,7 +6,9 @@
  */
 
 import { EventArgs, Focus, WindowSelection } from '@ephox/sugar';
+
 import Delay from 'tinymce/core/api/util/Delay';
+
 import { PlatformEditor } from './PlatformEditor';
 
 const setSelectionAtTouch = (editorApi: PlatformEditor, touchEvent: EventArgs<TouchEvent>) => {

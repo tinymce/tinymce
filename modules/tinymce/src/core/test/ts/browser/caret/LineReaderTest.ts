@@ -7,6 +7,7 @@ import { assert } from 'chai';
 
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import * as LineReader from 'tinymce/core/caret/LineReader';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 const BreakType = LineReader.BreakType;
@@ -77,7 +78,7 @@ describe('browser.tinymce.core.caret.LineReader', () => {
     assertPositions(actualPositions, expectedPositions);
   };
 
-  const assertNone = (a: Optional<unknown>) => {
+  const assertNone = (a: Optional<CaretPosition>) => {
     assert.isTrue(a.isNone(), 'Optional return value should be none');
   };
 
@@ -114,7 +115,7 @@ describe('browser.tinymce.core.caret.LineReader', () => {
     assert.equal(pos.offset(), offset, 'Should be the expected offset');
   };
 
-  const visualCaretCheck = (predicate, path: number[], offset: number) => {
+  const visualCaretCheck = (predicate: (scope: HTMLElement, pos: CaretPosition) => boolean, path: number[], offset: number) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
     return predicate(viewBlock.get(), pos);

@@ -19,7 +19,7 @@ import HtmlConverter from './HtmlConverter';
 import * as HtmlDisplay from './HtmlDisplay';
 import InlinesDemo from './InlinesDemo';
 import InspectorDemo from './InspectorDemo';
-import LayoutInsideDemo from './LayoutInsideDemo';
+import LayoutInsetDemo from './LayoutInsetDemo';
 import LongpressDemo from './LongpressDemo';
 import PinchingDemo from './PinchingDemo';
 import PositionDemo from './PositionDemo';
@@ -55,7 +55,7 @@ window.demos = {
   HtmlDisplay,
   InlinesDemo,
   InspectorDemo,
-  LayoutInsideDemo,
+  LayoutInsetDemo,
   LongpressDemo,
   PinchingDemo,
   PositionDemo,

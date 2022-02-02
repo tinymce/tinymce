@@ -6,6 +6,7 @@
  */
 
 import { Arr, Obj, Optional } from '@ephox/katamari';
+
 import { Entry } from './Entry';
 
 const cloneListProperties = (target: Entry, source: Entry): void => {

@@ -10,6 +10,7 @@ import DomParser from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 
 interface Data {
@@ -29,21 +30,21 @@ interface Data {
   active_color?: string;
 }
 
-const parseHeader = (head: string) => {
+const parseHeader = (editor: Editor, head: string): AstNode => {
   // Parse the contents with a DOM parser
   return DomParser({
     validate: false,
     root_name: '#document'
   // Parse as XHTML to allow for inclusion of the XML processing instruction
-  }).parse(head, { format: 'xhtml' });
+  }, editor.schema).parse(head, { format: 'xhtml' });
 };
 
-const htmlToData = (editor: Editor, head: string) => {
-  const headerFragment = parseHeader(head);
+const htmlToData = (editor: Editor, head: string): Data => {
+  const headerFragment = parseHeader(editor, head);
   const data: Data = {};
   let elm, matches;
 
-  const getAttr = (elm, name) => {
+  const getAttr = (elm: AstNode, name: string): string => {
     const value = elm.attr(name);
 
     return value || '';
@@ -120,15 +121,15 @@ const htmlToData = (editor: Editor, head: string) => {
   return data;
 };
 
-const dataToHtml = (editor: Editor, data: Data, head) => {
-  let headElement, elm, value;
+const dataToHtml = (editor: Editor, data: Data, head: string): string => {
+  let headElement: AstNode, elm: AstNode;
   const dom = editor.dom;
 
-  const setAttr = (elm, name, value) => {
+  const setAttr = (elm: AstNode, name: string, value: string | undefined) => {
     elm.attr(name, value ? value : undefined);
   };
 
-  const addHeadNode = (node) => {
+  const addHeadNode = (node: AstNode) => {
     if (headElement.firstChild) {
       headElement.insert(node, headElement.firstChild);
     } else {
@@ -136,7 +137,7 @@ const dataToHtml = (editor: Editor, data: Data, head) => {
     }
   };
 
-  const headerFragment = parseHeader(head);
+  const headerFragment = parseHeader(editor, head);
   headElement = headerFragment.getAll('head')[0];
   if (!headElement) {
     elm = headerFragment.getAll('html')[0];
@@ -152,7 +153,7 @@ const dataToHtml = (editor: Editor, data: Data, head) => {
   // Add/update/remove XML-PI
   elm = headerFragment.firstChild;
   if (data.xml_pi) {
-    value = 'version="1.0"';
+    let value = 'version="1.0"';
 
     if (data.docencoding) {
       value += ' encoding="' + data.docencoding + '"';

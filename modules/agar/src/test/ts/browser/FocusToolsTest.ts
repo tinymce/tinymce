@@ -1,5 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
+
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import * as FocusTools from 'ephox/agar/api/FocusTools';

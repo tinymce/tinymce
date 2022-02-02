@@ -1,7 +1,7 @@
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { SugarElement, SugarNode } from '@ephox/sugar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -9,6 +9,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
@@ -101,7 +102,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
       type: 'header'
     }, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td scope="col">X</td></tr></thead></table>');
+    TinyAssertions.assertContent(editor, '<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td>X</td></tr></thead></table>');
     assertEvents([{ type: 'tablemodified', structure: true, style: true }]);
   });
 
@@ -117,7 +118,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
       type: 'header'
     }, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table><caption>CAPTION</caption><thead><tr><td scope="col">X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table><caption>CAPTION</caption><thead><tr><td>X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>');
     assertEvents([{ type: 'tablemodified', structure: true, style: false }]);
   });
 

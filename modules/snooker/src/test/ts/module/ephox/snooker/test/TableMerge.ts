@@ -1,6 +1,7 @@
 import { assert } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableMerge from 'ephox/snooker/model/TableMerge';
@@ -8,7 +9,7 @@ import * as Fitment from 'ephox/snooker/test/Fitment';
 
 const mapToStructGrid = (grid: Structs.ElementNew[][]): Structs.RowCells[] => {
   return Arr.map(grid, (row) => {
-    return Structs.rowcells(row, 'tbody');
+    return Structs.rowcells('tr' as any, row, 'tbody', false);
   });
 };
 

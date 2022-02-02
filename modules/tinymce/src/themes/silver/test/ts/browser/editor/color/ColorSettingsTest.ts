@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -98,7 +98,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     },
     {
       text: 'Pale tomato',
-      value: '#FFB0A2',
+      value: '#FF6347',
       type: 'choiceitem',
       delta: 1
     }

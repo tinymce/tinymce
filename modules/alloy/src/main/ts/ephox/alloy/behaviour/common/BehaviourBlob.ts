@@ -1,5 +1,5 @@
-import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 
 import { BehaviourState, BehaviourStateInitialiser, NoState } from './BehaviourState';
 import { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec, BehaviourRecord } from './BehaviourTypes';
@@ -25,26 +25,26 @@ const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBe
    * and ensures that all the behaviours were valid. Will need to document
    * this entire process. Let's see where this is used.
    */
-  const schema: FieldProcessorAdt[] = Arr.map(all, (a) =>
+  const schema: FieldProcessor[] = Arr.map(all, (a) =>
     // Optional here probably just due to ForeignGui listing everything it supports. Can most likely
     // change it to strict once I fix the other errors.
     FieldSchema.optionObjOf(a.name(), [
-      FieldSchema.strict('config'),
+      FieldSchema.required('config'),
       FieldSchema.defaulted('state', NoState)
     ])
   );
 
   type B = Record<string, Optional<BehaviourSpec<BehaviourConfigSpec, BehaviourConfigDetail, BehaviourState>>>;
-  const validated = ValueSchema.asRaw<B>(
+  const validated = StructureSchema.asRaw<B>(
     'component.behaviours',
-    ValueSchema.objOf(schema),
+    StructureSchema.objOf(schema),
     spec.behaviours
   ).fold((errInfo) => {
     throw new Error(
-      ValueSchema.formatError(errInfo) + '\nComplete spec:\n' +
+      StructureSchema.formatError(errInfo) + '\nComplete spec:\n' +
         JSON.stringify(spec, null, 2)
     );
-  }, (v) => v);
+  }, Fun.identity);
 
   return {
     list: all,
@@ -53,7 +53,7 @@ const generateFrom = (spec: { behaviours?: BehaviourRecord }, all: Array<AlloyBe
         config: blob.config,
         state: blob.state.init(blob.config)
       }));
-      return () => output;
+      return Fun.constant(output);
     })
   };
 };

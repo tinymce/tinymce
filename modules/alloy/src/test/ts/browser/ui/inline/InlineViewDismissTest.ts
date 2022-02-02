@@ -86,14 +86,16 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
     return [
       UiFinder.sNotExists(gui.element, '.test-inline'),
       Step.sync(() => {
-        InlineView.showAt(inline, {
-          anchor: 'selection',
-          root: gui.element
-        }, Container.sketch({
+        InlineView.showAt(inline, Container.sketch({
           dom: {
             innerHtml: 'Inner HTML'
           }
-        }));
+        }), {
+          anchor: {
+            type: 'selection',
+            root: gui.element
+          }
+        });
       }),
       sCheckOpen('After show'),
 
@@ -106,14 +108,16 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
       Logger.t(
         'Show inline view again with different content',
         Step.sync(() => {
-          InlineView.showAt(inline, {
-            anchor: 'selection',
-            root: gui.element
-          }, Container.sketch({
+          InlineView.showAt(inline, Container.sketch({
             components: [
               Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') })
             ]
-          }));
+          }), {
+            anchor: {
+              type: 'selection',
+              root: gui.element
+            }
+          });
         })
       ),
 

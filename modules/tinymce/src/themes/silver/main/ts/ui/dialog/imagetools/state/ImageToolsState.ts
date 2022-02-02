@@ -5,8 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Singleton } from '@ephox/katamari';
+
 import Tools from 'tinymce/core/api/util/Tools';
+
 import UndoStack from '../UndoStack';
 
 interface BlobState {
@@ -21,7 +23,7 @@ interface UndoRedoState {
 
 const makeState = (initialState: BlobState) => {
   const blobState = Cell(initialState);
-  const tempState = Cell(Optional.none<BlobState>());
+  const tempState = Singleton.value<BlobState>();
   const undoStack = UndoStack();
   undoStack.add(initialState);
 
@@ -31,13 +33,13 @@ const makeState = (initialState: BlobState) => {
     blobState.set(state);
   };
 
-  const getTempState = (): BlobState => tempState.get().fold(() => blobState.get(), (temp) => temp);
+  const getTempState = (): BlobState => tempState.get().getOrThunk(blobState.get);
 
   const updateTempState = (blob: Blob): string => {
     const newTempState = createState(blob);
 
     destroyTempState();
-    tempState.set(Optional.some(newTempState));
+    tempState.set(newTempState);
     return newTempState.url;
   };
 
@@ -55,8 +57,8 @@ const makeState = (initialState: BlobState) => {
   };
 
   const destroyTempState = (): void => {
-    tempState.get().each(destroyState);
-    tempState.set(Optional.none());
+    tempState.on(destroyState);
+    tempState.clear();
   };
 
   const addBlobState = (blob: Blob): string => {
@@ -69,7 +71,7 @@ const makeState = (initialState: BlobState) => {
 
   const addTempState = (blob: Blob): string => {
     const newState = createState(blob);
-    tempState.set(Optional.some(newState));
+    tempState.set(newState);
     return newState.url;
   };
 

@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
+
 import * as Look from '../../look/Look';
 
 const selector = <E, D>(_universe: Universe<E, D>, sel: string): (universe: Universe<E, D>, item: E) => Optional<E> => {

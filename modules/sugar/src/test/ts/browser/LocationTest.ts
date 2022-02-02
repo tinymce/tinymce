@@ -1,14 +1,15 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
-import { Traverse } from 'ephox/sugar/api/Main';
 import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
 import * as SugarLocation from 'ephox/sugar/api/view/SugarLocation';
 
@@ -82,7 +83,7 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
         checks(doc);
         Remove.remove(iframe);
         next();
-      } catch (e) {
+      } catch (e: any) {
         // Remove.remove(iframe);
         failure(e);
       }

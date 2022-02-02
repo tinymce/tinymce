@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const parse = (timeString: string, defaultTime: string) => {
-  const multiples = {
+const parse = (timeString: string | undefined, defaultTime: string): number => {
+  const multiples: Record<string, number> = {
     s: 1000,
     m: 60000
   };

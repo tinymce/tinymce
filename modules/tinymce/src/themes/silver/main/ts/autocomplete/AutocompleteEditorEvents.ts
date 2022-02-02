@@ -8,8 +8,10 @@
 import { AlloyComponent, AlloyTriggers, Highlighting, NativeEvents } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
 import * as AutocompleteTag from './AutocompleteTag';
 
 export interface AutocompleterUiApi {

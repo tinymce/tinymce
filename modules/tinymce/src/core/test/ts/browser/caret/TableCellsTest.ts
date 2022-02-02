@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
 import * as TableCells from 'tinymce/core/caret/TableCells';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.caret.TableCellsTest', () => {
@@ -19,7 +20,7 @@ describe('browser.tinymce.core.caret.TableCellsTest', () => {
     Assertions.assertDomEq('Should be the expected element', expectedContainer, SugarElement.fromDom(cell));
   };
 
-  const assertNone = (opt: Optional<unknown>) => {
+  const assertNone = (opt: Optional<HTMLTableCellElement | HTMLTableCaptionElement>) => {
     assert.isTrue(opt.isNone(), 'Should be the none but got some');
   };
 

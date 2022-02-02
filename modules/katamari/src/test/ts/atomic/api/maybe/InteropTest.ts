@@ -1,5 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
+
 import * as Maybes from 'ephox/katamari/api/Maybes';
 
 describe('atomic.katamari.maybe.InteropTest', () => {

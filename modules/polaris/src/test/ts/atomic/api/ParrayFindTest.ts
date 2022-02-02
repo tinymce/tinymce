@@ -1,6 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import * as PositionArray from 'ephox/polaris/api/PositionArray';
 import * as Parrays from 'ephox/polaris/test/Parrays';
 

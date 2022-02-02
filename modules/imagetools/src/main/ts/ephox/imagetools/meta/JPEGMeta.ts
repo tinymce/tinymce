@@ -1,6 +1,7 @@
-import { Optionals } from '@ephox/katamari';
+import { Optionals, Results } from '@ephox/katamari';
+import Promise from '@ephox/wrap-promise-polyfill';
+
 import * as Conversions from '../util/Conversions';
-import { Promise } from '../util/Promise';
 import { BinaryReader } from './BinaryReader';
 import { readShort } from './BinaryReaderUtils';
 import { ExifTags, GPSTags, readMetaData, TiffTags } from './ExifReader';
@@ -25,7 +26,7 @@ const extractFrom = (blob: Blob): Promise<JPEGMeta> => {
   return Conversions.blobToArrayBuffer(blob).then<JPEGMeta>((ar) => {
     try {
       const br = new BinaryReader(ar);
-      if (readShort(br, 0).is(0xFFD8)) { // is JPEG
+      if (Results.is(readShort(br, 0), 0xFFD8)) { // is JPEG
         const headers = extractHeaders(br);
         const app1 = headers.filter((header) => header.name === 'APP1'); // APP1 contains Exif, Gps, etc
         const meta: JPEGMeta = {
@@ -47,7 +48,7 @@ const extractFrom = (blob: Blob): Promise<JPEGMeta> => {
       }
       return Promise.reject('Image was not a jpeg');
     } catch (ex) {
-      return Promise.reject(`Unsupported format or not an image: ${blob.type} (Exception: ${ex.message})`);
+      return Promise.reject(`Unsupported format or not an image: ${blob.type} (Exception: ${(ex as Error).message})`);
     }
   });
 };

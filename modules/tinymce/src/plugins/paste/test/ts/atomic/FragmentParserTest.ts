@@ -1,149 +1,89 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import * as FragmentParser from 'tinymce/plugins/paste/core/FragmentParser';
 
-UnitTest.test('atomic.tinymce.plugins.paste.FragmentParserTest', () => {
-  const testGetFragmentInfo = () => {
-    Assert.eq(
-      'Should be the input string and context body',
-      {
-        html: 'abc',
-        context: 'body'
-      },
-      FragmentParser.getFragmentInfo('abc')
-    );
+describe('atomic.tinymce.plugins.paste.FragmentParserTest', () => {
+  context('getFragmentInfo', () => {
+    it('should be a body context and the input for text content', () => {
+      const result = FragmentParser.getFragmentInfo('abc');
+      assert.deepEqual(result, { html: 'abc', context: 'body' });
+    });
 
-    Assert.eq(
-      'Should be the input string without fragment markers and context body', {
-        html: 'abc',
-        context: 'body'
-      },
-      FragmentParser.getFragmentInfo('<!-- StartFragment -->abc<!-- EndFragment -->')
-    );
+    it('should be a body context and the content inside the fragment markers for text', () => {
+      const text = FragmentParser.getFragmentInfo('<!-- StartFragment -->abc<!-- EndFragment -->');
+      assert.deepEqual(text, { html: 'abc', context: 'body' }, 'text with no before/after content');
 
-    Assert.eq(
-      'Should be the input string without fragment markers and context body', {
-        html: 'abc',
-        context: 'body'
-      },
-      FragmentParser.getFragmentInfo('<!--StartFragment-->abc<!--EndFragment-->')
-    );
+      const textNoSpaces = FragmentParser.getFragmentInfo('<!--StartFragment-->abc<!--EndFragment-->');
+      assert.deepEqual(textNoSpaces, { html: 'abc', context: 'body' }, 'text with no before/after content and no spaces in comments');
 
-    Assert.eq(
-      'Should be the input string without fragment markers and contents before/after fragment markers', {
-        html: 'abc',
-        context: 'body'
-      },
-      FragmentParser.getFragmentInfo('X<!--StartFragment-->abc<!--EndFragment-->Y')
-    );
+      const textWithOuterContent = FragmentParser.getFragmentInfo('X<!--StartFragment-->abc<!--EndFragment-->Y');
+      assert.deepEqual(textWithOuterContent, { html: 'abc', context: 'body' }, 'text with before/after content');
+    });
 
-    Assert.eq(
-      'Should be the input string without fragment markers and contents before/after fragment markers',
-      {
-        html: '<B>bold</B><I><B>abc</B>This</I>',
-        context: 'body'
-      },
-      FragmentParser.getFragmentInfo('<!DOCTYPE html><BODY><!-- StartFragment --><B>bold</B><I><B>abc</B>This</I><!-- EndFragment --></BODY></HTML>')
-    );
+    it('should be a body context and the content inside the fragment markers for html', () => {
+      const result = FragmentParser.getFragmentInfo('<!DOCTYPE html><BODY><!-- StartFragment --><B>bold</B><I><B>abc</B>This</I><!-- EndFragment --></BODY></HTML>');
+      assert.deepEqual(result, { html: '<B>bold</B><I><B>abc</B>This</I>', context: 'body' });
+    });
 
-    Assert.eq(
-      'Should be the input string without fragment markers and contents before/after them but with the ul context',
-      {
-        html: '<LI>abc</LI>',
-        context: 'ul'
-      },
-      FragmentParser.getFragmentInfo('<BODY><UL><!--StartFragment--><LI>abc</LI><!--EndFragment--></UL></BODY>')
-    );
+    it('should be a ul context and the content inside the fragment markers for lists', () => {
+      const simple = FragmentParser.getFragmentInfo('<BODY><UL><!--StartFragment--><LI>abc</LI><!--EndFragment--></UL></BODY>');
+      assert.deepEqual(simple, { html: '<LI>abc</LI>', context: 'ul' }, 'simple list');
 
-    Assert.eq(
-      'Should be the input string without fragment markers and contents before/after them but with the ul context',
-      {
-        html: '\n<LI>abc</LI>\n',
-        context: 'ul'
-      },
-      FragmentParser.getFragmentInfo('<BODY>\n<UL>\n<!--StartFragment-->\n<LI>abc</LI>\n<!--EndFragment-->\n</UL>\n</BODY>')
-    );
+      const newLines = FragmentParser.getFragmentInfo('<BODY>\n<UL>\n<!--StartFragment-->\n<LI>abc</LI>\n<!--EndFragment-->\n</UL>\n</BODY>');
+      assert.deepEqual(newLines, { html: '\n<LI>abc</LI>\n', context: 'ul' }, 'list with new lines');
+    });
 
-    Assert.eq(
-      'Should be the input string without fragment markers and contents before/after them but with the p context',
-      {
-        html: '<B>abc</B>',
-        context: 'p'
-      },
-      FragmentParser.getFragmentInfo('<BODY><P><!--StartFragment--><B>abc</B><!--EndFragment--></P></BODY>')
-    );
+    it('should be a p context and the content inside the fragment markers for paragraphs', () => {
+      const result = FragmentParser.getFragmentInfo('<BODY><P><!--StartFragment--><B>abc</B><!--EndFragment--></P></BODY>');
+      assert.deepEqual(result, { html: '<B>abc</B>', context: 'p' });
+    });
 
-    Assert.eq(
-      'Should be the input string without fragment markers and contents before/after them but with the h1 context',
-      {
-        html: '<B>abc</B>',
-        context: 'h1'
-      },
-      FragmentParser.getFragmentInfo('<BODY><H1><!--StartFragment--><B>abc</B><!--EndFragment--></H1></BODY>')
-    );
-  };
+    it('should be a h<num> context and the content inside the fragment markers for headings', () => {
+      const result = FragmentParser.getFragmentInfo('<BODY><H1><!--StartFragment--><B>abc</B><!--EndFragment--></H1></BODY>');
+      assert.deepEqual(result, { html: '<B>abc</B>', context: 'h1' });
+    });
+  });
 
-  const testGetFragmentHtml = () => {
-    Assert.eq(
-      'Should be the input string',
-      'abc',
-      FragmentParser.getFragmentHtml('abc')
-    );
+  context('getFragmentHtml', () => {
+    it('should be the input content', () => {
+      const result = FragmentParser.getFragmentHtml('abc');
+      assert.equal(result, 'abc');
+    });
 
-    Assert.eq(
-      'Should be the input without fragment markers',
-      'abc',
-      FragmentParser.getFragmentHtml('<!-- StartFragment -->abc<!-- EndFragment -->')
-    );
+    it('should be the content inside the fragment markers for text', () => {
+      const text = FragmentParser.getFragmentHtml('<!-- StartFragment -->abc<!-- EndFragment -->');
+      assert.equal(text, 'abc', 'text with no before/after content');
 
-    Assert.eq(
-      'Should be the input string without fragment markers',
-      'abc',
-      FragmentParser.getFragmentHtml('<!--StartFragment-->abc<!--EndFragment-->')
-    );
+      const textNoSpaces = FragmentParser.getFragmentHtml('<!--StartFragment-->abc<!--EndFragment-->');
+      assert.equal(textNoSpaces, 'abc', 'text with no before/after content and no spaces in comments');
 
-    Assert.eq(
-      'Should be the input string without fragment markers and suffix/prefix contents',
-      'abc',
-      FragmentParser.getFragmentHtml('X<!--StartFragment-->abc<!--EndFragment-->Y')
-    );
+      const textWithOuterContent = FragmentParser.getFragmentHtml('X<!--StartFragment-->abc<!--EndFragment-->Y');
+      assert.equal(textWithOuterContent, 'abc', 'text with before/after content');
+    });
 
-    Assert.eq(
-      'Should be the input string without fragment markers and suffix/prefix contents',
-      '<B>bold</B><I><B>abc</B>This</I>',
-      FragmentParser.getFragmentHtml('<!DOCTYPE html><BODY><!-- StartFragment --><B>bold</B><I><B>abc</B>This</I><!-- EndFragment --></BODY></HTML>')
-    );
+    it('should be the content inside the fragment markers for html', () => {
+      const result = FragmentParser.getFragmentHtml('<!DOCTYPE html><BODY><!-- StartFragment --><B>bold</B><I><B>abc</B>This</I><!-- EndFragment --></BODY></HTML>');
+      assert.equal(result, '<B>bold</B><I><B>abc</B>This</I>');
+    });
 
-    Assert.eq(
-      'Should be the input string without fragment markers and suffix/prefix contents',
-      '<LI>abc</LI>',
-      FragmentParser.getFragmentHtml('<BODY><UL><!--StartFragment--><LI>abc</LI><!--EndFragment--></UL></BODY>')
-    );
+    it('should be the content inside the fragment markers for lists', () => {
+      const simple = FragmentParser.getFragmentHtml('<BODY><UL><!--StartFragment--><LI>abc</LI><!--EndFragment--></UL></BODY>');
+      assert.equal(simple, '<LI>abc</LI>', 'simple list');
 
-    Assert.eq(
-      'Should be the input string without fragment markers and suffix/prefix contents',
-      '\n<LI>abc</LI>\n',
-      FragmentParser.getFragmentHtml('<BODY>\n<UL>\n<!--StartFragment-->\n<LI>abc</LI>\n<!--EndFragment-->\n</UL>\n</BODY>')
-    );
+      const newLines = FragmentParser.getFragmentHtml('<BODY>\n<UL>\n<!--StartFragment-->\n<LI>abc</LI>\n<!--EndFragment-->\n</UL>\n</BODY>');
+      assert.equal(newLines, '\n<LI>abc</LI>\n', 'list with new lines');
 
-    Assert.eq(
-      'Should be the input string with body element removed',
-      '<UL><LI>abc</LI></UL>',
-      FragmentParser.getFragmentHtml('<!DOCTYPE html><HTML><BODY><UL><LI>abc</LI></UL></BODY></HTML>')
-    );
+      const withRoot = FragmentParser.getFragmentHtml('<BODY CLASS="x"><!--StartFragment--><UL><LI>abc</LI></UL><!--EndFragment--></BODY>');
+      assert.equal(withRoot, '<UL><LI>abc</LI></UL>', 'list with root element');
+    });
 
-    Assert.eq(
-      'Should be the input string with body element removed',
-      '<UL><LI>abc</LI></UL>',
-      FragmentParser.getFragmentHtml('<BODY CLASS="x"><UL><LI>abc</LI></UL></BODY>')
-    );
+    it('should be the content inside the body', () => {
+      const full = FragmentParser.getFragmentHtml('<!DOCTYPE html><HTML><BODY><UL><LI>abc</LI></UL></BODY></HTML>');
+      assert.equal(full, '<UL><LI>abc</LI></UL>', 'full html with doctype and html element');
 
-    Assert.eq(
-      'Should be the input string with fragments and body element removed',
-      '<UL><LI>abc</LI></UL>',
-      FragmentParser.getFragmentHtml('<BODY CLASS="x"><!--StartFragment--><UL><LI>abc</LI></UL><!--EndFragment--></BODY>')
-    );
-  };
-
-  testGetFragmentInfo();
-  testGetFragmentHtml();
+      const fragment = FragmentParser.getFragmentHtml('<BODY CLASS="x"><UL><LI>abc</LI></UL></BODY>');
+      assert.equal(fragment, '<UL><LI>abc</LI></UL>', 'partial html with body only');
+    });
+  });
 });

@@ -25,6 +25,7 @@
  */
 
 import { Obj, Unicode } from '@ephox/katamari';
+
 import { URLConverter } from '../SettingsTypes';
 import Schema from './Schema';
 
@@ -82,7 +83,10 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
   return {
     /**
      * Parses the specified RGB color value and returns a hex version of that color.
+     * <br>
+     * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
      *
+     * @deprecated
      * @method toHex
      * @param {String} color RGB string value like rgb(1,2,3)
      * @return {String} Hex version of that RGB value like #FF00FF.

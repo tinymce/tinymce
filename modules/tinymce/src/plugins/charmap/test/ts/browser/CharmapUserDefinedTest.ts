@@ -1,11 +1,12 @@
 import { FocusTools } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarDocument } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { fakeEvent } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', () => {

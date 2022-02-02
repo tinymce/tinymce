@@ -4,6 +4,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
+
 import TestProviders from '../../../module/TestProviders';
 
 describe('phantom.tinymce.themes.silver.components.label.LabelTest', () => {

@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions, Mouse, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { Arr, Optionals } from '@ephox/katamari';
 import { Attribute, Height, SelectorFind, SugarBody, SugarDocument, SugarElement, SugarLocation, Width } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -61,9 +61,8 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
   const pAssertBlock = async (editor: Editor, blocked: boolean) => {
     const button = await TinyUiActions.pWaitForUi(editor, 'button:contains("Clickable?")');
     const parent = SelectorFind.closest(button, '[aria-busy]');
-    const isBlocked = parent
-      .bind((parent) => Attribute.getOpt(parent, 'aria-busy'))
-      .is('true');
+    const busyAttr = parent.bind((parent) => Attribute.getOpt(parent, 'aria-busy'));
+    const isBlocked = Optionals.is(busyAttr, 'true');
     assert.equal(isBlocked, blocked, 'Blocked state of the dialog');
   };
 

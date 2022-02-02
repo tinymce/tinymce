@@ -1,5 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional, OptionalInstances } from '@ephox/katamari';
+
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import { eqElement, tElement } from 'ephox/sugar/api/node/SugarElementInstances';
 

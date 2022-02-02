@@ -484,9 +484,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
 
   it('isDefaultPrevented', () => {
     const testObj: any = {};
-    const testCallback = () => {
-      return 'hello';
-    };
+    const testCallback = Fun.constant('hello');
     testObj.isDefaultPrevented = testCallback;
     eventUtils.fire(window, 'testEvent', testObj);
 

@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import AstNode, { Attributes } from 'tinymce/core/api/html/Node';
@@ -393,5 +393,49 @@ describe('browser.tinymce.core.html.NodeTest', () => {
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('b', 1));
     assert.isTrue(root.isEmpty({ img: 1 }, {}, isSpan), 'Should be true since the predicate says false.');
+  });
+
+  context('children', () => {
+    it('TINY-7756: Returns empty array when there are no children', () => {
+      const root = new AstNode('p', 1);
+      assert.lengthOf(root.children(), 0);
+    });
+
+    it('TINY-7756: Returns single child', () => {
+      const root = new AstNode('p', 1);
+      const child = root.append(new AstNode('span', 1));
+
+      const children = root.children();
+      assert.lengthOf(children, 1);
+      assert.strictEqual(children[0], child);
+    });
+
+    it('TINY-7756: Returns all children in order', () => {
+      const root = new AstNode('p', 1);
+      const child1 = root.append(new AstNode('span', 1));
+      const child2 = root.append(new AstNode('strong', 1));
+      const child3 = root.append(new AstNode('em', 1));
+
+      const children = root.children();
+      assert.lengthOf(children, 3);
+      assert.strictEqual(children[0], child1);
+      assert.strictEqual(children[1], child2);
+      assert.strictEqual(children[2], child3);
+    });
+
+    it('TINY-7756: Does not return descendants', () => {
+      const root = new AstNode('div', 1);
+      const child1 = root.append(new AstNode('span', 1));
+      child1.append(new AstNode('#text', 3));
+      const child2 = root.append(new AstNode('p', 1));
+      child2.append(new AstNode('strong', 1));
+      const child3 = root.append(new AstNode('em', 1));
+
+      const children = root.children();
+      assert.lengthOf(children, 3);
+      assert.strictEqual(children[0], child1);
+      assert.strictEqual(children[1], child2);
+      assert.strictEqual(children[2], child3);
+    });
   });
 });

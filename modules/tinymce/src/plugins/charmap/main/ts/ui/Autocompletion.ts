@@ -7,12 +7,13 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
+
 import * as CharMap from '../core/CharMap';
 import * as Scan from '../core/Scan';
 
 type CharMap = CharMap.CharMap;
 
-const init = (editor: Editor, all: CharMap) => {
+const init = (editor: Editor, all: CharMap): void => {
   editor.ui.registry.addAutocompleter('charmap', {
     ch: ':',
     columns: 'auto',

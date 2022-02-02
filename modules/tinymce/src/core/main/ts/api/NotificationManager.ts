@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Focus, SugarElement } from '@ephox/sugar';
+
 import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
@@ -139,9 +140,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
     });
   };
 
-  const getNotifications = (): NotificationApi[] => {
-    return notifications;
-  };
+  const getNotifications = Fun.constant(notifications);
 
   const registerEvents = (editor: Editor) => {
     editor.on('SkinLoaded', () => {
@@ -155,11 +154,15 @@ const NotificationManager = (editor: Editor): NotificationManager => {
           timeout: 0
         }, false);
       }
+
+      // Ensure the notifications are repositioned once the skin has loaded, as otherwise
+      // any notifications rendered before then may have wrapped and been in the wrong place
+      reposition();
     });
 
     // NodeChange is needed for inline mode and autoresize as the positioning is done
     // from the bottom up, which changes when the content in the editor changes.
-    editor.on('ResizeEditor ResizeWindow NodeChange', () => {
+    editor.on('show ResizeEditor ResizeWindow NodeChange', () => {
       Delay.requestAnimationFrame(reposition);
     });
 

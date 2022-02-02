@@ -41,6 +41,9 @@ const keyevent = (type: string, doc: SugarElement<Document>, value: number, modi
   } else {
 
     if (platform.browser.isChrome() || platform.browser.isEdge() || platform.browser.isFirefox()) {
+      if (type === 'keypress') {
+        defineGetter(oEvent, 'charCode', getter);
+      }
       defineGetter(oEvent, 'keyCode', getter);
       defineGetter(oEvent, 'which', getter);
       defineGetter(oEvent, 'shiftKey', () => mod.shiftKey === true);
@@ -72,6 +75,9 @@ const safari = (type: string, doc: SugarElement<Document>, value: number, modifi
   const oEvent = doc.dom.createEvent('Events');
   oEvent.initEvent(type, true, true);
 
+  if (type === 'keypress') {
+    (oEvent as any).charCode = value;
+  }
   (oEvent as any).which = value;
   (oEvent as any).keyCode = value;
   (oEvent as any).shiftKey = modifiers.shiftKey === true;

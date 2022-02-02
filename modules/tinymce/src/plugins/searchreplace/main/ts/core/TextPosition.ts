@@ -7,6 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import { SugarElement, SugarText } from '@ephox/sugar';
+
 import { Pattern, Position, TextMatch } from './Types';
 
 interface IndexedTextMatch extends TextMatch {

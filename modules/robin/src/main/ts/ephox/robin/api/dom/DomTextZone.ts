@@ -1,6 +1,7 @@
 import { DomUniverse } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import * as TextZone from '../general/TextZone';
 
 const universe = DomUniverse();

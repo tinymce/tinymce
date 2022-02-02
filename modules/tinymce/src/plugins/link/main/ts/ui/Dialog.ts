@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
@@ -15,9 +16,9 @@ import * as Utils from '../core/Utils';
 import { DialogChanges } from './DialogChanges';
 import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
-import { LinkDialogData, LinkDialogInfo } from './DialogTypes';
+import { LinkDialogData, LinkDialogInfo, LinkDialogKey } from './DialogTypes';
 
-const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>) => {
+const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>): void => {
   const data: LinkDialogData = api.getData();
 
   if (!data.url.value) {
@@ -29,7 +30,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
 
   // Check if a key is defined, meaning it was a field in the dialog. If it is,
   // then check if it's changed and return none if nothing has changed.
-  const getChangedValue = (key: string) => Optional.from(data[key]).filter((value) => !info.anchor[key].is(value));
+  const getChangedValue = (key: LinkDialogKey) => Optional.from(data[key]).filter((value) => !Optionals.is(info.anchor[key], value));
 
   const changedData = {
     href: data.url.value,
@@ -52,7 +53,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
   api.close();
 };
 
-const collectData = (editor): Promise<LinkDialogInfo> => {
+const collectData = (editor: Editor): Promise<LinkDialogInfo> => {
   const anchorNode: HTMLAnchorElement = Utils.getAnchorElement(editor);
   return DialogInfo.collect(editor, anchorNode);
 };
@@ -80,7 +81,7 @@ const getInitialData = (info: LinkDialogInfo, defaultTarget: Optional<string>): 
   };
 };
 
-const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
+const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
 
   const urlInput: Dialog.UrlInputSpec[] = [
     {
@@ -155,7 +156,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Dialog.
   };
 };
 
-const open = (editor: Editor) => {
+const open = (editor: Editor): void => {
   const data = collectData(editor);
   data.then((info) => {
     const onSubmit = handleSubmit(editor, info);

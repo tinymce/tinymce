@@ -48,7 +48,7 @@ const pattern: RegExp = (() => {
   const exponentPart = '[eE]' + signedInteger;
   const dot = '\\.';
 
-  const opt = (input: string) => `(?:${ input })?`;
+  const opt = (input: string) => `(?:${input})?`;
 
   const unsignedDecimalLiteral = [
     'Infinity',
@@ -57,9 +57,9 @@ const pattern: RegExp = (() => {
     decimalDigits + opt(exponentPart)
   ].join('|');
 
-  const float = `[+-]?(?:${ unsignedDecimalLiteral })`;
+  const float = `[+-]?(?:${unsignedDecimalLiteral})`;
 
-  return new RegExp(`^(${ float })(.*)$`);
+  return new RegExp(`^(${float})(.*)$`);
 })();
 
 const isUnit = <T extends keyof Units>(unit: string, accepted: T[]): unit is Units[T] =>

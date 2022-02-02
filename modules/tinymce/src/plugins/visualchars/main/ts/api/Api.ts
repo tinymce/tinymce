@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const get = (toggleState) => {
+import { Cell } from '@ephox/katamari';
+
+export interface Api {
+  readonly isEnabled: () => boolean;
+}
+
+const get = (toggleState: Cell<boolean>): Api => {
   const isEnabled = () => {
     return toggleState.get();
   };

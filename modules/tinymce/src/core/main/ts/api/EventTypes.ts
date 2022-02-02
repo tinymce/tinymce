@@ -6,8 +6,11 @@
  */
 
 import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
+import { FormatVars } from '../fmt/FormatTypes';
+import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
+import { ParserArgs } from './html/DomParser';
 import { Dialog } from './ui/Ui';
 import { NativeEventMap } from './util/EventDispatcher';
 import { InstanceApi } from './WindowManager';
@@ -16,11 +19,13 @@ export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
 
 // TODO Figure out if these properties should be on the ContentArgs types
 export type GetContentEvent = GetContentArgs & { source_view?: boolean; selection?: boolean; save?: boolean };
-export type SetContentEvent = SetContentArgs & { paste?: boolean; selection?: boolean };
+export type SetContentEvent = SetContentArgs & { source_view?: boolean; paste?: boolean; selection?: boolean };
 
 export interface NewBlockEvent { newBlock: Element }
 
 export interface NodeChangeEvent { element: Element; parents: Node[]; selectionChange?: boolean; initial?: boolean }
+
+export interface FormatEvent { format: string; vars?: FormatVars; node?: Node | RangeLikeObject }
 
 export interface ObjectResizeEvent { target: HTMLElement; width: number; height: number; origin: string }
 
@@ -47,6 +52,9 @@ export interface PlaceholderToggleEvent { state: boolean }
 
 export interface LoadErrorEvent { message: string }
 
+export interface PreProcessEvent extends ParserArgs { node: Element }
+export interface PostProcessEvent extends ParserArgs { content: string }
+
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
@@ -72,6 +80,8 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'BeforeExecCommand': ExecCommandEvent;
   'ExecCommand': ExecCommandEvent;
   'NodeChange': NodeChangeEvent;
+  'FormatApply': FormatEvent;
+  'FormatRemove': FormatEvent;
   'ShowCaret': ShowCaretEvent;
   'SelectionChange': { };
   'ObjectSelected': ObjectSelectedEvent;
@@ -104,6 +114,8 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'tap': TouchEvent;
   'longpress': TouchEvent;
   'longpresscancel': { };
+  'PreProcess': PreProcessEvent;
+  'PostProcess': PostProcessEvent;
 }
 
 export interface EditorManagerEventMap {

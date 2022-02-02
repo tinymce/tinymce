@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+
 import { copyCols } from 'ephox/snooker/api/CopyCols';
 
 UnitTest.test('CopyColumnsTest', () => {

@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
+
 import * as Simplify from 'ephox/robin/pathway/Simplify';
 
 UnitTest.test('SimplifyTest', () => {

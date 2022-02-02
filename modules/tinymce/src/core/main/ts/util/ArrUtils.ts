@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Type } from '@ephox/katamari';
+import { Obj, Type } from '@ephox/katamari';
 
 /**
  * Array utility class.
@@ -53,7 +53,7 @@ const each: {
   } else {
     // Hashtables
     for (n in o) {
-      if (o.hasOwnProperty(n)) {
+      if (Obj.has(o, n)) {
         if (cb.call(s, o[n], n, o) === false) {
           return false;
         }

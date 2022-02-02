@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import { Situs } from './Situs';
 
 export interface Response {

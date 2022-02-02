@@ -1,4 +1,5 @@
 import { Future, LazyValue, Result } from '@ephox/katamari';
+
 import * as DomEvent from '../events/DomEvent';
 import { EventArgs } from '../events/Types';
 import { SugarElement } from '../node/SugarElement';
@@ -24,6 +25,6 @@ const cWaitFor = (element: SugarElement, eventType: string, timeout: number): La
   w(LazyValue.nu, element, eventType, timeout);
 
 const waitFor = (element: SugarElement, eventType: string, timeout: number): Future<Result<EventArgs, string>> =>
-  w(Future.nu, element, eventType, timeout);
+  w<Future<Result<EventArgs, string>>>(Future.nu, element, eventType, timeout);
 
 export { cWaitFor, waitFor };

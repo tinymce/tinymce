@@ -8,29 +8,25 @@
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
-const toggleOutdentState = (api: Toolbar.ToolbarButtonInstanceApi, editor: Editor) => {
-  api.setDisabled(!editor.queryCommandState('outdent'));
+import { onActionExecCommand, onSetupEvent } from './ControlUtils';
 
-  const onNodeChange = () => {
+const onSetupOutdentState = (editor: Editor) =>
+  onSetupEvent(editor, 'NodeChange', (api: Toolbar.ToolbarButtonInstanceApi) => {
     api.setDisabled(!editor.queryCommandState('outdent'));
-  };
-
-  editor.on('NodeChange', onNodeChange);
-  return () => editor.off('NodeChange', onNodeChange);
-};
+  });
 
 const registerButtons = (editor: Editor) => {
   editor.ui.registry.addButton('outdent', {
     tooltip: 'Decrease indent',
     icon: 'outdent',
-    onSetup: (api) => toggleOutdentState(api, editor),
-    onAction: () => editor.execCommand('outdent')
+    onSetup: onSetupOutdentState(editor),
+    onAction: onActionExecCommand(editor, 'outdent')
   });
 
   editor.ui.registry.addButton('indent', {
     tooltip: 'Increase indent',
     icon: 'indent',
-    onAction: () => editor.execCommand('indent')
+    onAction: onActionExecCommand(editor, 'indent')
   });
 };
 

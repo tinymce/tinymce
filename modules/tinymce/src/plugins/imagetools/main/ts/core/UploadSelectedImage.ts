@@ -6,10 +6,12 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Actions from './Actions';
 
-const setup = (editor: Editor, imageUploadTimerState: Cell<number>, lastSelectedImageState: Cell<HTMLImageElement | null>) => {
+const setup = (editor: Editor, imageUploadTimerState: Cell<number>, lastSelectedImageState: Cell<HTMLImageElement | null>): void => {
   editor.on('NodeChange', (e) => {
     const lastSelectedImage = lastSelectedImageState.get();
     const selectedImage = Actions.getEditableImage(editor, e.element);

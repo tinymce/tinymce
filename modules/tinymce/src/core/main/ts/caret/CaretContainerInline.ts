@@ -6,13 +6,19 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import * as NodeType from '../dom/NodeType';
 import * as Zwsp from '../text/Zwsp';
 
 const isText = NodeType.isText;
-const startsWithCaretContainer = (node: Node) => isText(node) && node.data[0] === Zwsp.ZWSP;
-const endsWithCaretContainer = (node: Node) => isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
-const createZwsp = (node: Node) => node.ownerDocument.createTextNode(Zwsp.ZWSP);
+const startsWithCaretContainer = (node: Node): boolean =>
+  isText(node) && node.data[0] === Zwsp.ZWSP;
+
+const endsWithCaretContainer = (node: Node): boolean =>
+  isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
+
+const createZwsp = (node: Node): Text =>
+  node.ownerDocument.createTextNode(Zwsp.ZWSP);
 
 const insertBefore = (node: Node): Text => {
   if (isText(node.previousSibling)) {
@@ -36,7 +42,7 @@ const insertBefore = (node: Node): Text => {
   }
 };
 
-const insertAfter = (node: Node) => {
+const insertAfter = (node: Node): Text => {
   if (isText(node.nextSibling)) {
     if (startsWithCaretContainer(node.nextSibling)) {
       return node.nextSibling;
@@ -62,9 +68,11 @@ const insertAfter = (node: Node) => {
   }
 };
 
-const insertInline = (before: boolean, node: Node) => before ? insertBefore(node) : insertAfter(node);
-const insertInlineBefore = Fun.curry(insertInline, true) as (node: Node) => Text;
-const insertInlineAfter = Fun.curry(insertInline, false) as (node: Node) => Text;
+const insertInline = (before: boolean, node: Node): Text =>
+  before ? insertBefore(node) : insertAfter(node);
+
+const insertInlineBefore: (node: Node) => Text = Fun.curry(insertInline, true);
+const insertInlineAfter: (node: Node) => Text = Fun.curry(insertInline, false);
 
 export {
   insertInline,

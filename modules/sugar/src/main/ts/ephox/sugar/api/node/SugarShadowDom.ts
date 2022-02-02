@@ -1,4 +1,5 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
+
 import * as Traverse from '../search/Traverse';
 import { SugarElement } from './SugarElement';
 import * as SugarHead from './SugarHead';
@@ -13,7 +14,7 @@ export type RootNode = SugarElement<Document | ShadowRoot>;
  * a Document and a ShadowRoot.
  */
 export const isShadowRoot = (dos: RootNode): dos is SugarElement<ShadowRoot> =>
-  SugarNode.isDocumentFragment(dos) && Type.isNonNullable(dos.dom.host);
+  SugarNode.isDocumentFragment(dos) && Type.isNonNullable((dos.dom as ShadowRoot).host);
 
 /* eslint-disable @tinymce/no-implicit-dom-globals, @typescript-eslint/unbound-method */
 const supported: boolean =

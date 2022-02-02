@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
+
 import * as Fractures from 'ephox/robin/clumps/Fractures';
 
 UnitTest.test('FracturesTest', () => {

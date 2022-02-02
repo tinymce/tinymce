@@ -6,14 +6,17 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 export type HelpTabsSetting = (string | Dialog.TabSpec)[];
 
-const getHelpTabs = (editor: Editor): Optional<HelpTabsSetting> => Optional.from(editor.getParam('help_tabs'));
+const getHelpTabs = (editor: Editor): Optional<HelpTabsSetting> =>
+  Optional.from(editor.getParam('help_tabs'));
 
-const getForcedPlugins = (editor: Editor) => editor.getParam('forced_plugins');
+const getForcedPlugins = (editor: Editor): string[] | string | undefined =>
+  editor.getParam('forced_plugins');
 
 export {
   getHelpTabs,

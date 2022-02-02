@@ -8,6 +8,7 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, SugarElement } from '@ephox/sugar';
+
 import Delay from 'tinymce/core/api/util/Delay';
 
 const INTERVAL = 50;

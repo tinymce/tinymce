@@ -6,27 +6,27 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
-const stateSelectorAdapter = (editor: Editor, selector: string[]) => (buttonApi: Toolbar.ToolbarToggleButtonInstanceApi) =>
-  editor.selection.selectorChangedWithUnbind(selector.join(','), buttonApi.setActive).unbind;
+import { isMediaElement } from '../core/Selection';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
+  const onAction = () => editor.execCommand('mceMedia');
+
   editor.ui.registry.addToggleButton('media', {
     tooltip: 'Insert/edit media',
     icon: 'embed',
-    onAction: () => {
-      editor.execCommand('mceMedia');
-    },
-    onSetup: stateSelectorAdapter(editor, [ 'img[data-mce-object]', 'span[data-mce-object]', 'div[data-ephox-embed-iri]' ])
+    onAction,
+    onSetup: (buttonApi) => {
+      const selection = editor.selection;
+      buttonApi.setActive(isMediaElement(selection.getNode()));
+      return selection.selectorChangedWithUnbind('img[data-mce-object],span[data-mce-object],div[data-ephox-embed-iri]', buttonApi.setActive).unbind;
+    }
   });
 
   editor.ui.registry.addMenuItem('media', {
     icon: 'embed',
     text: 'Media...',
-    onAction: () => {
-      editor.execCommand('mceMedia');
-    }
+    onAction
   });
 };
 

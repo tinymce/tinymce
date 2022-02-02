@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as DocumentPosition from 'ephox/sugar/api/dom/DocumentPosition';
 import * as Insert from 'ephox/sugar/api/dom/Insert';

@@ -6,31 +6,51 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+const genericBase = {
+  remove_similar: true,
+  inherit: false
+};
+
+const cellBase = {
+  selector: 'td,th',
+  ...genericBase
+};
 
 const cellFormats = {
   tablecellbackgroundcolor: {
-    selector: 'td,th',
     styles: { backgroundColor: '%value' },
-    remove_similar: true
+    ...cellBase
+  },
+  tablecellverticalalign: {
+    styles: {
+      'vertical-align': '%value'
+    },
+    ...cellBase
   },
   tablecellbordercolor: {
-    selector: 'td,th',
     styles: { borderColor: '%value' },
-    remove_similar: true
+    ...cellBase
+  },
+  tablecellclass: {
+    classes: [ '%value' ],
+    ...cellBase
+  },
+  tableclass: {
+    selector: 'table',
+    classes: [ '%value' ],
+    ...genericBase
   },
   tablecellborderstyle: {
-    selector: 'td,th',
     styles: { borderStyle: '%value' },
-    remove_similar: true
+    ...cellBase
   },
   tablecellborderwidth: {
-    selector: 'td,th',
     styles: { borderWidth: '%value' },
-    remove_similar: true
+    ...cellBase
   }
 };
 
-const registerFormats = (editor: Editor) => {
+const registerFormats = (editor: Editor): void => {
   editor.formatter.register(cellFormats);
 };
 

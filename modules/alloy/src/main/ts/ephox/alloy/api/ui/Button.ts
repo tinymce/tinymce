@@ -70,7 +70,7 @@ const Button: ButtonSketcher = Sketcher.single({
   factory,
   configFields: [
     FieldSchema.defaulted('uid', undefined),
-    FieldSchema.strict('dom'),
+    FieldSchema.required('dom'),
     FieldSchema.defaulted('components', [ ]),
     SketchBehaviours.field('buttonBehaviours', [ Focusing, Keying ]),
     FieldSchema.option('action'),

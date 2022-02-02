@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const register = (editor: Editor, dialogOpener: () => void) => {
+const register = (editor: Editor, dialogOpener: () => void): void => {
   editor.ui.registry.addButton('help', {
     icon: 'help',
     tooltip: 'Help',

@@ -6,6 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import Env from '../api/Env';
 import * as ClientRect from '../geom/ClientRect';
 import * as NodeType from './NodeType';

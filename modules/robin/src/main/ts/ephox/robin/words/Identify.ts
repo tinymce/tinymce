@@ -1,5 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Pattern, Search } from '@ephox/polaris';
+
 import { WordScope } from '../data/WordScope';
 import * as WordSanitiser from '../util/WordSanitiser';
 

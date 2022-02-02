@@ -7,9 +7,10 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import { onSetupFormatToggle } from './complex/utils/Utils';
 
-const toggleFormat = (editor: Editor, fmt: string) => () => {
+import { onActionExecCommand, onSetupFormatToggle } from './ControlUtils';
+
+const onActionToggleFormat = (editor: Editor, fmt: string) => () => {
   editor.execCommand('mceToggleFormat', false, fmt);
 };
 
@@ -26,7 +27,7 @@ const registerFormatButtons = (editor: Editor) => {
       tooltip: btn.text,
       icon: btn.icon,
       onSetup: onSetupFormatToggle(editor, btn.name),
-      onAction: toggleFormat(editor, btn.name)
+      onAction: onActionToggleFormat(editor, btn.name)
     });
   });
 
@@ -36,7 +37,7 @@ const registerFormatButtons = (editor: Editor) => {
       text: name.toUpperCase(),
       tooltip: 'Heading ' + i,
       onSetup: onSetupFormatToggle(editor, name),
-      onAction: toggleFormat(editor, name)
+      onAction: onActionToggleFormat(editor, name)
     });
   }
 };
@@ -56,7 +57,7 @@ const registerCommandButtons = (editor: Editor) => {
     editor.ui.registry.addButton(btn.name, {
       tooltip: btn.text,
       icon: btn.icon,
-      onAction: () => editor.execCommand(btn.action)
+      onAction: onActionExecCommand(editor, btn.action)
     });
   });
 };
@@ -68,7 +69,7 @@ const registerCommandToggleButtons = (editor: Editor) => {
     editor.ui.registry.addToggleButton(btn.name, {
       tooltip: btn.text,
       icon: btn.icon,
-      onAction: () => editor.execCommand(btn.action),
+      onAction: onActionExecCommand(editor, btn.action),
       onSetup: onSetupFormatToggle(editor, btn.name)
     });
   });
@@ -99,14 +100,14 @@ const registerMenuItems = (editor: Editor) => {
       text: btn.text,
       icon: btn.icon,
       shortcut: btn.shortcut,
-      onAction: () => editor.execCommand(btn.action)
+      onAction: onActionExecCommand(editor, btn.action)
     });
   });
 
   editor.ui.registry.addMenuItem('codeformat', {
     text: 'Code',
     icon: 'sourcecode',
-    onAction: toggleFormat(editor, 'code')
+    onAction: onActionToggleFormat(editor, 'code')
   });
 };
 

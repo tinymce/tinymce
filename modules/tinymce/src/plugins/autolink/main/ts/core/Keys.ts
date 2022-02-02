@@ -5,32 +5,37 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Strings } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+
 import * as Settings from '../api/Settings';
 
-const rangeEqualsDelimiterOrSpace = (rangeString, delimiter) => {
-  return rangeString === delimiter || rangeString === ' ' || rangeString.charCodeAt(0) === 160;
-};
+const rangeEqualsBracketOrSpace = (rangeString: string): boolean =>
+  /^[(\[{ \u00a0]$/.test(rangeString);
 
-const handleEclipse = (editor) => {
-  parseCurrentLine(editor, -1, '(');
-};
+const isTextNode = (node: Node): node is Text =>
+  node.nodeType === 3;
 
-const handleSpacebar = (editor) => {
-  parseCurrentLine(editor, 0, '');
-};
+const isElement = (node: Node): node is Element =>
+  node.nodeType === 1;
 
-const handleEnter = (editor) => {
-  parseCurrentLine(editor, -1, '');
-};
+const handleBracket = (editor: Editor): void =>
+  parseCurrentLine(editor, -1);
 
-const scopeIndex = (container, index) => {
+const handleSpacebar = (editor: Editor): void =>
+  parseCurrentLine(editor, 0);
+
+const handleEnter = (editor: Editor): void =>
+  parseCurrentLine(editor, -1);
+
+const scopeIndex = (container: Node, index: number): number => {
   if (index < 0) {
     index = 0;
   }
 
-  if (container.nodeType === 3) {
+  if (isTextNode(container)) {
     const len = container.data.length;
 
     if (index > len) {
@@ -41,29 +46,37 @@ const scopeIndex = (container, index) => {
   return index;
 };
 
-const setStart = (rng, container, offset) => {
-  if (container.nodeType !== 1 || container.hasChildNodes()) {
+const setStart = (rng: Range, container: Node, offset: number): void => {
+  if (!isElement(container) || container.hasChildNodes()) {
     rng.setStart(container, scopeIndex(container, offset));
   } else {
     rng.setStartBefore(container);
   }
 };
 
-const setEnd = (rng, container, offset) => {
-  if (container.nodeType !== 1 || container.hasChildNodes()) {
+const setEnd = (rng: Range, container: Node, offset: number): void => {
+  if (!isElement(container) || container.hasChildNodes()) {
     rng.setEnd(container, scopeIndex(container, offset));
   } else {
     rng.setEndAfter(container);
   }
 };
 
-const parseCurrentLine = (editor: Editor, endOffset, delimiter) => {
+// Note: This is similar to the Polaris protocol detection, except it also handles `mailto` and any length scheme
+const hasProtocol = (url: string): boolean =>
+  /^([A-Za-z][A-Za-z\d.+-]*:\/\/)|mailto:/.test(url);
+
+// A limited list of punctuation characters that might be used after a link
+const isPunctuation = (char: string) =>
+  /[?!,.;:]/.test(char);
+
+const parseCurrentLine = (editor: Editor, endOffset: number): void => {
   let end, endContainer, bookmark, text, prev, len, rngText;
   const autoLinkPattern = Settings.getAutoLinkPattern(editor);
   const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
 
   // Never create a link when we are inside a link
-  if (editor.selection.getNode().tagName === 'A') {
+  if (editor.dom.getParent(editor.selection.getNode(), 'a[href]') !== null) {
     return;
   }
 
@@ -96,13 +109,13 @@ const parseCurrentLine = (editor: Editor, endOffset, delimiter) => {
     endContainer = rng.endContainer;
 
     // Get a text node
-    if (endContainer.nodeType !== 3 && endContainer.firstChild) {
-      while (endContainer.nodeType !== 3 && endContainer.firstChild) {
+    if (!isTextNode(endContainer) && endContainer.firstChild) {
+      while (!isTextNode(endContainer) && endContainer.firstChild) {
         endContainer = endContainer.firstChild;
       }
 
       // Move range to text node
-      if (endContainer.nodeType === 3) {
+      if (isTextNode(endContainer)) {
         setStart(rng, endContainer, 0);
         setEnd(rng, endContainer, endContainer.nodeValue.length);
       }
@@ -124,10 +137,10 @@ const parseCurrentLine = (editor: Editor, endOffset, delimiter) => {
     end -= 1;
     rngText = rng.toString();
 
-    // Loop until one of the following is found: a blank space, &nbsp;, delimiter, (end-2) >= 0
-  } while (rngText !== ' ' && rngText !== '' && rngText.charCodeAt(0) !== 160 && (end - 2) >= 0 && rngText !== delimiter);
+    // Loop until one of the following is found: a blank space, &nbsp;, bracket, (end-2) >= 0
+  } while (!rangeEqualsBracketOrSpace(rngText) && (end - 2) >= 0);
 
-  if (rangeEqualsDelimiterOrSpace(rng.toString(), delimiter)) {
+  if (rangeEqualsBracketOrSpace(rng.toString())) {
     setStart(rng, endContainer, end);
     setEnd(rng, endContainer, start);
     end += 1;
@@ -141,7 +154,7 @@ const parseCurrentLine = (editor: Editor, endOffset, delimiter) => {
 
   // Exclude last . from word like "www.site.com."
   text = rng.toString();
-  if (text.charAt(text.length - 1) === '.') {
+  if (isPunctuation(text.charAt(text.length - 1))) {
     setEnd(rng, endContainer, start - 1);
   }
 
@@ -151,16 +164,17 @@ const parseCurrentLine = (editor: Editor, endOffset, delimiter) => {
   const protocol = Settings.getDefaultLinkProtocol(editor);
 
   if (matches) {
-    if (matches[1] === 'www.') {
-      matches[1] = protocol + '://www.';
-    } else if (/@$/.test(matches[1]) && !/^mailto:/.test(matches[1])) {
-      matches[1] = 'mailto:' + matches[1];
+    let url = matches[0];
+    if (Strings.startsWith(url, 'www.')) {
+      url = protocol + '://' + url;
+    } else if (Strings.contains(url, '@') && !hasProtocol(url)) {
+      url = 'mailto:' + url;
     }
 
     bookmark = editor.selection.getBookmark();
 
     editor.selection.setRng(rng);
-    editor.execCommand('createlink', false, matches[1] + matches[2]);
+    editor.execCommand('createlink', false, url);
 
     if (defaultLinkTarget !== false) {
       editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
@@ -171,8 +185,8 @@ const parseCurrentLine = (editor: Editor, endOffset, delimiter) => {
   }
 };
 
-const setup = (editor: Editor) => {
-  let autoUrlDetectState;
+const setup = (editor: Editor): void => {
+  let autoUrlDetectState: boolean | undefined;
 
   editor.on('keydown', (e) => {
     if (e.keyCode === 13) {
@@ -198,8 +212,9 @@ const setup = (editor: Editor) => {
   }
 
   editor.on('keypress', (e) => {
-    if (e.keyCode === 41) {
-      return handleEclipse(editor);
+    // One of the closing bracket keys: ), ] or }
+    if (e.keyCode === 41 || e.keyCode === 93 || e.keyCode === 125) {
+      return handleBracket(editor);
     }
   });
 

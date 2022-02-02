@@ -6,6 +6,7 @@
  */
 
 import { Obj } from '@ephox/katamari';
+
 import Tools from './Tools';
 
 type WithSubItems<T, K extends keyof T> = T[K] extends Array<any> ? (T & T[K][number]): T;
@@ -91,6 +92,7 @@ Class.extend = extendClass = function <T extends Props<A>, A extends any[]> (pro
 
   // Creates a overloaded method for the class
   // this enables you to use this._super(); to call the super function
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   const createMethod = function (name, fn) {
     return function () {
       const self = this;

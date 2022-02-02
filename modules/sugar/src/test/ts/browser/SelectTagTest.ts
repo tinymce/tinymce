@@ -1,5 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Select from 'ephox/sugar/api/tag/SelectTag';
 

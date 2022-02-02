@@ -88,14 +88,16 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       ),
 
       Step.sync(() => {
-        InlineView.showAt(inline, {
-          anchor: 'selection',
-          root: gui.element
-        }, Container.sketch({
+        InlineView.showAt(inline, Container.sketch({
           dom: {
             innerHtml: 'Inner HTML'
           }
-        }));
+        }), {
+          anchor: {
+            type: 'selection',
+            root: gui.element
+          }
+        });
       }),
       sCheckOpen('After show'),
 
@@ -159,15 +161,17 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       sCheckClosed('After hide'),
 
       Step.sync(() => {
-        InlineView.showAt(inline, {
-          anchor: 'makeshift',
-          x: 50,
-          y: 50
-        }, Container.sketch({
+        InlineView.showAt(inline, Container.sketch({
           dom: {
             innerHtml: 'Inner HTML'
           }
-        }));
+        }), {
+          anchor: {
+            type: 'makeshift',
+            x: 50,
+            y: 50
+          }
+        });
       }),
       sCheckOpen('After show'),
 
@@ -221,10 +225,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
             }
           });
 
-          InlineView.showAt(inline, {
-            anchor: 'selection',
-            root: gui.element
-          }, Container.sketch({
+          InlineView.showAt(inline, Container.sketch({
             components: [
               Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') }),
               Button.sketch({ uid: 'italic-button', dom: { tag: 'button', innerHtml: 'I', classes: [ 'italic-button' ] }, action: store.adder('italic') }),
@@ -232,7 +233,12 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
               buildDropdown('+', 'Option'),
               buildDropdown('-', 'Item')
             ]
-          }));
+          }), {
+            anchor: {
+              type: 'selection',
+              root: gui.element
+            }
+          });
         })
       ),
 

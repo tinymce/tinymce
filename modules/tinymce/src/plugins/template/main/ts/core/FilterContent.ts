@@ -7,11 +7,12 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 import * as DateTimeHelper from './DateTimeHelper';
 import * as Templates from './Templates';
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.on('PreProcess', (o) => {
     const dom = editor.dom, dateFormat = Settings.getMdateFormat(editor);
 

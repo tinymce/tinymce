@@ -7,13 +7,16 @@
 
 import { Arr } from '@ephox/katamari';
 import { Class, SugarElement, SugarNode } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Data from './Data';
 import * as Nodes from './Nodes';
 
-const isWrappedNbsp = (node) => node.nodeName.toLowerCase() === 'span' && node.classList.contains('mce-nbsp-wrap');
+const isWrappedNbsp = (node: Node): node is HTMLSpanElement =>
+  node.nodeName.toLowerCase() === 'span' && (node as HTMLSpanElement).classList.contains('mce-nbsp-wrap');
 
-const show = (editor: Editor, rootElm: Node) => {
+const show = (editor: Editor, rootElm: Node): void => {
   const nodeList = Nodes.filterDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch);
 
   Arr.each(nodeList, (n) => {
@@ -34,7 +37,7 @@ const show = (editor: Editor, rootElm: Node) => {
   });
 };
 
-const hide = (editor: Editor, rootElm: Node) => {
+const hide = (editor: Editor, rootElm: Node): void => {
   const nodeList = editor.dom.select(Data.selector, rootElm);
 
   Arr.each(nodeList, (node) => {
@@ -46,7 +49,7 @@ const hide = (editor: Editor, rootElm: Node) => {
   });
 };
 
-const toggle = (editor: Editor) => {
+const toggle = (editor: Editor): void => {
   const body = editor.getBody();
   const bookmark = editor.selection.getBookmark();
   let parentNode = Nodes.findParentElm(editor.selection.getNode(), body);

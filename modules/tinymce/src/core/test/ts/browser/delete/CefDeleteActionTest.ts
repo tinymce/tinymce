@@ -6,6 +6,7 @@ import { assert } from 'chai';
 
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 type DeleteActionAdt = CefDeleteAction.DeleteActionAdt;
@@ -61,7 +62,7 @@ describe('browser.tinymce.core.delete.CefDeleteActionTest', () => {
   };
 
   const actionValue = (action: DeleteActionAdt) => {
-    return action.fold<SugarElement<Element> | CaretPosition>(
+    return action.fold<SugarElement<Node> | CaretPosition>(
       SugarElement.fromDom,
       SugarElement.fromDom,
       Fun.identity

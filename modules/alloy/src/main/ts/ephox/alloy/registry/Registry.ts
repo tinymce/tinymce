@@ -22,10 +22,10 @@ export const Registry = (): Registry => {
 
   const readOrTag = (component: AlloyComponent): string => {
     const elem = component.element;
-    return Tagger.read(elem).fold(() =>
+    return Tagger.read(elem).getOrThunk(() =>
       // No existing tag, so add one.
       Tagger.write('uid-', component.element)
-    , (uid) => uid);
+    );
   };
 
   const failOnDuplicate = (component: AlloyComponent, tagId: string): void => {

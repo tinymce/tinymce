@@ -2,7 +2,9 @@ import { ApproxStructure, Assertions, Keyboard, Keys, UiFinder } from '@ephox/ag
 import { AlloyComponent, Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
+
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
+
 import TestProviders from '../../../module/TestProviders';
 
 describe('phantom.tinymce.themes.silver.components.checkbox.Checkbox component Test', () => {

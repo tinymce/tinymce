@@ -4,6 +4,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 import { Spot } from '@ephox/phoenix';
 import { Pattern } from '@ephox/polaris';
 import { Compare, Html, Insert, InsertAll, SugarElement } from '@ephox/sugar';
+
 import * as DomTextSearch from 'ephox/robin/api/dom/DomTextSearch';
 import { TextSeekerOutcome, TextSeekerPhaseConstructor } from 'ephox/robin/textdata/TextSeeker';
 

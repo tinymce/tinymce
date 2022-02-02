@@ -8,9 +8,10 @@
 import { TieredData, TieredMenu } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Id, Merger, Obj, Optional } from '@ephox/katamari';
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
-import ItemResponse from '../item/ItemResponse';
 
+import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+
+import ItemResponse from '../item/ItemResponse';
 import { expand } from './MenuConversion';
 import { createPartialMenu } from './SingleMenu';
 import { SingleMenuItemSpec } from './SingleMenuTypes';

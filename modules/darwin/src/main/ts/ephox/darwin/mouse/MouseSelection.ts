@@ -1,5 +1,6 @@
-import { Singleton } from '@ephox/katamari';
-import { Compare, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Optional, Optionals, Singleton } from '@ephox/katamari';
+import { Compare, ContentEditable, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
+
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
 import * as CellSelection from '../selection/CellSelection';
@@ -11,11 +12,11 @@ export interface MouseSelection {
   readonly mouseup: (event: EventArgs<MouseEvent>) => void;
 }
 
-const findCell = (target: SugarElement, isRoot: (e: SugarElement) => boolean) =>
-  SelectorFind.closest(target, 'td,th', isRoot);
+const findCell = (target: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean): Optional<SugarElement<HTMLTableCellElement>> =>
+  SelectorFind.closest<HTMLTableCellElement>(target, 'td,th', isRoot);
 
-export const MouseSelection = (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): MouseSelection => {
-  const cursor = Singleton.value<SugarElement>();
+export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Node>, isRoot: (e: SugarElement<Node>) => boolean, annotations: SelectionAnnotation): MouseSelection => {
+  const cursor = Singleton.value<SugarElement<HTMLTableCellElement>>();
   const clearstate = cursor.clear;
 
   const applySelection = (event: EventArgs<MouseEvent>) => {
@@ -24,10 +25,19 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement, is
       findCell(event.target, isRoot).each((finish) => {
         CellSelection.identify(start, finish, isRoot).each((cellSel) => {
           const boxes = cellSel.boxes.getOr([]);
-          // Wait until we have more than one, otherwise you can't do text selection inside a cell.
-          // Alternatively, if the one cell selection starts in one cell and ends in a different cell,
-          // we can assume that the user is trying to make a one cell selection in two different tables which should be possible.
-          if (boxes.length > 1 || (boxes.length === 1 && !Compare.eq(start, finish))) {
+          if (boxes.length === 1) {
+            // If a single noneditable cell is selected and the actual selection target within the cell
+            // is also noneditable, make sure it is annotated
+            const singleCell = boxes[0];
+            const isNonEditableCell = ContentEditable.getRaw(singleCell) === 'false';
+            const isCellClosestContentEditable = Optionals.is(ContentEditable.closest(event.target), singleCell, Compare.eq);
+            if (isNonEditableCell && isCellClosestContentEditable) {
+              annotations.selectRange(container, boxes, singleCell, singleCell);
+              // TODO: TINY-7874 This is purely a workaround until the offscreen selection issues are solved
+              bridge.selectContents(singleCell);
+            }
+          } else if (boxes.length > 1) {
+            // Wait until we have more than one, otherwise you can't do text selection inside a cell.
             annotations.selectRange(container, boxes, cellSel.start, cellSel.finish);
 
             // stop the browser from creating a big text selection, select the cell where the cursor is

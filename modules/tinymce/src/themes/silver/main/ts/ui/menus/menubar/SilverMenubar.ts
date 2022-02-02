@@ -9,14 +9,15 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Dropdown, Focusing, Keying, NativeEvents, RawDomSchema, Replacing, Sketcher,
   SystemEvents, Tabstopping, UiSketcher
 } from '@ephox/alloy';
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, EventArgs, SelectorFind } from '@ephox/sugar';
+
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import { TranslatedString } from 'tinymce/core/api/util/I18n';
-
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+
 import { renderMenuButton } from '../../button/MenuButton';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';
 
@@ -59,7 +60,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
       };
 
       // Convert to an internal bridge spec
-      const internal = Toolbar.createMenuButton(buttonSpec).mapError((errInfo) => ValueSchema.formatError(errInfo)).getOrDie();
+      const internal = Toolbar.createMenuButton(buttonSpec).mapError((errInfo) => StructureSchema.formatError(errInfo)).getOrDie();
 
       return renderMenuButton(internal,
         MenuButtonClasses.Button,
@@ -141,10 +142,10 @@ export default Sketcher.single<SilverMenubarSpec, SilverMenubarDetail, SilverMen
   factory,
   name: 'silver.Menubar',
   configFields: [
-    FieldSchema.strict('dom'),
-    FieldSchema.strict('uid'),
-    FieldSchema.strict('onEscape'),
-    FieldSchema.strict('backstage'),
+    FieldSchema.required('dom'),
+    FieldSchema.required('uid'),
+    FieldSchema.required('onEscape'),
+    FieldSchema.required('backstage'),
     FieldSchema.defaulted('onSetup', Fun.noop)
   ],
   apis: {

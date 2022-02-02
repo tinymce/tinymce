@@ -22,7 +22,7 @@ export interface Base64UriParts {
 }
 
 export const extractBase64DataUris = (html: string): Base64Extract => {
-  const dataImageUri = /data:[^;]+;base64,([a-z0-9\+\/=]+)/gi;
+  const dataImageUri = /data:[^;]+;base64,([a-z0-9\+\/=\s]+)/gi;
   const chunks: string[] = [];
   const uris: UriMap = {};
   const prefix = Id.generate('img');
@@ -56,13 +56,13 @@ export const extractBase64DataUris = (html: string): Base64Extract => {
   }
 };
 
-export const restoreDataUris = (html: string, result: Base64Extract) =>
+export const restoreDataUris = (html: string, result: Base64Extract): string =>
   html.replace(result.re, (imageId) =>
     Obj.get(result.uris, imageId).getOr(imageId)
   );
 
 export const parseDataUri = (uri: string): Optional<Base64UriParts> => {
-  const matches = /data:([^;]+);base64,([a-z0-9\+\/=]+)/i.exec(uri);
+  const matches = /data:([^;]+);base64,([a-z0-9\+\/=\s]+)/i.exec(uri);
   if (matches) {
     return Optional.some({ type: matches[1], data: decodeURIComponent(matches[2]) });
   } else {

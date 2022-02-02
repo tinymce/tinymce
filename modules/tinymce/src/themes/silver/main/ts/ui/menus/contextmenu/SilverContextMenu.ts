@@ -7,11 +7,14 @@
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Arr, Fun, Obj, Result, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Result, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorExists, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+
+import { AnchorType } from './Coords';
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';
 import * as Settings from './Settings';
@@ -86,7 +89,7 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
       if (Type.isString(items)) {
         return addContextMenuGroup(acc, items.split(' '));
       } else if (items.length > 0) {
-        // TODO: Should we add a ValueSchema check here?
+        // TODO: Should we add a StructureSchema check here?
         const allItems = Arr.map(items, makeContextItem);
         return addContextMenuGroup(acc, allItems);
       } else {
@@ -117,15 +120,15 @@ export const isTriggeredByKeyboard = (editor: Editor, e: PointerEvent) =>
 const getSelectedElement = (editor: Editor, e: PointerEvent) =>
   isTriggeredByKeyboard(editor, e) ? editor.selection.getStart(true) : e.target as Element;
 
-const shouldUseNodeAnchor = (editor: Editor, e: PointerEvent) => {
+const getAnchorType = (editor: Editor, e: PointerEvent): AnchorType => {
   const selector = Settings.getAvoidOverlapSelector(editor);
-  if (isTriggeredByKeyboard(editor, e)) {
-    return true;
-  } else if (selector) {
+  const anchorType = isTriggeredByKeyboard(editor, e) ? 'selection' : 'point';
+  if (Strings.isNotEmpty(selector)) {
     const target = getSelectedElement(editor, e);
-    return SelectorExists.closest(SugarElement.fromDom(target), selector);
+    const selectorExists = SelectorExists.closest(SugarElement.fromDom(target), selector);
+    return selectorExists ? 'node' : anchorType;
   } else {
-    return false;
+    return anchorType;
   }
 };
 
@@ -166,7 +169,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
       return;
     }
 
-    const useNodeAnchor = shouldUseNodeAnchor(editor, e);
+    const anchorType = getAnchorType(editor, e);
 
     const buildMenu = () => {
       // Use the event target element for touch events, otherwise fallback to the current selection
@@ -178,7 +181,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
     };
 
     const initAndShow = isTouch() ? MobileContextMenu.initAndShow : DesktopContextMenu.initAndShow;
-    initAndShow(editor, e, buildMenu, backstage, contextmenu, useNodeAnchor);
+    initAndShow(editor, e, buildMenu, backstage, contextmenu, anchorType);
   };
 
   editor.on('init', () => {

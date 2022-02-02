@@ -28,7 +28,9 @@ import Sizzle from './Sizzle';
  * var $ = tinymce.dom.DomQuery;
  * $('p').attr('attr', 'value').addClass('class');
  *
+ * @deprecated
  * @class tinymce.dom.DomQuery
+ * @summary DomQuery has been deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.
  */
 
 type DomQuerySelector<T extends Node> = string | T | T[] | DomQuery<T>;
@@ -77,7 +79,7 @@ export interface DomQueryConstructor {
   grep <T>(array: T[], callback: (item, i: number) => boolean): T[];
   unique <T>(results: T[]): T[];
   text (elem: Node): string;
-  contains (context, elem: Node): number;
+  contains (context, elem: Node): boolean;
   filter (expr: string, elems: Node[], not?: boolean);
 }
 
@@ -97,10 +99,10 @@ interface DomQuery<T extends Node = Node> extends ArrayLike<T> {
   attr (attrs: Record<string, string | boolean | number | null>): this;
   attr (name: string): string;
   before (content: DomQuerySelector<T>): this;
-  children (selector?: string): DomQuery<ChildNode>;
+  children (selector?: string): DomQuery<Node & ChildNode>;
   clone (): this;
   closest (selector: DomQuerySelector<T>): this;
-  contents (selector?: string): DomQuery<ChildNode>;
+  contents (selector?: string): DomQuery<Node & ChildNode>;
   css (name: string, value: string | number | null): this;
   css (styles: Record<string, string | number | null>): this;
   css (name: string): string;
@@ -117,8 +119,8 @@ interface DomQuery<T extends Node = Node> extends ArrayLike<T> {
   html (): string;
   is (selector: string | ((i: number, item) => boolean)): boolean;
   last (): this;
-  next (selector?: string): DomQuery<ChildNode>;
-  nextUntil (selector: DomQuerySelector<T>, until?: string): DomQuery<ChildNode>;
+  next (selector?: string): DomQuery<Node & ChildNode>;
+  nextUntil (selector: DomQuerySelector<T>, until?: string): DomQuery<Node & ChildNode>;
   off <K extends keyof HTMLElementEventMap>(name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
   off <U>(name?: string, callback?: EventUtilsCallback<U>): this;
   offset (offset?: {}): {} | this;
@@ -129,8 +131,8 @@ interface DomQuery<T extends Node = Node> extends ArrayLike<T> {
   parentsUntil (selector: DomQuerySelector<T>, filter?: string): DomQuery<Node>;
   prepend (content: DomQuerySelector<T>): this;
   prependTo (val: DomQuerySelector<T>): this;
-  prev (selector?: string): DomQuery<ChildNode>;
-  prevUntil (selector: DomQuerySelector<T>, filter?: string): DomQuery<ChildNode>;
+  prev (selector?: string): DomQuery<Node & ChildNode>;
+  prevUntil (selector: DomQuerySelector<T>, filter?: string): DomQuery<Node & ChildNode>;
   prop (name: string, value: string): this;
   prop (props: Record<string, string | number>): this;
   prop (name: string): string;

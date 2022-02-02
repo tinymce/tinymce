@@ -34,7 +34,7 @@ describe('phantom.tinymce.themes.silver.components.colorinput.ColorInputTest', (
             { type: 'choiceitem', text: 'Purple', value: '#9B59B6' },
             { type: 'choiceitem', text: 'Navy Blue', value: '#34495E' }
           ],
-          getColorCols: () => 3
+          getColorCols: Fun.constant(3)
         })
       ]
     })

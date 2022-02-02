@@ -6,20 +6,27 @@
  */
 
 import { Cell, Obj } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import URI from 'tinymce/core/api/util/URI';
 import XHR from 'tinymce/core/api/util/XHR';
+
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import { DomTextMatcher } from './DomTextMatcher';
 
 export interface Data {
-  words: Record<string, string[]>;
-  dictionary?: any;
+  readonly words: Record<string, string[]>;
+  readonly dictionary?: any;
 }
 
-const getTextMatcher = (editor, textMatcherState) => {
+export interface LastSuggestion {
+  readonly suggestions: Record<string, string[]>;
+  readonly hasDictionarySupport: boolean;
+}
+
+const getTextMatcher = (editor: Editor, textMatcherState) => {
   if (!textMatcherState.get()) {
     const textMatcher = DomTextMatcher(editor.getBody(), editor);
     textMatcherState.set(textMatcher);
@@ -69,13 +76,13 @@ const defaultSpellcheckCallback = (editor: Editor, pluginUrl: string, currentLan
   };
 };
 
-const sendRpcCall = (editor: Editor, pluginUrl: string, currentLanguageState: Cell<string>, name: string, data: string, successCallback: Function, errorCallback?: Function) => {
+const sendRpcCall = (editor: Editor, pluginUrl: string, currentLanguageState: Cell<string>, name: string, data: string, successCallback: Function, errorCallback?: Function): void => {
   const userSpellcheckCallback = Settings.getSpellcheckerCallback(editor);
   const spellCheckCallback = userSpellcheckCallback ? userSpellcheckCallback : defaultSpellcheckCallback(editor, pluginUrl, currentLanguageState);
   spellCheckCallback.call(editor.plugins.spellchecker, name, data, successCallback, errorCallback);
 };
 
-const spellcheck = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, lastSuggestionsState: Cell<LastSuggestion>, currentLanguageState: Cell<string>) => {
+const spellcheck = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, lastSuggestionsState: Cell<LastSuggestion>, currentLanguageState: Cell<string>): void => {
   if (finish(editor, startedState, textMatcherState)) {
     return;
   }
@@ -95,13 +102,13 @@ const spellcheck = (editor: Editor, pluginUrl: string, startedState: Cell<boolea
   editor.focus();
 };
 
-const checkIfFinished = (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>) => {
+const checkIfFinished = (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>): void => {
   if (!editor.dom.select('span.mce-spellchecker-word').length) {
     finish(editor, startedState, textMatcherState);
   }
 };
 
-const addToDictionary = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: Element[]) => {
+const addToDictionary = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: Element[]): void => {
   editor.setProgressState(true);
 
   sendRpcCall(editor, pluginUrl, currentLanguageState, 'addToDictionary', word, () => {
@@ -114,7 +121,7 @@ const addToDictionary = (editor: Editor, pluginUrl: string, startedState: Cell<b
   });
 };
 
-const ignoreWord = (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, word: string, spans: Element[], all?: boolean) => {
+const ignoreWord = (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, word: string, spans: Element[], all?: boolean): void => {
   editor.selection.collapse();
 
   if (all) {
@@ -144,7 +151,7 @@ const finish = (editor: Editor, startedState: Cell<boolean>, textMatcherState: C
   }
 };
 
-const getElmIndex = (elm: HTMLElement) => {
+const getElmIndex = (elm: HTMLElement): string => {
   const value = elm.getAttribute('data-mce-index');
 
   if (typeof value === 'number') {
@@ -175,12 +182,7 @@ const findSpansByIndex = (editor: Editor, index: string): HTMLSpanElement[] => {
   return spans;
 };
 
-export interface LastSuggestion {
-  suggestions: Record<string, string[]>;
-  hasDictionarySupport: boolean;
-}
-
-const markErrors = (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, lastSuggestionsState: Cell<LastSuggestion>, data: Data) => {
+const markErrors = (editor: Editor, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, lastSuggestionsState: Cell<LastSuggestion>, data: Data): void => {
   const hasDictionarySupport = !!data.dictionary;
   const suggestions = data.words;
 

@@ -329,4 +329,41 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     assert.equal(lastName, 'click');
     assert.isFalse(lastState);
   });
+
+  it('TINY-7436: Callbacks added or removed in an earlier handler do not run while firing the same event', () => {
+    const dispatcher = new EventDispatcher();
+    const logs = [];
+
+    const func1 = () => {
+      logs.push('func1');
+      dispatcher.off('run', func2);
+      dispatcher.on('run', func3);
+    };
+    const func2 = () => logs.push('func2');
+    const func3 = () => logs.push('func3');
+
+    dispatcher.on('run', func1);
+    dispatcher.on('run', func2);
+
+    assert.isEmpty(logs);
+    dispatcher.fire('run');
+    assert.deepEqual(logs, [ 'func1' ]);
+  });
+
+  it('TINY-3254: Does not mutate the original event args when firing', () => {
+    const dispatcher = new EventDispatcher();
+    const original = { type: 'custom' };
+
+    dispatcher.on('run', (e) => {
+      e.new = true;
+    });
+    const result = dispatcher.fire<'run', any>('run', original);
+
+    assert.notDeepEqual(result, original);
+    assert.equal(original.type, 'custom');
+    assert.notProperty(original, 'new');
+    assert.notProperty(original, 'preventDefault');
+    assert.equal(result.type, 'run');
+    assert.isTrue(result.new);
+  });
 });

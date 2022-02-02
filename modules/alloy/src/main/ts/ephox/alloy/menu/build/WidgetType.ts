@@ -103,10 +103,10 @@ const builder = (detail: WidgetItemDetail) => {
 };
 
 const schema = [
-  FieldSchema.strict('uid'),
-  FieldSchema.strict('data'),
-  FieldSchema.strict('components'),
-  FieldSchema.strict('dom'),
+  FieldSchema.required('uid'),
+  FieldSchema.required('data'),
+  FieldSchema.required('components'),
+  FieldSchema.required('dom'),
   FieldSchema.defaulted('autofocus', false),
   FieldSchema.defaulted('ignoreFocus', false),
 

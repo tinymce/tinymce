@@ -6,6 +6,7 @@
  */
 
 import { Fun, Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
 
@@ -13,7 +14,7 @@ import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
 import * as Utils from '../core/Utils';
 
-const setupButtons = (editor: Editor) => {
+const setupButtons = (editor: Editor): void => {
   editor.ui.registry.addToggleButton('link', {
     icon: 'link',
     tooltip: 'Insert/edit link',
@@ -36,7 +37,7 @@ const setupButtons = (editor: Editor) => {
   });
 };
 
-const setupMenuItems = (editor: Editor) => {
+const setupMenuItems = (editor: Editor): void => {
   editor.ui.registry.addMenuItem('openlink', {
     text: 'Open link',
     icon: 'new-tab',
@@ -59,7 +60,7 @@ const setupMenuItems = (editor: Editor) => {
   });
 };
 
-const setupContextMenu = (editor: Editor) => {
+const setupContextMenu = (editor: Editor): void => {
   const inLink = 'link unlink openlink';
   const noLink = 'link';
   editor.ui.registry.addContextMenu('link', {
@@ -67,7 +68,7 @@ const setupContextMenu = (editor: Editor) => {
   });
 };
 
-const setupContextToolbars = (editor: Editor) => {
+const setupContextToolbars = (editor: Editor): void => {
   const collapseSelectionToEnd = (editor: Editor) => {
     editor.selection.collapse(false);
   };
@@ -76,6 +77,21 @@ const setupContextToolbars = (editor: Editor) => {
     const node = editor.selection.getNode();
     buttonApi.setDisabled(!Utils.getAnchorElement(editor, node));
     return Fun.noop;
+  };
+
+  /*
+   * if we're editing a link, don't change the text.
+   * if anything other than text is selected, don't change the text.
+   */
+  const getLinkText = (value: string) => {
+    const anchor = Utils.getAnchorElement(editor);
+    const onlyText = Utils.isOnlyTextSelected(editor);
+    if (!anchor && onlyText) {
+      const text = Utils.getAnchorText(editor.selection, anchor);
+      return Optional.some(text.length > 0 ? text : value);
+    } else {
+      return Optional.none();
+    }
   };
 
   editor.ui.registry.addContextForm('quicklink', {
@@ -104,28 +120,19 @@ const setupContextToolbars = (editor: Editor) => {
           return Actions.toggleActiveState(editor)(buttonApi);
         },
         onAction: (formApi) => {
-          const anchor = Utils.getAnchorElement(editor);
           const value = formApi.getValue();
-          if (!anchor) {
-            const attachState = { href: value, attach: Fun.noop };
-            const onlyText = Utils.isOnlyTextSelected(editor);
-            const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Optional.from(value)) : Optional.none();
-            Utils.link(editor, attachState, {
-              href: value,
-              text,
-              title: Optional.none(),
-              rel: Optional.none(),
-              target: Optional.none(),
-              class: Optional.none()
-            });
-            formApi.hide();
-          } else {
-            editor.undoManager.transact(() => {
-              editor.dom.setAttrib(anchor, 'href', value);
-              collapseSelectionToEnd(editor);
-              formApi.hide();
-            });
-          }
+          const text = getLinkText(value);
+          const attachState = { href: value, attach: Fun.noop };
+          Utils.link(editor, attachState, {
+            href: value,
+            text,
+            title: Optional.none(),
+            rel: Optional.none(),
+            target: Optional.none(),
+            class: Optional.none()
+          });
+          collapseSelectionToEnd(editor);
+          formApi.hide();
         }
       },
       {

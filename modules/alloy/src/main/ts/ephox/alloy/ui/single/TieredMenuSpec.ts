@@ -1,8 +1,9 @@
-import { Arr, Cell, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals, Singleton } from '@ephox/katamari';
 import { Attribute, Class, Classes, SelectorFilter, SelectorFind, SugarBody } from '@ephox/sugar';
 
 import * as EditableFields from '../../alien/EditableFields';
 import { Composing } from '../../api/behaviour/Composing';
+import { Disabling } from '../../api/behaviour/Disabling';
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Replacing } from '../../api/behaviour/Replacing';
@@ -37,7 +38,7 @@ export interface MenuNotBuilt {
 }
 
 const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _rawUiSpec) => {
-  const submenuParentItems: Cell<Optional<Record<string, AlloyComponent>>> = Cell(Optional.none());
+  const submenuParentItems = Singleton.value<Record<string, AlloyComponent>>();
 
   const buildMenus = (container: AlloyComponent, primaryName: string, menus: Record<string, PartialMenuSpec>): Record<string, MenuPreparation> => Obj.map(menus, (spec, name) => {
 
@@ -120,7 +121,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
         r[key] = itemComp;
       });
     });
-    submenuParentItems.set(Optional.some(r));
+    submenuParentItems.set(r);
     return r;
   });
 
@@ -170,31 +171,35 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   };
 
   const expandRight = (container: AlloyComponent, item: AlloyComponent, decision: ExpandHighlightDecision = ExpandHighlightDecision.HighlightSubmenu): Optional<AlloyComponent> => {
-    const value = getItemValue(item);
-    return layeredState.expand(value).bind((path) => {
-      // Called when submenus are opened by keyboard AND hovering navigation
-      updateAriaExpansions(container, path);
-      // When expanding, always select the first.
-      return Optional.from(path[0]).bind((menuName) => layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
-        const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
+    if (item.hasConfigured(Disabling) && Disabling.isDisabled(item)) {
+      return Optional.some(item);
+    } else {
+      const value = getItemValue(item);
+      return layeredState.expand(value).bind((path) => {
+        // Called when submenus are opened by keyboard AND hovering navigation
+        updateAriaExpansions(container, path);
+        // When expanding, always select the first.
+        return Optional.from(path[0]).bind((menuName) => layeredState.lookupMenu(menuName).bind((activeMenuPrep) => {
+          const activeMenu = buildIfRequired(container, menuName, activeMenuPrep);
 
-        // DUPE with above. Fix later.
-        if (!SugarBody.inBody(activeMenu.element)) {
-          Replacing.append(container, GuiFactory.premade(activeMenu));
-        }
+          // DUPE with above. Fix later.
+          if (!SugarBody.inBody(activeMenu.element)) {
+            Replacing.append(container, GuiFactory.premade(activeMenu));
+          }
 
-        // updateMenuPath is the code which changes the active menu. We don't always
-        // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
-        detail.onOpenSubmenu(container, item, activeMenu, Arr.reverse(path));
-        if (decision === ExpandHighlightDecision.HighlightSubmenu) {
-          Highlighting.highlightFirst(activeMenu);
-          return updateMenuPath(container, layeredState, path);
-        } else {
-          Highlighting.dehighlightAll(activeMenu);
-          return Optional.some(item);
-        }
-      }));
-    });
+          // updateMenuPath is the code which changes the active menu. We don't always
+          // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
+          detail.onOpenSubmenu(container, item, activeMenu, Arr.reverse(path));
+          if (decision === ExpandHighlightDecision.HighlightSubmenu) {
+            Highlighting.highlightFirst(activeMenu);
+            return updateMenuPath(container, layeredState, path);
+          } else {
+            Highlighting.dehighlightAll(activeMenu);
+            return Optional.some(item);
+          }
+        }));
+      });
+    }
   };
 
   const collapseLeft = (container: AlloyComponent, item: AlloyComponent): Optional<AlloyComponent> => {

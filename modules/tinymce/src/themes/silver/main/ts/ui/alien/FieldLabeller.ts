@@ -8,6 +8,7 @@
 import { AlloySpec, Behaviour, FormField as AlloyFormField, RawDomSchema, SketchSpec } from '@ephox/alloy';
 // TODO: Export properly from alloy.
 import { Optional } from '@ephox/katamari';
+
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 const renderFormFieldWith = (pLabel: Optional<AlloySpec>, pField: AlloySpec, extraClasses: string[], extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[]): SketchSpec => {

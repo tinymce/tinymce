@@ -7,6 +7,7 @@
 
 import { Arr, Fun } from '@ephox/katamari';
 import { Focus, SugarElement, SugarNode } from '@ephox/sugar';
+
 import Delay from 'tinymce/core/api/util/Delay';
 
 // There are numerous problems with Google Keyboard when we need to switch focus back from a toolbar item / dialog to

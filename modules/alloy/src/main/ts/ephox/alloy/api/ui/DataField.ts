@@ -38,9 +38,9 @@ const DataField: DataFieldSketcher = Sketcher.single({
   name: 'DataField',
   factory,
   configFields: [
-    FieldSchema.strict('uid'),
-    FieldSchema.strict('dom'),
-    FieldSchema.strict('getInitialValue'),
+    FieldSchema.required('uid'),
+    FieldSchema.required('dom'),
+    FieldSchema.required('getInitialValue'),
     SketchBehaviours.field('dataBehaviours', [ Representing, Composing ])
   ]
 });

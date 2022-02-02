@@ -12,6 +12,7 @@ import {
 import { Dialog, Menu as BridgeMenu } from '@ephox/bridge';
 import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
+
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderLabel } from '../alien/FieldLabeller';
 import { renderCommonDropdown, updateMenuText } from '../dropdown/CommonDropdown';

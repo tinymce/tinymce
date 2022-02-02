@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -179,5 +179,20 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       'beforegetcontent',
       'getcontent'
     ]);
+  });
+
+  it('TINY-7956: Get content without firing events', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>html</p>');
+    clearEvents();
+    const html = editor.getContent({ no_events: true });
+    Assertions.assertHtml('Should be expected html', '<p>html</p>', html);
+    assertEventsFiredInOrder([]);
+  });
+
+  it('TINY-7956: Set content without firing events', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>html</p>', { no_events: true });
+    assertEventsFiredInOrder([]);
   });
 });

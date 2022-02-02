@@ -1,4 +1,5 @@
 import { SugarElement } from '@ephox/sugar';
+
 import { Grid } from './Structs';
 import { Warehouse } from './Warehouse';
 

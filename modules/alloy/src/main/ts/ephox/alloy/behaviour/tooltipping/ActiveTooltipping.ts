@@ -53,7 +53,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       state.setTooltip(popup);
       Attachment.attach(sink, popup);
       tooltipConfig.onShow(comp, popup);
-      Positioning.position(sink, tooltipConfig.anchor(comp), popup);
+      Positioning.position(sink, popup, { anchor: tooltipConfig.anchor(comp) });
     }
   };
 

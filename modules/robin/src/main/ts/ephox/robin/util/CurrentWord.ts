@@ -1,4 +1,5 @@
 import { Optional, Optionals } from '@ephox/katamari';
+
 import { BeforeAfter } from '../data/BeforeAfter';
 import * as WordUtil from './WordUtil';
 

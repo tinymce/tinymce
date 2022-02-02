@@ -6,6 +6,7 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import VK from '../api/util/VK';
 import * as BoundarySelection from './BoundarySelection';

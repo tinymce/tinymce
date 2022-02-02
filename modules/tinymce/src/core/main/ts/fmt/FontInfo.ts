@@ -7,6 +7,7 @@
 
 import { Fun, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Compare, Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 
 const legacyPropNames: Record<string, string> = {

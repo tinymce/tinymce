@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireFullscreenStateChanged = (editor, state) => {
+import Editor from 'tinymce/core/api/Editor';
+
+const fireFullscreenStateChanged = (editor: Editor, state: boolean): void => {
   editor.fire('FullscreenStateChanged', { state });
 };
 

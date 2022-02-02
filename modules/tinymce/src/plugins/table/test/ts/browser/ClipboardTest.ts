@@ -1,21 +1,24 @@
+import { Clipboard } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Plugin from 'tinymce/plugins/table/Plugin';
+import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import { TableEventData } from 'tinymce/plugins/table/api/Events';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'table',
+    plugins: 'paste table',
     indent: false,
     valid_styles: {
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ], true);
+  }, [ PastePlugin, TablePlugin, Theme ], true);
 
   const cleanTableHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 
@@ -677,5 +680,87 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
       '</tbody>' +
       '</table>'
     );
+  });
+
+  it('TINY-7485: Pasting into a table with a single cells contents selected', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table><tbody>' +
+      '<tr><td>A</td><td>B</td></tr>' +
+      '<tr><td>C</td><td>D</td></tr>' +
+      '</tbody></table>'
+    );
+
+    TinySelections.setSelection(editor, [ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 1);
+    Clipboard.pasteItems(TinyDom.body(editor), {
+      'text/html': '<table><tbody>' +
+        '<tr><td>A</td><td>B</td></tr>' +
+        '<tr><td>C</td><td>D</td></tr>' +
+        '</tbody></table>'
+    });
+
+    TinyAssertions.assertContent(editor,
+      '<table><tbody>' +
+      '<tr><td>A</td><td>A</td><td>B</td></tr>' +
+      '<tr><td>C</td><td>C</td><td>D</td></tr>' +
+      '</tbody></table>'
+    );
+  });
+
+  it('TINY-7485: Pasting into a table with multiple cells selected should paste into the first cell', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table><tbody>' +
+      '<tr><td>A</td><td>B</td><td>&nbsp;</td></tr>' +
+      '<tr><td>C</td><td>D</td><td>&nbsp;</td></tr>' +
+      '<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+      '</tbody></table>'
+    );
+
+    selectRangeXY(editor, 'table tr:nth-child(2) td:nth-child(2)', 'table tr:nth-child(3) td:nth-child(3)');
+    Clipboard.pasteItems(TinyDom.body(editor), {
+      'text/html': '<table><tbody>' +
+        '<tr><td>A</td><td>B</td></tr>' +
+        '<tr><td>C</td><td>D</td></tr>' +
+        '</tbody></table>'
+    });
+
+    TinyAssertions.assertContent(editor,
+      '<table><tbody>' +
+      '<tr><td>A</td><td>B</td><td>&nbsp;</td></tr>' +
+      '<tr><td>C</td><td>A</td><td>B</td></tr>' +
+      '<tr><td>&nbsp;</td><td>C</td><td>D</td></tr>' +
+      '</tbody></table>'
+    );
+  });
+
+  it('TINY-6939: Pasting into a table should fire TableModified event', () => {
+    const editor = hook.editor();
+    const events: TableEventData[] = [];
+
+    const callback = (e: TableEventData) => {
+      events.push({
+        structure: e.structure,
+        style: e.style,
+      });
+    };
+
+    editor.on('TableModified', callback);
+    editor.setContent(
+      '<table><tbody>' +
+      '<tr><td>A</td><td>B</td></tr>' +
+      '</tbody></table>'
+    );
+
+    selectRangeXY(editor, 'table tr td:nth-child(1)', 'table tr td:nth-child(2)');
+    Clipboard.pasteItems(TinyDom.body(editor), {
+      'text/html': '<table><tbody>' +
+        '<tr><td>1</td><td>2</td></tr>' +
+        '</tbody></table>'
+    });
+
+    assert.deepEqual(events, [{ structure: true, style: true }]);
+
+    editor.off('TableModified', callback);
   });
 });

@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Strings from 'ephox/polaris/api/Strings';
 
 UnitTest.test('api.Strings.splits', () => {

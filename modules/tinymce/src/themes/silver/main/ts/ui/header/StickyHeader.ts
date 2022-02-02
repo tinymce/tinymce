@@ -6,11 +6,13 @@
  */
 
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
-import { Arr, Cell, Optional, Result } from '@ephox/katamari';
+import { Arr, Optional, Result, Singleton } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
+
+import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as EditorChannels from '../../Channels';
 
@@ -182,7 +184,7 @@ const getIframeBehaviours = () => [
 ];
 
 const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => {
-  const focusedElm = Cell<Optional<SugarElement>>(Optional.none());
+  const focusedElm = Singleton.value<SugarElement>();
   const lazySink = sharedBackstage.getSink;
 
   const runOnSinkElement = (f: (sink: SugarElement) => void) => {
@@ -221,17 +223,24 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           // Restore focus and reset the stored focused element
           focusedElm.get().each((elem) => {
             restoreFocus(comp.element, elem);
-            focusedElm.set(Optional.none());
+            focusedElm.clear();
           });
         },
         onHide: (comp) => {
-          focusedElm.set(findFocusedElem(comp.element, lazySink));
+          findFocusedElem(comp.element, lazySink).fold(focusedElm.clear, focusedElm.set);
           runOnSinkElement((elem) => updateSinkVisibility(elem, false));
         },
         onHidden: () => {
           runOnSinkElement((elem) => Classes.remove(elem, [ visibility.transitionClass ]));
         },
         ...visibility
+      },
+      lazyViewport: (comp) => {
+        const win = Boxes.win();
+        const offset = Settings.getStickyToolbarOffset(editor);
+        const top = win.y + (isDockedMode(comp, 'top') ? offset : 0);
+        const height = win.height - (isDockedMode(comp, 'bottom') ? offset : 0);
+        return Boxes.bounds(win.x, top, win.width, height);
       },
       modes: [ sharedBackstage.header.getDockingMode() ],
       onDocked: onDockingSwitch,

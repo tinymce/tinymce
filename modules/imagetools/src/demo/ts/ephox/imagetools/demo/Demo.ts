@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import * as ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
 import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
 import { ImageResult } from 'ephox/imagetools/util/ImageResult';

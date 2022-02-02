@@ -175,6 +175,16 @@ const get = (dom: DOMUtils) => {
       }
     },
 
+    lang: {
+      inline: 'span',
+      clear_child_styles: true,
+      remove_similar: true,
+      attributes: {
+        'lang': '%value',
+        'data-mce-lang': (vars) => vars?.customValue ?? null
+      }
+    },
+
     removeformat: [
       {
         selector: 'b,strong,em,i,font,u,strike,s,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins,small',

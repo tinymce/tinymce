@@ -6,6 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import CaretPosition from './CaretPosition';

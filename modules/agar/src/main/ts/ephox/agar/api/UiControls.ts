@@ -1,3 +1,4 @@
+import { Type } from '@ephox/katamari';
 import { SugarElement, Value } from '@ephox/sugar';
 
 import { Chain } from './Chain';
@@ -6,13 +7,30 @@ import * as UiFinder from './UiFinder';
 
 type TogglableElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement;
 
-const setValue = (element: SugarElement<TogglableElement>, newValue: string): void => {
-  Value.set(element, newValue);
+const fireEvent = (elem: SugarElement, event: string) => {
+  let evt: Event;
+  if (Type.isFunction(Event)) {
+    evt = new Event(event, {
+      bubbles: true,
+      cancelable: true
+    });
+  } else { // support IE
+    evt = document.createEvent('Event');
+    evt.initEvent(event, true, true);
+  }
+  elem.dom.dispatchEvent(evt);
 };
 
-const setValueOn = (container: SugarElement<Node>, selector: string, newValue: string): void => {
+const setValue = (element: SugarElement<TogglableElement>, newValue: string, eventName?: string): void => {
+  Value.set(element, newValue);
+  if (Type.isNonNullable(eventName)) {
+    fireEvent(element, eventName);
+  }
+};
+
+const setValueOn = (container: SugarElement<Node>, selector: string, newValue: string, eventName?: string): void => {
   const element = UiFinder.findIn(container, selector).getOrDie();
-  setValue(element, newValue);
+  setValue(element, newValue, eventName);
 };
 
 const getValue = (element: SugarElement<TogglableElement>): string => Value.get(element);

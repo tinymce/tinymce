@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import * as NativeRange from '../../selection/core/NativeRange';
 import * as SelectionDirection from '../../selection/core/SelectionDirection';
 import * as CaretRange from '../../selection/query/CaretRange';
@@ -120,8 +121,9 @@ const doGetExact = (selection: Selection): Optional<SimRange> => {
   }
 };
 
-const setToElement = (win: Window, element: SugarElement<Node>): void => {
-  const rng = NativeRange.selectNodeContents(win, element);
+const setToElement = (win: Window, element: SugarElement<Node>, selectNodeContents: boolean = true): void => {
+  const rngGetter = selectNodeContents ? NativeRange.selectNodeContents : NativeRange.selectNode;
+  const rng = rngGetter(win, element);
   doSetNativeRange(win, rng);
 };
 

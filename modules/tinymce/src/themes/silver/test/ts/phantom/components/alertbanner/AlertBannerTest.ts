@@ -3,6 +3,7 @@ import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
+
 import TestProviders from '../../../module/TestProviders';
 
 describe('phantom.tinymce.themes.silver.components.alertbanner.AlertBannerTest', () => {

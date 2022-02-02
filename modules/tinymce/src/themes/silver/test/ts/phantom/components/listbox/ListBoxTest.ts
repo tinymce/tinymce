@@ -6,6 +6,7 @@ import { Attribute } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { renderListBox } from 'tinymce/themes/silver/ui/dialog/ListBox';
+
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import * as TestExtras from '../../../module/TestExtras';
 

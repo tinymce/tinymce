@@ -6,6 +6,7 @@
  */
 
 import { Class } from '@ephox/sugar';
+
 import * as Styles from '../../style/Styles';
 
 const scrollableStyle = Styles.resolve('scrollable');

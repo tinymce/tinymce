@@ -67,7 +67,7 @@
  * <em>Added in TinyMCE 5.1</em>
  *
  * @method browser.isSafari
- * @return {Boolean} Returns <code>true if the user's browser is Safari.
+ * @return {Boolean} Returns <code>true</code> if the user's browser is Safari.
  */
 
 /**

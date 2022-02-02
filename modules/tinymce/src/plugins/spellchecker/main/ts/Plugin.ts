@@ -6,7 +6,9 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as DetectProPlugin from './alien/DetectProPlugin';
 import * as Api from './api/Api';
 import * as Commands from './api/Commands';
@@ -15,7 +17,7 @@ import { LastSuggestion } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 import * as SuggestionsMenu from './ui/SuggestionsMenu';
 
-export default () => {
+export default (): void => {
   PluginManager.add('spellchecker', (editor, pluginUrl) => {
     if (DetectProPlugin.hasProPlugin(editor) === false) {
       const startedState = Cell(false);
@@ -27,7 +29,7 @@ export default () => {
       SuggestionsMenu.setup(editor, pluginUrl, lastSuggestionsState, startedState, textMatcherState, currentLanguageState);
       Commands.register(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
 
-      return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, currentLanguageState, pluginUrl);
+      return Api.get(editor, startedState, lastSuggestionsState, textMatcherState, currentLanguageState);
     }
   });
 };

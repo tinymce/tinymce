@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
@@ -31,6 +32,11 @@ export default () => {
   const settings: RawEditorSettings = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
+    content_langs: [
+      { title: 'English (US)', code: 'en_us' },
+      { title: 'Spanish', code: 'es' },
+      { title: 'English (US Medical)', code: 'en_us', customCode: 'en_us_medical' }
+    ],
     images_upload_url: 'd',
     selector: 'textarea',
     // rtl_ui: true,
@@ -113,7 +119,7 @@ export default () => {
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
     toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
-    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code language | ltr rtl',
     contextmenu: 'link linkchecker image imagetools table lists spellchecker configurepermanentpen',
 
     // Multiple toolbar array

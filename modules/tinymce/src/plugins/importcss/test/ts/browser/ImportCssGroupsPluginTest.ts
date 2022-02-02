@@ -1,8 +1,8 @@
 import { Assertions, Keys } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { McEditor, TinyDom, TinyUiActions } from '@ephox/mcagar';
 import { SugarDocument } from '@ephox/sugar';
+import { McEditor, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';

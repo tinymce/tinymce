@@ -7,6 +7,7 @@
 
 import { Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as SelectionBookmark from './SelectionBookmark';

@@ -7,8 +7,8 @@
 
 import { KeyingConfigSpec, MenuTypes } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { colorClass, selectableClass } from '../item/ItemClasses';
 
+import { colorClass, selectableClass } from '../item/ItemClasses';
 import { markers as getMenuMarkers } from './MenuParts';
 
 export const deriveMenuMovement = (columns: number | 'auto', presets: Toolbar.PresetTypes): MenuTypes.MenuMovementSpec => {

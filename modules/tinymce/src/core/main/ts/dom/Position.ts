@@ -16,7 +16,7 @@ const firstElement = (nodes: SugarElement<Node>[]): Optional<SugarElement<HTMLEl
 
 // Firefox has a bug where caption height is not included correctly in offset calculations of tables
 // this tries to compensate for that by detecting if that offsets are incorrect and then remove the height
-const getTableCaptionDeltaY = (elm) => {
+const getTableCaptionDeltaY = (elm: SugarElement<Node>) => {
   if (browser.isFirefox() && SugarNode.name(elm) === 'table') {
     return firstElement(Traverse.children(elm)).filter((elm) => {
       return SugarNode.name(elm) === 'caption';
@@ -33,12 +33,11 @@ const getTableCaptionDeltaY = (elm) => {
   }
 };
 
-const hasChild = (elm, child) => elm.children && Arr.contains(elm.children, child);
+const hasChild = (elm: Element, child: Node) => elm.children && Arr.contains(elm.children, child);
 
-const getPos = (body, elm, rootElm) => {
-  let x = 0, y = 0, offsetParent;
+const getPos = (body: HTMLElement, elm: HTMLElement | null, rootElm?: Node): { x: number; y: number } => {
+  let x = 0, y = 0;
   const doc = body.ownerDocument;
-  let pos;
 
   rootElm = rootElm ? rootElm : body;
 
@@ -46,7 +45,7 @@ const getPos = (body, elm, rootElm) => {
     // Use getBoundingClientRect if it exists since it's faster than looping offset nodes
     // Fallback to offsetParent calculations if the body isn't static better since it stops at the body root
     if (rootElm === body && elm.getBoundingClientRect && Css.get(SugarElement.fromDom(body), 'position') === 'static') {
-      pos = elm.getBoundingClientRect();
+      const pos = elm.getBoundingClientRect();
 
       // Add scroll offsets from documentElement or body since IE with the wrong box model will use d.body and so do WebKit
       // Also remove the body/documentelement clientTop/clientLeft on IE 6, 7 since they offset the position
@@ -56,18 +55,19 @@ const getPos = (body, elm, rootElm) => {
       return { x, y };
     }
 
-    offsetParent = elm;
+    let offsetParent: Element = elm;
     while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType && !hasChild(offsetParent, rootElm)) {
-      x += offsetParent.offsetLeft || 0;
-      y += offsetParent.offsetTop || 0;
-      offsetParent = offsetParent.offsetParent;
+      const castOffsetParent = offsetParent as HTMLElement;
+      x += castOffsetParent.offsetLeft || 0;
+      y += castOffsetParent.offsetTop || 0;
+      offsetParent = castOffsetParent.offsetParent;
     }
 
-    offsetParent = elm.parentNode;
+    offsetParent = elm.parentNode as Element;
     while (offsetParent && offsetParent !== rootElm && offsetParent.nodeType && !hasChild(offsetParent, rootElm)) {
       x -= offsetParent.scrollLeft || 0;
       y -= offsetParent.scrollTop || 0;
-      offsetParent = offsetParent.parentNode;
+      offsetParent = offsetParent.parentNode as Element;
     }
 
     y += getTableCaptionDeltaY(SugarElement.fromDom(elm));

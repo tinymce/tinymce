@@ -14,6 +14,12 @@ import { EditorUiApi } from './ui/Ui';
 
 export type EntityEncoding = 'named' | 'numeric' | 'raw' | 'named,numeric' | 'named+numeric' | 'numeric,named' | 'numeric+named';
 
+export interface ContentLanguage {
+  readonly title: string;
+  readonly code: string;
+  readonly customCode?: string;
+}
+
 export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
   editorContainer: HTMLElement;
   iframeContainer: HTMLElement;
@@ -67,7 +73,9 @@ interface BaseEditorSettings {
   content_css_cors?: boolean;
   content_security_policy?: string;
   content_style?: string;
+  deprecation_warnings?: boolean;
   font_css?: string | string[];
+  content_langs?: ContentLanguage[];
   contextmenu?: string | false;
   contextmenu_never_use_native?: boolean;
   convert_fonts_to_spans?: boolean;
@@ -108,6 +116,7 @@ interface BaseEditorSettings {
   icons?: string;
   icons_url?: string;
   id?: string;
+  iframe_aria_text?: string;
   images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
   images_file_types?: string;
   images_replace_blob_uris?: boolean;
@@ -127,7 +136,7 @@ interface BaseEditorSettings {
   inline_boundaries_selector?: string;
   inline_styles?: boolean;
   invalid_elements?: string;
-  invalid_styles?: string;
+  invalid_styles?: string | Record<string, string>;
   keep_styles?: boolean;
   language?: string;
   language_load?: boolean;
@@ -142,6 +151,7 @@ interface BaseEditorSettings {
   no_newline_selector?: string;
   nowrap?: boolean;
   object_resizing?: boolean | string;
+  padd_empty_with_br?: boolean;
   placeholder?: string;
   preserve_cdata?: boolean;
   preview_styles?: boolean | string;
@@ -188,6 +198,7 @@ interface BaseEditorSettings {
   valid_classes?: string | Record<string, string>;
   valid_elements?: string;
   valid_styles?: string | Record<string, string>;
+  verify_html?: boolean;
   visual?: boolean;
   visual_anchor_class?: string;
   visual_table_class?: string;
@@ -212,6 +223,7 @@ interface BaseEditorSettings {
   text_block_elements?: string;
   text_inline_elements?: string;
   whitespace_elements?: string;
+  special?: string;
 
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;

@@ -6,7 +6,9 @@
  */
 
 import { Optional, Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { RenderUiComponents, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';

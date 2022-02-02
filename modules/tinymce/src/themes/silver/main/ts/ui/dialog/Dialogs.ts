@@ -11,6 +11,7 @@ import {
 } from '@ephox/alloy';
 import { Optional, Result } from '@ephox/katamari';
 import { Class, SugarBody } from '@ephox/sugar';
+
 import Env from 'tinymce/core/api/Env';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';

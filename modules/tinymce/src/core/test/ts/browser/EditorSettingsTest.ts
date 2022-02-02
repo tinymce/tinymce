@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

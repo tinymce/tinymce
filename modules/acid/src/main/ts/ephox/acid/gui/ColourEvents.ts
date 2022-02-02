@@ -1,5 +1,6 @@
 import { CustomEvent, SliderTypes } from '@ephox/alloy';
 import { Id } from '@ephox/katamari';
+
 import { Hex } from '../api/colour/ColourTypes';
 
 const fieldsUpdate = Id.generate('rgb-hex-update');

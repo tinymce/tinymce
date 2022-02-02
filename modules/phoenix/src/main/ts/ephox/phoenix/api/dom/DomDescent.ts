@@ -1,5 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { SugarElement } from '@ephox/sugar';
+
 import { SpotPoint } from '../data/Types';
 import * as Descent from '../general/Descent';
 

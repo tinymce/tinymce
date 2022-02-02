@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -74,10 +74,10 @@ const builder = (detail: NormalItemDetail): AlloySpec => ({
   eventOrder: detail.eventOrder
 });
 
-const schema: FieldProcessorAdt[] = [
-  FieldSchema.strict('data'),
-  FieldSchema.strict('components'),
-  FieldSchema.strict('dom'),
+const schema: FieldProcessor[] = [
+  FieldSchema.required('data'),
+  FieldSchema.required('components'),
+  FieldSchema.required('dom'),
   FieldSchema.defaulted('hasSubmenu', false),
 
   FieldSchema.option('toggling'),

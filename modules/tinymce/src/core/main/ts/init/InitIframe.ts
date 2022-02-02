@@ -70,24 +70,23 @@ const getIframeHtml = (editor: Editor) => {
 
   const bodyId = Settings.getBodyId(editor);
   const bodyClass = Settings.getBodyClass(editor);
+  const translatedAriaText = editor.translate(Settings.getIframeAriaText(editor));
 
   if (Settings.getContentSecurityPolicy(editor)) {
     iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + Settings.getContentSecurityPolicy(editor) + '" />';
   }
 
-  iframeHTML += '</head><body id="' + bodyId +
-    '" class="mce-content-body ' + bodyClass +
-    '" data-id="' + editor.id + '"><br></body></html>';
+  iframeHTML += '</head>' +
+    `<body id="${bodyId}" class="mce-content-body ${bodyClass}" data-id="${editor.id}" aria-label="${translatedAriaText}">` +
+    '<br>' +
+    '</body></html>';
 
   return iframeHTML;
 };
 
 const createIframe = (editor: Editor, o) => {
-  const title = editor.editorManager.translate(
-    'Rich Text Area. Press ALT-0 for help.'
-  );
-
-  const ifr = createIframeElement(editor.id, title, o.height, Settings.getIframeAttrs(editor)).dom;
+  const iframeTitle = editor.translate('Rich Text Area');
+  const ifr = createIframeElement(editor.id, iframeTitle, o.height, Settings.getIframeAttrs(editor)).dom;
 
   ifr.onload = () => {
     ifr.onload = null;

@@ -1,11 +1,13 @@
 import { before, describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyAssertions } from '@ephox/mcagar';
+import { McEditor, TinyAssertions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/src/core/main/ts/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.EditorContentWsTest', () => {
-  before(() => Theme());
+  before(() => {
+    Theme();
+  });
 
   it('Editor initialized on pre element should retain whitespace on get/set content', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<pre>  a  </pre>', {

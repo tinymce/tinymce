@@ -15,7 +15,8 @@ export interface SimpleValue<A> {
   svalue: A;
 }
 
-const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue: (val: A) => B): B => res.stype === SimpleResultType.Error ? onError(res.serror) : onValue(res.svalue);
+const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue: (val: A) => B): B =>
+  res.stype === SimpleResultType.Error ? onError(res.serror) : onValue(res.svalue);
 
 const partition = <E, A>(results: Array<SimpleResult<E[], A>>): { values: A[]; errors: E[][] } => {
   const values: A[] = [ ];
@@ -66,7 +67,8 @@ const svalue = <E, A>(v: A): SimpleResult<E, A> => ({ stype: SimpleResultType.Va
 
 const serror = <E, A>(e: E): SimpleResult<E, A> => ({ stype: SimpleResultType.Error, serror: e });
 
-const toResult = <E, A>(res: SimpleResult<E, A>): Result<A, E> => fold(res, Result.error, Result.value);
+const toResult = <E, A>(res: SimpleResult<E, A>): Result<A, E> =>
+  fold<Result<A, E>, E, A>(res, Result.error, Result.value);
 
 const fromResult = <E, A>(res: Result<A, E>): SimpleResult<E, A> => res.fold<SimpleResult<E, A>>(serror, svalue);
 

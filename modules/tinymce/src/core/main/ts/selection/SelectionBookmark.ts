@@ -8,6 +8,7 @@
 import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, SimRange, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 

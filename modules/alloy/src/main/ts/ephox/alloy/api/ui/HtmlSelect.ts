@@ -57,7 +57,7 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
 const HtmlSelect: HtmlSelectSketcher = Sketcher.single({
   name: 'HtmlSelect',
   configFields: [
-    FieldSchema.strict('options'),
+    FieldSchema.required('options'),
     SketchBehaviours.field('selectBehaviours', [ Focusing, Representing ]),
     FieldSchema.defaulted('selectClasses', [ ]),
     FieldSchema.defaulted('selectAttributes', { }),

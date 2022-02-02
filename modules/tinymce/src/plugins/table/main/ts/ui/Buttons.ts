@@ -5,19 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
+
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbar } from '../api/Settings';
+
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableBackgroundColorMap, getTableBorderColorMap, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+import { verticalAlignValues } from './CellAlignValues';
+import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, generateMenuItemsCallback } from './UiUtils';
 
-const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
+const addButtons = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
   editor.ui.registry.addMenuButton('table', {
     tooltip: 'Table',
     icon: 'table',
     fetch: (callback) => callback('inserttable | cell row column | advtablesort | tableprops deletetable')
   });
 
-  const cmd = (command) => () => editor.execCommand(command);
+  const cmd = (command: string) => () => editor.execCommand(command);
 
   editor.ui.registry.addButton('tableprops', {
     tooltip: 'Table properties',
@@ -165,9 +170,114 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     icon: 'table'
   });
 
+  const tableClassList = filterNoneItem(getTableClassList(editor));
+  if (tableClassList.length !== 0) {
+    editor.ui.registry.addMenuButton('tableclass', {
+      icon: 'table-classes',
+      tooltip: 'Table styles',
+      fetch: generateMenuItemsCallback(
+        editor,
+        selections,
+        tableClassList,
+        'tableclass',
+        (value) => editor.execCommand('mceTableToggleClass', false, value)
+      ),
+      onSetup: selectionTargets.onSetupTable
+    });
+  }
+
+  const tableCellClassList = filterNoneItem(getCellClassList(editor));
+  if (tableCellClassList.length !== 0) {
+    editor.ui.registry.addMenuButton('tablecellclass', {
+      icon: 'table-cell-classes',
+      tooltip: 'Cell styles',
+      fetch: generateMenuItemsCallback(
+        editor,
+        selections,
+        tableCellClassList,
+        'tablecellclass',
+        (value) => editor.execCommand('mceTableCellToggleClass', false, value)
+      ),
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
+  }
+
+  editor.ui.registry.addMenuButton('tablecellvalign', {
+    icon: 'vertical-align',
+    tooltip: 'Vertical align',
+    fetch: generateMenuItemsCallback(
+      editor,
+      selections,
+      verticalAlignValues,
+      'tablecellverticalalign',
+      applyTableCellStyle(editor, 'vertical-align')
+    ),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addMenuButton('tablecellborderwidth', {
+    icon: 'border-width',
+    tooltip: 'Border width',
+    fetch: generateMenuItemsCallback(
+      editor,
+      selections,
+      getTableBorderWidths(editor),
+      'tablecellborderwidth',
+      applyTableCellStyle(editor, 'border-width')
+    ),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addMenuButton('tablecellborderstyle', {
+    icon: 'border-style',
+    tooltip: 'Border style',
+    fetch: generateMenuItemsCallback(
+      editor,
+      selections,
+      getTableBorderStyles(editor),
+      'tablecellborderstyle',
+      applyTableCellStyle(editor, 'border-style')
+    ),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addToggleButton('tablecaption', {
+    tooltip: 'Table caption',
+    onAction: cmd('mceTableToggleCaption'),
+    icon: 'table-caption',
+    onSetup: selectionTargets.onSetupTableWithCaption
+  });
+
+  editor.ui.registry.addMenuButton('tablecellbackgroundcolor', {
+    icon: 'cell-background-color',
+    tooltip: 'Background color',
+    fetch: (callback) => callback(buildColorMenu(editor, getTableBackgroundColorMap(editor), 'background-color')),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addMenuButton('tablecellbordercolor', {
+    icon: 'cell-border-color',
+    tooltip: 'Border color',
+    fetch: (callback) => callback(buildColorMenu(editor, getTableBorderColorMap(editor), 'border-color')),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addToggleButton('tablerowheader', {
+    tooltip: 'Row header',
+    icon: 'table-top-header',
+    onAction: changeRowHeader(editor),
+    onSetup: selectionTargets.onSetupTableRowHeaders
+  });
+
+  editor.ui.registry.addToggleButton('tablecolheader', {
+    tooltip: 'Column header',
+    icon: 'table-left-header',
+    onAction: changeColumnHeader(editor),
+    onSetup: selectionTargets.onSetupTableColumnHeaders
+  });
 };
 
-const addToolbars = (editor: Editor) => {
+const addToolbars = (editor: Editor): void => {
   const isTable = (table: Node) => editor.dom.is(table, 'table') && editor.getBody().contains(table);
 
   const toolbar = getToolbar(editor);

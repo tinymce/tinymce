@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Insert, InsertAll, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { Insert, InsertAll, Remove, SelectorFind, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as LineUtils from 'tinymce/core/caret/LineUtils';
@@ -47,6 +47,21 @@ describe('browser.tinymce.core.LineUtilsTest', () => {
     assert.lengthOf(tableLinesWithChildren, 5, 'Should find multiple line rects for a table plus children');
     assert.lengthOf(cefLines, 3, 'Should find multiple line rects for an inline cef element');
     assert.lengthOf(videoLines, 3, 'Should find multiple line rects for a video element');
+
+    Remove.remove(container);
+  });
+
+  it('TINY-7736: Nested CEF element within table should prefer the cef element', () => {
+    const container = SugarElement.fromTag('div');
+    const table = SugarElement.fromHtml('<table style="width: 100px;"><tbody><tr><td>1</td><td><div contenteditable="false">2</div></td></tr></tbody></table>');
+    const cef = SelectorFind.descendant(table, 'div').getOrDie();
+    Insert.append(container, table);
+    Insert.append(SugarBody.body(), container);
+    const cefPos = SugarLocation.absolute(cef);
+
+    const result = LineUtils.closestFakeCaret(container.dom, cefPos.left - 10, cefPos.top + 5);
+    assert.equal(result.node, cef.dom, 'Should be the cef element');
+    assert.isTrue(result.before, 'Should be placed before');
 
     Remove.remove(container);
   });

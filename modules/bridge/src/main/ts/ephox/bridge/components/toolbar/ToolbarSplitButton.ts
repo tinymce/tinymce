@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 
 import { ChoiceMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
@@ -49,22 +49,22 @@ export interface ToolbarSplitButtonInstanceApi {
   setActive: (state: boolean) => void;
 }
 
-export const splitButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictString('type'),
+export const splitButtonSchema = StructureSchema.objOf([
+  FieldSchema.requiredString('type'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
   FieldSchema.optionString('text'),
   FieldSchema.optionFunction('select'),
-  FieldSchema.strictFunction('fetch'),
+  FieldSchema.requiredFunction('fetch'),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   // TODO: Validate the allowed presets
   FieldSchema.defaultedStringEnum('presets', 'normal', [ 'normal', 'color', 'listpreview' ]),
   FieldSchema.defaulted('columns', 1),
-  FieldSchema.strictFunction('onAction'),
-  FieldSchema.strictFunction('onItemAction')
+  FieldSchema.requiredFunction('onAction'),
+  FieldSchema.requiredFunction('onItemAction')
 ]);
 
 export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';
 
-export const createSplitButton = (spec: ToolbarSplitButtonSpec): Result<ToolbarSplitButton, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<ToolbarSplitButton>('SplitButton', splitButtonSchema, spec);
+export const createSplitButton = (spec: ToolbarSplitButtonSpec): Result<ToolbarSplitButton, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw<ToolbarSplitButton>('SplitButton', splitButtonSchema, spec);

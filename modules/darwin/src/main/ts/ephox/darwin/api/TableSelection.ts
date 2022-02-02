@@ -1,6 +1,7 @@
 import { Optional } from '@ephox/katamari';
 import { Structs, TablePositions } from '@ephox/snooker';
 import { Compare, SelectorFind, SugarElement } from '@ephox/sugar';
+
 import * as CellSelection from '../selection/CellSelection';
 
 // Explicitly calling CellSelection.retrieve so that we can see the API signature.

@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Height, SugarLocation, Width } from '@ephox/sugar';
 
@@ -12,14 +12,15 @@ import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as Layout from '../../positioning/layout/Layout';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
 import { TouchMenuDetail } from '../types/TouchMenuTypes';
 
-const anchorAtCentre = (component: AlloyComponent) => {
+const anchorAtCentre = (component: AlloyComponent): AnchorSpec => {
   const pos = SugarLocation.absolute(component.element);
   const w = Width.get(component.element);
   const h = Height.get(component.element);
   return {
-    anchor: 'makeshift',
+    type: 'makeshift',
     x: pos.left + w / 2,
     y: pos.top + h / 2,
     layouts: {
@@ -30,9 +31,9 @@ const anchorAtCentre = (component: AlloyComponent) => {
 };
 
 // Similar to dropdown.
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  FieldSchema.strict('dom'),
-  FieldSchema.strict('fetch'),
+const schema = Fun.constant([
+  FieldSchema.required('dom'),
+  FieldSchema.required('fetch'),
   Fields.onHandler('onOpen'),
   Fields.onKeyboardHandler('onExecute'),
   Fields.onHandler('onTap'),
@@ -40,7 +41,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   Fields.onHandler('onHoverOff'),
   Fields.onHandler('onMiss'),
   SketchBehaviours.field('touchmenuBehaviours', [ Toggling, Unselecting, Coupling ]),
-  FieldSchema.strict('toggleClass'),
+  FieldSchema.required('toggleClass'),
   FieldSchema.option('lazySink'),
   FieldSchema.option('role'),
   FieldSchema.defaulted('eventOrder', { }),
@@ -65,7 +66,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   }),
 
   PartType.external<TouchMenuDetail>({
-    schema: [ FieldSchema.strict('dom') ],
+    schema: [ FieldSchema.required('dom') ],
     name: 'view'
   }),
 

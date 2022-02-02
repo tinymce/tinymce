@@ -4,6 +4,7 @@ import {
 } from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Optional, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
+
 import { Hex, Rgba } from '../../api/colour/ColourTypes';
 import * as HexColour from '../../api/colour/HexColour';
 import * as RgbaColour from '../../api/colour/RgbaColour';

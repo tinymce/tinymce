@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import * as Conversions from '../util/Conversions';
 
 const blobToImage = (blob: Blob): Promise<HTMLImageElement> => {

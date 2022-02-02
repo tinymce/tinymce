@@ -3,6 +3,7 @@ import {
   Attribute, Compare, Direction, DomEvent, EventArgs, Insert, Replication, SelectorFind, SimSelection, SugarBody, SugarElement, SugarNode, Traverse,
   WindowSelection
 } from '@ephox/sugar';
+
 import { Ephemera } from 'ephox/darwin/api/Ephemera';
 import * as InputHandlers from 'ephox/darwin/api/InputHandlers';
 import { SelectionAnnotation } from 'ephox/darwin/api/SelectionAnnotation';

@@ -10,7 +10,7 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   let loadedScripts: string[] = [];
   let loadedCount = 0;
 
-  const pLoadScript = (url: string) => {
+  const pLoadScript = (url: string): Promise<void> => {
     loadedScripts.push(url);
     return new PromisePolyfill((resolve, reject) => {
       ScriptLoader.ScriptLoader.loadScript(url, () => {
@@ -20,7 +20,7 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     });
   };
 
-  const pLoadScripts = (urls: string[]) => {
+  const pLoadScripts = (urls: string[]): Promise<void> => {
     loadedScripts.push(...urls);
     const scriptCount = urls.length;
     return new PromisePolyfill((resolve, reject) => {
@@ -31,12 +31,12 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     });
   };
 
-  const addToQueue = (url: string) => {
+  const addToQueue = (url: string): void => {
     loadedScripts.push(url);
     ScriptLoader.ScriptLoader.add(url, () => loadedCount++);
   };
 
-  const pLoadQueue = () => new PromisePolyfill((resolve, reject) => {
+  const pLoadQueue = (): Promise<void> => new PromisePolyfill((resolve, reject) => {
     ScriptLoader.ScriptLoader.loadQueue(resolve, undefined, () => reject('Failed to load queued scripts'));
   });
 

@@ -12,6 +12,7 @@ import {
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
+
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -102,6 +103,11 @@ const renderCommonDropdown = <T>(
     }
   );
 
+  const iconSpec = Icons.render('chevron-down', {
+    tag: 'div',
+    classes: [ `${prefix}__select-chevron` ]
+  }, sharedBackstage.providers.icons);
+
   const memDropdown = Memento.record(
     AlloyDropdown.sketch({
       ...spec.uid ? { uid: spec.uid } : { },
@@ -116,13 +122,7 @@ const renderCommonDropdown = <T>(
       components: componentRenderPipeline([
         optMemDisplayIcon.map((mem) => mem.asSpec()),
         optMemDisplayText.map((mem) => mem.asSpec()),
-        Optional.some({
-          dom: {
-            tag: 'div',
-            classes: [ `${prefix}__select-chevron` ],
-            innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
-          }
-        })
+        Optional.some(iconSpec)
       ]),
       matchWidth: true,
       useMinWidth: true,
@@ -148,7 +148,7 @@ const renderCommonDropdown = <T>(
             optMemDisplayIcon.bind((mem) => mem.getOpt(comp)).each((displayIcon) => {
               Replacing.set(displayIcon, [
                 renderReplacableIconFromPack(se.event.icon, sharedBackstage.providers.icons)
-              ] );
+              ]);
             });
           })
         ])

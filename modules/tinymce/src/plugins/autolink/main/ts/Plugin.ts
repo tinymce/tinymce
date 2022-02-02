@@ -6,9 +6,10 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Keys from './core/Keys';
 
-export default () => {
+export default (): void => {
   PluginManager.add('autolink', (editor) => {
     Keys.setup(editor);
   });

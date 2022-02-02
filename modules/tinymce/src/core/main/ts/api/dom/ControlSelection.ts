@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Type } from '@ephox/katamari';
 import { Selectors, SugarElement } from '@ephox/sugar';
+
 import * as CefUtils from '../../dom/CefUtils';
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';
@@ -323,7 +324,10 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
           startScrollWidth = rootElement.scrollWidth;
           startScrollHeight = rootElement.scrollHeight;
 
-          resizeBackdrop = dom.add(rootElement, 'div', { class: 'mce-resize-backdrop' });
+          resizeBackdrop = dom.add(rootElement, 'div', {
+            'class': 'mce-resize-backdrop',
+            'data-mce-bogus': 'all'
+          });
           dom.setStyles(resizeBackdrop, {
             position: 'fixed',
             left: '0',

@@ -1,4 +1,4 @@
-import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, FieldSchema, ValueType } from '@ephox/boulder';
 import { Id } from '@ephox/katamari';
 
 import { events } from '../../ui/common/ButtonBase';
@@ -40,7 +40,7 @@ const TabButton: TabButtonSketcher = Sketcher.single({
   name: 'TabButton',
   configFields: [
     FieldSchema.defaulted('uid', undefined),
-    FieldSchema.strict('value'),
+    FieldSchema.required('value'),
     FieldSchema.field('dom', 'dom', FieldPresence.mergeWithThunk(() => ({
       attributes: {
         'role': 'tab',
@@ -48,12 +48,12 @@ const TabButton: TabButtonSketcher = Sketcher.single({
         'id': Id.generate('aria'),
         'aria-selected': 'false'
       }
-    })), ValueSchema.anyValue()),
+    })), ValueType.anyValue()),
     FieldSchema.option('action'),
     FieldSchema.defaulted('domModification', { }),
     SketchBehaviours.field('tabButtonBehaviours', [ Focusing, Keying, Representing ]),
 
-    FieldSchema.strict('view')
+    FieldSchema.required('view')
   ],
   factory
 });

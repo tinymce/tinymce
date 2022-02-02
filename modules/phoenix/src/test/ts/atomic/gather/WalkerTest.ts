@@ -1,6 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import { Direction, Transition } from 'ephox/phoenix/api/data/Types';
 import * as Walker from 'ephox/phoenix/gather/Walker';
 import { Walkers } from 'ephox/phoenix/gather/Walkers';

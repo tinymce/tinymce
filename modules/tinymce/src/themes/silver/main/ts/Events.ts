@@ -7,7 +7,8 @@
 
 import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
-import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
+import { DomEvent, EventArgs, SugarDocument, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -28,13 +29,14 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   const fireDismissPopups = (evt: EventArgs) => broadcastOn(Channels.dismissPopups(), { target: evt.target });
 
   // Document touch events
-  const onTouchstart = DomEvent.bind(SugarElement.fromDom(document), 'touchstart', fireDismissPopups);
-  const onTouchmove = DomEvent.bind(SugarElement.fromDom(document), 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
-  const onTouchend = DomEvent.bind(SugarElement.fromDom(document), 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
+  const doc = SugarDocument.getDocument();
+  const onTouchstart = DomEvent.bind(doc, 'touchstart', fireDismissPopups);
+  const onTouchmove = DomEvent.bind(doc, 'touchmove', (evt) => broadcastEvent(SystemEvents.documentTouchmove(), evt));
+  const onTouchend = DomEvent.bind(doc, 'touchend', (evt) => broadcastEvent(SystemEvents.documentTouchend(), evt));
 
   // Document mouse events
-  const onMousedown = DomEvent.bind(SugarElement.fromDom(document), 'mousedown', fireDismissPopups);
-  const onMouseup = DomEvent.bind(SugarElement.fromDom(document), 'mouseup', (evt) => {
+  const onMousedown = DomEvent.bind(doc, 'mousedown', fireDismissPopups);
+  const onMouseup = DomEvent.bind(doc, 'mouseup', (evt) => {
     if (evt.raw.button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: evt.target });
     }
@@ -46,6 +48,13 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     if (raw.button === 0) {
       broadcastOn(Channels.mouseReleased(), { target: SugarElement.fromDom(raw.target as Node) });
     }
+  };
+  const onContentMousedown = () => {
+    Arr.each(editor.editorManager.get(), (loopEditor) => {
+      if (editor !== loopEditor) {
+        loopEditor.fire('DismissPopups', { relatedTarget: editor });
+      }
+    });
   };
 
   // Window events
@@ -62,15 +71,21 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     }
   };
 
+  const onDismissPopups = (event: { relatedTarget: Editor }) => {
+    broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(event.relatedTarget.getContainer()) });
+  };
+
   // Don't start listening to events until the UI has rendered
   editor.on('PostRender', () => {
     editor.on('click', onContentClick);
     editor.on('tap', onContentClick);
     editor.on('mouseup', onContentMouseup);
+    editor.on('mousedown', onContentMousedown);
     editor.on('ScrollWindow', onWindowScroll);
     editor.on('ResizeWindow', onWindowResize);
     editor.on('ResizeEditor', onEditorResize);
     editor.on('AfterProgressState', onEditorProgress);
+    editor.on('DismissPopups', onDismissPopups);
   });
 
   editor.on('remove', () => {
@@ -78,10 +93,12 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.off('click', onContentClick);
     editor.off('tap', onContentClick);
     editor.off('mouseup', onContentMouseup);
+    editor.off('mousedown', onContentMousedown);
     editor.off('ScrollWindow', onWindowScroll);
     editor.off('ResizeWindow', onWindowResize);
     editor.off('ResizeEditor', onEditorResize);
     editor.off('AfterProgressState', onEditorProgress);
+    editor.off('DismissPopups', onDismissPopups);
 
     onMousedown.unbind();
     onTouchstart.unbind();

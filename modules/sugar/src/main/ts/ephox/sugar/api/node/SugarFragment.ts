@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import { SugarElement } from './SugarElement';
 
 const fromElements = (elements: SugarElement<Node>[], scope?: Document | null): SugarElement<DocumentFragment> => {

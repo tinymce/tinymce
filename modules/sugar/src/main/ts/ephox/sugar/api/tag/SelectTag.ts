@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 
 const getValueFromIndex = (options: HTMLOptionsCollection, index: number): Optional<string> => {

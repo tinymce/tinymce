@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { Split } from '@ephox/phoenix';
+
 import * as Clumps from '../../clumps/Clumps';
 import * as EntryPoints from '../../clumps/EntryPoints';
 import * as Fractures from '../../clumps/Fractures';

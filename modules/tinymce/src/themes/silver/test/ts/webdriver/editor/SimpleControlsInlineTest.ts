@@ -1,7 +1,7 @@
 import { RealMouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { McEditor } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { McEditor } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

@@ -7,12 +7,13 @@
 
 import { Clipboard } from './Clipboard';
 
-const get = (clipboard: Clipboard, quirks) => {
-  return {
-    clipboard,
-    quirks
-  };
-};
+export interface Api {
+  readonly clipboard: Clipboard;
+}
+
+const get = (clipboard: Clipboard): Api => ({
+  clipboard
+});
 
 export {
   get

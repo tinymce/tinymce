@@ -1,9 +1,10 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.ForceBlocksTest', () => {

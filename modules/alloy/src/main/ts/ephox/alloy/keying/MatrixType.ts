@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Focus, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
@@ -14,10 +14,10 @@ import { KeyRuleHandler, MatrixConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 
-const schema: FieldProcessorAdt[] = [
-  FieldSchema.strictObjOf('selectors', [
-    FieldSchema.strict('row'),
-    FieldSchema.strict('cell')
+const schema = [
+  FieldSchema.requiredObjOf('selectors', [
+    FieldSchema.required('row'),
+    FieldSchema.required('cell')
   ]),
 
   // Used to determine whether pressing right/down at the end cycles back to the start/top

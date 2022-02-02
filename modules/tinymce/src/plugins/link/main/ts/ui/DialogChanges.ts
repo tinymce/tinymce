@@ -10,11 +10,16 @@ import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { LinkDialogCatalog, LinkDialogData, LinkDialogUrlData, ListGroup, ListItem, ListValue } from './DialogTypes';
 
 export interface DialogDelta {
-  url: LinkDialogUrlData;
-  text: string;
+  readonly url: LinkDialogUrlData;
+  readonly text: string;
 }
 
-const isListGroup = (item: ListItem): item is ListGroup => Obj.hasNonNullableKey(item as Record<string, any>, 'items');
+export interface DialogChanges {
+  readonly onChange: (getData: () => LinkDialogData, change: { name: string }) => Optional<Partial<LinkDialogData>>;
+}
+
+const isListGroup = (item: ListItem): item is ListGroup =>
+  Obj.hasNonNullableKey(item as Record<string, any>, 'items');
 
 const findTextByValue = (value: string, catalog: ListItem[]): Optional<ListValue> =>
   Arr.findMap(catalog, (item) => {
@@ -50,7 +55,7 @@ const findCatalog = (catalogs: LinkDialogCatalog, fieldName: string): Optional<L
   }
 };
 
-const init = (initialData: LinkDialogData, linkCatalog: LinkDialogCatalog) => {
+const init = (initialData: LinkDialogData, linkCatalog: LinkDialogCatalog): DialogChanges => {
   const persistentData = {
     text: initialData.text,
     title: initialData.title

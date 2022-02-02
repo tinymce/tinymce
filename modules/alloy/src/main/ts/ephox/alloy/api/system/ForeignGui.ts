@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { DomEvent, EventArgs, Insert, SugarElement } from '@ephox/sugar';
 
@@ -46,13 +46,13 @@ export interface ForeignGuiConnection {
   readonly disengage: () => void;
 }
 
-const schema = ValueSchema.objOfOnly([
-  FieldSchema.strict('root'),
-  FieldSchema.strictArrayOfObj('dispatchers', [
+const schema = StructureSchema.objOfOnly([
+  FieldSchema.required('root'),
+  FieldSchema.requiredArrayOfObj('dispatchers', [
     // Given the initial target, what is the target of this particular behaviour?
-    FieldSchema.strict('getTarget'),
+    FieldSchema.required('getTarget'),
     // The configuration for the behaviours
-    FieldSchema.strict('alloyConfig')
+    FieldSchema.required('alloyConfig')
   ]),
   FieldSchema.defaulted('insertion', (root: SugarElement, system: AlloyComponent) => {
     Insert.append(root, system.element);
@@ -120,7 +120,7 @@ const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: SugarE
 };
 
 const engage = (spec: ForeignGuiSpec): ForeignGuiConnection => {
-  const detail: ForeignGuiDetail = ValueSchema.asRawOrDie('ForeignGui', schema, spec);
+  const detail: ForeignGuiDetail = StructureSchema.asRawOrDie('ForeignGui', schema, spec);
 
   // Creates an inner GUI and inserts it appropriately. This will be used
   // as the system for all behaviours

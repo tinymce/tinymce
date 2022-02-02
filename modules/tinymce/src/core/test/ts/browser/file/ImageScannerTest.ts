@@ -1,5 +1,5 @@
 import { before, describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { LegacyUnit } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Env from 'tinymce/core/api/Env';
@@ -7,6 +7,7 @@ import { BlobCache } from 'tinymce/core/api/file/BlobCache';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import { ImageScanner } from 'tinymce/core/file/ImageScanner';
 import { UploadStatus } from 'tinymce/core/file/UploadStatus';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.file.ImageScannerTest', () => {

@@ -7,7 +7,7 @@
 
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling,
-  FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
+  FormField as AlloyFormField, Invalidating, Memento, NativeEvents, Representing, SimpleOrSketchSpec, SketchSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, FutureResult, Id, Optional, Result } from '@ephox/katamari';
@@ -174,18 +174,16 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   // TODO: Consider a way of merging with Checkbox.
-  const makeIcon = (name, errId: Optional<string>, icon = name, label = name) => ({
-    dom: {
+  const makeIcon = (name, errId: Optional<string>, icon = name, label = name): SimpleOrSketchSpec =>
+    Icons.render(icon, {
       tag: 'div',
       classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],
-      innerHtml: Icons.get(icon, providersBackstage.icons),
       attributes: {
         'title': providersBackstage.translate(label),
         'aria-live': 'polite',
-        ...errId.fold(() => ({ }), (id) => ({ id }))
+        ...errId.fold(() => ({}), (id) => ({ id }))
       }
-    }
-  });
+    }, providersBackstage.icons);
 
   const memInvalidIcon = Memento.record(
     makeIcon('invalid', Optional.some(errorId), 'warning')

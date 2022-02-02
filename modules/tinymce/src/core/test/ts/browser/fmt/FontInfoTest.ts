@@ -3,6 +3,7 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as FontInfo from 'tinymce/core/fmt/FontInfo';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.fmt.FontInfoTest', () => {

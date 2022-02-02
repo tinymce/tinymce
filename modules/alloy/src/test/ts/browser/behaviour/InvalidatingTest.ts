@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Guard, Logger, Step, UiControls, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Cell, Future, Optional, Result } from '@ephox/katamari';
+import { Future, Result, Singleton } from '@ephox/katamari';
 import { SugarElement, Value } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -12,7 +12,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
-  const root = Cell(Optional.none<SugarElement<any>>());
+  const root = Singleton.value<SugarElement<any>>();
 
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build({
     dom: {
@@ -244,7 +244,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       sCheckValidOf('Other should initially be valid', other),
       Step.sync(() => {
-        root.set(Optional.some(other.element));
+        root.set(other.element);
       }),
 
       Chain.asStep({ }, [

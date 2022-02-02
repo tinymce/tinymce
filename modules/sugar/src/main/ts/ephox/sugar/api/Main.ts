@@ -37,6 +37,7 @@ import * as AttrList from './properties/AttrList';
 import * as Checked from './properties/Checked';
 import * as Class from './properties/Class';
 import * as Classes from './properties/Classes';
+import * as ContentEditable from './properties/ContentEditable';
 import * as Css from './properties/Css';
 import { CssProperty } from './properties/CssProperty';
 import * as Direction from './properties/Direction';
@@ -118,6 +119,7 @@ export {
   Checked,
   Class,
   Classes,
+  ContentEditable,
   Css,
   CssProperty,
   Direction,

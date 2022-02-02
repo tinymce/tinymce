@@ -2,6 +2,7 @@ import { Assert, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, OptionalInstances } from '@ephox/katamari';
 import { assert } from 'chai';
 import fc from 'fast-check';
+
 import { parseStartValue, parseDetail, ListDetail } from 'tinymce/plugins/lists/core/ListNumbering';
 
 describe('atomic.tinymce.plugins.lists.core.ListNumberingTest', () => {

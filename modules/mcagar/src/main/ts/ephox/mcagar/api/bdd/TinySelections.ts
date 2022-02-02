@@ -1,4 +1,5 @@
 import { Cursors, UiFinder } from '@ephox/agar';
+
 import { Editor } from '../../alien/EditorTypes';
 import { createDomSelection } from '../../selection/SelectionTools';
 import { TinyDom } from '../TinyDom';

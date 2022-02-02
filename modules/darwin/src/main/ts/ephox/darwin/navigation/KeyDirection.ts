@@ -1,6 +1,7 @@
 import { Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
 import { Situ, SugarElement, Traverse } from '@ephox/sugar';
+
 import { WindowBridge } from '../api/WindowBridge';
 import { Carets } from '../keyboard/Carets';
 import { Retries } from '../keyboard/Retries';

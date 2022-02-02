@@ -6,11 +6,13 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Parser from '../core/Parser';
 
-const open = (editor: Editor, headState: Cell<string>) => {
+const open = (editor: Editor, headState: Cell<string>): void => {
   const data = Parser.htmlToData(editor, headState.get());
 
   const defaultData = {

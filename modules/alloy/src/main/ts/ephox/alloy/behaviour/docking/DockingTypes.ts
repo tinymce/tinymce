@@ -45,8 +45,9 @@ export interface DockingConfig extends Behaviour.BehaviourConfigDetail {
 export interface DockingState extends BehaviourState {
   isDocked: () => boolean;
   setDocked: (docked: boolean) => void;
-  getInitialPosition: () => Optional<InitialDockingPosition>;
-  setInitialPosition: (bounds: Optional<InitialDockingPosition>) => void;
+  getInitialPos: () => Optional<InitialDockingPosition>;
+  setInitialPos: (bounds: InitialDockingPosition) => void;
+  clearInitialPos: () => void;
   isVisible: () => boolean;
   setVisible: (visible: boolean) => void;
   getModes: () => DockingMode[];

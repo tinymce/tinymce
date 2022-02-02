@@ -1,10 +1,11 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { LegacyUnit } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import $ from 'tinymce/core/api/dom/DomQuery';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as LineWalker from 'tinymce/core/caret/LineWalker';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 type LinePosClientRect = LineWalker.LinePosClientRect;

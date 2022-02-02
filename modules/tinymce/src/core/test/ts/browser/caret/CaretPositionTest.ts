@@ -1,8 +1,9 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { LegacyUnit } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
+
 import * as CaretAsserts from '../../module/test/CaretAsserts';
 import * as ViewBlock from '../../module/test/ViewBlock';
 

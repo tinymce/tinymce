@@ -5,7 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
+
 import { UploadHandler } from '../file/Uploader';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
@@ -22,7 +23,7 @@ const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
 
   if (value.indexOf('=') !== -1) {
     const bodyObj = editor.getParam(name, '', 'hash');
-    return bodyObj.hasOwnProperty(editor.id) ? bodyObj[editor.id] : defaultValue;
+    return Obj.get(bodyObj, editor.id).getOr(defaultValue);
   } else {
     return value;
   }
@@ -205,6 +206,8 @@ const getVisualAidsTableClass = (editor: Editor) => editor.getParam('visual_tabl
 
 const getVisualAidsAnchorClass = (editor: Editor) => editor.getParam('visual_anchor_class', 'mce-item-anchor', 'string');
 
+const getIframeAriaText = (editor: Editor) => editor.getParam('iframe_aria_text', 'Rich Text Area. Press ALT-0 for help.', 'string');
+
 export {
   getIframeAttrs,
   getDocType,
@@ -270,5 +273,6 @@ export {
   isVisualAidsEnabled,
   getVisualAidsTableClass,
   getFontCss,
-  getVisualAidsAnchorClass
+  getVisualAidsAnchorClass,
+  getIframeAriaText
 };

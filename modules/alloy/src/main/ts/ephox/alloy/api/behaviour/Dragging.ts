@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
-import { BehaviourStateInitialiser } from '../../behaviour/common/BehaviourState';
 
+import { BehaviourStateInitialiser } from '../../behaviour/common/BehaviourState';
 import * as DraggingApis from '../../behaviour/dragging/DraggingApis';
 import * as DraggingBranches from '../../behaviour/dragging/DraggingBranches';
 import { DraggingBehaviour, DraggingConfig, DraggingState, SnapConfig, SnapConfigSpec } from '../../dragging/common/DraggingTypes';

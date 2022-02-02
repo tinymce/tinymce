@@ -6,6 +6,7 @@
  */
 
 import { Arr, Optional } from '@ephox/katamari';
+
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
 import Editor from './Editor';

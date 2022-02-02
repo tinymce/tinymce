@@ -1,11 +1,12 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
-import { LegacyUnit, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
@@ -2322,7 +2323,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</li>' +
       '</ul>'
     );
-    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 1 ], 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 1 ], 1);
     editor.formatter.apply('aligncenter');
     assert.equal(getContent(editor),
       '<ul>' +
@@ -2350,7 +2351,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</li>' +
       '</ol>'
     );
-    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 0 ], 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 0 ], 1);
     editor.formatter.apply('aligncenter');
     assert.equal(getContent(editor),
       '<ol>' +
@@ -2362,6 +2363,34 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
           '</ol>' +
         '</li>' +
       '</ol>'
+    );
+  });
+
+  it('TINY-7393: Apply aligncenter to lists with other formatting', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>a</li>' +
+        '<li><strong>b</strong><br />' +
+          '<ul>' +
+            '<li>c</li>' +
+            '<li>d</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 1 ], 1);
+    editor.formatter.apply('aligncenter');
+    assert.equal(getContent(editor),
+      '<ul>' +
+        '<li style="text-align: center;">a</li>' +
+        '<li style="text-align: center;"><strong>b</strong><br />' +
+          '<ul>' +
+            '<li style="text-align: center;">c</li>' +
+            '<li style="text-align: center;">d</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
     );
   });
 
@@ -2498,5 +2527,13 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('formatA', { value: 'a' });
     editor.formatter.apply('formatA', { value: 'b' });
     assert.equal(getContent(editor), '<p class="a b">test</p>');
+  });
+
+  it('TINY-8036: Apply blockquote with multiple words and collapsed selection', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>test test</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 7);
+    editor.formatter.apply('blockquote');
+    TinyAssertions.assertContent(editor, '<blockquote><p>test test</p></blockquote>');
   });
 });

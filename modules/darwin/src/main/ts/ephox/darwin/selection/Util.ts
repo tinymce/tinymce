@@ -1,4 +1,5 @@
 import { SelectionDirection, SimRange, SimSelection, SugarElement } from '@ephox/sugar';
+
 import { Situs } from './Situs';
 
 const convertToRange = (win: Window, selection: SimSelection): SimRange => {

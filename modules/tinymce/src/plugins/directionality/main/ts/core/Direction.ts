@@ -5,24 +5,47 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr, Optional } from '@ephox/katamari';
+import { Traverse, Attribute, SugarElement, SugarNode, SelectorFind, Direction, SelectorFilter } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
 
-const setDir = (editor: Editor, dir: string) => {
-  const dom = editor.dom;
-  let curDir;
-  const blocks = editor.selection.getSelectedBlocks();
+type Dir = 'rtl' | 'ltr';
 
-  if (blocks.length) {
-    curDir = dom.getAttrib(blocks[0], 'dir');
+const getParentElement = (element: SugarElement<Element>): Optional<SugarElement<Element>> =>
+  Traverse.parent(element).filter(SugarNode.isElement);
 
-    Tools.each(blocks, (block) => {
-      // Add dir to block if the parent block doesn't already have that dir
-      if (!dom.getParent(block.parentNode, '*[dir="' + dir + '"]', dom.getRoot())) {
-        dom.setAttrib(block, 'dir', curDir !== dir ? dir : null);
-      }
+// if the block is a list item, we need to get the parent of the list itself
+const getNormalizedBlock = (element: SugarElement<Element>, isListItem: boolean): SugarElement<Element> => {
+  const normalizedElement = isListItem ? SelectorFind.ancestor(element, 'ol,ul') : Optional.some(element);
+  return normalizedElement.getOr(element);
+};
+
+const isListItem = SugarNode.isTag('li');
+
+const setDir = (editor: Editor, dir: Dir): void => {
+  const selectedBlocks = editor.selection.getSelectedBlocks();
+  if (selectedBlocks.length > 0) {
+    Arr.each(selectedBlocks, (block) => {
+      const blockElement = SugarElement.fromDom(block);
+      const isBlockElementListItem = isListItem(blockElement);
+      const normalizedBlock = getNormalizedBlock(blockElement, isBlockElementListItem);
+      const normalizedBlockParent = getParentElement(normalizedBlock);
+      normalizedBlockParent.each((parent) => {
+        const parentDirection = Direction.getDirection(parent);
+        if (parentDirection !== dir) {
+          Attribute.set(normalizedBlock, 'dir', dir);
+        } else if (Direction.getDirection(normalizedBlock) !== dir) {
+          Attribute.remove(normalizedBlock, 'dir');
+        }
+
+        // remove dir attr from list children
+        if (isBlockElementListItem) {
+          const listItems = SelectorFilter.children(normalizedBlock, 'li[dir]');
+          Arr.each(listItems, (listItem) => Attribute.remove(listItem, 'dir'));
+        }
+      });
     });
-
     editor.nodeChanged();
   }
 };

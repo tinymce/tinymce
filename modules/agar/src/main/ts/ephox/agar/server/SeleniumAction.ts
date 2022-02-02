@@ -1,5 +1,6 @@
 import { DataType, Http } from '@ephox/jax';
 import Promise from '@ephox/wrap-promise-polyfill';
+
 import { Chain } from '../api/Chain';
 import { Step } from '../api/Step';
 

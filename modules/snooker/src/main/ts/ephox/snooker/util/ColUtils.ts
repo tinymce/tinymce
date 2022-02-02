@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import * as Structs from '../api/Structs';
 
 export const uniqueColumns = (details: Structs.DetailExt[]): Structs.DetailExt[] => {

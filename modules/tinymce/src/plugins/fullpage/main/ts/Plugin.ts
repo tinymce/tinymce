@@ -6,12 +6,14 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Commands from './api/Commands';
 import * as FilterContent from './core/FilterContent';
 import * as Buttons from './ui/Buttons';
 
-export default () => {
+export default (): void => {
   PluginManager.add('fullpage', (editor) => {
     const headState = Cell(''), footState = Cell('');
 

@@ -17,41 +17,41 @@ export interface RawPattern {
 }
 
 export interface PatternError {
-  message: string;
-  pattern: RawPattern;
+  readonly message: string;
+  readonly pattern: RawPattern;
 }
 
 interface InlineBasePattern {
-  start: string;
-  end: string;
+  readonly start: string;
+  readonly end: string;
 }
 
 export interface InlineFormatPattern extends InlineBasePattern {
-  type: 'inline-format';
-  format: string[];
+  readonly type: 'inline-format';
+  readonly format: string[];
 }
 
 export interface InlineCmdPattern extends InlineBasePattern {
-  type: 'inline-command';
-  cmd: string;
-  value?: any;
+  readonly type: 'inline-command';
+  readonly cmd: string;
+  readonly value?: any;
 }
 
 export type InlinePattern = InlineFormatPattern | InlineCmdPattern;
 
 interface BlockBasePattern {
-  start: string;
+  readonly start: string;
 }
 
 export interface BlockFormatPattern extends BlockBasePattern {
-  type: 'block-format';
-  format: string;
+  readonly type: 'block-format';
+  readonly format: string;
 }
 
 export interface BlockCmdPattern extends BlockBasePattern {
-  type: 'block-command';
-  cmd: string;
-  value?: any;
+  readonly type: 'block-command';
+  readonly cmd: string;
+  readonly value?: any;
 }
 
 export type BlockPattern = BlockFormatPattern | BlockCmdPattern;
@@ -59,19 +59,19 @@ export type BlockPattern = BlockFormatPattern | BlockCmdPattern;
 export type Pattern = InlinePattern | BlockPattern;
 
 export interface PatternSet {
-  inlinePatterns: InlinePattern[];
-  blockPatterns: BlockPattern[];
+  readonly inlinePatterns: InlinePattern[];
+  readonly blockPatterns: BlockPattern[];
 }
 
 interface PatternMatch<T extends Pattern> {
-  pattern: T;
+  readonly pattern: T;
 }
 
 export interface BlockPatternMatch extends PatternMatch<BlockPattern> {
-  range: PathRange;
+  readonly range: PathRange;
 }
 
 export interface InlinePatternMatch extends PatternMatch<InlinePattern> {
-  startRng: PathRange;
-  endRng: PathRange;
+  readonly startRng: PathRange;
+  readonly endRng: PathRange;
 }

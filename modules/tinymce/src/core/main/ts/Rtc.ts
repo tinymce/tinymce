@@ -6,15 +6,16 @@
  */
 
 import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
+
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import Promise from './api/util/Promise';
 import { Content, ContentFormat, GetContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
+import { Format, FormatVars } from './fmt/FormatTypes';
 import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
@@ -27,6 +28,8 @@ import { addVisualInternal } from './view/VisualAidsImpl';
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
   undoManager: {
+    beforeChange: () => void;
+    add: () => UndoLevel;
     undo: () => UndoLevel;
     redo: () => UndoLevel;
     hasUndo: () => boolean;
@@ -39,17 +42,20 @@ interface RtcRuntimeApi {
   };
   formatter: {
     canApply: (format: string) => boolean;
-    match: (format: string, vars: Record<string, string>) => boolean;
-    closest: (formats: string) => string;
+    match: (format: string, vars: Record<string, string>, similar?: boolean) => boolean;
+    matchAll: () => string[];
+    matchNode: () => Format | undefined;
+    closest: (formats: string[]) => string;
     apply: (format: string, vars: Record<string, string>) => void;
     remove: (format: string, vars: Record<string, string>) => void;
     toggle: (format: string, vars: Record<string, string>) => void;
-    formatChanged: (formats: string, callback: FormatChangeCallback, similar: boolean) => UnbindFormatChanged;
+    formatChanged: (formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
     getContent: (args: GetContentArgs) => Content;
     setContent: (content: Content, args: SetContentArgs) => Content;
     insertContent: (content: Content) => void;
+    addVisual: () => void;
   };
   selection: {
     getContent: (args: GetSelectionContentArgs) => Content;
@@ -66,7 +72,7 @@ interface RtcRuntimeApi {
 interface RtcAdaptor {
   undoManager: {
     beforeChange: (locks: Locks, beforeBookmark: UndoBookmark) => void;
-    addUndoLevel: (
+    add: (
       undoManager: UndoManager,
       index: Index,
       locks: Locks,
@@ -93,7 +99,7 @@ interface RtcAdaptor {
     apply: Formatter['apply'];
     remove: Formatter['remove'];
     toggle: Formatter['toggle'];
-    formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => UnbindFormatChanged;
+    formatChanged: (registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars) => UnbindFormatChanged;
   };
   editor: {
     getContent: (args: GetContentArgs, format: ContentFormat) => Content;
@@ -121,7 +127,7 @@ interface RtcEditor extends Editor {
 const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   undoManager: {
     beforeChange: (locks, beforeBookmark) => Operations.beforeChange(editor, locks, beforeBookmark),
-    addUndoLevel: (undoManager, index, locks, beforeBookmark, level, event) =>
+    add: (undoManager, index, locks, beforeBookmark, level, event) =>
       Operations.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event),
     undo: (undoManager, locks, index) => Operations.undo(editor, undoManager, locks, index),
     redo: (index, data) => Operations.redo(editor, index, data),
@@ -135,7 +141,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
       Operations.extra(editor, undoManager, index, callback1, callback2)
   },
   formatter: {
-    match: (name, vars?, node?) => MatchFormat.match(editor, name, vars, node),
+    match: (name, vars?, node?, similar?) => MatchFormat.match(editor, name, vars, node, similar),
     matchAll: (names, vars) => MatchFormat.matchAll(editor, names, vars),
     matchNode: (node, name, vars, similar) => MatchFormat.matchNode(editor, node, name, vars, similar),
     canApply: (name) => MatchFormat.canApply(editor, name),
@@ -143,7 +149,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     apply: (name, vars?, node?) => ApplyFormat.applyFormat(editor, name, vars, node),
     remove: (name, vars, node, similar?) => RemoveFormat.remove(editor, name, vars, node, similar),
     toggle: (name, vars, node) => ToggleFormat.toggle(editor, name, vars, node),
-    formatChanged: (registeredFormatListeners, formats, callback, similar) => formatChangedInternal(editor, registeredFormatListeners, formats, callback, similar)
+    formatChanged: (registeredFormatListeners, formats, callback, similar, vars) => formatChangedInternal(editor, registeredFormatListeners, formats, callback, similar, vars)
   },
   editor: {
     getContent: (args, format) => getContentInternal(editor, args, format),
@@ -161,40 +167,38 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
 
 const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
   const defaultVars = (vars: Record<string, string>) => Type.isObject(vars) ? vars : {};
-  const unsupported = Fun.die('Unimplemented feature for rtc');
   const { undoManager, formatter, editor, selection, raw } = rtcEditor;
-  const ignore = Fun.noop;
 
   return {
     undoManager: {
-      beforeChange: ignore,
-      addUndoLevel: unsupported,
-      undo: () => undoManager.undo(),
-      redo: () => undoManager.redo(),
-      clear: () => undoManager.clear(),
-      reset: () => undoManager.reset(),
-      hasUndo: () => undoManager.hasUndo(),
-      hasRedo: () => undoManager.hasRedo(),
+      beforeChange: undoManager.beforeChange,
+      add: undoManager.add,
+      undo: undoManager.undo,
+      redo: undoManager.redo,
+      clear: undoManager.clear,
+      reset: undoManager.reset,
+      hasUndo: undoManager.hasUndo,
+      hasRedo: undoManager.hasRedo,
       transact: (_undoManager, _locks, fn) => undoManager.transact(fn),
       ignore: (_locks, callback) => undoManager.ignore(callback),
       extra: (_undoManager, _index, callback1, callback2) => undoManager.extra(callback1, callback2)
     },
     formatter: {
-      match: (name, vars?, _node?) => formatter.match(name, defaultVars(vars)),
-      matchAll: unsupported,
-      matchNode: unsupported,
+      match: (name, vars?, _node?, similar?) => formatter.match(name, defaultVars(vars), similar),
+      matchAll: formatter.matchAll,
+      matchNode: formatter.matchNode,
       canApply: (name) => formatter.canApply(name),
       closest: (names) => formatter.closest(names),
       apply: (name, vars, _node) => formatter.apply(name, defaultVars(vars)),
       remove: (name, vars, _node, _similar?) => formatter.remove(name, defaultVars(vars)),
       toggle: (name, vars, _node) => formatter.toggle(name, defaultVars(vars)),
-      formatChanged: (_rfl, formats, callback, similar) => formatter.formatChanged(formats, callback, similar)
+      formatChanged: (_rfl, formats, callback, similar, vars) => formatter.formatChanged(formats, callback, similar, vars)
     },
     editor: {
       getContent: (args, _format) => editor.getContent(args),
       setContent: (content, args) => editor.setContent(content, args),
       insertContent: (content, _details) => editor.insertContent(content),
-      addVisual: ignore
+      addVisual: editor.addVisual
     },
     selection: {
       getContent: (_format, args) => selection.getContent(args)
@@ -212,7 +216,7 @@ const makeNoopAdaptor = (): RtcAdaptor => {
   return {
     undoManager: {
       beforeChange: Fun.noop,
-      addUndoLevel: nul,
+      add: nul,
       undo: nul,
       redo: nul,
       clear: Fun.noop,
@@ -226,7 +230,7 @@ const makeNoopAdaptor = (): RtcAdaptor => {
     formatter: {
       match: Fun.never,
       matchAll: Fun.constant([]),
-      matchNode: Fun.never,
+      matchNode: Fun.constant(undefined),
       canApply: Fun.never,
       closest: empty,
       apply: Fun.noop,
@@ -257,23 +261,24 @@ const getRtcSetup = (editor: Editor): Optional<() => Promise<RtcRuntimeApi>> =>
     Optional.from(rtcPlugin.setup)
   );
 
-export const setup = (editor: Editor): Optional<Promise<boolean>> => {
+export const setup = (editor: Editor): Optional<() => Promise<boolean>> => {
   const editorCast = editor as RtcEditor;
   return getRtcSetup(editor).fold(
     () => {
       editorCast.rtcInstance = makePlainAdaptor(editor);
       return Optional.none();
     },
-    (setup) => Optional.some(
-      setup().then((rtcEditor) => {
-        editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
-        return rtcEditor.rtc.isRemote;
-      }, (err) => {
-        // We need to provide a noop adaptor on init failure since otherwise calls to hasUndo etc will continue to throw errors
-        editorCast.rtcInstance = makeNoopAdaptor();
-        return Promise.reject<boolean>(err);
-      })
-    )
+    (setup) => {
+      // We need to provide a noop adaptor while initializing since any call by the theme or plugins to say undoManager.hasUndo would throw errors
+      editorCast.rtcInstance = makeNoopAdaptor();
+
+      return Optional.some(
+        () => setup().then((rtcEditor) => {
+          editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
+          return rtcEditor.rtc.isRemote;
+        })
+      );
+    }
   );
 };
 
@@ -304,7 +309,7 @@ export const addUndoLevel = (
   level?: UndoLevel,
   event?: Event
 ): UndoLevel =>
-  getRtcInstanceWithError(editor).undoManager.addUndoLevel(undoManager, index, locks, beforeBookmark, level, event);
+  getRtcInstanceWithError(editor).undoManager.add(undoManager, index, locks, beforeBookmark, level, event);
 
 export const undo = (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index): UndoLevel =>
   getRtcInstanceWithError(editor).undoManager.undo(undoManager, locks, index);
@@ -347,7 +352,9 @@ export const matchFormat = (
   editor: Editor,
   name: string,
   vars?: Record<string, string>,
-  node?: Node): boolean => getRtcInstanceWithError(editor).formatter.match(name, vars, node);
+  node?: Node,
+  similar?: boolean
+): boolean => getRtcInstanceWithError(editor).formatter.match(name, vars, node, similar);
 
 export const matchAllFormats = (
   editor: Editor,
@@ -359,7 +366,7 @@ export const matchNodeFormat = (
   node: Node,
   name: string,
   vars?: Record<string, string>,
-  similar?: boolean): boolean => getRtcInstanceWithError(editor).formatter.matchNode(node, name, vars, similar);
+  similar?: boolean): Format | undefined => getRtcInstanceWithError(editor).formatter.matchNode(node, name, vars, similar);
 
 export const canApplyFormat = (
   editor: Editor,
@@ -367,7 +374,7 @@ export const canApplyFormat = (
 
 export const closestFormat = (
   editor: Editor,
-  names: string): string => getRtcInstanceWithError(editor).formatter.closest(names);
+  names: string[]): string => getRtcInstanceWithError(editor).formatter.closest(names);
 
 export const applyFormat = (
   editor: Editor,
@@ -386,8 +393,8 @@ export const toggleFormat = (editor: Editor, name: string, vars: Record<string, 
   getRtcInstanceWithError(editor).formatter.toggle(name, vars, node);
 };
 
-export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar: boolean = false): UnbindFormatChanged =>
-  getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar);
+export const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean, vars?: FormatVars): UnbindFormatChanged =>
+  getRtcInstanceWithError(editor).formatter.formatChanged(registeredFormatListeners, formats, callback, similar, vars);
 
 export const getContent = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content =>
   getRtcInstanceWithFallback(editor).editor.getContent(args, format);

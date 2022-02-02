@@ -6,9 +6,10 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Convert from './core/Convert';
 
-export default () => {
+export default (): void => {
   PluginManager.add('bbcode', (editor) => {
     editor.on('BeforeSetContent', (e) => {
       e.content = Convert.bbcode2html(e.content);

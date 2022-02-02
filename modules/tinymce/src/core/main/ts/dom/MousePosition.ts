@@ -25,7 +25,7 @@ interface Position {
   left: number;
 }
 
-const getAbsolutePosition = (elm: HTMLElement) => {
+const getAbsolutePosition = (elm: HTMLElement): Position => {
   const clientRect = elm.getBoundingClientRect();
   const doc = elm.ownerDocument;
   const docElem = doc.documentElement;
@@ -37,7 +37,8 @@ const getAbsolutePosition = (elm: HTMLElement) => {
   };
 };
 
-const getBodyPosition = (editor: Editor): Position => editor.inline ? getAbsolutePosition(editor.getBody()) : { left: 0, top: 0 };
+const getBodyPosition = (editor: Editor): Position =>
+  editor.inline ? getAbsolutePosition(editor.getBody()) : { left: 0, top: 0 };
 
 const getScrollPosition = (editor: Editor): Position => {
   const body = editor.getBody();

@@ -7,6 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import * as RangeNodes from './RangeNodes';
 
 const getRanges = (selection) => {

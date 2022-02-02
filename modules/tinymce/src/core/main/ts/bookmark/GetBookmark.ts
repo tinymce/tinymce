@@ -6,6 +6,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import Tools from '../api/util/Tools';
@@ -67,6 +68,10 @@ const getLocation = (trim: TrimFn, selection: EditorSelection, normalized: boole
 
   if (!selection.isCollapsed()) {
     bookmark.end = getPoint(dom, trim, normalized, rng, false);
+  }
+
+  if (CaretContainer.isRangeInCaretContainerBlock(rng)) {
+    bookmark.isFakeCaret = true;
   }
 
   return bookmark;

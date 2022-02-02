@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement, SugarNode, TextContent } from '@ephox/sugar';
+
 import * as Structs from 'ephox/snooker/api/Structs';
 
 // Creates an elementNew (or returns from elements array if it already exists)

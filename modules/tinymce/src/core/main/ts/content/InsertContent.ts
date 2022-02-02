@@ -8,12 +8,20 @@
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Rtc from '../Rtc';
+import { InsertContentDetails } from './ContentTypes';
 
-const processValue = (value) => {
-  let details;
+interface DetailsWithContent extends InsertContentDetails {
+  readonly content: string;
+}
 
+interface ProcessedValue {
+  readonly content: string;
+  readonly details: InsertContentDetails;
+}
+
+const processValue = (value: string | DetailsWithContent): ProcessedValue => {
   if (typeof value !== 'string') {
-    details = Tools.extend({
+    const details = Tools.extend({
       paste: value.paste,
       data: {
         paste: value.paste
@@ -32,7 +40,7 @@ const processValue = (value) => {
   };
 };
 
-const insertAtCaret = (editor: Editor, value) => {
+const insertAtCaret = (editor: Editor, value: string | DetailsWithContent): void => {
   const result = processValue(value);
 
   Rtc.insertContent(editor, result.content, result.details);

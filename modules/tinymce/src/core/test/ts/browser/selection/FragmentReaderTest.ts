@@ -4,6 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, SugarElement } from '@ephox/sugar';
 
 import * as FragmentReader from 'tinymce/core/selection/FragmentReader';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.selection.FragmentReaderTest', () => {

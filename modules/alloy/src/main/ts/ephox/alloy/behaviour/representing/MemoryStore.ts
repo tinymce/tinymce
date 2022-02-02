@@ -1,6 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import { MemoryRepresentingState, MemoryStoreConfig, RepresentingConfig } from './RepresentingTypes';
 import { memory } from './RepresentState';

@@ -1,4 +1,5 @@
 import { Universe } from '@ephox/boss';
+
 import * as Searcher from '../../search/Searcher';
 import { NamedPattern } from '../data/NamedPattern';
 import { SearchResult } from '../data/Types';

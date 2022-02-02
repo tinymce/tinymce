@@ -2,36 +2,38 @@ import { Fun } from '@ephox/katamari';
 
 const constant = Fun.constant;
 
-const contextmenu = constant('contextmenu');
-const touchstart = constant('touchstart');
-const touchmove = constant('touchmove');
-const touchend = constant('touchend');
-const touchcancel = constant('touchcancel');
-const gesturestart = constant('gesturestart');
-const mousedown = constant('mousedown');
-const mousemove = constant('mousemove');
-const mouseout = constant('mouseout');
-const mouseup = constant('mouseup');
-const mouseover = constant('mouseover');
+const contextmenu = constant('contextmenu' as const);
+const touchstart = constant('touchstart' as const);
+const touchmove = constant('touchmove' as const);
+const touchend = constant('touchend' as const);
+const touchcancel = constant('touchcancel' as const);
+const gesturestart = constant('gesturestart' as const);
+const mousedown = constant('mousedown' as const);
+const mousemove = constant('mousemove' as const);
+const mouseout = constant('mouseout' as const);
+const mouseup = constant('mouseup' as const);
+const mouseover = constant('mouseover' as const);
 // Not really a native event as it has to be simulated
-const focusin = constant('focusin');
-const focusout = constant('focusout');
-const keydown = constant('keydown');
-const keyup = constant('keyup');
-const input = constant('input');
-const change = constant('change');
-const focus = constant('focus');
-const click = constant('click');
-const transitionend = constant('transitionend');
-const selectstart = constant('selectstart');
-const paste = constant('paste');
-const dragover = constant('dragover');
-const dragend = constant('dragend');
-const dragstart = constant('dragstart');
-const dragleave = constant('dragleave');
-const dragenter = constant('dragenter');
-const drop = constant('drop');
-const drag = constant('drag');
+const focusin = constant('focusin' as const);
+const focusout = constant('focusout' as const);
+const keydown = constant('keydown' as const);
+const keyup = constant('keyup' as const);
+const input = constant('input' as const);
+const change = constant('change' as const);
+const focus = constant('focus' as const);
+const click = constant('click' as const);
+const transitioncancel = constant('transitioncancel' as const);
+const transitionend = constant('transitionend' as const);
+const transitionstart = constant('transitionstart' as const);
+const selectstart = constant('selectstart' as const);
+const paste = constant('paste' as const);
+const dragover = constant('dragover' as const);
+const dragend = constant('dragend' as const);
+const dragstart = constant('dragstart' as const);
+const dragleave = constant('dragleave' as const);
+const dragenter = constant('dragenter' as const);
+const drop = constant('drop' as const);
+const drag = constant('drag' as const);
 
 export {
   contextmenu,
@@ -58,7 +60,10 @@ export {
 
   click,
 
+  transitioncancel,
   transitionend,
+  transitionstart,
+
   selectstart,
   paste,
 

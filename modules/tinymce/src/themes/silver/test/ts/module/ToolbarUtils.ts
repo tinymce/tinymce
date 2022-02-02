@@ -1,11 +1,12 @@
 import { Waiter } from '@ephox/agar';
 import { Type } from '@ephox/katamari';
-import { TinyUiActions } from '@ephox/mcagar';
 import { Height, SugarElement, SugarLocation, Width } from '@ephox/sugar';
+import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
+
 import { pCloseMore, pOpenMore } from './MenuUtils';
 
 const pAssertFloatingToolbarPosition = async (editor: Editor, getTop: () => number, expectedLeft: number, expectedRight: number) => {

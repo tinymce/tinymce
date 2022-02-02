@@ -7,6 +7,7 @@
 
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import { Content, ContentFormat, GetContentArgs } from '../content/ContentTypes';
@@ -85,29 +86,34 @@ const getSerializedContent = (editor: Editor, args: GetSelectionContentArgs): Co
   return editor.selection.serializer.serialize(tmpElm, args);
 };
 
-export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs = {}): Content => {
-  args.get = true;
-  args.format = format;
-  args.selection = true;
+const setupArgs = (args: Partial<GetSelectionContentArgs>, format: ContentFormat): GetSelectionContentArgs => ({
+  ...args,
+  format,
+  get: true,
+  selection: true
+});
 
-  args = editor.fire('BeforeGetContent', args);
-  if (args.isDefaultPrevented()) {
-    editor.fire('GetContent', args);
-    return args.content;
+export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs = {}): Content => {
+  const defaultedArgs = setupArgs(args, format);
+  const updatedArgs = editor.fire('BeforeGetContent', defaultedArgs);
+
+  if (updatedArgs.isDefaultPrevented()) {
+    editor.fire('GetContent', updatedArgs);
+    return updatedArgs.content;
   }
 
-  if (args.format === 'text') {
+  if (updatedArgs.format === 'text') {
     return getTextContent(editor);
   } else {
-    args.getInner = true;
-    const content = getSerializedContent(editor, args);
+    updatedArgs.getInner = true;
+    const content = getSerializedContent(editor, updatedArgs);
 
-    if (args.format === 'tree') {
+    if (updatedArgs.format === 'tree') {
       return content;
     } else {
-      args.content = editor.selection.isCollapsed() ? '' : content as string;
-      editor.fire('GetContent', args);
-      return args.content;
+      updatedArgs.content = editor.selection.isCollapsed() ? '' : content as string;
+      editor.fire('GetContent', updatedArgs);
+      return updatedArgs.content;
     }
   }
 };

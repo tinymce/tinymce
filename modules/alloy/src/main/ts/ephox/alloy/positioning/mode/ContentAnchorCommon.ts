@@ -9,19 +9,9 @@ import * as Origins from '../layout/Origins';
 import { Anchoring, NodeAnchor, nu as NuAnchor, SelectionAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const capRect = (left: number, top: number, width: number, height: number): Optional<Boxes.BoxByPoint> => {
-  let newLeft = left, newTop = top, newWidth = width, newHeight = height;
-  // Try to prevent the context toolbar from getting above the editor toolbar
-  if (left < 0) {
-    newLeft = 0;
-    newWidth = width + left;
-  }
-  if (top < 0) {
-    newTop = 0;
-    newHeight = height + top;
-  }
-  const point = CssPosition.screen(SugarPosition(newLeft, newTop));
-  return Optional.some(Boxes.pointed(point, newWidth, newHeight));
+const getBox = (left: number, top: number, width: number, height: number): Optional<Boxes.BoxByPoint> => {
+  const point = CssPosition.screen(SugarPosition(left, top));
+  return Optional.some(Boxes.pointed(point, width, height));
 };
 
 const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: SugarElement): Optional<Anchoring> =>
@@ -68,6 +58,6 @@ const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPositio
   });
 
 export {
-  capRect,
+  getBox,
   calcNewAnchor
 };

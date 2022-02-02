@@ -7,6 +7,7 @@
 
 import { AlloyEvents, AlloyTriggers, CustomEvent, SystemEvents } from '@ephox/alloy';
 import { Id } from '@ephox/katamari';
+
 import { GetApiType, runWithApi } from '../../controls/Controls';
 
 export interface OnMenuItemExecuteType<T> extends GetApiType<T> {

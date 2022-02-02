@@ -6,6 +6,7 @@ import { assert } from 'chai';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as CaretContainerRemove from 'tinymce/core/caret/CaretContainerRemove';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.CaretContainerRemoveTest', () => {

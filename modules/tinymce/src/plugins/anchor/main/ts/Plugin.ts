@@ -6,12 +6,13 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Commands from './api/Commands';
 import * as FilterContent from './core/FilterContent';
 import * as Formats from './core/Formats';
 import * as Buttons from './ui/Buttons';
 
-export default () => {
+export default (): void => {
   PluginManager.add('anchor', (editor) => {
     FilterContent.setup(editor);
     Commands.register(editor);

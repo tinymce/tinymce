@@ -1,5 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Checked from 'ephox/sugar/api/properties/Checked';

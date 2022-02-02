@@ -19,9 +19,7 @@ export default () => {
   );
 
   const config = {
-    getFrame: () => {
-      return frame;
-    },
+    getFrame: Fun.constant(frame),
     onDomChanged: () => {
       return { unbind: Fun.noop };
     }

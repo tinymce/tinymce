@@ -1,7 +1,7 @@
 import { Assertions, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Html, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';

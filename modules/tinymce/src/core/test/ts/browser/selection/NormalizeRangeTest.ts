@@ -7,6 +7,7 @@ import { assert } from 'chai';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as NormalizeRange from 'tinymce/core/selection/NormalizeRange';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.selection.NormalizeRangeTest', () => {

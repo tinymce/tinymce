@@ -1,4 +1,4 @@
-import { Num, Optional, Optionals } from '@ephox/katamari';
+import { Fun, Num, Optional, Optionals } from '@ephox/katamari';
 import { Css, Scroll, SugarElement, SugarLocation, SugarPosition, Traverse } from '@ephox/sugar';
 
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
@@ -35,7 +35,7 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
       return DragCoord.offset(offset.left, offset.top);
     },
     // absolute
-    () => newCoords,
+    Fun.constant(newCoords),
     // fixed
     () => {
       const fixed = DragCoord.asFixed(newCoords, scroll, origin);

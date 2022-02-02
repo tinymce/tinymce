@@ -1,4 +1,5 @@
 import { Html, SugarElement, SugarNode } from '@ephox/sugar';
+
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
 export default (): SimpleGenerators => {
@@ -40,6 +41,7 @@ export default (): SimpleGenerators => {
     row: () => makeElem('tr', ''),
     colgroup: () => makeElem('colgroup', ''),
     col,
+    colGap: col,
     replace
   };
 };

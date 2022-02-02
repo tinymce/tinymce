@@ -1,11 +1,12 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { Generators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 import * as TableGrid from './TableGrid';
 
-const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: SugarElement) => boolean): Structs.RowDetails[] => {
+const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: SugarElement) => boolean): Structs.RowDetailNew<Structs.DetailNew>[] => {
   const seen: boolean[][] = Arr.map(grid, (row) =>
     Arr.map(row.cells, Fun.never)
   );
@@ -29,20 +30,25 @@ const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: Su
         return [] as Structs.DetailNew[];
       }
     });
-    return Structs.rowdetails(details, row.section);
+    return Structs.rowdetailnew(row.element, details, row.section, row.isNew);
   });
 };
 
 const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean): Structs.RowCells[] => {
   const grid: Structs.RowCells[] = [];
 
-  if (Warehouse.hasColumns(warehouse)) {
-    const groupElementNew = Arr.map(Warehouse.justColumns(warehouse), (column: Structs.Column): Structs.ElementNew =>
-      Structs.elementnew(column.element, isNew, false)
-    );
-
-    grid.push(Structs.rowcells(groupElementNew, 'colgroup'));
-  }
+  Arr.each(warehouse.colgroups, (colgroup) => {
+    const colgroupCols: Structs.ElementNew[] = [];
+    // This will add missing cols as well as clamp the number of cols to the max number of actual columns
+    // Note: Spans on cols are unsupported so clamping cols may result in a span on a col element being incorrect
+    for (let columnIndex = 0; columnIndex < warehouse.grid.columns; columnIndex++) {
+      const element = Warehouse.getColumnAt(warehouse, columnIndex)
+        .map((column) => Structs.elementnew(column.element, isNew, false))
+        .getOrThunk(() => Structs.elementnew(generators.colGap(), true, false));
+      colgroupCols.push(element);
+    }
+    grid.push(Structs.rowcells(colgroup.element, colgroupCols, 'colgroup', isNew));
+  });
 
   for (let rowIndex = 0; rowIndex < warehouse.grid.rows; rowIndex++) {
     const rowCells: Structs.ElementNew[] = [];
@@ -55,7 +61,8 @@ const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean): S
       );
       rowCells.push(element);
     }
-    const row = Structs.rowcells(rowCells, warehouse.all[rowIndex].section);
+    const rowDetail = warehouse.all[rowIndex];
+    const row = Structs.rowcells(rowDetail.element, rowCells, rowDetail.section, isNew);
     grid.push(row);
   }
 

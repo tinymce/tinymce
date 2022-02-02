@@ -5,22 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
+
 const internalMimeType = 'x-tinymce/html';
 const internalMark = '<!-- ' + internalMimeType + ' -->';
 
-const mark = (html: string) => {
-  return internalMark + html;
-};
+const mark = (html: string): string =>
+  internalMark + html;
 
-const unmark = (html: string) => {
-  return html.replace(internalMark, '');
-};
+const unmark = (html: string): string =>
+  html.replace(internalMark, '');
 
-const isMarked = (html: string) => {
-  return html.indexOf(internalMark) !== -1;
-};
+const isMarked = (html: string): boolean =>
+  html.indexOf(internalMark) !== -1;
 
-const internalHtmlMime = () => internalMimeType;
+const internalHtmlMime = Fun.constant(internalMimeType);
 
 export {
   mark,

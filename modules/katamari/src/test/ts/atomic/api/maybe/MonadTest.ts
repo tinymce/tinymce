@@ -1,6 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
+
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Maybe } from 'ephox/katamari/api/Maybe';
 import * as Maybes from 'ephox/katamari/api/Maybes';

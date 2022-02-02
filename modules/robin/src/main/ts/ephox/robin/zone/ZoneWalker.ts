@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
 import { Gather, Traverse } from '@ephox/phoenix';
+
 import { ZonePosition } from '../api/general/ZonePosition';
 import { ZoneViewports } from '../api/general/ZoneViewports';
 import { WordDecisionItem } from '../words/WordDecision';
@@ -43,9 +44,7 @@ const visit = <E, D>(
   traverse: Traverse<E>
 ): void => {
   // Find if the current item has a lang property on it.
-  const currentLang = universe.property().isElement(traverse.item) ?
-    Optional.from(universe.attrs().get(traverse.item, 'lang')) :
-    Optional.none<string>();
+  const currentLang = universe.property().getLanguage(traverse.item);
 
   if (universe.property().isText(traverse.item)) {
     stack.addDetail(transform(universe, traverse.item));

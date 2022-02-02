@@ -7,6 +7,7 @@
 
 import { DomFactory, RawDomSchema } from '@ephox/alloy';
 import { Strings } from '@ephox/katamari';
+
 import * as Styles from '../style/Styles';
 
 const dom = (rawHtml: string): RawDomSchema => {

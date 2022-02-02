@@ -12,8 +12,10 @@ import {
 import { Objects } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Cell, Fun, Merger } from '@ephox/katamari';
+
 import { toValidValues } from 'tinymce/themes/silver/ui/general/FormValues';
 import { interpretInForm } from 'tinymce/themes/silver/ui/general/UiFactory';
+
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { setMode } from '../alien/DialogTabHeight';
 import { formTabChangeEvent } from '../general/FormEvents';

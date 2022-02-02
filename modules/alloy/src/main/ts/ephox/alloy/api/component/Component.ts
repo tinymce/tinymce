@@ -1,4 +1,4 @@
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Arr, Cell, Optional, Type } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
@@ -59,7 +59,7 @@ const build = (spec: ComponentDetail): AlloyComponent => {
 
   const systemApi = Cell(singleton);
 
-  const info: CustomDefinition.CustomDetail<any> = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
+  const info: CustomDefinition.CustomDetail<any> = StructureSchema.getOrDie(CustomDefinition.toInfo(spec));
   const bBlob = CompBehaviours.generate(spec);
 
   const bList = BehaviourBlob.getBehaviours(bBlob);
@@ -86,7 +86,7 @@ const build = (spec: ComponentDetail): AlloyComponent => {
     // INVESTIGATE: Not sure about how to handle text nodes here.
     const subs = Arr.bind(children, (child) => systemApi.get().getByDom(child).fold(
       () => [ ],
-      (c) => [ c ]
+      Arr.pure
     ));
     subcomponents.set(subs);
   };
@@ -107,6 +107,7 @@ const build = (spec: ComponentDetail): AlloyComponent => {
   const readState = (behaviourName: string): any => bData[behaviourName]().map((b) => b.state.readState()).getOr('not enabled');
 
   const me: AlloyComponent = {
+    uid: spec.uid,
     getSystem: systemApi.get,
     config,
     hasConfigured,

@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
@@ -36,7 +36,7 @@ UnitTest.test('DomDefinitionTest', () => {
       (v) => [ true, v ]
     ),
     (opt: Optional<string>) => opt.fold(
-      () => 'None',
+      Fun.constant('None'),
       (v) => 'Some(' + v + ')'
     )
   );
@@ -109,7 +109,7 @@ UnitTest.test('DomDefinitionTest', () => {
         Assert.eq(
           () => 'Defn Style: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
           true,
-          result.styles[k] === v || result.styles[k] === mod.styles[k] && mod.styles.hasOwnProperty(k)
+          result.styles[k] === v || result.styles[k] === mod.styles[k] && Obj.has(mod.styles, k)
         );
       });
 
@@ -123,7 +123,7 @@ UnitTest.test('DomDefinitionTest', () => {
         Assert.eq(
           () => 'Defn attribute: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
           true,
-          result.attributes[k] === v || result.attributes[k] === mod.attributes[k] && mod.attributes.hasOwnProperty(k)
+          result.attributes[k] === v || result.attributes[k] === mod.attributes[k] && Obj.has(mod.attributes, k)
         );
       });
       return true;

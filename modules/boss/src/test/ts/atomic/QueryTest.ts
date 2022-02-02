@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import { Gene } from 'ephox/boss/api/Gene';
 import { TestUniverse } from 'ephox/boss/api/TestUniverse';
 import * as Query from 'ephox/boss/mutant/Query';

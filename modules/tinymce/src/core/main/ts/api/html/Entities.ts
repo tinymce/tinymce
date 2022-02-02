@@ -6,6 +6,7 @@
  */
 
 import { SugarElement } from '@ephox/sugar';
+
 import Tools from '../util/Tools';
 
 export interface EntitiesMap { [name: string]: string }

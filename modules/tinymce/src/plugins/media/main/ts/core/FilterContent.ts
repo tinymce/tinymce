@@ -8,12 +8,13 @@
 import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Nodes from './Nodes';
 import * as Sanitize from './Sanitize';
 
 declare let unescape: any;
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.on('preInit', () => {
     // Make sure that any messy HTML is retained inside these
     const specialElements = editor.schema.getSpecialElements();

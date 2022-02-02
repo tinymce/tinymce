@@ -6,6 +6,7 @@
  */
 
 import { SketchSpec } from '@ephox/alloy';
+
 import * as FontSizes from '../util/FontSizes';
 import * as UiDomFactory from '../util/UiDomFactory';
 import { MobileRealm } from './IosRealm';

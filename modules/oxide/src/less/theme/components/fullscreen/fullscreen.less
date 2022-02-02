@@ -14,14 +14,11 @@
 .tox-fullscreen {
   border: 0;
   height: 100%;
-  left: 0;
   margin: 0;
   overflow: hidden;
   // Android disable pull to reload in fullscreen
   overscroll-behavior: none;
   padding: 0;
-  position: fixed;
-  top: 0;
   touch-action: pinch-zoom;
   width: 100%;
 }
@@ -30,13 +27,16 @@
   display: none;
 }
 
-.tox.tox-tinymce.tox-fullscreen {
-  background-color: @fullscreen-container-background-color;
+.tox.tox-tinymce.tox-fullscreen,
+.tox-shadowhost.tox-fullscreen {
+  left: 0;
+  position: fixed;
+  top: 0;
   z-index: @z-index-fullscreen;
 }
 
-.tox-shadowhost.tox-fullscreen {
-  z-index: @z-index-fullscreen;
+.tox.tox-tinymce.tox-fullscreen {
+  background-color: @fullscreen-container-background-color;
 }
 
 // Body and ShadowDom support

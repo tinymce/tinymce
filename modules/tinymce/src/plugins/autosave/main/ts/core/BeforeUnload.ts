@@ -8,13 +8,14 @@
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.editorManager.on('BeforeUnload', (e) => {
     let msg: string;
 
-    Tools.each(EditorManager.get(), (editor: Editor) => {
+    Tools.each(EditorManager.get(), (editor) => {
       // Store a draft for each editor instance
       if (editor.plugins.autosave) {
         editor.plugins.autosave.storeDraft();

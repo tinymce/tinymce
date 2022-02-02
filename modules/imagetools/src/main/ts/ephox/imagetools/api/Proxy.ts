@@ -1,6 +1,7 @@
+import Promise from '@ephox/wrap-promise-polyfill';
+
 import * as Errors from '../proxy/Errors';
 import * as Utils from '../proxy/Utils';
-import { Promise } from '../util/Promise';
 
 const appendApiKey = (url: string, apiKey: string) => {
   const separator = url.indexOf('?') === -1 ? '?' : '&';

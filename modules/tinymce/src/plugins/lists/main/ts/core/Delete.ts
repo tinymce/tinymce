@@ -7,11 +7,13 @@
 
 import { Arr } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
+
 import { flattenListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
 import * as Bookmark from './Bookmark';
@@ -20,7 +22,7 @@ import * as NormalizeLists from './NormalizeLists';
 import * as ListRangeUtils from './RangeUtils';
 import * as Selection from './Selection';
 
-const findNextCaretContainer = (editor: Editor, rng: Range, isForward: Boolean, root: Node): Node => {
+const findNextCaretContainer = (editor: Editor, rng: Range, isForward: boolean, root: Node): Node => {
   let node = rng.startContainer;
   const offset = rng.startOffset;
 
@@ -62,13 +64,13 @@ const hasOnlyOneBlockChild = (dom: DOMUtils, elm: Element): boolean => {
   return childNodes.length === 1 && !NodeType.isListNode(childNodes[0]) && dom.isBlock(childNodes[0]);
 };
 
-const unwrapSingleBlockChild = (dom: DOMUtils, elm: Element) => {
+const unwrapSingleBlockChild = (dom: DOMUtils, elm: Element): void => {
   if (hasOnlyOneBlockChild(dom, elm)) {
     dom.remove(elm.firstChild, true);
   }
 };
 
-const moveChildren = (dom: DOMUtils, fromElm: Element, toElm: Element) => {
+const moveChildren = (dom: DOMUtils, fromElm: Element, toElm: Element): void => {
   let node;
 
   const targetElm = hasOnlyOneBlockChild(dom, toElm) ? toElm.firstChild : toElm;
@@ -81,7 +83,7 @@ const moveChildren = (dom: DOMUtils, fromElm: Element, toElm: Element) => {
   }
 };
 
-const mergeLiElements = (dom: DOMUtils, fromElm: Element, toElm: Element) => {
+const mergeLiElements = (dom: DOMUtils, fromElm: Element, toElm: Element): void => {
   let listNode;
   const ul: Node = fromElm.parentNode;
 
@@ -127,13 +129,13 @@ const mergeLiElements = (dom: DOMUtils, fromElm: Element, toElm: Element) => {
   });
 };
 
-const mergeIntoEmptyLi = (editor: Editor, fromLi: HTMLLIElement, toLi: HTMLLIElement) => {
+const mergeIntoEmptyLi = (editor: Editor, fromLi: HTMLLIElement, toLi: HTMLLIElement): void => {
   editor.dom.$(toLi).empty();
   mergeLiElements(editor.dom, fromLi, toLi);
   editor.selection.setCursorLocation(toLi, 0);
 };
 
-const mergeForward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: HTMLLIElement) => {
+const mergeForward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: HTMLLIElement): void => {
   const dom = editor.dom;
 
   if (dom.isEmpty(toLi)) {
@@ -145,14 +147,14 @@ const mergeForward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: H
   }
 };
 
-const mergeBackward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: HTMLLIElement) => {
+const mergeBackward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: HTMLLIElement): void => {
   const bookmark = Bookmark.createBookmark(rng);
   mergeLiElements(editor.dom, fromLi, toLi);
   const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
   editor.selection.setRng(resolvedBookmark);
 };
 
-const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean) => {
+const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean): boolean => {
   const dom = editor.dom, selection = editor.selection;
   const selectionStartElm = selection.getStart();
   const root = Selection.getClosestListRootElm(editor, selectionStartElm);
@@ -195,7 +197,7 @@ const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean) 
   return false;
 };
 
-const removeBlock = (dom: DOMUtils, block: Element, root: Node) => {
+const removeBlock = (dom: DOMUtils, block: Element, root: Node): void => {
   const parentBlock = dom.getParent(block.parentNode, dom.isBlock, root);
 
   dom.remove(block);
@@ -204,7 +206,7 @@ const removeBlock = (dom: DOMUtils, block: Element, root: Node) => {
   }
 };
 
-const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean) => {
+const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boolean => {
   const dom = editor.dom;
   const selectionStartElm = editor.selection.getStart();
   const root = Selection.getClosestListRootElm(editor, selectionStartElm);
@@ -254,7 +256,7 @@ const backspaceDelete = (editor: Editor, isForward: boolean): boolean => {
   return editor.selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE) {
       if (backspaceDelete(editor, false)) {

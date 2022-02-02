@@ -6,12 +6,13 @@
  */
 
 import { Obj } from '@ephox/katamari';
+
 import { isWhitespaceText } from '../../text/Whitespace';
 import { SchemaMap } from './Schema';
 
 export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
-const typeLookup = {
+const typeLookup: Record<string, number> = {
   '#text': 3,
   '#comment': 8,
   '#cdata': 4,
@@ -122,6 +123,8 @@ class AstNode {
   public lastChild?: AstNode;
   public next?: AstNode;
   public prev?: AstNode;
+  public raw?: boolean;
+  public fixed?: boolean;
 
   /**
    * Constructs a new Node instance.
@@ -177,10 +180,10 @@ class AstNode {
    * @param {String} value Optional value to set.
    * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
    */
-  public attr(name: string, value: string | null): AstNode;
-  public attr(name: Record<string, string | null>): AstNode;
-  public attr(name: string): string;
-  public attr(name: string | Record<string, string | null>, value?: string | null): string | AstNode {
+  public attr(name: string, value: string | null): AstNode | undefined;
+  public attr(name: Record<string, string | null>): AstNode | undefined;
+  public attr(name: string): string | undefined;
+  public attr(name: string | Record<string, string | null>, value?: string | null): string | AstNode | undefined {
     const self = this;
     let attrs: Attributes;
 
@@ -300,7 +303,7 @@ class AstNode {
    *
    * @method unwrap
    */
-  public unwrap() {
+  public unwrap(): void {
     const self = this;
 
     for (let node = self.firstChild; node;) {
@@ -383,13 +386,13 @@ class AstNode {
   }
 
   /**
-   * Inserts a node at a specific position as a child of the current node.
+   * Inserts a node at a specific position as a child of this node.
    *
    * @example
    * parentNode.insert(newChildNode, oldChildNode);
    *
    * @method insert
-   * @param {tinymce.html.Node} node Node to insert as a child of the current node.
+   * @param {tinymce.html.Node} node Node to insert as a child of this node.
    * @param {tinymce.html.Node} refNode Reference node to set node before/after.
    * @param {Boolean} before Optional state to insert the node before the reference node.
    * @return {tinymce.html.Node} The node that got inserted.
@@ -430,11 +433,11 @@ class AstNode {
   }
 
   /**
-   * Get all children by name.
+   * Get all descendants by name.
    *
    * @method getAll
-   * @param {String} name Name of the child nodes to collect.
-   * @return {Array} Array with child nodes matchin the specified name.
+   * @param {String} name Name of the descendant nodes to collect.
+   * @return {Array} Array with descendant nodes matching the specified name.
    */
   public getAll(name: string): AstNode[] {
     const self = this;
@@ -444,6 +447,23 @@ class AstNode {
       if (node.name === name) {
         collection.push(node);
       }
+    }
+
+    return collection;
+  }
+
+  /**
+   * Get all children of this node.
+   *
+   * @method children
+   * @return {Array} Array containing child nodes.
+   */
+  public children(): AstNode[] {
+    const self = this;
+    const collection: AstNode[] = [];
+
+    for (let node = self.firstChild; node; node = node.next) {
+      collection.push(node);
     }
 
     return collection;
@@ -491,7 +511,7 @@ class AstNode {
    * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  public isEmpty(elements: SchemaMap, whitespace: SchemaMap = {}, predicate?: (node: AstNode) => boolean) {
+  public isEmpty(elements: SchemaMap, whitespace: SchemaMap = {}, predicate?: (node: AstNode) => boolean): boolean {
     const self = this;
     let node = self.firstChild;
 

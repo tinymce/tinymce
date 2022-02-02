@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import { Gene } from '../api/Gene';
 
 const track = (current: Gene, parent: Optional<Gene>): Gene => {

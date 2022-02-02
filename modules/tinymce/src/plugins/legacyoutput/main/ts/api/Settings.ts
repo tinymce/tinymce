@@ -7,21 +7,24 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getFontSizeFormats = (editor: Editor): string => editor.getParam('fontsize_formats');
+const getFontSizeFormats = (editor: Editor): string =>
+  editor.getParam('fontsize_formats');
 
-const setFontSizeFormats = (editor: Editor, fontsize_formats: string) => {
+const setFontSizeFormats = (editor: Editor, fontsize_formats: string): void => {
   editor.settings.fontsize_formats = fontsize_formats; // Changes settings used by other plugins or core, so can't be removed.
 };
 
-const getFontFormats = (editor: Editor): string => editor.getParam('font_formats');
+const getFontFormats = (editor: Editor): string =>
+  editor.getParam('font_formats');
 
-const setFontFormats = (editor: Editor, font_formats: string) => {
+const setFontFormats = (editor: Editor, font_formats: string): void => {
   editor.settings.font_formats = font_formats; // Changes settings used by other plugins or core, so can't be removed.
 };
 
-const getFontSizeStyleValues = (editor: Editor): string => editor.getParam('font_size_style_values', 'xx-small,x-small,small,medium,large,x-large,xx-large');
+const getFontSizeStyleValues = (editor: Editor): string =>
+  editor.getParam('font_size_style_values', 'xx-small,x-small,small,medium,large,x-large,xx-large');
 
-const setInlineStyles = (editor: Editor, inline_styles: boolean) => {
+const setInlineStyles = (editor: Editor, inline_styles: boolean): void => {
   editor.settings.inline_styles = inline_styles; // Changes settings used by other plugins or core, so can't be removed.
 };
 

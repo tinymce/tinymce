@@ -7,7 +7,9 @@
 
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+
 import { repeatLeft } from '../alien/TextSearch';
 import * as AutocompleteTag from './AutocompleteTag';
 import { getText, isValidTextRange, isWhitespace } from './AutocompleteUtils';

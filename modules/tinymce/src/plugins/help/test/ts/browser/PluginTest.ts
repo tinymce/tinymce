@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Plugin from 'tinymce/plugins/help/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';

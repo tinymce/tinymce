@@ -1,5 +1,5 @@
 import { Objects } from '@ephox/boulder';
-import { Cell, Obj, Optional } from '@ephox/katamari';
+import { Cell, Obj, Optional, Singleton } from '@ephox/katamari';
 import { Compare, EventArgs, SugarElement } from '@ephox/sugar';
 
 import { DelayedFunction } from '../alien/DelayedFunction';
@@ -43,8 +43,7 @@ const monitor = (settings: GuiEventSettings): Monitor => {
    * without a *significant* touchmove in between.
    */
 
-  // Need a return value, so can't use Singleton.value;
-  const startData: Cell<Optional<TouchHistoryData>> = Cell(Optional.none());
+  const startData = Singleton.value<TouchHistoryData>();
   const longpressFired = Cell<boolean>(false);
 
   const longpress = DelayedFunction((event: EventArgs) => {
@@ -64,7 +63,7 @@ const monitor = (settings: GuiEventSettings): Monitor => {
 
       longpress.schedule(event);
       longpressFired.set(false);
-      startData.set(Optional.some(data));
+      startData.set(data);
     });
     return Optional.none();
   };
@@ -72,9 +71,9 @@ const monitor = (settings: GuiEventSettings): Monitor => {
   const handleTouchmove = (event: EventArgs<TouchEvent>): Optional<boolean> => {
     longpress.cancel();
     getTouch(event).each((touch) => {
-      startData.get().each((data) => {
+      startData.on((data) => {
         if (isFarEnough(touch, data)) {
-          startData.set(Optional.none());
+          startData.clear();
         }
       });
     });

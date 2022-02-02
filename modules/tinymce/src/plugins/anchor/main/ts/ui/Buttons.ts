@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   editor.ui.registry.addToggleButton('anchor', {
     icon: 'bookmark',
     tooltip: 'Anchor',

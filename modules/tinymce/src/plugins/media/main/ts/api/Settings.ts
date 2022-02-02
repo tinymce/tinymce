@@ -5,41 +5,38 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getScripts = (editor) => {
-  return editor.getParam('media_scripts');
-};
+import Editor from 'tinymce/core/api/Editor';
 
-const getAudioTemplateCallback = (editor) => {
-  return editor.getParam('audio_template_callback');
-};
+import { DataToHtmlCallback } from '../core/DataToHtml';
+import { MediaResolver } from '../core/Service';
+import { VideoScript } from '../core/VideoScript';
 
-const getVideoTemplateCallback = (editor) => {
-  return editor.getParam('video_template_callback');
-};
+const getScripts = (editor: Editor): VideoScript[] | undefined =>
+  editor.getParam('media_scripts');
 
-const hasLiveEmbeds = (editor) => {
-  return editor.getParam('media_live_embeds', true);
-};
+const getAudioTemplateCallback = (editor: Editor): DataToHtmlCallback | undefined =>
+  editor.getParam('audio_template_callback');
 
-const shouldFilterHtml = (editor) => {
-  return editor.getParam('media_filter_html', true);
-};
+const getVideoTemplateCallback = (editor: Editor): DataToHtmlCallback | undefined =>
+  editor.getParam('video_template_callback');
 
-const getUrlResolver = (editor) => {
-  return editor.getParam('media_url_resolver');
-};
+const hasLiveEmbeds = (editor: Editor): boolean =>
+  editor.getParam('media_live_embeds', true);
 
-const hasAltSource = (editor) => {
-  return editor.getParam('media_alt_source', true);
-};
+const shouldFilterHtml = (editor: Editor): boolean =>
+  editor.getParam('media_filter_html', true);
 
-const hasPoster = (editor) => {
-  return editor.getParam('media_poster', true);
-};
+const getUrlResolver = (editor: Editor): MediaResolver | undefined =>
+  editor.getParam('media_url_resolver');
 
-const hasDimensions = (editor) => {
-  return editor.getParam('media_dimensions', true);
-};
+const hasAltSource = (editor: Editor): boolean =>
+  editor.getParam('media_alt_source', true);
+
+const hasPoster = (editor: Editor): boolean =>
+  editor.getParam('media_poster', true);
+
+const hasDimensions = (editor: Editor): boolean =>
+  editor.getParam('media_dimensions', true);
 
 export {
   getScripts,

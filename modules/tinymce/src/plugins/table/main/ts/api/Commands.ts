@@ -8,8 +8,10 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
-import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { Insert, Remove, Replication, SelectorFind, Selectors, SugarElement, SugarNode } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActionResult, TableActions } from '../actions/TableActions';
@@ -25,10 +27,15 @@ import * as RowDialog from '../ui/RowDialog';
 import * as TableDialog from '../ui/TableDialog';
 import { isPercentagesForced, isPixelsForced, isResponsiveForced } from './Settings';
 
-const getSelectionStartCellOrCaption = (editor: Editor) => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
-const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionStartCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
 
-const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
+const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>> =>
+  TableSelection.getSelectionCellOrCaption(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+
+const getSelectionStartCell = (editor: Editor): Optional<SugarElement<HTMLTableCellElement>> =>
+  TableSelection.getSelectionCell(Util.getSelectionStart(editor), Util.getIsRoot(editor));
+
+const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard): void => {
   const isRoot = Util.getIsRoot(editor);
   const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
@@ -55,9 +62,9 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     if (!isForcedSizing) {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
         if (sizing === 'relative' && !Sizes.isPercentSizing(table)) {
-          enforcePercentage(editor, table);
+          enforcePercentage(table);
         } else if (sizing === 'fixed' && !Sizes.isPixelSizing(table)) {
-          enforcePixels(editor, table);
+          enforcePixels(table);
         } else if (sizing === 'responsive' && !Sizes.isNoneSizing(table)) {
           enforceNone(table);
         }
@@ -69,46 +76,93 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
-  const postExecute = (table: SugarElement<HTMLTableElement>) => (data: TableActionResult): void => {
-    editor.selection.setRng(data.rng);
-    editor.focus();
-    cellSelection.clear(table);
-    Util.removeDataStyle(table);
-    Events.fireTableModified(editor, table.dom, data.effect);
+  const performActionOnSelection = <T>(action: ExecuteAction<T>): Optional<T> =>
+    getSelectionStartCell(editor).bind((cell) =>
+      getTableFromCell(cell).map((table) => action(table, cell))
+    );
+
+  const toggleTableClass = (_ui: boolean, clazz: string) => {
+    performActionOnSelection((table) => {
+      editor.formatter.toggle('tableclass', { value: clazz }, table.dom);
+      Events.fireTableModified(editor, table.dom, Events.styleModified);
+    });
   };
 
-  const actOnSelection = (execute: CombinedTargetsTableAction): void =>
-    getSelectionStartCell(editor).each((cell) => {
-      getTableFromCell(cell).each((table) => {
-        const targets = TableTargets.forMenu(selections, table, cell);
-        execute(table, targets).each(postExecute(table));
+  const toggleTableCellClass = (_ui: boolean, clazz: string) => {
+    performActionOnSelection((table) => {
+      const selectedCells = TableSelection.getCellsFromSelection(selections);
+      const allHaveClass = Arr.forall(selectedCells, (cell) => editor.formatter.match('tablecellclass', { value: clazz }, cell.dom));
+      const formatterAction = allHaveClass ? editor.formatter.remove : editor.formatter.apply;
+
+      Arr.each(selectedCells, (cell) =>
+        formatterAction('tablecellclass', { value: clazz }, cell.dom)
+      );
+      Events.fireTableModified(editor, table.dom, Events.styleModified);
+    });
+  };
+
+  const toggleCaption = () => {
+    getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
+      TableLookup.table(cellOrCaption, isRoot).each((table) => {
+        SelectorFind.child(table, 'caption').fold(
+          () => {
+            const caption = SugarElement.fromTag('caption');
+            Insert.append(caption, SugarElement.fromText('Caption'));
+            Insert.appendAt(table, caption, 0);
+            editor.selection.setCursorLocation(caption.dom, 0);
+          },
+          (caption) => {
+            if (SugarNode.isTag('caption')(cellOrCaption)) {
+              Selectors.one('td', table).each((td) =>
+                editor.selection.setCursorLocation(td.dom, 0)
+              );
+            }
+            Remove.remove(caption);
+          }
+        );
+
+        Events.fireTableModified(editor, table.dom, Events.structureModified);
       });
     });
+  };
 
-  const copyRowSelection = () => getSelectionStartCell(editor).map((cell) =>
-    getTableFromCell(cell).bind((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
+  const postExecute = (_data: TableActionResult): void => {
+    editor.focus();
+  };
+
+  const actOnSelection = (execute: CombinedTargetsTableAction, noEvents: boolean = false) =>
+    performActionOnSelection((table, startCell) => {
+      const targets = TableTargets.forMenu(selections, table, startCell);
+      execute(table, targets, noEvents).each(postExecute);
+    });
+
+  const copyRowSelection = () =>
+    performActionOnSelection((table, startCell) => {
+      const targets = TableTargets.forMenu(selections, table, startCell);
       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.none());
       return CopyRows.copyRows(table, targets, generators);
-    }));
+    });
 
-  const copyColSelection = () => getSelectionStartCell(editor).map((cell) =>
-    getTableFromCell(cell).bind((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
+  const copyColSelection = () =>
+    performActionOnSelection((table, startCell) => {
+      const targets = TableTargets.forMenu(selections, table, startCell);
       return CopyCols.copyCols(table, targets);
-    }));
+    });
 
   const pasteOnSelection = (execute: AdvancedPasteTableAction, getRows: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) =>
     // If we have clipboard rows to paste
     getRows().each((rows) => {
       const clonedRows = Arr.map(rows, (row) => Replication.deep<HTMLTableColElement | HTMLTableRowElement>(row));
-      getSelectionStartCell(editor).each((cell) =>
-        getTableFromCell(cell).each((table) => {
-          const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
-          const targets = TableTargets.pasteRows(selections, cell, clonedRows, generators);
-          execute(table, targets).each(postExecute(table));
-        })
-      );
+      performActionOnSelection((table, startCell) => {
+        const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
+        const targets = TableTargets.pasteRows(selections, startCell, clonedRows, generators);
+        execute(table, targets).each(postExecute);
+      });
+    });
+
+  const actOnType = (getAction: (type: string) => CombinedTargetsTableAction) => (_ui: boolean, args: Record<string, any>) =>
+    Obj.get(args, 'type').each((type) => {
+      actOnSelection(getAction(type), args.no_events);
     });
 
   // Register action commands
@@ -121,49 +175,38 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableInsertColAfter: () => actOnSelection(actions.insertColumnsAfter),
     mceTableDeleteCol: () => actOnSelection(actions.deleteColumn),
     mceTableDeleteRow: () => actOnSelection(actions.deleteRow),
-    mceTableCutCol: (_grid) => copyColSelection().each((selection) => {
+    mceTableCutCol: () => copyColSelection().each((selection) => {
       clipboard.setColumns(selection);
       actOnSelection(actions.deleteColumn);
     }),
-    mceTableCutRow: (_grid) => copyRowSelection().each((selection) => {
+    mceTableCutRow: () => copyRowSelection().each((selection) => {
       clipboard.setRows(selection);
       actOnSelection(actions.deleteRow);
     }),
-    mceTableCopyCol: (_grid) => copyColSelection().each((selection) => clipboard.setColumns(selection)),
-    mceTableCopyRow: (_grid) => copyRowSelection().each((selection) => clipboard.setRows(selection)),
-    mceTablePasteColBefore: (_grid) => pasteOnSelection(actions.pasteColsBefore, clipboard.getColumns),
-    mceTablePasteColAfter: (_grid) => pasteOnSelection(actions.pasteColsAfter, clipboard.getColumns),
-    mceTablePasteRowBefore: (_grid) => pasteOnSelection(actions.pasteRowsBefore, clipboard.getRows),
-    mceTablePasteRowAfter: (_grid) => pasteOnSelection(actions.pasteRowsAfter, clipboard.getRows),
+    mceTableCopyCol: () => copyColSelection().each((selection) => clipboard.setColumns(selection)),
+    mceTableCopyRow: () => copyRowSelection().each((selection) => clipboard.setRows(selection)),
+    mceTablePasteColBefore: () => pasteOnSelection(actions.pasteColsBefore, clipboard.getColumns),
+    mceTablePasteColAfter: () => pasteOnSelection(actions.pasteColsAfter, clipboard.getColumns),
+    mceTablePasteRowBefore: () => pasteOnSelection(actions.pasteRowsBefore, clipboard.getRows),
+    mceTablePasteRowAfter: () => pasteOnSelection(actions.pasteRowsAfter, clipboard.getRows),
     mceTableDelete: eraseTable,
-    mceTableSizingMode: (ui: boolean, sizing: string) => setSizingMode(sizing)
+    mceTableCellToggleClass: toggleTableCellClass,
+    mceTableToggleClass: toggleTableClass,
+    mceTableToggleCaption: toggleCaption,
+    mceTableSizingMode: (_ui: boolean, sizing: string) => setSizingMode(sizing),
+    mceTableCellType: actOnType((type) => type === 'th' ? actions.makeCellsHeader : actions.unmakeCellsHeader),
+    mceTableColType: actOnType((type) => type === 'th' ? actions.makeColumnsHeader : actions.unmakeColumnsHeader),
+    mceTableRowType: actOnType((type) => {
+      switch (type) {
+        case 'header':
+          return actions.makeRowsHeader;
+        case 'footer':
+          return actions.makeRowsFooter;
+        default:
+          return actions.makeRowsBody;
+      }
+    })
   }, (func, name) => editor.addCommand(name, func));
-
-  // Due to a bug, we need to pass through a reference to the table obtained before the modification
-  const fireTableModifiedForSelection = (editor: Editor, tableOpt: Optional<SugarElement<HTMLTableElement>>): void => {
-    // Due to the same bug, the selection may incorrectly be on a row so we can't use getSelectionStartCell here
-    tableOpt.each((table) => {
-      Events.fireTableModified(editor, table.dom, Events.structureModified);
-    });
-  };
-
-  Obj.each({
-    mceTableCellType: (_ui, args) => {
-      const tableOpt = TableLookup.table(Util.getSelectionStart(editor), isRoot);
-      actions.setTableCellType(editor, args);
-      fireTableModifiedForSelection(editor, tableOpt);
-    },
-    mceTableRowType: (_ui, args) => {
-      const tableOpt = TableLookup.table(Util.getSelectionStart(editor), isRoot);
-      actions.setTableRowType(editor, args);
-      fireTableModifiedForSelection(editor, tableOpt);
-    },
-  }, (func, name) => editor.addCommand(name, func));
-
-  editor.addCommand('mceTableColType', (_ui, args) =>
-    Obj.get(args, 'type').each((type) =>
-      actOnSelection(type === 'th' ? actions.makeColumnsHeader : actions.unmakeColumnsHeader)
-    ));
 
   // Register dialog commands
   Obj.each({
@@ -191,7 +234,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     if (!Type.isObject(args)) {
       return;
     }
-    const cells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections, isRoot);
+    const cells = TableSelection.getCellsFromSelection(selections);
     if (cells.length === 0) {
       return;
     }

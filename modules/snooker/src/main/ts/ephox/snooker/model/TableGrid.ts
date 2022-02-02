@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { ElementNew, RowCells } from '../api/Structs';
 import * as GridRow from './GridRow';
 
@@ -21,11 +22,7 @@ const findDiff = (xs: ElementNew[], comp: (a: SugarElement, b: SugarElement) => 
   const index = Arr.findIndex(xs, (x) => {
     return !comp(first.element, x.element);
   });
-  return index.fold(() => {
-    return xs.length;
-  }, (ind) => {
-    return ind;
-  });
+  return index.getOr(xs.length);
 };
 
 /*
@@ -38,15 +35,15 @@ const findDiff = (xs: ElementNew[], comp: (a: SugarElement, b: SugarElement) => 
  *   rowspan: row span of the cell at (row, column)
  */
 const subgrid = (grid: RowCells[], row: number, column: number, comparator: (a: SugarElement, b: SugarElement) => boolean): { colspan: number; rowspan: number } => {
-  const restOfRow = getRow(grid, row).cells.slice(column);
-  const endColIndex = findDiff(restOfRow, comparator);
+  const gridRow = getRow(grid, row);
+  const isColRow = gridRow.section === 'colgroup';
 
-  const restOfColumn = getColumn(grid, column).slice(row);
-  const endRowIndex = findDiff(restOfColumn, comparator);
+  const colspan = findDiff(gridRow.cells.slice(column), comparator);
+  const rowspan = isColRow ? 1 : findDiff(getColumn(grid.slice(row), column), comparator);
 
   return {
-    colspan: endColIndex,
-    rowspan: endRowIndex
+    colspan,
+    rowspan
   };
 };
 

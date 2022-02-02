@@ -96,7 +96,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
     );
 
     const anchorSpec: NodeAnchorSpec = {
-      anchor: 'node',
+      type: 'node',
       root: gui.element,
       node: Optional.some(anchor.element),
       layouts: {
@@ -110,11 +110,11 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
         'Show inline view with custom reposition',
         GeneralSteps.sequence([
           Step.sync(() => {
-            InlineView.showAt(inline, anchorSpec, Container.sketch({
+            InlineView.showAt(inline, Container.sketch({
               components: [
                 Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') })
               ]
-            }));
+            }), { anchor: anchorSpec });
           }),
           sCheckPosition('Check initial position', inline.element, 200, 210),
 
@@ -143,11 +143,11 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
         'Show inline view with normal reposition',
         GeneralSteps.sequence([
           Step.sync(() => {
-            InlineView.showAt(inline2, anchorSpec, Container.sketch({
+            InlineView.showAt(inline2, Container.sketch({
               components: [
                 Button.sketch({ uid: 'bold-button2', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') })
               ]
-            }));
+            }), { anchor: anchorSpec });
           }),
           sCheckPosition('Check initial position', inline2.element, 150, 160),
 

@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { McEditor } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { McEditor } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';

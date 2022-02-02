@@ -6,9 +6,11 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
 import { DomTextMatcher } from '../core/DomTextMatcher';
@@ -16,8 +18,8 @@ import { DomTextMatcher } from '../core/DomTextMatcher';
 type LastSuggestion = Actions.LastSuggestion;
 
 interface LanguageValue {
-  name: string;
-  value: string;
+  readonly name: string;
+  readonly value: string;
 }
 
 const spellcheckerEvents = 'SpellcheckStart SpellcheckEnd';
@@ -47,7 +49,7 @@ const getItems = (editor: Editor): LanguageValue[] => {
   });
 };
 
-const register = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, lastSuggestionsState: Cell<LastSuggestion>) => {
+const register = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, lastSuggestionsState: Cell<LastSuggestion>): void => {
   const languageMenuItems = buildMenuItems('Language', getItems(editor));
   const startSpellchecking = () => {
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);

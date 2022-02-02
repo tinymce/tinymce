@@ -2,6 +2,7 @@ import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
+
 import * as TextZone from 'ephox/robin/api/general/TextZone';
 import { ArbIds, arbIds, ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
 import * as PropertyAssertions from 'ephox/robin/test/PropertyAssertions';

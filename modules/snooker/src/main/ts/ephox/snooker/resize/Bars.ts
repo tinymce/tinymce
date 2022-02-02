@@ -1,5 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Class, Css, Height, Insert, Remove, SelectorFilter, SugarElement, SugarLocation, SugarPosition, Width } from '@ephox/sugar';
+
 import { ResizeWire } from '../api/ResizeWire';
 import { Warehouse } from '../api/Warehouse';
 import * as Blocks from '../lookup/Blocks';

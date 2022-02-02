@@ -1,5 +1,6 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import * as Structs from '../api/Structs';
 import * as DetailsList from '../model/DetailsList';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
@@ -8,18 +9,17 @@ import * as TableLookup from './TableLookup';
 export interface Warehouse {
   readonly grid: Structs.Grid;
   readonly access: Record<string, Structs.DetailExt>;
-  readonly all: Structs.RowData<Structs.DetailExt>[];
-  readonly columns: Record<string, Structs.ColumnExt>;
+  readonly all: Structs.RowDetail<Structs.DetailExt>[];
+  readonly columns: Record<number, Structs.ColumnExt>;
+  readonly colgroups: Structs.Colgroup<Structs.ColumnExt>[];
 }
 
 const key = (row: number, column: number): string => {
   return row + ',' + column;
 };
 
-const getAt = (warehouse: Warehouse, row: number, column: number): Optional<Structs.DetailExt> => {
-  const raw = warehouse.access[key(row, column)];
-  return raw !== undefined ? Optional.some(raw) : Optional.none<Structs.DetailExt>();
-};
+const getAt = (warehouse: Warehouse, row: number, column: number): Optional<Structs.DetailExt> =>
+  Optional.from(warehouse.access[key(row, column)]);
 
 const findItem = <T>(warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean): Optional<Structs.DetailExt> => {
   const filtered = filterItems(warehouse, (detail) => {
@@ -36,7 +36,7 @@ const filterItems = (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: 
   return Arr.filter(all, predicate);
 };
 
-const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowData<T>): Record<number, Structs.ColumnExt> => {
+const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowDetail<T>): Record<number, Structs.ColumnExt> => {
   const columnsGroup: Record<number, Structs.ColumnExt> = {};
   let index = 0;
 
@@ -60,7 +60,7 @@ const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowData<T>):
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehouse => {
+const generate = <T extends Structs.Detail>(list: Structs.RowDetail<T>[]): Warehouse => {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.
@@ -69,8 +69,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
   //          element
   //          rowspan (merge cols)
   const access: Record<string, Structs.DetailExt> = {};
-  const cells: Structs.RowData<Structs.DetailExt>[] = [];
-  let columns: Record<number, Structs.ColumnExt> = {};
+  const cells: Structs.RowDetail<Structs.DetailExt>[] = [];
 
   const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
   const lockedColumns: Record<string, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
@@ -79,41 +78,54 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
   let maxColumns = 0;
   let rowCount = 0;
 
-  Arr.each(list, (rowData) => {
-    if (rowData.section === 'colgroup') {
-      columns = generateColumns<T>(rowData);
-    } else {
-      const currentRow: Structs.DetailExt[] = [];
-      Arr.each(rowData.cells, (rowCell) => {
-        let start = 0;
+  const { pass: colgroupRows, fail: rows } = Arr.partition(list, (rowData) => rowData.section === 'colgroup');
 
-        // If this spot has been taken by a previous rowspan, skip it.
-        while (access[key(rowCount, start)] !== undefined) {
-          start++;
+  // Handle rows first
+  Arr.each(rows, (rowData) => {
+    const currentRow: Structs.DetailExt[] = [];
+    Arr.each(rowData.cells, (rowCell) => {
+      let start = 0;
+
+      // If this spot has been taken by a previous rowspan, skip it.
+      while (access[key(rowCount, start)] !== undefined) {
+        start++;
+      }
+
+      const isLocked = Obj.hasNonNullableKey(lockedColumns, start.toString());
+      const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowCount, start, isLocked);
+
+      // Occupy all the (row, column) positions that this cell spans for.
+      for (let occupiedColumnPosition = 0; occupiedColumnPosition < rowCell.colspan; occupiedColumnPosition++) {
+        for (let occupiedRowPosition = 0; occupiedRowPosition < rowCell.rowspan; occupiedRowPosition++) {
+          const rowPosition = rowCount + occupiedRowPosition;
+          const columnPosition = start + occupiedColumnPosition;
+          const newpos = key(rowPosition, columnPosition);
+          access[newpos] = current;
+          maxColumns = Math.max(maxColumns, columnPosition + 1);
         }
+      }
 
-        const isLocked = Obj.hasNonNullableKey(lockedColumns, start.toString());
-        const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowCount, start, isLocked);
+      currentRow.push(current);
+    });
 
-        // Occupy all the (row, column) positions that this cell spans for.
-        for (let occupiedColumnPosition = 0; occupiedColumnPosition < rowCell.colspan; occupiedColumnPosition++) {
-          for (let occupiedRowPosition = 0; occupiedRowPosition < rowCell.rowspan; occupiedRowPosition++) {
-            const rowPosition = rowCount + occupiedRowPosition;
-            const columnPosition = start + occupiedColumnPosition;
-            const newpos = key(rowPosition, columnPosition);
-            access[newpos] = current;
-            maxColumns = Math.max(maxColumns, columnPosition + 1);
-          }
-        }
-
-        currentRow.push(current);
-      });
-
-      maxRows++;
-      cells.push(Structs.rowdata(rowData.element, currentRow, rowData.section));
-      rowCount++;
-    }
+    maxRows++;
+    cells.push(Structs.rowdetail(rowData.element, currentRow, rowData.section));
+    rowCount++;
   });
+
+  // Handle colgroups
+  // Note: Currently only a single colgroup is supported so just use the last one
+  const { columns, colgroups } = Arr.last(colgroupRows).map((rowData) => {
+    const columns = generateColumns<T>(rowData);
+    const colgroup = Structs.colgroup(rowData.element as SugarElement<HTMLTableColElement>, Obj.values(columns));
+    return {
+      colgroups: [ colgroup ],
+      columns
+    };
+  }).getOrThunk(() => ({
+    colgroups: [],
+    columns: {}
+  }));
 
   const grid = Structs.grid(maxRows, maxColumns);
 
@@ -121,7 +133,8 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
     grid,
     access,
     all: cells,
-    columns
+    columns,
+    colgroups
   };
 };
 

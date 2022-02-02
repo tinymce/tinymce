@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';

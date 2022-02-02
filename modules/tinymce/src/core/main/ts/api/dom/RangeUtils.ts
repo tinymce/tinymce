@@ -6,6 +6,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as NormalizeRange from '../../selection/NormalizeRange';
 import * as RangeCompare from '../../selection/RangeCompare';

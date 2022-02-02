@@ -6,9 +6,10 @@
  */
 
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import { ImageDialogInfo } from './DialogTypes';
 
-const makeTab = (_info: ImageDialogInfo) => {
+const makeTab = (_info: ImageDialogInfo): Dialog.TabSpec => {
   const items: Dialog.BodyComponentSpec[] = [
     {
       type: 'dropzone',

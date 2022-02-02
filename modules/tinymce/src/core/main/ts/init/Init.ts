@@ -6,6 +6,7 @@
  */
 
 import { Fun, Obj, Optional, Type } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';

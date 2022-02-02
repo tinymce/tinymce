@@ -6,10 +6,11 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+
 import * as FilterContent from '../core/FilterContent';
 import * as Settings from './Settings';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
   editor.addCommand('mcePageBreak', () => {
     editor.insertContent(FilterContent.getPlaceholderHtml(Settings.shouldSplitBlock(editor)));
   });

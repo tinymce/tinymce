@@ -6,6 +6,7 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 

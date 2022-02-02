@@ -8,9 +8,10 @@
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 
-const getPreviewHtml = (editor: Editor) => {
+const getPreviewHtml = (editor: Editor): string => {
   let headHtml = '';
   const encode = editor.dom.encode;
   const contentStyle = Settings.getContentStyle(editor);

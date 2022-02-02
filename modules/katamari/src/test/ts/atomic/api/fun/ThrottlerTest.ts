@@ -1,68 +1,91 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import Promise from '@ephox/wrap-promise-polyfill';
+import { assert } from 'chai';
+
 import * as Throttler from 'ephox/katamari/api/Throttler';
 
-UnitTest.asynctest('Throttler.adaptable', (success) => {
-  const data: string[] = [];
-  const throttler = Throttler.adaptable((value: string) => {
-    data.push(value);
-  }, 250);
+describe('atomic.katamari.api.fun.ThrottlerTest', () => {
 
-  throttler.throttle('cat');
-  throttler.throttle('dog');
-  throttler.throttle('elephant');
-  throttler.throttle('frog');
+  it('Throttler.adaptable', () => new Promise<void>((success) => {
+    const data: string[] = [];
+    const throttler = Throttler.adaptable((value: string) => {
+      data.push(value);
+    }, 100);
 
-  setTimeout(() => {
-    Assert.eq('eq', [ 'frog' ], data);
-    throttler.throttle('frog-goose');
-    throttler.throttle('goose');
+    throttler.throttle('cat');
+    throttler.throttle('dog');
+    throttler.throttle('elephant');
+    throttler.throttle('frog');
+
     setTimeout(() => {
-      Assert.eq('eq', [ 'frog', 'goose' ], data);
-      success();
-    }, 500);
-  }, 500);
-});
+      assert.deepEqual(data, [ 'frog' ]);
+      throttler.throttle('frog-goose');
+      throttler.throttle('goose');
+      setTimeout(() => {
+        assert.deepEqual(data, [ 'frog', 'goose' ]);
+        success();
+      }, 200);
+    }, 200);
+  }));
 
-UnitTest.asynctest('Throttler.first', (success) => {
-  const data: string[] = [];
-  const throttler = Throttler.first((value: string) => {
-    data.push(value);
-  }, 250);
+  it('Throttler.adaptable can throttle within the callback function', () => new Promise<void>((success) => {
+    const data: string[] = [];
+    const throttler = Throttler.adaptable((value: string) => {
+      data.push(value);
+      if (value === 'retry') {
+        throttler.throttle('retried');
+      }
+    }, 100);
 
-  throttler.throttle('cat');
-  throttler.throttle('dog');
-  throttler.throttle('elephant');
-  throttler.throttle('frog');
+    throttler.throttle('retry');
 
-  setTimeout(() => {
-    Assert.eq('eq', [ 'cat' ], data);
-    throttler.throttle('frog-goose');
-    throttler.throttle('goose');
     setTimeout(() => {
-      Assert.eq('eq', [ 'cat', 'frog-goose' ], data);
+      assert.deepEqual(data, [ 'retry', 'retried' ]);
       success();
-    }, 500);
-  }, 500);
-});
+    }, 250);
+  }));
 
-UnitTest.asynctest('Throttler.last', (success) => {
-  const data: string[] = [];
-  const throttler = Throttler.last((value: string) => {
-    data.push(value);
-  }, 250);
+  it('Throttler.first', () => new Promise<void>((success) => {
+    const data: string[] = [];
+    const throttler = Throttler.first((value: string) => {
+      data.push(value);
+    }, 100);
 
-  throttler.throttle('cat');
-  throttler.throttle('dog');
-  throttler.throttle('elephant');
-  throttler.throttle('frog');
+    throttler.throttle('cat');
+    throttler.throttle('dog');
+    throttler.throttle('elephant');
+    throttler.throttle('frog');
 
-  setTimeout(() => {
-    Assert.eq('eq', [ 'frog' ], data);
-    throttler.throttle('frog-goose');
-    throttler.throttle('goose');
     setTimeout(() => {
-      Assert.eq('eq', [ 'frog', 'goose' ], data);
-      success();
-    }, 500);
-  }, 500);
+      assert.deepEqual(data, [ 'cat' ]);
+      throttler.throttle('frog-goose');
+      throttler.throttle('goose');
+      setTimeout(() => {
+        assert.deepEqual(data, [ 'cat', 'frog-goose' ]);
+        success();
+      }, 200);
+    }, 200);
+  }));
+
+  it('Throttler.last', () => new Promise<void>((success) => {
+    const data: string[] = [];
+    const throttler = Throttler.last((value: string) => {
+      data.push(value);
+    }, 100);
+
+    throttler.throttle('cat');
+    throttler.throttle('dog');
+    throttler.throttle('elephant');
+    throttler.throttle('frog');
+
+    setTimeout(() => {
+      assert.deepEqual(data, [ 'frog' ]);
+      throttler.throttle('frog-goose');
+      throttler.throttle('goose');
+      setTimeout(() => {
+        assert.deepEqual(data, [ 'frog', 'goose' ]);
+        success();
+      }, 200);
+    }, 200);
+  }));
 });

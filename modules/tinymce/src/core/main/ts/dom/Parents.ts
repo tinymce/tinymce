@@ -10,7 +10,7 @@ import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 
 const dropLast = <T>(xs: T[]): T[] => xs.slice(0, -1);
 
-const parentsUntil = (start: SugarElement, root: SugarElement, predicate: (elm: SugarElement) => boolean): SugarElement[] => {
+const parentsUntil = (start: SugarElement<Node>, root: SugarElement<Node>, predicate: (elm: SugarElement<Node>) => boolean): SugarElement<Node>[] => {
   if (Compare.contains(root, start)) {
     return dropLast(Traverse.parents(start, (elm) => {
       return predicate(elm) || Compare.eq(elm, root);
@@ -20,9 +20,9 @@ const parentsUntil = (start: SugarElement, root: SugarElement, predicate: (elm: 
   }
 };
 
-const parents = (start: SugarElement, root: SugarElement): SugarElement[] => parentsUntil(start, root, Fun.never);
+const parents = (start: SugarElement<Node>, root: SugarElement<Node>): SugarElement<Node>[] => parentsUntil(start, root, Fun.never);
 
-const parentsAndSelf = (start: SugarElement, root: SugarElement): SugarElement[] => [ start ].concat(parents(start, root));
+const parentsAndSelf = (start: SugarElement<Node>, root: SugarElement<Node>): SugarElement<Node>[] => [ start ].concat(parents(start, root));
 
 export {
   parentsUntil,

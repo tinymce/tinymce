@@ -1,4 +1,4 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { Attribute, Css } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
@@ -33,7 +33,7 @@ const sketch = (sSpec: SlotContainerSpecBuilder): SketchSpec => {
 
     return {
       slot,
-      record: () => record
+      record: Fun.constant(record)
     };
   })();
 

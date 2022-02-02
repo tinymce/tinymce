@@ -6,6 +6,7 @@
  */
 
 import { Unicode } from '@ephox/katamari';
+
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';
 

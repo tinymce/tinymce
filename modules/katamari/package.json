@@ -1,18 +1,19 @@
 {
   "name": "@ephox/katamari",
-  "version": "7.2.1",
+  "version": "8.1.1",
   "description": "Basic data type library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce"
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/katamari"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
-    "test": "bedrock-auto -b phantomjs -d src/test/ts",
+    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "dependencies": {
     "@ephox/dispute": "^1.0.3",

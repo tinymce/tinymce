@@ -7,6 +7,7 @@
 
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import { isAfterMedia, isBeforeMedia } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
@@ -15,7 +16,7 @@ import * as NodeType from '../dom/NodeType';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import * as DeleteElement from './DeleteElement';
 
-const deleteElement = (editor: Editor, forward: boolean, element: Node) => {
+const deleteElement = (editor: Editor, forward: boolean, element: Node): boolean => {
   editor._selectionOverrides.hideFakeCaret();
   DeleteElement.deleteElement(editor, forward, SugarElement.fromDom(element));
   return true;
@@ -35,7 +36,7 @@ const deleteCaret = (editor: Editor, forward: boolean): boolean => {
   }
 };
 
-const deleteRange = (editor: Editor, forward: boolean) => {
+const deleteRange = (editor: Editor, forward: boolean): boolean => {
   const selectedNode = editor.selection.getNode();
   return NodeType.isMedia(selectedNode) ? deleteElement(editor, forward, selectedNode) : false;
 };

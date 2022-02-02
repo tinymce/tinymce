@@ -1,10 +1,11 @@
 {
   "name": "@ephox/porkbun",
   "description": "Event framework for JavaScript",
-  "version": "5.0.7",
+  "version": "6.0.3",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce"
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/porkbun"
   },
   "files": [
     "lib/main",
@@ -18,7 +19,7 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/katamari": "^7.2.1"
+    "@ephox/katamari": "^8.1.1"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
@@ -26,7 +27,7 @@
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "main": "./lib/main/ts/ephox/porkbun/api/Main.js",
   "module": "./lib/main/ts/ephox/porkbun/api/Main.js",

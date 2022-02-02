@@ -11,6 +11,7 @@ type ReadonlyRecord<K extends keyof any, T> = {
 };
 
 export interface AlloyComponent {
+  readonly uid: string;
   readonly getSystem: () => AlloySystemApi;
   readonly config: (behaviour: AlloyBehaviour<any, any>) => Optional<BehaviourConfigAndState<any, any>>;
   readonly hasConfigured: (behaviour: AlloyBehaviour<any, any>) => boolean;

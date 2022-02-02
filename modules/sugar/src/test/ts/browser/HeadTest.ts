@@ -1,5 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
+
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Head from 'ephox/sugar/api/node/SugarHead';
 import { withIframe } from 'ephox/sugar/test/WithHelpers';

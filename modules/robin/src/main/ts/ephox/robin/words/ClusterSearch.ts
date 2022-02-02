@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Gather, Transition } from '@ephox/phoenix';
+
 import { WordDecision, WordDecisionItem } from './WordDecision';
 import { WordWalking } from './WordWalking';
 

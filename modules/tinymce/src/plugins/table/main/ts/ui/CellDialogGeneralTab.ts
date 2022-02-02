@@ -6,13 +6,16 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import { getCellClassList } from '../api/Settings';
-import * as Helpers from './Helpers';
+import { verticalAlignValues } from './CellAlignValues';
+import * as UiUtils from './UiUtils';
 
 const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
-  const classes = Helpers.buildListItems(getCellClassList(editor));
+  const classes = UiUtils.buildListItems(getCellClassList(editor));
   if (classes.length > 0) {
     return Optional.some({
       name: 'class',
@@ -71,16 +74,12 @@ const children: Dialog.BodyComponentSpec[] = [
     name: 'valign',
     type: 'listbox',
     label: 'Vertical align',
-    items: [
-      { text: 'None', value: '' },
-      { text: 'Top', value: 'top' },
-      { text: 'Middle', value: 'middle' },
-      { text: 'Bottom', value: 'bottom' }
-    ]
+    items: verticalAlignValues
   }
 ];
 
-const getItems = (editor: Editor): Dialog.BodyComponentSpec[] => children.concat(getClassList(editor).toArray());
+const getItems = (editor: Editor): Dialog.BodyComponentSpec[] =>
+  children.concat(getClassList(editor).toArray());
 
 export {
   getItems

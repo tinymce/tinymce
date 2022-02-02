@@ -79,8 +79,8 @@ const fromPoint = (clientX: number, clientY: number, doc: Document): Range => {
       rng.setStart(point.offsetNode, point.offset);
       rng.collapse(true);
     }
-  } else if (doc.caretRangeFromPoint) {
-    rng = doc.caretRangeFromPoint(clientX, clientY);
+  } else if (pointDoc.caretRangeFromPoint) {
+    rng = pointDoc.caretRangeFromPoint(clientX, clientY);
   } else if (pointDoc.body.createTextRange) {
     rng = pointDoc.body.createTextRange();
 

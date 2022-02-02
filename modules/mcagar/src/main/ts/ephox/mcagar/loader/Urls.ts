@@ -6,6 +6,9 @@ export const setTinymceBaseUrl = (tinymce: any, baseUrl: string): void => {
   tinymce.baseURI = new tinymce.util.URI(tinymce.baseURL);
 };
 
+export const detectTinymceBaseUrl = (settings: Record<string, any>): string =>
+  Type.isString(settings.base_url) ? settings.base_url : '/project/node_modules/tinymce';
+
 export const setupTinymceBaseUrl = (tinymce: any, settings: Record<string, any>): void => {
   if (Type.isString(settings.base_url)) {
     setTinymceBaseUrl(tinymce, settings.base_url);

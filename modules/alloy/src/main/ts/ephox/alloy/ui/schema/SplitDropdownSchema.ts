@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -19,16 +19,16 @@ import { ButtonSpec } from '../types/ButtonTypes';
 import { SplitDropdownDetail } from '../types/SplitDropdownTypes';
 import { TieredMenuSpec } from '../types/TieredMenuTypes';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
-  FieldSchema.strict('toggleClass'),
-  FieldSchema.strict('fetch'),
+const schema = Fun.constant([
+  FieldSchema.required('toggleClass'),
+  FieldSchema.required('fetch'),
   Fields.onStrictHandler('onExecute'),
   FieldSchema.defaulted('getHotspot', Optional.some),
   FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
   AnchorLayouts.schema(),
   Fields.onStrictHandler('onItemExecute'),
   FieldSchema.option('lazySink'),
-  FieldSchema.strict('dom'),
+  FieldSchema.required('dom'),
   Fields.onHandler('onOpen'),
   SketchBehaviours.field('splitDropdownBehaviours', [ Coupling, Keying, Focusing ]),
   FieldSchema.defaulted('matchWidth', false),
@@ -41,7 +41,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 
 const arrowPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
-  schema: [ FieldSchema.strict('dom') ],
+  schema: [ FieldSchema.required('dom') ],
   name: 'arrow',
   defaults: () => {
     return {
@@ -74,7 +74,7 @@ const arrowPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
 
 const buttonPart = PartType.required<SplitDropdownDetail, ButtonSpec>({
   factory: Button,
-  schema: [ FieldSchema.strict('dom') ],
+  schema: [ FieldSchema.required('dom') ],
   name: 'button',
   defaults: () => {
     return {
@@ -123,7 +123,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         };
       }
     },
-    schema: [ FieldSchema.strict('text') ],
+    schema: [ FieldSchema.required('text') ],
     name: 'aria-descriptor'
   }),
 

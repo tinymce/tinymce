@@ -1,6 +1,7 @@
 import { DomUniverse } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { SpanWrapRange, SpotPoints, Wrapter } from '../data/Types';
 import * as Wrapping from '../general/Wrapping';
 

@@ -6,6 +6,7 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import DomSerializer from 'tinymce/core/api/dom/Serializer';
 import * as TrimHtml from 'tinymce/core/dom/TrimHtml';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 declare const escape: any;
@@ -162,8 +163,8 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     DOM.setHTML('test', '<input type="text" value="text" length="128" maxlength="129" />');
     assert.equal(ser.serialize(DOM.get('test')), '<input type="text" value="text" length="128" maxlength="129" />');
 
-    DOM.setHTML('test', '<form method="post"><input type="hidden" name="method" value="get" /></form>');
-    assert.equal(ser.serialize(DOM.get('test')), '<form method="post"><input type="hidden" name="method" value="get" /></form>');
+    DOM.setHTML('test', '<form method="post"><input type="hidden" name="formmethod" value="get" /></form>');
+    assert.equal(ser.serialize(DOM.get('test')), '<form method="post"><input type="hidden" name="formmethod" value="get" /></form>');
 
     DOM.setHTML('test', '<label for="test">label</label>');
     assert.equal(ser.serialize(DOM.get('test')), '<label for="test">label</label>');

@@ -1,4 +1,6 @@
+import { Fun } from '@ephox/katamari';
 import { Attribute, Class, Css, Remove, SugarElement } from '@ephox/sugar';
+
 import * as Styles from '../style/Styles';
 
 export interface BlockerOptions {
@@ -29,9 +31,7 @@ export const Blocker = (options: Partial<BlockerOptions>): Blocker => {
   Class.add(div, Styles.resolve('blocker'));
   Class.add(div, settings.layerClass);
 
-  const element = () => {
-    return div;
-  };
+  const element = Fun.constant(div);
 
   const destroy = () => {
     Remove.remove(div);

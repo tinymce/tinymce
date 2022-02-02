@@ -1,4 +1,5 @@
 import { Universe } from '@ephox/boss';
+
 import * as Spot from '../api/data/Spot';
 import * as Family from '../api/general/Family';
 import * as Split from './Split';

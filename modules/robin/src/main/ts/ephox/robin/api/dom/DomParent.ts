@@ -1,6 +1,7 @@
 import { DomUniverse } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import { BrokenPath, LeftRight } from '../../parent/Breaker';
 import * as Parent from '../general/Parent';
 

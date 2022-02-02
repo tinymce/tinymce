@@ -1,7 +1,9 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import * as DomGather from 'ephox/phoenix/api/dom/DomGather';
+
 import { Page } from '../module/ephox/phoenix/test/Page';
 
 UnitTest.test('DomGatherTest', () => {

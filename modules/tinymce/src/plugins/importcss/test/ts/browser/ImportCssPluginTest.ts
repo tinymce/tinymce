@@ -1,8 +1,8 @@
 import { ApproxStructure, Assertions, Mouse, UiFinder } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
-import { McEditor, TinyDom, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { McEditor, TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
@@ -314,6 +314,24 @@ describe('browser.tinymce.plugins.importcss.ImportCssTest', () => {
         { title: 'Advanced', filter: /.adv/ },
         { title: 'Other', custom: 'B' }
       ]
+    }
+  ));
+
+  it('TINY-8238: content_css with two files, basic and internal CSS classes', () => pTestEditorWithSettings(
+    {
+      menuContents: [
+        { tag: 'h1', html: 'h1.red', submenu: false },
+        { tag: 'p', html: 'p.other', submenu: false },
+        { tag: 'span', html: 'span.inline', submenu: false }
+      ],
+      choice: Optional.some('h1.red')
+    },
+    {
+      content_css: [
+        '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+        '/project/tinymce/src/plugins/importcss/test/css/internal.css'
+      ],
+      importcss_append: undefined
     }
   ));
 });

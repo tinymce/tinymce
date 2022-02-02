@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getDialect = (editor) => {
+import Editor from 'tinymce/core/api/Editor';
+
+const getDialect = (editor: Editor): string => {
   // Note: This option isn't even used since we only support one dialect
   return editor.getParam('bbcode_dialect', 'punbb').toLowerCase();
 };

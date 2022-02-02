@@ -9,7 +9,9 @@ import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Ta
 import { Dialog, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Attribute, Class, Focus } from '@ephox/sugar';
+
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
+
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';

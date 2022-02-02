@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, Css, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const candidatesArray = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];

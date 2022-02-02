@@ -10,6 +10,17 @@ export interface Selection {
   isCollapsed: () => boolean;
 }
 
+export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';
+
+export interface GetContentArgs {
+  format?: ContentFormat;
+  get?: boolean;
+  content?: string;
+  getInner?: boolean;
+  no_events?: boolean;
+  [key: string]: any;
+}
+
 export interface Editor {
   id: string;
   settings: Record<string, any>;
@@ -30,7 +41,7 @@ export interface Editor {
   getContentAreaContainer: () => HTMLElement;
   getElement: () => HTMLElement;
 
-  getContent: () => string;
+  getContent: (args?: GetContentArgs) => string;
   setContent: (content: string) => void;
 
   execCommand: (command: string, ui?: boolean, value?: any, args?: any) => boolean;

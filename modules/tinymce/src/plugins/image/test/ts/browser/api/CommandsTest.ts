@@ -1,6 +1,7 @@
 import { ApproxStructure } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { ImageData } from 'tinymce/plugins/image/core/ImageData';
 import Plugin from 'tinymce/plugins/image/Plugin';
@@ -143,5 +144,15 @@ describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
       height: ''
     });
     TinyAssertions.assertContent(editor, '<p><img src="#1" /></p>');
+  });
+
+  it('TINY-7998: Update image with dangerous URL should remove the src attribute', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="#1" alt="alt1" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    updateImage(editor, {
+      src: 'javascript:alert(1)'
+    });
+    TinyAssertions.assertContent(editor, '<p><img alt="alt1" /></p>');
   });
 });

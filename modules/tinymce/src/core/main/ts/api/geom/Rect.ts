@@ -25,7 +25,7 @@ interface Rect {
   intersect: (rect: GeomRect, cropRect: GeomRect) => GeomRect | null;
   clamp: (rect: GeomRect, clampRect: GeomRect, fixedSize?: boolean) => GeomRect;
   create: (x: number, y: number, w: number, h: number) => GeomRect;
-  fromClientRect: (clientRect: ClientRect) => GeomRect;
+  fromClientRect: (clientRect: DOMRect) => GeomRect;
 }
 
 const min = Math.min, max = Math.max, round = Math.round;
@@ -202,7 +202,7 @@ const create = (x: number, y: number, w: number, h: number) => {
  * @param {ClientRect} clientRect DOM ClientRect object.
  * @return {Rect} New rectangle object.
  */
-const fromClientRect = (clientRect: ClientRect) => {
+const fromClientRect = (clientRect: DOMRect) => {
   return create(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 };
 

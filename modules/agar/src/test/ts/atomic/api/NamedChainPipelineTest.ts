@@ -1,4 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+
 import { Chain } from 'ephox/agar/api/Chain';
 import { NamedChain } from 'ephox/agar/api/NamedChain';
 import { TestLogs } from 'ephox/agar/api/TestLogs';

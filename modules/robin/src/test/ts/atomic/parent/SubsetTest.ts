@@ -2,6 +2,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import * as Subset from 'ephox/robin/parent/Subset';
 
 UnitTest.test('SubsetTest', () => {

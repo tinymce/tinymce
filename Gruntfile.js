@@ -126,9 +126,9 @@ module.exports = function (grunt) {
   const runAllTests = grunt.option('ignore-lerna-changed') || false;
   const changes = fetchLernaProjects(grunt.log, runAllTests);
 
-  const bucket = grunt.option('bucket') || 1;
-  const buckets = grunt.option('buckets') || 1;
-  const chunk = grunt.option('chunk') || 100;
+  const bucket = parseInt(grunt.option('bucket'), 10) || 1;
+  const buckets = parseInt(grunt.option('buckets'), 10) || 1;
+  const chunk = parseInt(grunt.option('chunk'), 10) || 100;
 
   const phantomTests = filterChanges(changes, runsInPhantom);
   const browserTests = filterChangesNot(changes, runsInPhantom);

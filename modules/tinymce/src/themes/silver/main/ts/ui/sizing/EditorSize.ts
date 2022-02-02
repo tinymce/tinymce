@@ -6,7 +6,9 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import {
   getHeightSetting, getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting, getWidthSetting
 } from '../../api/Settings';

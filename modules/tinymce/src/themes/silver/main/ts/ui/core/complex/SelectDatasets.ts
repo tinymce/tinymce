@@ -6,7 +6,9 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import { SelectData } from './BespokeSelect';
 
 const process = (rawFormats): Array<{ title: string; format: string}> => Arr.map(rawFormats, (item) => {

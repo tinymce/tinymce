@@ -12,6 +12,7 @@ import {
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
+
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';

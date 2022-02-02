@@ -8,12 +8,12 @@
 import Tools from 'tinymce/core/api/util/Tools';
 
 export interface UrlPattern {
-  regex: RegExp;
-  type: 'iframe';
-  w: number;
-  h: number;
-  url: string;
-  allowFullscreen: boolean;
+  readonly regex: RegExp;
+  readonly type: 'iframe';
+  readonly w: number;
+  readonly h: number;
+  readonly url: string;
+  readonly allowFullscreen: boolean;
 }
 
 const urlPatterns: UrlPattern[] = [
@@ -67,7 +67,7 @@ const urlPatterns: UrlPattern[] = [
   }
 ];
 
-const getProtocol = (url: string) => {
+const getProtocol = (url: string): string => {
   const protocolMatches = url.match(/^(https?:\/\/|www\.)(.+)$/i);
   if (protocolMatches && protocolMatches.length > 1) {
     return protocolMatches[1] === 'www.' ? 'https://' : protocolMatches[1];
@@ -76,7 +76,7 @@ const getProtocol = (url: string) => {
   }
 };
 
-const getUrl = (pattern: UrlPattern, url: string) => {
+const getUrl = (pattern: UrlPattern, url: string): string => {
   const protocol = getProtocol(url);
 
   const match = pattern.regex.exec(url);

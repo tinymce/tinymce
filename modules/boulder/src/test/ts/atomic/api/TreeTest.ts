@@ -1,24 +1,25 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
-import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
+import * as StructureSchema from 'ephox/boulder/api/StructureSchema';
 
 UnitTest.test('Atomic Test: api.TreeTest', () => {
-  const schema = ValueSchema.objOf([
-    FieldSchema.strict('value'),
+  const schema = StructureSchema.objOf([
+    FieldSchema.required('value'),
     FieldSchema.defaulted('text', '?'),
     FieldSchema.field(
       'branches',
       'branches',
       FieldPresence.defaulted([ ]),
-      ValueSchema.thunkOf('recursive', () => {
-        return ValueSchema.arrOf(schema);
+      StructureSchema.thunkOf('recursive', () => {
+        return StructureSchema.arrOf(schema);
       })
     )
   ]);
 
   const check = (label: string, expected, input) => {
-    const actual = ValueSchema.asRawOrDie(label, schema, input);
+    const actual = StructureSchema.asRawOrDie(label, schema, input);
     Assert.eq(label, expected, actual);
   };
 

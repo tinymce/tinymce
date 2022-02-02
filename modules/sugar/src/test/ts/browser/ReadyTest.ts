@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Ready from 'ephox/sugar/api/events/Ready';
 
 UnitTest.test('ReadyTest', () => {

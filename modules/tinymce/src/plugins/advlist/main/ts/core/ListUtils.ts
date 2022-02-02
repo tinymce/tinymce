@@ -7,21 +7,21 @@
 
 import { Optional } from '@ephox/katamari';
 
-const isChildOfBody = (editor, elm) => {
+import Editor from 'tinymce/core/api/Editor';
+
+const isChildOfBody = (editor: Editor, elm: Node): boolean => {
   return editor.$.contains(editor.getBody(), elm);
 };
 
-const isTableCellNode = (node) => {
+const isTableCellNode = (node: Node | null): boolean => {
   return node && /^(TH|TD)$/.test(node.nodeName);
 };
 
-const isListNode = (editor) => {
-  return (node) => {
-    return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(editor, node);
-  };
+const isListNode = (editor: Editor) => (node: Node | null): boolean => {
+  return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(editor, node);
 };
 
-const getSelectedStyleType = (editor): Optional<string> => {
+const getSelectedStyleType = (editor: Editor): Optional<string> => {
   const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
   const style = editor.dom.getStyle(listElm, 'listStyleType');
   return Optional.from(style);

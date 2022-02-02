@@ -1,4 +1,5 @@
 import { Optional, Type } from '@ephox/katamari';
+
 import { SugarElement } from '../api/node/SugarElement';
 
 type TestFn = (e: SugarElement<Node>) => boolean;

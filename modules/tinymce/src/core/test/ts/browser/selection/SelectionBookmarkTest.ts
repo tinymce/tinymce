@@ -5,6 +5,7 @@ import { Hierarchy, Remove, SimRange, SimSelection, SugarElement, Traverse, Wind
 import { assert } from 'chai';
 
 import * as SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.selection.SelectionBookmarkTest', () => {

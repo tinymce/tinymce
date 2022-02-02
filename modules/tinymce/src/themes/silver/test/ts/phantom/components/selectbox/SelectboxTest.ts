@@ -5,6 +5,7 @@ import { Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
+
 import * as DomUtils from '../../../module/DomUtils';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestProviders from '../../../module/TestProviders';

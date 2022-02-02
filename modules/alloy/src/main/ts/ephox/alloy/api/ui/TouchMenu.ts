@@ -151,7 +151,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
           });
           const sandbox = Coupling.getCoupled(component, 'sandbox');
           const anchor = detail.getAnchor(component);
-          InlineView.showAt(sandbox, anchor, iMenu);
+          InlineView.showAt(sandbox, iMenu, { anchor });
         });
       }),
 

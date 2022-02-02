@@ -7,6 +7,7 @@
 
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -37,14 +38,15 @@ const nonTypingKeycodes = [
 
 const placeholderAttr = 'data-mce-placeholder';
 
-const isKeyboardEvent = (e: EditorEvent<any>): e is EditorEvent<KeyboardEvent> => e.type === 'keydown' || e.type === 'keyup';
+const isKeyboardEvent = (e: EditorEvent<any>): e is EditorEvent<KeyboardEvent> =>
+  e.type === 'keydown' || e.type === 'keyup';
 
-const isDeleteEvent = (e: EditorEvent<KeyboardEvent>) => {
+const isDeleteEvent = (e: EditorEvent<KeyboardEvent>): boolean => {
   const keyCode = e.keyCode;
   return keyCode === VK.BACKSPACE || keyCode === VK.DELETE;
 };
 
-const isNonTypingKeyboardEvent = (e: EditorEvent<unknown>) => {
+const isNonTypingKeyboardEvent = (e: EditorEvent<unknown>): boolean => {
   if (isKeyboardEvent(e)) {
     const keyCode = e.keyCode;
     // Ctrl/Meta/Alt key pressed, F1-12 or non typing keycode
@@ -59,7 +61,7 @@ const isTypingKeyboardEvent = (e: EditorEvent<unknown>) =>
   // Android will generally always send a 229 keycode since it uses an IME to input text
   isKeyboardEvent(e) && !(isDeleteEvent(e) || e.type === 'keyup' && e.keyCode === 229);
 
-const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: string) => {
+const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: string): boolean => {
   // Note: Don't use DOMUtils.isEmpty() here as it treats empty format caret nodes as non empty nodes
   if (Empty.isEmpty(SugarElement.fromDom(rootElm), false)) {
     const isForcedRootBlockFalse = forcedRootBlock === '';
@@ -78,7 +80,7 @@ const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: strin
   }
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   const dom = editor.dom;
   const rootBlock = Settings.getForcedRootBlock(editor);
   const placeholder = Settings.getPlaceholder(editor);

@@ -3,6 +3,7 @@ import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 
 import { renderTable } from 'tinymce/themes/silver/ui/dialog/Table';
+
 import TestProviders from '../../../module/TestProviders';
 
 describe('phantom.tinymce.themes.silver.components.table.TableTest', () => {

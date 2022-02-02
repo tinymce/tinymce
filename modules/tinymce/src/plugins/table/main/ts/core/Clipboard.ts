@@ -5,39 +5,35 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Optional } from '@ephox/katamari';
+import { Optional, Singleton } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 export interface Clipboard {
-  getRows: () => Optional<SugarElement<HTMLTableRowElement>[]>;
-  setRows: (rows: Optional<SugarElement<HTMLTableRowElement>[]>) => void;
-  clearRows: () => void;
+  readonly getRows: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;
+  readonly setRows: (rows: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => void;
+  readonly clearRows: () => void;
 
-  getColumns: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;
-  setColumns: (columns: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => void;
-  clearColumns: () => void;
+  readonly getColumns: () => Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>;
+  readonly setColumns: (columns: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => void;
+  readonly clearColumns: () => void;
 }
 
 export const Clipboard = (): Clipboard => {
-  const rows = Cell(Optional.none<SugarElement<HTMLTableRowElement>[]>());
-  const cols = Cell(Optional.none<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>());
-
-  const clearClipboard = (clipboard: Cell<Optional<SugarElement<any>[]>>) => {
-    clipboard.set(Optional.none());
-  };
+  const rows = Singleton.value<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>();
+  const cols = Singleton.value<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>();
 
   return {
     getRows: rows.get,
-    setRows: (r: Optional<SugarElement<HTMLTableRowElement>[]>) => {
-      rows.set(r);
-      clearClipboard(cols);
+    setRows: (r: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => {
+      r.fold(rows.clear, rows.set);
+      cols.clear();
     },
-    clearRows: () => clearClipboard(rows),
+    clearRows: rows.clear,
     getColumns: cols.get,
     setColumns: (c: Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]>) => {
-      cols.set(c);
-      clearClipboard(rows);
+      c.fold(cols.clear, cols.set);
+      rows.clear();
     },
-    clearColumns: () => clearClipboard(cols)
+    clearColumns: cols.clear
   };
 };

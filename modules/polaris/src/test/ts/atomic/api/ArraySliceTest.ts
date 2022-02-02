@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import * as fc from 'fast-check';
+
 import * as Arrays from 'ephox/polaris/api/Arrays';
 
 const { tArray, tNumber } = Testable;

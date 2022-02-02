@@ -7,11 +7,13 @@
 
 import { Type } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
+
 import { Bookmark } from '../../bookmark/BookmarkTypes';
 import CaretPosition from '../../caret/CaretPosition';
 import * as NodeType from '../../dom/NodeType';
 import * as ScrollIntoView from '../../dom/ScrollIntoView';
 import * as EditorFocus from '../../focus/EditorFocus';
+import { ClientRect } from '../../geom/ClientRect';
 import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as ElementSelection from '../../selection/ElementSelection';
 import * as EventProcessRanges from '../../selection/EventProcessRanges';
@@ -98,9 +100,9 @@ interface EditorSelection {
     parents: Element[];
   }) => void) => { unbind: () => void };
   getScrollContainer: () => HTMLElement;
-  scrollIntoView: (elm: Element, alignToTop?: boolean) => void;
+  scrollIntoView: (elm?: HTMLElement, alignToTop?: boolean) => void;
   placeCaretAt: (clientX: number, clientY: number) => void;
-  getBoundingClientRect: () => ClientRect;
+  getBoundingClientRect: () => ClientRect | DOMRect;
   destroy: () => void;
 }
 
@@ -539,10 +541,17 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     return scrollContainer;
   };
 
-  const scrollIntoView = (elm: HTMLElement, alignToTop?: boolean) => ScrollIntoView.scrollElementIntoView(editor, elm, alignToTop);
+  const scrollIntoView = (elm?: HTMLElement, alignToTop?: boolean) => {
+    if (Type.isNonNullable(elm)) {
+      ScrollIntoView.scrollElementIntoView(editor, elm, alignToTop);
+    } else {
+      ScrollIntoView.scrollRangeIntoView(editor, getRng(), alignToTop);
+    }
+  };
+
   const placeCaretAt = (clientX: number, clientY: number) => setRng(CaretRangeFromPoint.fromPoint(clientX, clientY, editor.getDoc()));
 
-  const getBoundingClientRect = (): ClientRect => {
+  const getBoundingClientRect = (): ClientRect | DOMRect => {
     const rng = getRng();
     return rng.collapsed ? CaretPosition.fromRangeStart(rng).getClientRects()[0] : rng.getBoundingClientRect();
   };

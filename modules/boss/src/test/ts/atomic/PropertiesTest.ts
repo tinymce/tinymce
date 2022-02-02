@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import { CommentGene } from 'ephox/boss/api/CommentGene';
 import { Gene } from 'ephox/boss/api/Gene';
 import { TextGene } from 'ephox/boss/api/TextGene';

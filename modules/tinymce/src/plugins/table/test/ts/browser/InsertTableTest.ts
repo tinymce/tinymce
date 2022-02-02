@@ -1,9 +1,10 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { insertTableTest } from '../module/test/TableTestUtils';
 
 describe('browser.tinymce.plugins.table.InsertTableTest', () => {

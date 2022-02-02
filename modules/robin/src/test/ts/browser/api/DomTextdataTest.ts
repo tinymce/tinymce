@@ -2,6 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { SugarElement } from '@ephox/sugar';
+
 import * as DomTextdata from 'ephox/robin/api/dom/DomTextdata';
 
 UnitTest.test('DomTextdataTest', () => {

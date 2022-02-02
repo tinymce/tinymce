@@ -1,5 +1,6 @@
 import { Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
@@ -33,7 +34,7 @@ export const block: BlockFn = (
   const blockSpec = getBusySpec(root, blockerBehaviours);
   const blocker = root.getSystem().build(blockSpec);
   Replacing.append(root, GuiFactory.premade(blocker));
-  if (blocker.hasConfigured(Keying)) {
+  if (blocker.hasConfigured(Keying) && config.focus) {
     Keying.focusIn(blocker);
   }
 

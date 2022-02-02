@@ -6,13 +6,15 @@
  */
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Memento, Replacing } from '@ephox/alloy';
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
+
 import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
+
 import { CropRect } from './CropRect';
 
-const loadImage = (image): Promise<SugarElement> => new Promise((resolve) => {
+const loadImage = (image: HTMLImageElement): Promise<HTMLImageElement> => new Promise((resolve) => {
   const loaded = () => {
     image.removeEventListener('load', loaded);
     resolve(image);
@@ -39,7 +41,7 @@ const renderImagePanel = (initialUrl: string) => {
   );
 
   const zoomState = Cell(1);
-  const cropRect = Cell(Optional.none<CropRect>());
+  const cropRect = Singleton.api<CropRect>();
   const rectState = Cell({
     x: 0,
     y: 0,
@@ -77,7 +79,7 @@ const renderImagePanel = (initialUrl: string) => {
         Css.setAll(bg.element, css);
       });
 
-      cropRect.get().each((cRect) => {
+      cropRect.run((cRect) => {
         const rect = rectState.get();
         cRect.setRect({
           x: rect.x * zoom + left,
@@ -117,34 +119,39 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Optional<SugarElement>> => {
+  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<void> => {
     const img = SugarElement.fromTag('img');
     Attribute.set(img, 'src', url);
-    return loadImage(img.dom).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
-      const aImg = GuiFactory.external({
-        element: img
-      });
+    return loadImage(img.dom).then(() => {
+      // Ensure the component hasn't been removed while the image was loading
+      // if it has, then just do nothing
+      if (anyInSystem.getSystem().isConnected()) {
+        memContainer.getOpt(anyInSystem).map((panel) => {
+          const aImg = GuiFactory.external({
+            element: img
+          });
 
-      Replacing.replaceAt(panel, 1, Optional.some(aImg));
+          Replacing.replaceAt(panel, 1, Optional.some(aImg));
 
-      const lastViewRect = viewRectState.get();
-      const viewRect = {
-        x: 0,
-        y: 0,
-        w: img.dom.naturalWidth,
-        h: img.dom.naturalHeight
-      };
-      viewRectState.set(viewRect);
-      const rect = Rect.inflate(viewRect, -20, -20);
-      rectState.set(rect);
+          const lastViewRect = viewRectState.get();
+          const viewRect = {
+            x: 0,
+            y: 0,
+            w: img.dom.naturalWidth,
+            h: img.dom.naturalHeight
+          };
+          viewRectState.set(viewRect);
+          const rect = Rect.inflate(viewRect, -20, -20);
+          rectState.set(rect);
 
-      if (lastViewRect.w !== viewRect.w || lastViewRect.h !== viewRect.h) {
-        zoomFit(panel, img);
+          if (lastViewRect.w !== viewRect.w || lastViewRect.h !== viewRect.h) {
+            zoomFit(panel, img);
+          }
+
+          repaintImg(panel, img);
+        });
       }
-
-      repaintImg(panel, img);
-      return img;
-    }));
+    });
   };
 
   const zoom = (anyInSystem: AlloyComponent, direction: number): void => {
@@ -159,13 +166,13 @@ const renderImagePanel = (initialUrl: string) => {
   };
 
   const showCrop = (): void => {
-    cropRect.get().each((cRect) => {
+    cropRect.run((cRect) => {
       cRect.toggleVisibility(true);
     });
   };
 
   const hideCrop = (): void => {
-    cropRect.get().each((cRect) => {
+    cropRect.run((cRect) => {
       cRect.toggleVisibility(false);
     });
   };
@@ -215,8 +222,11 @@ const renderImagePanel = (initialUrl: string) => {
                   };
                   rectState.set(newRect);
                 });
-                cropRect.set(Optional.some(cRect));
+                cropRect.set(cRect);
               });
+            }),
+            AlloyEvents.runOnDetached(() => {
+              cropRect.clear();
             })
           ])
         ])

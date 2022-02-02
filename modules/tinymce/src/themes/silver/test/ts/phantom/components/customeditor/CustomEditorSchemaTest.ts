@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { ValueSchema } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
 import { assert } from 'chai';
@@ -13,21 +13,21 @@ describe('phantom.tinymce.themes.silver.components.customeditor.CustomEditorSche
   };
 
   it('Invalid values returns an error', () => {
-    assert.isTrue(ValueSchema.asRaw('empty', schema, {}).isError(), 'Expect empty not not be valid');
+    assert.isTrue(StructureSchema.asRaw('empty', schema, {}).isError(), 'Expect empty not not be valid');
 
-    assert.isTrue(ValueSchema.asRaw('.', schema, base).isError(), 'Expect missing scriptId + scriptUrl or init to not be valid');
+    assert.isTrue(StructureSchema.asRaw('.', schema, base).isError(), 'Expect missing scriptId + scriptUrl or init to not be valid');
 
-    assert.isTrue(ValueSchema.asRaw('.', schema, {
+    assert.isTrue(StructureSchema.asRaw('.', schema, {
       ...base,
       scriptId: 'scriptId'
     }).isError(), 'Expect missing scriptUrl to not be valid');
 
-    assert.isTrue(ValueSchema.asRaw('.', schema, {
+    assert.isTrue(StructureSchema.asRaw('.', schema, {
       ...base,
       scriptUrl: 'scriptUrl'
     }).isError(), 'Expect missing scriptId to not be valid');
 
-    assert.isTrue(ValueSchema.asRaw('.', schema, {
+    assert.isTrue(StructureSchema.asRaw('.', schema, {
       ...base,
       scriptId: 'scriptId',
       scriptUrl: 'scriptUrl',
@@ -40,7 +40,7 @@ describe('phantom.tinymce.themes.silver.components.customeditor.CustomEditorSche
       }
     }).isError(), 'Expect combining script and init to not be valid');
 
-    assert.isTrue(ValueSchema.asRaw('.', schema, {
+    assert.isTrue(StructureSchema.asRaw('.', schema, {
       ...base,
       scriptId: 'scriptId',
       scriptUrl: 'scriptUrl',
@@ -51,13 +51,13 @@ describe('phantom.tinymce.themes.silver.components.customeditor.CustomEditorSche
   });
 
   it('Valid values should return a value', () => {
-    assert.isTrue(ValueSchema.asRaw('.', schema, {
+    assert.isTrue(StructureSchema.asRaw('.', schema, {
       ...base,
       scriptId: 'scriptId',
       scriptUrl: 'scriptUrl'
     }).isValue(), 'Expect scriptId + scriptUrl be valid');
 
-    assert.isTrue(ValueSchema.asRaw('.', schema, {
+    assert.isTrue(StructureSchema.asRaw('.', schema, {
       ...base,
       init: (_el) => {
         return {
@@ -68,7 +68,7 @@ describe('phantom.tinymce.themes.silver.components.customeditor.CustomEditorSche
       }
     }).isValue(), 'Expect init be valid');
 
-    assert.isTrue(ValueSchema.asRaw('.', schema, {
+    assert.isTrue(StructureSchema.asRaw('.', schema, {
       ...base,
       scriptId: 'scriptId',
       scriptUrl: 'scriptUrl',
@@ -85,9 +85,7 @@ describe('phantom.tinymce.themes.silver.components.customeditor.CustomEditorSche
         i: /^(?:fizz|buzz)/,
         j: new Blob([ '<a id="a"><b id="b">hey!</b></a>' ], { type: 'text/html' }),
         k: [ 'text', Infinity, true, false ],
-        l: { prop: 'value' },
-        m: new Map([[ 'key1', 'value1' ], [ 'key2', 'value2' ]]),
-        n: new Set([ 1, 2, 3, 4, 5 ])
+        l: { prop: 'value' }
       }
     }).isValue(), 'Expect scriptId + scriptUrl with structured-cloneable settings to be valid');
   });

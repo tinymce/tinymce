@@ -3,6 +3,7 @@ import { assert } from 'chai';
 
 import * as CaretBookmark from 'tinymce/core/bookmark/CaretBookmark';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
+
 import * as CaretAsserts from '../../module/test/CaretAsserts';
 import * as ViewBlock from '../../module/test/ViewBlock';
 

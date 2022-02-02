@@ -5,9 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
+
 import * as Dialog from '../ui/Dialog';
 
-const get = (editor) => {
+export interface Api {
+  readonly showDialog: () => void;
+}
+
+const get = (editor: Editor): Api => {
   const showDialog = () => {
     Dialog.showDialog(editor);
   };

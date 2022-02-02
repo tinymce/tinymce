@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
+
 import * as SpanWrap from '../../wrap/SpanWrap';
 import * as Wrapper from '../../wrap/Wrapper';
 import { Wraps } from '../../wrap/Wraps';

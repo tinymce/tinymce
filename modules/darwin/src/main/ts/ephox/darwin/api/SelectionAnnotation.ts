@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Attribute, Class, OnNode, SelectorFilter, SugarElement } from '@ephox/sugar';
+
 import { Ephemera } from './Ephemera';
 
 export interface SelectionAnnotation {
@@ -54,7 +55,7 @@ const byAttr = (ephemera: Ephemera, onSelection: (cells: SugarElement[], start: 
   };
 
   const clearBeforeUpdate = (container: SugarElement) => {
-    const sels = SelectorFilter.descendants(container, ephemera.selectedSelector);
+    const sels = SelectorFilter.descendants(container, `${ephemera.selectedSelector},${ephemera.firstSelectedSelector},${ephemera.lastSelectedSelector}`);
     Arr.each(sels, removeSelectionAttributes);
   };
 

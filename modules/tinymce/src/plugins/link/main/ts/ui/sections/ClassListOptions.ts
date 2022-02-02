@@ -6,6 +6,9 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
+import Editor from 'tinymce/core/api/Editor';
+
 import * as Settings from '../../api/Settings';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem } from '../DialogTypes';
@@ -13,7 +16,7 @@ import { ListItem } from '../DialogTypes';
 // Looks like tinymce currently renders menus, but doesn't
 // let you choose from one.
 
-const getClasses = (editor): Optional<ListItem[]> => {
+const getClasses = (editor: Editor): Optional<ListItem[]> => {
   const list = Settings.getLinkClassList(editor);
   if (list.length > 0) {
     return ListOptions.sanitize(list);

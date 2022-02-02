@@ -1,4 +1,5 @@
 import { Future, Futures, Id } from '@ephox/katamari';
+
 import * as BlobConversions from '../api/BlobConversions';
 import * as ResultConversions from '../api/ResultConversions';
 import ImageAsset from './ImageAsset';

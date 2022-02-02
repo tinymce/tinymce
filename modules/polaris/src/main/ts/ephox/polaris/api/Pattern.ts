@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import * as Chars from '../pattern/Chars';
 import { Custom } from '../pattern/Custom';
 import * as Safe from '../pattern/Safe';

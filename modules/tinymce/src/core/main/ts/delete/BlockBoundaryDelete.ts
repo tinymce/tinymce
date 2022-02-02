@@ -6,6 +6,7 @@
  */
 
 import { SugarElement } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import * as BlockMergeBoundary from './BlockMergeBoundary';
 import * as MergeBlocks from './MergeBlocks';

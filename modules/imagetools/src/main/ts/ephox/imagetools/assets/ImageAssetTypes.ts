@@ -1,4 +1,5 @@
 import { SugarElement } from '@ephox/sugar';
+
 import { ImageResult } from '../util/ImageResult';
 
 export interface BlobImageAsset {

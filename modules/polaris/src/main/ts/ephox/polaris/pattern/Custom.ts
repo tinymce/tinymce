@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import { PRegExp } from './Types';
 
 // tslint:disable-next-line:variable-name

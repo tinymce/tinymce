@@ -8,6 +8,7 @@ import { assert } from 'chai';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
+
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('phantom.tinymce.themes.silver.components.urlinput.UrlInputTest', () => {

@@ -1,15 +1,13 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Css, Height, SugarElement, Width } from '@ephox/sugar';
+
 import * as BarPositions from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
-import { DetailExt, RowData, Column } from './Structs';
-import { TableSize } from './TableSize';
+import { DetailExt, RowDetail, Column, Detail } from './Structs';
 import { Warehouse } from './Warehouse';
-
-type BarPositions<A> = BarPositions.BarPositions<A>;
 
 const redistributeToW = (newWidths: string[], cells: DetailExt[], unit: string): void => {
   Arr.each(cells, (cell) => {
@@ -26,7 +24,7 @@ const redistributeToColumns = (newWidths: string[], columns: Column[], unit: str
   });
 };
 
-const redistributeToH = <T> (newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string): void => {
+const redistributeToH = <T extends Detail> (newHeights: string[], rows: RowDetail<T>[], cells: DetailExt[], unit: string): void => {
   Arr.each(cells, (cell) => {
     const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
     const h = Redistribution.sum(heights, CellUtils.minHeight());
@@ -44,7 +42,7 @@ const getUnit = (newSize: string): 'px' | '%' => {
 
 // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
 // Updates CSS of the table, rows, and cells.
-const redistribute = (table: SugarElement, optWidth: Optional<string>, optHeight: Optional<string>, tableSize: TableSize): void => {
+const redistribute = (table: SugarElement<HTMLTableElement>, optWidth: Optional<string>, optHeight: Optional<string>): void => {
   const warehouse = Warehouse.fromTable(table);
   const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);
@@ -53,7 +51,7 @@ const redistribute = (table: SugarElement, optWidth: Optional<string>, optHeight
   optWidth.each((newWidth) => {
     const widthUnit = getUnit(newWidth);
     const totalWidth = Width.get(table);
-    const oldWidths = ColumnSizes.getRawWidths(warehouse, table, tableSize);
+    const oldWidths = ColumnSizes.getRawWidths(warehouse, table);
     const nuWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
 
     if (Warehouse.hasColumns(warehouse)) {

@@ -1,4 +1,5 @@
 import { Fun, Optional } from '@ephox/katamari';
+
 import * as Attribution from '../mutant/Attribution';
 import * as Comparator from '../mutant/Comparator';
 import * as Creator from '../mutant/Creator';
@@ -106,6 +107,7 @@ export const TestUniverse = (raw: Gene): TestUniverse => {
       isComment: Properties.isComment,
       isElement: Properties.isElement,
       isSpecial: Properties.isSpecial,
+      getLanguage: Properties.getLanguage,
       setText: Properties.setText,
       getText: Properties.getText,
       isEmptyTag: Properties.isEmptyTag,

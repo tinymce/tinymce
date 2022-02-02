@@ -1,4 +1,5 @@
 import { Chain, Cursors, StructAssert } from '@ephox/agar';
+
 import { Editor } from '../../alien/EditorTypes';
 import * as TinyAssertions from '../bdd/TinyAssertions';
 import * as TinySelections from '../bdd/TinySelections';

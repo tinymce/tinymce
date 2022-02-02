@@ -2,11 +2,12 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Eq, Pprint, Testable } from '@ephox/dispute';
 import { Fun, Optional, Result } from '@ephox/katamari';
 import fc from 'fast-check';
+
 import * as KAssert from 'ephox/katamari-assertions/api/KAssert';
 
 const { tNumber } = Testable;
 
-const tBoom = () => Testable.testable(Eq.eq(Fun.die('⊥')), Pprint.pprint(Fun.die('⊥')));
+const tBoom = () => Testable.testable(Eq.eq(Fun.die('should not be called')), Pprint.pprint(Fun.die('should not be called')));
 
 const twoDifferentNumbers = fc.tuple(fc.integer(), fc.integer()).filter(([ a, b ]) => a !== b);
 

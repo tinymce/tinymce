@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import { DOCUMENT, DOCUMENT_FRAGMENT, ELEMENT } from '../node/NodeTypes';
 import { SugarElement } from '../node/SugarElement';
 

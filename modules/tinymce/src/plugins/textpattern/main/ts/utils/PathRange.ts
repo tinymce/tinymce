@@ -10,8 +10,8 @@ import { Arr, Optional } from '@ephox/katamari';
 import * as Utils from './Utils';
 
 export interface PathRange {
-  start: number[];
-  end: number[];
+  readonly start: number[];
+  readonly end: number[];
 }
 
 const generatePath = (root: Node, node: Node, offset: number): number[] => {
@@ -39,7 +39,7 @@ const generatePathRange = (root: Node, startNode: Node, startOffset: number, end
   return { start, end };
 };
 
-const resolvePath = (root: Node, path: number[]): Optional<{node: Node; offset: number}> => {
+const resolvePath = (root: Node, path: number[]): Optional<{ node: Node; offset: number }> => {
   const nodePath = path.slice();
   const offset = nodePath.pop();
   const resolvedNode = Arr.foldl(nodePath, (optNode: Optional<Node>, index: number) => optNode.bind((node) => Optional.from(node.childNodes[index])), Optional.some(root));

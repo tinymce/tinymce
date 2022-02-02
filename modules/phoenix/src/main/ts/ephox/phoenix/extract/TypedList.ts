@@ -1,5 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Arrays } from '@ephox/polaris';
+
 import * as Spot from '../api/data/Spot';
 import { TypedItem } from '../api/data/TypedItem';
 import { SpotRange } from '../api/data/Types';

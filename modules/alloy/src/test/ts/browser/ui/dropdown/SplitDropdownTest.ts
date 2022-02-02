@@ -132,18 +132,21 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
           attrs: {
             'role': str.is('button'),
             'aria-expanded': str.is('false'),
-            'aria-haspopup': str.is('true')
+            'aria-haspopup': str.is('true'),
+            'tabindex': str.is('-1')
           },
 
           children: [
             s.element('span', {
               attrs: {
-                role: str.is('presentation')
+                role: str.is('presentation'),
+                tabindex: str.none()
               }
             }),
             s.element('span', {
               attrs: {
-                role: str.is('presentation')
+                role: str.is('presentation'),
+                tabindex: str.none()
               }
             })
           ]

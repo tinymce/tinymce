@@ -63,7 +63,7 @@ const combine = (
   eventOrder: Record<string, string[]>,
   behaviours: Array<AlloyBehaviour<any, any, any>>,
   base: Record<string, AlloyEventRecord>
-): Result<Record<string, UncurriedHandler>, string> => {
+): Result<Record<string, UncurriedHandler>, string[]> => {
   const byEventName: Record<string, Array<BehaviourTuple<any>>> = groupByEvents(info, behaviours, base);
   return combineGroups(byEventName, eventOrder);
 };

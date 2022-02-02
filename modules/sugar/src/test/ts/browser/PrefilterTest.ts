@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Html from 'ephox/sugar/api/properties/Html';

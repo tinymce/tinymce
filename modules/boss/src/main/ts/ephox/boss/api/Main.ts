@@ -6,7 +6,6 @@ import { SpecialGene } from './SpecialGene';
 import { TestUniverse } from './TestUniverse';
 import { TextGene } from './TextGene';
 import { Universe } from './Universe';
-
 /* eslint-disable import/order */
 // NON API USAGE
 // used by phoenix

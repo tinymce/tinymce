@@ -9,9 +9,11 @@ import { Attachment, Disabling } from '@ephox/alloy';
 import { Cell, Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@ephox/sugar';
+
 import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
+
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';

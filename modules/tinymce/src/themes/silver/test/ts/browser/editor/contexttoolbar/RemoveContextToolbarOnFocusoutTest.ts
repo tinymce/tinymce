@@ -1,8 +1,8 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { McEditor, TinySelections } from '@ephox/mcagar';
 import { Focus, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { McEditor, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -23,7 +23,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.RemoveContextToolb
   const focusInput = () => Focus.focus(inputElm);
 
   const pWaitForContextToolbarState = (state: boolean) => Waiter.pTryUntil(
-    `Wait for context toolbar to ${ state ? 'appear' : 'disappear' }`,
+    `Wait for context toolbar to ${state ? 'appear' : 'disappear'}`,
     () => {
       const assert = state ? UiFinder.exists : UiFinder.notExists;
       assert(SugarBody.body(), '.tox-pop');

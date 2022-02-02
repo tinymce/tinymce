@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+
 import * as SugarDocument from '../node/SugarDocument';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarShadowDom from '../node/SugarShadowDom';

@@ -1,5 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Jsc from '@ephox/wrap-jsverify';
+
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as PropertySteps from 'ephox/agar/api/PropertySteps';
 import { Step } from 'ephox/agar/api/Step';

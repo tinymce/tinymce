@@ -1,13 +1,13 @@
 {
   "name": "tinymce",
-  "version": "5.9.0",
+  "version": "5.10.2",
   "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
   },
   "description": "TinyMCE rich text editor",
-  "author": "Tiny Technologies",
+  "author": "Tiny Technologies, Inc",
   "bugs": {
     "url": "https://github.com/tinymce/tinymce/issues"
   },

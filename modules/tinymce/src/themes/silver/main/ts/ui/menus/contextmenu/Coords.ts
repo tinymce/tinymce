@@ -5,24 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
+import { AnchorSpec, MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+
+export type AnchorType = 'node' | 'selection' | 'point';
 
 interface Position {
   x: number;
   y: number;
 }
 
-const nu = (x: number, y: number): MakeshiftAnchorSpec => {
-  return {
-    anchor: 'makeshift',
-    x,
-    y
-  };
-};
+const nu = (x: number, y: number): MakeshiftAnchorSpec => ({
+  type: 'makeshift',
+  x,
+  y
+});
 
 const transpose = (pos: Position, dx: number, dy: number) => {
   return nu(pos.x + dx, pos.y + dy);
@@ -68,13 +69,24 @@ export const getPointAnchor = (editor: Editor, e: MouseEvent | TouchEvent) => {
 
 export const getSelectionAnchor = (editor: Editor): SelectionAnchorSpec => {
   return {
-    anchor: 'selection',
+    type: 'selection',
     root: SugarElement.fromDom(editor.selection.getNode())
   };
 };
 
 export const getNodeAnchor = (editor: Editor): NodeAnchorSpec => ({
-  anchor: 'node',
+  type: 'node',
   node: Optional.some(SugarElement.fromDom(editor.selection.getNode())),
   root: SugarElement.fromDom(editor.getBody())
 });
+
+export const getAnchorSpec = (editor: Editor, e: MouseEvent | TouchEvent, anchorType: AnchorType): AnchorSpec => {
+  switch (anchorType) {
+    case 'node':
+      return getNodeAnchor(editor);
+    case 'point':
+      return getPointAnchor(editor, e);
+    case 'selection':
+      return getSelectionAnchor(editor);
+  }
+};

@@ -1,13 +1,14 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
+import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { fakeEvent } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.charmap.SearchTest', () => {

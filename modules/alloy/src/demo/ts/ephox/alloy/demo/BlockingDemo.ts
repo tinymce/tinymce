@@ -1,5 +1,6 @@
 import { Result } from '@ephox/katamari';
 import { SugarBody, Traverse } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Blocking } from 'ephox/alloy/api/behaviour/Blocking';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
@@ -9,7 +10,6 @@ import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';
-
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default (): void => {

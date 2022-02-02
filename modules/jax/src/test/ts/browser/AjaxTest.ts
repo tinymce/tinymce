@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
+
 import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 import { DataType } from 'ephox/jax/core/DataType';
 import * as Http from 'ephox/jax/core/Http';
@@ -7,7 +8,7 @@ import { HttpError } from 'ephox/jax/core/HttpError';
 
 /* eslint-disable no-console */
 
-const expectError = (label: string, response: FutureResult<any, HttpError>) => FutureResult.nu((callback) => {
+const expectError = (label: string, response: FutureResult<any, HttpError<DataType.JSON>>) => FutureResult.nu((callback) => {
   response.get((res) => {
     res.fold((_err) => {
       console.log(label, 'successfully failed');
@@ -18,7 +19,7 @@ const expectError = (label: string, response: FutureResult<any, HttpError>) => F
   });
 });
 
-const expectValue = (label: string, value: any, response: FutureResult<any, HttpError>) => FutureResult.nu((callback) => {
+const expectValue = (label: string, value: any, response: FutureResult<any, HttpError<DataType.JSON>>) => FutureResult.nu((callback) => {
   response.get((res) => {
     res.fold((err) => {
       callback(Result.error(new Error(err.message)));
@@ -27,14 +28,14 @@ const expectValue = (label: string, value: any, response: FutureResult<any, Http
         assert.eq(value, val);
         console.log(label, 'passed with ', val);
         callback(Result.value({}));
-      } catch (err) {
+      } catch (err: any) {
         callback(Result.error(new Error(err)));
       }
     });
   });
 });
 
-const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError>) => FutureResult.nu((callback) => {
+const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, HttpError<DataType.Blob>>) => FutureResult.nu((callback) => {
   response.get((res) => {
     res.fold((err) => {
       callback(Result.error(new Error(err.message)));
@@ -44,7 +45,7 @@ const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, 
           assert.eq(JSON.stringify(value, null, '  '), text);
           console.log(label, 'passed with ', text);
           callback(Result.value({}));
-        } catch (err) {
+        } catch (err: any) {
           callback(Result.error(new Error(err)));
         }
       });

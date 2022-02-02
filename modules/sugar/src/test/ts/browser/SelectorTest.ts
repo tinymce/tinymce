@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
+
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Class from 'ephox/sugar/api/properties/Class';
@@ -31,7 +32,7 @@ UnitTest.test('SelectorTest', () => {
     // http://jsfiddle.net/spyder/fv9ptr5L/
     const empty = Div();
     Selectors.all('img:not([data-ephox-polish-blob])', empty);
-  } catch (e) {
+  } catch (e: any) {
     assert.fail(e);
   }
 

@@ -6,6 +6,7 @@
  */
 
 import { Fun, Optional, Type } from '@ephox/katamari';
+
 import { BlobInfo } from '../api/file/BlobCache';
 import { NotificationApi } from '../api/NotificationManager';
 import Promise from '../api/util/Promise';

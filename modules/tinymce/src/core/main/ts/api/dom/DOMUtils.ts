@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { SugarElement, WindowVisualViewport } from '@ephox/sugar';
+
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
@@ -66,8 +67,8 @@ interface AttrHooks {
 const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext): AttrHooks => {
   const keepValues: boolean = settings.keep_values;
   const keepUrlHook = {
-    set: ($elm, value: string, name: string) => {
-      if (settings.url_converter) {
+    set: ($elm, value: string | null, name: string) => {
+      if (settings.url_converter && value !== null) {
         value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, $elm[0]);
       }
 
@@ -81,7 +82,7 @@ const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, get
 
   const attrHooks: AttrHooks = {
     style: {
-      set: ($elm, value: string | {}) => {
+      set: ($elm, value: string | {} | null) => {
         if (value !== null && typeof value === 'object') {
           $elm.css(value);
           return;
@@ -736,7 +737,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     outHtml += '<' + name;
 
     for (key in attrs) {
-      if (attrs.hasOwnProperty(key) && attrs[key] !== null && typeof attrs[key] !== 'undefined') {
+      if (Obj.hasNonNullableKey(attrs, key)) {
         outHtml += ' ' + key + '="' + encode(attrs[key]) + '"';
       }
     }
@@ -1204,15 +1205,21 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const isChildOf = (node: Node, parent: Node) => {
-    while (node) {
-      if (parent === node) {
-        return true;
+    // IE only supports the native `contains` functions on HTMLElements, but not Nodes or Elements
+    // so we have to use the slow walking path for IE unfortunately.
+    if (!isIE) {
+      return node === parent || parent.contains(node);
+    } else {
+      while (node) {
+        if (parent === node) {
+          return true;
+        }
+
+        node = node.parentNode;
       }
 
-      node = node.parentNode;
+      return false;
     }
-
-    return false;
   };
 
   const dumpRng = (r: Range) => (
@@ -1235,7 +1242,23 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     schema,
     events,
     isBlock,
+
+    /**
+     * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
+     *
+     * @deprecated
+     * @property $
+     * @type tinymce.dom.DomQuery
+     */
     $,
+
+    /**
+     * <em>Deprecated in TinyMCE 5.10 and has been marked for removal in TinyMCE 6.0.</em>
+     *
+     * @deprecated
+     * @property $$
+     * @type tinymce.dom.DomQuery
+     */
     $$,
 
     root: null,
@@ -1909,7 +1932,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     dumpRng
   };
 
-  const attrHooks = setupAttrHooks(styles, settings, () => self);
+  const attrHooks = setupAttrHooks(styles, settings, Fun.constant(self));
 
   return self;
 };

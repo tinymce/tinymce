@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Logger from 'ephox/agar/api/Logger';
 
 UnitTest.test('LoggerTest', () => {

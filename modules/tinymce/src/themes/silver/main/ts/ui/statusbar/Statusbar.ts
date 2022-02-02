@@ -6,8 +6,10 @@
  */
 
 import { SimpleSpec } from '@ephox/alloy';
+
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
+
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ElementPath from './ElementPath';
 import * as ResizeHandler from './ResizeHandle';

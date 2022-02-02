@@ -7,6 +7,7 @@
 
 import { Receiving } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
+
 import * as TinyChannels from './TinyChannels';
 
 const format = (command, update) => {

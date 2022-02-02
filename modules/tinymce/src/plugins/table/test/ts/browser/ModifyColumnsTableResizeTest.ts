@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorFind, Width } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -611,7 +611,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
       it('TINY-6711: should resize table when inserting multiple columns', () => {
         const editor = hook.editor();
         const content = (`
-          <table width: 33.3433%; border="1">
+          <table style="width: 33.3433%;" border="1">
             <tbody>
               <tr>
                 <td data-mce-selected="1" data-mce-first-selected="1" style="width: 47.0386%;"></td>

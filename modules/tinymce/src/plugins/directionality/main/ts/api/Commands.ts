@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
+
 import * as Direction from '../core/Direction';
 
-const register = (editor) => {
+const register = (editor: Editor): void => {
   editor.addCommand('mceDirectionLTR', () => {
     Direction.setDir(editor, 'ltr');
   });

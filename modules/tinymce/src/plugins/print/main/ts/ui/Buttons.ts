@@ -7,17 +7,19 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const register = (editor: Editor) => {
+const register = (editor: Editor): void => {
+  const onAction = () => editor.execCommand('mcePrint');
+
   editor.ui.registry.addButton('print', {
     icon: 'print',
     tooltip: 'Print',
-    onAction: () => editor.execCommand('mcePrint')
+    onAction
   });
 
   editor.ui.registry.addMenuItem('print', {
     text: 'Print...',
     icon: 'print',
-    onAction: () => editor.execCommand('mcePrint')
+    onAction
   });
 };
 

@@ -4,6 +4,7 @@ import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as TableCellSelection from 'tinymce/core/selection/TableCellSelection';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.selection.TableCellSelectionTest', () => {

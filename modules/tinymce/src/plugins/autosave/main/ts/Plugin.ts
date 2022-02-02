@@ -6,6 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Api from './api/Api';
 import * as Settings from './api/Settings';
 import * as BeforeUnload from './core/BeforeUnload';
@@ -19,7 +20,7 @@ import * as Buttons from './ui/Buttons';
  * @private
  */
 
-export default () => {
+export default (): void => {
   PluginManager.add('autosave', (editor) => {
     BeforeUnload.setup(editor);
     Buttons.register(editor);

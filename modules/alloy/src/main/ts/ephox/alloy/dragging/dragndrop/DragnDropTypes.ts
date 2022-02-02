@@ -33,7 +33,7 @@ export interface StartingDragndropConfigSpec {
 export interface DragStartingConfig {
   type: string;
   phoneyTypes: string[];
-  effectAllowed: string;
+  effectAllowed: DataTransfer['effectAllowed'];
   getData: Optional<(component: AlloyComponent) => string>;
   getImageParent: Optional<(component: AlloyComponent) => SugarElement>;
   getImage: Optional<(component: AlloyComponent) => DragnDropImageClone>;
@@ -64,7 +64,7 @@ export interface DropDragndropConfigSpec {
 
 export interface DroppingConfig {
   type: string;
-  dropEffect: string;
+  dropEffect: DataTransfer['dropEffect'];
   onDrop: (component: AlloyComponent, dropEvent: DropEvent) => void;
   onDrag: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;
   onDragover: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => void;

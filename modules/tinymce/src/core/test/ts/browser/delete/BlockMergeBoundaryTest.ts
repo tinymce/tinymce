@@ -5,6 +5,7 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as BlockMergeBoundary from 'tinymce/core/delete/BlockMergeBoundary';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 type BlockBoundary = BlockMergeBoundary.BlockBoundary;

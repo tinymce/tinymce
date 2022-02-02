@@ -7,15 +7,13 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getNonEditableClass = (editor: Editor) => {
-  return editor.getParam('noneditable_noneditable_class', 'mceNonEditable');
-};
+const getNonEditableClass = (editor: Editor): string =>
+  editor.getParam('noneditable_noneditable_class', 'mceNonEditable');
 
-const getEditableClass = (editor: Editor) => {
-  return editor.getParam('noneditable_editable_class', 'mceEditable');
-};
+const getEditableClass = (editor: Editor): string =>
+  editor.getParam('noneditable_editable_class', 'mceEditable');
 
-const getNonEditableRegExps = (editor: Editor) => {
+const getNonEditableRegExps = (editor: Editor): RegExp[] => {
   const nonEditableRegExps = editor.getParam('noneditable_regexp', []);
 
   if (nonEditableRegExps && nonEditableRegExps.constructor === RegExp) {

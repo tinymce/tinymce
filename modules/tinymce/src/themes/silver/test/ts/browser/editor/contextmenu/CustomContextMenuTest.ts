@@ -1,7 +1,8 @@
 import { Keyboard, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -27,7 +28,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
         text: 'Custom Context Menu',
       });
       editor.ui.registry.addContextMenu('customContextMenu', {
-        update: () => 'customMenuItem'
+        update: Fun.constant('customMenuItem')
       });
     });
 

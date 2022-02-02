@@ -7,7 +7,8 @@
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Optional } from '@ephox/katamari';
+import { Obj, Singleton } from '@ephox/katamari';
+
 import Resource from 'tinymce/core/api/Resource';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -15,10 +16,11 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 type CustomEditorSpec = Dialog.CustomEditor;
 type CustomEditorInitFn = Dialog.CustomEditorInitFn;
 
-const isOldCustomEditor = (spec: CustomEditorSpec): spec is Dialog.CustomEditorOld => Object.prototype.hasOwnProperty.call(spec, 'init');
+const isOldCustomEditor = (spec: CustomEditorSpec): spec is Dialog.CustomEditorOld =>
+  Obj.has(spec as Dialog.CustomEditorOld, 'init');
 
 export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
-  const editorApi = Cell(Optional.none<Dialog.CustomEditorInit>());
+  const editorApi = Singleton.value<Dialog.CustomEditorInit>();
 
   const memReplaced = Memento.record({
     dom: {
@@ -26,7 +28,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
     }
   });
 
-  const initialValue = Cell(Optional.none<string>());
+  const initialValue = Singleton.value<string>();
 
   return {
     dom: {
@@ -43,12 +45,12 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
                 (init: CustomEditorInitFn) => init(ta.element.dom, spec.settings)
               )
             ).then((ea) => {
-              initialValue.get().each((cvalue) => {
+              initialValue.on((cvalue) => {
                 ea.setValue(cvalue);
               });
 
-              initialValue.set(Optional.none());
-              editorApi.set(Optional.some(ea));
+              initialValue.clear();
+              editorApi.set(ea);
             });
           });
         })
@@ -63,7 +65,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
           setValue: (component, value) => {
             editorApi.get().fold(
               () => {
-                initialValue.set(Optional.some(value));
+                initialValue.set(value);
               },
               (ed) => ed.setValue(value)
             );

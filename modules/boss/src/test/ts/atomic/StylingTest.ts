@@ -1,5 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { KAssert } from '@ephox/katamari-assertions';
+
 import { Gene } from 'ephox/boss/api/Gene';
 import * as Styling from 'ephox/boss/mutant/Styling';
 

@@ -40,14 +40,16 @@ const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: Float
   const bounds = detail.getBounds.map((bounder) => bounder());
   const sink = detail.lazySink(button).getOrDie();
 
-  Positioning.positionWithinBounds(sink, {
-    anchor: 'hotspot',
-    hotspot: button,
-    layouts,
-    overrides: {
-      maxWidthFunction: MaxWidth.expandable()
+  Positioning.positionWithinBounds(sink, toolbar, {
+    anchor: {
+      type: 'hotspot',
+      hotspot: button,
+      layouts,
+      overrides: {
+        maxWidthFunction: MaxWidth.expandable()
+      }
     }
-  }, toolbar, bounds);
+  }, bounds);
 };
 
 const setGroups = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts | undefined, groups: AlloySpec[]) => {

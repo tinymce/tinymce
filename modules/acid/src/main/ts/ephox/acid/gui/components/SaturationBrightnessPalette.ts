@@ -1,5 +1,6 @@
 import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher, SketchSpec, Slider, SliderTypes, UiSketcher } from '@ephox/alloy';
 import { Fun, Optional } from '@ephox/katamari';
+
 import { Hex } from '../../api/colour/ColourTypes';
 import * as HsvColour from '../../api/colour/HsvColour';
 import * as RgbaColour from '../../api/colour/RgbaColour';

@@ -1,11 +1,12 @@
 import { Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Preview from 'tinymce/core/fmt/Preview';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.fmt.PreviewTest', () => {

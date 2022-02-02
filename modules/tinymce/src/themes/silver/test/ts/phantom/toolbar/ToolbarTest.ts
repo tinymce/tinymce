@@ -6,6 +6,7 @@ import { SugarDocument } from '@ephox/sugar';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
+
 import TestProviders from '../../module/TestProviders';
 
 describe('phantom.tinymce.themes.silver.toolbar.ToolbarTest', () => {

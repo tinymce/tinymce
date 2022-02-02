@@ -1,5 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
+
 import * as Spot from '../api/data/Spot';
 import { SpotPoints, Wrapter } from '../api/data/Types';
 import * as Split from '../api/general/Split';

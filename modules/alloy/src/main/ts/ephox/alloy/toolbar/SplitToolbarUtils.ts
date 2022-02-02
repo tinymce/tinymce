@@ -20,13 +20,19 @@ const findFocusedComp = (comps: AlloyComponent[]): Optional<AlloyComponent> =>
   Arr.findMap(comps, (comp) => Focus.search(comp.element).bind((focusedElm) => comp.getSystem().getByDom(focusedElm).toOptional()));
 
 const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOverflow: (groups: AlloyComponent[]) => void): void => {
+  // Ensure we have toolbar groups to render
+  const builtGroups = detail.builtGroups.get();
+  if (builtGroups.length === 0) {
+    return;
+  }
+
   const primary = AlloyParts.getPartOrDie(toolbar, detail, 'primary');
   const overflowGroup = Coupling.getCoupled(toolbar, 'overflowGroup');
 
   // Set the primary toolbar to have visibility hidden;
   Css.set(primary.element, 'visibility', 'hidden');
 
-  const groups = detail.builtGroups.get().concat([ overflowGroup ]);
+  const groups = builtGroups.concat([ overflowGroup ]);
 
   // Store the current focus state
   const focusedComp = findFocusedComp(groups);

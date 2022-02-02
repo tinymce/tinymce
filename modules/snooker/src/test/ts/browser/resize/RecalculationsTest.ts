@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarElement, TextContent } from '@ephox/sugar';
+
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as Recalculations from 'ephox/snooker/resize/Recalculations';
@@ -29,7 +30,7 @@ UnitTest.test('RecalculationsTest', () => {
     heights
   });
 
-  const check = (expected: Parts[], input: Structs.RowData<Structs.Detail>[], sizes: Structs.Dimensions) => {
+  const check = (expected: Parts[], input: Structs.RowDetail<Structs.Detail>[], sizes: Structs.Dimensions) => {
     const warehouse = Warehouse.generate(input);
     const actualCellWidth = Recalculations.recalculateWidthForCells(warehouse, sizes.width);
     const actualColumnWidth = Recalculations.recalculateWidthForColumns(warehouse, sizes.width);
@@ -59,8 +60,8 @@ UnitTest.test('RecalculationsTest', () => {
     return elem;
   };
   const makeDetail = (elemText: string, rowspan: number, colspan: number) => Structs.detail(createCell(elemText), rowspan, colspan);
-  const makeRow = (cells: Structs.Detail[]) => Structs.rowdata(SugarElement.fromTag('tr'), cells, 'tbody');
-  const makeColumnGroup = (cols: Structs.Detail[]) => Structs.rowdata(SugarElement.fromTag('col'), cols, 'colgroup');
+  const makeRow = (cells: Structs.Detail[]) => Structs.rowdetail(SugarElement.fromTag('tr'), cells, 'tbody');
+  const makeColumnGroup = (cols: Structs.Detail[]) => Structs.rowdetail(SugarElement.fromTag('col'), cols, 'colgroup');
 
   check(
     [

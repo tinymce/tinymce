@@ -1,12 +1,13 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { fakeEvent } from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.emoticons.ImageEmoticonTest', () => {

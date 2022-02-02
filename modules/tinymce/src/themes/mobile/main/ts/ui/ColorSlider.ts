@@ -6,7 +6,9 @@
  */
 
 import { Behaviour, SketchSpec, Slider, Toggling } from '@ephox/alloy';
+import { Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Receivers from '../channels/Receivers';
@@ -103,10 +105,8 @@ const sketch = (realm: MobileRealm, editor: Editor) => {
         editor.nodeChanged();
       });
     },
-    getInitialValue: (/* slider */) => {
-      // Return black
-      return BLACK;
-    }
+    // Return black
+    getInitialValue: Fun.constant(BLACK)
   };
 
   return ToolbarWidgets.button(realm, 'color-levels', () => makeItems(spec), editor);

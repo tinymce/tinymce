@@ -1,5 +1,6 @@
 import { Assertions, Chain, Cursors, Step, StructAssert, Waiter } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
+
 import { Editor } from '../../alien/EditorTypes';
 import * as TinyAssertions from '../bdd/TinyAssertions';
 import * as TinySelections from '../bdd/TinySelections';

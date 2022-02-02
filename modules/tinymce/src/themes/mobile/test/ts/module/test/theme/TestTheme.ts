@@ -1,6 +1,6 @@
 import { AlloyComponent, Attachment, Behaviour, Gui, GuiFactory, Memento, Replacing } from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyApis, TinyLoader } from '@ephox/wrap-mcagar';
 
 import ThemeManager from 'tinymce/core/api/ThemeManager';
 import * as Features from 'tinymce/themes/mobile/features/Features';
@@ -53,7 +53,9 @@ const setup = (info, onSuccess, onFailure) => {
   ThemeManager.add(strName, (editor) => {
     return {
       renderUI: () => {
-        editor.fire('SkinLoaded');
+        // Existing themes will delay firing the SkinLoaded until the editor has been initialized
+        editor.on('init', () => editor.fire('SkinLoaded'));
+
         return {
           iframeContainer: socket.element.dom,
           editorContainer: alloy.element.dom

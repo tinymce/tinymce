@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import * as Generator from '../parray/Generator';
 import * as Query from '../parray/Query';
 import * as Split from '../parray/Split';

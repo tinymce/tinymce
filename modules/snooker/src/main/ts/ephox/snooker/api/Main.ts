@@ -23,6 +23,7 @@ import * as TableOperations from './TableOperations';
 import * as TablePositions from './TablePositions';
 import * as TableRender from './TableRender';
 import { TableResize } from './TableResize';
+import { TableSection } from './TableSection';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 
@@ -50,6 +51,7 @@ export {
   TablePositions,
   TableRender,
   TableResize,
+  TableSection,
   TableSize,
   RunOperation,
   GridRow,

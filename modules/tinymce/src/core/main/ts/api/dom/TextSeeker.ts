@@ -6,6 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
+
 import * as NodeType from '../../dom/NodeType';
 import { TextWalker } from '../../dom/TextWalker';
 import DOMUtils from './DOMUtils';

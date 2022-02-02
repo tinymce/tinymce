@@ -1,8 +1,8 @@
-import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 
 export default [
-  FieldSchema.strictArrayOf('events', ValueSchema.objOf([
-    FieldSchema.strictString('native'),
-    FieldSchema.strictString('simulated')
+  FieldSchema.requiredArrayOf('events', StructureSchema.objOf([
+    FieldSchema.requiredString('native'),
+    FieldSchema.requiredString('simulated')
   ]))
-] as FieldProcessorAdt[];
+] as FieldProcessor[];

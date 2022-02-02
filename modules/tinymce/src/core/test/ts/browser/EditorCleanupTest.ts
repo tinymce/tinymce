@@ -1,7 +1,7 @@
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { McEditor, TinyDom } from '@ephox/mcagar';
 import { Attribute, Remove, Truncate } from '@ephox/sugar';
+import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

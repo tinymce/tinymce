@@ -1,11 +1,12 @@
 import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { annotate, assertHtmlContent, assertMarker } from '../../module/test/AnnotationAsserts';
 
 describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {

@@ -1,5 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { Event, Events } from '@ephox/porkbun';
+
 import { DragEvents, DragState } from './DragTypes';
 
 export const NoDrag = (): DragState => {

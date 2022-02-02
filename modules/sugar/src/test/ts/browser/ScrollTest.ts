@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
@@ -71,7 +72,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
         runTests(doc);
         Remove.remove(iframe);
         next();
-      } catch (e) {
+      } catch (e: any) {
         // Remove.remove(iframe);
         failure(e);
       }

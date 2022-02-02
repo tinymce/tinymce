@@ -7,7 +7,9 @@
 
 import { Obj } from '@ephox/katamari';
 import { Css, Height, SugarElement, SugarPosition, Width } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import * as Events from '../../api/Events';
 import { getMaxHeightSetting, getMaxWidthSetting, getMinHeightSetting, getMinWidthSetting } from '../../api/Settings';
 import * as Utils from './Utils';

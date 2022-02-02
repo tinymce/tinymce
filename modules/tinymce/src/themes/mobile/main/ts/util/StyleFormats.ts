@@ -7,9 +7,10 @@
 
 import { Toggling } from '@ephox/alloy';
 import { Arr, Fun, Id, Merger, Obj } from '@ephox/katamari';
-import Editor from 'tinymce/core/api/Editor';
-import * as Settings from '../api/Settings';
 
+import Editor from 'tinymce/core/api/Editor';
+
+import * as Settings from '../api/Settings';
 import * as StylesMenu from '../ui/StylesMenu';
 import * as StyleConversions from './StyleConversions';
 

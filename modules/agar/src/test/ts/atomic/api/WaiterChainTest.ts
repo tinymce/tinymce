@@ -1,4 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
+
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as Waiter from 'ephox/agar/api/Waiter';

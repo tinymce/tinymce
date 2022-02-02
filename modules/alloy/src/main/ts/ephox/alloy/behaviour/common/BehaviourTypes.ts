@@ -1,4 +1,4 @@
-import { FieldProcessorAdt } from '@ephox/boulder';
+import { FieldProcessor } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -10,7 +10,7 @@ import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 
 export type BehaviourApiFunc<D extends BehaviourConfigDetail, S extends BehaviourState> = (component: AlloyComponent, bConfig: D, bState: S, ...rest: any[]) => any;
 
-export type BehaviourRecord = Record<string, ConfiguredBehaviour<any, any, any>>;
+export type BehaviourRecord = Record<string, ConfiguredBehaviour<any, any, any> | undefined>;
 export interface BehaviourApisRecord<D extends BehaviourConfigDetail, S extends BehaviourState> { [key: string]: BehaviourApiFunc<D, S> }
 export type BehaviourExtraRecord<E> = { [K in keyof E]: Function };
 
@@ -25,7 +25,7 @@ export interface BehaviourActiveSpec<D extends BehaviourConfigDetail, S extends 
 }
 export interface NamedConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
   key: string;
-  value: ConfiguredBehaviour<C, D, S>;
+  value: ConfiguredBehaviour<C, D, S> | undefined;
 }
 
 export interface AlloyBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
@@ -37,7 +37,7 @@ export interface AlloyBehaviour<C extends BehaviourConfigSpec, D extends Behavio
   handlers: (info: BehaviourInfo<D, S>) => {};
   name: () => string;
   revoke: () => NamedConfiguredBehaviour<C, D, S>;
-  schema: () => FieldProcessorAdt;
+  schema: () => FieldProcessor;
 }
 
 export interface ConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState> {
@@ -57,10 +57,10 @@ export interface BaseBehaviourConfig<D extends BehaviourConfigDetail, S extends 
 }
 
 export interface BehaviourConfig<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourApisRecord<D, S>, E extends BehaviourExtraRecord<E> = {}> extends BaseBehaviourConfig<D, S, A, E> {
-  fields: FieldProcessorAdt[];
+  fields: FieldProcessor[];
 }
 
 export interface BehaviourModeSpec<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourApisRecord<D, S>, E extends BehaviourExtraRecord<E> = {}> extends BaseBehaviourConfig<D, S, A, E> {
   branchKey: string;
-  branches: Record<string, FieldProcessorAdt[]>;
+  branches: Record<string, FieldProcessor[]>;
 }

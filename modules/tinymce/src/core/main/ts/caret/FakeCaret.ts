@@ -5,20 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Optional } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
+
 import DomQuery from '../api/dom/DomQuery';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import Delay from '../api/util/Delay';
 import * as NodeType from '../dom/NodeType';
-import * as GeomClientRect from '../geom/ClientRect';
+import * as ClientRect from '../geom/ClientRect';
 import * as CaretContainer from './CaretContainer';
 import * as CaretContainerRemove from './CaretContainerRemove';
 
+type GeomClientRect = ClientRect.ClientRect;
+
 export interface FakeCaret {
-  show: (before: boolean, element: Element) => Range;
+  show: (before: boolean, element: Element) => Range | null;
   hide: () => void;
   getCss: () => string;
   reposition: () => void;
@@ -38,16 +41,17 @@ const isMedia = NodeType.isMedia;
 const isTableCell = NodeType.isTableCell;
 const inlineFakeCaretSelector = '*[contentEditable=false],video,audio,embed,object';
 
-const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): GeomClientRect.ClientRect => {
-  const clientRect = GeomClientRect.collapse(element.getBoundingClientRect(), before);
-  let docElm, scrollX, scrollY, margin, rootRect;
+const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): GeomClientRect => {
+  const clientRect = ClientRect.collapse(element.getBoundingClientRect(), before);
+  let scrollX: number;
+  let scrollY: number;
 
   if (root.tagName === 'BODY') {
-    docElm = root.ownerDocument.documentElement;
+    const docElm = root.ownerDocument.documentElement;
     scrollX = root.scrollLeft || docElm.scrollLeft;
     scrollY = root.scrollTop || docElm.scrollTop;
   } else {
-    rootRect = root.getBoundingClientRect();
+    const rootRect = root.getBoundingClientRect();
     scrollX = root.scrollLeft - rootRect.left;
     scrollY = root.scrollTop - rootRect.top;
   }
@@ -58,7 +62,7 @@ const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: 
   clientRect.bottom += scrollY;
   clientRect.width = 1;
 
-  margin = element.offsetWidth - element.clientWidth;
+  let margin = element.offsetWidth - element.clientWidth;
 
   if (margin > 0) {
     if (before) {
@@ -101,14 +105,15 @@ const trimInlineCaretContainers = (root: HTMLElement): void => {
   }
 };
 
-export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
-  const lastVisualCaret = Cell<Optional<CaretState>>(Optional.none());
-  let cursorInterval, caretContainerNode;
+export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => node is HTMLElement, hasFocus: () => boolean): FakeCaret => {
+  const lastVisualCaret = Singleton.value<CaretState>();
+  let cursorInterval: number | undefined;
+  let caretContainerNode: Node | null;
   const rootBlock = Settings.getForcedRootBlock(editor);
   const caretBlock = rootBlock.length > 0 ? rootBlock : 'p';
 
-  const show = (before: boolean, element: HTMLElement): Range => {
-    let clientRect, rng;
+  const show = (before: boolean, element: Element): Range | null => {
+    let rng: Range;
 
     hide();
 
@@ -118,18 +123,15 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
     if (isBlock(element)) {
       caretContainerNode = CaretContainer.insertBlock(caretBlock, element, before);
-      clientRect = getAbsoluteClientRect(root, element, before);
+      const clientRect = getAbsoluteClientRect(root, element, before);
       DomQuery(caretContainerNode).css('top', clientRect.top);
 
-      const caret = DomQuery<HTMLElement>('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(root)[0];
-      lastVisualCaret.set(Optional.some({ caret, element, before }));
+      const caret = DomQuery<HTMLElement>('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css({ ...clientRect }).appendTo(root)[0];
+      lastVisualCaret.set({ caret, element, before });
 
-      lastVisualCaret.get().each((caretState) => {
-        if (before) {
-          DomQuery(caretState.caret).addClass('mce-visual-caret-before');
-        }
-      });
-
+      if (before) {
+        DomQuery(caret).addClass('mce-visual-caret-before');
+      }
       startBlink();
 
       rng = element.ownerDocument.createRange();
@@ -163,14 +165,14 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       caretContainerNode = null;
     }
 
-    lastVisualCaret.get().each((caretState) => {
+    lastVisualCaret.on((caretState) => {
       DomQuery(caretState.caret).remove();
-      lastVisualCaret.set(Optional.none());
+      lastVisualCaret.clear();
     });
 
     if (cursorInterval) {
       Delay.clearInterval(cursorInterval);
-      cursorInterval = null;
+      cursorInterval = undefined;
     }
   };
 
@@ -185,7 +187,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
   };
 
   const reposition = () => {
-    lastVisualCaret.get().each((caretState) => {
+    lastVisualCaret.on((caretState) => {
       const clientRect = getAbsoluteClientRect(root, caretState.element, caretState.before);
       DomQuery(caretState.caret).css({ ...clientRect });
     });
@@ -224,8 +226,8 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
 export const isFakeCaretTableBrowser = (): boolean => browser.isIE() || browser.isEdge() || browser.isFirefox();
 
-export const isInlineFakeCaretTarget = (node: Node): node is Element =>
+export const isInlineFakeCaretTarget = (node: Node): node is HTMLElement =>
   isContentEditableFalse(node) || isMedia(node);
 
-export const isFakeCaretTarget = (node: Node): node is Element =>
+export const isFakeCaretTarget = (node: Node): node is HTMLElement =>
   isInlineFakeCaretTarget(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());

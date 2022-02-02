@@ -6,6 +6,7 @@
  */
 
 import { Obj } from '@ephox/katamari';
+
 import { isReadOnly, processReadonlyEvents } from '../mode/Readonly';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
@@ -170,6 +171,11 @@ const EditorObservable: EditorObservable = {
 
     // Never bind focus/blur since the FocusManager fakes those
     if (name === 'focus' || name === 'blur') {
+      return;
+    }
+
+    // If the editor has been removed, `unbindAllNativeEvents` has already deleted all native event delegates
+    if (self.removed) {
       return;
     }
 

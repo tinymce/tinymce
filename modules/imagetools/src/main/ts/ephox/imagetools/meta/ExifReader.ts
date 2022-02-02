@@ -1,4 +1,5 @@
-import { Arr, Optional, Result, Type } from '@ephox/katamari';
+import { Arr, Optional, Result, Results, Type } from '@ephox/katamari';
+
 import { BinaryReader } from './BinaryReader';
 import { readByte, readList, readLong, readShort, readSignedLong, readString } from './BinaryReaderUtils';
 
@@ -435,14 +436,14 @@ export const readMetaData = (ar: ArrayBuffer): MetaData => {
   const TIFF_HEADER = 10;
   const ifd0 = ((): Result<number, string> => {
     // Check if that's APP1 and that it has EXIF
-    if (!readShort(reader, 0).is(0xFFE1) || !readString(reader, 4, 5).map((s) => s.toUpperCase()).is('EXIF\0')) {
+    if (!Results.is(readShort(reader, 0), 0xFFE1) || !Results.is(readString(reader, 4, 5).map((s) => s.toUpperCase()), 'EXIF\0')) {
       return Result.error('APP1 marker and EXIF marker cannot be read or not available.');
     }
     // Set read order of multi-byte data
-    reader.littleEndian = readShort(reader, TIFF_HEADER).is(0x4949);
+    reader.littleEndian = Results.is(readShort(reader, TIFF_HEADER), 0x4949);
 
     // Check if always present bytes are indeed present
-    if (!readShort(reader, TIFF_HEADER + 2).is(0x002A)) {
+    if (!Results.is(readShort(reader, TIFF_HEADER + 2), 0x002A)) {
       return Result.error('Invalid Exif data.');
     }
 

@@ -43,7 +43,7 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
 
   }, (_doc, _body, gui, _component, _store) => {
     const cSetupAnchor = (x: number, y: number) => Chain.injectThunked(() => ({
-      anchor: 'makeshift',
+      type: 'makeshift',
       x,
       y
     }));

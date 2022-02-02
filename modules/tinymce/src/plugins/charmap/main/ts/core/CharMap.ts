@@ -6,17 +6,21 @@
  */
 
 import { Arr } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import * as Settings from '../api/Settings';
 
 const isArray = Tools.isArray;
 
 export const UserDefined = 'User Defined';
 
+export type Char = [ number, string ];
+
 export interface CharMap {
   name: string;
-  characters: [number, string][];
+  characters: Char[];
 }
 
 const getDefaultCharMap = (): CharMap[] => {
@@ -365,15 +369,15 @@ const getDefaultCharMap = (): CharMap[] => {
   ];
 };
 
-const charmapFilter = (charmap) => {
+const charmapFilter = (charmap: Char[]): Char[] => {
   return Tools.grep(charmap, (item) => {
     return isArray(item) && item.length === 2;
   });
 };
 
-const getCharsFromSetting = (settingValue) => {
+const getCharsFromSetting = (settingValue: Char[] | (() => Char[]) | undefined): Char[] => {
   if (isArray(settingValue)) {
-    return [].concat(charmapFilter(settingValue));
+    return charmapFilter(settingValue);
   }
 
   if (typeof settingValue === 'function') {
@@ -383,7 +387,7 @@ const getCharsFromSetting = (settingValue) => {
   return [];
 };
 
-const extendCharMap = (editor: Editor, charmap: CharMap[]) => {
+const extendCharMap = (editor: Editor, charmap: CharMap[]): CharMap[] => {
   const userCharMap = Settings.getCharMap(editor);
   if (userCharMap) {
     charmap = [{ name: UserDefined, characters: getCharsFromSetting(userCharMap) }];
@@ -396,7 +400,7 @@ const extendCharMap = (editor: Editor, charmap: CharMap[]) => {
       userDefinedGroup[0].characters = [].concat(userDefinedGroup[0].characters).concat(getCharsFromSetting(userCharMapAppend));
       return charmap;
     }
-    return [].concat(charmap).concat({ name: UserDefined, characters: getCharsFromSetting(userCharMapAppend) });
+    return charmap.concat({ name: UserDefined, characters: getCharsFromSetting(userCharMapAppend) });
   }
 
   return charmap;

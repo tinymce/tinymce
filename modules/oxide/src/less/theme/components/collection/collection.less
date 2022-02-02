@@ -21,6 +21,7 @@
 @collection-item-label-text-transform: none;
 
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
+@collection-item-caret-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
 @collection-list-item-active-background-color: @toolbar-button-hover-background-color;
 @collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
@@ -172,13 +173,6 @@
     color: @collection-toolbar-item-label-active-text-color;
   }
 
-  // Disabled item
-  .tox-collection__item--state-disabled {
-    background-color: transparent;
-    color: @collection-item-label-disabled-text-color;
-    cursor: not-allowed;
-  }
-
   .tox-collection__item-icon,
   .tox-collection__item-checkmark {
     align-items: center;
@@ -233,6 +227,17 @@
 
     svg {
       fill: @collection-item-label-text-color;
+    }
+  }
+
+  // Disabled item
+  .tox-collection__item--state-disabled {
+    background-color: transparent;
+    color: @collection-item-label-disabled-text-color;
+    cursor: not-allowed;
+
+    .tox-collection__item-caret svg {
+      fill: @collection-item-caret-disabled-text-color;
     }
   }
 
@@ -382,13 +387,6 @@
   // Create a slight padding for lists containing no icons
   .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
     margin-right: @pad-xs;
-  }
-
-  .tox-collection__item-icon-rtl {
-    /* stylelint-disable-next-line no-descending-specificity */
-    .tox-collection__item-icon svg {
-      transform: rotateY(180deg);
-    }
   }
 
   .tox-collection__item-accessory {

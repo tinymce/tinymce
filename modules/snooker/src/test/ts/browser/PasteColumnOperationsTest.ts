@@ -1,4 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
+
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import * as Assertions from 'ephox/snooker/test/Assertions';
 import { generateTestTable } from 'ephox/snooker/test/CreateTableUtils';

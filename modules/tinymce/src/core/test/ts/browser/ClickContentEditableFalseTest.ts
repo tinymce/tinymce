@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/mcagar';
 import { Hierarchy } from '@ephox/sugar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

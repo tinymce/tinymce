@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const hasProPlugin = (editor: Editor) => {
+const hasProPlugin = (editor: Editor): boolean => {
   // draw back if power version is requested and registered
   if (editor.hasPlugin('tinymcespellchecker', true)) {
 

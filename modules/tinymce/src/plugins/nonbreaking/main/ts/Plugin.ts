@@ -6,6 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Commands from './api/Commands';
 import * as Keyboard from './core/Keyboard';
 import * as Buttons from './ui/Buttons';
@@ -17,7 +18,7 @@ import * as Buttons from './ui/Buttons';
  * @private
  */
 
-export default () => {
+export default (): void => {
   PluginManager.add('nonbreaking', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);

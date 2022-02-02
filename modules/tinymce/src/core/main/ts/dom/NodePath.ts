@@ -14,8 +14,8 @@ import DOMUtils from '../api/dom/DOMUtils';
  * @class tinymce.dom.NodePath
  */
 
-const create = (rootNode, targetNode, normalized?) => {
-  const path = [];
+const create = (rootNode: Node, targetNode: Node, normalized?: boolean): number[] => {
+  const path: number[] = [];
 
   for (; targetNode && targetNode !== rootNode; targetNode = targetNode.parentNode) {
     path.push(DOMUtils.nodeIndex(targetNode, normalized));
@@ -24,11 +24,11 @@ const create = (rootNode, targetNode, normalized?) => {
   return path;
 };
 
-const resolve = (rootNode, path) => {
-  let i, node, children;
+const resolve = (rootNode: Node, path: number[]): Node | null => {
+  let node: Node, i: number;
 
   for (node = rootNode, i = path.length - 1; i >= 0; i--) {
-    children = node.childNodes;
+    const children = node.childNodes;
 
     if (path[i] > children.length - 1) {
       return null;

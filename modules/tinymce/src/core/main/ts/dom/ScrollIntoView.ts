@@ -9,13 +9,14 @@ import { Fun } from '@ephox/katamari';
 import {
   Css, Height, Insert, Remove, Scroll, SugarElement, SugarLocation, SugarNode, SugarPosition, SugarText, Traverse, WindowVisualViewport
 } from '@ephox/sugar';
+
 import Editor from '../api/Editor';
 import { ScrollIntoViewEvent } from '../api/EventTypes';
 import * as OuterPosition from '../frames/OuterPosition';
 import * as Zwsp from '../text/Zwsp';
 
 interface MarkerInfo {
-  readonly element: SugarElement;
+  readonly element: SugarElement<HTMLElement>;
   readonly bottom: number;
   readonly height: number;
   readonly pos: SugarPosition;
@@ -57,7 +58,7 @@ const descend = (element: SugarElement, offset: number): { element: SugarElement
   }
 };
 
-const markerInfo = (element: SugarElement, cleanupFun: () => void): MarkerInfo => {
+const markerInfo = (element: SugarElement<HTMLElement>, cleanupFun: () => void): MarkerInfo => {
   const pos = SugarLocation.absolute(element);
   const height = Height.get(element);
   return {
@@ -71,7 +72,7 @@ const markerInfo = (element: SugarElement, cleanupFun: () => void): MarkerInfo =
 
 const createMarker = (element: SugarElement, offset: number): MarkerInfo => {
   const startPoint = descend(element, offset);
-  const span = SugarElement.fromHtml('<span data-mce-bogus="all">' + Zwsp.ZWSP + '</span>');
+  const span = SugarElement.fromHtml<HTMLSpanElement>('<span data-mce-bogus="all" style="display: inline-block;">' + Zwsp.ZWSP + '</span>');
   Insert.before(startPoint.element, span);
 
   return markerInfo(span, () => Remove.remove(span));
@@ -181,14 +182,14 @@ const elementIntoWindow = (editor: Editor, element: HTMLElement, alignToTop?: bo
 const rangeIntoFrame = (editor: Editor, rng: Range, alignToTop?: boolean) => withMarker(editor, intoFrame, rng, alignToTop);
 const elementIntoFrame = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => withElement(editor, element, intoFrame, alignToTop);
 
-const scrollElementIntoView = (editor: Editor, element: HTMLElement, alignToTop?: boolean) => {
+const scrollElementIntoView = (editor: Editor, element: HTMLElement, alignToTop?: boolean): void => {
   const scroller = editor.inline ? elementIntoWindow : elementIntoFrame;
   scroller(editor, element, alignToTop);
 };
 
 // This method is made to deal with the user pressing enter, it is not useful
 // if we want for example scroll in content after a paste event.
-const scrollRangeIntoView = (editor: Editor, rng: Range, alignToTop?: boolean) => {
+const scrollRangeIntoView = (editor: Editor, rng: Range, alignToTop?: boolean): void => {
   const scroller = editor.inline ? rangeIntoWindow : rangeIntoFrame;
   scroller(editor, rng, alignToTop);
 };

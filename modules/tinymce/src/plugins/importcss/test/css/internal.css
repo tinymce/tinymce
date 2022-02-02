@@ -1,0 +1,18 @@
+/* old style embeds */
+.ephox-summary-card-description {
+  margin-top: 0.5em;
+  display: block;
+}
+
+/* new style embeds */
+.tiny-pageembed--1by1 {
+  padding-top: 100%;
+}
+.tiny-pageembed.tiny-pageembed--1by1 {
+  padding-top: 100%;
+}
+
+/* very old style definitions */
+.mce-container {
+  display: block
+}

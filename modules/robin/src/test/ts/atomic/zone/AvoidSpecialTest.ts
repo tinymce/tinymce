@@ -2,6 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Gene, SpecialGene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { assert } from 'chai';
+
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { WordDecision } from 'ephox/robin/words/WordDecision';
 import { ZoneDetails } from 'ephox/robin/zone/LanguageZones';

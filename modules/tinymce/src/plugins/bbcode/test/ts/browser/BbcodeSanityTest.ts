@@ -1,6 +1,6 @@
 import { ApproxStructure } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Plugin from 'tinymce/plugins/bbcode/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';

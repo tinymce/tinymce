@@ -8,6 +8,7 @@
 import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Id, Optional } from '@ephox/katamari';
+
 import { ToolbarMode } from '../../api/Settings';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar, ToolbarGroup } from '../toolbar/CommonToolbar';

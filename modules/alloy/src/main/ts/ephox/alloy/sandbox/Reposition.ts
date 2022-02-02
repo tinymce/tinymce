@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 
 import { NamedConfiguredBehaviour } from '../api/behaviour/Behaviour';
@@ -24,11 +24,11 @@ export interface RepositionReceivingSpec {
   };
 }
 
-const schema = ValueSchema.objOfOnly([
+const schema = StructureSchema.objOfOnly([
   FieldSchema.optionObjOf('fireEventInstead', [
     FieldSchema.defaulted('event', SystemEvents.repositionRequested())
   ]),
-  FieldSchema.strictFunction('doReposition')
+  FieldSchema.requiredFunction('doReposition')
 ]);
 
 const receivingConfig = (rawSpec: RepositionReceivingSpec): NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig> => {
@@ -39,7 +39,7 @@ const receivingConfig = (rawSpec: RepositionReceivingSpec): NamedConfiguredBehav
 };
 
 const receivingChannel = (rawSpec: RepositionReceivingSpec): Record<string, ReceivingChannelSpec> => {
-  const detail: RepositionReceivingDetail = ValueSchema.asRawOrDie('Reposition', schema, rawSpec);
+  const detail: RepositionReceivingDetail = StructureSchema.asRawOrDie('Reposition', schema, rawSpec);
   return {
     [ Channels.repositionPopups() ]: {
       onReceive: (sandbox: AlloyComponent) => {

@@ -14,7 +14,7 @@ import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 
 const schema = [
-  FieldSchema.strict('selector'),
+  FieldSchema.required('selector'),
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
   FieldSchema.defaulted('moveOnTab', false)
 ];

@@ -2,6 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse, Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Insert, InsertAll, Remove, Replication, SugarBody, SugarElement } from '@ephox/sugar';
+
 import * as LeftBlock from 'ephox/robin/api/general/LeftBlock';
 
 UnitTest.test('LeftBlockTest', () => {

@@ -14,9 +14,9 @@ import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
-import I18n from 'tinymce/core/api/util/I18n';
 import { ToolbarGroupSetting } from 'tinymce/themes/silver/api/Settings';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+
 import * as ReadOnly from '../../../ReadOnly';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
@@ -70,22 +70,6 @@ interface GeneralToolbarButton<T> {
 
 const focusButtonEvent = Id.generate('focus-button');
 
-// TODO TINY-3598: Implement a permanent solution to render rtl icons
-// Icons that have `-rtl` equivalents
-const rtlIcon = [
-  'checklist',
-  'ordered-list'
-];
-
-// Icons that need to be transformed in RTL
-const rtlTransform = [
-  'indent',
-  'outdent',
-  'table-insert-column-after',
-  'table-insert-column-before',
-  'unordered-list'
-];
-
 type Behaviours = Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[];
 const renderCommonStructure = (
   icon: Optional<string>,
@@ -95,21 +79,14 @@ const renderCommonStructure = (
   behaviours: Optional<Behaviours>,
   providersBackstage: UiFactoryBackstageProviders
 ) => {
-
-  // If RTL and icon is in whitelist, add RTL icon class for icons that don't have a `-rtl` icon available.
-  // Use `-rtl` icon suffix for icons that do.
-
-  const getIconName = (iconName: string): string => I18n.isRtl() && Arr.contains(rtlIcon, iconName) ? iconName + '-rtl' : iconName;
-  const needsRtlClass = I18n.isRtl() && icon.exists((name) => Arr.contains(rtlTransform, name));
-
   return {
     dom: {
       tag: 'button',
-      classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []).concat(needsRtlClass ? [ ToolbarButtonClasses.IconRtl ] : []),
+      classes: [ ToolbarButtonClasses.Button ].concat(text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
       attributes: getTooltipAttributes(tooltip, providersBackstage)
     },
     components: componentRenderPipeline([
-      icon.map((iconName) => renderIconFromPack(getIconName(iconName), providersBackstage.icons)),
+      icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
       text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
     ]),
 
@@ -136,7 +113,7 @@ const renderCommonStructure = (
           channel: r,
           initialData: { icon, text },
           renderComponents: (data, _state) => componentRenderPipeline([
-            data.icon.map((iconName) => renderIconFromPack(getIconName(iconName), providersBackstage.icons)),
+            data.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons)),
             data.text.map((text) => renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
           ])
         })).toArray()
@@ -280,22 +257,14 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       });
     },
     setActive: (state) => {
-      if (comp.getSystem().isConnected()) {
-        // Toggle the pressed aria state component
-        Attribute.set(comp.element, 'aria-pressed', state);
-        // Toggle the inner button state, as that's the toggle component of the split button
-        SelectorFind.descendant(comp.element, 'span').each((button) => {
-          comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
-        });
-      }
+      // Toggle the pressed aria state component
+      Attribute.set(comp.element, 'aria-pressed', state);
+      // Toggle the inner button state, as that's the toggle component of the split button
+      SelectorFind.descendant(comp.element, 'span').each((button) => {
+        comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
+      });
     },
-    isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => {
-      if (comp.getSystem().isConnected()) {
-        return comp.getSystem().getByDom(button).exists(Toggling.isOn);
-      } else {
-        return false;
-      }
-    })
+    isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn))
   });
 
   const editorOffCell = Cell(Fun.noop);
@@ -354,7 +323,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         },
         buttonBehaviours: Behaviour.derive([
           DisablingConfigs.splitButton(sharedBackstage.providers.isDisabled),
-          ReadOnly.receivingConfig()
+          ReadOnly.receivingConfig(),
+          Icons.addFocusableBehaviour()
         ])
       }),
       AlloySplitDropdown.parts['aria-descriptor']({

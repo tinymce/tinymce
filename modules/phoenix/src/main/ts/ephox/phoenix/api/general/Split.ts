@@ -1,4 +1,5 @@
 import { Universe } from '@ephox/boss';
+
 import * as Splitter from '../../search/Splitter';
 import * as Positions from '../../split/Positions';
 import * as Range from '../../split/Range';

@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Unicode } from '@ephox/katamari';
+import { Arr, Obj, Type, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+
 import Editor from './api/Editor';
 import Env from './api/Env';
 import VK from './api/util/VK';
@@ -42,7 +43,7 @@ const getContentEditableRoot = (editor: Editor, node: Node) => CefUtils.getConte
 
 const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const selection = editor.selection, dom = editor.dom;
-  const isBlock = dom.isBlock;
+  const isBlock = dom.isBlock as (node: Node) => node is HTMLElement;
 
   const rootNode = editor.getBody();
   const fakeCaret = FakeCaret(editor, rootNode, isBlock, () => EditorFocus.hasFocus(editor));
@@ -62,8 +63,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     return container ? container.getElementsByTagName('*')[0] as HTMLElement : container;
   };
 
-  const setRange = (range: Range) => {
-    // console.log('setRange', range);
+  const setRange = (range: Range | null) => {
     if (range) {
       selection.setRng(range);
     }
@@ -71,7 +71,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
   const getRange = selection.getRng;
 
-  const showCaret = (direction: number, node: Element, before: boolean, scrollIntoView: boolean = true): Range => {
+  const showCaret = (direction: number, node: HTMLElement, before: boolean, scrollIntoView: boolean = true): Range => {
     const e = editor.fire('ShowCaret', {
       target: node,
       direction,
@@ -89,7 +89,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     return fakeCaret.show(before, node);
   };
 
-  const showBlockCaretContainer = (blockCaretContainer: Element) => {
+  const showBlockCaretContainer = (blockCaretContainer: HTMLElement) => {
     if (blockCaretContainer.hasAttribute('data-mce-caret')) {
       CaretContainer.showCaretContainerBlock(blockCaretContainer);
       setRange(getRange()); // Removes control rect on IE
@@ -131,16 +131,20 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     editor.on('ResizeWindow FullscreenStateChanged', fakeCaret.reposition);
 
     const hasNormalCaretPosition = (elm: Element) => {
-      const caretWalker = CaretWalker(elm);
-
-      if (!elm.firstChild) {
+      const start = elm.firstChild;
+      if (Type.isNullable(start)) {
         return false;
       }
 
-      const startPos = CaretPosition.before(elm.firstChild);
-      const newPos = caretWalker.next(startPos);
-
-      return newPos && !isNearFakeSelectionElement(newPos);
+      const startPos = CaretPosition.before(start);
+      // If the element has a single br as a child (i.e. is empty), then the start position is a valid cursor position
+      if (NodeType.isBr(startPos.getNode()) && elm.childNodes.length === 1) {
+        return !isNearFakeSelectionElement(startPos);
+      } else {
+        const caretWalker = CaretWalker(elm);
+        const newPos = caretWalker.next(startPos);
+        return newPos && !isNearFakeSelectionElement(newPos);
+      }
     };
 
     const isInSameBlock = (node1: Node, node2: Node) => {
@@ -156,12 +160,16 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       const targetBlock = dom.getParent(targetNode, isBlock);
       const caretBlock = dom.getParent(caretNode, isBlock);
 
+      if (Type.isNullable(targetBlock)) {
+        return false;
+      }
+
       // Click inside the suggested caret element
-      if (targetBlock && targetNode !== caretBlock && dom.isChildOf(targetBlock, caretBlock) && (isContentEditableFalse(getContentEditableRoot(editor, targetBlock)) === false)) {
+      if (targetNode !== caretBlock && dom.isChildOf(targetBlock, caretBlock) && (isContentEditableFalse(getContentEditableRoot(editor, targetBlock)) === false)) {
         return true;
       }
 
-      return targetBlock && !isInSameBlock(targetBlock, caretBlock) && hasNormalCaretPosition(targetBlock);
+      return !dom.isChildOf(caretBlock, targetBlock) && !isInSameBlock(targetBlock, caretBlock) && hasNormalCaretPosition(targetBlock);
     };
 
     editor.on('tap', (e) => {
@@ -213,8 +221,9 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
           if (!hasBetterMouseTarget(targetElm, fakeCaretInfo.node)) {
             e.preventDefault();
             const range = showCaret(1, fakeCaretInfo.node as HTMLElement, fakeCaretInfo.before, false);
-            editor.getBody().focus();
             setRange(range);
+            // Set the focus after the range has been set to avoid potential issues where the body has no selection
+            editor.getBody().focus();
           }
         }
       }

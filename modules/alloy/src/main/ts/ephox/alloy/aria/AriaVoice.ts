@@ -1,4 +1,4 @@
-import { Id } from '@ephox/katamari';
+import { Fun, Id } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
@@ -7,7 +7,7 @@ const offscreen = {
   left: '-9999px'
 };
 
-const tokenSelector = (): string => 'span[id^="ephox-alloy-aria-voice"]';
+const tokenSelector = Fun.constant('span[id^="ephox-alloy-aria-voice"]');
 
 // INVESTIGATE: Aria is special for insertion. Think about it more.
 const create = (doc: SugarElement<HTMLDocument>, text: string): SugarElement => {

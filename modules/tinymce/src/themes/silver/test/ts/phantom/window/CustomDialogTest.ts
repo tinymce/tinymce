@@ -8,6 +8,7 @@ import { assert } from 'chai';
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+
 import * as TestExtras from '../../module/TestExtras';
 
 const GuiSetup = TestHelpers.GuiSetup;

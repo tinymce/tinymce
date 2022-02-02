@@ -7,7 +7,7 @@
 
 import { Obj } from '@ephox/katamari';
 
-const entitiesAttr = {
+const entitiesAttr: Record<string, string> = {
   '"': '&quot;',
   '<': '&lt;',
   '>': '&gt;',
@@ -15,7 +15,8 @@ const entitiesAttr = {
   '\'': '&#039;'
 };
 
-const htmlEscape = (html: string): string => html.replace(/["'<>&]/g, (match: string) => Obj.get<Record<string, string>, string>(entitiesAttr, match).getOr(match));
+const htmlEscape = (html: string): string =>
+  html.replace(/["'<>&]/g, (match) => Obj.get(entitiesAttr, match).getOr(match));
 
 export {
   htmlEscape

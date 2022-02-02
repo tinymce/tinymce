@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+
 import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
 
 UnitTest.test('DomStructureTest', () => {

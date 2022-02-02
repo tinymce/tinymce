@@ -1,12 +1,13 @@
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import URI from 'tinymce/core/api/util/URI';
 import Plugin from 'tinymce/plugins/imagetools/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as ImageUtils from '../module/test/ImageUtils';
 
 describe('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', () => {

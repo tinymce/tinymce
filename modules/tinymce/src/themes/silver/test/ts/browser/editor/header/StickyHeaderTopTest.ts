@@ -1,4 +1,5 @@
 import { describe } from '@ephox/bedrock-client';
+
 import { ToolbarLocation, ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 
 import { testStickyHeader } from '../../../module/StickyHeaderStep';

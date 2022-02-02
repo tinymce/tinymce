@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Step } from './Step';
 import { TestLogs } from './TestLogs';

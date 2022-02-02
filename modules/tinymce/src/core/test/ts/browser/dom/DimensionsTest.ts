@@ -1,9 +1,10 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit } from '@ephox/mcagar';
+import { LegacyUnit } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import * as Dimensions from 'tinymce/core/dom/Dimensions';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.dom.DimensionsTest', () => {

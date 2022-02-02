@@ -1,6 +1,7 @@
 import { Universe } from '@ephox/boss';
 import { Contracts, Fun, Optional } from '@ephox/katamari';
 import { Gather, Spot, SpotPoint } from '@ephox/phoenix';
+
 import * as TextSearchBase from '../../textdata/TextSearch';
 import { TextSeeker, TextSeekerOutcome, TextSeekerPhase, TextSeekerPhaseConstructor, TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
 

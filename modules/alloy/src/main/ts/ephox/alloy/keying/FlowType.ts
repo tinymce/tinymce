@@ -16,7 +16,7 @@ import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 
 const schema = [
-  FieldSchema.strict('selector'),
+  FieldSchema.required('selector'),
   FieldSchema.defaulted('getInitial', Optional.none),
   FieldSchema.defaulted('execute', KeyingTypes.defaultExecute),
   Fields.onKeyboardHandler('onEscape'),

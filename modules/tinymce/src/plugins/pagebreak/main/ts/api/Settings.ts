@@ -7,9 +7,11 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getSeparatorHtml = (editor: Editor): string => editor.getParam('pagebreak_separator', '<!-- pagebreak -->');
+const getSeparatorHtml = (editor: Editor): string =>
+  editor.getParam('pagebreak_separator', '<!-- pagebreak -->');
 
-const shouldSplitBlock = (editor: Editor): boolean => editor.getParam('pagebreak_split_block', false);
+const shouldSplitBlock = (editor: Editor): boolean =>
+  editor.getParam('pagebreak_split_block', false);
 
 export {
   getSeparatorHtml,

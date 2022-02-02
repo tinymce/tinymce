@@ -1,11 +1,12 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { LegacyUnit } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
+
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.CaretContainerTest', () => {

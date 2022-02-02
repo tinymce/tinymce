@@ -6,6 +6,7 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import * as CursorRefresh from '../../touch/focus/CursorRefresh';
 import * as IosScrolling from '../scroll/IosScrolling';
 import * as DeviceZones from './DeviceZones';

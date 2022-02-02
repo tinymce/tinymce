@@ -31,7 +31,7 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
 
   const action = (component: AlloyComponent) => {
     const onOpenSync = switchToMenu;
-    DropdownUtils.togglePopup(detail, (x) => x, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
+    DropdownUtils.togglePopup(detail, Fun.identity, component, externals, onOpenSync, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
   };
 
   const openMenu = (comp: AlloyComponent) => {

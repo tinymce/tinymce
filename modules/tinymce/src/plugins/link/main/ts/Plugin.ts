@@ -6,12 +6,13 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Commands from './api/Commands';
 import * as Actions from './core/Actions';
 import * as Keyboard from './core/Keyboard';
 import * as Controls from './ui/Controls';
 
-export default () => {
+export default (): void => {
   PluginManager.add('link', (editor) => {
     Controls.setupButtons(editor);
     Controls.setupMenuItems(editor);

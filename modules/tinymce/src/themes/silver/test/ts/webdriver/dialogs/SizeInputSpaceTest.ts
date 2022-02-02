@@ -5,6 +5,7 @@ import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
+
 import TestProviders from '../../module/TestProviders';
 
 describe('webdriver.tinymce.themes.silver.dialogs.SizeInputSpaceTest', () => {

@@ -1,4 +1,5 @@
 import { SimRange, SugarElement } from '@ephox/sugar';
+
 import { Editor } from '../alien/EditorTypes';
 
 export interface TinyDom {

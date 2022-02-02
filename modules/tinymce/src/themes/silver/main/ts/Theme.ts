@@ -6,7 +6,9 @@
  */
 
 import { Fun } from '@ephox/katamari';
+
 import ThemeManager, { Theme } from 'tinymce/core/api/ThemeManager';
+
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import { Autocompleter } from './Autocompleter';
 import * as Render from './Render';

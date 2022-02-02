@@ -7,6 +7,7 @@
 
 import { Replacing } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
+
 import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 

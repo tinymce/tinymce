@@ -2,6 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { PositionArray, PRange } from '@ephox/polaris';
+
 import * as Spot from 'ephox/phoenix/api/data/Spot';
 import * as MatchSplitter from 'ephox/phoenix/search/MatchSplitter';
 import * as Finder from 'ephox/phoenix/test/Finder';

@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import URI from 'tinymce/core/api/util/URI';
@@ -131,5 +131,45 @@ describe('browser.tinymce.core.util.UriTest', () => {
     assert.deepEqual(getDocumentBaseUrl({ protocol: 'applewebdata:', href: 'applewebdata://something//dir/path1' }), 'applewebdata://something//dir/');
     assert.deepEqual(getDocumentBaseUrl({ protocol: 'https:', host: '[::1]', pathname: '/dir/path1/path2/' }), 'https://[::1]/dir/path1/path2/');
     assert.deepEqual(getDocumentBaseUrl({ protocol: 'http:', host: '[::1]:8080', pathname: '/dir/path1/path2' }), 'http://[::1]:8080/dir/path1/');
+  });
+
+  context('isDomSafe', () => {
+    it('simple cases', () => {
+      assert.isTrue(URI.isDomSafe('http://www.site.com/'));
+      assert.isTrue(URI.isDomSafe('https://www.site.com/'));
+      assert.isTrue(URI.isDomSafe('https://www.site.com:8000/'));
+      assert.isTrue(URI.isDomSafe('ftp://www.site.com:21'));
+      assert.isTrue(URI.isDomSafe('mailto:test@test.com'));
+      assert.isTrue(URI.isDomSafe('//www.site.com/dir1/file2.html'));
+      assert.isTrue(URI.isDomSafe('/path/file.txt'));
+      assert.isTrue(URI.isDomSafe('data:image/png;base64,R3/yw=='));
+      assert.isFalse(URI.isDomSafe('javascript:alert(1)'));
+      assert.isFalse(URI.isDomSafe('jav&#x09;ascript:alert(1)'));
+      assert.isFalse(URI.isDomSafe('data:image/svg+xml;base64,R3/yw=='));
+      assert.isFalse(URI.isDomSafe('data:text/html;%3Ch1%3EHello%2C%20World%21%3C%2Fh1%3E'));
+    });
+
+    it('should be safe for SVG data URIs with allow_svg_data_urls', () => {
+      assert.isTrue(URI.isDomSafe('data:image/svg+xml;base64,R3/yw==', 'img'));
+      assert.isTrue(URI.isDomSafe('data:image/svg+xml;base64,R3/yw==', 'video'));
+      assert.isFalse(URI.isDomSafe('data:image/svg+xml;base64,R3/yw==', 'a'));
+
+      const options = { allow_svg_data_urls: true };
+      assert.isTrue(URI.isDomSafe('data:image/svg+xml;base64,R3/yw==', 'img', options));
+      assert.isTrue(URI.isDomSafe('data:image/svg+xml;base64,R3/yw==', 'video', options));
+      assert.isTrue(URI.isDomSafe('data:image/svg+xml;base64,R3/yw==', 'a', options));
+    });
+
+    it('should always be safe with allow_script_urls', () => {
+      const options = { allow_script_urls: true };
+      assert.isTrue(URI.isDomSafe('javascript:alert(1)', 'p', options));
+      assert.isTrue(URI.isDomSafe('data:image/svg+xml;base64,R3/yw==', 'a', options));
+      assert.isTrue(URI.isDomSafe('data:text/html;%3Ch1%3EHello%2C%20World%21%3C%2Fh1%3E', 'a', options));
+    });
+
+    it('should be safe for HTML data URIs with allow_html_data_urls', () => {
+      const options = { allow_html_data_urls: true };
+      assert.isTrue(URI.isDomSafe('data:text/html;%3Ch1%3EHello%2C%20World%21%3C%2Fh1%3E', 'a', options));
+    });
   });
 });

@@ -1,5 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { SugarElement, TextContent } from '@ephox/sugar';
+
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as Blocks from 'ephox/snooker/lookup/Blocks';
@@ -11,7 +12,7 @@ UnitTest.test('BlocksTest', () => {
     return elem;
   };
   const s = (elemText: string, rowspan: number, colspan: number) => Structs.detail(createCell(elemText), rowspan, colspan);
-  const f = (cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(SugarElement.fromTag('tr'), cells, section);
+  const f = (cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdetail(SugarElement.fromTag('tr'), cells, section);
 
   const warehouse = Warehouse.generate([
     f([ s('a', 1, 1), s('b', 1, 2) ], 'thead'),

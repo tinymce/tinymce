@@ -1,6 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+
 import * as TableContent from 'ephox/snooker/api/TableContent';
 
 UnitTest.test('TableMergeContentTest', () => {

@@ -6,9 +6,11 @@
  */
 
 import { Cell, Obj } from '@ephox/katamari';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Tools from 'tinymce/core/api/util/Tools';
+
 import { MediaData } from './Types';
 import { getVideoScriptMatch, VideoScript } from './VideoScript';
 
@@ -16,7 +18,8 @@ type AttrList = Array<{ name: string; value: string }> & { map: Record<string, s
 
 const DOM = DOMUtils.DOM;
 
-const trimPx = (value: string) => value.replace(/px$/, '');
+const trimPx = (value: string): string =>
+  value.replace(/px$/, '');
 
 const getEphoxEmbedData = (attrs: AttrList): MediaData => {
   const style = attrs.map.style;

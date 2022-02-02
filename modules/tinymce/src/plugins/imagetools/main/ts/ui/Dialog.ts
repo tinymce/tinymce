@@ -6,15 +6,17 @@
  */
 
 import { Cell, Fun } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
 import * as Actions from '../core/Actions';
 import * as ImageSize from '../core/ImageSize';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
 interface ImageToolsState {
-  blob: Blob;
-  url: string;
+  readonly blob: Blob;
+  readonly url: string;
 }
 
 const createState = (blob: Blob): ImageToolsState => ({
@@ -22,7 +24,7 @@ const createState = (blob: Blob): ImageToolsState => ({
   url: URL.createObjectURL(blob)
 });
 
-const makeOpen = (editor: Editor, imageUploadTimerState: Cell<number>) => () => {
+const makeOpen = (editor: Editor, imageUploadTimerState: Cell<number>) => (): void => {
   const getLoadedSpec = (currentState: ImageToolsState): Dialog.DialogSpec<{ imagetools: ImageToolsState }> => ({
     title: 'Edit Image',
     size: 'large',

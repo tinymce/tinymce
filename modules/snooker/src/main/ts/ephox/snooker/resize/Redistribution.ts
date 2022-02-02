@@ -1,4 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
+
 import { Size } from './Size';
 
 // Convert all column widths to percent.

@@ -11,6 +11,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Id } from '@ephox/katamari';
+
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -29,6 +30,9 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
 
   const ratioEvent = Id.generate('ratio-event');
 
+  const makeIcon = (iconName: string) =>
+    Icons.render(iconName, { tag: 'span', classes: [ 'tox-icon', 'tox-lock-icon__' + iconName ] }, providersBackstage.icons);
+
   const pLock = AlloyFormCoupledInputs.parts.lock({
     dom: {
       tag: 'button',
@@ -38,20 +42,8 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       }
     },
     components: [
-      {
-        dom: {
-          tag: 'span',
-          classes: [ 'tox-icon', 'tox-lock-icon__lock' ],
-          innerHtml: Icons.get('lock', providersBackstage.icons)
-        }
-      },
-      {
-        dom: {
-          tag: 'span',
-          classes: [ 'tox-icon', 'tox-lock-icon__unlock' ],
-          innerHtml: Icons.get('unlock', providersBackstage.icons)
-        }
-      }
+      makeIcon('lock'),
+      makeIcon('unlock')
     ],
     buttonBehaviours: Behaviour.derive([
       Disabling.config({

@@ -1,4 +1,4 @@
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 
 const formatObj = (input: any): string => {
   return Type.isObject(input) && Obj.keys(input).length > 100 ? ' removed due to size' : JSON.stringify(input, null, 2);
@@ -8,9 +8,7 @@ const formatErrors = (errors: Array<{ path: string[]; getErrorInfo: () => string
   const es = errors.length > 10 ? errors.slice(0, 10).concat([
     {
       path: [ ],
-      getErrorInfo: () => {
-        return '... (only showing first ten failures)';
-      }
+      getErrorInfo: Fun.constant('... (only showing first ten failures)')
     }
   ]) : errors;
 

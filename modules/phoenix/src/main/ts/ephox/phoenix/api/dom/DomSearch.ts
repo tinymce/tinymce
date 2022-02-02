@@ -1,5 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { SugarElement } from '@ephox/sugar';
+
 import { NamedPattern } from '../data/NamedPattern';
 import { SearchResult } from '../data/Types';
 import * as Search from '../general/Search';

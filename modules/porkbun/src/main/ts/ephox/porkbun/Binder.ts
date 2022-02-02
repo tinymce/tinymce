@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import { Bindable, EventHandler } from './Event';
 
 export interface Binder {

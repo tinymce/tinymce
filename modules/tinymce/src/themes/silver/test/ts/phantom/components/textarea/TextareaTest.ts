@@ -5,6 +5,7 @@ import { Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
+
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestProviders from '../../../module/TestProviders';
 

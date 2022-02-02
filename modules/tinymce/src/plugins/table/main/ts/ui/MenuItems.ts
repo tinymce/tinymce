@@ -5,14 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Selections } from '@ephox/darwin';
+import { Fun } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import { hasTableGrid } from '../api/Settings';
+
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableBackgroundColorMap, getTableBorderColorMap, getTableClassList, hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+import { verticalAlignValues } from './CellAlignValues';
+import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, buildMenuItems } from './UiUtils';
 
-const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
+const addMenuItems = (editor: Editor, selections: Selections, selectionTargets: SelectionTargets, clipboard: Clipboard): void => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
   const insertTableAction = (data: { numRows: number; numColumns: number }) => {
@@ -88,7 +94,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   const row: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Row',
-    getSubmenuItems: () => 'tableinsertrowbefore tableinsertrowafter tabledeleterow tablerowprops | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter'
+    getSubmenuItems: Fun.constant('tableinsertrowbefore tableinsertrowafter tabledeleterow tablerowprops | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter')
   };
 
   editor.ui.registry.addMenuItem('tableinsertcolumnbefore', {
@@ -138,7 +144,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   const column: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Column',
-    getSubmenuItems: () => 'tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter'
+    getSubmenuItems: Fun.constant('tableinsertcolumnbefore tableinsertcolumnafter tabledeletecolumn | tablecutcolumn tablecopycolumn tablepastecolumnbefore tablepastecolumnafter')
   };
 
   editor.ui.registry.addMenuItem('tablecellprops', {
@@ -163,7 +169,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   const cell: Menu.NestedMenuItemSpec = {
     type: 'nestedmenuitem',
     text: 'Cell',
-    getSubmenuItems: () => 'tablecellprops tablemergecells tablesplitcells'
+    getSubmenuItems: Fun.constant('tablecellprops tablemergecells tablesplitcells')
   };
 
   if (hasTableGrid(editor) === false) {
@@ -200,7 +206,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       // context menu fires before node change, so check the selection here first
       selectionTargets.resetTargets();
       // ignoring element since it's monitored elsewhere
-      return selectionTargets.targets().fold(() => '', (targets) => {
+      return selectionTargets.targets().fold(Fun.constant(''), (targets) => {
         // If clicking in a caption, then we shouldn't show the cell/row/column options
         if (SugarNode.name(targets.element) === 'caption') {
           return 'tableprops deletetable';
@@ -209,6 +215,112 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
         }
       });
     }
+  });
+
+  const tableClassList = filterNoneItem(getTableClassList(editor));
+  if (tableClassList.length !== 0) {
+    editor.ui.registry.addNestedMenuItem('tableclass', {
+      icon: 'table-classes',
+      text: 'Table styles',
+      getSubmenuItems: () => buildMenuItems(
+        editor,
+        selections,
+        tableClassList,
+        'tableclass',
+        (value) => editor.execCommand('mceTableToggleClass', false, value)
+      ),
+      onSetup: selectionTargets.onSetupTable
+    });
+  }
+
+  const tableCellClassList = filterNoneItem(getCellClassList(editor));
+  if (tableCellClassList.length !== 0) {
+    editor.ui.registry.addNestedMenuItem('tablecellclass', {
+      icon: 'table-cell-classes',
+      text: 'Cell styles',
+      getSubmenuItems: () => buildMenuItems(
+        editor,
+        selections,
+        tableCellClassList,
+        'tablecellclass',
+        (value) => editor.execCommand('mceTableCellToggleClass', false, value)
+      ),
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
+  }
+
+  editor.ui.registry.addNestedMenuItem('tablecellvalign', {
+    icon: 'vertical-align',
+    text: 'Vertical align',
+    getSubmenuItems: () => buildMenuItems(
+      editor,
+      selections,
+      verticalAlignValues,
+      'tablecellverticalalign',
+      applyTableCellStyle(editor, 'vertical-align')
+    ),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addNestedMenuItem('tablecellborderwidth', {
+    icon: 'border-width',
+    text: 'Border width',
+    getSubmenuItems: () => buildMenuItems(
+      editor,
+      selections,
+      getTableBorderWidths(editor),
+      'tablecellborderwidth',
+      applyTableCellStyle(editor, 'border-width')
+    ),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addNestedMenuItem('tablecellborderstyle', {
+    icon: 'border-style',
+    text: 'Border style',
+    getSubmenuItems: () => buildMenuItems(
+      editor,
+      selections,
+      getTableBorderStyles(editor),
+      'tablecellborderstyle',
+      applyTableCellStyle(editor, 'border-style')
+    ),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addToggleMenuItem('tablecaption', {
+    icon: 'table-caption',
+    text: 'Table caption',
+    onAction: cmd('mceTableToggleCaption'),
+    onSetup: selectionTargets.onSetupTableWithCaption
+  });
+
+  editor.ui.registry.addNestedMenuItem('tablecellbackgroundcolor', {
+    icon: 'cell-background-color',
+    text: 'Background color',
+    getSubmenuItems: () => buildColorMenu(editor, getTableBackgroundColorMap(editor), 'background-color'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addNestedMenuItem('tablecellbordercolor', {
+    icon: 'cell-border-color',
+    text: 'Border color',
+    getSubmenuItems: () => buildColorMenu(editor, getTableBorderColorMap(editor), 'border-color'),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addToggleMenuItem('tablerowheader', {
+    text: 'Row header',
+    icon: 'table-top-header',
+    onAction: changeRowHeader(editor),
+    onSetup: selectionTargets.onSetupTableRowHeaders
+  });
+
+  editor.ui.registry.addToggleMenuItem('tablecolheader', {
+    text: 'Column header',
+    icon: 'table-left-header',
+    onAction: changeColumnHeader(editor),
+    onSetup: selectionTargets.onSetupTableColumnHeaders
   });
 };
 

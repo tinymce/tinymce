@@ -1,9 +1,10 @@
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import { assertTableStructureWithSizes, insertTable } from '../../module/test/TableTestUtils';
 
 describe('browser.tinymce.plugins.table.command.InsertTableCommandWithColGroupsTest', () => {

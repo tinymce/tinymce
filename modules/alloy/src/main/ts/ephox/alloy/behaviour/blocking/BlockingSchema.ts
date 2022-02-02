@@ -1,5 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
+
 import * as Fields from '../../data/Fields';
 
 export default [
@@ -9,6 +10,9 @@ export default [
   // element returned. Otherwise, it will be added as a child of the main
   // component.
   FieldSchema.defaultedFunction('getRoot', Optional.none),
+  // This boolean, if provided, will specify whether the blocking element is
+  // focused when the component is first blocked
+  FieldSchema.defaultedBoolean('focus', true),
   // This function, if provided, will be called any time the component is
   // blocked (unless it was already blocked).
   Fields.onHandler('onBlock'),

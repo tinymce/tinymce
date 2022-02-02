@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 
 interface TableConfig {
   readonly numCols: number;
@@ -10,7 +10,7 @@ const generateTestTable = (bodyContent: string[], headerContent: string[], foote
   const numCols = config.numCols;
   const theadContent = headerContent.length > 0 ? `<thead><tr>${headerContent.join('')}</tr></thead>` : ``;
   const tfootContent = footerContent.length > 0 ? `<tfoot><tr>${footerContent.join('')}</tr></tfoot>` : ``;
-  const colgroupContent = config.colgroup ? `<colgroup>${Arr.range(numCols, () => `<col>`).join('')}</colgroup>` : ``;
+  const colgroupContent = config.colgroup ? `<colgroup>${Arr.range(numCols, Fun.constant('<col>')).join('')}</colgroup>` : ``;
 
   return `<table${config.lockedColumns.length > 0 ? ` data-snooker-locked-cols="${config.lockedColumns.join(',')}"` : ''}>` +
     colgroupContent +

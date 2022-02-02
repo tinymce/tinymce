@@ -6,37 +6,20 @@
  */
 
 import { Arr, Obj } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
+
 import * as Settings from '../api/Settings';
 import * as PluginUrls from '../data/PluginUrls';
 
 const tab = (editor: Editor): Dialog.TabSpec => {
   const availablePlugins = () => {
-    const premiumPlugins = [
-      // TODO: Add other premium plugins such as permanent pen when they are included in the website
-      'Accessibility Checker',
-      'Advanced Code Editor',
-      'Advanced Tables',
-      // 'Autocorrect',
-      'Case Change',
-      'Checklist',
-      'Export',
-      'Tiny Comments',
-      'Tiny Drive',
-      'Enhanced Media Embed',
-      'Format Painter',
-      'Link Checker',
-      'Mentions',
-      'MoxieManager',
-      'Page Embed',
-      'Permanent Pen',
-      'PowerPaste',
-      'Spell Checker Pro'
-    ];
-
-    const premiumPluginList = Arr.map(premiumPlugins, (plugin) => '<li>' + I18n.translate(plugin) + '</li>').join('');
+    const premiumPlugins = Arr.filter(PluginUrls.urls, ({ key, type }) => {
+      return key !== 'autocorrect' && type === PluginUrls.PluginType.Premium;
+    });
+    const premiumPluginList = Arr.map(premiumPlugins, (plugin) => '<li>' + I18n.translate(plugin.name) + '</li>').join('');
 
     return '<div data-mce-tabstop="1" tabindex="-1">' +
       '<p><b>' + I18n.translate('Premium plugins:') + '</b></p>' +
@@ -56,7 +39,8 @@ const tab = (editor: Editor): Dialog.TabSpec => {
     const getMetadata = editor.plugins[key].getMetadata;
     return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
   }, (x) => {
-    return makeLink({ name: x.name, url: `https://www.tiny.cloud/docs/plugins/${x.type}/${x.slug}` });
+    const name = x.type === PluginUrls.PluginType.Premium ? `${x.name}*` : x.name;
+    return makeLink({ name, url: `https://www.tiny.cloud/docs/plugins/${x.type}/${x.slug}` });
   });
 
   const getPluginKeys = (editor: Editor) => {
@@ -68,7 +52,7 @@ const tab = (editor: Editor): Dialog.TabSpec => {
       Arr.filter(keys, (k) => !Arr.contains(forced_plugins, k));
   };
 
-  const pluginLister = (editor) => {
+  const pluginLister = (editor: Editor) => {
     const pluginKeys = getPluginKeys(editor);
     const pluginLis = Arr.map(pluginKeys, (key) => {
       return '<li>' + maybeUrlize(editor, key) + '</li>';
@@ -82,7 +66,7 @@ const tab = (editor: Editor): Dialog.TabSpec => {
     return html;
   };
 
-  const installedPlugins = (editor) => {
+  const installedPlugins = (editor: Editor) => {
     if (editor == null) {
       return '';
     }

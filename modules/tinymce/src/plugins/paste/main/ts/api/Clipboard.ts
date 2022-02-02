@@ -6,20 +6,22 @@
  */
 
 import { Cell } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
+
 import {
   ClipboardContents, getDataTransferItems, hasContentType, hasHtmlOrText, pasteHtml, pasteImageData, pasteText, registerEventsAndFilters
 } from '../core/Clipboard';
 import { PasteBin } from '../core/PasteBin';
 
 export interface Clipboard {
-  pasteFormat: Cell<string>;
-  pasteHtml: (html: string, internalFlag: boolean) => void;
-  pasteText: (text: string) => void;
-  pasteImageData: (e: ClipboardEvent | DragEvent, rng: Range) => boolean;
-  getDataTransferItems: (dataTransfer: DataTransfer) => ClipboardContents;
-  hasHtmlOrText: (content: ClipboardContents) => boolean;
-  hasContentType: (clipboardContent: ClipboardContents, mimeType: string) => boolean;
+  readonly pasteFormat: Cell<string>;
+  readonly pasteHtml: (html: string, internalFlag: boolean) => void;
+  readonly pasteText: (text: string) => void;
+  readonly pasteImageData: (e: ClipboardEvent | DragEvent, rng: Range) => boolean;
+  readonly getDataTransferItems: (dataTransfer: DataTransfer) => ClipboardContents;
+  readonly hasHtmlOrText: (content: ClipboardContents) => boolean;
+  readonly hasContentType: (clipboardContent: ClipboardContents, mimeType: string) => boolean;
 }
 
 export const Clipboard = (editor: Editor, pasteFormat: Cell<string>): Clipboard => {

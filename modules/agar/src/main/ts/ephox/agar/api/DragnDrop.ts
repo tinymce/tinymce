@@ -1,5 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
+
 import { createDataTransfer, getDragImage } from '../datatransfer/DataTransfer';
 import {
   createDragendEvent, createDragenterEvent, createDragEvent, createDragoverEvent, createDragstartEvent, createDropEvent, dispatchDndEvent,

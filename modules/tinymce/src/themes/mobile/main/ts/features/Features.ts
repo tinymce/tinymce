@@ -10,8 +10,8 @@ import { Objects } from '@ephox/boulder';
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as Settings from '../api/Settings';
 
+import * as Settings from '../api/Settings';
 import * as Receivers from '../channels/Receivers';
 import * as TinyChannels from '../channels/TinyChannels';
 import * as Styles from '../style/Styles';

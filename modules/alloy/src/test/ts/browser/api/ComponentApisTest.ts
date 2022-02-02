@@ -1,5 +1,6 @@
 import { Step, GeneralSteps, Logger, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
@@ -18,7 +19,7 @@ UnitTest.asynctest('ComponentApisTest', (success, failure) => {
     apis: {
       doFirstThing: store.adder('doFirstThing'),
       doSecondThing: store.adder('doSecondThing'),
-      doThirdThing: () => 'thirdThing'
+      doThirdThing: Fun.constant('thirdThing')
     }
   }), (_doc, _body, _gui, component, store) => [
     Logger.t('Testing "doFirstThing"', GeneralSteps.sequence([

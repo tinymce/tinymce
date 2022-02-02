@@ -7,6 +7,7 @@
 
 import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
+
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
@@ -349,7 +350,7 @@ const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]) => {
 
 const isFormatElement = (editor: Editor, element: SugarElement) => {
   const inlineElements = editor.schema.getTextInlineElements();
-  return inlineElements.hasOwnProperty(SugarNode.name(element)) && !isCaretNode(element.dom) && !NodeType.isBogus(element.dom);
+  return Obj.has(inlineElements, SugarNode.name(element)) && !isCaretNode(element.dom) && !NodeType.isBogus(element.dom);
 };
 
 const isEmptyCaretFormatElement = (element: SugarElement) => {

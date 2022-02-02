@@ -5,7 +5,7 @@ const firstLayer = <T extends Element>(scope: SugarElement<Node>, selector: stri
   return filterFirstLayer(scope, selector, Fun.always);
 };
 
-const filterFirstLayer = <T extends Element>(scope: SugarElement<Node>, selector: string, predicate: (e: SugarElement<ChildNode>) => boolean): SugarElement<T>[] => {
+const filterFirstLayer = <T extends Element>(scope: SugarElement<Node>, selector: string, predicate: (e: SugarElement<Node & ChildNode>) => boolean): SugarElement<T>[] => {
   return Arr.bind(Traverse.children(scope), (x) => {
     if (Selectors.is<T>(x, selector)) {
       return predicate(x) ? [ x ] : [];

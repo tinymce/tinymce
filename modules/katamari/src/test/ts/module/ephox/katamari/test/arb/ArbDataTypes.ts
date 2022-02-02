@@ -1,4 +1,5 @@
 import fc from 'fast-check';
+
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Future } from 'ephox/katamari/api/Future';
 import { Optional } from 'ephox/katamari/api/Optional';
@@ -6,10 +7,10 @@ import { Result } from 'ephox/katamari/api/Result';
 
 type Arbitrary<A> = fc.Arbitrary<A>;
 
-export const arbResultError = <A, E> (arbE: Arbitrary<E>): Arbitrary<Result<A, E>> =>
+export const arbResultError = <A = never, E = any> (arbE: Arbitrary<E>): Arbitrary<Result<A, E>> =>
   arbE.map(Result.error);
 
-export const arbResultValue = <A, E> (arbA: Arbitrary<A>): Arbitrary<Result<A, E>> =>
+export const arbResultValue = <A, E = never> (arbA: Arbitrary<A>): Arbitrary<Result<A, E>> =>
   arbA.map(Result.value);
 
 export const arbResult = <A, E> (arbA: Arbitrary<A>, arbE: Arbitrary<E>): Arbitrary<Result<A, E>> =>

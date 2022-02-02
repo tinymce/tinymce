@@ -1,4 +1,5 @@
 import { SugarElement } from '@ephox/sugar';
+
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import * as DemoContainer from 'ephox/agar/demo/DemoContainer';

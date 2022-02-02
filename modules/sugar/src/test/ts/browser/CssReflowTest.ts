@@ -1,4 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
@@ -17,7 +18,7 @@ UnitTest.asynctest('CssReflowTest', (success, failure) => {
     try {
       checks();
       success();
-    } catch (e) {
+    } catch (e: any) {
       failure(e);
     } finally {
       Remove.remove(iframe);

@@ -1,5 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
 import { SugarElement } from '@ephox/sugar';
+
 import { SplitPosition } from '../data/SplitPosition';
 import { TextSplit } from '../data/TextSplit';
 import { SpotRange } from '../data/Types';

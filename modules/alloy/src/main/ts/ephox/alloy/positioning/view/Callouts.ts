@@ -3,10 +3,12 @@ import { Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
 import { Bubble } from '../layout/Bubble';
 import { AnchorBox, AnchorElement } from '../layout/LayoutTypes';
 import * as Origins from '../layout/Origins';
+import * as Placement from '../layout/Placement';
 import { ReparteeOptions } from '../layout/SimpleLayout';
 import * as Bounder from './Bounder';
 import { applyPositionCss } from './PositionCss';
 import { RepositionDecision } from './Reposition';
+import { applyTransitionCss } from './Transitions';
 
 /*
  * This is the old repartee API. It is retained in a similar structure to the original form,
@@ -24,7 +26,7 @@ const layout = (anchorBox: AnchorBox, element: SugarElement, bubbles: Bubble, op
   Css.remove(element, 'max-width');
 
   const elementBox = elementSize(element);
-  return Bounder.attempts(options.preference, anchorBox, elementBox, bubbles, options.bounds);
+  return Bounder.attempts(element, options.preference, anchorBox, elementBox, bubbles, options.bounds);
 };
 
 const setClasses = (element: SugarElement, decision: RepositionDecision): void => {
@@ -54,7 +56,15 @@ const setWidth = (element: SugarElement, decision: RepositionDecision, options: 
 const position = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
   // This is a point of difference between Alloy and Repartee. Repartee appears to use Measure to calculate the available space for fixed origin
   // That is not ported yet.
-  applyPositionCss(element, Origins.reposition(options.origin, decision));
+  const positionCss = Origins.reposition(options.origin, decision);
+  options.transition.each((transition) => {
+    applyTransitionCss(element, options.origin, positionCss, transition, decision, options.lastPlacement);
+  });
+  applyPositionCss(element, positionCss);
+};
+
+const setPlacement = (element: SugarElement, decision: RepositionDecision): void => {
+  Placement.setPlacement(element, decision.placement);
 };
 
 export {
@@ -62,5 +72,6 @@ export {
   setClasses,
   setHeight,
   setWidth,
-  position
+  position,
+  setPlacement
 };

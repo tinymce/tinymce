@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -25,7 +25,7 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
   });
 
   it('TINY-4843: Unspecified line-height can be read from element', function () {
-    // https://bugs.webkit.org/show_bug.cgi?id=216601
+    // TODO: TINY-7895
     if (platform.browser.isSafari()) {
       this.skip();
     }
@@ -77,7 +77,11 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
     const events = [];
     const editor = hook.editor();
     editor.setContent('<p>Hello</p>');
-    const logEvents = (e) => events.push(e.type.toLowerCase());
+    const logEvents = (e) => {
+      if (e.command?.toLowerCase() !== 'mcefocus') {
+        events.push(e.type.toLowerCase());
+      }
+    };
     // Note: It's important that we prepend these events, otherwise the UndoManager `ExecCommand` event handler
     // will execute first and make it looks like `change` is fired second.
     editor.on('BeforeExecCommand change ExecCommand', logEvents, true);

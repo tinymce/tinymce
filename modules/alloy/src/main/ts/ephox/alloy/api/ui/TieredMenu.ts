@@ -44,10 +44,10 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
 
     FieldSchema.defaulted('highlightImmediately', true),
 
-    FieldSchema.strictObjOf('data', [
-      FieldSchema.strict('primary'),
-      FieldSchema.strict('menus'),
-      FieldSchema.strict('expansions')
+    FieldSchema.requiredObjOf('data', [
+      FieldSchema.required('primary'),
+      FieldSchema.required('menus'),
+      FieldSchema.required('expansions')
     ]),
 
     FieldSchema.defaulted('fakeFocus', false),
@@ -55,7 +55,7 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
     Fields.onHandler('onHover'),
     Fields.tieredMenuMarkers(),
 
-    FieldSchema.strict('dom'),
+    FieldSchema.required('dom'),
 
     FieldSchema.defaulted('navigateOnHover', true),
     FieldSchema.defaulted('stayInDom', false),

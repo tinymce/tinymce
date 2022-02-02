@@ -25,7 +25,7 @@ const sortKeys = <T extends Record<string, any>, K extends keyof T>(label: strin
     });
     return Result.value(sorted);
   } catch (err) {
-    return Result.error([ err ]);
+    return Result.error([ err as Error ]);
   }
 };
 

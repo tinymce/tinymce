@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import * as PositionArray from 'ephox/polaris/api/PositionArray';
 
 export interface PArrayTestItem {

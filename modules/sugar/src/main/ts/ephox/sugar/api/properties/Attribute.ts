@@ -1,4 +1,5 @@
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+
 import { SugarElement } from '../node/SugarElement';
 import * as SugarNode from '../node/SugarNode';
 
@@ -25,6 +26,16 @@ const setAll = (element: SugarElement<Element>, attrs: Record<string, string | b
   const dom = element.dom;
   Obj.each(attrs, (v, k) => {
     rawSet(dom, k, v);
+  });
+};
+
+const setOptions = (element: SugarElement<Element>, attrs: Record<string, Optional<string | boolean | number>>): void => {
+  Obj.each(attrs, (v, k) => {
+    v.fold(() => {
+      remove(element, k);
+    }, (value) => {
+      rawSet(element.dom, k, value);
+    });
   });
 };
 
@@ -77,4 +88,4 @@ const transfer = (source: SugarElement<Element>, destination: SugarElement<Eleme
   });
 };
 
-export { clone, set, setAll, get, getOpt, has, remove, hasNone, transfer };
+export { clone, set, setAll, setOptions, get, getOpt, has, remove, hasNone, transfer };

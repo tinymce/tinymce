@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+
 import { PRange } from '../pattern/Types';
 
 /**

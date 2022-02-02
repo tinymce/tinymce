@@ -6,6 +6,7 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Formats from './core/Formats';
 
 /**
@@ -15,7 +16,7 @@ import * as Formats from './core/Formats';
  * @private
  */
 
-export default () => {
+export default (): void => {
   PluginManager.add('legacyoutput', (editor) => {
     Formats.setup(editor);
   });

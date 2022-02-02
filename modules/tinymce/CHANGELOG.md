@@ -6,6 +6,172 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.10.2 - 2021-11-17
+
+### Fixed
+- Internal selectors were appearing in the style list when using the `importcss` plugin #TINY-8238
+
+## 5.10.1 - 2021-11-03
+
+### Fixed
+- The iframe aria help text was not read by some screen readers #TINY-8171
+- Clicking the `forecolor` or `backcolor` toolbar buttons would do nothing until selecting a color #TINY-7836
+- Crop functionality did not work in the `imagetools` plugin when the editor was rendered in a shadow root #TINY-6387
+- Fixed an exception thrown on Safari when closing the `searchreplace` plugin dialog #TINY-8166
+- The `autolink` plugin did not convert URLs to links when starting with a bracket #TINY-8091
+- The `autolink` plugin incorrectly created nested links in some cases #TINY-8091
+- Tables could have an incorrect height set on rows when rendered outside of the editor #TINY-7699
+- In certain circumstances, the table of contents plugin would incorrectly add an extra empty list item #TINY-4636
+- The insert table grid menu displayed an incorrect size when re-opening the grid #TINY-6532
+- The word count plugin was treating the zero width space character (`&#8203;`) as a word #TINY-7484
+
+## 5.10.0 - 2021-10-11
+
+### Added
+- Added a new `URI.isDomSafe(uri)` API to check if a URI is considered safe to be inserted into the DOM #TINY-7998
+- Added the `ESC` key code constant to the `VK` API #TINY-7917
+- Added a new `deprecation_warnings` setting for turning off deprecation console warning messages #TINY-8049
+
+### Improved
+- The `element` argument of the `editor.selection.scrollIntoView()` API is now optional, and if it is not provided the current selection will be scrolled into view #TINY-7291
+
+### Changed
+- The deprecated `scope` attribute is no longer added to `td` cells when converting a row to a header row #TINY-7731
+- The number of `col` elements is normalized to match the number of columns in a table after a table action #TINY-8011
+
+### Fixed
+- Fixed a regression that caused block wrapper formats to apply and remove incorrectly when using a collapsed selection with multiple words #TINY-8036
+- Resizing table columns in some scenarios would resize the column to an incorrect position #TINY-7731
+- Inserting a table where the parent element had padding would cause the table width to be incorrect #TINY-7991
+- The resize backdrop element did not have the `data-mce-bogus="all"` attribute set to prevent it being included in output #TINY-7854
+- Resize handles appeared on top of dialogs and menus when using an inline editor #TINY-3263
+- Fixed the `autoresize` plugin incorrectly scrolling to the top of the editor content in some cases when changing content #TINY-7291
+- Fixed the `editor.selection.scrollIntoView()` type signature, as it incorrectly required an `Element` instead of `HTMLElement` #TINY-7291
+- Table cells that were both row and column headers did not retain the correct state when converting back to a regular row or column #TINY-7709
+- Clicking beside a non-editable element could cause the editor to incorrectly scroll to the top of the content #TINY-7062
+- Clicking in a table cell, with a non-editable element in an adjacent cell, incorrectly caused the non-editable element to be selected #TINY-7736
+- Split toolbar buttons incorrectly had nested `tabindex="-1"` attributes #TINY-7879
+- Fixed notifications rendering in the wrong place initially and when the page was scrolled #TINY-7894
+- Fixed an exception getting thrown when the number of `col` elements didn't match the number of columns in a table #TINY-7041 #TINY-8011
+- The table selection state could become incorrect after selecting a noneditable table cell #TINY-8053
+- As of Mozilla Firefox 91, toggling fullscreen mode with `toolbar_sticky` enabled would cause the toolbar to disappear #TINY-7873
+- Fixed URLs not cleaned correctly in some cases in the `link` and `image` plugins #TINY-7998
+- Fixed the `image` and `media` toolbar buttons incorrectly appearing to be in an inactive state in some cases #TINY-3463
+- Fixed the `editor.selection.selectorChanged` API not firing if the selector matched the current selection when registered in some cases #TINY-3463
+- Inserting content into a `contenteditable="true"` element that was contained within a `contenteditable="false"` element would move the selection to an incorrect location #TINY-7842
+- Dragging and dropping `contenteditable="false"` elements could result in the element being placed in an unexpected location #TINY-7917
+- Pressing the Escape key would not cancel a drag action that started on a `contenteditable="false"` element within the editor #TINY-7917
+- `video` and `audio` elements were unable to be played when the `media` plugin live embeds were enabled in some cases #TINY-7674
+- Pasting images would throw an exception if the clipboard `items` were not files (for example, screenshots taken from gnome-software). Patch contributed by cedric-anne #TINY-8079
+
+### Deprecated
+- Several APIs have been deprecated. See the release notes section for information #TINY-8023 #TINY-8063
+- Several Editor settings have been deprecated. See the release notes section for information #TINY-8086
+- The Table of Contents and Image Tools plugins will be classified as Premium plugins in the next major release #TINY-8087
+- Word support in the `paste` plugin has been deprecated and will be removed in the next major release #TINY-8087
+
+## 5.9.2 - 2021-09-08
+
+### Fixed
+- Fixed an exception getting thrown when disabling events and setting content #TINY-7956
+- Delete operations could behave incorrectly if the selection crossed a table boundary #TINY-7596
+
+## 5.9.1 - 2021-08-27
+
+### Fixed
+- Published TinyMCE types failed to compile in strict mode #TINY-7915
+- The `TableModified` event sometimes didn't fire when performing certain table actions #TINY-7916
+
+## 5.9.0 - 2021-08-26
+
+### Added
+- Added a new `mceFocus` command that focuses the editor. Equivalent to using `editor.focus()` #TINY-7373
+- Added a new `mceTableToggleClass` command which toggles the provided class on the currently selected table #TINY-7476
+- Added a new `mceTableCellToggleClass` command which toggles the provided class on the currently selected table cells #TINY-7476
+- Added a new `tablecellvalign` toolbar button and menu item for vertical table cell alignment #TINY-7477
+- Added a new `tablecellborderwidth` toolbar button and menu item to change table cell border width #TINY-7478
+- Added a new `tablecellborderstyle` toolbar button and menu item to change table cell border style #TINY-7478
+- Added a new `tablecaption` toolbar button and menu item to toggle captions on tables #TINY-7479
+- Added a new `mceTableToggleCaption` command that toggles captions on a selected table #TINY-7479
+- Added a new `tablerowheader` toolbar button and menu item to toggle the header state of row cells #TINY-7478
+- Added a new `tablecolheader` toolbar button and menu item to toggle the header state of column cells #TINY-7482
+- Added a new `tablecellbordercolor` toolbar button and menu item to select table cell border colors, with an accompanying setting `table_border_color_map` to customize the available values #TINY-7480
+- Added a new `tablecellbackgroundcolor` toolbar button and menu item to select table cell background colors, with an accompanying setting `table_background_color_map` to customize the available values #TINY-7480
+- Added a new `language` menu item and toolbar button to add `lang` attributes to content, with an accompanying `content_langs` setting to specify the languages available #TINY-6149
+- A new `lang` format is now available that can be used with `editor.formatter`, or applied with the `Lang` editor command #TINY-6149
+- Added a new `language` icon for the `language` toolbar button #TINY-7670
+- Added a new `table-row-numbering` icon #TINY-7327
+- Added new plugin commands: `mceEmoticons` (Emoticons), `mceWordCount` (Word Count), and `mceTemplate` (Template) #TINY-7619
+- Added a new `iframe_aria_text` setting to set the iframe title attribute #TINY-1264
+- Added a new DomParser `Node.children()` API to return all the children of a `Node` #TINY-7756
+
+### Improved
+- Sticky toolbars can now be offset from the top of the page using the new `toolbar_sticky_offset` setting #TINY-7337
+- Fancy menu items now accept an `initData` property to allow custom initialization data #TINY-7480
+- Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
+- Improved the performance when UI components are rendered #TINY-7572
+- The context toolbar no longer unnecessarily repositions to the top of large elements when scrolling #TINY-7545
+- The context toolbar will now move out of the way when it overlaps with the selection, such as in table cells #TINY-7192
+- The context toolbar now uses a short animation when transitioning between different locations #TINY-7740
+- `Env.browser` now uses the User-Agent Client Hints API where it is available #TINY-7785
+- Icons with a `-rtl` suffix in their name will now automatically be used when the UI is rendered in right-to-left mode #TINY-7782
+- The `formatter.match` API now accepts an optional `similar` parameter to check if the format partially matches #TINY-7712
+- The `formatter.formatChanged` API now supports providing format variables when listening for changes #TINY-7713
+- The formatter will now fire `FormatApply` and `FormatRemove` events for the relevant actions #TINY-7713
+- The `autolink` plugin link detection now permits custom protocols #TINY-7714
+- The `autolink` plugin valid link detection has been improved #TINY-7714
+
+### Changed
+- Changed the load order so content CSS is loaded before the editor is populated with content #TINY-7249
+- Changed the `emoticons`, `wordcount`, `code`, `codesample`, and `template` plugins to open dialogs using commands #TINY-7619
+- The context toolbar will no longer show an arrow when it overlaps the content, such as in table cells #TINY-7665
+- The context toolbar will no longer overlap the statusbar for toolbars using `node` or `selection` positions #TINY-7666
+
+### Fixed
+- The `editor.fire` API was incorrectly mutating the original `args` provided #TINY-3254
+- Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
+- Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
+- Unbinding a native event handler inside the `remove` event caused an exception that blocked editor removal #TINY-7730
+- The `SetContent` event contained the incorrect `content` when using the `editor.selection.setContent()` API #TINY-3254
+- The editor content could be edited after calling `setProgressState(true)` in iframe mode #TINY-7373
+- Tabbing out of the editor after calling `setProgressState(true)` behaved inconsistently in iframe mode #TINY-7373
+- Flash of unstyled content while loading the editor because the content CSS was loaded after the editor content was rendered #TINY-7249
+- Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
+- HTML comments with mismatched quotes were parsed incorrectly under certain circumstances #TINY-7589
+- The editor could crash when inserting certain HTML content #TINY-7756
+- Inserting certain HTML content into the editor could result in invalid HTML once parsed #TINY-7756
+- Links in notification text did not show the correct mouse pointer #TINY-7661
+- Using the Tab key to navigate into the editor on Microsoft Internet Explorer 11 would incorrectly focus the toolbar #TINY-3707
+- The editor selection could be placed in an incorrect location when undoing or redoing changes in a document containing `contenteditable="false"` elements #TINY-7663
+- Menus and context menus were not closed when clicking into a different editor #TINY-7399
+- Context menus on Android were not displayed when more than one HTML element was selected #TINY-7688
+- Disabled nested menu items could still be opened #TINY-7700
+- The nested menu item chevron icon was not fading when the menu item was disabled #TINY-7700
+- `imagetools` buttons were incorrectly enabled for remote images without `imagetools_proxy` set #TINY-7772
+- Only table content would be deleted when partially selecting a table and content outside the table #TINY-6044
+- The table cell selection handling was incorrect in some cases when dealing with nested tables #TINY-6298
+- Removing a table row or column could result in the cursor getting placed in an invalid location #TINY-7695
+- Pressing the Tab key to navigate through table cells did not skip noneditable cells #TINY-7705
+- Clicking on a noneditable table cell did not show a visual selection like other noneditable elements #TINY-7724
+- Some table operations would incorrectly cause table row attributes and styles to be lost #TINY-6666
+- The selection was incorrectly lost when using the `mceTableCellType` and `mceTableRowType` commands #TINY-6666
+- The `mceTableRowType` was reversing the order of the rows when converting multiple header rows back to body rows #TINY-6666
+- The table dialog did not always respect the `table_style_with_css` option #TINY-4926
+- Pasting into a table with multiple cells selected could cause the content to be pasted in the wrong location #TINY-7485
+- The `TableModified` event was not fired when pasting cells into a table #TINY-6939
+- The table paste column before and after icons were not flipped in RTL mode #TINY-7851
+- Fixed table corruption when deleting a `contenteditable="false"` cell #TINY-7891
+- The `dir` attribute was being incorrectly applied to list items #TINY-4589
+- Applying selector formats would sometimes not apply the format correctly to elements in a list #TINY-7393
+- For formats that specify an attribute or style that should be removed, the formatter `match` API incorrectly returned `false` #TINY-6149
+- The type signature on the `formatter.matchNode` API had the wrong return type (was `boolean` but should have been `Formatter | undefined`) #TINY-6149
+- The `formatter.formatChanged` API would ignore the `similar` parameter if another callback had already been registered for the same format #TINY-7713
+- The `formatter.formatChanged` API would sometimes not run the callback the first time the format was removed #TINY-7713
+- Base64 encoded images with spaces or line breaks in the data URI were not displayed correctly. Patch contributed by RoboBurned
+
+### Deprecated
+- The `bbcode`, `fullpage`, `legacyoutput`, and `spellchecker` plugins have been deprecated and marked for removal in the next major release #TINY-7260
+
 ## 5.8.2 - 2021-06-23
 
 ### Fixed

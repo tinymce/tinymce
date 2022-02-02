@@ -1,5 +1,6 @@
 import { TestLabel } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+
 import * as ErrorTypes from '../alien/ErrorTypes';
 import { DieFn, NextFn } from '../pipe/Pipe';
 import { Step } from './Step';
