@@ -255,7 +255,6 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   if (details.paste === true && InsertList.isListFragment(editor.schema, fragment) && InsertList.isParentBlockLi(dom, parentNode)) {
     rng = InsertList.insertAtCaret(serializer, dom, selection.getRng(), fragment);
     selection.setRng(rng);
-    // editor.fire('SetContent', args);
     return;
   }
 
