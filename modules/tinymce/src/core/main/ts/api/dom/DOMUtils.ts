@@ -1091,7 +1091,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  const fire = (target: Target, name: string, evt?) => events.fire(target, name, evt);
+  const fire = (target: Target, name: string, evt?) => events.dispatch(target, name, evt);
 
   const getContentEditable = (node: Node) => {
     if (node && NodeType.isElement(node)) {

@@ -232,7 +232,7 @@ class EventUtils {
               }
             }
 
-            // Fire fake event
+            // dispatch fake event
             if (!related) {
               evt = fix(evt || win.event);
               evt.type = evt.type === 'mouseout' ? 'mouseleave' : 'mouseenter';
@@ -381,15 +381,15 @@ class EventUtils {
   }
 
   /**
-   * Fires the specified event on the specified target.
+   * Dispatches the specified event on the specified target.
    *
-   * @method fire
+   * @method dispatch
    * @param {Object} target Target node/window or custom object.
-   * @param {String} name Event name to fire.
+   * @param {String} name Event name to dispatch.
    * @param {Object} args Optional arguments to send to the observers.
    * @return {EventUtils} Event utils instance.
    */
-  public fire(target: any, name: string, args?: {}): this {
+  public dispatch(target: any, name: string, args?: {}): this {
     let id;
 
     // Don't bind to text nodes or comments
