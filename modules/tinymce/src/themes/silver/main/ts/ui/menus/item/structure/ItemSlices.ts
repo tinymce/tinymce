@@ -66,10 +66,11 @@ const renderShortcut = (shortcut: string): AlloySpec => ({
   }
 });
 
-const renderCheckmark = (_: IconProvider): AlloySpec => ({
+const renderCheckmark = (icons: IconProvider): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.checkmarkClass ]
+    classes: [ ItemClasses.checkmarkClass ],
+    innerHtml: getIcon('checkmark', icons)
   }
 });
 
