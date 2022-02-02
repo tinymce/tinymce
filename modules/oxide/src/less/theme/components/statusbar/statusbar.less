@@ -80,10 +80,19 @@
 
   .tox-statusbar__branding {
     svg {
-      fill: currentColor;
+      fill: @statusbar-text-color;
       height: 1.4em;
       vertical-align: -.4em;
       width: 4.0625em;
+    }
+
+    a:hover,
+    a:focus {
+      @{statusbar-not-disabled-selector} {
+        svg {
+          fill: @text-color;
+        }
+      }
     }
   }
 
