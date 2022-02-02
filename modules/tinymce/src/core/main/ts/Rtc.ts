@@ -223,7 +223,7 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
     editor: {
       getContent: (args) => editor.getContent(args),
       setContent: (content, args) => editor.setContent(content, args),
-      insertContent: (content) => editor.insertContent(content),
+      insertContent: (content, _details) => editor.insertContent(content),
       addVisual: editor.addVisual
     },
     selection: {
