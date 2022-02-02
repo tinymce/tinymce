@@ -198,7 +198,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     const tagName = ele.tagName.toLowerCase();
     const { attrName, attrValue } = evt;
 
-    evt.keepAttr = !validate || Strings.startsWith(attrName, 'data-') || schema.isValid(tagName, attrName);
+    evt.keepAttr = !validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-');
     if (!settings.allow_script_urls && attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) {
       evt.keepAttr = false;
     }

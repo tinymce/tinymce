@@ -1,4 +1,5 @@
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
+import { Remove, Selectors } from '@ephox/sugar';
 import { assert } from 'chai';
 import 'tinymce';
 
@@ -106,6 +107,9 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
         setTimeout(() => {
           // Destroy the editor by setting innerHTML common ajax pattern
           viewBlock.update('<textarea id="' + editor1.id + '"></textarea>');
+
+          // We need to remove the sink since it's added to the body
+          Selectors.one('.tox-silver-sink').each(Remove.remove);
 
           // Re-init the editor will have the same id
           EditorManager.init({

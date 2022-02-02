@@ -96,6 +96,6 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
         });
       }
     });
-    editor.remove();
+    McEditor.remove(editor);
   });
 });

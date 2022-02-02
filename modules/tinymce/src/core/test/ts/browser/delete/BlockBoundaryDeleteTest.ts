@@ -15,22 +15,24 @@ describe('browser.tinymce.core.delete.BlockBoundaryDeleteTest', () => {
 
   const doDelete = (editor: Editor) => {
     const returnVal = BlockBoundaryDelete.backspaceDelete(editor, true);
-    assert.isTrue(returnVal, 'Should return true since the operation should have done something');
+    returnVal.each((apply) => apply());
+    assert.isTrue(returnVal.isSome(), 'Should return true since the operation should have done something');
   };
 
   const noopDelete = (editor: Editor) => {
     const returnVal = BlockBoundaryDelete.backspaceDelete(editor, true);
-    assert.isFalse(returnVal, 'Should return false since the operation is a noop');
+    assert.isFalse(returnVal.isSome(), 'Should return false since the operation is a noop');
   };
 
   const doBackspace = (editor: Editor) => {
     const returnVal = BlockBoundaryDelete.backspaceDelete(editor, false);
-    assert.isTrue(returnVal, 'Should return true since the operation should have done something');
+    returnVal.each((apply) => apply());
+    assert.isTrue(returnVal.isSome(), 'Should return true since the operation should have done something');
   };
 
   const noopBackspace = (editor: Editor) => {
     const returnVal = BlockBoundaryDelete.backspaceDelete(editor, false);
-    assert.isFalse(returnVal, 'Should return false since the operation is a noop');
+    assert.isFalse(returnVal.isSome(), 'Should return false since the operation is a noop');
   };
 
   it('Backspace in same block should remain unchanged', () => {

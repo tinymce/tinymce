@@ -5,6 +5,7 @@ import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import Resource from 'tinymce/core/api/Resource';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
 
 import { fakeEvent } from '../module/test/Utils';
@@ -14,7 +15,10 @@ describe('browser.tinymce.plugins.emoticons.ImageEmojiTest', () => {
     plugins: 'emoticons',
     toolbar: 'emoticons',
     base_url: '/project/tinymce/js/tinymce',
-    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojiimages.js'
+    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojiimages.js',
+    setup: () => {
+      Resource.unload('tinymce.plugins.emoticons');
+    }
   }, [ Plugin ], true);
 
   it('TBA: Open dialog, Search for "dog", Dog should be first option', async () => {
