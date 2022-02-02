@@ -1,4 +1,5 @@
-import { Id, Optional } from '@ephox/katamari';
+import * as AriaManager from './AriaManager';
+import { Optional } from '@ephox/katamari';
 import { Attribute, PredicateFind, SelectorFind, SugarElement, SugarNode, SugarShadowDom } from '@ephox/sugar';
 
 const find = (queryElem: SugarElement<Node>): Optional<SugarElement<Element>> => {
@@ -18,29 +19,7 @@ const find = (queryElem: SugarElement<Node>): Optional<SugarElement<Element>> =>
   });
 };
 
-export interface AriaManager {
-  id: string;
-  link: (elem: SugarElement<Element>) => void;
-  unlink: (elem: SugarElement<Element>) => void;
-}
-
-const manager = (): AriaManager => {
-  const ariaId = Id.generate('aria-owns');
-
-  const link = (elem: SugarElement<Element>) => {
-    Attribute.set(elem, 'aria-owns', ariaId);
-  };
-
-  const unlink = (elem: SugarElement<Element>) => {
-    Attribute.remove(elem, 'aria-owns');
-  };
-
-  return {
-    id: ariaId,
-    link,
-    unlink
-  };
-};
+const manager = AriaManager.build(AriaManager.LinkableAttribute.AriaOwns);
 
 export {
   find,
