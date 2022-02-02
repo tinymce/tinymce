@@ -10,54 +10,55 @@ import { getPreviewContent } from 'tinymce/plugins/template/ui/Dialog';
 import { Settings } from '../module/Settings';
 
 const metaKey = Env.os.isMacOS() || Env.os.isiOS() ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
+const host = document.location.host;
 
 const noCorsNoStyle = '<!DOCTYPE html><html><head>' +
-  '<base href="http://localhost:8000/">' +
-  '<link type="text/css" rel="stylesheet" href="http://localhost:8000/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css">' +
-  '<link type="text/css" rel="stylesheet" href="http://localhost:8000/project/tinymce/js/tinymce/skins/content/default/content.css">' +
+  `<base href="http://${host}/">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/content/default/content.css">` +
   '<script>document.addEventListener && document.addEventListener("click", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === "A" && !(' +
   metaKey +
   ')) {e.preventDefault();}}}, false);</script> ' +
   '</head><body class=""></body></html>';
 
 const corsNoStyle = '<!DOCTYPE html><html><head>' +
-  '<base href=\"http://localhost:8000/\">' +
-  '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css\" crossorigin=\"anonymous\">' +
-  '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/content/default/content.css\" crossorigin=\"anonymous\">' +
-  '<script>document.addEventListener && document.addEventListener(\"click\", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === \"A\" && !(' +
+  `<base href="http://${host}/">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css" crossorigin="anonymous">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/content/default/content.css" crossorigin="anonymous">` +
+  '<script>document.addEventListener && document.addEventListener("click", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === "A" && !(' +
   metaKey +
-  ')) {e.preventDefault();}}}, false);</script> </head><body class=\"\"></body></html>';
+  ')) {e.preventDefault();}}}, false);</script> </head><body class=""></body></html>';
 
 const noCorsStyle = '<!DOCTYPE html><html><head>' +
-  '<base href=\"http://localhost:8000/\">' +
-  '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css\">' +
-  '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/content/default/content.css\">' +
-  '<style type=\"text/css\">This is the style inserted into the document</style>' +
-  '<script>document.addEventListener && document.addEventListener(\"click\", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === \"A\" && !(' +
+  `<base href="http://${host}/">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/content/default/content.css">` +
+  '<style type="text/css">This is the style inserted into the document</style>' +
+  '<script>document.addEventListener && document.addEventListener("click", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === "A" && !(' +
   metaKey +
   ')) {e.preventDefault();}}}, false);</script> ' +
-  '</head><body class=\"\"></body></html>';
+  '</head><body class=""></body></html>';
 
 const corsStyle = '<!DOCTYPE html><html><head>' +
-  '<base href=\"http://localhost:8000/\">' +
-  '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css\" crossorigin=\"anonymous\">' +
-  '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/content/default/content.css\" crossorigin=\"anonymous\">' +
-  '<style type=\"text/css\">This is the style inserted into the document</style>' +
-  '<script>document.addEventListener && document.addEventListener(\"click\", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === \"A\" && !(' +
+  `<base href="http://${host}/">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css" crossorigin="anonymous">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/content/default/content.css" crossorigin="anonymous">` +
+  '<style type="text/css">This is the style inserted into the document</style>' +
+  '<script>document.addEventListener && document.addEventListener("click", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === "A" && !(' +
   metaKey +
   ')) {e.preventDefault();}}}, false);</script> ' +
-  '</head><body class=\"\"></body></html>';
+  '</head><body class=""></body></html>';
 
 const corsStyleAndContent = '<!DOCTYPE html><html><head>' +
-  '<base href=\"http://localhost:8000/\">' +
-  '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css\" crossorigin=\"anonymous\">' +
-  '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/content/default/content.css\" crossorigin=\"anonymous\">' +
-  '<style type=\"text/css\">This is the style inserted into the document</style>' +
-  '<script>document.addEventListener && document.addEventListener(\"click\", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === \"A\" && !(' +
+  `<base href="http://${host}/">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css" crossorigin="anonymous">` +
+  `<link type="text/css" rel="stylesheet" href="http://${host}/project/tinymce/js/tinymce/skins/content/default/content.css" crossorigin="anonymous">` +
+  '<style type="text/css">This is the style inserted into the document</style>' +
+  '<script>document.addEventListener && document.addEventListener("click", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === "A" && !(' +
   metaKey +
   ')) {e.preventDefault();}}}, false);</script> ' +
   '</head>' +
-  '<body class=\"\">Custom content which was provided</body></html>';
+  '<body class="">Custom content which was provided</body></html>';
 
 describe('browser.tinymce.plugins.template.Dialog.getPreviewContent', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `buttonType` property on dialog button components, supporting `toolbar` style in addition to `primary` and `secondary` #TINY-8304
 - New `imagepreview` dialog component, allowing preview and zoom of any image URL #TINY-8333
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
+- New `Resource.unload` API to make it possible to unload resources #TINY-8431
 
 ### Improved
 - The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
@@ -28,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
 
 ### Changed
+- The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
 - The `editor.getContent()` API can provide custom content by preventing and overriding `content` in the `BeforeGetContent` event. This makes it consistent with the `editor.selection.getContent()` API #TINY-8018
 - The `images_upload_handler` option is no longer passed a `success` or `failure` callback and instead requires a `Promise` to be returned with the upload result #TINY-8325
 - RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
@@ -55,8 +57,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `textpattern_patterns` option to `text_patterns` #TINY-8312
 - Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
+- The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
+- Renamed the `font_formats` option to `font_family_formats` #TINY-8328
+- Renamed the `fontselect` toolbar button and `fontformats` menu item to `fontfamily` #TINY-8328
+- Renamed the `fontsize_formats` option to `font_size_formats` #TINY-8328
+- Renamed the `fontsizeselect` toolbar button and `fontsizes` menu item to `fontsize` #TINY-8328
+- Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
+- Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
+- Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
+- The Editor commands APIs will no longer fallback to executing the browsers native command functionality #TINY-7829
+- The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -65,9 +77,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 - The aria labels for the color picker dialog were not translated #TINY-8381
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
+- The `silver` theme UI was incorrectly rendered before plugins had initialized #TINY-8288
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
+- Deleting content would sometimes not fire `beforeinput` and `input` events as expected #TINY-8168  #TINY-8329
+- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308
 
 ### Removed
+- Removed the jQuery integration #TINY-4518
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
 - Removed the deprecated `XHR` API #TINY-8164
@@ -82,6 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
 - Removed the deprecated `media_scripts` option in the `media` plugin #TINY-8421
 - Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
+- Removed the deprecated `content_editable_state` and `padd_empty_with_br` options #TINY-8400
+- Removed the deprecated `autoresize_on_init` option from the `autoresize` plugin #TINY-8400
 - Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
 - Removed the callback for the `EditorUpload` APIs #TINY-8325
 - The legacy `mobile` theme has been removed #TINY-7832
@@ -90,12 +108,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed support for Word from the `paste` plugin #TINY-7493
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `imagetools` dialog component #TINY-8333
+- Removed the `filterNode` method from `DomParser` #TINY-8249
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
 - Removed the `tinymce.utils.Promise` API #TINY-8241
 - Removed the `toHex` function for the `DOMUtils` and `Styles` APIs #TINY-8163
 - Removed the `tabfocus` plugin #TINY-8315
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 - Removed the `editor.settings` property as it's been replaced by the new Options API #TINY-8236
+- Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
+- Removed the `mceInsertRawHTML` command #TINY-8214
+- Removed the undocumented `editor.editorCommands.hasCustomCommand` API #TINY-7829
+- Removed the undocumented `mceResetDesignMode`, `mceRepaint` and `mceBeginUndoLevel` commands #TINY-7829
+- Removed the `execCommand` handler function from the plugin and theme interfaces #TINY-7829
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

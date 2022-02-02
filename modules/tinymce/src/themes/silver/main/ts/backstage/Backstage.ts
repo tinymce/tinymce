@@ -48,7 +48,7 @@ export interface UiFactoryBackstageShared {
 
 export interface UiFactoryBackstage {
   urlinput?: UiFactoryBackstageForUrlInput;
-  styleselect?: UiFactoryBackstageForStyleButton;
+  styles?: UiFactoryBackstageForStyleButton;
   shared?: UiFactoryBackstageShared;
   colorinput?: UiFactoryBackstageForColorInput;
   dialog?: UiFactoryBackstageForDialog;
@@ -56,7 +56,7 @@ export interface UiFactoryBackstage {
   setContextMenuState?: (state: boolean) => void;
 }
 
-const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
+const init = (lazySink: () => Result<AlloyComponent, string>, editor: Editor, lazyAnchorbar: () => AlloyComponent): UiFactoryBackstage => {
   const contextMenuState = Cell(false);
   const toolbar = HeaderBackstage(editor);
   const backstage: UiFactoryBackstage = {
@@ -71,10 +71,10 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
       interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, backstage),
       anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),
       header: toolbar,
-      getSink: () => Result.value(sink)
+      getSink: lazySink
     },
     urlinput: UrlInputBackstage(editor),
-    styleselect: initStyleFormatBackstage(editor),
+    styles: initStyleFormatBackstage(editor),
     colorinput: ColorInputBackstage(editor),
     dialog: DialogBackstage(editor),
     isContextMenuOpen: () => contextMenuState.get(),

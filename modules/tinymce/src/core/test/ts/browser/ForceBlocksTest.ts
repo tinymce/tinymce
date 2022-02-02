@@ -11,7 +11,7 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, []);
+  }, [], true);
 
   const pressArrowKey = (editor: Editor) => {
     const dom = editor.dom, target = editor.selection.getNode();
@@ -24,7 +24,6 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
 
   it('Wrap single root text node in P', () => {
     const editor = hook.editor();
-    editor.focus();
     editor.getBody().innerHTML = 'abcd';
     LegacyUnit.setSelection(editor, 'body', 2);
     pressArrowKey(editor);

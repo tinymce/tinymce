@@ -523,15 +523,11 @@ const register = (editor: Editor) => {
 
   registerOption('convert_fonts_to_spans', {
     processor: 'boolean',
-    default: true
+    default: true,
+    deprecated: true
   });
 
   registerOption('fix_list_elements', {
-    processor: 'boolean',
-    default: false
-  });
-
-  registerOption('padd_empty_with_br', {
     processor: 'boolean',
     default: false
   });
@@ -547,7 +543,8 @@ const register = (editor: Editor) => {
 
   registerOption('inline_styles', {
     processor: 'boolean',
-    default: true
+    default: true,
+    deprecated: true
   });
 
   registerOption('element_format', {
@@ -642,11 +639,6 @@ const register = (editor: Editor) => {
   registerOption('a11y_advanced_options', {
     processor: 'boolean',
     default: false
-  });
-
-  registerOption('content_editable_state', {
-    processor: 'boolean',
-    default: true
   });
 
   registerOption('api_key', {
@@ -834,7 +826,6 @@ const getUrlConverterCallback = option('urlconverter_callback');
 const getAutoFocus = option('auto_focus');
 const shouldBrowserSpellcheck = option('browser_spellcheck');
 const getProtect = option('protect');
-const getContentEditableState = option('content_editable_state');
 const shouldPasteBlockDrop = option('paste_block_drop');
 const shouldPasteDataImages = option('paste_data_images');
 const shouldPasteFilterDrop = option('paste_filter_drop');
@@ -937,7 +928,6 @@ export {
   getAutoFocus,
   shouldBrowserSpellcheck,
   getProtect,
-  getContentEditableState,
   shouldPasteBlockDrop,
   shouldPasteDataImages,
   shouldPasteFilterDrop,

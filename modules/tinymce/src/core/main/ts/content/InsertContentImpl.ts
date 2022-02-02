@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import { Remove, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -22,6 +22,7 @@ import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
+import { cleanInvalidNodes } from '../html/InvalidNodes';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
@@ -282,7 +283,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     value = serializer.serialize(fragment);
     validInsertion(editor, value, parentNode);
   } else {
-    // If the fragment was invalid within that context then we need
+     // If the fragment was invalid within that context then we need
     // to parse and process the parent it's inserted into
 
     // Insert bookmark node and get the parent
@@ -305,14 +306,19 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
 
     // Get the outer/inner HTML depending on if we are in the root and parser and serialize that
     value = parentNode === rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);
-    value = serializer.serialize(
-      parser.parse(
-        // Need to replace by using a function since $ in the contents would otherwise be a problem
-        value.replace(/<span (id="mce_marker"|id=mce_marker).+?<\/span>/i, () => {
-          return serializer.serialize(fragment);
-        })
-      )
-    );
+    const root = parser.parse(value);
+    for (let markerNode = root; markerNode; markerNode = markerNode.walk()) {
+      if (markerNode.attr('id') === 'mce_marker') {
+        markerNode.replace(fragment);
+        break;
+      }
+    }
+    const toExtract = fragment.children();
+    const parent = fragment.parent.name;
+    fragment.unwrap();
+    const invalidChildren = Arr.filter(toExtract, (node) => !editor.schema.isValidChild(parent, node.name));
+    cleanInvalidNodes(invalidChildren, editor.schema);
+    value = serializer.serialize(root);
 
     // Set the inner/outer HTML depending on if we are in the root or not
     if (parentNode === rootNode) {

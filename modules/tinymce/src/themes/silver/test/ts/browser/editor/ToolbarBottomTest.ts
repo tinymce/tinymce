@@ -44,7 +44,7 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
   context('Check the direction that menus open in when toolbar_location: "bottom"', () => {
     it('Bespoke select menu should open above button', () => pTest({
       options: {
-        toolbar: 'styleselect'
+        toolbar: 'styles'
       },
       initial: [{
         clickOn: 'button[title="Formats"]',

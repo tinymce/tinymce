@@ -130,11 +130,11 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     TinyAssertions.assertContent(editor, '<div dir="ltr"><p>foo</p><p>bar</p></div>');
   });
 
-  it('TINY-4589: should get computed dir from #target', () => {
+  it('TINY-4589: should get computed dir from #target-elm', () => {
     const editor = hook.editor();
     editor.setContent(
       '<div dir="rtl">' +
-        '<div id="target" dir="ltr">' +
+        '<div id="target-elm" dir="ltr">' +
           '<div dir="x">' +
             '<p>foo</p>' +
             '<p>bar</p>' +
@@ -146,7 +146,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
     TinyAssertions.assertContent(editor,
       '<div dir="rtl">' +
-        '<div id="target" dir="ltr">' +
+        '<div id="target-elm" dir="ltr">' +
           '<div dir="x">' +
             '<p dir="rtl">foo</p>' +
             '<p>bar</p>' +
@@ -157,7 +157,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
     TinyAssertions.assertContent(editor,
       '<div dir="rtl">' +
-        '<div id="target" dir="ltr">' +
+        '<div id="target-elm" dir="ltr">' +
           '<div dir="x">' +
             '<p>foo</p>' +
             '<p>bar</p>' +

@@ -10,13 +10,13 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.core.FontSelectTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'fontsizeselect fontselect',
+    toolbar: 'fontsize fontfamily',
     content_style: [
       '.mce-content-body { font-family: Helvetica; font-size: 42px; }',
       '.mce-content-body p { font-family: Arial; font-size: 12px; }',
       '.mce-content-body h1 { font-family: Arial; font-size: 32px; }'
     ].join(''),
-    fontsize_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
+    font_size_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
   }, []);
 
   const systemFontStackVariants = [
