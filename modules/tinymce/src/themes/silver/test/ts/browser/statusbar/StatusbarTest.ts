@@ -35,11 +35,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
                 'aria-label': str.is('Powered by Tiny')
               },
               children: [
-                s.element('svg', {
-                  attrs: {
-                    title: str.is('Powered by Tiny')
-                  }
-                })
+                s.element('svg', {})
               ]
             })
           ]
@@ -71,11 +67,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
                 'aria-label': str.is('Powered by Tiny')
               },
               children: [
-                s.element('svg', {
-                  attrs: {
-                    title: str.is('Powered by Tiny')
-                  }
-                })
+                s.element('svg', {})
               ]
             })
           ]
@@ -107,11 +99,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
                 'aria-label': str.is('Powered by Tiny')
               },
               children: [
-                s.element('svg', {
-                  attrs: {
-                    title: str.is('Powered by Tiny')
-                  }
-                })
+                s.element('svg', {})
               ]
             })
           ]
