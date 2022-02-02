@@ -29,10 +29,8 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
   const updateButtonStates = (api: Dialog.DialogInstanceApi<DialogData>): void => {
-    const updateNext = Actions.hasNext(editor, currentSearchState) ? api.enable : api.disable;
-    updateNext('next');
-    const updatePrev = Actions.hasPrev(editor, currentSearchState) ? api.enable : api.disable;
-    updatePrev('prev');
+    api.setEnabled('next', Actions.hasNext(editor, currentSearchState));
+    api.setEnabled('prev', Actions.hasPrev(editor, currentSearchState));
   };
 
   const updateSearchState = (api: Dialog.DialogInstanceApi<DialogData>): void => {
@@ -49,7 +47,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
 
   const disableAll = (api: Dialog.DialogInstanceApi<DialogData>, disable: boolean): void => {
     const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
-    const toggle = disable ? api.disable : api.enable;
+    const toggle = (name: string) => api.setEnabled(name, !disable);
     Arr.each(buttons, toggle);
   };
 

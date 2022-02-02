@@ -124,7 +124,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
             updateDialog(api, t, previewHtml);
           }).catch(() => {
             updateDialog(api, t, '');
-            api.disable('save');
+            api.setEnabled('save', false);
             loadFailedAlert(api);
           });
         });
@@ -138,7 +138,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
         editor.execCommand('mceInsertTemplate', false, previewHtml);
         api.close();
       }).catch(() => {
-        api.disable('save');
+        api.setEnabled('save', false);
         loadFailedAlert(api);
       });
     });
@@ -210,7 +210,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
       updateDialog(dialogApi, templates[0], previewHtml);
     }).catch(() => {
       updateDialog(dialogApi, templates[0], '');
-      dialogApi.disable('save');
+      dialogApi.setEnabled('save', false);
       loadFailedAlert(dialogApi);
     });
   };

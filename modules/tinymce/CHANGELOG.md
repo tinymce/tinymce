@@ -70,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced `isDisabled()` with `isEnabled()` in various APIs #TINY-8101
 - Replaced `enable()` and `disable()` with `setEnabled(state)` in various APIs #TINY-8101
 - Replaced `disabled` property with `enabled` in various APIs #TINY-8101
+- Replaced `disable(name)` and `enable(name)` with `setEnabled(name, state)`in Dialog API #TINY-8101
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
