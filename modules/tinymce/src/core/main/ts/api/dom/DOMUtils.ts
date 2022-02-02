@@ -949,7 +949,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     node = node.firstChild;
     if (node) {
       const walker = new DomTreeWalker(node, node.parentNode);
-      const whitespace = schema ? schema.getWhiteSpaceElements() : {};
+      const whitespace = schema ? schema.getWhitespaceElements() : {};
       elements = elements || (schema ? schema.getNonEmptyElements() : null);
 
       do {

@@ -279,7 +279,7 @@ const walkTree = (root: AstNode, preprocessors: WalkerCallback[], postprocessors
 const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSettings, args: ParserArgs): [WalkerCallback, WalkerCallback] => {
   const validate = settings.validate;
   const nonEmptyElements = schema.getNonEmptyElements();
-  const whitespaceElements = schema.getWhiteSpaceElements();
+  const whitespaceElements = schema.getWhitespaceElements();
   const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;

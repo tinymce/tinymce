@@ -59,7 +59,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
     parser.addNodeFilter('br', (nodes, _, args) => {
       const blockElements = Tools.extend({}, schema.getBlockElements());
       const nonEmptyElements = schema.getNonEmptyElements();
-      const whiteSpaceElements = schema.getWhiteSpaceElements();
+      const whiteSpaceElements = schema.getWhitespaceElements();
 
       // Remove brs from body element as well
       blockElements.body = 1;

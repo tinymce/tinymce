@@ -246,7 +246,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
 
   it('getWhiteSpaceElements', () => {
     const schema = Schema();
-    assert.deepEqual(schema.getWhiteSpaceElements(), {
+    assert.deepEqual(schema.getWhitespaceElements(), {
       IFRAME: {}, NOSCRIPT: {}, OBJECT: {}, PRE: {}, CODE: {},
       SCRIPT: {}, STYLE: {}, TEXTAREA: {}, VIDEO: {}, AUDIO: {},
       iframe: {}, noscript: {}, object: {}, pre: {}, code: {},
