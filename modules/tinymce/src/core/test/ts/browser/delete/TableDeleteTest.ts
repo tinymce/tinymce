@@ -26,23 +26,29 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
     Assertions.assertHtml('Should be expected contents', expectedContent, Html.get(element));
   };
 
+  const doCommand = (editor: Editor, forward: boolean) => {
+    const returnVal = TableDelete.backspaceDelete(editor, forward);
+    returnVal.each((apply) => apply());
+    return returnVal.isSome();
+  };
+
   const doDelete = (editor: Editor) => {
-    const returnVal = TableDelete.backspaceDelete(editor, true);
+    const returnVal = doCommand(editor, true);
     assert.isTrue(returnVal, 'Should return true since the operation should have done something');
   };
 
   const doBackspace = (editor: Editor) => {
-    const returnVal = TableDelete.backspaceDelete(editor, false);
+    const returnVal = doCommand(editor, false);
     assert.isTrue(returnVal, 'Should return true since the operation should have done something');
   };
 
   const noopDelete = (editor: Editor) => {
-    const returnVal = TableDelete.backspaceDelete(editor, true);
+    const returnVal = doCommand(editor, true);
     assert.isFalse(returnVal, 'Should return false since the operation is a noop');
   };
 
   const noopBackspace = (editor: Editor) => {
-    const returnVal = TableDelete.backspaceDelete(editor, false);
+    const returnVal = doCommand(editor, false);
     assert.isFalse(returnVal, 'Should return false since the operation is a noop');
   };
 
