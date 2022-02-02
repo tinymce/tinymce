@@ -553,13 +553,6 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     assert.equal(editor.getContent(), '<p><em><strong>a</strong></em></p>');
   });
 
-  it('undo filter for mceRepaint is case insensitive', () => {
-    const editor = hook.editor();
-    editor.undoManager.clear();
-    editor.execCommand('mceRepaint');
-    assert.isFalse(editor.undoManager.hasUndo());
-  });
-
   it('TINY-7373: undo filter for mceFocus is case insensitive', () => {
     const editor = hook.editor();
     editor.undoManager.clear();

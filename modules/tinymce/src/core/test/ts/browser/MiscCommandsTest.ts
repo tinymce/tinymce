@@ -6,8 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as HtmlUtils from '../module/test/HtmlUtils';
-
 describe('browser.tinymce.core.MiscCommandsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
@@ -70,23 +68,5 @@ describe('browser.tinymce.core.MiscCommandsTest', () => {
     assert.equal(editor.selection.getStart().nodeName, 'DIV');
     assert.equal(editor.selection.getEnd().nodeName, 'DIV');
     assert.equal(editor.selection.isCollapsed(), false);
-  });
-
-  it('InsertLineBreak', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>123</p>');
-    LegacyUnit.setSelection(editor, 'p', 2);
-    editor.execCommand('InsertLineBreak');
-    assert.equal(editor.getContent(), '<p>12<br>3</p>');
-
-    editor.setContent('<p>123</p>');
-    LegacyUnit.setSelection(editor, 'p', 0);
-    editor.execCommand('InsertLineBreak');
-    assert.equal(editor.getContent(), '<p><br>123</p>');
-
-    editor.setContent('<p>123</p>');
-    LegacyUnit.setSelection(editor, 'p', 3);
-    editor.execCommand('InsertLineBreak');
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>123<br><br></p>');
   });
 });

@@ -82,6 +82,11 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.execCommand('HiliteColor', false, '#FF0000');
     assert.equal(editor.getContent(), '<p><span style="background-color: rgb(255, 0, 0);">test 123</span></p>');
 
+    editor.setContent('test 123');
+    editor.execCommand('SelectAll');
+    editor.execCommand('BackColor', false, '#FF0000');
+    assert.equal(editor.getContent(), '<p><span style="background-color: rgb(255, 0, 0);">test 123</span></p>');
+
     editor.setContent('<p><span style="text-decoration: underline;">test 123</span></p>');
     assert.equal(editor.getContent(), '<p><span style="text-decoration: underline;">test 123</span></p>');
 
@@ -219,6 +224,14 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.execCommand('SelectAll');
     editor.execCommand('FormatBlock', false, 'pre');
     assert.equal(editor.getContent(), '<pre>test 123</pre>');
+  });
+
+  it('createLink', () => {
+    const editor = hook.editor();
+    editor.setContent('test 123');
+    editor.execCommand('SelectAll');
+    editor.execCommand('createLink', false, 'http://www.site.com');
+    assert.equal(editor.getContent(), '<p><a href="http://www.site.com">test 123</a></p>');
   });
 
   it('mceInsertLink (relative)', () => {

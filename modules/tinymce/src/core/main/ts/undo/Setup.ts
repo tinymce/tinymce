@@ -19,7 +19,6 @@ const shouldIgnoreCommand = (cmd: string): boolean => {
   switch (cmd.toLowerCase()) {
     case 'undo':
     case 'redo':
-    case 'mcerepaint':
     case 'mcefocus':
       return true;
     default:
