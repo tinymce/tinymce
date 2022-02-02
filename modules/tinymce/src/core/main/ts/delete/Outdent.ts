@@ -20,7 +20,7 @@ const backspaceDelete = (editor: Editor): Optional<() => void> => {
     const pos = CaretPosition.fromRangeStart(rng);
     const block = dom.getParent(rng.startContainer, dom.isBlock);
     if (block !== null && BlockBoundary.isAtStartOfBlock(SugarElement.fromDom(block), pos)) {
-      return Optional.some(() => IndentOutdent.handle(editor, 'outdent'));
+      return Optional.some(() => IndentOutdent.outdent(editor));
     }
   }
 

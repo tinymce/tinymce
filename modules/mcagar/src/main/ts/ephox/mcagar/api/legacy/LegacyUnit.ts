@@ -56,7 +56,7 @@ const createSuite = <T = any>(): Suite<T> => {
 };
 
 const execCommand = <T extends Editor = Editor> (editor: T, cmd: string, ui?: boolean, value?: any): void => {
-  if (editor.editorCommands.hasCustomCommand(cmd)) {
+  if (editor.editorCommands.queryCommandSupported(cmd)) {
     editor.execCommand(cmd, ui, value);
   }
 };

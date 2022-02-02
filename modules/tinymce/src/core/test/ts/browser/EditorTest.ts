@@ -289,7 +289,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.addCommand('CustomCommand1', callback, scope);
     editor.addCommand('CustomCommand2', callback);
 
-    editor.execCommand('CustomCommand1', false, 'value', { extra: true });
+    editor.execCommand('CustomCommand1', false, 'value');
     assert.isFalse(lastArgs[0], 'addCommand');
     assert.equal( lastArgs[1], 'value', 'addCommand');
     assert.strictEqual(lastScope, scope, 'addCommand');
