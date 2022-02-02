@@ -11,10 +11,9 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
 import * as AutocompleteTag from './autocomplete/AutocompleteTag';
-import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs, SetContentResult } from './content/ContentTypes';
+import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs, SetContentResult, InsertContentDetails } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
-import { postProcessSetContent, preProcessSetContent } from './content/PrePostProcess';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
@@ -60,7 +59,7 @@ interface RtcRuntimeApi {
   editor: {
     getContent: (args: GetContentArgs) => Content;
     setContent: (content: Content, args: SetContentArgs) => SetContentResult;
-    insertContent: (content: Content) => void;
+    insertContent: (content: string) => void;
     addVisual: () => void;
   };
   selection: {
@@ -117,7 +116,7 @@ interface RtcAdaptor {
   editor: {
     getContent: (args: GetContentArgs) => Content;
     setContent: (content: Content, args: SetContentArgs) => SetContentResult;
-    insertContent: (value: string, details) => void;
+    insertContent: (value: string, details: InsertContentDetails) => void;
     addVisual: (elm?: HTMLElement) => void;
   };
   selection: {
@@ -189,7 +188,7 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   }
 });
 
-const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi, tinymceEditor: Editor): RtcAdaptor => {
+const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
   const defaultVars = (vars: Record<string, string>) => Type.isObject(vars) ? vars : {};
   const { init, undoManager, formatter, editor, selection, autocompleter, raw } = rtcEditor;
 
@@ -224,12 +223,7 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi, tinymceEditor: Editor): RtcAda
     editor: {
       getContent: (args) => editor.getContent(args),
       setContent: (content, args) => editor.setContent(content, args),
-      insertContent: (content, details) => {
-        return preProcessSetContent(tinymceEditor, { content, format: 'html', set: false, selection: true, paste: details.paste }).each((args) => {
-          editor.insertContent(content);
-          postProcessSetContent(tinymceEditor, content, args);
-        });
-      },
+      insertContent: (content) => editor.insertContent(content),
       addVisual: editor.addVisual
     },
     selection: {
@@ -317,7 +311,7 @@ export const setup = (editor: Editor): Optional<() => Promise<boolean>> => {
 
       return Optional.some(
         () => setup().then((rtcEditor) => {
-          editorCast.rtcInstance = makeRtcAdaptor(rtcEditor, editor);
+          editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
           return rtcEditor.rtc.isRemote;
         })
       );

@@ -9,6 +9,7 @@ import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Rtc from '../Rtc';
 import { InsertContentDetails } from './ContentTypes';
+import { postProcessSetContent, preProcessSetContent } from './PrePostProcess';
 
 interface DetailsWithContent extends InsertContentDetails {
   readonly content: string;
@@ -41,9 +42,13 @@ const processValue = (value: string | DetailsWithContent): ProcessedValue => {
 };
 
 const insertAtCaret = (editor: Editor, value: string | DetailsWithContent): void => {
-  const result = processValue(value);
+  const { content, details } = processValue(value);
 
-  Rtc.insertContent(editor, result.content, result.details);
+  preProcessSetContent(editor, { content, format: 'html', set: false, selection: true, paste: details.paste }).each((args) => {
+    Rtc.insertContent(editor, content, details);
+    postProcessSetContent(editor, content, args);
+    editor.addVisual();
+  });
 };
 
 export { insertAtCaret };
