@@ -123,6 +123,7 @@ export const initializeTinyMCE = (options: EditorInitParams) => {
     menubar: false,
     statusbar: false,
     color_map,
+    color_cols: 8,
     custom_colors: false,
     mobile: {
       toolbar_mode: 'floating',
