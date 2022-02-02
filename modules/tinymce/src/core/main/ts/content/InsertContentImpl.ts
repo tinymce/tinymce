@@ -283,7 +283,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     value = serializer.serialize(fragment);
     validInsertion(editor, value, parentNode);
   } else {
-     // If the fragment was invalid within that context then we need
+    // If the fragment was invalid within that context then we need
     // to parse and process the parent it's inserted into
 
     // Insert bookmark node and get the parent
