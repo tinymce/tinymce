@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { SimpleSpec } from '@ephox/alloy';
+import { Behaviour, Focusing, SimpleSpec } from '@ephox/alloy';
 
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -33,11 +33,13 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
               'href': 'https://www.tiny.cloud/powered-by-tiny?utm_campaign=editor_referral&utm_medium=poweredby&utm_source=tinymce&utm_content=v6',
               'rel': 'noopener',
               'target': '_blank',
-              'tabindex': '-1',
               'aria-label': I18n.translate([ 'Powered by {0}', 'Tiny' ])
             },
             innerHtml: Logo.trim()
-          }
+          },
+          behaviours: Behaviour.derive([
+            Focusing.config({})
+          ])
         }
       ]
     };
