@@ -25,11 +25,7 @@ describe('browser.tinymce.plugins.link.LinkDialogOverrideTest', () => {
                   spec.onChange(api, details);
                   if (details.name === 'url' || details.name === 'link' || details.name === 'anchor') {
                     const data = api.getData();
-                    if (data.url.value.length === 0) {
-                      api.setEnabled('save', false);
-                    } else {
-                      api.setEnabled('save', true);
-                    }
+                    api.setEnabled('save', data.url.value.length > 0);
                   }
                 }
               });

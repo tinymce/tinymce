@@ -325,11 +325,7 @@ const changeHandler = (helpers: Helpers, info: ImageDialogInfo, state: ImageDial
   } else if (evt.name === 'fileinput') {
     changeFileInput(helpers, info, state, api);
   } else if (evt.name === 'isDecorative') {
-    if (api.getData().isDecorative) {
-      api.setEnabled('alt', false);
-    } else {
-      api.setEnabled('alt', true);
-    }
+    api.setEnabled('alt', !api.getData().isDecorative);
   }
 };
 

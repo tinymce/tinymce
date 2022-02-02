@@ -58,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 - The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
-- Renamed the `getShortEndedElements` Schema to `getVoidElements` #TINY-8344
+- Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
 - Renamed the `font_formats` option to `font_family_formats` #TINY-8328
 - Renamed the `fontselect` toolbar button and `fontformats` menu item to `fontfamily` #TINY-8328
@@ -67,10 +67,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
 - Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
 - Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
-- Replaced `isDisabled()` with `isEnabled()` in various APIs #TINY-8101
-- Replaced `enable()` and `disable()` with `setEnabled(state)` in various APIs #TINY-8101
-- Replaced `disabled` property with `enabled` in various APIs #TINY-8101
-- Replaced `disable(name)` and `enable(name)` with `setEnabled(name, state)`in Dialog API #TINY-8101
+- Replaced the `isDisabled()` function with an `isEnabled()` function for various APIs #TINY-8101
+- Replaced the `enable()` and `disable()` functions with a `setEnabled(state)` function in various APIs #TINY-8101
+- Replaced the `disabled` property with an `enabled` property in various APIs #TINY-8101
+- Replaced the `disable(name)` and `enable(name)` functions with a `setEnabled(name, state)` function in the Dialog APIs #TINY-8101
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018

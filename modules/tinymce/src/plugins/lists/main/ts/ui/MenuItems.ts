@@ -17,7 +17,7 @@ const register = (editor: Editor): void => {
     text: 'List properties...',
     icon: 'ordered-list',
     onAction: () => editor.execCommand('mceListProps'),
-    onSetup: (api) => Util.listState(editor, 'OL', (active) => api.setEnabled(active))
+    onSetup: (api) => Util.listState(editor, 'OL', api.setEnabled)
   };
 
   editor.ui.registry.addMenuItem('listprops', listProperties);

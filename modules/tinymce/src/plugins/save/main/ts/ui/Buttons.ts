@@ -12,7 +12,7 @@ import * as Options from '../api/Options';
 
 const stateToggle = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
   const handler = () => {
-    api.setEnabled(!(Options.enableWhenDirty(editor) && !editor.isDirty()));
+    api.setEnabled(!Options.enableWhenDirty(editor) || editor.isDirty());
   };
 
   handler();
