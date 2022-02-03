@@ -958,5 +958,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
       assert.equal(serializedHtml, '<p>Hello world!<a>XSS</a></p>');
     });
+
+    it('data and aria attributes should always be retained', () => {
+      const parser = DomParser();
+      const html = '<p><a href="http://www.google.com/fake1" data-custom="custom" aria-invalid="true">Hello world!</a></p>';
+      const serializedHtml = serializer.serialize(parser.parse(html));
+
+      assert.equal(serializedHtml, html);
+    });
   });
 });

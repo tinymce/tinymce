@@ -38,16 +38,30 @@ describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
     expectedHtml: string,
     expectedLocation: 'before' | 'start' | 'end' | 'after' | 'none',
     expectedPath: number[],
-    expectedOffset: number
+    expectedOffset: number,
+    expectInputEvents: boolean = true
   ) => {
     const editor = hook.editor();
+    const inputEvents: string[] = [];
+    const collect = (event: InputEvent) => {
+      inputEvents.push(event.inputType);
+    };
+
+    editor.on('input', collect);
     editor.setContent(setupHtml);
     TinySelections.setCursor(editor, setupPath, setupOffset);
     editor.nodeChanged();
-    TinyContentActions.keystroke(editor, key);
+    TinyContentActions.keydown(editor, key);
+    editor.off('input', collect);
+
     TinyAssertions.assertContent(editor, expectedHtml);
     assert.equal(readLocation(editor), expectedLocation, 'Should be expected location');
     TinyAssertions.assertSelection(editor, expectedPath, expectedOffset, expectedPath, expectedOffset);
+
+    if (expectInputEvents) {
+      assert.deepEqual(inputEvents, [ key === Keys.backspace() ? 'deleteContentBackward' : 'deleteContentForward' ]);
+    }
+
     normalizeBody(editor);
   };
 
@@ -106,7 +120,7 @@ describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
   it('Backspace key inline_boundaries: false', () => {
     const editor = hook.editor();
     editor.options.set('inline_boundaries', false);
-    testBackspace('<p>a<a href="#">b</a>c</p>', [ 0, 2 ], 0, '<p>a<a href="#">b</a>c</p>', 'after', [ 0, 2 ], 0);
+    testBackspace('<p>a<a href="#">b</a>c</p>', [ 0, 2 ], 0, '<p>a<a href="#">b</a>c</p>', 'after', [ 0, 2 ], 0, false);
     editor.options.unset('inline_boundaries');
   });
 });

@@ -10,7 +10,7 @@ import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
 import { NodeChangeEvent } from '../api/EventTypes';
-import { EditorEvent } from '../api/PublicApi';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as BoundarySelection from './BoundarySelection';
 import * as MatchKeys from './MatchKeys';
