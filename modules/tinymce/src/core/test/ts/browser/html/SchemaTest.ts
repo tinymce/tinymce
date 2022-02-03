@@ -168,6 +168,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   });
 
   it(`addValidElements when there's a colon in an attribute name`, () => {
+    // Test that both a literal and escaped colon are correctly handled
     const schema = Schema({ valid_elements: '@[xml\\:space]' });
     schema.addValidElements('pre[xml:lang]');
     assert.deepEqual(
