@@ -19,7 +19,7 @@ describe('browser.tinymce.core.fmt.DefaultFormatsWithSchemaTest', () => {
       schema: 'html5'
     }, []);
 
-    it('TINY-8262: should apply strikethrough using a "s" tag', () => {
+    it('TINY-8262: should apply strikethrough using an "s" tag', () => {
       const editor = hook.editor();
       editor.setContent('<p>Test</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 2);
@@ -30,7 +30,7 @@ describe('browser.tinymce.core.fmt.DefaultFormatsWithSchemaTest', () => {
     });
 
     // Note: This test does not apply to html5-strict as "strike" is not valid in the schema
-    it('TINY-8262: should convert "strike" tag to "s" tag', () => {
+    it('TINY-8262: should convert "strike" tag to an "s" tag', () => {
       const editor = hook.editor();
       editor.setContent('<p><strike>Test</strike></p>');
       TinyAssertions.assertContent(editor, '<p><s>Test</s></p>');
@@ -43,7 +43,7 @@ describe('browser.tinymce.core.fmt.DefaultFormatsWithSchemaTest', () => {
       schema: 'html5-strict'
     }, []);
 
-    it('TINY-8262: should apply strikethrough using a "s" tag', () => {
+    it('TINY-8262: should apply strikethrough using an "s" tag', () => {
       const editor = hook.editor();
       editor.setContent('<p>Test</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 2);
@@ -70,7 +70,7 @@ describe('browser.tinymce.core.fmt.DefaultFormatsWithSchemaTest', () => {
       editor.setContent('<p>Test</p>');
     });
 
-    it('TINY-8262: should convert "strike" tag to "span" tag', () => {
+    it('TINY-8262: should convert "strike" tag to a "span" tag', () => {
       const editor = hook.editor();
       editor.setContent('<p><strike>Test</strike></p>');
       TinyAssertions.assertContent(editor, '<p><span style="text-decoration: line-through;">Test</span></p>');

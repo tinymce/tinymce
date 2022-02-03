@@ -60,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
-- Changed the default tag for the strikethrough format to the `s` tag for html5 schema types #TINY-8262
+- Changed the default tag for the strikethrough format to the `s` tag when using a html 5 schema #TINY-8262
 - Renamed the `font_formats` option to `font_family_formats` #TINY-8328
 - Renamed the `fontselect` toolbar button and `fontformats` menu item to `fontfamily` #TINY-8328
 - Renamed the `fontsize_formats` option to `font_size_formats` #TINY-8328
