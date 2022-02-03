@@ -82,7 +82,7 @@ interface BespokeSelectApi {
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
 const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
-  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean, value: Optional<any>): Optional<Menu.NestedMenuItemContents> => {
+  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, invalid: boolean, value: Optional<any>): Optional<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
       return Optional.some<Menu.SeparatorMenuItemSpec>({
@@ -110,7 +110,7 @@ const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spe
         text: translatedText,
         icon: rawItem.icon,
         active: rawItem.isSelected(value),
-        enabled: !disabled,
+        enabled: !invalid,
         onAction: spec.onAction(rawItem),
         ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: { style: preview } as any }))
       });
