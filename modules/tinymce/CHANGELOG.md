@@ -80,7 +80,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
 - The `silver` theme UI was incorrectly rendered before plugins had initialized #TINY-8288
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
-- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308 
+- Deleting content would sometimes not fire `beforeinput` and `input` events as expected #TINY-8168  #TINY-8329
+- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308
 
 ### Removed
 - Removed the jQuery integration #TINY-4518
