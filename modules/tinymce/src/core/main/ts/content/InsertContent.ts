@@ -58,8 +58,7 @@ const insertAtCaret = (editor: Editor, value: string | DetailsWithContent): void
   const { content, details } = processValue(value);
 
   preProcessSetContent(editor, { content: trimOrPad(editor, content), format: 'html', set: false, selection: true, paste: details.paste }).each((args) => {
-    Rtc.insertContent(editor, content, details);
-    postProcessSetContent(editor, content, args);
+    postProcessSetContent(editor, Rtc.insertContent(editor, args.content, details), args);
     editor.addVisual();
   });
 };

@@ -59,7 +59,7 @@ interface RtcRuntimeApi {
   editor: {
     getContent: (args: GetContentArgs) => Content;
     setContent: (content: Content, args: SetContentArgs) => SetContentResult;
-    insertContent: (content: string) => void;
+    insertContent: (content: string) => string;
     addVisual: () => void;
   };
   selection: {
@@ -116,7 +116,7 @@ interface RtcAdaptor {
   editor: {
     getContent: (args: GetContentArgs) => Content;
     setContent: (content: Content, args: SetContentArgs) => SetContentResult;
-    insertContent: (value: string, details: InsertContentDetails) => void;
+    insertContent: (value: string, details: InsertContentDetails) => string;
     addVisual: (elm?: HTMLElement) => void;
   };
   selection: {
@@ -274,7 +274,7 @@ const makeNoopAdaptor = (): RtcAdaptor => {
     editor: {
       getContent: empty,
       setContent: Fun.constant({ content: '', html: '' }),
-      insertContent: Fun.noop,
+      insertContent: Fun.constant(''),
       addVisual: Fun.noop
     },
     selection: {
@@ -439,7 +439,7 @@ export const getContent = (editor: Editor, args: GetContentArgs): Content =>
 export const setContent = (editor: Editor, content: Content, args: SetContentArgs): SetContentResult =>
   getRtcInstanceWithFallback(editor).editor.setContent(content, args);
 
-export const insertContent = (editor: Editor, value: string, details): void =>
+export const insertContent = (editor: Editor, value: string, details): string =>
   getRtcInstanceWithFallback(editor).editor.insertContent(value, details);
 
 export const getSelectedContent = (editor: Editor, format: ContentFormat, args: Partial<GetSelectionContentArgs>): Content =>
