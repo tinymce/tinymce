@@ -73,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced the `disable(name)` and `enable(name)` functions with a `setEnabled(name, state)` function in the Dialog APIs #TINY-8101
 - The Editor commands APIs will no longer fallback to executing the browsers native command functionality #TINY-7829
 - The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
+- Replaced 'Powered by Tiny' link text with logo #TINY-8371
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018

@@ -30,6 +30,11 @@ let create = (entries, tsConfig, outDir, filename) => {
     module: {
       rules: [
         {
+          test: /\.(svg)$/i,
+          loader: 'raw-loader',
+          type: 'javascript/auto'
+        },
+        {
           test: /\.ts$/,
           use: [
             {
