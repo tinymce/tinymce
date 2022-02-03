@@ -740,7 +740,7 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     DOM.bind(document, 'click', () => {
       count++;
     });
-    DOM.fire(document, 'click');
+    DOM.dispatch(document, 'click');
     DOM.unbind(document, 'click');
     assert.equal(count, 1);
 
@@ -749,14 +749,14 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
       e.stopPropagation();
       count++;
     });
-    DOM.fire(document, 'click');
-    DOM.fire(window, 'click');
+    DOM.dispatch(document, 'click');
+    DOM.dispatch(window, 'click');
     DOM.unbind([ document, window ], 'click');
     assert.equal(count, 2);
 
     count = 0;
-    DOM.fire(document, 'click');
-    DOM.fire(window, 'click');
+    DOM.dispatch(document, 'click');
+    DOM.dispatch(window, 'click');
     assert.equal(count, 0);
   });
 

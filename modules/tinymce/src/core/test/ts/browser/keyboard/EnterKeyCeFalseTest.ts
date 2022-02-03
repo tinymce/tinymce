@@ -24,9 +24,9 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
 
     evt = Tools.extend({ keyCode: 13 }, evt);
 
-    dom.fire(target, 'keydown', evt);
-    dom.fire(target, 'keypress', evt);
-    dom.fire(target, 'keyup', evt);
+    dom.dispatch(target, 'keydown', evt);
+    dom.dispatch(target, 'keypress', evt);
+    dom.dispatch(target, 'keyup', evt);
   };
 
   it('Enter in text within contentEditable:true h1 inside contentEditable:false div', () => {

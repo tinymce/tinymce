@@ -116,7 +116,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
     const editor = hook.editor();
     editor.setContent('<p>ab</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1, false);
-    DOMUtils.DOM.fire(document, 'mouseup');
+    DOMUtils.DOM.dispatch(document, 'mouseup');
     return pWaitForBookmark(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
   });
 

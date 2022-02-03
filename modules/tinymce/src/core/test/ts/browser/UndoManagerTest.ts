@@ -96,10 +96,10 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     assert.isFalse(editor.undoManager.typing);
 
-    editor.dom.fire(editor.getBody(), 'keydown', { keyCode: 65 });
+    editor.dom.dispatch(editor.getBody(), 'keydown', { keyCode: 65 });
     assert.isTrue(editor.undoManager.typing);
 
-    editor.dom.fire(editor.getBody(), 'keydown', { keyCode: 13 });
+    editor.dom.dispatch(editor.getBody(), 'keydown', { keyCode: 13 });
     assert.isFalse(editor.undoManager.typing);
 
     const selectAllFlags: Record<string, any> = { keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false };
@@ -110,7 +110,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       selectAllFlags.ctrlKey = true;
     }
 
-    editor.dom.fire(editor.getBody(), 'keydown', selectAllFlags);
+    editor.dom.dispatch(editor.getBody(), 'keydown', selectAllFlags);
     assert.isFalse(editor.undoManager.typing);
   });
 
@@ -187,9 +187,9 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       altKey: false
     };
 
-    editor.dom.fire(editor.getBody(), 'keydown', evt);
-    editor.dom.fire(editor.getBody(), 'keypress', evt);
-    editor.dom.fire(editor.getBody(), 'keyup', evt);
+    editor.dom.dispatch(editor.getBody(), 'keydown', evt);
+    editor.dom.dispatch(editor.getBody(), 'keypress', evt);
+    editor.dom.dispatch(editor.getBody(), 'keyup', evt);
 
     assert.isFalse(added);
     assert.deepEqual(commands, [ 'mceFocus', 'Undo' ]);
