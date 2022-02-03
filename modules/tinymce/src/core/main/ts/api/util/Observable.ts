@@ -58,7 +58,7 @@ const Observable: Observable<any> = {
       return EventUtils.normalize<U>(name.toLowerCase(), args ?? {} as U, self);
     }
 
-    const dispatcherArgs = getEventDispatcher(self).fire(name, args);
+    const dispatcherArgs = getEventDispatcher(self).dispatch(name, args);
 
     // Bubble event up to parents
     if (bubble !== false && self.parent) {

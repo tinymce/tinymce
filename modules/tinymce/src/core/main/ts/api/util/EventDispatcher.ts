@@ -126,16 +126,16 @@ class EventDispatcher<T> {
   }
 
   /**
-   * Fires the specified event by name.
+   * Dispatches the specified event by name.
    *
-   * @method fire
-   * @param {String} name Name of the event to fire.
+   * @method dispatch
+   * @param {String} name Name of the event to dispatch
    * @param {Object?} args Event arguments.
    * @return {Object} Event args instance passed in.
    * @example
-   * instance.fire('event', {...});
+   * instance.dispatch('event', {...});
    */
-  public fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U): EditorEvent<U> {
+  public dispatch <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U): EditorEvent<U> {
     const lcName = name.toLowerCase();
     const event = EventUtils.normalize<U>(lcName, args ?? {} as U, this.scope);
 
