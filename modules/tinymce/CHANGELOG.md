@@ -67,6 +67,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
 - Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
 - Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
+- Replaced the `isDisabled()` function with an `isEnabled()` function for various APIs #TINY-8101
+- Replaced the `enable()` and `disable()` functions with a `setEnabled(state)` function in various APIs #TINY-8101
+- Replaced the `disabled` property with an `enabled` property in various APIs #TINY-8101
+- Replaced the `disable(name)` and `enable(name)` functions with a `setEnabled(name, state)` function in the Dialog APIs #TINY-8101
 - The Editor commands APIs will no longer fallback to executing the browsers native command functionality #TINY-7829
 - The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
 

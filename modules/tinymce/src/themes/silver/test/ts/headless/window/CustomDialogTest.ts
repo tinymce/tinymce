@@ -119,7 +119,7 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
         {
           type: 'custom',
           text: 'go',
-          disabled: true
+          enabled: false,
         },
         {
           type: 'cancel',

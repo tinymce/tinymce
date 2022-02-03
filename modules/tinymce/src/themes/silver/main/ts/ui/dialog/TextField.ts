@@ -133,7 +133,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
   inputMode: spec.inputMode,
   placeholder: spec.placeholder,
   flex: false,
-  disabled: spec.disabled,
+  disabled: !spec.enabled,
   classname: 'tox-textfield',
   validation: Optional.none(),
   maximized: spec.maximized,
@@ -147,7 +147,7 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
   inputMode: Optional.none(), // type attribute is not valid for textareas
   placeholder: spec.placeholder,
   flex: true,
-  disabled: spec.disabled,
+  disabled: !spec.enabled,
   classname: 'tox-textarea',
   validation: Optional.none(),
   maximized: spec.maximized,

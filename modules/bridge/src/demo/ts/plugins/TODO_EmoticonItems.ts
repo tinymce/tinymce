@@ -6,7 +6,7 @@ import { getDemoRegistry } from '../buttons/DemoRegistry';
 export const registerEmoticonItems = (): void => {
   getDemoRegistry().addButton('emoticon', {
     type: 'button',
-    disabled: false,
+    enabled: true,
     onSetup: (_buttonApi) => Fun.noop,
     onAction: (_buttonApi) => {
 

@@ -12,7 +12,7 @@ import { onActionExecCommand, onSetupEvent } from './ControlUtils';
 
 const onSetupUndoRedoState = (editor: Editor, type: 'hasUndo' | 'hasRedo') =>
   onSetupEvent(editor, 'Undo Redo AddUndo TypingUndo ClearUndos SwitchMode', (api: Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi) => {
-    api.setDisabled(editor.mode.isReadOnly() || !editor.undoManager[type]());
+    api.setEnabled(!editor.mode.isReadOnly() || editor.undoManager[type]());
   });
 
 const registerMenuItems = (editor: Editor) => {
@@ -39,7 +39,7 @@ const registerButtons = (editor: Editor) => {
   editor.ui.registry.addButton('undo', {
     tooltip: 'Undo',
     icon: 'undo',
-    disabled: true,
+    enabled: false,
     onSetup: onSetupUndoRedoState(editor, 'hasUndo'),
     onAction: onActionExecCommand(editor, 'undo')
   });
@@ -47,7 +47,7 @@ const registerButtons = (editor: Editor) => {
   editor.ui.registry.addButton('redo', {
     tooltip: 'Redo',
     icon: 'redo',
-    disabled: true,
+    enabled: false,
     onSetup: onSetupUndoRedoState(editor, 'hasRedo'),
     onAction: onActionExecCommand(editor, 'redo')
   });

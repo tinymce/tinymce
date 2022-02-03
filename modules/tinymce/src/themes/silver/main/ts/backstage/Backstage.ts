@@ -65,7 +65,7 @@ const init = (lazySink: () => Result<AlloyComponent, string>, editor: Editor, la
         icons: () => editor.ui.registry.getAll().icons,
         menuItems: () => editor.ui.registry.getAll().menuItems,
         translate: I18n.translate,
-        isDisabled: () => editor.mode.isReadOnly() || editor.ui.isDisabled(),
+        isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
         getOption: editor.options.get
       },
       interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, backstage),
