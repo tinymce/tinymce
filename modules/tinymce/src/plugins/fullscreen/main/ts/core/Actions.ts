@@ -183,11 +183,11 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editorContainerStyle.top = fullscreenInfo.containerTop;
     editorContainerStyle.left = fullscreenInfo.containerLeft;
 
+    cleanup();
     setScrollPos(fullscreenInfo.scrollPos);
 
     fullscreenState.set(null);
     Events.fireFullscreenStateChanged(editor, false);
-    cleanup();
     editor.off('remove', cleanup);
   }
 };
