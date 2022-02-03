@@ -22,11 +22,12 @@ import Quirks from '../util/Quirks';
 import * as VisualAids from '../view/VisualAids';
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
+import * as Commands from './commands/Commands';
 import DOMUtils from './dom/DOMUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer from './dom/Serializer';
-import EditorCommands, { EditorCommandCallback } from './EditorCommands';
+import EditorCommands, { ExecCommandArgs, EditorCommandCallback } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
@@ -303,6 +304,7 @@ class Editor implements EditorObservable {
 
     this.shortcuts = new Shortcuts(this);
     this.editorCommands = new EditorCommands(this);
+    Commands.registerCommands(this);
 
     const cacheSuffix = getOption('cache_suffix');
     if (cacheSuffix) {
@@ -443,7 +445,7 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Adds a custom command to the editor, you can also override existing commands with this method.
+   * Adds a custom command to the editor. This function can also be used to override existing commands.
    * The command that you add can be executed with execCommand.
    *
    * @method addCommand
@@ -476,7 +478,7 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Adds a custom query state command to the editor, you can also override existing commands with this method.
+   * Adds a custom query state command to the editor. This function can also be used to override existing commands.
    * The command that you add can be executed with queryCommandState function.
    *
    * @method addQueryStateHandler
@@ -495,7 +497,7 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Adds a custom query value command to the editor, you can also override existing commands with this method.
+   * Adds a custom query value command to the editor. This function can also be used to override existing commands.
    * The command that you add can be executed with queryCommandValue function.
    *
    * @method addQueryValueHandler
@@ -545,18 +547,17 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Executes a command on the current instance. These commands can be TinyMCE internal commands prefixed with "mce" or
-   * they can be build in browser commands such as "Bold". A complete list of browser commands is available on MSDN or Mozilla.org.
-   * This function will dispatch the execCommand function on each plugin, theme or the execcommand_callback option if none of these
-   * return true it will handle the command as a internal browser command.
+   * Executes a registered command on the current instance. A list of available commands can be found in
+   * the tinymce command identifiers documentation.
    *
    * @method execCommand
    * @param {String} cmd Command name to execute, for example mceLink or Bold.
-   * @param {Boolean} ui True/false state if a UI (dialog) should be presented or not.
-   * @param {mixed} value Optional command value, this can be anything.
+   * @param {Boolean} ui Specifies if a UI (dialog) should be presented or not.
+   * @param {{Object/Array/String/Number/Boolean} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
+   * @return {Boolean} true or false if the command was supported or not.
    */
-  public execCommand(cmd: string, ui?: boolean, value?: any, args?: any): boolean {
+  public execCommand(cmd: string, ui?: boolean, value?: any, args?: ExecCommandArgs): boolean {
     return this.editorCommands.execCommand(cmd, ui, value, args);
   }
 
@@ -576,7 +577,7 @@ class Editor implements EditorObservable {
    *
    * @method queryCommandValue
    * @param {string} cmd Command to query value from.
-   * @return {Object} Command specific value, for example the current font size.
+   * @return {string} Command value, for example the current font size or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(cmd: string): string {
     return this.editorCommands.queryCommandValue(cmd);
