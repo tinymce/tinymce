@@ -16,7 +16,6 @@ import * as Options from './Options';
 export interface NotificationManagerImpl {
   open: (spec: NotificationSpec, closeCallback?: () => void) => NotificationApi;
   close: <T extends NotificationApi>(notification: T) => void;
-  reposition: <T extends NotificationApi>(notifications: T[]) => void;
   getArgs: <T extends NotificationApi>(notification: T) => NotificationSpec;
 }
 
@@ -35,8 +34,7 @@ export interface NotificationApi {
     value: (percent: number) => void;
   };
   text: (text: string) => void;
-  moveTo: (x: number, y: number) => void;
-  moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => void;
+  reposition: () => void;
   getEl: () => HTMLElement;
   settings: NotificationSpec;
 }
@@ -77,7 +75,9 @@ const NotificationManager = (editor: Editor): NotificationManager => {
 
   const reposition = () => {
     if (notifications.length > 0) {
-      getImplementation().reposition(notifications);
+      Arr.each(notifications, (notification) => {
+        notification.reposition();
+      });
     }
   };
 
