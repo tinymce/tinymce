@@ -27,7 +27,6 @@ import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
-import { trimOrPadLeftRight } from './NbspTrim';
 
 const isTableCell = NodeType.isTableCell;
 
@@ -205,11 +204,6 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
   let rng, node;
   const selection = editor.selection;
   const dom = editor.dom;
-
-  // Check for whitespace before/after value
-  if (/^ | $/.test(value)) {
-    value = trimOrPadLeftRight(dom, selection.getRng(), value);
-  }
 
   // Setup parser and serializer
   const parser = editor.parser;

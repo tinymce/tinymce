@@ -9,6 +9,7 @@ import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Rtc from '../Rtc';
 import { InsertContentDetails } from './ContentTypes';
+import { trimOrPadLeftRight } from './NbspTrim';
 import { postProcessSetContent, preProcessSetContent } from './PrePostProcess';
 
 interface DetailsWithContent extends InsertContentDetails {
@@ -41,10 +42,22 @@ const processValue = (value: string | DetailsWithContent): ProcessedValue => {
   };
 };
 
+const trimOrPad = (editor: Editor, value: string): string => {
+  const selection = editor.selection;
+  const dom = editor.dom;
+
+  // Check for whitespace before/after value
+  if (/^ | $/.test(value)) {
+    return trimOrPadLeftRight(dom, selection.getRng(), value);
+  } else {
+    return value;
+  }
+};
+
 const insertAtCaret = (editor: Editor, value: string | DetailsWithContent): void => {
   const { content, details } = processValue(value);
 
-  preProcessSetContent(editor, { content, format: 'html', set: false, selection: true, paste: details.paste }).each((args) => {
+  preProcessSetContent(editor, { content: trimOrPad(editor, content), format: 'html', set: false, selection: true, paste: details.paste }).each((args) => {
     Rtc.insertContent(editor, content, details);
     postProcessSetContent(editor, content, args);
     editor.addVisual();
