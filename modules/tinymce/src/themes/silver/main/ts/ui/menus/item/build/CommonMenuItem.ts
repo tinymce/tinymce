@@ -25,7 +25,7 @@ export interface CommonMenuItemSpec<T> {
   onAction: (itemApi: T) => void;
   onSetup: (itemApi: T) => OnDestroy<T>;
   triggersSubmenu: boolean;
-  disabled: boolean;
+  enabled: boolean;
   itemBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
   getApi: (comp: AlloyComponent) => T;
   data: ItemDataOutput;
@@ -48,7 +48,7 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
-        DisablingConfigs.item(() => spec.disabled || providersbackstage.isDisabled()),
+        DisablingConfigs.item(() => !spec.enabled || providersbackstage.isDisabled()),
         ReadOnly.receivingConfig(),
         Replacing.config({ })
       ].concat(spec.itemBehaviours)

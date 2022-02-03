@@ -30,7 +30,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         components: [
           renderToolbarButton({
             type: 'button',
-            disabled: false,
+            enabled: true,
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
             text: Optional.some('button1'),
@@ -40,7 +40,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             },
             onAction: (api: Toolbar.ToolbarButtonInstanceApi) => {
               store.adder('onAction.1')();
-              api.setDisabled(shouldDisable.get());
+              api.setEnabled(!shouldDisable.get());
             }
           }, TestProviders)
         ]
@@ -54,7 +54,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         components: [
           renderToolbarToggleButton({
             type: 'togglebutton',
-            disabled: false,
+            enabled: true,
             active: false,
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
@@ -65,7 +65,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             },
             onAction: (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
               store.adder('onToggleAction.2')();
-              api.setDisabled(shouldDisable.get());
+              api.setEnabled(!shouldDisable.get());
               api.setActive(shouldActivate.get());
             }
           }, TestProviders)
@@ -100,7 +100,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             },
             onAction: (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
               store.adder('onToggleAction.3')();
-              api.setDisabled(shouldDisable.get());
+              api.setEnabled(!shouldDisable.get());
               api.setActive(shouldActivate.get());
             },
             onItemAction: (api: Toolbar.ToolbarToggleButtonInstanceApi, _value: string) => {

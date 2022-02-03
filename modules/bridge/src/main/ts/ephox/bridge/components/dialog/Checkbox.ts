@@ -7,18 +7,18 @@ import { FormComponent, formComponentFields, FormComponentSpec } from './FormCom
 export interface CheckboxSpec extends FormComponentSpec {
   type: 'checkbox';
   label: string;
-  disabled?: boolean;
+  enabled?: boolean;
 }
 
 export interface Checkbox extends FormComponent {
   type: 'checkbox';
   label: string;
-  disabled: boolean;
+  enabled: boolean;
 }
 
 const checkboxFields = formComponentFields.concat([
   ComponentSchema.label,
-  ComponentSchema.disabled
+  ComponentSchema.enabled
 ]);
 
 export const checkboxSchema = StructureSchema.objOf(checkboxFields);

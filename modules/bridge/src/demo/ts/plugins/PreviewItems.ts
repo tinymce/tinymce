@@ -3,7 +3,7 @@ import { getDemoRegistry } from '../buttons/DemoRegistry';
 export const registerPreviewItems = (): void => {
   getDemoRegistry().addButton('preview', {
     type: 'button',
-    disabled: false,
+    enabled: true,
     onAction: (_buttonApi) => {
       // launch preview
     }

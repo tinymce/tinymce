@@ -182,7 +182,7 @@ export const createPartialMenu = (
         isHorizontalMenu
       );
       if (item.type === 'nestedmenuitem' && item.getSubmenuItems().length <= 0) {
-        return createItem({ ...item, disabled: true });
+        return createItem({ ...item, enabled: false });
       } else {
         return createItem(item);
       }

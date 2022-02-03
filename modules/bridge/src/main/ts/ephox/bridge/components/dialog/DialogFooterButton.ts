@@ -12,7 +12,7 @@ interface BaseDialogFooterButtonSpec {
   name?: string;
   align?: 'start' | 'end';
   primary?: boolean;
-  disabled?: boolean;
+  enabled?: boolean;
   icon?: string;
 }
 
@@ -35,7 +35,7 @@ interface BaseDialogFooterButton {
   name: string;
   align: 'start' | 'end';
   primary: boolean;
-  disabled: boolean;
+  enabled: boolean;
   icon: Optional<string>;
 }
 
@@ -59,7 +59,7 @@ const baseFooterButtonFields = [
   ComponentSchema.optionalIcon,
   FieldSchema.defaultedStringEnum('align', 'end', [ 'start', 'end' ]),
   ComponentSchema.primary,
-  ComponentSchema.disabled
+  ComponentSchema.enabled
 ];
 
 export const dialogFooterButtonFields = [

@@ -85,12 +85,8 @@ const getDialogApi = <T extends Dialog.DialogData>(
     });
   };
 
-  const disable = (name: string) => {
-    getCompByName(access, name).each(Disabling.disable);
-  };
-
-  const enable = (name: string) => {
-    getCompByName(access, name).each(Disabling.enable);
+  const setEnabled = (name: string, state: boolean) => {
+    getCompByName(access, name).each(state ? Disabling.enable : Disabling.disable);
   };
 
   const focus = (name: string) => {
@@ -147,8 +143,7 @@ const getDialogApi = <T extends Dialog.DialogData>(
   const instanceApi = {
     getData,
     setData,
-    disable,
-    enable,
+    setEnabled,
     focus,
     block,
     unblock,

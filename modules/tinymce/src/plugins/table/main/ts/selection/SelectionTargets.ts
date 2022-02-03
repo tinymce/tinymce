@@ -134,19 +134,19 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
   const onSetup = (api: UiApi, isDisabled: TargetSetupCallback) =>
     setupHandler(() =>
       targets.get().fold(() => {
-        api.setDisabled(true);
+        api.setEnabled(false);
       }, (targets) => {
-        api.setDisabled(isDisabled(targets));
+        api.setEnabled(!isDisabled(targets));
       })
     );
 
   const onSetupWithToggle = (api: UiToggleApi, isDisabled: TargetSetupCallback, isActive: TargetSetupCallback) =>
     setupHandler(() =>
       targets.get().fold(() => {
-        api.setDisabled(true);
+        api.setEnabled(false);
         api.setActive(false);
       }, (targets) => {
-        api.setDisabled(isDisabled(targets));
+        api.setEnabled(!isDisabled(targets));
         api.setActive(isActive(targets));
       })
     );

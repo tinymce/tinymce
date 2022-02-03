@@ -4,7 +4,7 @@ import { Optional, Result } from '@ephox/katamari';
 import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface BaseToolbarButtonSpec<I extends BaseToolbarButtonInstanceApi> {
-  disabled?: boolean;
+  enabled?: boolean;
   tooltip?: string;
   icon?: string;
   text?: string;
@@ -12,8 +12,8 @@ export interface BaseToolbarButtonSpec<I extends BaseToolbarButtonInstanceApi> {
 }
 
 export interface BaseToolbarButtonInstanceApi {
-  isDisabled: () => boolean;
-  setDisabled: (state: boolean) => void;
+  isEnabled: () => boolean;
+  setEnabled: (state: boolean) => void;
 }
 
 export interface ToolbarButtonSpec extends BaseToolbarButtonSpec<ToolbarButtonInstanceApi> {
@@ -27,7 +27,7 @@ export interface ToolbarButtonInstanceApi extends BaseToolbarButtonInstanceApi {
 }
 
 export interface BaseToolbarButton<I extends BaseToolbarButtonInstanceApi> {
-  disabled: boolean;
+  enabled: boolean;
   tooltip: Optional<string>;
   icon: Optional<string>;
   text: Optional<string>;
@@ -40,7 +40,7 @@ export interface ToolbarButton extends BaseToolbarButton<ToolbarButtonInstanceAp
 }
 
 export const baseToolbarButtonFields = [
-  ComponentSchema.disabled,
+  ComponentSchema.enabled,
   ComponentSchema.optionalTooltip,
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalText,
