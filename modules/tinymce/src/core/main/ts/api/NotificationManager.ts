@@ -74,11 +74,9 @@ const NotificationManager = (editor: Editor): NotificationManager => {
   };
 
   const reposition = () => {
-    if (notifications.length > 0) {
-      Arr.each(notifications, (notification) => {
-        notification.reposition();
-      });
-    }
+    Arr.each(notifications, (notification) => {
+      notification.reposition();
+    });
   };
 
   const addNotification = (notification: NotificationApi) => {

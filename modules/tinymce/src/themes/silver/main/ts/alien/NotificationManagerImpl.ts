@@ -89,7 +89,7 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
         maxHeightFunction: MaxHeight.expandable()
       };
 
-      // TODO TINY-8128: This is a nasty hack. This function only works if called on notifications in order.
+      // TODO TINY-8128: This is a hack. This logic only works if called on every notification in order (as NotificationManager.reposition() does).
       const allNotifications = editor.notificationManager.getNotifications();
 
       if (allNotifications[0] === thisNotification) {
@@ -101,24 +101,21 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
         InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor }, getBounds);
       } else {
         // all other notifications go directly below the previous one
-        for (let i = 1; i < allNotifications.length; i++) {
-          if (allNotifications[i] === thisNotification) {
-            const previousNotification = allNotifications[i - 1].getEl();
+        Arr.indexOf(allNotifications, thisNotification).each((idx) => {
+          const previousNotification = allNotifications[idx - 1].getEl();
 
-            const nodeAnchor: NodeAnchorSpec = {
-              type: 'node',
-              root: SugarBody.body(),
-              node: Optional.some(SugarElement.fromDom(previousNotification)),
-              overrides: anchorOverrides,
-              layouts: {
-                onRtl: () => [ Layout.south ],
-                onLtr: () => [ Layout.south ]
-              }
-            };
-            InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor: nodeAnchor }, getBounds);
-            break;
-          }
-        }
+          const nodeAnchor: NodeAnchorSpec = {
+            type: 'node',
+            root: SugarBody.body(),
+            node: Optional.some(SugarElement.fromDom(previousNotification)),
+            overrides: anchorOverrides,
+            layouts: {
+              onRtl: () => [ Layout.south ],
+              onLtr: () => [ Layout.south ]
+            }
+          };
+          InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor: nodeAnchor }, getBounds);
+        });
       }
     };
 
