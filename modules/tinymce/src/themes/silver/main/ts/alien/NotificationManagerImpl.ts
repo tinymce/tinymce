@@ -27,13 +27,11 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
     /* Attempt to ensure that the notifications render below the top of the header and between
      * whichever is the larger between the bottom of the content area and the bottom of the viewport
      *
-     * Note: This isn't perfect, but without being able to use docking and associate the notifications
-     * together due to the `moveTo` and `moveRel` APIs then we're a bit stuck and a proper solution
-     * will have to be done in TinyMCE 6.
+     * Note: This isn't perfect, but we have a plan to fix it now that TinyMCE 6 removed public methods restricting
+     * our ability to change anything (TINY-6679).
      *
-     * Updated note after TINY-6679: The `moveTo` and `moveRel` apis have been made private.
-     * There wasn't time to implement the proper solution but now that the API is self-contained
-     * that can be done in TINY-8128.
+     * TODO TINY-8128: use docking and associate the notifications together so they update position automatically
+     * during UI refresh updates.
      */
     const contentArea = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
     const win = Boxes.win();
