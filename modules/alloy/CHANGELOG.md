@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+- Dropdowns now use an "aria-controls" attribute rather than an "aria-owns" attribute when activated.
 - Firefox will now use the native `focusin` and `focusout` events instead of capturing the `focus` and `blur` events.
 - Horizontal and Vertical slider data is now just a number, instead of objects with single `x` or `y` properties #TINY-8304
 

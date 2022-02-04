@@ -12,7 +12,7 @@ import * as Options from '../api/Options';
 
 const stateToggle = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
   const handler = () => {
-    api.setDisabled(Options.enableWhenDirty(editor) && !editor.isDirty());
+    api.setEnabled(!Options.enableWhenDirty(editor) || editor.isDirty());
   };
 
   handler();
@@ -24,7 +24,7 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addButton('save', {
     icon: 'save',
     tooltip: 'Save',
-    disabled: true,
+    enabled: false,
     onAction: () => editor.execCommand('mceSave'),
     onSetup: stateToggle(editor)
   });
@@ -32,7 +32,7 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addButton('cancel', {
     icon: 'cancel',
     tooltip: 'Cancel',
-    disabled: true,
+    enabled: false,
     onAction: () => editor.execCommand('mceCancel'),
     onSetup: stateToggle(editor)
   });

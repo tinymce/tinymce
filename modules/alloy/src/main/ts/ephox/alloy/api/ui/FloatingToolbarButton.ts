@@ -1,7 +1,7 @@
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as ComponentStructure from '../../alien/ComponentStructure';
-import * as AriaOwner from '../../aria/AriaOwner';
+import * as AriaControls from '../../aria/AriaControls';
 import * as MaxWidth from '../../positioning/layout/MaxWidth';
 import { Layouts } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
@@ -58,12 +58,12 @@ const setGroups = (button: AlloyComponent, toolbar: AlloyComponent, detail: Floa
 };
 
 const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, detail: FloatingToolbarButtonDetail) => {
-  const ariaOwner = AriaOwner.manager();
+  const ariaControls = AriaControls.manager();
 
   const onOpen = (sandbox: AlloyComponent, toolbar: AlloyComponent) => {
     detail.fetch().get((groups) => {
       setGroups(button, toolbar, detail, spec.layouts, groups);
-      ariaOwner.link(button.element);
+      ariaControls.link(button.element);
       Keying.focusIn(toolbar);
     });
   };
@@ -72,14 +72,14 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
     // Toggle and focus the button
     Toggling.off(button);
     Focusing.focus(button);
-    ariaOwner.unlink(button.element);
+    ariaControls.unlink(button.element);
   };
 
   return {
     dom: {
       tag: 'div',
       attributes: {
-        id: ariaOwner.id
+        id: ariaControls.id
       }
     },
     behaviours: Behaviour.derive(

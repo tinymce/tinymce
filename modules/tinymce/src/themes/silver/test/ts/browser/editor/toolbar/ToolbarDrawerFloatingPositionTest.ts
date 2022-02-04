@@ -31,7 +31,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerFloatingPosi
     menubar: false,
     width: 450,
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'undo redo | styleselect | bold italic underline | strikethrough superscript subscript | alignleft aligncenter alignright aligncenter | outdent indent | cut copy paste | selectall remove',
+    toolbar: 'undo redo | styles | bold italic underline | strikethrough superscript subscript | alignleft aligncenter alignright aligncenter | outdent indent | cut copy paste | selectall remove',
     toolbar_mode: 'floating'
   }, setupElement, []);
 

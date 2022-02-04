@@ -40,14 +40,14 @@ export const createFindReplaceDialog = (): void => {
           name: 'replace',
           text: 'Replace',
           align: 'start',
-          disabled: true
+          enabled: false
         },
         {
           type: 'custom',
           name: 'replaceall',
           text: 'Replace all',
           align: 'start',
-          disabled: true
+          enabled: false
         },
         // TODO: How do we make a spacer here?
         {
@@ -55,14 +55,14 @@ export const createFindReplaceDialog = (): void => {
           name: 'prev',
           text: 'Prev',
           align: 'end',
-          disabled: true
+          enabled: false
         },
         {
           type: 'custom',
           name: 'next',
           text: 'Next',
           align: 'end',
-          disabled: true
+          enabled: false
         }
       ],
       initialData: {

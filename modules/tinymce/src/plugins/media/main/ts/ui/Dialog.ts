@@ -97,15 +97,15 @@ const getEditorData = (editor: Editor): MediaData => {
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
   return {
     embed: snippet,
-    ...HtmlToData.htmlToData(snippet)
+    ...HtmlToData.htmlToData(snippet, editor.schema)
   };
 };
 
-const addEmbedHtml = (api: Dialog.DialogInstanceApi<MediaDialogData>) => (response: Service.EmbedResult): void => {
+const addEmbedHtml = (api: Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) => (response: Service.EmbedResult): void => {
   // Only set values if a URL has been defined
   if (Type.isString(response.url) && response.url.trim().length > 0) {
     const html = response.html;
-    const snippetData = HtmlToData.htmlToData(html);
+    const snippetData = HtmlToData.htmlToData(html, editor.schema);
     const nuData: MediaData = {
       ...snippetData,
       source: response.url,
@@ -140,7 +140,7 @@ const handleInsert = (editor: Editor, html: string): void => {
 };
 
 const submitForm = (prevData: MediaData, newData: MediaData, editor: Editor): void => {
-  newData.embed = UpdateHtml.updateHtml(newData.embed, newData);
+  newData.embed = UpdateHtml.updateHtml(newData.embed, newData, false, editor.schema);
 
   // Only fetch the embed HTML content if the URL has changed from what it previously was
   if (newData.embed && (prevData.source === newData.source || Service.isCached(newData.source))) {
@@ -163,17 +163,17 @@ const showDialog = (editor: Editor): void => {
 
     // If a new URL is entered, then clear the embed html and fetch the new data
     if (prevData.source !== serviceData.source) {
-      addEmbedHtml(win)({ url: serviceData.source, html: '' });
+      addEmbedHtml(win, editor)({ url: serviceData.source, html: '' });
 
       Service.getEmbedHtml(editor, serviceData)
-        .then(addEmbedHtml(win))
+        .then(addEmbedHtml(win, editor))
         .catch(handleError(editor));
     }
   };
 
   const handleEmbed = (api: Dialog.DialogInstanceApi<MediaDialogData>): void => {
     const data = unwrap(api.getData());
-    const dataFromEmbed = HtmlToData.htmlToData(data.embed);
+    const dataFromEmbed = HtmlToData.htmlToData(data.embed, editor.schema);
     api.setData(wrap(dataFromEmbed));
   };
 

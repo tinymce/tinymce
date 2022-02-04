@@ -17,7 +17,7 @@ describe('headless.tinymce.themes.silver.components.listbox.ListBoxTest', () => 
     renderListBox({
       name: 'selector',
       label: Optional.some('selector'),
-      disabled: false,
+      enabled: true,
       items: [
         { value: 'one', text: 'One' },
         { value: 'two', text: 'Two' },

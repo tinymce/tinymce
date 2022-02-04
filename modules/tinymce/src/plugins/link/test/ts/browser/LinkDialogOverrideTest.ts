@@ -25,17 +25,13 @@ describe('browser.tinymce.plugins.link.LinkDialogOverrideTest', () => {
                   spec.onChange(api, details);
                   if (details.name === 'url' || details.name === 'link' || details.name === 'anchor') {
                     const data = api.getData();
-                    if (data.url.value.length === 0) {
-                      api.disable('save');
-                    } else {
-                      api.enable('save');
-                    }
+                    api.setEnabled('save', data.url.value.length > 0);
                   }
                 }
               });
               const api = originalWindowManager.open(newSpec);
               if (spec.initialData.url.value.length === 0) {
-                api.disable('save');
+                api.setEnabled('save', false);
               }
 
               return api;

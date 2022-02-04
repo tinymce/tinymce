@@ -31,8 +31,8 @@ const renderChoiceItem = (
       Toggling.set(component, state);
     },
     isActive: () => Toggling.isOn(component),
-    isDisabled: () => Disabling.isDisabled(component),
-    setDisabled: (state: boolean) => Disabling.set(component, state)
+    isEnabled: () => !Disabling.isDisabled(component),
+    setEnabled: (state: boolean) => Disabling.set(component, !state)
   });
 
   const structure = renderItemStructure({
@@ -54,7 +54,7 @@ const renderChoiceItem = (
   return Merger.deepMerge(
     renderCommonItem({
       data: buildData(spec),
-      disabled: spec.disabled,
+      enabled: spec.enabled,
       getApi,
       onAction: (_api) => onItemValueHandler(spec.value),
       onSetup: (api) => {

@@ -15,7 +15,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'advlist lists',
-    toolbar: 'bold | italic | underline | strikethrough | cut | copy | paste | indent | subscript | superscript | removeformat | fontselect | bullist',
+    toolbar: 'bold | italic | underline | strikethrough | cut | copy | paste | indent | subscript | superscript | removeformat | fontfamily | bullist',
     toolbar_mode: 'floating',
     menubar: false,
     width: 800, // Make sure all buttons show initially

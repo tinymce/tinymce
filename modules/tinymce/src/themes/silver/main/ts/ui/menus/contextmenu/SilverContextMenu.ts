@@ -31,7 +31,7 @@ const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMen
   const commonMenuItem = (item: Menu.ContextMenuItem | Menu.ContextSubMenu) => ({
     text: item.text,
     icon: item.icon,
-    disabled: item.disabled,
+    enabled: item.enabled,
     shortcut: item.shortcut,
   });
 
@@ -131,7 +131,7 @@ const getAnchorType = (editor: Editor, e: PointerEvent): AnchorType => {
   }
 };
 
-export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Error>, backstage: UiFactoryBackstage) => {
+export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, string>, backstage: UiFactoryBackstage) => {
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch;
 

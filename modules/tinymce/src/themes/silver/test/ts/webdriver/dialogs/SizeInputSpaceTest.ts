@@ -14,7 +14,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.SizeInputSpaceTest', () => {
       name: 'dimensions',
       label: Optional.some('size'),
       constrain: true,
-      disabled: false
+      enabled: true
     }, TestProviders)
   ));
 

@@ -496,7 +496,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         fontWeight: 'bold'
       }
     });
-    editor.getBody().innerHTML = '<p>a<span id="id" style="font-weight:bold">1234</span>b</p>';
+    editor.getBody().innerHTML = '<p>a<span id="test-id" style="font-weight:bold">1234</span>b</p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
@@ -504,7 +504,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('format');
     assert.equal(
       getContent(editor),
-      '<p><span style=\"font-weight: bold;\">a<span id=\"id\">1234</span>b</span></p>',
+      '<p><span style=\"font-weight: bold;\">a<span id=\"test-id\">1234</span>b</span></p>',
       'Inline element merged with child 3'
     );
   });

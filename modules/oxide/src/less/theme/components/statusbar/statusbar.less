@@ -18,6 +18,7 @@
 @statusbar-separator-color: transparent;
 @statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
 @statusbar-text-transform: none;
+@statusbar-not-disabled-selector: ~'&:not(:disabled):not([aria-disabled=true])';
 
 .tox {
   .tox-statusbar {
@@ -68,10 +69,30 @@
     color: @statusbar-text-color;
     text-decoration: none;
 
-    &:hover:not(:disabled):not([aria-disabled=true]),
-    &:focus:not(:disabled):not([aria-disabled=true]) {
-      cursor: pointer;
-      text-decoration: underline;
+    &:hover,
+    &:focus {
+      @{statusbar-not-disabled-selector} {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .tox-statusbar__branding {
+    svg {
+      fill: @statusbar-text-color;
+      height: 1.4em;
+      vertical-align: -.4em;
+      width: 4.0625em;
+    }
+
+    a:hover,
+    a:focus {
+      @{statusbar-not-disabled-selector} {
+        svg {
+          fill: @text-color;
+        }
+      }
     }
   }
 
