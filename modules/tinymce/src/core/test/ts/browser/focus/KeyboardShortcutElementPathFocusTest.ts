@@ -20,9 +20,7 @@ describe('browser.tinymce.core.focus.KeyboardShortcutElementPathFocusTest ', () 
       it('TINY-2884: Pressing Alt+F11 focuses the element path and escape from the toolbar will focus the editor', async () => {
         const editor = hook.editor();
         const doc = SugarDocument.getDocument();
-
         TinyContentActions.keystroke(editor, 122, { alt: true });
-
         await FocusTools.pTryOnSelector('Assert element path is focused', doc, 'div[role=navigation] .tox-statusbar__path-item');
         TinyUiActions.keystroke(editor, Keys.escape());
       });

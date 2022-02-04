@@ -12,31 +12,31 @@ describe('browser.tinymce.core.undo.UndoKeyboardShortcutTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
-  // idk why but it works, seperate test command for macOS, Firefox, and the rest
   const selectAll = (editor: Editor) => {
     editor.execCommand('SelectAll');
   };
-  const undoCommand = (editor: Editor) => {
+
+  const undoKeyStroke = (editor: Editor) => {
     TinyContentActions.keystroke(editor, 'Z'.charCodeAt(0), platform.os.isMacOS() ? { metaKey: true } : { ctrl: true });
-
   };
-  const redoCommand = (editor: Editor) => {
+
+  const redoKeyStroke = (editor: Editor) => {
     TinyContentActions.keystroke(editor, 'Y'.charCodeAt(0), platform.os.isMacOS() ? { metaKey: true } : { ctrl: true });
-
   };
+
   const deleteCommand = (editor: Editor) => {
     editor.execCommand('Delete');
   };
 
-  it('TINY-2884: shoud undo and redo action', () => {
+  it('TINY-2884: should undo and redo action', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     selectAll(editor);
     deleteCommand(editor);
     TinyAssertions.assertContent(editor, '');
-    undoCommand(editor);
+    undoKeyStroke(editor);
     TinyAssertions.assertContent(editor, '<p>abc</p>');
-    redoCommand(editor);
+    redoKeyStroke(editor);
     TinyAssertions.assertContent(editor, '');
   });
 });
