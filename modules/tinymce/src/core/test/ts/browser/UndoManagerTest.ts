@@ -594,4 +594,21 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
   });
+
+  it('TINY-6920: Do not fire change event at first typed character', () => {
+    const editor = hook.editor();
+    let changeEventCounter = 0;
+
+    const onChange = () => {
+      changeEventCounter++;
+    };
+
+    editor.resetContent('');
+
+    editor.on('change', onChange);
+    TinyContentActions.type(editor, 'A');
+    editor.off('change', onChange);
+
+    assert.equal(changeEventCounter, 0, 'No events should be detected');
+  });
 });

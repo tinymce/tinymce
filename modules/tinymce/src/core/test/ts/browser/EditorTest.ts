@@ -3,7 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, SugarBody } from '@ephox/sugar';
-import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -43,24 +43,6 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(lastLevel.content, editor.undoManager.data[0].content, 'Event: change');
 
     editor.off('change');
-  });
-
-  it('TINY-6920: Do not fire change event at first typed character', () => {
-    const editor = hook.editor();
-    let changeEventCounter = 0;
-
-    const onChange = () => {
-      changeEventCounter++;
-    };
-
-    editor.setContent('');
-    editor.setDirty(false);
-
-    editor.on('change', onChange);
-    TinyContentActions.type(editor, 'A');
-    editor.off('change', onChange);
-
-    assert.equal(changeEventCounter, 0, 'No events should be detected');
   });
 
   it('TBA: Event: beforeExecCommand', () => {
