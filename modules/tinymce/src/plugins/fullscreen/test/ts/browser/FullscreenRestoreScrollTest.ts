@@ -7,7 +7,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/fullscreen/Plugin';
 
-describe('browser.tinymce.plugins.fullscreen.FullscreenRestoreScrollTest.ts', () => {
+describe('browser.tinymce.plugins.fullscreen.FullscreenRestoreScrollTest', () => {
   const setupElement = () => {
     const container = SugarElement.fromTag('div');
     const beforeSpacer = SugarElement.fromTag('div');
