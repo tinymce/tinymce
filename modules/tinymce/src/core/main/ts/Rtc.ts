@@ -58,8 +58,8 @@ interface RtcRuntimeApi {
   };
   editor: {
     getContent: (args: GetContentArgs) => Content;
-    setContent: (content: Content, args: SetContentArgs) => SetContentResult;
-    insertContent: (content: string) => string;
+    setContent: (content: Content, args: SetContentArgs) => Content;
+    insertContent: (content: string) => void;
     addVisual: () => void;
   };
   selection: {
@@ -222,8 +222,13 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
     },
     editor: {
       getContent: (args) => editor.getContent(args),
-      setContent: (content, args) => editor.setContent(content, args),
-      insertContent: (content, _details) => editor.insertContent(content),
+      setContent: (content, args) => {
+        return { content: editor.setContent(content, args), html: '' };
+      },
+      insertContent: (content, _details) => {
+        editor.insertContent(content);
+        return '';
+      },
       addVisual: editor.addVisual
     },
     selection: {
