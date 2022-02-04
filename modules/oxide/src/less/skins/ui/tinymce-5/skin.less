@@ -45,6 +45,7 @@
 @menubar-separator-color: @border-color;
 @menubar-row-separator-color: @border-color;
 @statusbar-padding-x: @pad-sm;
+@statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
 @toolbar-group-padding-x: 4px;
 
 .tox {
@@ -96,5 +97,29 @@
 
   .tox-collection__item {
     border-radius: 0;
+    cursor: pointer;
+  }
+
+  .tox-statusbar a,
+  .tox-statusbar__path-item,
+  .tox-statusbar__wordcount {
+    &:hover,
+    &:focus {
+      @{statusbar-not-disabled-selector} {
+        color: @statusbar-text-color;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .tox-statusbar__branding {
+    svg {
+      vertical-align: -.25em;
+    }
+  }
+
+  .tox-statusbar__resize-handle {
+    padding-bottom: 0;
+    padding-right: 0;
   }
 }
