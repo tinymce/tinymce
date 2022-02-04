@@ -1,7 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyContentActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
