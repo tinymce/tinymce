@@ -7,6 +7,14 @@
 
 import AddOnManager from './AddOnManager';
 
+/**
+ * This API will be expanded with new requirements (breaking changes) in minor releases.
+ *
+ * It will be made public in a future major release.
+ *
+ * @private
+ * @class tinymce.Model
+ */
 export interface Model { }
 
 type ModelManager = AddOnManager<Model>;
