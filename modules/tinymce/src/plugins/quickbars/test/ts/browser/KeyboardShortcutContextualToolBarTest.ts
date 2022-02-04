@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.quickbars.KeyboardShortcutContextualToolbarTes
 
   const doc = SugarDocument.getDocument();
 
-  it('TINY-2884: keypress should focus on contextual menu', async () => {
+  it('TINY-2884: keypress should focus on contextual toolbar', async () => {
     const editor = hook.editor();
     editor.setContent('<p>aaaaaaa</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
