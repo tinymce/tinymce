@@ -486,7 +486,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
     let ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,
       prefix, outputName, globalAttributes, globalAttributesOrder, value;
     const elementRuleRegExp = /^([#+\-])?([^\[!\/]+)(?:\/([^\[!]+))?(?:(!?)\[([^\]]+)])?$/,
-      attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=:<]+)?(?:([=:<])(.*))?$/,
+      attrRuleRegExp = /^([!\-])?(\w+[\\:]:\w+|[^=~<]+)?(?:([=~<])(.*))?$/,
       hasPatternsRegExp = /[*?+]/;
 
     if (validElements) {
@@ -578,7 +578,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
                   }
 
                   // Forced value
-                  if (prefix === ':') {
+                  if (prefix === '~') {
                     element.attributesForced = element.attributesForced || [];
                     element.attributesForced.push({ name: attrName, value });
                     attr.forcedValue = value;

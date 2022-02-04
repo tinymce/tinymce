@@ -97,13 +97,22 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   });
 
   it('Forced attribute values', () => {
-    const schema = Schema({ valid_elements: 'img[border:0]' });
+    const schema = Schema({ valid_elements: 'img[border~0]' });
+    schema.addValidElements('a[href~a|xlink:href~b]');
     assert.deepEqual(
       schema.getElementRule('img'),
       {
         attributes: { border: { forcedValue: '0' }},
         attributesOrder: [ 'border' ],
         attributesForced: [{ name: 'border', value: '0' }]
+      }
+    );
+    assert.deepEqual(
+      schema.getElementRule('a'),
+      {
+        attributes: { 'href': { forcedValue: 'a' }, 'xlink:href': { forcedValue: 'b' }},
+        attributesOrder: [ 'href', 'xlink:href' ],
+        attributesForced: [{ name: 'href', value: 'a' }, { name: 'xlink:href', value: 'b' }]
       }
     );
   });
@@ -159,8 +168,9 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   });
 
   it(`addValidElements when there's a colon in an attribute name`, () => {
+    // Test that both a literal and escaped colon are correctly handled
     const schema = Schema({ valid_elements: '@[xml\\:space]' });
-    schema.addValidElements('pre[xml\\:lang]');
+    schema.addValidElements('pre[xml:lang]');
     assert.deepEqual(
       schema.getElementRule('pre'),
       {

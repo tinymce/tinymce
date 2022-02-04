@@ -235,6 +235,7 @@ const Quirks = (editor: Editor): Quirks => {
    * by clicking on them so we need to fake that.
    */
   const selectControlElements = () => {
+    const visualAidsAnchorClass = Options.getVisualAidsAnchorClass(editor);
     editor.on('click', (e) => {
       const target = e.target;
 
@@ -247,7 +248,7 @@ const Quirks = (editor: Editor): Quirks => {
         editor.nodeChanged();
       }
 
-      if (target.nodeName === 'A' && dom.hasClass(target, 'mce-item-anchor')) {
+      if (target.nodeName === 'A' && dom.hasClass(target, visualAidsAnchorClass) && target.childNodes.length === 0) {
         e.preventDefault();
         selection.select(target);
       }
