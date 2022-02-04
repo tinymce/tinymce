@@ -6,7 +6,7 @@ import { TinyHooks, TinySelections, TinyContentActions, TinyUiActions } from '@e
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
 
-describe('browser.tinymce.plugins.quickbars.KeyboardShortcutContextualToolBarTest', () => {
+describe('browser.tinymce.plugins.quickbars.KeyboardShortcutContextualToolbarTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'quickbars',
     quickbars_insert_toolbar: 'quicktable image media codesample',
