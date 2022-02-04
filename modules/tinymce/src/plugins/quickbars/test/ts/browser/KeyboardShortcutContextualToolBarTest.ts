@@ -6,27 +6,24 @@ import { TinyHooks, TinySelections, TinyContentActions, TinyUiActions } from '@e
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
 
-describe('browser.tinymce.plugins.quickbars.KeyboardShortcutContextualMenuTest', () => {
+describe('browser.tinymce.plugins.quickbars.KeyboardShortcutContextualToolBarTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'quickbars',
     quickbars_insert_toolbar: 'quicktable image media codesample',
     quickbars_selection_toolbar: 'bold italic underline | formatselect | bullist numlist | blockquote quicklink',
     contextmenu: 'undo redo | inserttable | cell row column deletetable | help',
     base_url: '/project/tinymce/js/tinymce',
-  }, [ Plugin ]);
+  }, [ Plugin ], true);
 
   const doc = SugarDocument.getDocument();
 
   it('TINY-2884: keypress should focus on contextual menu', async () => {
     const editor = hook.editor();
     editor.setContent('<p>aaaaaaa</p>');
-    editor.focus();
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
-    // safari would need this or else won't pass
-    setTimeout(() => {
-      TinyContentActions.keystroke(editor, 120, { ctrl: true });
-    }, 40);
-    await FocusTools.pTryOnSelector('Assert toolbar is focused', doc, 'div[role=toolbar] .tox-tbtn');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop div[role=toolbar] .tox-tbtn');
+    TinyContentActions.keystroke(editor, 120, { ctrl: true });
+    await FocusTools.pTryOnSelector('Assert toolbar is focused', doc, '.tox-pop div[role=toolbar] .tox-tbtn');
     TinyUiActions.keystroke(editor, Keys.escape());
     await FocusTools.pTryOnSelector('Assert editor is focused', doc, 'iframe');
   });
