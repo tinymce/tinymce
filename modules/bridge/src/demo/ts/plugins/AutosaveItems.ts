@@ -8,12 +8,12 @@ const editor = {
 export const registerAutosaveItems = (): void => {
   getDemoRegistry().addButton('restoredraft', {
     type: 'button',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       const editorOffCallback = (e) => {
         // Set the disabled state based on something
         const state = e;
-        buttonApi.setDisabled(state);
+        buttonApi.setEnabled(!state);
       };
       editor.on('StoreDraft RestoreDraft RemoveDraft', editorOffCallback);
       return () => editor.off('StoreDraft RestoreDraft RemoveDraft', editorOffCallback);

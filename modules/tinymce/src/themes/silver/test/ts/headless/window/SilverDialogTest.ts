@@ -77,7 +77,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogTest', () => {
       'input'
     );
     assertScrollLock(true);
-    dialogApi.disable('barny');
+    dialogApi.setEnabled('barny', false);
     closeDialog();
     await Waiter.pTryUntil(
       'Waiting for all dialog events when closing',

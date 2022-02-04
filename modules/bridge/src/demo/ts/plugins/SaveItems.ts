@@ -11,10 +11,10 @@ const editor = {
 export const registerSaveItems = (): void => {
   getDemoRegistry().addButton('save', {
     type: 'button',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       const editorOffCallback = () => {
-        buttonApi.setDisabled(editor.isDirty());
+        buttonApi.setEnabled(!editor.isDirty());
       };
       editor.on('nodeChange dirty', editorOffCallback);
       return () => editor.off('nodeChange dirty', editorOffCallback);

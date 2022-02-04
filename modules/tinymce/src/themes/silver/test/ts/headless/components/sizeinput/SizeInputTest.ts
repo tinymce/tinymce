@@ -15,7 +15,7 @@ describe('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest', ()
       name: 'dimensions',
       label: Optional.some('size'),
       constrain: true,
-      disabled: false
+      enabled: true
     }, TestProviders)
   ));
 

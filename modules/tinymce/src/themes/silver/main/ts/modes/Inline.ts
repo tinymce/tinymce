@@ -141,13 +141,10 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     hide: () => {
       ui.hide();
     },
-    enable: () => {
-      ReadOnly.broadcastReadonly(uiComponents, false);
+    setEnabled: (state) => {
+      ReadOnly.broadcastReadonly(uiComponents, !state);
     },
-    disable: () => {
-      ReadOnly.broadcastReadonly(uiComponents, true);
-    },
-    isDisabled: () => Disabling.isDisabled(outerContainer)
+    isEnabled: () => !Disabling.isDisabled(outerContainer)
   };
 
   return {

@@ -51,15 +51,15 @@ export const renderCardMenuItem = (
   extras: CardExtras
 ) => {
   const getApi = (component: AlloyComponent): Menu.CardMenuItemInstanceApi => ({
-    isDisabled: () => Disabling.isDisabled(component),
-    setDisabled: (state: boolean) => {
-      Disabling.set(component, state);
+    isEnabled: () => !Disabling.isDisabled(component),
+    setEnabled: (state: boolean) => {
+      Disabling.set(component, !state);
 
       // Disable sub components
       Arr.each(SelectorFilter.descendants(component.element, '*'), (elm) => {
         component.getSystem().getByDom(elm).each((comp: AlloyComponent) => {
           if (comp.hasConfigured(Disabling)) {
-            Disabling.set(comp, state);
+            Disabling.set(comp, !state);
           }
         });
       });
@@ -81,7 +81,7 @@ export const renderCardMenuItem = (
 
   return renderCommonItem({
     data: buildData({ text: Optional.none(), ...spec }),
-    disabled: spec.disabled,
+    enabled: spec.enabled,
     getApi,
     onAction: spec.onAction,
     onSetup: spec.onSetup,

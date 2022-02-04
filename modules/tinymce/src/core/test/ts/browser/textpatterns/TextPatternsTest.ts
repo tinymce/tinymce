@@ -204,4 +204,13 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
     Utils.setContentAndPressEnter(editor, '* **important list**');
     TinyAssertions.assertContentPresence(editor, { ul: 1, li: 2, strong: 1 });
   });
+
+  it('TINY-8414: should not throw an error if triggered at the start of a text node', () => {
+    // Note: This case is largely nonsense and not something that should ever occur naturally
+    const editor = hook.editor();
+    editor.setContent('<p><a href="about:blank"><span class="test">www</span>.google.com</a></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 1 ], 0);
+    TinyContentActions.keyup(editor, Keys.space());
+    TinyAssertions.assertContent(editor, '<p><a href="about:blank"><span class="test">www</span>.google.com</a></p>');
+  });
 });

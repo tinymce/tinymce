@@ -173,7 +173,11 @@ const parseCurrentLine = (editor: Editor, endOffset: number): void => {
     bookmark = editor.selection.getBookmark();
 
     editor.selection.setRng(rng);
-    editor.execCommand('createlink', false, url);
+
+    // Needs to be a native createlink command since this is executed in a keypress event handler
+    // so the pending character that is to be inserted needs to be inserted after the link. That will not
+    // happen if we use the formatter create link version.
+    editor.getDoc().execCommand('createlink', false, url);
 
     if (Type.isString(defaultLinkTarget)) {
       editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);

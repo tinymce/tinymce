@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `element_format` option has been set to `html` by default #TINY-8263
 - The `schema` option has been set to `html5` by default #TINY-8261
+- The `:` control character has been changed to `~` for the schema `valid_elements` and `extended_valid_elements` options #TINY-6726
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
@@ -67,6 +68,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
 - Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
 - Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
+- Replaced the `isDisabled()` function with an `isEnabled()` function for various APIs #TINY-8101
+- Replaced the `enable()` and `disable()` functions with a `setEnabled(state)` function in various APIs #TINY-8101
+- Replaced the `disabled` property with an `enabled` property in various APIs #TINY-8101
+- Replaced the `disable(name)` and `enable(name)` functions with a `setEnabled(name, state)` function in the Dialog APIs #TINY-8101
+- The Editor commands APIs will no longer fallback to executing the browsers native command functionality #TINY-7829
+- The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
+- Replaced 'Powered by Tiny' link text with logo #TINY-8371
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -75,8 +83,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `table` plugin would sometimes not correctly handle headers in the `tfoot` section #TINY-8104
 - The aria labels for the color picker dialog were not translated #TINY-8381
 - The `editor.annotator.remove` did not keep selection when removing the annotation #TINY-8195
+- The `silver` theme UI was incorrectly rendered before plugins had initialized #TINY-8288
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
-- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308 
+- Deleting content would sometimes not fire `beforeinput` and `input` events as expected #TINY-8168  #TINY-8329
+- Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308
+- Anchor elements would render incorrectly when using the `allow_html_in_named_anchor` option #TINY-3799
+- Fixed sub-menu items not read by screen readers. Patch contributed by westonkd #TINY-8417
 
 ### Removed
 - Removed the jQuery integration #TINY-4518
@@ -113,6 +125,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `editor.settings` property as it's been replaced by the new Options API #TINY-8236
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
 - Removed the `mceInsertRawHTML` command #TINY-8214
+- Removed the undocumented `editor.editorCommands.hasCustomCommand` API #TINY-7829
+- Removed the undocumented `mceResetDesignMode`, `mceRepaint` and `mceBeginUndoLevel` commands #TINY-7829
+- Removed the `execCommand` handler function from the plugin and theme interfaces #TINY-7829
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

@@ -55,7 +55,7 @@ export default () => {
         type: 'button',
         icon: 'bold',
         // ariaLabel: 'aria says icon button',
-        disabled: true,
+        enabled: false,
         onAction: (_api) => {
           console.log('basic-button-2 click, basic-icon');
         }

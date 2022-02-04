@@ -11,11 +11,10 @@ export type DialogData = Record<string, DialogDataItem>;
 export interface DialogInstanceApi<T extends DialogData> {
   getData: () => T;
   setData: (data: Partial<T>) => void;
-  disable: (name: string) => void;
+  setEnabled: (name: string, state: boolean) => void;
   focus: (name: string) => void;
   showTab: (name: string) => void;
   redial: (nu: DialogSpec<T>) => void;
-  enable: (name: string) => void;
   block: (msg: string) => void;
   unblock: () => void;
   close: () => void;
