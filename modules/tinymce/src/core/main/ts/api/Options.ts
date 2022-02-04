@@ -368,16 +368,7 @@ const register = (editor: Editor) => {
     default: 'silver'
   });
 
-  registerOption('model', {
-    processor: 'string',
-    default: 'dom'
-  });
-
   registerOption('theme_url', {
-    processor: 'string'
-  });
-
-  registerOption('model_url', {
     processor: 'string'
   });
 
@@ -457,6 +448,15 @@ const register = (editor: Editor) => {
 
   registerOption('forced_plugins', {
     processor: 'string[]'
+  });
+
+  registerOption('model', {
+    processor: 'string',
+    default: editor.hasPlugin('rtc') ? 'plugin' : 'dom'
+  });
+
+  registerOption('model_url', {
+    processor: 'string'
   });
 
   registerOption('block_unsupported_drop', {

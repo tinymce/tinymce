@@ -25,7 +25,6 @@ import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
-import * as Rtc from '../Rtc';
 import * as Init from './Init';
 
 interface UrlMeta {
@@ -63,9 +62,10 @@ const loadTheme = (editor: Editor, suffix: string): void => {
 };
 
 const loadModel = (editor: Editor, suffix: string): void => {
+  // Special case the 'wait for model' code if a plugin is responsible for it
+  // as the plugin will provide the instance instead
   const model = Options.getModel(editor);
-  // Special case the 'wait for model' code if RTC is loading, as it will provide a model instead
-  if (!Rtc.isRtc(editor) && !Obj.has(ModelManager.urls, model)) {
+  if (model !== 'plugin' && !Obj.has(ModelManager.urls, model)) {
     const modelUrl = Options.getModelUrl(editor);
     const url = Type.isString(modelUrl) ? editor.documentBaseURI.toAbsolute(modelUrl) : `models/${model}/model${suffix}.js`;
     ModelManager.load(model, url).catch(() => {
