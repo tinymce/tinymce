@@ -87,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
 - Deleting content would sometimes not fire `beforeinput` and `input` events as expected #TINY-8168  #TINY-8329
 - Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308
+- The `fullscreen` plugin would reset the scroll position when exiting fullscreen mode #TINY-8418
 - Anchor elements would render incorrectly when using the `allow_html_in_named_anchor` option #TINY-3799
 - Fixed sub-menu items not read by screen readers. Patch contributed by westonkd #TINY-8417
 
