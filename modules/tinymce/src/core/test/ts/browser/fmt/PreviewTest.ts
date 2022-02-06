@@ -6,8 +6,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as Preview from 'tinymce/core/fmt/Preview';
 
-import * as HtmlUtils from '../../module/test/HtmlUtils';
-
 describe('browser.tinymce.core.fmt.PreviewTest', () => {
   it('Preview.parseSelector', () => {
     assert.deepEqual(Preview.parseSelector('li.class1.class2#id1[attr1="1"]:disabled'), [
@@ -114,7 +112,7 @@ describe('browser.tinymce.core.fmt.PreviewTest', () => {
   it('Preview.selectorToHtml', () => {
     const trimSpaces = (str: string) => str.replace(/>\s+</g, '><').replace(/^\s*|\s*$/g, '');
 
-    const selectorToHtml = (selector: string) => HtmlUtils.normalizeHtml(Preview.selectorToHtml(selector).outerHTML);
+    const selectorToHtml = (selector: string) => Preview.selectorToHtml(selector).outerHTML;
 
     assert.equal(selectorToHtml('ul > li.class1'), trimSpaces([
       '<div>',
@@ -152,7 +150,7 @@ describe('browser.tinymce.core.fmt.PreviewTest', () => {
       '<div>',
       '<p>',
       '<ul>',
-      '<li alt="Some Alt" title="Some Title"></li>',
+      '<li title="Some Title" alt="Some Alt"></li>',
       '</ul>',
       '</p>',
       '</div>'

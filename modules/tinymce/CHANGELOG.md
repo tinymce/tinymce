@@ -130,6 +130,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the undocumented `editor.editorCommands.hasCustomCommand` API #TINY-7829
 - Removed the undocumented `mceResetDesignMode`, `mceRepaint` and `mceBeginUndoLevel` commands #TINY-7829
 - Removed the `execCommand` handler function from the plugin and theme interfaces #TINY-7829
+- Removed the `SaxParser` API #TINY-8218
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

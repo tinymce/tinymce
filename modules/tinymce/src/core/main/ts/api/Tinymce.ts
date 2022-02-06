@@ -32,7 +32,6 @@ import Rect from './geom/Rect';
 import DomParser, { DomParserSettings } from './html/DomParser';
 import Entities from './html/Entities';
 import AstNode, { AstNodeConstructor } from './html/Node';
-import SaxParser, { SaxParserSettings } from './html/SaxParser';
 import Schema, { SchemaSettings } from './html/Schema';
 import HtmlSerializer, { HtmlSerializerSettings } from './html/Serializer';
 import Styles, { StylesSettings } from './html/Styles';
@@ -87,12 +86,6 @@ interface BookmarkManagerNamespace {
   isBookmarkNode: (node: Node) => boolean;
 }
 
-interface SaxParserNamespace {
-  (settings?: SaxParserSettings, schema?: Schema): SaxParser;
-
-  findEndTag: (schema: Schema, html: string, startIndex: number) => number;
-}
-
 interface TinyMCE extends EditorManager {
 
   geom: {
@@ -131,7 +124,6 @@ interface TinyMCE extends EditorManager {
     Entities: Entities;
     Node: AstNodeConstructor;
     Schema: (settings?: SchemaSettings) => Schema;
-    SaxParser: SaxParserNamespace;
     DomParser: (settings?: DomParserSettings, schema?: Schema) => DomParser;
     Writer: (settings?: WriterSettings) => Writer;
     Serializer: (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
@@ -226,7 +218,6 @@ const publicApi = {
     Entities,
     Node: AstNode,
     Schema,
-    SaxParser,
     DomParser,
     Writer,
     Serializer: HtmlSerializer

@@ -95,12 +95,12 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(
       serializer.serialize(root),
       '<div><img src="file.gif" data-mce-src="file.gif"></div>',
-      'Whitespace where SaxParser will produce multiple whitespace nodes'
+      'Whitespace where the parser will produce multiple whitespace nodes'
     );
     assert.deepEqual(
       countNodes(root),
       { body: 1, div: 1, img: 1 },
-      'Whitespace where SaxParser will produce multiple whitespace nodes (count)'
+      'Whitespace where the parser will produce multiple whitespace nodes (count)'
     );
   });
 

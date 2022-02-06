@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.FormatterApplyTest', () => {
@@ -1872,12 +1871,12 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.register('format', {
       inline: 'span',
       attributes: {
-        id: 'id'
+        id: 'custom-id'
       }
     });
     editor.formatter.apply('format');
 
-    assert.equal(HtmlUtils.normalizeHtml(editor.getBody().innerHTML), '<p><span id="id">a<span data-mce-type="bookmark" id="b"></span>b</span></p>');
+    TinyAssertions.assertRawContent(editor, '<p><span id="custom-id">a<span id="b" data-mce-type="bookmark"></span>b</span></p>');
   });
 
   it('Bug #5134 - TinyMCE removes formatting tags in the getContent', () => {

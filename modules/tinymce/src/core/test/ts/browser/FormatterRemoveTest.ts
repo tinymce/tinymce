@@ -4,7 +4,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.FormatterRemoveTest', () => {
@@ -396,7 +395,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.getBody().innerHTML = '<p><del>abc</del></p>';
     LegacyUnit.setSelection(editor, 'del', 0, 'del', 3);
     editor.formatter.remove('removeformat');
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abc</p>');
+    TinyAssertions.assertContent(editor, '<p>abc</p>');
   });
 
   it('remove format on span with class using removeformat format', () => {
@@ -404,7 +403,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.getBody().innerHTML = '<p><span class="x">abc</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.remove('removeformat');
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abc</p>');
+    TinyAssertions.assertContent(editor, '<p>abc</p>');
   });
 
   it('remove format on span with internal class using removeformat format', () => {
@@ -412,7 +411,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.getBody().innerHTML = '<p><span class="mce-item-internal">abc</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.remove('removeformat');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p><span class="mce-item-internal">abc</span></p>');
+    TinyAssertions.assertRawContent(editor, '<p><span class="mce-item-internal">abc</span></p>');
   });
 
   it('Remove format of nested elements at start', () => {
