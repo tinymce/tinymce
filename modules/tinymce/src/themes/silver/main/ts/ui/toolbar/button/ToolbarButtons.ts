@@ -41,8 +41,8 @@ interface Specialisation<T> {
 }
 
 const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
-  isDisabled: () => Disabling.isDisabled(component),
-  setDisabled: (state: boolean) => Disabling.set(component, state)
+  isEnabled: () => !Disabling.isDisabled(component),
+  setEnabled: (state: boolean) => Disabling.set(component, !state)
 });
 
 const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => ({
@@ -50,8 +50,8 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
     Toggling.set(component, state);
   },
   isActive: () => Toggling.isOn(component),
-  isDisabled: () => Disabling.isDisabled(component),
-  setDisabled: (state: boolean) => Disabling.set(component, state)
+  isEnabled: () => !Disabling.isDisabled(component),
+  setEnabled: (state: boolean) => Disabling.set(component, !state)
 });
 
 const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
@@ -64,7 +64,7 @@ interface GeneralToolbarButton<T> {
   text: Optional<string>;
   tooltip: Optional<string>;
   onAction: (api: T) => void;
-  disabled: boolean;
+  enabled: boolean;
 }
 
 const focusButtonEvent = Id.generate('focus-button');
@@ -163,7 +163,8 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           onControlAttached(specialisation, editorOffCell),
           onControlDetached(specialisation, editorOffCell)
         ]),
-        DisablingConfigs.toolbarButton(() => spec.disabled || providersBackstage.isDisabled()),
+        // Enable toolbar buttons by default
+        DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
         ReadOnly.receivingConfig()
       ].concat(specialisation.toolbarButtonBehaviours)
     )
@@ -242,8 +243,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   const displayChannel = Id.generate('channel-update-split-dropdown-display');
 
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
-    isDisabled: () => Disabling.isDisabled(comp),
-    setDisabled: (state: boolean) => Disabling.set(comp, state),
+    isEnabled: () => !Disabling.isDisabled(comp),
+    setEnabled: (state: boolean) => Disabling.set(comp, !state),
     setIconFill: (id, value) => {
       SelectorFind.descendant(comp.element, 'svg path[id="' + id + '"], rect[id="' + id + '"]').each((underlinePath) => {
         Attribute.set(underlinePath, 'fill', value);

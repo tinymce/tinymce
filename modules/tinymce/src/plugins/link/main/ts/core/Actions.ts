@@ -76,7 +76,7 @@ const toggleActiveState = (editor: Editor) => (api: Toolbar.ToolbarToggleButtonI
 };
 
 const toggleEnabledState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
-  const updateState = () => api.setDisabled(Utils.getAnchorElement(editor, editor.selection.getNode()) === null);
+  const updateState = () => api.setEnabled(Utils.getAnchorElement(editor, editor.selection.getNode()) !== null);
   updateState();
   return toggleState(editor, updateState);
 };
@@ -84,8 +84,8 @@ const toggleEnabledState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstan
 const toggleUnlinkState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
   const hasLinks = (parents: Node[]) => Utils.hasLinks(parents) || Utils.hasLinksInSelection(editor.selection.getRng());
   const parents = editor.dom.getParents(editor.selection.getStart());
-  api.setDisabled(!hasLinks(parents));
-  return toggleState(editor, (e) => api.setDisabled(!hasLinks(e.parents)));
+  api.setEnabled(hasLinks(parents));
+  return toggleState(editor, (e) => api.setEnabled(hasLinks(e.parents)));
 };
 
 export {

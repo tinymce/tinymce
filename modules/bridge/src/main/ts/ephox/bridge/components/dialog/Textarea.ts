@@ -8,20 +8,20 @@ export interface TextAreaSpec extends FormComponentWithLabelSpec {
   type: 'textarea';
   placeholder?: string;
   maximized?: boolean;
-  disabled?: boolean;
+  enabled?: boolean;
 }
 
 export interface TextArea extends FormComponentWithLabel {
   type: 'textarea';
   maximized: boolean;
   placeholder: Optional<string>;
-  disabled: boolean;
+  enabled: boolean;
 }
 
 const textAreaFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('placeholder'),
   FieldSchema.defaultedBoolean('maximized', false),
-  ComponentSchema.disabled
+  ComponentSchema.enabled
 ]);
 
 export const textAreaSchema = StructureSchema.objOf(textAreaFields);

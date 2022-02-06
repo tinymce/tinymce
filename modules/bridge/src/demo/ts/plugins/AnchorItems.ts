@@ -8,7 +8,7 @@ const editor = {
 export const registerAnchorItems = (): void => {
   getDemoRegistry().addToggleButton('anchor', {
     type: 'togglebutton',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       const f = (e) => {
         // Set the active state based on something

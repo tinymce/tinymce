@@ -6,7 +6,7 @@ import * as ComponentSchema from '../../core/ComponentSchema';
 export interface ButtonSpec {
   type: 'button';
   text: string;
-  disabled?: boolean;
+  enabled?: boolean;
   /** @deprecated use `buttonType: "primary"` instead */
   primary?: boolean;
   name?: string;
@@ -18,7 +18,7 @@ export interface ButtonSpec {
 export interface Button {
   type: 'button';
   text: string;
-  disabled: boolean;
+  enabled: boolean;
   /** @deprecated use `buttonType: "primary"` instead */
   primary: boolean;
   name: string;
@@ -30,7 +30,7 @@ export interface Button {
 const buttonFields = [
   ComponentSchema.type,
   ComponentSchema.text,
-  ComponentSchema.disabled,
+  ComponentSchema.enabled,
   ComponentSchema.generatedName('button'),
   ComponentSchema.optionalIcon,
   ComponentSchema.borderless,

@@ -9,7 +9,7 @@ const editor = {
 export const registerMediaItems = (): void => {
   getDemoRegistry().addToggleButton('media', {
     type: 'togglebutton',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       editor.on('nodeChange', (e) => {
         buttonApi.setActive(e);
