@@ -31,16 +31,9 @@ const findCommentEndIndex = (html: string, isBogus: boolean, startIndex: number 
   }
 };
 
-/**
+/*
  * Returns the index of the matching end tag for a specific start tag. This can
  * be used to skip all children of a parent element from being processed.
- *
- * @private
- * @method findMatchingEndTagIndex
- * @param {tinymce.html.Schema} schema Schema instance to use to match short ended elements.
- * @param {String} html HTML string to find the end tag in.
- * @param {Number} startIndex Index to start searching at should be after the start tag.
- * @return {Number} Index of the end tag.
  */
 const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: number): number => {
   // TODO: TINY-7658: this regex does not support CDATA
@@ -132,5 +125,8 @@ const trimExternal = trimInternal;
 
 export {
   trimExternal,
-  trimInternal
+  trimInternal,
+
+  // Exported for testing purposes only
+  findMatchingEndTagIndex
 };
