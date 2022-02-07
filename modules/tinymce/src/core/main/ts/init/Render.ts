@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Strings, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -26,6 +26,11 @@ import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
 
+interface UrlMeta {
+  readonly url: string;
+  readonly name: Optional<string>;
+}
+
 const DOM = DOMUtils.DOM;
 
 const hasSkipLoadPrefix = (name) => {
@@ -37,7 +42,7 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   const languageUrl = Options.getLanguageUrl(editor);
 
   if (I18n.hasCode(languageCode) === false && languageCode !== 'en') {
-    const url = languageUrl !== '' ? languageUrl : editor.editorManager.baseURL + '/langs/' + languageCode + '.js';
+    const url = Strings.isNotEmpty(languageCode) ? languageUrl : `${editor.editorManager.baseURL}/langs/${languageCode}.js`;
 
     scriptLoader.add(url).catch(() => {
       ErrorReporter.languageLoadError(editor, url, languageCode);
@@ -45,39 +50,27 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   }
 };
 
-const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string): Promise<void> => {
+const loadTheme = (editor: Editor, suffix: string): void => {
   const theme = Options.getTheme(editor);
 
-  if (Type.isString(theme)) {
-    if (!hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
-      const themeUrl = Options.getThemeUrl(editor);
-      const url = themeUrl ? editor.documentBaseURI.toAbsolute(themeUrl) : 'themes/' + theme + '/theme' + suffix + '.js';
-      ThemeManager.load(theme, url).catch(() => {
-        ErrorReporter.themeLoadError(editor, url, theme);
-      });
-    }
-
-    const waitForTheme = () => ThemeManager.waitFor(theme);
-    return scriptLoader.loadQueue().then(waitForTheme, waitForTheme);
-  } else {
-    return Promise.resolve();
+  if (Type.isString(theme) && !hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
+    const themeUrl = Options.getThemeUrl(editor);
+    const url = themeUrl ? editor.documentBaseURI.toAbsolute(themeUrl) : `themes/${theme}/theme${suffix}.js`;
+    ThemeManager.load(theme, url).catch(() => {
+      ErrorReporter.themeLoadError(editor, url, theme);
+    });
   }
 };
 
-interface UrlMeta {
-  url: string;
-  name: Optional<string>;
-}
-
 const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.from(Options.getIconsUrl(editor))
-  .filter((url) => url.length > 0)
+  .filter(Strings.isNotEmpty)
   .map((url) => ({
     url,
     name: Optional.none()
   }));
 
 const getIconsUrlMetaFromName = (editor: Editor, name: string | undefined, suffix: string): Optional<UrlMeta> => Optional.from(name)
-  .filter((name) => name.length > 0 && !IconManager.has(name))
+  .filter((name) => Strings.isNotEmpty(name) && !IconManager.has(name))
   .map((name) => ({
     url: `${editor.editorManager.baseURL}/icons/${name}/icons${suffix}.js`,
     name: Optional.some(name)
@@ -109,29 +102,33 @@ const loadPlugins = (editor: Editor, suffix: string) => {
   Arr.each(Options.getPlugins(editor), (plugin) => {
     plugin = Tools.trim(plugin);
 
-    if (plugin && !PluginManager.urls[plugin]) {
-      if (!hasSkipLoadPrefix(plugin)) {
-        loadPlugin(plugin, 'plugins/' + plugin + '/plugin' + suffix + '.js');
-      }
+    if (plugin && !PluginManager.urls[plugin] && !hasSkipLoadPrefix(plugin)) {
+      loadPlugin(plugin, `plugins/${plugin}/plugin${suffix}.js`);
     }
   });
+};
+
+const isThemeLoaded = (editor: Editor): boolean => {
+  const theme = Options.getTheme(editor);
+  return !Type.isString(theme) || Type.isNonNullable(ThemeManager.get(theme));
 };
 
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
-  const initIfNotRemoved = () => {
-    if (!editor.removed) {
+  const initEditor = () => {
+    // If the editor has been destroyed or the theme hasn't loaded then
+    // don't continue to load the editor
+    if (!editor.removed && isThemeLoaded(editor)) {
       Init.init(editor);
     }
   };
 
-  loadTheme(scriptLoader, editor, suffix).then(() => {
-    loadLanguage(scriptLoader, editor);
-    loadIcons(scriptLoader, editor, suffix);
-    loadPlugins(editor, suffix);
-    scriptLoader.loadQueue().then(initIfNotRemoved, initIfNotRemoved);
-  });
+  loadTheme(editor, suffix);
+  loadLanguage(scriptLoader, editor);
+  loadIcons(scriptLoader, editor, suffix);
+  loadPlugins(editor, suffix);
+  scriptLoader.loadQueue().then(initEditor, initEditor);
 };
 
 const getStyleSheetLoader = (element: SugarElement<Element>, editor: Editor): StyleSheetLoader =>
