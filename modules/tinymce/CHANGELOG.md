@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
 - Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
 - Notifications no longer require a timeout to disable the close button #TINY-6679
+- The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
 
 ### Changed
 - The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627

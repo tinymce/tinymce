@@ -45,22 +45,15 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   }
 };
 
-const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string): Promise<void> => {
+const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string): void => {
   const theme = Options.getTheme(editor);
 
-  if (Type.isString(theme)) {
-    if (!hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
-      const themeUrl = Options.getThemeUrl(editor);
-      const url = themeUrl ? editor.documentBaseURI.toAbsolute(themeUrl) : 'themes/' + theme + '/theme' + suffix + '.js';
-      ThemeManager.load(theme, url).catch(() => {
-        ErrorReporter.themeLoadError(editor, url, theme);
-      });
-    }
-
-    const waitForTheme = () => ThemeManager.waitFor(theme);
-    return scriptLoader.loadQueue().then(waitForTheme, waitForTheme);
-  } else {
-    return Promise.resolve();
+  if (Type.isString(theme) && !hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
+    const themeUrl = Options.getThemeUrl(editor);
+    const url = themeUrl ? editor.documentBaseURI.toAbsolute(themeUrl) : 'themes/' + theme + '/theme' + suffix + '.js';
+    ThemeManager.load(theme, url).catch(() => {
+      ErrorReporter.themeLoadError(editor, url, theme);
+    });
   }
 };
 
@@ -109,29 +102,33 @@ const loadPlugins = (editor: Editor, suffix: string) => {
   Arr.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {
     plugin = Tools.trim(plugin);
 
-    if (plugin && !PluginManager.urls[plugin]) {
-      if (!hasSkipLoadPrefix(plugin)) {
-        loadPlugin(plugin, 'plugins/' + plugin + '/plugin' + suffix + '.js');
-      }
+    if (plugin && !PluginManager.urls[plugin] && !hasSkipLoadPrefix(plugin)) {
+      loadPlugin(plugin, 'plugins/' + plugin + '/plugin' + suffix + '.js');
     }
   });
+};
+
+const isThemeLoaded = (editor: Editor): boolean => {
+  const theme = Options.getTheme(editor);
+  return !Type.isString(theme) || Type.isNonNullable(ThemeManager.get(theme));
 };
 
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
-  const initIfNotRemoved = () => {
-    if (!editor.removed) {
+  const initEditor = () => {
+    // If the editor has been destroyed or the theme hasn't loaded then
+    // don't continue to load the editor
+    if (!editor.removed && isThemeLoaded(editor)) {
       Init.init(editor);
     }
   };
 
-  loadTheme(scriptLoader, editor, suffix).then(() => {
-    loadLanguage(scriptLoader, editor);
-    loadIcons(scriptLoader, editor, suffix);
-    loadPlugins(editor, suffix);
-    scriptLoader.loadQueue().then(initIfNotRemoved, initIfNotRemoved);
-  });
+  loadTheme(scriptLoader, editor, suffix);
+  loadLanguage(scriptLoader, editor);
+  loadIcons(scriptLoader, editor, suffix);
+  loadPlugins(editor, suffix);
+  scriptLoader.loadQueue().then(initEditor, initEditor);
 };
 
 const getStyleSheetLoader = (element: SugarElement<Element>, editor: Editor): StyleSheetLoader =>
