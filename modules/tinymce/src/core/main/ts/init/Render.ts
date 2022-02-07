@@ -103,10 +103,10 @@ const loadPlugins = (editor: Editor, suffix: string) => {
 
   Obj.each(Options.getExternalPlugins(editor), (url, name) => {
     loadPlugin(name, url);
-    editor.options.set('plugins', Options.getPlugins(editor) + ' ' + name);
+    editor.options.set('plugins', Options.getPlugins(editor).concat(name));
   });
 
-  Arr.each(Options.getPlugins(editor).split(/[ ,]/), (plugin) => {
+  Arr.each(Options.getPlugins(editor), (plugin) => {
     plugin = Tools.trim(plugin);
 
     if (plugin && !PluginManager.urls[plugin]) {

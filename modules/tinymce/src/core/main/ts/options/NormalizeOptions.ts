@@ -111,7 +111,7 @@ const processPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, d
 
   return Tools.extend(options, {
     forced_plugins: forcedPlugins,
-    plugins: combinedPlugins.join(' ')
+    plugins: combinedPlugins
   });
 };
 

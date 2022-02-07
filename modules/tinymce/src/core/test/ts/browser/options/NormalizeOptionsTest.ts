@@ -64,7 +64,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
       );
 
       assert.equal(settings.userSetting, 'b', 'Should have the specified userSetting');
-      assert.equal(settings.plugins, 'a', 'Should have the specified default plugin');
+      assert.deepEqual(settings.plugins, [ 'a' ], 'Should have the specified default plugin');
       assert.equal(settings.defaultSetting, 'a', 'Should have the default setting');
     });
 
@@ -79,7 +79,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
       const settings = NormalizeOptions.normalizeOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, 'a b c d', 'Should be both forced and user plugins');
+      assert.deepEqual(settings.plugins, [ 'a', 'b', 'c', 'd' ], 'Should be both forced and user plugins');
     });
 
     it('Override defaults with forced_plugins using strings', () => {
@@ -93,7 +93,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
       const settings = NormalizeOptions.normalizeOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, 'a b c d', 'Should be both forced and user plugins');
+      assert.deepEqual(settings.plugins, [ 'a', 'b', 'c', 'd' ], 'Should be both forced and user plugins');
     });
 
     it('Override defaults with forced_plugins using mixed types and spaces', () => {
@@ -107,7 +107,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
       const settings = NormalizeOptions.normalizeOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, 'a b c d e', 'Should be both forced and user plugins');
+      assert.deepEqual(settings.plugins, [ 'a', 'b', 'c', 'd', 'e' ], 'Should be both forced and user plugins');
     });
 
     it('Override defaults with just default forced_plugins', () => {
@@ -120,7 +120,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
       const settings = NormalizeOptions.normalizeOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, 'a b', 'Should be just default plugins');
+      assert.deepEqual(settings.plugins, [ 'a', 'b' ], 'Should be just default plugins');
     });
 
     it('Override defaults with just user plugins', () => {
@@ -133,7 +133,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
       const settings = NormalizeOptions.normalizeOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, 'a b', 'Should be just user plugins');
+      assert.deepEqual(settings.plugins, [ 'a', 'b' ], 'Should be just user plugins');
     });
 
     it('Override defaults with forced_plugins should not be possible to override', () => {
@@ -148,7 +148,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
       const settings = NormalizeOptions.normalizeOptions(defaultSettings, userSettings);
 
-      assert.equal(settings.plugins, 'a b c d', 'Should be just forced and user plugins');
+      assert.deepEqual(settings.plugins, [ 'a', 'b', 'c', 'd' ], 'Should be just forced and user plugins');
     });
   });
 
@@ -156,7 +156,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings (desktop)', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(false, false, { a: 1, b: 1, c: 1 }, { b: 2 }, { c: 3 }),
-        { a: 1, b: 2, c: 3, external_plugins: {}, forced_plugins: [], plugins: '' },
+        { a: 1, b: 2, c: 3, external_plugins: {}, forced_plugins: [], plugins: [] },
         'Should have validate, forced and empty plugins in the merged settings'
       );
     });
@@ -164,7 +164,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings forced_plugins in default override settings (desktop)', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
-        { external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
+        { external_plugins: {}, forced_plugins: [ 'a' ], plugins: [ 'a', 'b' ] },
         'Should have plugins merged with forced plugins'
       );
     });
@@ -172,7 +172,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings forced_plugins in default override settings (mobile)', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ] }),
-        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [ 'a' ], plugins: [ 'a', 'b' ] },
         'Should be have plugins merged with forced plugins'
       );
     });
@@ -183,7 +183,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
           plugins: [ 'b' ],
           mobile: { plugins: [ 'c' ], toolbar_sticky: true }
         }),
-        { external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
+        { external_plugins: {}, forced_plugins: [ 'a' ], plugins: [ 'a', 'b' ] },
         'Should not have plugins merged with mobile plugins'
       );
     });
@@ -191,7 +191,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings when theme is silver, forced_plugins in default override settings with user mobile settings (mobile)', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] }}),
-        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a lists custom' },
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [ 'a' ], plugins: [ 'a', 'lists', 'custom' ] },
         'Should not merge forced_plugins with mobile plugins when theme is not mobile'
       );
     });
@@ -199,7 +199,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings forced_plugins in default override forced_plugins in user settings', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(false, false, {}, { forced_plugins: [ 'a' ] }, { forced_plugins: [ 'b' ] }),
-        { external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a' },
+        { external_plugins: {}, forced_plugins: [ 'a' ], plugins: [ 'a' ] },
         'Should not have user forced plugins'
       );
     });
@@ -207,7 +207,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings when mobile.plugins is undefined, on a mobile device', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(true, true, {}, {}, { theme: 'silver', plugins: [ 'lists', 'b', 'autolink' ], mobile: {}}),
-        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [], plugins: 'lists b autolink', theme: 'silver' },
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [], plugins: [ 'lists', 'b', 'autolink' ], theme: 'silver' },
         'Should use settings.plugins when mobile theme is not set'
       );
     });
@@ -215,7 +215,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings with empty mobile.plugins="" on mobile', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(true, true, {}, {}, { mobile: { plugins: '' }}),
-        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [], plugins: '' },
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [], plugins: [] },
         'Should not have any plugins when mobile.plugins is explicitly empty'
       );
     });
@@ -223,7 +223,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
     it('Merged settings with defined mobile.plugins', () => {
       assert.deepEqual(
         NormalizeOptions.combineOptions(true, true, {}, {}, { mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ] }}),
-        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [], plugins: 'lists autolink foo bar' },
+        { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [], plugins: [ 'lists', 'autolink', 'foo', 'bar' ] },
         'Should allow all plugins'
       );
     });
@@ -234,7 +234,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
           theme: 'test',
           mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
         }),
-        { ...expectedPhoneDefaultSettings, theme: 'silver', external_plugins: {}, forced_plugins: [], plugins: 'lists autolink foo bar' },
+        { ...expectedPhoneDefaultSettings, theme: 'silver', external_plugins: {}, forced_plugins: [], plugins: [ 'lists', 'autolink', 'foo', 'bar' ] },
         'Should allow all mobile plugin'
       );
     });
@@ -246,7 +246,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
           plugins: [ 'aa', 'bb', 'cc' ],
           mobile: { plugins: [ 'lists', 'autolink', 'foo', 'bar' ], theme: 'silver' }
         }),
-        { theme: 'silver', external_plugins: {}, forced_plugins: [], plugins: 'aa bb cc' },
+        { theme: 'silver', external_plugins: {}, forced_plugins: [], plugins: [ 'aa', 'bb', 'cc' ] },
         'Should respect the desktop settings'
       );
     });
