@@ -23,9 +23,7 @@ export type BeforeGetContentEvent = GetContentArgs & { source_view?: boolean; se
 export type GetContentEvent = BeforeGetContentEvent & { content: Content };
 export type BeforeSetContentEvent = SetContentArgs & { source_view?: boolean; paste?: boolean; selection?: boolean };
 export type SetContentEvent = BeforeSetContentEvent & {
-  /**
-   * @deprecated
-   */
+  /** @deprecated */
   content: string;
 };
 
