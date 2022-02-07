@@ -105,6 +105,7 @@ const basePurifyConfig: Config = {
 
 // A list of attributes that should be filtered further based on the parser settings
 const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
+const internalElementAttr = 'data-mce-type';
 
 const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config => {
   const config = { ...basePurifyConfig };
@@ -130,6 +131,11 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
+    // Pad conditional comments if they aren't allowed
+    if (ele.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(ele.nodeValue)) {
+      ele.nodeValue = ' ' + ele.nodeValue;
+    }
+
     // Just leave non-elements such as text and comments up to dompurify
     const tagName = evt.tagName;
     if (ele.nodeType !== NodeTypes.ELEMENT || tagName === 'body') {
@@ -139,17 +145,8 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     // Construct the sugar element wrapper
     const element = SugarElement.fromDom(ele);
 
-    // Determine if the schema allows the element and either add it or remove it
-    const rule = schema.getElementRule(tagName.toLowerCase());
-    if (validate && !rule) {
-      Remove.unwrap(element);
-      return;
-    } else {
-      evt.allowedTags[tagName] = true;
-    }
-
     // Determine if we're dealing with an internal attribute
-    const isInternalElement = Attribute.has(element, 'data-mce-type');
+    const isInternalElement = Attribute.has(element, internalElementAttr);
 
     // Cleanup bogus elements
     const bogus = Attribute.get(element, 'data-mce-bogus');
@@ -160,6 +157,15 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
         Remove.unwrap(element);
       }
       return;
+    }
+
+    // Determine if the schema allows the element and either add it or remove it
+    const rule = schema.getElementRule(tagName.toLowerCase());
+    if (validate && !rule) {
+      Remove.unwrap(element);
+      return;
+    } else {
+      evt.allowedTags[tagName] = true;
     }
 
     // Validate the element using the attribute rules
@@ -199,7 +205,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     const { attrName, attrValue } = evt;
 
     evt.keepAttr = !validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-');
-    if (!settings.allow_script_urls && attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) {
+    if (attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) {
       evt.keepAttr = false;
     }
 
@@ -214,6 +220,9 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
       if (settings.allow_svg_data_urls && Strings.startsWith(attrValue, 'data:image/svg+xml')) {
         evt.forceKeepAttr = true;
       }
+    // For internal elements always keep the attribute if the attribute name is id, class or style
+    } else if (ele.hasAttribute(internalElementAttr) && (attrName === 'id' || attrName === 'class' || attrName === 'style')) {
+      evt.forceKeepAttr = true;
     }
   });
 
@@ -596,7 +605,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       const next = node.next;
 
       if (node.type === 3 || (node.type === 1 && node.name !== 'p' &&
-        !blockElements[node.name] && !node.attr('data-mce-type'))) {
+        !blockElements[node.name] && !node.attr(internalElementAttr))) {
         if (!rootBlockNode) {
           // Create a new root block element
           rootBlockNode = new AstNode(rootBlockName, 1);
