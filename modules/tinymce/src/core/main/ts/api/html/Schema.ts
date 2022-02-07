@@ -66,6 +66,7 @@ export interface SchemaMap { [name: string]: {} }
 export interface SchemaRegExpMap { [name: string]: RegExp }
 
 interface Schema {
+  type: SchemaType;
   children: Record<string, SchemaMap>;
   elements: Record<string, SchemaElement>;
   getValidStyles: () => Record<string, string[]> | undefined;
@@ -129,7 +130,7 @@ const split = (items: string, delim?: string): string[] => {
  * @param {String} type html4, html5 or html5-strict schema type.
  * @return {Object} Schema lookup table.
  */
-const compileSchema = (type: SchemaType = 'html5'): SchemaLookupTable => {
+const compileSchema = (type: SchemaType): SchemaLookupTable => {
   const schema: SchemaLookupTable = {};
   let globalAttributes, blockContent;
   let phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
@@ -438,7 +439,8 @@ const Schema = (settings?: SchemaSettings): Schema => {
   };
 
   settings = settings || {};
-  const schemaItems = compileSchema(settings.schema);
+  const schemaType = settings.schema ?? 'html5';
+  const schemaItems = compileSchema(schemaType);
 
   // Allow all elements and attributes if verify_html is set to false
   if (settings.verify_html === false) {
@@ -697,7 +699,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
     const childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)]$/; // from w3c's custom grammar (above)
 
     // Invalidate the schema cache if the schema is mutated
-    mapCache[settings.schema] = null;
+    mapCache[schemaType] = null;
 
     if (validChildren) {
       each(split(validChildren, ','), (rule) => {
@@ -1058,6 +1060,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    */
 
   return {
+    type: schemaType,
     children,
     elements,
     getValidStyles,

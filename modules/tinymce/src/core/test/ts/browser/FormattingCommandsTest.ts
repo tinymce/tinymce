@@ -50,7 +50,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('Strikethrough');
-    assert.equal(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
+    assert.equal(editor.getContent(), '<p><s>test 123</s></p>');
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
@@ -100,7 +100,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     assert.equal(editor.getContent(), '<p><span style="font-size: xx-large;">test 123</span></p>');
 
     editor.setContent('<p><strike>test 123</strike></p>');
-    assert.equal(editor.getContent(), '<p><span style="text-decoration: line-through;">test 123</span></p>');
+    assert.equal(editor.getContent(), '<p><s>test 123</s></p>');
 
     editor.setContent('<p><font face="Arial">test 123</font></p>');
     assert.equal(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');

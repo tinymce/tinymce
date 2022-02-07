@@ -85,7 +85,7 @@ export const FormatRegistry = (editor: Editor): FormatRegistry => {
     return formats;
   };
 
-  register(DefaultFormats.get(editor.dom));
+  register(DefaultFormats.get(editor));
   register(Options.getFormats(editor));
 
   return {

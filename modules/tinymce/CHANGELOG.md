@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
 - The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
 - Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
+- Notifications no longer require a timeout to disable the close button #TINY-6679
 
 ### Changed
 - The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
@@ -61,6 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
+- Changed the default tag for the strikethrough format to the `s` tag when using a html 5 schema #TINY-8262
+- The `strike` tag is automatically converted to the `s` tag when using a html 5 schema #TINY-8262
 - Renamed the `font_formats` option to `font_family_formats` #TINY-8328
 - Renamed the `fontselect` toolbar button and `fontformats` menu item to `fontfamily` #TINY-8328
 - Renamed the `fontsize_formats` option to `font_size_formats` #TINY-8328
@@ -87,6 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
 - Deleting content would sometimes not fire `beforeinput` and `input` events as expected #TINY-8168  #TINY-8329
 - Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308
+- The `fullscreen` plugin would reset the scroll position when exiting fullscreen mode #TINY-8418
 - Anchor elements would render incorrectly when using the `allow_html_in_named_anchor` option #TINY-3799
 - Fixed sub-menu items not read by screen readers. Patch contributed by westonkd #TINY-8417
 
