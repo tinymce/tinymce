@@ -28,7 +28,6 @@
       "tinymce.core.api.html.DomParser",
       "tinymce.core.api.html.Entities",
       "tinymce.core.api.html.Node",
-      "tinymce.core.api.html.SaxParser",
       "tinymce.core.api.html.Schema",
       "tinymce.core.api.html.Serializer",
       "tinymce.core.api.html.Styles",

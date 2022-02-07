@@ -34,7 +34,6 @@ import Rect, { GeomRect } from './geom/Rect';
 import DomParser, { DomParserSettings } from './html/DomParser';
 import Entities from './html/Entities';
 import AstNode from './html/Node';
-import SaxParser, { SaxParserSettings } from './html/SaxParser';
 import Schema, { SchemaSettings } from './html/Schema';
 import HtmlSerializer, { HtmlSerializerSettings } from './html/Serializer';
 import Styles from './html/Styles';
@@ -84,7 +83,6 @@ export {
   Entities,
   AstNode,
   Schema,
-  SaxParser,
   DomParser,
   Writer,
   HtmlSerializer,
@@ -131,7 +129,6 @@ export {
   Formats,
   NotificationApi,
   NotificationSpec,
-  SaxParserSettings,
   DomParserSettings,
   DomSerializerSettings,
   HtmlSerializerSettings,
