@@ -1,8 +1,11 @@
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
-import { TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyContentActions, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+
+const platform = PlatformDetection.detect();
 
 // TODO: Move into shared library
 const fakeEvent = (elm: SugarElement<HTMLElement>, name: string) => {
@@ -36,6 +39,11 @@ const pOpenDialog = async (editor: Editor) => {
   return await TinyUiActions.pWaitForDialog(editor);
 };
 
+const pOpenDialogWithKeyboard = async (editor: Editor) => {
+  TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), platform.os.isMacOS() ? { meta: true } : { ctrl: true });
+  await TinyUiActions.pWaitForDialog(editor);
+};
+
 const clickFind = (editor: Editor) => TinyUiActions.clickOnUi(editor, '[role=dialog] button[title="Find"]');
 const clickNext = (editor: Editor) => TinyUiActions.clickOnUi(editor, '[role=dialog] button[title="Next"]');
 const clickPrev = (editor: Editor) => TinyUiActions.clickOnUi(editor, '[role=dialog] button[title="Previous"]');
@@ -55,6 +63,7 @@ export {
   clickReplace,
   clickClose,
   pOpenDialog,
+  pOpenDialogWithKeyboard,
   pAssertFieldValue,
   pSelectPreference,
   pSetFieldValue

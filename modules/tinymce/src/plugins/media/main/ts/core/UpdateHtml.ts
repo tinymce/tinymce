@@ -6,11 +6,11 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import DomParser from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
+import { Parser } from './Parser';
 import { MediaData } from './Types';
 
 const DOM = DOMUtils.DOM;
@@ -32,7 +32,7 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean,
   let numSources = 0;
   let sourceCount = 0;
 
-  const parser = DomParser({ validate: false, forced_root_block: false }, schema);
+  const parser = Parser(schema);
   parser.addNodeFilter('source', (nodes) => numSources = nodes.length);
   const rootNode = parser.parse(html);
 

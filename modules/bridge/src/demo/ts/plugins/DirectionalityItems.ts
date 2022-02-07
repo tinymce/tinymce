@@ -8,7 +8,7 @@ const editor = {
 export const registerDirectionalityItems = (): void => {
   getDemoRegistry().addToggleButton('dir', {
     type: 'togglebutton',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       const f = (e) => {
         buttonApi.setActive(e);

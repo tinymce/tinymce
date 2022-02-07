@@ -28,8 +28,8 @@ const renderToggleMenuItem = (
       Toggling.set(component, state);
     },
     isActive: () => Toggling.isOn(component),
-    isDisabled: () => Disabling.isDisabled(component),
-    setDisabled: (state: boolean) => Disabling.set(component, state)
+    isEnabled: () => !Disabling.isDisabled(component),
+    setEnabled: (state: boolean) => Disabling.set(component, !state)
   });
 
   // BespokeSelects use meta to pass through styling information. Bespokes should only
@@ -49,7 +49,7 @@ const renderToggleMenuItem = (
   return Merger.deepMerge(
     renderCommonItem({
       data: buildData(spec),
-      disabled: spec.disabled,
+      enabled: spec.enabled,
       getApi,
       onAction: spec.onAction,
       onSetup: spec.onSetup,

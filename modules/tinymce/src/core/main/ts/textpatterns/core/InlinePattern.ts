@@ -260,7 +260,7 @@ const findPatterns = (editor: Editor, patterns: InlinePattern[], space: boolean)
   }
 
   return Utils.getParentBlock(editor, rng).bind((block) => {
-    const offset = rng.startOffset - (space ? 1 : 0);
+    const offset = Math.max(0, rng.startOffset - (space ? 1 : 0));
     return findPatternsRec(editor, patterns, rng.startContainer, offset, block);
   }).fold(() => [], (result) => result.matches);
 };

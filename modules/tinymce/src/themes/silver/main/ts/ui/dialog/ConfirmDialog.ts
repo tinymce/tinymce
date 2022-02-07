@@ -32,7 +32,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
         text: 'Yes',
         primary: true,
         align: 'end',
-        disabled: false,
+        enabled: true,
         icon: Optional.none()
       }, 'submit', extras.backstage)
     );
@@ -42,7 +42,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
       text: 'No',
       primary: false,
       align: 'end',
-      disabled: false,
+      enabled: true,
       icon: Optional.none()
     }, 'cancel', extras.backstage);
 

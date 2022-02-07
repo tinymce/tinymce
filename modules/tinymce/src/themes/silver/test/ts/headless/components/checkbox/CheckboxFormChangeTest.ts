@@ -17,7 +17,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.CheckboxFormChangeT
       renderCheckbox({
         label: 'TestCheckbox',
         name: 'test-check-box',
-        disabled: false
+        enabled: true,
       }, TestProviders, Optional.none())
     ],
     behaviours: Behaviour.derive([

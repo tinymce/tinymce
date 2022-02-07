@@ -3,7 +3,7 @@ import { getDemoRegistry } from '../buttons/DemoRegistry';
 export const registerPageBreakItems = (): void => {
   getDemoRegistry().addButton('pagebreak', {
     type: 'button',
-    disabled: false,
+    enabled: true,
     onAction: (_buttonApi) => {
       // inserts page break
     }

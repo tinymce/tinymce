@@ -51,8 +51,8 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
         });
 
         // Check all APIs do not throw errors
-        api.disable('async.setData');
-        api.enable('async.setData');
+        api.setEnabled('async.setData', false);
+        api.setEnabled('async.setData', true);
         api.block('message');
         api.unblock();
         api.showTab('new tab');

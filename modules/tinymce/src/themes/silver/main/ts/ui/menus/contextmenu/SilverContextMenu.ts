@@ -31,7 +31,7 @@ const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMen
   const commonMenuItem = (item: Menu.ContextMenuItem | Menu.ContextSubMenu) => ({
     text: item.text,
     icon: item.icon,
-    disabled: item.disabled,
+    enabled: item.enabled,
     shortcut: item.shortcut,
   });
 

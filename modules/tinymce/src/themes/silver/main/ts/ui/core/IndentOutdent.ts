@@ -12,7 +12,7 @@ import { onActionExecCommand, onSetupEvent } from './ControlUtils';
 
 const onSetupOutdentState = (editor: Editor) =>
   onSetupEvent(editor, 'NodeChange', (api: Toolbar.ToolbarButtonInstanceApi) => {
-    api.setDisabled(!editor.queryCommandState('outdent'));
+    api.setEnabled(editor.queryCommandState('outdent'));
   });
 
 const registerButtons = (editor: Editor) => {

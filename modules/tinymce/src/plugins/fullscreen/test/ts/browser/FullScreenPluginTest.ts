@@ -1,8 +1,9 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarShadowDom, Traverse } from '@ephox/sugar';
-import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -11,6 +12,7 @@ import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
 describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   const lastEventArgs = Cell(null);
+  const platform = PlatformDetection.detect();
 
   const getContentContainer = (editor: Editor) =>
     SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor)));
@@ -73,6 +75,11 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
     assertShadowHostState(editor, shouldExist);
   };
 
+  const fullScreenKeyCombination = (editor: Editor) => {
+    const modifiers = platform.os.isMacOS() ? { meta: true, shift: true } : { ctrl: true, shift: true };
+    TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), modifiers);
+  };
+
   Arr.each([
     { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
@@ -102,6 +109,29 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         editor.execCommand('mceFullScreen');
         assertApiAndLastEvent(editor, false);
         assertPageState(editor, false);
+      });
+
+      it('TINY-2884: Toggle fullscreen on with keyboard, open link dialog, insert link, close dialog and toggle fullscreen off', async () => {
+        const editor = hook.editor();
+        assertPageState(editor, false);
+        fullScreenKeyCombination(editor);
+        assertApiAndLastEvent(editor, true);
+        assertPageState(editor, true);
+        editor.execCommand('mceLink');
+        await pWaitForDialog(editor, 'Insert/Edit Link');
+        closeOnlyWindow(editor);
+        assertPageState(editor, true);
+        fullScreenKeyCombination(editor);
+        assertApiAndLastEvent(editor, false);
+        assertPageState(editor, false);
+      });
+
+      it('TINY-2884: Toggle fullscreen with keyboard and cleanup editor should clean up classes', () => {
+        const editor = hook.editor();
+        fullScreenKeyCombination(editor);
+        assertApiAndLastEvent(editor, true);
+        assertPageState(editor, true);
+        fullScreenKeyCombination(editor);
       });
 
       it('TBA: Toggle fullscreen and cleanup editor should clean up classes', () => {

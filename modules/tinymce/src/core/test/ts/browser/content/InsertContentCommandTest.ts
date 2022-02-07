@@ -280,7 +280,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.execCommand('mceInsertContent', false, '<strike>strike</strike><font size="7">font</font>');
     assert.equal(
       editor.getContent(),
-      '<p><span style="text-decoration: line-through;">strike</span><span style="font-size: 300%;">font</span></p>'
+      '<p><s>strike</s><span style="font-size: 300%;">font</span></p>'
     );
   });
 
