@@ -425,7 +425,7 @@ class Editor implements EditorObservable {
    * tinymce.activeEditor.hasPlugin('table');
    */
   public hasPlugin(name: string, loaded?: boolean): boolean {
-    const hasPlugin = Arr.contains(Options.getPlugins(this).split(/[ ,]/), name);
+    const hasPlugin = Arr.contains(Options.getPlugins(this), name);
     if (hasPlugin) {
       return loaded ? PluginManager.get(name) !== undefined : true;
     } else {
