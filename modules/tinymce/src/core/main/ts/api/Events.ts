@@ -6,11 +6,11 @@
  */
 
 import { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
-import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes';
+import { Content, GetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
-import { PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
+import { BeforeSetContentEvent, SetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { ParserArgs } from './html/DomParser';
 import { EditorEvent } from './util/EventDispatcher';
 
@@ -48,10 +48,10 @@ const fireFormatApply = (editor: Editor, format: string, node: Node | RangeLikeO
 const fireFormatRemove = (editor: Editor, format: string, node: Node | RangeLikeObject, vars: FormatVars | undefined) =>
   editor.fire('FormatRemove', { format, node, vars });
 
-const fireBeforeSetContent = <T extends SetContentArgs>(editor: Editor, args: T) =>
+const fireBeforeSetContent = <T extends BeforeSetContentEvent>(editor: Editor, args: T) =>
   editor.fire('BeforeSetContent', args);
 
-const fireSetContent = <T extends SetContentArgs>(editor: Editor, args: T) =>
+const fireSetContent = <T extends SetContentEvent>(editor: Editor, args: T) =>
   editor.fire('SetContent', args);
 
 const fireBeforeGetContent = <T extends GetContentArgs>(editor: Editor, args: T) =>
