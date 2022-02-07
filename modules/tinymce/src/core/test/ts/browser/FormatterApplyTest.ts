@@ -2040,7 +2040,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.getBody().innerHTML = '<p>a <em><em>em</em> </em></p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'em em', 0);
     editor.formatter.apply('strikethrough');
-    assert.equal(getContent(editor), '<p><span style="text-decoration: line-through;">a </span><em><em>em</em> </em></p>');
+    assert.equal(getContent(editor), '<p><s>a </s><em><em>em</em> </em></p>');
   });
 
   it('Superscript on subscript removes the subscript element', () => {
