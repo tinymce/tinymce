@@ -45,7 +45,7 @@ const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   }
 };
 
-const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string): void => {
+const loadTheme = (editor: Editor, suffix: string): void => {
   const theme = Options.getTheme(editor);
 
   if (Type.isString(theme) && !hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
@@ -124,7 +124,7 @@ const loadScripts = (editor: Editor, suffix: string) => {
     }
   };
 
-  loadTheme(scriptLoader, editor, suffix);
+  loadTheme(editor, suffix);
   loadLanguage(scriptLoader, editor);
   loadIcons(scriptLoader, editor, suffix);
   loadPlugins(editor, suffix);
