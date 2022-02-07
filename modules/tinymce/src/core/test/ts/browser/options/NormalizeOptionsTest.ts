@@ -84,11 +84,11 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
     it('Override defaults with forced_plugins using strings with spaces', () => {
       const defaultSettings = {
-        forced_plugins: 'a b'
+        forced_plugins: '  a   b'
       };
 
       const userSettings = {
-        plugins: 'c d'
+        plugins: ' c d '
       };
 
       const settings = NormalizeOptions.normalizeOptions(defaultSettings, userSettings);
@@ -98,7 +98,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
     it('Override defaults with forced_plugins using strings with commas', () => {
       const defaultSettings = {
-        forced_plugins: 'a, b'
+        forced_plugins: 'a,b'
       };
 
       const userSettings = {
