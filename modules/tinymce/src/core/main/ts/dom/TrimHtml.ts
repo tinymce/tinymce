@@ -72,7 +72,7 @@ const findMatchingEndTagIndex = (schema: Schema, html: string, startIndex: numbe
 
         if (startMatch[1] === '/') { // end of element
           count -= 1;
-        } else if (!Obj.has(voidElements, startMatch[2])) { // start of element, specifically not a shortEndedElement like <br>
+        } else if (!Obj.has(voidElements, startMatch[2])) { // start of element, specifically not a void element like <br>
           count += 1;
         }
 
