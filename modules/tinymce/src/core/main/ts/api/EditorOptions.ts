@@ -107,10 +107,7 @@ export interface Options {
    * @param {String} name Name of a registered option.
    * @return {Boolean} True if the option value was successfully set, otherwise false.
    */
-  set: {
-    <K extends keyof EditorOptions>(name: K, value: EditorOptions[K]): boolean;
-    <T>(name: string, value: T): boolean;
-  };
+  set: <K extends string, T>(name: K, value: K extends keyof NormalizedEditorOptions ? NormalizedEditorOptions[K] : T) => boolean;
 
   /**
    * Clear the set value for the specified option and revert back to the default value.
