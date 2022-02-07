@@ -82,7 +82,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
       assert.equal(settings.plugins, 'a b c d', 'Should be both forced and user plugins');
     });
 
-    it('Override defaults with forced_plugins using strings', () => {
+    it('Override defaults with forced_plugins using strings with spaces', () => {
       const defaultSettings = {
         forced_plugins: 'a b'
       };
@@ -96,13 +96,13 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
       assert.equal(settings.plugins, 'a b c d', 'Should be both forced and user plugins');
     });
 
-    it('Override defaults with forced_plugins using mixed types and spaces', () => {
+    it('Override defaults with forced_plugins using strings with commas', () => {
       const defaultSettings = {
-        forced_plugins: '  a   b'
+        forced_plugins: 'a, b'
       };
 
       const userSettings = {
-        plugins: [ ' c ', '  d   e ' ]
+        plugins: ' c, d, e '
       };
 
       const settings = NormalizeOptions.normalizeOptions(defaultSettings, userSettings);
