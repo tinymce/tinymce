@@ -25,12 +25,14 @@ const deviceDetection = PlatformDetection.detect().deviceType;
 const isPhone = deviceDetection.isPhone();
 const isTablet = deviceDetection.isTablet();
 
-const normalizePlugins = (plugins: string | string[]) => {
-  const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
-  const trimmedPlugins = Arr.map(Type.isString(pluginNames) ? pluginNames.split(' ') : [ ], Strings.trim);
-  return Arr.filter(trimmedPlugins, (item) => {
-    return item.length > 0;
-  });
+const normalizePlugins = (plugins: string | string[] | undefined) => {
+  if (Type.isNullable(plugins)) {
+    return [];
+  } else {
+    const pluginNames = Type.isArray(plugins) ? plugins : plugins.split(/[ ,]/);
+    const trimmedPlugins = Arr.map(pluginNames, Strings.trim);
+    return Arr.filter(trimmedPlugins, Strings.isNotEmpty);
+  }
 };
 
 const extractSections = (keys: string[], options: RawEditorOptions) => {
