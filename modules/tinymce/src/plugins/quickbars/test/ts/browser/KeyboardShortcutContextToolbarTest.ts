@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.quickbars.KeyboardShortcutContextToolbarTest',
 
   const doc = SugarDocument.getDocument();
 
-  it('TINY-2884: keypress Ctrl+F9 should focus on the contextual toolbar', async () => {
+  it('TINY-2884: Ctrl+F9 should focus on the contextual toolbar', async () => {
     const editor = hook.editor();
     editor.setContent('<p>aaaaaaa</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
