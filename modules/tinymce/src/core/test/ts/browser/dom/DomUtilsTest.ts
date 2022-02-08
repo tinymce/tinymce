@@ -93,7 +93,7 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
 
     DOM.get('test').innerHTML = '<span id="test2" class="test"></span>';
     DOM.removeClass('test2', 'test');
-    assert.equal(HtmlUtils.normalizeHtml(DOM.get('test').innerHTML), '<span id="test2"></span>', 'incorrect classname');
+    assert.equal(DOM.get('test').innerHTML, '<span id="test2"></span>', 'incorrect classname');
 
     DOM.remove('test');
   });

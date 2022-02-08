@@ -55,9 +55,9 @@ describe('headless.tinymce.themes.silver.window.WindowManagerRedialTest', () => 
       if (actionData.name === 'Dest.DialogB') {
         dialogApi.redial(dialogB);
       } else if (actionData.name === 'disable-dest') {
-        dialogApi.disable('Dest.DialogB');
+        dialogApi.setEnabled('Dest.DialogB', false);
       } else if (actionData.name === 'enable-dest') {
-        dialogApi.enable('Dest.DialogB');
+        dialogApi.setEnabled('Dest.DialogB', true);
       }
     }
   };
@@ -163,9 +163,9 @@ describe('headless.tinymce.themes.silver.window.WindowManagerRedialTest', () => 
     const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), 'input').getOrDie();
     assert.equal(Value.get(input), 'C.Alpha', 'Checking input value');
 
-    dialogApi.disable('tab.switch.two');
+    dialogApi.setEnabled('tab.switch.two', false);
     UiFinder.exists(SugarBody.body(), 'button[disabled]:contains("Switch to Tab Two")');
-    dialogApi.enable('tab.switch.two');
+    dialogApi.setEnabled('tab.switch.two', true);
 
     Mouse.clickOn(SugarBody.body(), 'button:contains("Switch to Tab Two")');
     // Tab "Two" should be selected

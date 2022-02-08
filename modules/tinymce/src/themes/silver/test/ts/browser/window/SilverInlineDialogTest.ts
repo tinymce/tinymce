@@ -101,7 +101,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
       SugarDocument.getDocument(),
       'input'
     );
-    api.disable('barny');
+    api.setEnabled('barny', false);
     DialogUtils.close(editor);
     await Waiter.pTryUntil(
       'Waiting for all dialog events when closing',

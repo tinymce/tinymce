@@ -140,7 +140,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
           children: [
             s.element('div', {
               attrs: {
-                id: str.contains('aria-owns')
+                id: str.contains('aria-controls')
               },
               children: [
                 s.element('div', {

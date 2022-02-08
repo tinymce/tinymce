@@ -62,22 +62,22 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
             type: 'submenu',
             text: 'customSubMenuItem',
             shortcut: 'custom-shortcut',
-            disabled: false,
+            enabled: true,
             getSubmenuItems: () => [
               {
                 text: 'disabledCustomNestedMenuItem',
-                disabled: true,
+                enabled: false,
               },
               {
                 text: 'customNestedMenuItem',
                 shortcut: 'custom-nested-shortcut',
-                disabled: false,
+                enabled: true,
               }
             ],
           },
           {
             text: 'disabledCustomMenuItem',
-            disabled: true,
+            enabled: false,
           }
         ],
       });

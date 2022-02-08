@@ -7,13 +7,13 @@ import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLa
 export interface UrlInputSpec extends FormComponentWithLabelSpec {
   type: 'urlinput';
   filetype?: 'image' | 'media' | 'file';
-  disabled?: boolean;
+  enabled?: boolean;
 }
 
 export interface UrlInput extends FormComponentWithLabel {
   type: 'urlinput';
   filetype: 'image' | 'media' | 'file';
-  disabled: boolean;
+  enabled: boolean;
 }
 
 export interface UrlInputData {
@@ -25,7 +25,7 @@ export interface UrlInputData {
 
 const urlInputFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedStringEnum('filetype', 'file', [ 'image', 'media', 'file' ]),
-  ComponentSchema.disabled
+  ComponentSchema.enabled
 ]);
 
 export const urlInputSchema = StructureSchema.objOf(urlInputFields);

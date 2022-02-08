@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
 - The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
 - Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
+- Notifications no longer require a timeout to disable the close button #TINY-6679
+- The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
 
 ### Changed
 - The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
@@ -46,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `target_list` option has been renamed to `link_target_list` for the `link` plugin #TINY-4603
 - The `element_format` option has been set to `html` by default #TINY-8263
 - The `schema` option has been set to `html5` by default #TINY-8261
+- The `:` control character has been changed to `~` for the schema `valid_elements` and `extended_valid_elements` options #TINY-6726
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - The default value for the `link_default_protocol` option has been changed to `https` instead of `http` #TINY-7824
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
@@ -58,8 +61,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the `hr` plugin's functionality to TinyMCE core #TINY-8313
 - Moved the `print` plugin's functionality to TinyMCE core #TINY-8314
 - The `media` plugin no longer treats `iframe`, `video`, `audio` or `object` elements as "special" and will validate the contents against the schema #TINY-8382
+- The `change` event is no longer fired on first modification #TINY-6920
 - Renamed the `getShortEndedElements` Schema API to `getVoidElements` #TINY-8344
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
+- Changed the default tag for the strikethrough format to the `s` tag when using a html 5 schema #TINY-8262
+- The `strike` tag is automatically converted to the `s` tag when using a html 5 schema #TINY-8262
 - Renamed the `font_formats` option to `font_family_formats` #TINY-8328
 - Renamed the `fontselect` toolbar button and `fontformats` menu item to `fontfamily` #TINY-8328
 - Renamed the `fontsize_formats` option to `font_size_formats` #TINY-8328
@@ -67,8 +73,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `formatselect` toolbar button and `blockformats` menu item to `blocks` #TINY-8328
 - Renamed the `styleselect` toolbar button and `formats` menu item to `styles` #TINY-8328
 - Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
+- Replaced the `isDisabled()` function with an `isEnabled()` function for various APIs #TINY-8101
+- Replaced the `enable()` and `disable()` functions with a `setEnabled(state)` function in various APIs #TINY-8101
+- Replaced the `disabled` property with an `enabled` property in various APIs #TINY-8101
+- Replaced the `disable(name)` and `enable(name)` functions with a `setEnabled(name, state)` function in the Dialog APIs #TINY-8101
 - The Editor commands APIs will no longer fallback to executing the browsers native command functionality #TINY-7829
 - The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
+- The `plugins` option now returns a `string` array instead of a space separated string #TINY-8455
+- Replaced 'Powered by Tiny' link text with logo #TINY-8371
 - The `fire()` function of `tinymce.Editor`, `tinymce.dom.EventUtils`, `tinymce.dom.DOMUtils`, `tinymce.util.Observable` and `tinymce.util.EventDispatcher` is now deprecated. Use `dispatch()` function instead #TINY-8102
 
 ### Fixed
@@ -82,9 +94,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dialog labels and other text-based UI properties did not escape HTML markup #TINY-7524
 - Deleting content would sometimes not fire `beforeinput` and `input` events as expected #TINY-8168  #TINY-8329
 - Alignment would sometimes be removed on parent elements when changing alignment on certain inline nodes, such as images #TINY-8308
+- The `fullscreen` plugin would reset the scroll position when exiting fullscreen mode #TINY-8418
+- Anchor elements would render incorrectly when using the `allow_html_in_named_anchor` option #TINY-3799
+- Fixed sub-menu items not read by screen readers. Patch contributed by westonkd #TINY-8417
 
 ### Removed
 - Removed the jQuery integration #TINY-4518
+- Removed support for the `plugins` option allowing a mixture of a string array and of space separated strings #TINY-8399
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
 - Removed the deprecated `XHR` API #TINY-8164
@@ -121,6 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the undocumented `editor.editorCommands.hasCustomCommand` API #TINY-7829
 - Removed the undocumented `mceResetDesignMode`, `mceRepaint` and `mceBeginUndoLevel` commands #TINY-7829
 - Removed the `execCommand` handler function from the plugin and theme interfaces #TINY-7829
+- Removed the `SaxParser` API #TINY-8218
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

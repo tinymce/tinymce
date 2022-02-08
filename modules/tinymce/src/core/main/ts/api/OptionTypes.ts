@@ -245,7 +245,7 @@ export interface RawEditorOptions extends BaseEditorOptions {
 export interface NormalizedEditorOptions extends BaseEditorOptions {
   external_plugins: Record<string, string>;
   forced_plugins: string[];
-  plugins: string;
+  plugins: string[];
 }
 
 export interface EditorOptions extends NormalizedEditorOptions {

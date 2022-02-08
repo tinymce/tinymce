@@ -9,11 +9,11 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import DomParser from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 import * as Options from '../api/Options';
+import { Parser } from './Parser';
 
 declare let escape: any;
 
@@ -49,7 +49,7 @@ const setDimensions = (node: AstNode, previewNode: AstNode, styles: Record<strin
 };
 
 const appendNodeContent = (editor: Editor, nodeName: string, previewNode: AstNode, html: string): void => {
-  const newNode = DomParser({ forced_root_block: false, validate: false }, editor.schema).parse(html, { context: nodeName });
+  const newNode = Parser(editor.schema).parse(html, { context: nodeName });
   while (newNode.firstChild) {
     previewNode.append(newNode.firstChild);
   }

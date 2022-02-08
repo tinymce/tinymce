@@ -8,7 +8,7 @@ const editor = {
 export const registerFullscreenItems = (): void => {
   getDemoRegistry().addToggleButton('fullscreen', {
     type: 'togglebutton',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       const f = (e) => {
         buttonApi.setActive(e.something);

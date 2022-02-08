@@ -54,13 +54,30 @@ const blockSvgDataUris = (allowSvgDataUrls: boolean | undefined, tagName?: strin
   }
 };
 
+const decodeUri = (encodedUri: string) => {
+  try {
+    // Might throw malformed URI sequence
+    return decodeURIComponent(encodedUri);
+  } catch (ex) {
+    // Fallback to non UTF-8 decoder
+    return unescape(encodedUri);
+  }
+};
+
 export const isInvalidUri = (settings: SafeUriOptions, uri: string, tagName?: string) => {
-  if (settings.allow_html_data_urls) {
+  const decodedUri = decodeUri(uri);
+
+  if (settings.allow_script_urls) {
     return false;
-  } else if (/^data:image\//i.test(uri)) {
-    return blockSvgDataUris(settings.allow_svg_data_urls, tagName) && /^data:image\/svg\+xml/i.test(uri);
+  // Ensure we don't have a javascript URI, as that is not safe since it allows arbitrary JavaScript execution
+  } else if (/((java|vb)script|mhtml):/i.test(decodedUri)) {
+    return true;
+  } else if (settings.allow_html_data_urls) {
+    return false;
+  } else if (/^data:image\//i.test(decodedUri)) {
+    return blockSvgDataUris(settings.allow_svg_data_urls, tagName) && /^data:image\/svg\+xml/i.test(decodedUri);
   } else {
-    return /^data:/i.test(uri);
+    return /^data:/i.test(decodedUri);
   }
 };
 
@@ -97,21 +114,7 @@ class URI {
     if (options.allow_script_urls) {
       return true;
     } else {
-      let decodedUri = Entities.decode(uri).replace(/[\s\u0000-\u001F]+/g, '');
-
-      try {
-        // Might throw malformed URI sequence
-        decodedUri = decodeURIComponent(decodedUri);
-      } catch (ex) {
-        // Fallback to non UTF-8 decoder
-        decodedUri = unescape(decodedUri);
-      }
-
-      // Ensure we don't have a javascript URI, as that is not safe since it allows arbitrary JavaScript execution
-      if (/((java|vb)script|mhtml):/i.test(decodedUri)) {
-        return false;
-      }
-
+      const decodedUri = Entities.decode(uri).replace(/[\s\u0000-\u001F]+/g, '');
       return !isInvalidUri(options, decodedUri, context);
     }
   }

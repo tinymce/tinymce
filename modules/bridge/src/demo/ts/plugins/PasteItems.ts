@@ -9,7 +9,7 @@ const editor = {
 export const registerPasteItems = (): void => {
   getDemoRegistry().addToggleButton('pastetext', {
     type: 'togglebutton',
-    disabled: false,
+    enabled: true,
     onSetup: (buttonApi) => {
       editor.on('PastePlainTextToggle', (e) => {
         buttonApi.setActive(e.state);

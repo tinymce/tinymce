@@ -75,7 +75,7 @@ const setupContextToolbars = (editor: Editor): void => {
 
   const onSetupLink = (buttonApi: InlineContent.ContextFormButtonInstanceApi) => {
     const node = editor.selection.getNode();
-    buttonApi.setDisabled(!Utils.getAnchorElement(editor, node));
+    buttonApi.setEnabled(Utils.getAnchorElement(editor, node) !== null);
     return Fun.noop;
   };
 

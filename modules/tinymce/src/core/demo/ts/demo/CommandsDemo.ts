@@ -100,9 +100,9 @@ export default () => {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'textarea.tinymce',
     plugins: [
-      'advlist autolink link image lists charmap preview anchor pagebreak',
-      'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-      'save table directionality emoticons template importcss codesample'
+      'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+      'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
+      'save', 'table', 'directionality', 'emoticons', 'template', 'importcss', 'codesample'
     ],
     toolbar1: 'bold italic',
     menubar: false

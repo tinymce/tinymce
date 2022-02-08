@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -56,7 +56,7 @@ const trimLegacyPrefix = (name: string) => {
 const initPlugins = (editor: Editor) => {
   const initializedPlugins = [];
 
-  Tools.each(Options.getPlugins(editor).split(/[ ,]/), (name) => {
+  Arr.each(Options.getPlugins(editor), (name) => {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
   });
 };
@@ -156,11 +156,10 @@ const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
   const uiApiFacade: EditorUiApi = {
     show: Optional.from(api.show).getOr(Fun.noop),
     hide: Optional.from(api.hide).getOr(Fun.noop),
-    disable: Optional.from(api.disable).getOr(Fun.noop),
-    isDisabled: Optional.from(api.isDisabled).getOr(Fun.never),
-    enable: () => {
+    isEnabled: Optional.from(api.isEnabled).getOr(Fun.always),
+    setEnabled: (state) => {
       if (!editor.mode.isReadOnly()) {
-        Optional.from(api.enable).map(Fun.call);
+        Optional.from(api.setEnabled).each((f) => f(state));
       }
     }
   };

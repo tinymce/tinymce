@@ -33,7 +33,7 @@ export default () => {
         },
         onSetup: (btnApi) => {
           editor.annotator.annotationChanged('alpha', (state, _name, _obj) => {
-            btnApi.setDisabled(state);
+            btnApi.setEnabled(!state);
           });
           return Fun.noop;
         }
@@ -61,10 +61,10 @@ export default () => {
           editor.annotator.remove('alpha');
           editor.focus();
         },
-        disabled: true,
+        enabled: false,
         onSetup: (btnApi) => {
           editor.annotator.annotationChanged('alpha', (state, _name, _obj) => {
-            btnApi.setDisabled(!state);
+            btnApi.setEnabled(state);
           });
           return Fun.noop;
         }

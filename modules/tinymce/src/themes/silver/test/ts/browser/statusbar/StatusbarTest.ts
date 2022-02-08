@@ -30,7 +30,14 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
         s.element('span', {
           classes: [ arr.has('tox-statusbar__branding') ],
           children: [
-            s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
+            s.element('a', {
+              attrs: {
+                'aria-label': str.is('Powered by Tiny')
+              },
+              children: [
+                s.element('svg', {})
+              ]
+            })
           ]
         })
       ]
@@ -55,7 +62,14 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
         s.element('span', {
           classes: [ arr.has('tox-statusbar__branding') ],
           children: [
-            s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
+            s.element('a', {
+              attrs: {
+                'aria-label': str.is('Powered by Tiny')
+              },
+              children: [
+                s.element('svg', {})
+              ]
+            })
           ]
         })
       ]
@@ -80,7 +94,14 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
         s.element('span', {
           classes: [ arr.has('tox-statusbar__branding') ],
           children: [
-            s.element('a', { children: [ s.text(str.is('Powered by Tiny')) ] })
+            s.element('a', {
+              attrs: {
+                'aria-label': str.is('Powered by Tiny')
+              },
+              children: [
+                s.element('svg', {})
+              ]
+            })
           ]
         })
       ]

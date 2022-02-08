@@ -95,12 +95,12 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(
       serializer.serialize(root),
       '<div><img src="file.gif" data-mce-src="file.gif"></div>',
-      'Whitespace where SaxParser will produce multiple whitespace nodes'
+      'Whitespace where the parser will produce multiple whitespace nodes'
     );
     assert.deepEqual(
       countNodes(root),
       { body: 1, div: 1, img: 1 },
-      'Whitespace where SaxParser will produce multiple whitespace nodes (count)'
+      'Whitespace where the parser will produce multiple whitespace nodes (count)'
     );
   });
 
@@ -667,6 +667,33 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
   });
 
+  it('Preserve internal elements', () => {
+    const html = '<span id="id" class="class"><b>text</b></span><span id="test" data-mce-type="something"></span>';
+
+    const parser1 = DomParser({}, Schema({ valid_elements: 'b' }));
+    const serializerHtml1 = serializer.serialize(parser1.parse(html));
+    assert.equal(
+      serializerHtml1,
+      '<b>text</b><span id="test" data-mce-type="something"></span>',
+      'Preserve internal span element without any span schema rule.'
+    );
+
+    const parser2 = DomParser({}, Schema({ valid_elements: 'b,span[class]' }));
+    const serializerHtml2 = serializer.serialize(parser2.parse(html));
+    assert.equal(
+      serializerHtml2,
+      '<span class="class"><b>text</b></span><span id="test" data-mce-type="something"></span>',
+      'Preserve internal span element with a span schema rule.'
+    );
+
+    const serializedHtml3 = serializer.serialize(parser1.parse('<b data-mce-type="test" id="x" style="color: red" src="1" data="2" onclick="3"></b>'));
+    assert.equal(
+      serializedHtml3,
+      '<b data-mce-type="test" id="x" style="color: red"></b>',
+      'Removes disallowed elements'
+    );
+  });
+
   // TODO: TINY-4627/TINY-8363 - the iframe innerHTML on safari is `&lt;textarea&gt;` whereas on other browsers
   //       is `<textarea>`. This causes the mXSS cleaner in DOMPurify to run and causes the different assertions below
   it('parse iframe XSS', () => {
@@ -676,6 +703,26 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       serializer.serialize(DomParser().parse('<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')),
       browser.isSafari() ? '<iframe><textarea></iframe><img src="a">' : '<img src="a">'
     );
+  });
+
+  it('Conditional comments (allowed)', () => {
+    const parser = DomParser({ allow_conditional_comments: true, validate: false }, schema);
+    const html = '<!--[if gte IE 4]>alert(1)<![endif]-->';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+    assert.equal(serializedHtml, '<!--[if gte IE 4]>alert(1)<![endif]-->');
+  });
+
+  it('Conditional comments (denied)', () => {
+    const parser = DomParser({ allow_conditional_comments: false, validate: false }, schema);
+
+    let serializedHtml = serializer.serialize(parser.parse('<!--[if gte IE 4]>alert(1)<![endif]-->'));
+    assert.equal(serializedHtml, '<!-- [if gte IE 4]>alert(1)<![endif]-->');
+
+    serializedHtml = serializer.serialize(parser.parse('<!--[if !IE]>alert(1)<![endif]-->'));
+    assert.equal(serializedHtml, '<!-- [if !IE]>alert(1)<![endif]-->');
+
+    serializedHtml = serializer.serialize(parser.parse('<!--[iF !IE]>alert(1)<![endif]-->'));
+    assert.equal(serializedHtml, '<!-- [iF !IE]>alert(1)<![endif]-->');
   });
 
   it('allow_script_urls should allow any URIs', () => {
@@ -701,6 +748,62 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       '<a>1</a>' +
       '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">2</a>' +
       '<a href="data:image/svg+xml;base64,x">3</a>'
+    );
+  });
+
+  it('Parse script urls (disallow svg data image uris)', () => {
+    const parser = DomParser({ allow_svg_data_urls: false, allow_html_data_urls: false, validate: false }, schema);
+    const html = '<a href="data:image/svg+xml;base64,x">1</a>' +
+      '<img src="data:image/svg+xml;base64,x">';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(
+      serializedHtml,
+      '<a>1</a>' +
+      '<img>'
+    );
+  });
+
+  it('Parse script urls (denied)', () => {
+    const parser = DomParser({ allow_script_urls: false, validate: false }, schema);
+    const html = '<a href="jAvaScript:alert(1)">1</a>' +
+      '<a href="vbscript:alert(2)">2</a>' +
+      '<a href="javascript:alert(3)">3</a>' +
+      '<a href="\njavascript:alert(4)">4</a>' +
+      '<a href="java\nscript:alert(5)">5</a>' +
+      '<a href="java\tscript:alert(6)">6</a>' +
+      '<a href="%6aavascript:alert(7)">7</a>' +
+      '<a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">8</a>' +
+      '<a href=" dAt%61: tExt/html  ; bAse64 , PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">9</a>' +
+      '<object data="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">10</object>' +
+      '<button formaction="javascript:alert(11)">11</button>' +
+      '<form action="javascript:alert(12)">12</form>' +
+      '<table background="javascript:alert(13)"><tbody><tr><td>13</td></tr></tbody></table>' +
+      '<a href="mhtml:14">14</a>' +
+      '<a xlink:href="jAvaScript:alert(15)">15</a>' +
+      '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">' +
+      '<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(
+      serializedHtml,
+      '<a>1</a>' +
+      '<a>2</a>' +
+      '<a>3</a>' +
+      '<a>4</a>' +
+      '<a>5</a>' +
+      '<a>6</a>' +
+      '<a>7</a>' +
+      '<a>8</a>' +
+      '<a>9</a>' +
+      '<object>10</object>' +
+      '<button>11</button>' +
+      '<form>12</form>' +
+      '<table><tbody><tr><td>13</td></tr></tbody></table>' +
+      '<a>14</a>' +
+      '<a>15</a>' +
+      '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">' +
+      '<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
     );
   });
 
@@ -841,6 +944,44 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     assert.equal(serializedHtml, html, 'Should be html with base64 uri retained');
   });
 
+  it('Parse away bogus elements', () => {
+    const testBogusParsing = (inputHtml: string, outputHtml: string) => {
+      const parser = DomParser({}, schema);
+      const serializedHtml = serializer.serialize(parser.parse(inputHtml));
+      assert.equal(serializedHtml, outputHtml);
+    };
+
+    testBogusParsing('a<b data-mce-bogus="1">b</b>c', 'abc');
+    testBogusParsing('a<b data-mce-bogus="true">b</b>c', 'abc');
+    testBogusParsing('a<b data-mce-bogus="1"></b>c', 'ac');
+    testBogusParsing('a<b data-mce-bogus="all">b</b>c', 'ac');
+    testBogusParsing('a<b data-mce-bogus="all"><!-- x --><?xml?></b>c', 'ac');
+    testBogusParsing('a<b data-mce-bogus="all"><b>b</b></b>c', 'ac');
+    testBogusParsing('a<b data-mce-bogus="all"><br>b</b><b>c</b>', 'a<b>c</b>');
+    testBogusParsing('a<b data-mce-bogus="all"><img>b</b><b>c</b>', 'a<b>c</b>');
+    testBogusParsing('a<b data-mce-bogus="all"><b attr="x">b</b></b>c', 'ac');
+    testBogusParsing('a<b data-mce-bogus="all"></b>c', 'ac');
+    testBogusParsing('a<b data-mce-bogus="all"></b><b>c</b>', 'a<b>c</b>');
+  });
+
+  it('remove bogus elements even if not part of valid_elements', () => {
+    const parser = DomParser({}, Schema({ valid_elements: 'p,span,' }));
+    const html = '<p>a <span data-mce-bogus="all">&nbsp;<span contenteditable="false">X</span>&nbsp;</span>b</p>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml, '<p>a b</p>');
+  });
+
+  it('Parse cdata with comments', () => {
+    const parser = DomParser({}, schema);
+
+    const serializedHtml = serializer.serialize(parser.parse('<div><![CDATA[<!--x--><!--y--!>-->]]></div>', { format: 'html' }));
+    assert.equal(serializedHtml, '<div><!--[CDATA[<!--x----><!--y-->--&gt;]]&gt;</div>');
+
+    const serializedXHtml = serializer.serialize(parser.parse('<div><![CDATA[<!--x--><!--y-->--><!--]]></div>', { format: 'xhtml' }));
+    assert.equal(serializedXHtml, '<div><![CDATA[<!--x--><!--y-->--><!--]]></div>');
+  });
+
   it('TINY-7756: Parsing invalid nested children', () => {
     const schema = Schema({ valid_children: '-td[button|a|div]' });
     const parser = DomParser({}, schema);
@@ -900,6 +1041,28 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const serializedHtml = serializer.serialize(parser.parse(html, { context: 'p' }));
 
     assert.equal(serializedHtml, '<p>Hello world! <button>This is a button with a meta tag in it</button></p>');
+  });
+
+  it('TINY-7756: should prevent dom clobbering overriding document/form properties', () => {
+    const parser = DomParser({}, Schema({ valid_elements: '*[id|src|name|class]' }));
+    const html = '<img src="x" name="getElementById" />' +
+      '<input id="attributes" />' +
+      '<output id="style"></output>' +
+      '<button name="action"></button>' +
+      '<select name="getElementsByName"></select>' +
+      '<fieldset name="method"></fieldset>' +
+      '<textarea name="click"></textarea>';
+    const serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<img src="x">' +
+      '<input>' +
+      '<output></output>' +
+      '<button></button>' +
+      '<select></select>' +
+      '<fieldset></fieldset>' +
+      '<textarea></textarea>'
+    );
   });
 
   context('validate: false', () => {

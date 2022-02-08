@@ -37,7 +37,7 @@ export type ListBoxItem = ListBoxNestedItem | ListBoxSingleItem;
 export interface ListBox extends FormComponentWithLabel {
   type: 'listbox';
   items: ListBoxItem[];
-  disabled: boolean;
+  enabled: boolean;
 }
 
 const listBoxSingleItemFields = [
@@ -57,7 +57,7 @@ const listBoxItemSchema = StructureSchema.oneOf([
 
 const listBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
   FieldSchema.requiredArrayOf('items', listBoxItemSchema),
-  ComponentSchema.disabled
+  ComponentSchema.enabled
 ]);
 
 export const listBoxSchema = StructureSchema.objOf(listBoxFields);

@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Boxes, Gui, GuiFactory, InlineView, Layout, LayoutInset, MaxHeight, NodeAnchorSpec } from '@ephox/alloy';
-import { Arr, Num, Optional, Type } from '@ephox/katamari';
+import { Boxes, Gui, GuiFactory, InlineView, Layout, MaxHeight, NodeAnchorSpec } from '@ephox/alloy';
+import { Arr, Num, Optional } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -20,40 +20,29 @@ interface Extras {
   readonly backstage: UiFactoryBackstage;
 }
 
-type Location = 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc';
-
 export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl => {
   const sharedBackstage = extras.backstage.shared;
 
-  const getLayoutDirection = (rel: Location) => {
-    switch (rel) {
-      case 'bc-bc':
-        return LayoutInset.south;
-      case 'tc-tc':
-        return LayoutInset.north;
-      case 'tc-bc':
-        return Layout.north;
-      case 'bc-tc':
-      default:
-        return Layout.south;
-    }
-  };
-
-  const reposition = (notifications: NotificationApi[]) => {
-    if (notifications.length > 0) {
-      Arr.each(notifications, (notification, index) => {
-        if (index === 0) {
-          notification.moveRel(null, 'banner');
-        } else {
-          notification.moveRel(notifications[index - 1].getEl(), 'bc-tc');
-        }
-      });
-    }
+  const getBounds = () => {
+    /* Attempt to ensure that the notifications render below the top of the header and between
+     * whichever is the larger between the bottom of the content area and the bottom of the viewport
+     *
+     * Note: This isn't perfect, but we have a plan to fix it now that TinyMCE 6 removed public methods restricting
+     * our ability to change anything (TINY-6679).
+     *
+     * TODO TINY-8128: use docking and associate the notifications together so they update position automatically
+     * during UI refresh updates.
+     */
+    const contentArea = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
+    const win = Boxes.win();
+    const x = Num.clamp(win.x, contentArea.x, contentArea.right);
+    const y = Num.clamp(win.y, contentArea.y, contentArea.bottom);
+    const right = Math.max(contentArea.right, win.right);
+    const bottom = Math.max(contentArea.bottom, win.bottom);
+    return Optional.some(Boxes.bounds(x, y, right - x, bottom - y));
   };
 
   const open = (settings: NotificationSpec, closeCallback: () => void): NotificationApi => {
-    const hideCloseButton = !settings.closeButton && settings.timeout && (settings.timeout > 0 || settings.timeout < 0);
-
     const close = () => {
       closeCallback();
       InlineView.hide(notificationWrapper);
@@ -65,7 +54,7 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
         level: Arr.contains([ 'success', 'error', 'warning', 'warn', 'info' ], settings.type) ? settings.type : undefined,
         progress: settings.progressBar === true,
         icon: Optional.from(settings.icon),
-        closeButton: !hideCloseButton,
+        closeButton: settings.closeButton,
         onAction: close,
         iconProvider: sharedBackstage.providers.icons,
         translationProvider: sharedBackstage.providers.translate
@@ -79,8 +68,8 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
           classes: [ 'tox-notifications-container' ]
         },
         lazySink: sharedBackstage.getSink,
-        fireDismissalEventInstead: { },
-        ...sharedBackstage.header.isPositionedAtTop() ? { } : { fireRepositionEventInstead: { }}
+        fireDismissalEventInstead: {},
+        ...sharedBackstage.header.isPositionedAtTop() ? {} : { fireRepositionEventInstead: {}}
       })
     );
 
@@ -92,60 +81,45 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
       }, settings.timeout);
     }
 
-    const getBounds = () => {
-      /* Attempt to ensure that the notifications render below the top of the header and between
-       * whichever is the larger between the bottom of the content area and the bottom of the viewport
-       *
-       * Note: This isn't perfect, but without being able to use docking and associate the notifications
-       * together due to the `moveTo` and `moveRel` APIs then we're a bit stuck and a proper solution
-       * will have to be done in TinyMCE 6.
-       */
-      const contentArea = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
-      const win = Boxes.win();
-      const x = Num.clamp(win.x, contentArea.x, contentArea.right);
-      const y = Num.clamp(win.y, contentArea.y, contentArea.bottom);
-      const right = Math.max(contentArea.right, win.right);
-      const bottom = Math.max(contentArea.bottom, win.bottom);
-      return Optional.some(Boxes.bounds(x, y, right - x, bottom - y));
-    };
+    const reposition = () => {
+      const notificationSpec = GuiFactory.premade(notification);
+      const anchorOverrides = {
+        maxHeightFunction: MaxHeight.expandable()
+      };
 
-    return {
-      close,
-      moveTo: (x: number, y: number) => {
-        InlineView.showAt(notificationWrapper, GuiFactory.premade(notification), {
-          anchor: {
-            type: 'makeshift',
-            x,
-            y
-          }
-        });
-      },
-      moveRel: (element: HTMLElement | null, rel: Location | 'banner') => {
-        const notificationSpec = GuiFactory.premade(notification);
-        const anchorOverrides = {
-          maxHeightFunction: MaxHeight.expandable()
+      // TODO TINY-8128: This is a hack. This logic only works if called on every notification in order (as NotificationManager.reposition() does).
+      const allNotifications = editor.notificationManager.getNotifications();
+
+      if (allNotifications[0] === thisNotification) {
+        // first notification goes below the banner element
+        const anchor = {
+          ...sharedBackstage.anchors.banner(),
+          overrides: anchorOverrides
         };
-        if (rel !== 'banner' && Type.isNonNullable(element)) {
-          const layoutDirection = getLayoutDirection(rel);
+        InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor }, getBounds);
+      } else {
+        // all other notifications go directly below the previous one
+        Arr.indexOf(allNotifications, thisNotification).each((idx) => {
+          const previousNotification = allNotifications[idx - 1].getEl();
+
           const nodeAnchor: NodeAnchorSpec = {
             type: 'node',
             root: SugarBody.body(),
-            node: Optional.some(SugarElement.fromDom(element)),
+            node: Optional.some(SugarElement.fromDom(previousNotification)),
             overrides: anchorOverrides,
             layouts: {
-              onRtl: () => [ layoutDirection ],
-              onLtr: () => [ layoutDirection ]
+              onRtl: () => [ Layout.south ],
+              onLtr: () => [ Layout.south ]
             }
           };
           InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor: nodeAnchor }, getBounds);
-        } else {
-          const anchor = {
-            ...sharedBackstage.anchors.banner(),
-            overrides: anchorOverrides
-          };
-          InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor }, getBounds);
-        }
-      },
+        });
+      }
+    };
+
+    const thisNotification = {
+      close,
+      reposition,
       text: (nuText: string) => {
         // check if component is still mounted
         Notification.updateText(notification, nuText);
@@ -158,6 +132,7 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
         }
       }
     };
+    return thisNotification;
   };
 
   const close = (notification: NotificationApi) => {
@@ -171,7 +146,6 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
   return {
     open,
     close,
-    reposition,
     getArgs
   };
 };

@@ -83,11 +83,10 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
       editor.nodeChanged();
     }
 
-    // Fire a TypingUndo/Change event on the first character entered
+    // Fire a TypingUndo event on the first character entered
     if (isFirstTypedCharacter.get() && undoManager.typing && Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0]) === false) {
       if (editor.isDirty() === false) {
         editor.setDirty(true);
-        editor.dispatch('change', { level: undoManager.data[0], lastLevel: null });
       }
 
       editor.dispatch('TypingUndo');

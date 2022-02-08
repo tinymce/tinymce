@@ -431,8 +431,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('plugins', {
-    processor: 'string',
-    default: ''
+    processor: 'string[]',
+    default: []
   });
 
   registerOption('external_plugins', {

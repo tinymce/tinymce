@@ -472,7 +472,7 @@ describe('browser.tinymce.core.EditorTest', () => {
   context('hasPlugin', () => {
     const checkWithoutManager = (title: string, plugins: string, plugin: string, expected: boolean) => {
       const editor = hook.editor();
-      editor.options.set('plugins', plugins);
+      editor.options.set('plugins', plugins.split(/[ ,]/));
       assert.equal(editor.hasPlugin(plugin), expected, title);
     };
 
@@ -482,7 +482,7 @@ describe('browser.tinymce.core.EditorTest', () => {
         PluginManager.add('ParticularPlugin', Fun.noop);
       }
 
-      editor.options.set('plugins', plugins);
+      editor.options.set('plugins', plugins.split(/[ ,]/));
       assert.equal(editor.hasPlugin(plugin, true), expected, title);
 
       if (addToManager) {

@@ -317,9 +317,8 @@ class Editor implements EditorObservable {
       styleSheetLoader: undefined,
       show: Fun.noop,
       hide: Fun.noop,
-      enable: Fun.noop,
-      disable: Fun.noop,
-      isDisabled: Fun.never
+      setEnabled: Fun.noop,
+      isEnabled: Fun.always
     };
 
     this.mode = createMode(self);
@@ -427,7 +426,7 @@ class Editor implements EditorObservable {
    * tinymce.activeEditor.hasPlugin('table');
    */
   public hasPlugin(name: string, loaded?: boolean): boolean {
-    const hasPlugin = Arr.contains(Options.getPlugins(this).split(/[ ,]/), name);
+    const hasPlugin = Arr.contains(Options.getPlugins(this), name);
     if (hasPlugin) {
       return loaded ? PluginManager.get(name) !== undefined : true;
     } else {

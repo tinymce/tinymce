@@ -19,7 +19,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
       label: Optional.some('UrlInput label'),
       name: 'col1',
       filetype: 'file',
-      disabled: false
+      enabled: true
     }, helpers.backstage(), {
       getHistory: (_fileType) => [],
       addToHistory: (_url, _filetype) => store.adder('addToHistory')(),

@@ -71,13 +71,13 @@ describe('headless.tinymce.themes.silver.window.TabbedDialogTest', () => {
           type: 'custom',
           name: 'gotoBasic',
           text: '-> Basic',
-          disabled: false
+          enabled: true
         },
         {
           type: 'custom',
           name: 'gotoAdvanced',
           text: '-> Advanced',
-          disabled: false
+          enabled: true
         },
         {
           type: 'cancel',
