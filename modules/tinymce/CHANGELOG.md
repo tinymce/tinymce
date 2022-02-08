@@ -69,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `lineheight_formats` option to `line_height_formats` #TINY-8328
 - The Editor commands APIs will no longer fallback to executing the browsers native command functionality #TINY-7829
 - The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
-- Renamed the `fire()` function to `dispatch()` in various APIs #TINY-8102
+- The `fire()` function of `tinymce.Editor`, `tinymce.dom.EventUtils`, `tinymce.dom.DOMUtils`, `tinymce.util.Observable` and `tinymce.util.EventDispatcher` is now deprecated. Use `dispatch()` function instead #TINY-8102
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
