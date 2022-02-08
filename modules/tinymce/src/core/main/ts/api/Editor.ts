@@ -782,7 +782,7 @@ class Editor implements EditorObservable {
    * @method setContent
    * @param {String} content Content to set to editor, normally HTML contents but can be other formats as well.
    * @param {Object} args Optional content object, this gets passed around through the whole set process.
-   * @return {String} HTML string that got set into the editor.
+   * @deprecated @return {String} HTML string that got set into the editor.
    * @example
    * // Sets the HTML contents of the activeEditor editor
    * tinymce.activeEditor.setContent('<span>some</span> html');
