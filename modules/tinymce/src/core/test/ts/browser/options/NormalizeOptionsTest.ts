@@ -190,7 +190,7 @@ describe('browser.tinymce.core.options.NormalizeOptionsTest', () => {
 
     it('Merged settings when theme is silver, forced_plugins in default override settings with user mobile settings (mobile)', () => {
       assert.deepEqual(
-        NormalizeOptions.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists custom' ] }}),
+        NormalizeOptions.combineOptions(true, true, {}, { forced_plugins: [ 'a' ] }, { plugins: [ 'b' ], mobile: { plugins: [ 'lists', 'custom' ] }}),
         { ...expectedPhoneDefaultSettings, external_plugins: {}, forced_plugins: [ 'a' ], plugins: [ 'a', 'lists', 'custom' ] },
         'Should not merge forced_plugins with mobile plugins when theme is not mobile'
       );
