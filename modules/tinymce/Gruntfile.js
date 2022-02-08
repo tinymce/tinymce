@@ -158,8 +158,7 @@ module.exports = function (grunt) {
               swag.nodeResolve({
                 basedir: __dirname,
                 prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core',
-                  'tinymce/ui': 'lib/ui/main/ts'
+                  'tinymce/core': 'lib/globals/tinymce/core'
                 }, [
                   [`tinymce/themes/${name}/resources`, `src/themes/${name}/main/resources`],
                   [`tinymce/themes/${name}`, `lib/themes/${name}/main/ts`]
@@ -187,11 +186,11 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              FilesAsStrings,
               swag.nodeResolve({
                 basedir: __dirname,
                 prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core',
-                  'tinymce/ui': 'lib/ui/main/ts'
+                  'tinymce/core': 'lib/globals/tinymce/core'
                 }, [
                   [`tinymce/models/${name}`, `lib/models/${name}/main/ts`]
                 ]),
