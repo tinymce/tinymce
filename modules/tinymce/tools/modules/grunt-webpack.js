@@ -107,7 +107,7 @@ let createTheme = (name) => {
 };
 
 let createModel = (name) => {
-  return create(`src/models/${name}/demo/ts/demo/Demos.ts`, 'tsconfig.model.json', `scratch/demos/models/${name}`, 'demo.js');
+  return create(`src/models/${name}/demo/ts/demo/Demo.ts`, 'tsconfig.model.json', `scratch/demos/models/${name}`, 'demo.js');
 };
 
 let allPluginDemos = (plugins) => {
@@ -119,7 +119,7 @@ let allThemeDemos = (themes) => {
 };
 
 let allModelDemos = (models) => {
-  return create(buildDemoEntries(models, 'models', 'Demos.ts'), 'tsconfig.model.json', 'scratch/demos/models', 'demo.js')
+  return create(buildDemoEntries(models, 'models', 'Demo.ts'), 'tsconfig.model.json', 'scratch/demos/models', 'demo.js')
 };
 
 let all = (plugins, themes, models) => {
