@@ -238,6 +238,7 @@ class Editor implements EditorObservable {
   public bindPendingEventDelegates: EditorObservable['bindPendingEventDelegates'];
   public toggleNativeEvent: EditorObservable['toggleNativeEvent'];
   public unbindAllNativeEvents: EditorObservable['unbindAllNativeEvents'];
+  public fire: EditorObservable['fire'];
   public dispatch: EditorObservable['dispatch'];
   public on: EditorObservable['on'];
   public off: EditorObservable['off'];
