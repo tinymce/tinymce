@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
   const customEmbed =
   '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;">' +
   '<iframe src="https://www.youtube.com/embed/IcgmSRJHu_8"' +
-  ' width="560" height="314" allowfullscreen="allowfullscreen">' +
+  ' width="560" height="314" allowfullscreen="allowfullscreen" data-mce-fragment="1">' +
   '</iframe></div>';
 
   const pTestResolvedEmbedContentSubmit = async (editor: Editor, url: string, expected: string) => {

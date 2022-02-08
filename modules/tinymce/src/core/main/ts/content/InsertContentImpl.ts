@@ -22,6 +22,7 @@ import * as TableDelete from '../delete/TableDelete';
 import * as CefUtils from '../dom/CefUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
+import * as FilterNode from '../html/FilterNode';
 import { cleanInvalidNodes } from '../html/InvalidNodes';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
@@ -312,6 +313,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     fragment.unwrap();
     const invalidChildren = Arr.filter(toExtract, (node) => !editor.schema.isValidChild(parent, node.name));
     cleanInvalidNodes(invalidChildren, editor.schema);
+    FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), root);
     value = serializer.serialize(root);
 
     // Set the inner/outer HTML depending on if we are in the root or not
