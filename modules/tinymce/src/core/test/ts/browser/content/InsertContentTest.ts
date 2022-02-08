@@ -624,4 +624,19 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     );
     TinyAssertions.assertCursor(editor, [ 1, 1, 0, 0 ], 16);
   });
+
+  it('TINY-8444: Inserting block content runs the node filters', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Content</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 3);
+
+    let numNodesFiltered = 0;
+    editor.parser.addNodeFilter('div', (nodes) => {
+      numNodesFiltered += nodes.length;
+    });
+
+    editor.insertContent('<div>inserted content</div>');
+    assert.equal(numNodesFiltered, 1, 'Node filters should have run');
+    TinyAssertions.assertContent(editor, '<p>Con</p><div>inserted content</div><p>tent</p>');
+  });
 });
