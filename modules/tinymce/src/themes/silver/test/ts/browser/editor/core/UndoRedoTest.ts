@@ -5,7 +5,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.editor.core.UndoRedoUiTest', () => {
+describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'redo undo',
