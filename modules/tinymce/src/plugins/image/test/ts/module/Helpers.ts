@@ -20,7 +20,6 @@ export interface ImageDialogData {
   class: string;
   border: string;
   hspace: string;
-  style: string;
   vspace: string;
   borderstyle: string;
 }
@@ -39,7 +38,6 @@ export const generalTabSelectors = {
 
 export const advancedTabSelectors = {
   border: 'label.tox-label:contains("Border width") + input.tox-textfield',
-  style: 'label.tox-label:contains("Style") + input.tox-textfield',
   hspace: 'label.tox-label:contains("Horizontal space") + input.tox-textfield',
   vspace: 'label.tox-label:contains("Vertical space") + input.tox-textfield',
   borderstyle: 'label.tox-label:contains("Border style") + div.tox-listboxfield > .tox-listbox'

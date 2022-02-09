@@ -5,7 +5,7 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { advancedTabSelectors, assertInputValue, fillActiveDialog, ImageDialogData, setInputValue } from '../module/Helpers';
+import { advancedTabSelectors, assertInputValue, fillActiveDialog, ImageDialogData } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -40,10 +40,9 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   const pCreateTestOnEmptyEditor = (editor: Editor, data: Partial<ImageDialogData>, expectedContent: string) =>
     pCreateTestWithContent(editor, '', { element: [ 0 ], offset: 0 }, data, expectedContent);
 
-  const pCreateTestUpdatedStyle = async (editor: Editor, style: string, assertion: () => void) => {
-    await pInitAndOpenDialog(editor, '', { element: [ 0 ], offset: 0 });
+  const pCreateTestValidatingAdvancedTab = async (editor: Editor, style: string, assertion: () => void) => {
+    await pInitAndOpenDialog(editor, `<img style="${style}" src="src" alt="alt">`, { start: { element: [ 0 ], offset: 0 }, finish: { element: [ 0 ], offset: 1 }});
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Advanced")');
-    setInputValue(advancedTabSelectors.style, style);
     assertion();
     TinyUiActions.submitDialog(editor);
   };
@@ -71,27 +70,14 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
         src: {
           value: 'src'
         },
-        style: 'border-width: 10px; border-style: solid;'
+        border: '10px',
+        borderstyle: 'solid'
       },
       '<p><img style="border-width: 10px; border-style: solid;" src="src" alt="alt"></p>'
     )
   );
 
-  it('TBA: Advanced image dialog margin style only options on empty editor', () =>
-    pCreateTestOnEmptyEditor(
-      hook.editor(),
-      {
-        alt: 'alt',
-        src: {
-          value: 'src'
-        },
-        style: 'margin: 10px;'
-      },
-      '<p><img style="margin: 10px;" src="src" alt="alt"></p>'
-    )
-  );
-
-  it('TBA: Advanced image dialog overridden border style options on empty editor', () =>
+  it('TBA: Advanced image dialog border style options on empty editor', () =>
     pCreateTestOnEmptyEditor(
       hook.editor(),
       {
@@ -100,13 +86,12 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
         src: {
           value: 'src'
         },
-        style: 'border-width: 15px;'
       },
       '<p><img style="border-width: 10px;" src="src" alt="alt"></p>'
     )
   );
 
-  it('TBA: Advanced image dialog overridden margin style options on empty editor', () =>
+  it('TBA: Advanced image dialog margin style options on empty editor', () =>
     pCreateTestOnEmptyEditor(
       hook.editor(),
       {
@@ -115,7 +100,6 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
         src: {
           value: 'src'
         },
-        style: 'margin-left: 15px; margin-top: 20px;',
         vspace: '10'
       },
       '<p><img style="margin: 10px;" src="src" alt="alt"></p>'
@@ -143,85 +127,78 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   );
 
   it('TBA: Advanced image dialog non-shorthand horizontal margin style change test', () =>
-    pCreateTestUpdatedStyle(
+    pCreateTestValidatingAdvancedTab(
       hook.editor(),
       'margin-left: 15px; margin-right: 15px;',
       () => {
         assertInputValue(advancedTabSelectors.vspace, '');
         assertInputValue(advancedTabSelectors.hspace, '15');
-        assertInputValue(advancedTabSelectors.style, 'margin-left: 15px; margin-right: 15px;');
       }
     )
   );
 
   it('TBA: Advanced image dialog non-shorthand vertical margin style change test', () =>
-    pCreateTestUpdatedStyle(
+    pCreateTestValidatingAdvancedTab(
       hook.editor(),
       'margin-top: 15px; margin-bottom: 15px;',
       () => {
         assertInputValue(advancedTabSelectors.vspace, '15');
         assertInputValue(advancedTabSelectors.hspace, '');
-        assertInputValue(advancedTabSelectors.style, 'margin-top: 15px; margin-bottom: 15px;');
       }
     )
   );
 
   it('TBA: Advanced image dialog shorthand margin 1 value style change test', () =>
-    pCreateTestUpdatedStyle(
+    pCreateTestValidatingAdvancedTab(
       hook.editor(),
       'margin: 5px;',
       () => {
         assertInputValue(advancedTabSelectors.vspace, '5');
         assertInputValue(advancedTabSelectors.hspace, '5');
-        assertInputValue(advancedTabSelectors.style, 'margin: 5px;');
       }
     )
   );
 
   it('TBA: Advanced image dialog shorthand margin 2 value style change test', () =>
-    pCreateTestUpdatedStyle(
+    pCreateTestValidatingAdvancedTab(
       hook.editor(),
       'margin: 5px 10px;',
       () => {
         assertInputValue(advancedTabSelectors.vspace, '5');
         assertInputValue(advancedTabSelectors.hspace, '10');
-        assertInputValue(advancedTabSelectors.style, 'margin: 5px 10px 5px 10px;');
       }
     )
   );
 
   it('TBA: Advanced image dialog shorthand margin 3 value style change test', () =>
-    pCreateTestUpdatedStyle(
+    pCreateTestValidatingAdvancedTab(
       hook.editor(),
       'margin: 5px 10px 15px;',
       () => {
         assertInputValue(advancedTabSelectors.vspace, '');
         assertInputValue(advancedTabSelectors.hspace, '10');
-        assertInputValue(advancedTabSelectors.style, 'margin: 5px 10px 15px 10px;');
       }
     )
   );
 
   it('TBA: Advanced image dialog shorthand margin 4 value style change test', () =>
-    pCreateTestUpdatedStyle(
+    pCreateTestValidatingAdvancedTab(
       hook.editor(),
       'margin: 5px 10px 15px 20px;',
       () => {
         assertInputValue(advancedTabSelectors.vspace, '');
         assertInputValue(advancedTabSelectors.hspace, '');
-        assertInputValue(advancedTabSelectors.style, 'margin: 5px 10px 15px 20px;');
       }
     )
   );
 
   it('TBA: Advanced image dialog shorthand margin 4 value style with single value override change test', () =>
-    pCreateTestUpdatedStyle(
+    pCreateTestValidatingAdvancedTab(
       hook.editor(),
       'margin: 5px 10px 15px 20px; margin-top: 15px;',
       () => {
         assertInputValue(advancedTabSelectors.vspace, '15');
         assertInputValue(advancedTabSelectors.hspace, '');
-        assertInputValue(advancedTabSelectors.style, 'margin: 15px 10px 15px 20px;');
       }
     )
   );
