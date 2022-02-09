@@ -16,7 +16,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
   before(function () {
     // TODO: TINY-2308 Get this test working on everything!
     const browser = PlatformDetection.detect().browser;
-    if (browser.isChromium() || browser.isSafari() || browser.isFirefox()) {
+    if ( browser.isFirefox()) {
       this.skip();
     }
 
@@ -30,6 +30,15 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     // NOTE: this is just for aiding debugging. It only works in some browsers
     'iframe:focus-within { outline: 3px solid green; !important; }'
   ]);
+
+  const focusOnPrevious = async () => {
+    await RealKeys.pSendKeysOn(
+      'iframe => body',
+      [
+        RealKeys.combo({ shiftKey: true }, '\u0009')
+      ]
+    );
+  };
 
   it('Keyboard navigate dialog with iframe component', async () => {
     windowManager.open({
@@ -71,13 +80,16 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
         RealKeys.text('\u0009')
       ]
     );
-    await FocusTools.pTryOnSelector(
+
+    const iframe = await FocusTools.pTryOnSelector(
       'focus should be on iframe',
       SugarDocument.getDocument(),
       'iframe'
     );
 
-    await Waiter.pWait(500);
+    await Waiter.pTryUntilPredicate('Wait for frame to be loaded', () => {
+      return (iframe.dom as HTMLIFrameElement).contentDocument.readyState === 'complete';
+    });
 
     await RealKeys.pSendKeysOn(
       'iframe => body',
@@ -89,6 +101,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     await RealKeys.pSendKeysOn(
       'iframe => body',
       [
+        RealKeys.text('\u0009'),
         RealKeys.text('\u0009')
       ]
     );
@@ -96,7 +109,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     await FocusTools.pTryOnSelector(
       'focus should be on button (cancel)',
       SugarDocument.getDocument(),
-      'button:contains("cancel")'
+      'button:contains("Close")'
     );
 
     // Tag it for using with selenium. Note, I should just
@@ -119,12 +132,9 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
       'iframe'
     );
 
-    await RealKeys.pSendKeysOn(
-      'iframe => body',
-      [
-        RealKeys.combo({ shiftKey: true }, '\u0009')
-      ]
-    );
+    // trigger shift+tab twice to skip the tabStop then go back to input, currently firefox does not register RealKeys.combo
+    await focusOnPrevious();
+    await focusOnPrevious();
 
     await FocusTools.pTryOnSelector(
       'focus should move back to input (iframe >> input)',
