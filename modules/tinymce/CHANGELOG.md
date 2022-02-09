@@ -81,7 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
 - The `plugins` option now returns a `string` array instead of a space separated string #TINY-8455
 - Replaced 'Powered by Tiny' link text with logo #TINY-8371
-- The `fire()` function of `tinymce.Editor`, `tinymce.dom.EventUtils`, `tinymce.dom.DOMUtils`, `tinymce.util.Observable` and `tinymce.util.EventDispatcher` is now deprecated. Use `dispatch()` function instead #TINY-8102
+- Replaced the `fire()` function with a `dispatch()` in various APIs #TINY-8102
+- Renamed the `tinymce.html.schema.getWhiteSpaceElement()` API to `tinymce.html.schema.getWhitespaceElements()` #TINY-8102
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -139,6 +140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
+- The `fire()` function of `tinymce.Editor`, `tinymce.dom.EventUtils`, `tinymce.dom.DOMUtils`, `tinymce.util.Observable` and `tinymce.util.EventDispatcher` is now deprecated. Use `dispatch()` function instead #TINY-8102
 
 ## 5.10.3 - 2022-02-09
 
