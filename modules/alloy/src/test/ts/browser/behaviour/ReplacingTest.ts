@@ -56,13 +56,13 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
       components: [ ]
     });
 
-    const sCheckReplaceAt = (label: string, comp: AlloyComponent, expectedClasses: string[], inputClasses: string[], replaceeIndex: number, replaceClass: Optional<string>) => Logger.t(
-      `${label}: Check replaceAt(${replaceeIndex}, "${replaceClass}") for data: [${inputClasses.join(', ')}]`,
+    const sCheckReplaceAtWith = (label: string, comp: AlloyComponent, expectedClasses: string[], inputClasses: string[], replaceeIndex: number, replaceSpec: Optional<AlloySpec>) => Logger.t(
+      `${label}: Check replaceAt(${replaceeIndex}, with spec for data: [${inputClasses.join(', ')}]`,
       Step.sync(() => {
         Replacing.set(comp,
           Arr.map(inputClasses, (ic) => makeTag('div', [ ic ]))
         );
-        Replacing.replaceAt(comp, replaceeIndex, replaceClass.map((clazz) => makeTag('div', [ clazz ])));
+        Replacing.replaceAt(comp, replaceeIndex, replaceSpec);
         Assertions.assertStructure(
           'Asserting structure',
           ApproxStructure.build((s, _str, arr) => s.element('div', {
@@ -72,6 +72,9 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         );
       })
     );
+
+    const sCheckReplaceAt = (label: string, comp: AlloyComponent, expectedClasses: string[], inputClasses: string[], replaceeIndex: number, replaceClass: Optional<string>) =>
+      sCheckReplaceAtWith(label, comp, expectedClasses, inputClasses, replaceeIndex, replaceClass.map((clazz) => makeTag('div', [ clazz ])));
 
     return Arr.map([
       { comp: withoutReuseComp, label: 'Without reuse' },
@@ -418,12 +421,21 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         ),
 
         sCheckReplaceAt(
-          '.replaceAt 2 of 3 with nothing',
+          '.replaceAt 1 of 3 with nothing',
           spec.comp,
           [ 'original1', 'original3' ],
           [ 'original1', 'original2', 'original3' ],
           1,
           Optional.none()
+        ),
+
+        sCheckReplaceAtWith(
+          '.replaceAt 2 of 3 with premade spec',
+          spec.comp,
+          [ 'original1', 'original2', 'replaceAt-2' ],
+          [ 'original1', 'original2', 'original3' ],
+          2,
+          Optional.some(GuiFactory.premade(GuiFactory.build(makeTag('div', [ 'replaceAt-2' ]))))
         )
       ]);
     }).concat([
