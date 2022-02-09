@@ -452,7 +452,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const validClasses = compileElementMap(settings.valid_classes, 'map');
 
   // Setup map objects
-  const whiteSpaceElementsMap = createLookupTable(
+  const whitespaceElementsMap = createLookupTable(
     'whitespace_elements',
     'pre script noscript style textarea video audio iframe object code'
   );
@@ -943,7 +943,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
    * @method getWhitespaceElements
    * @return {Object} Name/value lookup map for white space elements.
    */
-  const getWhitespaceElements = Fun.constant(whiteSpaceElementsMap);
+  const getWhitespaceElements = Fun.constant(whitespaceElementsMap);
 
   /**
    * Returns a map with special elements. These are elements that needs to be parsed

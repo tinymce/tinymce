@@ -59,7 +59,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
     parser.addNodeFilter('br', (nodes, _, args) => {
       const blockElements = Tools.extend({}, schema.getBlockElements());
       const nonEmptyElements = schema.getNonEmptyElements();
-      const whiteSpaceElements = schema.getWhitespaceElements();
+      const whitespaceElements = schema.getWhitespaceElements();
 
       // Remove brs from body element as well
       blockElements.body = 1;
@@ -92,7 +92,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
             node.remove();
 
             // Is the parent to be considered empty after we removed the BR
-            if (isEmpty(schema, nonEmptyElements, whiteSpaceElements, parent)) {
+            if (isEmpty(schema, nonEmptyElements, whitespaceElements, parent)) {
               const elementRule = schema.getElementRule(parent.name);
 
               // Remove or padd the element depending on schema rule
