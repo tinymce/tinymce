@@ -81,15 +81,13 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
       ]
     );
 
-    const iframe = await FocusTools.pTryOnSelector(
+    await FocusTools.pTryOnSelector(
       'focus should be on iframe',
       SugarDocument.getDocument(),
       'iframe'
     );
 
-    await Waiter.pTryUntilPredicate('Wait for frame to be loaded', () => {
-      return (iframe.dom as HTMLIFrameElement).contentDocument.readyState === 'complete';
-    });
+    await Waiter.pWait(500);
 
     await RealKeys.pSendKeysOn(
       'iframe => body',
