@@ -74,7 +74,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
       }
     }, {}, Fun.noop);
 
-    await UiFinder.pWaitForState('check iframe is loaded', SugarDocument.getDocument(), 'iframe', (iframe) => (iframe.dom as HTMLIFrameElement).contentDocument.readyState === 'complete');
+    await UiFinder.pWaitForState('check iframe is loaded', SugarDocument.getDocument(), '.tox-navobj iframe', (iframe) => (iframe.dom as HTMLIFrameElement).contentDocument.readyState === 'complete');
 
     await RealKeys.pSendKeysOn(
       'input',
