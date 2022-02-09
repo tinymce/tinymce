@@ -1808,22 +1808,23 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     /**
      * Fires the specified event on the specified target.
      * <br>
-     * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use the <code>dispatch<code> instead.</em>
+     * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch<code> instead.</em>
+     *
      * @method fire
-     * @param {Object} target Target node/window or custom object.
+     * @param {Node/Document/Window} target Target element or object to fire event on.
      * @param {String} name Event name to fire.
-     * @param {Object} args Optional arguments to send to the observers.
-     * @return {EventUtils} Event utils instance.
+     * @param {Object} evt Event object to send.
+     * @return {Event} Event object.
      * @deprecated Use dispatch() instead
      */
     fire,
 
     /**
-     * Dispatches the specified event name with object on target.
+     * Dispatches the specified event name and optional object on the specified target.
      *
      * @method dispatch
      * @param {Node/Document/Window} target Target element or object to dispatch event on.
-     * @param {String} name Name of the event to dispatch.
+     * @param {String} name Name of the event to fire.
      * @param {Object} evt Event object to send.
      * @return {Event} Event object.
      */

@@ -43,7 +43,7 @@ const Observable: Observable<any> = {
    * Fires the specified event by name. Consult the
    * <a href="/docs/advanced/events">event reference</a> for more details on each event.
    * <br>
-   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use the <code>dispatch<code> instead.</em>
+   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch<code> instead.</em>
    *
    * @method fire
    * @param {String} name Name of the event to fire.
