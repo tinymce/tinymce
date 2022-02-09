@@ -1,4 +1,4 @@
-import { FocusTools, RealKeys, Waiter } from '@ephox/agar';
+import { FocusTools, RealKeys, Waiter, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
@@ -73,6 +73,8 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
           '</body>'
       }
     }, {}, Fun.noop);
+
+    await UiFinder.pWaitForState('check iframe is loaded', SugarDocument.getDocument(), 'iframe', (iframe) => (iframe.dom as HTMLIFrameElement).contentDocument.readyState === 'complete');
 
     await RealKeys.pSendKeysOn(
       'input',
