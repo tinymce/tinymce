@@ -778,6 +778,8 @@ class Editor implements EditorObservable {
   /**
    * Sets the specified content to the editor instance, this will cleanup the content before it gets set using
    * the different cleanup rules options.
+   * <br>
+   * <em>Note: The content return value was deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0.</em>
    *
    * @method setContent
    * @param {String} content Content to set to editor, normally HTML contents but can be other formats as well.

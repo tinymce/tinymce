@@ -138,6 +138,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
+- The `content` property on the `SetContent` event has been deprecated and will be removed in the next major release #TINY-8457
+- The return value of the `editor.setContent` API has been deprecated and will be removed in the next major release #TINY-8457
 
 ## 5.10.3 - 2022-02-09
 
