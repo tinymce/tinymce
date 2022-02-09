@@ -16,7 +16,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
   before(function () {
     // TODO: TINY-2308 Get this test working on everything!
     const browser = PlatformDetection.detect().browser;
-    if ( browser.isFirefox()) {
+    if ( browser.isFirefox() || browser.isSafari() ) {
       this.skip();
     }
 
