@@ -81,13 +81,15 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
       ]
     );
 
-    await FocusTools.pTryOnSelector(
+    const iframe = await FocusTools.pTryOnSelector(
       'focus should be on iframe',
       SugarDocument.getDocument(),
       'iframe'
     );
 
-    await Waiter.pWait(500);
+    await Waiter.pTryUntilPredicate('Wait for frame to be loaded', () => {
+      return (iframe.dom as HTMLIFrameElement).contentDocument.readyState === 'complete';
+    });
 
     await RealKeys.pSendKeysOn(
       'iframe => body',
@@ -108,13 +110,13 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
       'focus should be on button (cancel)',
       SugarDocument.getDocument(),
       'button:contains("Close")'
-    ).then(() => {
-      // Tag it for using with selenium. Note, I should just
-      // implement the automatic id tagging in agar, and
-      // pass in a DOM reference (or assume focused element)
-      Focus.active().each((button) => {
-        Class.add(button, 'cancel-button');
-      });
+    );
+
+    // Tag it for using with selenium. Note, I should just
+    // implement the automatic id tagging in agar, and
+    // pass in a DOM reference (or assume focused element)
+    Focus.active().each((button) => {
+      Class.add(button, 'cancel-button');
     });
 
     await RealKeys.pSendKeysOn(
