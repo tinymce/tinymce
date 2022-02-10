@@ -3,9 +3,9 @@ import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as TableTestUtils from '../../module/test/TableUtils';
+import * as TableTestUtils from '../../../module/table/TableTestUtils';
 
-describe('browser.tinymce.core.table.InsertTableCommandWithColGroupsTest', () => {
+describe('browser.tinymce.models.dom.table.command.InsertTableCommandWithColGroupsTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     indent: false,
     valid_styles: {

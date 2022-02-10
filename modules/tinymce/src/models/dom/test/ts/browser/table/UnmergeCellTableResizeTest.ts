@@ -6,14 +6,14 @@ import { TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as TableTestUtils from '../../module/test/TableUtils';
+import * as TableTestUtils from '../../module/table/TableTestUtils';
 
 interface Scenario {
   readonly html: string;
   readonly select: (editor: Editor) => void;
 }
 
-describe('browser.tinymce.core.table.UnmergeCellTableResizeTest', () => {
+describe('browser.tinymce.models.dom.table.UnmergeCellTableResizeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     width: 400,
     base_url: '/project/tinymce/js/tinymce'

@@ -10,7 +10,7 @@ const enum Direction {
   Column
 }
 
-describe('browser.tinymce.core.table.TwoCellsSelectionTest', () => {
+describe('browser.tinymce.models.dom.table.TwoCellsSelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce',

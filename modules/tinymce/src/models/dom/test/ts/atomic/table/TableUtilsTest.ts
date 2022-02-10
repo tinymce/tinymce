@@ -2,9 +2,9 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
 
-import { isPercentage, isPixel } from 'tinymce/core/table/TableUtils';
+import { isPercentage, isPixel } from 'tinymce/models/dom/table/core/TableUtils';
 
-describe('atomic.tinymce.core.table.TableUtilsTest', () => {
+describe('atomic.tinymce.models.dom.table.TableUtilsTest', () => {
   it('isPercentage', () => {
     assert.isFalse(isPercentage(''), 'Empty string is false');
     assert.isFalse(isPercentage('%'), 'Single % string is false');

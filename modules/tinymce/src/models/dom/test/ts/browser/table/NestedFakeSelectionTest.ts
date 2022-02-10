@@ -5,7 +5,7 @@ import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as TableTestUtils from '../../module/test/TableUtils';
+import * as TableTestUtils from '../../module/table/TableTestUtils';
 
 interface Scenario {
   readonly content: string;
@@ -14,7 +14,7 @@ interface Scenario {
   readonly keyDirection: number;
 }
 
-describe('browser.tinymce.core.table.NestedFakeSelectionTest', () => {
+describe('browser.tinymce.models.dom.table.NestedFakeSelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     valid_styles: {

@@ -5,13 +5,13 @@ import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as TableTestUtils from '../../module/test/TableUtils';
+import * as TableTestUtils from '../../module/table/TableTestUtils';
 
 interface Scenario {
   readonly html: string;
 }
 
-describe('browser.tinymce.core.table.InsertColumnTableSizeTest', () => {
+describe('browser.tinymce.models.dom.table.InsertColumnTableSizeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     width: 400,
     base_url: '/project/tinymce/js/tinymce'

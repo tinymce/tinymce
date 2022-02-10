@@ -6,9 +6,9 @@ import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/w
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as TableTestUtils from '../../module/test/TableUtils';
+import * as TableTestUtils from '../../module/table/TableTestUtils';
 
-describe('browser.tinymce.core.table.FakeSelectionTest', () => {
+describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     valid_styles: {

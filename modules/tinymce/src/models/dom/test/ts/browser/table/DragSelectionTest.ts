@@ -4,7 +4,7 @@ import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.table.DragSelectionTest', () => {
+describe('browser.tinymce.models.dom.table.DragSelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     height: 300

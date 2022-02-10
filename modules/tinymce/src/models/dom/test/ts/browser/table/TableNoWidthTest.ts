@@ -3,7 +3,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.table.TableNoWidthTest', () => {
+describe('browser.tinymce.models.dom.table.TableNoWidthTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'

@@ -6,13 +6,13 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as TableTestUtils from '../../module/test/TableUtils';
+import * as TableTestUtils from '../../module/table/TableTestUtils';
 
 interface Scenario {
   readonly html: string;
 }
 
-describe('browser.tinymce.core.table.InsertRowTableResizeTest', () => {
+describe('browser.tinymce.models.dom.table.InsertRowTableResizeTest', () => {
   let objectResizedCounter = 0;
   const hook = TinyHooks.bddSetup<Editor>({
     width: 400,

@@ -6,9 +6,9 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as TableTestUtils from '../../module/test/TableUtils';
+import * as TableTestUtils from '../../module/table/TableTestUtils';
 
-describe('browser.tinymce.core.table.InsertTableWidthsTest', () => {
+describe('browser.tinymce.models.dom.table.InsertTableWidthsTest', () => {
   Arr.each([ 'fixed', 'relative' ], (mode) => {
     context(`table_sizing_mode: ${mode}`, () => {
       const hook = TinyHooks.bddSetupLight<Editor>({

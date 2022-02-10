@@ -11,7 +11,7 @@ interface TableCommandMap {
   readonly mceTableDeleteCol: number;
 }
 
-describe('browser.tinymce.core.table.ModifyColumnsTableResizeTest', () => {
+describe('browser.tinymce.models.dom.table.ModifyColumnsTableResizeTest', () => {
   /**
    * Test the width of tables before and after column operations
    * There is a 2 pixel delta allowed from the expected width, to account for table borders

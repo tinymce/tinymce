@@ -7,7 +7,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.table.DragResizeTest', () => {
+describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     content_style: 'table {border: 0;padding:0;} td {border: 0;padding:0;}',
     height: 400,

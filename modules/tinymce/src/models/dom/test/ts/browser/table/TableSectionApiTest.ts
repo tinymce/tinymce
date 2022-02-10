@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { NewTableCellEvent, TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-describe('browser.tinymce.core.table.TableSectionApiTest', () => {
+describe('browser.tinymce.models.dom.table.TableSectionApiTest', () => {
   const bodyContent = `<table>
 <tbody>
 <tr id="one">

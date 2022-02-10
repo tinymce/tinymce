@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.table.InvalidColCountTest', () => {
+describe('browser.tinymce.models.dom.table.InvalidColCountTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
   }, [], true);

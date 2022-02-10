@@ -3,7 +3,7 @@ import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.table.EmptyRowTableTest', () => {
+describe('browser.tinymce.models.dom.table.EmptyRowTableTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
   }, []);

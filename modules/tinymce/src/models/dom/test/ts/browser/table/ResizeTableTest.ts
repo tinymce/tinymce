@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { ObjectResizeEvent, TableModifiedEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-import * as TableTestUtils from '../../module/test/TableUtils';
+import * as TableTestUtils from '../../module/table/TableTestUtils';
 
 interface WidthMeasurements {
   readonly table: SugarElement<HTMLTableElement>;
@@ -20,7 +20,7 @@ interface WidthMeasurements {
   readonly colWidthsBefore: TableTestUtils.WidthData[];
 }
 
-describe('browser.tinymce.core.table.ResizeTableTest', () => {
+describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
   const lastObjectResizeStartEvent = Cell<EditorEvent<ObjectResizeEvent> | null>(null);
   const lastObjectResizedEvent = Cell<EditorEvent<ObjectResizeEvent> | null>(null);
   const pixelDiffThreshold = 3;

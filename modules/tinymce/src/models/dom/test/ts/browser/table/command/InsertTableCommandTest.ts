@@ -4,9 +4,9 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import * as TableTestUtils from '../../module/test/TableUtils';
+import * as TableTestUtils from '../../../module/table/TableTestUtils';
 
-describe('browser.tinymce.core.table.InsertTableCommandTest', () => {
+describe('browser.tinymce.models.dom.table.command.InsertTableCommandTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     indent: false,
     valid_styles: {

@@ -4,7 +4,7 @@ import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.table.SwitchTableSectionTest', () => {
+describe('browser.tinymce.models.dom.table.SwitchTableSectionTest', () => {
   const basicContent = `<table>
 <tbody>
 <tr id="one">
