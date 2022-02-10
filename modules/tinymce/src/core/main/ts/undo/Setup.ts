@@ -20,6 +20,11 @@ const shouldIgnoreCommand = (cmd: string): boolean => {
     case 'undo':
     case 'redo':
     case 'mcefocus':
+    case 'tablecellselectionclear':
+    case 'tableresizeHandlerhide':
+    case 'tableresizeHandlershow':
+    case 'tableresizeHandlerrefresh':
+      // TODO: There might be a better way to handle the table specific commands e.g. using events instead
       return true;
     default:
       return false;

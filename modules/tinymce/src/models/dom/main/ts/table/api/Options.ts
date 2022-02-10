@@ -19,6 +19,10 @@ const option: {
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
+  registerOption('table_clone_elements', {
+    processor: 'string[]'
+  });
+
   registerOption('table_column_resizing', {
     processor: (value) => {
       const valid = Arr.contains([ 'preservetable', 'resizetable' ], value);
@@ -33,7 +37,7 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getCloneElements = option('table_clone_elements');
+const getTableCloneElements = option('table_clone_elements');
 
 const getColumnResizingBehaviour = option('table_column_resizing');
 
@@ -62,7 +66,7 @@ const hasTableObjectResizing = (editor: Editor): boolean => {
 export {
   register,
 
-  getCloneElements,
+  getTableCloneElements,
   isTablePercentagesForced,
   isTablePixelsForced,
   isTableResponsiveForced,

@@ -6,27 +6,24 @@
  */
 
 import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional, Type } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup } from '@ephox/snooker';
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
-import { ephemera } from '../../table/TableEphemera';
-import { getCellsFromSelection } from '../../table/TableSelection';
-import * as Utils from '../../table/TableUtils';
-import Editor from '../Editor';
-import * as Options from '../Options';
-import * as Events from '../TableEvents';
-import { EditorEvent } from '../util/EventDispatcher';
+import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
+import * as Utils from '../core/TableUtils';
+import { ephemera } from '../selection/Ephemera';
+import { getCellsFromSelection } from '../selection/TableSelection';
+import * as Events from './Events';
+import * as Options from './Options';
 
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
 
-export interface TableCellSelection {
-  readonly clear: (container: Node) => void;
-}
-
-export const TableCellSelection = (editor: Editor): TableCellSelection => {
+export const TableCellSelection = (editor: Editor): void => {
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     const tableOpt = TableLookup.table(start);
     tableOpt.each((table) => {
@@ -95,6 +92,7 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
 
     const keydown = (event: KeyboardEvent) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
+      // TODO: Using command causes issue with undo state
       editor.execCommand('TableResizeHandlerHide', false, undefined, { skip_focus: true });
       // editor.dispatch('TableResizeHandlerHide');
 
@@ -187,7 +185,15 @@ export const TableCellSelection = (editor: Editor): TableCellSelection => {
   const clear = (container: Node) =>
     annotations.clear(SugarElement.fromDom(container));
 
-  return {
-    clear
-  };
+  editor.addCommand('TableCellSelectionClear', (_ui, container: Node) => {
+    clear(container);
+  });
+
+  // TODO: Alternative approach
+  editor.on('TableCellSelectionClear', (e) => {
+    const container = e.container;
+    if (Type.isNonNullable(container)) {
+      clear(container);
+    }
+  });
 };

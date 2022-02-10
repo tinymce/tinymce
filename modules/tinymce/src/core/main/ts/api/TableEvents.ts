@@ -13,12 +13,8 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import { Optional } from '@ephox/katamari';
-import { OtherCells } from '@ephox/snooker';
-import { SugarElement } from '@ephox/sugar';
-
 import Editor from './Editor';
-import { NewTableCellEvent, NewTableRowEvent, TableEventData } from './EventTypes';
+import { NewTableCellEvent, NewTableRowEvent } from './EventTypes';
 import { EditorEvent } from './util/EventDispatcher';
 
 const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<NewTableRowEvent> =>
@@ -35,42 +31,9 @@ const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, h
   editor.dispatch('ObjectResized', { target, width, height, origin });
 };
 
-const fireTableSelectionChange = (
-  editor: Editor,
-  cells: SugarElement<HTMLTableCellElement>[],
-  start: SugarElement<HTMLTableCellElement>,
-  finish: SugarElement<HTMLTableCellElement>,
-  otherCells: Optional<OtherCells.OtherCells>
-): void => {
-  editor.dispatch('TableSelectionChange', {
-    cells,
-    start,
-    finish,
-    otherCells
-  });
-};
-
-const fireTableSelectionClear = (editor: Editor): void => {
-  editor.dispatch('TableSelectionClear');
-};
-
-const fireTableModified = (editor: Editor, table: HTMLTableElement, data: TableEventData): void => {
-  editor.dispatch('TableModified', { ...data, table });
-};
-
-const styleModified: TableEventData = { structure: false, style: true };
-const structureModified: TableEventData = { structure: true, style: false };
-const styleAndStructureModified: TableEventData = { structure: true, style: true };
-
 export {
   fireNewRow,
   fireNewCell,
   fireObjectResizeStart,
-  fireObjectResized,
-  fireTableSelectionChange,
-  fireTableSelectionClear,
-  fireTableModified,
-  styleModified,
-  structureModified,
-  styleAndStructureModified
+  fireObjectResized
 };

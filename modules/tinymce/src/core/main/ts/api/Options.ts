@@ -760,10 +760,6 @@ const register = (editor: Editor) => {
     default: []
   });
 
-  registerOption('table_clone_elements', {
-    processor: 'string[]'
-  });
-
   registerOption('table_tab_navigation', {
     processor: 'boolean',
     default: true
@@ -927,7 +923,6 @@ const determineDefaultTableStyles = (editor: Editor): Record<string, string> => 
   }
 };
 
-const getTableCloneElements = option('table_clone_elements');
 const hasTableTabNavigation = option('table_tab_navigation');
 const getTableSizingMode = option('table_sizing_mode');
 const isTablePercentagesForced = (editor: Editor): boolean =>
@@ -1038,7 +1033,6 @@ export {
   getNonEditableRegExps,
   getEditableClass,
   hasTableTabNavigation,
-  getTableCloneElements,
   isTablePercentagesForced,
   isTablePixelsForced,
   isTableResponsiveForced,

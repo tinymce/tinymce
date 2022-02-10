@@ -13,6 +13,10 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
+import { Optional } from '@ephox/katamari';
+import { OtherCells } from '@ephox/snooker';
+import { SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { NewTableCellEvent, NewTableRowEvent, TableEventData } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -25,6 +29,25 @@ const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<Ne
 
 const fireTableModified = (editor: Editor, table: HTMLTableElement, data: TableEventData): void => {
   editor.dispatch('TableModified', { ...data, table });
+};
+
+const fireTableSelectionChange = (
+  editor: Editor,
+  cells: SugarElement<HTMLTableCellElement>[],
+  start: SugarElement<HTMLTableCellElement>,
+  finish: SugarElement<HTMLTableCellElement>,
+  otherCells: Optional<OtherCells.OtherCells>
+): void => {
+  editor.dispatch('TableSelectionChange', {
+    cells,
+    start,
+    finish,
+    otherCells
+  });
+};
+
+const fireTableSelectionClear = (editor: Editor): void => {
+  editor.dispatch('TableSelectionClear');
 };
 
 const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string) => {
@@ -42,6 +65,8 @@ const styleAndStructureModified: TableEventData = { structure: true, style: true
 export {
   fireObjectResizeStart,
   fireObjectResized,
+  fireTableSelectionChange,
+  fireTableSelectionClear,
   fireNewRow,
   fireNewCell,
   fireTableModified,

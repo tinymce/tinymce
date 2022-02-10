@@ -70,7 +70,7 @@ export const TableActions = (editor: Editor): TableActions => {
     isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
 
   // Optional.none gives the default cloneFormats.
-  const cloneFormats = Optional.from(Options.getCloneElements(editor));
+  const cloneFormats = Optional.from(Options.getTableCloneElements(editor));
 
   const colMutationOp = Options.getColumnResizingBehaviour(editor) === 'resizetable' ? Fun.noop : CellMutations.halve;
 
@@ -95,7 +95,8 @@ export const TableActions = (editor: Editor): TableActions => {
       // with noneditable cells, so lets check if we have a noneditable cell and if so place the selection
       const cells = TableLookup.cells(table);
       return Arr.head(cells).filter(SugarBody.inBody).map((firstCell) => {
-        editor.selection._tableCellSelection.clear(table.dom);
+        editor.execCommand('TableCellSelectionClear', false, table.dom, { skip_focus: true });
+        // editor.dispatch('TableCellSelectionClear', { container: table.dom });
         const rng = editor.dom.createRng();
         rng.selectNode(firstCell.dom);
         editor.selection.setRng(rng);
@@ -108,7 +109,9 @@ export const TableActions = (editor: Editor): TableActions => {
       rng.setStart(des.element.dom, des.offset);
       rng.setEnd(des.element.dom, des.offset);
       editor.selection.setRng(rng);
-      editor.selection._tableCellSelection.clear(table.dom);
+      // editor.execCommand('TableCellSelectionClear', false, table.dom, { skip_focus: true });
+      editor.dispatch('TableCellSelectionClear', { container: table.dom });
+      // editor.selection._tableCellSelection.clear(table.dom);
       return Optional.some(rng);
     });
 

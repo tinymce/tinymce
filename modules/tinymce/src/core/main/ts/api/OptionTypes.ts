@@ -199,6 +199,7 @@ interface BaseEditorOptions {
   style_formats_merge?: boolean;
   submit_patch?: boolean;
   suffix?: string;
+  // TODO: Remove table options that are no longer used
   table_clone_elements?: string[];
   table_column_resizing?: TableColumnResizing;
   table_default_attributes?: Record<string, string>;
