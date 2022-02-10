@@ -359,7 +359,7 @@ const setup = (editor: Editor): RenderInfo => {
       if (Css.isValidValue('div', 'height', parsedHeight)) {
         Css.set(outerContainer.element, 'height', parsedHeight);
       } else {
-        Css.set(outerContainer.element, 'height', '200px');
+        Css.set(outerContainer.element, 'height', '400px');
       }
     }
 
