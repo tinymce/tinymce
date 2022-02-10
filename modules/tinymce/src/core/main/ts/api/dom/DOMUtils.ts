@@ -1806,7 +1806,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     unbind: unbind as DOMUtils['unbind'],
 
     /**
-     * Fires the specified event on the specified target.
+     * Fires the specified event name and optional object on the specified target.
      * <br>
      * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch<code> instead.</em>
      *
