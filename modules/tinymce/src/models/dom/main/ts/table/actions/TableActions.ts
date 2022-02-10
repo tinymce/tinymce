@@ -124,7 +124,8 @@ export const TableActions = (editor: Editor): TableActions => {
       };
       return guard(table) ? operation(table, target, generators, behaviours).bind((result) => {
         // Update the resize bars after the table opeation
-        editor.selection._tableResizeHandler.refresh(table.dom);
+        editor.execCommand('TableResizeHandlerRefresh', false, table.dom, { skip_focus: true });
+        // editor.dispatch('TableResizeHandlerRefresh', { table: table.dom });
 
         // INVESTIGATE: Should "noEvents" prevent these from firing as well?
         Arr.each(result.newRows, (row) => {

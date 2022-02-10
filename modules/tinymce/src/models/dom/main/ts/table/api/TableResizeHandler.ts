@@ -5,24 +5,19 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Singleton, Strings } from '@ephox/katamari';
+import { Arr, Singleton, Strings, Type } from '@ephox/katamari';
 import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableConversions, TableGridSize, TableLookup, TableResize, Warehouse } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
-import * as NodeType from '../../dom/NodeType';
-import * as TableSize from '../../table/TableSize';
-import * as Utils from '../../table/TableUtils';
-import * as TableWire from '../../table/TableWire';
-import Editor from '../Editor';
-import * as Options from '../Options';
-import * as Events from '../TableEvents';
+import Editor from 'tinymce/core/api/Editor';
 
-export interface TableResizeHandler {
-  readonly refresh: (table: HTMLTableElement) => void;
-  readonly hide: () => void;
-  readonly show: () => void;
-  readonly destroy: () => void;
-}
+import * as Utils from '../core/TableUtils';
+import * as TableWire from '../core/TableWire';
+import * as TableSize from '../queries/TableSize';
+import * as Events from './Events';
+import * as Options from './Options';
+
+const isTable = (node: Node) => Type.isNonNullable(node) && (node as Element).tagName === 'TABLE';
 
 const barResizerPrefix = 'bar-';
 const isResizable = (elm: SugarElement<Element>) => Attribute.get(elm, 'data-mce-resize') !== 'false';
@@ -39,7 +34,7 @@ const syncPixels = (table: SugarElement<HTMLTableElement>): void => {
   }
 };
 
-export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
+export const TableResizeHandler = (editor: Editor): void => {
   const selectionRng = Singleton.value<Range>();
   const tableResize = Singleton.value<TableResize>();
   const resizeWire = Singleton.value<ResizeWire>();
@@ -139,7 +134,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   // If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
   editor.on('ObjectResizeStart', (e) => {
     const targetElm = e.target;
-    if (NodeType.isTable(targetElm)) {
+    if (isTable(targetElm)) {
       const table = SugarElement.fromDom(targetElm);
 
       // Add a class based on the resizing mode
@@ -166,7 +161,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
 
   editor.on('ObjectResized', (e) => {
     const targetElm = e.target;
-    if (NodeType.isTable(targetElm)) {
+    if (isTable(targetElm)) {
       const table = SugarElement.fromDom(targetElm);
 
       // Resize based on the snooker logic to adjust the individual col/rows if resized from a corner
@@ -190,6 +185,10 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     });
   });
 
+  editor.on('remove', () => {
+    destroy();
+  });
+
   const refresh = (table: HTMLTableElement): void => {
     tableResize.get().each((resize) => resize.refreshBars(SugarElement.fromDom(table)));
   };
@@ -202,10 +201,31 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     tableResize.get().each((resize) => resize.showBars());
   };
 
-  return {
-    refresh,
-    hide,
-    show,
-    destroy
-  };
+  editor.addCommand('TableResizeHandlerRefresh', (_ui, table: HTMLTableElement) => {
+    refresh(table);
+  });
+
+  editor.addCommand('TableResizeHandlerHide', () => {
+    hide();
+  });
+
+  editor.addCommand('TableResizeHandlerShow', () => {
+    show();
+  });
+
+  // TODO: Other possible alternative
+  editor.on('TableResizeHandlerRefresh', (e) => {
+    const table = e.table;
+    if (isTable(table)) {
+      refresh(table);
+    }
+  });
+
+  editor.on('TableResizeHandlerHide', () => {
+    hide();
+  });
+
+  editor.on('TableResizeHandlerShow', () => {
+    show();
+  });
 };

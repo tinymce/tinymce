@@ -10,9 +10,14 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Clipboard from './actions/Clipboard';
 import { TableActions } from './actions/TableActions';
 import * as Commands from './api/Commands';
+import * as Options from './api/Options';
 import * as QueryCommands from './api/QueryCommands';
+import { TableResizeHandler } from './api/TableResizeHandler';
 
 const setupTable = (editor: Editor): void => {
+  Options.register(editor);
+  TableResizeHandler(editor);
+
   const actions = TableActions(editor);
   Commands.registerCommands(editor, actions);
   QueryCommands.registerQueryCommands(editor, actions);

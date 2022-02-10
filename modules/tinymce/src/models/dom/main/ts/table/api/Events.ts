@@ -18,13 +18,21 @@ import { NewTableCellEvent, NewTableRowEvent, TableEventData } from 'tinymce/cor
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<NewTableRowEvent> =>
-  editor.fire('NewRow', { node: row });
+  editor.dispatch('NewRow', { node: row });
 
 const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<NewTableCellEvent> =>
-  editor.fire('NewCell', { node: cell });
+  editor.dispatch('NewCell', { node: cell });
 
 const fireTableModified = (editor: Editor, table: HTMLTableElement, data: TableEventData): void => {
-  editor.fire('TableModified', { ...data, table });
+  editor.dispatch('TableModified', { ...data, table });
+};
+
+const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string) => {
+  editor.dispatch('ObjectResizeStart', { target, width, height, origin });
+};
+
+const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string) => {
+  editor.dispatch('ObjectResized', { target, width, height, origin });
 };
 
 const styleModified: TableEventData = { structure: false, style: true };
@@ -32,6 +40,8 @@ const structureModified: TableEventData = { structure: true, style: false };
 const styleAndStructureModified: TableEventData = { structure: true, style: true };
 
 export {
+  fireObjectResizeStart,
+  fireObjectResized,
   fireNewRow,
   fireNewCell,
   fireTableModified,

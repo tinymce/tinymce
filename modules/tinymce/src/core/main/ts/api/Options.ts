@@ -764,11 +764,6 @@ const register = (editor: Editor) => {
     processor: 'string[]'
   });
 
-  registerOption('table_resize_bars', {
-    processor: 'boolean',
-    default: true
-  });
-
   registerOption('table_tab_navigation', {
     processor: 'boolean',
     default: true
@@ -790,14 +785,6 @@ const register = (editor: Editor) => {
   registerOption('table_sizing_mode', {
     processor: 'string',
     default: 'auto'
-  });
-
-  registerOption('table_column_resizing', {
-    processor: (value) => {
-      const valid = Arr.contains([ 'preservetable', 'resizetable' ], value);
-      return valid ? { value, valid } : { valid: false, message: 'Must be preservetable, or resizetable.' };
-    },
-    default: 'preservetable'
   });
 
   registerOption('table_default_attributes', {
@@ -943,12 +930,6 @@ const determineDefaultTableStyles = (editor: Editor): Record<string, string> => 
 const getTableCloneElements = option('table_clone_elements');
 const hasTableTabNavigation = option('table_tab_navigation');
 const getTableSizingMode = option('table_sizing_mode');
-const getTableColumnResizingBehaviour = option('table_column_resizing');
-const hasTableObjectResizing = (editor: Editor): boolean => {
-  const objectResizing = editor.options.get('object_resizing');
-  return Arr.contains(objectResizing.split(','), 'table');
-};
-const hasTableResizeBars = option('table_resize_bars');
 const isTablePercentagesForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'relative';
 const isTablePixelsForced = (editor: Editor): boolean =>
@@ -1058,9 +1039,6 @@ export {
   getEditableClass,
   hasTableTabNavigation,
   getTableCloneElements,
-  hasTableObjectResizing,
-  hasTableResizeBars,
-  getTableColumnResizingBehaviour,
   isTablePercentagesForced,
   isTablePixelsForced,
   isTableResponsiveForced,

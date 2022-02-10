@@ -22,17 +22,17 @@ import { NewTableCellEvent, NewTableRowEvent, TableEventData } from './EventType
 import { EditorEvent } from './util/EventDispatcher';
 
 const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<NewTableRowEvent> =>
-  editor.fire('NewRow', { node: row });
+  editor.dispatch('NewRow', { node: row });
 
 const fireNewCell = (editor: Editor, cell: HTMLTableCellElement): EditorEvent<NewTableCellEvent> =>
-  editor.fire('NewCell', { node: cell });
+  editor.dispatch('NewCell', { node: cell });
 
 const fireObjectResizeStart = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string): void => {
-  editor.fire('ObjectResizeStart', { target, width, height, origin });
+  editor.dispatch('ObjectResizeStart', { target, width, height, origin });
 };
 
 const fireObjectResized = (editor: Editor, target: HTMLElement, width: number, height: number, origin: string): void => {
-  editor.fire('ObjectResized', { target, width, height, origin });
+  editor.dispatch('ObjectResized', { target, width, height, origin });
 };
 
 const fireTableSelectionChange = (
@@ -42,7 +42,7 @@ const fireTableSelectionChange = (
   finish: SugarElement<HTMLTableCellElement>,
   otherCells: Optional<OtherCells.OtherCells>
 ): void => {
-  editor.fire('TableSelectionChange', {
+  editor.dispatch('TableSelectionChange', {
     cells,
     start,
     finish,
@@ -51,11 +51,11 @@ const fireTableSelectionChange = (
 };
 
 const fireTableSelectionClear = (editor: Editor): void => {
-  editor.fire('TableSelectionClear');
+  editor.dispatch('TableSelectionClear');
 };
 
 const fireTableModified = (editor: Editor, table: HTMLTableElement, data: TableEventData): void => {
-  editor.fire('TableModified', { ...data, table });
+  editor.dispatch('TableModified', { ...data, table });
 };
 
 const styleModified: TableEventData = { structure: false, style: true };

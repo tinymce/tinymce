@@ -35,7 +35,6 @@ import DOMUtils from './DOMUtils';
 import SelectorChanged from './SelectorChanged';
 import DomSerializer from './Serializer';
 import { TableCellSelection } from './TableCellSelection';
-import { TableResizeHandler } from './TableResizeHandler';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
@@ -62,7 +61,6 @@ const isValidRange = (rng: Range) => {
 interface EditorSelection {
   bookmarkManager: BookmarkManager;
   controlSelection: ControlSelection;
-  _tableResizeHandler: TableResizeHandler;
   _tableCellSelection: TableCellSelection;
   dom: DOMUtils;
   win: Window;
@@ -133,7 +131,6 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     cellEphemera.selectedSelector
   );
 
-  const _tableResizeHandler = TableResizeHandler(editor);
   const _tableCellSelection = TableCellSelection(editor);
 
   const { selectorChangedWithUnbind } = SelectorChanged(dom, editor);
@@ -574,13 +571,11 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const destroy = () => {
     win = selectedRange = explicitRange = null;
     controlSelection.destroy();
-    _tableResizeHandler.destroy();
   };
 
   const exports: EditorSelection = {
     bookmarkManager: null,
     controlSelection: null,
-    _tableResizeHandler,
     _tableCellSelection,
     dom,
     win,

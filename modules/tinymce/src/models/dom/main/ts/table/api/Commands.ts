@@ -50,7 +50,7 @@ const registerCommands = (editor: Editor, actions: TableActions): void => {
 
   const setSizingMode = (sizing: string) => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     // Do nothing if tables are forced to use a specific sizing mode
-    const isForcedSizing = Options.isResponsiveForced(editor) || Options.isPixelsForced(editor) || Options.isPercentagesForced(editor);
+    const isForcedSizing = Options.isTableResponsiveForced(editor) || Options.isTablePixelsForced(editor) || Options.isTablePercentagesForced(editor);
     if (!isForcedSizing) {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
         if (sizing === 'relative' && !Sizes.isPercentSizing(table)) {

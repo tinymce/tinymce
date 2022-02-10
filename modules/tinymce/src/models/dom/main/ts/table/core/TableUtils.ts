@@ -13,7 +13,7 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, SugarElement } from '@ephox/sugar';
 
@@ -41,10 +41,29 @@ const getSelectionStart = (editor: Editor): SugarElement<Element> =>
 const getSelectionEnd = (editor: Editor): SugarElement<Element> =>
   SugarElement.fromDom(editor.selection.getEnd());
 
+const getPixelWidth = (elm: HTMLElement): number =>
+  elm.getBoundingClientRect().width;
+
+const getPixelHeight = (elm: HTMLElement): number =>
+  elm.getBoundingClientRect().height;
+
+const getRawWidth = (editor: Editor, elm: HTMLElement): Optional<string> => {
+  const raw = editor.dom.getStyle(elm, 'width') || editor.dom.getAttrib(elm, 'width');
+  return Optional.from(raw).filter(Strings.isNotEmpty);
+};
+
+const isPercentage = (value: string): boolean => /^(\d+(\.\d+)?)%$/.test(value);
+const isPixel = (value: string): boolean => /^(\d+(\.\d+)?)px$/.test(value);
+
 export {
   getBody,
   getIsRoot,
   removeDataStyle,
   getSelectionStart,
-  getSelectionEnd
+  getSelectionEnd,
+  isPercentage,
+  isPixel,
+  getPixelWidth,
+  getPixelHeight,
+  getRawWidth
 };
