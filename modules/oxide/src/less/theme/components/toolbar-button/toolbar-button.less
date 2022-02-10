@@ -22,7 +22,7 @@
 @toolbar-button-height: 28px;
 @toolbar-button-icon-color: contrast(@background-color, @color-white, @color-black);
 @toolbar-button-spacing-x: 1px;
-@toolbar-button-spacing-y: 2px;
+@toolbar-button-spacing-y: 3px;
 @toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
@@ -74,7 +74,7 @@
     font-weight: @toolbar-button-font-weight;
     height: @toolbar-button-height;
     justify-content: center;
-    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
+    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
     outline: none;
     overflow: hidden;
     padding: 0;
