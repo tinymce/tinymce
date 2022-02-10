@@ -167,7 +167,7 @@ const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
 };
 
 const init = (editor: Editor) => {
-  editor.fire('ScriptsLoaded');
+  editor.dispatch('ScriptsLoaded');
 
   initIcons(editor);
   initTheme(editor);

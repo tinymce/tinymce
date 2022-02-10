@@ -73,7 +73,7 @@ class EditorCommands {
       }
     }
 
-    const eventArgs = editor.fire('BeforeExecCommand', { command, ui, value });
+    const eventArgs = editor.dispatch('BeforeExecCommand', { command, ui, value });
     if (eventArgs.isDefaultPrevented()) {
       return false;
     }
@@ -81,7 +81,7 @@ class EditorCommands {
     const func = this.commands.exec[lowerCaseCommand];
     if (Type.isFunction(func)) {
       func(lowerCaseCommand, ui, value);
-      editor.fire('ExecCommand', { command, ui, value });
+      editor.dispatch('ExecCommand', { command, ui, value });
       return true;
     }
 

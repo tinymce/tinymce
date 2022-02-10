@@ -82,7 +82,7 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
     while (i-- > 0) {
       const parent = parents[i];
       if (parent.nodeType === 1 && !isHidden(parent as Element)) {
-        const args = editor.fire('ResolveName', {
+        const args = editor.dispatch('ResolveName', {
           name: parent.nodeName.toLowerCase(),
           target: parent
         });

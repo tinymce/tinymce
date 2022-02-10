@@ -81,7 +81,7 @@ interface Schema {
   getSelfClosingElements: () => SchemaMap;
   getNonEmptyElements: () => SchemaMap;
   getMoveCaretBeforeOnEnterElements: () => SchemaMap;
-  getWhiteSpaceElements: () => SchemaMap;
+  getWhitespaceElements: () => SchemaMap;
   getSpecialElements: () => SchemaRegExpMap;
   isValidChild: (name: string, child: string) => boolean;
   isValid: (name: string, attr?: string) => boolean;
@@ -452,7 +452,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const validClasses = compileElementMap(settings.valid_classes, 'map');
 
   // Setup map objects
-  const whiteSpaceElementsMap = createLookupTable(
+  const whitespaceElementsMap = createLookupTable(
     'whitespace_elements',
     'pre script noscript style textarea video audio iframe object code'
   );
@@ -940,10 +940,10 @@ const Schema = (settings?: SchemaSettings): Schema => {
   /**
    * Returns a map with elements where white space is to be preserved. For example: <code>&#60;pre&#62;</code> or <code>&#60;script&#62;</code>.
    *
-   * @method getWhiteSpaceElements
+   * @method getWhitespaceElements
    * @return {Object} Name/value lookup map for white space elements.
    */
-  const getWhiteSpaceElements = Fun.constant(whiteSpaceElementsMap);
+  const getWhitespaceElements = Fun.constant(whitespaceElementsMap);
 
   /**
    * Returns a map with special elements. These are elements that needs to be parsed
@@ -1075,7 +1075,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
     getSelfClosingElements,
     getNonEmptyElements,
     getMoveCaretBeforeOnEnterElements,
-    getWhiteSpaceElements,
+    getWhitespaceElements,
     getSpecialElements,
     isValidChild,
     isValid,

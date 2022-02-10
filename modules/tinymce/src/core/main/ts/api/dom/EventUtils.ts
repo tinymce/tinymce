@@ -232,7 +232,7 @@ class EventUtils {
               }
             }
 
-            // Fire fake event
+            // dispatch fake event
             if (!related) {
               evt = fix(evt || win.event);
               evt.type = evt.type === 'mouseout' ? 'mouseleave' : 'mouseenter';
@@ -382,14 +382,30 @@ class EventUtils {
 
   /**
    * Fires the specified event on the specified target.
+   * <br>
+   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch<code> instead.</em>
    *
    * @method fire
    * @param {Object} target Target node/window or custom object.
    * @param {String} name Event name to fire.
    * @param {Object} args Optional arguments to send to the observers.
    * @return {EventUtils} Event utils instance.
+   * @deprecated Use dispatch() instead
    */
   public fire(target: any, name: string, args?: {}): this {
+    return this.dispatch(target, name, args);
+  }
+
+  /**
+   * Dispatches the specified event on the specified target.
+   *
+   * @method dispatch
+   * @param {Node/window} target Target node/window or custom object.
+   * @param {String} name Event name to dispatch.
+   * @param {Object} args Optional arguments to send to the observers.
+   * @return {EventUtils} Event utils instance.
+   */
+  public dispatch(target: any, name: string, args?: {}): this {
     let id;
 
     // Don't bind to text nodes or comments

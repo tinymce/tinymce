@@ -72,7 +72,7 @@ export interface EventDispatcherConstructor<T extends NativeEventMap> {
 }
 
 /**
- * This class lets you add/remove and fire events by name on the specified scope. This makes
+ * This class lets you add/remove and dispatch events by name on the specified scope. This makes
  * it easy to add event listener logic to any class.
  *
  * @class tinymce.util.EventDispatcher
@@ -80,7 +80,7 @@ export interface EventDispatcherConstructor<T extends NativeEventMap> {
  *  var eventDispatcher = new EventDispatcher();
  *
  *  eventDispatcher.on('click', function() {console.log('data');});
- *  eventDispatcher.fire('click', {data: 123});
+ *  eventDispatcher.dispatch('click', {data: 123});
  */
 
 const nativeEvents = Tools.makeMap(
@@ -127,15 +127,32 @@ class EventDispatcher<T> {
 
   /**
    * Fires the specified event by name.
+   * <br>
+   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch<code> instead.</em>
    *
    * @method fire
    * @param {String} name Name of the event to fire.
    * @param {Object?} args Event arguments.
    * @return {Object} Event args instance passed in.
+   * @deprecated Use dispatch() instead
    * @example
    * instance.fire('event', {...});
    */
   public fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U): EditorEvent<U> {
+    return this.dispatch(name, args);
+  }
+
+  /**
+   * Dispatches the specified event by name.
+   *
+   * @method dispatch
+   * @param {String} name Name of the event to dispatch
+   * @param {Object?} args Event arguments.
+   * @return {Object} Event args instance passed in.
+   * @example
+   * instance.dispatch('event', {...});
+   */
+  public dispatch <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U): EditorEvent<U> {
     const lcName = name.toLowerCase();
     const event = EventUtils.normalize<U>(lcName, args ?? {} as U, this.scope);
 

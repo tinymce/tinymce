@@ -266,7 +266,7 @@ const getCssText = (editor: Editor, format: any) => {
     }
   });
 
-  editor.fire('PreviewFormats');
+  editor.dispatch('PreviewFormats');
 
   // Add the previewElm outside the visual area
   dom.setStyles(previewFrag, { position: 'absolute', left: -0xFFFF });
@@ -318,7 +318,7 @@ const getCssText = (editor: Editor, format: any) => {
     previewCss += name + ':' + value + ';';
   });
 
-  editor.fire('AfterPreviewFormats');
+  editor.dispatch('AfterPreviewFormats');
 
   // previewCss += 'line-height:normal';
 

@@ -179,7 +179,7 @@ const move = (state: Singleton.Value<State>, editor: Editor) => {
     const movement = Math.max(Math.abs(e.screenX - state.screenX), Math.abs(e.screenY - state.screenY));
 
     if (!state.dragging && movement > 10) {
-      const args = editor.fire('dragstart', { target: state.element as EventTarget } as DragEvent);
+      const args = editor.dispatch('dragstart', { target: state.element as EventTarget } as DragEvent);
       if (args.isDefaultPrevented()) {
         return;
       }
@@ -212,7 +212,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
       if (isValidDropTarget(editor, getRawTarget(editor.selection), state.element)) {
         const targetClone = cloneElement(state.element);
 
-        const args = editor.fire('drop', {
+        const args = editor.dispatch('drop', {
           clientX: e.clientX,
           clientY: e.clientY
         } as DragEvent);
@@ -226,7 +226,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
         }
       }
 
-      editor.fire('dragend');
+      editor.dispatch('dragend');
     }
   });
 
@@ -236,7 +236,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
 const stop = (state: Singleton.Value<State>, editor: Editor) => () => {
   state.on((state) => {
     if (state.dragging) {
-      editor.fire('dragend');
+      editor.dispatch('dragend');
     }
   });
   removeDragState(state);

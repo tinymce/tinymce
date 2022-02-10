@@ -14,7 +14,7 @@ const register = (editor: Editor): void => {
   editor.addCommand('mceLink', () => {
     if (Options.useQuickLink(editor)) {
       // Taken from ContextEditorEvents in silver. Find a better way.
-      editor.fire('contexttoolbar-show', {
+      editor.dispatch('contexttoolbar-show', {
         toolbarKey: 'quicklink'
       });
     } else {

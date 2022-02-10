@@ -22,7 +22,10 @@ export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
 export type BeforeGetContentEvent = GetContentArgs & { source_view?: boolean; selection?: boolean; save?: boolean };
 export type GetContentEvent = BeforeGetContentEvent & { content: Content };
 export type BeforeSetContentEvent = SetContentArgs & { source_view?: boolean; paste?: boolean; selection?: boolean };
-export type SetContentEvent = BeforeSetContentEvent;
+export type SetContentEvent = BeforeSetContentEvent & {
+  /** @deprecated */
+  content: string;
+};
 
 export interface NewBlockEvent { newBlock: Element }
 

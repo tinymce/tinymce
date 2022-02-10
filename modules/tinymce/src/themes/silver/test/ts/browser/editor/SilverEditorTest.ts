@@ -377,7 +377,7 @@ describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
 
   it('TBA: Using the api should toggle a toggle button', () => {
     const editor = hook.editor();
-    editor.fire('customtoggle1-toggle');
+    editor.dispatch('customtoggle1-toggle');
     const button = UiFinder.findIn(TinyDom.container(editor), '.tox-tbtn:contains("ToggleMe")').getOrDie();
     Assertions.assertStructure('ToggleMe button should be pressed',
       ApproxStructure.build((s, str, arr) => s.element('button', {
@@ -404,7 +404,7 @@ describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
 
   it('TBA: Using the api should toggle a split button', () => {
     const editor = hook.editor();
-    editor.fire('splitbutton1-toggle');
+    editor.dispatch('splitbutton1-toggle');
     const button = UiFinder.findIn(TinyDom.container(editor), '.tox-split-button > .tox-tbtn:contains("Delta")').getOrDie();
     Assertions.assertStructure('Delta button should be pressed',
       ApproxStructure.build((s, str, arr) => s.element('span', {

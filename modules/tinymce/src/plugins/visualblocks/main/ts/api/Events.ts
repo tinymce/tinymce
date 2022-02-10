@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 
 const fireVisualBlocks = (editor: Editor, state: boolean): void => {
-  editor.fire('VisualBlocks', { state });
+  editor.dispatch('VisualBlocks', { state });
 };
 
 export {

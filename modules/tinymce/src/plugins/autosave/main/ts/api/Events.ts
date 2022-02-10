@@ -9,13 +9,13 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const fireRestoreDraft = (editor: Editor): EditorEvent<{}> =>
-  editor.fire('RestoreDraft');
+  editor.dispatch('RestoreDraft');
 
 const fireStoreDraft = (editor: Editor): EditorEvent<{}> =>
-  editor.fire('StoreDraft');
+  editor.dispatch('StoreDraft');
 
 const fireRemoveDraft = (editor: Editor): EditorEvent<{}> =>
-  editor.fire('RemoveDraft');
+  editor.dispatch('RemoveDraft');
 
 export {
   fireRestoreDraft,

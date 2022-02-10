@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `imagepreview` dialog component, allowing preview and zoom of any image URL #TINY-8333
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
 - New `Resource.unload` API to make it possible to unload resources #TINY-8431
+- New `dispatch()` function to replace the now deprecated `fire()` function in various APIs #TINY-8102
 
 ### Improved
 - The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
@@ -81,6 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
 - The `plugins` option now returns a `string` array instead of a space separated string #TINY-8455
 - Replaced 'Powered by Tiny' link text with logo #TINY-8371
+- Renamed the `getWhiteSpaceElements()` function to `getWhitespaceElements()` in the `Schema` API #TINY-8102
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -138,6 +140,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304
+- The `fire()` function of `tinymce.Editor`, `tinymce.dom.EventUtils`, `tinymce.dom.DOMUtils`, `tinymce.util.Observable` and `tinymce.util.EventDispatcher` is now deprecated. It will be removed in the next major release. Use `dispatch()` function instead #TINY-8102
+- The `content` property on the `SetContent` event has been deprecated and will be removed in the next major release #TINY-8457
+- The return value of the `editor.setContent` API has been deprecated and will be removed in the next major release #TINY-8457
 
 ## 5.10.3 - 2022-02-09
 
