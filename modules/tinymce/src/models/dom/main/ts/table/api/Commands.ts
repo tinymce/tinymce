@@ -11,6 +11,7 @@ import { Insert, Remove, Replication, SelectorFind, Selectors, SugarElement, Sug
 
 import Editor from 'tinymce/core/api/Editor';
 
+import * as InsertTable from '../actions/InsertTable';
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActionResult, TableActions } from '../actions/TableActions';
 import * as Events from '../api/Events';
 import * as Utils from '../core/TableUtils';
@@ -20,6 +21,12 @@ import * as FakeClipboard from './Clipboard';
 import * as Options from './Options';
 
 type ExecuteAction<T> = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>) => T;
+
+interface InsertTableArgs {
+  readonly rows: number;
+  readonly columns: number;
+  readonly options?: Record<string, number>;
+}
 
 const getSelectionStartCellOrCaption = (editor: Editor): Optional<SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>> =>
   TableSelection.getSelectionCellOrCaption(Utils.getSelectionStart(editor), Utils.getIsRoot(editor));
@@ -199,6 +206,10 @@ const registerCommands = (editor: Editor, actions: TableActions): void => {
       }
     })
   }, (func, name) => editor.addCommand(name, func));
+
+  editor.addCommand('mceInsertTable', (_ui: boolean, args: InsertTableArgs) => {
+    InsertTable.insertTable(editor, args.rows, args.columns, args.options);
+  });
 
   // Apply cell style using command (background color, border color, border style and border width)
   // tinyMCE.activeEditor.execCommand('mceTableApplyCellStyle', false, { backgroundColor: 'red', borderColor: 'blue' })

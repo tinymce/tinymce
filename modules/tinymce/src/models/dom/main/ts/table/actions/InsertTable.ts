@@ -9,10 +9,11 @@ import { Arr, Fun, Type } from '@ephox/katamari';
 import { TableRender, TableConversions } from '@ephox/snooker';
 import { Attribute, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import Editor from 'tinymce/core/api/Editor';
+
+import * as Events from '../api/Events';
 import * as Options from '../api/Options';
-import * as Events from '../api/TableEvents';
-import * as Utils from './TableUtils';
+import * as Utils from '../core/TableUtils';
 
 const placeCaretInCell = (editor: Editor, cell: SugarElement<HTMLTableCellElement>): void => {
   editor.selection.select(cell.dom, true);
