@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `imagepreview` dialog component, allowing preview and zoom of any image URL #TINY-8333
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
 - New `Resource.unload` API to make it possible to unload resources #TINY-8431
-- New `dispatch()` function has been added to replace the old `fire()` function in various APIs #TINY-8102
+- New `dispatch()` function to replace the now deprecated `fire()` function in various APIs #TINY-8102
 
 ### Improved
 - The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
@@ -82,7 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
 - The `plugins` option now returns a `string` array instead of a space separated string #TINY-8455
 - Replaced 'Powered by Tiny' link text with logo #TINY-8371
-- Renamed the `tinymce.html.schema.getWhiteSpaceElements()` API to `tinymce.html.schema.getWhitespaceElements()` #TINY-8102
+- Renamed the `getWhiteSpaceElements()` function to `getWhitespaceElements()` in the `Schema` API #TINY-8102
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
