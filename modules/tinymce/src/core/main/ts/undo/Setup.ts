@@ -89,7 +89,7 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
         editor.setDirty(true);
       }
 
-      editor.fire('TypingUndo');
+      editor.dispatch('TypingUndo');
       isFirstTypedCharacter.set(false);
       editor.nodeChanged();
     }

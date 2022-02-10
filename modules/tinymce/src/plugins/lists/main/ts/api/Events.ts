@@ -11,4 +11,4 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { ListAction } from '../core/ListAction';
 
 export const fireListEvent = (editor: Editor, action: ListAction, element: Node): EditorEvent<{ action: ListAction; element: Node }> =>
-  editor.fire('ListMutation', { action, element });
+  editor.dispatch('ListMutation', { action, element });

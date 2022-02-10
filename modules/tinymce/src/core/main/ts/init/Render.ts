@@ -192,7 +192,7 @@ const render = (editor: Editor) => {
 
     // Pass submit/reset from form to editor instance
     editor.formEventDelegate = (e) => {
-      editor.fire(e.type, e);
+      editor.dispatch(e.type, e);
     };
 
     DOM.bind(form, 'submit reset', editor.formEventDelegate);

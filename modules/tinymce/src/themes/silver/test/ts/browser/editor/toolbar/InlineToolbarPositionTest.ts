@@ -70,7 +70,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarPositionTest
 
   const pDeactivateEditor = async (editor: Editor) => {
     FocusTools.setFocus(Traverse.documentElement(SugarDocument.getDocument()), 'div.scroll-div');
-    editor.fire('focusout');
+    editor.dispatch('focusout');
     await UiFinder.pWaitForHidden('Wait for editor to hide', SugarBody.body(), '.tox.tox-tinymce-inline');
   };
 

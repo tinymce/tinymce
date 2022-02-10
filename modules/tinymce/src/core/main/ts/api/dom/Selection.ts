@@ -374,7 +374,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
     const sel = getSel();
 
-    const evt = editor.fire('SetSelectionRange', { range: rng, forward });
+    const evt = editor.dispatch('SetSelectionRange', { range: rng, forward });
     rng = evt.range;
 
     if (sel) {
@@ -422,7 +422,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
       }
     }
 
-    editor.fire('AfterSetSelectionRange', { range: rng, forward });
+    editor.dispatch('AfterSetSelectionRange', { range: rng, forward });
   };
 
   /**

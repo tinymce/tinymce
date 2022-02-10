@@ -11,9 +11,9 @@ const clickMiddleOf = (editor: Editor, elementPath: number[], dx: number = 0, dy
   const clientY = (rect.top + rect.height / 2) + dy;
 
   const event = { target: element as EventTarget, clientX, clientY } as MouseEvent;
-  editor.fire('mousedown', { ...event });
-  editor.fire('mouseup', { ...event });
-  editor.fire('click', { ...event });
+  editor.dispatch('mousedown', { ...event });
+  editor.dispatch('mouseup', { ...event });
+  editor.dispatch('click', { ...event });
 };
 
 describe('browser.tinymce.core.ClickContentEditableFalseTest', () => {

@@ -23,8 +23,8 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   const selectOne = (editor: Editor, start: string) => {
     const startElm = editor.dom.select(start)[0];
 
-    editor.fire('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
-    editor.fire('mouseup', { target: startElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mouseup', { target: startElm, button: 0 } as unknown as MouseEvent);
 
     LegacyUnit.setSelection(editor, startElm, 0);
   };
@@ -33,9 +33,9 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     const startElm = editor.dom.select(start)[0];
     const endElm = editor.dom.select(end)[0];
 
-    editor.fire('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
-    editor.fire('mouseover', { target: endElm, button: 0 } as unknown as MouseEvent);
-    editor.fire('mouseup', { target: endElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mouseover', { target: endElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mouseup', { target: endElm, button: 0 } as unknown as MouseEvent);
 
     LegacyUnit.setSelection(editor, endElm, 0);
   };

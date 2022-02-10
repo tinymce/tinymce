@@ -30,9 +30,9 @@ describe('browser.tinymce.plugins.image.FigureResizeTest', () => {
     const target = resizeHandle.dom;
     const pos = dom.getPos(target);
 
-    dom.fire(target, 'mousedown', { screenX: pos.x, screenY: pos.y });
-    dom.fire(target, 'mousemove', { screenX: pos.x + px, screenY: pos.y });
-    dom.fire(target, 'mouseup');
+    dom.dispatch(target, 'mousedown', { screenX: pos.x, screenY: pos.y });
+    dom.dispatch(target, 'mousemove', { screenX: pos.x + px, screenY: pos.y });
+    dom.dispatch(target, 'mouseup');
   };
 
   it('TBA: resizing image in figure', async () => {

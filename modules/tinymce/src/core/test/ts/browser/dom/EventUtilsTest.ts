@@ -44,14 +44,14 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     result = {};
-    eventUtils.fire(window, 'click');
-    eventUtils.fire(window, 'keydown');
+    eventUtils.dispatch(window, 'click');
+    eventUtils.dispatch(window, 'keydown');
     assert.deepEqual(result, { click: true, keydown1: true, keydown2: true });
 
     eventUtils.unbind(window);
     result = {};
-    eventUtils.fire(window, 'click');
-    eventUtils.fire(window, 'keydown');
+    eventUtils.dispatch(window, 'click');
+    eventUtils.dispatch(window, 'keydown');
     assert.deepEqual(result, {});
   });
 
@@ -71,14 +71,14 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     result = {};
-    eventUtils.fire(window, 'click');
-    eventUtils.fire(window, 'keydown');
+    eventUtils.dispatch(window, 'click');
+    eventUtils.dispatch(window, 'keydown');
     assert.deepEqual(result, { click: true, keydown1: true, keydown2: true });
 
     eventUtils.unbind(window, 'click');
     result = {};
-    eventUtils.fire(window, 'click');
-    eventUtils.fire(window, 'keydown');
+    eventUtils.dispatch(window, 'click');
+    eventUtils.dispatch(window, 'keydown');
     assert.deepEqual(result, { keydown1: true, keydown2: true });
   });
 
@@ -105,14 +105,14 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     eventUtils.bind(window, 'keydown', callback2);
 
     result = {};
-    eventUtils.fire(window, 'click');
-    eventUtils.fire(window, 'keydown');
+    eventUtils.dispatch(window, 'click');
+    eventUtils.dispatch(window, 'keydown');
     assert.deepEqual(result, { click: true, keydown1: true, keydown2: true });
 
     eventUtils.unbind(window, 'keydown', callback2);
     result = {};
-    eventUtils.fire(window, 'click');
-    eventUtils.fire(window, 'keydown');
+    eventUtils.dispatch(window, 'click');
+    eventUtils.dispatch(window, 'keydown');
     assert.deepEqual(result, { click: true, keydown1: true });
   });
 
@@ -124,9 +124,9 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     eventUtils.unbind(window, 'mouseup mousedown');
 
     const result = {};
-    eventUtils.fire(window, 'mouseup');
-    eventUtils.fire(window, 'mousedown');
-    eventUtils.fire(window, 'click');
+    eventUtils.dispatch(window, 'mouseup');
+    eventUtils.dispatch(window, 'mousedown');
+    eventUtils.dispatch(window, 'click');
     assert.deepEqual(result, { click: true });
   });
 
@@ -136,9 +136,9 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     const result = {};
-    eventUtils.fire(window, 'mouseup');
-    eventUtils.fire(window, 'mousedown');
-    eventUtils.fire(window, 'click');
+    eventUtils.dispatch(window, 'mouseup');
+    eventUtils.dispatch(window, 'mousedown');
+    eventUtils.dispatch(window, 'click');
     assert.deepEqual(result, { mouseup: true, mousedown: true });
   });
 
@@ -166,23 +166,23 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     result = {};
-    eventUtils.fire(window, 'click');
+    eventUtils.dispatch(window, 'click');
     assert.deepEqual(result, { window: true });
 
     result = {};
-    eventUtils.fire(document, 'click');
+    eventUtils.dispatch(document, 'click');
     assert.deepEqual(result, { document: true, window: true });
 
     result = {};
-    eventUtils.fire(document.body, 'click');
+    eventUtils.dispatch(document.body, 'click');
     assert.deepEqual(result, { body: true, document: true, window: true });
 
     result = {};
-    eventUtils.fire(document.getElementById('content'), 'click');
+    eventUtils.dispatch(document.getElementById('content'), 'click');
     assert.deepEqual(result, { content: true, body: true, document: true, window: true });
 
     result = {};
-    eventUtils.fire(document.getElementById('inner'), 'click');
+    eventUtils.dispatch(document.getElementById('inner'), 'click');
     assert.deepEqual(result, { inner: true, content: true, body: true, document: true, window: true });
   });
 
@@ -201,11 +201,11 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     result = {};
-    eventUtils.fire(window, 'click', { defaultPrevented: false, cancelBubble: false });
+    eventUtils.dispatch(window, 'click', { defaultPrevented: false, cancelBubble: false });
     assert.deepEqual(result, { window: true, windowPrevented: false, windowIsPrevented: false });
 
     result = {};
-    eventUtils.fire(document.getElementById('inner'), 'click', { defaultPrevented: false, cancelBubble: false });
+    eventUtils.dispatch(document.getElementById('inner'), 'click', { defaultPrevented: false, cancelBubble: false });
     assert.deepEqual(result, { inner: true, window: true, windowPrevented: true, windowIsPrevented: true });
   });
 
@@ -224,7 +224,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     const result = {} as Record<string, any>;
-    eventUtils.fire(window, 'click');
+    eventUtils.dispatch(window, 'click');
     assert.deepEqual(result, { click1: true, click2: true });
   });
 
@@ -243,7 +243,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     const result = {} as Record<string, any>;
-    eventUtils.fire(document.getElementById('inner'), 'click');
+    eventUtils.dispatch(document.getElementById('inner'), 'click');
     assert.deepEqual(result, { click3: true });
   });
 
@@ -267,12 +267,12 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     result = {};
-    eventUtils.fire(document.getElementById('inner'), 'click');
+    eventUtils.dispatch(document.getElementById('inner'), 'click');
     assert.deepEqual(result, { click1: true, click2: true, click3: true, click4: true });
 
     eventUtils.clean(window);
     result = {};
-    eventUtils.fire(document.getElementById('inner'), 'click');
+    eventUtils.dispatch(document.getElementById('inner'), 'click');
     assert.deepEqual(result, {});
   });
 
@@ -300,12 +300,12 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     result = {};
-    eventUtils.fire(document.getElementById('inner'), 'click');
+    eventUtils.dispatch(document.getElementById('inner'), 'click');
     assert.deepEqual(result, { click1: true, click2: true, click3: true, click4: true, click5: true });
 
     eventUtils.clean(document);
     result = {};
-    eventUtils.fire(document.getElementById('inner'), 'click');
+    eventUtils.dispatch(document.getElementById('inner'), 'click');
     assert.deepEqual(result, { click1: true });
   });
 
@@ -329,12 +329,12 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     result = {};
-    eventUtils.fire(document.getElementById('inner'), 'click');
+    eventUtils.dispatch(document.getElementById('inner'), 'click');
     assert.deepEqual(result, { click1: true, click2: true, click3: true, click4: true });
 
     eventUtils.clean(document.getElementById('content'));
     result = {};
-    eventUtils.fire(document.getElementById('inner'), 'click');
+    eventUtils.dispatch(document.getElementById('inner'), 'click');
     assert.deepEqual(result, { click1: true, click2: true });
   });
 
@@ -345,15 +345,15 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
       result[e.type] = true;
     });
 
-    eventUtils.fire(document.body, 'mouseenter');
-    eventUtils.fire(document.body, 'mouseleave');
+    eventUtils.dispatch(document.body, 'mouseenter');
+    eventUtils.dispatch(document.body, 'mouseleave');
 
     assert.deepEqual(result, { mouseenter: true, mouseleave: true });
 
     result = {};
     eventUtils.clean(document.body);
-    eventUtils.fire(document.body, 'mouseenter');
-    eventUtils.fire(document.body, 'mouseleave');
+    eventUtils.dispatch(document.body, 'mouseenter');
+    eventUtils.dispatch(document.body, 'mouseleave');
     assert.deepEqual(result, {});
   });
 
@@ -383,7 +383,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   it('bind unbind fire clean on null', () => {
     eventUtils.bind(null, 'click', Fun.noop);
     eventUtils.unbind(null, 'click', Fun.noop);
-    eventUtils.fire(null, 'click', {});
+    eventUtils.dispatch(null, 'click', {});
     eventUtils.clean(null);
     assert.ok(true, 'No exception');
   });
@@ -410,8 +410,8 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     });
 
     const event: any = {};
-    eventUtils.fire(window, 'keydown', event);
-    eventUtils.fire(window, 'keyup', event);
+    eventUtils.dispatch(window, 'keydown', event);
+    eventUtils.dispatch(window, 'keyup', event);
 
     assert.equal(true, event.isDefaultPrevented(), 'Default is prevented.');
     assert.equal(true, event.isPropagationStopped(), 'Propagation is stopped.');
@@ -439,11 +439,11 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     eventUtils.bind(window, 'click', callback);
     eventUtils.bind(window, 'click', append('c'));
 
-    eventUtils.fire(window, 'click', {});
+    eventUtils.dispatch(window, 'click', {});
     assert.equal(data, 'abc');
 
     data = '';
-    eventUtils.fire(window, 'click', {});
+    eventUtils.dispatch(window, 'click', {});
     assert.equal(data, 'ac');
   });
 
@@ -486,7 +486,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     const testObj: any = {};
     const testCallback = Fun.constant('hello');
     testObj.isDefaultPrevented = testCallback;
-    eventUtils.fire(window, 'testEvent', testObj);
+    eventUtils.dispatch(window, 'testEvent', testObj);
 
     assert.notEqual(testObj.isDefaultPrevented, testCallback, 'Is overwritten by our isDefaultPrevented');
     assert.equal(typeof testObj.isPropagationStopped, 'function', 'Has our isPropagationStopped');

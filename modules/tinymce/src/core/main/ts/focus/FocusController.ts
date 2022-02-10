@@ -70,12 +70,12 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
 
     if (focusedEditor !== editor) {
       if (focusedEditor) {
-        focusedEditor.fire('blur', { focusedEditor: editor });
+        focusedEditor.dispatch('blur', { focusedEditor: editor });
       }
 
       editorManager.setActive(editor);
       editorManager.focusedEditor = editor;
-      editor.fire('focus', { blurredEditor: focusedEditor });
+      editor.dispatch('focus', { blurredEditor: focusedEditor });
       editor.focus(true);
     }
   });
@@ -86,7 +86,7 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
 
       // Still the same editor the blur was outside any editor UI
       if (!isUIElement(editor, getActiveElement(editor)) && focusedEditor === editor) {
-        editor.fire('blur', { focusedEditor: null });
+        editor.dispatch('blur', { focusedEditor: null });
         editorManager.focusedEditor = null;
       }
     });
@@ -103,7 +103,7 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
           if (target.ownerDocument === document) {
             // Fire a blur event if the element isn't a UI element
             if (target !== document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {
-              activeEditor.fire('blur', { focusedEditor: null });
+              activeEditor.dispatch('blur', { focusedEditor: null });
               editorManager.focusedEditor = null;
             }
           }

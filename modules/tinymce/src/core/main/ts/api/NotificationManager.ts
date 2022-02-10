@@ -101,7 +101,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
 
     // fire event to allow notification spec to be mutated before display
     if (fireEvent) {
-      editor.fire('BeforeOpenNotification', { notification: spec });
+      editor.dispatch('BeforeOpenNotification', { notification: spec });
     }
 
     return Arr.find(notifications, (notification) => {
@@ -124,7 +124,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
       reposition();
 
       // Ensure notification is not passed by reference to prevent mutation
-      editor.fire('OpenNotification', { notification: { ...notification }});
+      editor.dispatch('OpenNotification', { notification: { ...notification }});
       return notification;
     });
   };

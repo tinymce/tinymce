@@ -418,7 +418,7 @@ const contentBodyLoaded = (editor: Editor): void => {
     contentCssCors: Options.shouldUseContentCssCors(editor),
     referrerPolicy: Options.getReferrerPolicy(editor),
     onSetAttrib: (e) => {
-      editor.fire('SetAttrib', e);
+      editor.dispatch('SetAttrib', e);
     }
   });
 

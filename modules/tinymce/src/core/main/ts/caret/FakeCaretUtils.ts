@@ -27,7 +27,7 @@ const getNodeRange = (node: Element): Range => {
 };
 
 const selectNode = (editor: Editor, node: Element): Optional<Range> => {
-  const e = editor.fire('BeforeObjectSelected', { target: node });
+  const e = editor.dispatch('BeforeObjectSelected', { target: node });
   if (e.isDefaultPrevented()) {
     return Optional.none();
   }

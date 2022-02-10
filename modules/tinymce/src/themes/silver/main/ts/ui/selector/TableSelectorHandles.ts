@@ -137,13 +137,13 @@ const setup = (editor: Editor, sink: AlloyComponent) => {
 
   const topLeftSnaps = getSnapsConfig(getTopLeftSnaps, startCell, (start) => {
     finishCell.get().each((finish) => {
-      editor.fire('TableSelectorChange', { start, finish });
+      editor.dispatch('TableSelectorChange', { start, finish });
     });
   });
 
   const bottomRightSnaps = getSnapsConfig(getBottomRightSnaps, finishCell, (finish) => {
     startCell.get().each((start) => {
-      editor.fire('TableSelectorChange', { start, finish });
+      editor.dispatch('TableSelectorChange', { start, finish });
     });
   });
 

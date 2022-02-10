@@ -40,7 +40,7 @@ const createAndFireInputEvent = (eventType: string) =>
 
     const input = clone(new InputEvent(eventType));
 
-    return editor.fire(eventType, { ...input, ...overrides, ...specifics });
+    return editor.dispatch(eventType, { ...input, ...overrides, ...specifics });
   };
 
 const fireFakeInputEvent = createAndFireInputEvent('input');

@@ -10,6 +10,7 @@ import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
 
 interface Observable<T> {
   fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;
+  dispatch <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;
   on <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void, prepend?: boolean): EventDispatcher<T>;
   off <K extends string>(name?: K, callback?: (event: EditorEvent<MappedEvent<T, K>>) => void): EventDispatcher<T>;
   once <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void): EventDispatcher<T>;
@@ -41,16 +42,35 @@ const Observable: Observable<any> = {
   /**
    * Fires the specified event by name. Consult the
    * <a href="/docs/advanced/events">event reference</a> for more details on each event.
+   * <br>
+   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch<code> instead.</em>
    *
    * @method fire
    * @param {String} name Name of the event to fire.
    * @param {Object?} args Event arguments.
    * @param {Boolean?} bubble True/false if the event is to be bubbled.
    * @return {Object} Event args instance passed in.
+   * @deprecated Use dispatch() instead
    * @example
    * instance.fire('event', {...});
    */
   fire<K extends string, U extends MappedEvent<any, K>>(name: K, args?: U, bubble?: boolean) {
+    return this.dispatch(name, args, bubble);
+  },
+
+  /**
+   * Dispatches the specified event by name. Consult the
+   * <a href="/docs/advanced/events">event reference</a> for more details on each event.
+   *
+   * @method dispatch
+   * @param {String} name Name of the event to dispatch.
+   * @param {Object?} args Event arguments.
+   * @param {Boolean?} bubble True/false if the event is to be bubbled.
+   * @return {Object} Event args instance passed in.
+   * @example
+   * instance.dispatch('event', {...});
+   */
+  dispatch<K extends string, U extends MappedEvent<any, K>>(name: K, args?: U, bubble?: boolean) {
     const self = this;
 
     // Prevent all events except the remove/detach event after the instance has been removed
@@ -58,13 +78,13 @@ const Observable: Observable<any> = {
       return EventUtils.normalize<U>(name.toLowerCase(), args ?? {} as U, self);
     }
 
-    const dispatcherArgs = getEventDispatcher(self).fire(name, args);
+    const dispatcherArgs = getEventDispatcher(self).dispatch(name, args);
 
     // Bubble event up to parents
     if (bubble !== false && self.parent) {
       let parent = self.parent();
       while (parent && !dispatcherArgs.isPropagationStopped()) {
-        parent.fire(name, dispatcherArgs, false);
+        parent.dispatch(name, dispatcherArgs, false);
         parent = parent.parent();
       }
     }
