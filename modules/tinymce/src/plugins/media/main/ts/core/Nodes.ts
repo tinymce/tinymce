@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -124,7 +124,7 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
 };
 
 const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targetNode: AstNode): void => {
-  // Prefix all attributes except width, height and style since we
+  // Prefix all attributes except internal (data-mce-*), width, height and style since we
   // will add these to the placeholder
   const attribs = sourceNode.attributes;
   let ai = attribs.length;
@@ -132,7 +132,7 @@ const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targe
     const attrName = attribs[ai].name;
     let attrValue = attribs[ai].value;
 
-    if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style') {
+    if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style' && !Strings.startsWith(attrName, 'data-mce-')) {
       if (attrName === 'data' || attrName === 'src') {
         attrValue = editor.convertURL(attrValue, attrName);
       }
