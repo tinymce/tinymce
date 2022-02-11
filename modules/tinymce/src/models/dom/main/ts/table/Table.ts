@@ -17,10 +17,10 @@ import { TableResizeHandler } from './api/TableResizeHandler';
 
 const setupTable = (editor: Editor): void => {
   Options.register(editor);
-  TableResizeHandler(editor);
-  TableCellSelection(editor);
+  const resizeHandler = TableResizeHandler(editor);
+  TableCellSelection(editor, resizeHandler);
 
-  const actions = TableActions(editor);
+  const actions = TableActions(editor, resizeHandler);
   Commands.registerCommands(editor, actions);
   QueryCommands.registerQueryCommands(editor, actions);
   // TODO: TINY-8385 Maybe move to core. Although, will need RTC to have that working first

@@ -17,6 +17,7 @@ import { TableEventData } from 'tinymce/core/api/EventTypes';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
+import { TableResizeHandler } from '../api/TableResizeHandler';
 import * as Utils from '../core/TableUtils';
 import * as TableSize from '../queries/TableSize';
 
@@ -59,7 +60,7 @@ export interface TableActions {
   readonly getTableColType: LookupAction;
 }
 
-export const TableActions = (editor: Editor): TableActions => {
+export const TableActions = (editor: Editor, resizeHandler: TableResizeHandler): TableActions => {
   const isTableBody = (editor: Editor): boolean =>
     SugarNode.name(Utils.getBody(editor)) === 'table';
 
@@ -127,8 +128,7 @@ export const TableActions = (editor: Editor): TableActions => {
       };
       return guard(table) ? operation(table, target, generators, behaviours).bind((result) => {
         // Update the resize bars after the table opeation
-        editor.execCommand('TableResizeHandlerRefresh', false, table.dom, { skip_focus: true });
-        // editor.dispatch('TableResizeHandlerRefresh', { table: table.dom });
+        resizeHandler.refresh(table.dom);
 
         // INVESTIGATE: Should "noEvents" prevent these from firing as well?
         Arr.each(result.newRows, (row) => {

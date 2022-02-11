@@ -19,11 +19,12 @@ import { ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection } from '../selection/TableSelection';
 import * as Events from './Events';
 import * as Options from './Options';
+import { TableResizeHandler } from './TableResizeHandler';
 
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
 
-export const TableCellSelection = (editor: Editor): void => {
+export const TableCellSelection = (editor: Editor, resizeHandler: TableResizeHandler): void => {
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     const tableOpt = TableLookup.table(start);
     tableOpt.each((table) => {
@@ -92,9 +93,7 @@ export const TableCellSelection = (editor: Editor): void => {
 
     const keydown = (event: KeyboardEvent) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
-      // TODO: Using command causes issue with undo state
-      editor.execCommand('TableResizeHandlerHide', false, undefined, { skip_focus: true });
-      // editor.dispatch('TableResizeHandlerHide');
+      resizeHandler.hide();
 
       const rng = editor.selection.getRng();
       const start = SugarElement.fromDom(rng.startContainer);
@@ -104,8 +103,7 @@ export const TableCellSelection = (editor: Editor): void => {
         handleResponse(wrappedEvent, response);
       });
 
-      editor.execCommand('TableResizeHandlerShow', false, undefined, { skip_focus: true });
-      // editor.dispatch('TableResizeHandlerShow');
+      resizeHandler.show();
     };
 
     const isLeftMouse = (raw: MouseEvent) => raw.button === 0;

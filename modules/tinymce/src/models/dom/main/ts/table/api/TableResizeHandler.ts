@@ -17,6 +17,12 @@ import * as TableSize from '../queries/TableSize';
 import * as Events from './Events';
 import * as Options from './Options';
 
+export interface TableResizeHandler {
+  readonly refresh: (table: HTMLTableElement) => void;
+  readonly hide: () => void;
+  readonly show: () => void;
+}
+
 const isTable = (node: Node) => Type.isNonNullable(node) && (node as Element).tagName === 'TABLE';
 
 const barResizerPrefix = 'bar-';
@@ -34,7 +40,7 @@ const syncPixels = (table: SugarElement<HTMLTableElement>): void => {
   }
 };
 
-export const TableResizeHandler = (editor: Editor): void => {
+export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const selectionRng = Singleton.value<Range>();
   const tableResize = Singleton.value<TableResize>();
   const resizeWire = Singleton.value<ResizeWire>();
@@ -201,31 +207,9 @@ export const TableResizeHandler = (editor: Editor): void => {
     tableResize.get().each((resize) => resize.showBars());
   };
 
-  editor.addCommand('TableResizeHandlerRefresh', (_ui, table: HTMLTableElement) => {
-    refresh(table);
-  });
-
-  editor.addCommand('TableResizeHandlerHide', () => {
-    hide();
-  });
-
-  editor.addCommand('TableResizeHandlerShow', () => {
-    show();
-  });
-
-  // TODO: Other possible alternative
-  editor.on('TableResizeHandlerRefresh', (e) => {
-    const table = e.table;
-    if (isTable(table)) {
-      refresh(table);
-    }
-  });
-
-  editor.on('TableResizeHandlerHide', () => {
-    hide();
-  });
-
-  editor.on('TableResizeHandlerShow', () => {
-    show();
-  });
+  return {
+    refresh,
+    hide,
+    show
+  };
 };
