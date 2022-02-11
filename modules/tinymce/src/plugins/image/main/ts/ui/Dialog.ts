@@ -225,40 +225,6 @@ const changeImages = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialo
   changeSrc(helpers, info, state, api);
 };
 
-const calcVSpace = (css: StyleMap): string => {
-  const matchingTopBottom = css['margin-top'] && css['margin-bottom'] && css['margin-top'] === css['margin-bottom'];
-  return matchingTopBottom ? Utils.removePixelSuffix(String(css['margin-top'])) : '';
-};
-
-const calcHSpace = (css: StyleMap): string => {
-  const matchingLeftRight = css['margin-right'] && css['margin-left'] && css['margin-right'] === css['margin-left'];
-  return matchingLeftRight ? Utils.removePixelSuffix(String(css['margin-right'])) : '';
-};
-
-const calcBorderWidth = (css: StyleMap): string =>
-  css['border-width'] ? Utils.removePixelSuffix(String(css['border-width'])) : '';
-
-const calcBorderStyle = (css: StyleMap): string =>
-  css['border-style'] ? String(css['border-style']) : '';
-
-const calcStyle = (parseStyle: Helpers['parseStyle'], serializeStyle: Helpers['serializeStyle'], css: StyleMap): string =>
-  serializeStyle(parseStyle(serializeStyle(css)));
-
-const changeStyle2 = (parseStyle: Helpers['parseStyle'], serializeStyle: Helpers['serializeStyle'], data: ImageDialogData): ImageDialogData => {
-  const css = Utils.mergeMargins(parseStyle(data.style));
-  const dataCopy: ImageDialogData = Merger.deepMerge({}, data);
-  // Move opposite equal margins to vspace/hspace field
-  dataCopy.vspace = calcVSpace(css);
-  dataCopy.hspace = calcHSpace(css);
-  // Move border-width
-  dataCopy.border = calcBorderWidth(css);
-  // Move border-style
-  dataCopy.borderstyle = calcBorderStyle(css);
-  // Reserialize style
-  dataCopy.style = calcStyle(parseStyle, serializeStyle, css);
-  return dataCopy;
-};
-
 const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API): void => {
   const data = api.getData();
   api.block('Uploading image'); // What msg do we pass to the lock?
@@ -340,10 +306,10 @@ const submitHandler = (editor: Editor, info: ImageDialogInfo, helpers: Helpers) 
 
   // The data architecture relies on passing everything through the style field for validation.
   // Since the style field was removed that process must be simulated on submit.
-  const finalData = changeStyle2(helpers.parseStyle, helpers.serializeStyle, {
+  const finalData = {
     ...data,
     style: getStyleValue(helpers.normalizeCss, toImageData(data, false))
-  });
+  };
 
   editor.execCommand('mceUpdateImage', false, toImageData(finalData, info.hasAccessibilityOptions));
   editor.editorUpload.uploadImagesAuto();
