@@ -38,7 +38,7 @@ const registerMouseUp = (editor: Editor, throttledStore: StoreThrottler) => {
 const registerEditorEvents = (editor: Editor, throttledStore: StoreThrottler) => {
   registerMouseUp(editor, throttledStore);
 
-  editor.on('keyup NodeChange', (e) => {
+  editor.on('keyup NodeChange AfterSetSelectionRange', (e) => {
     if (!isManualNodeChange(e)) {
       SelectionBookmark.store(editor);
     }
