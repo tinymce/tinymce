@@ -98,7 +98,7 @@ const initTheme = (editor: Editor) => {
 const initModel = (editor: Editor) => {
   const model = Options.getModel(editor);
   const Model = ModelManager.get(model);
-  editor.model = Model(editor, ModelManager.urls[model]) || {};
+  editor.model = Model(editor, ModelManager.urls[model]);
 };
 
 const renderFromLoadedTheme = (editor: Editor) => {

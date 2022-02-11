@@ -17,6 +17,7 @@ import { TableEventData } from 'tinymce/core/api/EventTypes';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
+import { TableCellSelectionHandler } from '../api/TableCellSelectionHandler';
 import { TableResizeHandler } from '../api/TableResizeHandler';
 import * as Utils from '../core/TableUtils';
 import * as TableSize from '../queries/TableSize';
@@ -60,7 +61,7 @@ export interface TableActions {
   readonly getTableColType: LookupAction;
 }
 
-export const TableActions = (editor: Editor, resizeHandler: TableResizeHandler): TableActions => {
+export const TableActions = (editor: Editor, resizeHandler: TableResizeHandler, cellSelectionHandler: TableCellSelectionHandler): TableActions => {
   const isTableBody = (editor: Editor): boolean =>
     SugarNode.name(Utils.getBody(editor)) === 'table';
 
@@ -96,8 +97,7 @@ export const TableActions = (editor: Editor, resizeHandler: TableResizeHandler):
       // with noneditable cells, so lets check if we have a noneditable cell and if so place the selection
       const cells = TableLookup.cells(table);
       return Arr.head(cells).filter(SugarBody.inBody).map((firstCell) => {
-        editor.execCommand('TableCellSelectionClear', false, table.dom, { skip_focus: true });
-        // editor.dispatch('TableCellSelectionClear', { container: table.dom });
+        cellSelectionHandler.clearSelectedCells(table.dom);
         const rng = editor.dom.createRng();
         rng.selectNode(firstCell.dom);
         editor.selection.setRng(rng);
@@ -110,9 +110,7 @@ export const TableActions = (editor: Editor, resizeHandler: TableResizeHandler):
       rng.setStart(des.element.dom, des.offset);
       rng.setEnd(des.element.dom, des.offset);
       editor.selection.setRng(rng);
-      // editor.execCommand('TableCellSelectionClear', false, table.dom, { skip_focus: true });
-      editor.dispatch('TableCellSelectionClear', { container: table.dom });
-      // editor.selection._tableCellSelection.clear(table.dom);
+      cellSelectionHandler.clearSelectedCells(table.dom);
       return Optional.some(rng);
     });
 

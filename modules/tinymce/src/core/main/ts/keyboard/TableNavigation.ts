@@ -182,8 +182,7 @@ const handleTab = (editor: Editor, forward: boolean): boolean => {
     // window.event.preventDefault();
     // Clear fake ranged selection because our new selection will always be collapsed
     TableLookup.table(cell, isRoot).each((table) => {
-      // editor.dispatch('TableCellSelectionClear', { container: table.dom });
-      editor.execCommand('TableCellSelectionClear', false, table.dom, { skip_focus: true });
+      editor.model.table.clearSelectedCells(table.dom);
     });
     // Collapse selection to start or end based on shift key
     editor.selection.collapse(!forward);

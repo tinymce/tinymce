@@ -11,9 +11,11 @@ import ModelManager, { Model } from 'tinymce/core/api/ModelManager';
 import * as Table from './table/Table';
 
 const DomModel = (editor: Editor): Model => {
-  Table.setupTable(editor);
+  const table = Table.setupTable(editor);
 
-  return {};
+  return {
+    table
+  };
 };
 
 export default () => {

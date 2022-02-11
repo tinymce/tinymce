@@ -39,7 +39,7 @@ const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
 const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
-  Arr.map(editor.selection.getSelectedCells(), SugarElement.fromDom);
+  Arr.map(editor.model.table.getSelectedCells(), SugarElement.fromDom);
 
 const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
   const cellOpt = getSelectionCell(selected);

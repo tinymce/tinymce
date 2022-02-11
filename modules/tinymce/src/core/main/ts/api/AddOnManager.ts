@@ -101,7 +101,7 @@ export interface UrlObject { prefix: string; resource: string; suffix: string }
 
 type WaitState = 'added' | 'loaded';
 
-export type AddOnConstructor<T> = (editor: Editor, url: string) => void | T;
+export type AddOnConstructor<T> = (editor: Editor, url: string) => T;
 
 interface AddOnManager<T> {
   items: AddOnConstructor<T>[];

@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Cell, Fun, Optional, Type } from '@ephox/katamari';
+import { InputHandlers, Response, SelectionAnnotation, SelectionKeys, Selections, SelectionTypes } from '@ephox/darwin';
+import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup } from '@ephox/snooker';
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
@@ -17,14 +17,26 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Utils from '../core/TableUtils';
 import { ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection } from '../selection/TableSelection';
+import * as TableSelection from '../selection/TableSelection';
 import * as Events from './Events';
 import * as Options from './Options';
 import { TableResizeHandler } from './TableResizeHandler';
 
+export interface TableCellSelectionHandler {
+  readonly getSelectedCells: () => HTMLTableCellElement[];
+  readonly clearSelectedCells: (container: Node) => void;
+}
+
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
 
-export const TableCellSelection = (editor: Editor, resizeHandler: TableResizeHandler): void => {
+export const TableCellSelectionHandler = (editor: Editor, resizeHandler: TableResizeHandler): TableCellSelectionHandler => {
+  const cellSelection = Selections(
+    () => SugarElement.fromDom(editor.getBody()),
+    () => TableSelection.getSelectionCell(Utils.getSelectionStart(editor), Utils.getIsRoot(editor)),
+    ephemera.selectedSelector
+  );
+
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     const tableOpt = TableLookup.table(start);
     tableOpt.each((table) => {
@@ -180,18 +192,23 @@ export const TableCellSelection = (editor: Editor, resizeHandler: TableResizeHan
     editor.serializer.addTempAttr(ephemera.lastSelected);
   });
 
-  const clear = (container: Node) =>
+  const clearSelectedCells = (container: Node) =>
     annotations.clear(SugarElement.fromDom(container));
 
-  editor.addCommand('TableCellSelectionClear', (_ui, container: Node) => {
-    clear(container);
-  });
+  const getSelectedCells = (): HTMLTableCellElement[] =>
+    SelectionTypes.fold<HTMLTableCellElement[]>(cellSelection.get(),
+      // No fake selected cells
+      Fun.constant([]),
+      // This path is taken whenever there is fake cell selection even for just a single selected cell
+      (cells) => {
+        return Arr.map(cells, (cell) => cell.dom);
+      },
+      // For this path, the start of the selection whether collapsed or ranged is within a table cell
+      (cell) => [ cell.dom ]
+    );
 
-  // TODO: Alternative approach
-  editor.on('TableCellSelectionClear', (e) => {
-    const container = e.container;
-    if (Type.isNonNullable(container)) {
-      clear(container);
-    }
-  });
+  return {
+    getSelectedCells,
+    clearSelectedCells
+  };
 };
