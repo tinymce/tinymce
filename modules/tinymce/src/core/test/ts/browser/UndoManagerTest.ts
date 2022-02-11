@@ -21,7 +21,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     indent: false,
     entities: 'raw',
     base_url: '/project/tinymce/js/tinymce'
-  }, []);
+  }, [], true);
 
   it('Initial states', () => {
     const editor = hook.editor();
