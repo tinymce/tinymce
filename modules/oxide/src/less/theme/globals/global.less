@@ -13,7 +13,7 @@
 @tinymce-border-radius: 10px;
 @tinymce-border-width: 2px;
 @tinymce-box-shadow: none;
-@editor-header-inline-background-color: if((alpha(@toolbar-background-color) > 0), transparent, @background-color); // If @toolbar-background-color is set to transparent, then set the inline toolbar background color to be another color to not be transparent over content.
+@editor-header-inline-background-color: @background-color;
 
 .tox-tinymce {
   border: @tinymce-border-width solid @tinymce-border-color;

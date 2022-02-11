@@ -19,6 +19,7 @@
 
 // private variables
 @_toolbar-height: @toolbar-button-height + (@toolbar-button-spacing-y * 2) + (@toolbar-group-spacing-y * 2) + 1px;
+@_toolbar-padding-x-no-group-spacing: max(@toolbar-padding-x - @toolbar-group-padding-x, 0);
 @_toolbar-row-separator-downsize: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y * 2;
 @_toolbar-row-separator-image: repeating-linear-gradient(@toolbar-row-separator-color 0px 1px, transparent 1px @_toolbar-height);
 @_toolbar-row-separator-image-offset: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y;
@@ -42,14 +43,14 @@
     flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
-    padding: 0 @toolbar-padding-x;
+    padding: 0 @_toolbar-padding-x-no-group-spacing;
   }
 
   .tox-toolbar-overlord > .tox-toolbar,
   .tox-toolbar-overlord > .tox-toolbar__primary,
   .tox-toolbar-overlord > .tox-toolbar__overflow {
-    @_toolbar-row-separator-image-offset: 0;
-    @_toolbar-row-separator-downsize: 0;
+    @_toolbar-row-separator-image-offset: 0px;
+    @_toolbar-row-separator-downsize: 0px;
 
     background-position: @_toolbar-row-separator-image-position;
     background-size: @_toolbar-row-separator-image-size;
@@ -99,18 +100,28 @@
   }
 }
 
-// Add a top border when toolbar_location is bottom and menubar is hidden
-&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar:first-child,
-&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar-overlord:first-child .tox-toolbar__primary {
-  border-top: 1px solid @toolbar-separator-color;
+// Floating more drawer styles. Uses pop toolbar styles
+.tox.tox-tinymce-aux .tox-toolbar__overflow {
+  @_toolbar-row-separator-downsize: @_toolbar-height + @pad-xs + @pad-xs * 2;
+  @_toolbar-row-separator-image-offset: @_toolbar-height + @pad-xs;
+  @toolbar-row-separator-padding: @pad-sm;
+  @toolbar-padding-x: @pad-sm;
+
+  background-color: @pop-background-color;
+  background-position: @_toolbar-row-separator-image-position;
+  background-size: @_toolbar-row-separator-image-size;
+  border: none;
+  border-radius: @pop-border-radius;
+  box-shadow: @pop-box-shadow;
+  padding: @pad-xs 0;
 }
 
-// Floating more drawer styles. Uses pop toolbar styles
-.tox.tox-tinymce-aux {
-  .tox-toolbar__overflow {
+/* stylelint-disable */
+// Distraction-free mode
+.tox-pop .tox-pop__dialog {
+  .tox-toolbar.tox-toolbar { ///////////////////////////////////////////////////////////////////////////////////////////////
     @_toolbar-row-separator-downsize: @_toolbar-height + @pad-xs + @pad-xs * 2;
     @_toolbar-row-separator-image-offset: @_toolbar-height + @pad-xs;
-    @toolbar-row-separator-padding: @pad-sm;
 
     background-color: @pop-background-color;
     background-position: @_toolbar-row-separator-image-position;
@@ -118,12 +129,11 @@
     border: none;
     border-radius: @pop-border-radius;
     box-shadow: @pop-box-shadow;
-    padding: @pad-xs @pad-sm;
+    padding: @pad-xs 0;
   }
 }
 
-/* stylelint-disable */
-.tox {
+.tox { ///////////////////////////////////////////////////////////////////////////////////////////////
   .tox-toolbar-overlord .tox-toolbar:not(.tox-toolbar--scrolling):first-child,
   .tox-toolbar-overlord .tox-toolbar__primary {
     @_toolbar-row-separator-image-offset: @_toolbar-height;
