@@ -11,35 +11,43 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
     WordcountPlugin(5);
   });
 
+  const elementPathSpec: ApproxStructure.Builder<StructAssert> = (s, str, arr) =>
+    s.element('div', {
+      classes: [ arr.has('tox-statusbar__path') ],
+      children: [
+        s.element('div', { children: [ s.text(str.is('p')) ] }),
+        s.element('div', { children: [ s.text(str.is(' › ')) ] }),
+        s.element('div', { children: [ s.text(str.is('strong')) ] }),
+        s.element('div', { children: [ s.text(str.is(' › ')) ] }),
+        s.element('div', { children: [ s.text(str.is('em')) ] })
+      ]
+    });
+
+  const brandingSpec: ApproxStructure.Builder<StructAssert> = (s, str, arr) =>
+    s.element('span', {
+      classes: [ arr.has('tox-statusbar__branding') ],
+      children: [
+        s.element('a', {
+          attrs: {
+            'aria-label': str.is('Powered by Tiny')
+          },
+          children: [
+            s.element('svg', {})
+          ]
+        })
+      ]
+    });
+
   const fullStatusbarSpec: ApproxStructure.Builder<StructAssert[]> = (s, str, arr) => [
     s.element('div', {
       classes: [ arr.has('tox-statusbar__text-container') ],
       children: [
-        s.element('div', {
-          classes: [ arr.has('tox-statusbar__path') ],
-          children: [
-            s.element('div', { children: [ s.text(str.is('p')) ] }),
-            s.element('div', { children: [ s.text(str.is(' › ')) ] }),
-            s.element('div', { children: [ s.text(str.is('strong')) ] })
-          ]
-        }),
+        elementPathSpec(s, str, arr),
         s.element('button', {
           classes: [ arr.has('tox-statusbar__wordcount') ],
           children: [ s.text(str.is('2 words')) ]
         }),
-        s.element('span', {
-          classes: [ arr.has('tox-statusbar__branding') ],
-          children: [
-            s.element('a', {
-              attrs: {
-                'aria-label': str.is('Powered by Tiny')
-              },
-              children: [
-                s.element('svg', {})
-              ]
-            })
-          ]
-        })
+        brandingSpec(s, str, arr)
       ]
     }),
     s.element('div', {
@@ -51,27 +59,8 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
     s.element('div', {
       classes: [ arr.has('tox-statusbar__text-container') ],
       children: [
-        s.element('div', {
-          classes: [ arr.has('tox-statusbar__path') ],
-          children: [
-            s.element('div', { children: [ s.text(str.is('p')) ] }),
-            s.element('div', { children: [ s.text(str.is(' › ')) ] }),
-            s.element('div', { children: [ s.text(str.is('strong')) ] })
-          ]
-        }),
-        s.element('span', {
-          classes: [ arr.has('tox-statusbar__branding') ],
-          children: [
-            s.element('a', {
-              attrs: {
-                'aria-label': str.is('Powered by Tiny')
-              },
-              children: [
-                s.element('svg', {})
-              ]
-            })
-          ]
-        })
+        elementPathSpec(s, str, arr),
+        brandingSpec(s, str, arr)
       ]
     }),
     s.element('div', {
@@ -83,27 +72,8 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
     s.element('div', {
       classes: [ arr.has('tox-statusbar__text-container') ],
       children: [
-        s.element('div', {
-          classes: [ arr.has('tox-statusbar__path') ],
-          children: [
-            s.element('div', { children: [ s.text(str.is('p')) ] }),
-            s.element('div', { children: [ s.text(str.is(' › ')) ] }),
-            s.element('div', { children: [ s.text(str.is('strong')) ] })
-          ]
-        }),
-        s.element('span', {
-          classes: [ arr.has('tox-statusbar__branding') ],
-          children: [
-            s.element('a', {
-              attrs: {
-                'aria-label': str.is('Powered by Tiny')
-              },
-              children: [
-                s.element('svg', {})
-              ]
-            })
-          ]
-        })
+        elementPathSpec(s, str, arr),
+        brandingSpec(s, str, arr)
       ]
     })
   ];
@@ -114,7 +84,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
       ...config
     });
     editor.focus();
-    editor.setContent('<p><strong>hello world</strong></p>');
+    editor.setContent('<p><strong><em>hello world</em></strong></p>');
     await Waiter.pTryUntil('Wait for editor structure', () => Assertions.assertStructure(structureLabel, editorStructure, TinyDom.container(editor)));
     McEditor.remove(editor);
   };
