@@ -8,6 +8,7 @@ let zipUtils = require('./tools/modules/zip-helper');
 let gruntUtils = require('./tools/modules/grunt-utils');
 let gruntWebPack = require('./tools/modules/grunt-webpack');
 let swag = require('@ephox/swag');
+let path = require('path');
 
 let plugins = [
   'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 'code', 'codesample',
@@ -295,19 +296,24 @@ module.exports = function (grunt) {
     ),
 
     'webpack-dev-server': {
-      options: {
-        webpack: gruntWebPack.all(plugins, themes, models),
-        publicPath: '/',
-        inline: false,
-        port: grunt.option('webpack-port') !== undefined ? grunt.option('webpack-port') : 3000,
-        host: '0.0.0.0',
-        disableHostCheck: true,
-        stats: {
-          assets: false,
-          modulesSpace: 5
-        },
-        before: app => gruntWebPack.generateDemoIndex(grunt, app, plugins, themes, models)
-      },
+      options: gruntWebPack.all(plugins, themes, models).map((config) => ({
+        ...config,
+        devServer: {
+          port: grunt.option('webpack-port') !== undefined ? grunt.option('webpack-port') : 3000,
+          host: '0.0.0.0',
+          allowedHosts: 'all',
+          static: {
+            publicPath: '/',
+            directory: path.join(__dirname)
+          },
+          hot: false,
+          liveReload: false,
+          setupMiddlewares: (middlewares, devServer) => {
+            gruntWebPack.generateDemoIndex(grunt, devServer.app, plugins, themes, models);
+            return middlewares;
+          }
+        }
+      })),
       start: { }
     },
 

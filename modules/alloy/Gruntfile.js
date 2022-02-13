@@ -80,13 +80,14 @@ module.exports = (grunt) => {
 
     'webpack-dev-server': {
       options: {
-        webpack: [
-          create('./src/demo/ts/ephox/alloy/demo/Demos.ts', 'scratch/compiled/demo.js')
-        ],
-        inline: false,
-        port: 3003,
-        host: '0.0.0.0',
-        disableHostCheck: true
+        ...create('./src/demo/ts/ephox/alloy/demo/Demos.ts', 'scratch/compiled/demo.js'),
+        devServer: {
+          port: 3003,
+          host: '0.0.0.0',
+          allowedHosts: 'all',
+          hot: false,
+          liveReload: false
+        }
       },
       start: { }
     },

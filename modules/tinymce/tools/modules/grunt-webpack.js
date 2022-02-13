@@ -1,5 +1,4 @@
 const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const LiveReloadPlugin = require('webpack-livereload-plugin');
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
@@ -22,6 +21,14 @@ let create = (entries, tsConfig, outDir = '.') => {
       removeEmptyChunks: false,
       splitChunks: false,
     },
+    infrastructureLogging: {
+      level: 'log'
+    },
+    ignoreWarnings: [
+      // suppress type re-export warnings caused by `transpileOnly: true`
+      // See https://github.com/TypeStrong/ts-loader#transpileonly
+      /export .* was not found in/
+    ],
     resolve: {
       extensions: [ '.ts', '.js' ],
       plugins: [
@@ -92,7 +99,6 @@ let create = (entries, tsConfig, outDir = '.') => {
       ]
     },
     plugins: [
-      new LiveReloadPlugin(),
       // See https://github.com/TypeStrong/ts-loader#usage-with-webpack-watch
       new webpack.WatchIgnorePlugin({
         paths: [
@@ -110,8 +116,8 @@ let create = (entries, tsConfig, outDir = '.') => {
       pathinfo: false
     },
     stats: {
-      // suppress type re-export warnings caused by `transpileOnly: true`
-      warningsFilter: /export .* was not found in/
+      assets: false,
+      modulesSpace: 5
     }
   };
 };
