@@ -1,5 +1,4 @@
 import { Arr } from '@ephox/katamari';
-import { Traverse } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
@@ -22,10 +21,7 @@ const withReuse = (parent: AlloyComponent, data: AlloySpec[]): void => {
       return patchSpecChildren(
         parent.element,
         data,
-        (d, i) => {
-          const optObsoleted = Traverse.child(parent.element, i);
-          return parent.getSystem().buildOrPatch(d, optObsoleted);
-        }
+        parent.getSystem().buildOrPatch
       );
     });
   }, parent.element);
