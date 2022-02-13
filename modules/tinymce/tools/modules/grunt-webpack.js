@@ -84,10 +84,7 @@ let create = (entries, tsConfig, outDir = '.') => {
               options: {
                 configFile: tsConfigPath,
                 transpileOnly: true,
-                projectReferences: true,
-                compilerOptions: {
-                  declarationMap: false
-                }
+                projectReferences: true
               }
             }
           ]
