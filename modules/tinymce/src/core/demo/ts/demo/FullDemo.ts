@@ -53,7 +53,6 @@ export default () => {
       { title: 'Some class', value: 'class-name' }
     ],
     importcss_append: true,
-    height: 400,
     image_advtab: true,
     file_picker_callback: (callback, _value, meta) => {
       if (meta.fieldname === 'poster') {

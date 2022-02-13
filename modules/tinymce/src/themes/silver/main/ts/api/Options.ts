@@ -72,7 +72,8 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('min_height', {
-    processor: 'number'
+    processor: 'number',
+    default: 100
   });
 
   registerOption('min_width', {
@@ -280,7 +281,7 @@ const isReadOnly = option('readonly');
 const getHeightOption = option('height');
 const getWidthOption = option('width');
 const getMinWidthOption = wrapOptional(option('min_width'));
-const getMinHeightOption = wrapOptional(option('min_height'));
+const getMinHeightOption = option('min_height');
 const getMaxWidthOption = wrapOptional(option('max_width'));
 const getMaxHeightOption = wrapOptional(option('max_height'));
 const getUserStyleFormats = wrapOptional(option('style_formats'));
