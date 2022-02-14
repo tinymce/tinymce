@@ -44,7 +44,7 @@ const registerEvents = (editor: Editor, actions: TableActions): void => {
     };
 
     if (e.selection === true) {
-      const cells = TableSelection.getCellsFromSelection(editor);
+      const cells = TableSelection.getCellsFromFakeSelection(editor);
       if (cells.length >= 1) {
         multiCellContext(cells);
       }

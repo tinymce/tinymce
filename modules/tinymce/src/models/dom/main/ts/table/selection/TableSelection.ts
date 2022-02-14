@@ -13,9 +13,9 @@
  */
 
 import { TableSelection } from '@ephox/darwin';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
+import { SelectorFind, Selectors, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -37,11 +37,16 @@ const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement 
 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
+// Note: Includes single cell if the start of the selection whether collapsed or ranged is within a table cell
 const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
   SugarElements.fromDom(editor.model.table.getSelectedCells());
+
+const getCellsFromFakeSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
+  Arr.filter(getCellsFromSelection(editor), (cell) => Selectors.is(cell, ephemera.selectedSelector));
 
 export {
   getSelectionCell,
   getSelectionCellOrCaption,
-  getCellsFromSelection
+  getCellsFromSelection,
+  getCellsFromFakeSelection
 };
