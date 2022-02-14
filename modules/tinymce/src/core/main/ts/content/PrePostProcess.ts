@@ -53,8 +53,8 @@ const postProcessGetContent = <T extends GetContentArgs>(editor: Editor, content
   if (args.no_events) {
     return content;
   } else {
-    const outcome = withSerializedContent(content, (c) => Events.fireGetContent(editor, { ...args, content: c }));
-    return outcome.content;
+    const processedEventArgs = withSerializedContent(content, (c) => Events.fireGetContent(editor, { ...args, content: c }));
+    return processedEventArgs.content;
   }
 };
 
@@ -62,12 +62,12 @@ const preProcessSetContent = <T extends SetContentArgs>(editor: Editor, args: T)
   if (args.no_events) {
     return Result.value(args);
   } else {
-    const outcome = withSerializedContent(args.content, (content) => Events.fireBeforeSetContent(editor, { ...args, content }));
-    if (outcome.isDefaultPrevented()) {
-      Events.fireSetContent(editor, outcome);
+    const processedEventArgs = withSerializedContent(args.content, (content) => Events.fireBeforeSetContent(editor, { ...args, content }));
+    if (processedEventArgs.isDefaultPrevented()) {
+      Events.fireSetContent(editor, processedEventArgs);
       return Result.error(undefined);
     } else {
-      return Result.value(outcome);
+      return Result.value(processedEventArgs);
     }
   }
 };
