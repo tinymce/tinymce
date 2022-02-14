@@ -47,10 +47,6 @@ const register = (editor: Editor): void => {
 
   const stringOrFalseProcessor = (value: unknown) => Type.isString(value) || value === false;
   const stringOrNumberProcessor = (value: unknown) => Type.isString(value) || Type.isNumber(value);
-  const cssHeightOrDefault = () => {
-    const cssHeight = Utils.parseToInt(DOMUtils.DOM.getStyle(editor.getElement(), 'height', true));
-    return Math.max(cssHeight.fold(Fun.constant(0), Fun.identity), 400);
-  };
 
   registerOption('skin', {
     processor: (value) => Type.isString(value) || value === false,
@@ -63,7 +59,7 @@ const register = (editor: Editor): void => {
 
   registerOption('height', {
     processor: stringOrNumberProcessor,
-    default: cssHeightOrDefault()
+    default: Math.max(editor.getElement().offsetHeight, 400)
   });
 
   registerOption('width', {
