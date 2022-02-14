@@ -8,7 +8,7 @@
 /*
  NOTE: This file is duplicated in the following locations:
   - core/table/TableEphemera.ts
-  - models/dom/table/selection/Ephemera.ts
+  - plugins/table/selection/Ephemera.ts
   - advtable
  Make sure that if making changes to this file, the other files are updated as well
  */

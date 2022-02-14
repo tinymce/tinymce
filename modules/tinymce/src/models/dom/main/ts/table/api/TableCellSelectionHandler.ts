@@ -5,38 +5,46 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { InputHandlers, Response, SelectionAnnotation, SelectionKeys } from '@ephox/darwin';
-import { Cell, Fun, Optional } from '@ephox/katamari';
+import { InputHandlers, Response, SelectionAnnotation, SelectionKeys, Selections, SelectionTypes } from '@ephox/darwin';
+import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
-import { OtherCells, TableFill, TableLookup, TableResize } from '@ephox/snooker';
+import { OtherCells, TableFill, TableLookup } from '@ephox/snooker';
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-import * as Events from '../api/Events';
-import * as Options from '../api/Options';
-import * as Util from '../core/Util';
-import { ephemera } from './Ephemera';
-import { SelectionTargets } from './SelectionTargets';
+import * as Utils from '../core/TableUtils';
+import { ephemera } from '../selection/Ephemera';
+import { getCellsFromSelection } from '../selection/TableSelection';
+import * as TableSelection from '../selection/TableSelection';
+import * as Events from './Events';
+import * as Options from './Options';
+import { TableResizeHandler } from './TableResizeHandler';
+
+export interface TableCellSelectionHandler {
+  readonly getSelectedCells: () => HTMLTableCellElement[];
+  readonly clearSelectedCells: (container: Node) => void;
+}
 
 const hasInternalTarget = (e: Event): boolean =>
   Class.has(SugarElement.fromDom(e.target as Node), 'ephox-snooker-resizer-bar') === false;
 
-export interface CellSelectionApi {
-  readonly clear: (container: SugarElement<Node>) => void;
-}
+export const TableCellSelectionHandler = (editor: Editor, resizeHandler: TableResizeHandler): TableCellSelectionHandler => {
+  const cellSelection = Selections(
+    () => SugarElement.fromDom(editor.getBody()),
+    () => TableSelection.getSelectionCell(Utils.getSelectionStart(editor), Utils.getIsRoot(editor)),
+    ephemera.selectedSelector
+  );
 
-export default (editor: Editor, lazyResize: () => Optional<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi => {
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
-    selectionTargets.targets().each((targets) => {
-      const tableOpt = TableLookup.table(start);
-      tableOpt.each((table) => {
-        const cloneFormats = Options.getCloneElements(editor);
-        const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
-        const otherCells = OtherCells.getOtherCells(table, targets, generators);
-        Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
-      });
+    const tableOpt = TableLookup.table(start);
+    tableOpt.each((table) => {
+      const cloneFormats = Optional.from(Options.getTableCloneElements(editor));
+      const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
+      const selectedCells = getCellsFromSelection(editor);
+      const otherCells = OtherCells.getOtherCells(table, { selection: selectedCells }, generators);
+      Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
     });
   };
 
@@ -46,8 +54,8 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
 
   editor.on('init', (_e) => {
     const win = editor.getWin();
-    const body = Util.getBody(editor);
-    const isRoot = Util.getIsRoot(editor);
+    const body = Utils.getBody(editor);
+    const isRoot = Utils.getIsRoot(editor);
 
     // When the selection changes through either the mouse or keyboard, and the selection is no longer within the table.
     // Remove the selection.
@@ -97,7 +105,7 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
 
     const keydown = (event: KeyboardEvent) => {
       const wrappedEvent = DomEvent.fromRawEvent(event);
-      lazyResize().each((resize) => resize.hideBars());
+      resizeHandler.hide();
 
       const rng = editor.selection.getRng();
       const start = SugarElement.fromDom(rng.startContainer);
@@ -106,7 +114,8 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
       keyHandlers.keydown(wrappedEvent, start, rng.startOffset, end, rng.endOffset, direction).each((response) => {
         handleResponse(wrappedEvent, response);
       });
-      lazyResize().each((resize) => resize.showBars());
+
+      resizeHandler.show();
     };
 
     const isLeftMouse = (raw: MouseEvent) => raw.button === 0;
@@ -178,7 +187,28 @@ export default (editor: Editor, lazyResize: () => Optional<TableResize>, selecti
     editor.on('NodeChange', syncSelection);
   });
 
+  editor.on('PreInit', () => {
+    editor.serializer.addTempAttr(ephemera.firstSelected);
+    editor.serializer.addTempAttr(ephemera.lastSelected);
+  });
+
+  const clearSelectedCells = (container: Node) =>
+    annotations.clear(SugarElement.fromDom(container));
+
+  const getSelectedCells = (): HTMLTableCellElement[] =>
+    SelectionTypes.fold<HTMLTableCellElement[]>(cellSelection.get(),
+      // No fake selected cells
+      Fun.constant([]),
+      // This path is taken whenever there is fake cell selection even for just a single selected cell
+      (cells) => {
+        return Arr.map(cells, (cell) => cell.dom);
+      },
+      // For this path, the start of the selection whether collapsed or ranged is within a table cell
+      (cell) => [ cell.dom ]
+    );
+
   return {
-    clear: annotations.clear
+    getSelectedCells,
+    clearSelectedCells
   };
 };

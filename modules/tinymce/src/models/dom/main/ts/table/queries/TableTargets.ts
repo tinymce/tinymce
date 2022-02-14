@@ -7,14 +7,14 @@
 
 /*
  NOTE: This file is partially duplicated in the following locations:
-  - models/dom/table/queries/TableTargets.ts
+  - plugins/table/queries/TableTargets.ts
   - advtable
  Make sure that if making changes to this file, the other files are updated as well
  */
 
 import { CellOpSelection } from '@ephox/darwin';
 import { Optional } from '@ephox/katamari';
-import { RunOperation } from '@ephox/snooker';
+import { RunOperation, SimpleGenerators } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 
 import { ephemera } from '../selection/Ephemera';
@@ -33,8 +33,17 @@ const forMenu = (selectedCells: SugarElement<HTMLTableCellElement>[], table: Sug
   selection: CellOpSelection.selection(selectedCells)
 });
 
-export {
-  noMenu,
-  forMenu
-};
+const paste = (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>, clipboard: SugarElement<HTMLTableElement>, generators: SimpleGenerators): RunOperation.TargetPaste => ({
+  element,
+  clipboard,
+  generators
+});
+
+const pasteRows = (selectedCells: SugarElement<HTMLTableCellElement>[], _cell: SugarElement<HTMLTableCellElement>, clipboard: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], generators: SimpleGenerators): RunOperation.TargetPasteRows => ({
+  selection: CellOpSelection.selection(selectedCells),
+  clipboard,
+  generators
+});
+
+export { noMenu, forMenu, paste, pasteRows };
 

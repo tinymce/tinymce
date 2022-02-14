@@ -8,17 +8,17 @@
 /*
  NOTE: This file is partially duplicated in the following locations:
   - core/table/TableSelection.ts
-  - models/dom/table/selection/TableSelection.ts
+  - plugins/table/selection/TableSelection.ts
   - advtable
  Make sure that if making changes to this file, the other files are updated as well
  */
 
 import { TableSelection } from '@ephox/darwin';
-import { Arr, Fun, Optionals } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { Attribute, Compare, SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
+import { SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { Editor } from 'tinymce/core/api/PublicApi';
+import Editor from 'tinymce/core/api/Editor';
 
 import { ephemera } from './Ephemera';
 
@@ -41,22 +41,8 @@ const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td')
 const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
   Arr.map(editor.model.table.getSelectedCells(), SugarElement.fromDom);
 
-const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
-  const cellOpt = getSelectionCell(selected);
-  const rowsOpt = cellOpt.bind((cell) => TableLookup.table(cell))
-    .map((table) => TableLookup.rows(table));
-  return Optionals.lift2(cellOpt, rowsOpt, (cell, rows) =>
-    Arr.filter(rows, (row) =>
-      Arr.exists(SugarElements.fromDom(row.dom.cells), (rowCell) =>
-        Attribute.get(rowCell, selector) === '1' || Compare.eq(rowCell, cell)
-      )
-    )
-  ).getOr([]);
-};
-
 export {
   getSelectionCell,
   getSelectionCellOrCaption,
-  getRowsFromSelection,
   getCellsFromSelection
 };
