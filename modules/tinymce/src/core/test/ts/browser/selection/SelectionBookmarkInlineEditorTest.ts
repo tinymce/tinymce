@@ -60,16 +60,21 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
   before(() => addTestDiv());
   after(() => removeTestDiv());
 
+  it('assert bookmark is updated in response to `setRng`', () => {
+    const editor = hook.editor();
+    editor.resetContent('<p>a</p><p>b</p>');
+
+    TinySelections.setRawSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false); // Ensure node change doesn't fire
+    assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+  });
+
   it('assert selection after no nodechanged, should not restore', () => {
     const editor = hook.editor();
-    editor.setContent('<p>a</p><p>b</p>');
-    // In FireFox blurring the editor adds an undo level that triggers a nodechange that creates a bookmark,
-    // so by adding an undo level first we keep it from adding a bookmark because the undo manager
-    // does not add a new undolevel if it is the same as the previous level.
-    editor.undoManager.add();
+    editor.resetContent('<p>a</p><p>b</p>');
 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
-    TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false); // Ensure node change doesn't fire
+    TinySelections.setRawSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
     assertBookmark(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
 
