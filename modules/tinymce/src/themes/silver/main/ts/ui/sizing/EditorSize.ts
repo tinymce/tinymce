@@ -14,7 +14,7 @@ import * as Utils from './Utils';
 
 export const getHeight = (editor: Editor) => {
   const baseHeight = Options.getHeightOption(editor);
-  const minHeight = Options.getMinHeightOption(editor);
+  const minHeight = Optional.from(Options.getMinHeightOption(editor));
   const maxHeight = Options.getMaxHeightOption(editor);
 
   return Utils.parseToInt(baseHeight).map((height) => Utils.calcCappedSize(height, minHeight, maxHeight));
