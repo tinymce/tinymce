@@ -81,6 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Editor query command APIs will now return `false` or an empty string on removed editors #TINY-7829
 - The `plugins` option now returns a `string` array instead of a space separated string #TINY-8455
 - Replaced 'Powered by Tiny' link text with logo #TINY-8371
+- Changed the default height of Editor from 200px to 400px #TINY-8443
+- The `min-height` of Editor is set to 100px so the UI can't be hidden while resizing #TINY-8443
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
