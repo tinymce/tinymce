@@ -60,6 +60,14 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0 ], 1);
     });
 
+    it('TINY-8201: Home key should move caret to closest cef inside the closest editing host', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>x</p><div contenteditable="false"><div contenteditable="true"><p><span contenteditable="false">CEF</span>123</p></div></div>');
+      TinySelections.setCursor(editor, [ 1, 0, 0, 1 ], 1);
+      TinyContentActions.keystroke(editor, Keys.home());
+      TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0 ], 0);
+    });
+
     context('Inline boundaries', () => {
       it('TINY-4612: move caret out and at the beginning of the element', () => {
         const editor = hook.editor();
@@ -126,6 +134,14 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       TinySelections.setCursor(editor, [ 1, 0, 0, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.end());
       TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0 ], 1);
+    });
+
+    it('TINY-8201: End key should move caret to closest cef inside the closest editing host', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>x</p><div contenteditable="false"><div contenteditable="true"><p>123<span contenteditable="false">CEF</span></p></div></div>');
+      TinySelections.setCursor(editor, [ 1, 0, 0, 0 ], 1);
+      TinyContentActions.keystroke(editor, Keys.end());
+      TinyAssertions.assertCursor(editor, [ 1, 0, 0, 2 ], 1);
     });
 
     context('Inline boundaries', () => {
