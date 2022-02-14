@@ -21,7 +21,6 @@ import {
 } from '../caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '../caret/TableCells';
 import * as NodeType from '../dom/NodeType';
-import * as TableUtils from '../table/TableUtils';
 import * as NavigationUtils from './NavigationUtils';
 
 type PositionsUntilFn = (scope: HTMLElement, start: CaretPosition) => LineInfo;
@@ -169,7 +168,7 @@ const tabBackward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean,
 const handleTab = (editor: Editor, forward: boolean): boolean => {
   const rootElements = [ 'table', 'li', 'dl' ];
 
-  const body = TableUtils.getBody(editor);
+  const body = SugarElement.fromDom(editor.getBody());
   const isRoot = (element: SugarElement<Node>) => {
     const name = SugarNode.name(element);
     return Compare.eq(element, body) || Arr.contains(rootElements, name);
@@ -179,7 +178,6 @@ const handleTab = (editor: Editor, forward: boolean): boolean => {
   // If navigating backwards, use the start of the ranged selection
   const container = SugarElement.fromDom(!forward ? rng.startContainer : rng.endContainer);
   return TableLookup.cell(container, isRoot).map((cell) => {
-    // window.event.preventDefault();
     // Clear fake ranged selection because our new selection will always be collapsed
     TableLookup.table(cell, isRoot).each((table) => {
       editor.model.table.clearSelectedCells(table.dom);

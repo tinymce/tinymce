@@ -9,10 +9,10 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import * as TableFormats from '../table/TableFormats';
 import * as DefaultFormats from './DefaultFormats';
 import { Format, Formats } from './FormatTypes';
 import { isInlineFormat, isSelectorFormat } from './FormatUtils';
+import * as TableFormats from './TableFormats';
 
 export interface FormatRegistry {
   get: {

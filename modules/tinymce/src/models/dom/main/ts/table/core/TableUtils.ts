@@ -7,7 +7,6 @@
 
 /*
  NOTE: This file is partially duplicated in the following locations:
-  - core/table/TableUtils.ts
   - plugins/table/core/Utils.ts
   - advtable
  Make sure that if making changes to this file, the other files are updated as well

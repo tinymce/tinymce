@@ -94,11 +94,11 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   };
 
   const destroy = () => {
-    tableResize.get().each((sz) => {
+    tableResize.on((sz) => {
       sz.destroy();
     });
 
-    resizeWire.get().each((w) => {
+    resizeWire.on((w) => {
       TableWire.remove(editor, w);
     });
   };
@@ -124,7 +124,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
         const rawTable = table.dom;
         Utils.removeDataStyle(table);
 
-        selectionRng.get().each((rng) => {
+        selectionRng.on((rng) => {
           editor.selection.setRng(rng);
           editor.focus();
         });
@@ -182,7 +182,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   });
 
   editor.on('SwitchMode', () => {
-    tableResize.get().each((resize) => {
+    tableResize.on((resize) => {
       if (editor.mode.isReadOnly()) {
         resize.hideBars();
       } else {
@@ -196,15 +196,15 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   });
 
   const refresh = (table: HTMLTableElement): void => {
-    tableResize.get().each((resize) => resize.refreshBars(SugarElement.fromDom(table)));
+    tableResize.on((resize) => resize.refreshBars(SugarElement.fromDom(table)));
   };
 
   const hide = (): void => {
-    tableResize.get().each((resize) => resize.hideBars());
+    tableResize.on((resize) => resize.hideBars());
   };
 
   const show = (): void => {
-    tableResize.get().each((resize) => resize.showBars());
+    tableResize.on((resize) => resize.showBars());
   };
 
   return {

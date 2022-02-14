@@ -8,7 +8,6 @@
 /*
  NOTE: This file is partially duplicated in the following locations:
   - models/dom/table/core/TableUtils.ts
-  - core/table/TableUtils.ts
   - advtable
  Make sure that if making changes to this file, the other files are updated as well
  */

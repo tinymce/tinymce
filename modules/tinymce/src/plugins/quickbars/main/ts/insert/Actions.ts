@@ -9,8 +9,8 @@ import { Id } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
-const insertTable = (editor: Editor, cols: number, rows: number): void => {
-  editor.execCommand('mceInsertTable', false, { rows, columns: cols });
+const insertTable = (editor: Editor, columns: number, rows: number): void => {
+  editor.execCommand('mceInsertTable', false, { rows, columns });
 };
 
 const insertBlob = (editor: Editor, base64: string, blob: Blob): void => {

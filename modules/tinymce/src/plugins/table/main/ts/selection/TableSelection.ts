@@ -7,7 +7,6 @@
 
 /*
  NOTE: This file is partially duplicated in the following locations:
-  - core/table/TableSelection.ts
   - models/dom/table/selection/TableSelection.ts
   - advtable
  Make sure that if making changes to this file, the other files are updated as well
@@ -39,7 +38,7 @@ const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
 const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
-  Arr.map(editor.model.table.getSelectedCells(), SugarElement.fromDom);
+  SugarElements.fromDom(editor.model.table.getSelectedCells());
 
 const getRowsFromSelection = (selected: SugarElement<Node>, selector: string): SugarElement<HTMLTableRowElement>[] => {
   const cellOpt = getSelectionCell(selected);

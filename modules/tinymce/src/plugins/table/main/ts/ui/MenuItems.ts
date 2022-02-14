@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -17,26 +17,37 @@ import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, buildMenuItems } from './UiUtils';
 
-interface AddMenuSpec {
-  text: string;
-  command: string;
-  icon?: string;
-  onSetup: (api: Menu.MenuItemInstanceApi) => () => void;
+interface AddMenuSpec<T> {
+  readonly text: string;
+  readonly command: string;
+  readonly icon?: string;
+  readonly onSetup: (api: T) => () => void;
+  readonly onAction?: (api: T) => void;
 }
 
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void => {
   const cmd = (command: string) => () => editor.execCommand(command);
 
   // TODO: TINY-8172 Unwind this when an alternative solution is found
-  const addMenuIfRegistered = (name: string, spec: AddMenuSpec) => {
-    if (editor.editorCommands.queryCommandSupported(spec.command)) {
+  const addMenuIfRegistered = (name: string, spec: AddMenuSpec<Menu.MenuItemInstanceApi>) => {
+    if (editor.queryCommandSupported(spec.command)) {
       editor.ui.registry.addMenuItem(name, {
         ...spec,
-        onAction: cmd(spec.command)
+        onAction: Type.isFunction(spec.onAction) ? spec.onAction : cmd(spec.command)
       });
       return true;
     } else {
       return false;
+    }
+  };
+
+  // TODO: TINY-8172 Unwind this when an alternative solution is found
+  const addToggleMenuIfRegistered = (name: string, spec: AddMenuSpec<Menu.ToggleMenuItemInstanceApi>) => {
+    if (editor.queryCommandSupported(spec.command)) {
+      editor.ui.registry.addToggleMenuItem(name, {
+        ...spec,
+        onAction: Type.isFunction(spec.onAction) ? spec.onAction : cmd(spec.command)
+      });
     }
   };
 
@@ -243,7 +254,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
   });
 
   const tableClassList = filterNoneItem(Options.getTableClassList(editor));
-  if (tableClassList.length !== 0 && editor.editorCommands.queryCommandSupported('mceTableToggleClass')) {
+  if (tableClassList.length !== 0 && editor.queryCommandSupported('mceTableToggleClass')) {
     editor.ui.registry.addNestedMenuItem('tableclass', {
       icon: 'table-classes',
       text: 'Table styles',
@@ -258,7 +269,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
   }
 
   const tableCellClassList = filterNoneItem(Options.getCellClassList(editor));
-  if (tableCellClassList.length !== 0 && editor.editorCommands.queryCommandSupported('mceTableCellToggleClass')) {
+  if (tableCellClassList.length !== 0 && editor.queryCommandSupported('mceTableCellToggleClass')) {
     editor.ui.registry.addNestedMenuItem('tablecellclass', {
       icon: 'table-cell-classes',
       text: 'Cell styles',
@@ -273,7 +284,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
   }
 
   // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.editorCommands.queryCommandSupported('mceTableApplyCellStyle')) {
+  if (editor.queryCommandSupported('mceTableApplyCellStyle')) {
     editor.ui.registry.addNestedMenuItem('tablecellvalign', {
       icon: 'vertical-align',
       text: 'Vertical align',
@@ -325,35 +336,28 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets): void 
     });
   }
 
-  // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.editorCommands.queryCommandSupported('mceTableToggleCaption')) {
-    editor.ui.registry.addToggleMenuItem('tablecaption', {
-      icon: 'table-caption',
-      text: 'Table caption',
-      onAction: cmd('mceTableToggleCaption'),
-      onSetup: selectionTargets.onSetupTableWithCaption
-    });
-  }
+  addToggleMenuIfRegistered('tablecaption', {
+    icon: 'table-caption',
+    text: 'Table caption',
+    command: 'mceTableToggleCaption',
+    onSetup: selectionTargets.onSetupTableWithCaption
+  });
 
-  // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.editorCommands.queryCommandSupported('mceTableRowType')) {
-    editor.ui.registry.addToggleMenuItem('tablerowheader', {
-      text: 'Row header',
-      icon: 'table-top-header',
-      onAction: changeRowHeader(editor),
-      onSetup: selectionTargets.onSetupTableRowHeaders
-    });
-  }
+  addToggleMenuIfRegistered('tablerowheader', {
+    text: 'Row header',
+    icon: 'table-top-header',
+    command: 'mceTableRowType',
+    onAction: changeRowHeader(editor),
+    onSetup: selectionTargets.onSetupTableRowHeaders
+  });
 
-  // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.editorCommands.queryCommandSupported('mceTableColType')) {
-    editor.ui.registry.addToggleMenuItem('tablecolheader', {
-      text: 'Column header',
-      icon: 'table-left-header',
-      onAction: changeColumnHeader(editor),
-      onSetup: selectionTargets.onSetupTableColumnHeaders
-    });
-  }
+  addToggleMenuIfRegistered('tablecolheader', {
+    text: 'Column header',
+    icon: 'table-left-header',
+    command: 'mceTableColType',
+    onAction: changeColumnHeader(editor),
+    onSetup: selectionTargets.onSetupTableRowHeaders
+  });
 };
 
 export {

@@ -18,7 +18,7 @@ import FakeClipboard from 'tinymce/core/api/FakeClipboard';
 
 type RowElement = HTMLTableRowElement | HTMLTableColElement;
 
-const tableTypeBase = 'x-dom/mce-table-';
+const tableTypeBase = 'x-tinymce/dom-table-';
 const tableTypeRow = tableTypeBase + 'rows';
 const tableTypeColumn = tableTypeBase + 'columns';
 

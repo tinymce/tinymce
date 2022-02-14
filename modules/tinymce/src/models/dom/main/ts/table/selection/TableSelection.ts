@@ -7,16 +7,15 @@
 
 /*
  NOTE: This file is partially duplicated in the following locations:
-  - core/table/TableSelection.ts
   - plugins/table/selection/TableSelection.ts
   - advtable
  Make sure that if making changes to this file, the other files are updated as well
  */
 
 import { TableSelection } from '@ephox/darwin';
-import { Arr, Fun } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
-import { SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { SelectorFind, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -39,7 +38,7 @@ const getSelectionCellOrCaption = getSelectionFromSelector<HTMLTableCellElement 
 const getSelectionCell = getSelectionFromSelector<HTMLTableCellElement>('th,td');
 
 const getCellsFromSelection = (editor: Editor): SugarElement<HTMLTableCellElement>[] =>
-  Arr.map(editor.model.table.getSelectedCells(), SugarElement.fromDom);
+  SugarElements.fromDom(editor.model.table.getSelectedCells());
 
 export {
   getSelectionCell,

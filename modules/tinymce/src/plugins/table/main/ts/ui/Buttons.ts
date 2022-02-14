@@ -15,10 +15,10 @@ import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, generateMenuItemsCallback } from './UiUtils';
 
 interface AddButtonSpec {
-  tooltip: string;
-  command: string;
-  icon: string;
-  onSetup?: (api: Toolbar.ToolbarButtonInstanceApi) => () => void;
+  readonly tooltip: string;
+  readonly command: string;
+  readonly icon: string;
+  readonly onSetup?: (api: Toolbar.ToolbarButtonInstanceApi) => () => void;
 }
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void => {
@@ -32,7 +32,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
 
   // TODO: TINY-8172 Unwind this when an alternative solution is found
   const addButtonIfRegistered = (name: string, spec: AddButtonSpec) => {
-    if (editor.editorCommands.queryCommandSupported(spec.command)) {
+    if (editor.queryCommandSupported(spec.command)) {
       editor.ui.registry.addButton(name, {
         ...spec,
         onAction: cmd(spec.command)
@@ -187,7 +187,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
   });
 
   const tableClassList = filterNoneItem(Options.getTableClassList(editor));
-  if (tableClassList.length !== 0 && editor.editorCommands.queryCommandSupported('mceTableToggleClass')) {
+  if (tableClassList.length !== 0 && editor.queryCommandSupported('mceTableToggleClass')) {
     editor.ui.registry.addMenuButton('tableclass', {
       icon: 'table-classes',
       tooltip: 'Table styles',
@@ -202,7 +202,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
   }
 
   const tableCellClassList = filterNoneItem(Options.getCellClassList(editor));
-  if (tableCellClassList.length !== 0 && editor.editorCommands.queryCommandSupported('mceTableCellToggleClass')) {
+  if (tableCellClassList.length !== 0 && editor.queryCommandSupported('mceTableCellToggleClass')) {
     editor.ui.registry.addMenuButton('tablecellclass', {
       icon: 'table-cell-classes',
       tooltip: 'Cell styles',
@@ -217,7 +217,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
   }
 
   // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.editorCommands.queryCommandSupported('mceTableApplyCellStyle')) {
+  if (editor.queryCommandSupported('mceTableApplyCellStyle')) {
     editor.ui.registry.addMenuButton('tablecellvalign', {
       icon: 'vertical-align',
       tooltip: 'Vertical align',
@@ -270,7 +270,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
   }
 
   // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.editorCommands.queryCommandSupported('mceTableToggleCaption')) {
+  if (editor.queryCommandSupported('mceTableToggleCaption')) {
     editor.ui.registry.addToggleButton('tablecaption', {
       tooltip: 'Table caption',
       onAction: cmd('mceTableToggleCaption'),
@@ -280,7 +280,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
   }
 
   // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.editorCommands.queryCommandSupported('mceTableRowType')) {
+  if (editor.queryCommandSupported('mceTableRowType')) {
     editor.ui.registry.addToggleButton('tablerowheader', {
       tooltip: 'Row header',
       icon: 'table-top-header',
@@ -290,7 +290,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
   }
 
   // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.editorCommands.queryCommandSupported('mceTableColType')) {
+  if (editor.queryCommandSupported('mceTableColType')) {
     editor.ui.registry.addToggleButton('tablecolheader', {
       tooltip: 'Column header',
       icon: 'table-left-header',
