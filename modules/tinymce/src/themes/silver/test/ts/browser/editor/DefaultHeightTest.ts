@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.editor.DefaultHeight', () => {
+describe('browser.tinymce.themes.silver.editor.DefaultHeightTest', () => {
   const baseSettings = {
     base_url: '/project/tinymce/js/tinymce'
   };
