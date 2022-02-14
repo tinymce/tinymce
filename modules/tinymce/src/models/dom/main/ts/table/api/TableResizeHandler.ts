@@ -51,7 +51,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     TableSize.get(editor, table);
 
   const lazyResizingBehaviour = () =>
-    Options.getTableColumnResizingBehaviour(editor) === 'preservetable' ? ResizeBehaviour.preserveTable() : ResizeBehaviour.resizeTable();
+    Options.isPreserveTableColumnResizing(editor) ? ResizeBehaviour.preserveTable() : ResizeBehaviour.resizeTable();
 
   const getNumColumns = (table: SugarElement<HTMLTableElement>) =>
     TableGridSize.getGridSize(table).columns;
@@ -77,7 +77,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       const tableSize = lazySizing(table);
 
       // For preserve table we want to always resize the entire table. So pretend the last column is being resized
-      const col = Options.getTableColumnResizingBehaviour(editor) === 'preservetable' || isRightEdgeResize ? getNumColumns(table) - 1 : 0;
+      const col = Options.isPreserveTableColumnResizing(editor) || isRightEdgeResize ? getNumColumns(table) - 1 : 0;
       Adjustments.adjustWidth(table, width - startW, col, resizing, tableSize);
     // Handle the edge case where someone might fire this event without resizing.
     // If so then we need to ensure the table is still using percent

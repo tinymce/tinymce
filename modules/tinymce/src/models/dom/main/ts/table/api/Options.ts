@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -93,13 +93,26 @@ const register = (editor: Editor): void => {
   });
 };
 
-const getTableCloneElements = option('table_clone_elements');
+const getTableCloneElements = (editor: Editor): Optional<string[]> => {
+  return Optional.from(editor.options.get('table_clone_elements'));
+};
 
-const getColumnResizingBehaviour = option('table_column_resizing');
+const hasTableObjectResizing = (editor: Editor): boolean => {
+  const objectResizing = editor.options.get('object_resizing');
+  return Arr.contains(objectResizing.split(','), 'table');
+};
 
-const getTableSizingMode = option('table_sizing_mode');
+const getTableHeaderType = option<TableHeaderType>('table_header_type');
 
-const getTableHeaderType = option('table_header_type');
+const getTableColumnResizingBehaviour = option<TableColumnResizing>('table_column_resizing');
+
+const isPreserveTableColumnResizing = (editor: Editor): boolean =>
+  getTableColumnResizingBehaviour(editor) === 'preservetable';
+
+const isResizeTableColumnResizing = (editor: Editor): boolean =>
+  getTableColumnResizingBehaviour(editor) === 'resizetable';
+
+const getTableSizingMode = option<TableSizingMode>('table_sizing_mode');
 
 const isTablePercentagesForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'relative';
@@ -110,16 +123,9 @@ const isTablePixelsForced = (editor: Editor): boolean =>
 const isTableResponsiveForced = (editor: Editor): boolean =>
   getTableSizingMode(editor) === 'responsive';
 
-const hasTableResizeBars = option('table_resize_bars');
+const hasTableResizeBars = option<boolean>('table_resize_bars');
 
-const getTableColumnResizingBehaviour = option('table_column_resizing');
-
-const hasTableObjectResizing = (editor: Editor): boolean => {
-  const objectResizing = editor.options.get('object_resizing');
-  return Arr.contains(objectResizing.split(','), 'table');
-};
-
-const getTableDefaultAttributes = option('table_default_attributes');
+const getTableDefaultAttributes = option<Record<string, string>>('table_default_attributes');
 
 const getTableDefaultStyles = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
@@ -127,7 +133,7 @@ const getTableDefaultStyles = (editor: Editor): Record<string, string> => {
   return options.isSet('table_default_styles') ? options.get('table_default_styles') : determineDefaultTableStyles(editor);
 };
 
-const tableUseColumnGroup = option('table_use_colgroups');
+const tableUseColumnGroup = option<boolean>('table_use_colgroups');
 
 export {
   register,
@@ -137,8 +143,9 @@ export {
   isTablePixelsForced,
   isTableResponsiveForced,
   getTableHeaderType,
-  getColumnResizingBehaviour,
   getTableColumnResizingBehaviour,
+  isPreserveTableColumnResizing,
+  isResizeTableColumnResizing,
   hasTableObjectResizing,
   hasTableResizeBars,
   getTableDefaultAttributes,

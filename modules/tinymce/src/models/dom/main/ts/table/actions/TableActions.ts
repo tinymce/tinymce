@@ -72,9 +72,9 @@ export const TableActions = (editor: Editor, resizeHandler: TableResizeHandler, 
     isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
 
   // Optional.none gives the default cloneFormats.
-  const cloneFormats = Optional.from(Options.getTableCloneElements(editor));
+  const cloneFormats = Options.getTableCloneElements(editor);
 
-  const colMutationOp = Options.getColumnResizingBehaviour(editor) === 'resizetable' ? Fun.noop : CellMutations.halve;
+  const colMutationOp = Options.isResizeTableColumnResizing(editor) ? Fun.noop : CellMutations.halve;
 
   const getTableSectionType = (table: SugarElement<HTMLTableElement>) => {
     switch (Options.getTableHeaderType(editor)) {
@@ -121,7 +121,7 @@ export const TableActions = (editor: Editor, resizeHandler: TableResizeHandler, 
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const behaviours: RunOperation.OperationBehaviours = {
         sizing: TableSize.get(editor, table),
-        resize: Options.getColumnResizingBehaviour(editor) === 'resizetable' ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable(),
+        resize: Options.isResizeTableColumnResizing(editor) ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable(),
         section: getTableSectionType(table)
       };
       return guard(table) ? operation(table, target, generators, behaviours).bind((result) => {
