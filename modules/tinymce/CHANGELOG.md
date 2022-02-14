@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Notifications no longer require a timeout to disable the close button #TINY-6679
 - The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
 - Calls to `editor.selection.setRng` now update the cursor position bookmark used when focus is returned to the editor #TINY-8450
+- The `BeforeSetContent` event will now include the actual serialized content when passing in an `AstNode` to the `editor.setContent` API #TINY-7996
 - The default height of editor has been increased from `200px` to `400px` to improve the usability of the editor #TINY-6860
 
 ### Changed
@@ -86,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `plugins` option now returns a `string` array instead of a space separated string #TINY-8455
 - Replaced 'Powered by Tiny' link text with logo #TINY-8371
 - Renamed the `getWhiteSpaceElements()` function to `getWhitespaceElements()` in the `Schema` API #TINY-8102
+- The `GetContent` event will now always pass a `string` for the `content` property #TINY-7996
 - The `mceInsertTable` command can no longer open the insert table dialog. Use the `mceInsertTableDialog` command instead #TINY-8273
 - Moved non-UI table functionality to core #TINY-8273
 - The `table_style_by_css` option has been set to `true` by default #TINY-8259

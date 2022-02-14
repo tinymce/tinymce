@@ -14,17 +14,19 @@ export interface GetContentArgs {
   format: ContentFormat;
   get: boolean;
   getInner: boolean;
-  content?: Content;
   no_events?: boolean;
+  save?: boolean;
+  source_view?: boolean;
   [key: string]: any;
 }
 
 export interface SetContentArgs {
   format: string;
   set: boolean;
-  content: string;
+  content: Content;
   no_events?: boolean;
   no_selection?: boolean;
+  paste?: boolean;
 }
 
 export interface SetContentResult {
@@ -38,6 +40,7 @@ export interface GetSelectionContentArgs extends GetContentArgs {
 }
 
 export interface SetSelectionContentArgs extends SetContentArgs {
+  content: string;
   selection?: boolean;
 }
 
@@ -48,3 +51,6 @@ export interface InsertContentDetails {
     readonly paste: boolean;
   };
 }
+
+export const isTreeNode = (content: unknown): content is AstNode =>
+  content instanceof AstNode;
