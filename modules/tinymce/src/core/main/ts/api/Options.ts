@@ -443,6 +443,15 @@ const register = (editor: Editor) => {
     processor: 'string[]'
   });
 
+  registerOption('model', {
+    processor: 'string',
+    default: editor.hasPlugin('rtc') ? 'plugin' : 'dom'
+  });
+
+  registerOption('model_url', {
+    processor: 'string'
+  });
+
   registerOption('block_unsupported_drop', {
     processor: 'boolean',
     default: true
@@ -799,6 +808,8 @@ const getEventRoot = option('event_root');
 const getServiceMessage = option('service_message');
 const getTheme = option('theme');
 const getThemeUrl = option('theme_url');
+const getModel = option('model');
+const getModelUrl = option('model_url');
 const isInlineBoundariesEnabled = option('inline_boundaries');
 const getFormats = option('formats');
 const getPreviewStyles = option('preview_styles');
@@ -898,12 +909,14 @@ export {
   getEventRoot,
   getServiceMessage,
   getTheme,
+  getModel,
   isInlineBoundariesEnabled,
   getFormats,
   getPreviewStyles,
   canFormatEmptyLines,
   getCustomUiSelector,
   getThemeUrl,
+  getModelUrl,
   isInline,
   hasHiddenInput,
   shouldPatchSubmit,
