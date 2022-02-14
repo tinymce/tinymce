@@ -6,7 +6,7 @@ import { TinyDom } from '../TinyDom';
 
 const setRawSelection = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number): void => {
   const rng = createDomSelection(TinyDom.body(editor), startPath, soffset, finishPath, foffset);
-  const sel = editor.getWin().getSelection();
+  const sel = editor.selection.getSel();
   if (sel) {
     sel.removeAllRanges();
     sel.addRange(rng);

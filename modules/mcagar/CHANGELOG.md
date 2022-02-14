@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- `getSel()` to the `EditorTypes.Selection` interface
+- `setRawSelection()` to the `TinySelections` helper methods
+
 ### Improved
 - Updated the APIs to work with the TinyMCE 6 options API.
 
