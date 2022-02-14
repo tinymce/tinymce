@@ -22,6 +22,6 @@ describe('browser.tinymce.core.init.InitEditorLanguageTest', () => {
   it('TBA: Should have been able to load a custom language pack', () => {
     UiFinder.notExists(SugarBody.body(), '.tox-notification');
     assert.equal(I18n.getCode(), 'custom', 'I18n language code should be the custom language code');
-    assert.deepEqual(I18n.getData(), { custom: customLanguagePack }, 'I18n data should have custom language pack');
+    assert.deepEqual(I18n.getData().custom, customLanguagePack, 'I18n data should have custom language pack');
   });
 });
