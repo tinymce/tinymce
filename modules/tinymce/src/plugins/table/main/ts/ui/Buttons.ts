@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
+
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
@@ -14,11 +16,12 @@ import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, generateMenuItemsCallback } from './UiUtils';
 
-interface AddButtonSpec {
+interface AddButtonSpec<T> {
   readonly tooltip: string;
   readonly command: string;
   readonly icon: string;
-  readonly onSetup?: (api: Toolbar.ToolbarButtonInstanceApi) => () => void;
+  readonly onSetup?: (api: T) => () => void;
+  readonly onAction?: (api: T) => void;
 }
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void => {
@@ -31,11 +34,21 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
   const cmd = (command: string) => () => editor.execCommand(command);
 
   // TODO: TINY-8172 Unwind this when an alternative solution is found
-  const addButtonIfRegistered = (name: string, spec: AddButtonSpec) => {
+  const addButtonIfRegistered = (name: string, spec: AddButtonSpec<Toolbar.ToolbarButtonInstanceApi>) => {
     if (editor.queryCommandSupported(spec.command)) {
       editor.ui.registry.addButton(name, {
         ...spec,
-        onAction: cmd(spec.command)
+        onAction: Type.isFunction(spec.onAction) ? spec.onAction : cmd(spec.command)
+      });
+    }
+  };
+
+  // TODO: TINY-8172 Unwind this when an alternative solution is found
+  const addToggleButtonIfRegistered = (name: string, spec: AddButtonSpec<Toolbar.ToolbarToggleButtonInstanceApi>) => {
+    if (editor.queryCommandSupported(spec.command)) {
+      editor.ui.registry.addToggleButton(name, {
+        ...spec,
+        onAction: Type.isFunction(spec.onAction) ? spec.onAction : cmd(spec.command)
       });
     }
   };
@@ -269,35 +282,28 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets): void =>
     });
   }
 
-  // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.queryCommandSupported('mceTableToggleCaption')) {
-    editor.ui.registry.addToggleButton('tablecaption', {
-      tooltip: 'Table caption',
-      onAction: cmd('mceTableToggleCaption'),
-      icon: 'table-caption',
-      onSetup: selectionTargets.onSetupTableWithCaption
-    });
-  }
+  addToggleButtonIfRegistered('tablecaption', {
+    tooltip: 'Table caption',
+    icon: 'table-caption',
+    command: 'mceTableToggleCaption',
+    onSetup: selectionTargets.onSetupTableWithCaption
+  });
 
-  // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.queryCommandSupported('mceTableRowType')) {
-    editor.ui.registry.addToggleButton('tablerowheader', {
-      tooltip: 'Row header',
-      icon: 'table-top-header',
-      onAction: changeRowHeader(editor),
-      onSetup: selectionTargets.onSetupTableRowHeaders
-    });
-  }
+  addToggleButtonIfRegistered('tablerowheader', {
+    tooltip: 'Row header',
+    icon: 'table-top-header',
+    command: 'mceTableRowType',
+    onAction: changeRowHeader(editor),
+    onSetup: selectionTargets.onSetupTableRowHeaders
+  });
 
-  // TODO: TINY-8172 Unwind this when an alternative solution is found
-  if (editor.queryCommandSupported('mceTableColType')) {
-    editor.ui.registry.addToggleButton('tablecolheader', {
-      tooltip: 'Column header',
-      icon: 'table-left-header',
-      onAction: changeColumnHeader(editor),
-      onSetup: selectionTargets.onSetupTableColumnHeaders
-    });
-  }
+  addToggleButtonIfRegistered('tablecolheader', {
+    tooltip: 'Column header',
+    icon: 'table-left-header',
+    command: 'mceTableColType',
+    onAction: changeColumnHeader(editor),
+    onSetup: selectionTargets.onSetupTableColumnHeaders
+  });
 };
 
 const addToolbars = (editor: Editor): void => {

@@ -416,7 +416,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   };
 
   const updateResizeRect = (e) => {
-    let startElm: HTMLElement, controlElm: HTMLElement;
+    let startElm: Element, controlElm: HTMLElement;
 
     const isChildOrEqual = (node, parent) => {
       if (node) {
@@ -443,7 +443,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
     if (isChildOrEqual(controlElm, rootElement)) {
       disableGeckoResize();
-      startElm = selection.getStart(true) as HTMLElement;
+      startElm = selection.getStart(true);
 
       if (isChildOrEqual(startElm, controlElm) && isChildOrEqual(selection.getEnd(true), controlElm)) {
         showResizeRect(controlElm);
