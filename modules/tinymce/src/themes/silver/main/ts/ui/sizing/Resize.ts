@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { Css, Height, SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -26,7 +26,7 @@ export enum ResizeTypes {
 export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalHeight: number, originalWidth: number) => {
   const dimensions: EditorDimensions = {};
 
-  dimensions.height = Utils.calcCappedSize(originalHeight + deltas.top, Options.getMinHeightOption(editor), Options.getMaxHeightOption(editor));
+  dimensions.height = Utils.calcCappedSize(originalHeight + deltas.top, Optional.from(Options.getMinHeightOption(editor)), Options.getMaxHeightOption(editor));
 
   if (resizeType === ResizeTypes.Both) {
     dimensions.width = Utils.calcCappedSize(originalWidth + deltas.left, Options.getMinWidthOption(editor), Options.getMaxWidthOption(editor));
