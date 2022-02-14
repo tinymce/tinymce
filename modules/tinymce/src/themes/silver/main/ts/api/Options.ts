@@ -14,8 +14,6 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import { EditorOptions, ToolbarGroup } from 'tinymce/core/api/OptionTypes';
 
-import * as Utils from '../ui/sizing/Utils';
-
 export type ToolbarGroupOption = ToolbarGroup;
 
 export enum ToolbarMode {
