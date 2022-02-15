@@ -87,6 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed the `getWhiteSpaceElements()` function to `getWhitespaceElements()` in the `Schema` API #TINY-8102
 - The `mceInsertTable` command can no longer open the insert table dialog. Use the `mceInsertTableDialog` command instead #TINY-8273
 - Moved non-UI table functionality to core #TINY-8273
+- The `table_style_by_css` option has been set to `true` by default #TINY-8259
+- The `table_use_colgroups` option has been set to `true` by default #TINY-8259
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018

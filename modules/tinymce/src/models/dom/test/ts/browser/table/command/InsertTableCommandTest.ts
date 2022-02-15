@@ -15,7 +15,8 @@ describe('browser.tinymce.models.dom.table.command.InsertTableCommandTest', () =
     },
     base_url: '/project/tinymce/js/tinymce',
     statusbar: false,
-    table_header_type: 'cells'
+    table_header_type: 'cells',
+    table_use_colgroups: false
   }, [], true);
 
   const assertNumNewUndoLevels = (editor: Editor, expected: number) => {
