@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Notifications no longer require a timeout to disable the close button #TINY-6679
 - The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
 - Calls to `editor.selection.setRng` now update the cursor position bookmark used when focus is returned to the editor #TINY-8450
-- The default height of editor is changed from `200px` to `400px` #TINY-6860
+- The default height of editor has been increased from `200px` to `400px` to improve the UX of UI #TINY-6860
 
 ### Changed
 - The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
