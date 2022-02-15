@@ -34,7 +34,7 @@ export type SetupCallback = (editor: Editor) => void;
 
 export type FilePickerCallback = (callback: Function, value: any, meta: Record<string, any>) => void;
 export type FilePickerValidationStatus = 'valid' | 'unknown' | 'invalid' | 'none';
-export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string}) => void) => void;
+export type FilePickerValidationCallback = (info: { type: string; url: string }, callback: (validation: { status: FilePickerValidationStatus; message: string }) => void) => void;
 
 export type PastePreProcessFn = (editor: Editor, args: PastePreProcessEvent) => void;
 export type PastePostProcessFn = (editor: Editor, args: PastePostProcessEvent) => void;
@@ -153,6 +153,8 @@ interface BaseEditorOptions {
   menubar?: boolean | string;
   min_height?: number;
   min_width?: number;
+  model?: string;
+  model_url?: string;
   no_newline_selector?: string;
   noneditable_class?: string;
   noneditable_regexp?: RegExp | RegExp[];
@@ -193,12 +195,11 @@ interface BaseEditorOptions {
   style_formats_merge?: boolean;
   submit_patch?: boolean;
   suffix?: string;
+  table_tab_navigation?: boolean;
   target?: HTMLElement;
   text_patterns?: RawPattern[] | false;
   theme?: string | ThemeInitFunc | false;
   theme_url?: string;
-  model?: string;
-  model_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar1?: string;
   toolbar2?: string;

@@ -162,10 +162,6 @@ class EditorCommands {
    * @return {Boolean} true/false if the command is supported or not.
    */
   public queryCommandSupported(command: string): boolean {
-    if (this.editor.quirks.isHidden() || this.editor.removed) {
-      return false;
-    }
-
     const lowerCaseCommand = command.toLowerCase();
     if (this.commands.exec[lowerCaseCommand]) {
       return true;

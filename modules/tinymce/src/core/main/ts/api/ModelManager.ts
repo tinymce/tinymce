@@ -15,7 +15,12 @@ import AddOnManager from './AddOnManager';
  * @private
  * @class tinymce.Model
  */
-export interface Model { }
+export interface Model {
+  readonly table: {
+    readonly getSelectedCells: () => HTMLTableCellElement[];
+    readonly clearSelectedCells: (container: Node) => void;
+  };
+}
 
 type ModelManager = AddOnManager<Model>;
 const ModelManager: ModelManager = AddOnManager.ModelManager;

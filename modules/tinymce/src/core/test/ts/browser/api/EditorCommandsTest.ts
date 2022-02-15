@@ -332,7 +332,7 @@ describe('browser.tinymce.core.api.EditorCommandsTest', () => {
 
       editor.remove();
 
-      assert.isFalse(editor.editorCommands.queryCommandSupported('Bold'));
+      assert.isTrue(editor.editorCommands.queryCommandSupported('Bold'));
       assert.isFalse(editor.editorCommands.queryCommandState('Bold'));
       assert.equal(editor.editorCommands.queryCommandValue('FontSize'), '');
       assert.isFalse(editor.editorCommands.execCommand('Bold'));
