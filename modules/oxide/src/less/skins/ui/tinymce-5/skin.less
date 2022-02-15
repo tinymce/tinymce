@@ -40,6 +40,7 @@
 @_toolbar-divider-height: @_toolbar-height - 1px;
 @toolbar-row-separator-color: @toolbar-group-separator-color;
 @toolbar-separator-color: @border-color;
+@toolbar-padding-y: 0px;
 @toolbar-padding-x: 0px;
 @toolbar-separator-distance: 0;
 @color-tint: #207ab7;
@@ -146,6 +147,10 @@
     svg {
       vertical-align: -.25em;
     }
+  }
+
+  &:not([dir=rtl]) .tox-statusbar__branding {
+    margin-left: 1ch;
   }
 
   .tox-statusbar__resize-handle {
