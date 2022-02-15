@@ -469,7 +469,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     input.parentNode.removeChild(input);
   });
 
-  it('TINY-6946: Images should be properly cleaned up and not cause a crash', () => {
+  it('TINY-6946: Images should be properly cleaned up if they contain invalid trailing data', () => {
     const editor = hook.editor();
     editor.setContent('<img src="data:image/gif;base64,R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==%A0">');
     TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA=="></p>');

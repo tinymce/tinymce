@@ -134,7 +134,12 @@ describe('atomic.tinymce.core.html.Base64UrisTest', () => {
     KAssert.eqOptional('Data uri without base64', Optional.none(), parseDataUri('data:image/svg+xml,R4/yw=='));
     KAssert.eqOptional('Data with spaces, tabs and line breaks', Optional.some({ type: 'image/png', data: 'SGVsbG8sI\r\n  Hdv		cmxkIQ==' }), parseDataUri('data:image/png;base64,SGVsbG8sI\r\n  Hdv		cmxkIQ=='));
     KAssert.eqOptional('Corrupted data', Optional.some({ type: 'image/gif', data: 'R0' }), parseDataUri('data:image/gif;base64,R0ÖlGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==%A0'));
-    // eslint-disable-next-line max-len
-    KAssert.eqOptional('Corrupted data due to added letters', Optional.some({ type: 'image/gif', data: 'R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==' }), parseDataUri('data:image/gif;base64,R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==%A0'));
+    KAssert.eqOptional(
+      'Corrupted data due to added letters',
+      Optional.some({
+        type: 'image/gif',
+        data: 'R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA=='
+      }),
+      parseDataUri('data:image/gif;base64,R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==%A0'));
   });
 });
