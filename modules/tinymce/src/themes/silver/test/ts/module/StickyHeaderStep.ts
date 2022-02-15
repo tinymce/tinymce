@@ -24,7 +24,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       min_height: 300,
       min_width: 350,
       height: 400,
-      width: 450,
+      width: 500,
       max_height: 500,
       max_width: 550,
       toolbar_mode: toolbarMode,

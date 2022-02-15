@@ -55,7 +55,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloati
     await pOpenFloatingToolbarAndAssertPosition(editor, getExpectedToolbarPos, async () => {
       // Press enter a few times to change the height of the editor
       pressEnterNTimes(editor, 3);
-      await pAssertFloatingToolbarPosition(editor, getExpectedToolbarPos, 105, 519);
+      await pAssertFloatingToolbarPosition(editor, getExpectedToolbarPos, 105, 531);
     });
   }));
 
@@ -71,7 +71,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloati
         assert.isAtLeast(getUiContainerTop(editor), initialContainerTop.get() + lineHeight * 3, 'Toolbar top position'); // Wait for the toolbar to move three lines
       });
       initialContainerTop.set(getUiContainerTop(editor)); // reset the toolbar position
-      await pAssertFloatingToolbarPosition(editor, getExpectedToolbarPos, 105, 519); // top of ui container - two toolbar heights
+      await pAssertFloatingToolbarPosition(editor, getExpectedToolbarPos, 105, 531); // top of ui container - two toolbar heights
     });
   }));
 });

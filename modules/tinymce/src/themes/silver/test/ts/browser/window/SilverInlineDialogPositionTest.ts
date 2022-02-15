@@ -64,7 +64,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
       // Shrink the editor to 300px
       Mouse.mouseDown(resizeHandle);
       resizeToPos(650, 400, 500, 300);
-      await pAssertPos(dialog, 'absolute', 5, -173); // Toolbar wraps so y diff is 100 + toolbar height
+      await pAssertPos(dialog, 'absolute', 5, -166); // Toolbar wraps so y diff is 100 + toolbar height
 
       // Enlarge the editor to 500px
       Mouse.mouseDown(resizeHandle);
