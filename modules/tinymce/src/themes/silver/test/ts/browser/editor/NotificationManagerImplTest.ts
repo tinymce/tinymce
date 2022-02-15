@@ -34,7 +34,8 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
   context('Top toolbar positioning', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
-      width: 600
+      width: 600,
+      height: 200
     }, []);
 
     const assertStructure = (label: string, notification: NotificationApi, type: string, message: string, progress?: number) => {
