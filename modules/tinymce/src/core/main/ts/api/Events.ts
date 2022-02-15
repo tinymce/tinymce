@@ -6,11 +6,12 @@
  */
 
 import { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
-import { Content, GetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
-import { BeforeSetContentEvent, SetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
+import {
+  BeforeSetContentEvent, SetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent, GetContentEvent, BeforeGetContentEvent
+} from './EventTypes';
 import { ParserArgs } from './html/DomParser';
 import { EditorEvent } from './util/EventDispatcher';
 
@@ -54,10 +55,10 @@ const fireBeforeSetContent = <T extends BeforeSetContentEvent>(editor: Editor, a
 const fireSetContent = <T extends SetContentEvent>(editor: Editor, args: T) =>
   editor.dispatch('SetContent', args);
 
-const fireBeforeGetContent = <T extends GetContentArgs>(editor: Editor, args: T) =>
+const fireBeforeGetContent = <T extends BeforeGetContentEvent>(editor: Editor, args: T) =>
   editor.dispatch('BeforeGetContent', args);
 
-const fireGetContent = <T extends GetContentArgs & { content: Content }>(editor: Editor, args: T) =>
+const fireGetContent = <T extends GetContentEvent>(editor: Editor, args: T) =>
   editor.dispatch('GetContent', args);
 
 const fireAutocompleterStart = (editor: Editor, args: AutocompleterEventArgs) => editor.dispatch('AutocompleterStart', args);

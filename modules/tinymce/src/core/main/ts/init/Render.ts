@@ -237,7 +237,7 @@ const render = (editor: Editor) => {
 
   if (Options.isEncodingXml(editor)) {
     editor.on('GetContent', (e) => {
-      if (e.save && Type.isString(e.content)) {
+      if (e.save) {
         e.content = DOM.encode(e.content);
       }
     });

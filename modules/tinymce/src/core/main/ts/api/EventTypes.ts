@@ -6,7 +6,7 @@
  */
 
 import { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
-import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes';
+import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
@@ -18,14 +18,23 @@ import { InstanceApi } from './WindowManager';
 
 export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
 
-// TODO Figure out if these properties should be on the ContentArgs types
-export type BeforeGetContentEvent = GetContentArgs & { source_view?: boolean; selection?: boolean; save?: boolean };
-export type GetContentEvent = BeforeGetContentEvent & { content: Content };
-export type BeforeSetContentEvent = SetContentArgs & { source_view?: boolean; paste?: boolean; selection?: boolean };
-export type SetContentEvent = BeforeSetContentEvent & {
+export interface BeforeGetContentEvent extends GetContentArgs {
+  selection?: boolean;
+}
+
+export interface GetContentEvent extends BeforeGetContentEvent {
+  content: string;
+}
+
+export interface BeforeSetContentEvent extends SetContentArgs {
+  content: string;
+  selection?: boolean;
+}
+
+export interface SetContentEvent extends BeforeSetContentEvent {
   /** @deprecated */
   content: string;
-};
+}
 
 export interface NewBlockEvent { newBlock: Element }
 
