@@ -98,6 +98,18 @@
   .tox-tbtn__icon-wrap {
     //
   }
+
+  .tox-toolbar-overlord .tox-toolbar:not(.tox-toolbar--scrolling):first-child,
+  .tox-toolbar-overlord .tox-toolbar__primary {
+    @_toolbar-row-separator-image-offset: @_toolbar-height;
+
+    background-position: @_toolbar-row-separator-image-position;
+  }
+
+  .tox-editor-header > .tox-toolbar--scrolling,
+  .tox-toolbar-overlord .tox-toolbar--scrolling:first-child {
+    background-image: none;
+  }
 }
 
 // Floating more drawer styles. Uses pop toolbar styles
@@ -116,33 +128,15 @@
   padding: @pad-xs 0;
 }
 
-/* stylelint-disable */
 // Distraction-free mode
 .tox-pop .tox-pop__dialog {
-  .tox-toolbar.tox-toolbar { ///////////////////////////////////////////////////////////////////////////////////////////////
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tox-toolbar {
     @_toolbar-row-separator-downsize: @_toolbar-height + @pad-xs + @pad-xs * 2;
     @_toolbar-row-separator-image-offset: @_toolbar-height + @pad-xs;
 
-    background-color: @pop-background-color;
     background-position: @_toolbar-row-separator-image-position;
     background-size: @_toolbar-row-separator-image-size;
-    border: none;
-    border-radius: @pop-border-radius;
-    box-shadow: @pop-box-shadow;
     padding: @pad-xs 0;
   }
 }
-
-.tox { ///////////////////////////////////////////////////////////////////////////////////////////////
-  .tox-toolbar-overlord .tox-toolbar:not(.tox-toolbar--scrolling):first-child,
-  .tox-toolbar-overlord .tox-toolbar__primary {
-    @_toolbar-row-separator-image-offset: @_toolbar-height;
-
-    background-position: @_toolbar-row-separator-image-position;
-  }
-  .tox-editor-header > .tox-toolbar--scrolling,
-  .tox-toolbar-overlord .tox-toolbar--scrolling:first-child {
-    background-image: none;
-  }
-}
-/* stylelint-enable */
