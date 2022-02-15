@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
-import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
+import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Css, PredicateFilter, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -242,7 +242,21 @@ const addBrToBlockIfNeeded = (dom, block) => {
   }
 };
 
-const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
+const findParent = (editor: Editor, container: Node, stepUntilFinding?: string) => {
+  const findDirectParent = () =>
+    editor.dom.getParent(container, editor.dom.isBlock);
+
+  if (Type.isString(stepUntilFinding)) {
+    return SelectorFind.ancestor(SugarElement.fromDom(container), stepUntilFinding, (element) => element.dom === editor.dom.getRoot()).fold(
+      findDirectParent,
+      (element) => element.dom
+    );
+  } else {
+    return findDirectParent();
+  }
+};
+
+const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>, stepUntilFinding?: string) => {
   let tmpRng, container, offset, parentBlock;
   let newBlock, fragment, containerBlock, parentBlockName, isAfterLastNodeInContainer;
   const dom = editor.dom;
@@ -361,7 +375,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
   const insertNewBlockAfter = () => {
     // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
-    if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
+    if (/^(H[1-6]|PRE|BLOCKQUOTE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
       newBlock = createNewBlock(newBlockName);
     } else {
       newBlock = createNewBlock();
@@ -417,7 +431,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   }
 
   // Find parent block and setup empty block paddings
-  parentBlock = dom.getParent(container, dom.isBlock);
+  parentBlock = findParent(editor, container, stepUntilFinding);
   containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
 
   // Setup block names

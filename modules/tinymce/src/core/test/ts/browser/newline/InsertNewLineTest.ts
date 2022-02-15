@@ -162,4 +162,24 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     TinyAssertions.assertContent(editor, '<p><a href="#">a</a></p><p><a href="#"><img src="about:blank"></a></p>');
     TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
   });
+
+  context('Blockquote manipulation', () => {
+    it('Press Enter in blockquote', () => {
+      const editor = hook.editor();
+      editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+      TinySelections.setCursor(editor, [ 0, 1 ], 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p><p>&nbsp;</p></blockquote>');
+      TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
+    });
+
+    it('Press Shift+Enter in blockquote', () => {
+      const editor = hook.editor();
+      editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+      TinySelections.setCursor(editor, [ 0, 1 ], 1);
+      insertNewline(editor, { shiftKey: true });
+      TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote><p>&nbsp;</p>');
+      TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+    });
+  });
 });

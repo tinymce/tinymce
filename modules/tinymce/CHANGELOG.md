@@ -94,6 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved non-UI table functionality to core #TINY-8273
 - The `table_style_by_css` option has been set to `true` by default #TINY-8259
 - The `table_use_colgroups` option has been set to `true` by default #TINY-8259
+- Pressing Shift + Enter will now step out of `blockquote` elements to match `pre` element behavior #TINY-6559
 - The default minimum height of editor has been changed to 100px to prevent the UI disappearing while resizing #TINY-6860
 
 ### Fixed

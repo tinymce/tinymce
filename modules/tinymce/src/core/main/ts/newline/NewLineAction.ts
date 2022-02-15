@@ -16,6 +16,7 @@ import * as NewLineUtils from './NewLineUtils';
 const newLineAction = Adt.generate([
   { br: [ ] },
   { block: [ ] },
+  { newBlock: [ ] },
   { none: [ ] }
 ]);
 
@@ -35,6 +36,7 @@ const inBlock = (blockName: string, requiredState: boolean) => (editor: Editor, 
 };
 
 const inPreBlock = (requiredState: boolean) => inBlock('pre', requiredState);
+const inBlockQuoteBlock = (editor: Editor) => NewLineUtils.isBlockQuote(editor);
 const inSummaryBlock = () => inBlock('summary', true);
 
 const shouldPutBrInPre = (requiredState) => {
@@ -79,6 +81,7 @@ const getAction = (editor: Editor, evt?) => {
     match([ inListBlock(true), hasShiftKey ], newLineAction.br()),
     match([ inListBlock(true) ], newLineAction.block()),
     match([ inBrContext ], newLineAction.br()),
+    match([ inBlockQuoteBlock, hasShiftKey ], newLineAction.newBlock()),
     match([ hasShiftKey ], newLineAction.br()),
     match([ canInsertIntoEditableRoot ], newLineAction.block())
   ], [ editor, !!(evt && evt.shiftKey) ]).getOr(newLineAction.none());

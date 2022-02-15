@@ -15,6 +15,22 @@ import * as InsertBr from './InsertBr';
 import * as NewLineAction from './NewLineAction';
 
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
+  const insertBlock = (stepUntilFinding?: string) =>
+    () => {
+      if (Type.isNonNullable(evt)) {
+        const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
+        if (event.isDefaultPrevented()) {
+          return;
+        }
+      }
+
+      InsertBlock.insert(editor, evt, stepUntilFinding);
+
+      if (Type.isNonNullable(evt)) {
+        fireFakeInputEvent(editor, 'insertParagraph');
+      }
+    };
+
   NewLineAction.getAction(editor, evt).fold(
     () => {
       if (Type.isNonNullable(evt)) {
@@ -30,20 +46,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
         fireFakeInputEvent(editor, 'insertLineBreak');
       }
     },
-    () => {
-      if (Type.isNonNullable(evt)) {
-        const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
-        if (event.isDefaultPrevented()) {
-          return;
-        }
-      }
-
-      InsertBlock.insert(editor, evt);
-
-      if (Type.isNonNullable(evt)) {
-        fireFakeInputEvent(editor, 'insertParagraph');
-      }
-    },
+    insertBlock(),
+    insertBlock('BLOCKQUOTE'),
     Fun.noop
   );
 };
