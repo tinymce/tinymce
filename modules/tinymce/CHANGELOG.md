@@ -31,8 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Notifications no longer require a timeout to disable the close button #TINY-6679
 - The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
 - Calls to `editor.selection.setRng` now update the cursor position bookmark used when focus is returned to the editor #TINY-8450
-- Changed the default height of Editor from `200px` to `400px` #TINY-6860
-- Set the default min height of Editor to 100px so it can't be made disappeared while resizing  #TINY-6860
+- The default minimum height of editor has been changed to 100px to prevent the UI disappearing while resizing #TINY-6860
 
 ### Changed
 - The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
@@ -86,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `plugins` option now returns a `string` array instead of a space separated string #TINY-8455
 - Replaced 'Powered by Tiny' link text with logo #TINY-8371
 - Renamed the `getWhiteSpaceElements()` function to `getWhitespaceElements()` in the `Schema` API #TINY-8102
+- The default height of editor is changed from `200px` to `400px` #TINY-6860
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
