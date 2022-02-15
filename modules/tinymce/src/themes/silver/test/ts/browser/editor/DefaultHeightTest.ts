@@ -17,7 +17,7 @@ describe('browser.tinymce.themes.silver.editor.DefaultHeightTest', () => {
     McEditor.remove(editor);
   });
 
-  it('TINY-8443: Height option takes precedence', async () => {
+  it('TINY-8443: Height option takes precedence over the default', async () => {
     const editor = await McEditor.pFromSettings<Editor>({ ...baseSettings, height: 500 });
     assertEditorHeight(editor, 500);
     McEditor.remove(editor);
