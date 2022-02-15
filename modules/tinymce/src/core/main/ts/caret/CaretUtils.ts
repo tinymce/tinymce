@@ -77,9 +77,11 @@ const findNode = (node: Node, direction: number, predicateFn: (node: Node) => bo
 };
 
 const getEditingHost = (node: Node, rootNode: HTMLElement): HTMLElement => {
-  return PredicateFind.ancestor(SugarElement.fromDom(node), (node) => isContentEditableTrue(node.dom), (node) => node.dom === rootNode)
+  const isCETrue = (node: SugarElement<Node>): node is SugarElement<HTMLElement> => isContentEditableTrue(node.dom);
+  const isRoot = (node: SugarElement<Node>) => node.dom === rootNode;
+  return PredicateFind.ancestor(SugarElement.fromDom(node), isCETrue, isRoot)
     .map((elm) => elm.dom)
-    .getOr(rootNode) as HTMLElement;
+    .getOr(rootNode);
 };
 
 const getParentBlock = (node: Node, rootNode?: Node): Node | null => {
