@@ -168,9 +168,9 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
 
       // Scroll so the header is above the top of the window, but the bottom of the editor is in view
       const topOfEditor = SugarLocation.absolute(TinyDom.container(editor)).top;
-      Scroll.to(0, topOfEditor + 300);
+      Scroll.to(0, topOfEditor + 100);
       const notification2 = openNotification(editor, 'success', 'Message');
-      assertPosition('Partial editor view notification', notification2, 226, -2000);
+      assertPosition('Partial editor view notification', notification2, 226, -2100);
       notification2.close();
 
       // Scroll so the editor is above the top of the window
