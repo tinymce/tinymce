@@ -15,6 +15,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }',
     width: 800,
+    table_sizing_mode: 'fixed',
     setup: (editor: Editor) => {
       editor.on('ObjectResizeStart ObjectResized', (e) => {
         const counter = eventCounter.get();
@@ -28,9 +29,9 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const target = element as EventTarget;
     const rect = element.getBoundingClientRect();
     const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
-    editor.fire('mousedown', { target, clientX, clientY, button: 2 } as MouseEvent);
-    editor.fire('mouseup', { target, clientX, clientY, button: 2 } as MouseEvent);
-    editor.fire('contextmenu', { target, clientX, clientY, button: 2 } as PointerEvent);
+    editor.dispatch('mousedown', { target, clientX, clientY, button: 2 } as MouseEvent);
+    editor.dispatch('mouseup', { target, clientX, clientY, button: 2 } as MouseEvent);
+    editor.dispatch('contextmenu', { target, clientX, clientY, button: 2 } as PointerEvent);
   };
 
   const resetEventCounter = () => eventCounter.set({ });

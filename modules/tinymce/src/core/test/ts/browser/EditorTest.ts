@@ -406,16 +406,16 @@ describe('browser.tinymce.core.EditorTest', () => {
       clickCount++;
     });
 
-    editor.dom.fire(editor.getBody(), 'click');
+    editor.dom.dispatch(editor.getBody(), 'click');
     assert.equal(clickCount, 1, 'setMode');
 
     editor.mode.set('readonly');
     assert.isTrue(isDisabled('.tox-editor-container button:last-of-type'), 'setMode');
-    editor.dom.fire(editor.getBody(), 'click');
+    editor.dom.dispatch(editor.getBody(), 'click');
     assert.equal(clickCount, 1, 'setMode');
 
     editor.mode.set('design');
-    editor.dom.fire(editor.getBody(), 'click');
+    editor.dom.dispatch(editor.getBody(), 'click');
     assert.isFalse(isDisabled('.tox-editor-container button:last-of-type'), 'setMode');
     assert.equal(clickCount, 2, 'setMode');
   });
@@ -472,7 +472,7 @@ describe('browser.tinymce.core.EditorTest', () => {
   context('hasPlugin', () => {
     const checkWithoutManager = (title: string, plugins: string, plugin: string, expected: boolean) => {
       const editor = hook.editor();
-      editor.options.set('plugins', plugins);
+      editor.options.set('plugins', plugins.split(/[ ,]/));
       assert.equal(editor.hasPlugin(plugin), expected, title);
     };
 
@@ -482,7 +482,7 @@ describe('browser.tinymce.core.EditorTest', () => {
         PluginManager.add('ParticularPlugin', Fun.noop);
       }
 
-      editor.options.set('plugins', plugins);
+      editor.options.set('plugins', plugins.split(/[ ,]/));
       assert.equal(editor.hasPlugin(plugin, true), expected, title);
 
       if (addToManager) {

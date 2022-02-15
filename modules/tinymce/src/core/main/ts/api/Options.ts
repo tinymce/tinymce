@@ -431,8 +431,8 @@ const register = (editor: Editor) => {
   });
 
   registerOption('plugins', {
-    processor: 'string',
-    default: ''
+    processor: 'string[]',
+    default: []
   });
 
   registerOption('external_plugins', {
@@ -441,6 +441,15 @@ const register = (editor: Editor) => {
 
   registerOption('forced_plugins', {
     processor: 'string[]'
+  });
+
+  registerOption('model', {
+    processor: 'string',
+    default: editor.hasPlugin('rtc') ? 'plugin' : 'dom'
+  });
+
+  registerOption('model_url', {
+    processor: 'string'
   });
 
   registerOption('block_unsupported_drop', {
@@ -744,6 +753,11 @@ const register = (editor: Editor) => {
     default: []
   });
 
+  registerOption('table_tab_navigation', {
+    processor: 'boolean',
+    default: true
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -799,6 +813,8 @@ const getEventRoot = option('event_root');
 const getServiceMessage = option('service_message');
 const getTheme = option('theme');
 const getThemeUrl = option('theme_url');
+const getModel = option('model');
+const getModelUrl = option('model_url');
 const isInlineBoundariesEnabled = option('inline_boundaries');
 const getFormats = option('formats');
 const getPreviewStyles = option('preview_styles');
@@ -855,6 +871,8 @@ const isEncodingXml = (editor: Editor): boolean =>
 const getAllowedImageFileTypes = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('images_file_types'));
 
+const hasTableTabNavigation = option('table_tab_navigation');
+
 export {
   register,
 
@@ -898,12 +916,14 @@ export {
   getEventRoot,
   getServiceMessage,
   getTheme,
+  getModel,
   isInlineBoundariesEnabled,
   getFormats,
   getPreviewStyles,
   canFormatEmptyLines,
   getCustomUiSelector,
   getThemeUrl,
+  getModelUrl,
   isInline,
   hasHiddenInput,
   shouldPatchSubmit,
@@ -944,5 +964,6 @@ export {
   getTextPatterns,
   getNonEditableClass,
   getNonEditableRegExps,
-  getEditableClass
+  getEditableClass,
+  hasTableTabNavigation
 };

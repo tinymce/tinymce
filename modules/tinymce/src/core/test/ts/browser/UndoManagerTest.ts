@@ -96,10 +96,10 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     assert.isFalse(editor.undoManager.typing);
 
-    editor.dom.fire(editor.getBody(), 'keydown', { keyCode: 65 });
+    editor.dom.dispatch(editor.getBody(), 'keydown', { keyCode: 65 });
     assert.isTrue(editor.undoManager.typing);
 
-    editor.dom.fire(editor.getBody(), 'keydown', { keyCode: 13 });
+    editor.dom.dispatch(editor.getBody(), 'keydown', { keyCode: 13 });
     assert.isFalse(editor.undoManager.typing);
 
     const selectAllFlags: Record<string, any> = { keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false };
@@ -110,7 +110,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       selectAllFlags.ctrlKey = true;
     }
 
-    editor.dom.fire(editor.getBody(), 'keydown', selectAllFlags);
+    editor.dom.dispatch(editor.getBody(), 'keydown', selectAllFlags);
     assert.isFalse(editor.undoManager.typing);
   });
 
@@ -187,9 +187,9 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       altKey: false
     };
 
-    editor.dom.fire(editor.getBody(), 'keydown', evt);
-    editor.dom.fire(editor.getBody(), 'keypress', evt);
-    editor.dom.fire(editor.getBody(), 'keyup', evt);
+    editor.dom.dispatch(editor.getBody(), 'keydown', evt);
+    editor.dom.dispatch(editor.getBody(), 'keypress', evt);
+    editor.dom.dispatch(editor.getBody(), 'keyup', evt);
 
     assert.isFalse(added);
     assert.deepEqual(commands, [ 'mceFocus', 'Undo' ]);
@@ -377,7 +377,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     KeyUtils.type(editor, '\b');
 
     assert.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some text</p>');
-    editor.fire('blur');
+    editor.dispatch('blur');
     assert.equal(HtmlUtils.cleanHtml(lastLevel.content), '<p>some</p>');
 
     editor.execCommand('FormatBlock', false, 'h1');
@@ -593,5 +593,22 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       TinyAssertions.assertContent(editor, '<div contenteditable="false"><p>CEF</p></div><p>something</p><p>something else</p>');
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
+  });
+
+  it('TINY-6920: Do not fire change event at first typed character', () => {
+    const editor = hook.editor();
+    let changeEventCounter = 0;
+
+    const onChange = () => {
+      changeEventCounter++;
+    };
+
+    editor.resetContent('');
+
+    editor.on('change', onChange);
+    TinyContentActions.type(editor, 'A');
+    editor.off('change', onChange);
+
+    assert.equal(changeEventCounter, 0, 'No events should be detected');
   });
 });

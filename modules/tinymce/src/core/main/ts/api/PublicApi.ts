@@ -34,13 +34,13 @@ import Rect, { GeomRect } from './geom/Rect';
 import DomParser, { DomParserSettings } from './html/DomParser';
 import Entities from './html/Entities';
 import AstNode from './html/Node';
-import SaxParser, { SaxParserSettings } from './html/SaxParser';
 import Schema, { SchemaSettings } from './html/Schema';
 import HtmlSerializer, { HtmlSerializerSettings } from './html/Serializer';
 import Styles from './html/Styles';
 import Writer, { WriterSettings } from './html/Writer';
 import IconManager from './IconManager';
 import { EditorModeApi } from './Mode';
+import ModelManager, { Model } from './ModelManager';
 import NotificationManager, { NotificationApi, NotificationSpec } from './NotificationManager';
 import { EditorOptions, RawEditorOptions } from './OptionTypes';
 import PluginManager, { Plugin } from './PluginManager';
@@ -84,7 +84,6 @@ export {
   Entities,
   AstNode,
   Schema,
-  SaxParser,
   DomParser,
   Writer,
   HtmlSerializer,
@@ -117,6 +116,7 @@ export {
   Shortcuts,
   PluginManager,
   ThemeManager,
+  ModelManager,
   UndoManager,
   WindowManager,
   FakeClipboard,
@@ -131,12 +131,12 @@ export {
   Formats,
   NotificationApi,
   NotificationSpec,
-  SaxParserSettings,
   DomParserSettings,
   DomSerializerSettings,
   HtmlSerializerSettings,
   Plugin,
   SchemaSettings,
   Theme,
+  Model,
   WriterSettings
 };

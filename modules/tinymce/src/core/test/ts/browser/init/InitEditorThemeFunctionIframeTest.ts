@@ -19,7 +19,7 @@ describe('browser.tinymce.core.init.InitEditorThemeFunctionIframeTest', () => {
     },
     base_url: '/project/tinymce/js/tinymce',
     init_instance_callback: (editor) => {
-      editor.fire('SkinLoaded');
+      editor.dispatch('SkinLoaded');
     }
   }, []);
 

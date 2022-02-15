@@ -83,9 +83,9 @@ const settings = {
     makeSidebar(ed, 'sidebar1', 'green', 200);
   },
   plugins: [
-    'autosave advlist autolink link image lists charmap preview anchor pagebreak',
-    'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-    'save table directionality emoticons template importcss codesample help'
+    'autosave', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+    'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
+    'save', 'table', 'directionality', 'emoticons', 'template', 'importcss', 'codesample', 'help'
   ],
   // rtl_ui: true,
   add_unload_trigger: false,

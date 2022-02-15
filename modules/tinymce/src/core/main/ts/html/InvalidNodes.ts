@@ -31,7 +31,7 @@ const removeOrUnwrapInvalidNode = (node: AstNode, schema: Schema, originalNodePa
 const cleanInvalidNodes = (nodes: AstNode[], schema: Schema, onCreate: (newNode: AstNode) => void = Fun.noop): void => {
   const textBlockElements = schema.getTextBlockElements();
   const nonEmptyElements = schema.getNonEmptyElements();
-  const whitespaceElements = schema.getWhiteSpaceElements();
+  const whitespaceElements = schema.getWhitespaceElements();
   const nonSplittableElements = Tools.makeMap('tr,td,th,tbody,thead,tfoot,table');
 
   const fixed = new Set<AstNode>();

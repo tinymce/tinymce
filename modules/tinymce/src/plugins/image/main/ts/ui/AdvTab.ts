@@ -14,11 +14,6 @@ const makeTab = (_info: ImageDialogInfo): Dialog.TabSpec => ({
   name: 'advanced',
   items: [
     {
-      type: 'input',
-      label: 'Style',
-      name: 'style'
-    },
-    {
       type: 'grid',
       columns: 2,
       items: [

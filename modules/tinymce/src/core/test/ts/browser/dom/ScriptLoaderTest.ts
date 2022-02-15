@@ -1,23 +1,35 @@
-import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
+import { Arr, Global } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 
 describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   const testScript = '/project/tinymce/src/core/test/assets/js/test.js';
-  let loadedScripts: string[] = [];
+  const nestedScript = '/project/tinymce/src/core/test/assets/js/nested.js';
+  const invalidScript = '/project/tinymce/src/core/test/assets/js/invalid.js';
   let loadedCount = 0;
 
+  before(() => {
+    Global.tinymce_ = { ScriptLoader: ScriptLoader.ScriptLoader };
+  });
+
+  after(() => {
+    delete Global.tinymce_;
+  });
+
+  afterEach(() => {
+    Arr.each([ testScript, nestedScript, invalidScript ], (url) => ScriptLoader.ScriptLoader.remove(url));
+    loadedCount = 0;
+  });
+
   const pLoadScript = (url: string): Promise<void> => {
-    loadedScripts.push(url);
     return ScriptLoader.ScriptLoader.loadScript(url).then(() => {
       loadedCount++;
     });
   };
 
   const pLoadScripts = (urls: string[]): Promise<void> => {
-    loadedScripts.push(...urls);
     const scriptCount = urls.length;
     return ScriptLoader.ScriptLoader.loadScripts(urls).then(() => {
       loadedCount += scriptCount;
@@ -25,7 +37,6 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   };
 
   const addToQueue = (url: string): void => {
-    loadedScripts.push(url);
     ScriptLoader.ScriptLoader.add(url).then(() => loadedCount++);
   };
 
@@ -36,12 +47,6 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     assert.equal(loadedCount, count, 'Loaded script count');
   };
 
-  afterEach(() => {
-    Arr.each(loadedScripts, (url) => ScriptLoader.ScriptLoader.remove(url));
-    loadedCount = 0;
-    loadedScripts = [];
-  });
-
   it('TBA: Load a single script', async () => {
     await pLoadScript(testScript);
     assertQueueLoadedCount(1);
@@ -50,6 +55,15 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   it('TBA: Load scripts', async () => {
     await pLoadScripts([ testScript ]);
     assertQueueLoadedCount(1);
+  });
+
+  it('TBA: Load invalid scripts', async () => {
+    try {
+      await pLoadScripts([ invalidScript ]);
+    } catch (failedUrls) {
+      assert.deepEqual(failedUrls, [ invalidScript ]);
+    }
+    assertQueueLoadedCount(0);
   });
 
   it('TBA: Load scripts via a queue', async () => {
@@ -87,5 +101,13 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     await Promise.all(loadQueuePromises);
     assertQueueLoadedCount(2);
     assert.deepEqual(loadOrder, [ 'first', 'second' ]);
+  });
+
+  it('TINY-8480: Loads additional scripts added to the queue while loading', async () => {
+    addToQueue(nestedScript);
+    await pLoadQueue();
+    assertQueueLoadedCount(1);
+    assert.isTrue(ScriptLoader.ScriptLoader.isDone(testScript), 'test.js should have been loaded');
+    assert.isTrue(ScriptLoader.ScriptLoader.isDone(nestedScript), 'nested.js should have been loaded');
   });
 });

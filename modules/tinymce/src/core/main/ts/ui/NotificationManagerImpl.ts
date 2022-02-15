@@ -13,7 +13,6 @@ export const NotificationManagerImpl = () => {
   return {
     open: unimplemented,
     close: unimplemented,
-    reposition: unimplemented,
     getArgs: unimplemented
   };
 };

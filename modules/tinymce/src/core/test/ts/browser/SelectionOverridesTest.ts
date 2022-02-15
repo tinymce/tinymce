@@ -47,7 +47,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
   it('click on link in cE=false', () => {
     const editor = hook.editor();
     editor.setContent('<p contentEditable="false"><a href="#"><strong>link</strong></a></p>');
-    const evt = editor.fire('click', { target: editor.dom.select('strong')[0] } as any);
+    const evt = editor.dispatch('click', { target: editor.dom.select('strong')[0] } as any);
 
     assert.equal(evt.isDefaultPrevented(), true);
   });
@@ -136,7 +136,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     editor.getBody().contentEditable = 'false';
 
     const rect = editor.dom.getRect(body);
-    editor.fire('mousedown', {
+    editor.dispatch('mousedown', {
       target: body as EventTarget,
       clientX: rect.x,
       clientY: rect.y

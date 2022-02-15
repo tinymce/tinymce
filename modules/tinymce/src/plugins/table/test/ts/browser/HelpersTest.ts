@@ -211,7 +211,6 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
 
   it('TBA: extractDataFromTableElement 3 - border width from border-width style', () => {
     const editor = hook.editor();
-    editor.options.set('table_style_by_css', true);
     editor.setContent(
       '<table class="foo" style="border-width: 5px" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
     );
@@ -222,7 +221,6 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
 
   it('TBA: extractDataFromTableElement 4 - border width from border style', () => {
     const editor = hook.editor();
-    editor.options.set('table_style_by_css', true);
     editor.setContent(
       '<table class="foo" style="border: 5px solid red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
     );
@@ -240,6 +238,7 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.border, '5', 'Extracts border');
+    editor.options.unset('table_style_by_css');
   });
 
   it('TBA: extractDataFromTableElement 6 - border width from children', () => {
@@ -251,11 +250,11 @@ describe('browser.tinymce.plugins.table.HelpersTest', () => {
     const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
     const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
     assert.equal(tableData.border, '5px', 'Extracts border-width');
+    editor.options.unset('table_style_by_css');
   });
 
   it('TBA: extractDataFromTableElement 7 - border width, style and color from collapsed style', () => {
     const editor = hook.editor();
-    editor.options.set('table_style_by_css', true);
     editor.setContent(
       '<table class="foo" style="border: 5px double red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
     );

@@ -10,6 +10,7 @@ import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/
 import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
+import * as FilterNode from '../../html/FilterNode';
 import { cleanInvalidNodes } from '../../html/InvalidNodes';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
@@ -85,12 +86,6 @@ interface DomParser {
   parse: (html: string, args?: ParserArgs) => AstNode;
 }
 
-// For internal parser use only - a summary of which nodes have been matched by which node/attribute filters
-interface FilterMatches {
-  readonly nodes: Record<string, AstNode[]>;
-  readonly attributes: Record<string, AstNode[]>;
-}
-
 type WalkerCallback = (node: AstNode) => void;
 
 const basePurifyConfig: Config = {
@@ -105,6 +100,7 @@ const basePurifyConfig: Config = {
 
 // A list of attributes that should be filtered further based on the parser settings
 const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
+const internalElementAttr = 'data-mce-type';
 
 const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config => {
   const config = { ...basePurifyConfig };
@@ -130,6 +126,11 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
   purify.addHook('uponSanitizeElement', (ele, evt) => {
+    // Pad conditional comments if they aren't allowed
+    if (ele.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(ele.nodeValue)) {
+      ele.nodeValue = ' ' + ele.nodeValue;
+    }
+
     // Just leave non-elements such as text and comments up to dompurify
     const tagName = evt.tagName;
     if (ele.nodeType !== NodeTypes.ELEMENT || tagName === 'body') {
@@ -139,17 +140,8 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     // Construct the sugar element wrapper
     const element = SugarElement.fromDom(ele);
 
-    // Determine if the schema allows the element and either add it or remove it
-    const rule = schema.getElementRule(tagName.toLowerCase());
-    if (validate && !rule) {
-      Remove.unwrap(element);
-      return;
-    } else {
-      evt.allowedTags[tagName] = true;
-    }
-
     // Determine if we're dealing with an internal attribute
-    const isInternalElement = Attribute.has(element, 'data-mce-type');
+    const isInternalElement = Attribute.has(element, internalElementAttr);
 
     // Cleanup bogus elements
     const bogus = Attribute.get(element, 'data-mce-bogus');
@@ -160,6 +152,15 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
         Remove.unwrap(element);
       }
       return;
+    }
+
+    // Determine if the schema allows the element and either add it or remove it
+    const rule = schema.getElementRule(tagName.toLowerCase());
+    if (validate && !rule) {
+      Remove.unwrap(element);
+      return;
+    } else {
+      evt.allowedTags[tagName] = true;
     }
 
     // Validate the element using the attribute rules
@@ -199,7 +200,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
     const { attrName, attrValue } = evt;
 
     evt.keepAttr = !validate || schema.isValid(tagName, attrName) || Strings.startsWith(attrName, 'data-') || Strings.startsWith(attrName, 'aria-');
-    if (!settings.allow_script_urls && attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) {
+    if (attrName in filteredUrlAttrs && URI.isInvalidUri(settings, attrValue, tagName)) {
       evt.keepAttr = false;
     }
 
@@ -214,6 +215,9 @@ const setupPurify = (settings: DomParserSettings, schema: Schema): DOMPurifyI =>
       if (settings.allow_svg_data_urls && Strings.startsWith(attrValue, 'data:image/svg+xml')) {
         evt.forceKeepAttr = true;
       }
+    // For internal elements always keep the attribute if the attribute name is id, class or style
+    } else if (ele.hasAttribute(internalElementAttr) && (attrName === 'id' || attrName === 'class' || attrName === 'style')) {
+      evt.forceKeepAttr = true;
     }
   });
 
@@ -279,7 +283,7 @@ const walkTree = (root: AstNode, preprocessors: WalkerCallback[], postprocessors
 const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSettings, args: ParserArgs): [WalkerCallback, WalkerCallback] => {
   const validate = settings.validate;
   const nonEmptyElements = schema.getNonEmptyElements();
-  const whitespaceElements = schema.getWhiteSpaceElements();
+  const whitespaceElements = schema.getWhitespaceElements();
   const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
@@ -475,86 +479,6 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
   const getAttributeFilters = (): ParserFilter[] => [].concat(attributeFilters);
 
-  // Test a single node against the current filters, and add it to any match lists if necessary
-  const filterNode = (node: AstNode, matches: FilterMatches): void => {
-    const name = node.name;
-    // Run element filters
-    if (name in nodeFilters) {
-      const list = matches.nodes[name];
-
-      if (list) {
-        list.push(node);
-      } else {
-        matches.nodes[name] = [ node ];
-      }
-    }
-
-    // Run attribute filters
-    if (node.attributes) {
-      let i = attributeFilters.length;
-      while (i--) {
-        const attrName = attributeFilters[i].name;
-
-        if (attrName in node.attributes.map) {
-          const list = matches.attributes[attrName];
-
-          if (list) {
-            list.push(node);
-          } else {
-            matches.attributes[attrName] = [ node ];
-          }
-        }
-      }
-    }
-  };
-
-  // Run all necessary node filters and attribute filters, based on a match set
-  const runFilters = (matches: FilterMatches, args: ParserArgs): void => {
-    // Run node filters
-    for (const name in matches.nodes) {
-      if (Obj.has(matches.nodes, name)) {
-        const list = nodeFilters[name];
-        const nodes = matches.nodes[name];
-
-        // Remove already removed children
-        let fi = nodes.length;
-        while (fi--) {
-          if (!nodes[fi].parent) {
-            nodes.splice(fi, 1);
-          }
-        }
-
-        const l = list.length;
-        for (let i = 0; i < l; i++) {
-          list[i](nodes, name, args);
-        }
-      }
-    }
-
-    // Run attribute filters
-    const l = attributeFilters.length;
-    for (let i = 0; i < l; i++) {
-      const list = attributeFilters[i];
-
-      if (list.name in matches.attributes) {
-        const nodes = matches.attributes[list.name];
-
-        // Remove already removed children
-        let fi = nodes.length;
-        while (fi--) {
-          if (!nodes[fi].parent) {
-            nodes.splice(fi, 1);
-          }
-        }
-
-        const callbacks = list.callbacks;
-        for (let fi = 0, fl = callbacks.length; fi < fl; fi++) {
-          callbacks[fi](nodes, list.name, args);
-        }
-      }
-    }
-  };
-
   const findInvalidChildren = (node: AstNode, invalidChildren: AstNode[]): void => {
     // Check if the node is a valid child of the parent node. If the child is
     // unknown we don't collect it since it's probably a custom element
@@ -596,7 +520,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       const next = node.next;
 
       if (node.type === 3 || (node.type === 1 && node.name !== 'p' &&
-        !blockElements[node.name] && !node.attr('data-mce-type'))) {
+        !blockElements[node.name] && !node.attr(internalElementAttr))) {
         if (!rootBlockNode) {
           // Create a new root block element
           rootBlockNode = new AstNode(rootBlockName, 1);
@@ -646,8 +570,9 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const invalidFinder = validate ? (node: AstNode) => findInvalidChildren(node, invalidChildren) : Fun.noop;
 
     // Set up attribute and node matching
-    const matches: FilterMatches = { nodes: {}, attributes: {}};
-    const matchFinder = (node: AstNode) => filterNode(node, matches);
+    const nodeFilters = getNodeFilters();
+    const matches: FilterNode.FilterMatches = { nodes: {}, attributes: {}};
+    const matchFinder = (node: AstNode) => FilterNode.matchNode(nodeFilters, attributeFilters, node, matches);
 
     // Walk the dom, apply all of the above things
     walkTree(rootNode, [ whitespacePre, matchFinder ], [ whitespacePost, invalidFinder ]);
@@ -674,7 +599,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
     // Run filters only when the contents is valid
     if (!args.invalid) {
-      runFilters(matches, args);
+      FilterNode.runFilters(matches, args);
     }
 
     return rootNode;
@@ -690,7 +615,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   ParserFilters.register(exports, defaultedSettings);
-  LegacyFilter.register(exports, defaultedSettings);
+  LegacyFilter.register(exports, defaultedSettings, schema);
 
   return exports;
 };

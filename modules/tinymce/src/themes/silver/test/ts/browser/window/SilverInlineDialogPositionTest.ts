@@ -85,8 +85,8 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
       // Enlarge the editor to 2000px
       Height.set(TinyDom.container(editor), 2000);
-      editor.fire('ResizeEditor');
-      await pAssertPos(dialog, 'absolute', 158, -1906);
+      editor.dispatch('ResizeEditor');
+      await pAssertPos(dialog, 'absolute', 158, -1910);
 
       // Scroll to 1500px and assert docked
       Scroll.to(0, 1500);
@@ -104,7 +104,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPositionTest', 
 
       // Enlarge the editor to 2000px
       Height.set(TinyDom.container(editor), 2000);
-      editor.fire('ResizeEditor');
+      editor.dispatch('ResizeEditor');
 
       // Scroll to 1500px, open the dialog and assert docked
       Scroll.to(0, 1500);

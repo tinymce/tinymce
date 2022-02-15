@@ -4,6 +4,15 @@ import { Editor } from '../../alien/EditorTypes';
 import { createDomSelection } from '../../selection/SelectionTools';
 import { TinyDom } from '../TinyDom';
 
+const setRawSelection = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number): void => {
+  const rng = createDomSelection(TinyDom.body(editor), startPath, soffset, finishPath, foffset);
+  const sel = editor.selection.getSel();
+  if (sel) {
+    sel.removeAllRanges();
+    sel.addRange(rng);
+  }
+};
+
 const setSelection = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number, fireNodeChange: boolean = true): void => {
   const rng = createDomSelection(TinyDom.body(editor), startPath, soffset, finishPath, foffset);
   editor.selection.setRng(rng);
@@ -31,5 +40,6 @@ export {
   select,
   setCursor,
   setSelection,
+  setRawSelection,
   setSelectionFrom
 };

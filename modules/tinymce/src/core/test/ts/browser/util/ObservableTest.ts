@@ -43,22 +43,22 @@ describe('browser.tinymce.core.util.ObservableTest', () => {
       data += 'c';
     });
 
-    inst2.fire('click');
+    inst2.dispatch('click');
     assert.strictEqual(data, 'cab');
 
     inst2.on('click', (e) => {
       e.stopPropagation();
     });
 
-    inst2.fire('click');
+    inst2.dispatch('click');
     assert.strictEqual(data, 'cabc');
 
     inst1.on('remove', () => {
       data += 'r';
     });
     inst1.removed = true;
-    inst1.fire('click');
-    inst1.fire('remove');
+    inst1.dispatch('click');
+    inst1.dispatch('remove');
     assert.strictEqual(data, 'cabcr');
   });
 });

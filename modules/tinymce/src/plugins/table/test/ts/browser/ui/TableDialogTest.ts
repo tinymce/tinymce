@@ -64,14 +64,13 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       return s.element('table', {
         attrs: {
           border: str.is('1'),
-          cellpadding: str.is('5'),
-          cellspacing: str.is('5')
         },
         styles: {
           'height': str.is('500px'),
           'width': str.is('500px'),
           'margin-left': str.is('0px'),
-          'margin-right': str.is('auto')
+          'margin-right': str.is('auto'),
+          'border-spacing': str.is('5px')
         },
         children: [
           s.element('caption', { }),
@@ -80,6 +79,10 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
               s.element('tr', {
                 children: [
                   s.element('td', {
+                    styles: {
+                      'border-width': str.is('1px'),
+                      'padding': str.is('5px')
+                    },
                     children: [
                       s.text(str.is('X'))
                     ]
@@ -95,9 +98,9 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     const fullStandardData = {
       width: '500px',
       height: '500px',
-      cellspacing: '5',
-      cellpadding: '5',
-      border: '1',
+      cellspacing: '5px',
+      cellpadding: '5px',
+      border: '1px',
       caption: true,
       align: 'left'
     };
@@ -212,7 +215,6 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       { title: 'Cat', value: 'cat' }
     ]);
     editor.options.set('table_advtab', true);
-    editor.options.set('table_style_by_css', true);
     setTable(editor);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -225,7 +227,9 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     TableTestUtils.setDialogValues(emptyAllOnData, true, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
     TableTestUtils.assertElementStructure(editor, 'table', htmlEmptyTable);
+
     editor.options.unset('table_class_list');
+    editor.options.unset('table_advtab');
   });
 
   it('TBA: Open dialog via execCommand', async () => {
@@ -253,12 +257,13 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     const editor = hook.editor();
     editor.options.set('table_advtab', true);
-    editor.options.set('table_style_by_css', true);
     editor.setContent(baseHtml);
     setCursor(editor);
     editor.execCommand('mceTableProps');
     TableTestUtils.assertDialogValues(baseData, true, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
+
+    editor.options.unset('table_advtab');
   });
 
   it('TBA: Test cancel changes nothing and save does', async () => {
@@ -310,7 +315,6 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       { title: 'Cat', value: 'cat' }
     ]);
     editor.options.set('table_advtab', true);
-    editor.options.set('table_style_by_css', true);
     editor.setContent(baseHtml);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
@@ -327,6 +331,9 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(newData, true, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
+
+    editor.options.unset('table_class_list');
+    editor.options.unset('table_advtab');
   });
 
   it('TINY-6558: float style should not be recognised as a valid table alignment and is cleared when setting an alignment', async () => {

@@ -48,5 +48,5 @@ export const addVisualInternal = (editor: Editor, elm?: HTMLElement) => {
     }
   });
 
-  editor.fire('VisualAid', { element: elm, hasVisual: editor.hasVisual });
+  editor.dispatch('VisualAid', { element: elm, hasVisual: editor.hasVisual });
 };

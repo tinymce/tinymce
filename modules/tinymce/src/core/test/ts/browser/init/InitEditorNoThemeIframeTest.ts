@@ -10,7 +10,7 @@ describe('browser.tinymce.core.init.InitEditorNoThemeIframeTest', () => {
     theme: false,
     base_url: '/project/tinymce/js/tinymce',
     init_instance_callback: (editor) => {
-      editor.fire('SkinLoaded');
+      editor.dispatch('SkinLoaded');
     }
   }, []);
 

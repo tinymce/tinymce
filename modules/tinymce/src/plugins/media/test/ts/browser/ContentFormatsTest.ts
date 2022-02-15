@@ -12,6 +12,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     media_live_embeds: false,
     document_base_url: '/tinymce/tinymce/trunk/tests/',
     extended_valid_elements: 'script[src|type]',
+    allow_conditional_comments: true
   }, [ Plugin ]);
 
   it('TBA: Object retained as is', () => {
@@ -106,7 +107,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     const placeholderElm = editor.getBody().firstChild.firstChild as HTMLImageElement;
     placeholderElm.width = 100;
     placeholderElm.height = 200;
-    editor.fire('ObjectResized', { target: placeholderElm, width: placeholderElm.width, height: placeholderElm.height, origin: 'corner-se' });
+    editor.dispatch('ObjectResized', { target: placeholderElm, width: placeholderElm.width, height: placeholderElm.height, origin: 'corner-se' });
     editor.options.set('media_filter_html', false);
 
     TinyAssertions.assertContent(editor,

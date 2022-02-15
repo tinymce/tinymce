@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
+import ModelManager from '../api/ModelManager';
 import * as Options from '../api/Options';
 import { ThemeInitFunc } from '../api/OptionTypes';
 import PluginManager from '../api/PluginManager';
@@ -56,7 +57,7 @@ const trimLegacyPrefix = (name: string) => {
 const initPlugins = (editor: Editor) => {
   const initializedPlugins = [];
 
-  Tools.each(Options.getPlugins(editor).split(/[ ,]/), (name) => {
+  Arr.each(Options.getPlugins(editor), (name) => {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
   });
 };
@@ -92,6 +93,12 @@ const initTheme = (editor: Editor) => {
     // Theme set to false or null doesn't produce a theme api
     editor.theme = {};
   }
+};
+
+const initModel = (editor: Editor) => {
+  const model = Options.getModel(editor);
+  const Model = ModelManager.get(model);
+  editor.model = Model(editor, ModelManager.urls[model]);
 };
 
 const renderFromLoadedTheme = (editor: Editor) => {
@@ -167,10 +174,11 @@ const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
 };
 
 const init = (editor: Editor) => {
-  editor.fire('ScriptsLoaded');
+  editor.dispatch('ScriptsLoaded');
 
   initIcons(editor);
   initTheme(editor);
+  initModel(editor);
   initPlugins(editor);
   const renderInfo = renderThemeUi(editor);
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));

@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import DomParser from 'tinymce/core/api/html/DomParser';
 import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 import * as Options from '../api/Options';
+import { Parser } from './Parser';
 
 declare let escape: any;
 
@@ -49,7 +49,7 @@ const setDimensions = (node: AstNode, previewNode: AstNode, styles: Record<strin
 };
 
 const appendNodeContent = (editor: Editor, nodeName: string, previewNode: AstNode, html: string): void => {
-  const newNode = DomParser({ forced_root_block: false, validate: false }, editor.schema).parse(html, { context: nodeName });
+  const newNode = Parser(editor.schema).parse(html, { context: nodeName });
   while (newNode.firstChild) {
     previewNode.append(newNode.firstChild);
   }
@@ -124,7 +124,7 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
 };
 
 const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targetNode: AstNode): void => {
-  // Prefix all attributes except width, height and style since we
+  // Prefix all attributes except internal (data-mce-*), width, height and style since we
   // will add these to the placeholder
   const attribs = sourceNode.attributes;
   let ai = attribs.length;
@@ -132,7 +132,7 @@ const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targe
     const attrName = attribs[ai].name;
     let attrValue = attribs[ai].value;
 
-    if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style') {
+    if (attrName !== 'width' && attrName !== 'height' && attrName !== 'style' && !Strings.startsWith(attrName, 'data-mce-')) {
       if (attrName === 'data' || attrName === 'src') {
         attrValue = editor.convertURL(attrValue, attrName);
       }

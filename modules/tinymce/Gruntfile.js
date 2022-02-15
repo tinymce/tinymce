@@ -20,6 +20,10 @@ let themes = [
   'silver'
 ];
 
+let models = [
+  'dom',
+];
+
 let oxideUiSkinMap = {
   'dark': 'oxide-dark',
   'default': 'oxide',
@@ -156,8 +160,7 @@ module.exports = function (grunt) {
               swag.nodeResolve({
                 basedir: __dirname,
                 prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core',
-                  'tinymce/ui': 'lib/ui/main/ts'
+                  'tinymce/core': 'lib/globals/tinymce/core'
                 }, [
                   [`tinymce/themes/${name}/resources`, `src/themes/${name}/main/resources`],
                   [`tinymce/themes/${name}`, `lib/themes/${name}/main/ts`]
@@ -174,6 +177,37 @@ module.exports = function (grunt) {
             {
               src: `lib/themes/${name}/main/ts/Main.js`,
               dest: `js/tinymce/themes/${name}/theme.js`
+            }
+          ]
+        };
+      }),
+      gruntUtils.generate(models, 'model', (name) => {
+        return {
+          options: {
+            treeshake: true,
+            format: 'iife',
+            onwarn: swag.onwarn,
+            plugins: [
+              FilesAsStrings,
+              swag.nodeResolve({
+                basedir: __dirname,
+                prefixes: gruntUtils.prefixes({
+                  'tinymce/core': 'lib/globals/tinymce/core'
+                }, [
+                  [`tinymce/models/${name}`, `lib/models/${name}/main/ts`]
+                ]),
+                mappers: [
+                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
+                  swag.mappers.invalidDir('./lib/core/main/ts')
+                ]
+              }),
+              swag.remapImports()
+            ]
+          },
+          files:[
+            {
+              src: `lib/models/${name}/main/ts/Main.js`,
+              dest: `js/tinymce/models/${name}/model.js`
             }
           ]
         };
@@ -237,6 +271,11 @@ module.exports = function (grunt) {
         return {
           files: [ { src: `js/tinymce/themes/${name}/theme.js`, dest: `js/tinymce/themes/${name}/theme.min.js` } ]
         };
+      }),
+      gruntUtils.generate(models, 'model', (name) => {
+        return {
+          files: [ { src: `js/tinymce/models/${name}/model.js`, dest: `js/tinymce/models/${name}/model.min.js` } ]
+        };
       })
     ),
 
@@ -249,19 +288,21 @@ module.exports = function (grunt) {
       {themes: () => {
         gruntWebPack.allThemeDemos(themes);
       }},
+      {models: () => gruntWebPack.allModelDemos(models)},
       gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
-      gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) )
+      gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) ),
+      gruntUtils.generate(models, 'model', (name) => () => gruntWebPack.createModel(name) )
     ),
 
     'webpack-dev-server': {
       options: {
-        webpack: gruntWebPack.all(plugins, themes),
+        webpack: gruntWebPack.all(plugins, themes, models),
         publicPath: '/',
         inline: false,
         port: grunt.option('webpack-port') !== undefined ? grunt.option('webpack-port') : 3000,
         host: '0.0.0.0',
         disableHostCheck: true,
-        before: app => gruntWebPack.generateDemoIndex(grunt, app, plugins, themes)
+        before: app => gruntWebPack.generateDemoIndex(grunt, app, plugins, themes, models)
       },
       start: { }
     },
@@ -298,6 +339,15 @@ module.exports = function (grunt) {
             `js/tinymce/themes/${name}/theme.js`
           ],
           dest: `js/tinymce/themes/${name}/theme.js`
+        };
+      }),
+      gruntUtils.generate(models, 'model', function (name) {
+        return {
+          src: [
+            'src/core/text/license-header.js',
+            `js/tinymce/models/${name}/model.js`
+          ],
+          dest: `js/tinymce/models/${name}/model.js`
         };
       })
     ),
@@ -381,6 +431,7 @@ module.exports = function (grunt) {
           excludes: [
             'js/**/plugin.js',
             'js/**/theme.js',
+            'js/**/model.js',
             'js/**/icons.js',
             'js/**/*.map',
             'js/tinymce/tinymce.full.min.js',
@@ -403,6 +454,7 @@ module.exports = function (grunt) {
           'js/tinymce/skins/**/*.woff',
           'js/tinymce/icons',
           'js/tinymce/themes',
+          'js/tinymce/models',
           'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
           'js/tinymce/license.txt',
@@ -510,6 +562,7 @@ module.exports = function (grunt) {
                 'js/tinymce/tinymce.d.ts',
                 'js/tinymce/tinymce.min.js',
                 'js/tinymce/themes/*/theme.min.js',
+                'js/tinymce/models/*/model.min.js',
                 'js/tinymce/plugins/*/plugin.min.js',
                 '!js/tinymce/plugins/example/plugin.min.js',
                 '!js/tinymce/plugins/example_dependency/plugin.min.js'
@@ -529,6 +582,7 @@ module.exports = function (grunt) {
           'js/tinymce/skins',
           'js/tinymce/icons',
           'js/tinymce/themes',
+          'js/tinymce/models',
           'js/tinymce/license.txt'
         ]
       },
@@ -607,12 +661,14 @@ module.exports = function (grunt) {
                     'tinymce.js',
                     'plugins/*/plugin.js',
                     'themes/*/theme.js',
-                    'themes/*/icons.js',
+                    'models/*/model.js',
+                    'icons/*/icons.js',
                   ],
                   'files': [
                     'tinymce.min.js',
                     'plugins/*/plugin.min.js',
                     'themes/*/theme.min.js',
+                    'models/*/model.min.js',
                     'skins/**',
                     'icons/*/icons.min.js'
                   ]
@@ -637,6 +693,11 @@ module.exports = function (grunt) {
             );
             zipUtils.addIndexFiles(
               zip,
+              getDirs('js/tinymce/models'),
+              zipUtils.generateIndex('models', 'model')
+            );
+            zipUtils.addIndexFiles(
+              zip,
               getDirs('js/tinymce/icons'),
               zipUtils.generateIndex('icons', 'icons')
             );
@@ -653,6 +714,7 @@ module.exports = function (grunt) {
           'js/tinymce/icons',
           'js/tinymce/plugins',
           'js/tinymce/themes',
+          'js/tinymce/models',
           'js/tinymce/tinymce.js',
           'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
@@ -701,6 +763,7 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/langs', dest: '/content/scripts/tinymce/langs' },
           { src: 'js/tinymce/plugins', dest: '/content/scripts/tinymce/plugins' },
           { src: 'js/tinymce/themes', dest: '/content/scripts/tinymce/themes' },
+          { src: 'js/tinymce/models', dest: '/content/scripts/tinymce/models' },
           { src: 'js/tinymce/skins', dest: '/content/scripts/tinymce/skins' },
           { src: 'js/tinymce/icons', dest: '/content/scripts/tinymce/icons' },
           { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
@@ -715,10 +778,12 @@ module.exports = function (grunt) {
       minified: {
         options: {
           themesDir: 'js/tinymce/themes',
+          modelsDir: 'js/tinymce/models',
           pluginsDir: 'js/tinymce/plugins',
           iconsDir: 'js/tinymce/icons',
           pluginFileName: 'plugin.min.js',
           themeFileName: 'theme.min.js',
+          modelFileName: 'model.min.js',
           iconsFileName: 'icons.min.js',
           outputPath: 'js/tinymce/tinymce.full.min.js'
         },
@@ -731,10 +796,12 @@ module.exports = function (grunt) {
       source: {
         options: {
           themesDir: 'js/tinymce/themes',
+          modelsDir: 'js/tinymce/models',
           pluginsDir: 'js/tinymce/plugins',
           iconsDir: 'js/tinymce/icons',
           pluginFileName: 'plugin.js',
           themeFileName: 'theme.js',
+          modelFileName: 'model.js',
           iconsFileName: 'icons.js',
           outputPath: 'js/tinymce/tinymce.full.js'
         },

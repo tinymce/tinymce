@@ -8,14 +8,14 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     const dispatcher = new EventDispatcher();
     let args: EditorEvent<any>;
 
-    args = dispatcher.fire('click', { test: 1 });
+    args = dispatcher.dispatch('click', { test: 1 });
     assert.equal(args.test, 1);
     assert.isFalse(args.isDefaultPrevented());
     assert.isFalse(args.isPropagationStopped());
     assert.isFalse(args.isImmediatePropagationStopped());
     assert.equal(args.target, dispatcher);
 
-    args = dispatcher.fire('click');
+    args = dispatcher.dispatch('click');
     assert.isFalse(args.isDefaultPrevented());
     assert.isFalse(args.isPropagationStopped());
     assert.isFalse(args.isImmediatePropagationStopped());
@@ -32,7 +32,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       data += 'b';
     });
 
-    dispatcher.fire('click', { test: 1 });
+    dispatcher.dispatch('click', { test: 1 });
     assert.equal(data, 'ab');
   });
 
@@ -47,7 +47,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       data += 'b';
     });
 
-    dispatcher.fire('click', { test: 1 });
+    dispatcher.dispatch('click', { test: 1 });
     assert.equal(data, 'a');
   });
 
@@ -62,10 +62,10 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       data += 'b';
     }), dispatcher);
 
-    dispatcher.fire('click');
+    dispatcher.dispatch('click');
     assert.equal(data, 'ab');
 
-    dispatcher.fire('keydown');
+    dispatcher.dispatch('keydown');
     assert.equal(data, 'abb');
   });
 
@@ -80,7 +80,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       data += 'b';
     }, true), dispatcher);
 
-    dispatcher.fire('click');
+    dispatcher.dispatch('click');
     assert.equal(data, 'ba');
   });
 
@@ -98,10 +98,10 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       data += 'c';
     }), dispatcher);
 
-    dispatcher.fire('click');
+    dispatcher.dispatch('click');
     assert.equal(data, 'abc');
 
-    dispatcher.fire('click');
+    dispatcher.dispatch('click');
     assert.equal(data, 'abcac');
   });
 
@@ -119,10 +119,10 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       data += 'c';
     }), dispatcher);
 
-    dispatcher.fire('click');
+    dispatcher.dispatch('click');
     assert.equal(data, 'bac');
 
-    dispatcher.fire('click');
+    dispatcher.dispatch('click');
     assert.equal(data, 'bacac');
   });
 
@@ -140,7 +140,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     dispatcher.once('click', handler);
     dispatcher.off('click', handler);
 
-    dispatcher.fire('click');
+    dispatcher.dispatch('click');
     assert.equal(data, 'a');
   });
 
@@ -155,14 +155,14 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       data += 'b';
     });
 
-    dispatcher.fire('click');
+    dispatcher.dispatch('click');
     assert.equal(data, 'a');
 
-    dispatcher.fire('keydown');
+    dispatcher.dispatch('keydown');
     assert.equal(data, 'ab');
 
-    dispatcher.fire('click');
-    dispatcher.fire('keydown');
+    dispatcher.dispatch('click');
+    dispatcher.dispatch('keydown');
 
     assert.equal(data, 'ab');
   });
@@ -188,8 +188,8 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     dispatcher.off();
 
     data = '';
-    dispatcher.fire('click');
-    dispatcher.fire('keydown');
+    dispatcher.dispatch('click');
+    dispatcher.dispatch('keydown');
     assert.equal(data, '');
   });
 
@@ -214,8 +214,8 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     dispatcher.off('click');
 
     data = '';
-    dispatcher.fire('click');
-    dispatcher.fire('keydown');
+    dispatcher.dispatch('click');
+    dispatcher.dispatch('keydown');
     assert.equal(data, 'c');
   });
 
@@ -235,7 +235,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     dispatcher.off('click', listenerB);
 
     data = '';
-    dispatcher.fire('click');
+    dispatcher.dispatch('click');
     assert.equal(data, 'a');
   });
 
@@ -248,7 +248,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     dispatcher.on('click', function () {
       // eslint-disable-next-line consistent-this
       lastScope = this;
-    }).fire('click');
+    }).dispatch('click');
     assert.equal(dispatcher, lastScope);
 
     const scope = { test: 1 };
@@ -257,7 +257,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       // eslint-disable-next-line consistent-this
       lastScope = this;
       lastEvent = e;
-    }).fire('click');
+    }).dispatch('click');
     assert.equal(scope, lastScope);
     assert.equal(lastEvent.target, lastScope);
   });
@@ -271,7 +271,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
       }
     });
 
-    const args = dispatcher.fire('click');
+    const args = dispatcher.dispatch('click');
     assert.strictEqual(lastArgs, args);
   });
 
@@ -291,7 +291,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     };
 
     dispatcher.on('click', listenerA);
-    const args = dispatcher.fire('click');
+    const args = dispatcher.dispatch('click');
     assert.strictEqual(lastArgs, args);
     assert.equal(data, '');
   });
@@ -346,7 +346,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     dispatcher.on('run', func2);
 
     assert.isEmpty(logs);
-    dispatcher.fire('run');
+    dispatcher.dispatch('run');
     assert.deepEqual(logs, [ 'func1' ]);
   });
 
@@ -357,7 +357,7 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     dispatcher.on('run', (e) => {
       e.new = true;
     });
-    const result = dispatcher.fire<'run', any>('run', original);
+    const result = dispatcher.dispatch<'run', any>('run', original);
 
     assert.notDeepEqual(result, original);
     assert.equal(original.type, 'custom');

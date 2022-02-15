@@ -22,7 +22,10 @@ export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
 export type BeforeGetContentEvent = GetContentArgs & { source_view?: boolean; selection?: boolean; save?: boolean };
 export type GetContentEvent = BeforeGetContentEvent & { content: Content };
 export type BeforeSetContentEvent = SetContentArgs & { source_view?: boolean; paste?: boolean; selection?: boolean };
-export type SetContentEvent = BeforeSetContentEvent;
+export type SetContentEvent = BeforeSetContentEvent & {
+  /** @deprecated */
+  content: string;
+};
 
 export interface NewBlockEvent { newBlock: Element }
 
@@ -69,6 +72,17 @@ export interface PastePostProcessEvent {
   readonly internal: boolean;
 }
 
+export interface NewTableRowEvent { node: HTMLTableRowElement }
+export interface NewTableCellEvent { node: HTMLTableCellElement }
+
+export interface TableEventData {
+  readonly structure: boolean;
+  readonly style: boolean;
+}
+export interface TableModifiedEvent extends TableEventData {
+  readonly table: HTMLTableElement;
+}
+
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
@@ -89,6 +103,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'SkinLoaded': { };
   'SkinLoadError': LoadErrorEvent;
   'PluginLoadError': LoadErrorEvent;
+  'ModelLoadError': LoadErrorEvent;
   'IconsLoadError': LoadErrorEvent;
   'ThemeLoadError': LoadErrorEvent;
   'LanguageLoadError': LoadErrorEvent;
@@ -137,6 +152,9 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'PastePlainTextToggle': PastePlainTextToggleEvent;
   'PastePreProcess': PastePreProcessEvent;
   'PastePostProcess': PastePostProcessEvent;
+  'TableModified': TableModifiedEvent;
+  'NewRow': NewTableRowEvent;
+  'NewCell': NewTableCellEvent;
 }
 
 export interface EditorManagerEventMap {

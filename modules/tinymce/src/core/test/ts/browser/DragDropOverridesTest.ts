@@ -52,9 +52,9 @@ describe('browser.tinymce.core.DragDropOverridesTest', () => {
     const screenX = rect.left + rect.width / 2;
     const screenY = rect.top + rect.height / 2;
 
-    editor.fire('mousedown', { button, screenX, screenY, target } as unknown as MouseEvent);
-    editor.fire('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, clientX: 0, clientY: 0, target } as unknown as MouseEvent);
-    editor.dom.fire(document.body, 'mouseup');
+    editor.dispatch('mousedown', { button, screenX, screenY, target } as unknown as MouseEvent);
+    editor.dispatch('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, clientX: 0, clientY: 0, target } as unknown as MouseEvent);
+    editor.dom.dispatch(document.body, 'mouseup');
 
     assert.isTrue(fired.get(), 'Should fire dragend event');
   });

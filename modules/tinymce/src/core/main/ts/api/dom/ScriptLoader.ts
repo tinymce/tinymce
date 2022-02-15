@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Optional, Unique } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Type, Unique } from '@ephox/katamari';
 
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';
@@ -222,41 +222,55 @@ class ScriptLoader {
       delete self.scriptLoadedCallbacks[url];
     };
 
-    const load = (urls: string[]) => {
-      self.loading = true;
-      return Promise.allSettled(Arr.map(urls, (url): Promise<void> => {
-        // Script is already loaded then execute script callbacks directly
-        if (self.states[url] === LOADED) {
+    const processResults = (results: Array<PromiseSettledResult<void>>): Promise<void> => {
+      const failures = Arr.filter(results, (result): result is PromiseRejectedResult => result.status === 'rejected');
+      if (failures.length > 0) {
+        return Promise.reject(Arr.bind(failures, ({ reason }) => Type.isArray(reason) ? reason : [ reason ]));
+      } else {
+        return Promise.resolve();
+      }
+    };
+
+    const load = (urls: string[]) => Promise.allSettled(Arr.map(urls, (url): Promise<void> => {
+      // Script is already loaded then execute script callbacks directly
+      if (self.states[url] === LOADED) {
+        execCallbacks('resolve', url);
+        return Promise.resolve();
+      } else if (self.states[url] === FAILED) {
+        execCallbacks('reject', url);
+        return Promise.reject(url);
+      } else {
+        // Script is not already loaded, so load it
+        self.states[url] = LOADING;
+
+        return self.loadScript(url).then(() => {
+          self.states[url] = LOADED;
           execCallbacks('resolve', url);
-          return Promise.resolve();
-        } else if (self.states[url] === FAILED) {
+
+          // Immediately load additional scripts if any were added to the queue while loading this script
+          const queue = self.queue;
+          if (queue.length > 0) {
+            self.queue = [];
+            return load(queue).then(processResults);
+          }
+        }, () => {
+          self.states[url] = FAILED;
           execCallbacks('reject', url);
           return Promise.reject(url);
-        } else {
-          // Script is not already loaded, so load it
-          self.states[url] = LOADING;
+        });
+      }
+    }));
 
-          return self.loadScript(url).then(() => {
-            self.states[url] = LOADED;
-            execCallbacks('resolve', url);
-          }, () => {
-            self.states[url] = FAILED;
-            execCallbacks('reject', url);
-            return Promise.reject(url);
-          });
-        }
-      })).then((results) => {
+    const processQueue = (urls: string[]) => {
+      self.loading = true;
+      return load(urls).then((results) => {
         self.loading = false;
 
         // Start loading the next queued item
         const nextQueuedItem = self.queueLoadedCallbacks.shift();
         Optional.from(nextQueuedItem).each(Fun.call);
 
-        const failures = Arr.filter(results, (result): result is PromiseRejectedResult => result.status === 'rejected');
-        if (failures.length > 0) {
-          const results = Arr.map(failures, (failure) => failure.reason);
-          return Promise.reject(results);
-        }
+        return processResults(results);
       });
     };
 
@@ -264,10 +278,10 @@ class ScriptLoader {
     const uniqueScripts = Unique.stringArray(scripts);
     if (self.loading) {
       return new Promise((resolve, reject) => {
-        self.queueLoadedCallbacks.push(() => load(uniqueScripts).then(resolve, reject));
+        self.queueLoadedCallbacks.push(() => processQueue(uniqueScripts).then(resolve, reject));
       });
     } else {
-      return load(uniqueScripts);
+      return processQueue(uniqueScripts);
     }
   }
 }

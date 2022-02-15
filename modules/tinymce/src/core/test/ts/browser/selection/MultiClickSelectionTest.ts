@@ -9,7 +9,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
   }, [], true);
 
   const fakeMultiClick = (editor: Editor, clickCount) => {
-    editor.fire('click', { detail: clickCount } as MouseEvent);
+    editor.dispatch('click', { detail: clickCount } as MouseEvent);
   };
 
   for (let clickCount = 3; clickCount <= 10; clickCount++) {

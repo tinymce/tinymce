@@ -1,11 +1,9 @@
 import { before, describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-
-import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
   before(function () {
@@ -26,7 +24,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
+    TinyAssertions.assertContent(editor, '<h1>ab</h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -35,7 +33,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<p>a</p><p><br></p><p><br></p><p>b</p>';
     LegacyUnit.setSelection(editor, 'p:last-of-type', 0);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br></p><p>b</p>');
+    TinyAssertions.assertRawContent(editor, '<p>a</p><p><br></p><p>b</p>');
     assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
@@ -44,10 +42,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>ab</h1><p>b<span style="color:red">cd</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1, 'span', 1);
     editor.execCommand('Delete');
-    assert.equal(
-      HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)),
-      '<h1>a<span style="color: red;">d</span></h1>'
-    );
+    TinyAssertions.assertContent(editor, '<h1>a<span style="color: red;">d</span></h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -110,7 +105,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b<br>c</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>ab<br>c</h1>');
+    TinyAssertions.assertContent(editor, '<h1>ab<br>c</h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -122,7 +117,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     rng.setEndAfter(editor.dom.select('img')[0]);
     editor.selection.setRng(rng);
     editor.execCommand('Delete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<p>a</p><p><br></p>');
+    TinyAssertions.assertRawContent(editor, '<p>a</p><p><br></p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
@@ -172,7 +167,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.selection.setRng(rng);
 
     editor.execCommand('ForwardDelete');
-    assert.equal(HtmlUtils.normalizeHtml(HtmlUtils.cleanHtml(editor.getBody().innerHTML)), '<h1>a<br>bc</h1>');
+    TinyAssertions.assertContent(editor, '<h1>a<br>bc</h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -181,7 +176,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
+    TinyAssertions.assertContent(editor, '<h1>ab</h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
@@ -206,8 +201,8 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
-    editor.fire('keydown', { keyCode: 8, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false } as KeyboardEvent);
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
+    editor.dispatch('keydown', { keyCode: 8, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false } as KeyboardEvent);
+    TinyAssertions.assertContent(editor, '<h1>ab</h1>');
     assert.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
@@ -215,8 +210,8 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
-    editor.fire('keydown', { keyCode: 46, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false } as KeyboardEvent);
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<h1>ab</h1>');
+    editor.dispatch('keydown', { keyCode: 46, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false } as KeyboardEvent);
+    TinyAssertions.assertContent(editor, '<h1>ab</h1>');
     assert.equal(editor.selection.getStart().nodeName, 'H1');
   });
   /*
@@ -229,7 +224,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         editor.getBody().innerHTML = '<p>abc 123</p>';
         LegacyUnit.setSelection(editor, 'p', 7);
         editor.fire("keydown", { keyCode: 8, ctrlKey: true });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abc&nbsp;</p>');
+        TinyAssertions.assertContent(editor, '<p>abc&nbsp;</p>');
         assert.equal(editor.selection.getStart().nodeName, 'P');
       });
 
@@ -238,7 +233,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         editor.getBody().innerHTML = '<p>abc 123</p>';
         LegacyUnit.setSelection(editor, 'p', 7);
         editor.fire("keydown", { keyCode: 8, metaKey: true });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><br></p>');
+       TinyAssertions.assertContent(editor, '<p><br></p>');
         assert.equal(editor.selection.getStart().nodeName, 'BR');
       });
 
@@ -246,10 +241,10 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         const editor = hook.editor();
         editor.getBody().innerHTML = '<p>abc 123</p>';
         LegacyUnit.setSelection(editor, 'p', 0);
-        editor.fire("keydown", { keyCode: 46, ctrlKey: true });
+        editor.dispatch("keydown", { keyCode: 46, ctrlKey: true });
 
         // Remove nbsp since very old WebKit has an slight issue
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML).replace('&nbsp;', ''), '<p>123</p>');
+        assert.equal(editor.getContent().replace('&nbsp;', ''), '<p>123</p>');
         assert.equal(editor.selection.getStart().nodeName, 'P');
       });
 
@@ -258,7 +253,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         editor.getBody().innerHTML = '<p>abc 123</p>';
         LegacyUnit.setSelection(editor, 'p', 0);
         editor.fire("keydown", { keyCode: 46, metaKey: true });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><br></p>');
+        TinyAssertions.assertContent(editor, '<p><br></p>');
         assert.equal(editor.selection.getStart().nodeName, 'BR');
       });
 
@@ -267,7 +262,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         editor.getBody().innerHTML = '<p><i><b>x</b></i></p><p>y</p>';
         LegacyUnit.setSelection(editor, 'b', 0, 'b', 1);
         editor.fire("keypress", { keyCode: 65, charCode: 65 });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><i><b>a</b></i></p><p>y</p>');
+        TinyAssertions.assertContent(editor, '<p><i><b>a</b></i></p><p>y</p>');
         assert.equal(editor.selection.getStart().nodeName, 'B');
       });
 
@@ -276,7 +271,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         editor.getBody().innerHTML = '<p><b>xy</b></p>';
         LegacyUnit.setSelection(editor, 'b', 0, 'b', 1);
         editor.fire("keypress", { keyCode: 65, charCode: 65 });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><b>ay</b></p>');
+        TinyAssertions.assertContent(editor, '<p><b>ay</b></p>');
         assert.equal(editor.selection.getStart().nodeName, 'B');
       });
 
@@ -285,7 +280,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         editor.getBody().innerHTML = '<p><i>1<b>2</b>3</i></p>';
         LegacyUnit.setSelection(editor, 'b', 0, 'b', 1);
         editor.fire("keypress", { keyCode: 65, charCode: 65 });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><i>1<b>a</b>3</i></p>');
+        TinyAssertions.assertContent(editor, '<p><i>1<b>a</b>3</i></p>');
         assert.equal(editor.selection.getStart().nodeName, 'B');
       });
 
@@ -294,7 +289,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         editor.getBody().innerHTML = '<p><b><i>b</i></b></p>';
         LegacyUnit.setSelection(editor, 'i', 1);
         editor.fire("keydown", { keyCode: 8 });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><b><i><br></i></b></p>');
+        TinyAssertions.assertContent(editor, '<p><b><i><br></i></b></p>');
         assert.equal(editor.selection.getStart(true).nodeName, 'I');
       });
 
@@ -303,7 +298,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         editor.getBody().innerHTML = '<p><b><i>b</i></b></p>';
         LegacyUnit.setSelection(editor, 'i', 0);
         editor.fire("keydown", { keyCode: 46 });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><b><i><br></i></b></p>');
+        TinyAssertions.assertContent(editor, '<p><b><i><br></i></b></p>');
         assert.equal(editor.selection.getStart(true).nodeName, 'I');
       });
 
@@ -317,7 +312,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         rng.setEndBefore(editor.$('br:last')[0]);
         editor.selection.setRng(rng);
         editor.fire("keydown", { keyCode: 8 });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>a</p><p><b><i><br></i></b></p>');
+        TinyAssertions.assertContent(editor, '<p>a</p><p><b><i><br></i></b></p>');
         assert.equal(editor.selection.getStart(true).nodeName, 'I');
       });
 
@@ -331,7 +326,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         rng.setEndBefore(editor.$('br:first')[0]);
         editor.selection.setRng(rng);
         editor.fire("keydown", { keyCode: 46 });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>a</p><p><b><i><br></i></b></p>');
+        TinyAssertions.assertContent(editor, '<p>a</p><p><b><i><br></i></b></p>');
         assert.equal(editor.selection.getStart(true).nodeName, 'I');
       });
 
@@ -340,7 +335,7 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
         editor.getBody().innerHTML = '<p>abc</p>';
         LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
         editor.fire('keypress', { charCode: 97 });
-        assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>a</p>');
+        TinyAssertions.assertContent(editor, '<p>a</p>');
         assert.equal(editor.selection.getRng().startContainer.data, 'a');
         assert.equal(editor.selection.getRng().startOffset, 1);
       });
@@ -349,8 +344,8 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
-    editor.fire('keydown', { keyCode: 46 } as KeyboardEvent);
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p>');
+    editor.dispatch('keydown', { keyCode: 46 } as KeyboardEvent);
+    TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
     assert.equal(editor.selection.getStart(true).nodeName, 'P');
   });
 
@@ -358,8 +353,8 @@ describe('browser.tinymce.core.util.QuirksWebkitTest', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
-    editor.fire('keydown', { keyCode: 8 } as KeyboardEvent);
-    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><br data-mce-bogus="1"></p>');
+    editor.dispatch('keydown', { keyCode: 8 } as KeyboardEvent);
+    TinyAssertions.assertRawContent(editor, '<p><br data-mce-bogus="1"></p>');
     assert.equal(editor.selection.getStart(true).nodeName, 'P');
   });
 });

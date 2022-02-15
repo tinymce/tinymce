@@ -490,7 +490,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   dom.setAttrib(newBlock, 'id', ''); // Remove ID since it needs to be document unique
 
   // Allow custom handling of new blocks
-  editor.fire('NewBlock', { newBlock });
+  editor.dispatch('NewBlock', { newBlock });
 };
 
 export {

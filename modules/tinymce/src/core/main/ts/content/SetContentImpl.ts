@@ -18,15 +18,7 @@ import { isWsPreserveElement } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as FilterNode from '../html/FilterNode';
-import { Content, SetContentArgs } from './ContentTypes';
-import { postProcessSetContent, preProcessSetContent } from './PrePostProcess';
-
-interface SetContentResult {
-  readonly content: Content;
-  readonly html: string;
-}
-
-const defaultFormat = 'html';
+import { Content, SetContentArgs, SetContentResult } from './ContentTypes';
 
 const isTreeNode = (content: unknown): content is AstNode =>
   content instanceof AstNode;
@@ -100,28 +92,12 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, arg
   return { content, html: trimmedHtml };
 };
 
-const setupArgs = (args: Partial<SetContentArgs>, content: Content): SetContentArgs => ({
-  format: defaultFormat,
-  ...args,
-  set: true,
-  content: isTreeNode(content) ? '' : content
-});
-
-export const setContentInternal = (editor: Editor, content: Content, args: Partial<SetContentArgs>): Content => {
-  const defaultedArgs = setupArgs(args, content);
-  return preProcessSetContent(editor, defaultedArgs).map((updatedArgs) => {
-    // Don't use the content from the args for tree, as it'll be an empty string
-    const updatedContent = isTreeNode(content) ? content : updatedArgs.content;
-
-    const result = Optional.from(editor.getBody()).map((body) => {
-      if (isTreeNode(updatedContent)) {
-        return setContentTree(editor, body, updatedContent, updatedArgs);
-      } else {
-        return setContentString(editor, body, updatedContent, updatedArgs);
-      }
-    }).getOr({ content, html: updatedArgs.content });
-
-    postProcessSetContent(editor, result.html, updatedArgs);
-    return result.content;
-  }).getOr(content);
+export const setContentInternal = (editor: Editor, content: Content, args: SetContentArgs): SetContentResult => {
+  return Optional.from(editor.getBody()).map((body) => {
+    if (isTreeNode(content)) {
+      return setContentTree(editor, body, content, args);
+    } else {
+      return setContentString(editor, body, content, args);
+    }
+  }).getOr({ content, html: args.content });
 };

@@ -104,8 +104,6 @@ describe('browser.tinymce.plugins.image.DialogTest', () => {
     pressDown(editor);
     await pAssertFocused('Advanced tab', '.tox-dialog__body-nav-item:contains("Advanced")');
     pressTab(editor);
-    await pAssertFocused('Style', '.tox-textfield');
-    pressTab(editor);
     await pAssertFocused('Vertical space', '.tox-textfield');
     pressTab(editor);
     await pAssertFocused('Horizontal space', '.tox-textfield');

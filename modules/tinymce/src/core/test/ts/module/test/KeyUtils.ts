@@ -20,7 +20,7 @@ const type = (editor: Editor, chr: string | number | Record<string, number | str
   let offset: number;
 
   const fakeEvent = (target: Node, type: string, evt: Record<string, any>) => {
-    editor.dom.fire(target, type, evt);
+    editor.dom.dispatch(target, type, evt);
   };
 
   // Numeric keyCode

@@ -15,7 +15,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Styles from '../actions/Styles';
 import * as Options from '../api/Options';
-import * as Util from '../core/Util';
+import * as Utils from '../core/Utils';
 
 /**
  * @class tinymce.table.ui.Helpers
@@ -233,7 +233,7 @@ const extractDataFromCellElement = (editor: Editor, cell: HTMLTableCellElement, 
     width: getStyle(colElm, 'width'),
     height: getStyle(cell, 'height'),
     scope: dom.getAttrib(cell, 'scope'),
-    celltype: Util.getNodeName(cell) as 'td' | 'th',
+    celltype: Utils.getNodeName(cell) as 'td' | 'th',
     class: dom.getAttrib(cell, 'class', ''),
     halign: getHAlignment(editor, cell),
     valign: getVAlignment(editor, cell),

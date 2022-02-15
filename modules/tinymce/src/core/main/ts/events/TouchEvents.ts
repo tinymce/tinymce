@@ -38,7 +38,7 @@ const setup = (editor: Editor) => {
   const longpressFired = Cell<boolean>(false);
 
   const debounceLongpress = Throttler.last((e) => {
-    editor.fire('longpress', { ...e, type: 'longpress' });
+    editor.dispatch('longpress', { ...e, type: 'longpress' });
     longpressFired.set(true);
   }, LONGPRESS_DELAY);
 
@@ -65,7 +65,7 @@ const setup = (editor: Editor) => {
         if (isFarEnough(touch, data)) {
           startData.clear();
           longpressFired.set(false);
-          editor.fire('longpresscancel');
+          editor.dispatch('longpresscancel');
         }
       });
     });
@@ -85,7 +85,7 @@ const setup = (editor: Editor) => {
         if (longpressFired.get()) {
           e.preventDefault();
         } else {
-          editor.fire('tap', { ...e, type: 'tap' });
+          editor.dispatch('tap', { ...e, type: 'tap' });
         }
       });
   }, true);

@@ -16,7 +16,6 @@ import * as Options from './Options';
 export interface NotificationManagerImpl {
   open: (spec: NotificationSpec, closeCallback?: () => void) => NotificationApi;
   close: <T extends NotificationApi>(notification: T) => void;
-  reposition: <T extends NotificationApi>(notifications: T[]) => void;
   getArgs: <T extends NotificationApi>(notification: T) => NotificationSpec;
 }
 
@@ -35,8 +34,7 @@ export interface NotificationApi {
     value: (percent: number) => void;
   };
   text: (text: string) => void;
-  moveTo: (x: number, y: number) => void;
-  moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => void;
+  reposition: () => void;
   getEl: () => HTMLElement;
   settings: NotificationSpec;
 }
@@ -76,9 +74,9 @@ const NotificationManager = (editor: Editor): NotificationManager => {
   };
 
   const reposition = () => {
-    if (notifications.length > 0) {
-      getImplementation().reposition(notifications);
-    }
+    Arr.each(notifications, (notification) => {
+      notification.reposition();
+    });
   };
 
   const addNotification = (notification: NotificationApi) => {
@@ -103,7 +101,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
 
     // fire event to allow notification spec to be mutated before display
     if (fireEvent) {
-      editor.fire('BeforeOpenNotification', { notification: spec });
+      editor.dispatch('BeforeOpenNotification', { notification: spec });
     }
 
     return Arr.find(notifications, (notification) => {
@@ -126,7 +124,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
       reposition();
 
       // Ensure notification is not passed by reference to prevent mutation
-      editor.fire('OpenNotification', { notification: { ...notification }});
+      editor.dispatch('OpenNotification', { notification: { ...notification }});
       return notification;
     });
   };
