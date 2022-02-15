@@ -13,14 +13,16 @@
 @statusbar-focus-background-color: multiply(white, contrast(@background-color, fade(@color-black, 15), fade(@color-black, 85)));
 @statusbar-font-size: @font-size-sm;
 @statusbar-font-weight: @font-weight-normal;
-@statusbar-height: 28px;
-@statusbar-padding-x: @pad-md;
-@statusbar-separator-color: #e3e3e3;
+@statusbar-height: 25px;
+@statusbar-padding-x: @pad-sm;
+@statusbar-separator-color: @tinymce-separator-color;
 @statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, fade(@color-white, 75));
 @statusbar-text-transform: none;
 @statusbar-not-disabled-selector: ~'&:not(:disabled):not([aria-disabled=true])';
-@statusbar-logo-color: fade(@text-color, 70);
+@statusbar-logo-color: fade(@text-color, 80);
 @statusbar-logo-active-color: @text-color;
+@statusbar-resize-handle-color: fade(@text-color, 50);
+@statusbar-resize-handle-radius: @tinymce-border-radius - @tinymce-border-width - 3px; // Minus handle padding
 
 .tox {
   .tox-statusbar {
@@ -113,13 +115,13 @@
 
     svg {
       display: block;
-      fill: @statusbar-text-color;
+      fill: @statusbar-resize-handle-color;
     }
 
     &:focus {
       svg {
         background-color: @statusbar-focus-background-color;
-        border-radius: 1px;
+        border-radius: 1px 1px @statusbar-resize-handle-radius 1px;
         box-shadow: 0 0 0 2px @statusbar-focus-background-color;
       }
     }
@@ -132,7 +134,7 @@
   }
 
   .tox-statusbar__branding {
-    margin-left: 1ch;
+    margin-left: 2ch;
   }
 }
 

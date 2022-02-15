@@ -10,16 +10,16 @@
 //
 
 @toolbar-background-color: @background-color;
-@toolbar-padding-y: 0;
-@toolbar-padding-x: @pad-md;
-@toolbar-row-separator-color: #e3e3e3;
-@toolbar-row-separator-padding: @toolbar-padding-x;
-@toolbar-separator-distance: 5px;
+@toolbar-padding-y: 5px;
+@toolbar-padding-x: @pad-sm;
+@toolbar-row-separator-color: @tinymce-separator-color;
+@toolbar-row-separator-padding: @toolbar-group-padding-x;
+@toolbar-separator-distance: 0px;
 @toolbar-separator-color: transparent;
 
 // private variables
 @_toolbar-height: @toolbar-button-height + (@toolbar-button-spacing-y * 2) + (@toolbar-group-spacing-y * 2) + 1px;
-@_toolbar-padding-x-no-group-spacing: max(@toolbar-padding-x - @toolbar-group-padding-x, 0);
+@_toolbar-padding-x-no-group-spacing: max(@toolbar-padding-x - @toolbar-group-padding-x, 0px);
 @_toolbar-row-separator-downsize: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y * 2;
 @_toolbar-row-separator-image: repeating-linear-gradient(@toolbar-row-separator-color 0px 1px, transparent 1px @_toolbar-height);
 @_toolbar-row-separator-image-offset: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y;
