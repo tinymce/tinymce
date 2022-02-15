@@ -16,12 +16,6 @@ import { UserListItem, UserListValue } from '../ui/UiUtils';
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
 
-// Note: This is also specified in the core Options.ts file
-const defaultStyles = {
-  'border-collapse': 'collapse',
-  'width': '100%'
-};
-
 const defaultCellBorderWidths = Arr.range(5, (i) => {
   const size = `${i + 1}px`;
   return { title: size, value: size };
@@ -32,7 +26,7 @@ const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double',
 });
 
 // Note: This is also contained in the core Options.ts file
-const determineDefaultStyles = (editor: Editor): Record<string, string> => {
+const determineDefaultStyles = (editor: Editor, defaultStyles: Record<string, string>): Record<string, string> => {
   if (isPixelsForced(editor)) {
     // Determine the inner size of the parent block element where the table will be inserted
     const dom = editor.dom;
@@ -153,7 +147,8 @@ const isResponsiveForced = (editor: Editor): boolean =>
 const getDefaultStyles = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
   const options = editor.options;
-  return options.isSet('table_default_styles') ? options.get('table_default_styles') : determineDefaultStyles(editor);
+  const defaultStyles = options.get('table_default_styles');
+  return options.isSet('table_default_styles') ? defaultStyles : determineDefaultStyles(editor, defaultStyles);
 };
 
 export {

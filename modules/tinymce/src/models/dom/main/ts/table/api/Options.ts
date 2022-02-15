@@ -21,24 +21,18 @@ const option: {
 } = (name: string) => (editor: Editor) =>
   editor.options.get(name);
 
-// Note: This is also specified in the table plugin Options.ts file
-const defaultTableStyles = {
-  'border-collapse': 'collapse',
-  'width': '100%'
-};
-
 // Note: This is also contained in the table plugin Options.ts file
-const determineDefaultTableStyles = (editor: Editor): Record<string, string> => {
+const determineDefaultTableStyles = (editor: Editor, defaultStyles: Record<string, string>): Record<string, string> => {
   if (isTablePixelsForced(editor)) {
     // Determine the inner size of the parent block element where the table will be inserted
     const dom = editor.dom;
     const parentBlock = dom.getParent<HTMLElement>(editor.selection.getStart(), dom.isBlock) ?? editor.getBody();
     const contentWidth = Width.getInner(SugarElement.fromDom(parentBlock));
-    return { ...defaultTableStyles, width: contentWidth + 'px' };
+    return { ...defaultStyles, width: contentWidth + 'px' };
   } else if (isTableResponsiveForced(editor)) {
-    return Obj.filter(defaultTableStyles, (_value, key) => key !== 'width');
+    return Obj.filter(defaultStyles, (_value, key) => key !== 'width');
   } else {
-    return defaultTableStyles;
+    return defaultStyles;
   }
 };
 
@@ -76,7 +70,10 @@ const register = (editor: Editor): void => {
 
   registerOption('table_default_styles', {
     processor: 'object',
-    default: defaultTableStyles
+    default: {
+      'border-collapse': 'collapse',
+      'width': '100%'
+    }
   });
 
   registerOption('table_column_resizing', {
@@ -130,7 +127,8 @@ const getTableDefaultAttributes = option<Record<string, string>>('table_default_
 const getTableDefaultStyles = (editor: Editor): Record<string, string> => {
   // Note: The we don't rely on the default here as we need to dynamically lookup the widths based on the current editor state
   const options = editor.options;
-  return options.isSet('table_default_styles') ? options.get('table_default_styles') : determineDefaultTableStyles(editor);
+  const defaultStyles = options.get('table_default_styles');
+  return options.isSet('table_default_styles') ? defaultStyles : determineDefaultTableStyles(editor, defaultStyles);
 };
 
 const tableUseColumnGroup = option<boolean>('table_use_colgroups');
