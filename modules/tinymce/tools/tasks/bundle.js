@@ -3,7 +3,7 @@ var path = require("path");
 
 module.exports = function (grunt) {
   grunt.registerMultiTask("bundle", "Bundles code, themes and bundles to a single file.", function () {
-    var options, contents, themes, plugins, icons;
+    var options, contents, themes, plugins, icons, models;
 
     function appendFile(src) {
       src = src.replace(/\\/g, '/');
@@ -38,20 +38,23 @@ module.exports = function (grunt) {
     }
 
     options = grunt.config([this.name, this.target]).options;
-    options.themesDir = options.themesDir || "plugins";
+    options.themesDir = options.themesDir || "themes";
     options.themeFileName = options.themeFileName || "theme.min.js";
     options.pluginsDir = options.pluginsDir || "plugins";
     options.pluginFileName = options.pluginFileName || "plugin.min.js";
     options.iconsDir = options.iconsDir || "icons";
     options.iconsFileName = options.iconsFileName || "icons.min.js";
+    options.modelsDir = options.modelsDir || "models";
+    options.modelFileName = options.modelFileName || "model.min.js";
     options.outputPath = options.outputPath || "full.min.js";
 
     themes = grunt.option("themes");
     plugins = grunt.option("plugins");
     icons = grunt.option("icons") || 'default';
+    models = grunt.option("models") || 'dom';
 
     if (!themes && !plugins) {
-      grunt.log.writeln("Use: grunt bundle --themes <comma separated list of themes> --plugins <comma separated list of plugins> --icons <comma separated list of icons>");
+      grunt.log.writeln("Use: grunt bundle --themes <comma separated list of themes> --plugins <comma separated list of plugins> --icons <comma separated list of icons> --models <comma separated list of models>");
       process.exit(-1);
       return;
     }
@@ -66,6 +69,7 @@ module.exports = function (grunt) {
     append(options.themesDir, options.themeFileName, themes);
     append(options.pluginsDir, options.pluginFileName, plugins, 'js');
     append(options.iconsDir, options.iconsFileName, icons);
+    append(options.modelsDir, options.modelFileName, models);
 
     if (contents.length > 0) {
       grunt.file.write(options.outputPath, contents);

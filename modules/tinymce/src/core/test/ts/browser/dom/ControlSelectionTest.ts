@@ -15,6 +15,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }',
     width: 800,
+    table_sizing_mode: 'fixed',
     setup: (editor: Editor) => {
       editor.on('ObjectResizeStart ObjectResized', (e) => {
         const counter = eventCounter.get();

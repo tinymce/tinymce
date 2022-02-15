@@ -12,7 +12,8 @@ describe('browser.tinymce.plugins.table.TableDefaultAttributesTest', () => {
     indent: false,
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce',
-    statusbar: false
+    statusbar: false,
+    table_use_colgroups: false
   }, [ Plugin ], true);
 
   beforeEach(() => {
