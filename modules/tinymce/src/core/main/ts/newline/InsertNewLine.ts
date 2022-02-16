@@ -15,7 +15,7 @@ import * as InsertBr from './InsertBr';
 import * as NewLineAction from './NewLineAction';
 
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
-  const insertBlock = (stepUntilFinding?: string) =>
+  const insertBlock = (predicate: (node: Element) => boolean) =>
     () => {
       if (Type.isNonNullable(evt)) {
         const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
@@ -24,7 +24,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
         }
       }
 
-      InsertBlock.insert(editor, evt, stepUntilFinding);
+      InsertBlock.insert(editor, predicate, evt);
 
       if (Type.isNonNullable(evt)) {
         fireFakeInputEvent(editor, 'insertParagraph');
@@ -46,8 +46,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
         fireFakeInputEvent(editor, 'insertLineBreak');
       }
     },
-    insertBlock(),
-    insertBlock('BLOCKQUOTE'),
+    insertBlock(Fun.always),
+    insertBlock((node) => node.tagName === 'BLOCKQUOTE'),
     Fun.noop
   );
 };

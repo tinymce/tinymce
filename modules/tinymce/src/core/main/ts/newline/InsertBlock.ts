@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
-import { Css, PredicateFilter, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Css, PredicateFilter, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -242,21 +242,15 @@ const addBrToBlockIfNeeded = (dom, block) => {
   }
 };
 
-const findParent = (editor: Editor, container: Node, stepUntilFinding?: string) => {
-  const findDirectParent = () =>
-    editor.dom.getParent(container, editor.dom.isBlock);
-
-  if (Type.isString(stepUntilFinding)) {
-    return SelectorFind.ancestor(SugarElement.fromDom(container), stepUntilFinding, (element) => element.dom === editor.dom.getRoot()).fold(
-      findDirectParent,
-      (element) => element.dom
-    );
-  } else {
-    return findDirectParent();
-  }
+const findParent = (editor: Editor, container: Node, predicate: (node: Node) => boolean) => {
+  const isRoot = (element: SugarElement<Node>) => element.dom === editor.getBody();
+  return PredicateFind.closest(SugarElement.fromDom(container), (node) => editor.dom.isBlock(node.dom) && predicate(node.dom), isRoot).fold(
+    () => editor.dom.getParent(container, editor.dom.isBlock),
+    (element) => element.dom
+  );
 };
 
-const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>, stepUntilFinding?: string) => {
+const insert = (editor: Editor, predicate: (node: Node) => boolean, evt?: EditorEvent<KeyboardEvent>) => {
   let tmpRng, container, offset, parentBlock;
   let newBlock, fragment, containerBlock, parentBlockName, isAfterLastNodeInContainer;
   const dom = editor.dom;
@@ -431,7 +425,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>, stepUntilFindi
   }
 
   // Find parent block and setup empty block paddings
-  parentBlock = findParent(editor, container, stepUntilFinding);
+  parentBlock = findParent(editor, container, predicate);
   containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
 
   // Setup block names
