@@ -105,7 +105,7 @@ const getEditableRoot = (dom, node) => {
 };
 
 const isBlockQuote = (editor: Editor) =>
-  SelectorFind.ancestor(SugarElement.fromDom(editor.selection.getStart(true)), 'BLOCKQUOTE', (element) => element.dom === editor.dom.getRoot()).isSome();
+  SelectorFind.ancestor(SugarElement.fromDom(editor.selection.getStart(true)), 'blockquote', (element) => element.dom === editor.dom.getRoot()).isSome();
 
 const getParentBlock = (editor: Editor) => {
   return Optional.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
