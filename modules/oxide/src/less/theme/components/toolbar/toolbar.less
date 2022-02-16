@@ -24,7 +24,7 @@
 @_toolbar-row-separator-image: repeating-linear-gradient(@toolbar-row-separator-color 0px 1px, transparent 1px @_toolbar-height);
 @_toolbar-row-separator-image-offset: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y;
 @_toolbar-row-separator-image-position: center top @_toolbar-row-separator-image-offset;
-@_toolbar-row-separator-image-size: calc(100% - @toolbar-row-separator-padding * 2) calc(100% - @_toolbar-row-separator-downsize);
+@_toolbar-row-separator-image-size: calc(100% - @toolbar-row-separator-padding * 2) calc(100% - @_toolbar-row-separator-downsize - 1px);
 
 .tox {
   .tox-toolbar-overlord {
