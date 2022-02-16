@@ -6,7 +6,7 @@
  */
 
 import { Fun, Optional, Unicode } from '@ephox/katamari';
-import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { SelectorExists, SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -105,7 +105,7 @@ const getEditableRoot = (dom, node) => {
 };
 
 const isBlockQuote = (editor: Editor) =>
-  SelectorFind.ancestor(SugarElement.fromDom(editor.selection.getStart(true)), 'blockquote', (element) => element.dom === editor.dom.getRoot()).isSome();
+  SelectorExists.ancestor(SugarElement.fromDom(editor.selection.getStart(true)), 'blockquote', (element) => element.dom === editor.dom.getRoot());
 
 const getParentBlock = (editor: Editor) => {
   return Optional.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
