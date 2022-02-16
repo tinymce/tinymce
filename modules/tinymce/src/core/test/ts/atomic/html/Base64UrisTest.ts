@@ -135,7 +135,7 @@ describe('atomic.tinymce.core.html.Base64UrisTest', () => {
     KAssert.eqOptional('Data with spaces, tabs and line breaks', Optional.some({ type: 'image/png', data: 'SGVsbG8sI\r\n  Hdv		cmxkIQ==' }), parseDataUri('data:image/png;base64,SGVsbG8sI\r\n  Hdv		cmxkIQ=='));
     KAssert.eqOptional('Corrupted data', Optional.some({ type: 'image/gif', data: 'R0' }), parseDataUri('data:image/gif;base64,R0ÖlGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==%A0'));
     KAssert.eqOptional(
-      'Corrupted data due to added letters',
+      'Corrupted data due to added URL encoded nbsp',
       Optional.some({
         type: 'image/gif',
         data: 'R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA=='
