@@ -10,7 +10,7 @@ import { pAssertFloatingToolbarHeight, pOpenFloatingToolbarAndAssertPosition } f
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerFloatingPositionTest', () => {
   const toolbarHeight = 33;
-  const toolbarDrawerHeight = 74;
+  const toolbarDrawerHeight = 86;
   const windowBottomOffset = window.innerHeight - 100;
   let rootElement: SugarElement<HTMLDivElement>;
 

@@ -149,7 +149,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       s.theRest()
     ]);
 
-    resizeTo(400, 400, 550, 400);
+    resizeTo(400, 400, 500, 400);
 
     await pAssertToolbarButtonState('Assert the toolbar buttons are enabled and now include subscript', false, (s, str, arr) => [
       enabledButtonStruct(s, str, arr, 'Bold'),
