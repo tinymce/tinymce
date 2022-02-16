@@ -163,8 +163,8 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
   });
 
-  context('Blockquote manipulation', () => {
-    it('Press Enter in blockquote', () => {
+  context('Blockquote', () => {
+    it('TINY-6559: Press Enter in blockquote', () => {
       const editor = hook.editor();
       editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
       TinySelections.setCursor(editor, [ 0, 1 ], 1);
@@ -173,7 +173,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     });
 
-    it('Press Shift+Enter in blockquote', () => {
+    it('TINY-6559: Press Shift+Enter in blockquote', () => {
       const editor = hook.editor();
       editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
       TinySelections.setCursor(editor, [ 0, 1 ], 1);
