@@ -122,7 +122,9 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         backstage
       );
 
+      editor.ui.show();
       ModalDialog.show(dialog.dialog);
+      dialog.instanceApi.setData(initialData);
       return dialog.instanceApi;
     };
 
