@@ -1,9 +1,9 @@
-import { FocusTools, RealKeys, UiFinder } from '@ephox/agar';
+import { FocusTools, RealKeys, RealMouse, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { SugarDocument } from '@ephox/sugar';
+import { Focus, SugarDocument } from '@ephox/sugar';
 
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
@@ -11,6 +11,7 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
+  const isFirefox = PlatformDetection.detect().browser.isFirefox();
   const helpers = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   before(() => {
@@ -68,7 +69,21 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
       }
     }, {}, Fun.noop);
 
-    await UiFinder.pWaitForState('check iframe is loaded', SugarDocument.getDocument(), '.tox-dialog .tox-dialog__body iframe', (iframe) => (iframe.dom as HTMLIFrameElement).contentDocument.readyState === 'complete');
+    await UiFinder.pWaitForState<HTMLIFrameElement>(
+      'check iframe is loaded',
+      SugarDocument.getDocument(),
+      '.tox-dialog .tox-dialog__body iframe',
+      (iframe) => iframe.dom.contentDocument.readyState === 'complete'
+    );
+
+    const input = await FocusTools.pTryOnSelector('focus should be on the input initially', SugarDocument.getDocument(), 'input');
+
+    if (isFirefox) {
+      // Firefox doesn't allow escaping the iframe if it's body has been interacted with? Focusing alone didn't work
+      await RealMouse.pClickOn('iframe => body');
+      await FocusTools.pTryOnSelector('focus should be on iframe', SugarDocument.getDocument(), 'iframe');
+      Focus.focus(input);
+    }
 
     await pPressTab('input', false);
 
@@ -86,9 +101,9 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
 
     // Firefox when shift+tabbing it will cause the iframe to be focused twice
     // so we need to do an extra shift+tab
-    if (PlatformDetection.detect().browser.isFirefox()) {
+    if (isFirefox) {
       await FocusTools.pTryOnSelector('focus should be on the iframe', SugarDocument.getDocument(), 'iframe');
-      await pPressTab('iframe => body', true);
+      await pPressTab('iframe', true);
     }
 
     await FocusTools.pTryOnSelector('focus should be on the "before" tabstop', SugarDocument.getDocument(), 'div[class*="alloy-fake-before-tabstop"]');
