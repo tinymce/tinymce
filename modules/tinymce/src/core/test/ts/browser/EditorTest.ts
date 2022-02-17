@@ -3,7 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -467,6 +467,18 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.isTrue(editor.hasFocus(), 'hasFocus');
 
     input.parentNode.removeChild(input);
+  });
+
+  it('TINY-6946: Images should be properly cleaned up if they contain invalid trailing data', () => {
+    const editor = hook.editor();
+    editor.setContent('<img src="data:image/gif;base64,R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==%A0">');
+    TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA=="></p>');
+  });
+
+  it('TINY-6946: Images should cut off invalid data, even if the image remains invalid', () => {
+    const editor = hook.editor();
+    editor.setContent('<img src="data:image/gif;base64,R0ÖlGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==%A0">');
+    TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0"></p>');
   });
 
   context('hasPlugin', () => {
