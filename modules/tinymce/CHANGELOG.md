@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
 - New `Resource.unload` API to make it possible to unload resources #TINY-8431
 - New `dispatch()` function to replace the now deprecated `fire()` function in various APIs #TINY-8102
+- New `mceInsertTableDialog` command to open the insert table dialog #TINY-8273
 
 ### Improved
 - The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
@@ -31,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Notifications no longer require a timeout to disable the close button #TINY-6679
 - The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
 - Calls to `editor.selection.setRng` now update the cursor position bookmark used when focus is returned to the editor #TINY-8450
+- The `BeforeSetContent` event will now include the actual serialized content when passing in an `AstNode` to the `editor.setContent` API #TINY-7996
+- The default height of editor has been increased from `200px` to `400px` to improve the usability of the editor #TINY-6860
 
 ### Changed
 - The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627
@@ -84,6 +87,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `plugins` option now returns a `string` array instead of a space separated string #TINY-8455
 - Replaced 'Powered by Tiny' link text with logo #TINY-8371
 - Renamed the `getWhiteSpaceElements()` function to `getWhitespaceElements()` in the `Schema` API #TINY-8102
+- The `GetContent` event will now always pass a `string` for the `content` property #TINY-7996
+- The `mceInsertTable` command can no longer open the insert table dialog. Use the `mceInsertTableDialog` command instead #TINY-8273
+- Moved non-UI table functionality to core #TINY-8273
+- The `table_style_by_css` option has been set to `true` by default #TINY-8259
+- The `table_use_colgroups` option has been set to `true` by default #TINY-8259
+- The default minimum height of editor has been changed to 100px to prevent the UI disappearing while resizing #TINY-6860
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
@@ -97,6 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deleting content would sometimes not fire `beforeinput` and `input` events as expected #TINY-8168 #TINY-8329
 - Anchor elements would render incorrectly when using the `allow_html_in_named_anchor` option #TINY-3799
 - Fixed sub-menu items not read by screen readers. Patch contributed by westonkd #TINY-8417
+- The Home or End keys would move out of a editable element contained within a noneditable element #TINY-8201
 - The dialog could not be opened before the editor has been rendered #TINY-8397
 
 ### Removed
@@ -140,6 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `execCommand` handler function from the plugin and theme interfaces #TINY-7829
 - Removed the `SaxParser` API #TINY-8218
 - Removed the style field from the `image` plugin dialog advanced tab #TINY-3422
+- Removed the `table` plugin's API #TINY-8273
 
 ### Deprecated
 - The dialog button component `primary` property has been deprecated in favour of the new `buttonType` property #TINY-8304

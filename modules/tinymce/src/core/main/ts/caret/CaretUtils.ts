@@ -6,7 +6,7 @@
  */
 
 import { Fun, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { PredicateFind, SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
@@ -76,14 +76,12 @@ const findNode = (node: Node, direction: number, predicateFn: (node: Node) => bo
   return null;
 };
 
-const getEditingHost = (node: Node, rootNode?: Node): Node | undefined => {
-  for (node = node.parentNode; node && node !== rootNode; node = node.parentNode) {
-    if (isContentEditableTrue(node)) {
-      return node;
-    }
-  }
-
-  return rootNode;
+const getEditingHost = (node: Node, rootNode: HTMLElement): HTMLElement => {
+  const isCETrue = (node: SugarElement<Node>): node is SugarElement<HTMLElement> => isContentEditableTrue(node.dom);
+  const isRoot = (node: SugarElement<Node>) => node.dom === rootNode;
+  return PredicateFind.ancestor(SugarElement.fromDom(node), isCETrue, isRoot)
+    .map((elm) => elm.dom)
+    .getOr(rootNode);
 };
 
 const getParentBlock = (node: Node, rootNode?: Node): Node | null => {
@@ -101,7 +99,7 @@ const getParentBlock = (node: Node, rootNode?: Node): Node | null => {
 const isInSameBlock = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean =>
   getParentBlock(caretPosition1.container(), rootNode) === getParentBlock(caretPosition2.container(), rootNode);
 
-const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode?: Node): boolean =>
+const isInSameEditingHost = (caretPosition1: CaretPosition, caretPosition2: CaretPosition, rootNode: HTMLElement): boolean =>
   getEditingHost(caretPosition1.container(), rootNode) === getEditingHost(caretPosition2.container(), rootNode);
 
 const getChildNodeAtRelativeOffset = (relativeOffset: number, caretPosition: CaretPosition): Node | null => {

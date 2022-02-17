@@ -21,7 +21,7 @@ tinymce.init({
     { title: 'Bird', value: 'bird' },
     { title: 'Snake', value: 'snake' }
   ],
-  table_style_by_css: true,
+  // table_style_by_css: false,
   // table grid TBD
   table_grid: true,
   // table_column_resizing: 'preservetable',

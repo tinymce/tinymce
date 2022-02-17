@@ -57,7 +57,7 @@ const register = (editor: Editor): void => {
 
   registerOption('height', {
     processor: stringOrNumberProcessor,
-    default: Math.max(editor.getElement().offsetHeight, 200)
+    default: Math.max(editor.getElement().offsetHeight, 400)
   });
 
   registerOption('width', {
@@ -66,7 +66,8 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('min_height', {
-    processor: 'number'
+    processor: 'number',
+    default: 100
   });
 
   registerOption('min_width', {

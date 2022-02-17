@@ -12,6 +12,7 @@ import * as Options from '../api/Options';
 import * as DefaultFormats from './DefaultFormats';
 import { Format, Formats } from './FormatTypes';
 import { isInlineFormat, isSelectorFormat } from './FormatUtils';
+import * as TableFormats from './TableFormats';
 
 export interface FormatRegistry {
   get: {
@@ -86,6 +87,7 @@ export const FormatRegistry = (editor: Editor): FormatRegistry => {
   };
 
   register(DefaultFormats.get(editor));
+  register(TableFormats.get());
   register(Options.getFormats(editor));
 
   return {

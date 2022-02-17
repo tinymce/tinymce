@@ -122,27 +122,32 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
 
     assert.isTrue(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('p:first-of-type').firstChild, 0),
-      CaretPosition(findElm('p:first-of-type').firstChild, 1)
+      CaretPosition(findElm('p:first-of-type').firstChild, 1),
+      getRoot()
     ));
 
     assert.isTrue(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('p:first-of-type').firstChild, 0),
-      CaretPosition(getRoot().childNodes[1], 1)
+      CaretPosition(getRoot().childNodes[1], 1),
+      getRoot()
     ));
 
     assert.isTrue(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('span span:first-of-type').firstChild, 0),
-      CaretPosition(findElm('span span:first-of-type').firstChild, 1)
+      CaretPosition(findElm('span span:first-of-type').firstChild, 1),
+      getRoot()
     ));
 
     assert.isFalse(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('p:first-of-type').firstChild, 0),
-      CaretPosition(findElm('span span:first-of-type').firstChild, 1)
+      CaretPosition(findElm('span span:first-of-type').firstChild, 1),
+      getRoot()
     ));
 
     assert.isFalse(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('span span:first-of-type').firstChild, 0),
-      CaretPosition(findElm('span span:last-of-type').firstChild, 1)
+      CaretPosition(findElm('span span:last-of-type').firstChild, 1),
+      getRoot()
     ));
   });
 

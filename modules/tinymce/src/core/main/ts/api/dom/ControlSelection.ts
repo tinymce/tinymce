@@ -59,17 +59,17 @@ interface SelectedResizeHandle extends ResizeHandle {
 const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSelection => {
   const elementSelectionAttr = 'data-mce-selected';
   const dom = editor.dom, each = Tools.each;
-  let selectedElm, selectedElmGhost: HTMLElement, resizeHelper, selectedHandle: SelectedResizeHandle, resizeBackdrop: HTMLElement;
-  let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
-  let width,
-    height;
+  let selectedElm: HTMLElement, selectedElmGhost: HTMLElement, resizeHelper: HTMLElement, selectedHandle: SelectedResizeHandle, resizeBackdrop: HTMLElement;
+  let startX: number, startY: number, selectedElmX: number, selectedElmY: number, startW: number, startH: number, ratio: number, resizeStarted: boolean;
+  let width: number,
+    height: number;
   const editableDoc = editor.getDoc(),
     rootDocument = document;
   const abs = Math.abs,
     round = Math.round,
     rootElement = editor.getBody();
-  let startScrollWidth,
-    startScrollHeight;
+  let startScrollWidth: number,
+    startScrollHeight: number;
 
   // Details about each resize handle how to scale etc
   const resizeHandles: ResizeHandles = {
@@ -80,13 +80,13 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     sw: [ 0, 1, -1, 1 ]
   };
 
-  const isImage = (elm) => {
-    return elm && (elm.nodeName === 'IMG' || editor.dom.is(elm, 'figure.image'));
-  };
+  const isImage = (elm: Element) =>
+    Type.isNonNullable(elm) && (NodeType.isImg(elm) || editor.dom.is(elm, 'figure.image'));
 
-  const isMedia = (elm: Element) => NodeType.isMedia(elm) || dom.hasClass(elm, 'mce-preview-object');
+  const isMedia = (elm: Element) =>
+    NodeType.isMedia(elm) || dom.hasClass(elm, 'mce-preview-object');
 
-  const isEventOnImageOutsideRange = (evt, range) => {
+  const isEventOnImageOutsideRange = (evt, range: Range) => {
     if (evt.type === 'longpress' || evt.type.indexOf('touch') === 0) {
       const touch = evt.touches[0];
       return isImage(evt.target) && !RangePoint.isXYWithinRange(touch.clientX, touch.clientY, range);
@@ -164,8 +164,8 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   };
 
   const resizeGhostElement = (e: MouseEvent) => {
-    let deltaX, deltaY, proportional;
-    let resizeHelperX, resizeHelperY;
+    let deltaX: number, deltaY: number, proportional: boolean;
+    let resizeHelperX: number, resizeHelperY: number;
 
     // Calc new width/height
     deltaX = e.screenX - startX;
@@ -416,7 +416,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   };
 
   const updateResizeRect = (e) => {
-    let startElm, controlElm;
+    let startElm: Element, controlElm: HTMLElement;
 
     const isChildOrEqual = (node, parent) => {
       if (node) {
@@ -439,7 +439,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     });
 
     controlElm = e.type === 'mousedown' ? e.target : selection.getNode();
-    controlElm = SelectorFind.closest(SugarElement.fromDom(controlElm), 'table,img,figure.image,hr,video,span.mce-preview-object').getOrUndefined()?.dom;
+    controlElm = SelectorFind.closest<HTMLElement>(SugarElement.fromDom(controlElm), 'table,img,figure.image,hr,video,span.mce-preview-object').getOrUndefined()?.dom;
 
     if (isChildOrEqual(controlElm, rootElement)) {
       disableGeckoResize();
