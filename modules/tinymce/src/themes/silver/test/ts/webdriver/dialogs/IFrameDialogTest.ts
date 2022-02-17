@@ -79,7 +79,8 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     const input = await FocusTools.pTryOnSelector('focus should be on the input initially', SugarDocument.getDocument(), 'input');
 
     if (isFirefox) {
-      // Firefox doesn't allow escaping the iframe if it's body has been interacted with? Focusing alone didn't work
+      // Firefox doesn't allow escaping the iframe when using shift+tab if it's body hasn't been interacted with? Focusing alone didn't work
+      // TODO: TINY-2308 - Investigate how to fix this, as it means tabbing can get stuck in the iframe on Firefox
       await RealMouse.pClickOn('iframe => body');
       await FocusTools.pTryOnSelector('focus should be on iframe', SugarDocument.getDocument(), 'iframe');
       Focus.focus(input);
