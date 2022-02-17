@@ -110,6 +110,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Home or End keys would move out of a editable element contained within a noneditable element #TINY-8201
 
 ### Removed
+- Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
+- Removed support for Word from the `paste` plugin #TINY-7493
+- Removed support for the `plugins` option allowing a mixture of a string array and of space separated strings #TINY-8399
+- Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
 - Removed the jQuery integration #TINY-4518
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `imagetools` dialog component #TINY-8333
@@ -129,10 +133,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the style field from the `image` plugin dialog advanced tab #TINY-3422
 - Removed the legacy `mobile` theme #TINY-7832
 - Removed the legacy browser detection properties from `Env` #TINY-8162
-- Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
-- Removed support for Word from the `paste` plugin #TINY-7493
-- Removed support for the `plugins` option allowing a mixture of a string array and of space separated strings #TINY-8399
-- Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
 - Removed the deprecated `XHR` API #TINY-8164
