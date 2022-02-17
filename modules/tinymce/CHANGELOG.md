@@ -106,6 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deleting content would sometimes not fire `beforeinput` and `input` events as expected #TINY-8168 #TINY-8329
 - Anchor elements would render incorrectly when using the `allow_html_in_named_anchor` option #TINY-3799
 - Fixed sub-menu items not read by screen readers. Patch contributed by westonkd #TINY-8417
+- The Home or End keys would move out of a editable element contained within a noneditable element #TINY-8201
 
 ### Removed
 - Removed the jQuery integration #TINY-4518

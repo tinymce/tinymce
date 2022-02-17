@@ -130,16 +130,15 @@ const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range:
 
 const getLineEndPoint = (editor: Editor, forward: boolean): Optional<CaretPosition> => {
   const rng = editor.selection.getRng();
-  const body = editor.getBody();
+  const from = forward ? CaretPosition.fromRangeEnd(rng) : CaretPosition.fromRangeStart(rng);
+  const host = CaretUtils.getEditingHost(from.container(), editor.getBody());
 
   if (forward) {
-    const from = CaretPosition.fromRangeEnd(rng);
-    const result = getPositionsUntilNextLine(body, from);
-    return Arr.last(result.positions);
+    const lineInfo = getPositionsUntilNextLine(host, from);
+    return Arr.last(lineInfo.positions);
   } else {
-    const from = CaretPosition.fromRangeStart(rng);
-    const result = getPositionsUntilPreviousLine(body, from);
-    return Arr.head(result.positions);
+    const lineInfo = getPositionsUntilPreviousLine(host, from);
+    return Arr.head(lineInfo.positions);
   }
 };
 
