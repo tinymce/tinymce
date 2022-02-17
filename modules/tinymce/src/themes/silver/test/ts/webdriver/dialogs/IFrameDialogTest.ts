@@ -1,9 +1,9 @@
-import { FocusTools, RealKeys, Waiter, UiFinder } from '@ephox/agar';
+import { FocusTools, RealKeys, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Class, Focus, SugarDocument } from '@ephox/sugar';
+import { SugarDocument } from '@ephox/sugar';
 
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
@@ -13,13 +13,7 @@ import * as TestExtras from '../../module/TestExtras';
 describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
   const helpers = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
-  before(function () {
-    // TODO: TINY-2308 Get this test working on everything!
-    const browser = PlatformDetection.detect().browser;
-    if ( browser.isFirefox() || browser.isSafari() ) {
-      this.skip();
-    }
-
+  before(() => {
     windowManager = WindowManager.setup(helpers.extras());
   });
 
@@ -31,11 +25,11 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     'iframe:focus-within { outline: 3px solid green; !important; }'
   ]);
 
-  const focusOnPrevious = async () => {
+  const pPressTab = async (selector: string, shift: boolean) => {
     await RealKeys.pSendKeysOn(
-      'iframe => body',
+      selector,
       [
-        RealKeys.combo({ shiftKey: true }, '\u0009')
+        RealKeys.combo({ shiftKey: shift }, '\u0009')
       ]
     );
   };
@@ -76,72 +70,30 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
 
     await UiFinder.pWaitForState('check iframe is loaded', SugarDocument.getDocument(), '.tox-dialog .tox-dialog__body iframe', (iframe) => (iframe.dom as HTMLIFrameElement).contentDocument.readyState === 'complete');
 
-    await RealKeys.pSendKeysOn(
-      'input',
-      [
-        RealKeys.text('\u0009')
-      ]
-    );
+    await pPressTab('input', false);
 
-    const iframe = await FocusTools.pTryOnSelector(
-      'focus should be on iframe',
-      SugarDocument.getDocument(),
-      'iframe'
-    );
+    await FocusTools.pTryOnSelector('focus should be on iframe', SugarDocument.getDocument(), 'iframe');
+    await pPressTab('iframe => body', false);
 
-    await Waiter.pTryUntilPredicate('Wait for frame to be loaded', () => {
-      return (iframe.dom as HTMLIFrameElement).contentDocument.readyState === 'complete';
-    });
+    await FocusTools.pTryOnSelector('focus should be on the "after" tabstop', SugarDocument.getDocument(), 'div[class*="alloy-fake-after-tabstop"]');
+    await pPressTab('div[class*="alloy-fake-after-tabstop"]', false);
 
-    await RealKeys.pSendKeysOn(
-      'iframe => body',
-      [
-        RealKeys.text('\uE015') // Arrow down
-      ]
-    );
+    await FocusTools.pTryOnSelector('focus should be on button (cancel)', SugarDocument.getDocument(), 'button:contains("Close")');
+    await pPressTab('button.tox-button--secondary', true);
 
-    await RealKeys.pSendKeysOn(
-      'iframe => body',
-      [
-        RealKeys.text('\u0009'),
-        RealKeys.text('\u0009')
-      ]
-    );
+    await FocusTools.pTryOnSelector('focus should move back to iframe (button >> iframe)', SugarDocument.getDocument(), 'iframe');
+    await pPressTab('iframe => body', true);
 
-    await FocusTools.pTryOnSelector(
-      'focus should be on button (cancel)',
-      SugarDocument.getDocument(),
-      'button:contains("Close")'
-    );
+    // Firefox when shift+tabbing it will cause the iframe to be focused twice
+    // so we need to do an extra shift+tab
+    if (PlatformDetection.detect().browser.isFirefox()) {
+      await FocusTools.pTryOnSelector('focus should be on the iframe', SugarDocument.getDocument(), 'iframe');
+      await pPressTab('iframe => body', true);
+    }
 
-    // Tag it for using with selenium. Note, I should just
-    // implement the automatic id tagging in agar, and
-    // pass in a DOM reference (or assume focused element)
-    Focus.active().each((button) => {
-      Class.add(button, 'cancel-button');
-    });
+    await FocusTools.pTryOnSelector('focus should be on the "before" tabstop', SugarDocument.getDocument(), 'div[class*="alloy-fake-before-tabstop"]');
+    await pPressTab('div[class*="alloy-fake-before-tabstop"]', true);
 
-    await RealKeys.pSendKeysOn(
-      '.cancel-button',
-      [
-        RealKeys.combo({ shiftKey: true }, '\u0009')
-      ]
-    );
-
-    await FocusTools.pTryOnSelector(
-      'focus should move back to iframe (button >> iframe)',
-      SugarDocument.getDocument(),
-      'iframe'
-    );
-
-    // trigger shift+tab twice to skip the tabStop then go back to input, currently firefox does not register RealKeys.combo
-    await focusOnPrevious();
-    await focusOnPrevious();
-
-    await FocusTools.pTryOnSelector(
-      'focus should move back to input (iframe >> input)',
-      SugarDocument.getDocument(),
-      'input'
-    );
+    await FocusTools.pTryOnSelector('focus should move back to input (iframe >> input)', SugarDocument.getDocument(), 'input');
   });
 });
