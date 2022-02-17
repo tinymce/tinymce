@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.codesample.CodeSampleSelectionTest', () => {
     await TestUtils.pSubmitDialog(editor);
     await TestUtils.pAssertEditorContents(TinyDom.body(editor), 'markup', markupContent, 'pre.language-markup');
     const pre = editor.getBody().querySelector('pre');
-    editor.fire('dblclick', { target: pre } as unknown as MouseEvent);
+    editor.dispatch('dblclick', { target: pre } as unknown as MouseEvent);
     await UiFinder.pWaitForVisible('Waited for dialog to be visible', SugarBody.body(), dialogSelector);
     TestUtils.assertCodeSampleDialog('markup', markupContent);
     await TestUtils.pCancelDialog(editor);

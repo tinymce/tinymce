@@ -33,7 +33,6 @@ interface Size {
 }
 
 interface Helpers {
-  readonly onSubmit: (info: ImageDialogInfo) => (api: API) => void;
   readonly imageSize: (url: string) => Promise<Size>;
   readonly addToBlobCache: (blobInfo: BlobInfo) => void;
   readonly createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
@@ -226,52 +225,6 @@ const changeImages = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialo
   changeSrc(helpers, info, state, api);
 };
 
-const calcVSpace = (css: StyleMap): string => {
-  const matchingTopBottom = css['margin-top'] && css['margin-bottom'] && css['margin-top'] === css['margin-bottom'];
-  return matchingTopBottom ? Utils.removePixelSuffix(String(css['margin-top'])) : '';
-};
-
-const calcHSpace = (css: StyleMap): string => {
-  const matchingLeftRight = css['margin-right'] && css['margin-left'] && css['margin-right'] === css['margin-left'];
-  return matchingLeftRight ? Utils.removePixelSuffix(String(css['margin-right'])) : '';
-};
-
-const calcBorderWidth = (css: StyleMap): string =>
-  css['border-width'] ? Utils.removePixelSuffix(String(css['border-width'])) : '';
-
-const calcBorderStyle = (css: StyleMap): string =>
-  css['border-style'] ? String(css['border-style']) : '';
-
-const calcStyle = (parseStyle: Helpers['parseStyle'], serializeStyle: Helpers['serializeStyle'], css: StyleMap): string =>
-  serializeStyle(parseStyle(serializeStyle(css)));
-
-const changeStyle2 = (parseStyle: Helpers['parseStyle'], serializeStyle: Helpers['serializeStyle'], data: ImageDialogData): ImageDialogData => {
-  const css = Utils.mergeMargins(parseStyle(data.style));
-  const dataCopy: ImageDialogData = Merger.deepMerge({}, data);
-  // Move opposite equal margins to vspace/hspace field
-  dataCopy.vspace = calcVSpace(css);
-  dataCopy.hspace = calcHSpace(css);
-  // Move border-width
-  dataCopy.border = calcBorderWidth(css);
-  // Move border-style
-  dataCopy.borderstyle = calcBorderStyle(css);
-  // Reserialize style
-  dataCopy.style = calcStyle(parseStyle, serializeStyle, css);
-  return dataCopy;
-};
-
-const changeStyle = (helpers: Helpers, api: API): void => {
-  const data = api.getData();
-  const newData = changeStyle2(helpers.parseStyle, helpers.serializeStyle, data);
-  api.setData(newData);
-};
-
-const changeAStyle = (helpers: Helpers, info: ImageDialogInfo, api: API): void => {
-  const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
-  const style = getStyleValue(helpers.normalizeCss, toImageData(data, false));
-  api.setData({ style });
-};
-
 const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDialogState, api: API): void => {
   const data = api.getData();
   api.block('Uploading image'); // What msg do we pass to the lock?
@@ -317,11 +270,6 @@ const changeHandler = (helpers: Helpers, info: ImageDialogInfo, state: ImageDial
     changeImages(helpers, info, state, api);
   } else if (evt.name === 'alt') {
     state.prevAlt = api.getData().alt;
-  } else if (evt.name === 'style') {
-    changeStyle(helpers, api);
-  } else if (evt.name === 'vspace' || evt.name === 'hspace' ||
-    evt.name === 'border' || evt.name === 'borderstyle') {
-    changeAStyle(helpers, info, api);
   } else if (evt.name === 'fileinput') {
     changeFileInput(helpers, info, state, api);
   } else if (evt.name === 'isDecorative') {
@@ -353,36 +301,17 @@ const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | Dialog
   }
 };
 
-const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo): DialogType.DialogSpec<ImageDialogData> => {
-  const state = createState(info);
-  return {
-    title: 'Insert/Edit Image',
-    size: 'normal',
-    body: makeDialogBody(info),
-    buttons: [
-      {
-        type: 'cancel',
-        name: 'cancel',
-        text: 'Cancel'
-      },
-      {
-        type: 'submit',
-        name: 'save',
-        text: 'Save',
-        primary: true
-      }
-    ],
-    initialData: fromImageData(info.image),
-    onSubmit: helpers.onSubmit(info),
-    onChange: changeHandler(helpers, info, state),
-    onClose: closeHandler(state)
-  };
-};
-
-const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API): void => {
+const submitHandler = (editor: Editor, info: ImageDialogInfo, helpers: Helpers) => (api: API): void => {
   const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
 
-  editor.execCommand('mceUpdateImage', false, toImageData(data, info.hasAccessibilityOptions));
+  // The data architecture relies on passing everything through the style field for validation.
+  // Since the style field was removed that process must be simulated on submit.
+  const finalData = {
+    ...data,
+    style: getStyleValue(helpers.normalizeCss, toImageData(data, false))
+  };
+
+  editor.execCommand('mceUpdateImage', false, toImageData(finalData, info.hasAccessibilityOptions));
   editor.editorUpload.uploadImagesAuto();
 
   api.close();
@@ -439,7 +368,6 @@ const uploadImage = (editor: Editor) => (blobInfo: BlobInfo): Promise<UploadResu
 
 export const Dialog = (editor: Editor): { open: () => void } => {
   const helpers: Helpers = {
-    onSubmit: submitHandler(editor),
     imageSize: imageSize(editor),
     addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),
@@ -451,7 +379,31 @@ export const Dialog = (editor: Editor): { open: () => void } => {
   };
   const open = () => {
     collect(editor)
-      .then(makeDialog(helpers))
+      .then((info: ImageDialogInfo): DialogType.DialogSpec<ImageDialogData> => {
+        const state = createState(info);
+        return {
+          title: 'Insert/Edit Image',
+          size: 'normal',
+          body: makeDialogBody(info),
+          buttons: [
+            {
+              type: 'cancel',
+              name: 'cancel',
+              text: 'Cancel'
+            },
+            {
+              type: 'submit',
+              name: 'save',
+              text: 'Save',
+              primary: true
+            }
+          ],
+          initialData: fromImageData(info.image),
+          onSubmit: submitHandler(editor, info, helpers),
+          onChange: changeHandler(helpers, info, state),
+          onClose: closeHandler(state)
+        };
+      })
       .then(editor.windowManager.open);
   };
   return {

@@ -18,10 +18,7 @@ import { isWsPreserveElement } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as FilterNode from '../html/FilterNode';
-import { Content, SetContentArgs, SetContentResult } from './ContentTypes';
-
-const isTreeNode = (content: unknown): content is AstNode =>
-  content instanceof AstNode;
+import { Content, isTreeNode, SetContentArgs, SetContentResult } from './ContentTypes';
 
 const moveSelection = (editor: Editor): void => {
   if (EditorFocus.hasFocus(editor)) {
@@ -99,5 +96,5 @@ export const setContentInternal = (editor: Editor, content: Content, args: SetCo
     } else {
       return setContentString(editor, body, content, args);
     }
-  }).getOr({ content, html: args.content });
+  }).getOr({ content, html: isTreeNode(args.content) ? '' : args.content });
 };

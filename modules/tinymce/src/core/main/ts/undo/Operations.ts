@@ -31,7 +31,7 @@ export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: In
   }
 
   const lastLevel = undoManager.data[index.get()];
-  if (editor.fire('BeforeAddUndo', { level, lastLevel, originalEvent: event }).isDefaultPrevented()) {
+  if (editor.dispatch('BeforeAddUndo', { level, lastLevel, originalEvent: event }).isDefaultPrevented()) {
     return null;
   }
 
@@ -76,10 +76,10 @@ export const addUndoLevel = (editor: Editor, undoManager: UndoManager, index: In
 
   if (index.get() > 0) {
     editor.setDirty(true);
-    editor.fire('AddUndo', args);
-    editor.fire('change', args);
+    editor.dispatch('AddUndo', args);
+    editor.dispatch('change', args);
   } else {
-    editor.fire('AddUndo', args);
+    editor.dispatch('AddUndo', args);
   }
 
   return level;
@@ -89,7 +89,7 @@ export const clear = (editor: Editor, undoManager: UndoManager, index: Index) =>
   undoManager.data = [];
   index.set(0);
   undoManager.typing = false;
-  editor.fire('ClearUndos');
+  editor.dispatch('ClearUndos');
 };
 
 export const extra = (editor: Editor, undoManager: UndoManager, index: Index, callback1: () => void, callback2: () => void) => {
@@ -112,7 +112,7 @@ export const redo = (editor: Editor, index: Index, data: UndoLevel[]) => {
     level = data[index.get()];
     Levels.applyToEditor(editor, level, false);
     editor.setDirty(true);
-    editor.fire('Redo', { level });
+    editor.dispatch('Redo', { level });
   }
 
   return level;
@@ -132,7 +132,7 @@ export const undo = (editor: Editor, undoManager: UndoManager, locks: Locks, ind
     level = undoManager.data[index.get()];
     Levels.applyToEditor(editor, level, true);
     editor.setDirty(true);
-    editor.fire('Undo', { level });
+    editor.dispatch('Undo', { level });
   }
 
   return level;

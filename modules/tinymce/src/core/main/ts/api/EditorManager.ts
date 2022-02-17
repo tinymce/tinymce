@@ -46,10 +46,10 @@ const globalEventDelegate = (e) => {
   each(EditorManager.get(), (editor) => {
     switch (type) {
       case 'scroll':
-        editor.fire('ScrollWindow', e);
+        editor.dispatch('ScrollWindow', e);
         break;
       case 'resize':
-        editor.fire('ResizeWindow', e);
+        editor.dispatch('ResizeWindow', e);
         break;
     }
   });
@@ -511,11 +511,11 @@ const EditorManager: EditorManager = {
     // to fire a bunch of activate/deactivate calls while initializing
     self.activeEditor = editor;
 
-    self.fire('AddEditor', { editor });
+    self.dispatch('AddEditor', { editor });
 
     if (!beforeUnloadDelegate) {
       beforeUnloadDelegate = (e) => {
-        const event = self.fire('BeforeUnload');
+        const event = self.dispatch('BeforeUnload');
         if (event.returnValue) {
           // browsers are all a little bit special about this: https://developer.mozilla.org/en-US/docs/Web/API/BeforeUnloadEvent
           e.preventDefault();
@@ -597,7 +597,7 @@ const EditorManager: EditorManager = {
     }
 
     if (removeEditorFromList(editor)) {
-      self.fire('RemoveEditor', { editor });
+      self.dispatch('RemoveEditor', { editor });
     }
 
     if (editors.length === 0) {
@@ -716,10 +716,10 @@ const EditorManager: EditorManager = {
 
     if (this.activeEditor !== editor) {
       if (activeEditor) {
-        activeEditor.fire('deactivate', { relatedTarget: editor });
+        activeEditor.dispatch('deactivate', { relatedTarget: editor });
       }
 
-      editor.fire('activate', { relatedTarget: activeEditor });
+      editor.dispatch('activate', { relatedTarget: activeEditor });
     }
 
     this.activeEditor = editor;

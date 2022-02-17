@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Type } from '@ephox/katamari';
+import { Arr, Cell } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
@@ -58,7 +58,7 @@ const UploadChangeHandler = (editor: Editor) => {
       return !Levels.isEq(lastChangedLevel.get(), level);
     }).each((level) => {
       editor.setDirty(true);
-      editor.fire('change', {
+      editor.dispatch('change', {
         level,
         lastLevel: Arr.get(data, data.length - 2).getOrNull()
       });
@@ -282,8 +282,7 @@ const EditorUpload = (editor: Editor): EditorUpload => {
   });
 
   editor.on('GetContent', (e) => {
-    // if the content is not a string, we can't process it
-    if (e.source_view || e.format === 'raw' || e.format === 'tree' || !Type.isString(e.content)) {
+    if (e.source_view || e.format === 'raw' || e.format === 'tree') {
       return;
     }
 

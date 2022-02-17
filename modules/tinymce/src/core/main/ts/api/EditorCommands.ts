@@ -73,7 +73,7 @@ class EditorCommands {
       }
     }
 
-    const eventArgs = editor.fire('BeforeExecCommand', { command, ui, value });
+    const eventArgs = editor.dispatch('BeforeExecCommand', { command, ui, value });
     if (eventArgs.isDefaultPrevented()) {
       return false;
     }
@@ -81,7 +81,7 @@ class EditorCommands {
     const func = this.commands.exec[lowerCaseCommand];
     if (Type.isFunction(func)) {
       func(lowerCaseCommand, ui, value);
-      editor.fire('ExecCommand', { command, ui, value });
+      editor.dispatch('ExecCommand', { command, ui, value });
       return true;
     }
 
@@ -162,10 +162,6 @@ class EditorCommands {
    * @return {Boolean} true/false if the command is supported or not.
    */
   public queryCommandSupported(command: string): boolean {
-    if (this.editor.quirks.isHidden() || this.editor.removed) {
-      return false;
-    }
-
     const lowerCaseCommand = command.toLowerCase();
     if (this.commands.exec[lowerCaseCommand]) {
       return true;

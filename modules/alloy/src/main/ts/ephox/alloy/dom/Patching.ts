@@ -4,7 +4,7 @@ import { Compare, Insert, Remove, SugarElement, SugarNode, Traverse } from '@eph
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { AlloySpec } from '../api/component/SpecTypes';
 
-type SpecBuilder = (spec: AlloySpec, i: number, optObs: Optional<SugarElement<Node>>) => AlloyComponent;
+type SpecBuilder = (spec: AlloySpec, optObs: Optional<SugarElement<Node>>) => AlloyComponent;
 
 const determineObsoleted = (parent: SugarElement<Element>, index: number, oldObsoleted: Optional<SugarElement<Node>>): Optional<SugarElement<Node>> => {
   // When dealing with premades, the process of building something may have moved existing nodes around, so we see
@@ -62,17 +62,21 @@ const patchChildrenWith = <T, C>(parent: SugarElement<Element>, nu: T[], f: (n: 
   return builtChildren;
 };
 
+const patchSpecChild = (parent: SugarElement<Element>, index: number, spec: AlloySpec, build: SpecBuilder): AlloyComponent => {
+  // Before building anything, this is the DOM element we are going to try to use.
+  const oldObsoleted = Traverse.child(parent, index);
+  const childComp = build(spec, oldObsoleted);
+
+  const obsoleted = determineObsoleted(parent, index, oldObsoleted);
+  ensureInDom(parent, childComp.element, obsoleted);
+
+  return childComp;
+};
+
 const patchSpecChildren = (parent: SugarElement<Element>, specs: AlloySpec[], build: SpecBuilder): AlloyComponent[] =>
-  patchChildrenWith(parent, specs, (spec, index) => {
-    // Before building anything, this is the DOM element we are going to try to use.
-    const oldObsoleted = Traverse.child(parent, index);
-    const childComp = build(spec, index, oldObsoleted);
-
-    const obsoleted = determineObsoleted(parent, index, oldObsoleted);
-    ensureInDom(parent, childComp.element, obsoleted);
-
-    return childComp;
-  });
+  patchChildrenWith(parent, specs, (spec, index) =>
+    patchSpecChild(parent, index, spec, build)
+  );
 
 const patchDomChildren = (parent: SugarElement<Element>, nodes: SugarElement<Node>[]): SugarElement<Node>[] =>
   patchChildrenWith(parent, nodes, (node, index) => {
@@ -82,7 +86,7 @@ const patchDomChildren = (parent: SugarElement<Element>, nodes: SugarElement<Nod
   });
 
 export {
-  ensureInDom,
   patchDomChildren,
+  patchSpecChild,
   patchSpecChildren
 };

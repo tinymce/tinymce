@@ -70,7 +70,7 @@ const createIframe = (editor: Editor, boxInfo) => {
 
   ifr.onload = () => {
     ifr.onload = null;
-    editor.fire('load');
+    editor.dispatch('load');
   };
 
   editor.contentAreaContainer = boxInfo.iframeContainer;

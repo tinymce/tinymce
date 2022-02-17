@@ -28,12 +28,12 @@ type ScrollFunc = (doc: SugarElement, scrollTop: number, marker: MarkerInfo, ali
 const excludeFromDescend = (element: SugarElement) => SugarNode.name(element) === 'textarea';
 
 const fireScrollIntoViewEvent = (editor: Editor, data: ScrollIntoViewEvent): boolean => {
-  const scrollEvent = editor.fire('ScrollIntoView', data);
+  const scrollEvent = editor.dispatch('ScrollIntoView', data);
   return scrollEvent.isDefaultPrevented();
 };
 
 const fireAfterScrollIntoViewEvent = (editor: Editor, data: ScrollIntoViewEvent): void => {
-  editor.fire('AfterScrollIntoView', data);
+  editor.dispatch('AfterScrollIntoView', data);
 };
 
 const descend = (element: SugarElement, offset: number): { element: SugarElement; offset: number } => {

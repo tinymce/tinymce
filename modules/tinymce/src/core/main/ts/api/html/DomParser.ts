@@ -10,6 +10,7 @@ import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/
 import createDompurify, { Config, DOMPurifyI } from 'dompurify';
 
 import * as NodeType from '../../dom/NodeType';
+import * as FilterNode from '../../html/FilterNode';
 import { cleanInvalidNodes } from '../../html/InvalidNodes';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
@@ -83,12 +84,6 @@ interface DomParser {
   addNodeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
   getNodeFilters: () => ParserFilter[];
   parse: (html: string, args?: ParserArgs) => AstNode;
-}
-
-// For internal parser use only - a summary of which nodes have been matched by which node/attribute filters
-interface FilterMatches {
-  readonly nodes: Record<string, AstNode[]>;
-  readonly attributes: Record<string, AstNode[]>;
 }
 
 type WalkerCallback = (node: AstNode) => void;
@@ -288,7 +283,7 @@ const walkTree = (root: AstNode, preprocessors: WalkerCallback[], postprocessors
 const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSettings, args: ParserArgs): [WalkerCallback, WalkerCallback] => {
   const validate = settings.validate;
   const nonEmptyElements = schema.getNonEmptyElements();
-  const whitespaceElements = schema.getWhiteSpaceElements();
+  const whitespaceElements = schema.getWhitespaceElements();
   const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
@@ -484,86 +479,6 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
   const getAttributeFilters = (): ParserFilter[] => [].concat(attributeFilters);
 
-  // Test a single node against the current filters, and add it to any match lists if necessary
-  const filterNode = (node: AstNode, matches: FilterMatches): void => {
-    const name = node.name;
-    // Run element filters
-    if (name in nodeFilters) {
-      const list = matches.nodes[name];
-
-      if (list) {
-        list.push(node);
-      } else {
-        matches.nodes[name] = [ node ];
-      }
-    }
-
-    // Run attribute filters
-    if (node.attributes) {
-      let i = attributeFilters.length;
-      while (i--) {
-        const attrName = attributeFilters[i].name;
-
-        if (attrName in node.attributes.map) {
-          const list = matches.attributes[attrName];
-
-          if (list) {
-            list.push(node);
-          } else {
-            matches.attributes[attrName] = [ node ];
-          }
-        }
-      }
-    }
-  };
-
-  // Run all necessary node filters and attribute filters, based on a match set
-  const runFilters = (matches: FilterMatches, args: ParserArgs): void => {
-    // Run node filters
-    for (const name in matches.nodes) {
-      if (Obj.has(matches.nodes, name)) {
-        const list = nodeFilters[name];
-        const nodes = matches.nodes[name];
-
-        // Remove already removed children
-        let fi = nodes.length;
-        while (fi--) {
-          if (!nodes[fi].parent) {
-            nodes.splice(fi, 1);
-          }
-        }
-
-        const l = list.length;
-        for (let i = 0; i < l; i++) {
-          list[i](nodes, name, args);
-        }
-      }
-    }
-
-    // Run attribute filters
-    const l = attributeFilters.length;
-    for (let i = 0; i < l; i++) {
-      const list = attributeFilters[i];
-
-      if (list.name in matches.attributes) {
-        const nodes = matches.attributes[list.name];
-
-        // Remove already removed children
-        let fi = nodes.length;
-        while (fi--) {
-          if (!nodes[fi].parent) {
-            nodes.splice(fi, 1);
-          }
-        }
-
-        const callbacks = list.callbacks;
-        for (let fi = 0, fl = callbacks.length; fi < fl; fi++) {
-          callbacks[fi](nodes, list.name, args);
-        }
-      }
-    }
-  };
-
   const findInvalidChildren = (node: AstNode, invalidChildren: AstNode[]): void => {
     // Check if the node is a valid child of the parent node. If the child is
     // unknown we don't collect it since it's probably a custom element
@@ -655,8 +570,9 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const invalidFinder = validate ? (node: AstNode) => findInvalidChildren(node, invalidChildren) : Fun.noop;
 
     // Set up attribute and node matching
-    const matches: FilterMatches = { nodes: {}, attributes: {}};
-    const matchFinder = (node: AstNode) => filterNode(node, matches);
+    const nodeFilters = getNodeFilters();
+    const matches: FilterNode.FilterMatches = { nodes: {}, attributes: {}};
+    const matchFinder = (node: AstNode) => FilterNode.matchNode(nodeFilters, attributeFilters, node, matches);
 
     // Walk the dom, apply all of the above things
     walkTree(rootNode, [ whitespacePre, matchFinder ], [ whitespacePost, invalidFinder ]);
@@ -683,7 +599,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
     // Run filters only when the contents is valid
     if (!args.invalid) {
-      runFilters(matches, args);
+      FilterNode.runFilters(matches, args);
     }
 
     return rootNode;

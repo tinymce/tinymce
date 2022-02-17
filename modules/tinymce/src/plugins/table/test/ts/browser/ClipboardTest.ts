@@ -1,11 +1,13 @@
 import { Clipboard } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr, Optional } from '@ephox/katamari';
+import { Insert, SugarElement, SugarNode, TextContent, Traverse } from '@ephox/sugar';
 import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
-import { TableEventData } from 'tinymce/plugins/table/api/Events';
+import { TableEventData } from 'tinymce/core/api/EventTypes';
+import * as FakeClipboard from 'tinymce/plugins/table/api/Clipboard';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.plugins.table.ClipboardTest', () => {
@@ -23,8 +25,8 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
   const selectOne = (editor: Editor, start: string) => {
     const startElm = editor.dom.select(start)[0];
 
-    editor.fire('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
-    editor.fire('mouseup', { target: startElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mouseup', { target: startElm, button: 0 } as unknown as MouseEvent);
 
     LegacyUnit.setSelection(editor, startElm, 0);
   };
@@ -33,18 +35,19 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     const startElm = editor.dom.select(start)[0];
     const endElm = editor.dom.select(end)[0];
 
-    editor.fire('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
-    editor.fire('mouseover', { target: endElm, button: 0 } as unknown as MouseEvent);
-    editor.fire('mouseup', { target: endElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mousedown', { target: startElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mouseover', { target: endElm, button: 0 } as unknown as MouseEvent);
+    editor.dispatch('mouseup', { target: endElm, button: 0 } as unknown as MouseEvent);
 
     LegacyUnit.setSelection(editor, endElm, 0);
   };
 
-  const createRow = (editor: Editor, cellContents: string[]) => {
-    const tr = editor.dom.create('tr');
-
-    Tools.each(cellContents, (html) => {
-      tr.appendChild(editor.dom.create('td', null, html));
+  const createRow = (cellContents: string[]): SugarElement<HTMLTableRowElement> => {
+    const tr = SugarElement.fromTag('tr');
+    Arr.each(cellContents, (content) => {
+      const td = SugarElement.fromTag('td');
+      TextContent.set(td, content);
+      Insert.append(tr, td);
     });
 
     return tr;
@@ -408,15 +411,15 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     LegacyUnit.setSelection(editor, 'tr:nth-child(1) td', 0);
     editor.execCommand('mceTableCopyRow');
 
-    const clipboardRows = editor.plugins.table.getClipboardRows();
+    const clipboardRows = FakeClipboard.getRows().getOr([]);
 
     assert.equal(clipboardRows.length, 1);
-    assert.equal(clipboardRows[0].tagName, 'TR');
+    assert.isTrue(SugarNode.isTag('tr')(clipboardRows[0]));
 
-    editor.plugins.table.setClipboardRows(clipboardRows.concat([
-      createRow(editor, [ 'a', 'b' ]),
-      createRow(editor, [ 'c', 'd' ])
-    ]));
+    FakeClipboard.setRows(Optional.some(clipboardRows.concat([
+      createRow([ 'a', 'b' ]),
+      createRow([ 'c', 'd' ])
+    ])));
 
     LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);
     editor.execCommand('mceTablePasteRowAfter');
@@ -530,18 +533,18 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     LegacyUnit.setSelection(editor, 'tr td:nth-child(1)', 0);
     editor.execCommand('mceTableCopyCol');
 
-    const clipboardCols = editor.plugins.table.getClipboardCols();
+    const clipboardCols = FakeClipboard.getColumns().getOr([]);
 
     assert.equal(clipboardCols.length, 2);
-    assert.equal(clipboardCols[0].tagName, 'TR');
-    const cells = clipboardCols[0].childNodes;
+    assert.isTrue(SugarNode.isTag('tr')(clipboardCols[0]));
+    const cells = Traverse.children(clipboardCols[0]);
     assert.equal(cells.length, 1);
-    assert.equal(cells[0].nodeName, 'TD');
+    assert.isTrue(SugarNode.isTag('td')(cells[0]));
 
-    editor.plugins.table.setClipboardCols([
-      createRow(editor, [ 'a', 'b' ]),
-      createRow(editor, [ 'c', 'd' ])
-    ]);
+    FakeClipboard.setColumns(Optional.some([
+      createRow([ 'a', 'b' ]),
+      createRow([ 'c', 'd' ])
+    ]));
 
     LegacyUnit.setSelection(editor, 'tr td:nth-child(2)', 0);
     editor.execCommand('mceTablePasteColAfter');

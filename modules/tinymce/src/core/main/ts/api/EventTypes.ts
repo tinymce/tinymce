@@ -6,7 +6,7 @@
  */
 
 import { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
-import { Content, GetContentArgs, SetContentArgs } from '../content/ContentTypes';
+import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
@@ -18,11 +18,23 @@ import { InstanceApi } from './WindowManager';
 
 export interface ExecCommandEvent { command: string; ui?: boolean; value?: any }
 
-// TODO Figure out if these properties should be on the ContentArgs types
-export type BeforeGetContentEvent = GetContentArgs & { source_view?: boolean; selection?: boolean; save?: boolean };
-export type GetContentEvent = BeforeGetContentEvent & { content: Content };
-export type BeforeSetContentEvent = SetContentArgs & { source_view?: boolean; paste?: boolean; selection?: boolean };
-export type SetContentEvent = BeforeSetContentEvent;
+export interface BeforeGetContentEvent extends GetContentArgs {
+  selection?: boolean;
+}
+
+export interface GetContentEvent extends BeforeGetContentEvent {
+  content: string;
+}
+
+export interface BeforeSetContentEvent extends SetContentArgs {
+  content: string;
+  selection?: boolean;
+}
+
+export interface SetContentEvent extends BeforeSetContentEvent {
+  /** @deprecated */
+  content: string;
+}
 
 export interface NewBlockEvent { newBlock: Element }
 
@@ -69,6 +81,17 @@ export interface PastePostProcessEvent {
   readonly internal: boolean;
 }
 
+export interface NewTableRowEvent { node: HTMLTableRowElement }
+export interface NewTableCellEvent { node: HTMLTableCellElement }
+
+export interface TableEventData {
+  readonly structure: boolean;
+  readonly style: boolean;
+}
+export interface TableModifiedEvent extends TableEventData {
+  readonly table: HTMLTableElement;
+}
+
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor };
   'deactivate': { relatedTarget: Editor };
@@ -89,6 +112,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'SkinLoaded': { };
   'SkinLoadError': LoadErrorEvent;
   'PluginLoadError': LoadErrorEvent;
+  'ModelLoadError': LoadErrorEvent;
   'IconsLoadError': LoadErrorEvent;
   'ThemeLoadError': LoadErrorEvent;
   'LanguageLoadError': LoadErrorEvent;
@@ -137,6 +161,9 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'PastePlainTextToggle': PastePlainTextToggleEvent;
   'PastePreProcess': PastePreProcessEvent;
   'PastePostProcess': PastePostProcessEvent;
+  'TableModified': TableModifiedEvent;
+  'NewRow': NewTableRowEvent;
+  'NewCell': NewTableCellEvent;
 }
 
 export interface EditorManagerEventMap {

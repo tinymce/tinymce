@@ -6,11 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added new `refreshBars` API to `TableResize`.
+
 ### Changed
 - Upgraded to Katamari 9.0, which includes breaking changes to the `Optional` API used in this module.
+- `RunOperation.run` no longer requires the `wire` to be provided, instead the resize bars should be refreshed after the run operation if required.
 
 ### Fixed
 - All `th` rows in `tfoot` sections were incorrectly detected as header rows.
+- `OtherCells.getOtherCells` would incorrectly return `col` elements for `colgroup` tables.
 
 ### Removed
 - Removed support for Microsoft Internet Explorer and legacy Microsoft Edge.

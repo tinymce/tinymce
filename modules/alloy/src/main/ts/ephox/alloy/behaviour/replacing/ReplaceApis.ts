@@ -4,14 +4,15 @@ import { Compare, Insert, SugarElement } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as Attachment from '../../api/system/Attachment';
+import * as Patching from '../../dom/Patching';
 import * as InternalAttachment from '../../system/InternalAttachment';
 import { Stateless } from '../common/BehaviourState';
 import { withoutReuse, withReuse } from './ReplacingAll';
 import { ReplacingConfig } from './ReplacingTypes';
 
-const virtualReplace = (component: AlloyComponent, replacee: AlloyComponent, _replaceeIndex: number, childSpec: AlloySpec) => {
+const virtualReplace = (component: AlloyComponent, replacee: AlloyComponent, replaceeIndex: number, childSpec: AlloySpec) => {
   InternalAttachment.virtualDetach(replacee);
-  const child = component.getSystem().buildOrPatch(childSpec, Optional.some(replacee.element));
+  const child = Patching.patchSpecChild(component.element, replaceeIndex, childSpec, component.getSystem().buildOrPatch);
   InternalAttachment.virtualAttach(component, child);
   component.syncComponents();
 };

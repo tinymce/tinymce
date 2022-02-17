@@ -31,9 +31,9 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
     evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
 
     editor.on('input', collect);
-    dom.fire(target, 'keydown', evt);
-    dom.fire(target, 'keypress', evt);
-    dom.fire(target, 'keyup', evt);
+    dom.dispatch(target, 'keydown', evt);
+    dom.dispatch(target, 'keypress', evt);
+    dom.dispatch(target, 'keyup', evt);
     editor.off('input', collect);
 
     assert.deepEqual([ shouldBeParagraph ? 'insertParagraph' : 'insertLineBreak' ], inputEvents, 'Events not fired as expected');

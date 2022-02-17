@@ -17,9 +17,9 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     const dom = editor.dom, target = editor.selection.getNode();
     const evt = { keyCode: 37 };
 
-    dom.fire(target, 'keydown', evt);
-    dom.fire(target, 'keypress', evt);
-    dom.fire(target, 'keyup', evt);
+    dom.dispatch(target, 'keydown', evt);
+    dom.dispatch(target, 'keypress', evt);
+    dom.dispatch(target, 'keyup', evt);
   };
 
   it('Wrap single root text node in P', () => {

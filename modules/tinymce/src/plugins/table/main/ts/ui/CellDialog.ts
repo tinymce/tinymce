@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { TableLookup, Warehouse } from '@ephox/snooker';
 import { Compare, SugarElement } from '@ephox/sugar';
@@ -16,7 +15,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
-import * as Util from '../core/Util';
+import * as Utils from '../core/Utils';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
 import { getAdvancedTab } from './DialogAdvancedTab';
@@ -49,15 +48,15 @@ const getSelectedCells = (table: SugarElement<HTMLTableElement>, cells: SugarEle
 const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data: CellData): void => {
   modifier.setAttrib('scope', data.scope);
   modifier.setAttrib('class', data.class);
-  modifier.setStyle('height', Util.addPxSuffix(data.height));
-  colModifier.setStyle('width', Util.addPxSuffix(data.width));
+  modifier.setStyle('height', Utils.addPxSuffix(data.height));
+  colModifier.setStyle('width', Utils.addPxSuffix(data.width));
 };
 
 const updateAdvancedProps = (modifier: DomModifier, data: CellData): void => {
   modifier.setFormat('tablecellbackgroundcolor', data.backgroundcolor);
   modifier.setFormat('tablecellbordercolor', data.bordercolor);
   modifier.setFormat('tablecellborderstyle', data.borderstyle);
-  modifier.setFormat('tablecellborderwidth', Util.addPxSuffix(data.borderwidth));
+  modifier.setFormat('tablecellborderwidth', Utils.addPxSuffix(data.borderwidth));
 };
 
 /*
@@ -163,8 +162,8 @@ const getData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]): C
   return Helpers.getSharedValues<CellData>(cellsData.getOrDie());
 };
 
-const open = (editor: Editor, selections: Selections): void => {
-  const cells = TableSelection.getCellsFromSelection(selections);
+const open = (editor: Editor): void => {
+  const cells = TableSelection.getCellsFromSelection(editor);
 
   // Check if there are any cells to operate on
   if (cells.length === 0) {

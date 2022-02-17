@@ -62,7 +62,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   };
 
   const showCaret = (direction: number, node: HTMLElement, before: boolean, scrollIntoView: boolean = true): Range => {
-    const e = editor.fire('ShowCaret', {
+    const e = editor.dispatch('ShowCaret', {
       target: node,
       direction,
       before
@@ -295,7 +295,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
   const selectElement = (elm: HTMLElement) => {
     const targetClone = elm.cloneNode(true);
-    const e = editor.fire('ObjectSelected', { target: elm, targetClone });
+    const e = editor.dispatch('ObjectSelected', { target: elm, targetClone });
     if (e.isDefaultPrevented()) {
       return null;
     }

@@ -107,7 +107,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     const placeholderElm = editor.getBody().firstChild.firstChild as HTMLImageElement;
     placeholderElm.width = 100;
     placeholderElm.height = 200;
-    editor.fire('ObjectResized', { target: placeholderElm, width: placeholderElm.width, height: placeholderElm.height, origin: 'corner-se' });
+    editor.dispatch('ObjectResized', { target: placeholderElm, width: placeholderElm.width, height: placeholderElm.height, origin: 'corner-se' });
     editor.options.set('media_filter_html', false);
 
     TinyAssertions.assertContent(editor,
