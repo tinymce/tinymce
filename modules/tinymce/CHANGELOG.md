@@ -122,6 +122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `textpattern` plugin's API as part of moving it to core #TINY-8312
 - Removed the `table` plugin's API #TINY-8273
 - Removed the callback for the `EditorUpload` API #TINY-8325
+- Removed the legacy browser detection properties from the `Env` API #TINY-8162
 - Removed the `filterNode` method from the `DomParser` API #TINY-8249
 - Removed the `SaxParser` API #TINY-8218
 - Removed the `tinymce.utils.Promise` API #TINY-8241
@@ -132,7 +133,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `mceInsertRawHTML` command #TINY-8214
 - Removed the style field from the `image` plugin dialog advanced tab #TINY-3422
 - Removed the legacy `mobile` theme #TINY-7832
-- Removed the legacy browser detection properties from `Env` #TINY-8162
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
 - Removed the deprecated `XHR` API #TINY-8164
@@ -141,11 +141,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `execCallback` and `setMode` APIs from `Editor` #TINY-8162
 - Removed the deprecated `addComponents` and `dependencies` APIs from `AddOnManager` #TINY-8162
 - Removed the deprecated `clearInterval`, `clearTimeout`, `debounce`, `requestAnimationFrame`, `setInterval`, `setTimeout` and `throttle` APIs from `Delay` #TINY-8162
-- Removed the deprecated `Schema` settings #TINY-7821
-- Removed the deprecated `file_browser_callback_types`, `force_hex_style_colors` and `images_dataimg_filter` settings #TINY-7823
-- Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` settings #TINY-7820
+- Removed the deprecated `Schema` options #TINY-7821
+- Removed the deprecated `file_browser_callback_types`, `force_hex_style_colors` and `images_dataimg_filter` options #TINY-7823
+- Removed the deprecated `filepicker_validator_handler`, `force_p_newlines`, `gecko_spellcheck`, `tab_focus`, `table_responsive_width` and `toolbar_drawer` options #TINY-7820
 - Removed the deprecated `media_scripts` option in the `media` plugin #TINY-8421
-- Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init settings #TINY-7822
+- Removed the deprecated `editor_deselector`, `editor_selector`, `elements`, `mode` and `types` legacy TinyMCE init options #TINY-7822
 - Removed the deprecated `content_editable_state` and `padd_empty_with_br` options #TINY-8400
 - Removed the deprecated `autoresize_on_init` option from the `autoresize` plugin #TINY-8400
 - Removed the deprecated `fullpage`, `spellchecker`, `bbcode`, `legacyoutput`, `colorpicker`, `contextmenu` and `textcolor` plugins #TINY-8192
