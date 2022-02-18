@@ -11,7 +11,7 @@ import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import { pAssertFloatingToolbarPosition, pOpenFloatingToolbarAndAssertPosition } from '../../../module/ToolbarUtils';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.InlineToolbarDrawerFloatingPositionTest', () => {
-  const toolbarHeight = 33;
+  const toolbarHeight = 39;
   const lineHeight = 30;
 
   const getUiContainerTop = (editor: Editor) => {
