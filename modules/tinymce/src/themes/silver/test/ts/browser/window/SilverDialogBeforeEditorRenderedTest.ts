@@ -7,18 +7,6 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBeforeEditorRenderedT
   const hook = TinyHooks.bddSetupLight<Editor>({
     inline: true,
     base_url: '/project/tinymce/js/tinymce',
-    setup: (ed: Editor) => {
-      ed.on('init', () => {
-        ed.windowManager.open({
-          title: 'Test Dialog',
-          body: {
-            type: 'panel',
-            items: []
-          },
-          buttons: []
-        });
-      });
-    }
   }, []);
 
   it('TINY-8397: Open dialog while the inline editor is hidden should not throw an exception', async () => {
