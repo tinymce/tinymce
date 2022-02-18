@@ -44,6 +44,7 @@
     flex-shrink: 0;
     flex-wrap: wrap;
     padding: 0 @_toolbar-padding-x-no-group-spacing;
+    transform: perspective(1px); // Fix for Chrome’s BG size rounding errors in some cases
   }
 
   .tox-toolbar-overlord > .tox-toolbar,
