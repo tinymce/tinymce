@@ -10,7 +10,7 @@ import {
 } from '@ephox/alloy';
 import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
+import { Compare, Css, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
@@ -94,6 +94,7 @@ const setup = (editor: Editor): RenderInfo => {
   const deviceClasses = isTouch ? [ touchPlatformClass ] : [];
   const isToolbarBottom = Options.isToolbarLocationBottom(editor);
   const toolbarMode = Options.getToolbarMode(editor);
+  const isInShadowRoot = SugarShadowDom.isInShadowRoot(SugarElement.fromDom(editor.getElement()));
 
   const memAnchorBar = Memento.record({
     dom: {
@@ -229,12 +230,13 @@ const setup = (editor: Editor): RenderInfo => {
         tag: 'div',
         classes: [ 'tox', 'tox-silver-sink', 'tox-tinymce-aux' ].concat(deviceClasses),
         attributes: {
-          ...I18n.isRtl() ? { dir: 'rtl' } : {}
+          ...I18n.isRtl() ? { dir: 'rtl' } : {},
+          style: isInShadowRoot ? 'top: 0; left: 0; right: 0; position: fixed' : ''
         }
       },
       behaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: () => header.isDocked(lazyHeader)
+          useFixed: () => isInShadowRoot || header.isDocked(lazyHeader)
         })
       ])
     };
@@ -405,7 +407,7 @@ const setup = (editor: Editor): RenderInfo => {
     };
 
     setupShortcutsAndCommands(outerContainer);
-    Events.setup(editor, mothership, uiMothership);
+    Events.setup(editor, mothership, uiMothership, isInShadowRoot);
     header.setup(editor, backstage.shared, lazyHeader);
     FormatControls.setup(editor, backstage);
     SilverContextMenu.setup(editor, lazySinkResult, backstage);

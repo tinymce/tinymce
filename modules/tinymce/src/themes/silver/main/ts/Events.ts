@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem) => {
+const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem, isInShadowRoot: boolean) => {
   const broadcastEvent = (name: string, evt: EventArgs) => {
     Arr.each([ mothership, uiMothership ], (ship) => {
       ship.broadcastEvent(name, evt);
@@ -58,7 +58,13 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   };
 
   // Window events
-  const onWindowScroll = (evt: UIEvent) => broadcastEvent(SystemEvents.windowScroll(), DomEvent.fromRawEvent(evt));
+  const onWindowScroll = (evt: UIEvent) => {
+    if (isInShadowRoot) {
+      broadcastOn(Channels.repositionPopups(), {});
+    }
+
+    broadcastEvent(SystemEvents.windowScroll(), DomEvent.fromRawEvent(evt));
+  };
   const onWindowResize = (evt: UIEvent) => {
     broadcastOn(Channels.repositionPopups(), {});
     broadcastEvent(SystemEvents.windowResize(), DomEvent.fromRawEvent(evt));
