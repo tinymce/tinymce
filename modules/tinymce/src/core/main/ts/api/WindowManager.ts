@@ -107,6 +107,7 @@ const WindowManager = (editor: Editor): WindowManager => {
     editor.editorManager.setActive(editor);
     SelectionBookmark.store(editor);
 
+    editor.ui.show();
     const dialog = openDialog();
     addDialog(dialog);
     return dialog;

@@ -136,7 +136,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const api: Partial<EditorUiApi> = {
     show: () => {
-      ui.show();
+      render();
     },
     hide: () => {
       ui.hide();
