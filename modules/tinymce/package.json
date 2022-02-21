@@ -23,8 +23,8 @@
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
-    "dompurify": "^2.3.4",
-    "prismjs": "^1.26.0",
+    "dompurify": "^2.3.6",
+    "prismjs": "^1.27.0",
     "tslib": "^2.0.0"
   }
 }
