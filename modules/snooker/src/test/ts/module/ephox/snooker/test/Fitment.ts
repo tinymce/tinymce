@@ -1,4 +1,4 @@
-import { assert } from '@ephox/bedrock-client';
+import { Assert } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
@@ -12,13 +12,13 @@ const mapToStructGrid = (grid: Structs.ElementNew[][]): Structs.RowCells[] => {
 };
 
 const assertGrids = (expected: Structs.RowCells[], actual: Structs.RowCells[]): void => {
-  assert.eq(expected.length, actual.length);
+  Assert.eq('', expected.length, actual.length);
   Arr.each(expected, (row, i) => {
     Arr.each(row.cells, (cell, j) => {
-      assert.eq(cell.element, actual[i].cells[j].element);
-      assert.eq(cell.isNew, actual[i].cells[j].isNew);
+      Assert.eq('', cell.element, actual[i].cells[j].element);
+      Assert.eq('', cell.isNew, actual[i].cells[j].isNew);
     });
-    assert.eq(row.section, actual[i].section);
+    Assert.eq('', row.section, actual[i].section);
   });
 };
 
@@ -31,16 +31,16 @@ const measureTest = (expected: { error: string } | { rowDelta: number; colDelta:
 
   Fitment.measure(startAddress, mapToStructGrid(gridA), mapToStructGrid(gridB)).fold((err) => {
     if ('error' in expected) {
-      assert.eq(expected.error, err);
+      Assert.eq('', expected.error, err);
     } else {
-      assert.fail('An error was not expected. Message was "' + err + '"');
+      Assert.fail('An error was not expected. Message was "' + err + '"');
     }
   }, (delta) => {
     if ('rowDelta' in expected) {
-      assert.eq(expected.rowDelta, delta.rowDelta, 'rowDelta expected: ' + expected.rowDelta + ' actual: ' + delta.rowDelta);
-      assert.eq(expected.colDelta, delta.colDelta, 'colDelta expected: ' + expected.colDelta + ' actual: ' + delta.colDelta);
+      Assert.eq('rowDelta expected: ' + expected.rowDelta + ' actual: ' + delta.rowDelta, expected.rowDelta, delta.rowDelta);
+      Assert.eq('colDelta expected: ' + expected.colDelta + ' actual: ' + delta.colDelta, expected.colDelta, delta.colDelta);
     } else {
-      assert.fail('Expected error "' + expected.error + '" but instead got rowDelta=' + delta.rowDelta + ' colDelta=' + delta.colDelta);
+      Assert.fail('Expected error "' + expected.error + '" but instead got rowDelta=' + delta.rowDelta + ' colDelta=' + delta.colDelta);
     }
   });
 };
@@ -59,8 +59,8 @@ const tailorIVTest = (expected: { rows: number; cols: number }, startAddress: St
   const tailoredGrid = Fitment.tailor(mapToStructGrid(gridA), delta, generator());
   const rows = tailoredGrid.length;
   const cols = tailoredGrid[0].cells.length;
-  assert.eq(expected.rows, rows);
-  assert.eq(expected.cols, cols);
+  Assert.eq('', expected.rows, rows);
+  Assert.eq('', expected.cols, cols);
 };
 
 export {

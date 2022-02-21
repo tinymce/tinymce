@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 
 import * as Injection from 'ephox/phoenix/injection/Injection';
@@ -27,7 +27,7 @@ UnitTest.test('InsertAtTest', () => {
     const universe = makeUniverse();
     const start = Finder.get(universe, element);
     Injection.atStartOf(universe, start, offset, injection);
-    assert.eq(expected, universe.shortlog((item) => {
+    Assert.eq('', expected, universe.shortlog((item) => {
       const props = universe.property();
       return props.isText(item) ? `text("${props.getText(item)}")` : item.id;
     }));

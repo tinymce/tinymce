@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Remove, SugarElement } from '@ephox/sugar';
 
 import * as TableGridSize from 'ephox/snooker/api/TableGridSize';
@@ -8,8 +8,8 @@ UnitTest.test('Table grid size test', () => {
     const tbl = SugarElement.fromHtml<HTMLTableElement>(html);
     const size = TableGridSize.getGridSize(tbl);
 
-    assert.eq(expectedColumnCount, size.columns, 'Should be expected column count');
-    assert.eq(expectedRowCount, size.rows, 'Should be expected row count');
+    Assert.eq('Should be expected column count', expectedColumnCount, size.columns);
+    Assert.eq('Should be expected row count', expectedRowCount, size.rows);
 
     Remove.remove(tbl);
   };

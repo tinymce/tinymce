@@ -1,4 +1,4 @@
-import { assert } from '@ephox/bedrock-client';
+import { Assert } from '@ephox/bedrock-client';
 import { Arr, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -14,13 +14,13 @@ const mapToStructGrid = (grid: Structs.ElementNew[][]): Structs.RowCells[] => {
 };
 
 const assertGrids = (expected: Structs.RowCells[], actual: Structs.RowCells[]): void => {
-  assert.eq(expected.length, actual.length);
+  Assert.eq('', expected.length, actual.length);
   Arr.each(expected, (row, i) => {
     Arr.each(row.cells, (cell, j) => {
-      assert.eq(cell.element, actual[i].cells[j].element);
-      assert.eq(cell.isNew, actual[i].cells[j].isNew);
+      Assert.eq('', cell.element, actual[i].cells[j].element);
+      Assert.eq('', cell.isNew, actual[i].cells[j].isNew);
     });
-    assert.eq(row.section, actual[i].section);
+    Assert.eq('', row.section, actual[i].section);
   });
 };
 
@@ -42,15 +42,15 @@ const mergeTest = (
   );
   nuGrid.fold((err) => {
     if ('error' in expected) {
-      assert.eq(expected.error, err);
+      Assert.eq('', expected.error, err);
     } else {
-      assert.fail('Failure was unexpected, got error "' + err + '"');
+      Assert.fail('Failure was unexpected, got error "' + err + '"');
     }
   }, (grid) => {
     if (!('error' in expected)) {
       assertGrids(mapToStructGrid(expected), grid);
     } else {
-      assert.fail('Expected failure "' + expected.error + '" but instead got grid');
+      Assert.fail('Expected failure "' + expected.error + '" but instead got grid');
     }
   });
 };

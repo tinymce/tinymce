@@ -1,5 +1,5 @@
 import { Logger } from '@ephox/agar';
-import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 
@@ -16,7 +16,7 @@ UnitTest.test('StructureSchemaRawTest', () => {
       const message = StructureSchema.formatError(err);
       Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, (val) => {
-      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
+      Assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
     });
   };
 
@@ -423,7 +423,7 @@ UnitTest.test('StructureSchemaRawTest', () => {
       num: 42,
       str: 'a'
     }).fold(
-      () => assert.fail('Should not fail'),
+      () => Assert.fail('Should not fail'),
       (actual) => Assert.eq('Should be expected object', {
         num: 42,
         str: 'a'
@@ -432,7 +432,7 @@ UnitTest.test('StructureSchemaRawTest', () => {
 
     StructureSchema.asRaw<SomeType>('SomeType', schema, {}).fold(
       (err) => Assert.eq('Should be two errors', 2, err.errors.length),
-      () => assert.fail('Should not pass')
+      () => Assert.fail('Should not pass')
     );
   });
 

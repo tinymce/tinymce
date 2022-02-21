@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Css from 'ephox/sugar/api/properties/Css';
@@ -12,13 +12,13 @@ UnitTest.test('CssProperty', () => {
   const el = EphoxElement('div');
 
   const propertyIsNot = (elm: SugarElement<Element>, propName: string, propValue: string) => {
-    assert.eq(false, init.is(elm));
-    assert.eq(false, Css.get(elm, propName) === propValue, 'Expected ' + elm.dom + ' to not have property ' + propName + ' set to ' + propValue);
+    Assert.eq('', false, init.is(elm));
+    Assert.eq('Expected ' + elm.dom + ' to not have property ' + propName + ' set to ' + propValue, false, Css.get(elm, propName) === propValue);
   };
 
   const propertyIs = (elm: SugarElement<Element>, propName: string, propValue: string) => {
-    assert.eq(true, init.is(elm), 'This is failing because ' + elm.dom + ' should have ' + propName + ':' + propValue + '. But found: ' + Css.get(elm, propName) );
-    assert.eq(true, Css.get(elm, propName) === propValue, 'Expected ' + elm.dom + ' to have property ' + propName + ' set to ' + propValue);
+    Assert.eq('This is failing because ' + elm.dom + ' should have ' + propName + ':' + propValue + '. But found: ' + Css.get(elm, propName), true, init.is(elm));
+    Assert.eq('Expected ' + elm.dom + ' to have property ' + propName + ' set to ' + propValue, true, Css.get(elm, propName) === propValue);
   };
 
   propertyIsNot(el, propertyName, propertyValue);

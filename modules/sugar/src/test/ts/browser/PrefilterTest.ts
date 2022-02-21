@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
@@ -27,7 +27,7 @@ UnitTest.test('Browser Test: PrefilterTest', () => {
     const actual = Prefilter.beforeSpecial(element, offset);
 
     const actualS = toString(actual);
-    assert.eq(expected, actualS, 'Test: ' + label + '. Was: ' + actualS + ', but expected: ' + expected);
+    Assert.eq('Test: ' + label + '. Was: ' + actualS + ', but expected: ' + expected, expected, actualS);
   };
 
   check('div 0', 'on(<div><span>dog</span><br><img><span>cat</span></div>, 0)', [ ], 0);

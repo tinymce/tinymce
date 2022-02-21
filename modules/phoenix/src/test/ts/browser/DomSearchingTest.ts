@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Pattern } from '@ephox/polaris';
 import { SugarElement } from '@ephox/sugar';
@@ -14,5 +14,5 @@ UnitTest.test('DomSearchingTest', () => {
     pattern: Pattern.unsafetoken('sometext')
   }], Fun.never);
 
-  assert.eq(0, result.length, 'There should be no matches, because some and text are separated by a list boundary');
+  Assert.eq('There should be no matches, because some and text are separated by a list boundary', 0, result.length);
 });

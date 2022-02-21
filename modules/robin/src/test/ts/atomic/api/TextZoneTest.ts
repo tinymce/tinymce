@@ -1,4 +1,4 @@
-import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
 
@@ -55,14 +55,14 @@ UnitTest.test('TextZoneTest', () => {
         // Good
         Fun.noop,
         (act) => {
-          assert.fail(label + '\nShould not have created zone: ' + JSON.stringify(
+          Assert.fail(label + '\nShould not have created zone: ' + JSON.stringify(
             JSON.stringify(rawOne(doc1, act))
           ));
         }
       );
     }, (exp) => {
       actual.fold(() => {
-        assert.fail(label + '\nDid not find a zone. Expected to find: ' + JSON.stringify(exp, null, 2));
+        Assert.fail(label + '\nDid not find a zone. Expected to find: ' + JSON.stringify(exp, null, 2));
       }, (act) => {
         Assert.eq(label + '\nTesting zone: ', exp, rawOne(doc1, act));
       });

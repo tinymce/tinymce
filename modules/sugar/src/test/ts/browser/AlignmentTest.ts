@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -22,7 +22,7 @@ UnitTest.test('AlignmentTest', () => {
 
   const check = (element: SugarElement<Element> | SugarElement<Text>, property: string, value: string, expected: boolean) => {
     const res = Alignment.hasAlignment(element, property, value);
-    assert.eq(expected, res);
+    Assert.eq('', expected, res);
     Traverse.parent(element).each(Remove.remove);
   };
 

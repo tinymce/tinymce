@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
@@ -20,7 +20,7 @@ UnitTest.test('LeftBlockTest', () => {
 
   const check = (expected: string[], id: string, method: (u: TestUniverse, i: Gene) => Gene[]) => {
     const actual = method(universe, universe.find(universe.get(), id).getOrDie());
-    assert.eq(expected, Arr.map(actual, (x) => {
+    Assert.eq('', expected, Arr.map(actual, (x) => {
       return x.id;
     }));
   };

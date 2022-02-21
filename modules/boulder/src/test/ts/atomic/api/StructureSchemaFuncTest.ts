@@ -1,5 +1,5 @@
 import { Logger } from '@ephox/agar';
-import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
 
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
@@ -14,7 +14,7 @@ UnitTest.test('Atomic Test: api.StructureSchemaFuncTest', () => {
       const message = StructureSchema.formatError(err);
       Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, (val) => {
-      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
+      Assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
     });
   };
 
@@ -32,7 +32,7 @@ UnitTest.test('Atomic Test: api.StructureSchemaFuncTest', () => {
       }
 
       if (passed !== null) {
-        assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(passed, null, 2) + ')');
+        Assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(passed, null, 2) + ')');
       }
     });
   };

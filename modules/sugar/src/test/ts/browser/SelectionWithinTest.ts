@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
@@ -19,7 +19,7 @@ UnitTest.test('Browser Test: SelectionTest', () => {
   const assertWithin = (expected: Record<string, number>, outer: SugarElement<Node>) => {
     WindowSelection.setToElement(window, outer);
     WindowSelection.getExact(window).fold(() => {
-      assert.fail('Selection should be wrapping: ' + Html.getOuter(outer));
+      Assert.fail('Selection should be wrapping: ' + Html.getOuter(outer));
     }, (sel) => {
       Obj.each(expected, (num, tag) => {
         const actual = WindowSelection.findWithin(
@@ -27,11 +27,8 @@ UnitTest.test('Browser Test: SelectionTest', () => {
           SimSelection.exact(sel.start, sel.soffset, sel.finish, sel.foffset),
           tag
         );
-        assert.eq(
-          num, actual.length, 'Incorrect number of ' + tag + ' tags.\n' +
-          'Expected: ' + num + ', but was: ' + actual.length
-        );
-        assert.eq(true, Arr.forall(actual, (a) => SugarNode.name(a) === tag), 'All tags must be: ' + tag);
+        Assert.eq('Incorrect number of ' + tag + ' tags.\n' + 'Expected: ' + num + ', but was: ' + actual.length, num, actual.length);
+        Assert.eq('All tags must be: ' + tag, true, Arr.forall(actual, (a) => SugarNode.name(a) === tag));
       });
     });
   };

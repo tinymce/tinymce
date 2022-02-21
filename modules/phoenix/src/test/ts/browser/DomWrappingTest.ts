@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Class, Html, Insert, InsertAll, Remove, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
@@ -26,7 +26,7 @@ UnitTest.test('DomWrappingTest', () => {
 
   const checker = (expected: string, p1: number[], offset1: number, p2: number[], offset2: number, input: SugarElement[], initial: string) => {
     check(input, (container: SugarElement) => {
-      assert.eq(initial, Html.get(container));
+      Assert.eq('', initial, Html.get(container));
       const first = c(container, p1);
       const second = c(container, p2);
       DomWrapping.wrapWith(first, offset1, second, offset2, () => {
@@ -35,7 +35,7 @@ UnitTest.test('DomWrappingTest', () => {
         return DomWrapping.nu(basic);
       });
 
-      assert.eq(expected, Html.get(container));
+      Assert.eq('', expected, Html.get(container));
     });
   };
 

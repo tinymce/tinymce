@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 
 import { Bindable, Event } from 'ephox/porkbun/Event';
@@ -25,7 +25,7 @@ UnitTest.test('Events', () => {
     });
 
     let called = false;
-    let calledEvent: MyEvent | Record<string, () => any> = {};
+    let calledEvent: MyEvent | Record<string, string> = {};
 
     const handler = (event: MyEvent) => {
       calledEvent = event;
@@ -35,9 +35,9 @@ UnitTest.test('Events', () => {
     events.registry.myEvent.bind(handler);
     events.trigger.myEvent('something');
 
-    assert.eq(true, called);
-    assert.eq(true, Obj.has(calledEvent, 'name'));
-    assert.eq('something', calledEvent.name);
+    Assert.eq('', true, called);
+    Assert.eq('', true, Obj.has(calledEvent, 'name'));
+    Assert.eq('', 'something', calledEvent.name);
 
     called = false;
     calledEvent = {};
@@ -45,8 +45,8 @@ UnitTest.test('Events', () => {
     events.registry.myEvent.unbind(handler);
     events.trigger.myEvent('something');
 
-    assert.eq(false, called);
-    assert.eq(false, Obj.has(calledEvent, 'name'));
+    Assert.eq('', false, called);
+    Assert.eq('', false, Obj.has(calledEvent, 'name'));
 
     // This should not throw an error
     events.registry.myEvent.unbind(handler);
@@ -57,11 +57,11 @@ UnitTest.test('Events', () => {
       emptyEvent: Event([])
     });
 
-    assert.throwsError(
+    Assert.throwsError(
+      'Event bind error: undefined handler',
       () => {
         events.registry.emptyEvent.bind(undefined as any);
-      },
-      'Event bind error: undefined handler'
+      }
     );
   })();
 
@@ -74,15 +74,15 @@ UnitTest.test('Events', () => {
       quack: SourceEvent([ 'a', 'b', 'c' ], ea.registry.chook)
     });
 
-    assert.throwsError(
-      () => eb.trigger.quack('hay', 'bee', 'quee'),
-      'Cannot trigger a source event.'
+    Assert.throwsError(
+      'Cannot trigger a source event.',
+      () => eb.trigger.quack('hay', 'bee', 'quee')
     );
 
     eb.registry.quack.bind((evt) => {
-      assert.eq('ay', evt.a);
-      assert.eq('bee', evt.b);
-      assert.eq('sea', evt.c);
+      Assert.eq('', 'ay', evt.a);
+      Assert.eq('', 'bee', evt.b);
+      Assert.eq('', 'sea', evt.c);
     });
     ea.trigger.chook('ay', 'bee', 'sea');
 
@@ -98,9 +98,9 @@ UnitTest.test('Events', () => {
     });
 
     eb.registry.quack.bind((evt) => {
-      assert.eq('ay', evt.a);
-      assert.eq('bee', evt.b);
-      assert.eq('sea', evt.c);
+      Assert.eq('', 'ay', evt.a);
+      Assert.eq('', 'bee', evt.b);
+      Assert.eq('', 'sea', evt.c);
     });
     ea.trigger.chook('ay', 'bee', 'sea', 'dee', 'eee');
 

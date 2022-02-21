@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj, Type } from '@ephox/katamari';
 import { Attribute, Class, Html, InsertAll, SugarElement } from '@ephox/sugar';
 
@@ -97,13 +97,13 @@ UnitTest.test('CopySelectedTest', () => {
     // Verify specified table attributes are not present in replica table
     if (Type.isNonNullable(tableAttributes)) {
       Arr.each(tableAttributes.afterCopy, (attrName) => {
-        assert.eq(false, Attribute.has(replica, attrName));
+        Assert.eq('', false, Attribute.has(replica, attrName));
       });
     }
 
     // Now verify that the table matches the nested array structure of expected
     const assertWithInfo = <T> (exp: T, actual: T, info: string) => {
-      assert.eq(exp, actual, () => 'expected ' + info + ' "' + exp + '", was "' + actual + '"' + ', test "' + label + '". Output HTML:\n' + Html.getOuter(replica));
+      Assert.eq(() => 'expected ' + info + ' "' + exp + '", was "' + actual + '"' + ', test "' + label + '". Output HTML:\n' + Html.getOuter(replica), exp, actual);
     };
 
     const domRows = traverseChildElements(replica);

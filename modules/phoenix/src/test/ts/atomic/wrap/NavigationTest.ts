@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { CommentGene, Gene, TestUniverse, TextGene } from '@ephox/boss';
 
 import * as Finder from 'ephox/phoenix/test/Finder';
@@ -34,20 +34,20 @@ UnitTest.test('NavigationTest', () => {
 
   const checkLast = (expected: CheckItem, id: string) => {
     const actual = Navigation.toLast(doc, Finder.get(doc, id));
-    assert.eq(expected.element, actual.element.id);
-    assert.eq(expected.offset, actual.offset);
+    Assert.eq('', expected.element, actual.element.id);
+    Assert.eq('', expected.offset, actual.offset);
   };
 
   const checkLower = (expected: CheckItem, id: string) => {
     const actual = Navigation.toLower(doc, Finder.get(doc, id));
-    assert.eq(expected.element, actual.element.id);
-    assert.eq(expected.offset, actual.offset);
+    Assert.eq('', expected.element, actual.element.id);
+    Assert.eq('', expected.offset, actual.offset);
   };
 
   const checkLeaf = (expected: CheckItem, id: string, offset: number) => {
     const actual = Navigation.toLeaf(doc, Finder.get(doc, id), offset);
-    assert.eq(expected.element, actual.element.id);
-    assert.eq(expected.offset, actual.offset);
+    Assert.eq('', expected.element, actual.element.id);
+    Assert.eq('', expected.offset, actual.offset);
   };
 
   checkLower({ element: '1', offset: 2 }, '1');
@@ -64,17 +64,17 @@ UnitTest.test('NavigationTest', () => {
   const checkFreeFallLtr = (expected: CheckItem, universe: TestUniverse, elementId: string) => {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallLtr(universe, element);
-    assert.eq(element.id, elementId);
-    assert.eq(expected.element, actual.element.id);
-    assert.eq(expected.offset, actual.offset);
+    Assert.eq('', element.id, elementId);
+    Assert.eq('', expected.element, actual.element.id);
+    Assert.eq('', expected.offset, actual.offset);
   };
 
   const checkFreeFallRtl = (expected: CheckItem, universe: TestUniverse, elementId: string) => {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallRtl(universe, element);
-    assert.eq(element.id, elementId);
-    assert.eq(expected.element, actual.element.id);
-    assert.eq(expected.offset, actual.offset);
+    Assert.eq('', element.id, elementId);
+    Assert.eq('', expected.element, actual.element.id);
+    Assert.eq('', expected.offset, actual.offset);
   };
 
   // Freefall without comment nodes

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Ready from 'ephox/sugar/api/events/Ready';
 
@@ -9,5 +9,5 @@ UnitTest.test('ReadyTest', () => {
   Ready.document(() => {
     called++;
   });
-  assert.eq(1, called);
+  Assert.eq('', 1, called);
 });

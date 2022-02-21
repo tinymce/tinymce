@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
@@ -32,11 +32,11 @@ UnitTest.test('Contiguous Text Nodes Test', () => {
 
   const check = (expected: CheckItem[], ids: string[]) => {
     const actual = Contiguous.textnodes(doc, Finder.getAll(doc, ids));
-    assert.eq(expected.length, actual.length);
+    Assert.eq('', expected.length, actual.length);
     Arr.each(expected, (exp, i) => {
       const act = actual[i];
-      assert.eq(exp.parent, act.parent.id);
-      assert.eq(exp.children, TestRenders.ids(act.children));
+      Assert.eq('', exp.parent, act.parent.id);
+      Assert.eq('', exp.children, TestRenders.ids(act.children));
     });
   };
 

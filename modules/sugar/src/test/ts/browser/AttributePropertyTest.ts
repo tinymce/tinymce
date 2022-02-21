@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import { AttributeProperty } from 'ephox/sugar/api/properties/AttributeProperty';
@@ -18,17 +18,17 @@ UnitTest.test('AttributePropertyTest', () => {
   const link = EphoxElement('a');
   Attribute.set(link, 'href', '#');
 
-  assert.eq(false, init.is(link));
-  assert.eq(false, init.is(rtlEl));
-  assert.eq(true, init.is(ltrEl));
+  Assert.eq('', false, init.is(link));
+  Assert.eq('', false, init.is(rtlEl));
+  Assert.eq('', true, init.is(ltrEl));
 
   init.remove(rtlEl);
-  assert.eq(Attribute.get(rtlEl, 'custom'), undefined);
+  Assert.eq('', Attribute.get(rtlEl, 'custom'), undefined);
   init.set(rtlEl);
-  assert.eq(Attribute.get(rtlEl, 'custom'), 'value');
+  Assert.eq('', Attribute.get(rtlEl, 'custom'), 'value');
 
   init.set(link);
-  assert.eq(Attribute.get(link, 'custom'), 'value');
+  Assert.eq('', Attribute.get(link, 'custom'), 'value');
   init.remove(link);
-  assert.eq(Attribute.get(link, 'custom'), undefined);
+  Assert.eq('', Attribute.get(link, 'custom'), undefined);
 });

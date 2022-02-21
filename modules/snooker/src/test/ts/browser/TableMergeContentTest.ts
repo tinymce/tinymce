@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -21,7 +21,7 @@ UnitTest.test('TableMergeContentTest', () => {
 
     TableContent.merge(cells);
     Arr.each(specs, (spec, i) => {
-      assert.eq(spec.expected, Html.get(cells[i]), () => spec.label + ' expected:\n' + spec.expected + '\n got: \n' + Html.get(cells[i]));
+      Assert.eq(() => spec.label + ' expected:\n' + spec.expected + '\n got: \n' + Html.get(cells[i]), spec.expected, Html.get(cells[i]));
     });
 
     Remove.remove(table);

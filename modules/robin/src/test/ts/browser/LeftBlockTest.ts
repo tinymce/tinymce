@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse, Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Insert, InsertAll, Remove, Replication, SugarBody, SugarElement } from '@ephox/sugar';
@@ -25,13 +25,13 @@ UnitTest.test('LeftBlockTest', () => {
   const check = (expected: string, path: number[], method: <E, D>(universe: Universe<E, D>, item: E) => E[]) => {
     reset();
     const ele = Hierarchy.follow(editor, path);
-    assert.eq(true, ele.isSome(), 'Could not find element at path: ' + path);
+    Assert.eq('Could not find element at path: ' + path, true, ele.isSome());
     ele.each((start) => {
       const group = method(universe, start);
       const clones = Arr.map(group, Replication.deep);
       const div = SugarElement.fromTag('div');
       InsertAll.append(div, clones);
-      assert.eq(expected, div.dom.innerHTML);
+      Assert.eq('', expected, div.dom.innerHTML);
     });
   };
 

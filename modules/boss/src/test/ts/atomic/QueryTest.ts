@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import { Gene } from 'ephox/boss/api/Gene';
 import { TestUniverse } from 'ephox/boss/api/TestUniverse';
@@ -24,13 +24,13 @@ UnitTest.test('QueryTest', () => {
   const checkPrev = (expected: string, id: string) => {
     const first = universe.find(universe.get(), id).getOrDie();
     const actual = Query.prevSibling(first).map((e) => e.id).getOr('_nope_');
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   const checkNext = (expected: string, id: string) => {
     const first = universe.find(universe.get(), id).getOrDie();
     const actual = Query.nextSibling(first).map((e) => e.id).getOr('_nope_');
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   const checkPosition = (expected: number, one: string, other: string) => {
@@ -38,7 +38,7 @@ UnitTest.test('QueryTest', () => {
     const last = universe.find(universe.get(), other).getOrDie();
 
     const actual = Query.comparePosition(first, last);
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   checkPosition(4, '1.1.1', '1.1.2');
