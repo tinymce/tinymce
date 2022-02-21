@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Attribute, Html, Insert, InsertAll, Remove, SugarElement } from '@ephox/sugar';
 
@@ -28,7 +28,7 @@ UnitTest.test('DomSearchTest', () => {
       });
     });
 
-    assert.eq(expected, Html.get(container));
+    Assert.eq('', expected, Html.get(container));
   };
 
   check('<span data-word="Sed">Sed</span>', [ 'Sed' ], [ 'Sed' ]);

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -17,15 +17,15 @@ UnitTest.test('SelectorTest', () => {
 
   const textnode = SugarElement.fromText('');
   const commentnode = SugarElement.fromHtml('<!--a-->');
-  assert.eq(false, Selectors.is(textnode, 'anything'));
-  assert.eq(false, Selectors.is(commentnode, 'anything'));
-  assert.eq([], Selectors.all('anything', textnode));
-  assert.eq([], Selectors.all('anything', commentnode));
+  Assert.eq('', false, Selectors.is(textnode, 'anything'));
+  Assert.eq('', false, Selectors.is(commentnode, 'anything'));
+  Assert.eq('', [], Selectors.all('anything', textnode));
+  Assert.eq('', [], Selectors.all('anything', commentnode));
   Checkers.checkOpt(Optional.none<SugarElement<Element>>(), Selectors.one('anything', textnode));
   Checkers.checkOpt(Optional.none<SugarElement<Element>>(), Selectors.one('anything', commentnode));
-  assert.eq([], SelectorFilter.ancestors(textnode, 'anything'));
-  assert.eq([], SelectorFilter.siblings(textnode, 'anything'));
-  assert.eq([], SelectorFilter.children(textnode, 'anything'));
+  Assert.eq('', [], SelectorFilter.ancestors(textnode, 'anything'));
+  Assert.eq('', [], SelectorFilter.siblings(textnode, 'anything'));
+  Assert.eq('', [], SelectorFilter.children(textnode, 'anything'));
 
   try {
     // IE throws an error running complex queries on an empty div
@@ -33,7 +33,7 @@ UnitTest.test('SelectorTest', () => {
     const empty = Div();
     Selectors.all('img:not([data-ephox-polish-blob])', empty);
   } catch (e: any) {
-    assert.fail(e);
+    Assert.fail(e);
   }
 
   TestPage.connect(); // description of structure is in TestPage
@@ -67,36 +67,36 @@ UnitTest.test('SelectorTest', () => {
   Checkers.checkList([ TestPage.s1, TestPage.s2, TestPage.s3, TestPage.s4 ], SelectorFilter.descendants(TestPage.container, 'span'));
   Checkers.checkList([], SelectorFilter.descendants(TestPage.container, 'blockquote'));
 
-  assert.eq(true, SelectorExists.any('p'));
-  assert.eq(false, SelectorExists.any('table'));
-  assert.eq(true, SelectorExists.ancestor(TestPage.t1, 'p'));
-  assert.eq(false, SelectorExists.ancestor(TestPage.t1, 'span'));
-  assert.eq(true, SelectorExists.sibling(TestPage.p2, 'p'));
-  assert.eq(false, SelectorExists.sibling(TestPage.t1, 'p'));
-  assert.eq(true, SelectorExists.child(TestPage.p1, 'span'));
-  assert.eq(false, SelectorExists.child(TestPage.p2, 'label'));
-  assert.eq(true, SelectorExists.descendant(TestPage.p2, 'span'));
-  assert.eq(false, SelectorExists.closest(TestPage.p1, 'span'));
-  assert.eq(true, SelectorExists.closest(TestPage.p1, 'p'));
-  assert.eq(true, SelectorExists.closest(TestPage.s1, 'p'));
-  assert.eq(true, SelectorExists.closest(TestPage.t1, 'p'));
+  Assert.eq('', true, SelectorExists.any('p'));
+  Assert.eq('', false, SelectorExists.any('table'));
+  Assert.eq('', true, SelectorExists.ancestor(TestPage.t1, 'p'));
+  Assert.eq('', false, SelectorExists.ancestor(TestPage.t1, 'span'));
+  Assert.eq('', true, SelectorExists.sibling(TestPage.p2, 'p'));
+  Assert.eq('', false, SelectorExists.sibling(TestPage.t1, 'p'));
+  Assert.eq('', true, SelectorExists.child(TestPage.p1, 'span'));
+  Assert.eq('', false, SelectorExists.child(TestPage.p2, 'label'));
+  Assert.eq('', true, SelectorExists.descendant(TestPage.p2, 'span'));
+  Assert.eq('', false, SelectorExists.closest(TestPage.p1, 'span'));
+  Assert.eq('', true, SelectorExists.closest(TestPage.p1, 'p'));
+  Assert.eq('', true, SelectorExists.closest(TestPage.s1, 'p'));
+  Assert.eq('', true, SelectorExists.closest(TestPage.t1, 'p'));
 
   // simple selectors
-  assert.eq(false, Selectors.is(TestPage.t1, 'p'), 'Text node should not match "p"');
-  assert.eq(true, Selectors.is(TestPage.p1, 'p'), 'Paragraph should match "p"');
-  assert.eq(false, Selectors.is(TestPage.p1, 'span'), 'Paragraph should not match "span"');
-  assert.eq(false, Selectors.is(TestPage.p1, 'p.blue'), 'Paragraph should not match "p.blue"');
-  assert.eq(true, Selectors.is(TestPage.s3, 'span'), 'Span should match "span"');
+  Assert.eq('Text node should not match "p"', false, Selectors.is(TestPage.t1, 'p'));
+  Assert.eq('Paragraph should match "p"', true, Selectors.is(TestPage.p1, 'p'));
+  Assert.eq('Paragraph should not match "span"', false, Selectors.is(TestPage.p1, 'span'));
+  Assert.eq('Paragraph should not match "p.blue"', false, Selectors.is(TestPage.p1, 'p.blue'));
+  Assert.eq('Span should match "span"', true, Selectors.is(TestPage.s3, 'span'));
 
   // slightly more advanced selectors
-  assert.eq(true, Selectors.is(TestPage.p1, 'div > p'), 'Paragraph should match "p"');
-  assert.eq(true, Selectors.is(TestPage.p1, 'div > p:first-child'), 'Paragraph should match "p"');
-  assert.eq(true, Selectors.is(TestPage.p2, 'div > p:last-child'), 'Paragraph should match "p"');
-  assert.eq(true, Selectors.is(TestPage.s4, 'div > p:last-child span span:last-child'), 'Span should match "span"');
+  Assert.eq('Paragraph should match "p"', true, Selectors.is(TestPage.p1, 'div > p'));
+  Assert.eq('Paragraph should match "p"', true, Selectors.is(TestPage.p1, 'div > p:first-child'));
+  Assert.eq('Paragraph should match "p"', true, Selectors.is(TestPage.p2, 'div > p:last-child'));
+  Assert.eq('Span should match "span"', true, Selectors.is(TestPage.s4, 'div > p:last-child span span:last-child'));
 
   // Mutating content.
   Class.add(TestPage.p1, 'blue');
-  assert.eq(true, Selectors.is(TestPage.p1, 'p.blue'), 'Paragraph should (now) match "p.blue"');
+  Assert.eq('Paragraph should (now) match "p.blue"', true, Selectors.is(TestPage.p1, 'p.blue'));
 
   Remove.remove(TestPage.container);
 });

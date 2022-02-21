@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { Gene } from 'ephox/boss/api/Gene';
@@ -25,7 +25,7 @@ UnitTest.test('InsertionTest', () => {
     const anchor = Locator.byId(family, anchorId).getOrDie();
     const item = Locator.byId(family, itemId).getOrDie();
     method(anchor, item);
-    assert.eq(expected, Logger.basic(family));
+    Assert.eq('', expected, Logger.basic(family));
   };
 
   const checkBefore = (expected: string, input: Gene, anchorId: string, itemId: string) => {
@@ -40,7 +40,7 @@ UnitTest.test('InsertionTest', () => {
     const family = Tracks.track(input, Optional.none());
     const anchor = Locator.byId(family, anchorId).getOrDie();
     Insertion.wrap(anchor, wrapper);
-    assert.eq(expected, Logger.basic(family));
+    Assert.eq('', expected, Logger.basic(family));
   };
 
   // initially A(B,C(D(E),F))
@@ -61,7 +61,7 @@ UnitTest.test('InsertionTest', () => {
       return Locator.byId(family, itemId).getOrDie('Did not find item: ' + itemId);
     });
     Insertion.afterAll(anchor, items);
-    assert.eq(expected, Logger.basic(family));
+    Assert.eq('', expected, Logger.basic(family));
   };
 
   checkAfterAll('A(B,C(D,E,F))', data(), 'D', [ 'E', 'F' ]);

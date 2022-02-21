@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
@@ -42,7 +42,7 @@ UnitTest.test('RangeTest', () => {
     const start = Finder.get(doc, startId);
     const finish = Finder.get(doc, finishId);
     const actual = Family.range(doc, start, delta1, finish, delta2);
-    assert.eq(expected, Arr.map(actual, (x) => {
+    Assert.eq('', expected, Arr.map(actual, (x) => {
       return x.id;
     }));
   };

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { Html, Insert, SugarElement } from '@ephox/sugar';
 
@@ -22,8 +22,8 @@ UnitTest.test('CloneFormatsTest', () => {
 
   const clonedCell = cloneTableFill.cell(cell);
 
-  assert.eq('<td><strong><em><br></em></strong></td>', Html.getOuter(clonedCell));
+  Assert.eq('', '<td><strong><em><br></em></strong></td>', Html.getOuter(clonedCell));
 
   const noClonedCell = noCloneTableFill.cell(cell);
-  assert.eq('<td><br></td>', Html.getOuter(noClonedCell));
+  Assert.eq('', '<td><br></td>', Html.getOuter(noClonedCell));
 });

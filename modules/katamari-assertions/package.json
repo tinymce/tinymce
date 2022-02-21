@@ -16,7 +16,7 @@
   "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/bedrock-client": "^11.0.0",
+    "@ephox/bedrock-client": "11 || 12 || 13",
     "@ephox/dispute": "^1.0.3",
     "@ephox/katamari": "^9.0.0-alpha.2",
     "tslib": "^2.0.0"

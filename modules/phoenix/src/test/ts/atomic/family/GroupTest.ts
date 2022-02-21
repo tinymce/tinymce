@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
@@ -34,7 +34,7 @@ UnitTest.test('GroupTest', () => {
       return Finder.get(doc, id);
     });
     const actual = Group.group(doc, items);
-    assert.eq(expected, Arr.map(actual, (xs) => {
+    Assert.eq('', expected, Arr.map(actual, (xs) => {
       return Arr.map(xs, TestRenders.typeditem);
     }));
   };

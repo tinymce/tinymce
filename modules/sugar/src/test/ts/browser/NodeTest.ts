@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
 import * as NodeTypes from 'ephox/sugar/api/node/NodeTypes';
@@ -9,12 +9,12 @@ import EphoxElement from 'ephox/sugar/test/EphoxElement';
 
 UnitTest.test('NodeTest', () => {
   const check = (node: SugarElement<Node>, nodeType: number, nodeName: string, nodeValue: string | null, isElement: boolean, isText: boolean, isDocument: boolean) => {
-    assert.eq(nodeType, SugarNode.type(node));
-    assert.eq(nodeName, SugarNode.name(node));
-    assert.eq(nodeValue, SugarNode.value(node));
-    assert.eq(isElement, SugarNode.isElement(node));
-    assert.eq(isText, SugarNode.isText(node));
-    assert.eq(isDocument, SugarNode.isDocument(node));
+    Assert.eq('', nodeType, SugarNode.type(node));
+    Assert.eq('', nodeName, SugarNode.name(node));
+    Assert.eq('', nodeValue, SugarNode.value(node));
+    Assert.eq('', isElement, SugarNode.isElement(node));
+    Assert.eq('', isText, SugarNode.isText(node));
+    Assert.eq('', isDocument, SugarNode.isDocument(node));
   };
 
   check(
@@ -54,7 +54,7 @@ UnitTest.test('NodeTest', () => {
       return predicate(input);
     });
 
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   const data = [ '<div>Hello</div>', '<div><span>Hello</span></div>', '<div><!-- I am a comment --></div>' ];

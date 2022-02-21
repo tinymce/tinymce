@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 
@@ -53,7 +53,7 @@ UnitTest.test('WalkerPathTest', () => {
       current = Walker.go(universe, c.item, c.mode, direction);
     }
 
-    assert.eq(expected, path);
+    Assert.eq('', expected, path);
   };
 
   checkPath([

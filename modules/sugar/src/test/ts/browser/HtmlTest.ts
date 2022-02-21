@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Html from 'ephox/sugar/api/properties/Html';
@@ -9,12 +9,12 @@ UnitTest.test('HtmlTest', () => {
   const c = Div();
   const container = Div();
   Insert.append(container, c);
-  assert.eq('<div></div>', Html.getOuter(c));
+  Assert.eq('', '<div></div>', Html.getOuter(c));
 
-  assert.eq(true, c.dom.parentNode === container.dom, 'getOuter must not change the DOM');
+  Assert.eq('getOuter must not change the DOM', true, c.dom.parentNode === container.dom);
 
   const content = '<p>stuff</p>';
   Html.set(c, content);
-  assert.eq(content, c.dom.innerHTML);
-  assert.eq(content, Html.get(c));
+  Assert.eq('', content, c.dom.innerHTML);
+  Assert.eq('', content, Html.get(c));
 });

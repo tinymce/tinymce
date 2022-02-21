@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
@@ -19,17 +19,17 @@ UnitTest.test('SplitterTest', () => {
     const universe = TestUniverse(data);
     const item = Finder.get(universe, id);
     const actual = Splitter.subdivide(universe, item, positions);
-    assert.eq(expected.length, actual.length, 'Incorrect size for subdivide test');
+    Assert.eq('Incorrect size for subdivide test', expected.length, actual.length);
     Arr.each(expected, (exp, i) => {
       const act = actual[i];
       // TODO: Consider removing an expected id from the test case as it isn't really representing anything meaningful
-      assert.eq(exp.id, act.element.id);
-      assert.eq(exp.start, act.start, 'comparing start for ' + exp.id + ': ' + exp.start + ' vs ' + act.start);
-      assert.eq(exp.finish, act.finish, 'comparing finish for ' + exp.id + ': ' + exp.finish + ' vs ' + act.finish);
-      assert.eq(exp.text, act.element.text);
+      Assert.eq('', exp.id, act.element.id);
+      Assert.eq('comparing start for ' + exp.id + ': ' + exp.start + ' vs ' + act.start, exp.start, act.start);
+      Assert.eq('comparing finish for ' + exp.id + ': ' + exp.finish + ' vs ' + act.finish, exp.finish, act.finish);
+      Assert.eq('', exp.text, act.element.text);
     });
 
-    assert.eq(toplevel, Arr.map(universe.get().children, TestRenders.text));
+    Assert.eq('', toplevel, Arr.map(universe.get().children, TestRenders.text));
   };
 
   checkSubdivide([ '_', 'abcdefghijklm', 'n', 'opq', 'rstuvwxyz' ], [

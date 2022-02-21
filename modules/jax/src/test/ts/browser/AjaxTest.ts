@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
 
 import { readBlobAsText } from 'ephox/jax/core/BlobReader';
@@ -25,7 +25,7 @@ const expectValue = (label: string, value: any, response: FutureResult<any, Http
       callback(Result.error(new Error(err.message)));
     }, (val) => {
       try {
-        assert.eq(value, val);
+        Assert.eq('', value, val);
         console.log(label, 'passed with ', val);
         callback(Result.value({}));
       } catch (err: any) {
@@ -42,7 +42,7 @@ const expectBlobJson = (label: string, value: any, response: FutureResult<Blob, 
     }, (blob) => {
       readBlobAsText(blob).get((text) => {
         try {
-          assert.eq(JSON.stringify(value, null, '  '), text);
+          Assert.eq('', JSON.stringify(value, null, '  '), text);
           console.log(label, 'passed with ', text);
           callback(Result.value({}));
         } catch (err: any) {

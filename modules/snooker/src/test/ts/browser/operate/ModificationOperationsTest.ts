@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Html, SugarElement, SugarNode } from '@ephox/sugar';
 
@@ -25,15 +25,15 @@ UnitTest.test('ModificationOperationsTest', () => {
   };
 
   const assertGrids = (expected: Structs.RowCells[], actual: Structs.RowCells[], checkIsNew: boolean) => {
-    assert.eq(expected.length, actual.length);
+    Assert.eq('', expected.length, actual.length);
     Arr.each(expected, (row, i) => {
       Arr.each(row.cells, (cell, j) => {
         Assertions.assertHtml('Expected elements to have the same HTML', Html.getOuter(cell.element), Html.getOuter(actual[i].cells[j].element));
-        assert.eq(cell.isNew, actual[i].cells[j].isNew);
+        Assert.eq('', cell.isNew, actual[i].cells[j].isNew);
       });
-      assert.eq(row.section, actual[i].section, 'section type');
+      Assert.eq('section type', row.section, actual[i].section);
       if (checkIsNew) {
-        assert.eq(row.isNew, actual[i].isNew, 'is new row');
+        Assert.eq('is new row', row.isNew, actual[i].isNew);
       }
     });
   };

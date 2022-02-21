@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -9,7 +9,7 @@ UnitTest.test('CompareTest', () => {
   TestPage.connect(); // description of structure is in TestPage
 
   const check = (expected: boolean, e1: SugarElement<unknown>, e2: SugarElement<unknown>) => {
-    assert.eq(expected, Compare.eq(e1, e2));
+    Assert.eq('', expected, Compare.eq(e1, e2));
   };
 
   check(true, TestPage.p1, TestPage.p1);
@@ -17,13 +17,13 @@ UnitTest.test('CompareTest', () => {
   check(true, TestPage.s1, TestPage.s1);
   check(false, TestPage.s1, TestPage.s2);
 
-  assert.eq(false, Compare.member(TestPage.p1, []));
-  assert.eq(true, Compare.member(TestPage.p1, [ TestPage.p1 ]));
-  assert.eq(true, Compare.member(TestPage.p1, [ TestPage.t2, TestPage.p1 ]));
-  assert.eq(false, Compare.member(TestPage.p1, [ TestPage.t2 ]));
+  Assert.eq('', false, Compare.member(TestPage.p1, []));
+  Assert.eq('', true, Compare.member(TestPage.p1, [ TestPage.p1 ]));
+  Assert.eq('', true, Compare.member(TestPage.p1, [ TestPage.t2, TestPage.p1 ]));
+  Assert.eq('', false, Compare.member(TestPage.p1, [ TestPage.t2 ]));
 
   const checkIsEqualNode = (expected: boolean, e1: SugarElement<Node>, e2: SugarElement<Node>) => {
-    assert.eq(expected, Compare.isEqualNode(e1, e2));
+    Assert.eq('', expected, Compare.isEqualNode(e1, e2));
   };
 
   checkIsEqualNode(true, SugarElement.fromTag('p'), SugarElement.fromTag('p'));
@@ -74,22 +74,22 @@ UnitTest.test('CompareTest', () => {
   //   TestPage.s2, TestPage.p1);
 
   // Text Node vs Element
-  assert.eq(true, Compare.contains(TestPage.container, TestPage.t6));
-  assert.eq(false, Compare.contains(TestPage.t6, TestPage.container));
-  assert.eq(true, Compare.contains(TestPage.p3, TestPage.t6));
-  assert.eq(false, Compare.contains(TestPage.t6, TestPage.p3));
-  assert.eq(false, Compare.contains(TestPage.t1, TestPage.s2));
-  assert.eq(false, Compare.contains(TestPage.s2, TestPage.t1));
+  Assert.eq('', true, Compare.contains(TestPage.container, TestPage.t6));
+  Assert.eq('', false, Compare.contains(TestPage.t6, TestPage.container));
+  Assert.eq('', true, Compare.contains(TestPage.p3, TestPage.t6));
+  Assert.eq('', false, Compare.contains(TestPage.t6, TestPage.p3));
+  Assert.eq('', false, Compare.contains(TestPage.t1, TestPage.s2));
+  Assert.eq('', false, Compare.contains(TestPage.s2, TestPage.t1));
   // Text Node vs Text Node
-  assert.eq(false, Compare.contains(TestPage.t7, TestPage.t6));
-  assert.eq(false, Compare.contains(TestPage.t6, TestPage.t7));
-  assert.eq(false, Compare.contains(TestPage.t6, TestPage.t6)); // does not contain itself
+  Assert.eq('', false, Compare.contains(TestPage.t7, TestPage.t6));
+  Assert.eq('', false, Compare.contains(TestPage.t6, TestPage.t7));
+  Assert.eq('', false, Compare.contains(TestPage.t6, TestPage.t6)); // does not contain itself
   // Element vs Element
-  assert.eq(true, Compare.contains(TestPage.container, TestPage.d1));
-  assert.eq(false, Compare.contains(TestPage.d1, TestPage.container));
-  assert.eq(false, Compare.contains(TestPage.p1, TestPage.s2));
-  assert.eq(false, Compare.contains(TestPage.s2, TestPage.p1));
-  assert.eq(false, Compare.contains(TestPage.s2, TestPage.s2)); // does not contain itself
+  Assert.eq('', true, Compare.contains(TestPage.container, TestPage.d1));
+  Assert.eq('', false, Compare.contains(TestPage.d1, TestPage.container));
+  Assert.eq('', false, Compare.contains(TestPage.p1, TestPage.s2));
+  Assert.eq('', false, Compare.contains(TestPage.s2, TestPage.p1));
+  Assert.eq('', false, Compare.contains(TestPage.s2, TestPage.s2)); // does not contain itself
 
   // Clean up test page
   Remove.remove(TestPage.container);

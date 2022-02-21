@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as DocumentPosition from 'ephox/sugar/api/dom/DocumentPosition';
@@ -36,7 +36,7 @@ UnitTest.test('DocumentPositionTest', () => {
   Insert.append(SugarBody.body(), container);
 
   const check = (expected: boolean, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number, msg: string) => {
-    assert.eq(expected, DocumentPosition.after(start, soffset, finish, foffset), msg);
+    Assert.eq(msg, expected, DocumentPosition.after(start, soffset, finish, foffset));
   };
 
   check(true, container, 1, p1t1, ''.length, 'Selection from (div,end) -> (p1t1,0) should be RTL');
@@ -78,17 +78,17 @@ UnitTest.test('DocumentPositionTest', () => {
           +-p2
              +-p2br
     */
-    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 0, div, 0)),
-      'lca(div,0,div,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(div, 0, div, 0)) + `, expected: '<div>...'`);
-    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)),
-      'lca(p1,0,p2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)) + `, expected: '<div>...'`);
-    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 1, div, 2)),
-      'lca(div,1,div,2)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(div, 1, div, 2)) + `, expected: '<div>...'`);
-    assert.eq(true, Compare.eq(div, DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)),
-      'lca(p1span1,0,p2br,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)) + `, expected: '<div>...'`);
-    assert.eq(true, Compare.eq(p11, DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)),
-      'lca(p1text,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)) + `, expected: 'p1': <p>One, two...`);
-    assert.eq(true, Compare.eq(p1span, DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)),
-      'lca(p1span1,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)) + `, expected: 'p1span': <span>cat dog </span>`);
+    Assert.eq('lca(div,0,div,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(div, 0, div, 0)) + `, expected: '<div>...'`,
+      true, Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 0, div, 0)));
+    Assert.eq('lca(p1,0,p2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)) + `, expected: '<div>...'`,
+      true, Compare.eq(div, DocumentPosition.commonAncestorContainer(p11, 0, p2, 0)));
+    Assert.eq('lca(div,1,div,2)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(div, 1, div, 2)) + `, expected: '<div>...'`,
+      true, Compare.eq(div, DocumentPosition.commonAncestorContainer(div, 1, div, 2)));
+    Assert.eq('lca(p1span1,0,p2br,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)) + `, expected: '<div>...'`,
+      true, Compare.eq(div, DocumentPosition.commonAncestorContainer(p1span1, 0, p2br, 0)));
+    Assert.eq('lca(p1text,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)) + `, expected: 'p1': <p>One, two...`,
+      true, Compare.eq(p11, DocumentPosition.commonAncestorContainer(p1text, 0, p1span2, 0)));
+    Assert.eq('lca(p1span1,0,p1span2,0)===' + Html.getOuter(DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)) + `, expected: 'p1span': <span>cat dog </span>`,
+      true, Compare.eq(p1span, DocumentPosition.commonAncestorContainer(p1span1, 0, p1span2, 0)));
   })();
 });
