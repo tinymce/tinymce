@@ -26,7 +26,9 @@ let models = [
 
 let oxideUiSkinMap = {
   'dark': 'oxide-dark',
-  'default': 'oxide'
+  'default': 'oxide',
+  'tinymce-5': 'tinymce-5',
+  'tinymce-5-dark': 'tinymce-5-dark'
 };
 
 const stripSourceMaps = function (data) {

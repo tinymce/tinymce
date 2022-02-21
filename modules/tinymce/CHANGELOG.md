@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Calls to `editor.selection.setRng` now update the cursor position bookmark used when focus is returned to the editor #TINY-8450
 - The `BeforeSetContent` event will now include the actual serialized content when passing in an `AstNode` to the `editor.setContent` API #TINY-7996
 - The default height of editor has been increased from `200px` to `400px` to improve the usability of the editor #TINY-6860
+- New default theme styling for TinyMCE 6 facelift with old skin available as `tinymce-5` and `tinymce-5-dark` #TINY-8373
 
 ### Changed
 - The `DomParser` API no longer uses a custom parser internally and instead uses the native `DOMParser` API #TINY-4627

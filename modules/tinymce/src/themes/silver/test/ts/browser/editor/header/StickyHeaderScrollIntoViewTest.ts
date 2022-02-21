@@ -48,7 +48,7 @@ describe('browser.tinymce.themes.silver.editor.header.StickyHeaderScrollIntoView
     assert.approximately(actualY, y, 5, `Scroll position Y should be expected value: ${y} got ${actualY}`);
   };
 
-  const headerHeight = 79;
+  const headerHeight = 85;
   let initialContainerPos: SugarPosition;
   let expectedSecondParaScrollBottomPos: number;
   let expectedSecondParaScrollTopPos: number;
