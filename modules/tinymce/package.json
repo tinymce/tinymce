@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/tinymce/tinymce/issues"
   },
-  "license": "LGPL-2.1",
+  "license": "MIT",
   "engines": {
     "node": ">=0.10.26"
   },

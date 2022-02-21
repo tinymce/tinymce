@@ -32,7 +32,7 @@
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "main": "./lib/main/ts/ephox/polaris/api/Main.js",
   "module": "./lib/main/ts/ephox/polaris/api/Main.js",
   "types": "./lib/main/ts/ephox/polaris/api/Main.d.ts"

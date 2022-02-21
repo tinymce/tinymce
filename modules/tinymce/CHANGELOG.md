@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
 
 ### Changed
+- TinyMCE is now MIT licensed #TINY-2316
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
 - The `paste_data_images` option now defaults to `true` #TINY-8310
 - Moved the `noneditable` plugin to TinyMCE core #TINY-8311

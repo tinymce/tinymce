@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { AlloyTriggers, Behaviour, Focusing, NativeEvents, Tabstopping } from '@ephox/alloy';
 import { Fun, Id } from '@ephox/katamari';
 import { Class, SelectorExists } from '@ephox/sugar';

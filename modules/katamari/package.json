@@ -14,7 +14,7 @@
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "dependencies": {
     "@ephox/dispute": "^1.0.3",
     "tslib": "^2.0.0"
