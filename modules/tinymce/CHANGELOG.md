@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `tabindex` attribute is now copied from the target element to the iframe #TINY-8315
 
 ### Improved
+- New default theme styling for TinyMCE 6 facelift with old skin available as `tinymce-5` and `tinymce-5-dark` #TINY-8373
 - The default height of editor has been increased from `200px` to `400px` to improve the usability of the editor #TINY-6860
 - The upload results returned from the `editor.uploadImages()` API now includes a `removed` flag, reflecting if the image was removed after a failed upload #TINY-7735
 - The `ScriptLoader`, `StyleSheetLoader`, `AddOnManager`, `PluginManager` and `ThemeManager` APIs will now return a `Promise` when loading resources instead of using callbacks #TINY-8325
@@ -34,7 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
 - Notifications no longer require a timeout to disable the close button #TINY-6679
 - The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
-- New default theme styling for TinyMCE 6 facelift with old skin available as `tinymce-5` and `tinymce-5-dark` #TINY-8373
 
 ### Changed
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
