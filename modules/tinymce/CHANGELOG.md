@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## Fixed
+
+- Absolutely positioned UI components like menus are no longer constrained to the bounds of the editors parent shadowRoot #TINY-6536
+
 ## 6.0 (TBD)
 
 ### Added
