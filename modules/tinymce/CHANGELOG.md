@@ -114,7 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
-- Removed support for Word from the `paste` plugin #TINY-7493
+- Removed support for Microsoft Word from the opensource paste functionality #TINY-7493
 - Removed support for the `plugins` option allowing a mixture of a string array and of space separated strings #TINY-8399
 - Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
 - Removed the jQuery integration #TINY-4518
