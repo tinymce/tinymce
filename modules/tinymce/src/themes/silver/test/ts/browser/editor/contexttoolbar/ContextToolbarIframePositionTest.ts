@@ -121,7 +121,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     scrollTo(editor, 0, 200);
     TinySelections.setCursor(editor, scenario.cursor.elementPath, scenario.cursor.offset);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
-    await pAssertPosition('bottom', 224);
+    await pAssertPosition('bottom', 223);
 
     // Position the link at the top of the viewport, just below the toolbar
     scrollTo(editor, 0, 300);
@@ -135,7 +135,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     // Position the element back into view
     scrollTo(editor, 0, 200);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), topSelector + scenario.classes);
-    await pAssertPosition('bottom', 224);
+    await pAssertPosition('bottom', 223);
 
     // Position the element off the top of the screen and check the context toolbar is hidden
     scrollTo(editor, 0, 600);
@@ -254,10 +254,10 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     editor.setContent('<p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p><p style="padding-top: 100px;"></p>text</p>');
     TinySelections.setSelection(editor, [ 3, 0 ], 1, [ 3, 0 ], 3);
     // Place the selected text right at the bottom of the editor so only ~1px of the selection is visible
-    scrollTo(editor, 0, 88);
+    scrollTo(editor, 0, 87);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear above the content', SugarBody.body(), topSelector);
     // Moving 2px more the selected text is now offscreen so the context toolbar should hide
-    scrollTo(editor, 0, 86);
+    scrollTo(editor, 0, 85);
     await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
   });
 
