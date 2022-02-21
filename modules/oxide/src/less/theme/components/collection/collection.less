@@ -11,8 +11,9 @@
 //
 
 @collection-item-padding: @pad-xs @pad-sm;
-@collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
+@collection-item-separator-color: @tinymce-separator-color;
 @collection-item-separator-margin-y: @pad-xs;
+@collection-item-radius: @toolbar-button-border-radius;
 
 @collection-item-label-font-size: @font-size-sm;
 @collection-item-label-font-style: normal;
@@ -115,8 +116,8 @@
 
   .tox-collection__item {
     align-items: center;
+    border-radius: @collection-item-radius;
     color: @collection-item-label-text-color;
-    cursor: pointer;
     display: flex;
     -webkit-touch-callout: none;
     user-select: none;
@@ -274,8 +275,8 @@
   }
 
   .tox-collection--horizontal .tox-collection__item {
-    height: @toolbar-button-height; // 24px
-    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0; // 2px 0 3px 0
+    height: @toolbar-button-height; // 28px
+    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0; // 4px 0 3px 0
     padding: 0 4px;
   }
 

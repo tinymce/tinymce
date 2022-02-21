@@ -10,16 +10,21 @@
 //
 
 @toolbar-background-color: @background-color;
-@toolbar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_toolbar-height}' viewBox='0 0 40 @{_toolbar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_toolbar-divider-height}' width='100' height='1' fill='@{_toolbar-row-separator-color}'/%3E%3C/svg%3E") left 0 top @toolbar-padding-y @toolbar-background-color;
-@toolbar-row-separator-color: @toolbar-group-separator-color;
-@toolbar-separator-color: @border-color;
-@toolbar-padding-y: 0; // Note that a positive value doesn't work with toolbar collapsing into multiple rows. Will cause issues with the toolbar row separator
-@toolbar-padding-x: 0;
+@toolbar-padding-y: 1px;
+@toolbar-padding-x: @pad-sm;
+@toolbar-row-separator-color: @tinymce-separator-color;
+@toolbar-row-separator-padding: @toolbar-group-padding-x;
+@toolbar-separator-distance: 0px;
+@toolbar-separator-color: transparent;
 
 // private variables
-@_toolbar-row-separator-color: escape('@{toolbar-row-separator-color}');
-@_toolbar-divider-height: @_toolbar-height - 1px;
 @_toolbar-height: @toolbar-button-height + (@toolbar-button-spacing-y * 2) + (@toolbar-group-spacing-y * 2) + 1px;
+@_toolbar-padding-x-no-group-spacing: max(@toolbar-padding-x - @toolbar-group-padding-x, 0px);
+@_toolbar-row-separator-downsize: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y * 2;
+@_toolbar-row-separator-image: repeating-linear-gradient(@toolbar-row-separator-color 0px 1px, transparent 1px @_toolbar-height);
+@_toolbar-row-separator-image-offset: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y;
+@_toolbar-row-separator-image-position: center top @_toolbar-row-separator-image-offset;
+@_toolbar-row-separator-image-size: calc(100% - @toolbar-row-separator-padding * 2) calc(100% - @_toolbar-row-separator-downsize);
 
 .tox {
   .tox-toolbar-overlord {
@@ -29,13 +34,27 @@
   .tox-toolbar,
   .tox-toolbar__primary,
   .tox-toolbar__overflow {
-    background: @toolbar-background;
     background-color: @toolbar-background-color;
+    background-image: @_toolbar-row-separator-image;
+    background-position: @_toolbar-row-separator-image-position;
+    background-repeat: no-repeat;
+    background-size: @_toolbar-row-separator-image-size;
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
-    padding: @toolbar-padding-y @toolbar-padding-x;
+    padding: 0 @_toolbar-padding-x-no-group-spacing;
+    transform: perspective(1px); // Fix for Chrome’s BG size rounding errors in some cases
+  }
+
+  .tox-toolbar-overlord > .tox-toolbar,
+  .tox-toolbar-overlord > .tox-toolbar__primary,
+  .tox-toolbar-overlord > .tox-toolbar__overflow {
+    @_toolbar-row-separator-image-offset: 0px;
+    @_toolbar-row-separator-downsize: 0px;
+
+    background-position: @_toolbar-row-separator-image-position;
+    background-size: @_toolbar-row-separator-image-size;
   }
 
   .tox-toolbar__overflow.tox-toolbar__overflow--closed {
@@ -56,9 +75,11 @@
 
   // Add top borders
   .tox-menubar + .tox-toolbar,
-  .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary {
+  .tox-menubar + .tox-toolbar-overlord {
     border-top: 1px solid @toolbar-separator-color;
-    margin-top: -1px; // Temporary fix to hide menubar bottom border below the toolbar
+    margin-top: @toolbar-separator-distance;
+    padding-bottom: @toolbar-padding-y;
+    padding-top: @toolbar-separator-distance + @toolbar-padding-y;
   }
 
   .tox-toolbar--scrolling {
@@ -78,20 +99,45 @@
   .tox-tbtn__icon-wrap {
     //
   }
-}
 
-// Add a top border when toolbar_location is bottom and menubar is hidden
-&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar:first-child,
-&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar-overlord:first-child .tox-toolbar__primary {
-  border-top: 1px solid @toolbar-separator-color;
+  .tox-toolbar-overlord .tox-toolbar:not(.tox-toolbar--scrolling):first-child,
+  .tox-toolbar-overlord .tox-toolbar__primary {
+    @_toolbar-row-separator-image-offset: @_toolbar-height;
+
+    background-position: @_toolbar-row-separator-image-position;
+  }
+
+  .tox-editor-header > .tox-toolbar--scrolling,
+  .tox-toolbar-overlord .tox-toolbar--scrolling:first-child {
+    background-image: none;
+  }
 }
 
 // Floating more drawer styles. Uses pop toolbar styles
-.tox.tox-tinymce-aux {
-  .tox-toolbar__overflow {
-    background-color: @pop-background-color;
-    border: 1px solid @pop-border-color;
-    border-radius: @pop-border-radius;
-    box-shadow: @pop-box-shadow;
+.tox.tox-tinymce-aux .tox-toolbar__overflow {
+  @_toolbar-row-separator-downsize: @_toolbar-height + @pad-xs + @pad-xs * 2;
+  @_toolbar-row-separator-image-offset: @_toolbar-height + @pad-xs;
+  @toolbar-row-separator-padding: @pad-sm;
+  @toolbar-padding-x: @pad-sm;
+
+  background-color: @pop-background-color;
+  background-position: @_toolbar-row-separator-image-position;
+  background-size: @_toolbar-row-separator-image-size;
+  border: none;
+  border-radius: @pop-border-radius;
+  box-shadow: @pop-box-shadow;
+  padding: @pad-xs 0;
+}
+
+// Distraction-free mode
+.tox-pop .tox-pop__dialog {
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tox-toolbar {
+    @_toolbar-row-separator-downsize: @_toolbar-height + @pad-xs + @pad-xs * 2;
+    @_toolbar-row-separator-image-offset: @_toolbar-height + @pad-xs;
+
+    background-position: @_toolbar-row-separator-image-position;
+    background-size: @_toolbar-row-separator-image-size;
+    padding: @pad-xs 0;
   }
 }

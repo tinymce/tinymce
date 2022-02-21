@@ -10,10 +10,11 @@
 //
 
 @tinymce-border-color: @border-color;
-@tinymce-border-radius: 0;
-@tinymce-border-width: 1px;
+@tinymce-border-radius: 10px;
+@tinymce-border-width: 2px;
 @tinymce-box-shadow: none;
-@editor-header-inline-background-color: if((alpha(@toolbar-background-color) > 0), transparent, @background-color); // If @toolbar-background-color is set to transparent, then set the inline toolbar background color to be another color to not be transparent over content.
+@tinymce-separator-color: darken(@border-color, 4.5%);
+@editor-header-inline-background-color: @background-color;
 
 .tox-tinymce {
   border: @tinymce-border-width solid @tinymce-border-color;
@@ -29,15 +30,21 @@
 }
 
 // Place the border/shadow on the header in inline mode instead of the root component
-.tox-tinymce-inline {
+.tox.tox-tinymce-inline {
   border: none;
   box-shadow: none;
+  overflow: initial;
+
+  .tox-editor-container {
+    overflow: initial;
+  }
 
   .tox-editor-header {
     background-color: @editor-header-inline-background-color;
     border: @tinymce-border-width solid @tinymce-border-color;
     border-radius: @tinymce-border-radius;
     box-shadow: @tinymce-box-shadow;
+    overflow: hidden;
   }
 }
 

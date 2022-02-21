@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dialog spec `initialData` type is now `Partial<T>` to match the underlying implementation details #TINY-8334
 - Notifications no longer require a timeout to disable the close button #TINY-6679
 - The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
+- New default theme styling for TinyMCE 6 facelift with old skin available as `tinymce-5` and `tinymce-5-dark` #TINY-8373
 
 ### Changed
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
