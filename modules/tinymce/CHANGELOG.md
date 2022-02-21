@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A `ThemeLoadError` event is now fired if the theme fails to load #TINY-8325
 - The `BeforeSetContent` event will now include the actual serialized content when passing in an `AstNode` to the `editor.setContent` API #TINY-7996
 - Improved support for placing the caret before or after noneditable elements within the editor #TINY-8169
-- Calls to `editor.selection.setRng` now update the cursor position bookmark used when focus is returned to the editor #TINY-8450
+- Calls to `editor.selection.setRng` now update the caret position bookmark used when focus is returned to the editor #TINY-8450
 - The `emoticon` plugin dialog, toolbar and menu item has been updated to use the more accurate `Emojis` term #TINY-7631
 - The dialog `redial` API will now only rerender the changed components instead of the whole dialog #TINY-8334
 - The dialog API `setData` method now uses a deep merge algorithm to support partial nested objects #TINY-8333
@@ -67,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `:` control character has been changed to `~` for the schema `valid_elements` and `extended_valid_elements` options #TINY-6726
 - The `primary` property on dialog buttons has been deprecated. Use the new `buttonType` property instead #TINY-8304
 - Changed the default statusbar element path delimiter from `»` to `›` #TINY-8372
-- Replaced 'Powered by Tiny' link text with logo #TINY-8371
+- Replaced the `Powered by Tiny` branding text with the Tiny logo #TINY-8371
 - The default minimum height of editor has been changed to 100px to prevent the UI disappearing while resizing #TINY-6860
 - RGB colors are no longer converted to hex values when parsing or serializing content #TINY-8163
 - Replaced the `isDisabled()` function with an `isEnabled()` function for various APIs #TINY-8101
