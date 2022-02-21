@@ -378,7 +378,7 @@ class Editor implements EditorObservable {
   /**
    * Returns a configuration parameter by name.
    * <br>
-   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use the <code>editor.options.get<code> API instead.</em>
+   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use the <code>editor.options.get</code> API instead.</em>
    *
    * @method getParam
    * @param {String} name Configuration parameter to retrieve.
