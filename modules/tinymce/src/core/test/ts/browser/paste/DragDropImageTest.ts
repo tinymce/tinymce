@@ -27,13 +27,14 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
     return new window.File([ bytes ], filename, { type });
   };
 
-  const pWaitForSelector = (editor: Editor, selector: string) =>
-    UiFinder.pWaitFor(`Wait for ${selector} to exist`, TinyDom.body(editor), selector);
+  const pSetupAndDropImage = async (editor: Editor) => {
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
 
-  const pDropImage = (editor: Editor) =>
-    DragnDrop.pDropFiles(TinyDom.body(editor), [
+    await DragnDrop.pDropFiles(TinyDom.body(editor), [
       base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
     ], true);
+  };
 
   it('TINY-8486: Drop image - paste_data_images: true', async () => {
     const editor = await McEditor.pFromSettings<Editor>({
@@ -42,14 +43,11 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
       base_url: '/project/tinymce/js/tinymce'
     });
 
-    editor.setContent('<p>a</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    await pSetupAndDropImage(editor);
 
-    await pDropImage(editor);
-
-    await pWaitForSelector(editor, 'img');
+    const image = await UiFinder.pWaitFor<HTMLImageElement>(`Wait for image to exist`, TinyDom.body(editor), 'img');
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
-    assert.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
+    assert.strictEqual(image.dom.src.indexOf('blob:'), 0);
 
     McEditor.remove(editor);
   });
@@ -61,10 +59,7 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
       base_url: '/project/tinymce/js/tinymce'
     });
 
-    editor.setContent('<p>a</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 0);
-
-    await pDropImage(editor);
+    await pSetupAndDropImage(editor);
 
     TinyAssertions.assertContent(editor, '<p>a</p>');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);

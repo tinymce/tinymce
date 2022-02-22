@@ -110,7 +110,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Anchor elements would render incorrectly when using the `allow_html_in_named_anchor` option #TINY-3799
 - The `AstNode` HTML serializer did not serialize `pre` or `textarea` elements correctly when they contained newlines #TINY-8446
 - Fixed sub-menu items not read by screen readers. Patch contributed by westonkd #TINY-8417
-- Drag and drop would not properly detect images and respect the `paste_data_images` option in some cases #TINY-8486
 - The Home or End keys would move out of a editable element contained within a noneditable element #TINY-8201
 - Dialogs could not be opened in inline mode before the editor had been rendered #TINY-8397
 
