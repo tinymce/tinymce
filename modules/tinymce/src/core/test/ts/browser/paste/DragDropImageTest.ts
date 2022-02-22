@@ -1,6 +1,6 @@
-import { Waiter } from '@ephox/agar';
+import { DragnDrop, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { McEditor, TinyAssertions, TinySelections } from '@ephox/wrap-mcagar';
+import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -27,15 +27,13 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
     return new window.File([ bytes ], filename, { type });
   };
 
-  const fireDropEvent = (editor: Editor, files: File[]): DragEvent => {
-    const data = {
-      dataTransfer: { files }
-    } as any;
-    return editor.fire('drop', data);
-  };
-
   const pWaitForSelector = (editor: Editor, selector: string) =>
-    Waiter.pTryUntilPredicate(`Wait for ${selector} to exist`, () => editor.dom.select(selector).length > 0);
+    UiFinder.pWaitFor(`Wait for ${selector} to exist`, TinyDom.body(editor), selector);
+
+  const pDropImage = (editor: Editor) =>
+    DragnDrop.pDropFiles(TinyDom.body(editor), [
+      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
+    ], true);
 
   it('TINY-8486: Drop image - paste_data_images: true', async () => {
     const editor = await McEditor.pFromSettings<Editor>({
@@ -47,10 +45,7 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
 
-    const event = fireDropEvent(editor, [
-      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
-    ]);
-    assert.isTrue(event.defaultPrevented);
+    await pDropImage(editor);
 
     await pWaitForSelector(editor, 'img');
     TinyAssertions.assertContent(editor, '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '">a</p>');
@@ -69,13 +64,8 @@ describe('browser.tinymce.core.paste.DragDropImageTest', () => {
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
 
-    const event = fireDropEvent(editor, [
-      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
-    ]);
-    assert.isTrue(event.defaultPrevented);
+    await pDropImage(editor);
 
-    // Wait to make sure any async actions have occured
-    await Waiter.pWait(100);
     TinyAssertions.assertContent(editor, '<p>a</p>');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
 
