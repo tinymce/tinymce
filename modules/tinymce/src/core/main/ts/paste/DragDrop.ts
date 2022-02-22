@@ -32,7 +32,7 @@ const setFocusedRange = (editor: Editor, rng: Range | undefined): void => {
 };
 
 const hasImage = (dataTransfer: DataTransfer): boolean =>
-  Arr.exists(dataTransfer.files, (file) => /^data:image\//.test(file.type));
+  Arr.exists(dataTransfer.files, (file) => /^image\//.test(file.type));
 
 const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => {
   // Block all drag/drop events
