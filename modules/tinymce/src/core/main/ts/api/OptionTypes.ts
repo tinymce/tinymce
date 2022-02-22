@@ -96,7 +96,7 @@ interface BaseEditorOptions {
   element_format?: 'xhtml' | 'html';
   elementpath?: boolean;
   encoding?: string;
-  end_container_on_empty_block?: boolean;
+  end_container_on_empty_block?: boolean | string;
   entities?: string;
   entity_encoding?: EntityEncoding;
   extended_valid_elements?: string;

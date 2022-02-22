@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
-import { Css, PredicateFilter, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Css, PredicateExists, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -242,15 +242,24 @@ const addBrToBlockIfNeeded = (dom, block) => {
   }
 };
 
-const findParent = (editor: Editor, container: Node, predicate: (node: Node) => boolean) => {
+const findQuoteBlock = (editor: Editor, container: Node, targetName: string) => {
   const isRoot = (element: SugarElement<Node>) => element.dom === editor.getBody();
-  return PredicateFind.closest(SugarElement.fromDom(container), (node) => editor.dom.isBlock(node.dom) && predicate(node.dom), isRoot).fold(
-    () => editor.dom.getParent(container, editor.dom.isBlock),
-    (element) => element.dom
-  );
+  return PredicateExists.closest(SugarElement.fromDom(container), (node: SugarElement) => editor.dom.isBlock(node.dom) && node.dom.tagName === targetName, isRoot);
 };
 
-const insert = (editor: Editor, predicate: (node: Node) => boolean, evt?: EditorEvent<KeyboardEvent>) => {
+const shouldEndContainer = (editor: Editor, container: Node) => {
+  if (!container) {
+    return false;
+  }
+  const optionValue = Options.shouldEndContainerOnEmptyBlock(editor);
+  if (Type.isString(optionValue)) {
+    return Arr.exists(optionValue.split(/, ?/), (value) => findQuoteBlock(editor, container, value.toUpperCase()));
+  } else {
+    return optionValue;
+  }
+};
+
+const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   let tmpRng, container, offset, parentBlock;
   let newBlock, fragment, containerBlock, parentBlockName, isAfterLastNodeInContainer;
   const dom = editor.dom;
@@ -376,7 +385,7 @@ const insert = (editor: Editor, predicate: (node: Node) => boolean, evt?: Editor
     }
 
     // Split the current container block element if enter is pressed inside an empty inner block element
-    if (Options.shouldEndContainerOnEmptyBlock(editor) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
+    if (shouldEndContainer(editor, containerBlock) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
       // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
       newBlock = dom.split(containerBlock, parentBlock);
     } else {
@@ -425,7 +434,7 @@ const insert = (editor: Editor, predicate: (node: Node) => boolean, evt?: Editor
   }
 
   // Find parent block and setup empty block paddings
-  parentBlock = findParent(editor, container, predicate);
+  parentBlock = editor.dom.getParent(container, editor.dom.isBlock);
   containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
 
   // Setup block names
