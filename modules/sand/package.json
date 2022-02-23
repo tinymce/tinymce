@@ -28,7 +28,7 @@
     "platform"
   ],
   "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "dependencies": {
     "@ephox/katamari": "^9.0.0-alpha.3",
     "tslib": "^2.0.0"

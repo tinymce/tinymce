@@ -28,7 +28,7 @@
     "tslib": "^2.0.0"
   },
   "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "main": "./lib/main/ts/ephox/darwin/api/Main.js",
   "module": "./lib/main/ts/ephox/darwin/api/Main.js",
   "types": "./lib/main/ts/ephox/darwin/api/Main.d.ts",

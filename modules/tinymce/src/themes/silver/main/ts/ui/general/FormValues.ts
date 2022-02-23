@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { Obj, Optional, Result } from '@ephox/katamari';
 
 const toValidValues = <T> (values: { [key: string]: Optional<T[keyof T]> }) => {

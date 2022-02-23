@@ -18,7 +18,7 @@
     "tslib": "^2.0.0"
   },
   "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "files": [
     "lib/main",
     "lib/demo",

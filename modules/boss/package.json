@@ -33,7 +33,7 @@
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "main": "./lib/main/ts/ephox/boss/api/Main.js",
   "module": "./lib/main/ts/ephox/boss/api/Main.js",
   "types": "./lib/main/ts/ephox/boss/api/Main.d.ts"
