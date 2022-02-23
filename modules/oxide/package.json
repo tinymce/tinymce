@@ -17,7 +17,7 @@
   "keywords": [
     "TinyMCE"
   ],
-  "author": "Tiny Technologies, Inc",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "files": [
     "build/skins/content/**/*.css",
