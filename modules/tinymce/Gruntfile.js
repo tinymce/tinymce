@@ -638,7 +638,7 @@ module.exports = function (grunt) {
                 'directory': 'modules/tinymce'
               },
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'author': 'Tiny Technologies, Inc',
+              'author': 'Ephox Corporation DBA Tiny Technologies, Inc',
               'main': 'tinymce.js',
               'types': 'tinymce.d.ts',
               'license': 'MIT',
@@ -730,8 +730,8 @@ module.exports = function (grunt) {
         options: {
           id: 'TinyMCE',
           version: packageData.version,
-          authors: 'Tiny Technologies, Inc',
-          owners: 'Tiny Technologies, Inc',
+          authors: 'Ephox Corporation DBA Tiny Technologies, Inc',
+          owners: 'Ephox Corporation DBA Tiny Technologies, Inc',
           description: 'The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
           'control released as Open Source under MIT by Tiny Technologies, Inc. TinyMCE has the ability to convert HTML ' +
           'TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate ' +

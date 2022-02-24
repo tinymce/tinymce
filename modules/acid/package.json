@@ -14,7 +14,7 @@
     "@ephox/sugar": "^9.0.0-alpha.5",
     "tslib": "^2.0.0"
   },
-  "author": "Tiny Technologies, Inc",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "files": [
     "lib/main",
