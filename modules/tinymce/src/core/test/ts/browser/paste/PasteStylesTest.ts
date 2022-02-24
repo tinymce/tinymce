@@ -67,4 +67,13 @@ describe('browser.tinymce.core.paste.PasteStylesTest', () => {
     Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="color: rgb(224, 62, 45);">b</span>' });
     TinyAssertions.assertContent(editor, `<p><span style="color: rgb(224, 62, 45);">b</span></p>`);
   });
+
+  it('TINY-8525: paste span without any color styles, paste_webkit_styles: color,font-family', () => {
+    const editor = hook.editor();
+    editor.options.set('paste_webkit_styles', 'color,font-family');
+    editor.setContent('<p>test</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+    Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="font-family: Arial,sans-serif;">b</span>' });
+    TinyAssertions.assertContent(editor, `<p><span style="font-family: Arial,sans-serif;">b</span></p>`);
+  });
 });

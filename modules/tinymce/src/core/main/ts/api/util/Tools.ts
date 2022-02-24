@@ -14,7 +14,7 @@ interface Tools {
     <T>(arr: ArrayLike<T> | null | undefined, pred?: ArrayCallback<T, boolean>): T[];
     <T>(arr: Record<string, T> | null | undefined, pred?: ObjCallback<T, boolean>): T[];
   };
-  trim: (str: string) => string;
+  trim: (str: string | null | undefined) => string;
   toArray: <T>(obj: ArrayLike<T>) => T[];
   hasOwn: (obj: any, name: string) => boolean;
   makeMap: <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>) => Record<string, T | string>;
