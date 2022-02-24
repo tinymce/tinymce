@@ -1,11 +1,4 @@
 
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 // The FakeClipboard has been designed to match the native Clipboard API as closely as possible
 // https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
 

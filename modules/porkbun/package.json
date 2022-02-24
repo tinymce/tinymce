@@ -27,8 +27,8 @@
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
-  "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "MIT",
   "main": "./lib/main/ts/ephox/porkbun/api/Main.js",
   "module": "./lib/main/ts/ephox/porkbun/api/Main.js",
   "types": "./lib/main/ts/ephox/porkbun/api/Main.d.ts"

@@ -21,8 +21,8 @@
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
-  "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "MIT",
   "dependencies": {
     "@ephox/agar": "^7.0.0-alpha.5",
     "@ephox/katamari": "^9.0.0-alpha.3",

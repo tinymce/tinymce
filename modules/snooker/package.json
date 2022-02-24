@@ -26,8 +26,8 @@
     "@ephox/sugar": "^9.0.0-alpha.5",
     "tslib": "^2.0.0"
   },
-  "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "MIT",
   "main": "./lib/main/ts/ephox/snooker/api/Main.js",
   "module": "./lib/main/ts/ephox/snooker/api/Main.js",
   "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",

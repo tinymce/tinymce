@@ -21,8 +21,8 @@
     "browser",
     "test"
   ],
-  "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "MIT",
   "dependencies": {
     "@ephox/bedrock-client": "11 || 12 || 13",
     "@ephox/bedrock-common": "11 || 12 || 13",

@@ -19,8 +19,8 @@
     "append",
     "predicate"
   ],
-  "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "MIT",
   "dependencies": {
     "@ephox/katamari": "^9.0.0-alpha.3",
     "@ephox/sand": "^6.0.0-alpha.4"

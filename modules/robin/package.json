@@ -29,8 +29,8 @@
   "devDependencies": {
     "@ephox/katamari-assertions": "^4.0.0-alpha.3"
   },
-  "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "MIT",
   "main": "./lib/main/ts/ephox/robin/api/Main.js",
   "module": "./lib/main/ts/ephox/robin/api/Main.js",
   "types": "./lib/main/ts/ephox/robin/api/Main.d.ts",

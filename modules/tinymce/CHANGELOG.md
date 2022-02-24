@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor theme is now fetched in parallel with the icons, language pack and plugins #TINY-8453
 
 ### Changed
+- TinyMCE is now MIT licensed #TINY-2316
 - Moved the `paste` plugin's functionality to TinyMCE core #TINY-8310
 - The `paste_data_images` option now defaults to `true` #TINY-8310
 - Moved the `noneditable` plugin to TinyMCE core #TINY-8311
@@ -112,6 +113,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed sub-menu items not read by screen readers. Patch contributed by westonkd #TINY-8417
 - The Home or End keys would move out of a editable element contained within a noneditable element #TINY-8201
 - Dialogs could not be opened in inline mode before the editor had been rendered #TINY-8397
+- Clicking on menu items could cause an unexpected console warning if the `onAction` function caused the menu to close #TINY-8513
 
 ### Removed
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
@@ -136,6 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
 - Removed the `mceInsertRawHTML` command #TINY-8214
 - Removed the style field from the `image` plugin dialog advanced tab #TINY-3422
+- Removed the `paste_filter_drop` option as native drag and drop handling is no longer supported #TINY-8511
 - Removed the legacy `mobile` theme #TINY-7832
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162

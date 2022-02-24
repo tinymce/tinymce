@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -664,11 +657,6 @@ const register = (editor: Editor) => {
     default: true
   });
 
-  registerOption('paste_filter_drop', {
-    processor: 'boolean',
-    default: true
-  });
-
   registerOption('paste_preprocess', {
     processor: 'function'
   });
@@ -844,7 +832,6 @@ const shouldBrowserSpellcheck = option('browser_spellcheck');
 const getProtect = option('protect');
 const shouldPasteBlockDrop = option('paste_block_drop');
 const shouldPasteDataImages = option('paste_data_images');
-const shouldPasteFilterDrop = option('paste_filter_drop');
 const getPastePreProcess = option('paste_preprocess');
 const getPastePostProcess = option('paste_postprocess');
 const getPasteWebkitStyles = option('paste_webkit_styles');
@@ -950,7 +937,6 @@ export {
   getProtect,
   shouldPasteBlockDrop,
   shouldPasteDataImages,
-  shouldPasteFilterDrop,
   getPastePreProcess,
   getPastePostProcess,
   getPasteWebkitStyles,
