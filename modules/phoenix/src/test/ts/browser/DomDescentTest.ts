@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 
@@ -38,8 +38,8 @@ UnitTest.test('DomDescentTest', () => {
 
   const check = (expected: CheckItem, actual: SpotPoint<SugarElement>) => {
     const aPath = Hierarchy.path(root, actual.element).getOrDie('Could not extract path');
-    assert.eq(expected.path, aPath);
-    assert.eq(expected.offset, actual.offset);
+    Assert.eq('', expected.path, aPath);
+    Assert.eq('', expected.offset, actual.offset);
   };
 
   // Descending into div should take you to first whitspace node.

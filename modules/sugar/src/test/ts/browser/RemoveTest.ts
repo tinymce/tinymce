@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -34,24 +34,24 @@ UnitTest.test('RemoveTest', () => {
       Insert.append(SugarBody.body(), container);
     }
 
-    assert.eq('<p><span></span></p><p></p>', Html.get(container));
+    Assert.eq('', '<p><span></span></p><p></p>', Html.get(container));
     Remove.remove(p2);
-    assert.eq('<p><span></span></p>', Html.get(container));
+    Assert.eq('', '<p><span></span></p>', Html.get(container));
     Insert.append(container, p2);
-    assert.eq('<p><span></span></p><p></p>', Html.get(container));
+    Assert.eq('', '<p><span></span></p><p></p>', Html.get(container));
     Remove.remove(span);
-    assert.eq('<p></p><p></p>', Html.get(container));
+    Assert.eq('', '<p></p><p></p>', Html.get(container));
     Remove.empty(container);
 
     // regular empty check
-    assert.eq('', Html.get(container));
-    assert.eq(0, Traverse.children(container).length);
+    Assert.eq('', '', Html.get(container));
+    Assert.eq('', 0, Traverse.children(container).length);
 
     // after inserting an empty text node, empty doesn't always mean empty!
     Insert.append(container, SugarElement.fromText(''));
     Remove.empty(container);
-    assert.eq('', Html.get(container));
-    assert.eq(0, Traverse.children(container).length);
+    Assert.eq('', '', Html.get(container));
+    Assert.eq('', 0, Traverse.children(container).length);
 
     Remove.remove(container);
   };

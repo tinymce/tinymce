@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -19,14 +19,14 @@ UnitTest.test('DirectionTest', () => {
   const assertDirection = (element: SugarElement<Element>, expectedDirection: 'ltr' | 'rtl') => {
     appendToDom(element);
     const dir = Direction.getDirection(element);
-    assert.eq(expectedDirection, dir);
+    Assert.eq('', expectedDirection, dir);
     Remove.remove(element);
   };
 
   const assertOnDirection = (element: SugarElement<Element>, isLeftReturnThis: string, isRightReturnThis: string, expectedOn: string) => {
     appendToDom(element);
     const onDirection = Direction.onDirection(isLeftReturnThis, isRightReturnThis);
-    assert.eq(expectedOn, onDirection(element));
+    Assert.eq('', expectedOn, onDirection(element));
     Remove.remove(element);
   };
 

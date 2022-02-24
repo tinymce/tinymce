@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
 import { Arr, Optional, Result, Singleton } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';

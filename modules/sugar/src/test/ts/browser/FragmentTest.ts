@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
@@ -15,5 +15,5 @@ UnitTest.test('FragmentTest', () => {
   const container = SugarElement.fromTag('div');
   Insert.append(container, fragment);
 
-  assert.eq('<span>Hi</span><br><p>One</p>', Html.get(container));
+  Assert.eq('', '<span>Hi</span><br><p>One</p>', Html.get(container));
 });

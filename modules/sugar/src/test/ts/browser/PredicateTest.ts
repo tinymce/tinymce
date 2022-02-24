@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -42,20 +42,20 @@ UnitTest.test('PredicateTest', () => {
   Checkers.checkList([ TestPage.s1, TestPage.s2, TestPage.s3, TestPage.s4 ], PredicateFilter.descendants(TestPage.container, Checkers.isName('span')));
   Checkers.checkList([], PredicateFilter.descendants(TestPage.container, Checkers.isName('blockquote')));
 
-  assert.eq(true, PredicateExists.any(Checkers.isName('p')));
-  assert.eq(false, PredicateExists.any(Checkers.isName('table')));
-  assert.eq(true, PredicateExists.ancestor(TestPage.t1, Checkers.isName('p')));
-  assert.eq(false, PredicateExists.ancestor(TestPage.p1, Checkers.isName('p')));
-  assert.eq(false, PredicateExists.ancestor(TestPage.t1, Checkers.isName('span')));
-  assert.eq(true, PredicateExists.closest(TestPage.t1, Checkers.isName('p')));
-  assert.eq(true, PredicateExists.closest(TestPage.p1, Checkers.isName('p')));
-  assert.eq(false, PredicateExists.closest(TestPage.t1, Checkers.isName('span')));
-  assert.eq(true, PredicateExists.sibling(TestPage.p2, Checkers.isName('p')));
-  assert.eq(false, PredicateExists.sibling(TestPage.t1, Checkers.isName('p')));
-  assert.eq(true, PredicateExists.child(TestPage.p1, SugarNode.isText));
-  assert.eq(false, PredicateExists.child(TestPage.p2, SugarNode.isText));
-  assert.eq(true, PredicateExists.descendant(TestPage.p2, SugarNode.isText));
-  assert.eq(false, PredicateExists.descendant(TestPage.s1, Checkers.isName('p')));
+  Assert.eq('', true, PredicateExists.any(Checkers.isName('p')));
+  Assert.eq('', false, PredicateExists.any(Checkers.isName('table')));
+  Assert.eq('', true, PredicateExists.ancestor(TestPage.t1, Checkers.isName('p')));
+  Assert.eq('', false, PredicateExists.ancestor(TestPage.p1, Checkers.isName('p')));
+  Assert.eq('', false, PredicateExists.ancestor(TestPage.t1, Checkers.isName('span')));
+  Assert.eq('', true, PredicateExists.closest(TestPage.t1, Checkers.isName('p')));
+  Assert.eq('', true, PredicateExists.closest(TestPage.p1, Checkers.isName('p')));
+  Assert.eq('', false, PredicateExists.closest(TestPage.t1, Checkers.isName('span')));
+  Assert.eq('', true, PredicateExists.sibling(TestPage.p2, Checkers.isName('p')));
+  Assert.eq('', false, PredicateExists.sibling(TestPage.t1, Checkers.isName('p')));
+  Assert.eq('', true, PredicateExists.child(TestPage.p1, SugarNode.isText));
+  Assert.eq('', false, PredicateExists.child(TestPage.p2, SugarNode.isText));
+  Assert.eq('', true, PredicateExists.descendant(TestPage.p2, SugarNode.isText));
+  Assert.eq('', false, PredicateExists.descendant(TestPage.s1, Checkers.isName('p')));
 
   Remove.remove(TestPage.container);
 });

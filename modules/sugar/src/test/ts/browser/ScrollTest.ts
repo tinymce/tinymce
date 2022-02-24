@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -93,8 +93,8 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
   const scrollCheck = (x: number, y: number, epsX: number, epsY: number, doc: TestDocSpec, msg: string) => {
     Css.reflow(doc.body);
     const scr = Scroll.get(doc.rawDoc);
-    assert.eq(true, within(x, scr.left, epsX), msg + ' (' + doc.dir + ') Expected scrollCheck x=' + x + ', got=' + scr.left + ', eps=' + epsX);
-    assert.eq(true, within(y, scr.top, epsY), msg + ' (' + doc.dir + ') Expected scrollCheck y=' + y + ', got=' + scr.top + ', eps=' + epsY);
+    Assert.eq(msg + ' (' + doc.dir + ') Expected scrollCheck x=' + x + ', got=' + scr.left + ', eps=' + epsX, true, within(x, scr.left, epsX));
+    Assert.eq(msg + ' (' + doc.dir + ') Expected scrollCheck y=' + y + ', got=' + scr.top + ', eps=' + epsY, true, within(y, scr.top, epsY));
   };
 
   // scroll to (x,y) and check position
@@ -127,7 +127,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
     const cX = Math.round(center.left);
     const cY = Math.round(center.top);
 
-    assert.eq(true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isMacOS() && scrollBarWidth === 0), 'scroll bar width, got=' + scrollBarWidth);
+    Assert.eq('scroll bar width, got=' + scrollBarWidth, true, scrollBarWidth > 5 && scrollBarWidth < 50 || (platform.os.isMacOS() && scrollBarWidth === 0));
 
     scrollCheck(0, 0, 0, 0, doc, 'start pos');
 

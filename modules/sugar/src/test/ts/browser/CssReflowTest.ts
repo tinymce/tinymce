@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -40,7 +40,7 @@ UnitTest.asynctest('CssReflowTest', (success, failure) => {
     const newspan = Traverse.firstChild(reflowTest).getOrDie('test broke') as SugarElement<HTMLSpanElement>;
     Css.reflow(newspan);
     // TODO: I can't actually make this fail without a reflow, we need a more stressful test. But you get the idea.
-    assert.eq('solid', Css.get(newspan, 'border-left-style'));
+    Assert.eq('', 'solid', Css.get(newspan, 'border-left-style'));
     Remove.remove(newspan);
 
   };

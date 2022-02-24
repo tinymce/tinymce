@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { Arr, Cell } from '@ephox/katamari';
 
 import RangeUtils from '../api/dom/RangeUtils';
@@ -32,7 +25,7 @@ const setFocusedRange = (editor: Editor, rng: Range | undefined): void => {
 };
 
 const hasImage = (dataTransfer: DataTransfer): boolean =>
-  Arr.exists(dataTransfer.files, (file) => /^data:image\//.test(file.type));
+  Arr.exists(dataTransfer.files, (file) => /^image\//.test(file.type));
 
 const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => {
   // Block all drag/drop events

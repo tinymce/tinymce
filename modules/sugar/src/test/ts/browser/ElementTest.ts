@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
@@ -12,12 +12,12 @@ UnitTest.test('ElementTest', () => {
       // expected
       return;
     }
-    assert.fail('function did not throw an error');
+    Assert.fail('function did not throw an error');
   };
 
   const checkEl = <T extends Node | Window>(f: ElementConstructor, el: T, expt: T) => {
     const element = f(el);
-    assert.eq(true, expt === element.dom);
+    Assert.eq('', true, expt === element.dom);
   };
 
   checkErr(SugarElement.fromDom, undefined);

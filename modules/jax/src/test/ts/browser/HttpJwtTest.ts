@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
 
 import { DataType } from 'ephox/jax/core/DataType';
@@ -12,7 +12,7 @@ const expectError = (label: string, response: FutureResult<any, HttpError<DataTy
   response.get((res) => {
     res.fold((_err) => {
       console.log(label, 'successfully failed');
-      assert.eq(expectedCalls, actualCalls);
+      Assert.eq('', expectedCalls, actualCalls);
       actualCalls = [];
       callback(Result.value({ }));
     }, (_val) => {
@@ -27,9 +27,9 @@ const expectValue = (label: string, value: any, response: FutureResult<any, Http
       callback(Result.error(new Error(err.message)));
     }, (val) => {
       try {
-        assert.eq(value, val);
+        Assert.eq('', value, val);
         console.log(label, 'passed with ', val);
-        assert.eq(expectedCalls, actualCalls);
+        Assert.eq('', expectedCalls, actualCalls);
         actualCalls = [];
         callback(Result.value({}));
       } catch (err) {

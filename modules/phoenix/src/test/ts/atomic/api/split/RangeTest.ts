@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 
 import * as Split from 'ephox/phoenix/api/general/Split';
@@ -11,8 +11,8 @@ UnitTest.test('IdentifyTest', () => {
     const base = Finder.get(universe, baseid);
     const end = Finder.get(universe, endid);
     const actual = Split.range(universe, base, baseoffset, end, endoffset);
-    assert.eq(expected, TestRenders.texts(actual));
-    assert.eq(all, TestRenders.texts(universe.get().children));
+    Assert.eq('', expected, TestRenders.texts(actual));
+    Assert.eq('', all, TestRenders.texts(universe.get().children));
   };
 
   check([ 'C', 'aterpillar', 'Go', 'rilla' ], [ 'aterpillar', 'Go' ], 'a', 1, 'b', 2, Gene('root', 'root', [

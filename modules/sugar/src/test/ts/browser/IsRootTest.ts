@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as Compare from 'ephox/sugar/api/dom/Compare';
@@ -42,21 +42,21 @@ UnitTest.test('IsRootTest', () => {
   Checkers.checkList([ TestPage.d1 ], SelectorFilter.ancestors(TestPage.p3, '*', isRoot));
   Checkers.checkList([ TestPage.d1 ], PredicateFilter.ancestors(TestPage.p3, Fun.always, isRoot));
 
-  assert.eq(false, SelectorExists.closest(TestPage.p3, 'li', isRoot));
-  assert.eq(false, SelectorExists.closest(TestPage.p3, 'ol,ul', isRoot));
-  assert.eq(false, PredicateExists.closest(TestPage.p3, Checkers.isName('li'), isRoot));
+  Assert.eq('', false, SelectorExists.closest(TestPage.p3, 'li', isRoot));
+  Assert.eq('', false, SelectorExists.closest(TestPage.p3, 'ol,ul', isRoot));
+  Assert.eq('', false, PredicateExists.closest(TestPage.p3, Checkers.isName('li'), isRoot));
 
-  assert.eq(true, SelectorExists.closest(TestPage.p3, 'div', isRoot));
-  assert.eq(true, SelectorExists.closest(TestPage.d1, 'div', isRoot));
-  assert.eq(true, PredicateExists.closest(TestPage.p3, Checkers.isName('div'), isRoot));
-  assert.eq(true, PredicateExists.closest(TestPage.d1, Checkers.isName('div'), isRoot));
+  Assert.eq('', true, SelectorExists.closest(TestPage.p3, 'div', isRoot));
+  Assert.eq('', true, SelectorExists.closest(TestPage.d1, 'div', isRoot));
+  Assert.eq('', true, PredicateExists.closest(TestPage.p3, Checkers.isName('div'), isRoot));
+  Assert.eq('', true, PredicateExists.closest(TestPage.d1, Checkers.isName('div'), isRoot));
 
-  assert.eq(false, SelectorExists.ancestor(TestPage.p3, 'li', isRoot));
-  assert.eq(false, SelectorExists.ancestor(TestPage.p3, 'ol,ul', isRoot));
-  assert.eq(false, PredicateExists.ancestor(TestPage.p3, Checkers.isName('li'), isRoot));
+  Assert.eq('', false, SelectorExists.ancestor(TestPage.p3, 'li', isRoot));
+  Assert.eq('', false, SelectorExists.ancestor(TestPage.p3, 'ol,ul', isRoot));
+  Assert.eq('', false, PredicateExists.ancestor(TestPage.p3, Checkers.isName('li'), isRoot));
 
-  assert.eq(true, SelectorExists.ancestor(TestPage.p3, 'div', isRoot));
-  assert.eq(true, PredicateExists.ancestor(TestPage.p3, Checkers.isName('div'), isRoot));
+  Assert.eq('', true, SelectorExists.ancestor(TestPage.p3, 'div', isRoot));
+  Assert.eq('', true, PredicateExists.ancestor(TestPage.p3, Checkers.isName('div'), isRoot));
 
   Checkers.checkList([ TestPage.d1 ], Traverse.parents(TestPage.p3, isRoot));
   Checkers.checkList([ TestPage.p3, TestPage.d1 ], Traverse.parents(TestPage.t6, isRoot));

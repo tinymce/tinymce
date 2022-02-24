@@ -4,7 +4,6 @@ const clean = require('gulp-clean');
 const less = require('gulp-less');
 const lessAutoprefix = require('less-plugin-autoprefix');
 const gulpStylelint = require('gulp-stylelint');
-const header = require('gulp-header');
 const cleanCSS = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const rename = require('gulp-rename');
@@ -91,7 +90,6 @@ gulp.task('minifyCss', function() {
   return gulp.src(['./build/skins/**/*.css', '!**/*.min.css'])
     .pipe(sourcemaps.init())
     .pipe(cleanCSS({ rebase: false }))
-    .pipe(header(fs.readFileSync('src/text/license-header.css', 'utf8')))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./build/skins'))

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Unicode } from '@ephox/katamari';
 
 import * as Pattern from 'ephox/polaris/api/Pattern';
@@ -9,10 +9,10 @@ import { PRegExp } from 'ephox/polaris/pattern/Types';
 UnitTest.test('api.Search.findall (using api.Pattern)', () => {
   const checkAll = (expected: [number, number][], input: string, pattern: PRegExp) => {
     const actual = Search.findall(input, pattern);
-    assert.eq(expected.length, actual.length);
+    Assert.eq('', expected.length, actual.length);
     Arr.each(expected, (exp, i) => {
-      assert.eq(exp[0], actual[i].start);
-      assert.eq(exp[1], actual[i].finish);
+      Assert.eq('', exp[0], actual[i].start);
+      Assert.eq('', exp[1], actual[i].finish);
     });
   };
   const testData = (pattern: PRegExp, name: string) => ({
@@ -22,11 +22,11 @@ UnitTest.test('api.Search.findall (using api.Pattern)', () => {
 
   const checkMany = (expected: [number, number, string][], text: string, targets: ReturnType<typeof testData>[]) => {
     const actual = Search.findmany(text, targets);
-    assert.eq(expected.length, actual.length);
+    Assert.eq('', expected.length, actual.length);
     Arr.each(expected, (exp, i) => {
-      assert.eq(exp[0], actual[i].start);
-      assert.eq(exp[1], actual[i].finish);
-      assert.eq(exp[2], actual[i].name);
+      Assert.eq('', exp[0], actual[i].start);
+      Assert.eq('', exp[1], actual[i].finish);
+      Assert.eq('', exp[2], actual[i].name);
     });
   };
 

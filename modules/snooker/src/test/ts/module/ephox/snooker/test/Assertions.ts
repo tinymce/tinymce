@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import { assert } from '@ephox/bedrock-client';
+import { Assert } from '@ephox/bedrock-client';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
@@ -47,7 +47,7 @@ const checkOld = (
       table,
       result.getOrDie(label + ': could not get result').cursor.getOrDie(label + ': could not find cursor')
     ).getOrDie(label + ': could not find path');
-    assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
+    Assert.eq('', [ expCell.section, expCell.row, expCell.column ], actualPath);
   });
 
   // Let's get rid of size information.
@@ -87,7 +87,7 @@ const checkOldMultiple = (
       table,
       result.getOrDie(label + ': could not get result').cursor.getOrDie(label + ': could not find cursor')
     ).getOrDie(label + ': could not find path');
-    assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
+    Assert.eq('', [ expCell.section, expCell.row, expCell.column ], actualPath);
   });
 
   // Let's get rid of size information.
@@ -178,7 +178,7 @@ const checkStructure = (
   }, Bridge.generators);
 
   const actualPath = Hierarchy.path(table, result.getOrDie().cursor.getOrDie()).getOrDie('could not find path');
-  assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
+  Assert.eq('', [ expCell.section, expCell.row, expCell.column ], actualPath);
 
   // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
   const rows = SelectorFilter.descendants(table, 'tr');
@@ -186,7 +186,7 @@ const checkStructure = (
     const cells = SelectorFilter.descendants<HTMLTableCellElement>(r, 'td,th');
     return Arr.map(cells, Html.get);
   });
-  assert.eq(expected, actual);
+  Assert.eq('', expected, actual);
   Remove.remove(container);
 };
 
@@ -216,7 +216,7 @@ const checkDelete = (
       table,
       result.getOrDie(label + ': could not get result').cursor.getOrDie(label + ': could not find cursor')
     ).getOrDie(label + ': could not find path');
-    assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
+    Assert.eq('', [ expCell.section, expCell.row, expCell.column ], actualPath);
   });
 
   // Let's get rid of size information.
@@ -261,7 +261,7 @@ const checkMerge = (
   const all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));
   Arr.each(all, (elem) => Css.remove(elem, 'width') );
 
-  assert.eq('1', Attribute.get(table, 'border'));
+  Assert.eq('', '1', Attribute.get(table, 'border'));
   // Get around ordering of attribute differences.
   Attribute.remove(table, 'border');
   Assertions.assertHtmlStructure(label, expected, Html.getOuter(table));

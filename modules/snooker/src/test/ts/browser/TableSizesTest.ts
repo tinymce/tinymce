@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { Css, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -92,7 +92,7 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
     return table;
   };
 
-  assert.eq(
+  Assert.eq('',
     '<table style="width: 25px;"><tbody>' +
       '<tr><td style="width: 20px;">A0</td><td style="width: 30%;">B0</td></tr>' +
       '<tr><td style="width: 10px;">A1</td><td style="width: 15px;">B1</td></tr>' +
@@ -103,12 +103,12 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
     ], '25px'))
   );
 
-  assert.eq([[ '1px', '2px' ], [ '1px', '2px' ]], readWidth(generateW([[ '1px', '2px' ], [ '1px', '2px' ]], '3px')));
+  Assert.eq('', [[ '1px', '2px' ], [ '1px', '2px' ]], readWidth(generateW([[ '1px', '2px' ], [ '1px', '2px' ]], '3px')));
 
   const checkWidth = (expected: string[][], table: SugarElement<HTMLTableElement>, newWidth: string) => {
     Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Optional.some(newWidth), Optional.none());
-    assert.eq(expected, readWidth(table));
+    Assert.eq('', expected, readWidth(table));
     Remove.remove(table);
   };
 
@@ -120,7 +120,7 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
   const checkHeight = (expected: string[][], table: SugarElement<HTMLTableElement>, newHeight: string) => {
     Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Optional.none(), Optional.some(newHeight));
-    assert.eq(expected, readHeight(table));
+    Assert.eq('', expected, readHeight(table));
     Remove.remove(table);
   };
 

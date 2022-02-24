@@ -1,24 +1,21 @@
 //
-// Copyright (c) Tiny Technologies, Inc. All rights reserved.
-// Licensed under the LGPL or a commercial license.
-// For LGPL see License.txt in the project root for license information.
-// For commercial licenses see https://www.tiny.cloud/
-//
-
-//
 // Statusbar
 //
 
 @statusbar-background-color: @background-color;
 @statusbar-focus-background-color: multiply(white, contrast(@background-color, fade(@color-black, 15), fade(@color-black, 85)));
-@statusbar-font-size: @font-size-xs;
+@statusbar-font-size: @font-size-sm;
 @statusbar-font-weight: @font-weight-normal;
-@statusbar-height: 18px;
+@statusbar-height: 25px;
 @statusbar-padding-x: @pad-sm;
-@statusbar-separator-color: @border-color;
-@statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
-@statusbar-text-transform: uppercase;
+@statusbar-separator-color: @tinymce-separator-color;
+@statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, fade(@color-white, 75));
+@statusbar-text-transform: none;
 @statusbar-not-disabled-selector: ~'&:not(:disabled):not([aria-disabled=true])';
+@statusbar-logo-color: fade(@text-color, 80);
+@statusbar-logo-active-color: @text-color;
+@statusbar-resize-handle-color: fade(@text-color, 50);
+@statusbar-resize-handle-radius: @tinymce-border-radius - @tinymce-border-width - 3px; // Minus handle padding
 
 .tox {
   .tox-statusbar {
@@ -72,25 +69,25 @@
     &:hover,
     &:focus {
       @{statusbar-not-disabled-selector} {
+        color: @text-color;
         cursor: pointer;
-        text-decoration: underline;
       }
     }
   }
 
   .tox-statusbar__branding {
     svg {
-      fill: @statusbar-text-color;
-      height: 1.4em;
-      vertical-align: -.4em;
-      width: 4.0625em;
+      fill: @statusbar-logo-color;
+      height: 1.14em;
+      vertical-align: -.28em;
+      width: 3.6em;
     }
 
     a:hover,
     a:focus {
       @{statusbar-not-disabled-selector} {
         svg {
-          fill: @text-color;
+          fill: @statusbar-logo-active-color;
         }
       }
     }
@@ -105,17 +102,19 @@
     justify-content: flex-end;
     margin-left: auto;
     margin-right: -@statusbar-padding-x;
+    padding-bottom: 3px;
     padding-left: 1ch;
+    padding-right: 3px;
 
     svg {
       display: block;
-      fill: @statusbar-text-color;
+      fill: @statusbar-resize-handle-color;
     }
 
     &:focus {
       svg {
         background-color: @statusbar-focus-background-color;
-        border-radius: 1px;
+        border-radius: 1px 1px @statusbar-resize-handle-radius 1px;
         box-shadow: 0 0 0 2px @statusbar-focus-background-color;
       }
     }
@@ -128,7 +127,7 @@
   }
 
   .tox-statusbar__branding {
-    margin-left: 1ch;
+    margin-left: 2ch;
   }
 }
 

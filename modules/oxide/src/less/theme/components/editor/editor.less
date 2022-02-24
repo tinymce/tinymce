@@ -1,16 +1,11 @@
 //
-// Copyright (c) Tiny Technologies, Inc. All rights reserved.
-// Licensed under the LGPL or a commercial license.
-// For LGPL see License.txt in the project root for license information.
-// For commercial licenses see https://www.tiny.cloud/
-//
-
-//
 // Editor
 //
 
-@editor-header-box-shadow: none;
-@editor-header-sticky-box-shadow: 0 4px 4px -3px rgba(0, 0, 0, .25);
+@editor-header-box-shadow: 0 2px 2px -2px fade(@color-black, 10%), 0 8px 8px -4px fade(@color-black, 7%);
+@editor-header-sticky-box-shadow: 0 2px 2px -2px fade(@color-black, 20%), 0 8px 8px -4px fade(@color-black, 15%);
+@editor-bottom-header-box-shadow: none;
+@editor-bottom-header-sticky-box-shadow: @editor-header-sticky-box-shadow;
 @editor-header-sticky-background-color: if((alpha(@toolbar-background-color) > 0), transparent, @background-color); // If @toolbar-background-color is set to transparent, then set the sticky toolbar background color to be another color to not be transparent over content.
 
 .tox {
@@ -27,17 +22,15 @@
   }
 
   &:not(.tox-tinymce-inline) .tox-editor-header {
+    background-color: @background-color;
     box-shadow: @editor-header-box-shadow;
+    padding: @pad-xs 0;
     transition: box-shadow .5s;
   }
-}
 
-// Remove double border when using toolbar_location bottom
-// or when using inline mode.
-.tox.tox-tinymce--toolbar-bottom,
-.tox.tox-tinymce-inline {
-  .tox-editor-header {
-    margin-bottom: -1px;
+  &:not(.tox-tinymce-inline).tox-tinymce--toolbar-bottom .tox-editor-header {
+    border-top: 1px solid @tinymce-separator-color;
+    box-shadow: @editor-bottom-header-box-shadow;
   }
 }
 
@@ -45,10 +38,17 @@
   //
 }
 
-.tox.tox-tinymce--toolbar-sticky-on {
+.tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-sticky-on {
   .tox-editor-header {
-    background-color: @editor-header-sticky-background-color;
+    background-color: @background-color;
     box-shadow: @editor-header-sticky-box-shadow;
+    padding: @pad-xs 0;
+  }
+
+  &.tox-tinymce--toolbar-bottom {
+    .tox-editor-header {
+      box-shadow: @editor-bottom-header-sticky-box-shadow;
+    }
   }
 }
 

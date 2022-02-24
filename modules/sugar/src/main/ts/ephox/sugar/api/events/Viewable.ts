@@ -4,9 +4,6 @@ import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
 import * as Visibility from '../view/Visibility';
 
-// TypeScript does not include MutationObserver on the window object, and it's accessed that way for... reasons?
-declare const window: any;
-
 /*
  * Long term it's probably worth looking at using a single event per page the way Resize does.
  * This could get a bit slow with a lot of editors in a heavy page.
