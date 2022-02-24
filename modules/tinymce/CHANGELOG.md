@@ -1222,7 +1222,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 5.0.0 - 2019-02-04
 
-Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
+Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/tinymce/5/5_0_0-release-notes-overview.html
 
 ### Added
 - Added links and registered names with * to denote premium plugins in Plugins tab of Help dialog #TINY-3223
@@ -1394,8 +1394,6 @@ Full documentation for the version 5 features and changes is available at https:
 ## 5.0.0-preview-1 - 2018-10-01
 
 Developer preview 1
-
-Initial list of features and changes is available at https://tiny.cloud/docs-preview/release-notes/new-features/
 
 ## 4.9.11 - 2020-07-13
 
