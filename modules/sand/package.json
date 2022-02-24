@@ -27,7 +27,7 @@
   "keywords": [
     "platform"
   ],
-  "author": "Tiny Technologies, Inc",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "dependencies": {
     "@ephox/katamari": "^9.0.0-alpha.3",

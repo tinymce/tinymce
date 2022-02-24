@@ -35,7 +35,7 @@
   "keywords": [
     "ui"
   ],
-  "author": "Tiny Technologies, Inc",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "MIT",
   "main": "./lib/main/ts/ephox/alloy/api/Main.js",
   "module": "./lib/main/ts/ephox/alloy/api/Main.js",
