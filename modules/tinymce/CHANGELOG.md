@@ -138,6 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
 - Removed the `mceInsertRawHTML` command #TINY-8214
 - Removed the style field from the `image` plugin dialog advanced tab #TINY-3422
+- Removed the `paste_filter_drop` option as native drag and drop handling is no longer supported #TINY-8511
 - Removed the legacy `mobile` theme #TINY-7832
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162

@@ -657,11 +657,6 @@ const register = (editor: Editor) => {
     default: true
   });
 
-  registerOption('paste_filter_drop', {
-    processor: 'boolean',
-    default: true
-  });
-
   registerOption('paste_preprocess', {
     processor: 'function'
   });
@@ -837,7 +832,6 @@ const shouldBrowserSpellcheck = option('browser_spellcheck');
 const getProtect = option('protect');
 const shouldPasteBlockDrop = option('paste_block_drop');
 const shouldPasteDataImages = option('paste_data_images');
-const shouldPasteFilterDrop = option('paste_filter_drop');
 const getPastePreProcess = option('paste_preprocess');
 const getPastePostProcess = option('paste_postprocess');
 const getPasteWebkitStyles = option('paste_webkit_styles');
@@ -943,7 +937,6 @@ export {
   getProtect,
   shouldPasteBlockDrop,
   shouldPasteDataImages,
-  shouldPasteFilterDrop,
   getPastePreProcess,
   getPastePostProcess,
   getPasteWebkitStyles,

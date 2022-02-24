@@ -156,7 +156,6 @@ interface BaseEditorOptions {
   paste_as_text?: boolean;
   paste_block_drop?: boolean;
   paste_data_images?: boolean;
-  paste_filter_drop?: boolean;
   paste_merge_formats?: boolean;
   paste_postprocess?: PastePostProcessFn;
   paste_preprocess?: PastePreProcessFn;
