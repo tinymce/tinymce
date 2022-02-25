@@ -6,7 +6,7 @@
  */
 
 import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
-import { Css, PredicateExists, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
+import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -242,20 +242,12 @@ const addBrToBlockIfNeeded = (dom, block) => {
   }
 };
 
-const findQuoteBlock = (editor: Editor, container: Node, targetName: string) => {
-  const isRoot = (element: SugarElement<Node>) => element.dom === editor.getBody();
-  return PredicateExists.closest(SugarElement.fromDom(container), (node: SugarElement) => editor.dom.isBlock(node.dom) && node.dom.tagName === targetName, isRoot);
-};
-
 const shouldEndContainer = (editor: Editor, container: Node) => {
-  if (!container) {
-    return false;
-  }
   const optionValue = Options.shouldEndContainerOnEmptyBlock(editor);
   if (Type.isString(optionValue)) {
-    return Arr.exists(optionValue.split(/, ?/), (value) => findQuoteBlock(editor, container, value.toUpperCase()));
+    return Type.isNonNullable(container) && Arr.contains(optionValue.split(/, ?/), container.nodeName.toLowerCase());
   } else {
-    return optionValue;
+    return Type.isNonNullable(container) && optionValue;
   }
 };
 
@@ -434,7 +426,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   }
 
   // Find parent block and setup empty block paddings
-  parentBlock = editor.dom.getParent(container, editor.dom.isBlock);
+  parentBlock = dom.getParent(container, dom.isBlock);
   containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
 
   // Setup block names
