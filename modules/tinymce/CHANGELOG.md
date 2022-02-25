@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Changed
-- Pressing Shift + Enter will now step out of `blockquote` elements to match `pre` element behavior #TINY-6559gp
+- The option`end_container_on_empty_block` can now take a string of blocks to split when pressing Enter twice #TINY-6559
+- The default value for option`end_container_on_empty_block` changed to `blockquote` #TINY-6559
 
 ## 6.0 (TBD)
 
