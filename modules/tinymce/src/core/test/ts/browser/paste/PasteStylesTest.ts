@@ -20,7 +20,7 @@ describe('browser.tinymce.core.paste.PasteStylesTest', () => {
   beforeEach(() => {
     const editor = hook.editor();
     editor.options.unset('paste_remove_styles_if_webkit');
-    editor.options.unset('paste_remove_styles');
+    editor.options.unset('paste_webkit_styles');
   });
 
   it('TBA: Paste span with encoded style attribute, paste_webkit_styles: font-family', () => {
