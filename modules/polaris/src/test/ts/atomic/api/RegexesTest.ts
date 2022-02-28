@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 
 import * as Regexes from 'ephox/polaris/api/Regexes';
@@ -153,7 +153,7 @@ UnitTest.test('RegexesTest', () => {
 
   Arr.each(trueCases, (cs) => {
     const matched = Regexes.link().exec(cs);
-    assert.eq(cs, matched !== null && matched[0], 'expected true but was false: ' + cs);
+    Assert.eq('expected true but was false: ' + cs, cs, matched !== null && matched[0]);
     if (matched !== null && matched.length > 1) {
       // eslint-disable-next-line no-console
       console.log('matched groups:');
@@ -161,13 +161,13 @@ UnitTest.test('RegexesTest', () => {
         // eslint-disable-next-line no-console
         console.log(i, s);
       });
-      assert.fail('link regex must not capture any groups');
+      Assert.fail('link regex must not capture any groups');
     }
   });
 
   Arr.each(falseCases, (cs) => {
     const match = Regexes.link().exec(cs);
-    assert.eq(false, match !== null && cs === match[0], 'expected false but was true: ' + cs);
+    Assert.eq('expected false but was true: ' + cs, false, match !== null && cs === match[0]);
   });
 
   const autolinks = { // Ignore trailing: \-_.~*+=!&;:\'%@?#^${}(),
@@ -247,9 +247,9 @@ UnitTest.test('RegexesTest', () => {
     const match = Regexes.autolink().exec(k);
     if (match !== null) {
       const url = match[1];
-      assert.eq(true, v === url, 'expected ' + v + ' but was "' + url + '"');
+      Assert.eq('expected ' + v + ' but was "' + url + '"', true, v === url);
     } else {
-      assert.fail('expected ' + v + ' but did not match "' + k + '"');
+      Assert.fail('expected ' + v + ' but did not match "' + k + '"');
     }
   });
 
@@ -281,9 +281,9 @@ UnitTest.test('RegexesTest', () => {
     const match = Regexes.link().exec(k);
     if (match !== null) {
       const url = match[0];
-      assert.eq(true, v === url, 'expected ' + v + ' but was "' + url + '"');
+      Assert.eq('expected ' + v + ' but was "' + url + '"', true, v === url);
     } else {
-      assert.fail('expected ' + v + ' but did not match "' + k + '"');
+      Assert.fail('expected ' + v + ' but did not match "' + k + '"');
     }
   });
 });

@@ -20,7 +20,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.ContextMenuPositionTe
     editor.setContent('<p>Some <strong>bold</strong> content</p>');
     TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
     await pOpenContextMenu(editor, 'strong'); // Will trigger from the top right corner of the node
-    assertContentMenuPosition(61, -182);
+    assertContentMenuPosition(63, -174);
   });
 
   it('TINY-6036: Context menu opened on "overlap avoid" element should dock to node', async () => {
@@ -28,6 +28,6 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.ContextMenuPositionTe
     editor.setContent('<p>Some <span class="mce-spellchecker-word">invalud</span> word</p>');
     TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
     await pOpenContextMenu(editor, 'span.mce-spellchecker-word');
-    assertContentMenuPosition(61, -163);
+    assertContentMenuPosition(63, -154);
   });
 });

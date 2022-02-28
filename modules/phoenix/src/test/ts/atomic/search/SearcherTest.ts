@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 
@@ -64,7 +64,7 @@ UnitTest.test('SearcherTest', () => {
         exact: match.exact
       };
     });
-    assert.eq(expected, processed);
+    Assert.eq('', expected, processed);
   };
 
   // An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t>

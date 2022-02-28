@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -24,7 +24,7 @@ UnitTest.test('DomGatherTest', () => {
 
   const check = (spec: CheckItem) => {
     const actual = spec.seek(spec.element, spec.predicate, is(page.container)).getOrDie('No actual element found.');
-    assert.eq(spec.expected.dom, actual.dom);
+    Assert.eq('', spec.expected.dom, actual.dom);
   };
 
   const cases: CheckItem[] = [

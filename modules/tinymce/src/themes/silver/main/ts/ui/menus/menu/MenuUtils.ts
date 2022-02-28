@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { ItemTypes, MenuTypes } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { InlineContent, Menu, Toolbar } from '@ephox/bridge';

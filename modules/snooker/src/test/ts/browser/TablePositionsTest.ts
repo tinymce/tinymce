@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
@@ -82,7 +82,7 @@ UnitTest.test('RectangularTest', () => {
     const start = SelectorFilter.descendants<HTMLTableCellElement>(tableTarget, from)[0];
     const finish = SelectorFilter.descendants<HTMLTableCellElement>(tableTarget, to)[0];
     const c = TablePositions.getBox(tableTarget, start, finish);
-    assert.eq(expected, c.isSome());
+    Assert.eq('', expected, c.isSome());
   };
 
   check(table, '#tableA td#B1', '#tableA td#C3', false);

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { PositionArray, PRange } from '@ephox/polaris';
@@ -34,8 +34,8 @@ UnitTest.test('MatchSplitterTest', () => {
     });
 
     const actual = MatchSplitter.separate(universe, list, matches);
-    assert.eq(expected.length, actual.length, 'Wrong sizes for MatchSplitter');
-    assert.eq(expected, Arr.map(actual, (a) => {
+    Assert.eq('Wrong sizes for MatchSplitter', expected.length, actual.length);
+    Assert.eq('', expected, Arr.map(actual, (a) => {
       return {
         text: TestRenders.texts(a.elements),
         exact: a.exact,
@@ -43,7 +43,7 @@ UnitTest.test('MatchSplitterTest', () => {
       };
     }));
 
-    assert.eq(all, TestRenders.texts(universe.get().children));
+    Assert.eq('', all, TestRenders.texts(universe.get().children));
 
   };
 

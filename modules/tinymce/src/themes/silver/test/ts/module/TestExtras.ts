@@ -59,6 +59,9 @@ export const TestExtras = (): TestExtras => {
     setContent: (_content) => {},
     insertContent: (_content: string, _args?: any) => {},
     execCommand: (_cmd: string, _ui?: boolean, _value?: any) => {},
+    ui: {
+      show: Fun.noop
+    },
     options: {
       get: (name: string) => options[name]
     }

@@ -26,7 +26,9 @@ let models = [
 
 let oxideUiSkinMap = {
   'dark': 'oxide-dark',
-  'default': 'oxide'
+  'default': 'oxide',
+  'tinymce-5': 'tinymce-5',
+  'tinymce-5-dark': 'tinymce-5-dark'
 };
 
 const stripSourceMaps = function (data) {
@@ -315,7 +317,7 @@ module.exports = function (grunt) {
         },
         core: {
           src: [
-            'src/core/text/license-header.js',
+            'src/core/text/build-header.js',
             'js/tinymce/tinymce.js'
           ],
           dest: 'js/tinymce/tinymce.js'
@@ -324,7 +326,7 @@ module.exports = function (grunt) {
       gruntUtils.generate(plugins, 'plugin', function (name) {
         return {
           src: [
-            'src/core/text/license-header.js',
+            'src/core/text/build-header.js',
             `js/tinymce/plugins/${name}/plugin.js`
           ],
           dest: `js/tinymce/plugins/${name}/plugin.js`
@@ -333,7 +335,7 @@ module.exports = function (grunt) {
       gruntUtils.generate(themes, 'theme', function (name) {
         return {
           src: [
-            'src/core/text/license-header.js',
+            'src/core/text/build-header.js',
             `js/tinymce/themes/${name}/theme.js`
           ],
           dest: `js/tinymce/themes/${name}/theme.js`
@@ -342,7 +344,7 @@ module.exports = function (grunt) {
       gruntUtils.generate(models, 'model', function (name) {
         return {
           src: [
-            'src/core/text/license-header.js',
+            'src/core/text/build-header.js',
             `js/tinymce/models/${name}/model.js`
           ],
           dest: `js/tinymce/models/${name}/model.js`
@@ -531,7 +533,7 @@ module.exports = function (grunt) {
           },
           onBeforeConcat: function (destPath, chunks) {
             // Strip the license from each file and prepend the license, so it only appears once
-            var license = grunt.file.read('src/core/text/license-header.js').replace(/@@version@@/g, packageData.version).replace(/@@releaseDate@@/g, packageData.date);
+            var license = grunt.file.read('src/core/text/build-header.js').replace(/@@version@@/g, packageData.version).replace(/@@releaseDate@@/g, packageData.date);
             return [license].concat(chunks.map(function (chunk) {
               return chunk.replace(license, '').trim();
             }));
@@ -621,7 +623,7 @@ module.exports = function (grunt) {
             zip.addData('bower.json', jsonToBuffer({
               'name': 'tinymce',
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': 'LGPL-2.1',
+              'license': 'MIT',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'ignore': ['README.md', 'composer.json', 'package.json', '.npmignore', 'CHANGELOG.md']
@@ -636,10 +638,10 @@ module.exports = function (grunt) {
                 'directory': 'modules/tinymce'
               },
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'author': 'Tiny Technologies, Inc',
+              'author': 'Ephox Corporation DBA Tiny Technologies, Inc',
               'main': 'tinymce.js',
               'types': 'tinymce.d.ts',
-              'license': 'LGPL-2.1',
+              'license': 'MIT',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'bugs': { 'url': 'https://github.com/tinymce/tinymce/issues' }
@@ -649,7 +651,7 @@ module.exports = function (grunt) {
               'name': 'tinymce/tinymce',
               'version': packageData.version,
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': ['LGPL-2.1-only'],
+              'license': ['MIT-only'],
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'type': 'component',
@@ -728,15 +730,15 @@ module.exports = function (grunt) {
         options: {
           id: 'TinyMCE',
           version: packageData.version,
-          authors: 'Tiny Technologies, Inc',
-          owners: 'Tiny Technologies, Inc',
+          authors: 'Ephox Corporation DBA Tiny Technologies, Inc',
+          owners: 'Ephox Corporation DBA Tiny Technologies, Inc',
           description: 'The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-          'control released as Open Source under LGPL by Tiny Technologies, Inc. TinyMCE has the ability to convert HTML ' +
+          'control released as Open Source under MIT by Tiny Technologies, Inc. TinyMCE has the ability to convert HTML ' +
           'TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate ' +
           'into other Content Management Systems.',
           releaseNotes: 'Release notes for my package.',
           summary: 'TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-          'control released as Open Source under LGPL by Tiny Technologies, Inc.',
+          'control released as Open Source under MIT by Tiny Technologies, Inc.',
           projectUrl: 'https://www.tiny.cloud/',
           iconUrl: 'https://www.tiny.cloud/favicon-32x32.png',
           licenseUrl: 'https://www.tiny.cloud/license',

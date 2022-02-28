@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Attribute from 'ephox/sugar/api/properties/Attribute';
@@ -12,10 +12,10 @@ UnitTest.test('ClassTest', () => {
   const m = MathElement();
 
   const check = (blob: boolean, spot: boolean, mogel: boolean, t: boolean) => {
-    assert.eq(blob, Class.has(c, 'blob'));
-    assert.eq(spot, Class.has(c, 'spot'));
-    assert.eq(mogel, Class.has(c, 'mogel'));
-    assert.eq(t, Class.has(c, 't'));
+    Assert.eq('', blob, Class.has(c, 'blob'));
+    Assert.eq('', spot, Class.has(c, 'spot'));
+    Assert.eq('', mogel, Class.has(c, 'mogel'));
+    Assert.eq('', t, Class.has(c, 't'));
   };
 
   check(false, false, false, false);
@@ -24,7 +24,7 @@ UnitTest.test('ClassTest', () => {
 
   Class.remove(c, 'blob');
   check(false, false, false, false);
-  assert.eq(false, Attribute.has(c, 'class'), 'empty class attribute was not removed');
+  Assert.eq('empty class attribute was not removed', false, Attribute.has(c, 'class'));
 
   Class.add(c, 'blob');
   check(true, false, false, false);
@@ -35,53 +35,53 @@ UnitTest.test('ClassTest', () => {
   Classes.add(c, [ 'mogel', 't' ]);
   check(true, true, true, true);
 
-  assert.eq([ 'blob', 'spot', 'mogel', 't' ], Classes.get(c));
+  Assert.eq('', [ 'blob', 'spot', 'mogel', 't' ], Classes.get(c));
 
   Classes.remove(c, [ 'mogel', 't' ]);
   check(true, true, false, false);
-  assert.eq([ 'blob', 'spot' ], Classes.get(c));
+  Assert.eq('', [ 'blob', 'spot' ], Classes.get(c));
 
   Class.remove(c, 'blob');
   check(false, true, false, false);
 
-  assert.eq(true, Class.toggle(c, 'mogel'));
+  Assert.eq('', true, Class.toggle(c, 'mogel'));
   check(false, true, true, false);
 
-  assert.eq(false, Class.toggle(c, 'mogel'));
+  Assert.eq('', false, Class.toggle(c, 'mogel'));
   check(false, true, false, false);
 
   Class.remove(c, 'spot');
   check(false, false, false, false);
-  assert.eq(false, Attribute.has(c, 'class'), 'empty class attribute was not removed');
+  Assert.eq('empty class attribute was not removed', false, Attribute.has(c, 'class'));
 
   Class.toggle(c, 'spot');
   check(false, true, false, false);
   Class.toggle(c, 'spot');
   check(false, false, false, false);
-  assert.eq(false, Attribute.has(c, 'class'), 'empty class attribute was not removed');
+  Assert.eq('empty class attribute was not removed', false, Attribute.has(c, 'class'));
 
   const incorrect = SugarElement.fromText('a');
-  assert.eq(false, Class.has(incorrect, 'anything'));
+  Assert.eq('', false, Class.has(incorrect, 'anything'));
 
-  assert.eq([], Classes.get(m));
+  Assert.eq('', [], Classes.get(m));
 
   Classes.add(m, [ 'a', 'b' ]);
-  assert.eq([ 'a', 'b' ], Classes.get(m));
+  Assert.eq('', [ 'a', 'b' ], Classes.get(m));
   Classes.remove(m, [ 'a', 'b' ]);
-  assert.eq([], Classes.get(m));
-  assert.eq(false, Class.has(m, 'a'));
+  Assert.eq('', [], Classes.get(m));
+  Assert.eq('', false, Class.has(m, 'a'));
 
   Class.toggle(m, 'a');
-  assert.eq([ 'a' ], Classes.get(m));
+  Assert.eq('', [ 'a' ], Classes.get(m));
   Class.toggle(m, 'a');
-  assert.eq([], Classes.get(m));
+  Assert.eq('', [], Classes.get(m));
 
   const tgl = Class.toggler(m, 'tglClass');
-  assert.eq(false, tgl.isOn());
+  Assert.eq('', false, tgl.isOn());
   tgl.on();
-  assert.eq(true, tgl.isOn());
-  assert.eq([ 'tglClass' ], Classes.get(m));
+  Assert.eq('', true, tgl.isOn());
+  Assert.eq('', [ 'tglClass' ], Classes.get(m));
   tgl.off();
-  assert.eq(false, tgl.isOn());
-  assert.eq([], Classes.get(m));
+  Assert.eq('', false, tgl.isOn());
+  Assert.eq('', [], Classes.get(m));
 });

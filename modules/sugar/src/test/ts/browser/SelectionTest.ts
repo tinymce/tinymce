@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Compare from 'ephox/sugar/api/dom/Compare';
 import * as Hierarchy from 'ephox/sugar/api/dom/Hierarchy';
@@ -28,18 +28,18 @@ UnitTest.test('Browser Test: SelectionTest', () => {
 
   const assertNoSelection = (label: string) => {
     WindowSelection.getExact(window).each((_sel) => {
-      assert.fail('There should not be a selection yet: ' + label);
+      Assert.fail('There should not be a selection yet: ' + label);
     });
   };
 
   const assertSelection = (label: string, expStart: SugarElement<Node>, expSoffset: number, expFinish: SugarElement<Node>, expFoffset: number) => {
     WindowSelection.getExact(window).fold(() => {
-      assert.fail('After setting selection ' + label + ', could not find a selection');
+      Assert.fail('After setting selection ' + label + ', could not find a selection');
     }, (sel) => {
-      assert.eq(true, Compare.eq(sel.start, expStart), () => 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label);
-      assert.eq(expSoffset, sel.soffset);
-      assert.eq(true, Compare.eq(sel.finish, expFinish), () => 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label);
-      assert.eq(expFoffset, sel.foffset);
+      Assert.eq(() => 'Start container should be: ' + Html.getOuter(expStart) + '\n' + label, true, Compare.eq(sel.start, expStart));
+      Assert.eq('', expSoffset, sel.soffset);
+      Assert.eq(() => 'Finish container should be ' + Html.getOuter(expFinish) + '\n' + label, true, Compare.eq(sel.finish, expFinish));
+      Assert.eq('', expFoffset, sel.foffset);
     });
   };
 
@@ -55,7 +55,7 @@ UnitTest.test('Browser Test: SelectionTest', () => {
   const assertFragmentHtml = (expected: string, fragment: SugarElement<Node>) => {
     const div = SugarElement.fromTag('div');
     InsertAll.append(div, Traverse.children(fragment));
-    assert.eq(expected, Html.get(div));
+    Assert.eq('', expected, Html.get(div));
   };
 
   const p1Selected = WindowSelection.forElement(window, p1);
@@ -63,7 +63,7 @@ UnitTest.test('Browser Test: SelectionTest', () => {
   assertFragmentHtml('This is the <strong>first</strong> paragraph', clone);
 
   WindowSelection.replace(window, SimSelection.exactFromRange(p1Selected), SugarElements.fromHtml('<a>link</a><span>word</span>'));
-  assert.eq('<a>link</a><span>word</span>', Html.get(p1));
+  Assert.eq('', '<a>link</a><span>word</span>', Html.get(p1));
 
   WindowSelection.deleteAt(window,
     SimSelection.exact(
@@ -74,7 +74,7 @@ UnitTest.test('Browser Test: SelectionTest', () => {
     )
   );
 
-  assert.eq('<a>li</a><span>d</span>', Html.get(p1));
+  Assert.eq('', '<a>li</a><span>d</span>', Html.get(p1));
 
   Remove.remove(p1);
   Remove.remove(p2);
@@ -82,10 +82,10 @@ UnitTest.test('Browser Test: SelectionTest', () => {
   const assertRng = (selection: SimSelection, expStart: SugarElement<Node>, expSoffset: number, expFinish: SugarElement<Node>, expFoffset: number) => {
     const r = WindowSelection.toNative(selection);
 
-    assert.eq(expStart.dom, r.startContainer, () => 'Start Container should be: ' + Html.getOuter(expStart));
-    assert.eq(expSoffset, r.startOffset, 'Start offset should be: ' + expSoffset);
-    assert.eq(expFinish.dom, r.endContainer, () => 'End Container should be: ' + Html.getOuter(expFinish));
-    assert.eq(expFoffset, r.endOffset, 'End offset should be: ' + expFoffset);
+    Assert.eq(() => 'Start Container should be: ' + Html.getOuter(expStart), expStart.dom, r.startContainer);
+    Assert.eq('Start offset should be: ' + expSoffset, expSoffset, r.startOffset);
+    Assert.eq(() => 'End Container should be: ' + Html.getOuter(expFinish), expFinish.dom, r.endContainer);
+    Assert.eq('End offset should be: ' + expFoffset, expFoffset, r.endOffset);
 
     return r;
   };

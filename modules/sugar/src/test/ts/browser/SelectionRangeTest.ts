@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Compare from 'ephox/sugar/api/dom/Compare';
@@ -58,10 +58,10 @@ UnitTest.test('WindowSelectionTest', () => {
     const expStart = find(expected.start);
     const expFinish = find(expected.finish);
 
-    assert.eq(true, Compare.eq(expStart, actual.start), 'Start element different');
-    assert.eq(true, Compare.eq(expFinish, actual.finish), 'Finish element different');
-    assert.eq(expected.soffset, actual.soffset);
-    assert.eq(expected.foffset, actual.foffset);
+    Assert.eq('Start element different', true, Compare.eq(expStart, actual.start));
+    Assert.eq('Finish element different', true, Compare.eq(expFinish, actual.finish));
+    Assert.eq('', expected.soffset, actual.soffset);
+    Assert.eq('', expected.foffset, actual.foffset);
   };
 
   const checkUniCodeSelection = (content: string) => {
@@ -73,7 +73,7 @@ UnitTest.test('WindowSelectionTest', () => {
   const checkStringAt = (label: string, expectedStr: string, start: Situ, finish: Situ) => {
     // dont need to set a selection range, just extract the Situ.on() element/offset pair
     const actual = WindowSelection.getAsString(window, SimSelection.relative(start, finish));
-    assert.eq(expectedStr, actual, 'Actual was not expected [' + expectedStr + '|' + actual + ']');
+    Assert.eq('Actual was not expected [' + expectedStr + '|' + actual + ']', expectedStr, actual);
   };
 
   checkSelection(

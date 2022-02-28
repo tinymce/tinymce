@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
@@ -36,7 +36,7 @@ UnitTest.test('ClumpsTest', () => {
       return { start: a.start.id, soffset: a.soffset, finish: a.finish.id, foffset: a.foffset };
     });
 
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   check([
