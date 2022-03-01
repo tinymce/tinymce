@@ -6,7 +6,7 @@ Used and trusted by millions of developers, TinyMCE is the world’s most custom
 
 With more than 350M+ downloads every year, we’re also one of the most trusted enterprise-grade open source HTML editors on the internet. There’s currently more than 100M+ products worldwide, powered by Tiny. As a high powered WYSIWYG editor, TinyMCE is built to scale, designed to innovate, and thrives on delivering results to difficult edge-cases.
 
-You can access a [full featured demo of TinyMCE](https://www.tiny.cloud/docs/tinymce/6/os-full-featured.html) in the docs on the TinyMCE website.
+You can access a [full featured demo of TinyMCE](https://www.tiny.cloud/docs/tinymce/6/premium-full-featured.html) in the docs on the TinyMCE website.
 
 <p align="center">
   <img alt="Screenshot of the TinyMCE Editor" src="https://www.tiny.cloud/storage/github-readme-images/tinymce-editor.png"\>
@@ -18,7 +18,7 @@ Getting started with the TinyMCE rich text editor is easy, and for simple config
 
 [TinyMCE Cloud Deployment Quick Start Guide](https://www.tiny.cloud/docs/tinymce/6/cloud-quick-start.html)
 
-[TinyMCE Self-hosted Deployment Guide](https://www.tiny.cloud/docs/tinymce/6/javascript-pm.html)
+[TinyMCE Self-hosted Deployment Guide](https://www.tiny.cloud/docs/tinymce/6/npm-projects.html)
 
 TinyMCE provides a range of configuration options that allow you to integrate it into your application. Start customizing with a [basic setup](https://www.tiny.cloud/docs/tinymce/6/basic-setup.html).
 

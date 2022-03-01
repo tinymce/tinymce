@@ -360,7 +360,7 @@ const EditorManager: EditorManager = {
       if (Env.browser.isIE() || Env.browser.isEdge()) {
         ErrorReporter.initError(
           'TinyMCE does not support the browser you are using. For a list of supported' +
-          ' browsers please see: https://www.tiny.cloud/docs/tinymce/6/support.html#_supported_web_browsers'
+          ' browsers please see: https://www.tiny.cloud/docs/tinymce/6/support.html#supportedwebbrowsers'
         );
         return [];
       } else if (isQuirksMode) {
