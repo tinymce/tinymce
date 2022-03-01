@@ -1397,7 +1397,7 @@ Full documentation for the version 5 features and changes is available at https:
 
 Developer preview 1
 
-Initial list of features and changes is available at https://tiny.cloud/docs-preview/release-notes/new-features/
+Initial list of features and changes is available at https://tiny.cloud/tinymce/5/release-notes/release-notes50.html
 
 ## 4.9.11 - 2020-07-13
 
