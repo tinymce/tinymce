@@ -96,7 +96,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The default value for the `schema` option has been changed to `html5` #TINY-8261
 - The default value for the `table_style_by_css` option has been changed to `true` #TINY-8259
 - The default value for the `table_use_colgroups` option has been changed to `true` #TINY-8259
-- The URL links to the TinyMCE docs reference site #TINY-8441
 
 ### Fixed
 - The object returned from the `editor.fire()` API was incorrect if the editor had been removed #TINY-8018
