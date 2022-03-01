@@ -33,7 +33,7 @@ const tab = (editor: Editor): Dialog.TabSpec => {
     return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
   }, (x) => {
     const name = x.type === PluginUrls.PluginType.Premium ? `${x.name}*` : x.name;
-    return makeLink({ name, url: `https://www.tiny.cloud/docs/plugins/${x.type}/${x.slug}` });
+    return makeLink({ name, url: `https://www.tiny.cloud/docs/tinymce/6/${x.slug}.html` });
   });
 
   const getPluginKeys = (editor: Editor) => {
