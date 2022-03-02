@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.0.0 - 2020-03-03
+
 ### Added
 - New `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
 - New `editor.annotator.removeAll` API to remove all annotations by name #TINY-8195
