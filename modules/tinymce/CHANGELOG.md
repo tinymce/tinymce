@@ -114,7 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Home or End keys would move out of a editable element contained within a noneditable element #TINY-8201
 - Dialogs could not be opened in inline mode before the editor had been rendered #TINY-8397
 - Clicking on menu items could cause an unexpected console warning if the `onAction` function caused the menu to close #TINY-8513
-- Fixed various color bugs for the dark skins #TINY-8527
+- Fixed various color and contrast issues for the dark skins #TINY-8527
 
 ### Removed
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
