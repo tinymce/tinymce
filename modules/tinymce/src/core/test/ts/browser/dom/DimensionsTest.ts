@@ -33,4 +33,13 @@ describe('browser.tinymce.core.dom.DimensionsTest', () => {
     LegacyUnit.equalDom(clientRects[0].node, viewElm.childNodes[0]);
     LegacyUnit.equalDom(clientRects[1].node, viewElm.childNodes[1]);
   });
+
+  it('TINY-8532: getClientRects with comment nodes', () => {
+    const viewElm = setupHtml('<b>a</b><!--comment--><b>b</b>');
+    const clientRects = Dimensions.getClientRects(Arr.from(viewElm.childNodes));
+
+    assert.lengthOf(clientRects, 2);
+    LegacyUnit.equalDom(clientRects[0].node, viewElm.childNodes[0]);
+    LegacyUnit.equalDom(clientRects[1].node, viewElm.childNodes[2]);
+  });
 });
