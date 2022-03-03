@@ -142,7 +142,7 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window.
      *
      * @method open
-     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/ui-components/dialog/#configurationoptions">Dialog - Configuration options</a>.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/dialog-configuration.html#configurationoptions">Dialog - Configuration options</a>.
      */
     open,
 
@@ -150,7 +150,7 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window for the specified url.
      *
      * @method openUrl
-     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/ui-components/urldialog/#urldialogconfiguration">URL dialog configuration</a>.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/urldialog.html#configuration">URL dialog configuration</a>.
      */
     openUrl,
 

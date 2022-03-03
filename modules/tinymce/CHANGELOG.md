@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The option`end_container_on_empty_block` can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for option`end_container_on_empty_block` changed to `blockquote` #TINY-6559
 
-## 6.0 (TBD)
+## 6.0.0 - 2020-03-03
 
 ### Added
 - New `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
@@ -120,6 +120,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Home or End keys would move out of a editable element contained within a noneditable element #TINY-8201
 - Dialogs could not be opened in inline mode before the editor had been rendered #TINY-8397
 - Clicking on menu items could cause an unexpected console warning if the `onAction` function caused the menu to close #TINY-8513
+- Fixed various color and contrast issues for the dark skins #TINY-8527
 
 ### Removed
 - Removed support for Microsoft Internet Explorer 11 #TINY-8194 #TINY-8241
@@ -144,6 +145,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `shortEnded` and `fixed` properties on `tinymce.html.Node` class #TINY-8205
 - Removed the `mceInsertRawHTML` command #TINY-8214
 - Removed the style field from the `image` plugin dialog advanced tab #TINY-3422
+- Removed the `paste_filter_drop` option as native drag and drop handling is no longer supported #TINY-8511
 - Removed the legacy `mobile` theme #TINY-7832
 - Removed the deprecated `$`, `Class`, `DomQuery` and `Sizzle` APIs #TINY-4520 #TINY-8326
 - Removed the deprecated `Color`, `JSON`, `JSONP` and `JSONRequest` #TINY-8162
@@ -1229,7 +1231,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 5.0.0 - 2019-02-04
 
-Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/release-notes/
+Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/tinymce/5/release-notes/release-notes50.html
 
 ### Added
 - Added links and registered names with * to denote premium plugins in Plugins tab of Help dialog #TINY-3223
@@ -1402,7 +1404,7 @@ Full documentation for the version 5 features and changes is available at https:
 
 Developer preview 1
 
-Initial list of features and changes is available at https://tiny.cloud/docs-preview/release-notes/new-features/
+Initial list of features and changes is available at https://www.tiny.cloud/docs/tinymce/5/release-notes/release-notes50.html
 
 ## 4.9.11 - 2020-07-13
 

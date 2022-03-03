@@ -6,7 +6,7 @@ Used and trusted by millions of developers, TinyMCE is the world’s most custom
 
 With more than 350M+ downloads every year, we’re also one of the most trusted enterprise-grade open source HTML editors on the internet. There’s currently more than 100M+ products worldwide, powered by Tiny. As a high powered WYSIWYG editor, TinyMCE is built to scale, designed to innovate, and thrives on delivering results to difficult edge-cases.
 
-You can access a [full featured demo of TinyMCE](https://www.tiny.cloud/docs/demo/full-featured/) in the docs on the TinyMCE website.
+You can access a [full featured demo of TinyMCE](https://www.tiny.cloud/docs/tinymce/6/premium-full-featured.html) in the docs on the TinyMCE website.
 
 <p align="center">
   <img alt="Screenshot of the TinyMCE Editor" src="https://www.tiny.cloud/storage/github-readme-images/tinymce-editor.png"\>
@@ -16,17 +16,17 @@ You can access a [full featured demo of TinyMCE](https://www.tiny.cloud/docs/dem
 
 Getting started with the TinyMCE rich text editor is easy, and for simple configurations can be done in less than 5 minutes.
 
-[TinyMCE Cloud Deployment Quick Start Guide](https://www.tiny.cloud/docs/quick-start/)
+[TinyMCE Cloud Deployment Quick Start Guide](https://www.tiny.cloud/docs/tinymce/6/cloud-quick-start.html)
 
-[TinyMCE Self-hosted Deployment Guide](https://www.tiny.cloud/docs/general-configuration-guide/advanced-install/)
+[TinyMCE Self-hosted Deployment Guide](https://www.tiny.cloud/docs/tinymce/6/npm-projects.html)
 
-TinyMCE provides a range of configuration options that allow you to integrate it into your application. Start customizing with a [basic setup](https://www.tiny.cloud/docs/general-configuration-guide/basic-setup/).
+TinyMCE provides a range of configuration options that allow you to integrate it into your application. Start customizing with a [basic setup](https://www.tiny.cloud/docs/tinymce/6/basic-setup.html).
 
 Configure it for one of three modes of editing:
 
-- [TinyMCE classic editing mode](https://www.tiny.cloud/docs/general-configuration-guide/use-tinymce-classic/).
-- [TinyMCE inline editing mode](https://www.tiny.cloud/docs/general-configuration-guide/use-tinymce-inline/).
-- [TinyMCE distraction-free editing mode](https://www.tiny.cloud/docs/general-configuration-guide/use-tinymce-distraction-free/).
+- [TinyMCE classic editing mode](https://www.tiny.cloud/docs/tinymce/6/use-tinymce-classic.html).
+- [TinyMCE inline editing mode](https://www.tiny.cloud/docs/tinymce/6/use-tinymce-inline.html).
+- [TinyMCE distraction-free editing mode](https://www.tiny.cloud/docs/tinymce/6/use-tinymce-distraction-free.html).
 
 ## Features
 
@@ -38,13 +38,13 @@ TinyMCE is easily integrated into your projects with the help of components such
 - [tinymce-vue](https://github.com/tinymce/tinymce-vue)
 - [tinymce-angular](https://github.com/tinymce/tinymce-angular)
 
-With over 29 integrations, and 400+ APIs, see the TinyMCE docs for a full list of editor [integrations](https://www.tiny.cloud/docs/integrations/).
+With over 29 integrations, and 400+ APIs, see the TinyMCE docs for a full list of editor [integrations](https://www.tiny.cloud/docs/tinymce/6/integrations.html).
 
 ### Customization
 
-It is easy to [configure the UI](https://www.tiny.cloud/docs/general-configuration-guide/customize-ui/) of your rich text editor to match the design of your site, product or application. Due to its flexibility, you can [configure the editor](https://www.tiny.cloud/docs/general-configuration-guide/basic-setup/) with as much or as little functionality as you like, depending on your requirements.
+It is easy to [configure the UI](https://www.tiny.cloud/docs/tinymce/6/customize-ui.html) of your rich text editor to match the design of your site, product or application. Due to its flexibility, you can [configure the editor](https://www.tiny.cloud/docs/tinymce/6/basic-setup.html) with as much or as little functionality as you like, depending on your requirements.
 
-With [50+ powerful plugins available](https://www.tiny.cloud/apps/), and content editable as the basis of TinyMCE, adding additional functionality is as simple as including a single line of code.
+With [50+ powerful plugins available](https://www.tiny.cloud/tinymce/features/), and content editable as the basis of TinyMCE, adding additional functionality is as simple as including a single line of code.
 
 Realizing the full power of most plugins requires only a few lines more.
 
@@ -52,7 +52,7 @@ Realizing the full power of most plugins requires only a few lines more.
 
 Sometimes your editor requirements can be quite unique, and you need the freedom and flexibility to innovate. Thanks to TinyMCE being open source, you can view the source code and develop your own extensions for custom functionality to meet your own requirements.
 
-The TinyMCE [API](https://www.tiny.cloud/docs/api/) is exposed to make it easier for you to write custom functionality that fits within the existing framework of TinyMCE [UI components](https://www.tiny.cloud/docs/ui-components/).
+The TinyMCE [API](https://www.tiny.cloud/docs/tinymce/6/apis/tinymce.root.html) is exposed to make it easier for you to write custom functionality that fits within the existing framework of TinyMCE [UI components](https://www.tiny.cloud/docs/tinymce/6/custom-ui-components.html).
 
 ### Extended Features and Support
 

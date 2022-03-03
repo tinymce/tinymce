@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 11.0.0 - 2022-03-03
+
 ### Added
 - Added new `refreshBars` API to `TableResize`.
 

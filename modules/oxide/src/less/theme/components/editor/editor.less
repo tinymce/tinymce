@@ -2,6 +2,7 @@
 // Editor
 //
 
+@editor-header-border: none;
 @editor-header-box-shadow: 0 2px 2px -2px fade(@color-black, 10%), 0 8px 8px -4px fade(@color-black, 7%);
 @editor-header-sticky-box-shadow: 0 2px 2px -2px fade(@color-black, 20%), 0 8px 8px -4px fade(@color-black, 15%);
 @editor-bottom-header-box-shadow: none;
@@ -23,6 +24,7 @@
 
   &:not(.tox-tinymce-inline) .tox-editor-header {
     background-color: @background-color;
+    border-bottom: @editor-header-border;
     box-shadow: @editor-header-box-shadow;
     padding: @pad-xs 0;
     transition: box-shadow .5s;

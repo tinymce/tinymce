@@ -20,15 +20,15 @@ const getNodeClientRects = (node: Node): NodeClientRect[] => {
 
   if (NodeType.isElement(node)) {
     return toArrayWithNode(node.getClientRects());
-  }
-
-  if (NodeType.isText(node)) {
+  } else if (NodeType.isText(node)) {
     const rng = node.ownerDocument.createRange();
 
     rng.setStart(node, 0);
     rng.setEnd(node, node.data.length);
 
     return toArrayWithNode(rng.getClientRects());
+  } else {
+    return [];
   }
 };
 
