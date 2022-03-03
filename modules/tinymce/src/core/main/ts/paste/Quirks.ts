@@ -1,15 +1,9 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { Transformations } from '@ephox/acid';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Options from '../api/Options';
+import Tools from '../api/util/Tools';
 
 type PreProcessFilter = (editor: Editor, content: string, internal: boolean) => string;
 
@@ -27,7 +21,8 @@ const addPreProcessFilter = (editor: Editor, filterFunc: PreProcessFilter) => {
 
 const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi;
 
-const rgbToHex = (value: string) => value.replace(rgbRegExp, Transformations.rgbaToHexString).toLowerCase();
+const rgbToHex = (value: string | undefined): string =>
+  Tools.trim(value).replace(rgbRegExp, Transformations.rgbaToHexString).toLowerCase();
 
 /*
  * WebKit has a nasty quirk where the all computed styles gets added to style attributes when copy/pasting contents.

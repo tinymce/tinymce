@@ -1,4 +1,4 @@
-import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional, OptionalInstances } from '@ephox/katamari';
 
 import * as Compare from 'ephox/sugar/api/dom/Compare';
@@ -23,17 +23,17 @@ UnitTest.test('FocusTest', () => {
   Insert.append(SugarBody.body(), div);
 
   Focus.focus(input);
-  assert.eq(true, Compare.eq(Focus.active().getOrDie(), input));
+  Assert.eq('', true, Compare.eq(Focus.active().getOrDie(), input));
   Focus.focus(div);
-  assert.eq(true, Compare.eq(Focus.active().getOrDie(), div));
+  Assert.eq('', true, Compare.eq(Focus.active().getOrDie(), div));
   Focus.focus(input);
-  assert.eq(true, Compare.eq(Focus.active().getOrDie(), input));
+  Assert.eq('', true, Compare.eq(Focus.active().getOrDie(), input));
   Focus.focusInside(div);
-  assert.eq(true, Compare.eq(Focus.active().getOrDie(), input));
+  Assert.eq('', true, Compare.eq(Focus.active().getOrDie(), input));
   Focus.focusInside(input);
-  assert.eq(true, Compare.eq(Focus.active().getOrDie(), input));
+  Assert.eq('', true, Compare.eq(Focus.active().getOrDie(), input));
   Focus.focus(div);
-  assert.eq(true, Compare.eq(Focus.active().getOrDie(), div));
+  Assert.eq('', true, Compare.eq(Focus.active().getOrDie(), div));
 
   Remove.remove(div);
 });

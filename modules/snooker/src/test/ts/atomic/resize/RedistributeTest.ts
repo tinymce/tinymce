@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Redistribution from 'ephox/snooker/resize/Redistribution';
 import { Size } from 'ephox/snooker/resize/Size';
@@ -15,12 +15,12 @@ UnitTest.test('RedistributeTest', () => {
   };
 
   const check = (expected: string[], input: string[], originalWidth: number, newWidth: string) => {
-    assert.eq(expected, Redistribution.redistribute(input, originalWidth, newWidth));
+    Assert.eq('', expected, Redistribution.redistribute(input, originalWidth, newWidth));
   };
 
   const checkValidate = (expected: string, input: string) => {
     const actual = toStr(Redistribution.validate(input));
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   checkValidate('pixels[10]', '10px');
@@ -44,11 +44,11 @@ UnitTest.test('RedistributeTest', () => {
   check([ '', '', '20px' ], [ '', '', '20px' ], 60, '60px');
   check([ '', '', '' ], [ '', '', '' ], 60, '60px');
 
-  assert.eq([ '10px', '10px', '11px' ], Redistribution.normalize([ '10.3px', '10.3px', '10.3px' ]));
-  assert.eq([ '10px', '11px', '10px' ], Redistribution.normalize([ '10px', '11px', '10px' ]));
-  assert.eq([ '33.33%', '33.33%', '33.33%' ], Redistribution.normalize([ '33.33%', '33.33%', '33.33%' ]));
+  Assert.eq('', [ '10px', '10px', '11px' ], Redistribution.normalize([ '10.3px', '10.3px', '10.3px' ]));
+  Assert.eq('', [ '10px', '11px', '10px' ], Redistribution.normalize([ '10px', '11px', '10px' ]));
+  Assert.eq('', [ '33.33%', '33.33%', '33.33%' ], Redistribution.normalize([ '33.33%', '33.33%', '33.33%' ]));
 
-  assert.eq(100, Redistribution.sum([ '100px' ], 10));
-  assert.eq(50, Redistribution.sum([ '50%' ], 10));
-  assert.eq(75, Redistribution.sum([ '50px', '25px' ], 10));
+  Assert.eq('', 100, Redistribution.sum([ '100px' ], 10));
+  Assert.eq('', 50, Redistribution.sum([ '50%' ], 10));
+  Assert.eq('', 75, Redistribution.sum([ '50px', '25px' ], 10));
 });

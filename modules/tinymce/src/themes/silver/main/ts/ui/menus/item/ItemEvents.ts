@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { AlloyEvents, AlloyTriggers, SystemEvents } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 
@@ -24,7 +17,9 @@ const onMenuItemExecute = <T>(info: OnMenuItemExecuteType<T>, itemResponse: Item
   // If there is an action, run the action
   runWithApi(info, comp)(info.onAction);
   if (!info.triggersSubmenu && itemResponse === ItemResponse.CLOSE_ON_EXECUTE) {
-    AlloyTriggers.emit(comp, SystemEvents.sandboxClose());
+    if (comp.getSystem().isConnected()) {
+      AlloyTriggers.emit(comp, SystemEvents.sandboxClose());
+    }
     simulatedEvent.stop();
   }
 });

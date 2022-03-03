@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { Arr, Optional } from '@ephox/katamari';
 
 import * as SelectionBookmark from '../selection/SelectionBookmark';
@@ -107,6 +100,7 @@ const WindowManager = (editor: Editor): WindowManager => {
     editor.editorManager.setActive(editor);
     SelectionBookmark.store(editor);
 
+    editor.ui.show();
     const dialog = openDialog();
     addDialog(dialog);
     return dialog;
@@ -148,7 +142,7 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window.
      *
      * @method open
-     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/ui-components/dialog/#configurationoptions">Dialog - Configuration options</a>.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/dialog-configuration.html#configurationoptions">Dialog - Configuration options</a>.
      */
     open,
 
@@ -156,7 +150,7 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window for the specified url.
      *
      * @method openUrl
-     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/ui-components/urldialog/#urldialogconfiguration">URL dialog configuration</a>.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/urldialog.html#configuration">URL dialog configuration</a>.
      */
     openUrl,
 

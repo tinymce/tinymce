@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { Arr } from '@ephox/katamari';
 
 import * as ClientRect from '../geom/ClientRect';
@@ -27,15 +20,15 @@ const getNodeClientRects = (node: Node): NodeClientRect[] => {
 
   if (NodeType.isElement(node)) {
     return toArrayWithNode(node.getClientRects());
-  }
-
-  if (NodeType.isText(node)) {
+  } else if (NodeType.isText(node)) {
     const rng = node.ownerDocument.createRange();
 
     rng.setStart(node, 0);
     rng.setEnd(node, node.data.length);
 
     return toArrayWithNode(rng.getClientRects());
+  } else {
+    return [];
   }
 };
 

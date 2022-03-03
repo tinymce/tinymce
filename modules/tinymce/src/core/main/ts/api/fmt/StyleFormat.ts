@@ -1,13 +1,6 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { BlockFormat, InlineFormat, SelectorFormat } from './Format';
 
-// somewhat documented at https://www.tiny.cloud/docs/configure/content-formatting/#style_formats
+// somewhat documented at https://www.tiny.cloud/docs/tinymce/6/content-formatting.html#formats
 export type StyleFormat = BlockStyleFormat | InlineStyleFormat | SelectorStyleFormat;
 export type AllowedFormat = Separator | FormatReference | StyleFormat | NestedFormatting;
 

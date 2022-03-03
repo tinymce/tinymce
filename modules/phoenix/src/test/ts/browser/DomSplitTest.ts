@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarElement, SugarText, Traverse } from '@ephox/sugar';
 
@@ -20,7 +20,7 @@ UnitTest.test('DomSplitTest', () => {
     }, (v) => {
       const children = Traverse.children(v) as SugarElement<Text>[];
       const text = Arr.map(children, SugarText.get);
-      assert.eq(expected, text);
+      Assert.eq('', expected, text);
     });
   };
 

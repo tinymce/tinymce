@@ -1,11 +1,4 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Type } from '@ephox/katamari';
 
 import RangeUtils from '../api/dom/RangeUtils';
 import Editor from '../api/Editor';
@@ -32,7 +25,7 @@ const setFocusedRange = (editor: Editor, rng: Range | undefined): void => {
 };
 
 const hasImage = (dataTransfer: DataTransfer): boolean =>
-  Arr.exists(dataTransfer.files, (file) => /^data:image\//.test(file.type));
+  Arr.exists(dataTransfer.files, (file) => /^image\//.test(file.type));
 
 const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => {
   // Block all drag/drop events
@@ -60,6 +53,10 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
     }
 
     const rng = getCaretRangeFromEvent(editor, e);
+    if (Type.isNullable(rng)) {
+      return;
+    }
+
     const dropContent = Clipboard.getDataTransferItems(e.dataTransfer);
     const internal = Clipboard.hasContentType(dropContent, InternalHtml.internalHtmlMime());
 
@@ -67,31 +64,29 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
       return;
     }
 
-    if (rng && Options.shouldPasteFilterDrop(editor)) {
-      const internalContent = dropContent[InternalHtml.internalHtmlMime()];
-      const content = internalContent || dropContent['text/html'] || dropContent['text/plain'];
+    const internalContent = dropContent[InternalHtml.internalHtmlMime()];
+    const content = internalContent || dropContent['text/html'] || dropContent['text/plain'];
 
-      if (content) {
-        e.preventDefault();
+    if (content) {
+      e.preventDefault();
 
-        // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
-        Delay.setEditorTimeout(editor, () => {
-          editor.undoManager.transact(() => {
-            if (internalContent) {
-              editor.execCommand('Delete');
-            }
+      // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
+      Delay.setEditorTimeout(editor, () => {
+        editor.undoManager.transact(() => {
+          if (internalContent) {
+            editor.execCommand('Delete');
+          }
 
-            setFocusedRange(editor, rng);
+          setFocusedRange(editor, rng);
 
-            const trimmedContent = PasteUtils.trimHtml(content);
-            if (dropContent['text/html']) {
-              Clipboard.pasteHtml(editor, trimmedContent, internal);
-            } else {
-              Clipboard.pasteText(editor, trimmedContent);
-            }
-          });
+          const trimmedContent = PasteUtils.trimHtml(content);
+          if (dropContent['text/html']) {
+            Clipboard.pasteHtml(editor, trimmedContent, internal);
+          } else {
+            Clipboard.pasteText(editor, trimmedContent);
+          }
         });
-      }
+      });
     }
   });
 

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Compare, Hierarchy, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -29,13 +29,13 @@ UnitTest.test('DomClumpsTest', () => {
 
   const checkFracture = (expected: string, start: number[], soffset: number, finish: number[], foffset: number) => {
     DomClumps.fracture(isRoot, find(start), soffset, find(finish), foffset).each(mark);
-    assert.eq(expected, Html.get(container));
+    Assert.eq('', expected, Html.get(container));
   };
 
   const checkFractures = (expected: string, start: number[], soffset: number, finish: number[], foffset: number) => {
     const sections = DomClumps.fractures(isRoot, find(start), soffset, find(finish), foffset);
     Arr.each(sections, mark);
-    assert.eq(expected, Html.get(container));
+    Assert.eq('', expected, Html.get(container));
   };
 
   container.dom.innerHTML =

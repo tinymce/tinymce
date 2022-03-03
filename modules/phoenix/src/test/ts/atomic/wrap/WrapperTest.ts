@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 
 import * as Finder from 'ephox/phoenix/test/Finder';
@@ -43,8 +43,8 @@ UnitTest.test('WrapperTest', () => {
     };
 
     const actual = Wrapper.reuse(doc, start, startOffset, finish, finishOffset, predicate, nu);
-    assert.eq(expected, TestRenders.ids(actual));
-    assert.eq(postTest, doc.shortlog((item) => {
+    Assert.eq('', expected, TestRenders.ids(actual));
+    Assert.eq('', postTest, doc.shortlog((item) => {
       const props = doc.property();
       return props.isText(item) ? `text("${props.getText(item)}")` : item.id;
     }));

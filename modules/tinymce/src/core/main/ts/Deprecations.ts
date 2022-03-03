@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { Arr, Obj } from '@ephox/katamari';
 
 import { NormalizedEditorOptions, RawEditorOptions } from './api/OptionTypes';
@@ -55,7 +48,7 @@ const logRemovedWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Nor
     // eslint-disable-next-line no-console
     console.warn(
       'The following deprecated features are currently enabled and have been removed in TinyMCE 6.0. These features will no longer work and should be removed from the TinyMCE configuration. ' +
-      'See https://www.tiny.cloud/docs/release-notes/6.0-upcoming-changes/ for more information.' +
+      'See https://www.tiny.cloud/docs/tinymce/6/migration-from-5x.html for more information.' +
       themesMessage +
       pluginsMessage +
       settingsMessage

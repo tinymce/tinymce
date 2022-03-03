@@ -1,11 +1,4 @@
 //
-// Copyright (c) Tiny Technologies, Inc. All rights reserved.
-// Licensed under the LGPL or a commercial license.
-// For LGPL see License.txt in the project root for license information.
-// For commercial licenses see https://www.tiny.cloud/
-//
-
-//
 // Toolbar button
 // When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
 //
@@ -19,15 +12,15 @@
 @toolbar-button-font-size: @font-size-sm;
 @toolbar-button-font-style: normal;
 @toolbar-button-font-weight: @font-weight-normal;
-@toolbar-button-height: 34px;
+@toolbar-button-height: 28px;
 @toolbar-button-icon-color: contrast(@background-color, @color-white, @color-black);
-@toolbar-button-spacing-x: 0;
-@toolbar-button-spacing-y: 2px;
+@toolbar-button-spacing-x: 1px;
+@toolbar-button-spacing-y: 5px;
 @toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
 
-@toolbar-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-black, 15), fade(@color-black, 85)));
+@toolbar-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 20), fade(@color-tint, 80)));
 @toolbar-button-hover-border: @toolbar-button-border;
 @toolbar-button-hover-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-hover-icon-color: @toolbar-button-icon-color;
@@ -46,7 +39,7 @@
 @toolbar-button-active-text-color: @toolbar-button-enabled-text-color;
 @toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
 
-@toolbar-button-enabled-background-color:  multiply(white, contrast(@background-color, fade(@color-black, 25), fade(@color-black, 65)));
+@toolbar-button-enabled-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65)));
 @toolbar-button-enabled-border: @toolbar-button-hover-border;
 @toolbar-button-enabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-enabled-icon-color: @toolbar-button-hover-icon-color;
@@ -74,7 +67,7 @@
     font-weight: @toolbar-button-font-weight;
     height: @toolbar-button-height;
     justify-content: center;
-    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
+    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
     outline: none;
     overflow: hidden;
     padding: 0;

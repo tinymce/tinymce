@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
@@ -12,9 +12,9 @@ UnitTest.test('BlockTest', () => {
     BrowserCheck.run(input, (node) => {
       const actual = DomParent.sharedOne(look, [ node ]);
       actual.fold(() => {
-        assert.fail('Expected a common ' + expected + ' tag');
+        Assert.fail('Expected a common ' + expected + ' tag');
       }, (act) => {
-        assert.eq(expected, SugarNode.name(act));
+        Assert.eq('', expected, SugarNode.name(act));
       });
     });
   };
@@ -23,7 +23,7 @@ UnitTest.test('BlockTest', () => {
     BrowserCheck.run(input, (node) => {
       const actual = DomParent.sharedOne(look, [ node ]);
       actual.each((a) => {
-        assert.fail('Expected no common tag matching the look. Received: ' + SugarNode.name(a));
+        Assert.fail('Expected no common tag matching the look. Received: ' + SugarNode.name(a));
       });
     });
   };
@@ -40,9 +40,9 @@ UnitTest.test('BlockTest', () => {
   BrowserCheck.run('<p>this<span class="child"> is it </span></p>', (node) => {
     const actual = DomParent.sharedOne(DomLook.exact(Traverse.parent(node).getOrDie()), [ node ]);
     actual.fold(() => {
-      assert.fail('Expected a common tag');
+      Assert.fail('Expected a common tag');
     }, (act) => {
-      assert.eq('span', SugarNode.name(act));
+      Assert.eq('', 'span', SugarNode.name(act));
     });
   });
 });

@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -12,7 +5,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 const tab = (): Dialog.TabSpec => {
   const getVersion = (major: string, minor: string) => major.indexOf('@') === 0 ? 'X.X.X' : major + '.' + minor;
   const version = getVersion(EditorManager.majorVersion, EditorManager.minorVersion);
-  const changeLogLink = '<a href="https://www.tiny.cloud/docs/changelog/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">TinyMCE ' + version + '</a>';
+  const changeLogLink = '<a href="https://www.tiny.cloud/docs/tinymce/6/changelog.html?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">TinyMCE ' + version + '</a>';
 
   const htmlPanel: Dialog.HtmlPanelSpec = {
     type: 'htmlpanel',

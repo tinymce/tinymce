@@ -15,29 +15,13 @@ export interface Bounds {
   readonly bottom: number;
 }
 
-// Experimental support for visual viewport
-// TODO: Remove this once using the TS dom library
-interface WindowVisualViewport {
-  readonly offsetLeft: number;
-  readonly offsetTop: number;
-  readonly pageLeft: number;
-  readonly pageTop: number;
-  readonly width: number;
-  readonly height: number;
-  readonly scale: number;
-  readonly addEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
-  readonly removeEventListener: (event: string, handler: EventListenerOrEventListenerObject) => void;
-  readonly dispatchEvent: (evt: Event) => boolean;
-}
-
-const get = (_win?: Window): Optional<WindowVisualViewport> => {
+const get = (_win?: Window): Optional<VisualViewport> => {
   const win = _win === undefined ? window : _win;
   if (PlatformDetection.detect().browser.isFirefox()) {
     // TINY-7984: Firefox 91 is returning incorrect values for visualViewport.pageTop, so disable it for now
     return Optional.none();
   } else {
-    // eslint-disable-next-line dot-notation
-    return Optional.from((win as any)['visualViewport']);
+    return Optional.from(win.visualViewport);
   }
 };
 
@@ -86,6 +70,5 @@ const bind = (name: string, callback: EventHandler, _win?: Window): EventUnbinde
 export {
   bind,
   get,
-  getBounds,
-  WindowVisualViewport
+  getBounds
 };

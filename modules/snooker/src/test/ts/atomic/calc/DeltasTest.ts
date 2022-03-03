@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
@@ -21,7 +21,7 @@ UnitTest.test('DeltasTest', () => {
       isRelative: false
     };
     const actual = Deltas.determine(input, column, step, tableSize as TableSize, resizeBehaviour);
-    assert.eq(expected, Arr.map(actual, (num) => Math.round(num)), `${msg}: expected: ${expected}, actual: ${actual}`);
+    Assert.eq(`${msg}: expected: ${expected}, actual: ${actual}`, expected, Arr.map(actual, (num) => Math.round(num)));
   };
 
   Arr.each([ resizeTable, preserveTable ], (mode) => {

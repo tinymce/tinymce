@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarElement, TextContent } from '@ephox/sugar';
 
@@ -29,13 +29,13 @@ UnitTest.test('CellBounds.isWithin Test', () => {
   const checkWithin = (expected: boolean, warehouse: Warehouse, bounds: Structs.Bounds, row: number, column: number) => {
     const cell = Warehouse.getAt(warehouse, row, column).getOrDie();
     const actual = CellBounds.isWithin(bounds, cell);
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   const checkInSelection = (expected: boolean, warehouse: Warehouse, bounds: Structs.Bounds, row: number, column: number) => {
     const cell = Warehouse.getAt(warehouse, row, column).getOrDie();
     const actual = CellBounds.inSelection(bounds, cell);
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   checkWithin(false, inputA, bounds1To3, 2, 2);

@@ -1,11 +1,4 @@
 //
-// Copyright (c) Tiny Technologies, Inc. All rights reserved.
-// Licensed under the LGPL or a commercial license.
-// For LGPL see License.txt in the project root for license information.
-// For commercial licenses see https://www.tiny.cloud/
-//
-
-//
 // Notification
 //
 
@@ -15,25 +8,33 @@
 @notification-font-weight: @font-weight-normal;
 @notification-padding: @pad-xs;
 
-@notification-success-background-color: tint(@color-success, 80%);
-@notification-success-border-color: tint(@color-success, 70%);
+@notification-success-background-color: mix(@background-color, @color-success, 80%);
+@notification-success-border-color: mix(@background-color, @color-success, 70%);
 @notification-success-text-color: @text-color;
-@notification-success-link-color: shade(@color-success, 30%);
+@notification-success-link-color: mix(@text-color, @color-success, 30%);
 
-@notification-warn-background-color: #fffaea;
-@notification-warn-border-color: darken(@notification-warn-background-color, 15%);
-@notification-warn-text-color: @text-color;
-@notification-warn-link-color: @text-color;
+// Yellow warning color mixes particularly bad with darker colors, hence additional checks
+@notification-warn-background-color: ._notification-luma-checker(tint(@_color-warn, 80%), @background-color)[@result];
+@notification-warn-border-color: ._notification-luma-checker(tint(@_color-warn, 70%), @tinymce-separator-color)[@result];
+@notification-warn-text-color: ._notification-luma-checker(@text-color, mix(@text-color, @_color-warn, 70%))[@result];
+@notification-warn-link-color: ._notification-luma-checker(mix(@text-color, @_color-warn, 30%), @_color-warn)[@result];
 
-@notification-error-background-color: tint(@color-error, 87%);
-@notification-error-border-color: tint(@color-error, 75%);
+@notification-error-background-color: mix(@background-color, @color-error, 80%);
+@notification-error-border-color: mix(@background-color, @color-error, 70%);
 @notification-error-text-color: @text-color;
-@notification-error-link-color: @color-error;
+@notification-error-link-color: mix(@text-color, @color-error, 30%);
 
-@notification-info-background-color: #d9edf7;
-@notification-info-border-color: #779ecb;
+@notification-info-background-color: mix(@background-color, @_color-info, 80%);
+@notification-info-border-color: mix(@background-color, @_color-info, 70%);
 @notification-info-text-color: @text-color;
-@notification-info-link-color: @text-color;
+@notification-info-link-color: mix(@text-color, @_color-info, 30%);
+
+// Private variables
+._notification-luma-checker(@color-light, @color-dark) {
+  @result: if((luma(@background-color) > 50%), @color-light, @color-dark);
+}
+@_color-warn: #ffcc00;
+@_color-info: #3087eb;
 
 .tox {
   // Wraps around many notifications

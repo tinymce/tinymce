@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { AlloyComponent, Attachment, Boxes, Disabling } from '@ephox/alloy';
 import { Cell, Singleton } from '@ephox/katamari';
 import { DomEvent, SugarElement } from '@ephox/sugar';
@@ -136,7 +129,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
 
   const api: Partial<EditorUiApi> = {
     show: () => {
-      ui.show();
+      render();
     },
     hide: () => {
       ui.hide();

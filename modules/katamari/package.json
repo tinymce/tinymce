@@ -1,6 +1,6 @@
 {
   "name": "@ephox/katamari",
-  "version": "9.0.0-alpha.2",
+  "version": "9.0.1",
   "description": "Basic data type library",
   "repository": {
     "type": "git",
@@ -13,8 +13,8 @@
     "test-manual": "bedrock -d src/test/ts",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
-  "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "MIT",
   "dependencies": {
     "@ephox/dispute": "^1.0.3",
     "tslib": "^2.0.0"

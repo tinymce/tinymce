@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import { CommentGene } from 'ephox/boss/api/CommentGene';
 import { Gene } from 'ephox/boss/api/Gene';
@@ -11,7 +11,7 @@ UnitTest.test('PropertiesTest', () => {
   const c = CommentGene('-comment-', 'comment');
 
   const check = (expected: boolean, element: Gene, pred: (e: Gene) => boolean) => {
-    assert.eq(expected, pred(element));
+    Assert.eq('', expected, pred(element));
   };
 
   check(true, g, Properties.isElement);

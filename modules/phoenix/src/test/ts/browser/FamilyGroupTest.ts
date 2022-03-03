@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement, SugarText } from '@ephox/sugar';
@@ -25,7 +25,7 @@ UnitTest.test('FamilyGroupTest', () => {
     const actual = Arr.map(rawActual, (a) => {
       return Arr.map(a, toStr);
     });
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   check([

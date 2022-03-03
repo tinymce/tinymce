@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 
 import * as PositionArray from 'ephox/polaris/api/PositionArray';
@@ -20,7 +20,7 @@ UnitTest.test('api.PositionArray.generate', () => {
 
   const check = (expected: string[], input: string[], start?: number) => {
     const result = PositionArray.generate(input, generator, start);
-    assert.eq(expected, Arr.map(result, (item) => {
+    Assert.eq('', expected, Arr.map(result, (item) => {
       return item.start + '->' + item.finish + '@ ' + item.item;
     }));
   };

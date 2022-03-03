@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 
@@ -30,15 +30,15 @@ UnitTest.test('api.Split.(split,splitByPair)', () => {
   const checkSplit = (before: Optional<string>, after: Optional<string>, text: string, position: number) => {
     const input = generate(text);
     const actual = Split.split(input.universe, input.item, position);
-    assert.eq(true, isEq(before, actual.before));
-    assert.eq(true, isEq(after, actual.after));
+    Assert.eq('', true, isEq(before, actual.before));
+    Assert.eq('', true, isEq(after, actual.after));
   };
 
   const checkPair = (expected: string, middle: string, text: string, start: number, finish: number) => {
     const input = generate(text);
     const actual = Split.splitByPair(input.universe, input.item, start, finish);
-    assert.eq(middle, actual.text);
-    assert.eq(expected, input.universe.shortlog((item) => {
+    Assert.eq('', middle, actual.text);
+    Assert.eq('', expected, input.universe.shortlog((item) => {
       const props = input.universe.property();
       return props.isText(item) ? `text("${props.getText(item)}")` : item.id;
     }));
