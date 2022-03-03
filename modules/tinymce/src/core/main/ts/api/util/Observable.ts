@@ -34,7 +34,7 @@ const getEventDispatcher = (obj): EventDispatcher<any> => {
 const Observable: Observable<any> = {
   /**
    * Fires the specified event by name. Consult the
-   * <a href="/docs/advanced/events">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/6/events.html">event reference</a> for more details on each event.
    * <br>
    * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch</code> instead.</em>
    *
@@ -53,7 +53,7 @@ const Observable: Observable<any> = {
 
   /**
    * Dispatches the specified event by name. Consult the
-   * <a href="/docs/advanced/events">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/6/events.html">event reference</a> for more details on each event.
    *
    * @method dispatch
    * @param {String} name Name of the event to dispatch.
@@ -87,7 +87,7 @@ const Observable: Observable<any> = {
 
   /**
    * Binds an event listener to a specific event by name. Consult the
-   * <a href="/docs/advanced/events">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/6/events.html">event reference</a> for more details on each event.
    *
    * @method on
    * @param {String} name Event name or space separated list of events to bind.
@@ -105,7 +105,7 @@ const Observable: Observable<any> = {
 
   /**
    * Unbinds an event listener to a specific event by name. Consult the
-   * <a href="/docs/advanced/events">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/6/events.html">event reference</a> for more details on each event.
    *
    * @method off
    * @param {String?} name Name of the event to unbind.
@@ -127,7 +127,7 @@ const Observable: Observable<any> = {
 
   /**
    * Bind the event callback and once it fires the callback is removed. Consult the
-   * <a href="/docs/advanced/events">event reference</a> for more details on each event.
+   * <a href="https://www.tiny.cloud/docs/tinymce/6/events.html">event reference</a> for more details on each event.
    *
    * @method once
    * @param {String} name Name of the event to bind.

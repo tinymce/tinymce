@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 8.0.0 - 2022-03-03
+
 ### Added
 - Added the `getSel()` function to the `EditorTypes.Selection` interface.
 - Added the `setRawSelection()` function to the `TinySelections` helper methods to allow setting the selection without using any TinyMCE APIs.

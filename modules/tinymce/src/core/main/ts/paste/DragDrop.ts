@@ -1,4 +1,4 @@
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Type } from '@ephox/katamari';
 
 import RangeUtils from '../api/dom/RangeUtils';
 import Editor from '../api/Editor';
@@ -53,6 +53,10 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
     }
 
     const rng = getCaretRangeFromEvent(editor, e);
+    if (Type.isNullable(rng)) {
+      return;
+    }
+
     const dropContent = Clipboard.getDataTransferItems(e.dataTransfer);
     const internal = Clipboard.hasContentType(dropContent, InternalHtml.internalHtmlMime());
 
@@ -60,31 +64,29 @@ const setup = (editor: Editor, draggingInternallyState: Cell<boolean>): void => 
       return;
     }
 
-    if (rng && Options.shouldPasteFilterDrop(editor)) {
-      const internalContent = dropContent[InternalHtml.internalHtmlMime()];
-      const content = internalContent || dropContent['text/html'] || dropContent['text/plain'];
+    const internalContent = dropContent[InternalHtml.internalHtmlMime()];
+    const content = internalContent || dropContent['text/html'] || dropContent['text/plain'];
 
-      if (content) {
-        e.preventDefault();
+    if (content) {
+      e.preventDefault();
 
-        // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
-        Delay.setEditorTimeout(editor, () => {
-          editor.undoManager.transact(() => {
-            if (internalContent) {
-              editor.execCommand('Delete');
-            }
+      // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
+      Delay.setEditorTimeout(editor, () => {
+        editor.undoManager.transact(() => {
+          if (internalContent) {
+            editor.execCommand('Delete');
+          }
 
-            setFocusedRange(editor, rng);
+          setFocusedRange(editor, rng);
 
-            const trimmedContent = PasteUtils.trimHtml(content);
-            if (dropContent['text/html']) {
-              Clipboard.pasteHtml(editor, trimmedContent, internal);
-            } else {
-              Clipboard.pasteText(editor, trimmedContent);
-            }
-          });
+          const trimmedContent = PasteUtils.trimHtml(content);
+          if (dropContent['text/html']) {
+            Clipboard.pasteHtml(editor, trimmedContent, internal);
+          } else {
+            Clipboard.pasteText(editor, trimmedContent);
+          }
         });
-      }
+      });
     }
   });
 
