@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as SugarNode from 'ephox/sugar/api/node/SugarNode';
@@ -11,7 +11,7 @@ UnitTest.test('TextTest', () => {
     Traverse.child(span, 0).filter(SugarNode.isText).each((text0) => {
       span.dom.innerHTML = 'smashed';
       const v = SugarText.get(text0); // Throws in IE10.
-      assert.eq('string', typeof v);
+      Assert.eq('', 'string', typeof v);
     });
   };
 
@@ -19,20 +19,20 @@ UnitTest.test('TextTest', () => {
 
   const notText = SugarElement.fromTag('span');
   const t = SugarElement.fromText('a');
-  assert.eq('a', SugarText.get(t));
+  Assert.eq('', 'a', SugarText.get(t));
   SugarText.set(t, 'blue');
-  assert.eq('blue', t.dom.nodeValue);
+  Assert.eq('', 'blue', t.dom.nodeValue);
 
   try {
     SugarText.get(notText as any);
-    assert.fail('get on non-text did not throw');
+    Assert.fail('get on non-text did not throw');
   } catch (e) {
     // pass
   }
 
   try {
     SugarText.set(notText as any, 'bogus');
-    assert.fail('set on non-text did not throw');
+    Assert.fail('set on non-text did not throw');
   } catch (e) {
     // pass
   }

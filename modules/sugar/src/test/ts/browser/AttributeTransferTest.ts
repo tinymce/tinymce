@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
@@ -36,15 +36,15 @@ UnitTest.test('AttributeTransfer', () => {
     Attribute.transfer(source, destination, attributes);
     Arr.each(expectedAbsent, (k) => {
       if (Attribute.has(destination, k)) {
-        assert.fail('Result should not have attribute: ' + k);
+        Assert.fail('Result should not have attribute: ' + k);
       }
     });
 
     Obj.each(expectedPresent, (v, k) => {
       if (!Attribute.has(destination, k)) {
-        assert.fail('Result should have attribute: ' + k);
+        Assert.fail('Result should have attribute: ' + k);
       } else {
-        assert.eq(v, Attribute.get(destination, k));
+        Assert.eq('', v, Attribute.get(destination, k));
       }
     });
   };

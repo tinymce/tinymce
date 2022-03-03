@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
@@ -201,10 +201,10 @@ UnitTest.test('FitmentIVTest', () => {
           })();
 
           if (expected === '?') {
-            assert.eq(true, '?_' === (cell.element as unknown as string).substring(0, 2));
+            Assert.eq('', true, '?_' === (cell.element as unknown as string).substring(0, 2));
           } else {
-            assert.eq(expected.isNew, cell.isNew);
-            assert.eq(expected.element, cell.element);
+            Assert.eq('', expected.isNew, cell.isNew);
+            Assert.eq('', expected.element, cell.element);
           }
         });
       });

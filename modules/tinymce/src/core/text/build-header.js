@@ -1,0 +1,3 @@
+/**
+ * TinyMCE version @@version@@ (@@releaseDate@@)
+ */

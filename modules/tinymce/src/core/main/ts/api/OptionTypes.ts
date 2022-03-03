@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { UploadHandler } from '../file/Uploader';
 import { RawPattern } from '../textpatterns/core/PatternTypes';
 import Editor from './Editor';
@@ -163,7 +156,6 @@ interface BaseEditorOptions {
   paste_as_text?: boolean;
   paste_block_drop?: boolean;
   paste_data_images?: boolean;
-  paste_filter_drop?: boolean;
   paste_merge_formats?: boolean;
   paste_postprocess?: PastePostProcessFn;
   paste_preprocess?: PastePreProcessFn;

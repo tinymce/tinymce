@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 
 import * as Arrays from 'ephox/polaris/api/Arrays';
@@ -7,7 +7,7 @@ import { Splitting } from 'ephox/polaris/api/Splitting';
 UnitTest.test('api.Arrays.splitby', () => {
   const check = <T>(expected: T[][], input: T[], pred: (x: T) => boolean) => {
     const actual = Arrays.splitby(input, pred);
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   check([], [], Fun.always);
@@ -29,7 +29,7 @@ UnitTest.test('api.Arrays.splitby', () => {
 
   const checkAdv = (expected: string[][], input: string[]) => {
     const actual = Arrays.splitbyAdv(input, predicate);
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   checkAdv([ ], [ ]);

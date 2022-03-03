@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
@@ -32,7 +32,7 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', () => {
   const check = (expected: string[], extract: typeof Extract.from, initial: string) => {
     const start = Finder.get(doc, initial);
     const actual = extract(doc, start);
-    assert.eq(expected, Arr.map(actual, TestRenders.typeditem));
+    Assert.eq('', expected, Arr.map(actual, TestRenders.typeditem));
   };
 
   const checkFrom = (expected: string[], initial: string) => {
@@ -42,7 +42,7 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', () => {
   const checkAll = (expected: string[], initial: string) => {
     const start = Finder.get(doc, initial);
     const actual = Extract.all(doc, start);
-    assert.eq(expected, Arr.map(actual, (a) => {
+    Assert.eq('', expected, Arr.map(actual, (a) => {
       return a.id;
     }));
   };
@@ -52,15 +52,15 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', () => {
   const checkExtract = (expected: {id: string; offset: number}, childId: string, offset: number) => {
     const child = Finder.get(doc, childId);
     const actual = Extract.extract(doc, child, offset);
-    assert.eq(expected.id, actual.element.id);
-    assert.eq(expected.offset, actual.offset);
+    Assert.eq('', expected.id, actual.element.id);
+    Assert.eq('', expected.offset, actual.offset);
   };
 
   const checkExtractTo = (expected: {id: string; offset: number}, childId: string, offset: number, pred: (e: any) => boolean) => {
     const child = Finder.get(doc, childId);
     const actual = Extract.extractTo(doc, child, offset, pred);
-    assert.eq(expected.id, actual.element.id);
-    assert.eq(expected.offset, actual.offset);
+    Assert.eq('', expected.id, actual.element.id);
+    Assert.eq('', expected.offset, actual.offset);
   };
 
   checkFrom([

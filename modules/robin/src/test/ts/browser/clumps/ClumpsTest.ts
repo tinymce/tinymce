@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { DomUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Compare, Hierarchy, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
@@ -35,11 +35,11 @@ UnitTest.test('ClumpsTest', () => {
 
   const check = (expected: Expected[], start: number[], soffset: number, finish: number[], foffset: number) => {
     const actual = Clumps.collect(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
-    assert.eq(expected.length, actual.length, 'The length of Clumps was different. Expected: ' + expected.length + ', actual: ' + actual.length);
+    Assert.eq('The length of Clumps was different. Expected: ' + expected.length + ', actual: ' + actual.length, expected.length, actual.length);
     Arr.each(expected, (exp, i) => {
       const act = actual[i];
-      assert.eq(true, Compare.eq(find(exp.start), act.start));
-      assert.eq(true, Compare.eq(find(exp.end), act.finish));
+      Assert.eq('', true, Compare.eq(find(exp.start), act.start));
+      Assert.eq('', true, Compare.eq(find(exp.end), act.finish));
     });
   };
 

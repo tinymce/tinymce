@@ -1,5 +1,4 @@
 {
-  "plugins":[ "notice" ],
   "rules": {
     "@typescript-eslint/explicit-module-boundary-types": "off"
   },
@@ -12,8 +11,7 @@
             "allowed": [ "fetch", "requestAnimationFrame", "InputEvent" ],
             "appendDefaults": true
           }
-        ],
-        "notice/notice":[ "error", { "templateFile": "copyright-header.js", "chars": 300, "onNonMatchingHeader": "replace" }]
+        ]
       }
     }
   ]

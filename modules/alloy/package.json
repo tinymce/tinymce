@@ -1,13 +1,13 @@
 {
   "name": "@ephox/alloy",
-  "version": "10.0.0-alpha.4",
+  "version": "10.0.1",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^7.0.0-alpha.4",
-    "@ephox/boulder": "^7.0.0-alpha.2",
-    "@ephox/katamari": "^9.0.0-alpha.2",
-    "@ephox/sand": "^6.0.0-alpha.3",
-    "@ephox/sugar": "^9.0.0-alpha.4",
+    "@ephox/agar": "^7.0.1",
+    "@ephox/boulder": "^7.0.1",
+    "@ephox/katamari": "^9.0.1",
+    "@ephox/sand": "^6.0.1",
+    "@ephox/sugar": "^9.0.1",
     "tslib": "^2.0.0"
   },
   "files": [
@@ -35,8 +35,8 @@
   "keywords": [
     "ui"
   ],
-  "author": "Tiny Technologies, Inc",
-  "license": "Apache-2.0",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "MIT",
   "main": "./lib/main/ts/ephox/alloy/api/Main.js",
   "module": "./lib/main/ts/ephox/alloy/api/Main.js",
   "types": "./lib/main/ts/ephox/alloy/api/Main.d.ts"

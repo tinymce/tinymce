@@ -1,9 +1,8 @@
 import { ApproxStructure, Assertions, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyDom } from '@ephox/mcagar';
 import { Focus, Scroll, SugarBody, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -115,21 +114,21 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       assertStructure('Check success notification structure', nSuccess, 'success', 'Message 4');
 
       // Check items are positioned so that they are stacked
-      assertPosition('Error notification', nError, 220, -200);
-      assertPosition('Warning notification', nWarn, 220, -152);
-      assertPosition('Info notification', nInfo, 220, -104);
-      assertPosition('Success notification', nSuccess, 220, -56);
+      assertPosition('Error notification', nError, 220, -192);
+      assertPosition('Warning notification', nWarn, 220, -144);
+      assertPosition('Info notification', nInfo, 220, -96);
+      assertPosition('Success notification', nSuccess, 220, -48);
 
       nError.close();
 
-      assertPosition('Warning notification', nWarn, 220, -200);
-      assertPosition('Info notification', nInfo, 220, -150);
-      assertPosition('Success notification', nSuccess, 220, -100);
+      assertPosition('Warning notification', nWarn, 220, -192);
+      assertPosition('Info notification', nInfo, 220, -144);
+      assertPosition('Success notification', nSuccess, 220, -96);
 
       nInfo.close();
 
-      assertPosition('Warning notification', nWarn, 220, -200);
-      assertPosition('Success notification', nSuccess, 220, -150);
+      assertPosition('Warning notification', nWarn, 220, -192);
+      assertPosition('Success notification', nSuccess, 220, -144);
 
       nWarn.close();
       nSuccess.close();
@@ -163,7 +162,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       // Scroll so the editor is below the bottom of the window
       Scroll.to(0, 0);
       const notification1 = openNotification(editor, 'success', 'Message');
-      assertPosition('Below window notification', notification1, 226, -2200);
+      assertPosition('Below window notification', notification1, 226, -2192);
       notification1.close();
 
       // Scroll so the header is above the top of the window, but the bottom of the editor is in view
@@ -186,7 +185,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       const editor = hook.editor();
 
       const notifications = Arr.range(9, (i) => openNotification(editor, 'success', `Message ${i + 1}`));
-      assertPosition('Last notification is outside the content area', notifications[notifications.length - 1], 220, 185);
+      assertPosition('Last notification is outside the content area', notifications[notifications.length - 1], 220, 192);
 
       Arr.each(notifications, (notification) => notification.close());
     });

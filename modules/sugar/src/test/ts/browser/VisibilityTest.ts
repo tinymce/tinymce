@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
@@ -12,27 +12,27 @@ import Div from 'ephox/sugar/test/Div';
 
 UnitTest.test('VisibilityTest', () => {
   const c = Div();
-  assert.eq(false, Visibility.isVisible(c));
+  Assert.eq('', false, Visibility.isVisible(c));
   Insert.append(SugarBody.body(), c);
-  assert.eq(true, Visibility.isVisible(c));
+  Assert.eq('', true, Visibility.isVisible(c));
 
   Css.set(c, 'display', 'none');
-  assert.eq(false, Visibility.isVisible(c));
+  Assert.eq('', false, Visibility.isVisible(c));
 
   const s = SugarElement.fromTag('span');
-  assert.eq(false, Visibility.isVisible(s));
+  Assert.eq('', false, Visibility.isVisible(s));
 
   Insert.append(SugarBody.body(), s);
   const expected = PlatformDetection.detect().browser.isFirefox();
-  assert.eq(expected, Visibility.isVisible(s)); // tricked you! height and width are zero == hidden
+  Assert.eq('', expected, Visibility.isVisible(s)); // tricked you! height and width are zero == hidden
 
   const d = Div();
   Insert.append(c, d);
-  assert.eq(false, Visibility.isVisible(d));
+  Assert.eq('', false, Visibility.isVisible(d));
 
   Css.remove(c, 'display');
-  assert.eq(true, Visibility.isVisible(d));
-  assert.eq(true, Visibility.isVisible(c));
+  Assert.eq('', true, Visibility.isVisible(d));
+  Assert.eq('', true, Visibility.isVisible(c));
 
   Arr.each([ c, d, s ], Remove.remove);
 });

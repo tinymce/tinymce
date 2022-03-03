@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Binder from 'ephox/porkbun/Binder';
 import { Event } from 'ephox/porkbun/Event';
@@ -18,23 +18,23 @@ UnitTest.test('Binder', () => {
     called = true;
   });
 
-  assert.throws(() => {
+  Assert.throws('', () => {
     binder.bind(events.registry.myEvent, (_event) => {
       called = true;
     });
   });
 
   events.trigger.myEvent();
-  assert.eq(true, called);
+  Assert.eq('', true, called);
 
   called = false;
 
   binder.unbind(events.registry.myEvent);
 
   events.trigger.myEvent();
-  assert.eq(false, called);
+  Assert.eq('', false, called);
 
-  assert.throws(() => {
+  Assert.throws('', () => {
     binder.unbind(events.registry.myEvent);
   });
 
@@ -53,5 +53,5 @@ UnitTest.test('Binder', () => {
   events.trigger.myEvent();
   events.trigger.secondEvent();
 
-  assert.eq(0, count);
+  Assert.eq('', 0, count);
 });

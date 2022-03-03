@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { Gene } from 'ephox/boss/api/Gene';
@@ -28,17 +28,17 @@ UnitTest.test('TracksTest', () => {
     return item.parent.getOrDie('Expected to have parent').id;
   };
 
-  assert.eq('A', a.id);
-  assert.eq('B', b.id);
-  assert.eq('C', c.id);
-  assert.eq('D', d.id);
-  assert.eq('E', e.id);
-  assert.eq('F', f.id);
+  Assert.eq('', 'A', a.id);
+  Assert.eq('', 'B', b.id);
+  Assert.eq('', 'C', c.id);
+  Assert.eq('', 'D', d.id);
+  Assert.eq('', 'E', e.id);
+  Assert.eq('', 'F', f.id);
 
-  assert.eq('parent', p(a));
-  assert.eq('A', p(b));
-  assert.eq('A', p(c));
-  assert.eq('C', p(d));
-  assert.eq('D', p(e));
-  assert.eq('C', p(f));
+  Assert.eq('', 'parent', p(a));
+  Assert.eq('', 'A', p(b));
+  Assert.eq('', 'A', p(c));
+  Assert.eq('', 'C', p(d));
+  Assert.eq('', 'D', p(e));
+  Assert.eq('', 'C', p(f));
 });

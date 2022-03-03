@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
 
 import * as Parents from 'ephox/phoenix/family/Parents';
@@ -40,7 +40,7 @@ UnitTest.test('ParentsTest', () => {
     const start = Finder.get(doc, first);
     const finish = Finder.get(doc, last);
     const actual = Parents.common(doc, start, finish);
-    assert.eq(expected, actual.getOrDie('No common parent').id);
+    Assert.eq('', expected, actual.getOrDie('No common parent').id);
   };
 
   check('abc', 'abc', 'abcc');

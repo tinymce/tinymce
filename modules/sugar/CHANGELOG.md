@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 9.0.0 - 2022-03-03
+
 ### Added
 - New `Ready.image` function that returns a promise which will not resolve until the image element has loaded. Errors trigger promise rejection.
 

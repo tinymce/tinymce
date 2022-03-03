@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 5.0.0 - 2022-03-03
+
 ### Added
 - Added a new `rgbaToHexString` API, to convert RGBA to Hex.
 

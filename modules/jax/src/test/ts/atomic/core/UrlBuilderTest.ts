@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { buildUrl } from 'ephox/jax/core/UrlBuilder';
@@ -8,7 +8,7 @@ UnitTest.test('UrlBuilderTest', () => {
 
   // copied from agar, perhaps we should move it to bedrock
   const assertEq = (label: string, expected: string, actual: string) => {
-    assert.eq(expected, actual, `${label}.\n  Expected: ${expected} \n  Actual: ${actual}`);
+    Assert.eq(`${label}.\n  Expected: ${expected} \n  Actual: ${actual}`, expected, actual);
   };
 
   assertEq('Should remain unchanged', 'http://localhost', buildUrl('http://localhost', Optional.none()));

@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as PositionArray from 'ephox/polaris/api/PositionArray';
 import * as Strings from 'ephox/polaris/api/Strings';
@@ -13,7 +13,7 @@ UnitTest.test('api.PositionArray.splits', () => {
   const check = (expected: string[], input: string[], positions: number[]) => {
     const parray = Parrays.make(input);
     const actual = PositionArray.splits(parray, positions, subdivide);
-    assert.eq(expected, Parrays.dump(actual));
+    Assert.eq('', expected, Parrays.dump(actual));
   };
 
   check([], [], []);

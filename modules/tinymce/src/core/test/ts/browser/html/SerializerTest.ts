@@ -37,4 +37,24 @@ describe('browser.tinymce.core.html.SerializerTest', () => {
       '<b a="1" b="2">a</b><i a="1" b="2">b</i>'
     );
   });
+
+  it('TINY-8446: Serialize pre elements with content that starts with newlines', () => {
+    const schema = Schema({ valid_elements: 'pre' });
+    const serializer = HtmlSerializer({}, schema);
+
+    assert.equal(
+      serializer.serialize(DomParser({ validate: false }, schema).parse('<pre>\n\ncontent</pre>')),
+      '<pre>\n\ncontent</pre>'
+    );
+  });
+
+  it('TINY-8446: Serialize textarea elements with content that starts with newlines', () => {
+    const schema = Schema({ valid_elements: 'textarea' });
+    const serializer = HtmlSerializer({}, schema);
+
+    assert.equal(
+      serializer.serialize(DomParser({ validate: false }, schema).parse('<textarea>\n\ncontent</textarea>')),
+      '<textarea>\n\ncontent</textarea>'
+    );
+  });
 });

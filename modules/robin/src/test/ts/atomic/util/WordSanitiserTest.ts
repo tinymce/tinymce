@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional, Optionals } from '@ephox/katamari';
 
 import { WordScope } from 'ephox/robin/data/WordScope';
@@ -13,9 +13,9 @@ UnitTest.test('Word Sanitiser', () => {
 
   const check = (expected: WordScope, input: WordScope) => {
     const actual = WordSanitiser.scope(input);
-    assert.eq(expected.word, actual.word);
-    assert.eq(true, Optionals.equals(expected.left, actual.left));
-    assert.eq(true, Optionals.equals(expected.right, actual.right));
+    Assert.eq('', expected.word, actual.word);
+    Assert.eq('', true, Optionals.equals(expected.left, actual.left));
+    Assert.eq('', true, Optionals.equals(expected.right, actual.right));
   };
 
   check(ss('one', '<', '>'), ss('one', '<', '>'));

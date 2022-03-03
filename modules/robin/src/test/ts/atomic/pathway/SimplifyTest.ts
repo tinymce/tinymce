@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
@@ -42,7 +42,7 @@ UnitTest.test('SimplifyTest', () => {
     });
 
     const actual = Simplify.simplify(doc, path);
-    assert.eq(expected, Arr.map(actual, (s) => {
+    Assert.eq('', expected, Arr.map(actual, (s) => {
       return s.id;
     }));
   };

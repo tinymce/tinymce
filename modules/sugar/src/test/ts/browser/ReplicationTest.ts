@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Replication from 'ephox/sugar/api/dom/Replication';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
@@ -13,12 +13,12 @@ interface TestSpec {
 
 UnitTest.test('ReplicationTest', () => {
   const checkValues = (expected: TestSpec, actual: SugarElement<HTMLElement>) => {
-    assert.eq(expected.name, 'span');
-    assert.eq(expected.attrs.href, actual.dom.getAttribute('href'));
-    assert.eq(expected.attrs['data-color'], actual.dom.getAttribute('data-color'));
+    Assert.eq('', expected.name, 'span');
+    Assert.eq('', expected.attrs.href, actual.dom.getAttribute('href'));
+    Assert.eq('', expected.attrs['data-color'], actual.dom.getAttribute('data-color'));
 
-    assert.eq(expected.styles.margin, actual.dom.style.getPropertyValue('margin'));
-    assert.eq(expected.styles.padding, actual.dom.style.getPropertyValue('padding'));
+    Assert.eq('', expected.styles.margin, actual.dom.style.getPropertyValue('margin'));
+    Assert.eq('', expected.styles.padding, actual.dom.style.getPropertyValue('padding'));
   };
 
   const checkCopy = (expected: TestSpec, input: string) => {
@@ -33,7 +33,7 @@ UnitTest.test('ReplicationTest', () => {
     const actual = Replication.mutate(initial, 'span');
 
     // mutate destroys the original element
-    assert.eq(0, Traverse.children(initial).length);
+    Assert.eq('', 0, Traverse.children(initial).length);
 
     checkValues(expected, actual);
   };

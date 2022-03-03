@@ -1,17 +1,17 @@
 {
   "name": "tinymce",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
   },
   "description": "TinyMCE rich text editor",
-  "author": "Tiny Technologies, Inc",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "bugs": {
     "url": "https://github.com/tinymce/tinymce/issues"
   },
-  "license": "LGPL-2.1",
+  "license": "MIT",
   "engines": {
     "node": ">=0.10.26"
   },
@@ -23,8 +23,8 @@
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
-    "dompurify": "^2.3.4",
-    "prismjs": "^1.26.0",
+    "dompurify": "^2.3.6",
+    "prismjs": "^1.27.0",
     "tslib": "^2.0.0"
   }
 }

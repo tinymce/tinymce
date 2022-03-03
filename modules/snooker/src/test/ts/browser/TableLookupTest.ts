@@ -1,4 +1,4 @@
-import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Compare, Insert, Remove, SelectorFilter, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -20,17 +20,17 @@ UnitTest.test('TableLookupTest - cells', () => {
   const testerFound = (html: string, triggerSelector: string, resultSelector: string, label: string) => {
     testWithSelector(html, triggerSelector, (triggerElement) => {
       const result = TableLookup.cell(triggerElement);
-      assert.eq(true, result.isSome(), label + ': Expected the result to find something');
+      Assert.eq(label + ': Expected the result to find something', true, result.isSome());
       const expectedElement = SelectorFilter.descendants(SugarBody.body(), resultSelector);
-      assert.eq(true, expectedElement.length === 1, label + ': Expected to find only one element in the DOM with the selector ' + resultSelector + ' found: ' + expectedElement.length);
-      assert.eq(true, Compare.eq(expectedElement[0], result.getOrDie()), label + ': The result and the expectation should be the same element');
+      Assert.eq(label + ': Expected to find only one element in the DOM with the selector ' + resultSelector + ' found: ' + expectedElement.length, true, expectedElement.length === 1);
+      Assert.eq(label + ': The result and the expectation should be the same element', true, Compare.eq(expectedElement[0], result.getOrDie()));
     });
   };
 
   const testerShouldNotFind = (html: string, selector: string, label: string) => {
     testWithSelector(html, selector, (triggerElement) => {
       const result = TableLookup.cell(triggerElement);
-      assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
+      Assert.eq(label + ': Expected the result to find nothing', false, result.isSome());
     });
   };
 
@@ -122,12 +122,12 @@ UnitTest.test('TableLookupTest - cells', () => {
 
     const cells = SelectorFilter.descendants(SugarBody.body(), 'td');
     if (cells.length === 0) {
-      assert.fail('Could not find any table cell element');
+      Assert.fail('Could not find any table cell element');
     } else {
       Arr.each(cells, (cell) => {
         const result = TableLookup.cell(cell);
-        assert.eq(true, result.isSome(), label + ': Expected the result to find something');
-        assert.eq(true, Compare.eq(cell, result.getOrDie()), label + ': The result and the expectation should be the same element');
+        Assert.eq(label + ': Expected the result to find something', true, result.isSome());
+        Assert.eq(label + ': The result and the expectation should be the same element', true, Compare.eq(cell, result.getOrDie()));
       });
 
       Remove.remove(element);
@@ -141,11 +141,11 @@ UnitTest.test('TableLookupTest - cells', () => {
 
     const rows = SelectorFilter.descendants(SugarBody.body(), 'tr');
     if (rows.length === 0) {
-      assert.fail('Could not find any table row elements');
+      Assert.fail('Could not find any table row elements');
     } else {
       Arr.each(rows, (row) => {
         const result = TableLookup.cell(row);
-        assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
+        Assert.eq(label + ': Expected the result to find nothing', false, result.isSome());
       });
       Remove.remove(element);
     }

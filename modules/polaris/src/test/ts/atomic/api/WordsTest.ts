@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
 import { getWords, WordOptions } from 'ephox/polaris/words/Words';
@@ -18,7 +18,7 @@ UnitTest.test('api.Words.words', () => {
     const wordSets: Char[][] = getWords(chars, (char) => char.char, options);
     const actual = simplifySets(wordSets);
 
-    assert.eq(expected, actual);
+    Assert.eq('', expected, actual);
   };
 
   // splits words on whitespace
