@@ -1,12 +1,12 @@
 {
   "name": "@ephox/boulder",
-  "version": "7.0.0-alpha.4",
+  "version": "7.0.0",
   "description": "Basic javascript object validation",
   "dependencies": {
-    "@ephox/katamari": "^9.0.0-alpha.4"
+    "@ephox/katamari": "^9.0.0"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^4.0.0-alpha.4"
+    "@ephox/katamari-assertions": "^4.0.0"
   },
   "scripts": {
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
