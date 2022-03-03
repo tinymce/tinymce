@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 10.0.0 - 2022-03-03
+
 ### Added
 - Added a new `buildOrPatch` function to the `SystemApi` to allow reusing the passed obsoleted dom element.
 

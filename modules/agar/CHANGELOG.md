@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 7.0.0 - 2022-03-03
+
 ### Changed
 - The `sizzle` library is now used directly instead of using the `@ephox/wrap-sizzle` wrapper library.
 - Replaced `jsverify` with `fast-check` for the `Arbitraries` module.
