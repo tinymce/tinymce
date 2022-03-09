@@ -5,12 +5,15 @@ import Editor from '../../api/Editor';
 import VK from '../../api/util/VK';
 import * as BlockPattern from '../core/BlockPattern';
 import * as InlinePattern from '../core/InlinePattern';
-import { PatternSet } from '../core/PatternTypes';
+import { InlinePattern as InlinePatternType, PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
+const hasPatterns = (patternSet: PatternSet): boolean =>
+  patternSet.inlinePatterns.length > 0 || patternSet.blockPatterns.length > 0;
+
 const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  // Skip checking when the selection isn't collapsed
-  if (!editor.selection.isCollapsed()) {
+  // Skip checking when the selection isn't collapsed or we have no patterns
+  if (!editor.selection.isCollapsed() || !hasPatterns(patternSet)) {
     return false;
   }
 
@@ -47,12 +50,14 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
   return false;
 };
 
-const handleInlineKey = (editor: Editor, patternSet: PatternSet): void => {
-  const inlineMatches = InlinePattern.findPatterns(editor, patternSet.inlinePatterns, true);
-  if (inlineMatches.length > 0) {
-    editor.undoManager.transact(() => {
-      InlinePattern.applyMatches(editor, inlineMatches);
-    });
+const handleInlineKey = (editor: Editor, inlinePatterns: InlinePatternType[]): void => {
+  if (inlinePatterns.length > 0) {
+    const inlineMatches = InlinePattern.findPatterns(editor, inlinePatterns, true);
+    if (inlineMatches.length > 0) {
+      editor.undoManager.transact(() => {
+        InlinePattern.applyMatches(editor, inlineMatches);
+      });
+    }
   }
 };
 

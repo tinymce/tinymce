@@ -1,6 +1,7 @@
 import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
+import * as Pattern from '../textpatterns/core/Pattern';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { EditorOptions } from './OptionTypes';
@@ -698,7 +699,8 @@ const register = (editor: Editor) => {
   registerOption('text_patterns', {
     processor: (value) => {
       if (Type.isArrayOf(value, Type.isObject) || value === false) {
-        return { value: value === false ? [] : value, valid: true };
+        const patterns = value === false ? [] : value;
+        return { value: Pattern.fromRawPatterns(patterns), valid: true };
       } else {
         return { valid: false, message: 'Must be an array of objects or false.' };
       }
