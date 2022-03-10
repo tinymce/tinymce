@@ -1,4 +1,4 @@
-import { Arr, Result, Type } from '@ephox/katamari';
+import { Arr, Result, Results, Type } from '@ephox/katamari';
 
 import { BlockPattern, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawPattern } from './PatternTypes';
 
@@ -132,13 +132,29 @@ const denormalizePattern = (pattern: Pattern): RawPattern => {
   }
 };
 
+const getBlockPatterns = (patterns: Pattern[]): BlockPattern[] =>
+  sortPatterns(Arr.filter(patterns, isBlockPattern));
+
+const getInlinePatterns = (patterns: Pattern[]): InlinePattern[] =>
+  Arr.filter(patterns, isInlinePattern);
+
 const createPatternSet = (patterns: Pattern[]): PatternSet => ({
-  inlinePatterns: Arr.filter(patterns, isInlinePattern),
-  blockPatterns: sortPatterns(Arr.filter(patterns, isBlockPattern))
+  inlinePatterns: getInlinePatterns(patterns),
+  blockPatterns: getBlockPatterns(patterns)
 });
+
+const fromRawPatterns = (patterns: RawPattern[]): Pattern[] => {
+  const normalized = Results.partition(Arr.map(patterns, normalizePattern));
+  // eslint-disable-next-line no-console
+  Arr.each(normalized.errors, (err) => console.error(err.message, err.pattern));
+  return normalized.values;
+};
 
 export {
   normalizePattern,
   denormalizePattern,
-  createPatternSet
+  createPatternSet,
+  getBlockPatterns,
+  getInlinePatterns,
+  fromRawPatterns
 };
