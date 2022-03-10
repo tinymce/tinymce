@@ -1,5 +1,5 @@
 import { UploadHandler } from '../file/Uploader';
-import { RawPattern } from '../textpatterns/core/PatternTypes';
+import { Pattern, RawPattern } from '../textpatterns/core/PatternTypes';
 import Editor from './Editor';
 import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { Formats } from './fmt/Format';
@@ -252,5 +252,5 @@ export interface EditorOptions extends NormalizedEditorOptions {
   noneditable_regexp: RegExp[];
   object_resizing?: string;
   preview_styles?: string;
-  text_patterns?: RawPattern[];
+  text_patterns?: Pattern[];
 }
