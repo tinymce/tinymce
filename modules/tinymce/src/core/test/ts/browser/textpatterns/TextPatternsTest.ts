@@ -213,4 +213,19 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
     TinyContentActions.keyup(editor, Keys.space());
     TinyAssertions.assertContent(editor, '<p><a href="about:blank"><span class="test">www</span>.google.com</a></p>');
   });
+
+  it('TINY-8540: should be able to add additional patterns', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressSpace(editor, 'brb');
+    TinyAssertions.assertContent(editor, '<p>brb&nbsp;</p>');
+
+    editor.options.set('text_patterns', [
+      ...editor.options.get('text_patterns'),
+      { start: 'brb', replacement: 'be right back' }
+    ]);
+    Utils.setContentAndPressSpace(editor, 'brb');
+    TinyAssertions.assertContent(editor, '<p>be right back&nbsp;</p>');
+
+    editor.options.unset('text_patterns');
+  });
 });
