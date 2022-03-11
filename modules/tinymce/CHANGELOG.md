@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Dialogs will not exceed the window height on smaller screens #TINY-8146
+
 ## 6.0.1 - TBD
 
 ### Fixed
