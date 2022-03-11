@@ -54,8 +54,8 @@ describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
   const pOpenAutocompleter = async (editor: Editor, triggerChar: string) => {
     editor.focus();
     editor.setContent(`<p>${triggerChar}</p>`);
-    TinySelections.setCursor(editor, [ 0, 0 ], plusTriggerChar.length);
-    TinyContentActions.keypress(editor, plusTriggerChar.charCodeAt(0));
+    TinySelections.setCursor(editor, [ 0, 0 ], triggerChar.length);
+    TinyContentActions.keypress(editor, triggerChar.charCodeAt(0));
     // Wait 50ms for the keypress to process
     await Waiter.pWait(keyboardThrottleTimer);
   };
