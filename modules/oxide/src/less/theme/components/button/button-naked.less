@@ -6,14 +6,14 @@
 
 @button-naked-icon-color: @text-color;
 
-@button-naked-hover-background-color: @button-secondary-hover-background-color;
-@button-naked-hover-border-color: @button-secondary-hover-border-color;
-@button-naked-hover-box-shadow: @button-secondary-hover-box-shadow;
-@button-naked-hover-icon-color: @button-secondary-hover-text-color;
+@button-naked-hover-background-color: .bg-luma-checker(fade(@button-naked-icon-color, 12%), fade(@button-naked-icon-color, 20%))[@result];
+@button-naked-hover-border-color: transparent;
+@button-naked-hover-box-shadow: unset;
+@button-naked-hover-icon-color: @button-naked-icon-color;
 
-@button-naked-disabled-background-color: @button-secondary-disabled-background-color;
-@button-naked-disabled-border-color: @button-secondary-disabled-border-color;
-@button-naked-disabled-box-shadow: @button-secondary-disabled-box-shadow;
+@button-naked-disabled-background-color: @button-naked-hover-background-color;
+@button-naked-disabled-border-color: transparent;
+@button-naked-disabled-box-shadow: unset;
 @button-naked-disabled-icon-color: fade(@button-naked-icon-color, 50%);
 
 @button-naked-focus-background-color: @button-naked-hover-background-color;
@@ -21,10 +21,10 @@
 @button-naked-focus-box-shadow: @button-naked-hover-box-shadow;
 @button-naked-focus-icon-color: @button-naked-hover-icon-color;
 
-@button-naked-active-background-color: @button-secondary-active-background-color;
-@button-naked-active-border-color: @button-secondary-active-border-color;
-@button-naked-active-box-shadow: @button-secondary-active-box-shadow;
-@button-naked-active-icon-color: @button-secondary-active-text-color;
+@button-naked-active-background-color: .bg-luma-checker(fade(@button-naked-icon-color, 18%), fade(@button-naked-icon-color, 30%))[@result];
+@button-naked-active-border-color: transparent;
+@button-naked-active-box-shadow: unset;
+@button-naked-active-icon-color: @button-naked-icon-color;
 
 .tox {
   .tox-button--naked {
