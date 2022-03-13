@@ -1,4 +1,4 @@
-import { Optional, Singleton, Throttler, Thunk, Type } from '@ephox/katamari';
+import { Cell, Optional, Singleton, Throttler, Thunk, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import { fireAutocompleterEnd, fireAutocompleterStart, fireAutocompleterUpdate } from '../api/Events';
@@ -13,8 +13,13 @@ interface ActiveAutocompleter {
   readonly matchLength: number;
 }
 
-const setupEditorInput = (editor: Editor, load: (fetchOptions?: Record<string, any>) => void) => {
-  const update = Throttler.last(load, 50);
+interface AutocompleterApi {
+  readonly cancelIfNecessary: () => void;
+  readonly load: (fetchOptions?: Record<string, any>) => void;
+}
+
+const setupEditorInput = (editor: Editor, api: AutocompleterApi) => {
+  const update = Throttler.last(api.load, 50);
 
   editor.on('keypress compositionend', (e) => {
     // IE will pass the escape key here, so just don't do anything on escape
@@ -26,9 +31,14 @@ const setupEditorInput = (editor: Editor, load: (fetchOptions?: Record<string, a
   });
 
   editor.on('keydown', (e) => {
+    const keyCode = e.which;
+
     // Pressing <backspace> updates the autocompleter
-    if (e.which === 8) {
+    if (keyCode === 8) {
       update.throttle();
+    // Pressing <esc> closes the autocompleter
+    } else if (keyCode === 27) {
+      api.cancelIfNecessary();
     }
   });
 
@@ -37,6 +47,7 @@ const setupEditorInput = (editor: Editor, load: (fetchOptions?: Record<string, a
 
 export const setup = (editor: Editor): void => {
   const activeAutocompleter = Singleton.value<ActiveAutocompleter>();
+  const uiActive = Cell<boolean>(false);
 
   const isActive = activeAutocompleter.isSet;
 
@@ -44,6 +55,7 @@ export const setup = (editor: Editor): void => {
     if (isActive()) {
       Rtc.removeAutocompleterDecoration(editor);
       fireAutocompleterEnd(editor);
+      uiActive.set(false);
       activeAutocompleter.clear();
     }
   };
@@ -58,10 +70,6 @@ export const setup = (editor: Editor): void => {
         triggerChar: context.triggerChar,
         matchLength: context.text.length
       });
-
-      return true;
-    } else {
-      return false;
     }
   };
 
@@ -81,7 +89,7 @@ export const setup = (editor: Editor): void => {
     doLookup(fetchOptions).fold(
       cancelIfNecessary,
       (lookupInfo) => {
-        const wasNecessary = commenceIfNecessary(lookupInfo.context);
+        commenceIfNecessary(lookupInfo.context);
 
         // Wait for the results to return and then display the menu
         lookupInfo.lookupData.then((lookupData) => {
@@ -101,10 +109,11 @@ export const setup = (editor: Editor): void => {
                   matchLength: context.text.length
                 });
 
-                if (wasNecessary) {
-                  fireAutocompleterStart(editor, { lookupData });
-                } else {
+                if (uiActive.get()) {
                   fireAutocompleterUpdate(editor, { lookupData });
+                } else {
+                  uiActive.set(true);
+                  fireAutocompleterStart(editor, { lookupData });
                 }
               }
             }
@@ -121,5 +130,8 @@ export const setup = (editor: Editor): void => {
 
   editor.addCommand('mceAutocompleterClose', cancelIfNecessary);
 
-  setupEditorInput(editor, load);
+  setupEditorInput(editor, {
+    cancelIfNecessary,
+    load
+  });
 };

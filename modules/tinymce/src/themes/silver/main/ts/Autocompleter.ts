@@ -47,7 +47,7 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
   const isActive = activeState.get;
 
   const hideIfNecessary = () => {
-    if (isActive()) {
+    if (isMenuOpen()) {
       InlineView.hide(autocompleter);
     }
   };
