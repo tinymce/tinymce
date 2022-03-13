@@ -1,7 +1,7 @@
 import { Keys, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Throttler, Type } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -247,6 +247,28 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
         },
         onAction: (autocompleteApi, rng, value) => {
           store.adder('euro:' + value)();
+          ed.selection.setRng(rng);
+          ed.insertContent(value);
+          autocompleteApi.hide();
+        }
+      });
+
+      const dollarsFetch = Throttler.last((resolve) => {
+        resolve(
+          Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
+            value: `dollars-${letter}`,
+            text: `d-${letter}`,
+            icon: '$'
+          }))
+        );
+      }, 100);
+      ed.ui.registry.addAutocompleter('Dollars1', {
+        ch: '$',
+        minChars: 0,
+        columns: 1,
+        fetch: (_pattern, _maxResults) => new Promise(dollarsFetch.throttle),
+        onAction: (autocompleteApi, rng, value) => {
+          store.adder('dollars:' + value)();
           ed.selection.setRng(rng);
           ed.insertContent(value);
           autocompleteApi.hide();
@@ -643,5 +665,24 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     },
     choice: (editor) => TinyContentActions.keydown(editor, Keys.enter()),
     assertion: () => store.assertEq('Euro-= should fire', [ 'euro:AutocompleterContents->onAction', 'euro:euro-=' ])
+  }));
+
+  it('TINY-8552: Checking menu can be closed with a throttled fetch (trigger: $)', () => pTestAutocompleter({
+    triggerChar: '$',
+    additionalContent: 'a',
+    structure: {
+      type: 'list',
+      hasIcons: true,
+      groups: [
+        [
+          { title: 'd-a', text: 'd-<span class="tox-autocompleter-highlight">a</span>', icon: '$' },
+          { title: 'd-b', text: 'd-b', icon: '$' },
+          { title: 'd-c', text: 'd-c', icon: '$' },
+          { title: 'd-d', text: 'd-d', icon: '$' }
+        ]
+      ]
+    },
+    choice: (editor) => TinyContentActions.keydown(editor, Keys.enter()),
+    assertion: (editor) => TinyAssertions.assertContent(editor, '<p>dollars-a</p>')
   }));
 });
