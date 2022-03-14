@@ -6,11 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Dialogs will not exceed the window height on smaller screens #TINY-8146
+
+## 6.0.1 - TBD
+
 ### Changed
 - The option`end_container_on_empty_block` can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for option`end_container_on_empty_block` changed to `blockquote` #TINY-6559
 
-## 6.0.0 - 2020-03-03
+### Fixed
+- Fixed the dev ZIP missing the required `bin` scripts to build from the source #TINY-8542
+- Fixed a regression whereby text patterns couldn't be updated at runtime #TINY-8540
+- Naked buttons better adapt to various background colors, improved text contrast in notifications #TINY-8533
+- The autocompleter would not fire the `AutocompleterStart` event nor close the menu in some cases #TINY-8552
+
+## 6.0.0 - 2022-03-03
 
 ### Added
 - New `editor.options` API to replace the old `editor.settings` and `editor.getParam` APIs #TINY-8206
