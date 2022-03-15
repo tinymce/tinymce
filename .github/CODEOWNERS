@@ -1,8 +1,8 @@
-* @tinymce/editor-platform-team @spocke @metricjs @lnewson @ltrouton @HAFRMO @ashfordneil @JamesToohey
+* @tinymce/editor-platform-team @spocke @lnewson @ltrouton @HAFRMO @tiny-ben-tran
 
 # Oxide changes should include the design team as well
-/modules/oxide/ @tinymce/editor-platform-team @lostkeys @spocke @metricjs @lnewson @ltrouton @HAFRMO @ashfordneil @JamesToohey
-/modules/oxide-icons-default/ @tinymce/editor-platform-team @lostkeys @spocke @metricjs @lnewson @ltrouton @HAFRMO @ashfordneil @JamesToohey
+/modules/oxide/ @tinymce/editor-platform-team @lostkeys @noxuhax @spocke @lnewson @ltrouton @HAFRMO @tiny-ben-tran
+/modules/oxide-icons-default/ @tinymce/editor-platform-team @lostkeys @noxuhax @spocke @lnewson @ltrouton @HAFRMO @tiny-ben-tran
 
 # Katamari changes should include the integrations team as well
-/modules/katamari/ @tinymce/editor-platform-team @tinymce/integrations-team @spocke @metricjs @lnewson @ltrouton @HAFRMO @ashfordneil @JamesToohey
+/modules/katamari/ @tinymce/editor-platform-team @tinymce/integrations-team @spocke @lnewson @ltrouton @HAFRMO @tiny-ben-tran
