@@ -121,6 +121,14 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
           '</table>', 'ab');
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0);
     });
+
+    it('TINY-8563: Copy cef element', () => {
+      const editor = hook.editor();
+      copy(editor, '<p>a<span contenteditable="false">bc</span></p>', [ 0 ], 1, [ 0 ], 2);
+      assertClipboardData('<!-- x-tinymce/html --><span contenteditable="false">bc</span>', 'bc');
+      TinyAssertions.assertContent(editor, '<p>a<span contenteditable="false">bc</span></p>');
+      TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
+    });
   });
 
   context('cut', () => {
@@ -156,6 +164,14 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
       cut(editor, '<p>abc</p>', [ 0, 0 ], 1, [ 0, 0 ], 1);
       assertClipboardData('', '');
       await pWaitUntilAssertContent(editor, '<p>abc</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('TINY-8563: Cut cef element', async () => {
+      const editor = hook.editor();
+      cut(editor, '<p>a<span contenteditable="false">bc</span></p>', [ 0 ], 1, [ 0 ], 2);
+      assertClipboardData('<!-- x-tinymce/html --><span contenteditable="false">bc</span>', 'bc');
+      await pWaitUntilAssertContent(editor, '<p>a</p>');
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
   });
