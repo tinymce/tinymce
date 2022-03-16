@@ -43,11 +43,6 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const isFakeSelectionTargetElement = (node: Node): node is HTMLElement =>
     node !== rootNode && (isContentEditableFalse(node) || NodeType.isMedia(node)) && dom.isChildOf(node, rootNode);
 
-  const getRealSelectionElement = () => {
-    const container = dom.get(realSelectionId);
-    return container ? container.getElementsByTagName('*')[0] as HTMLElement : container;
-  };
-
   const setRange = (range: Range | null) => {
     if (range) {
       selection.setRng(range);
@@ -190,22 +185,6 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
       if (!isFakeSelectionElement(parentNode)) {
         removeElementSelection();
-      }
-    });
-
-    editor.on('copy', (e) => {
-      const clipboardData = e.clipboardData;
-
-      // Make sure we get proper html/text for the fake cE=false selection
-      if (!e.isDefaultPrevented() && e.clipboardData) {
-        const realSelectionElement = getRealSelectionElement();
-        if (realSelectionElement) {
-          e.preventDefault();
-          clipboardData.clearData();
-          clipboardData.setData('text/html', realSelectionElement.outerHTML);
-          // outerText is a nonstandard property and doesn't exist on Firefox, so fallback to innerText
-          clipboardData.setData('text/plain', (realSelectionElement as any).outerText || realSelectionElement.innerText);
-        }
       }
     });
 
