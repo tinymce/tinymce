@@ -153,7 +153,8 @@ const extract = (table: SugarElement<HTMLTableElement>, selectedSelector: string
   const unselectedCells = LayerSelector.filterFirstLayer(replica, 'th,td', (cell) => Selectors.is(cell, selector));
   Arr.each(unselectedCells, Remove.remove);
 
-  fillInGaps(list, replicaHouse, replicaStats, isSelected);
+  const rows = Arr.filter(list, (row) => row.section !== 'colgroup');
+  fillInGaps(rows, replicaHouse, replicaStats, isSelected);
 
   const house = Warehouse.fromTable(table);
   const widthDelta = getTableWidthDelta(table, house, tableSize, replicaStats);
