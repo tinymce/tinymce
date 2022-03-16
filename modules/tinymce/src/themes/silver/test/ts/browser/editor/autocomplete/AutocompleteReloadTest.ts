@@ -9,12 +9,12 @@ import { pAssertAutocompleterStructure, pWaitForAutocompleteToOpen } from '../..
 
 interface Scenario {
   readonly action: (editor: Editor) => Promise<void>;
-  readonly assertion: (editor: Editor) => void;
+  readonly assertion: (editor: Editor) => Promise<void>;
 }
 
 interface ScenarioWithPostAction extends Scenario {
   readonly postAction: (editor: Editor) => Promise<void>;
-  readonly postAssertion: (editor: Editor) => void;
+  readonly postAssertion: (editor: Editor) => Promise<void>;
 }
 
 const hasPostActions = (scenario: any): scenario is ScenarioWithPostAction =>
@@ -98,10 +98,10 @@ describe('Editor Autocompleter Reload test', () => {
     const editor = hook.editor();
     await pSetContentAndTrigger(editor, ':aa', ':'.charCodeAt(0));
     await scenario.action(editor);
-    scenario.assertion(editor);
+    await scenario.assertion(editor);
     if (hasPostActions(scenario)) {
       await scenario.postAction(editor);
-      scenario.postAssertion(editor);
+      await scenario.postAssertion(editor);
     }
   };
 
