@@ -51,7 +51,10 @@ const clientInfo = (rect: NodeClientRect, clientX: number): FakeCaretInfo => {
   };
 };
 
-const horizontalDistance: DistanceFn = (rect, x, _y) => x > rect.left && x < rect.right ? 0 : Math.min(Math.abs(rect.left - x), Math.abs(rect.right - x));
+// Measure the distance between the x and the closest edge of the rect.
+// If the x is inside the rect then always return 0.
+const horizontalDistance: DistanceFn = (rect, x, _y) =>
+  x > rect.left && x < rect.right ? 0 : Math.min(Math.abs(rect.left - x), Math.abs(rect.right - x));
 
 const closestChildCaretCandidateNodeRect = (children: ChildNode[], clientX: number, clientY: number): Optional<NodeClientRect> => {
   const caretCandidateRect = (rect: NodeClientRect) => {

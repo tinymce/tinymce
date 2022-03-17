@@ -248,7 +248,7 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
         })
       );
 
-      it('TINY-8567: should find the left noeditable node as the closest candidate since the point is beyond the 2 pixels edge between the text node and element', () =>
+      it('TINY-8567: should find the left noneditable node as the closest candidate since the point is beyond the 2 pixels edge between the text node and element', () =>
         testClosestCaretCandidate({
           html: '<span contenteditable="false" style="display: inline-block; margin-right: 5px; width: 10px; height: 10px; background: green"></span><span>hello</span>',
           targetPath: [ 0 ],
