@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed the dev ZIP missing the required `bin` scripts to build from the source #TINY-8542
 - Fixed a regression whereby text patterns couldn't be updated at runtime #TINY-8540
+- Fixed an issue where tables with colgroups could be copied incorrectly in some cases #TINY-8568
 - Naked buttons better adapt to various background colors, improved text contrast in notifications #TINY-8533
 - The autocompleter would not fire the `AutocompleterStart` event nor close the menu in some cases #TINY-8552
 - Clipboard content was not generated correctly when cutting and copying `contenteditable="false"` elements #TINY-8563
