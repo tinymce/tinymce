@@ -175,6 +175,87 @@ describe('browser.tinymce.core.ClosestCaretCandidateTest', () => {
           expected: Optional.some([ 0 ])
         })
       );
+
+      it('TINY-8567: should find the text node as the closest caret candidate since the point is within the text node', () =>
+        testClosestCaretCandidate({
+          html: '<span contenteditable="false" style="display: inline-block; width: 10px; height: 10px; background: green"></span>hello',
+          targetPath: [ 0 ],
+          dx: 15, dy: 5,
+          expected: Optional.some([ 1 ])
+        })
+      );
+
+      it('TINY-8567: should find the left text node as the closest candidate since the point is at the edge between the text node and element', () =>
+        testClosestCaretCandidate({
+          html: 'hello<span contenteditable="false" style="display: inline-block; width: 10px; height: 10px; background: green"></span>',
+          targetPath: [ 1 ],
+          dx: 0, dy: 5,
+          expected: Optional.some([ 0 ])
+        })
+      );
+
+      it('TINY-8567: should find the right text node as the closest candidate since the point is at the edge between the text node and element', () =>
+        testClosestCaretCandidate({
+          html: '<span contenteditable="false" style="display: inline-block; width: 10px; height: 10px; background: green"></span>hello',
+          targetPath: [ 0 ],
+          dx: 10, dy: 5,
+          expected: Optional.some([ 1 ])
+        })
+      );
+
+      it('TINY-8567: should find the left wrapped text node as the closest candidate since the point is at the edge between the text node and element', () =>
+        testClosestCaretCandidate({
+          html: '<span>hello</span><span contenteditable="false" style="display: inline-block; width: 10px; height: 10px; background: green"></span>',
+          targetPath: [ 1 ],
+          dx: 0, dy: 5,
+          expected: Optional.some([ 0, 0 ])
+        })
+      );
+
+      it('TINY-8567: should find the right wrapped text node as the closest candidate since the point is at the edge between the text node and element', () =>
+        testClosestCaretCandidate({
+          html: '<span contenteditable="false" style="display: inline-block; width: 10px; height: 10px; background: green"></span><span>hello</span>',
+          targetPath: [ 0 ],
+          dx: 10, dy: 5,
+          expected: Optional.some([ 1, 0 ])
+        })
+      );
+
+      it('TINY-8567: should find the left wrapped text node as the closest candidate since the point is within the 2 pixels edge between the text node and element', () =>
+        testClosestCaretCandidate({
+          html: '<span>hello</span><span contenteditable="false" style="display: inline-block; margin-left: 2px; width: 10px; height: 10px; background: green"></span>',
+          targetPath: [ 1 ],
+          dx: -1, dy: 5,
+          expected: Optional.some([ 0, 0 ])
+        })
+      );
+
+      it('TINY-8567: should find the right wrapped text node as the closest candidate since the point is within the 2 pixels edge between the text node and element', () =>
+        testClosestCaretCandidate({
+          html: '<span contenteditable="false" style="display: inline-block; margin-right: 2px; width: 10px; height: 10px; background: green"></span><span>hello</span>',
+          targetPath: [ 0 ],
+          dx: 11, dy: 5,
+          expected: Optional.some([ 1, 0 ])
+        })
+      );
+
+      it('TINY-8567: should find the right noneditable node as the closest candidate since the point is beyond the 2 pixels edge between the text node and element', () =>
+        testClosestCaretCandidate({
+          html: '<span>hello</span><span contenteditable="false" style="display: inline-block; margin-left: 5px; width: 10px; height: 10px; background: green"></span>',
+          targetPath: [ 1 ],
+          dx: -1, dy: 5,
+          expected: Optional.some([ 1 ])
+        })
+      );
+
+      it('TINY-8567: should find the left noneditable node as the closest candidate since the point is beyond the 2 pixels edge between the text node and element', () =>
+        testClosestCaretCandidate({
+          html: '<span contenteditable="false" style="display: inline-block; margin-right: 5px; width: 10px; height: 10px; background: green"></span><span>hello</span>',
+          targetPath: [ 0 ],
+          dx: 11, dy: 5,
+          expected: Optional.some([ 0 ])
+        })
+      );
     });
   });
 
