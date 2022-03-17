@@ -72,6 +72,11 @@
     margin-bottom: -1px;
   }
 
+  &:not(.tox-tinymce-inline).tox-tinymce--toolbar-bottom .tox-editor-header {
+    border-top: none;
+    box-shadow: none;
+  }
+
   // Double .tox selector to increase specificity over `:not(.tox-tinymce-inline)` from new style
   &.tox.tox-tinymce--toolbar-sticky-on {
     .tox-editor-header {
@@ -111,8 +116,13 @@
     background: @toolbar-background !important;
   }
 
+  .tox-menubar + .tox-toolbar-overlord {
+    border-top: none;
+  }
+
   .tox-menubar + .tox-toolbar,
   .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary {
+    border-top: 1px solid @toolbar-separator-color;
     margin-top: -1px; // Fix to hide menubar bottom border below the toolbar
   }
 
@@ -123,7 +133,7 @@
 
   &:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar-overlord:first-child .tox-toolbar__primary,
   &:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar:first-child {
-    border-top: 1px solid @border-color;
+    border-top: 1px solid @toolbar-separator-color;
   }
 
   .tox-toolbar__group {
