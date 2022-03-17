@@ -9,6 +9,8 @@ import { Detail, DetailExt, RowDetail } from './Structs';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 
+type CellRowDetail = RowDetail<Detail<HTMLTableCellElement>, HTMLTableRowElement>;
+
 interface StatsStruct {
   readonly minRow: number;
   readonly minCol: number;
@@ -62,7 +64,7 @@ const findSelectedStats = (house: Warehouse, isSelected: (detail: DetailExt) => 
   return statsStruct(minRow, minCol, maxRow, maxCol, allCells, selectedCells);
 };
 
-const makeCell = (list: RowDetail<Detail>[], seenSelected: boolean, rowIndex: number): void => {
+const makeCell = (list: CellRowDetail[], seenSelected: boolean, rowIndex: number): void => {
   // no need to check bounds, as anything outside this index is removed in the nested for loop
   const row = list[rowIndex].element;
   const td = SugarElement.fromTag('td');
@@ -72,6 +74,7 @@ const makeCell = (list: RowDetail<Detail>[], seenSelected: boolean, rowIndex: nu
 };
 
 const fillInGaps = (list: RowDetail<Detail>[], house: Warehouse, stats: StatsStruct, isSelected: (detail: DetailExt) => boolean) => {
+  const rows = Arr.filter(list, (row): row is CellRowDetail => row.section !== 'colgroup');
   const totalColumns = house.grid.columns;
   const totalRows = house.grid.rows;
   // unselected cells have been deleted, now fill in the gaps in the model
@@ -82,7 +85,7 @@ const fillInGaps = (list: RowDetail<Detail>[], house: Warehouse, stats: StatsStr
         // if there is a hole in the table itself, or it's an unselected position, we need a cell
         const needCell = Warehouse.getAt(house, i, j).filter(isSelected).isNone();
         if (needCell) {
-          makeCell(list, seenSelected, i);
+          makeCell(rows, seenSelected, i);
         } else {
           seenSelected = true;
         }

@@ -22,8 +22,6 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
   afterEach(() => {
     const editor = hook.editor();
     editor.options.unset('paste_remove_styles_if_webkit');
-    editor.options.unset('paste_retain_style_properties');
-    editor.options.unset('paste_enable_default_filters');
     editor.options.unset('paste_data_images');
     editor.options.unset('paste_webkit_styles');
   });
