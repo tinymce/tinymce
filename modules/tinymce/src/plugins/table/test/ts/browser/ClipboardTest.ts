@@ -764,4 +764,40 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
 
     editor.off('TableModified', callback);
   });
+
+  it('TINY-8568: should correctly copy and paste colgroup table with complex selection', () => {
+    const editor = hook.editor();
+
+    const inputTable = '<table>' +
+    '<colgroup><col data-col-id="0"><col data-col-id="1"><col data-col-id="2"><col data-col-id="3"><col data-col-id="4"></colgroup>' +
+    '<tbody>' +
+    '<tr><td>&nbsp;</td><td>&nbsp;</td><td>a</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+    '<tr><td>&nbsp;</td><td colspan="2">b</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+    '<tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="2">c</td><td>&nbsp;</td></tr>' +
+    '<tr><td>&nbsp;</td><td>&nbsp;</td><td>d</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+    '</tbody>' +
+    '</table>';
+
+    const expectedTable = '<table>' +
+    '<colgroup><col data-col-id="1"><col data-col-id="2"><col data-col-id="3"></colgroup>' +
+    '<tbody>' +
+    '<tr><td>&nbsp;</td><td>a</td><td>&nbsp;</td></tr>' +
+    '<tr><td colspan="2">b</td><td>&nbsp;</td></tr>' +
+    '<tr><td>&nbsp;</td><td colspan="2">c</td></tr>' +
+    '<tr><td>&nbsp;</td><td>d</td><td>&nbsp;</td></tr>' +
+    '</tbody>' +
+    '</table>';
+
+    editor.setContent(
+      inputTable +
+      '<p>&nbsp;</p>'
+    );
+    selectRangeXY(editor, 'table tr:nth-child(1) td:nth-child(3)', 'table tr:nth-child(4) td:nth-child(3)');
+
+    const dataTransfer = Clipboard.copy(TinyDom.body(editor));
+    assert.equal(dataTransfer.getData('text/html'), '<!-- x-tinymce/html -->' + expectedTable);
+    TinySelections.setCursor(editor, [ 1, 0 ], 0);
+    Clipboard.pasteItems(TinyDom.body(editor), Arr.mapToObject(dataTransfer.types, (type) => dataTransfer.getData(type)));
+    TinyAssertions.assertContent(editor, inputTable + expectedTable);
+  });
 });
