@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Naked buttons better adapt to various background colors, improved text contrast in notifications #TINY-8533
 - The autocompleter would not fire the `AutocompleterStart` event nor close the menu in some cases #TINY-8552
 - It wasn't possible to select text right after an inline noneditable element #TINY-8567
+- Clipboard content was not generated correctly when cutting and copying `contenteditable="false"` elements #TINY-8563
+
 ## 6.0.0 - 2022-03-03
 
 ### Added
