@@ -63,6 +63,9 @@ const bedrockHeadless = (tests, browser, auto) => {
         name: 'headless-tests',
         browser,
         testfiles: testFolders(tests, auto),
+
+        // we have a few tests that don't play nicely when combined together in the monorepo
+        retries: 3
       }
     }
   }

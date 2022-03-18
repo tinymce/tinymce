@@ -370,7 +370,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
   const insertNewBlockAfter = () => {
     // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
-    if (/^(H[1-6]|PRE|BLOCKQUOTE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
+    if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
       newBlock = createNewBlock(newBlockName);
     } else {
       newBlock = createNewBlock();
