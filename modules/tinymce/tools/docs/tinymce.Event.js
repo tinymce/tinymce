@@ -26,7 +26,7 @@
  * Returns true/false if the default action is to be prevented or not.
  *
  * @method isDefaultPrevented
- * @return {Boolean} True/false if the event is to be execured or not.
+ * @return {Boolean} True/false if the event is to be executed or not.
  */
 
 /**
