@@ -34,24 +34,24 @@ const getRemovedPlugins = (options: NormalizedEditorOptions): string[] => {
 
 const logRemovedWarnings = (rawOptions: RawEditorOptions, normalizedOptions: NormalizedEditorOptions): void => {
   // Note: Ensure we use the original user settings, not the final when logging
-  const removedSettings = getRemovedOptions(rawOptions);
+  const removedOptions = getRemovedOptions(rawOptions);
   const removedPlugins = getRemovedPlugins(normalizedOptions);
 
   const hasRemovedPlugins = removedPlugins.length > 0;
-  const hasRemovedSettings = removedSettings.length > 0;
+  const hasRemovedOptions = removedOptions.length > 0;
   const isLegacyMobileTheme = normalizedOptions.theme === 'mobile';
-  if (hasRemovedPlugins || hasRemovedSettings || isLegacyMobileTheme) {
+  if (hasRemovedPlugins || hasRemovedOptions || isLegacyMobileTheme) {
     const listJoiner = '\n- ';
     const themesMessage = isLegacyMobileTheme ? `\n\nThemes:${listJoiner}mobile` : '';
     const pluginsMessage = hasRemovedPlugins ? `\n\nPlugins:${listJoiner}${removedPlugins.join(listJoiner)}` : '';
-    const settingsMessage = hasRemovedSettings ? `\n\nSettings:${listJoiner}${removedSettings.join(listJoiner)}` : '';
+    const optionsMessage = hasRemovedOptions ? `\n\nOptions:${listJoiner}${removedOptions.join(listJoiner)}` : '';
     // eslint-disable-next-line no-console
     console.warn(
       'The following deprecated features are currently enabled and have been removed in TinyMCE 6.0. These features will no longer work and should be removed from the TinyMCE configuration. ' +
       'See https://www.tiny.cloud/docs/tinymce/6/migration-from-5x.html for more information.' +
       themesMessage +
       pluginsMessage +
-      settingsMessage
+      optionsMessage
     );
   }
 };

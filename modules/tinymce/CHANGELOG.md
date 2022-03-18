@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue where tables with colgroups could be copied incorrectly in some cases #TINY-8568
 - Naked buttons better adapt to various background colors, improved text contrast in notifications #TINY-8533
 - The autocompleter would not fire the `AutocompleterStart` event nor close the menu in some cases #TINY-8552
+- It wasn't possible to select text right after an inline noneditable element #TINY-8567
+- Fixed a double border showing for the `tinymce-5` skin when using `toolbar_location: 'bottom'` #TINY-8564
 - Clipboard content was not generated correctly when cutting and copying `contenteditable="false"` elements #TINY-8563
 
 ## 6.0.0 - 2022-03-03
@@ -136,7 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed support for Microsoft Word from the opensource paste functionality #TINY-7493
 - Removed support for the `plugins` option allowing a mixture of a string array and of space separated strings #TINY-8399
 - Removed support for the deprecated `false` value for the `forced_root_block` option #TINY-8260
-- Removed the jQuery integration #TINY-4518
+- Removed the jQuery integration #TINY-4519
 - Removed the `imagetools` plugin, which is now classified as a Premium plugin #TINY-8209
 - Removed the `imagetools` dialog component #TINY-8333
 - Removed the `toc` plugin, which is now classified as a Premium plugin #TINY-8250
