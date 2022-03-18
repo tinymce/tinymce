@@ -173,7 +173,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
     });
 
-    context('Has default value', () => {
+    context('With the default value', () => {
       it('TINY-6559: Press Enter in blockquote', () => {
         const editor = hook.editor();
         editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');

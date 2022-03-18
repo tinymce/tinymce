@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- */
-
 import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 
@@ -12,6 +5,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import { Tools } from '../api/PublicApi';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -242,12 +236,14 @@ const addBrToBlockIfNeeded = (dom, block) => {
   }
 };
 
-const shouldEndContainer = (editor: Editor, container: Node) => {
+const shouldEndContainer = (editor: Editor, container: Node | undefined) => {
   const optionValue = Options.shouldEndContainerOnEmptyBlock(editor);
-  if (Type.isString(optionValue)) {
-    return Type.isNonNullable(container) && Arr.contains(optionValue.split(/, ?/), container.nodeName.toLowerCase());
+  if (Type.isNullable(container)) {
+    return false;
+  } else if (Type.isString(optionValue)) {
+    return Arr.contains(Tools.explode(optionValue), container.nodeName.toLowerCase());
   } else {
-    return Type.isNonNullable(container) && optionValue;
+    return optionValue;
   }
 };
 

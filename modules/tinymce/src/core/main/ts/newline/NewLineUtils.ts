@@ -97,9 +97,6 @@ const getEditableRoot = (dom, node) => {
   return parent !== root ? editableRoot : root;
 };
 
-const isBlockQuote = (editor: Editor) =>
-  SelectorExists.ancestor(SugarElement.fromDom(editor.selection.getStart(true)), 'blockquote', (element) => element.dom === editor.dom.getRoot());
-
 const getParentBlock = (editor: Editor) => {
   return Optional.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
 };
@@ -124,6 +121,5 @@ export {
   getEditableRoot,
   getParentBlock,
   getParentBlockName,
-  isBlockQuote,
   isListItemParentBlock
 };

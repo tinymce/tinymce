@@ -6,14 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
+- The default value for `end_container_on_empty_block` option has been changed to ` 'blockquote' ` #TINY-6559
+
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 
 ## 6.0.1 - TBD
-
-### Changed
-- The option`end_container_on_empty_block` can now take a string of blocks to split when pressing Enter twice #TINY-6559
-- The default value for option`end_container_on_empty_block` changed to `blockquote` #TINY-6559
 
 ### Fixed
 - Fixed the dev ZIP missing the required `bin` scripts to build from the source #TINY-8542
