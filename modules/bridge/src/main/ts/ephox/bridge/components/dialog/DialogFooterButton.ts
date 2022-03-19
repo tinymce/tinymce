@@ -14,6 +14,7 @@ interface BaseDialogFooterButtonSpec {
   primary?: boolean;
   enabled?: boolean;
   icon?: string;
+  buttonType?: 'primary' | 'secondary';
 }
 
 export interface DialogFooterNormalButtonSpec extends BaseDialogFooterButtonSpec {
@@ -34,9 +35,11 @@ export type DialogFooterButtonSpec = DialogFooterNormalButtonSpec | DialogFooter
 interface BaseDialogFooterButton {
   name: string;
   align: 'start' | 'end';
+  /** @deprecated use `buttonType: "primary"` instead */
   primary: boolean;
   enabled: boolean;
   icon: Optional<string>;
+  buttonType: Optional<'primary' | 'secondary'>;
 }
 
 export interface DialogFooterNormalButton extends BaseDialogFooterButton {
@@ -58,8 +61,11 @@ const baseFooterButtonFields = [
   ComponentSchema.generatedName('button'),
   ComponentSchema.optionalIcon,
   FieldSchema.defaultedStringEnum('align', 'end', [ 'start', 'end' ]),
+  // this should be removed, but must live here because FieldSchema doesn't have a way to manage deprecated fields
   ComponentSchema.primary,
-  ComponentSchema.enabled
+  ComponentSchema.enabled,
+  // this should be defaulted to `secondary` but the implementation needs to manage the deprecation
+  FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary' ])
 ];
 
 export const dialogFooterButtonFields = [
