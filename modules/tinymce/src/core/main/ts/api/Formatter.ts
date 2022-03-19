@@ -11,18 +11,19 @@ import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
 
 /**
+ * @summary
  * Text formatter engine class. This class is used to apply formats like bold, italic, font size
  * etc to the current selection or specific nodes. This engine was built to replace the browser's
  * default formatting logic for execCommand due to its inconsistent and buggy behavior.
  *
  * @class tinymce.Formatter
  * @example
- *  tinymce.activeEditor.formatter.register('mycustomformat', {
- *    inline: 'span',
- *    styles: {color: '#ff0000'}
- *  });
+ * tinymce.activeEditor.formatter.register('mycustomformat', {
+ *   inline: 'span',
+ *   styles: {color: '#ff0000'}
+ * });
  *
- *  tinymce.activeEditor.formatter.apply('mycustomformat');
+ * tinymce.activeEditor.formatter.apply('mycustomformat');
  */
 
 interface Formatter extends FormatRegistry {
@@ -60,7 +61,7 @@ const Formatter = (editor: Editor): Formatter => {
      *
      * @method has
      * @param {String} name Format name to check if a format exists.
-     * @return {boolean} True/False if a format for the specified name exists.
+     * @return {Boolean} True/False if a format for the specified name exists.
      */
     has: formats.has,
 
@@ -126,7 +127,7 @@ const Formatter = (editor: Editor): Formatter => {
      * @param {Object} vars Optional list of variables to replace before checking it.
      * @param {Node} node Optional node to check.
      * @param {Boolean} similar Optional argument to specify that similar formats should be checked instead of only exact formats.
-     * @return {boolean} true/false if the specified selection/node matches the format.
+     * @return {Boolean} true/false if the specified selection/node matches the format.
      */
     match: (name, vars?, node?, similar?) => Rtc.matchFormat(editor, name, vars, node, similar),
 
@@ -169,7 +170,7 @@ const Formatter = (editor: Editor): Formatter => {
      *
      * @method canApply
      * @param {String} name Name of format to check.
-     * @return {boolean} true/false if the specified format can be applied to the current selection/node.
+     * @return {Boolean} true/false if the specified format can be applied to the current selection/node.
      */
     canApply: (name) => Rtc.canApplyFormat(editor, name),
 
@@ -178,7 +179,7 @@ const Formatter = (editor: Editor): Formatter => {
      *
      * @method formatChanged
      * @param {String} formats Comma separated list of formats to check for.
-     * @param {function} callback Callback with state and args when the format is changed/toggled on/off.
+     * @param {Function} callback Callback with state and args when the format is changed/toggled on/off.
      * @param {Boolean} similar True/false state if the match should handle similar or exact formats.
      * @param {Object} vars Restrict the format being watched to only match if the variables applied are equal to vars.
      */
@@ -191,8 +192,8 @@ const Formatter = (editor: Editor): Formatter => {
      * @param {String/Object} format Format to generate preview css text for.
      * @return {String} Css text for the specified format.
      * @example
-     * var cssText1 = editor.formatter.getCssText('bold');
-     * var cssText2 = editor.formatter.getCssText({inline: 'b'});
+     * const cssText1 = editor.formatter.getCssText('bold');
+     * const cssText2 = editor.formatter.getCssText({ inline: 'b' });
      */
     getCssText: Fun.curry(Preview.getCssText, editor)
   };

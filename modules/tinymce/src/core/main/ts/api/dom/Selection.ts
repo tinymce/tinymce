@@ -192,7 +192,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
    * @example
    * // Stores a bookmark of the current selection
-   * var bm = tinymce.activeEditor.selection.getBookmark();
+   * const bm = tinymce.activeEditor.selection.getBookmark();
    *
    * tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + 'Some new content');
    *
@@ -208,7 +208,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @param {Object} bookmark Bookmark to restore selection from.
    * @example
    * // Stores a bookmark of the current selection
-   * var bm = tinymce.activeEditor.selection.getBookmark();
+   * const bm = tinymce.activeEditor.selection.getBookmark();
    *
    * tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + 'Some new content');
    *
@@ -492,7 +492,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    *
    * @method selectorChanged
    * @param {String} selector CSS selector to check for.
-   * @param {function} callback Callback with state and args when the selector is matches or not.
+   * @param {Function} callback Callback with state and args when the selector is matches or not.
    */
   const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);

@@ -115,7 +115,7 @@ const UndoManager = (editor: Editor): UndoManager => {
      * be ignored. So a translation can include calls to execCommand or editor.insertContent.
      *
      * @method transact
-     * @param {function} callback Function that gets executed and has dom manipulation logic in it.
+     * @param {Function} callback Function that gets executed and has dom manipulation logic in it.
      * @return {Object} Undo level that got added or null it a level wasn't needed.
      */
     transact: (callback: () => void): UndoLevel => {
@@ -128,7 +128,7 @@ const UndoManager = (editor: Editor): UndoManager => {
      * include calls to execCommand or editor.insertContent.
      *
      * @method ignore
-     * @param {function} callback Function that gets executed and has dom manipulation logic in it.
+     * @param {Function} callback Function that gets executed and has dom manipulation logic in it.
      */
     ignore: (callback: () => void) => {
       Rtc.ignore(editor, locks, callback);
@@ -140,8 +140,8 @@ const UndoManager = (editor: Editor): UndoManager => {
      * undo level that the user doesn't see until they undo.
      *
      * @method extra
-     * @param {function} callback1 Function that does mutation but gets stored as a "hidden" extra undo level.
-     * @param {function} callback2 Function that does mutation but gets displayed to the user.
+     * @param {Function} callback1 Function that does mutation but gets stored as a "hidden" extra undo level.
+     * @param {Function} callback2 Function that does mutation but gets displayed to the user.
      */
     extra: (callback1: () => void, callback2: () => void) => {
       Rtc.extra(editor, undoManager, index, callback1, callback2);

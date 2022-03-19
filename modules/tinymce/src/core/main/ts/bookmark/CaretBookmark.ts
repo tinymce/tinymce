@@ -20,8 +20,8 @@ import * as ArrUtils from '../util/ArrUtils';
  * @static
  * @class tinymce.caret.CaretBookmark
  * @example
- * var bookmark = CaretBookmark.create(rootElm, CaretPosition.before(rootElm.firstChild));
- * var caretPosition = CaretBookmark.resolve(bookmark);
+ * const bookmark = CaretBookmark.create(rootElm, CaretPosition.before(rootElm.firstChild));
+ * const caretPosition = CaretBookmark.resolve(bookmark);
  */
 
 const isText = NodeType.isText;

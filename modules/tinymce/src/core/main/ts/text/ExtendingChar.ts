@@ -4,7 +4,7 @@
  * @private
  * @class tinymce.text.ExtendingChar
  * @example
- * var isExtending = ExtendingChar.isExtendingChar('a');
+ * const isExtending = ExtendingChar.isExtendingChar('a');
  */
 
 // Generated from: http://www.unicode.org/Public/UNIDATA/DerivedCoreProperties.txt

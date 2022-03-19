@@ -20,8 +20,9 @@ interface TextSeeker {
  *
  * @class tinymce.dom.TextSeeker
  * @example
- * var startOfWord = TextSeeker(editor.dom).backwards(startNode, startOffset, function(textNode, offset, text) {
- *   var lastSpaceCharIndex = text.lastIndexOf(' ');
+ * const seeker = tinymce.dom.TextSeeker(editor.dom);
+ * const startOfWord = seeker.backwards(startNode, startOffset, (textNode, offset, text) => {
+ *   const lastSpaceCharIndex = text.lastIndexOf(' ');
  *   if (lastSpaceCharIndex !== -1) {
  *     return lastSpaceCharIndex + 1;
  *   } else {

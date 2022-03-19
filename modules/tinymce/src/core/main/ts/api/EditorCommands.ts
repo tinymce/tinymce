@@ -106,8 +106,8 @@ class EditorCommands {
    * Returns a command specific value, for example the current font size.
    *
    * @method queryCommandValue
-   * @param {string} cmd Command to query value from.
-   * @return {string} Command value, for example the current font size or an empty string (`""`) if the query command is not found.
+   * @param {String} cmd Command to query value from.
+   * @return {String} Command value, for example the current font size or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(command: string): string {
     if (this.editor.quirks.isHidden() || this.editor.removed) {

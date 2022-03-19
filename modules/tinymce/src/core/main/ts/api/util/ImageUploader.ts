@@ -43,7 +43,7 @@ const ImageUploader = (editor: Editor): ImageUploader => {
      *
      * @method upload
      * @param {Array} blobInfos  A BlobInfo array containing the image data to upload. A BlobInfo can be created by calling `editor.editorUpload.blobCache.create()`.
-     * @param {boolean} showNotification (Optional) When set to true, a notification with a progress bar will be shown during image uploads.
+     * @param {Boolean} showNotification (Optional) When set to true, a notification with a progress bar will be shown during image uploads.
      */
     upload: (blobInfos: BlobInfo[], showNotification: boolean = true) =>
       uploader.upload(blobInfos, showNotification ? openNotification(editor) : undefined)

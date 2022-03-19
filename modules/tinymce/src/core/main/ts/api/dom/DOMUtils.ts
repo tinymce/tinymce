@@ -1188,7 +1188,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      *
      * @method getRect
      * @param {Element/String} elm Element object or element ID to get rectangle from.
-     * @return {object} Rectangle for specified element object with x, y, w, h fields.
+     * @return {Object} Rectangle for specified element object with x, y, w, h fields.
      */
     getRect,
 
@@ -1197,7 +1197,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      *
      * @method getSize
      * @param {Element/String} elm Element object or element ID to get rectangle from.
-     * @return {object} Rectangle for specified element object with w, h fields.
+     * @return {Object} Rectangle for specified element object with w, h fields.
      */
     getSize,
 
@@ -1209,7 +1209,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      *
      * @method getParent
      * @param {Node/String} node DOM node to search parents on or ID string.
-     * @param {function} selector Selection function or CSS selector to execute on each node.
+     * @param {Function} selector Selection function or CSS selector to execute on each node.
      * @param {Node} root Optional root element, never go beyond this point.
      * @return {Node} DOM Node or null if it wasn't found.
      */
@@ -1221,7 +1221,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      *
      * @method getParents
      * @param {Node/String} node DOM node to search parents on or ID string.
-     * @param {function} selector Selection function to execute on each node or CSS pattern.
+     * @param {Function} selector Selection function to execute on each node or CSS pattern.
      * @param {Node} root Optional root element, never go beyond this point.
      * @return {Array} Array of nodes or null if it wasn't found.
      */
@@ -1460,7 +1460,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @method getPos
      * @param {Element/String} elm HTML element or element id to get x, y position from.
      * @param {Element} rootElm Optional root element to stop calculations at.
-     * @return {object} Absolute position of the specified element object with x, y fields.
+     * @return {Object} Absolute position of the specified element object with x, y fields.
      */
     getPos,
 
@@ -1712,7 +1712,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      *
      * @method run
      * @param {String/Element/Array} elm ID or DOM element object or array with ids or elements.
-     * @param {function} func Function to execute for each item.
+     * @param {Function} func Function to execute for each item.
      * @param {Object} scope Optional scope to execute the function in.
      * @return {Object/Array} Single object, or an array of objects if multiple input elements were passed in.
      */
@@ -1730,11 +1730,11 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     /**
      * Returns true/false if the specified node is to be considered empty or not.
      *
-     * @example
-     * tinymce.DOM.isEmpty(node, {img: true});
      * @method isEmpty
      * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
      * @return {Boolean} true/false if the node is empty or not.
+     * @example
+     * tinymce.DOM.isEmpty(node, {img: true});
      */
     isEmpty,
 
@@ -1745,7 +1745,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @method createRng
      * @return {DOMRange} DOM Range object.
      * @example
-     * var rng = tinymce.DOM.createRng();
+     * const rng = tinymce.DOM.createRng();
      * alert(rng.startContainer + "," + rng.startOffset);
      */
     createRng,
@@ -1755,7 +1755,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      *
      * @method nodeIndex
      * @param {Node} node Node to look for.
-     * @param {boolean} normalized Optional true/false state if the index is what it would be after a normalization.
+     * @param {Boolean} normalized Optional true/false state if the index is what it would be after a normalization.
      * @return {Number} Index of the specified node.
      */
     nodeIndex: findNodeIndex,
@@ -1780,9 +1780,9 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @param {Element/Document/Window/Array} target Target element to bind events to.
      * handler to or an array of elements/ids/documents.
      * @param {String} name Name of event handler to add, for example: click.
-     * @param {function} func Function to execute when the event occurs.
+     * @param {Function} func Function to execute when the event occurs.
      * @param {Object} scope Optional scope to execute the function in.
-     * @return {function} Function callback handler the same as the one passed in.
+     * @return {Function} Function callback handler the same as the one passed in.
      */
     bind: bind as DOMUtils['bind'],
 
@@ -1792,8 +1792,8 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @method unbind
      * @param {Element/Document/Window/Array} target Target element to unbind events on.
      * @param {String} name Event handler name, for example: "click"
-     * @param {function} func Function to remove.
-     * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
+     * @param {Function} func Function to remove.
+     * @return {Boolean/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements
      * were passed in.
      */
     unbind: unbind as DOMUtils['unbind'],

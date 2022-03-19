@@ -15,13 +15,14 @@ import AstNode from './Node';
 import Schema, { SchemaRegExpMap } from './Schema';
 
 /**
+ * @summary
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
  * sure that the node tree is valid according to the specified schema.
  * So for example: <p>a<p>b</p>c</p> will become <p>a</p><p>b</p><p>c</p>
  *
  * @example
- * var parser = new tinymce.html.DomParser({validate: true}, schema);
- * var rootNode = parser.parse('<h1>content</h1>');
+ * const parser = tinymce.html.DomParser({validate: true}, schema);
+ * const rootNode = parser.parse('<h1>content</h1>');
  *
  * @class tinymce.html.DomParser
  * @version 3.4
@@ -407,15 +408,15 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    * Adds a node filter function to the parser, the parser will collect the specified nodes by name
    * and then execute the callback once it has finished parsing the document.
    *
-   * @example
-   * parser.addNodeFilter('p,h1', function(nodes, name) {
-   *  for (var i = 0; i < nodes.length; i++) {
-   *   console.log(nodes[i].name);
-   *  }
-   * });
    * @method addNodeFilter
    * @param {String} name Comma separated list of nodes to collect.
-   * @param {function} callback Callback function to execute once it has collected nodes.
+   * @param {Function} callback Callback function to execute once it has collected nodes.
+   * @example
+   * parser.addNodeFilter('p,h1', (nodes, name) => {
+   *   for (var i = 0; i < nodes.length; i++) {
+   *     console.log(nodes[i].name);
+   *   }
+   * });
    */
   const addNodeFilter = (name: string, callback: ParserFilterCallback) => {
     each(explode(name), (name) => {
@@ -445,15 +446,15 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    * Adds a attribute filter function to the parser, the parser will collect nodes that has the specified attributes
    * and then execute the callback once it has finished parsing the document.
    *
-   * @example
-   * parser.addAttributeFilter('src,href', function(nodes, name) {
-   *  for (var i = 0; i < nodes.length; i++) {
-   *   console.log(nodes[i].name);
-   *  }
-   * });
    * @method addAttributeFilter
    * @param {String} name Comma separated list of nodes to collect.
-   * @param {function} callback Callback function to execute once it has collected nodes.
+   * @param {Function} callback Callback function to execute once it has collected nodes.
+   * @example
+   * parser.addAttributeFilter('src,href', (nodes, name) => {
+   *   for (let i = 0; i < nodes.length; i++) {
+   *     console.log(nodes[i].name);
+   *   }
+   * });
    */
   const addAttributeFilter = (name: string, callback: ParserFilterCallback) => {
     each(explode(name), (name) => {
@@ -537,12 +538,12 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   /**
    * Parses the specified HTML string into a DOM like node tree and returns the result.
    *
-   * @example
-   * var rootNode = new DomParser({...}).parse('<b>text</b>');
    * @method parse
    * @param {String} html Html string to sax parse.
    * @param {Object} args Optional args object that gets passed to all filter functions.
    * @return {tinymce.html.Node} Root node containing the tree.
+   * @example
+   * const rootNode = tinymce.html.DomParser({...}).parse('<b>text</b>');
    */
   const parse = (html: string, args: ParserArgs = {}): AstNode => {
     const validate = defaultedSettings.validate;

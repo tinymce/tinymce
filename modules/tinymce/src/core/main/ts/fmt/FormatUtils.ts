@@ -54,8 +54,8 @@ const moveStart = (dom: DOMUtils, selection: EditorSelection, rng: Range) => {
  *
  * @private
  * @param {Node} node Node to start at.
- * @param {boolean} next (Optional) Include next or previous node defaults to previous.
- * @param {boolean} inc (Optional) Include the current node in checking. Defaults to false.
+ * @param {Boolean} next (Optional) Include next or previous node defaults to previous.
+ * @param {Boolean} inc (Optional) Include the current node in checking. Defaults to false.
  * @return {Node} Next or previous node or undefined if it wasn't found.
  */
 const getNonWhiteSpaceSibling = (node: Node, next?: boolean, inc?: boolean) => {
@@ -122,7 +122,7 @@ const replaceVars = (value: FormatAttrOrStyleValue, vars?: FormatVars): string =
  * @private
  * @param {String/Node} str1 Node or string to compare.
  * @param {String/Node} str2 Node or string to compare.
- * @return {boolean} True/false if they match.
+ * @return {Boolean} True/false if they match.
  */
 const isEq = (str1, str2) => {
   str1 = str1 || '';

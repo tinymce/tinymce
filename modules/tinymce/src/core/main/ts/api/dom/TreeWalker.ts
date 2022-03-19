@@ -9,10 +9,10 @@ export interface DomTreeWalkerConstructor {
  *
  * @class tinymce.dom.TreeWalker
  * @example
- * var walker = new tinymce.dom.TreeWalker(startNode);
+ * const walker = new tinymce.dom.TreeWalker(startNode);
  *
  * do {
- *     console.log(walker.current());
+ *   console.log(walker.current());
  * } while (walker.next());
  */
 

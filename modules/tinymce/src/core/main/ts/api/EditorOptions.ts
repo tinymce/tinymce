@@ -52,9 +52,9 @@ export interface OptionSpec<T, U> extends BaseOptionSpec {
 }
 
 /**
- * TinyMCE Options API.
+ * TinyMCE Editor Options API.
  *
- * @class tinymce.editor.Options
+ * @class tinymce.EditorOptions
  */
 
 export interface Options {

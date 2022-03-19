@@ -14,11 +14,10 @@ interface HtmlSerializer {
 /**
  * This class is used to serialize down the DOM tree into a string using a Writer instance.
  *
- *
- * @example
- * new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
  * @class tinymce.html.Serializer
  * @version 3.4
+ * @example
+ * tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
  */
 
 const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): HtmlSerializer => {
@@ -30,11 +29,11 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
   /**
    * Serializes the specified node into a string.
    *
-   * @example
-   * new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
    * @method serialize
    * @param {tinymce.html.Node} node Node instance to serialize.
    * @return {String} String with HTML based on DOM tree.
+   * @example
+   * tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
    */
   const serialize = (node: AstNode): string => {
     const validate = settings.validate;

@@ -153,9 +153,9 @@ class EventUtils {
    * @method bind
    * @param {Object} target Target node/window or custom object.
    * @param {String} names Name of the event to bind.
-   * @param {function} callback Callback function to execute when the event occurs.
+   * @param {Function} callback Callback function to execute when the event occurs.
    * @param {Object} scope Scope to call the callback function on, defaults to target.
-   * @return {function} Callback function that got bound.
+   * @return {Function} Callback function that got bound.
    */
   public bind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback: EventUtilsCallback<HTMLElementEventMap[K]>, scope?: any): EventUtilsCallback<HTMLElementEventMap[K]>;
   public bind <T = any>(target: any, names: string, callback: EventUtilsCallback<T>, scope?: any): EventUtilsCallback<T>;
@@ -286,7 +286,7 @@ class EventUtils {
    * @method unbind
    * @param {Object} target Target node/window or custom object.
    * @param {String} names Optional event name to unbind.
-   * @param {function} callback Optional callback function to unbind.
+   * @param {Function} callback Optional callback function to unbind.
    * @return {EventUtils} Event utils instance.
    */
   public unbind <K extends keyof HTMLElementEventMap>(target: any, name: K, callback?: EventUtilsCallback<HTMLElementEventMap[K]>): this;
