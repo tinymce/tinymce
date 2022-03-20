@@ -132,8 +132,6 @@ const Formatter = (editor: Editor): Formatter => {
 
     /**
      * Finds the closest matching format from a set of formats for the current selection.
-     * <br>
-     * <em>Added in TinyMCE 5.6</em>
      *
      * @method closest
      * @param {Array} names Format names to check for.

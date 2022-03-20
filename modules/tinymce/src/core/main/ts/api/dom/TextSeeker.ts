@@ -54,8 +54,6 @@ const TextSeeker = (dom: DOMUtils, isBoundary?: (node: Node) => boolean): TextSe
 
   /**
    * Search backwards through text nodes until a match, boundary, or root node has been found.
-   * <br>
-   * <em>Added in TinyMCE 5.2</em>
    *
    * @method backwards
    * @param {Node} node The node to start searching from.
@@ -71,8 +69,6 @@ const TextSeeker = (dom: DOMUtils, isBoundary?: (node: Node) => boolean): TextSe
 
   /**
    * Search forwards through text nodes until a match, boundary, or root node has been found.
-   * <br>
-   * <em>Added in TinyMCE 5.2</em>
    *
    * @method forwards
    * @param {Node} node The node to start searching from.
