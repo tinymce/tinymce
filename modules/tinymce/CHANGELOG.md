@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
+- The `buttonType` property did not work for dialog footer buttons #TINY-8582
 
 ## 6.0.1 - TBD
 

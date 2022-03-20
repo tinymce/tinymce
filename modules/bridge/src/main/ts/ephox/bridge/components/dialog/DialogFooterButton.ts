@@ -11,6 +11,7 @@ export type DialogFooterToggleMenuItem = DialogToggleMenuItem;
 interface BaseDialogFooterButtonSpec {
   name?: string;
   align?: 'start' | 'end';
+  /** @deprecated use `buttonType: "primary"` instead */
   primary?: boolean;
   enabled?: boolean;
   icon?: string;
