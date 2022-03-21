@@ -37,14 +37,14 @@
  * toolbar, notifications, and dialogs. Can not be set to 'true' when in readonly mode.
  *
  * @method tinymce.editor.ui.setEnabled
- * @param {Boolean} true/false the state in which to set the user interface
+ * @param {Boolean} state The state in which to set the user interface.
  */
 
 /**
- * Determines if the editor user interface is `enabled` (`true`) or not (`false`).
+ * Determines if the editor user interface is `enabled` (`true`) or `disabled` (`false`).
  *
  * @method tinymce.editor.ui.isEnabled
- * @return {Boolean} true/false if the editor user interface is `enabled` (`true`) or not (`false`).
+ * @return {Boolean} true/false if the editor user interface is enabled (`true`) or disabled (`false`).
  */
 
 /**
