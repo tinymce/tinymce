@@ -73,7 +73,7 @@ export interface EventDispatcherConstructor<T extends NativeEventMap> {
  * const eventDispatcher = new EventDispatcher();
  *
  * eventDispatcher.on('click', () => console.log('data'));
- * eventDispatcher.dispatch('click', {data: 123});
+ * eventDispatcher.dispatch('click', { data: 123 });
  */
 
 const nativeEvents = Tools.makeMap(

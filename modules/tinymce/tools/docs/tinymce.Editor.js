@@ -105,7 +105,10 @@
  * @type tinymce.NotificationManager
  * @example
  * // Shows a notification info message.
- * tinymce.activeEditor.notificationManager.open({text: 'Hello world!', type: 'info'});
+ * tinymce.activeEditor.notificationManager.open({
+ *   text: 'Hello world!',
+ *   type: 'info'
+ * });
  */
 
 /**

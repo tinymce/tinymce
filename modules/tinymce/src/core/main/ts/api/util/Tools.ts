@@ -247,12 +247,12 @@ const Tools: Tools = {
    * @param {Object} s Optional scope to execute the callback in.
    * @example
    * // Iterate an array
-   * tinymce.each([1,2,3], (v, i) => {
+   * tinymce.each([ 1,2,3 ], (v, i) => {
    *   console.debug("Value: " + v + ", Index: " + i);
    * });
    *
    * // Iterate an object
-   * tinymce.each({a: 1, b: 2, c: 3], (v, k) => {
+   * tinymce.each({ a: 1, b: 2, c: 3 }, (v, k) => {
    *   console.debug("Value: " + v + ", Key: " + k);
    * });
    */
@@ -279,7 +279,7 @@ const Tools: Tools = {
    * @return {Array} New array with values imported and filtered based in input.
    * @example
    * // Filter out some items, this will return an array with 4 and 5
-   * const items = tinymce.grep([1,2,3,4,5], (v) => v > 3);
+   * const items = tinymce.grep([ 1,2,3,4,5 ], (v) => v > 3);
    */
   grep: ArrUtils.filter,
 

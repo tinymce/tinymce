@@ -490,7 +490,7 @@ class AstNode {
    * @param {Function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    * @example
-   * node.isEmpty({img: true});
+   * node.isEmpty({ img: true });
    */
   public isEmpty(elements: SchemaMap, whitespace: SchemaMap = {}, predicate?: (node: AstNode) => boolean): boolean {
     const self = this;

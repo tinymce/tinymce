@@ -832,12 +832,12 @@ const Schema = (settings?: SchemaSettings): Schema => {
   /**
    * Name/value map object with valid parents and children to those parents.
    *
-   * @example
-   * children = {
-   *    div:{p:{}, h1:{}}
-   * };
    * @field children
    * @type Object
+   * @example
+   * children = {
+   *    div: { p:{}, h1:{} }
+   * };
    */
 
   /**

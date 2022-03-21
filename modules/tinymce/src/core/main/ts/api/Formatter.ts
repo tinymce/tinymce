@@ -20,7 +20,7 @@ import Editor from './Editor';
  * @example
  * tinymce.activeEditor.formatter.register('mycustomformat', {
  *   inline: 'span',
- *   styles: {color: '#ff0000'}
+ *   styles: { color: '#ff0000' }
  * });
  *
  * tinymce.activeEditor.formatter.apply('mycustomformat');

@@ -8,7 +8,7 @@ import Entities from './Entities';
  * @class tinymce.html.Writer
  * @version 3.4
  * @example
- * const writer = tinymce.html.Writer({indent: true});
+ * const writer = tinymce.html.Writer({ indent: true });
  * writer.start('node', { attr: 'value });
  * writer.end('node');
  * console.log(writer.getContent());

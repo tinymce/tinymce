@@ -1300,7 +1300,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * were passed in.
      * @example
      * // Adds a new paragraph to the end of the active editor
-     * tinymce.activeEditor.dom.add(tinymce.activeEditor.getBody(), 'p', {title: 'my title'}, 'Some content');
+     * tinymce.activeEditor.dom.add(tinymce.activeEditor.getBody(), 'p', { title: 'my title' }, 'Some content');
      */
     add,
 
@@ -1314,7 +1314,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @return {Element} HTML DOM node element that got created.
      * @example
      * // Adds an element where the caret/selection is in the active editor
-     * var el = tinymce.activeEditor.dom.create('div', {id: 'test', 'class': 'myclass'}, 'some content');
+     * var el = tinymce.activeEditor.dom.create('div', { id: 'test', 'class': 'myclass' }, 'some content');
      * tinymce.activeEditor.selection.setNode(el);
      */
     create,
@@ -1329,7 +1329,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @return {String} String with new HTML element, for example: <a href="#">test</a>.
      * @example
      * // Creates a html chunk and inserts it at the current selection/caret location
-     * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', {href: 'test.html'}, 'some line'));
+     * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', { href: 'test.html' }, 'some line'));
      */
     createHTML,
 
@@ -1396,10 +1396,10 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @param {Object} styles Name/Value collection of style items to add to the element(s).
      * @example
      * // Sets styles on all paragraphs in the currently active editor
-     * tinymce.activeEditor.dom.setStyles(tinymce.activeEditor.dom.select('p'), {'background-color': 'red', 'color': 'green'});
+     * tinymce.activeEditor.dom.setStyles(tinymce.activeEditor.dom.select('p'), { 'background-color': 'red', 'color': 'green' });
      *
      * // Sets styles to an element by id in the current document
-     * tinymce.DOM.setStyles('mydiv', {'background-color': 'red', 'color': 'green'});
+     * tinymce.DOM.setStyles('mydiv', { 'background-color': 'red', 'color': 'green' });
      */
     setStyles,
 
@@ -1436,10 +1436,10 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @param {Object} attrs Name/Value collection of attribute items to add to the element(s).
      * @example
      * // Sets class and title attributes on all paragraphs in the active editor
-     * tinymce.activeEditor.dom.setAttribs(tinymce.activeEditor.dom.select('p'), {'class': 'myclass', title: 'some title'});
+     * tinymce.activeEditor.dom.setAttribs(tinymce.activeEditor.dom.select('p'), { 'class': 'myclass', title: 'some title' });
      *
      * // Sets class and title attributes on a specific element in the current page
-     * tinymce.DOM.setAttribs('mydiv', {'class': 'myclass', title: 'some title'});
+     * tinymce.DOM.setAttribs('mydiv', { 'class': 'myclass', title: 'some title' });
      */
     setAttribs,
 
@@ -1734,7 +1734,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
      * @return {Boolean} true/false if the node is empty or not.
      * @example
-     * tinymce.DOM.isEmpty(node, {img: true});
+     * tinymce.DOM.isEmpty(node, { img: true });
      */
     isEmpty,
 

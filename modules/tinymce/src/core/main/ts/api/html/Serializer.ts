@@ -17,7 +17,7 @@ interface HtmlSerializer {
  * @class tinymce.html.Serializer
  * @version 3.4
  * @example
- * tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
+ * tinymce.html.Serializer().serialize(tinymce.html.DomParser().parse('<p>text</p>'));
  */
 
 const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): HtmlSerializer => {
@@ -33,7 +33,7 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
    * @param {tinymce.html.Node} node Node instance to serialize.
    * @return {String} String with HTML based on DOM tree.
    * @example
-   * tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse('<p>text</p>'));
+   * tinymce.html.Serializer().serialize(tinymce.html.DomParser().parse('<p>text</p>'));
    */
   const serialize = (node: AstNode): string => {
     const validate = settings.validate;

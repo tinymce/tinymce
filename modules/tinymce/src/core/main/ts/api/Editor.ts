@@ -56,7 +56,7 @@ import WindowManager from './WindowManager';
  * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');
  *
  * // Gets the current editors selection as text
- * tinymce.activeEditor.selection.getContent({format: 'text'});
+ * tinymce.activeEditor.selection.getContent({ format: 'text' });
  *
  * // Creates a new editor instance
  * const ed = new tinymce.Editor('textareaid', {
@@ -456,7 +456,7 @@ class Editor implements EditorObservable {
    *   setup: (ed) => {
    *     // Register example command
    *     ed.addCommand('mycommand', (ui, v) => {
-   *       ed.windowManager.alert('Hello world!! Selection: ' + ed.selection.getContent({format: 'text'}));
+   *       ed.windowManager.alert('Hello world!! Selection: ' + ed.selection.getContent({ format: 'text' }));
    *     });
    *   }
    * });
@@ -787,7 +787,7 @@ class Editor implements EditorObservable {
    * tinymce.get('my_editor').setContent(data);
    *
    * // Sets the content of the activeEditor editor using the specified format
-   * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
+   * tinymce.activeEditor.setContent('<p>Some html</p>', { format: 'html' });
    */
   public setContent(content: string, args?: Partial<EditorContent.SetContentArgs>): string;
   public setContent(content: AstNode, args?: Partial<EditorContent.SetContentArgs>): AstNode;
@@ -808,7 +808,7 @@ class Editor implements EditorObservable {
    * console.debug(tinymce.activeEditor.getContent());
    *
    * // Get the contents of the currently active editor as plain text
-   * tinymce.activeEditor.getContent({format: 'text'});
+   * tinymce.activeEditor.getContent({ format: 'text' });
    *
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()

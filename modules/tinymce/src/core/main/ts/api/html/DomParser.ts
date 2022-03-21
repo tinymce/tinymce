@@ -21,7 +21,7 @@ import Schema, { SchemaRegExpMap } from './Schema';
  * So for example: <p>a<p>b</p>c</p> will become <p>a</p><p>b</p><p>c</p>
  *
  * @example
- * const parser = tinymce.html.DomParser({validate: true}, schema);
+ * const parser = tinymce.html.DomParser({ validate: true }, schema);
  * const rootNode = parser.parse('<h1>content</h1>');
  *
  * @class tinymce.html.DomParser

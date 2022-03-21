@@ -144,7 +144,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * alert(tinymce.activeEditor.selection.getContent());
    *
    * // Alerts the currently selected contents as plain text
-   * alert(tinymce.activeEditor.selection.getContent({format: 'text'}));
+   * alert(tinymce.activeEditor.selection.getContent({ format: 'text' }));
    */
   const getContent = (args?: Partial<GetSelectionContentArgs>): any => GetSelectionContent.getContent(editor, args);
 
@@ -426,7 +426,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @return {Element} Returns the element that got passed in.
    * @example
    * // Inserts a DOM node at current selection/caret location
-   * tinymce.activeEditor.selection.setNode(tinymce.activeEditor.dom.create('img', {src: 'some.gif', title: 'some title'}));
+   * tinymce.activeEditor.selection.setNode(tinymce.activeEditor.dom.create('img', { src: 'some.gif', title: 'some title' }));
    */
   const setNode = (elm: Element): Element => {
     setContent(dom.getOuterHTML(elm));
