@@ -91,12 +91,12 @@ const Observable: Observable<any> = {
    *
    * @method on
    * @param {String} name Event name or space separated list of events to bind.
-   * @param {callback} callback Callback to be executed when the event occurs.
+   * @param {Function} callback Callback to be executed when the event occurs.
    * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
-   * instance.on('event', function(e) {
-   *     // Callback logic
+   * instance.on('event', (e) => {
+   *   // Callback logic
    * });
    */
   on(name, callback, prepend?) {
@@ -109,7 +109,7 @@ const Observable: Observable<any> = {
    *
    * @method off
    * @param {String?} name Name of the event to unbind.
-   * @param {callback?} callback Callback to unbind.
+   * @param {Function?} callback Callback to unbind.
    * @return {Object} Current class instance.
    * @example
    * // Unbind specific callback
@@ -131,7 +131,7 @@ const Observable: Observable<any> = {
    *
    * @method once
    * @param {String} name Name of the event to bind.
-   * @param {callback} callback Callback to bind only once.
+   * @param {Function} callback Callback to bind only once.
    * @return {Object} Current class instance.
    */
   once(name, callback) {

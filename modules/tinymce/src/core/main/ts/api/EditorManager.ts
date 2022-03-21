@@ -318,9 +318,9 @@ const EditorManager: EditorManager = {
    *
    * // Initializes a editor instance using the shorter version and with a promise
    * tinymce.init({
-   *    some_settings : 'some value'
-   * }).then(function(editors) {
-   *    ...
+   *   some_settings : 'some value'
+   * }).then((editors) => {
+   *   ...
    * });
    */
   init(options: RawEditorOptions) {
@@ -448,18 +448,18 @@ const EditorManager: EditorManager = {
    * @return {tinymce.Editor/Array} Editor instance or an array of editor instances.
    * @example
    * // Adds an onclick event to an editor by id
-   * tinymce.get('mytextbox').on('click', function(e) {
-   *    ed.windowManager.alert('Hello world!');
+   * tinymce.get('mytextbox').on('click', (e) => {
+   *   ed.windowManager.alert('Hello world!');
    * });
    *
    * // Adds an onclick event to an editor by index
-   * tinymce.get(0).on('click', function(e) {
-   *    ed.windowManager.alert('Hello world!');
+   * tinymce.get(0).on('click', (e) => {
+   *   ed.windowManager.alert('Hello world!');
    * });
    *
    * // Adds an onclick event to an editor by id (longer version)
-   * tinymce.EditorManager.get('mytextbox').on('click', function(e) {
-   *    ed.windowManager.alert('Hello world!');
+   * tinymce.EditorManager.get('mytextbox').on('click', (e) => {
+   *   ed.windowManager.alert('Hello world!');
    * });
    */
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions

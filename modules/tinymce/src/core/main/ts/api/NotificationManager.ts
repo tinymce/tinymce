@@ -45,8 +45,8 @@ interface NotificationManager {
  * @example
  * // Opens a new notification of type "error" with text "An error occurred."
  * tinymce.activeEditor.notificationManager.open({
- *    text: 'An error occurred.',
- *    type: 'error'
+ *   text: 'An error occurred.',
+ *   type: 'error'
  * });
  */
 

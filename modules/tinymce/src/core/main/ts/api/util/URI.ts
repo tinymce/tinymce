@@ -234,7 +234,7 @@ class URI {
    * Sets the internal path part of the URI.
    *
    * @method setPath
-   * @param {string} path Path string to set.
+   * @param {String} path Path string to set.
    */
   public setPath(path: string) {
     const pathMatch = /^(.*?)\/?(\w+)?$/.exec(path);
@@ -257,7 +257,7 @@ class URI {
    * @return {String} Relative URI from the point specified in the current URI instance.
    * @example
    * // Converts an absolute URL to an relative URL url will be somedir/somefile.htm
-   * var url = new tinymce.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
+   * const url = new tinymce.util.URI('http://www.site.com/dir/').toRelative('http://www.site.com/dir/somedir/somefile.htm');
    */
   public toRelative(uri: string): string {
     let output;
@@ -305,7 +305,7 @@ class URI {
    * @return {String} Absolute URI from the point specified in the current URI instance.
    * @example
    * // Converts an relative URL to an absolute URL url will be http://www.site.com/dir/somedir/somefile.htm
-   * var url = new tinymce.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
+   * const url = new tinymce.util.URI('http://www.site.com/dir/').toAbsolute('somedir/somefile.htm');
    */
   public toAbsolute(uri: string, noHost?: boolean): string {
     const absoluteUri = new URI(uri, { base_uri: this });

@@ -75,8 +75,8 @@
  * @property initialized
  * @type Boolean
  * @example
- * function isEditorInitialized(editor) {
- *     return editor && editor.initialized;
+ * const isEditorInitialized = (editor) => {
+ *   return editor && editor.initialized;
  * }
  */
 
@@ -90,13 +90,11 @@
  * tinymce.activeEditor.windowManager.alert('Hello world!');
  *
  * // Opens a new dialog with the file.htm file and the size 320x240
- * // It also adds a custom parameter this can be retrieved by using tinyMCEPopup.getWindowArg inside the dialog.
- * tinymce.activeEditor.windowManager.open({
- *    url: 'file.htm',
- *    width: 320,
- *    height: 240
- * }, {
- *    custom_param: 1
+ * tinymce.activeEditor.windowManager.openUrl({
+ *   title: 'Custom Dialog',
+ *   url: 'file.htm',
+ *   width: 320,
+ *   height: 240
  * });
  */
 
@@ -107,7 +105,10 @@
  * @type tinymce.NotificationManager
  * @example
  * // Shows a notification info message.
- * tinymce.activeEditor.notificationManager.open({text: 'Hello world!', type: 'info'});
+ * tinymce.activeEditor.notificationManager.open({
+ *   text: 'Hello world!',
+ *   type: 'info'
+ * });
  */
 
 /**

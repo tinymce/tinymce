@@ -34,7 +34,7 @@ const BookmarkManager = (selection: EditorSelection): BookmarkManager => {
      * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.
      * @example
      * // Stores a bookmark of the current selection
-     * var bm = tinymce.activeEditor.selection.getBookmark();
+     * const bm = tinymce.activeEditor.selection.getBookmark();
      *
      * tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + 'Some new content');
      *
@@ -50,7 +50,7 @@ const BookmarkManager = (selection: EditorSelection): BookmarkManager => {
      * @param {Object} bookmark Bookmark to restore selection from.
      * @example
      * // Stores a bookmark of the current selection
-     * var bm = tinymce.activeEditor.selection.getBookmark();
+     * const bm = tinymce.activeEditor.selection.getBookmark();
      *
      * tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + 'Some new content');
      *

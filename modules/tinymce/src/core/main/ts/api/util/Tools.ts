@@ -58,7 +58,7 @@ const trim = (str) => {
  *
  * @method is
  * @param {Object} obj Object to check type of.
- * @param {string} type Optional type to check for.
+ * @param {String} type Optional type to check for.
  * @return {Boolean} true/false if the object is of the specified type.
  */
 const is = (obj: any, type: string) => {
@@ -134,7 +134,7 @@ const extend = (obj, ...exts: any[]) => {
  *
  * @method walk
  * @param {Object} o Object tree to walk though.
- * @param {function} f Function to call for each item.
+ * @param {Function} f Function to call for each item.
  * @param {String} n Optional name of collection inside the objects to walk for example childNodes.
  * @param {String} s Optional scope to execute the function in.
  */
@@ -165,7 +165,7 @@ const walk = function (o, f, n?, s?) {
  * @return {Object} Last object in path or null if it couldn't be resolved.
  * @example
  * // Resolve a path into an object reference
- * var obj = tinymce.resolve('a.b.c.d');
+ * const obj = tinymce.resolve('a.b.c.d');
  */
 const resolve = (n, o?) => {
   let i, l;
@@ -188,11 +188,11 @@ const resolve = (n, o?) => {
  * Splits a string but removes the whitespace before and after each value.
  *
  * @method explode
- * @param {string} s String to split.
- * @param {string} d Delimiter to split by.
+ * @param {String} s String to split.
+ * @param {String} d Delimiter to split by.
  * @example
  * // Split a string into an array with a,b,c
- * var arr = tinymce.explode('a, b,   c');
+ * const arr = tinymce.explode('a, b,   c');
  */
 const explode = (s, d?) => {
   if (!s || is(s, 'array')) {
@@ -220,7 +220,7 @@ const Tools: Tools = {
    *
    * @method isArray
    * @param {Object} obj Object to check.
-   * @return {boolean} true/false state if the object is an array or not.
+   * @return {Boolean} true/false state if the object is an array or not.
    */
   isArray: ArrUtils.isArray,
 
@@ -243,17 +243,17 @@ const Tools: Tools = {
    *
    * @method each
    * @param {Object} o Collection to iterate.
-   * @param {function} cb Callback function to execute for each item.
+   * @param {Function} cb Callback function to execute for each item.
    * @param {Object} s Optional scope to execute the callback in.
    * @example
    * // Iterate an array
-   * tinymce.each([1,2,3], function(v, i) {
-   *     console.debug("Value: " + v + ", Index: " + i);
+   * tinymce.each([ 1,2,3 ], (v, i) => {
+   *   console.debug("Value: " + v + ", Index: " + i);
    * });
    *
    * // Iterate an object
-   * tinymce.each({a: 1, b: 2, c: 3], function(v, k) {
-   *     console.debug("Value: " + v + ", Key: " + k);
+   * tinymce.each({ a: 1, b: 2, c: 3 }, (v, k) => {
+   *   console.debug("Value: " + v + ", Key: " + k);
    * });
    */
   each: ArrUtils.each,
@@ -264,7 +264,7 @@ const Tools: Tools = {
    *
    * @method map
    * @param {Array} array Array of items to iterate.
-   * @param {function} callback Function to call for each item. It's return value will be the new value.
+   * @param {Function} callback Function to call for each item. It's return value will be the new value.
    * @return {Array} Array with new values based on function return values.
    */
   map: ArrUtils.map,
@@ -275,11 +275,11 @@ const Tools: Tools = {
    *
    * @method grep
    * @param {Array} a Array of items to loop though.
-   * @param {function} f Function to call for each item. Include/exclude depends on it's return value.
+   * @param {Function} f Function to call for each item. Include/exclude depends on it's return value.
    * @return {Array} New array with values imported and filtered based in input.
    * @example
    * // Filter out some items, this will return an array with 4 and 5
-   * var items = tinymce.grep([1,2,3,4,5], function(v) {return v > 3;});
+   * const items = tinymce.grep([ 1,2,3,4,5 ], (v) => v > 3);
    */
   grep: ArrUtils.filter,
 

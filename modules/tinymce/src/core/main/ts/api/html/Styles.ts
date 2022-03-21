@@ -1,20 +1,19 @@
 /**
  * This class is used to parse CSS styles it also compresses styles to reduce the output size.
  *
+ * @class tinymce.html.Styles
+ * @version 3.4
  * @example
- * var Styles = tinymce.html.Styles({
- *    url_converter: function(url) {
- *       return url;
- *    }
+ * const Styles = tinymce.html.Styles({
+ *   url_converter: (url) => {
+ *     return url;
+ *   }
  * });
  *
  * styles = Styles.parse('border: 1px solid red');
  * styles.color = 'red';
  *
- * console.log(new tinymce.html.Styles().serialize(styles));
- *
- * @class tinymce.html.Styles
- * @version 3.4
+ * console.log(tinymce.html.Styles().serialize(styles));
  */
 
 import { Obj, Unicode } from '@ephox/katamari';
