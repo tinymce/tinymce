@@ -32,12 +32,12 @@
  */
 
 /**
- * Sets the state of editor user interface as `enabled` (`true`) or not (`false`).
+ * Sets the state of editor user interface as `enabled` (`true`) or `disabled` (`false`).
  * This method affects all user interface elements, including: menu bar,
  * toolbar, notifications, and dialogs. Can not be set to 'true' when in readonly mode.
  *
  * @method tinymce.editor.ui.setEnabled
- * @parameters {Boolean} true/false the state in which to set the user interface
+ * @param {Boolean} true/false the state in which to set the user interface
  */
 
 /**
