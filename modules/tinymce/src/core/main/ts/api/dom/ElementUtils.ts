@@ -25,7 +25,7 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
    * @method compare
    * @param {Node} node1 First node to compare with.
    * @param {Node} node2 Second node to compare with.
-   * @return {boolean} True/false if the nodes are the same or not.
+   * @return {Boolean} True/false if the nodes are the same or not.
    */
   const compare = (node1, node2) => {
     // Not the same name
@@ -61,7 +61,7 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
      * @private
      * @param {Object} obj1 First object to compare.
      * @param {Object} obj2 Second object to compare.
-     * @return {boolean} True/false if the objects matches or not.
+     * @return {Boolean} True/false if the objects matches or not.
      */
     const compareObjects = (obj1, obj2) => {
       let value, name;

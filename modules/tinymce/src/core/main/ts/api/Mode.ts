@@ -5,7 +5,7 @@ import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBl
 import Editor from './Editor';
 
 /**
- * TinyMCE 5 Mode API.
+ * TinyMCE Editor Mode API.
  *
  * @class tinymce.EditorMode
  */
@@ -63,7 +63,7 @@ export interface EditorModeApi {
    * Flags whether the editor should be made readonly while this mode is active.
    *
    * @property editorReadOnly
-   * @type boolean
+   * @type Boolean
    */
   editorReadOnly: boolean;
 }

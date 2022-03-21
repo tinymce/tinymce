@@ -305,7 +305,7 @@ const EditorManager: EditorManager = {
   /**
    * Initializes a set of editors. This method will create editors based on various settings.
    * <br /><br />
-   * For information on basic usage of <code>init</code>, see: <a href="https://www.tiny.cloud/docs/tinymce/6/basic-setup.html">Basic setup</a>.
+   * For information on basic usage of <code>init</code>, see: <a href="https://www.tiny.cloud/docs/tinymce/6/basic-setup/">Basic setup</a>.
    *
    * @method init
    * @param {Object} options Options object to be passed to each editor instance.
@@ -318,9 +318,9 @@ const EditorManager: EditorManager = {
    *
    * // Initializes a editor instance using the shorter version and with a promise
    * tinymce.init({
-   *    some_settings : 'some value'
-   * }).then(function(editors) {
-   *    ...
+   *   some_settings : 'some value'
+   * }).then((editors) => {
+   *   ...
    * });
    */
   init(options: RawEditorOptions) {
@@ -360,7 +360,7 @@ const EditorManager: EditorManager = {
       if (Env.browser.isIE() || Env.browser.isEdge()) {
         ErrorReporter.initError(
           'TinyMCE does not support the browser you are using. For a list of supported' +
-          ' browsers please see: https://www.tiny.cloud/docs/tinymce/6/support.html#supportedwebbrowsers'
+          ' browsers please see: https://www.tiny.cloud/docs/tinymce/6/support/#supportedwebbrowsers'
         );
         return [];
       } else if (isQuirksMode) {
@@ -448,18 +448,18 @@ const EditorManager: EditorManager = {
    * @return {tinymce.Editor/Array} Editor instance or an array of editor instances.
    * @example
    * // Adds an onclick event to an editor by id
-   * tinymce.get('mytextbox').on('click', function(e) {
-   *    ed.windowManager.alert('Hello world!');
+   * tinymce.get('mytextbox').on('click', (e) => {
+   *   ed.windowManager.alert('Hello world!');
    * });
    *
    * // Adds an onclick event to an editor by index
-   * tinymce.get(0).on('click', function(e) {
-   *    ed.windowManager.alert('Hello world!');
+   * tinymce.get(0).on('click', (e) => {
+   *   ed.windowManager.alert('Hello world!');
    * });
    *
    * // Adds an onclick event to an editor by id (longer version)
-   * tinymce.EditorManager.get('mytextbox').on('click', function(e) {
-   *    ed.windowManager.alert('Hello world!');
+   * tinymce.EditorManager.get('mytextbox').on('click', (e) => {
+   *   ed.windowManager.alert('Hello world!');
    * });
    */
   // eslint-disable-next-line prefer-arrow/prefer-arrow-functions

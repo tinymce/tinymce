@@ -56,11 +56,11 @@ import WindowManager from './WindowManager';
  * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');
  *
  * // Gets the current editors selection as text
- * tinymce.activeEditor.selection.getContent({format: 'text'});
+ * tinymce.activeEditor.selection.getContent({ format: 'text' });
  *
  * // Creates a new editor instance
- * var ed = new tinymce.Editor('textareaid', {
- *     some_setting: 1
+ * const ed = new tinymce.Editor('textareaid', {
+ *   some_setting: 1
  * }, tinymce.EditorManager);
  *
  * ed.render();
@@ -169,7 +169,7 @@ class Editor implements EditorObservable {
    * Editor options API
    *
    * @property options
-   * @type tinymce.options.Options
+   * @type tinymce.EditorOptions
    */
   public options: EditorOptions;
 
@@ -381,10 +381,10 @@ class Editor implements EditorObservable {
    * @deprecated Use editor.options.get instead
    * @example
    * // Returns a specific config value from the currently active editor
-   * var someval = tinymce.activeEditor.getParam('myvalue');
+   * const someval = tinymce.activeEditor.getParam('myvalue');
    *
    * // Returns a specific config value from a specific editor instance by id
-   * var someval2 = tinymce.get('my_editor').getParam('myvalue');
+   * const someval2 = tinymce.get('my_editor').getParam('myvalue');
    */
   public getParam <K extends BuiltInOptionType>(name: string, defaultVal: BuiltInOptionTypeMap[K], type: K): BuiltInOptionTypeMap[K];
   public getParam <K extends keyof NormalizedEditorOptions>(name: K, defaultVal?: NormalizedEditorOptions[K], type?: BuiltInOptionType): NormalizedEditorOptions[K];
@@ -407,8 +407,6 @@ class Editor implements EditorObservable {
 
   /**
    * Checks that the plugin is in the editor configuration and can optionally check if the plugin has been loaded.
-   * <br>
-   * <em>Added in TinyMCE 5.5</em>
    *
    * @method hasPlugin
    * @param {String} name The name of the plugin, as specified for the TinyMCE `plugins` option.
@@ -446,19 +444,19 @@ class Editor implements EditorObservable {
    *
    * @method addCommand
    * @param {String} name Command name to add/override.
-   * @param {addCommandCallback} callback Function to execute when the command occurs.
+   * @param {Function} callback Function to execute when the command occurs.
    * @param {Object} scope Optional scope to execute the function in.
    * @example
    * // Adds a custom command that later can be executed using execCommand
    * tinymce.init({
-   *    ...
+   *  ...
    *
-   *    setup: function(ed) {
-   *       // Register example command
-   *       ed.addCommand('mycommand', function(ui, v) {
-   *          ed.windowManager.alert('Hello world!! Selection: ' + ed.selection.getContent({format: 'text'}));
-   *       });
-   *    }
+   *   setup: (ed) => {
+   *     // Register example command
+   *     ed.addCommand('mycommand', (ui, v) => {
+   *       ed.windowManager.alert('Hello world!! Selection: ' + ed.selection.getContent({ format: 'text' }));
+   *     });
+   *   }
    * });
    */
   public addCommand(name: string, callback: EditorCommandCallback, scope?: object) {
@@ -479,7 +477,7 @@ class Editor implements EditorObservable {
    *
    * @method addQueryStateHandler
    * @param {String} name Command name to add/override.
-   * @param {addQueryStateHandlerCallback} callback Function to execute when the command state retrieval occurs.
+   * @param {Function} callback Function to execute when the command state retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
   public addQueryStateHandler(name: string, callback: () => boolean, scope?: any) {
@@ -498,7 +496,7 @@ class Editor implements EditorObservable {
    *
    * @method addQueryValueHandler
    * @param {String} name Command name to add/override.
-   * @param {addQueryValueHandlerCallback} callback Function to execute when the command value retrieval occurs.
+   * @param {Function} callback Function to execute when the command value retrieval occurs.
    * @param {Object} scope Optional scope to execute the function in.
    */
   public addQueryValueHandler(name: string, callback: () => string, scope?: any) {
@@ -521,21 +519,19 @@ class Editor implements EditorObservable {
    * @param {Object} scope Optional scope to execute the function in.
    * @return {Boolean} true/false state if the shortcut was added or not.
    * @example
-   * editor.addShortcut('ctrl+a', "description of the shortcut", function() {});
-   * editor.addShortcut('ctrl+alt+a', "description of the shortcut", function() {});
+   * editor.addShortcut('ctrl+a', 'description of the shortcut', () => {});
+   * editor.addShortcut('ctrl+alt+a', 'description of the shortcut', () => {});
    * // "meta" maps to Command on Mac and Ctrl on PC
-   * editor.addShortcut('meta+a', "description of the shortcut", function() {});
+   * editor.addShortcut('meta+a', 'description of the shortcut', () => {});
    * // "access" maps to Control+Option on Mac and shift+alt on PC
-   * editor.addShortcut('access+a', "description of the shortcut", function() {});
+   * editor.addShortcut('access+a', 'description of the shortcut', () => {});
    *
-   * editor.addShortcut(
-   *  'meta+access+c', 'Opens the code editor dialog.', function () {
-   *    editor.execCommand('mceCodeEditor');
+   * editor.addShortcut('meta+access+c', 'Opens the code editor dialog.', () => {
+   *   editor.execCommand('mceCodeEditor');
    * });
    *
-   * editor.addShortcut(
-   *  'meta+shift+32', 'Inserts "Hello, World!" for meta+shift+space', function () {
-   *    editor.execCommand('mceInsertContent', false, 'Hello, World!');
+   * editor.addShortcut('meta+shift+32', 'Inserts "Hello, World!" for meta+shift+space', () => {
+   *   editor.execCommand('mceInsertContent', false, 'Hello, World!');
    * });
    */
   public addShortcut(pattern: string, desc: string, cmdFunc: string | [string, boolean, any] | (() => void), scope?: any) {
@@ -549,7 +545,7 @@ class Editor implements EditorObservable {
    * @method execCommand
    * @param {String} cmd Command name to execute, for example mceLink or Bold.
    * @param {Boolean} ui Specifies if a UI (dialog) should be presented or not.
-   * @param {{Object/Array/String/Number/Boolean} value Optional command value, this can be anything.
+   * @param {Object/Array/String/Number/Boolean} value Optional command value, this can be anything.
    * @param {Object} args Optional arguments object.
    * @return {Boolean} true or false if the command was supported or not.
    */
@@ -561,7 +557,7 @@ class Editor implements EditorObservable {
    * Returns a command specific state, for example if bold is enabled or not.
    *
    * @method queryCommandState
-   * @param {string} cmd Command to query state from.
+   * @param {String} cmd Command to query state from.
    * @return {Boolean} Command specific state, for example if bold is enabled or not.
    */
   public queryCommandState(cmd: string): boolean {
@@ -572,8 +568,8 @@ class Editor implements EditorObservable {
    * Returns a command specific value, for example the current font size.
    *
    * @method queryCommandValue
-   * @param {string} cmd Command to query value from.
-   * @return {string} Command value, for example the current font size or an empty string (`""`) if the query command is not found.
+   * @param {String} cmd Command to query value from.
+   * @return {String} Command value, for example the current font size or an empty string (`""`) if the query command is not found.
    */
   public queryCommandValue(cmd: string): string {
     return this.editorCommands.queryCommandValue(cmd);
@@ -789,7 +785,7 @@ class Editor implements EditorObservable {
    * tinymce.get('my_editor').setContent(data);
    *
    * // Sets the content of the activeEditor editor using the specified format
-   * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
+   * tinymce.activeEditor.setContent('<p>Some html</p>', { format: 'html' });
    */
   public setContent(content: string, args?: Partial<EditorContent.SetContentArgs>): string;
   public setContent(content: AstNode, args?: Partial<EditorContent.SetContentArgs>): AstNode;
@@ -810,7 +806,7 @@ class Editor implements EditorObservable {
    * console.debug(tinymce.activeEditor.getContent());
    *
    * // Get the contents of the currently active editor as plain text
-   * tinymce.activeEditor.getContent({format: 'text'});
+   * tinymce.activeEditor.getContent({ format: 'text' });
    *
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()
@@ -869,8 +865,9 @@ class Editor implements EditorObservable {
    * @method isDirty
    * @return {Boolean} True/false if the editor is dirty or not. It will get dirty if the user has made modifications to the contents.
    * @example
-   * if (tinymce.activeEditor.isDirty())
-   *     alert("You must save your contents.");
+   * if (tinymce.activeEditor.isDirty()) {
+   *   alert("You must save your contents.");
+   * }
    */
   public isDirty() {
     return !this.isNotDirty;
@@ -883,13 +880,13 @@ class Editor implements EditorObservable {
    * @method setDirty
    * @param {Boolean} state True/false if the editor is considered dirty.
    * @example
-   * function ajaxSave() {
-   *     var editor = tinymce.get('elm1');
+   * const ajaxSave = () => {
+   *   const editor = tinymce.get('elm1');
    *
-   *     // Save contents using some XHR call
-   *     alert(editor.getContent());
+   *   // Save contents using some XHR call
+   *   alert(editor.getContent());
    *
-   *     editor.setDirty(false); // Force not dirty state
+   *   editor.setDirty(false); // Force not dirty state
    * }
    */
   public setDirty(state: boolean) {
@@ -1004,10 +1001,10 @@ class Editor implements EditorObservable {
    * manipulation functions.
    *
    * @method convertURL
-   * @param {string} url URL to convert.
-   * @param {string} name Attribute name src, href etc.
-   * @param {string/HTMLElement} elm Tag name or HTML DOM element depending on HTML or DOM insert.
-   * @return {string} Converted URL string.
+   * @param {String} url URL to convert.
+   * @param {String} name Attribute name src, href etc.
+   * @param {String/HTMLElement} elm Tag name or HTML DOM element depending on HTML or DOM insert.
+   * @return {String} Converted URL string.
    */
   public convertURL(url: string, name: string, elm?): string {
     const self = this, getOption = self.options.get;

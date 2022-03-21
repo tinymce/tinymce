@@ -3,16 +3,15 @@ import Tools from '../util/Tools';
 import Entities from './Entities';
 
 /**
- * This class is used to write HTML tags out it can be used with the Serializer or the SaxParser.
- *
- * @class tinymce.html.Writer
- * @example
- * var writer = new tinymce.html.Writer({indent: true});
- * var parser = new tinymce.html.SaxParser(writer).parse('<p><br></p>');
- * console.log(writer.getContent());
+ * This class is used to write HTML tags out it can be used with the Serializer.
  *
  * @class tinymce.html.Writer
  * @version 3.4
+ * @example
+ * const writer = tinymce.html.Writer({ indent: true });
+ * writer.start('node', { attr: 'value });
+ * writer.end('node');
+ * console.log(writer.getContent());
  */
 
 const makeMap = Tools.makeMap;

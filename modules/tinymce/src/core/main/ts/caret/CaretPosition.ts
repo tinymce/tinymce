@@ -18,8 +18,8 @@ type GeomClientRect = ClientRect.ClientRect;
  * @private
  * @class tinymce.caret.CaretPosition
  * @example
- * var caretPos1 = CaretPosition(container, offset);
- * var caretPos2 = CaretPosition.fromRangeStart(someRange);
+ * const caretPos1 = CaretPosition(container, offset);
+ * const caretPos2 = CaretPosition.fromRangeStart(someRange);
  */
 
 const isElement = NodeType.isElement;

@@ -36,7 +36,7 @@ const Delay: Delay = {
    *
    * @method setEditorTimeout
    * @param {tinymce.Editor} editor Editor instance to check the removed state on.
-   * @param {function} callback Callback to execute when timer runs out.
+   * @param {Function} callback Callback to execute when timer runs out.
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */
@@ -53,7 +53,7 @@ const Delay: Delay = {
    * still alive when the callback gets executed.
    *
    * @method setEditorInterval
-   * @param {function} callback Callback to execute when interval time runs out.
+   * @param {Function} callback Callback to execute when interval time runs out.
    * @param {Number} time Optional time to wait before the callback is executed, defaults to 0.
    * @return {Number} Timeout id number.
    */

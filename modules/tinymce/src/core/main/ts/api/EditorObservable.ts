@@ -20,7 +20,7 @@ const DOM = DOMUtils.DOM;
 let customEventRootDelegates;
 
 /**
- * Returns the event target so for the specified event. Some events fire
+ * Returns the event target for the specified event. Some events fire
  * only on document, some fire on documentElement etc. This also handles the
  * custom event root setting where it returns that element instead of the body.
  *

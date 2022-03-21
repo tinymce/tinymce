@@ -28,15 +28,15 @@ const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSer
      * Adds a node filter function to the parser used by the serializer, the parser will collect the specified nodes by name
      * and then execute the callback once it has finished parsing the document.
      *
-     * @example
-     * parser.addNodeFilter('p,h1', function(nodes, name) {
-     *  for (var i = 0; i < nodes.length; i++) {
-     *   console.log(nodes[i].name);
-     *  }
-     * });
      * @method addNodeFilter
      * @method {String} name Comma separated list of nodes to collect.
-     * @param {function} callback Callback function to execute once it has collected nodes.
+     * @param {Function} callback Callback function to execute once it has collected nodes.
+     * @example
+     * parser.addNodeFilter('p,h1', (nodes, name) => {
+     *   for (let i = 0; i < nodes.length; i++) {
+     *     console.log(nodes[i].name);
+     *   }
+     * });
      */
     addNodeFilter: domSerializer.addNodeFilter,
 
@@ -45,15 +45,15 @@ const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSer
      * collect nodes that has the specified attributes
      * and then execute the callback once it has finished parsing the document.
      *
-     * @example
-     * parser.addAttributeFilter('src,href', function(nodes, name) {
-     *  for (var i = 0; i < nodes.length; i++) {
-     *   console.log(nodes[i].name);
-     *  }
-     * });
      * @method addAttributeFilter
      * @method {String} name Comma separated list of nodes to collect.
-     * @param {function} callback Callback function to execute once it has collected nodes.
+     * @param {Function} callback Callback function to execute once it has collected nodes.
+     * @example
+     * parser.addAttributeFilter('src,href', (nodes, name) => {
+     *   for (let i = 0; i < nodes.length; i++) {
+     *     console.log(nodes[i].name);
+     *   }
+     * });
      */
     addAttributeFilter: domSerializer.addAttributeFilter,
 
