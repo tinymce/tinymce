@@ -305,7 +305,7 @@ const EditorManager: EditorManager = {
   /**
    * Initializes a set of editors. This method will create editors based on various settings.
    * <br /><br />
-   * For information on basic usage of <code>init</code>, see: <a href="https://www.tiny.cloud/docs/tinymce/6/basic-setup.html">Basic setup</a>.
+   * For information on basic usage of <code>init</code>, see: <a href="https://www.tiny.cloud/docs/tinymce/6/basic-setup/">Basic setup</a>.
    *
    * @method init
    * @param {Object} options Options object to be passed to each editor instance.
@@ -360,7 +360,7 @@ const EditorManager: EditorManager = {
       if (Env.browser.isIE() || Env.browser.isEdge()) {
         ErrorReporter.initError(
           'TinyMCE does not support the browser you are using. For a list of supported' +
-          ' browsers please see: https://www.tiny.cloud/docs/tinymce/6/support.html#supportedwebbrowsers'
+          ' browsers please see: https://www.tiny.cloud/docs/tinymce/6/support/#supportedwebbrowsers'
         );
         return [];
       } else if (isQuirksMode) {
