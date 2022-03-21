@@ -196,8 +196,6 @@ const registry = () => {
      * <br>
      * <strong>Note:</strong> Group toolbar buttons can only be used when using the floating toolbar mode.
      * <br>
-     * <em>Added in TinyMCE 5.2</em>
-     * <br>
      * For information on creating a group toolbar button, see:
      * <a href="https://www.tiny.cloud/docs/tinymce/6/custom-group-toolbar-button/">
      * UI Components - Types of toolbar buttons: Group toolbar button</a>.
