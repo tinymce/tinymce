@@ -21,7 +21,7 @@ interface FakeClipboard {
   /**
    * Create a FakeClipboardItem instance that is used when reading or writing data via the FakeClipboard API.
    *
-   * @constructor FakeClipboardItem
+   * @method FakeClipboardItem
    * @param {Object} items An object with the type as the key and any data as the value.
    * @returns {FakeClipboard.FakeClipboardItem} A new fake clipboard item to represent the specified items.
    */
