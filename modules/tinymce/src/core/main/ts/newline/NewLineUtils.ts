@@ -1,5 +1,5 @@
 import { Fun, Optional, Unicode } from '@ephox/katamari';
-import { SelectorExists, SugarElement } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
