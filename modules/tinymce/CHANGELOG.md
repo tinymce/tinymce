@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - It wasn't possible to select text right after an inline noneditable element #TINY-8567
 - Fixed a double border showing for the `tinymce-5` skin when using `toolbar_location: 'bottom'` #TINY-8564
 - Clipboard content was not generated correctly when cutting and copying `contenteditable="false"` elements #TINY-8563
-- Fixed clipping box-shadow in autocomplete #TINY-8573
+- Fixed the box-shadow getting clipped in autocompletor popups #TINY-8573
 
 ## 6.0.0 - 2022-03-03
 
