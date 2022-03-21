@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
-- The `buttonType` property did not work for dialog footer buttons #TINY-8582
 
 ## 6.0.1 - TBD
 
@@ -21,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - It wasn't possible to select text right after an inline noneditable element #TINY-8567
 - Fixed a double border showing for the `tinymce-5` skin when using `toolbar_location: 'bottom'` #TINY-8564
 - Clipboard content was not generated correctly when cutting and copying `contenteditable="false"` elements #TINY-8563
+- The `buttonType` property did not work for dialog footer buttons #TINY-8582
 
 ## 6.0.0 - 2022-03-03
 
