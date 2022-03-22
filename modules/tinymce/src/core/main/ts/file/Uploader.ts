@@ -11,17 +11,17 @@ import { UploadStatus } from './UploadStatus';
  * @private
  * @class tinymce.file.Uploader
  * @example
- * var uploader = new Uploader({
- *     url: '/upload.php',
- *     basePath: '/base/path',
- *     credentials: true,
- *     handler: function(data, success, failure) {
- *         ...
- *     }
+ * const uploader = new Uploader({
+ *   url: '/upload.php',
+ *   basePath: '/base/path',
+ *   credentials: true,
+ *   handler: (data, success, failure) => {
+ *     ...
+ *   }
  * });
  *
- * uploader.upload(blobInfos).then(function(result) {
- *     ...
+ * uploader.upload(blobInfos).then((result) => {
+ *   ...
  * });
  */
 

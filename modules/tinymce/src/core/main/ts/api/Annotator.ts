@@ -66,7 +66,7 @@ const Annotator = (editor: Editor): Annotator => {
      *
      * @method annotationChanged
      * @param {String} name Name of annotation to listen for
-     * @param {function} callback Calback with (state, name, and data) fired when the annotation
+     * @param {Function} callback Callback with (state, name, and data) fired when the annotation
      * at the cursor changes. If state if false, data will not be provided.
      */
     annotationChanged: (name: string, callback: AnnotationListenerApi) => {

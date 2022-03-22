@@ -20,8 +20,9 @@ interface TextSeeker {
  *
  * @class tinymce.dom.TextSeeker
  * @example
- * var startOfWord = TextSeeker(editor.dom).backwards(startNode, startOffset, function(textNode, offset, text) {
- *   var lastSpaceCharIndex = text.lastIndexOf(' ');
+ * const seeker = tinymce.dom.TextSeeker(editor.dom);
+ * const startOfWord = seeker.backwards(startNode, startOffset, (textNode, offset, text) => {
+ *   const lastSpaceCharIndex = text.lastIndexOf(' ');
  *   if (lastSpaceCharIndex !== -1) {
  *     return lastSpaceCharIndex + 1;
  *   } else {
@@ -54,8 +55,6 @@ const TextSeeker = (dom: DOMUtils, isBoundary?: (node: Node) => boolean): TextSe
 
   /**
    * Search backwards through text nodes until a match, boundary, or root node has been found.
-   * <br>
-   * <em>Added in TinyMCE 5.2</em>
    *
    * @method backwards
    * @param {Node} node The node to start searching from.
@@ -71,8 +70,6 @@ const TextSeeker = (dom: DOMUtils, isBoundary?: (node: Node) => boolean): TextSe
 
   /**
    * Search forwards through text nodes until a match, boundary, or root node has been found.
-   * <br>
-   * <em>Added in TinyMCE 5.2</em>
    *
    * @method forwards
    * @param {Node} node The node to start searching from.

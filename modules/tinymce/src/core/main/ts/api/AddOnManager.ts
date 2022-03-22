@@ -18,29 +18,29 @@ import I18n from './util/I18n';
  * @class tinymce.Theme
  * @example
  * tinymce.ThemeManager.add('MyTheme', (editor) => {
- *     // Setup up custom UI elements in the dom
- *     var div = document.createElement('div');
- *     var iframe = document.createElement('iframe');
- *     document.body.appendChild(div);
- *     document.body.appendChild(iframe);
+ *   // Setup up custom UI elements in the dom
+ *   const div = document.createElement('div');
+ *   const iframe = document.createElement('iframe');
+ *   document.body.appendChild(div);
+ *   document.body.appendChild(iframe);
  *
- *     // Themes should fire the SkinLoaded event once the UI has been created and all StyleSheets have been loaded.
- *     editor.on('init', function() {
- *         editor.fire('SkinLoaded');
- *     });
+ *   // Themes should fire the SkinLoaded event once the UI has been created and all StyleSheets have been loaded.
+ *   editor.on('init', () => {
+ *     editor.fire('SkinLoaded');
+ *   });
  *
- *     // Themes must return a renderUI function that returns the editorContainer. If the editor is not running in inline mode, an iframeContainer should also be returned.
- *     var renderUI = function() {
- *         return {
- *             editorContainer: div,
- *             iframeContainer: iframe
- *         };
- *     };
- *
- *     // Return the renderUI function
+ *   // Themes must return a renderUI function that returns the editorContainer. If the editor is not running in inline mode, an iframeContainer should also be returned.
+ *   const renderUI = () => {
  *     return {
- *         renderUI: renderUI
+ *       editorContainer: div,
+ *       iframeContainer: iframe
  *     };
+ *   };
+ *
+ *   // Return the renderUI function
+ *   return {
+ *     renderUI: renderUI
+ *   };
  * });
  */
 
@@ -57,29 +57,29 @@ import I18n from './util/I18n';
  * @class tinymce.Plugin
  * @example
  * tinymce.PluginManager.add('MyPlugin', (editor, url) => {
- *     // Register a toolbar button that triggers an alert when clicked
- *     // To show this button in the editor, include it in the toolbar setting
- *     editor.ui.registry.addButton('myCustomToolbarButton', {
- *         text: 'My custom button',
- *         onAction: function() {
- *             alert('Button clicked!');
- *         }
- *     });
+ *   // Register a toolbar button that triggers an alert when clicked
+ *   // To show this button in the editor, include it in the toolbar setting
+ *   editor.ui.registry.addButton('myCustomToolbarButton', {
+ *     text: 'My custom button',
+ *     onAction: () => {
+ *       alert('Button clicked!');
+ *     }
+ *   });
  *
- *     // Register a menu item that triggers an alert when clicked
- *     // To show this menu item in the editor, include it in the menu setting
- *     editor.ui.registry.addMenuItem('myCustomMenuItem', {
- *         text: 'My custom menu item',
- *         onAction: function() {
- *             alert('Menu item clicked');
- *         }
- *     });
+ *   // Register a menu item that triggers an alert when clicked
+ *   // To show this menu item in the editor, include it in the menu setting
+ *   editor.ui.registry.addMenuItem('myCustomMenuItem', {
+ *     text: 'My custom menu item',
+ *     onAction: () => {
+ *       alert('Menu item clicked');
+ *     }
+ *   });
  *
- *     // Either return plugin metadata or do not return
- *     return {
- *         name: 'MyPlugin',
- *         url: 'https://mydocs.com/myplugin'
- *     };
+ *   // Either return plugin metadata or do not return
+ *   return {
+ *     name: 'MyPlugin',
+ *     url: 'https://mydocs.com/myplugin'
+ *   };
  * });
  */
 
@@ -244,21 +244,19 @@ const AddOnManager = <T>(): AddOnManager<T> => {
      * @return {tinymce.Theme/tinymce.Plugin} The same theme or plugin instance that got passed in.
      * @example
      * // Create a simple plugin
-     * tinymce.create('tinymce.plugins.TestPlugin', {
-     *   TestPlugin: function(ed, url) {
-     *   ed.on('click', function(e) {
-     *      ed.windowManager.alert('Hello World!');
+     * const TestPlugin = (ed, url) => {
+     *   ed.on('click', (e) => {
+     *     ed.windowManager.alert('Hello World!');
      *   });
-     *   }
-     * });
+     * };
      *
      * // Register plugin using the add method
-     * tinymce.PluginManager.add('test', tinymce.plugins.TestPlugin);
+     * tinymce.PluginManager.add('test', TestPlugin);
      *
      * // Initialize TinyMCE
      * tinymce.init({
-     *  ...
-     *  plugins: '-test' // Init the plugin but don't try to load it
+     *   ...
+     *   plugins: '-test' // Init the plugin but don't try to load it
      * });
      */
     add,
@@ -280,8 +278,8 @@ const AddOnManager = <T>(): AddOnManager<T> => {
      *
      * // Initialize TinyMCE
      * tinymce.init({
-     *  ...
-     *  plugins: '-myplugin' // Don't try to load it again
+     *   ...
+     *   plugins: '-myplugin' // Don't try to load it again
      * });
      */
     load,

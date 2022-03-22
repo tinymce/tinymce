@@ -97,15 +97,15 @@ interface SchemaLookupTable {
  * Schema validator class.
  *
  * @class tinymce.html.Schema
- * @example
- *  if (tinymce.activeEditor.schema.isValidChild('p', 'span'))
- *    alert('span is valid child of p.');
- *
- *  if (tinymce.activeEditor.schema.getElementRule('p'))
- *    alert('P is a valid element.');
- *
- * @class tinymce.html.Schema
  * @version 3.4
+ * @example
+ * if (tinymce.activeEditor.schema.isValidChild('p', 'span')) {
+ *   alert('span is valid child of p.');
+ * }
+ *
+ * if (tinymce.activeEditor.schema.getElementRule('p')) {
+ *   alert('P is a valid element.');
+ * }
  */
 
 const mapCache: Record<string, SchemaLookupTable> = {}, dummyObj = {};
@@ -832,12 +832,12 @@ const Schema = (settings?: SchemaSettings): Schema => {
   /**
    * Name/value map object with valid parents and children to those parents.
    *
-   * @example
-   * children = {
-   *    div:{p:{}, h1:{}}
-   * };
    * @field children
    * @type Object
+   * @example
+   * children = {
+   *    div: { p:{}, h1:{} }
+   * };
    */
 
   /**

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a double border showing for the `tinymce-5` skin when using `toolbar_location: 'bottom'` #TINY-8564
 - Clipboard content was not generated correctly when cutting and copying `contenteditable="false"` elements #TINY-8563
 - Fixed the box-shadow getting clipped in autocompletor popups #TINY-8573
+- The `buttonType` property did not work for dialog footer buttons #TINY-8582
 
 ## 6.0.0 - 2022-03-03
 
@@ -1238,7 +1239,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 5.0.0 - 2019-02-04
 
-Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/tinymce/5/release-notes/release-notes50.html
+Full documentation for the version 5 features and changes is available at https://www.tiny.cloud/docs/tinymce/5/release-notes/release-notes50/
 
 ### Added
 - Added links and registered names with * to denote premium plugins in Plugins tab of Help dialog #TINY-3223
@@ -1411,7 +1412,7 @@ Full documentation for the version 5 features and changes is available at https:
 
 Developer preview 1
 
-Initial list of features and changes is available at https://www.tiny.cloud/docs/tinymce/5/release-notes/release-notes50.html
+Initial list of features and changes is available at https://www.tiny.cloud/docs/tinymce/5/release-notes/release-notes50/
 
 ## 4.9.11 - 2020-07-13
 

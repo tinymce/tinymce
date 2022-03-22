@@ -70,10 +70,10 @@ export interface EventDispatcherConstructor<T extends NativeEventMap> {
  *
  * @class tinymce.util.EventDispatcher
  * @example
- *  var eventDispatcher = new EventDispatcher();
+ * const eventDispatcher = new EventDispatcher();
  *
- *  eventDispatcher.on('click', function() {console.log('data');});
- *  eventDispatcher.dispatch('click', {data: 123});
+ * eventDispatcher.on('click', () => console.log('data'));
+ * eventDispatcher.dispatch('click', { data: 123 });
  */
 
 const nativeEvents = Tools.makeMap(
@@ -193,12 +193,12 @@ class EventDispatcher<T> {
    *
    * @method on
    * @param {String} name Event name or space separated list of events to bind.
-   * @param {callback} callback Callback to be executed when the event occurs.
+   * @param {Function} callback Callback to be executed when the event occurs.
    * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
-   * instance.on('event', function(e) {
-   *     // Callback logic
+   * instance.on('event', (e) => {
+   *   // Callback logic
    * });
    */
   public on <K extends string>(name: K, callback: false | ((event: EditorEvent<MappedEvent<T, K>>) => void), prepend?: boolean, extra?: {}): this {
@@ -244,7 +244,7 @@ class EventDispatcher<T> {
    *
    * @method off
    * @param {String?} name Name of the event to unbind.
-   * @param {callback?} callback Callback to unbind.
+   * @param {Function?} callback Callback to unbind.
    * @return {Object} Current class instance.
    * @example
    * // Unbind specific callback
@@ -312,12 +312,12 @@ class EventDispatcher<T> {
    *
    * @method once
    * @param {String} name Event name or space separated list of events to bind.
-   * @param {callback} callback Callback to be executed when the event occurs.
+   * @param {Function} callback Callback to be executed when the event occurs.
    * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
-   * instance.once('event', function(e) {
-   *     // Callback logic
+   * instance.once('event', (e) => {
+   *   // Callback logic
    * });
    */
   public once <K extends string>(name: K, callback: (event: EditorEvent<MappedEvent<T, K>>) => void, prepend?: boolean): this {

@@ -11,19 +11,20 @@ import { Dialog } from './ui/Ui';
  * @class tinymce.WindowManager
  * @example
  * // Opens a new dialog with the file.htm file and the size 320x240
- * // It also adds a custom parameter this can be retrieved by using tinyMCEPopup.getWindowArg inside the dialog.
- * tinymce.activeEditor.windowManager.open({
- *    url: 'file.htm',
- *    width: 320,
- *    height: 240
- * }, {
- *    custom_param: 1
+ * tinymce.activeEditor.windowManager.openUrl({
+ *   title: 'Custom Dialog',
+ *   url: 'file.htm',
+ *   width: 320,
+ *   height: 240
  * });
  *
  * // Displays an alert box using the active editors window manager instance
  * tinymce.activeEditor.windowManager.alert('Hello world!');
  *
- * // Displays an confirm box and an alert message will be displayed depending on what you choose in the confirm
+ * // Displays a confirm box and an alert message will be displayed depending on what you choose in the confirm
+ * tinymce.activeEditor.windowManager.confirm('Do you want to do something?', (state) => {
+ *   const message = state ? 'Ok' : 'Cancel';
+ *   tinymce.activeEditor.windowManager.alert(message);
  * });
  */
 
@@ -142,7 +143,7 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window.
      *
      * @method open
-     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/dialog-configuration.html#configurationoptions">Dialog - Configuration options</a>.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/dialog-configuration/#configurationoptions">Dialog - Configuration options</a>.
      */
     open,
 
@@ -150,7 +151,7 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window for the specified url.
      *
      * @method openUrl
-     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/urldialog.html#configuration">URL dialog configuration</a>.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/urldialog/#configuration">URL dialog configuration</a>.
      */
     openUrl,
 
@@ -160,7 +161,7 @@ const WindowManager = (editor: Editor): WindowManager => {
      *
      * @method alert
      * @param {String} message Text to display in the new alert dialog.
-     * @param {function} callback (Optional) Callback function to be executed after the user has selected ok.
+     * @param {Function} callback (Optional) Callback function to be executed after the user has selected ok.
      * @param {Object} scope (Optional) Scope to execute the callback in.
      * @example
      * // Displays an alert box using the active editors window manager instance
@@ -174,15 +175,13 @@ const WindowManager = (editor: Editor): WindowManager => {
      *
      * @method confirm
      * @param {String} message Text to display in the new confirm dialog.
-     * @param {function} callback (Optional) Callback function to be executed after the user has selected ok or cancel.
+     * @param {Function} callback (Optional) Callback function to be executed after the user has selected ok or cancel.
      * @param {Object} scope (Optional) Scope to execute the callback in.
      * @example
-     * // Displays an confirm box and an alert message will be displayed depending on what you choose in the confirm
-     * tinymce.activeEditor.windowManager.confirm("Do you want to do something", function(s) {
-     *    if (s)
-     *       tinymce.activeEditor.windowManager.alert("Ok");
-     *    else
-     *       tinymce.activeEditor.windowManager.alert("Cancel");
+     * // Displays a confirm box and an alert message will be displayed depending on what you choose in the confirm
+     * tinymce.activeEditor.windowManager.confirm('Do you want to do something?', (state) => {
+     *   const message = state ? 'Ok' : 'Cancel';
+     *   tinymce.activeEditor.windowManager.alert(message);
      * });
      */
     confirm,

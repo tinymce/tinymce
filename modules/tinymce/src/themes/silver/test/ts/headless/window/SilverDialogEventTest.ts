@@ -39,6 +39,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           text: 'Cancel',
           align: 'end',
           primary: false,
+          buttonType: Optional.some('secondary'),
           enabled: true,
           icon: Optional.none()
         },
@@ -48,6 +49,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           text: 'Save',
           align: 'end',
           primary: true,
+          buttonType: Optional.some('primary'),
           enabled: true,
           icon: Optional.none()
         }

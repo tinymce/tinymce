@@ -182,7 +182,7 @@ const encodeNamed = (text: string, attr?: boolean, entities?: EntitiesMap): stri
  * @method getEncodeFunc
  * @param {String} name Comma separated list of encoders for example named,numeric.
  * @param {String} entities Optional parameter with entities to use instead of the built in set.
- * @return {function} Encode function to be used.
+ * @return {Function} Encode function to be used.
  */
 const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
   const entitiesMap = buildEntitiesLookup(entities) || namedEntities;

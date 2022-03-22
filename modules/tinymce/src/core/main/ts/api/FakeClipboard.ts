@@ -23,7 +23,7 @@ interface FakeClipboard {
    *
    * @method FakeClipboardItem
    * @param {Object} items An object with the type as the key and any data as the value.
-   * @returns {tinymce.FakeClipboard.FakeClipboardItem} A new fake clipboard item to represent the specified items.
+   * @returns {FakeClipboard.FakeClipboardItem} A new fake clipboard item to represent the specified items.
    */
   readonly FakeClipboardItem: (items: Record<string, any>) => FakeClipboardItem;
 

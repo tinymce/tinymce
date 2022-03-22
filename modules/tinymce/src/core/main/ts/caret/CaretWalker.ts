@@ -20,10 +20,10 @@ export interface CaretWalker {
  * @private
  * @class tinymce.caret.CaretWalker
  * @example
- * var caretWalker = new CaretWalker(rootElm);
+ * const caretWalker = CaretWalker(rootElm);
  *
- * var prevLogicalCaretPosition = caretWalker.prev(CaretPosition.fromRangeStart(range));
- * var nextLogicalCaretPosition = caretWalker.next(CaretPosition.fromRangeEnd(range));
+ * const prevLogicalCaretPosition = caretWalker.prev(CaretPosition.fromRangeStart(range));
+ * const nextLogicalCaretPosition = caretWalker.next(CaretPosition.fromRangeEnd(range));
  */
 
 export enum HDirection {
