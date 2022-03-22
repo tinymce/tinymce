@@ -161,7 +161,6 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
       ...spec,
-      buttonType: Optional.none(),
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
