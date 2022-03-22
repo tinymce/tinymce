@@ -24,6 +24,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
         name: 'yes',
         text: 'Yes',
         primary: true,
+        buttonType: Optional.some('primary'),
         align: 'end',
         enabled: true,
         icon: Optional.none()
@@ -34,6 +35,7 @@ export const setup = (extras: ConfirmDialogSetup) => {
       name: 'no',
       text: 'No',
       primary: false,
+      buttonType: Optional.some('secondary'),
       align: 'end',
       enabled: true,
       icon: Optional.none()
