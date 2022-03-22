@@ -164,15 +164,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
   });
 
   context('end_container_on_empty_block', () => {
-    it('TINY-6559: Press Enter in blockquote without wrapping p', () => {
-      const editor = hook.editor();
-      editor.setContent('<blockquote>Line 1</blockquote>');
-      TinySelections.setCursor(editor, [ 0 ], 1);
-      insertNewline(editor, { });
-      TinyAssertions.assertContent(editor, '<blockquote>Line 1</blockquote><p>&nbsp;</p>');
-      TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
-    });
-
     context('With the default value', () => {
       it('TINY-6559: Press Enter in blockquote', () => {
         const editor = hook.editor();
