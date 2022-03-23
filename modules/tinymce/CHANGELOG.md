@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.0.1 - 2022-03-23
+
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 
@@ -22,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clipboard content was not generated correctly when cutting and copying `contenteditable="false"` elements #TINY-8563
 - Fixed the box-shadow getting clipped in autocompletor popups #TINY-8573
 - The `buttonType` property did not work for dialog footer buttons #TINY-8582
+- Fix contrast ratio for error messages #TINY-8586
 
 ## 6.0.0 - 2022-03-03
 
