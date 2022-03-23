@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clipboard content was not generated correctly when cutting and copying `contenteditable="false"` elements #TINY-8563
 - Fixed the box-shadow getting clipped in autocompletor popups #TINY-8573
 - The `buttonType` property did not work for dialog footer buttons #TINY-8582
+- Fix contrast ratio for error messages #TINY-8586
 
 ## 6.0.0 - 2022-03-03
 
