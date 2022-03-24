@@ -162,4 +162,326 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     TinyAssertions.assertContent(editor, '<p><a href="#">a</a></p><p><a href="#"><img src="about:blank"></a></p>');
     TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
   });
+
+  context('end_container_on_empty_block', () => {
+    context('With the default value', () => {
+      it('TINY-6559: Press Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p><p>&nbsp;</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
+      });
+
+      it('TINY-6559: Press Shift+Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { shiftKey: true });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2<br><br></p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote', () => {
+        const editor = hook.editor();
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote><p>&nbsp;</p>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
+        const editor = hook.editor();
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p></blockquote><p>&nbsp;</p><blockquote><p>Line 2</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a div', () => {
+        const editor = hook.editor();
+        editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div><p>Line 1</p><p>Line 2</p><p>&nbsp;</p><p>&nbsp;</p></div>');
+        TinyAssertions.assertSelection(editor, [ 0, 3 ], 0, [ 0, 3 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a section', () => {
+        const editor = hook.editor();
+        editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<section><p>Line 1</p><p>Line 2</p><p>&nbsp;</p><p>&nbsp;</p></section>');
+        TinyAssertions.assertSelection(editor, [ 0, 3 ], 0, [ 0, 3 ], 0);
+      });
+    });
+
+    context('Is set to "div"', () => {
+      it('TINY-6559: Press Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div');
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p><p>&nbsp;</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
+      });
+
+      it('TINY-6559: Press Shift+Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div');
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { shiftKey: true });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2<br><br></p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div');
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p><p>&nbsp;</p><p>&nbsp;</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 3 ], 0, [ 0, 3 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div');
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>&nbsp;</p><p>&nbsp;</p><p>Line 2</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a div', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div');
+        editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div><p>Line 1</p><p>Line 2</p></div><p>&nbsp;</p>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a section', () => {
+        const editor = hook.editor();
+        editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<section><p>Line 1</p><p>Line 2</p><p>&nbsp;</p><p>&nbsp;</p></section>');
+        TinyAssertions.assertSelection(editor, [ 0, 3 ], 0, [ 0, 3 ], 0);
+      });
+    });
+
+    context('Is set to "div,blockquote"', () => {
+      it('TINY-6559: Press Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div,blockquote');
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p><p>&nbsp;</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
+      });
+
+      it('TINY-6559: Press Shift+Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div,blockquote');
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { shiftKey: true });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2<br><br></p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div,blockquote');
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote><p>&nbsp;</p>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div,blockquote');
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p></blockquote><p>&nbsp;</p><blockquote><p>Line 2</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a div', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', 'div,blockquote');
+        editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div><p>Line 1</p><p>Line 2</p></div><p>&nbsp;</p>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a section', () => {
+        const editor = hook.editor();
+        editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<section><p>Line 1</p><p>Line 2</p><p>&nbsp;</p><p>&nbsp;</p></section>');
+        TinyAssertions.assertSelection(editor, [ 0, 3 ], 0, [ 0, 3 ], 0);
+      });
+    });
+
+    context('Is set to true', () => {
+      it('TINY-6559: Press Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', true);
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p><p>&nbsp;</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
+      });
+
+      it('TINY-6559: Press Shift+Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', true);
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { shiftKey: true });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2<br><br></p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', true);
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote><p>&nbsp;</p>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', true);
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p></blockquote><p>&nbsp;</p><blockquote><p>Line 2</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a div', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', true);
+        editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div><p>Line 1</p><p>Line 2</p></div><p>&nbsp;</p>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a section', () => {
+        const editor = hook.editor();
+        editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<section><p>Line 1</p><p>Line 2</p></section><p>&nbsp;</p>');
+        TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      });
+    });
+
+    context('Is set to false', () => {
+      it('TINY-6559: Press Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', false);
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p><p>&nbsp;</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
+      });
+
+      it('TINY-6559: Press Shift+Enter in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', false);
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { shiftKey: true });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2<br><br></p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', false);
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p><p>&nbsp;</p><p>&nbsp;</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 3 ], 0, [ 0, 3 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', false);
+        editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>&nbsp;</p><p>&nbsp;</p><p>Line 2</p></blockquote>');
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a div', () => {
+        const editor = hook.editor();
+        editor.options.set('end_container_on_empty_block', false);
+        editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div><p>Line 1</p><p>Line 2</p><p>&nbsp;</p><p>&nbsp;</p></div>');
+        TinyAssertions.assertSelection(editor, [ 0, 3 ], 0, [ 0, 3 ], 0);
+      });
+
+      it('TINY-6559: Press Enter twice in a section', () => {
+        const editor = hook.editor();
+        editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        insertNewline(editor, { });
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<section><p>Line 1</p><p>Line 2</p><p>&nbsp;</p><p>&nbsp;</p></section>');
+        TinyAssertions.assertSelection(editor, [ 0, 3 ], 0, [ 0, 3 ], 0);
+      });
+    });
+  });
 });
