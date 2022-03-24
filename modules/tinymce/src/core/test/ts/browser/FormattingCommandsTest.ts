@@ -135,6 +135,12 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     assert.equal(editor.getContent(), '<p style="text-align: center;">test 123</p>');
     assert.isTrue(editor.queryCommandState('JustifyCenter'), 'should have JustifyCenter state true');
 
+    editor.setContent('<pre>test 123</pre>');
+    editor.execCommand('SelectAll');
+    editor.execCommand('JustifyCenter');
+    assert.equal(editor.getContent(), '<pre style="text-align: center;">test 123</pre>');
+    assert.isTrue(editor.queryCommandState('JustifyCenter'), 'should have JustifyCenter state true');
+
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('JustifyRight');

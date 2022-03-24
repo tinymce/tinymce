@@ -29,7 +29,7 @@ const get = (editor: Editor) => {
         preview: 'font-family font-size'
       },
       {
-        selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li',
+        selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li,pre',
         styles: {
           textAlign: 'left'
         },
@@ -61,7 +61,7 @@ const get = (editor: Editor) => {
 
     aligncenter: [
       {
-        selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li',
+        selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li,pre',
         styles: {
           textAlign: 'center'
         },
@@ -105,7 +105,7 @@ const get = (editor: Editor) => {
         preview: 'font-family font-size'
       },
       {
-        selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li',
+        selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li,pre',
         styles: {
           textAlign: 'right'
         },
@@ -137,7 +137,7 @@ const get = (editor: Editor) => {
 
     alignjustify: [
       {
-        selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li',
+        selector: 'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li,pre',
         styles: {
           textAlign: 'justify'
         },
