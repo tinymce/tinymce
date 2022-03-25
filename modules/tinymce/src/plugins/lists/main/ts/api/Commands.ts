@@ -20,7 +20,7 @@ const registerDialog = (editor: Editor): void => {
 };
 
 const register = (editor: Editor): void => {
-  editor.on('BeforeExecCommand', (e) => {
+  editor.on('ExecCommand', (e) => {
     const cmd = e.command.toLowerCase();
 
     if (cmd === 'indent') {
