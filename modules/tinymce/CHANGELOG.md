@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
+- Lists are listening to indent/outdent events though ExecCommand, so it's possible to cancel it via BeforeExecCommand
 
 ## 6.0.1 - 2022-03-23
 
