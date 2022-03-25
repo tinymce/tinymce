@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 
+### Improved
+- New `opaque` prop for `iframe` dialog component fixes an issue in Preview and Insert Template dialogs with dark skins #TINY-8534
+
 ## 6.0.1 - TBD
 
 ### Fixed

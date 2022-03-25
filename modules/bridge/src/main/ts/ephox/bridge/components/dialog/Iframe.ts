@@ -6,15 +6,18 @@ import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWith
 export interface IframeSpec extends FormComponentWithLabelSpec {
   type: 'iframe';
   sandboxed?: boolean;
+  opaque?: boolean;
 }
 
 export interface Iframe extends FormComponentWithLabel {
   type: 'iframe';
   sandboxed: boolean;
+  opaque?: boolean;
 }
 
 const iframeFields = formComponentWithLabelFields.concat([
-  FieldSchema.defaultedBoolean('sandboxed', true)
+  FieldSchema.defaultedBoolean('sandboxed', true),
+  FieldSchema.defaultedBoolean('opaque', false)
 ]);
 
 export const iframeSchema = StructureSchema.objOf(iframeFields);
