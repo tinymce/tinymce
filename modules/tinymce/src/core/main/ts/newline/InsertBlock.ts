@@ -1,4 +1,4 @@
-import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -6,6 +6,7 @@ import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
+import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as NodeType from '../dom/NodeType';
@@ -235,6 +236,17 @@ const addBrToBlockIfNeeded = (dom, block) => {
   }
 };
 
+const shouldEndContainer = (editor: Editor, container: Node | undefined) => {
+  const optionValue = Options.shouldEndContainerOnEmptyBlock(editor);
+  if (Type.isNullable(container)) {
+    return false;
+  } else if (Type.isString(optionValue)) {
+    return Arr.contains(Tools.explode(optionValue), container.nodeName.toLowerCase());
+  } else {
+    return optionValue;
+  }
+};
+
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   let tmpRng, container, offset, parentBlock;
   let newBlock, fragment, containerBlock, parentBlockName, isAfterLastNodeInContainer;
@@ -361,7 +373,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
     }
 
     // Split the current container block element if enter is pressed inside an empty inner block element
-    if (Options.shouldEndContainerOnEmptyBlock(editor) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
+    if (shouldEndContainer(editor, containerBlock) && canSplitBlock(dom, containerBlock) && dom.isEmpty(parentBlock)) {
       // Split container block for example a BLOCKQUOTE at the current blockParent location for example a P
       newBlock = dom.split(containerBlock, parentBlock);
     } else {

@@ -155,8 +155,16 @@ const register = (editor: Editor) => {
   });
 
   registerOption('end_container_on_empty_block', {
-    processor: 'boolean',
-    default: false
+    processor: (value) => {
+      if (Type.isBoolean(value)) {
+        return { valid: true, value };
+      } else if (Type.isString(value)) {
+        return { valid: true, value };
+      } else {
+        return { valid: false, message: 'Must be boolean or a string' };
+      }
+    },
+    default: 'blockquote'
   });
 
   registerOption('font_size_style_values', {

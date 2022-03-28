@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -121,49 +121,105 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     assert.equal(editor.getContent(), '<p><span style="color: #ff0000; font-family: Arial;">test 123</span></p>');
   });
 
-  it('Formatting commands (alignInline)', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>test 123</p>');
-    editor.execCommand('SelectAll');
-    editor.execCommand('JustifyLeft');
-    assert.equal(editor.getContent(), '<p style="text-align: left;">test 123</p>');
-    assert.isTrue(editor.queryCommandState('JustifyLeft'), 'should have JustifyLeft state true');
+  context('Formatting commands (alignInline)', () => {
+    it('TBA - p, JustifyLeft', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test 123</p>');
+      editor.execCommand('SelectAll');
+      editor.execCommand('JustifyLeft');
+      assert.equal(editor.getContent(), '<p style="text-align: left;">test 123</p>');
+      assert.isTrue(editor.queryCommandState('JustifyLeft'), 'should have JustifyLeft state true');
+    });
 
-    editor.setContent('<p>test 123</p>');
-    editor.execCommand('SelectAll');
-    editor.execCommand('JustifyCenter');
-    assert.equal(editor.getContent(), '<p style="text-align: center;">test 123</p>');
-    assert.isTrue(editor.queryCommandState('JustifyCenter'), 'should have JustifyCenter state true');
+    it('TBA - p, JustifyCenter', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test 123</p>');
+      editor.execCommand('SelectAll');
+      editor.execCommand('JustifyCenter');
+      assert.equal(editor.getContent(), '<p style="text-align: center;">test 123</p>');
+      assert.isTrue(editor.queryCommandState('JustifyCenter'), 'should have JustifyCenter state true');
+    });
 
-    editor.setContent('<p>test 123</p>');
-    editor.execCommand('SelectAll');
-    editor.execCommand('JustifyRight');
-    assert.equal(editor.getContent(), '<p style="text-align: right;">test 123</p>');
-    assert.isTrue(editor.queryCommandState('JustifyRight'), 'should have JustifyRight state true');
+    it('TBA - p, JustifyRight', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test 123</p>');
+      editor.execCommand('SelectAll');
+      editor.execCommand('JustifyRight');
+      assert.equal(editor.getContent(), '<p style="text-align: right;">test 123</p>');
+      assert.isTrue(editor.queryCommandState('JustifyRight'), 'should have JustifyRight state true');
+    });
 
-    editor.setContent('<p>test 123</p>');
-    editor.execCommand('SelectAll');
-    editor.execCommand('JustifyFull');
-    assert.equal(editor.getContent(), '<p style="text-align: justify;">test 123</p>');
-    assert.isTrue(editor.queryCommandState('JustifyFull'), 'should have JustifyFull state true');
+    it('TBA - p, JustifyFull', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test 123</p>');
+      editor.execCommand('SelectAll');
+      editor.execCommand('JustifyFull');
+      assert.equal(editor.getContent(), '<p style="text-align: justify;">test 123</p>');
+      assert.isTrue(editor.queryCommandState('JustifyFull'), 'should have JustifyFull state true');
+    });
 
-    editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
-    editor.selection.select(editor.dom.select('img')[0]);
-    editor.execCommand('JustifyLeft');
-    assert.equal(editor.getContent(), '<p><img style="float: left;" src="tinymce/ui/img/raster.gif"></p>');
+    it('TINY-7715 - pre, JustifyLeft', () => {
+      const editor = hook.editor();
+      editor.setContent('<pre>test 123</pre>');
+      editor.execCommand('SelectAll');
+      editor.execCommand('JustifyLeft');
+      assert.equal(editor.getContent(), '<pre style="text-align: left;">test 123</pre>');
+      assert.isTrue(editor.queryCommandState('JustifyLeft'), 'should have JustifyLeft state true');
+    });
 
-    editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
-    editor.selection.select(editor.dom.select('img')[0]);
-    editor.execCommand('JustifyCenter');
-    assert.equal(
-      editor.getContent(),
-      '<p><img style="margin-right: auto; margin-left: auto; display: block;" src="tinymce/ui/img/raster.gif"></p>'
-    );
+    it('TINY-7715 - pre, JustifyCenter', () => {
+      const editor = hook.editor();
+      editor.setContent('<pre>test 123</pre>');
+      editor.execCommand('SelectAll');
+      editor.execCommand('JustifyCenter');
+      assert.equal(editor.getContent(), '<pre style="text-align: center;">test 123</pre>');
+      assert.isTrue(editor.queryCommandState('JustifyCenter'), 'should have JustifyCenter state true');
+    });
 
-    editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
-    editor.selection.select(editor.dom.select('img')[0]);
-    editor.execCommand('JustifyRight');
-    assert.equal(editor.getContent(), '<p><img style="float: right;" src="tinymce/ui/img/raster.gif"></p>');
+    it('TINY-7715 - pre, JustifyRight', () => {
+      const editor = hook.editor();
+      editor.setContent('<pre>test 123</pre>');
+      editor.execCommand('SelectAll');
+      editor.execCommand('JustifyRight');
+      assert.equal(editor.getContent(), '<pre style="text-align: right;">test 123</pre>');
+      assert.isTrue(editor.queryCommandState('JustifyRight'), 'should have JustifyRight state true');
+    });
+
+    it('TINY-7715 - pre, JustifyFull', () => {
+      const editor = hook.editor();
+      editor.setContent('<pre>test 123</pre>');
+      editor.execCommand('SelectAll');
+      editor.execCommand('JustifyFull');
+      assert.equal(editor.getContent(), '<pre style="text-align: justify;">test 123</pre>');
+      assert.isTrue(editor.queryCommandState('JustifyFull'), 'should have JustifyFull state true');
+    });
+
+    it('TBA - img, JustifyLeft', () => {
+      const editor = hook.editor();
+      editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
+      editor.selection.select(editor.dom.select('img')[0]);
+      editor.execCommand('JustifyLeft');
+      assert.equal(editor.getContent(), '<p><img style="float: left;" src="tinymce/ui/img/raster.gif"></p>');
+    });
+
+    it('TBA - img, JustifyCenter', () => {
+      const editor = hook.editor();
+      editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
+      editor.selection.select(editor.dom.select('img')[0]);
+      editor.execCommand('JustifyCenter');
+      assert.equal(
+        editor.getContent(),
+        '<p><img style="margin-right: auto; margin-left: auto; display: block;" src="tinymce/ui/img/raster.gif"></p>'
+      );
+    });
+
+    it('TBA - img, JustifyRight', () => {
+      const editor = hook.editor();
+      editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
+      editor.selection.select(editor.dom.select('img')[0]);
+      editor.execCommand('JustifyRight');
+      assert.equal(editor.getContent(), '<p><img style="float: right;" src="tinymce/ui/img/raster.gif"></p>');
+    });
   });
 
   it('mceBlockQuote', () => {
@@ -334,7 +390,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     assert.equal(
       editor.getContent(),
       '<p><a href="link"><span id="s1"><strong><em>1</em>' +
-        '</strong></span><span id="s2"><em><strong>2</strong></em></span></a></p>'
+      '</strong></span><span id="s2"><em><strong>2</strong></em></span></a></p>'
     );
   });
 
