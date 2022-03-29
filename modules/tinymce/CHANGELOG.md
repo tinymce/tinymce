@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Text alignment could not be applied to `pre` elements #TINY-7715
+- Dialogs would in some cases not prevent key presses from escalating to listeners #TINY-7005
 
 ## 6.0.1 - 2022-03-23
 

@@ -246,7 +246,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Keyboard.sKeydown(doc, Keys.enter(), { }),
       store.sAssertEq('After pressing <enter>', [ 'dialog.execute' ]),
       store.sClear,
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       store.sAssertEq('After pressing <esc>', [ 'dialog.escape' ]),
 
       Step.sync(() => {

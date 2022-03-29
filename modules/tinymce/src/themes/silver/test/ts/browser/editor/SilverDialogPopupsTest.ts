@@ -94,7 +94,7 @@ describe('browser.tinymce.themes.silver.editor.DialogPopupsTest', () => {
     assertVisibleFocusInside(FocusTools.getFocused, '.tox-swatches');
     TinyUiActions.keydown(editor, Keys.escape());
     await FocusTools.pTryOnSelector('Focus should return to colorinput button', doc, 'span[aria-haspopup="true"]');
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
     await pWaitForDialogClosed();
   });
 
@@ -107,7 +107,7 @@ describe('browser.tinymce.themes.silver.editor.DialogPopupsTest', () => {
     await UiFinder.pWaitForVisible('Waiting for menu to appear', SugarBody.body(), '.tox-collection__item');
     assertVisibleFocusInside(() => UiFinder.findIn(SugarBody.body(), '.tox-collection__item--active'), '.tox-menu');
     TinyUiActions.keydown(editor, Keys.escape());
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
     await pWaitForDialogClosed();
   });
 });
