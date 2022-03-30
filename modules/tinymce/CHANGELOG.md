@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Text alignment could not be applied to `pre` elements #TINY-7715
+- Nuget packages for .NET and .NET Core now copy TinyMCE into /wwwroot/lib/ in the projects TinyMCE is installed in #TINY-8611
 
 ## 6.0.1 - 2022-03-23
 
