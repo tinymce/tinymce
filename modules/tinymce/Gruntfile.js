@@ -770,7 +770,8 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
           { src: 'js/tinymce/tinymce.d.ts', dest: '/content/scripts/tinymce/tinymce.d.ts' },
           { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
-          { src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt' }
+          { src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt' },
+          { src: 'tools/nuget/build/TinyMCE.targets', dest: '/build/TinyMCE.targets' }
         ]
       },
     },
