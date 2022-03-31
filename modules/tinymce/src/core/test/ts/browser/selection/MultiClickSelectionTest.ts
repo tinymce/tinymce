@@ -1,4 +1,6 @@
+import { Cursors } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -8,6 +10,8 @@ import { findClosestBlockRange } from 'tinymce/core/selection/MultiClickSelectio
 
 import * as ViewBlock from '../../module/test/ViewBlock';
 
+type RangePath = [startContainerPath: number[], startOffset: number, endContainerPath: number[], endOffset: number];
+
 describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
   describe('findClosestBlockRange test', () => {
     const DOM = DOMUtils.DOM;
@@ -15,10 +19,13 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
     const getRoot = viewBlock.get;
     const setupHtml = viewBlock.update;
 
-    const createRange = (sc: Node, so: number, ec: Node, eo: number) => {
+    const resolveRange = (args: RangePath): Range => {
+      const root = SugarElement.fromDom(getRoot());
+      const startContainer = Cursors.calculateOne(root, args[0]);
+      const endContainer = Cursors.calculateOne(root, args[2]);
       const rng = DOM.createRng();
-      rng.setStart(sc, so);
-      rng.setEnd(ec, eo);
+      rng.setStart(startContainer.dom, args[1]);
+      rng.setEnd(endContainer.dom, args[3]);
       return rng;
     };
 
@@ -29,52 +36,47 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       assert.strictEqual(actual.endOffset, expected.endOffset, 'endOffset should be equal');
     };
 
-    const testFindClosestBlockRange = (startRng: Range, expectedRng: Range) =>
-      assertRange(expectedRng, findClosestBlockRange(startRng, getRoot()));
+    const testFindClosestBlockRange = (startRngPath: RangePath, expectedRngPath: RangePath) =>
+      assertRange(resolveRange(expectedRngPath), findClosestBlockRange(resolveRange(startRngPath), getRoot()));
 
-    it(`should return the range with the whole text content of the block`, () => {
+    it('TINY-8215: Should return the range with the whole text content of the block', () => {
       setupHtml('<p>aaa bIb ccc</p>');
-      const textNode = getRoot().firstChild.firstChild;
-      const startRng = createRange(textNode, 4, textNode, 7);
-      const expectedRng = createRange(textNode, 0, textNode, 11);
-      testFindClosestBlockRange(startRng, expectedRng);
+      testFindClosestBlockRange(
+        [[ 0, 0 ], 4, [ 0, 0 ], 7 ],
+        [[ 0, 0 ], 0, [ 0, 0 ], 11 ]
+      );
     });
 
-    it(`should return the range expanded from the block start to the next closest <br> element`, () => {
+    it('TINY-8215: Should return the range expanded from the block start to the next closest <br> element', () => {
       setupHtml('<p>aaa bIb <strong>ccc</strong><br>ddd</p>');
-      const firstTextNode = getRoot().firstChild.firstChild;
-      const cccTextNode = getRoot().firstChild.childNodes[1].firstChild;
-      const startRng = createRange(firstTextNode, 3, firstTextNode, 6);
-      const expectedRng = createRange(firstTextNode, 0, cccTextNode, 3);
-      testFindClosestBlockRange(startRng, expectedRng);
+      testFindClosestBlockRange(
+        [[ 0, 0 ], 3, [ 0, 0 ], 6 ],
+        [[ 0, 0 ], 0, [ 0, 1, 0 ], 3 ]
+      );
     });
 
-    it(`should return the range expanded from <br> element to end of the block`, () => {
+    it('TINY-8215: Should return the range expanded from <br> element to end of the block', () => {
       setupHtml('<p>aaa<br><em>bbb</em> cIc ddd</p>');
-      const lastTextNode = getRoot().firstChild.lastChild;
-      const bbbTextNode = getRoot().firstChild.childNodes[2].firstChild;
-      const startRng = createRange(lastTextNode, 1, lastTextNode, 4);
-      const expectedRng = createRange(bbbTextNode, 0, lastTextNode, 8);
-      testFindClosestBlockRange(startRng, expectedRng);
+      testFindClosestBlockRange(
+        [[ 0, 3 ], 1, [ 0, 3 ], 4 ],
+        [[ 0, 2, 0 ], 0, [ 0, 3 ], 8 ]
+      );
     });
 
-    it(`should return the range expanded between the two <br> elements`, () => {
+    it('TINY-8215: Should return the range expanded between the two <br> elements', () => {
       setupHtml('<p>aaa<br><em>bbb</em> cIc <strong>ddd</strong><br>eee</p>');
-      const clickTextNode = getRoot().firstChild.childNodes[3];
-      const bbbTextNode = getRoot().firstChild.childNodes[2].firstChild;
-      const dddTextNode = getRoot().firstChild.childNodes[4].firstChild;
-      const startRng = createRange(clickTextNode, 0, clickTextNode, 5);
-      const expectedRng = createRange(bbbTextNode, 0, dddTextNode, 3);
-      testFindClosestBlockRange(startRng, expectedRng);
+      testFindClosestBlockRange(
+        [[ 0, 3 ], 0, [ 0, 3 ], 5 ],
+        [[ 0, 2, 0 ], 0, [ 0, 4, 0 ], 3 ]
+      );
     });
 
-    it(`should return range expanded beween the block start and <br> elememt when the start range is exacly the <br> element`, () => {
+    it('TINY-8215: Should return the range expanded beween the block start and <br> elememt when the start range is exacly the <br> element', () => {
       setupHtml('<p>aaa bbb ccc<br>ddd</p>');
-      const pNode = getRoot().firstChild;
-      const firstTextNode = getRoot().firstChild.firstChild;
-      const startRng = createRange(pNode, 1, pNode, 2); // select exactly <br> element
-      const expectedRng = createRange(firstTextNode, 0, pNode, 2);
-      testFindClosestBlockRange(startRng, expectedRng);
+      testFindClosestBlockRange(
+        [[ 0 ], 1, [ 0 ], 2 ],
+        [[ 0, 0 ], 0, [ 0 ], 2 ]
+      );
     });
   });
 
@@ -107,7 +109,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       });
     }
 
-    it(`should select the content after <br> element`, () => {
+    it('TINY-8215: Should select the content after <br> element', () => {
       const editor = hook.editor();
       editor.setContent('<p><em>aaa</em><br><strong>cIc</strong> ddd</p>');
       const target = editor.dom.select('strong')[0];
@@ -116,7 +118,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 2, 0 ], 0, [ 0, 3 ], 4);
     });
 
-    it(`selection should not be collapsed before noneditable content`, () => {
+    it('TINY-8215: Selection should not be collapsed before noneditable content', () => {
       const editor = hook.editor();
       editor.setContent('<p>aaa bbb</p><div contenteditable="false"><p contenteditable="true">ccc</p></div>');
       const target = editor.dom.select('p')[0];

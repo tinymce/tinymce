@@ -39,11 +39,7 @@ const walkForwardWhile = (startNode: Node, rootNode: Node): Node => {
 
 const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
   const startPos = CaretPosition.fromRangeStart(startRng);
-  let clickNode = startPos.container();
-  if (CaretPosition.isElementPosition(startPos)) {
-    clickNode = clickNode.childNodes[startPos.offset()];
-  }
-
+  const clickNode = startPos.getNode();
   const startNode = walkBackwardWhile(clickNode, rootNode);
   const endNode = walkForwardWhile(clickNode, rootNode);
 
@@ -53,7 +49,6 @@ const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
   } else {
     rng.setStartBefore(startNode);
   }
-
   if (isText(endNode)) {
     rng.setEnd(endNode, endNode.data.length);
   } else {
