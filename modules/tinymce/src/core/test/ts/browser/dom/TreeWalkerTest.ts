@@ -46,6 +46,8 @@ describe('browser.tinymce.core.dom.TreeWalkerTest', () => {
     nodes = all(viewBlock.get()).slice(1);
   });
 
+  const isTextNode = (node: Node | undefined): node is Text => node && node.nodeType === 3;
+
   const compareNodeLists = (expectedNodes: ArrayLike<Node>, actualNodes: ArrayLike<Node>) => {
     if (expectedNodes.length !== actualNodes.length) {
       return false;
@@ -95,5 +97,31 @@ describe('browser.tinymce.core.dom.TreeWalkerTest', () => {
 
     actualNodes = actualNodes.reverse();
     assert.isTrue(compareNodeLists(viewBlock.get().childNodes, actualNodes), 'Should be the same');
+  });
+
+  it('TINY-8592: prev2 with abortIf function when reaching 4', () => {
+    const walker = new DomTreeWalker(nodes[nodes.length - 1], viewBlock.get());
+    let actualNodes;
+
+    actualNodes = [ walker.current() ];
+    while ((walker.prev2(false, (node: Node | undefined) => node && isTextNode(node) && node.textContent === '4'))) {
+      actualNodes.push(walker.current());
+    }
+
+    actualNodes = actualNodes.reverse();
+    assert.isTrue(compareNodeLists(nodes.slice(9), actualNodes), 'Should be the same');
+  });
+
+  it('TINY-8592: prev2 with abortIf function and shallow mode', () => {
+    const walker = new DomTreeWalker(nodes[nodes.length - 1], viewBlock.get());
+    let actualNodes;
+
+    actualNodes = [ walker.current() ];
+    while ((walker.prev2(false, (node: Node | undefined) => node && !isTextNode(node)))) {
+      actualNodes.push(walker.current());
+    }
+
+    actualNodes = actualNodes.reverse();
+    assert.isTrue(compareNodeLists([ viewBlock.get().childNodes.item(2) ], actualNodes), 'Should be the same');
   });
 });

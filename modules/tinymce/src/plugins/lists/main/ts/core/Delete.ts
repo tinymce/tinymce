@@ -37,7 +37,7 @@ const findNextCaretContainer = (editor: Editor, rng: Range, isForward: boolean, 
     }
   }
 
-  while ((node = walker[isForward ? 'next' : 'prev2']())) {
+  while ((node = (isForward ? walker.next() : walker.prev2(false, (checkNode: Node | undefined) => checkNode && checkNode.nodeName === 'TABLE')))) {
     if (node.nodeName === 'LI' && !node.hasChildNodes()) {
       return node;
     }
