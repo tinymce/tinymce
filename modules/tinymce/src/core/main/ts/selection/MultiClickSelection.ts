@@ -1,4 +1,4 @@
-import { SugarElement } from '@ephox/sugar';
+import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -11,25 +11,26 @@ import * as RangeNormalizer from './RangeNormalizer';
 const isBr = NodeType.isBr;
 const isText = NodeType.isText;
 
-const isBoundary = (node: Node): boolean => {
-  return isBr(node) || isBlock(SugarElement.fromDom(node));
+const getParentBlock = (node: Node, rootNode: Node): Node => {
+  const scope = PredicateFind.closest(SugarElement.fromDom(node), isBlock, (elm) => Compare.eq(SugarElement.fromDom(rootNode), elm));
+  return scope.getOr(SugarElement.fromDom(rootNode)).dom;
 };
 
-const walkBackwardWhile = (startNode: Node, rootNode: Node): Node => {
-  const walker = new DomTreeWalker(startNode, rootNode);
+const walkBackwardWhile = (startNode: Node, scope: Node): Node => {
+  const walker = new DomTreeWalker(startNode, scope);
   let result: Node = startNode;
-  for (let next = walker.prev(); next && !isBoundary(next); next = walker.prev()) {
-    if (isCaretCandidate(next)) {
-      result = next;
+  for (let prev = walker.prev(); prev && !isBr(prev); prev = walker.prev()) {
+    if (isCaretCandidate(prev)) {
+      result = prev;
     }
   }
   return result;
 };
 
-const walkForwardWhile = (startNode: Node, rootNode: Node): Node => {
-  const walker = new DomTreeWalker(startNode, rootNode);
+const walkForwardWhile = (startNode: Node, scope: Node): Node => {
+  const walker = new DomTreeWalker(startNode, scope);
   let result: Node = startNode;
-  for (let next = startNode; next && !isBoundary(next); next = walker.next()) {
+  for (let next = startNode; next && !isBr(next); next = walker.next()) {
     if (isCaretCandidate(next)) {
       result = next;
     }
@@ -40,8 +41,9 @@ const walkForwardWhile = (startNode: Node, rootNode: Node): Node => {
 const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
   const startPos = CaretPosition.fromRangeStart(startRng);
   const clickNode = startPos.getNode();
-  const startNode = walkBackwardWhile(clickNode, rootNode);
-  const endNode = walkForwardWhile(clickNode, rootNode);
+  const scope = getParentBlock(clickNode, rootNode);
+  const startNode = walkBackwardWhile(clickNode, scope);
+  const endNode = walkForwardWhile(clickNode, scope);
 
   const rng = document.createRange();
   if (isText(startNode)) {
