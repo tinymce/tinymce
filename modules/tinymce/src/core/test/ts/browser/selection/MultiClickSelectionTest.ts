@@ -66,7 +66,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
     it('TINY-8215: Should return the range expanded between the two <br> elements', () => {
       setupHtml('<p>aaa<br><em>bbb</em> cIc <strong>ddd</strong><br>eee</p>');
       testFindClosestBlockRange(
-        [[ 0, 3 ], 0, [ 0, 3 ], 5 ],
+        [[ 0, 3 ], 1, [ 0, 3 ], 4 ],
         [[ 0, 2, 0 ], 0, [ 0, 4, 0 ], 3 ]
       );
     });
@@ -75,6 +75,22 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       setupHtml('<p>aaa bbb ccc<br>ddd</p>');
       testFindClosestBlockRange(
         [[ 0 ], 1, [ 0 ], 2 ],
+        [[ 0, 0 ], 0, [ 0 ], 2 ]
+      );
+    });
+
+    it('TINY-8215: it should set start of the range before cef element if the first caret candidate is within it', () => {
+      setupHtml('<p><span contenteditable="false"><em>aaa</em></span> bIb</p>');
+      testFindClosestBlockRange(
+        [[ 0, 1 ], 1, [ 0, 1 ], 4 ],
+        [[ 0 ], 0, [ 0, 1 ], 4 ]
+      );
+    });
+
+    it('TINY-8215: it should set end of the range right after cef element if the last caret candidate is within it', () => {
+      setupHtml('<p>aIa <span contenteditable="false">bbb</span><br>ccc</p>');
+      testFindClosestBlockRange(
+        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
         [[ 0, 0 ], 0, [ 0 ], 2 ]
       );
     });

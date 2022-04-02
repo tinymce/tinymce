@@ -10,11 +10,15 @@ import * as RangeNormalizer from './RangeNormalizer';
 
 const isBr = NodeType.isBr;
 const isText = NodeType.isText;
+const isContentEditableFalse = (elm: SugarElement<Node>): boolean => NodeType.isContentEditableFalse(elm.dom);
+const isRoot = (rootNode: Node) => (elm: SugarElement<Node>): boolean => Compare.eq(SugarElement.fromDom(rootNode), elm);
 
-const getParentBlock = (node: Node, rootNode: Node): Node => {
-  const scope = PredicateFind.closest(SugarElement.fromDom(node), isBlock, (elm) => Compare.eq(SugarElement.fromDom(rootNode), elm));
-  return scope.getOr(SugarElement.fromDom(rootNode)).dom;
-};
+const getParentBlock = (node: Node, rootNode: Node): Node =>
+  PredicateFind.closest(SugarElement.fromDom(node), isBlock, isRoot(rootNode))
+    .getOr(SugarElement.fromDom(rootNode)).dom;
+
+const getParentCef = (node: Node, rootNode: Node) =>
+  PredicateFind.closest(SugarElement.fromDom(node), isContentEditableFalse, isRoot(rootNode));
 
 const walkBackwardWhile = (startNode: Node, scope: Node): Node => {
   const walker = new DomTreeWalker(startNode, scope);
@@ -46,16 +50,21 @@ const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
   const endNode = walkForwardWhile(clickNode, scope);
 
   const rng = document.createRange();
-  if (isText(startNode)) {
-    rng.setStart(startNode, 0);
-  } else {
-    rng.setStartBefore(startNode);
-  }
-  if (isText(endNode)) {
-    rng.setEnd(endNode, endNode.data.length);
-  } else {
-    rng.setEndAfter(endNode);
-  }
+  getParentCef(startNode, scope).fold(() => {
+    if (isText(startNode)) {
+      rng.setStart(startNode, 0);
+    } else {
+      rng.setStartBefore(startNode);
+    }
+  }, (cef) => rng.setStartBefore(cef.dom));
+
+  getParentCef(endNode, scope).fold(() => {
+    if (isText(endNode)) {
+      rng.setEnd(endNode, endNode.data.length);
+    } else {
+      rng.setEndAfter(endNode);
+    }
+  }, (cef) => rng.setEndAfter(cef.dom));
   return rng;
 };
 
