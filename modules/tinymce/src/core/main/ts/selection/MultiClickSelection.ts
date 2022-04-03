@@ -13,30 +13,20 @@ const isText = NodeType.isText;
 const isContentEditableFalse = (elm: SugarElement<Node>): boolean => NodeType.isContentEditableFalse(elm.dom);
 const isRoot = (rootNode: Node) => (elm: SugarElement<Node>): boolean => Compare.eq(SugarElement.fromDom(rootNode), elm);
 
-const getParentBlock = (node: Node, rootNode: Node): Node =>
+const getClosestBlock = (node: Node, rootNode: Node): Node =>
   PredicateFind.closest(SugarElement.fromDom(node), isBlock, isRoot(rootNode))
     .getOr(SugarElement.fromDom(rootNode)).dom;
 
-const getParentCef = (node: Node, rootNode: Node) =>
+const getClosestCef = (node: Node, rootNode: Node) =>
   PredicateFind.closest(SugarElement.fromDom(node), isContentEditableFalse, isRoot(rootNode));
 
-const walkBackwardWhile = (startNode: Node, scope: Node): Node => {
+const findEdgeCaretCandidate = (startNode: Node, scope: Node, forward: boolean): Node => {
   const walker = new DomTreeWalker(startNode, scope);
+  const next = forward ? walker.next.bind(walker) : walker.prev.bind(walker);
   let result: Node = startNode;
-  for (let prev = walker.prev(); prev && !isBr(prev); prev = walker.prev()) {
-    if (isCaretCandidate(prev)) {
-      result = prev;
-    }
-  }
-  return result;
-};
-
-const walkForwardWhile = (startNode: Node, scope: Node): Node => {
-  const walker = new DomTreeWalker(startNode, scope);
-  let result: Node = startNode;
-  for (let next = startNode; next && !isBr(next); next = walker.next()) {
-    if (isCaretCandidate(next)) {
-      result = next;
+  for (let current = forward ? startNode : next(); current && !isBr(current); current = next()) {
+    if (isCaretCandidate(current)) {
+      result = current;
     }
   }
   return result;
@@ -45,12 +35,12 @@ const walkForwardWhile = (startNode: Node, scope: Node): Node => {
 const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
   const startPos = CaretPosition.fromRangeStart(startRng);
   const clickNode = startPos.getNode();
-  const scope = getParentBlock(clickNode, rootNode);
-  const startNode = walkBackwardWhile(clickNode, scope);
-  const endNode = walkForwardWhile(clickNode, scope);
+  const scope = getClosestBlock(clickNode, rootNode);
+  const startNode = findEdgeCaretCandidate(clickNode, scope, false);
+  const endNode = findEdgeCaretCandidate(clickNode, scope, true);
 
   const rng = document.createRange();
-  getParentCef(startNode, scope).fold(() => {
+  getClosestCef(startNode, scope).fold(() => {
     if (isText(startNode)) {
       rng.setStart(startNode, 0);
     } else {
@@ -58,7 +48,7 @@ const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
     }
   }, (cef) => rng.setStartBefore(cef.dom));
 
-  getParentCef(endNode, scope).fold(() => {
+  getClosestCef(endNode, scope).fold(() => {
     if (isText(endNode)) {
       rng.setEnd(endNode, endNode.data.length);
     } else {
