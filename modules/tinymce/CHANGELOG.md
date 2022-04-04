@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
+- On triple click selection incorrectly collapsed in the Chrome browser when occurred around nested noneditable content #TINY-8215
 
 ## 6.0.1 - TBD
 
