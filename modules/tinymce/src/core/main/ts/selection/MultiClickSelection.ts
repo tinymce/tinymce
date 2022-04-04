@@ -40,21 +40,25 @@ const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
   const endNode = findEdgeCaretCandidate(clickNode, scope, true);
 
   const rng = document.createRange();
-  getClosestCef(startNode, scope).fold(() => {
-    if (isText(startNode)) {
-      rng.setStart(startNode, 0);
-    } else {
-      rng.setStartBefore(startNode);
-    }
-  }, (cef) => rng.setStartBefore(cef.dom));
+  getClosestCef(startNode, scope).fold(
+    () => {
+      if (isText(startNode)) {
+        rng.setStart(startNode, 0);
+      } else {
+        rng.setStartBefore(startNode);
+      }
+    }, (cef) => rng.setStartBefore(cef.dom)
+  );
 
-  getClosestCef(endNode, scope).fold(() => {
-    if (isText(endNode)) {
-      rng.setEnd(endNode, endNode.data.length);
-    } else {
-      rng.setEndAfter(endNode);
-    }
-  }, (cef) => rng.setEndAfter(cef.dom));
+  getClosestCef(endNode, scope).fold(
+    () => {
+      if (isText(endNode)) {
+        rng.setEnd(endNode, endNode.data.length);
+      } else {
+        rng.setEndAfter(endNode);
+      }
+    }, (cef) => rng.setEndAfter(cef.dom)
+  );
   return rng;
 };
 
