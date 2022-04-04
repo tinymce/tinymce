@@ -1,4 +1,4 @@
-import { Cursors } from '@ephox/agar';
+import { Cursors, Mouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -101,8 +101,8 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       base_url: '/project/tinymce/js/tinymce'
     }, [], true);
 
-    const fakeMultiClick = (editor: Editor, clickCount: number, target: HTMLElement) => {
-      editor.dispatch('mousedown', { detail: clickCount, target } as unknown as MouseEvent);
+    const fakeMultiClick = (clickCount: number, target: HTMLElement) => {
+      Mouse.mouseDown(SugarElement.fromDom(target), { detail: clickCount });
     };
 
     for (let clickCount = 3; clickCount <= 10; clickCount++) {
@@ -111,7 +111,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
         editor.setContent('<p>abc</p>');
         const target = editor.dom.select('p')[0];
         TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
-        fakeMultiClick(editor, clickCount, target);
+        fakeMultiClick( clickCount, target);
         TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
       });
 
@@ -120,7 +120,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
         editor.setContent('<p>abc</p>');
         const target = editor.dom.select('p')[0];
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [], 1);
-        fakeMultiClick(editor, clickCount, target);
+        fakeMultiClick( clickCount, target);
         TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
       });
     }
@@ -130,7 +130,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       editor.setContent('<p><em>aaa</em><br><strong>cIc</strong> ddd</p>');
       const target = editor.dom.select('strong')[0];
       TinySelections.setSelection(editor, [ 0, 2, 0 ], 0, [ 0, 2, 0 ], 3);
-      fakeMultiClick(editor, 3, target);
+      fakeMultiClick(3, target);
       TinyAssertions.assertSelection(editor, [ 0, 2, 0 ], 0, [ 0, 3 ], 4);
     });
 
@@ -139,7 +139,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       editor.setContent('<p>aaa bbb</p><div contenteditable="false"><p contenteditable="true">ccc</p></div>');
       const target = editor.dom.select('p')[0];
       TinySelections.setSelection(editor, [ 0, 0 ], 4, [ 0, 0 ], 7);
-      fakeMultiClick(editor, 3, target);
+      fakeMultiClick(3, target);
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 7);
     });
   });
