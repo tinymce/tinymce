@@ -11,10 +11,11 @@ import * as RangeNormalizer from './RangeNormalizer';
 const isBr = NodeType.isBr;
 const isText = NodeType.isText;
 const isContentEditableFalse = (elm: SugarElement<Node>): boolean => NodeType.isContentEditableFalse(elm.dom);
+const isContentEditableTrue = (elm: SugarElement<Node>): boolean => NodeType.isContentEditableTrue(elm.dom);
 const isRoot = (rootNode: Node) => (elm: SugarElement<Node>): boolean => Compare.eq(SugarElement.fromDom(rootNode), elm);
 
-const getClosestBlock = (node: Node, rootNode: Node): Node =>
-  PredicateFind.closest(SugarElement.fromDom(node), isBlock, isRoot(rootNode))
+const getClosestScope = (node: Node, rootNode: Node): Node =>
+  PredicateFind.closest(SugarElement.fromDom(node), (elm) => isContentEditableTrue(elm) || isBlock(elm), isRoot(rootNode))
     .getOr(SugarElement.fromDom(rootNode)).dom;
 
 const getClosestCef = (node: Node, rootNode: Node) =>
@@ -35,7 +36,7 @@ const findEdgeCaretCandidate = (startNode: Node, scope: Node, forward: boolean):
 const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
   const startPos = CaretPosition.fromRangeStart(startRng);
   const clickNode = startPos.getNode();
-  const scope = getClosestBlock(clickNode, rootNode);
+  const scope = getClosestScope(clickNode, rootNode);
   const startNode = findEdgeCaretCandidate(clickNode, scope, false);
   const endNode = findEdgeCaretCandidate(clickNode, scope, true);
 

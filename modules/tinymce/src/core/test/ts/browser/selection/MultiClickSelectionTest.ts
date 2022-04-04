@@ -79,7 +79,7 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       );
     });
 
-    it('TINY-8215: it should set start of the range before cef element if the first caret candidate is within it', () => {
+    it('TINY-8215: Should set start of the range before cef element if the first caret candidate is within it', () => {
       setupHtml('<p><span contenteditable="false"><em>aaa</em></span> bIb</p>');
       testFindClosestBlockRange(
         [[ 0, 1 ], 1, [ 0, 1 ], 4 ],
@@ -87,11 +87,27 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       );
     });
 
-    it('TINY-8215: it should set end of the range right after cef element if the last caret candidate is within it', () => {
+    it('TINY-8215: Should set end of the range right after cef element if the last caret candidate is within it', () => {
       setupHtml('<p>aIa <span contenteditable="false">bbb</span><br>ccc</p>');
       testFindClosestBlockRange(
         [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
         [[ 0, 0 ], 0, [ 0 ], 2 ]
+      );
+    });
+
+    it('TINY-8215: Should restrict range up to the cet element scope', () => {
+      setupHtml('<p contenteditable="false">aaa<span contenteditable="true">bbb cIc ddd</span>eee</p>');
+      testFindClosestBlockRange(
+        [[ 0, 1, 0 ], 4, [ 0, 1, 0 ], 7 ],
+        [[ 0, 1, 0 ], 0, [ 0, 1, 0 ], 11 ]
+      );
+    });
+
+    it('TINY-8215: Should include nested cef element to range scoped with cet element', () => {
+      setupHtml('<p contenteditable="true">aaa<span contenteditable="false">bbb ccc ddd</span>eee</p>');
+      testFindClosestBlockRange(
+        [[ 0 ], 1, [ 0 ], 2 ],
+        [[ 0, 0 ], 0, [ 0, 2 ], 3 ]
       );
     });
   });
