@@ -6,11 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
+- The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
+
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
+- Text alignment could not be applied to `pre` elements #TINY-7715
 - On triple click selection was incorrectly collapsed in the Chrome browser when occurring around nested noneditable content #TINY-8215
 
-## 6.0.1 - TBD
+## 6.0.1 - 2022-03-23
 
 ### Fixed
 - Fixed the dev ZIP missing the required `bin` scripts to build from the source #TINY-8542
@@ -23,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clipboard content was not generated correctly when cutting and copying `contenteditable="false"` elements #TINY-8563
 - Fixed the box-shadow getting clipped in autocompletor popups #TINY-8573
 - The `buttonType` property did not work for dialog footer buttons #TINY-8582
+- Fix contrast ratio for error messages #TINY-8586
 
 ## 6.0.0 - 2022-03-03
 
