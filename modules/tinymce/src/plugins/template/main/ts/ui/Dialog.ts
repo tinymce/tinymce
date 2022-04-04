@@ -183,7 +183,7 @@ const open = (editor: Editor, templateList: ExternalTemplate[]): void => {
           type: 'iframe',
           name: 'preview',
           sandboxed: false,
-          opaque: true
+          transparent: false
         }
       ];
 

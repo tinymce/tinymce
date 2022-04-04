@@ -16,7 +16,7 @@ export const open = (editor: Editor): void => {
           name: 'preview',
           type: 'iframe',
           sandboxed: true,
-          opaque: true
+          transparent: false
         }
       ]
     },

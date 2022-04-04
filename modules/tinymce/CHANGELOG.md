@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Improved
+- New `transparent` property for `iframe` dialog component #TINY-8534
+
 ### Changed
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
@@ -13,9 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Text alignment could not be applied to `pre` elements #TINY-7715
-
-### Improved
-- New `opaque` prop for `iframe` dialog component fixes an issue in Preview and Insert Template dialogs with dark skins #TINY-8534
+- Preview and Insert Template dialogs display correct content backgorund in dark skins #TINY-8534
 
 ## 6.0.1 - 2022-03-23
 
