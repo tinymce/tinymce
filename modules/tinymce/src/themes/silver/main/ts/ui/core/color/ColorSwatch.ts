@@ -16,6 +16,7 @@ export interface ColorSwatchDialogData {
 type ColorFormat = 'forecolor' | 'hilitecolor';
 
 const fallbackColor = '#000000';
+const fallbackColorBg = '#fbeeb8';
 
 const getCurrentColor = (editor: Editor, format: ColorFormat): Optional<string> => {
   let color: string | undefined;
@@ -232,7 +233,7 @@ const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, val
 const register = (editor: Editor) => {
   registerCommands(editor);
   const lastForeColor = Cell(fallbackColor);
-  const lastBackColor = Cell(fallbackColor);
+  const lastBackColor = Cell(fallbackColorBg);
   registerTextColorButton(editor, 'forecolor', 'forecolor', 'Text color', lastForeColor);
   registerTextColorButton(editor, 'backcolor', 'hilitecolor', 'Background color', lastBackColor);
 
