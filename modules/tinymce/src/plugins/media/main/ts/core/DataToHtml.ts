@@ -11,10 +11,10 @@ import * as UrlPatterns from './UrlPatterns';
 export type DataToHtmlCallback = (data: MediaData) => string;
 
 const getIframeHtml = (data: MediaData, iframeTemplateCallback: DataToHtmlCallback): string => {
-  const allowFullscreen = data.allowfullscreen ? ' allowFullscreen="1"' : '';
   if (iframeTemplateCallback) {
     return iframeTemplateCallback(data);
   } else {
+    const allowFullscreen = data.allowfullscreen ? ' allowFullscreen="1"' : '';
 
     return '<iframe src="' + data.source + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
   }
