@@ -1,5 +1,5 @@
 import { Arr } from '@ephox/katamari';
-import { Compare, Remove, SugarElement } from '@ephox/sugar';
+import { Compare, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
@@ -37,7 +37,7 @@ const findNextCaretContainer = (editor: Editor, rng: Range, isForward: boolean, 
     }
   }
 
-  while ((node = (isForward ? walker.next() : walker.prev2(false, (checkNode: Node | undefined) => checkNode && checkNode.nodeName === 'TABLE')))) {
+  while ((node = (isForward ? walker.next() : walker.prev2()))) {
     if (node.nodeName === 'LI' && !node.hasChildNodes()) {
       return node;
     }
@@ -208,6 +208,15 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
   if (block && dom.isEmpty(block)) {
     const rng = ListRangeUtils.normalizeRange(editor.selection.getRng());
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
+
+    const findValidElement = (element: SugarElement<Node>) => Arr.contains([ 'td', 'th', 'caption' ], SugarNode.name(element));
+    const findRoot = (node: SugarElement<Node>) => node.dom === root;
+    const otherLiCell = PredicateFind.closest(SugarElement.fromDom(otherLi), findValidElement, findRoot);
+    const caretCell = PredicateFind.closest(SugarElement.fromDom(rng.startContainer), findValidElement, findRoot);
+
+    if (otherLiCell !== caretCell) {
+      return false;
+    }
 
     if (otherLi) {
       editor.undoManager.transact(() => {

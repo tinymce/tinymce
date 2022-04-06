@@ -1,5 +1,3 @@
-import { Fun, Type } from '@ephox/katamari';
-
 export interface DomTreeWalkerConstructor {
   readonly prototype: DomTreeWalker;
 
@@ -66,8 +64,8 @@ class DomTreeWalker {
     return this.node;
   }
 
-  public prev2(shallow?: boolean, abortIf?: (node: Node | undefined) => boolean): Node | undefined {
-    this.node = this.findPreviousNode(this.node, Type.isFunction(abortIf) ? abortIf : Fun.never, shallow);
+  public prev2(shallow?: boolean): Node | undefined {
+    this.node = this.findPreviousNode(this.node, shallow);
     return this.node;
   }
 
@@ -98,12 +96,12 @@ class DomTreeWalker {
     }
   }
 
-  private findPreviousNode(node: Node | undefined, abortIf: (node: Node | undefined) => boolean, shallow?: boolean): undefined | Node {
+  private findPreviousNode(node: Node | undefined, shallow?: boolean): undefined | Node {
     let sibling: Node, parent: Node, child: Node;
 
     if (node) {
       sibling = node.previousSibling;
-      if (this.rootNode && sibling === this.rootNode || abortIf(sibling)) {
+      if (this.rootNode && sibling === this.rootNode) {
         return;
       }
 
@@ -111,10 +109,6 @@ class DomTreeWalker {
         if (!shallow) {
           // Walk down to the most distant child
           for (child = sibling.lastChild; child; child = child.lastChild) {
-            if (abortIf(child)) {
-              return;
-            }
-
             if (!child.lastChild) {
               return child;
             }
@@ -125,7 +119,7 @@ class DomTreeWalker {
       }
 
       parent = node.parentNode;
-      if (parent && parent !== this.rootNode && !abortIf(parent)) {
+      if (parent && parent !== this.rootNode) {
         return parent;
       }
     }
