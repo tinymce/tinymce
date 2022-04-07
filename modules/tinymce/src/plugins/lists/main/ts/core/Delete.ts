@@ -209,16 +209,16 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
     const rng = ListRangeUtils.normalizeRange(editor.selection.getRng());
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
 
-    const findValidElement = (element: SugarElement<Node>) => Arr.contains([ 'td', 'th', 'caption' ], SugarNode.name(element));
-    const findRoot = (node: SugarElement<Node>) => node.dom === root;
-    const otherLiCell = PredicateFind.closest(SugarElement.fromDom(otherLi), findValidElement, findRoot);
-    const caretCell = PredicateFind.closest(SugarElement.fromDom(rng.startContainer), findValidElement, findRoot);
-
-    if (otherLiCell !== caretCell) {
-      return false;
-    }
-
     if (otherLi) {
+      const findValidElement = (element: SugarElement<Node>) => Arr.contains([ 'td', 'th', 'caption' ], SugarNode.name(element));
+      const findRoot = (node: SugarElement<Node>) => node.dom === root;
+      const otherLiCell = PredicateFind.closest(SugarElement.fromDom(otherLi), findValidElement, findRoot);
+      const caretCell = PredicateFind.closest(SugarElement.fromDom(rng.startContainer), findValidElement, findRoot);
+
+      if (otherLiCell !== caretCell) {
+        return false;
+      }
+
       editor.undoManager.transact(() => {
         removeBlock(dom, block, root);
         ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode as Element);
