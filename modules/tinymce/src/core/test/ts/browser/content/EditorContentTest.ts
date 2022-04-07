@@ -94,6 +94,46 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     assertEventsContentType();
   });
 
+  it('TINY-8578: getContent text, empty line in div', () => {
+    const editor = hook.editor();
+    editor.setContent('<div><p></p></div>');
+    const text = editor.getContent({ format: 'text' });
+    const expected = '';
+    Assertions.assertHtml('Should be expected text', expected, text);
+    assertEventsFiredInOrder();
+    assertEventsContentType();
+  });
+
+  it('TINY-8578: getContent text, empty line', () => {
+    const editor = hook.editor();
+    editor.setContent('<p></p>');
+    const text = editor.getContent({ format: 'text' });
+    const expected = '';
+    Assertions.assertHtml('Should be expected text', expected, text);
+    assertEventsFiredInOrder();
+    assertEventsContentType();
+  });
+
+  it('TINY-8578: getContent text, two empty lines in div', () => {
+    const editor = hook.editor();
+    editor.setContent('<div><p></p><p></p></div>');
+    const text = editor.getContent({ format: 'text' });
+    const expected = '\n\n\n\n';
+    Assertions.assertHtml('Should be expected text', expected, text);
+    assertEventsFiredInOrder();
+    assertEventsContentType();
+  });
+
+  it('TINY-8578: getContent text, two empty lines', () => {
+    const editor = hook.editor();
+    editor.setContent('<p></p><p></p>');
+    const text = editor.getContent({ format: 'text' });
+    const expected = '\n\n\n\n';
+    Assertions.assertHtml('Should be expected text', expected, text);
+    assertEventsFiredInOrder();
+    assertEventsContentType();
+  });
+
   it('TINY-6281: getContent text with empty editor', () => {
     const editor = hook.editor();
     editor.setContent('');

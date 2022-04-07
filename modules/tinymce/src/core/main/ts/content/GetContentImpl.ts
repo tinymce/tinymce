@@ -1,4 +1,4 @@
-import { Fun, Optional, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -23,7 +23,8 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
   } else if (args.format === 'text') {
     // return empty string for text format when editor is empty to avoid bogus elements being returned in content
-    content = editor.dom.isEmpty(body) ? '' : Zwsp.trim(body.innerText || body.textContent);
+    content = Zwsp.trim(body.innerText || body.textContent);
+    content = Arr.contains([ '\n\n', '\n' ], content) ? '' : content;
   } else if (args.format === 'tree') {
     content = editor.serializer.serialize(body, args);
   } else {
