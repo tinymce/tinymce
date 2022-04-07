@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Text alignment could not be applied to `pre` elements #TINY-7715
-- Preview and Insert Template dialogs display correct content backgorund in dark skins #TINY-8534
+- Preview and Insert Template dialogs display the correct content background color when using dark skins #TINY-8534
 
 ## 6.0.1 - 2022-03-23
 
