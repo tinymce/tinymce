@@ -8,12 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
-- Added optional function parameter to `TreeWalker.prev2`, allowing aborting tree walking efforts #TINY-8592
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
 
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
-- Some types on functions in `editor.dom.TreeWalker` class missed that it could return undefined #TINY-8592
+- Some types on functions in `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
 - In some cases backspace would step into tables rather than remain outside #TINY-8592
 - Text alignment could not be applied to `pre` elements #TINY-7715
 

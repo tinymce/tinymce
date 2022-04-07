@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Optionals } from '@ephox/katamari';
 import { Compare, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -215,7 +215,7 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
       const otherLiCell = PredicateFind.closest(SugarElement.fromDom(otherLi), findValidElement, findRoot);
       const caretCell = PredicateFind.closest(SugarElement.fromDom(rng.startContainer), findValidElement, findRoot);
 
-      if (otherLiCell !== caretCell) {
+      if (!Optionals.equals(otherLiCell, caretCell, (a, b) => a.dom === b.dom)) {
         return false;
       }
 
