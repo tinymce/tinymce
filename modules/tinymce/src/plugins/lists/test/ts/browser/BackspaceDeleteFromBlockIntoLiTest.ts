@@ -50,7 +50,7 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
       '</table>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 1 ], 0);
     TinyContentActions.keystroke(editor, Keys.backspace());
-    TinyAssertions.assertCursor(editor, [0, 0, 0, 0, 0, 0, 0 ], 1);
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 1);
     TinyAssertions.assertContent(editor, '<table>' +
         '<tbody>' +
           '<tr>' +
@@ -83,7 +83,7 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
     editor.setContent(content);
     TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
     TinyContentActions.keystroke(editor, Keys.backspace());
-    TinyAssertions.assertCursor(editor, [ 0, 0, 0,1 ], 0);
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1 ], 0);
     TinyAssertions.assertContent(editor, content);
   });
 
