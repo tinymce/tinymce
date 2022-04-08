@@ -84,7 +84,7 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       ui.show();
       return;
     }
-    // console.time("init load");
+
     floatContainer.set(OuterContainer.getHeader(outerContainer).getOrDie());
 
     const uiContainer = getUiContainer(editor);
