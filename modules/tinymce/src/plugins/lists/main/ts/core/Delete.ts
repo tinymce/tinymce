@@ -215,7 +215,7 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
       const otherLiCell = PredicateFind.closest(SugarElement.fromDom(otherLi), findValidElement, findRoot);
       const caretCell = PredicateFind.closest(SugarElement.fromDom(rng.startContainer), findValidElement, findRoot);
 
-      if (!Optionals.equals(otherLiCell, caretCell, (a, b) => a.dom === b.dom)) {
+      if (!Optionals.equals(otherLiCell, caretCell, Compare.eq)) {
         return false;
       }
 

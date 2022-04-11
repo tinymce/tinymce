@@ -36,7 +36,7 @@ class DomTreeWalker {
    * Returns the current node.
    *
    * @method current
-   * @return {Node | undefined} Current node where the walker is, or undefined if the walker has reached the end.
+   * @return {Node/undefined} Current node where the walker is, or undefined if the walker has reached the end.
    */
   public current(): Node | undefined {
     return this.node;
@@ -46,7 +46,7 @@ class DomTreeWalker {
    * Walks to the next node in tree.
    *
    * @method next
-   * @return {Node | undefined} Current node where the walker is after moving to the next node, or undefined if the walker has reached the end.
+   * @return {Node/undefined} Current node where the walker is after moving to the next node, or undefined if the walker has reached the end.
    */
   public next(shallow?: boolean): Node | undefined {
     this.node = this.findSibling(this.node, 'firstChild', 'nextSibling', shallow);
@@ -57,7 +57,7 @@ class DomTreeWalker {
    * Walks to the previous node in tree.
    *
    * @method prev
-   * @return {Node | undefined} Current node where the walker is after moving to the previous node, or undefined if the walker has reached the end.
+   * @return {Node/undefined} Current node where the walker is after moving to the previous node, or undefined if the walker has reached the end.
    */
   public prev(shallow?: boolean): Node | undefined {
     this.node = this.findSibling(this.node, 'lastChild', 'previousSibling', shallow);
