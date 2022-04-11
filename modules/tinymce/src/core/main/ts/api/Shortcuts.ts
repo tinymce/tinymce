@@ -37,7 +37,8 @@ const keyCodeLookup = {
   f9: 120,
   f10: 121,
   f11: 122,
-  f12: 123
+  f12: 123,
+  '.': 190,
 };
 
 const modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access');

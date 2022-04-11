@@ -72,6 +72,7 @@ describe('browser.tinymce.core.ShortcutsTest', () => {
     assertShortcut('f10', { keyCode: 121 }, true);
     assertShortcut('f11', { keyCode: 122 }, true);
     assertShortcut('f12', { keyCode: 123 }, true);
+    assertShortcut('.', { keyCode: 190 }, true);
   });
 
   it('Remove', () => {
