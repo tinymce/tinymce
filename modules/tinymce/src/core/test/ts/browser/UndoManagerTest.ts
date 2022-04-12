@@ -298,13 +298,13 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     const data = editor.undoManager.data;
     assert.lengthOf(data, 3);
     assert.equal(data[0].content, '<p>abc</p>');
-    assert.deepEqual(data[0].bookmark, { start: [ 0, 0, 0 ] });
-    assert.deepEqual(data[0].beforeBookmark, { start: [ 0, 0, 0 ] });
+    assert.deepEqual(data[0].bookmark, { start: [ 0, 0, 0 ], forward: true });
+    assert.deepEqual(data[0].beforeBookmark, { start: [ 0, 0, 0 ], forward: true });
     assert.equal(data[1].content, '<p>a1c</p>');
-    assert.deepEqual(data[1].bookmark, { start: [ 2, 0, 0 ] });
-    assert.deepEqual(data[1].beforeBookmark, { start: [ 2, 0, 0 ] });
+    assert.deepEqual(data[1].bookmark, { start: [ 2, 0, 0 ], forward: true });
+    assert.deepEqual(data[1].beforeBookmark, { start: [ 2, 0, 0 ], forward: true });
     assert.equal(data[2].content, '<p>a2c</p>');
-    assert.deepEqual(data[2].bookmark, { start: [ 2, 0, 0 ] });
+    assert.deepEqual(data[2].bookmark, { start: [ 2, 0, 0 ], forward: true });
     assert.deepEqual(data[1].beforeBookmark, data[2].bookmark);
   });
 

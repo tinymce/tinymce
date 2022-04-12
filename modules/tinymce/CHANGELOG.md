@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Text alignment could not be applied to `pre` elements #TINY-7715
+- Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
 
 ## 6.0.1 - 2022-03-23
 
