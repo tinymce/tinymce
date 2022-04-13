@@ -58,6 +58,17 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     assert.isTrue(isExpectedTypes);
   };
 
+  const isSafari = () => PlatformDetection.detect().browser.isSafari();
+
+  const testGetTextContent = (content: string, expected: string) => {
+    const editor = hook.editor();
+    editor.setContent(content);
+    const text = editor.getContent({ format: 'text' });
+    Assertions.assertEq('Should be expected text', expected, text);
+    assertEventsFiredInOrder();
+    assertEventsContentType();
+  }
+
   const clearEvents = () => events = [];
 
   beforeEach(() => clearEvents());
@@ -80,68 +91,20 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     assertEventsContentType();
   });
 
-  it('TINY-6281: getContent text', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>Text to be retrieved</p>');
-    const text = editor.getContent({ format: 'text' });
-    // TODO: TINY-8367 The table plugin code has been moved to core so there is now always an extra DIV in the dom for the table resize bars
-    // Safari differs in behaviour compared to the other browsers when getting text content for inline mode.
-    // When the resize bar div is included in the DOM, editor.getBody().innerText includes two extra \n at the end
-    const isSafari = PlatformDetection.detect().browser.isSafari();
-    const expected = 'Text to be retrieved' + (isSafari ? '\n\n' : '');
-    Assertions.assertHtml('Should be expected text', expected, text);
-    assertEventsFiredInOrder();
-    assertEventsContentType();
-  });
+  // TODO: TINY-8367 The table plugin code has been moved to core so there is now always an extra DIV in the dom for the table resize bars
+  // Safari differs in behaviour compared to the other browsers when getting text content for inline mode.
+  // When the resize bar div is included in the DOM, editor.getBody().innerText includes two extra \n at the end
+  it('TINY-6281: getContent text', () => testGetTextContent('<p>Text to be retrieved</p>', 'Text to be retrieved' + (isSafari() ? '\n\n' : '')));
 
-  it('TINY-8578: getContent text, empty line in div', () => {
-    const editor = hook.editor();
-    editor.setContent('<div><p></p></div>');
-    const text = editor.getContent({ format: 'text' });
-    const expected = '';
-    Assertions.assertEq('Should be expected text', expected, text);
-    assertEventsFiredInOrder();
-    assertEventsContentType();
-  });
+  it('TINY-8578: getContent text, empty line in div', () => testGetTextContent('<div><p></p></div>', ''));
 
-  it('TINY-8578: getContent text, empty line', () => {
-    const editor = hook.editor();
-    editor.setContent('<p></p>');
-    const text = editor.getContent({ format: 'text' });
-    const expected = '';
-    Assertions.assertEq('Should be expected text', expected, text);
-    assertEventsFiredInOrder();
-    assertEventsContentType();
-  });
+  it('TINY-8578: getContent text, empty line', () => testGetTextContent('<p></p>', ''));
 
-  it('TINY-8578: getContent text, two empty lines in div', () => {
-    const editor = hook.editor();
-    editor.setContent('<div><p></p><p></p></div>');
-    const text = editor.getContent({ format: 'text' });
-    const isSafari = PlatformDetection.detect().browser.isSafari();
-    Assertions.assertEq('Should be expected text', isSafari ? '\n\n' : '\n\n\n\n', text);
-    assertEventsFiredInOrder();
-    assertEventsContentType();
-  });
+  it('TINY-8578: getContent text, two empty lines in div', () => testGetTextContent('<div><p></p><p></p></div>', isSafari() ? '\n\n' : '\n\n\n\n'));
 
-  it('TINY-8578: getContent text, two empty lines', () => {
-    const editor = hook.editor();
-    editor.setContent('<p></p><p></p>');
-    const text = editor.getContent({ format: 'text' });
-    const isSafari = PlatformDetection.detect().browser.isSafari();
-    Assertions.assertEq('Should be expected text', isSafari ? '\n\n' : '\n\n\n\n', text);
-    assertEventsFiredInOrder();
-    assertEventsContentType();
-  });
+  it('TINY-8578: getContent text, two empty lines', () => testGetTextContent('<p></p><p></p>', isSafari() ? '\n\n' : '\n\n\n\n'));
 
-  it('TINY-6281: getContent text with empty editor', () => {
-    const editor = hook.editor();
-    editor.setContent('');
-    const text = editor.getContent({ format: 'text' });
-    Assertions.assertHtml('Should be expected text', '', text);
-    assertEventsFiredInOrder();
-    assertEventsContentType();
-  });
+  it('TINY-6281: getContent text with empty editor', () => testGetTextContent('', ''));
 
   it('TBA: getContent tree', () => {
     const editor = hook.editor();

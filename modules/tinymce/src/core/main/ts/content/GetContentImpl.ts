@@ -23,8 +23,8 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
   } else if (args.format === 'text') {
     // return empty string for text format when editor is empty to avoid bogus elements being returned in content
-    content = Zwsp.trim(body.innerText || body.textContent);
-    content = '\n' === content ? '' : content;
+    content = Zwsp.trim(body.innerText);
+    content = content === '\n' ? '' : content;
   } else if (args.format === 'tree') {
     content = editor.serializer.serialize(body, args);
   } else {
