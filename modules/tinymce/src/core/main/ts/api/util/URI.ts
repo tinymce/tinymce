@@ -399,6 +399,10 @@ class URI {
    * @param {String} path Relative path to convert into an absolute path.
    */
   public toAbsPath(base: string, path: string): string {
+    if (!base && !path) {
+      return '';
+    }
+
     let i, nb = 0, o = [], outPath;
 
     // Split paths
