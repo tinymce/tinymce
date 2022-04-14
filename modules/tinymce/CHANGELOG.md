@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Inline toolbars flicker when switching between editors #TINY-8594
+- Inline toolbars flicker when switching between editors #TINY-8594 #TINY-8503
 
 ## 5.10.3 - 2022-02-09
 
