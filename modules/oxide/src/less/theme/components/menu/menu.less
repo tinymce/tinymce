@@ -35,6 +35,13 @@
     padding: @menu-item-collection-grid-padding;
   }
 
+  // Revert Collection item label’s word-break
+  // to avoid breaking longer menu items
+  .tox-menu .tox-collection__item-label {
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
   // Reset all margins for block elements when used in menu labels
   // such as format and styles menu
   /* stylelint-disable */
