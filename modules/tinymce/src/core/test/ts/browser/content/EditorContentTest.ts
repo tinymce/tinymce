@@ -67,7 +67,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     Assertions.assertEq('Should be expected text', expected, text);
     assertEventsFiredInOrder();
     assertEventsContentType();
-  }
+  };
 
   const clearEvents = () => events = [];
 
