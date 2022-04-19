@@ -61,7 +61,7 @@ const match = (predicates, action) => {
   };
 };
 
-const getAction = (editor: Editor, evt?) => {
+const getAction = (editor: Editor, evt?): Adt => {
   return LazyEvaluator.evaluateUntil([
     match([ shouldBlockNewLine ], newLineAction.none()),
     match([ inSummaryBlock() ], newLineAction.br()),
