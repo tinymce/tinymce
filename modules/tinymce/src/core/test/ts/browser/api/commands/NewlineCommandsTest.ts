@@ -18,6 +18,15 @@ describe('browser.tinymce.core.api.commands.NewlineCommandTest', () => {
     TinyAssertions.assertCursor(editor, [ 1, 0 ], 0);
   });
 
+  it('TINY-8606: InsertParagraph command ', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>This is a test</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 'This'.length, [ 0, 0 ], 'This is a '.length);
+    editor.execCommand('InsertParagraph');
+    TinyAssertions.assertContent(editor, '<p>This</p><p>test</p>');
+    TinyAssertions.assertCursor(editor, [ 1, 0 ], 0);
+  });
+
   it('TINY-7829: mceInsertNewLine command', () => {
     const editor = hook.editor();
     editor.setContent('<p>123</p>');

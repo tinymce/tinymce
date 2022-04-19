@@ -5,6 +5,12 @@ import Editor from '../Editor';
 export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     insertParagraph: () => {
+      // eslint-disable-next-line no-console
+      console.log('editor.selection: ', editor.selection);
+      // eslint-disable-next-line no-console
+      console.log('editor.selection.destroy: ', editor.selection.destroy);
+      // editor.selection.destroy();
+      editor.selection.setContent('');
       InsertNewLine.insert(editor);
     },
 
