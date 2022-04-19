@@ -1,3 +1,5 @@
+import { execDeleteCommand } from 'tinymce/core/delete/DeleteUtils';
+
 import * as InsertBr from '../../newline/InsertBr';
 import * as InsertNewLine from '../../newline/InsertNewLine';
 import Editor from '../Editor';
@@ -5,12 +7,9 @@ import Editor from '../Editor';
 export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     insertParagraph: () => {
-      // eslint-disable-next-line no-console
-      console.log('editor.selection: ', editor.selection);
-      // eslint-disable-next-line no-console
-      console.log('editor.selection.destroy: ', editor.selection.destroy);
-      // editor.selection.destroy();
-      editor.selection.setContent('');
+      if (editor.selection.isCollapsed() === false) {
+        execDeleteCommand(editor);
+      }
       InsertNewLine.insert(editor);
     },
 
