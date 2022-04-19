@@ -2,6 +2,7 @@ import { Fun, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
+import { execDeleteCommand } from '../delete/DeleteUtils';
 import { fireFakeBeforeInputEvent, fireFakeInputEvent } from '../keyboard/FakeInputEvents';
 import * as InsertBlock from './InsertBlock';
 import * as InsertBr from './InsertBr';
@@ -10,6 +11,9 @@ import * as NewLineAction from './NewLineAction';
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   NewLineAction.getAction(editor, evt).fold(
     () => {
+      if (editor.selection.isCollapsed() === false) {
+        execDeleteCommand(editor);
+      }
       if (Type.isNonNullable(evt)) {
         const event = fireFakeBeforeInputEvent(editor, 'insertLineBreak');
         if (event.isDefaultPrevented()) {
@@ -24,6 +28,9 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
       }
     },
     () => {
+      if (editor.selection.isCollapsed() === false) {
+        execDeleteCommand(editor);
+      }
       if (Type.isNonNullable(evt)) {
         const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
         if (event.isDefaultPrevented()) {
