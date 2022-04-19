@@ -4,7 +4,7 @@ import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerFloatingPositionTest', () => {
+describe('browser.tinymce.themes.silver.editor.toolbar.MultipleToolbarVisibilityTest', () => {
 
   const settings = {
     inline: true,
@@ -24,10 +24,23 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerFloatingPosi
     editorTwo.setContent('<p id="number2">blarg</p>');
     editorOne.focus();
     editorTwo.focus();
-    await asyncTimeout(100);
+    await asyncTimeout(500);
+
     Assert.eq('editor 2 toolbar should be showing', 'flex', Css.get(TinyDom.container(editorTwo), 'display'));
     Assert.eq('editor 1 toolbar should be hidden', 'none', Css.get(TinyDom.container(editorOne), 'display'));
     McEditor.remove(editorOne);
     McEditor.remove(editorTwo);
+  });
+
+  it('TINY-8594: No flickering when switching', async () => {
+    const editorOne = await McEditor.pFromHtml<Editor>('<div><p id="number1"><strong>Editor one</strong></p></div>', settings);
+    const editorTwo = await McEditor.pFromHtml<Editor>('<div><p id="number2"><strong>Editor two</strong></p></div>', settings);
+    await asyncTimeout(500);
+    editorOne.focus();
+    Assert.eq('Editor 1 toolbar should be showing', 'flex', Css.get(TinyDom.container(editorOne), 'display'));
+
+    editorTwo.focus();
+    Assert.eq('Editor 1 toolbar should be hidden', 'none', Css.get(TinyDom.container(editorOne), 'display'));
+    Assert.eq('Editor 2 toolbar should be showing', 'flex', Css.get(TinyDom.container(editorTwo), 'display'));
   });
 });
