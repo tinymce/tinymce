@@ -3,7 +3,9 @@
 // When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
 //
 
+@toolbar-button-bespoke-background-color: contrast(@background-color, darken(@background-color, 3%), lighten(@background-color, 7%));
 @toolbar-button-bespoke-label-max-width: 7em;
+@toolbar-button-bespoke-spacing-x: 4px;
 
 .tox {
   .tox-tbtn--select {
@@ -31,10 +33,18 @@
 
   // Make dynamic text labeled buttons fixed width to prevent them from
   // jumping around when the content changes.
-  .tox-tbtn--bespoke .tox-tbtn__select-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: @toolbar-button-bespoke-label-max-width;
+  .tox-tbtn--bespoke {
+    background: @toolbar-button-bespoke-background-color;
+
+    & + .tox-tbtn--bespoke {
+      margin-inline-start: @toolbar-button-bespoke-spacing-x;
+    }
+
+    .tox-tbtn__select-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: @toolbar-button-bespoke-label-max-width;
+    }
   }
 }
