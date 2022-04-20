@@ -1,4 +1,3 @@
-const LiveReloadPlugin = require('webpack-livereload-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const path = require('path');
@@ -27,6 +26,11 @@ const create = (inFile, outFile) => {
         }),
       ]
     },
+    ignoreWarnings: [
+      // suppress type re-export warnings caused by `transpileOnly: true`
+      // See https://github.com/TypeStrong/ts-loader#transpileonly
+      /export .* was not found in/
+    ],
     module: {
       rules: [
         {
@@ -56,7 +60,6 @@ const create = (inFile, outFile) => {
       ]
     },
     plugins: [
-      new LiveReloadPlugin(),
       new ForkTsCheckerWebpackPlugin({ async: true })
     ],
     output: {
@@ -79,17 +82,20 @@ module.exports = (grunt) => {
     },
 
     'webpack-dev-server': {
+      demos: create('./src/demo/ts/ephox/alloy/demo/Demos.ts', 'scratch/compiled/demo.js'),
       options: {
-        ...create('./src/demo/ts/ephox/alloy/demo/Demos.ts', 'scratch/compiled/demo.js'),
         devServer: {
           port: 3003,
           host: '0.0.0.0',
           allowedHosts: 'all',
           hot: false,
-          liveReload: false
+          liveReload: false,
+          static: {
+            publicPath: '/',
+            directory: path.join(__dirname, '/src/demo')
+          },
         }
-      },
-      start: { }
+      }
     },
 
     rollup: {

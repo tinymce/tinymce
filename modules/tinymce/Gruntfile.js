@@ -280,24 +280,24 @@ module.exports = function (grunt) {
       })
     ),
 
-    webpack: Object.assign(
-      {
-        core: () => [
-          gruntWebPack.create('src/core/demo/ts/demo/Demos.ts', 'tsconfig.json', 'scratch/demos/core', 'demo.js'),
-          gruntWebPack.create('src/core/demo/ts/demo/ContentSecurityPolicyDemo.ts', 'tsconfig.json', 'scratch/demos/core', 'cspdemo.js')
-        ],
-        plugins: () => gruntWebPack.allPluginDemos(plugins),
-        themes: () => gruntWebPack.allThemeDemos(themes),
-        models: () => gruntWebPack.allModelDemos(models)
-      },
-      gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
-      gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) ),
-      gruntUtils.generate(models, 'model', (name) => () => gruntWebPack.createModel(name) )
-    ),
+    webpack: {
+      core: () => [
+        gruntWebPack.create('src/core/demo/ts/demo/Demos.ts', 'tsconfig.json', 'scratch/demos/core', 'demo.js'),
+        gruntWebPack.create('src/core/demo/ts/demo/ContentSecurityPolicyDemo.ts', 'tsconfig.json', 'scratch/demos/core', 'cspdemo.js')
+      ],
+      demos: () => [
+        gruntWebPack.allPluginDemos(plugins),
+        gruntWebPack.allThemeDemos(themes),
+        gruntWebPack.allModelDemos(models),
+      ],
+      plugins: () => gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name)),
+      themes: () => gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name)),
+      models: () => gruntUtils.generate(models, 'model', (name) => () => gruntWebPack.createModel(name))
+    },
 
     'webpack-dev-server': {
-      options: gruntWebPack.all(plugins, themes, models).map((config) => ({
-        ...config,
+      everything: () => gruntWebPack.all(plugins, themes, models),
+      options: {
         devServer: {
           port: grunt.option('webpack-port') !== undefined ? grunt.option('webpack-port') : 3000,
           host: '0.0.0.0',
@@ -313,8 +313,7 @@ module.exports = function (grunt) {
             return middlewares;
           }
         }
-      })),
-      start: { }
+      },
     },
 
     concat: Object.assign({
