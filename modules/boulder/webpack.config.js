@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/main/ts/ephox/boulder/api/Main.ts',
   devtool: 'source-map',
   mode: 'development',
-  target: ['web', 'es5'],
+  target: ['web'],
 
   resolve: {
     extensions: ['.ts', '.js'],

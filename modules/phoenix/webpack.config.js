@@ -10,7 +10,7 @@ module.exports = {
   },
   devtool: 'source-map',
   mode: 'development',
-  target: ['web', 'es5'],
+  target: ['web'],
 
   resolve: {
     extensions: ['.ts', '.js'],

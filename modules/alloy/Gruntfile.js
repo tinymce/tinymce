@@ -10,7 +10,7 @@ const create = (inFile, outFile) => {
     entry: inFile,
     devtool: 'source-map',
     mode: 'development',
-    target: ['web', 'es5'],
+    target: ['web'],
     optimization: {
       removeAvailableModules: false,
       removeEmptyChunks: false,
