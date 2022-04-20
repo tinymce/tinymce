@@ -147,7 +147,7 @@ const createTheme = (name) => {
 };
 
 const createModel = (name) => {
-  return create(`src/models/${name}/demo/ts/demo/Demo.ts`, 'tsconfig.model.json', `scratch/demos/models/${name}`, 'demo.js');
+  return create(`src/models/${name}/demo/ts/demo/Demo.ts`, 'tsconfig.model.json', `scratch/demos/models/${name}`);
 };
 
 const allPluginDemos = (plugins) => {
