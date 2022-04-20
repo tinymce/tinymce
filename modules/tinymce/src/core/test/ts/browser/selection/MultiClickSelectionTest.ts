@@ -10,7 +10,7 @@ import { findClosestBlockRange } from 'tinymce/core/selection/MultiClickSelectio
 
 import * as ViewBlock from '../../module/test/ViewBlock';
 
-type RangePath = [startContainerPath: number[], startOffset: number, endContainerPath: number[], endOffset: number];
+type RangePath = [ startContainerPath: number[], startOffset: number, endContainerPath: number[], endOffset: number ];
 
 describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
   describe('findClosestBlockRange test', () => {

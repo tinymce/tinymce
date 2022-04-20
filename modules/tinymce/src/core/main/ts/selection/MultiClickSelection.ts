@@ -48,7 +48,8 @@ const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
       } else {
         rng.setStartBefore(startNode);
       }
-    }, (cef) => rng.setStartBefore(cef.dom)
+    },
+    (cef) => rng.setStartBefore(cef.dom)
   );
 
   getClosestCef(endNode, scope).fold(
@@ -58,12 +59,13 @@ const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
       } else {
         rng.setEndAfter(endNode);
       }
-    }, (cef) => rng.setEndAfter(cef.dom)
+    },
+    (cef) => rng.setEndAfter(cef.dom)
   );
   return rng;
 };
 
-const onTripleClickSelect = (editor) => {
+const onTripleClickSelect = (editor: Editor) => {
   const rng = findClosestBlockRange(editor.selection.getRng(), editor.getBody());
   editor.selection.setRng(RangeNormalizer.normalize(rng));
 };
