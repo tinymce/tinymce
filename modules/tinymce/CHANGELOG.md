@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Added background and additional spacing for the text labeled buttons in the toolbar to improve visual clarity #TINY-8617
+
 ## 6.0.1 - 2022-03-23
 
 ### Fixed
