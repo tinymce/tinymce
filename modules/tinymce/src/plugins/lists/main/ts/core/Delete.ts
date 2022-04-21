@@ -37,7 +37,8 @@ const findNextCaretContainer = (editor: Editor, rng: Range, isForward: boolean, 
     }
   }
 
-  while ((node = (isForward ? walker.next() : walker.prev2()))) {
+  const walkFn = isForward ? walker.next.bind(walker) : walker.prev2.bind(walker);
+  while ((node = walkFn())) {
     if (node.nodeName === 'LI' && !node.hasChildNodes()) {
       return node;
     }

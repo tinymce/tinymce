@@ -96,7 +96,7 @@ class DomTreeWalker {
     }
   }
 
-  private findPreviousNode(node: Node | undefined, shallow?: boolean): undefined | Node {
+  private findPreviousNode(node: Node | undefined, shallow?: boolean): Node | undefined {
     let sibling: Node, parent: Node, child: Node;
 
     if (node) {
