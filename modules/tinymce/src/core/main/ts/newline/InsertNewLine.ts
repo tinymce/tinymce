@@ -11,7 +11,7 @@ import * as NewLineAction from './NewLineAction';
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   NewLineAction.getAction(editor, evt).fold(
     () => {
-      if (editor.selection.isCollapsed() === false) {
+      if (!editor.selection.isCollapsed()) {
         execDeleteCommand(editor);
       }
       if (Type.isNonNullable(evt)) {
@@ -28,7 +28,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
       }
     },
     () => {
-      if (editor.selection.isCollapsed() === false) {
+      if (!editor.selection.isCollapsed()) {
         execDeleteCommand(editor);
       }
       if (Type.isNonNullable(evt)) {
