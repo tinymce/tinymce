@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Inline toolbars flickered when switching between editors #TINY-8594
 - Multiple inline toolbars were shown if focused too quickly #TINY-8503
+- Fix custom toolbar select buttons width on touch devices #TINY-8647
 
 ## 6.0.1 - 2022-03-23
 
