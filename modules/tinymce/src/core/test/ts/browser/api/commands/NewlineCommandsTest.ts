@@ -18,7 +18,7 @@ describe('browser.tinymce.core.api.commands.NewlineCommandTest', () => {
     TinyAssertions.assertCursor(editor, [ 1, 0 ], 0);
   });
 
-  it('TINY-8606: InsertParagraph command should delect the selectio', () => {
+  it('TINY-8606: InsertParagraph command should delete the selection', () => {
     const editor = hook.editor();
     editor.setContent('<p>This is a test</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 'This'.length, [ 0, 0 ], 'This is a '.length);
@@ -27,7 +27,7 @@ describe('browser.tinymce.core.api.commands.NewlineCommandTest', () => {
     TinyAssertions.assertCursor(editor, [ 1, 0 ], 0);
   });
 
-  it('TINY-8606: mceInsertNewLine command should delect the selectio', () => {
+  it('TINY-8606: mceInsertNewLine command should delete the selection', () => {
     const editor = hook.editor();
     editor.setContent('<p>This is a test</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 'This'.length, [ 0, 0 ], 'This is a '.length);
