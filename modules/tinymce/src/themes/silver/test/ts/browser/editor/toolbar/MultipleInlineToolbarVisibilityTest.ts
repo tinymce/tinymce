@@ -4,7 +4,7 @@ import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.themes.silver.editor.toolbar.MultipleToolbarVisibilityTest', () => {
+describe('browser.tinymce.themes.silver.editor.toolbar.MultipleInlineToolbarVisibilityTest', () => {
 
   const settings = {
     inline: true,
@@ -14,7 +14,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleToolbarVisibility
   };
 
   const pWaitForFocus = (editor: Editor) => new Promise((resolve) => {
-    editor.on('focus', resolve);
+    editor.once('focus', resolve);
     editor.focus();
   });
 
