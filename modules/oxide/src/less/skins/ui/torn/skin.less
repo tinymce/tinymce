@@ -104,6 +104,34 @@
     text-transform: uppercase;
     white-space: nowrap;
   }
+
+  .tox-menu {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    bottom: 39px;
+    cursor: default;
+    padding: 10px;
+    z-index: 1;
+  }
+
+  .tox-swatch:not(.tox-swatch--remove) {
+    border-radius: 0 35% 65% 35%;
+    cursor: pointer;
+    display: block;
+    height: 10px;
+    margin: 14px;
+    padding: 2px;
+    transform: rotate(39deg) skewY(15deg);
+    width: 10px;
+
+    &:hover {
+      transform: rotate(39deg) skewY(15deg) scale(1.3);
+    }
+
+    &:focus {
+      transform: rotate(39deg) skewY(15deg) scale(1.3);
+    }
+  }
 }
 
 .tox:not([dir="rtl"]) {
