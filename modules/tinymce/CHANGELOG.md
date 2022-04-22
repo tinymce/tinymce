@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Text alignment could not be applied to `pre` elements #TINY-7715
 
+## 6.0.2 - TBD
+
+### Fixed
+- Inline toolbars flickered when switching between editors #TINY-8594
+- Multiple inline toolbars were shown if focused too quickly #TINY-8503
+
 ## 6.0.1 - 2022-03-23
 
 ### Fixed
