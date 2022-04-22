@@ -25,6 +25,7 @@
     "test": "bedrock-auto -b chrome-headless --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
     "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
+    "start": "grunt dev",
     "prepublishOnly": "tsc -b"
   },
   "repository": {

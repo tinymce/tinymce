@@ -1,4 +1,5 @@
-const { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -8,13 +9,14 @@ module.exports = {
     search: './src/demo/ts/ephox/phoenix/demo/SearchDemo.ts'
   },
   devtool: 'source-map',
+  mode: 'development',
+  target: ['web'],
 
   resolve: {
     extensions: ['.ts', '.js'],
     plugins: [
       new TsConfigPathsPlugin({
-        baseUrl: '.',
-        compiler: 'typescript'
+        extensions: ['.ts', '.js']
       }),
     ]
   },
@@ -23,19 +25,32 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
+        resolve: {
+          fullySpecified: false
+        }
+      },
+
+      {
+        test: /\.js$/,
         use: ['source-map-loader'],
         enforce: 'pre'
       },
 
       {
         test: /\.ts$/,
-        use: ['awesome-typescript-loader']
+        use: [{
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            projectReferences: true
+          }
+        }]
       }
     ]
   },
 
   plugins: [
-    new CheckerPlugin()
+    new ForkTsCheckerWebpackPlugin({ async: true })
   ],
 
   output: {

@@ -69,7 +69,7 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean,
               break;
 
             case 'iframe':
-              node.attr('src', data.src);
+              node.attr('src', data.source);
               break;
 
             case 'object':
