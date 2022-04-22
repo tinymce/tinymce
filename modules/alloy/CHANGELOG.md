@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+- UI components, such as dialogs, would in some cases cause the `esc` keyup event to incorrectly bubble up to containing elements #TINY-7005
+
 ## 10.0.0 - 2022-03-03
 
 ### Added

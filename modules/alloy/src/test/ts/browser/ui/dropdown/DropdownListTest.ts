@@ -166,7 +166,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       store.sAssertEq('Checking sandbox is getting event', [ 'received made-up-event' ]),
       store.sClear,
 
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       Waiter.sTryUntil(
         'Waiting for menu to disappear',
         FocusTools.sTryOnSelector('Focus should be back on button', doc, 'button')
@@ -223,7 +223,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
       store.sAssertEq('after executing item: alpha', [ 'dropdown.menu.execute: alpha' ]),
       store.sClear,
 
-      Keyboard.sKeydown(doc, Keys.escape(), {}),
+      Keyboard.sKeyup(doc, Keys.escape(), {}),
       FocusTools.sTryOnSelector(
         'Focus should have moved back to the dropdown',
         doc,
