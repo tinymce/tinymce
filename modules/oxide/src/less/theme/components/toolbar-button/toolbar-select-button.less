@@ -38,13 +38,4 @@
     white-space: nowrap;
     width: @toolbar-button-bespoke-label-max-width;
   }
-
-  // Correct specific styles for split button on touch devices
-  // See toolbar-split-button.less
-  &.tox-platform-touch {
-    .tox-split-button .tox-tbtn.tox-tbtn--select.tox-tbtn--select {
-      padding: 0 (@toolbar-button-select-padding - @toolbar-split-button-chevron-touch-padding);
-      width: auto;
-    }
-  }
 }
