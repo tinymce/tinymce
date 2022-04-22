@@ -33,7 +33,7 @@ const findEdgeCaretCandidate = (startNode: Node, scope: Node, forward: boolean):
   return result;
 };
 
-const findClosestBlockRange = (startRng: Range, rootNode: Node) => {
+const findClosestBlockRange = (startRng: Range, rootNode: Node): Range => {
   const startPos = CaretPosition.fromRangeStart(startRng);
   const clickNode = startPos.getNode();
   const scope = getClosestScope(clickNode, rootNode);

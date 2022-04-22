@@ -10,8 +10,6 @@ import { findClosestBlockRange } from 'tinymce/core/selection/MultiClickSelectio
 
 import * as ViewBlock from '../../module/test/ViewBlock';
 
-type RangePath = [ startContainerPath: number[], startOffset: number, endContainerPath: number[], endOffset: number ];
-
 describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
   describe('findClosestBlockRange test', () => {
     const DOM = DOMUtils.DOM;
@@ -19,14 +17,13 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
     const getRoot = viewBlock.get;
     const setupHtml = viewBlock.update;
 
-    const resolveRange = (args: RangePath): Range => {
+    const toDomRange = (path: Cursors.CursorPath): Range => {
       const root = SugarElement.fromDom(getRoot());
-      const startContainer = Cursors.calculateOne(root, args[0]);
-      const endContainer = Cursors.calculateOne(root, args[2]);
-      const rng = DOM.createRng();
-      rng.setStart(startContainer.dom, args[1]);
-      rng.setEnd(endContainer.dom, args[3]);
-      return rng;
+      const range = Cursors.calculate(root, path);
+      const domRng = DOM.createRng();
+      domRng.setStart(range.start.dom, range.soffset);
+      domRng.setEnd(range.finish.dom, range.foffset);
+      return domRng;
     };
 
     const assertRange = (expected: Range, actual: Range) => {
@@ -36,79 +33,142 @@ describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
       assert.strictEqual(actual.endOffset, expected.endOffset, 'endOffset should be equal');
     };
 
-    const testFindClosestBlockRange = (startRngPath: RangePath, expectedRngPath: RangePath) =>
-      assertRange(resolveRange(expectedRngPath), findClosestBlockRange(resolveRange(startRngPath), getRoot()));
+    const testFindClosestBlockRange = (startRngPath: Cursors.CursorPath, expectedRngPath: Cursors.CursorPath) =>
+      assertRange(toDomRange(expectedRngPath), findClosestBlockRange(toDomRange(startRngPath), getRoot()));
 
     it('TINY-8215: Should return the range with the whole text content of the block', () => {
       setupHtml('<p>aaa bIb ccc</p>');
-      testFindClosestBlockRange(
-        [[ 0, 0 ], 4, [ 0, 0 ], 7 ],
-        [[ 0, 0 ], 0, [ 0, 0 ], 11 ]
-      );
+      testFindClosestBlockRange({
+        startPath: [ 0, 0 ],
+        soffset: 4,
+        finishPath: [ 0, 0 ],
+        foffset: 7
+      }, {
+        startPath: [ 0, 0 ],
+        soffset: 0,
+        finishPath: [ 0, 0 ],
+        foffset: 11
+      });
     });
 
     it('TINY-8215: Should return the range expanded from the block start to the next closest <br> element', () => {
       setupHtml('<p>aaa bIb <strong>ccc</strong><br>ddd</p>');
-      testFindClosestBlockRange(
-        [[ 0, 0 ], 3, [ 0, 0 ], 6 ],
-        [[ 0, 0 ], 0, [ 0, 1, 0 ], 3 ]
-      );
+      testFindClosestBlockRange({
+        startPath: [ 0, 0 ],
+        soffset: 3,
+        finishPath: [ 0, 0 ],
+        foffset: 6
+      }, {
+        startPath: [ 0, 0 ],
+        soffset: 0,
+        finishPath: [ 0, 1, 0 ],
+        foffset: 3
+      });
     });
 
     it('TINY-8215: Should return the range expanded from <br> element to end of the block', () => {
       setupHtml('<p>aaa<br><em>bbb</em> cIc ddd</p>');
-      testFindClosestBlockRange(
-        [[ 0, 3 ], 1, [ 0, 3 ], 4 ],
-        [[ 0, 2, 0 ], 0, [ 0, 3 ], 8 ]
-      );
+      testFindClosestBlockRange({
+        startPath: [ 0, 3 ],
+        soffset: 1,
+        finishPath: [ 0, 3 ],
+        foffset: 4
+      }, {
+        startPath: [ 0, 2, 0 ],
+        soffset: 0,
+        finishPath: [ 0, 3 ],
+        foffset: 8
+      });
     });
 
     it('TINY-8215: Should return the range expanded between the two <br> elements', () => {
       setupHtml('<p>aaa<br><em>bbb</em> cIc <strong>ddd</strong><br>eee</p>');
-      testFindClosestBlockRange(
-        [[ 0, 3 ], 1, [ 0, 3 ], 4 ],
-        [[ 0, 2, 0 ], 0, [ 0, 4, 0 ], 3 ]
-      );
+      testFindClosestBlockRange({
+        startPath: [ 0, 3 ],
+        soffset: 1,
+        finishPath: [ 0, 3 ],
+        foffset: 4
+      }, {
+        startPath: [ 0, 2, 0 ],
+        soffset: 0,
+        finishPath: [ 0, 4, 0 ],
+        foffset: 3
+      });
     });
 
     it('TINY-8215: Should return the range expanded beween the block start and <br> elememt when the start range is exacly the <br> element', () => {
       setupHtml('<p>aaa bbb ccc<br>ddd</p>');
-      testFindClosestBlockRange(
-        [[ 0 ], 1, [ 0 ], 2 ],
-        [[ 0, 0 ], 0, [ 0 ], 2 ]
-      );
+      testFindClosestBlockRange({
+        startPath: [ 0 ],
+        soffset: 1,
+        finishPath: [ 0 ],
+        foffset: 2
+      }, {
+        startPath: [ 0, 0 ],
+        soffset: 0,
+        finishPath: [ 0 ],
+        foffset: 2
+      });
     });
 
     it('TINY-8215: Should set start of the range before cef element if the first caret candidate is within it', () => {
       setupHtml('<p><span contenteditable="false"><em>aaa</em></span> bIb</p>');
-      testFindClosestBlockRange(
-        [[ 0, 1 ], 1, [ 0, 1 ], 4 ],
-        [[ 0 ], 0, [ 0, 1 ], 4 ]
-      );
+      testFindClosestBlockRange({
+        startPath: [ 0, 1 ],
+        soffset: 1,
+        finishPath: [ 0, 1 ],
+        foffset: 4
+      }, {
+        startPath: [ 0 ],
+        soffset: 0,
+        finishPath: [ 0, 1 ],
+        foffset: 4
+      });
     });
 
     it('TINY-8215: Should set end of the range right after cef element if the last caret candidate is within it', () => {
       setupHtml('<p>aIa <span contenteditable="false">bbb</span><br>ccc</p>');
-      testFindClosestBlockRange(
-        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
-        [[ 0, 0 ], 0, [ 0 ], 2 ]
-      );
+      testFindClosestBlockRange({
+        startPath: [ 0, 0 ],
+        soffset: 0,
+        finishPath: [ 0, 0 ],
+        foffset: 3
+      }, {
+        startPath: [ 0, 0 ],
+        soffset: 0,
+        finishPath: [ 0 ],
+        foffset: 2
+      });
     });
 
     it('TINY-8215: Should restrict range up to the cet element scope', () => {
       setupHtml('<p contenteditable="false">aaa<span contenteditable="true">bbb cIc ddd</span>eee</p>');
-      testFindClosestBlockRange(
-        [[ 0, 1, 0 ], 4, [ 0, 1, 0 ], 7 ],
-        [[ 0, 1, 0 ], 0, [ 0, 1, 0 ], 11 ]
-      );
+      testFindClosestBlockRange({
+        startPath: [ 0, 1, 0 ],
+        soffset: 4,
+        finishPath: [ 0, 1, 0 ],
+        foffset: 7
+      }, {
+        startPath: [ 0, 1, 0 ],
+        soffset: 0,
+        finishPath: [ 0, 1, 0 ],
+        foffset: 11
+      });
     });
 
     it('TINY-8215: Should include nested cef element to range scoped with cet element', () => {
       setupHtml('<p contenteditable="true">aaa<span contenteditable="false">bbb ccc ddd</span>eee</p>');
-      testFindClosestBlockRange(
-        [[ 0 ], 1, [ 0 ], 2 ],
-        [[ 0, 0 ], 0, [ 0, 2 ], 3 ]
-      );
+      testFindClosestBlockRange({
+        startPath: [ 0 ],
+        soffset: 1,
+        finishPath: [ 0 ],
+        foffset: 2
+      }, {
+        startPath: [ 0, 0 ],
+        soffset: 0,
+        finishPath: [ 0, 2 ],
+        foffset: 3
+      });
     });
   });
 
