@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
+- Some media elements wouldn't update when changing the source URL #TINY-8660
 - Inline toolbars flickered when switching between editors #TINY-8594
 - Multiple inline toolbars were shown if focused too quickly #TINY-8503
 - Added background and additional spacing for the text labeled buttons in the toolbar to improve visual clarity #TINY-8617
