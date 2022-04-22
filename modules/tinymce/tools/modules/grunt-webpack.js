@@ -138,30 +138,6 @@ const buildEntries = (typeNames, type, entry, pathPrefix = '') => typeNames.redu
   }, {}
 );
 
-const createPlugin = (name) => {
-  return create({ 'demo.js': `src/plugins/${name}/demo/ts/demo/Demo.ts` }, '../../tsconfig.demo.json', `scratch/demos/plugins/${name}/`);
-};
-
-const createTheme = (name) => {
-  return create({ 'demo.js': `src/themes/${name}/demo/ts/demo/Demos.ts` }, '../../tsconfig.demo.json', `scratch/demos/themes/${name}`);
-};
-
-const createModel = (name) => {
-  return create(`src/models/${name}/demo/ts/demo/Demo.ts`, 'tsconfig.model.json', `scratch/demos/models/${name}`);
-};
-
-const allPluginDemos = (plugins) => {
-  return create(buildDemoEntries(plugins, 'plugins', 'Demo.ts'), '../../tsconfig.demo.json', 'scratch/demos')
-};
-
-const allThemeDemos = (themes) => {
-  return create(buildDemoEntries(themes, 'themes', 'Demos.ts'), '../../tsconfig.demo.json', 'scratch/demos')
-};
-
-const allModelDemos = (models) => {
-  return create(buildDemoEntries(models, 'models', 'Demo.ts'), '../../tsconfig.demo.json', 'scratch/demos')
-};
-
 const all = (plugins, themes, models) => {
   return [
     create({
@@ -223,13 +199,6 @@ const generateDemoIndex = (grunt, app, plugins, themes, models) => {
 };
 
 module.exports = {
-  createPlugin,
-  createTheme,
-  createModel,
-  create,
   all,
-  allPluginDemos,
-  allThemeDemos,
-  allModelDemos,
   generateDemoIndex
 };

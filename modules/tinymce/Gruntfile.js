@@ -280,21 +280,6 @@ module.exports = function (grunt) {
       })
     ),
 
-    webpack: {
-      core: () => [
-        gruntWebPack.create('src/core/demo/ts/demo/Demos.ts', 'tsconfig.json', 'scratch/demos/core', 'demo.js'),
-        gruntWebPack.create('src/core/demo/ts/demo/ContentSecurityPolicyDemo.ts', 'tsconfig.json', 'scratch/demos/core', 'cspdemo.js')
-      ],
-      demos: () => [
-        gruntWebPack.allPluginDemos(plugins),
-        gruntWebPack.allThemeDemos(themes),
-        gruntWebPack.allModelDemos(models),
-      ],
-      plugins: () => gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name)),
-      themes: () => gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name)),
-      models: () => gruntUtils.generate(models, 'model', (name) => () => gruntWebPack.createModel(name))
-    },
-
     'webpack-dev-server': {
       everything: () => gruntWebPack.all(plugins, themes, models),
       options: {
