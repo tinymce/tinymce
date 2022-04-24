@@ -1,36 +1,13 @@
 {
-  "extends": "./tsconfig.shared.json",
-
-  // Compile nothing here but instead let it be compiled by the project references
-  "files": [],
-  "references": [
-    { "path": "modules/acid" },
-    { "path": "modules/agar" },
-    { "path": "modules/alloy" },
-    { "path": "modules/boss" },
-    { "path": "modules/boulder" },
-    { "path": "modules/bridge" },
-    { "path": "modules/darwin" },
-    { "path": "modules/dragster" },
-    { "path": "modules/katamari" },
-    { "path": "modules/katamari-assertions" },
-    { "path": "modules/mcagar" },
-    { "path": "modules/phoenix" },
-    { "path": "modules/polaris" },
-    { "path": "modules/porkbun" },
-    { "path": "modules/robin" },
-    { "path": "modules/sand" },
-    { "path": "modules/snooker" },
-    { "path": "modules/sugar" },
-    { "path": "modules/tinymce" }
-  ],
+  "extends": "./tsconfig.json",
 
   "compilerOptions": {
     "paths": {
-      // duplicate paths, copied from each individual tsconfig.json
-      // once there is a webpack path plugin that supports project references this can be deleted
-      "tinymce": ["modules/tinymce/src/core/main/ts/api/Main"],
-      "tinymce/core/*": ["modules/tinymce/src/core/main/ts/*"],
+      // duplicate paths, copied from tsconfig.json
+      // the exception is the tinymce core paths which point to the lib directories
+      // once there is a webpack path plugin that supports project references most of this can be deleted
+      "tinymce": ["modules/tinymce/lib/core/main/ts/api/Main"],
+      "tinymce/core/*": ["modules/tinymce/lib/globals/tinymce/core/*"],
       "tinymce/themes/silver/resources/*": ["modules/tinymce/src/themes/silver/main/resources/*"],
       "tinymce/themes/silver/demo/*": ["modules/tinymce/src/themes/silver/demo/ts/*"],
       "tinymce/themes/silver/*": ["modules/tinymce/src/themes/silver/main/ts/*"],
@@ -48,6 +25,7 @@
       "tinymce/plugins/emoticons/*": ["modules/tinymce/src/plugins/emoticons/main/ts/*"],
       "tinymce/plugins/fullscreen/*": ["modules/tinymce/src/plugins/fullscreen/main/ts/*"],
       "tinymce/plugins/help/*": ["modules/tinymce/src/plugins/help/main/ts/*"],
+      "tinymce/plugins/hr/*": ["modules/tinymce/src/plugins/hr/main/ts/*"],
       "tinymce/plugins/image/*": ["modules/tinymce/src/plugins/image/main/ts/*"],
       "tinymce/plugins/importcss/*": ["modules/tinymce/src/plugins/importcss/main/ts/*"],
       "tinymce/plugins/insertdatetime/*": ["modules/tinymce/src/plugins/insertdatetime/main/ts/*"],
@@ -55,9 +33,9 @@
       "tinymce/plugins/lists/*": ["modules/tinymce/src/plugins/lists/main/ts/*"],
       "tinymce/plugins/media/*": ["modules/tinymce/src/plugins/media/main/ts/*"],
       "tinymce/plugins/nonbreaking/*": ["modules/tinymce/src/plugins/nonbreaking/main/ts/*"],
-      "tinymce/plugins/noneditable/*": ["modules/tinymce/src/plugins/noneditable/main/ts/*"],
       "tinymce/plugins/pagebreak/*": ["modules/tinymce/src/plugins/pagebreak/main/ts/*"],
       "tinymce/plugins/preview/*": ["modules/tinymce/src/plugins/preview/main/ts/*"],
+      "tinymce/plugins/print/*": ["modules/tinymce/src/plugins/print/main/ts/*"],
       "tinymce/plugins/quickbars/*": ["modules/tinymce/src/plugins/quickbars/main/ts/*"],
       "tinymce/plugins/save/*": ["modules/tinymce/src/plugins/save/main/ts/*"],
       "tinymce/plugins/searchreplace/*": ["modules/tinymce/src/plugins/searchreplace/main/ts/*"],
