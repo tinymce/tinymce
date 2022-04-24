@@ -36,7 +36,7 @@ const renderCaretLocation = (editor: Editor, caret: Cell<Text>, location: Bounda
     return location;
   });
 
-const getPositionFromRange = (editor: Editor, root: HTMLElement, range: Range, forward: boolean): CaretPosition => {
+const getPositionFromRange = (range: Range, root: HTMLElement, forward: boolean): CaretPosition => {
   const start = CaretPosition.fromRangeStart(range);
   if (range.collapsed) {
     return start;
@@ -48,7 +48,7 @@ const getPositionFromRange = (editor: Editor, root: HTMLElement, range: Range, f
 
 const findLocation = (editor: Editor, caret: Cell<Text>, forward: boolean) => {
   const rootNode = editor.getBody();
-  const from = getPositionFromRange(editor, rootNode, editor.selection.getRng(), forward);
+  const from = getPositionFromRange(editor.selection.getRng(), rootNode, forward);
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
   const location = BoundaryLocation.findLocation(forward, isInlineTarget, rootNode, from);
   return location.bind((location) => renderCaretLocation(editor, caret, location));
