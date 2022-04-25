@@ -1,13 +1,14 @@
-import { Arr, Optional, Strings, Unicode } from '@ephox/katamari';
+import { Arr, Optional, Strings, Type, Unicode } from '@ephox/katamari';
 import { Css, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import { isAfterBlock, isAtEndOfBlock, isAtStartOfBlock, isBeforeBlock } from '../caret/BlockBoundary';
 import { isAfterBr, isBeforeBr } from '../caret/CaretBr';
 import * as CaretFinder from '../caret/CaretFinder';
 import { CaretPosition } from '../caret/CaretPosition';
 import { isAfterSpace, isBeforeSpace } from '../caret/CaretPositionPredicates';
-import { getElementFromPosition } from '../caret/CaretUtils';
+import { getElementFromPosition, isBlockLike } from '../caret/CaretUtils';
 import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';
@@ -54,6 +55,25 @@ const isAtLineBoundary = (root: SugarElement, pos: CaretPosition) => (
     isBeforeBr(root, pos)
 );
 
+const isCefBlock = (node?: Node) =>
+  Type.isNonNullable(node) && NodeType.isContentEditableFalse(node) && isBlockLike(node);
+
+const isBeforeCefBlock = (root: SugarElement, pos: CaretPosition) => {
+  if (pos.isAtEnd()) {
+    return isCefBlock(new DomTreeWalker(pos.container(), root.dom).next());
+  } else {
+    return false;
+  }
+};
+
+const isAfterCefBlock = (root: SugarElement, pos: CaretPosition) => {
+  if (pos.isAtStart()) {
+    return isCefBlock(new DomTreeWalker(pos.container(), root.dom).prev2());
+  } else {
+    return false;
+  }
+};
+
 const needsToHaveNbsp = (root: SugarElement, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
@@ -66,7 +86,7 @@ const needsToBeNbspLeft = (root: SugarElement, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
-    return isAtStartOfBlock(root, pos) || isBeforeBlock(root, pos) || isAfterBr(root, pos) || hasSpaceBefore(root, pos);
+    return isAtStartOfBlock(root, pos) || isBeforeBlock(root, pos) || isAfterBr(root, pos) || hasSpaceBefore(root, pos) || isAfterCefBlock(root, pos);
   }
 };
 
@@ -85,7 +105,7 @@ const needsToBeNbspRight = (root: SugarElement, pos: CaretPosition) => {
   if (isInPre(pos)) {
     return false;
   } else {
-    return isAtEndOfBlock(root, pos) || isAfterBlock(root, pos) || isBeforeBr(root, pos) || hasSpaceAfter(root, pos);
+    return isAtEndOfBlock(root, pos) || isAfterBlock(root, pos) || isBeforeBr(root, pos) || hasSpaceAfter(root, pos) || isBeforeCefBlock(root, pos);
   }
 };
 
