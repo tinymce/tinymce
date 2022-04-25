@@ -38,6 +38,7 @@ export default () => {
     cmd('Indent'),
     cmd('Outdent'),
     cmd('InsertHorizontalRule'),
+    cmd('InsertParagraph'),
     cmd('mceToggleVisualAid'),
     cmd('mceInsertLink', 'url'),
     cmd('selectAll'),
