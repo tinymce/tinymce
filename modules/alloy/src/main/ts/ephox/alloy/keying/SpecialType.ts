@@ -48,10 +48,9 @@ const getKeydownRules = (component: AlloyComponent, simulatedEvent: NativeSimula
   KeyRules.rule(KeyMatch.inSet(Keys.SPACE), specialInfo.onSpace)
 ];
 
-const getKeyupRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => (specialInfo.stopSpaceKeyup ? [
-  KeyRules.rule(KeyMatch.inSet(Keys.SPACE), stopEventForFirefox)
-] : [ ]).concat([
+const getKeyupRules = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, specialInfo: SpecialConfig): Array<KeyRules.KeyRule<SpecialConfig, Stateless>> => [
+  ...(specialInfo.stopSpaceKeyup ? [ KeyRules.rule(KeyMatch.inSet(Keys.SPACE), stopEventForFirefox) ] : [ ]),
   KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), specialInfo.onEscape)
-]);
+];
 
 export default KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, (specialInfo: SpecialConfig) => specialInfo.focusIn);
