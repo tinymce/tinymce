@@ -1,7 +1,7 @@
 import { ApproxStructure, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyUiActions, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -21,15 +21,15 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
     editor.setContent('<p>a&nbsp;&nbsp;b</p>');
     assert.lengthOf(editor.dom.select('span'), 0);
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await Waiter.pTryUntil('wait for visual chars to appear', () => TinyAssertions.assertContentStructure(editor, assertSpanStruct));
+    await Waiter.pTryUntil('wait for visual chars to appear', () => assertSpanStruct(editor));
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await Waiter.pTryUntil('wait for visual chars to appear', () => TinyAssertions.assertContentStructure(editor, assertNbspStruct));
+    await Waiter.pTryUntil('wait for visual chars to appear', () => assertNbspStruct(editor));
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await Waiter.pTryUntil('wait for visual chars to appear', () => TinyAssertions.assertContentStructure(editor, assertSpanStruct));
+    await Waiter.pTryUntil('wait for visual chars to appear', () => assertSpanStruct(editor));
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await Waiter.pTryUntil('wait for visual chars to appear', () => TinyAssertions.assertContentStructure(editor, assertNbspStruct));
+    await Waiter.pTryUntil('wait for visual chars to appear', () => assertNbspStruct(editor));
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await Waiter.pTryUntil('wait for visual chars to appear', () => TinyAssertions.assertContentStructure(editor, assertSpanStruct));
+    await Waiter.pTryUntil('wait for visual chars to appear', () => assertSpanStruct(editor));
   });
 
   it('TINY-4507: Set content with HTML like content, click visual chars button and assert span char is present in whitespaces, click the button again and assert no span is present in the whitespace', async () => {
@@ -37,15 +37,40 @@ describe('browser.tinymce.plugins.visualchars.PluginTest', () => {
     editor.setContent('<p>&lt;img src=&quot;image.png&quot;&gt;&nbsp;</p>');
 
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await Waiter.pTryUntil('wait for visual chars', () => assertStruct(ApproxStructure.build((s, str) => [
+    await Waiter.pTryUntil('wait for visual chars', () => assertStruct(editor, ApproxStructure.build((s, str) => [
       s.text(str.is('<img src="image.png">')),
       s.element('span', {})
     ])));
 
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await Waiter.pTryUntil('wait for visual chars to disappear', () => assertStruct(ApproxStructure.build((s, str) => [
+    await Waiter.pTryUntil('wait for visual chars to disappear', () => assertStruct(editor, ApproxStructure.build((s, str) => [
       s.text(str.is('<img src="image.png">')),
       s.text(str.is(Unicode.nbsp))
     ])));
+  });
+
+  it('TINY-8599: toggling visual chars should retain selection direction', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>abc&nbsp;&nbsp;</p>');
+
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
+    editor.selection.setRng(editor.selection.getRng(), false);
+
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await Waiter.pTryUntil('wait for visual chars to appear', () => assertStruct(editor, ApproxStructure.build((s, str) => [
+      s.text(str.is('abc')),
+      s.element('span', {}),
+      s.element('span', {})
+    ])));
+
+    assert.isFalse(editor.selection.isForward(), 'should still be backwards');
+
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await Waiter.pTryUntil('wait for visual chars to disappear', () => assertStruct(editor, ApproxStructure.build((s, str) => [
+      s.text(str.is('abc\u00a0')),
+      s.text(str.is(Unicode.nbsp))
+    ])));
+
+    assert.isFalse(editor.selection.isForward(), 'should still be backwards');
   });
 });
