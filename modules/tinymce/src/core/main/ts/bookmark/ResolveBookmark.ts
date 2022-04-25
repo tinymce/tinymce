@@ -16,8 +16,8 @@ import {
 import * as CaretBookmark from './CaretBookmark';
 
 export interface BookmarkResolveResult {
-  range: Range;
-  forward: boolean;
+  readonly range: Range;
+  readonly forward: boolean;
 }
 
 const isForwardBookmark = (bookmark: Bookmark) =>
@@ -33,14 +33,14 @@ const addBogus = (dom: DOMUtils, node: Node): Node => {
 };
 
 const resolveCaretPositionBookmark = (dom: DOMUtils, bookmark: StringPathBookmark) => {
-  const rng = dom.createRng();
-  const spos = CaretBookmark.resolve(dom.getRoot(), bookmark.start);
-  rng.setStart(spos.container(), spos.offset());
+  const range = dom.createRng();
+  const startPos = CaretBookmark.resolve(dom.getRoot(), bookmark.start);
+  range.setStart(startPos.container(), startPos.offset());
 
-  const epos = CaretBookmark.resolve(dom.getRoot(), bookmark.end);
-  rng.setEnd(epos.container(), epos.offset());
+  const endPos = CaretBookmark.resolve(dom.getRoot(), bookmark.end);
+  range.setEnd(endPos.container(), endPos.offset());
 
-  return { range: rng, forward: isForwardBookmark(bookmark) };
+  return { range, forward: isForwardBookmark(bookmark) };
 };
 
 const insertZwsp = (node: Node, rng: Range) => {
@@ -210,10 +210,10 @@ const restoreEndPoint = (dom: DOMUtils, suffix: string, bookmark: IdBookmark): O
 };
 
 const resolvePaths = (dom: DOMUtils, bookmark: PathBookmark): Optional<BookmarkResolveResult> => {
-  const rng = dom.createRng();
+  const range = dom.createRng();
 
-  if (setEndPoint(dom, true, bookmark, rng) && setEndPoint(dom, false, bookmark, rng)) {
-    return Optional.some({ range: rng, forward: isForwardBookmark(bookmark) });
+  if (setEndPoint(dom, true, bookmark, range) && setEndPoint(dom, false, bookmark, range)) {
+    return Optional.some({ range, forward: isForwardBookmark(bookmark) });
   } else {
     return Optional.none();
   }
@@ -227,18 +227,18 @@ const resolveId = (dom: DOMUtils, bookmark: IdBookmark): Optional<BookmarkResolv
     startPos,
     endPos.or(startPos),
     (spos, epos) => {
-      const rng = dom.createRng();
-      rng.setStart(addBogus(dom, spos.container()), spos.offset());
-      rng.setEnd(addBogus(dom, epos.container()), epos.offset());
-      return { range: rng, forward: isForwardBookmark(bookmark) };
+      const range = dom.createRng();
+      range.setStart(addBogus(dom, spos.container()), spos.offset());
+      range.setEnd(addBogus(dom, epos.container()), epos.offset());
+      return { range, forward: isForwardBookmark(bookmark) };
     }
   );
 };
 
 const resolveIndex = (dom: DOMUtils, bookmark: IndexBookmark): Optional<BookmarkResolveResult> => Optional.from(dom.select(bookmark.name)[bookmark.index]).map((elm) => {
-  const rng = dom.createRng();
-  rng.selectNode(elm);
-  return { range: rng, forward: true };
+  const range = dom.createRng();
+  range.selectNode(elm);
+  return { range, forward: true };
 });
 
 const resolve = (selection: EditorSelection, bookmark: Bookmark): Optional<BookmarkResolveResult> => {
