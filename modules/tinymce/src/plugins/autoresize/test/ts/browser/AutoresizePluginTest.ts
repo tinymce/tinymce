@@ -169,6 +169,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
   it('TINY-7291: Editor does not scroll to the top on undo/redo (SetContent & NodeChange trigger)', () => {
     const editor = hook.editor();
     editor.resetContent('<div style="height: 5000px;">a</div><p>Some content</p>');
+    window.scrollTo(0, 5000);
     TinySelections.setCursor(editor, [ 1, 0 ], 12);
     TinyContentActions.type(editor, '. More content...');
     editor.undoManager.add();
