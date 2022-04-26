@@ -9,7 +9,7 @@ import Entities from './Entities';
  * @version 3.4
  * @example
  * const writer = tinymce.html.Writer({ indent: true });
- * writer.start('node', { attr: 'value });
+ * writer.start('node', { attr: 'value' });
  * writer.end('node');
  * console.log(writer.getContent());
  */
@@ -51,12 +51,12 @@ const Writer = (settings?: WriterSettings): Writer => {
 
   return {
     /**
-     * Writes the a start element such as <p id="a">.
+     * Writes a start element, such as `<p id="a">`.
      *
      * @method start
      * @param {String} name Name of the element.
-     * @param {Array} attrs Optional attribute array or undefined if it hasn't any.
-     * @param {Boolean} empty Optional empty state if the tag should end like <br />.
+     * @param {Array} attrs Optional array of objects containing an attribute name and value, or undefined if the element has no attributes.
+     * @param {Boolean} empty Optional empty state if the tag should serialize as a void element. For example: `<img />`
      */
     start: (name: string, attrs?: Attributes, empty?: boolean) => {
       let i, l, attr, value;
@@ -94,7 +94,7 @@ const Writer = (settings?: WriterSettings): Writer => {
     },
 
     /**
-     * Writes the a end element such as </p>.
+     * Writes an end element, such as `</p>`.
      *
      * @method end
      * @param {String} name Name of the element.
@@ -125,7 +125,7 @@ const Writer = (settings?: WriterSettings): Writer => {
      *
      * @method text
      * @param {String} text String to write out.
-     * @param {Boolean} raw Optional raw state if true the contents wont get encoded.
+     * @param {Boolean} raw Optional raw state. If true, the contents won't get encoded.
      */
     text: (text: string, raw?: boolean) => {
       if (text.length > 0) {
@@ -134,7 +134,7 @@ const Writer = (settings?: WriterSettings): Writer => {
     },
 
     /**
-     * Writes a cdata node such as <![CDATA[data]]>.
+     * Writes a cdata node, such as `<![CDATA[data]]>`.
      *
      * @method cdata
      * @param {String} text String to write out inside the cdata.
@@ -144,9 +144,9 @@ const Writer = (settings?: WriterSettings): Writer => {
     },
 
     /**
-     * Writes a comment node such as <!-- Comment -->.
+     * Writes a comment node, such as `<!-- Comment -->`.
      *
-     * @method cdata
+     * @method comment
      * @param {String} text String to write out inside the comment.
      */
     comment: (text: string) => {
@@ -154,7 +154,7 @@ const Writer = (settings?: WriterSettings): Writer => {
     },
 
     /**
-     * Writes a PI node such as <?xml attr="value" ?>.
+     * Writes a processing instruction (PI) node, such as `<?xml attr="value" ?>`.
      *
      * @method pi
      * @param {String} name Name of the pi.
@@ -173,7 +173,7 @@ const Writer = (settings?: WriterSettings): Writer => {
     },
 
     /**
-     * Writes a doctype node such as <!DOCTYPE data>.
+     * Writes a doctype node, such as `<!DOCTYPE data>`.
      *
      * @method doctype
      * @param {String} text String to write out inside the doctype.
@@ -183,7 +183,7 @@ const Writer = (settings?: WriterSettings): Writer => {
     },
 
     /**
-     * Resets the internal buffer if one wants to reuse the writer.
+     * Resets the internal buffer. For example, if one wants to reuse the writer.
      *
      * @method reset
      */
@@ -192,7 +192,7 @@ const Writer = (settings?: WriterSettings): Writer => {
     },
 
     /**
-     * Returns the contents that got serialized.
+     * Returns the contents that was serialized.
      *
      * @method getContent
      * @return {String} HTML contents that got written down.

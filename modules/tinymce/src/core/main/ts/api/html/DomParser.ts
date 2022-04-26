@@ -18,7 +18,7 @@ import Schema, { SchemaRegExpMap } from './Schema';
  * @summary
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
  * sure that the node tree is valid according to the specified schema.
- * So for example: <p>a<p>b</p>c</p> will become <p>a</p><p>b</p><p>c</p>
+ * So for example: `<p>a<p>b</p>c</p>` will become `<p>a</p><p>b</p><p>c</p>`.
  *
  * @example
  * const parser = tinymce.html.DomParser({ validate: true }, schema);

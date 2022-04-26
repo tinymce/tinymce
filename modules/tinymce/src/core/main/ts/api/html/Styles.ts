@@ -1,5 +1,5 @@
 /**
- * This class is used to parse CSS styles it also compresses styles to reduce the output size.
+ * This class is used to parse CSS styles. It also compresses styles to reduce the output size.
  *
  * @class tinymce.html.Styles
  * @version 3.4
@@ -63,12 +63,12 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
   const self: Styles = {
     /**
      * Parses the specified style value into an object collection. This parser will also
-     * merge and remove any redundant items that browsers might have added. It will also convert non hex
-     * colors to hex values. Urls inside the styles will also be converted to absolute/relative based on settings.
+     * merge and remove any redundant items that browsers might have added. URLs inside
+     * the styles will also be converted to absolute/relative based on the settings.
      *
      * @method parse
-     * @param {String} css Style value to parse for example: border:1px solid red;.
-     * @return {Object} Object representation of that style like {border: '1px solid red'}
+     * @param {String} css Style value to parse. For example: `border:1px solid red;`
+     * @return {Object} Object representation of that style. For example: `{ border: '1px solid red' }`
      */
     parse: (css: string): Record<string, string> => {
       const styles: any = {};
@@ -297,9 +297,9 @@ const Styles = (settings?: StylesSettings, schema?: Schema): Styles => {
      * Serializes the specified style object into a string.
      *
      * @method serialize
-     * @param {Object} styles Object to serialize as string for example: {border: '1px solid red'}
+     * @param {Object} styles Object to serialize as string. For example: `{ border: '1px solid red' }`
      * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.
-     * @return {String} String representation of the style object for example: border: 1px solid red.
+     * @return {String} String representation of the style object. For example: `border: 1px solid red`
      */
     serialize: (styles: StyleMap, elementName?: string): string => {
       let css = '';
