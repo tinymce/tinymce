@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
 - In some cases pressing the backspace key would incorrectly step into tables rather than remain outside #TINY-8592
 - Text alignment could not be applied to `pre` elements #TINY-7715
+- Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
 - When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
 
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inline toolbars flickered when switching between editors #TINY-8594
 - Multiple inline toolbars were shown if focused too quickly #TINY-8503
 - Added background and additional spacing for the text labeled buttons in the toolbar to improve visual clarity #TINY-8617
+- Toolbar split buttons with text used an incorrect width on touch devices #TINY-8647
 
 ## 6.0.1 - 2022-03-23
 
