@@ -347,7 +347,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       assertCaretAtZwsp(editor);
     });
 
-    it('TINY-8601: It should move caret after selected inline boundary node when arrow right', () => {
+    it('TINY-8601: should move caret after selected inline boundary node when arrow right', () => {
       const editor = hook.editor();
       editor.setContent('<p>test <span class="mce-annotation">span</span> selection</p>', { format: 'raw' });
       TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2, true);
