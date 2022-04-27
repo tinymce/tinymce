@@ -94,40 +94,40 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
   it('applyToEditor to equal content with complete level', () => {
     const editor = hook.editor();
     const level = Levels.createCompleteLevel('<p>a</p>');
-    level.bookmark = { start: [ 1, 0, 0 ] };
+    level.bookmark = { start: [ 1, 0, 0 ], forward: true };
 
     editor.getBody().innerHTML = '<p>a</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     Levels.applyToEditor(editor, level, false);
 
     assert.strictEqual(editor.getBody().innerHTML, '<p>a</p>');
-    assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ] });
+    assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ], forward: true });
   });
 
   it('applyToEditor to different content with complete level', () => {
     const editor = hook.editor();
     const level = Levels.createCompleteLevel('<p>b</p>');
-    level.bookmark = { start: [ 1, 0, 0 ] };
+    level.bookmark = { start: [ 1, 0, 0 ], forward: true };
 
     editor.getBody().innerHTML = '<p>a</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     Levels.applyToEditor(editor, level, false);
 
     assert.strictEqual(editor.getBody().innerHTML, '<p>b</p>');
-    assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ] });
+    assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ], forward: true });
   });
 
   it('applyToEditor to different content with fragmented level', () => {
     const editor = hook.editor();
     const level = Levels.createFragmentedLevel([ '<p>a</p>', '<p>b</p>' ]);
-    level.bookmark = { start: [ 1, 0, 0 ] };
+    level.bookmark = { start: [ 1, 0, 0 ], forward: true };
 
     editor.getBody().innerHTML = '<p>c</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     Levels.applyToEditor(editor, level, false);
 
     assert.strictEqual(editor.getBody().innerHTML, '<p>a</p><p>b</p>');
-    assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ] });
+    assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ], forward: true });
   });
 
   it('isEq', () => {

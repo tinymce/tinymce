@@ -44,6 +44,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
     editor.setContent('<p>a b c</p>');
+    editor.undoManager.add();
     await pWaitForWordcount(3);
     editor.execCommand('undo');
     TinyAssertions.assertContent(editor, '');
