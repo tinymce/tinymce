@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Text alignment could not be applied to `pre` elements #TINY-7715
 - Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
-- The caret moved before the selected inline boundary element when the right arrow key pressing #TINY-8601
+- When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
 
 ## 6.0.2 - 2022-04-27
 
