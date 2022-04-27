@@ -92,7 +92,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.selection.setContent(' ');
       TinyAssertions.assertContent(editor, '<p>s&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
     });
-  
+
     it('TINY-8588: Add two spaces just before a block', () => {
       const editor = hook.editor();
       editor.setContent('<p>s<span style="display: block;" contenteditable="false">a</span></p>');
@@ -101,7 +101,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.selection.setContent(' ');
       TinyAssertions.assertContent(editor, '<p>s &nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
     });
-  
+
     it('TINY-8588: Add one space before a block while in a span', () => {
       const editor = hook.editor();
       editor.setContent('<p><span class="filler">s</span><span style="display: block;" contenteditable="false">a</span></p>');
