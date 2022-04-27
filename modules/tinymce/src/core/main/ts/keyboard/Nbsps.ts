@@ -58,21 +58,11 @@ const isAtLineBoundary = (root: SugarElement, pos: CaretPosition) => (
 const isCefBlock = (node?: Node) =>
   Type.isNonNullable(node) && NodeType.isContentEditableFalse(node) && isBlockLike(node);
 
-const isBeforeCefBlock = (root: SugarElement, pos: CaretPosition) => {
-  if (pos.isAtEnd()) {
-    return isCefBlock(new DomTreeWalker(pos.container(), root.dom).next());
-  } else {
-    return false;
-  }
-};
+const isBeforeCefBlock = (root: SugarElement, pos: CaretPosition) =>
+  pos.isAtEnd() && isCefBlock(new DomTreeWalker(pos.container(), root.dom).next());
 
-const isAfterCefBlock = (root: SugarElement, pos: CaretPosition) => {
-  if (pos.isAtStart()) {
-    return isCefBlock(new DomTreeWalker(pos.container(), root.dom).prev2());
-  } else {
-    return false;
-  }
-};
+const isAfterCefBlock = (root: SugarElement, pos: CaretPosition) =>
+  pos.isAtStart() && isCefBlock(new DomTreeWalker(pos.container(), root.dom).prev2());
 
 const needsToHaveNbsp = (root: SugarElement, pos: CaretPosition) => {
   if (isInPre(pos)) {
