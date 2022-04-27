@@ -40,17 +40,6 @@
     margin: 0;
   }
 
-  // Increase the chevron size and decrease the button size on touch devices
-  &.tox-platform-touch {
-    .tox-split-button .tox-tbtn:first-child {
-      width: @toolbar-button-width - @toolbar-split-button-chevron-touch-padding;
-    }
-
-    .tox-split-button__chevron {
-      width: @toolbar-button-chevron-width + @toolbar-split-button-chevron-touch-padding;
-    }
-  }
-
   .tox-split-button.tox-tbtn--disabled:hover,
   .tox-split-button.tox-tbtn--disabled:focus,
   .tox-split-button.tox-tbtn--disabled .tox-tbtn:hover,
@@ -58,5 +47,20 @@
     background: @toolbar-button-disabled-background-color;
     box-shadow: @toolbar-button-disabled-box-shadow;
     color: @toolbar-button-disabled-text-color;
+  }
+
+  // Increase the chevron size and decrease the button size on touch devices
+  &.tox-platform-touch {
+    .tox-split-button .tox-tbtn--select {
+      padding: 0 (@toolbar-button-select-padding - @toolbar-split-button-chevron-touch-padding);
+    }
+
+    .tox-split-button .tox-tbtn:not(.tox-tbtn--select):first-child {
+      width: @toolbar-button-width - @toolbar-split-button-chevron-touch-padding;
+    }
+
+    .tox-split-button__chevron {
+      width: @toolbar-button-chevron-width + @toolbar-split-button-chevron-touch-padding;
+    }
   }
 }
