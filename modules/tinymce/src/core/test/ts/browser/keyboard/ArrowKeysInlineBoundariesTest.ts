@@ -337,7 +337,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
     });
   });
 
-  context('Arrow keys on inline boundary node when selection is not collapsed', () => {
+  context('Arrow keys when selection is not collapsed', () => {
     it('TINY-8601: It should move caret before selected inline boundary node when arrow left', () => {
       const editor = hook.editor();
       editor.setContent('<p>test <span class="mce-annotation">span</span> selection</p>', { format: 'raw' });
