@@ -18,8 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - UI components, such as dialogs, would in some cases cause the `esc` keyup event to incorrectly trigger inside the editor #TINY-7005
 - Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
+- When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
 
-## 6.0.2 - TBD
+## 6.0.2 - 2022-04-27
 
 ### Fixed
 - Some media elements wouldn't update when changing the source URL #TINY-8660

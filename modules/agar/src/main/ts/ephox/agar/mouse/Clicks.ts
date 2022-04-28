@@ -26,6 +26,7 @@ interface Settings {
   metaKey?: boolean;
   bubbles?: boolean;
   cancelable?: boolean;
+  detail?: number;
 }
 
 // Types of events
