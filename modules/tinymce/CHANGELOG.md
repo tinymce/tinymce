@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Text alignment could not be applied to `pre` elements #TINY-7715
 - Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
+- When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
 
 ## 6.0.2 - 2022-04-27
 
