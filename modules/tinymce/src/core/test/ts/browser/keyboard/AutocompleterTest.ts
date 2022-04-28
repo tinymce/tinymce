@@ -68,7 +68,7 @@ describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
   };
 
   const pCloseAutocompleterByKey = async (editor: Editor) => {
-    TinyContentActions.keydown(editor, Keys.escape());
+    TinyContentActions.keyup(editor, Keys.escape());
     // Wait 50ms for the keypress to process
     await Waiter.pWait(keyboardThrottleTimer);
   };

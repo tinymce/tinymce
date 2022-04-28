@@ -213,13 +213,13 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     const editor = hook.editor();
     await pClickOnSplitBtnFor(editor, 'Numbered list');
     assertNumListStructure();
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   });
 
   it('Check bullet list toolbar button structure', async () => {
     const editor = hook.editor();
     await pClickOnSplitBtnFor(editor, 'Bullet list');
     assertBullListStructure();
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   });
 });
