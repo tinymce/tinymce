@@ -12,38 +12,10 @@ interface DataUriResult {
   readonly data: string;
 }
 
-const blobUriToBlob = (url: string): Promise<Blob> => {
-  return new Promise((resolve, reject) => {
-
-    const rejectWithError = () => {
-      reject('Cannot convert ' + url + ' to Blob. Resource might not exist or is inaccessible.');
-    };
-
-    try {
-      const xhr = new XMLHttpRequest();
-
-      xhr.open('GET', url, true);
-      xhr.responseType = 'blob';
-
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          resolve(xhr.response);
-        } else {
-          // IE11 makes it into onload but responds with status 500
-          rejectWithError();
-        }
-      };
-
-      // Chrome fires an error event instead of the exception
-      // Also there seems to be no way to intercept the message that is logged to the console
-      xhr.onerror = rejectWithError;
-
-      xhr.send();
-    } catch (ex) {
-      rejectWithError();
-    }
-  });
-};
+const blobUriToBlob = (url: string): Promise<Blob> =>
+  fetch(url)
+    .then((res) => res.ok ? res.blob() : Promise.reject())
+    .catch(() => Promise.reject(`Cannot convert ${url} to Blob. Resource might not exist or is inaccessible.`));
 
 const parseDataUri = (uri: string): DataUriResult => {
   let type: string | undefined;
