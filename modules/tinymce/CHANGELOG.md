@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
 
 ### Fixed
-- Spaces would not be added or shown on Chrome in certain situations #TINY-8588
+- Spaces would not be added correctly on some browsers when before or after a contenteditable block element #TINY-8588
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Text alignment could not be applied to `pre` elements #TINY-7715
 
