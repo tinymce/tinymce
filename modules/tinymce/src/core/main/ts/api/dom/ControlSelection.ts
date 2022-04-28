@@ -39,6 +39,23 @@ interface SelectedResizeHandle extends ResizeHandle {
   };
 }
 
+const elementSelectionAttr = 'data-mce-selected';
+const controlElmSelector = 'table,img,figure.image,hr,video,span.mce-preview-object';
+const abs = Math.abs;
+const round = Math.round;
+
+// Details about each resize handle how to scale etc
+const resizeHandles: ResizeHandles = {
+  // Name: x multiplier, y multiplier, delta size x, delta size y
+  nw: [ 0, 0, -1, -1 ],
+  ne: [ 1, 0, 1, -1 ],
+  se: [ 1, 1, 1, 1 ],
+  sw: [ 0, 1, -1, 1 ]
+};
+
+const isTouchEvent = (evt: EditorEvent<PointerEvent> | EditorEvent<TouchEvent>): evt is EditorEvent<TouchEvent> =>
+  evt.type === 'longpress' || evt.type.indexOf('touch') === 0;
+
 /**
  * This class handles control selection of elements. Controls are elements
  * that can be resized and needs to be selected as a whole. It adds custom resize handles
@@ -49,37 +66,25 @@ interface SelectedResizeHandle extends ResizeHandle {
  */
 
 const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSelection => {
-  const elementSelectionAttr = 'data-mce-selected';
   const dom = editor.dom;
+  const editableDoc = editor.getDoc();
+  const rootDocument = document;
+  const rootElement = editor.getBody();
   let selectedElm: HTMLElement, selectedElmGhost: HTMLElement, resizeHelper: HTMLElement, selectedHandle: SelectedResizeHandle, resizeBackdrop: HTMLElement;
   let startX: number, startY: number, selectedElmX: number, selectedElmY: number, startW: number, startH: number, ratio: number, resizeStarted: boolean;
-  let width: number,
-    height: number;
-  const editableDoc = editor.getDoc(),
-    rootDocument = document;
-  const abs = Math.abs,
-    round = Math.round,
-    rootElement = editor.getBody();
-  let startScrollWidth: number,
-    startScrollHeight: number;
+  let width: number;
+  let height: number;
+  let startScrollWidth: number;
+  let startScrollHeight: number;
 
-  // Details about each resize handle how to scale etc
-  const resizeHandles: ResizeHandles = {
-    // Name: x multiplier, y multiplier, delta size x, delta size y
-    nw: [ 0, 0, -1, -1 ],
-    ne: [ 1, 0, 1, -1 ],
-    se: [ 1, 1, 1, 1 ],
-    sw: [ 0, 1, -1, 1 ]
-  };
+  const isImage = (elm: Node | undefined) =>
+    Type.isNonNullable(elm) && (NodeType.isImg(elm) || dom.is(elm, 'figure.image'));
 
-  const isImage = (elm: Element) =>
-    Type.isNonNullable(elm) && (NodeType.isImg(elm) || editor.dom.is(elm, 'figure.image'));
-
-  const isMedia = (elm: Element) =>
+  const isMedia = (elm: Node) =>
     NodeType.isMedia(elm) || dom.hasClass(elm, 'mce-preview-object');
 
-  const isEventOnImageOutsideRange = (evt, range: Range) => {
-    if (evt.type === 'longpress' || evt.type.indexOf('touch') === 0) {
+  const isEventOnImageOutsideRange = (evt: EditorEvent<PointerEvent> | EditorEvent<TouchEvent>, range: Range) => {
+    if (isTouchEvent(evt)) {
       const touch = evt.touches[0];
       return isImage(evt.target) && !RangePoint.isXYWithinRange(touch.clientX, touch.clientY, range);
     } else {
@@ -87,7 +92,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
   };
 
-  const contextMenuSelectImage = (evt) => {
+  const contextMenuSelectImage = (evt: EditorEvent<PointerEvent> | EditorEvent<TouchEvent>) => {
     const target = evt.target;
 
     if (isEventOnImageOutsideRange(evt, editor.selection.getRng()) && !evt.isDefaultPrevented()) {
@@ -413,7 +418,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
 
     const targetElm = e.type === 'mousedown' ? e.target : selection.getNode();
-    const controlElm = SelectorFind.closest<HTMLElement>(SugarElement.fromDom(targetElm), 'table,img,figure.image,hr,video,span.mce-preview-object')
+    const controlElm = SelectorFind.closest<HTMLElement>(SugarElement.fromDom(targetElm), controlElmSelector)
       .map((e) => e.dom)
       .getOrUndefined();
 
