@@ -38,18 +38,34 @@ const getSelectedCells = (table: SugarElement<HTMLTableElement>, cells: SugarEle
   }));
 };
 
-const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data: CellData): void => {
-  modifier.setAttrib('scope', data.scope);
-  modifier.setAttrib('class', data.class);
-  modifier.setStyle('height', Utils.addPxSuffix(data.height));
-  colModifier.setStyle('width', Utils.addPxSuffix(data.width));
+const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data: CellData, shouldUse: (key: string) => boolean): void => {
+  if (shouldUse('scope')) {
+    modifier.setAttrib('scope', data.scope);
+  }
+  if (shouldUse('class')) {
+    modifier.setAttrib('class', data.class);
+  }
+  if (shouldUse('height')) {
+    modifier.setStyle('height', Utils.addPxSuffix(data.height));
+  }
+  if (shouldUse('width')) {
+    colModifier.setStyle('width', Utils.addPxSuffix(data.width));
+  }
 };
 
-const updateAdvancedProps = (modifier: DomModifier, data: CellData): void => {
-  modifier.setFormat('tablecellbackgroundcolor', data.backgroundcolor);
-  modifier.setFormat('tablecellbordercolor', data.bordercolor);
-  modifier.setFormat('tablecellborderstyle', data.borderstyle);
-  modifier.setFormat('tablecellborderwidth', Utils.addPxSuffix(data.borderwidth));
+const updateAdvancedProps = (modifier: DomModifier, data: CellData, shouldUse: (key: string) => boolean): void => {
+  if (shouldUse('backgroundcolor')) {
+    modifier.setFormat('tablecellbackgroundcolor', data.backgroundcolor);
+  }
+  if (shouldUse('bordercolor')) {
+    modifier.setFormat('tablecellbordercolor', data.bordercolor);
+  }
+  if (shouldUse('borderstyle')) {
+    modifier.setFormat('tablecellborderstyle', data.borderstyle);
+  }
+  if (shouldUse('borderwidth')) {
+    modifier.setFormat('tablecellborderwidth', Utils.addPxSuffix(data.borderwidth));
+  }
 };
 
 /*
@@ -65,19 +81,18 @@ const updateAdvancedProps = (modifier: DomModifier, data: CellData): void => {
   how as part of this, it doesn't remove any original alignment before
   applying any specified alignment.
  */
-const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData): void => {
+const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData, wasChanged: (key: string) => boolean): void => {
   const isSingleCell = cells.length === 1;
   Arr.each(cells, (item) => {
     const cellElm = item.element;
-    const modifier = isSingleCell ? DomModifier.normal(editor, cellElm) : DomModifier.ifTruthy(editor, cellElm);
-    const colModifier = item.column.map((col) =>
-      isSingleCell ? DomModifier.normal(editor, col) : DomModifier.ifTruthy(editor, col)
-    ).getOr(modifier);
+    const shouldOverrideCurrentValue = isSingleCell ? Fun.always : wasChanged;
+    const modifier = DomModifier.normal(editor, cellElm);
+    const colModifier = item.column.map((col) => DomModifier.normal(editor, col)).getOr(modifier);
 
-    updateSimpleProps(modifier, colModifier, data);
+    updateSimpleProps(modifier, colModifier, data, shouldOverrideCurrentValue);
 
     if (Options.hasAdvancedCellTab(editor)) {
-      updateAdvancedProps(modifier, data);
+      updateAdvancedProps(modifier, data, shouldOverrideCurrentValue);
     }
 
     // Remove alignment
@@ -119,7 +134,7 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
 
       // Update the cells styling using the dialog data
       if (styleModified || Obj.has(modifiedData, 'scope')) {
-        applyStyleData(editor, selectedCells, data);
+        applyStyleData(editor, selectedCells, data, Fun.curry(Arr.contains, Obj.keys(modifiedData)));
       }
 
       // Update the cells structure using the dialog data
