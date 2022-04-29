@@ -150,7 +150,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
         item('new-value1')
       ]),
 
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       steps.sAssertValue('After pressing ESC', 'New-value1'),
       steps.sAssertFocusOnTypeahead('After pressing ESC'),
       steps.sWaitForNoMenu('After pressing ESC'),

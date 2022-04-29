@@ -15,8 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
 - In some cases pressing the backspace key would incorrectly step into tables rather than remain outside #TINY-8592
 - Text alignment could not be applied to `pre` elements #TINY-7715
+- UI components, such as dialogs, would in some cases cause the `esc` keyup event to incorrectly trigger inside the editor #TINY-7005
 - Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
+- When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
 - When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
 
 ## 6.0.2 - 2022-04-27

@@ -41,7 +41,7 @@ describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
     TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
     await assertMenuItemState(editor, 'Redo', true);
     await assertMenuItemState(editor, 'Undo', true);
-    TinyUiActions.keydown(hook.editor(), Keys.escape());
+    TinyUiActions.keyup(hook.editor(), Keys.escape());
   });
 
   it('TINY-8101: Undo/redo should be disabled/enabled if dirty', async () => {
@@ -54,7 +54,7 @@ describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
     TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
     await assertMenuItemState(editor, 'Redo', true);
     await assertMenuItemState(editor, 'Undo', false);
-    TinyUiActions.keydown(hook.editor(), Keys.escape());
+    TinyUiActions.keyup(hook.editor(), Keys.escape());
 
     // 2. Redo should be enabled after undo being clicked
     TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[title="Undo"]');
@@ -63,7 +63,7 @@ describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
     TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
     await assertMenuItemState(editor, 'Redo', false);
     await assertMenuItemState(editor, 'Undo', true);
-    TinyUiActions.keydown(hook.editor(), Keys.escape());
+    TinyUiActions.keyup(hook.editor(), Keys.escape());
   });
 
   it('TINY-8101: Undo/redo are always disabled in readonly mode', async () => {

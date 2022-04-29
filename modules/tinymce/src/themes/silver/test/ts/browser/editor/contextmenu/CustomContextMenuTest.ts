@@ -15,7 +15,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
     await TinyUiActions.pTriggerContextMenu(editor, selector, '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');
 
   const pCloseContextMenu = async () => {
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape());
+    Keyboard.activeKeyup(SugarDocument.getDocument(), Keys.escape());
     await Waiter.pTryUntil('Close context menu', () => UiFinder.notExists(SugarBody.body(), 'div[role="menu"]'));
   };
 

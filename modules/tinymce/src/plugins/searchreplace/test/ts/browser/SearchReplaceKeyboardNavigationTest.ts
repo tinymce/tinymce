@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
   const doc = SugarDocument.getDocument();
 
   const pressTab = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
-  const pressEsc = (editor: Editor) => TinyUiActions.keydown(editor, Keys.escape());
+  const pressEsc = (editor: Editor) => TinyUiActions.keyup(editor, Keys.escape());
   const pressDown = (editor: Editor) => TinyUiActions.keydown(editor, Keys.down());
   const pressRight = (editor: Editor) => TinyUiActions.keydown(editor, Keys.right());
   const pressEnter = (editor: Editor) => TinyUiActions.keydown(editor, Keys.enter());
