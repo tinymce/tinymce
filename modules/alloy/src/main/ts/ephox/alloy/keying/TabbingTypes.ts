@@ -112,11 +112,12 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
   const getKeydownRules = Fun.constant([
     KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB) ]), goBackwards),
     KeyRules.rule(KeyMatch.inSet(Keys.TAB), goForwards),
-    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), exit),
     KeyRules.rule(KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER) ]), execute)
   ]);
 
-  const getKeyupRules = Fun.constant([ ]);
+  const getKeyupRules = Fun.constant([
+    KeyRules.rule(KeyMatch.inSet(Keys.ESCAPE), exit)
+  ]);
 
   return KeyingType.typical(schema, NoState.init, getKeydownRules, getKeyupRules, () => Optional.some(focusIn));
 };
