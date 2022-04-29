@@ -62,11 +62,11 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     }));
 
   /**
-   * Loads the specified CSS file and calls the `success` callback if successfully loaded, otherwise calls `failure`.
+   * Loads the specified CSS file and returns a Promise that will resolve when the stylesheet is loaded successfully or reject if it failed to load.
    *
    * @method load
    * @param {String} url Url to be loaded.
-   * @return {Promise} A promise that will resolve when the stylesheet is loaded successfully or reject if it failed to load.
+   * @return {Promise} A Promise that will resolve or reject when the stylesheet is loaded.
    */
   const load = (url: string): Promise<void> =>
     new Promise((success, failure) => {
@@ -180,11 +180,11 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     });
 
   /**
-   * Loads the specified CSS files and calls the `success` callback if successfully loaded, otherwise calls `failure`.
+   * Loads the specified CSS files and returns a Promise that is resolved when all stylesheets are loaded or rejected if any failed to load.
    *
    * @method loadAll
    * @param {Array} urls URLs to be loaded.
-   * @return {Promise} A promise that is resolved when all stylesheets are loaded or rejected if any failed to load.
+   * @return {Promise} A Promise that will resolve or reject when all stylesheets are loaded.
    */
   const loadAll = (urls: string[]) => {
     const loadedUrls = Promise.allSettled(Arr.map(urls, (url) => load(url).then(Fun.constant(url))));
