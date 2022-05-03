@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
 
 ### Fixed
+- Images were not showing as selected when selecting images alongside other content #TINY-5947
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
 - In some cases pressing the backspace key would incorrectly step into tables rather than remain outside #TINY-8592
