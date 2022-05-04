@@ -361,7 +361,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p>test <span class="mce-annotation">span</span> selection</p>');
       TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 4, true);
       TinyContentActions.keystroke(editor, Keys.left());
-      TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
+      TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1); // offset 1 is caused by the ZWSP at the beginning of the span text
       assertCaretAfterZwsp(editor);
     });
 
