@@ -472,6 +472,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
       // See https://bugs.webkit.org/show_bug.cgi?id=230594.
       return true;
     }
+
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
   };
 
