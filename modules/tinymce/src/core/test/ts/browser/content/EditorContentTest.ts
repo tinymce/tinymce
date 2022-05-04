@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -138,7 +138,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>html</p>');
     editor.setContent('<p>new html</p>');
-    TinyAssertions.assertContent(editor, '<p>new html</p>');
+    assert.deepEqual(editor.getContent(), '<p>new html</p>');
     assertEventsFiredInOrder([
       'beforesetcontent',
       'setcontent',
