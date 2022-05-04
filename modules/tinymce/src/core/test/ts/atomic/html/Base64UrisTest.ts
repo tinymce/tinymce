@@ -98,6 +98,28 @@ describe('atomic.tinymce.core.html.Base64UrisTest', () => {
         }
       }
     );
+
+    testExtract(
+      'TINY-8646: Should extract base64 encoded image following `data:` text on the same paragaph',
+      '<p>my data:<img src="data:image/gif;base64,R0/yw=="/></p>',
+      {
+        html: '<p>my data:<img src="$prefix_0"/></p>',
+        uris: {
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
+        }
+      }
+    );
+
+    testExtract(
+      'TINY-8646: Should extract base64 encoded image in the next paragraph following `data:` text',
+      '<p>my data:</p><p><img src="data:image/gif;base64,R0/yw=="/></p>',
+      {
+        html: '<p>my data:</p><p><img src="$prefix_0"/></p>',
+        uris: {
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
+        }
+      }
+    );
   });
 
   const testRestoreDataUris = (label: string, inputResult: Base64Extract, inputHtml: string, expectedHtml: string) => {
