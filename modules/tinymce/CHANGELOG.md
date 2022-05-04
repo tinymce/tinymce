@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Base64 encoded image was not displayed following `data:` text #TINY-8646
+
 ## 5.10.4 - 2022-04-27
 
 ### Fixed
