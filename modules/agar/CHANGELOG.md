@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added `detail` property to emulated mouse events settings.
+
 ## 7.0.0 - 2022-03-03
 
 ### Changed

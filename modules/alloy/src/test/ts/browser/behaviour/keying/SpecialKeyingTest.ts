@@ -37,6 +37,12 @@ UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
       store.sAssertEq('Pressing ' + expected, [ expected ])
     ]);
 
+    const pressUp = (expected: string, key: number, modifiers: { }) => GeneralSteps.sequence([
+      store.sClear,
+      Keyboard.sKeyup(doc, key, modifiers),
+      store.sAssertEq('Pressing ' + expected, [ expected ])
+    ]);
+
     return [
       GuiSetup.mSetupKeyLogger(body),
       FocusTools.sSetFocus('Start on component', gui.element, '.special-keying'),
@@ -47,7 +53,7 @@ UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
       press('up', Keys.up(), { }),
       press('down', Keys.down(), { }),
       press('right', Keys.right(), { }),
-      press('escape', Keys.escape(), { }),
+      pressUp('escape', Keys.escape(), { }),
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
   }, success, failure);

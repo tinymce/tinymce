@@ -81,8 +81,8 @@ const assertStructureHasCustomStyle = (editor: Editor, rows: number, columns: nu
 };
 
 const closeMenu = (editor: Editor) => {
-  TinyUiActions.keydown(editor, Keys.escape());
-  TinyUiActions.keydown(editor, Keys.escape());
+  TinyUiActions.keyup(editor, Keys.escape());
+  TinyUiActions.keyup(editor, Keys.escape());
 };
 
 const clickOnButton = (editor: Editor, title: string) => {

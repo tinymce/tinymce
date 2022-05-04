@@ -299,7 +299,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       ),
 
       // Pressing escape should focus sortby
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       sTestMenus(
         'After pressing down in sortby menu',
         [ ],
@@ -434,7 +434,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       ),
 
       // Press escape to exit the inline widget
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       sTestMenus(
         'After pressing <escape> inside inline widget',
         [ ],
