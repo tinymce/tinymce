@@ -8,7 +8,7 @@ export interface DomModifier {
 
 // The get node is required here because it can be transformed
 // when switching between tags (e.g. th and td)
-const modifiers = (editor: Editor, element: Element): DomModifier => {
+const normal = (editor: Editor, element: Element): DomModifier => {
   const dom = editor.dom;
 
   const setAttrib = (attr: string, value: string) => {
@@ -36,5 +36,5 @@ const modifiers = (editor: Editor, element: Element): DomModifier => {
 };
 
 export const DomModifier = {
-  normal: modifiers
+  normal
 };

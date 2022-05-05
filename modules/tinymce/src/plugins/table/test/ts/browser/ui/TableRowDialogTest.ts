@@ -249,7 +249,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     assertEvents();
   });
 
-  it('TINY-8625: Table row properties dialog update multiple rows, but does not override unchanged values', async () => {
+  it('TINY-8625: Table row properties dialog updates multiple rows, but does not override unchanged values', async () => {
     const initialHtml =
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
         '<tbody>' +
@@ -304,7 +304,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     assertEvents();
   });
 
-  it('TINY-8625: Table row properties dialog update multiple rows allows resetting values', async () => {
+  it('TINY-8625: Table row properties dialog updates multiple rows allows resetting values', async () => {
     const initialHtml =
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
         '<tbody>' +

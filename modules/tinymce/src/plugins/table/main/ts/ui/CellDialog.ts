@@ -38,32 +38,32 @@ const getSelectedCells = (table: SugarElement<HTMLTableElement>, cells: SugarEle
   }));
 };
 
-const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data: CellData, shouldUse: (key: string) => boolean): void => {
-  if (shouldUse('scope')) {
+const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data: CellData, shouldUpdate: (key: string) => boolean): void => {
+  if (shouldUpdate('scope')) {
     modifier.setAttrib('scope', data.scope);
   }
-  if (shouldUse('class')) {
+  if (shouldUpdate('class')) {
     modifier.setAttrib('class', data.class);
   }
-  if (shouldUse('height')) {
+  if (shouldUpdate('height')) {
     modifier.setStyle('height', Utils.addPxSuffix(data.height));
   }
-  if (shouldUse('width')) {
+  if (shouldUpdate('width')) {
     colModifier.setStyle('width', Utils.addPxSuffix(data.width));
   }
 };
 
-const updateAdvancedProps = (modifier: DomModifier, data: CellData, shouldUse: (key: string) => boolean): void => {
-  if (shouldUse('backgroundcolor')) {
+const updateAdvancedProps = (modifier: DomModifier, data: CellData, shouldUpdate: (key: string) => boolean): void => {
+  if (shouldUpdate('backgroundcolor')) {
     modifier.setFormat('tablecellbackgroundcolor', data.backgroundcolor);
   }
-  if (shouldUse('bordercolor')) {
+  if (shouldUpdate('bordercolor')) {
     modifier.setFormat('tablecellbordercolor', data.bordercolor);
   }
-  if (shouldUse('borderstyle')) {
+  if (shouldUpdate('borderstyle')) {
     modifier.setFormat('tablecellborderstyle', data.borderstyle);
   }
-  if (shouldUse('borderwidth')) {
+  if (shouldUpdate('borderwidth')) {
     modifier.setFormat('tablecellborderwidth', Utils.addPxSuffix(data.borderwidth));
   }
 };

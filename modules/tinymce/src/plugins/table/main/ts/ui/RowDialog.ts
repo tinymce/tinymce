@@ -18,23 +18,23 @@ import * as RowDialogGeneralTab from './RowDialogGeneralTab';
 
 type RowData = Helpers.RowData;
 
-const updateSimpleProps = (modifier: DomModifier, data: RowData, shouldUse: (key: string) => boolean): void => {
-  if (shouldUse('class')) {
+const updateSimpleProps = (modifier: DomModifier, data: RowData, shouldUpdate: (key: string) => boolean): void => {
+  if (shouldUpdate('class')) {
     modifier.setAttrib('class', data.class);
   }
-  if (shouldUse('height')) {
+  if (shouldUpdate('height')) {
     modifier.setStyle('height', Utils.addPxSuffix(data.height));
   }
 };
 
-const updateAdvancedProps = (modifier: DomModifier, data: RowData, shouldUse: (key: string) => boolean): void => {
-  if (shouldUse('backgroundcolor')) {
+const updateAdvancedProps = (modifier: DomModifier, data: RowData, shouldUpdate: (key: string) => boolean): void => {
+  if (shouldUpdate('backgroundcolor')) {
     modifier.setStyle('background-color', data.backgroundcolor);
   }
-  if (shouldUse('bordercolor')) {
+  if (shouldUpdate('bordercolor')) {
     modifier.setStyle('border-color', data.bordercolor);
   }
-  if (shouldUse('borderstyle')) {
+  if (shouldUpdate('borderstyle')) {
     modifier.setStyle('border-style', data.borderstyle);
   }
 };
