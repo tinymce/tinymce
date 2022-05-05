@@ -145,9 +145,20 @@ describe('atomic.tinymce.core.html.Base64UrisTest', () => {
 
     testExtract(
       'TINY-8646: Should extract based64 encoded image when single quotes are used',
-      '<img name=\'data:\' src=\'data:image/gif;base64,R0/yw==\'/>',
+      '<img name=\'data:\'src=\'data:image/gif;base64,R0/yw==\'/>',
       {
-        html: '<img name=\'data:\' src=\'$prefix_0\'/>',
+        html: '<img name=\'data:\'src=\'$prefix_0\'/>',
+        uris: {
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
+        }
+      }
+    );
+
+    testExtract(
+      'TINY-8646: Should extract based64 encoded image when whitespaces are used (eg newline, tabs)',
+      '<img name="data:"\n' + 'src="data:image/gif;base64,R0/yw=="/>',
+      {
+        html: '<img name="data:"\n' + 'src="$prefix_0"/>',
         uris: {
           $prefix_0: 'data:image/gif;base64,R0/yw=='
         }

@@ -22,7 +22,7 @@ export interface Base64UriParts {
 }
 
 export const extractBase64DataUris = (html: string): Base64Extract => {
-  const dataImageUri = /data:[^;<" ]+;base64,([a-z0-9\+\/=\s]+)/gi;
+  const dataImageUri = /data:[^;<"'\s]+;base64,([a-z0-9\+\/=\s]+)/gi;
   const chunks: string[] = [];
   const uris: UriMap = {};
   const prefix = Id.generate('img');
