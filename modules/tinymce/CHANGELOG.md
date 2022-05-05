@@ -7,13 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Changed
+- Getting the text content of the editor now returns newlines instead of an empty string if more than one empty paragraph exists #TINY-8578
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
 
 ### Fixed
+- Spaces would not be added correctly on some browsers when before or after a contenteditable block element #TINY-8588
+- Images were not showing as selected when selecting images alongside other content #TINY-5947
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
+- Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
+- In some cases pressing the backspace key would incorrectly step into tables rather than remain outside #TINY-8592
 - Text alignment could not be applied to `pre` elements #TINY-7715
 - Nuget packages for .NET and .NET Core now copy TinyMCE into `/wwwroot/lib/` in the projects TinyMCE is installed in #TINY-8611
+- UI components, such as dialogs, would in some cases cause the `esc` keyup event to incorrectly trigger inside the editor #TINY-7005
+- Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
+- An exception could be thrown for the `editor.selection.isForward()` API due to an invalid selection on some versions of Safari #TINY-8686
+- The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
+- When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
+- When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
+
+## 6.0.3 - TBD
+
+### Fixed
+- Could not remove values when multiple cells were selected with the cell properties dialog #TINY-8625
+- Could not remove values when multiple rows were selected with the row properties dialog #TINY-8625
+
+## 6.0.2 - 2022-04-27
+
+### Fixed
+- Some media elements wouldn't update when changing the source URL #TINY-8660
+- Inline toolbars flickered when switching between editors #TINY-8594
+- Multiple inline toolbars were shown if focused too quickly #TINY-8503
+- Added background and additional spacing for the text labeled buttons in the toolbar to improve visual clarity #TINY-8617
+- Toolbar split buttons with text used an incorrect width on touch devices #TINY-8647
 
 ## 6.0.1 - 2022-03-23
 

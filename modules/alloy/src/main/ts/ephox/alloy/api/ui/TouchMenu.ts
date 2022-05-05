@@ -147,7 +147,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
           forceHoverOn(component);
           const iMenu = Menu.sketch({
             ...externals.menu(),
-            items
+            items: items.getOr([])
           });
           const sandbox = Coupling.getCoupled(component, 'sandbox');
           const anchor = detail.getAnchor(component);

@@ -237,9 +237,9 @@ const Tools: Tools = {
   makeMap,
 
   /**
-   * Performs an iteration of all items in a collection such as an object or array. This method will execure the
+   * Performs an iteration of all items in a collection such as an object or array. This method will execute the
    * callback function for each item in the collection, if the callback returns false the iteration will terminate.
-   * The callback has the following format: cb(value, key_or_index).
+   * The callback has the following format: `cb(value, key_or_index)`.
    *
    * @method each
    * @param {Object} o Collection to iterate.

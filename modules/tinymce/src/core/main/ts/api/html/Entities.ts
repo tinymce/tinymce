@@ -129,8 +129,8 @@ const encodeRaw = (text: string, attr?: boolean): string => text.replace(attr ? 
 
 /**
  * Encoded the specified text with both the attributes and text entities. This function will produce larger text contents
- * since it doesn't know if the context is within a attribute or text node. This was added for compatibility
- * and is exposed as the DOMUtils.encode function.
+ * since it doesn't know if the context is within an attribute or text node. This was added for compatibility
+ * and is exposed as the `DOMUtils.encode` function.
  *
  * @method encodeAllRaw
  * @param {String} text Text to encode.

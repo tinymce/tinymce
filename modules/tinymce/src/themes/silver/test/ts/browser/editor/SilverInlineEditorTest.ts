@@ -354,7 +354,7 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
       })),
       activeItem
     );
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
     UiFinder.notExists(SugarBody.body(), '[role="menu"]');
   });
 

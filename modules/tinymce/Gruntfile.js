@@ -8,6 +8,7 @@ let zipUtils = require('./tools/modules/zip-helper');
 let gruntUtils = require('./tools/modules/grunt-utils');
 let gruntWebPack = require('./tools/modules/grunt-webpack');
 let swag = require('@ephox/swag');
+let path = require('path');
 
 let plugins = [
   'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 'code', 'codesample',
@@ -279,32 +280,25 @@ module.exports = function (grunt) {
       })
     ),
 
-    webpack: Object.assign(
-      {core: () => {
-          gruntWebPack.create('src/core/demo/ts/demo/Demos.ts', 'tsconfig.json', 'scratch/demos/core', 'demo.js');
-          gruntWebPack.create('src/core/demo/ts/demo/ContentSecurityPolicyDemo.ts', 'tsconfig.json', 'scratch/demos/core', 'cspdemo.js');
-        }},
-      {plugins: () => gruntWebPack.allPluginDemos(plugins)},
-      {themes: () => {
-        gruntWebPack.allThemeDemos(themes);
-      }},
-      {models: () => gruntWebPack.allModelDemos(models)},
-      gruntUtils.generate(plugins, 'plugin', (name) => () => gruntWebPack.createPlugin(name) ),
-      gruntUtils.generate(themes, 'theme', (name) => () => gruntWebPack.createTheme(name) ),
-      gruntUtils.generate(models, 'model', (name) => () => gruntWebPack.createModel(name) )
-    ),
-
     'webpack-dev-server': {
+      everything: () => gruntWebPack.all(plugins, themes, models),
       options: {
-        webpack: gruntWebPack.all(plugins, themes, models),
-        publicPath: '/',
-        inline: false,
-        port: grunt.option('webpack-port') !== undefined ? grunt.option('webpack-port') : 3000,
-        host: '0.0.0.0',
-        disableHostCheck: true,
-        before: app => gruntWebPack.generateDemoIndex(grunt, app, plugins, themes, models)
+        devServer: {
+          port: grunt.option('webpack-port') !== undefined ? grunt.option('webpack-port') : 3000,
+          host: '0.0.0.0',
+          allowedHosts: 'all',
+          static: {
+            publicPath: '/',
+            directory: path.join(__dirname)
+          },
+          hot: false,
+          liveReload: false,
+          setupMiddlewares: (middlewares, devServer) => {
+            gruntWebPack.generateDemoIndex(grunt, devServer.app, plugins, themes, models);
+            return middlewares;
+          }
+        }
       },
-      start: { }
     },
 
     concat: Object.assign({

@@ -55,7 +55,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.MobileContextMenuTest
 
   const pressDownArrowKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
   const pressEnterKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
-  const pressEscKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape());
+  const pressEscKey = () => Keyboard.activeKeyup(SugarDocument.getDocument(), Keys.escape());
 
   const tableHtml = '<table style="width: 100%;">' +
   '<tbody>' +

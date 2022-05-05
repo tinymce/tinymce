@@ -149,7 +149,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinyUiActions.keydown(editor, Keys.enter());
     store.assertEq('B should have fired because it is primary', [ 'B.Words' ]);
     hasDialog('Immediate context form should have an inner dialog class');
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
     // Check that the context popup still exists;
     UiFinder.exists(SugarBody.body(), '.tox-pop');
     await Waiter.pTryUntil('Check that the editor still has focus', () => editor.hasFocus());
@@ -167,10 +167,10 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinyUiActions.keydown(editor, Keys.enter());
     await FocusTools.pTryOnSelector('Focus should now be on input in context form that was launched by button', doc, 'input');
     hasDialog('Launched context form should have an inner dialog class');
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
     await FocusTools.pTryOnSelector('Focus should have shifted back to the triggering toolbar', doc, '.tox-pop button');
     hasDialog('Restored context toolbar (esc from form) should have an inner dialog class');
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
     // Check that the context popup still exists;
     UiFinder.exists(SugarBody.body(), '.tox-pop');
     await Waiter.pTryUntil('Check that the editor still has focus', () => editor.hasFocus());
