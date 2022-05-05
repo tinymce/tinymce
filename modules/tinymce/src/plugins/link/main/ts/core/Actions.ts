@@ -50,7 +50,7 @@ const setupGotoLinks = (editor: Editor): void => {
 
   editor.on('keydown', (e) => {
     const link = getSelectedLink(editor);
-    if (link && e.keyCode === 13 && hasOnlyAltModifier(e)) {
+    if (!e.defaultPrevented && link && e.keyCode === 13 && hasOnlyAltModifier(e)) {
       e.preventDefault();
       gotoLink(editor, link);
     }
