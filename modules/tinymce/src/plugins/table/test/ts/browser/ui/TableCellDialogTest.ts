@@ -239,6 +239,118 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
     assertEventsOrder();
   });
 
+  it('TINY-8625: Table cell properties dialog update multiple cells, but does not override unchanged values', async () => {
+    const initialHtml = '<table>' +
+        '<colgroup>' +
+          '<col style="width: 25.3548%;">' +
+          '<col style="width: 74.5433%;">' +
+        '</colgroup>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td data-mce-selected="1" style="height: 200px;">&nbsp;</td>' +
+            '<td data-mce-selected="1" style="height: 200px;">&nbsp;</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>';
+
+    const newHtml = '<table>' +
+      '<colgroup>' +
+        '<col style="width: 25.3548%;">' +
+        '<col style="width: 74.5433%;">' +
+      '</colgroup>' +
+      '<tbody>' +
+        '<tr>' +
+          '<td style="height: 20px;">&nbsp;</td>' +
+          '<td style="height: 20px;">&nbsp;</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>';
+
+    const newData = {
+      height: '20',
+    };
+
+    const initialDialogValues = {
+      width: '',
+      height: '200px',
+      celltype: 'td',
+      halign: '',
+      valign: '',
+      scope: '',
+      backgroundcolor: '',
+      bordercolor: '',
+      borderstyle: '',
+      border: ''
+    };
+
+    const editor = hook.editor();
+    assertEventsOrder([]);
+    editor.setContent(initialHtml);
+    TinySelections.select(editor, 'td:nth-child(2)', [ 0 ]);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(initialDialogValues, true, generalSelectors);
+    TableTestUtils.setDialogValues(newData, true, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, newHtml);
+    assertEventsOrder();
+  });
+
+  it('TINY-8625: Table cell properties dialog update multiple cells allows resetting values', async () => {
+    const initialHtml = '<table>' +
+        '<colgroup>' +
+          '<col style="width: 25.3548%;">' +
+          '<col style="width: 74.5433%;">' +
+        '</colgroup>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td data-mce-selected="1" style="height: 200px;">&nbsp;</td>' +
+            '<td data-mce-selected="1" style="height: 200px;">&nbsp;</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>';
+
+    const newHtml = '<table>' +
+      '<colgroup>' +
+        '<col style="width: 25.3548%;">' +
+        '<col style="width: 74.5433%;">' +
+      '</colgroup>' +
+      '<tbody>' +
+        '<tr>' +
+          '<td>&nbsp;</td>' +
+          '<td>&nbsp;</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>';
+
+    const newData = {
+      height: '',
+    };
+
+    const initialDialogValues = {
+      width: '',
+      height: '200px',
+      celltype: 'td',
+      halign: '',
+      valign: '',
+      scope: '',
+      backgroundcolor: '',
+      bordercolor: '',
+      borderstyle: '',
+      border: ''
+    };
+
+    const editor = hook.editor();
+    assertEventsOrder([]);
+    editor.setContent(initialHtml);
+    TinySelections.select(editor, 'td:nth-child(2)', [ 0 ]);
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues(initialDialogValues, true, generalSelectors);
+    TableTestUtils.setDialogValues(newData, true, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor, newHtml);
+    assertEventsOrder();
+  });
+
   it('TBA: Remove all styles', async () => {
     const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
     'border-color: red; border-style: dashed; background-color: blue;" scope="row">X</th></tr></tbody></table>';
