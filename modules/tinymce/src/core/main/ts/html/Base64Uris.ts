@@ -1,4 +1,4 @@
-import { Id, Obj, Optional } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 
 export type UriMap = Record<string, string>;
 
@@ -13,41 +13,6 @@ export interface Base64UriParts {
   readonly type: string;
   readonly data: string;
 }
-
-export const extractBase64DataUris = (html: string): Base64Extract => {
-  const dataImageUri = /data:[^;]+;base64,([a-z0-9\+\/=\s]+)/gi;
-  const chunks: string[] = [];
-  const uris: UriMap = {};
-  const prefix = Id.generate('img');
-  let matches: RegExpExecArray;
-  let index = 0;
-  let count = 0;
-
-  while ((matches = dataImageUri.exec(html))) {
-    const [ uri ] = matches;
-    const imageId = prefix + '_' + count++;
-
-    uris[imageId] = uri;
-
-    if (index < matches.index) {
-      chunks.push(html.substr(index, matches.index - index));
-    }
-
-    chunks.push(imageId);
-    index = matches.index + uri.length;
-  }
-
-  const re = new RegExp(`${prefix}_[0-9]+`, 'g');
-  if (index === 0) {
-    return { prefix, uris, html, re };
-  } else {
-    if (index < html.length) {
-      chunks.push(html.substr(index));
-    }
-
-    return { prefix, uris, html: chunks.join(''), re };
-  }
-};
 
 export const restoreDataUris = (html: string, result: Base64Extract): string =>
   html.replace(result.re, (imageId) =>

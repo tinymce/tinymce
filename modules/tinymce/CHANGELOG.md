@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
 - When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
 
+## 6.0.3 - TBD
+
+### Fixed
+- Could not remove values when multiple cells were selected with the cell properties dialog #TINY-8625
+- Could not remove values when multiple rows were selected with the row properties dialog #TINY-8625
+
 ## 6.0.2 - 2022-04-27
 
 ### Fixed
