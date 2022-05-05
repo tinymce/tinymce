@@ -6,10 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## 5.10.5 - 2022-05-05
-
 ### Fixed
-- Base64 data URI was not extracted correctly following `data:` text #TINY-8646
+- Base64 data URIs were not extracted correctly during parsing when proceded by `data:` text #TINY-8646
 
 ## 5.10.4 - 2022-04-27
 
