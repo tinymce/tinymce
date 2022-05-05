@@ -11,12 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
 
 ### Fixed
+- Images were not showing as selected when selecting images alongside other content #TINY-5947
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
 - In some cases pressing the backspace key would incorrectly step into tables rather than remain outside #TINY-8592
 - Text alignment could not be applied to `pre` elements #TINY-7715
 - UI components, such as dialogs, would in some cases cause the `esc` keyup event to incorrectly trigger inside the editor #TINY-7005
 - Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
+- An exception could be thrown for the `editor.selection.isForward()` API due to an invalid selection on some versions of Safari #TINY-8686
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
 - When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
 - When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601

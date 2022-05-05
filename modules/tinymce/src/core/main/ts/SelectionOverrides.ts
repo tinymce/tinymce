@@ -279,7 +279,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     // But data-mce-selected can be values other than 1 so keep existing value if
     // node has one, and remove data-mce-selected from everything else
     const nodeElm = SugarElement.fromDom(elm);
-    Arr.each(SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), '*[data-mce-selected]'), (elm) => {
+    Arr.each(SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), `*[${elementSelectionAttr}]`), (elm) => {
       if (!Compare.eq(nodeElm, elm)) {
         Attribute.remove(elm, elementSelectionAttr);
       }
