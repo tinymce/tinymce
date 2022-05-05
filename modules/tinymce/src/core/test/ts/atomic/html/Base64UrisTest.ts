@@ -120,6 +120,39 @@ describe('atomic.tinymce.core.html.Base64UrisTest', () => {
         }
       }
     );
+
+    testExtract(
+      'TINY-8646: Should extract based64 encoded image following an attribute with `data:` text as a value',
+      '<img name="data:" src="data:image/gif;base64,R0/yw=="/>',
+      {
+        html: '<img name="data:" src="$prefix_0"/>',
+        uris: {
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
+        }
+      }
+    );
+
+    testExtract(
+      'TINY-8646: Should extract based64 encoded image when there is no space between attributes',
+      '<img name="data:"src="data:image/gif;base64,R0/yw=="/>',
+      {
+        html: '<img name="data:"src="$prefix_0"/>',
+        uris: {
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
+        }
+      }
+    );
+
+    testExtract(
+      'TINY-8646: Should extract based64 encoded image when single quotes are used',
+      '<img name=\'data:\' src=\'data:image/gif;base64,R0/yw==\'/>',
+      {
+        html: '<img name=\'data:\' src=\'$prefix_0\'/>',
+        uris: {
+          $prefix_0: 'data:image/gif;base64,R0/yw=='
+        }
+      }
+    );
   });
 
   const testRestoreDataUris = (label: string, inputResult: Base64Extract, inputHtml: string, expectedHtml: string) => {
