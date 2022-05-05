@@ -6,7 +6,25 @@ import * as LazyEvaluator from '../util/LazyEvaluator';
 import * as ContextSelectors from './ContextSelectors';
 import * as NewLineUtils from './NewLineUtils';
 
-const newLineAction = Adt.generate([
+export interface NewLineActionAdt {
+  fold: <T> (
+    br: VoidFunction,
+    block: VoidFunction,
+    none: VoidFunction,
+  ) => T;
+  match: <T> (branches: {
+    br: VoidFunction;
+    block: VoidFunction;
+    none: VoidFunction;
+  }) => T;
+  log: (label: string) => void;
+}
+
+const newLineAction: {
+  br: () => NewLineActionAdt;
+  block: () => NewLineActionAdt;
+  none: () => NewLineActionAdt;
+} = Adt.generate([
   { br: [ ] },
   { block: [ ] },
   { none: [ ] }
@@ -61,7 +79,7 @@ const match = (predicates, action) => {
   };
 };
 
-const getAction = (editor: Editor, evt?) => {
+const getAction = (editor: Editor, evt?): NewLineActionAdt => {
   return LazyEvaluator.evaluateUntil([
     match([ shouldBlockNewLine ], newLineAction.none()),
     match([ inSummaryBlock() ], newLineAction.br()),

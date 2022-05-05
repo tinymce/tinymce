@@ -135,7 +135,7 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
       'button:contains("Button2")'
     ),
 
-    Keyboard.sKeydown(doc, Keys.escape(), { }),
+    Keyboard.sKeyup(doc, Keys.escape(), { }),
     FocusTools.sTryOnSelector(
       'Focus should move back to widget',
       doc,

@@ -144,7 +144,7 @@ UnitTest.asynctest('FloatingToolbarButtonTest', (success, failure) => {
       ]),
 
       Log.stepsAsStep('', 'Escape should close floating toolbar', [
-        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        Keyboard.sKeyup(doc, Keys.escape(), { }),
         sAssertFloatingToolbarClosed()
       ]),
 

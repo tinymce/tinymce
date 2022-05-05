@@ -5,15 +5,18 @@ import Tools from '../api/util/Tools';
 export interface StringPathBookmark {
   start: string;
   end?: string;
+  forward?: boolean;
 }
 
 export interface RangeBookmark {
   rng: Range;
+  forward?: boolean;
 }
 
 export interface IdBookmark {
   id: string;
   keep?: boolean;
+  forward?: boolean;
 }
 
 export interface IndexBookmark {
@@ -25,6 +28,7 @@ export interface PathBookmark {
   start: number[];
   end?: number[];
   isFakeCaret?: boolean;
+  forward?: boolean;
 }
 
 export type Bookmark = StringPathBookmark | RangeBookmark | IdBookmark | IndexBookmark | PathBookmark;

@@ -31,7 +31,7 @@ const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): H
    *
    * @method serialize
    * @param {tinymce.html.Node} node Node instance to serialize.
-   * @return {String} String with HTML based on DOM tree.
+   * @return {String} String with HTML based on the DOM tree.
    * @example
    * tinymce.html.Serializer().serialize(tinymce.html.DomParser().parse('<p>text</p>'));
    */

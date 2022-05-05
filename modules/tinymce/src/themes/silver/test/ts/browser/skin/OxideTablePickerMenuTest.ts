@@ -92,7 +92,7 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
       menu
     );
     await FocusTools.pTryOnSelector('Focus should be on 2 down, 2 across table cell', doc, '.tox-insert-table-picker__selected:last');
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   });
 
   it('TINY-6532: Re-opening the menu should reset the selected cells', async () => {
@@ -111,13 +111,13 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
     UiFinder.exists(firstPicker, 'div.tox-insert-table-picker__selected');
     UiFinder.exists(firstPicker, 'span.tox-insert-table-picker__label:contains("1x1")');
 
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
     await Waiter.pTryUntil('Wait for menu to be hidden', () => UiFinder.notExists(SugarBody.body(), 'div.tox-fancymenuitem'));
 
     const secondPicker = await pOpenTablePicker();
     UiFinder.notExists(secondPicker, 'div.tox-insert-table-picker__selected');
     UiFinder.exists(secondPicker, 'span.tox-insert-table-picker__label:contains("0x0")');
-    TinyUiActions.keydown(editor, Keys.escape());
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   });
 });

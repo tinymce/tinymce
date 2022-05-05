@@ -110,7 +110,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
         steps.sWaitForMenu('"Typing" should activate menu'),
         steps.sAssertValue('Checking non-matching typeahead menu not changing value', 'al'),
-        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        Keyboard.sKeyup(doc, Keys.escape(), { }),
         steps.sWaitForNoMenu('Pressing escape should dismiss menu'),
 
         FocusTools.sSetActiveValue(doc, 'Al'),
@@ -119,7 +119,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
 
         steps.sAssertValue('Should change to "Alpha" with it selected over', 'Alpha'),
         steps.sAssertTextSelection('Selects Over Al|pha|', 'Al'.length, 'Alpha'.length),
-        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        Keyboard.sKeyup(doc, Keys.escape(), { }),
         steps.sWaitForNoMenu('Pressing escape should dismiss menu for end of this part of test')
       ];
     };
@@ -135,7 +135,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
         steps.sTriggerInputEvent('Simulate typing to show menu with "al"'),
         steps.sWaitForMenu('"Typing" should activate menu'),
         steps.sAssertValue('Checking non-matching typeahead menu not changing value', 'al'),
-        Keyboard.sKeydown(doc, Keys.escape(), { }),
+        Keyboard.sKeyup(doc, Keys.escape(), { }),
         steps.sWaitForNoMenu('Pressing escape should dismiss menu'),
 
         FocusTools.sSetActiveValue(doc, 'Al'),

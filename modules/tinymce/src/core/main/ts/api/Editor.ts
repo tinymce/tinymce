@@ -1032,10 +1032,10 @@ class Editor implements EditorObservable {
   }
 
   /**
-   * Adds visual aid for tables, anchors etc so they can be more easily edited inside the editor.
+   * Adds visual aids for tables, anchors, etc so they can be more easily edited inside the editor.
    *
    * @method addVisual
-   * @param {Element} elm Optional root element to loop though to find tables etc that needs the visual aid.
+   * @param {Element} elm Optional root element to loop though to find tables, etc that needs the visual aid.
    */
   public addVisual(elm?: HTMLElement) {
     VisualAids.addVisual(this, elm);

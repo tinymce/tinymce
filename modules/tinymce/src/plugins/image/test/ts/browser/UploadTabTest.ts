@@ -1,5 +1,5 @@
 import { Assertions, FileInput, Files, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
 import { SugarBody, Value } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -18,6 +18,14 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
+
+  afterEach(() => {
+    const editor = hook.editor();
+    editor.options.unset('automatic_uploads');
+    editor.options.unset('images_file_types');
+    editor.options.unset('images_upload_handler');
+    editor.options.unset('image_advtab');
+  });
 
   const closeDialog = (editor: Editor) =>
     TinyUiActions.cancelDialog(editor);
@@ -108,7 +116,6 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValue('uploaded_image.jpg');
-    editor.options.unset('images_upload_url');
     closeDialog(editor);
   });
 
@@ -159,6 +166,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     const editor = hook.editor();
     editor.setContent('');
     editor.options.set('automatic_uploads', false);
+    editor.options.set('images_upload_handler', (blobInfo) => Promise.resolve(blobInfo.base64()));
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
@@ -166,7 +174,6 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValueStartsWith('blob:');
     closeDialog(editor);
-    editor.options.unset('automatic_uploads');
   });
 
   it('TINY-6224: Image uploader respects `images_file_types` setting', async () => {
@@ -181,7 +188,6 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValue('logo.svg');
     closeDialog(editor);
-    editor.options.unset('images_file_types');
   });
 
   it('TINY-6622: Image uploader retains the file name/extension', async () => {
