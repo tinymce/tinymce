@@ -304,7 +304,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     assertEvents();
   });
 
-  it('TINY-8625: Table row properties dialog updates multiple rows allows resetting values', async () => {
+  it('TINY-8625: Table row properties dialog updates multiple rows and allows resetting values', async () => {
     const initialHtml =
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
         '<tbody>' +
