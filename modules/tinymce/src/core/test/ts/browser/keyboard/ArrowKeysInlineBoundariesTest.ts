@@ -336,4 +336,43 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     });
   });
+
+  context('Arrow keys when selection is not collapsed', () => {
+    it('TINY-8601: should move caret before selected inline boundary node when arrow left', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test <span class="mce-annotation">span</span> selection</p>');
+      TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2, true);
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 5);
+      assertCaretAtZwsp(editor);
+    });
+
+    it('TINY-8601: should move caret after selected inline boundary node when arrow right', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test <span class="mce-annotation">span</span> selection</p>');
+      TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2, true);
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+
+    it('TINY-8601: should collapse inner text selection to the start when arrow left', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test <span class="mce-annotation">span</span> selection</p>');
+      TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 4, true);
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1); // offset 1 is caused by the ZWSP at the beginning of the span text
+      assertCaretAfterZwsp(editor);
+    });
+
+    it('TINY-8601: should collapse inner text selection to the end when arrow right', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test <span class="mce-annotation">span</span> selection</p>');
+      TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 4, true);
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 4);
+      assertCaretAtZwsp(editor);
+    });
+  });
+
 });

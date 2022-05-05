@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An exception could be thrown for the `editor.selection.isForward()` API due to an invalid selection on some versions of Safari #TINY-8686
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
 - When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
+- When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
 
 ## 6.0.2 - 2022-04-27
 
