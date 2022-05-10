@@ -49,10 +49,12 @@ const setupGotoLinks = (editor: Editor): void => {
   });
 
   editor.on('keydown', (e) => {
-    const link = getSelectedLink(editor);
-    if (!e.isDefaultPrevented() && link && e.keyCode === 13 && hasOnlyAltModifier(e)) {
-      e.preventDefault();
-      gotoLink(editor, link);
+    if (!e.isDefaultPrevented() && e.keyCode === 13 && hasOnlyAltModifier(e)) {
+      const link = getSelectedLink(editor);
+      if (link) {
+        e.preventDefault();
+        gotoLink(editor, link);
+      }
     }
   });
 };
