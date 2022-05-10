@@ -15,7 +15,7 @@ describe('browser.tinymce.plugins.link.PreventDefaultTest', () => {
     toolbar: 'link openlink unlink',
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed) => {
-      const hasOnlyAltModifier = (e) => {
+      const hasOnlyAltModifier = (e: KeyboardEvent) => {
         return (
           e.altKey === true &&
           e.shiftKey === false &&
