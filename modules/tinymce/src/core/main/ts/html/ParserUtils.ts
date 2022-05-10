@@ -6,7 +6,9 @@ import Schema, { SchemaMap } from '../api/html/Schema';
 
 const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, blockElements: SchemaMap, node: AstNode): void => {
   if (args.insert && blockElements[node.name]) {
-    node.empty().append(new AstNode('br', 1));
+    const astNode = new AstNode('br', 1);
+    astNode.attr('data-mce-bogus', '1');
+    node.empty().append(astNode);
   } else {
     node.empty().append(new AstNode('#text', 3)).value = Unicode.nbsp;
   }
