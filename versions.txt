@@ -3,3 +3,4 @@
 
 alloy@10.1.0
 agar@7.1.0
+polaris@6.0.2
