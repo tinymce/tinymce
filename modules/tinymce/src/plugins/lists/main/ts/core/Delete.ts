@@ -151,7 +151,7 @@ const mergeBackward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: 
 const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean): boolean => {
   const dom = editor.dom, selection = editor.selection;
   const selectionStartElm = selection.getStart();
-  const root = Selection.getClosestListRootElm(editor, selectionStartElm);
+  const root = Selection.getClosestEditingHost(editor, selectionStartElm);
   const li = dom.getParent(selection.getStart(), 'LI', root) as HTMLLIElement;
 
   if (li) {
@@ -203,7 +203,7 @@ const removeBlock = (dom: DOMUtils, block: Element, root: Node): void => {
 const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boolean => {
   const dom = editor.dom;
   const selectionStartElm = editor.selection.getStart();
-  const root = Selection.getClosestListRootElm(editor, selectionStartElm);
+  const root = Selection.getClosestEditingHost(editor, selectionStartElm);
   const block = dom.getParent(selectionStartElm, dom.isBlock, root);
 
   if (block && dom.isEmpty(block)) {
@@ -240,7 +240,7 @@ const backspaceDeleteCaret = (editor: Editor, isForward: boolean): boolean => {
 
 const backspaceDeleteRange = (editor: Editor): boolean => {
   const selectionStartElm = editor.selection.getStart();
-  const root = Selection.getClosestListRootElm(editor, selectionStartElm);
+  const root = Selection.getClosestEditingHost(editor, selectionStartElm);
   const startListParent = editor.dom.getParent(selectionStartElm, 'LI,DT,DD', root);
 
   if (startListParent || Selection.getSelectedListItems(editor).length > 0) {
