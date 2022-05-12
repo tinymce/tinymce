@@ -1,6 +1,6 @@
 import { UiFinder } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Cell } from '@ephox/katamari';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -11,7 +11,7 @@ import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
 describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
-  const lastEventArgs = Cell(null);
+  let firedEvents = [];
   const platform = PlatformDetection.detect();
 
   const getContentContainer = (editor: Editor) =>
@@ -37,7 +37,8 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
 
   const assertApiAndLastEvent = (editor: Editor, state: boolean) => {
     assert.equal(editor.plugins.fullscreen.isFullscreen(), state, 'Editor isFullscreen state');
-    assert.equal(lastEventArgs.get().state, state, 'FullscreenStateChanged event state');
+    assert.deepEqual(firedEvents, [ 'fullscreenstatechanged', state, 'resizeeditor', state ], 'FullscreenStateChanged event state');
+    firedEvents = [];
   };
 
   const assertHtmlAndBodyState = (editor: Editor, shouldExist: boolean) => {
@@ -89,12 +90,15 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         plugins: 'fullscreen link',
         base_url: '/project/tinymce/js/tinymce',
         setup: (editor: Editor) => {
-          lastEventArgs.set(null);
-          editor.on('FullscreenStateChanged', (e: Editor) => {
-            lastEventArgs.set(e);
+          firedEvents = [];
+          editor.on('FullscreenStateChanged ResizeEditor', (e: any) => {
+            firedEvents.push(e.type);
+            firedEvents.push(e.state);
           });
         }
       }, [ FullscreenPlugin, LinkPlugin ]);
+
+      afterEach(() => firedEvents = []);
 
       it('TBA: Toggle fullscreen on, open link dialog, insert link, close dialog and toggle fullscreen off', async () => {
         const editor = hook.editor();

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Changed
+- Toggling fullscreen mode with `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701
 - Getting the text content of the editor now returns newlines instead of an empty string if more than one empty paragraph exists #TINY-8578
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
