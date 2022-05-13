@@ -1,4 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
+import { SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -30,6 +31,17 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   const getNextPosFn = Fun.curry(CaretUtils.getVisualCaretPosition, forwards ? caretWalker.next : caretWalker.prev);
   const isBeforeFn = forwards ? isBefore : isAfter;
 
+  const isCefAtEdge = (editor: Editor, range: Range ): boolean => {
+    const body = SugarElement.fromDom(editor.getBody());
+    return !range.collapsed
+      && (Traverse.firstChild(body).exists((el) => isElement(el.dom) && el.dom === editor.selection.getStart())
+      || Traverse.lastChild(body).exists((el) => isElement(el.dom) && el.dom === editor.selection.getEnd()));
+  };
+  if (isCefAtEdge(editor, range)) {
+    const newRange = range.cloneRange();
+    newRange.collapse(direction === HDirection.Backwards);
+    return Optional.from(newRange);
+  }
   if (!range.collapsed) {
     const node = RangeNodes.getSelectedNode(range);
     if (isElement(node)) {
@@ -69,6 +81,9 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
 
 const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
                         isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is Element): Optional<Range> => {
+  if (!range.collapsed) {
+    range.collapse(direction === LineWalker.VDirection.Up);
+  }
   const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
   const caretClientRect = ArrUtils.last(caretPosition.getClientRects());
   const forwards = direction === LineWalker.VDirection.Down;

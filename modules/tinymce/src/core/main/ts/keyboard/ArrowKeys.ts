@@ -18,6 +18,8 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     { keyCode: VK.LEFT, action: MatchKeys.action(CefNavigation.moveH, editor, false) },
     { keyCode: VK.UP, action: MatchKeys.action(CefNavigation.moveV, editor, false) },
     { keyCode: VK.DOWN, action: MatchKeys.action(CefNavigation.moveV, editor, true) },
+    { keyCode: VK.UP, action: MatchKeys.action(CefNavigation.selectToEndPoint, editor, false), metaKey: true, shiftKey: true },
+    { keyCode: VK.DOWN, action: MatchKeys.action(CefNavigation.selectToEndPoint, editor, true), metaKey: true, shiftKey: true },
     { keyCode: VK.RIGHT, action: MatchKeys.action(TableNavigation.moveH, editor, true) },
     { keyCode: VK.LEFT, action: MatchKeys.action(TableNavigation.moveH, editor, false) },
     { keyCode: VK.UP, action: MatchKeys.action(TableNavigation.moveV, editor, false) },

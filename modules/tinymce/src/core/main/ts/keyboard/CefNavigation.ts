@@ -3,6 +3,7 @@ import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterContentEditableFalse, isAfterTable, isBeforeContentEditableFalse, isBeforeTable } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
@@ -91,8 +92,28 @@ const moveToLineEndPoint = (editor: Editor, forward: boolean): boolean => {
   return NavigationUtils.moveToLineEndPoint(editor, forward, isCefPosition);
 };
 
+const selectToEndPoint = (editor: Editor, forward: boolean): boolean => {
+  const root = editor.getBody();
+
+  const getEdgePosition = (forward: boolean): Optional<CaretPosition> =>
+    forward ? CaretFinder.lastPositionIn(root).filter(isAfterContentEditableFalse) : CaretFinder.firstPositionIn(root).filter(isBeforeContentEditableFalse);
+
+  const newRange = getEdgePosition(forward).map((pos) => {
+    const rng = pos.toRange();
+    const curRng = editor.selection.getRng();
+    forward ? rng.setStart(curRng.startContainer, curRng.startOffset) : rng.setEnd(curRng.endContainer, curRng.endOffset);
+    return rng;
+  });
+  if (newRange.isSome()) {
+    NavigationUtils.moveToRange(editor, newRange.getOrDie());
+    return true;
+  }
+  return false;
+};
+
 export {
   moveH,
   moveV,
-  moveToLineEndPoint
+  moveToLineEndPoint,
+  selectToEndPoint
 };
