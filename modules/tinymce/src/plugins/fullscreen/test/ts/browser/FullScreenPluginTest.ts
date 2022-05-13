@@ -96,7 +96,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
 
   const assertPositionChanged = (notification: NotificationApi, oldPos: { left: number; top: number }) => {
     const position = getNotificationPosition(notification);
-    assert.isFalse(position.top === oldPos.top && position.left === oldPos.left);
+    assert.isFalse(position.top === oldPos.top && position.left === oldPos.left, 'Notification position not updated as expected');
   };
 
   const fullScreenKeyCombination = (editor: Editor) => {
