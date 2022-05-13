@@ -12,7 +12,7 @@ import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
 describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
-  let firedEvents = [];
+  let firedEvents: string[] = [];
   const platform = PlatformDetection.detect();
 
   afterEach(() => {
@@ -40,9 +40,9 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
     }
   };
 
-  const assertApiAndLastEvent = (editor: Editor, state: boolean) => {
+  const assertApiAndEvents = (editor: Editor, state: boolean) => {
     assert.equal(editor.plugins.fullscreen.isFullscreen(), state, 'Editor isFullscreen state');
-    assert.deepEqual(firedEvents, [ 'fullscreenstatechanged', state, 'resizeeditor' ], 'Fired event state');
+    assert.deepEqual(firedEvents, [ 'fullscreenstatechanged:' + state, 'resizeeditor' ], 'Should be expected events and state');
   };
 
   const assertHtmlAndBodyState = (editor: Editor, shouldExist: boolean) => {
@@ -115,9 +115,10 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         setup: (editor: Editor) => {
           firedEvents = [];
           editor.on('FullscreenStateChanged ResizeEditor', (e: any) => {
-            firedEvents.push(e.type);
             if (Type.isBoolean(e.state)) {
-              firedEvents.push(e.state);
+              firedEvents.push(`${e.type}:${e.state}`);
+            } else {
+              firedEvents.push(e.type);
             }
           });
         }
@@ -127,7 +128,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         const editor = hook.editor();
         assertPageState(editor, false);
         editor.execCommand('mceFullScreen');
-        assertApiAndLastEvent(editor, true);
+        assertApiAndEvents(editor, true);
         firedEvents = [];
         assertPageState(editor, true);
         editor.execCommand('mceLink');
@@ -135,7 +136,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         closeOnlyWindow(editor);
         assertPageState(editor, true);
         editor.execCommand('mceFullScreen');
-        assertApiAndLastEvent(editor, false);
+        assertApiAndEvents(editor, false);
         assertPageState(editor, false);
       });
 
@@ -143,7 +144,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         const editor = hook.editor();
         assertPageState(editor, false);
         fullScreenKeyCombination(editor);
-        assertApiAndLastEvent(editor, true);
+        assertApiAndEvents(editor, true);
         firedEvents = [];
         assertPageState(editor, true);
         editor.execCommand('mceLink');
@@ -151,14 +152,14 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         closeOnlyWindow(editor);
         assertPageState(editor, true);
         fullScreenKeyCombination(editor);
-        assertApiAndLastEvent(editor, false);
+        assertApiAndEvents(editor, false);
         assertPageState(editor, false);
       });
 
       it('TINY-2884: Toggle fullscreen with keyboard and cleanup editor should clean up classes', () => {
         const editor = hook.editor();
         fullScreenKeyCombination(editor);
-        assertApiAndLastEvent(editor, true);
+        assertApiAndEvents(editor, true);
         assertPageState(editor, true);
         fullScreenKeyCombination(editor);
       });
@@ -170,7 +171,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         editor.execCommand('mceFullScreen');
         assertPositionChanged(notification, positions);
         notification.close();
-        assertApiAndLastEvent(editor, true);
+        assertApiAndEvents(editor, true);
         assertPageState(editor, true);
         editor.execCommand('mceFullScreen');
       });
@@ -184,7 +185,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         editor.execCommand('mceFullScreen');
         assertPositionChanged(notification, positions);
         notification.close();
-        assertApiAndLastEvent(editor, false);
+        assertApiAndEvents(editor, false);
         assertPageState(editor, false);
       });
     });

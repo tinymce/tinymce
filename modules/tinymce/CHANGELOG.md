@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Spaces would not be added correctly on some browsers when before or after a contenteditable block element #TINY-8588
 - Images were not showing as selected when selecting images alongside other content #TINY-5947
-- Notifications would not properly reposition when toggling to or from fullscreen #TINY-8701
+- Notifications would not properly reposition when toggling fullscreen mode #TINY-8701
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
 - In some cases pressing the backspace key would incorrectly step into tables rather than remain outside #TINY-8592
