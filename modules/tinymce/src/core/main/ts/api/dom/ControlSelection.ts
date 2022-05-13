@@ -466,7 +466,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   editor.on('init', () => {
     disableGeckoResize();
 
-    editor.on('NodeChange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', updateResizeRect);
+    editor.on('NodeChange ResizeEditor ResizeWindow ResizeContent drop', updateResizeRect);
 
     // Update resize rect while typing in a table
     editor.on('keyup compositionend', (e) => {

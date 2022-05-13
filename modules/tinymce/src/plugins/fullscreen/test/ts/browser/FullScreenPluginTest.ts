@@ -1,12 +1,13 @@
 import { UiFinder } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarShadowDom, Traverse } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { NotificationApi } from 'tinymce/core/api/PublicApi';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
@@ -37,8 +38,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
 
   const assertApiAndLastEvent = (editor: Editor, state: boolean) => {
     assert.equal(editor.plugins.fullscreen.isFullscreen(), state, 'Editor isFullscreen state');
-    assert.deepEqual(firedEvents, [ 'fullscreenstatechanged', state, 'resizeeditor', state ], 'FullscreenStateChanged event state');
-    firedEvents = [];
+    assert.deepEqual(firedEvents, [ 'fullscreenstatechanged', state, 'resizeeditor' ], 'Fired event state');
   };
 
   const assertHtmlAndBodyState = (editor: Editor, shouldExist: boolean) => {
@@ -76,6 +76,25 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
     assertShadowHostState(editor, shouldExist);
   };
 
+  const createNotification = (editor: Editor) =>
+    editor.notificationManager.open({
+      text: 'This is an informational notification.',
+      type: 'info'
+    });
+
+  const getNotificationPosition = (notification: NotificationApi) => {
+    const elem = Traverse.parent(SugarElement.fromDom(notification.getEl())).getOrDie() as SugarElement<HTMLElement>;
+    return {
+      top: elem.dom.offsetTop,
+      left: elem.dom.offsetLeft
+    };
+  };
+
+  const asserPositionChanged = (notification: NotificationApi, oldPos: { left: number; top: number }) => {
+    const position = getNotificationPosition(notification);
+    assert.isFalse(position.top === oldPos.top && position.left === oldPos.left);
+  };
+
   const fullScreenKeyCombination = (editor: Editor) => {
     const modifiers = platform.os.isMacOS() ? { meta: true, shift: true } : { ctrl: true, shift: true };
     TinyContentActions.keystroke(editor, 'F'.charCodeAt(0), modifiers);
@@ -93,18 +112,23 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
           firedEvents = [];
           editor.on('FullscreenStateChanged ResizeEditor', (e: any) => {
             firedEvents.push(e.type);
-            firedEvents.push(e.state);
+            if (Type.isBoolean(e.state)) {
+              firedEvents.push(e.state);
+            }
           });
         }
       }, [ FullscreenPlugin, LinkPlugin ]);
 
-      afterEach(() => firedEvents = []);
+      afterEach(() => {
+        firedEvents = [];
+      });
 
       it('TBA: Toggle fullscreen on, open link dialog, insert link, close dialog and toggle fullscreen off', async () => {
         const editor = hook.editor();
         assertPageState(editor, false);
         editor.execCommand('mceFullScreen');
         assertApiAndLastEvent(editor, true);
+        firedEvents = [];
         assertPageState(editor, true);
         editor.execCommand('mceLink');
         await pWaitForDialog(editor, 'Insert/Edit Link');
@@ -120,6 +144,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         assertPageState(editor, false);
         fullScreenKeyCombination(editor);
         assertApiAndLastEvent(editor, true);
+        firedEvents = [];
         assertPageState(editor, true);
         editor.execCommand('mceLink');
         await pWaitForDialog(editor, 'Insert/Edit Link');
@@ -138,6 +163,52 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
         fullScreenKeyCombination(editor);
       });
 
+      it('TINY-8701: notifications are properly updated when notification is created before fullscreen', () => {
+        const editor = hook.editor();
+        const notification = createNotification(editor);
+        const positions = getNotificationPosition(notification);
+        editor.execCommand('mceFullScreen');
+        asserPositionChanged(notification, positions);
+        notification.close();
+        assertApiAndLastEvent(editor, true);
+        assertPageState(editor, true);
+        editor.execCommand('mceFullScreen');
+      });
+
+      it('TINY-8701: notifications are properly updated when notification is created after fullscreen', () => {
+        const editor = hook.editor();
+        editor.execCommand('mceFullScreen');
+        firedEvents = [];
+        const notification = createNotification(editor);
+        const positions = getNotificationPosition(notification);
+        editor.execCommand('mceFullScreen');
+        asserPositionChanged(notification, positions);
+        notification.close();
+        assertApiAndLastEvent(editor, false);
+        assertPageState(editor, false);
+      });
+    });
+
+    context(tester.label + ', removal test', () => {
+      const hook = tester.setup<Editor>({
+        plugins: 'fullscreen link',
+        base_url: '/project/tinymce/js/tinymce',
+        setup: (editor: Editor) => {
+          firedEvents = [];
+          editor.on('FullscreenStateChanged ResizeEditor', (e: any) => {
+            firedEvents.push(e.type);
+            if (Type.isBoolean(e.state)) {
+              firedEvents.push(e.state);
+            }
+          });
+        }
+      }, [ FullscreenPlugin, LinkPlugin ]);
+
+      afterEach(() => {
+        firedEvents = [];
+      });
+
+      // This test removes the editor. No tests can or should be added after this test.
       it('TBA: Toggle fullscreen and cleanup editor should clean up classes', () => {
         const editor = hook.editor();
         editor.execCommand('mceFullScreen');
