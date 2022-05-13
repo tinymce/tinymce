@@ -26,8 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
 - When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
 - When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
-- Indenting or outdenting list items inside a block element inside a list item would not work #TINY-8068
-- Switching between unordered/ordered lists would incorrectly alter any parent element that contained that list #TINY-8068
+- Indenting or outdenting list items inside a block element that was inside another list item would not work #TINY-7209
+- Switching between unordered and ordered lists would incorrectly alter any parent element that contained that list #TINY-8068
 
 ## 6.0.3 - TBD
 

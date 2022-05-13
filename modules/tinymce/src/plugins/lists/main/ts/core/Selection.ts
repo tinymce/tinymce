@@ -6,17 +6,20 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as NodeType from './NodeType';
 
+const listNames = [ 'OL', 'UL', 'DL' ];
+const listSelector = listNames.join(',');
+
 const getParentList = (editor: Editor, node?: Node): HTMLElement => {
   const selectionStart = node || editor.selection.getStart(true);
 
-  return editor.dom.getParent(selectionStart, 'OL,UL,DL', getClosestListHost(editor, selectionStart));
+  return editor.dom.getParent(selectionStart, listSelector, getClosestListHost(editor, selectionStart));
 };
 
 const isParentListSelected = (parentList: HTMLElement, selectedBlocks: Element[]): boolean =>
   parentList && selectedBlocks.length === 1 && selectedBlocks[0] === parentList;
 
 const findSubLists = (parentList: HTMLElement): HTMLElement[] =>
-  Arr.filter(parentList.querySelectorAll('ol,ul,dl'), NodeType.isListNode);
+  Arr.filter(parentList.querySelectorAll(listSelector), NodeType.isListNode);
 
 const getSelectedSubLists = (editor: Editor): HTMLElement[] => {
   const parentList = getParentList(editor);
@@ -54,15 +57,11 @@ const getClosestEditingHost = (editor: Editor, elm: Node): HTMLElement => {
   return parentTableCell.length > 0 ? parentTableCell[0] : editor.getBody();
 };
 
-const isListHost = (schema: Schema, node: Node) => {
-  const nodeName = node.nodeName;
-  const listNames = [ 'UL', 'OL', 'DL' ];
-
-  return !NodeType.isListNode(node) && !NodeType.isListItemNode(node) && Arr.exists(listNames, (listName) => schema.isValidChild(nodeName, listName));
-};
+const isListHost = (schema: Schema, node: Node) =>
+  !NodeType.isListNode(node) && !NodeType.isListItemNode(node) && Arr.exists(listNames, (listName) => schema.isValidChild(node.nodeName, listName));
 
 const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {
-  const parentBlocks = editor.dom.getParents<HTMLElement>(elm, (elm) => editor.dom.isBlock(elm));
+  const parentBlocks = editor.dom.getParents<HTMLElement>(elm, editor.dom.isBlock);
   const parentBlock = Arr.find(parentBlocks, (elm) => isListHost(editor.schema, elm));
 
   return parentBlock.getOr(editor.getBody());

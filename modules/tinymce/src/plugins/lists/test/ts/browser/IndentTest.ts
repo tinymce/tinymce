@@ -463,25 +463,25 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     const testIndentAtTextPath = testCommandAtTextPath('Indent');
     const testOutdentAtTextPath = testCommandAtTextPath('Outdent');
 
-    it('TINY-8068: indent list item inside div inside list item', testIndentAtTextPath(
+    it('TINY-7209: indent list item inside div inside list item', testIndentAtTextPath(
       '<ul><li>A<div><ul><li>B</li><li>C</li></ul></div></li><li>D</li></ul>',
       [ 0, 0, 1, 0, 0, 0 ],
       '<ul><li>A<div><ul><li style="list-style-type: none;"><ul><li>B</li></ul></li><li>C</li></ul></div></li><li>D</li></ul>'
     ));
 
-    it('TINY-8068: indent list item with a paragraph inside div inside a list item', testIndentAtTextPath(
+    it('TINY-7209: indent list item with a paragraph inside div inside a list item', testIndentAtTextPath(
       '<ul><li>A<div><ul><li><p>B</p></li><li>C</li></ul></div></li><li>D</li></ul>',
       [ 0, 0, 1, 0, 0, 0, 0 ],
       '<ul><li>A<div><ul><li style="list-style-type: none;"><ul><li><p>B</p></li></ul></li><li>C</li></ul></div></li><li>D</li></ul>'
     ));
 
-    it('TINY-8068: outdent list item inside a div inside a list item', testOutdentAtTextPath(
+    it('TINY-7209: outdent list item inside a div inside a list item', testOutdentAtTextPath(
       '<ul><li>A<div><ul><li>B</li><li>C</li></ul></div></li><li>D</li></ul>',
       [ 0, 0, 1, 0, 0, 0 ],
       '<ul><li>A<div><p>B</p><ul><li>C</li></ul></div></li><li>D</li></ul>'
     ));
 
-    it('TINY-8068: outdent list item with a paragraph inside div inside a list item', testOutdentAtTextPath(
+    it('TINY-7209: outdent list item with a paragraph inside div inside a list item', testOutdentAtTextPath(
       '<ul><li>A<div><ul><li><p>B</p></li><li>C</li></ul></div></li><li>D</li></ul>',
       [ 0, 0, 1, 0, 0, 0 ],
       '<ul><li>A<div><p>B</p><ul><li>C</li></ul></div></li><li>D</li></ul>'
