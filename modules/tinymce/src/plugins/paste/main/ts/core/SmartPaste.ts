@@ -33,7 +33,7 @@ const pasteHtml = (editor: Editor, html: string): boolean => {
  */
 
 const isAbsoluteUrl = (url: string): boolean =>
-  /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
+  /^https?:\/\/[\w\-\/+=.,!;:&%@^~(){}?#]+$/i.test(url);
 
 const isImageUrl = (editor: Editor, url: string): boolean => {
   return isAbsoluteUrl(url) && Arr.exists(Settings.getAllowedImageFileTypes(editor), (type) =>
