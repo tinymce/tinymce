@@ -28,6 +28,7 @@
   - allow up to 15 character schemes including all valid characters from the spec https://url.spec.whatwg.org/#url-scheme-string (TINY-5074)
   - changed instances of 0-9 to be \d (TINY-5074)
   - reduced duplication (TINY-5074)
+  - allow [*!;:'@$] in the path segment as they are valid characters per the spec: https://url.spec.whatwg.org/#url-path-segment-string (TINY-8069)
 
 (?:
   (?:
@@ -42,7 +43,7 @@
 (?:
   \/
   (?:
-     [-+~=.,%()\/\w]*[-+~=%()\/\w]
+     [-.~*+=!;:'%@$(),\/\w]*[-~*+=%@$()\/\w]
    )?
 )?
 (?:
@@ -61,7 +62,7 @@
 
 const link = (): RegExp =>
   // eslint-disable-next-line max-len
-  /(?:[A-Za-z][A-Za-z\d.+-]{0,14}:\/\/(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?|www\.|[-;:&=+$,.\w]+@)[A-Za-z\d-]+(?:\.[A-Za-z\d-]+)*(?::\d+)?(?:\/(?:[-+~=.,%()\/\w]*[-+~=%()\/\w])?)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
+  /(?:[A-Za-z][A-Za-z\d.+-]{0,14}:\/\/(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?|www\.|[-;:&=+$,.\w]+@)[A-Za-z\d-]+(?:\.[A-Za-z\d-]+)*(?::\d+)?(?:\/(?:[-.~*+=!;:'%@$(),\/\w]*[-~*+=%@$()\/\w])?)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
 
 const autolink = (): RegExp => {
   /*
