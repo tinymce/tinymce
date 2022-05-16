@@ -1,5 +1,5 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Obj } from '@ephox/katamari';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import Schema from 'tinymce/core/api/html/Schema';
@@ -281,10 +281,10 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
   it('getTextInlineElements', () => {
     const schema = Schema();
     assert.deepEqual(schema.getTextInlineElements(), {
-      B: {}, CITE: {}, CODE: {}, DFN: {}, EM: {}, FONT: {}, I: {}, MARK: {}, Q: {},
-      SAMP: {}, SPAN: {}, STRIKE: {}, STRONG: {}, SUB: {}, SUP: {}, U: {}, VAR: {},
-      b: {}, cite: {}, code: {}, dfn: {}, em: {}, font: {}, i: {}, mark: {}, q: {},
-      samp: {}, span: {}, strike: {}, strong: {}, sub: {}, sup: {}, u: {}, var: {}
+      B: {}, CITE: {}, CODE: {}, DFN: {}, EM: {}, FONT: {}, I: {}, MARK: {}, Q: {}, SAMP: {},
+      SPAN: {}, S: {}, STRIKE: {}, STRONG: {}, SUB: {}, SUP: {}, U: {}, VAR: {},
+      b: {}, cite: {}, code: {}, dfn: {}, em: {}, font: {}, i: {}, mark: {}, q: {}, samp: {},
+      span: {}, s: {}, strike: {}, strong: {}, sub: {}, sup: {}, u: {}, var: {}
     });
   });
 
@@ -488,6 +488,26 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
         classC: {},
         classD: {}
       }
+    });
+  });
+
+  context('paddInEmptyBlock', () => {
+    it('TINY-8639: default behaviour', () => {
+      const schema = Schema({});
+      const rules = Obj.mapToArray(schema.getTextInlineElements(), (_value, name) => schema.getElementRule(name.toLowerCase()));
+      assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => Type.isUndefined(rule.paddInEmptyBlock)));
+    });
+
+    it('TINY-8639: retain_empty_block_inline_children: false', () => {
+      const schema = Schema({ retain_empty_block_inline_children: false });
+      const rules = Obj.mapToArray(schema.getTextInlineElements(), (_value, name) => schema.getElementRule(name.toLowerCase()));
+      assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => Type.isUndefined(rule.paddInEmptyBlock)));
+    });
+
+    it('TINY-8639: retain_empty_block_inline_children: true', () => {
+      const schema = Schema({ retain_empty_block_inline_children: true });
+      const rules = Obj.mapToArray(schema.getTextInlineElements(), (_value, name) => schema.getElementRule(name.toLowerCase()));
+      assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => rule.paddInEmptyBlock === true));
     });
   });
 });

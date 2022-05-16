@@ -34,6 +34,7 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   // TINY-6483: Can format 'br' if it is contained in a valid empty block and an inline format is being applied
   if (Options.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
     // A curated list using the textBlockElements map and parts of the blockElements map from the schema
+    // NOTE: This is duplicated in DomParser.ts
     const validBRParentElements: Record<string, {}> = {
       ...editor.schema.getTextBlockElements(),
       td: {},

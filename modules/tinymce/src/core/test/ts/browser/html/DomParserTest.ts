@@ -1065,6 +1065,127 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
   });
 
+  it('TINY-8639: handling empty text inline elements when root block is empty', () => {
+    const html = '<p><strong></strong></p>' +
+    '<p><s></s></p>' +
+    '<p><span class="test"></span></p>' +
+    '<p><span style="color: red;"></span></p>' +
+    '<p><span></span></p>';
+
+    let parser = DomParser({}, Schema({ retain_empty_block_inline_children: false }));
+    let serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<p>\u00a0</p>' +
+      '<p>\u00a0</p>' +
+      '<p>\u00a0</p>' +
+      '<p>\u00a0</p>' +
+      '<p>\u00a0</p>'
+    );
+
+    parser = DomParser({}, Schema({ retain_empty_block_inline_children: true }));
+    serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<p><strong>\u00a0</strong></p>' +
+      '<p><s>\u00a0</s></p>' +
+      '<p><span class="test">\u00a0</span></p>' +
+      '<p><span style="color: red;">\u00a0</span></p>' +
+      '<p>\u00a0</p>'
+    );
+  });
+
+  it('TINY-8639: handling single space text inline elements when root block is otherwise empty', () => {
+    const html = '<p><strong> </strong></p>' +
+    '<p><s> </s></p>' +
+    '<p><span class="test"> </span></p>' +
+    '<p><span style="color: red;"> </span></p>' +
+    '<p><span> </span></p>';
+
+    let parser = DomParser({}, Schema({ retain_empty_block_inline_children: false }));
+    let serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<p><strong> </strong></p>' +
+      '<p><s> </s></p>' +
+      // isEmpty node logic considers a span with no style attribute and a single space to be empty (Node.ts -> isEmpty -> isEmptyTextNode)
+      '<p> </p>' +
+      '<p><span style="color: red;"> </span></p>' +
+      '<p>\u00a0</p>'
+    );
+
+    parser = DomParser({}, Schema({ retain_empty_block_inline_children: true }));
+    serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<p><strong> </strong></p>' +
+      '<p><s> </s></p>' +
+      '<p><span class="test">\u00a0</span></p>' +
+      '<p><span style="color: red;"> </span></p>' +
+      '<p>\u00a0</p>'
+    );
+  });
+
+  it('TINY-8639: handling single nbsp text inline elements when root block is otherwise empty', () => {
+    const html = '<p><strong>&nbsp;</strong></p>' +
+    '<p><s>&nbsp;</s></p>' +
+    '<p><span class="test">&nbsp;</span></p>' +
+    '<p><span style="color: red;">&nbsp;</span></p>' +
+    '<p><span>&nbsp;</span></p>';
+
+    let parser = DomParser({}, Schema({ retain_empty_block_inline_children: false }));
+    let serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<p><strong>\u00a0</strong></p>' +
+      '<p><s>\u00a0</s></p>' +
+      '<p><span class="test">\u00a0</span></p>' +
+      '<p><span style="color: red;">\u00a0</span></p>' +
+      '<p>\u00a0</p>'
+    );
+
+    parser = DomParser({}, Schema({ retain_empty_block_inline_children: true }));
+    serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<p><strong>\u00a0</strong></p>' +
+      '<p><s>\u00a0</s></p>' +
+      '<p><span class="test">\u00a0</span></p>' +
+      '<p><span style="color: red;">\u00a0</span></p>' +
+      '<p>\u00a0</p>'
+    );
+  });
+
+  it('TINY-8639: should always remove empty inline element if it is not in an empty block', () => {
+    const html = '<p>ab<strong></strong>cd</p>' +
+    '<p>ab<s></s>cd</p>' +
+    '<p>ab<span class="test"></span>cd</p>' +
+    '<p>ab<span style="color: red;"></span>cd</p>' +
+    '<p>ab<span></span>cd</p>';
+
+    let parser = DomParser({}, Schema({ retain_empty_block_inline_children: false }));
+    let serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<p>abcd</p>' +
+      '<p>abcd</p>' +
+      '<p>abcd</p>' +
+      '<p>abcd</p>' +
+      '<p>abcd</p>'
+    );
+
+    parser = DomParser({}, Schema({ retain_empty_block_inline_children: true }));
+    serializedHtml = serializer.serialize(parser.parse(html));
+
+    assert.equal(serializedHtml,
+      '<p>abcd</p>' +
+      '<p>abcd</p>' +
+      '<p>abcd</p>' +
+      '<p>abcd</p>' +
+      '<p>abcd</p>'
+    );
+  });
+
   context('validate: false', () => {
     it('invalid elements and attributes should not be removed', () => {
       const parser = DomParser({ validate: false }, Schema({ valid_elements: 'span[id]' }));

@@ -279,6 +279,8 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhitespaceElements();
   const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+  // NOTE: This is duplicated in ApplyFormat.ts
+  const textRootBlockElements: Record<string, string> = extend(makeMap('td,th,li,dt,dd,figcaption,caption,details,summary'), schema.getTextBlockElements());
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
   const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
@@ -290,6 +292,18 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
         return true;
       } else {
         node = node.parent;
+      }
+    }
+    return false;
+  };
+
+  const isTextRootBlockEmpty = (node: AstNode) => {
+    let tempNode = node;
+    while (Type.isNonNullable(tempNode)) {
+      if (tempNode.name in textRootBlockElements) {
+        return isEmpty(schema, nonEmptyElements, whitespaceElements, tempNode);
+      } else {
+        tempNode = tempNode.parent;
       }
     }
     return false;
@@ -332,14 +346,27 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
       const elementRule = schema.getElementRule(node.name);
       if (validate && elementRule) {
         const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
-        if (elementRule.removeEmpty && isNodeEmpty) {
-          if (blockElements[node.name]) {
-            node.remove();
-          } else {
-            node.unwrap();
+
+        const removeOrPadd = () => {
+          if (elementRule.removeEmpty && isNodeEmpty) {
+            if (blockElements[node.name]) {
+              node.remove();
+            } else {
+              node.unwrap();
+            }
+          } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
+            paddEmptyNode(settings, args, blockElements, node);
           }
-        } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
-          paddEmptyNode(settings, args, blockElements, node);
+        };
+
+        if (elementRule.paddInEmptyBlock && isNodeEmpty) {
+          if (isTextRootBlockEmpty(node)) {
+            paddEmptyNode(settings, args, blockElements, node);
+          } else {
+            removeOrPadd();
+          }
+        } else {
+          removeOrPadd();
         }
       }
     } else if (node.type === 3) {

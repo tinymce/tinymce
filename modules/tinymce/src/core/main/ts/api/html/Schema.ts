@@ -15,6 +15,7 @@ export interface SchemaSettings {
   valid_elements?: string;
   valid_styles?: string | Record<string, string>;
   verify_html?: boolean;
+  retain_empty_block_inline_children?: boolean;
 }
 
 export interface Attribute {
@@ -47,6 +48,7 @@ export interface ElementRule {
   paddEmpty?: boolean;
   removeEmpty?: boolean;
   removeEmptyAttrs?: boolean;
+  paddInEmptyBlock?: boolean;
 }
 
 export interface SchemaElement extends ElementRule {
@@ -382,7 +384,7 @@ const compileSchema = (type: SchemaType): SchemaLookupTable => {
   return schema;
 };
 
-const compileElementMap = (value: string | Record<string, string>, mode?: string ) => {
+const compileElementMap = (value: string | Record<string, string>, mode?: string) => {
   let styles;
 
   if (value) {
@@ -464,7 +466,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
   const blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
     'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
     'datalist select optgroup figcaption details summary', textBlockElementsMap);
-  const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
+  const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font s strike u var cite ' +
     'dfn code mark q sup sub samp');
 
   // See https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
@@ -762,8 +764,20 @@ const Schema = (settings?: SchemaSettings): Schema => {
     // Add default alt attribute for images, removed since alt="" is treated as presentational.
     // elements.img.attributesDefault = [{name: 'alt', value: ''}];
 
+    // By default,
+    // - padd the text inline element if it is empty and also a child of an empty root block
+    // - in all other cases, remove the text inline element if it is empty
+    each(textInlineElementsMap, (_val, name) => {
+      if (elements[name]) {
+        if (settings.retain_empty_block_inline_children) {
+          elements[name].paddInEmptyBlock = true;
+        }
+        elements[name].removeEmpty = true;
+      }
+    });
+
     // Remove these if they are empty by default
-    each(split('ol ul sub sup blockquote span font a table tbody strong em b i'), (name) => {
+    each(split('ol ul blockquote a table tbody'), (name) => {
       if (elements[name]) {
         elements[name].removeEmpty = true;
       }
