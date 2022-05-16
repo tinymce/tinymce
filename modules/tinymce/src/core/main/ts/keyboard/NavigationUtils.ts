@@ -10,6 +10,7 @@ import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';
 import * as LineUtils from '../caret/LineUtils';
 import * as LineWalker from '../caret/LineWalker';
+import { isContentEditableFalse } from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
@@ -24,6 +25,14 @@ const moveToRange = (editor: Editor, rng: Range) => {
 const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boolean): Optional<Range> =>
   Optional.some(FakeCaretUtils.renderRangeCaret(editor, range, scrollIntoView));
 
+const isCefAtEdgeSelected = (editor: Editor): boolean => {
+  const body = SugarElement.fromDom(editor.getBody());
+  const rng = editor.selection.getRng();
+  return !rng.collapsed
+    && (Traverse.firstChild(body).exists((el) => isContentEditableFalse(el.dom) && el.dom === editor.selection.getStart())
+    || Traverse.lastChild(body).exists((el) => isContentEditableFalse(el.dom) && el.dom === editor.selection.getEnd()));
+};
+
 const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
                           isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node) => node is Element): Optional<Range> => {
   const forwards = direction === HDirection.Forwards;
@@ -31,13 +40,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   const getNextPosFn = Fun.curry(CaretUtils.getVisualCaretPosition, forwards ? caretWalker.next : caretWalker.prev);
   const isBeforeFn = forwards ? isBefore : isAfter;
 
-  const isCefAtEdge = (editor: Editor, range: Range ): boolean => {
-    const body = SugarElement.fromDom(editor.getBody());
-    return !range.collapsed
-      && (Traverse.firstChild(body).exists((el) => isElement(el.dom) && el.dom === editor.selection.getStart())
-      || Traverse.lastChild(body).exists((el) => isElement(el.dom) && el.dom === editor.selection.getEnd()));
-  };
-  if (isCefAtEdge(editor, range)) {
+  if (isCefAtEdgeSelected(editor)) {
     const newRange = range.cloneRange();
     newRange.collapse(direction === HDirection.Backwards);
     return Optional.from(newRange);
@@ -157,6 +160,7 @@ const moveToLineEndPoint = (editor: Editor, forward: boolean, isElementPosition:
   });
 
 export {
+  isCefAtEdgeSelected,
   getLineEndPoint,
   moveHorizontally,
   moveVertically,
