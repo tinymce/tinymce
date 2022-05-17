@@ -14,7 +14,7 @@ import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import AstNode from './Node';
 import SaxParser, { ParserFormat } from './SaxParser';
-import Schema, { SchemaElement, SchemaMap } from './Schema';
+import Schema, { getTextRootBlockElements, SchemaElement, SchemaMap } from './Schema';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -365,7 +365,8 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     args = args || {};
     matchedNodes = {};
     matchedAttributes = {};
-    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+    const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+    const textRootBlockElements = getTextRootBlockElements(schema);
     const nonEmptyElements = schema.getNonEmptyElements();
     const children = schema.children;
     const validate = settings.validate;
@@ -674,7 +675,25 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
             isInWhiteSpacePreservedElement = false;
           }
 
-          if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
+          const nodeIsEmpty = isEmpty(schema, nonEmptyElements, whiteSpaceElements, node);
+
+          if (elementRule.paddInEmptyBlock && nodeIsEmpty) {
+            let tempNode = node;
+            while (tempNode) {
+              if (tempNode.name in textRootBlockElements) {
+                if (isEmpty(schema, nonEmptyElements, whiteSpaceElements, tempNode)) {
+                  paddEmptyNode(settings, args, blockElements, node);
+                  return;
+                } else {
+                  break;
+                }
+              } else {
+                tempNode = tempNode.parent;
+              }
+            }
+          }
+
+          if (elementRule.removeEmpty && nodeIsEmpty) {
             tempNode = node.parent;
 
             if (blockElements[node.name]) {
@@ -687,7 +706,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
             return;
           }
 
-          if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
+          if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || nodeIsEmpty)) {
             paddEmptyNode(settings, args, blockElements, node);
           }
 
