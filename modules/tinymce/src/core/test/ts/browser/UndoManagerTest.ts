@@ -1,6 +1,6 @@
 import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -610,5 +610,30 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     editor.off('change', onChange);
 
     assert.equal(changeEventCounter, 0, 'No events should be detected');
+  });
+
+  it('TINY-8641: New api add that fire change', () => {
+    const editor = hook.editor();
+    let changeEventCounter = 0;
+
+    editor.resetContent('some inital content');
+    const onChange = () => {
+      changeEventCounter++;
+    };
+
+    editor.on('change', onChange);
+
+    assert.equal(changeEventCounter, 0, '0 event should be detected at start');
+    editor.undoManager.fireIfChanged();
+    assert.equal(changeEventCounter, 0, '0 event should be detected if content is coherent with the undoManager history');
+
+    Arr.last(editor.undoManager.data).each((lastLevel) => {
+      lastLevel.content = 'a modified last level';
+    });
+
+    editor.undoManager.fireIfChanged();
+    assert.equal(changeEventCounter, 1, '1 event should be detected if the content is not coherent with the undoManager history');
+
+    editor.off('change', onChange);
   });
 });

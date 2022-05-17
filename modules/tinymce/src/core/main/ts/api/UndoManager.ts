@@ -1,7 +1,8 @@
-import { Cell, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Fun, Singleton } from '@ephox/katamari';
 
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as Rtc from '../Rtc';
+import * as Levels from '../undo/Levels';
 import { addKeyboardShortcuts, registerEvents } from '../undo/Setup';
 import { Index, Locks, UndoLevel, UndoManager } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
@@ -48,6 +49,29 @@ const UndoManager = (editor: Editor): UndoManager => {
      */
     add: (level?: UndoLevel, event?: Event): UndoLevel => {
       return Rtc.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event);
+    },
+
+    /**
+     * Trigger change event if the content in last layer of the undoManager and the current editor content are different
+     *
+     * @method fireIfChanged
+     */
+    fireIfChanged: (): void => {
+      const data = editor.undoManager.data;
+      const currentLevel = Levels.createFromEditor(editor);
+
+      Arr.last(data).filter((level) => {
+        return !Levels.isEq(level, currentLevel);
+      }).fold(
+        Fun.noop,
+        (lastLevel) => {
+          editor.dispatch('change', {
+            level: lastLevel,
+            lastLevel: Arr.get(data, data.length - 2).getOrNull()
+          });
+        }
+      );
+
     },
 
     /**
