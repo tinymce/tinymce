@@ -612,7 +612,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     assert.equal(changeEventCounter, 0, 'No events should be detected');
   });
 
-  it('TINY-8641: fire change if the current content and the undoManager history are incoherent', () => {
+  it('TINY-8641: fire change and set editor dirty if the current content and the undoManager history are incoherent', () => {
     const editor = hook.editor();
     let changeEventCounter = 0;
 
@@ -631,8 +631,10 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       lastLevel.content = 'a modified last level';
     });
 
+    assert.equal(editor.isDirty(), false, 'Editor should be not dirty before fireIfChanged');
     editor.undoManager.fireIfChanged();
     assert.equal(changeEventCounter, 1, '1 event should be detected if the content is not coherent with the undoManager history');
+    assert.equal(editor.isDirty(), true, 'Editor should be dirty after fireIfChanged');
 
     editor.undoManager.fireIfChanged();
     editor.undoManager.fireIfChanged();
