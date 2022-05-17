@@ -6,8 +6,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 
-// these tests cover the cases with cef at the start/end of the editor content
-
 describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
