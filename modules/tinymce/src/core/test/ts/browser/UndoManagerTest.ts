@@ -634,6 +634,11 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     editor.undoManager.fireIfChanged();
     assert.equal(changeEventCounter, 1, '1 event should be detected if the content is not coherent with the undoManager history');
 
+    editor.undoManager.fireIfChanged();
+    editor.undoManager.fireIfChanged();
+    editor.undoManager.fireIfChanged();
+    assert.equal(changeEventCounter, 1, 'firing again the function should not trigger chage again');
+
     editor.off('change', onChange);
   });
 });

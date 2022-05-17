@@ -16,6 +16,7 @@ const UndoManager = (editor: Editor): UndoManager => {
   const beforeBookmark = Singleton.value<Bookmark>();
   const locks: Locks = Cell(0);
   const index: Index = Cell(0);
+  const lastChangedLevel = Cell<UndoLevel>(null);
 
   /* eslint consistent-this:0 */
   const undoManager = {
@@ -55,18 +56,22 @@ const UndoManager = (editor: Editor): UndoManager => {
      * Trigger change event if the content in last layer of the undoManager and the current editor content are different
      *
      * @method fireIfChanged
+     * @param {Object} newLastChangedLevel Optional undo level object that update internal status lastChangedLevel status
      */
-    fireIfChanged: (): void => {
+    fireIfChanged: (newLastChangedLevel?: UndoLevel): void => {
+      if (newLastChangedLevel) {
+        lastChangedLevel.set(newLastChangedLevel);
+      }
       const data = editor.undoManager.data;
-      const currentLevel = Levels.createFromEditor(editor);
 
       Arr.last(data).filter((level) => {
-        return !Levels.isEq(level, currentLevel);
+        return !Levels.isEq(level, lastChangedLevel.get());
       }).fold(
         Fun.noop,
-        (lastLevel) => {
+        (level) => {
+          editor.setDirty(true);
           editor.dispatch('change', {
-            level: lastLevel,
+            level,
             lastLevel: Arr.get(data, data.length - 2).getOrNull()
           });
         }
