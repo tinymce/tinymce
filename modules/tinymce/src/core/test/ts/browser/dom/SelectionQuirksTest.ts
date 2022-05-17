@@ -1,9 +1,11 @@
 import { Keys, Monitor, Mouse } from '@ephox/agar';
+import { assertEq } from '@ephox/agar/src/main/ts/ephox/agar/api/Assertions';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 
 describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -64,8 +66,20 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0 ], 0);
     TinyContentActions.keyup(editor, Keys.left(), { shift: true });
     assertNormalizeCounter(0);
-    TinyContentActions.keyup(editor, 17, { }); // single ctrl
+    TinyContentActions.keyup(editor, 17, {}); // single ctrl
     assertNormalizeCounter(1);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+  });
+
+  it('TINY-4550: Normalization should not run after selecting all with keyboard shortcut when there is only an image in the content', () => {
+    const editor = hook.editor();
+    resetNormalizeCounter();
+    editor.setContent('<p><img src="https://www.tiny.cloud/images/glyph-tinymce@2x.png" alt="" width="354" height="116"></p>');
+    TinySelections.setCursor(editor, [ 0 ], 1);
+    editor.shortcuts.add('meta+a', null, 'SelectAll');
+    const isMac = Env.os.isMacOS() || Env.os.isiOS();
+    TinyContentActions.keydown(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
+    TinyContentActions.keyup(editor, isMac ? 224 : 17, {});
+    assertEq('Selection node should be the p node', '<p><img src="https://www.tiny.cloud/images/glyph-tinymce@2x.png" alt="" width="354" height="116"></p>', editor.selection.getContent());
   });
 });
