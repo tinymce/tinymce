@@ -139,7 +139,7 @@ const hasCompatibleStyle = (dom: DOMUtils, sib: Element, detail: ListDetail): bo
 const applyList = (editor: Editor, listName: string, detail: ListDetail): void => {
   const rng = editor.selection.getRng();
   let listItemName = 'LI';
-  const root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
+  const root = Selection.getClosestListHost(editor, editor.selection.getStart(true));
   const dom = editor.dom;
 
   if (dom.getContentEditable(editor.selection.getNode()) === 'false') {

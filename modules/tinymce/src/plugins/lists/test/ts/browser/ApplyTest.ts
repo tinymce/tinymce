@@ -1,5 +1,5 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyAssertions, TinySelections, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -12,7 +12,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     disable_nodechange: true,
     indent: false,
     entities: 'raw',
-    valid_elements:
+    extended_valid_elements:
       'li[style|class|data-custom|data-custom1|data-custom2],ol[style|class|data-custom|data-custom1|data-custom2],' +
       'ul[style|class|data-custom|data-custom1|data-custom2],dl,dt,dd,em,strong,span,#p,div,br',
     valid_styles: {
@@ -898,5 +898,41 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ul>'
     );
     TinyAssertions.assertRawContent(editor, expected);
+  });
+
+  context('Parent context', () => {
+    const testApplyOLAtTextPath = (inputHtml: string, path: number[], expectedHtml: string) => () => {
+      const editor = hook.editor();
+      editor.setContent(inputHtml);
+
+      TinySelections.setCursor(editor, path, 0);
+      editor.execCommand('InsertOrderedList');
+
+      TinyAssertions.assertContent(editor, expectedHtml);
+    };
+
+    it('TINY-8068: apply OL to UL inside DIV should not alter the DIV', testApplyOLAtTextPath(
+      '<div><ul><li>a</li></ul></div>',
+      [ 0, 0, 0, 0 ],
+      '<div><ol><li>a</li></ol></div>'
+    ));
+
+    it('TINY-8068: apply OL to UL on LI with a paragraph should not alter the paragraph', testApplyOLAtTextPath(
+      '<ul><li><p>a</p></li></ul>',
+      [ 0, 0, 0, 0 ],
+      '<ol><li><p>a</p></li></ol>'
+    ));
+
+    it('TINY-8068: apply OL in a table should not alter elements outside the table', testApplyOLAtTextPath(
+      '<div><table><tbody><tr><td>a</td></tr></tbody></table></div>',
+      [ 0, 0, 0, 0, 0, 0 ],
+      '<div><table><tbody><tr><td><ol><li>a</li></ol></td></tr></tbody></table></div>'
+    ));
+
+    it('TINY-8068: apply OL to UL in table should not alter elements outside the table', testApplyOLAtTextPath(
+      '<div><table><tbody><tr><td><ul><li>a</li></ul></td></tr></tbody></table></div>',
+      [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+      '<div><table><tbody><tr><td><ol><li>a</li></ol></td></tr></tbody></table></div>'
+    ));
   });
 });

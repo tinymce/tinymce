@@ -22,7 +22,9 @@ UnitTest.test('RegexesTest', () => {
     'http://xn--domain.com',
     'www.google.ca/index.htm?id=/bla/bla',
     'https://www.amazon.com.au/gp/product/B0798R2WXG/ref=s9_acsd_top_hd_bw_b5QhTfX_c_x_w?pf_rd_m=ANEGB3WVEVKZB&pf_rd_s=merchandised-search-4&pf_rd_r=KF6SD7C0M69MKF2FR9CC&pf_rd_t=101&pf_rd_p=8ad3bdba-b846-5350-9c00-72c2cb7191dd&pf_rd_i=4975211051',
-    'https://www.birddoctor.net/refId,56511/refDownload.pml'
+    'https://www.birddoctor.net/refId,56511/refDownload.pml',
+    'https://www.example.com/:w:/s/b026324c6904b2a9cb4b88d6d61c81d1?q=abc123',
+    'https://website.com/test/!test'
   ];
 
   // More cases, http://formvalidation.io/validators/uri/
@@ -253,19 +255,29 @@ UnitTest.test('RegexesTest', () => {
     }
   });
 
-  const onlyWithPathLinks = { // Ignore trailing comma and period in URL path
+  // Ignore trailing punctuation such as a comma, period and exclamation mark at the end of the URL path
+  const onlyWithPathLinks = {
     'http://google.com': 'http://google.com',
     'http://google.com.': 'http://google.com',
     'http://google.com,': 'http://google.com',
+    'http://google.com!': 'http://google.com',
+    'http://google.com;': 'http://google.com',
+    'http://google.com:': 'http://google.com',
     'http://google.com/,': 'http://google.com/',
     'http://google.com/,,': 'http://google.com/',
     'http://google.com/.': 'http://google.com/',
     'http://google.com/..': 'http://google.com/',
+    'http://google.com/!': 'http://google.com/',
+    'http://google.com/:': 'http://google.com/',
+    'http://google.com/;': 'http://google.com/',
     'http://google.com/,/': 'http://google.com/,/',
     'http://google.com/,/,': 'http://google.com/,/',
     'http://google.com/abc': 'http://google.com/abc',
     'http://google.com/abc,': 'http://google.com/abc',
     'http://google.com/abc.': 'http://google.com/abc',
+    'http://google.com/abc!': 'http://google.com/abc',
+    'http://google.com/abc;': 'http://google.com/abc',
+    'http://google.com/abc:': 'http://google.com/abc',
     'http://google.com/,ab,c': 'http://google.com/,ab,c',
     'http://google.com/ab,c': 'http://google.com/ab,c',
     'http://google.com/ab,c,': 'http://google.com/ab,c',
