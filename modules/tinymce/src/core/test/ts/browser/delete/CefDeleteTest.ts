@@ -149,19 +149,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
       TinySelections.setSelection(editor, [], 0, [ 2, 0 ], 2);
       TinyContentActions.keystroke(editor, Keys.backspace());
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
-      TinyAssertions.assertContentStructure(editor,
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('c'))
-                ]
-              })
-            ]
-          });
-        })
-      );
+      TinyAssertions.assertContent(editor, '<p>c</p>');
     });
 
     it('TINY-7795: should drop selected content when cef block at the end', () => {
@@ -170,25 +158,12 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 1, [], 2);
       TinyContentActions.keystroke(editor, Keys.backspace());
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
-      TinyAssertions.assertContentStructure(editor,
-        ApproxStructure.build((s, str, _arr) => {
-          return s.element('body', {
-            children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('a'))
-                ]
-              })
-            ]
-          });
-        })
-      );
+      TinyAssertions.assertContent(editor, '<p>a</p>');
     });
 
     it('TINY-7795: should drop selected content when cef block at the start and at the end', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>');
-      // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>
       editor.execCommand('SelectAll');
       TinyContentActions.keystroke(editor, Keys.backspace());
       TinyAssertions.assertContent(editor, '');
