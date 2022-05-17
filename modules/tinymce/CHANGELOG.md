@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
 - When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
 - When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
-- Cmd+Shift+Left/Right on MacOS (or Ctrl+Shift+Home/End on Windows) could not expand the selection when `contenteditable="false"` element was at the edge of content #TINY-7795
+- Cmd+Shift+Up/Down on MacOS (or Ctrl+Shift+Home/End on Windows) could not expand the selection when `contenteditable="false"` element was at the edge of content #TINY-7795
 
 ## 6.0.3 - TBD
 
