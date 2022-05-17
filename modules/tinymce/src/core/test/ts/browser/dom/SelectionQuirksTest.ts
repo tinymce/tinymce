@@ -66,7 +66,7 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0 ], 0);
     TinyContentActions.keyup(editor, Keys.left(), { shift: true });
     assertNormalizeCounter(0);
-    TinyContentActions.keyup(editor, 17, {}); // single ctrl
+    TinyContentActions.keyup(editor, 17, { }); // single ctrl
     assertNormalizeCounter(1);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
@@ -79,7 +79,7 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     editor.shortcuts.add('meta+a', null, 'SelectAll');
     const isMac = Env.os.isMacOS() || Env.os.isiOS();
     TinyContentActions.keydown(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
-    TinyContentActions.keyup(editor, isMac ? 224 : 17, {});
+    TinyContentActions.keyup(editor, isMac ? 224 : 17, { });
     assertEq('Selection node should be the p node', '<p><img src="https://www.tiny.cloud/images/glyph-tinymce@2x.png" alt="" width="354" height="116"></p>', editor.selection.getContent());
   });
 });
