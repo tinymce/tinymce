@@ -142,7 +142,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
   });
 
   context('cef is at the start/end of the content and covered with selection', () => {
-    it('TINY-7795: shoud drop selected content when cef block at the start', () => {
+    it('TINY-7795: shoud delete selected content when cef block at the start', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p>');
       // actual content: <p data-mce-caret="before"></p><p contenteditable="false">CEF</p><p>abc</p>
@@ -152,7 +152,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
       TinyAssertions.assertContent(editor, '<p>c</p>');
     });
 
-    it('TINY-7795: should drop selected content when cef block at the end', () => {
+    it('TINY-7795: should delete selected content when cef block at the end', () => {
       const editor = hook.editor();
       editor.setContent('<p>abc</p><p contenteditable="false">CEF</p>');
       TinySelections.setSelection(editor, [ 0, 0 ], 1, [], 2);
@@ -161,7 +161,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
       TinyAssertions.assertContent(editor, '<p>a</p>');
     });
 
-    it('TINY-7795: should drop selected content when cef block at the start and at the end', () => {
+    it('TINY-7795: should delete selected content when cef block at the start and at the end', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>');
       editor.execCommand('SelectAll');
