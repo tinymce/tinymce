@@ -98,17 +98,20 @@ const selectToEndPoint = (editor: Editor, forward: boolean): boolean => {
   const getEdgePosition = (forward: boolean): Optional<CaretPosition> =>
     forward ? CaretFinder.lastPositionIn(root).filter(isAfterContentEditableFalse) : CaretFinder.firstPositionIn(root).filter(isBeforeContentEditableFalse);
 
-  const newRange = getEdgePosition(forward).map((pos) => {
-    const rng = pos.toRange();
-    const curRng = editor.selection.getRng();
-    forward ? rng.setStart(curRng.startContainer, curRng.startOffset) : rng.setEnd(curRng.endContainer, curRng.endOffset);
-    return rng;
-  });
-  if (newRange.isSome()) {
-    NavigationUtils.moveToRange(editor, newRange.getOrDie());
-    return true;
-  }
-  return false;
+  return getEdgePosition(forward)
+    .map((pos) => {
+      const rng = pos.toRange();
+      const curRng = editor.selection.getRng();
+      forward ? rng.setStart(curRng.startContainer, curRng.startOffset) : rng.setEnd(curRng.endContainer, curRng.endOffset);
+      return rng;
+    })
+    .fold(
+      Fun.never,
+      (rng) => {
+        NavigationUtils.moveToRange(editor, rng);
+        return true;
+      }
+    );
 };
 
 export {
