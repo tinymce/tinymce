@@ -237,6 +237,7 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
 const backspaceDeleteCaret = (editor: Editor, isForward: boolean): boolean => {
   return backspaceDeleteFromListToListCaret(editor, isForward) || backspaceDeleteIntoListCaret(editor, isForward);
 };
+
 const hasListSelection = (editor: Editor) => {
   const selectionStartElm = editor.selection.getStart();
   const root = Selection.getClosestEditingHost(editor, selectionStartElm);
@@ -264,7 +265,7 @@ const backspaceDelete = (editor: Editor, isForward: boolean): boolean => {
 
 const setup = (editor: Editor): void => {
   editor.on('ExecCommand', (e) => {
-    const cmd = e.command.toLocaleLowerCase();
+    const cmd = e.command.toLowerCase();
     if ((cmd === 'delete' || cmd === 'forwarddelete') && hasListSelection(editor)) {
       NormalizeLists.normalizeLists(editor.dom, editor.getBody());
     }
