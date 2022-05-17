@@ -612,7 +612,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     assert.equal(changeEventCounter, 0, 'No events should be detected');
   });
 
-  it('TINY-8641: New api add that fire change', () => {
+  it('TINY-8641: fire change if the current content and the undoManager history are incoherent', () => {
     const editor = hook.editor();
     let changeEventCounter = 0;
 
