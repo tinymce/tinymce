@@ -667,14 +667,17 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   it('Custom elements', () => {
     const ser = DomSerializer({
       custom_elements: 'custom1,~custom2',
-      valid_elements: 'custom1,custom2'
+      valid_elements: 'custom1,custom2,#p'
     });
 
     document.createElement('custom1');
     document.createElement('custom2');
 
     DOM.setHTML('test', '<p><custom1>c1</custom1><custom2>c2</custom2></p>');
-    assert.equal(ser.serialize(DOM.get('test')), '<custom1>c1</custom1><custom2>c2</custom2>');
+    assert.equal(ser.serialize(DOM.get('test')), '<custom1>c1</custom1><p><custom2>c2</custom2></p>');
+
+    DOM.setHTML('test', '<custom1></custom1><p><custom2></custom2></p>');
+    assert.equal(ser.serialize(DOM.get('test')), '<custom1></custom1><p><custom2></custom2></p>');
   });
 
   it('Remove internal classes', () => {

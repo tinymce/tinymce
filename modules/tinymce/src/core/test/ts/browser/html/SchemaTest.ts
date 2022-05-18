@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import { assert } from 'chai';
 
@@ -488,6 +488,34 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
         classC: {},
         classD: {}
       }
+    });
+  });
+
+  context('custom elements', () => {
+    it('TBA: custom elements are added as element rules and copy the span/div rules', () => {
+      const schema = Schema({
+        custom_elements: '~foo-bar,bar-foo'
+      });
+
+      const inlineRule = schema.getElementRule('foo-bar');
+      const spanRule = schema.getElementRule('span');
+      assert.deepEqual(inlineRule.attributes, spanRule.attributes, 'inline custom element rules should be copied from the span rules');
+      assert.deepEqual(inlineRule.attributesOrder, spanRule.attributesOrder, 'inline custom element rules should be copied from the span rules');
+      assert.deepEqual(schema.children['foo-bar'], schema.children.span);
+
+      const blockRule = schema.getElementRule('bar-foo');
+      const divRule = schema.getElementRule('div');
+      assert.deepEqual(blockRule.attributes, divRule.attributes, 'block custom element rules should be copied from the div rules');
+      assert.deepEqual(blockRule.attributesOrder, divRule.attributesOrder, 'block custom element rules should be copied from the div rules');
+      assert.deepEqual(schema.children['bar-foo'], schema.children.div);
+    });
+
+    it('TINY-4784: custom elements should be added to the non-empty elements list by default', () => {
+      const schema = Schema({
+        custom_elements: '~foo-bar,bar-foo'
+      });
+
+      assert.hasAnyKeys(schema.getNonEmptyElements(), [ 'foo-bar', 'FOO-BAR', 'bar-foo', 'BAR-FOO' ]);
     });
   });
 });

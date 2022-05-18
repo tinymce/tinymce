@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Getting the text content of the editor now returns newlines instead of an empty string if more than one empty paragraph exists #TINY-8578
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
+- Custom elements are now treated as non-empty elements via the schema #TINY-4784
 
 ### Fixed
 - Links would open when using alt+enter (option+enter on Mac) even when `preventDefault()` is called on the keydown event #TINY-8661
@@ -30,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
 - Indenting or outdenting list items inside a block element that was inside another list item would not work #TINY-7209
 - Switching between unordered and ordered lists would incorrectly alter any parent element that contained that list #TINY-8068
+- Custom elements on blank lines would be be removed during serialization #TINY-4784
 - The URL detection used for `autolink` and smart paste didn't work if a path segment contained valid characters such as `!` and `:` #TINY-8069
 
 ## 6.0.3 - TBD
