@@ -1,3 +1,4 @@
+import { Clipboard } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
@@ -107,5 +108,15 @@ describe('browser.tinymce.core.ModeTest', () => {
     setMode(editor, 'readonly');
     assertMode(editor, 'readonly');
     assertBodyClass(editor, 'mce-content-readonly', true);
+  });
+
+  it('TINY-6800: even in readonly mode copy event should be dispatched', () => {
+    const editor = hook.editor();
+
+    let copyEventCount = 0;
+    editor.on('copy', () => copyEventCount++);
+
+    Clipboard.copy(TinyDom.body(editor));
+    assert.equal(copyEventCount, 1, 'copy event should be fired');
   });
 });

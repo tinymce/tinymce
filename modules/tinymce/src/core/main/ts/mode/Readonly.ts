@@ -116,6 +116,9 @@ const registerReadOnlyContentFilters = (editor: Editor) => {
 
 const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 
+const allowedEvents: ReadonlyArray<string> = [ 'copy' ];
+
+const isReadOnlyAllowedEvent = (e: Event) => allowedEvents.includes(e.type);
 /*
 * This function is exported for unit testing purposes only
 */
@@ -163,6 +166,7 @@ const registerReadOnlySelectionBlockers = (editor: Editor) => {
 
 export {
   isReadOnly,
+  isReadOnlyAllowedEvent,
   getAnchorHrefOpt,
   toggleReadOnly,
   registerReadOnlyContentFilters,
