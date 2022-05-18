@@ -66,7 +66,7 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinyContentActions.keyup(editor, Keys.left(), { shift: true });
     assertNormalizeCounter(0);
     TinyContentActions.keyup(editor, 17, { }); // single ctrl
-    assertNormalizeCounter(1);
+    assertNormalizeCounter(0);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
 
