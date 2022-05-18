@@ -54,16 +54,14 @@ const getEventTarget = (editor: Editor, eventName: string): Node => {
   return editor.getBody();
 };
 
-const isListening = (editor: Editor) => !editor.hidden && !isReadOnly(editor);
+const isListening = (editor: Editor, e: Event) => !editor.hidden && (!isReadOnly(editor) || isReadOnlyAllowedEvent(e));
 
 const fireEvent = (editor: Editor, eventName: string, e: Event) => {
-  if (isListening(editor)) {
+  if (isListening(editor, e)) {
     editor.dispatch(eventName, e);
-  } else if (isReadOnly(editor)) {
+  }
+  if (isReadOnly(editor)) {
     processReadonlyEvents(editor, e);
-    if (isReadOnlyAllowedEvent(e)) {
-      editor.dispatch(eventName, e);
-    }
   }
 };
 
