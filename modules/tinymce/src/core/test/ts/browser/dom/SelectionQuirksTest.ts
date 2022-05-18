@@ -1,4 +1,4 @@
-import { Keys, Monitor, Mouse, Assertions } from '@ephox/agar';
+import { Keys, Monitor, Mouse } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -79,6 +79,8 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     const isMac = Env.os.isMacOS() || Env.os.isiOS();
     TinyContentActions.keydown(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
     TinyContentActions.keyup(editor, isMac ? 224 : 17, { });
-    Assertions.assertEq('Selection node should be the p node', '<p><img src="https://www.tiny.cloud/images/glyph-tinymce@2x.png" alt="" width="354" height="116"></p>', editor.selection.getContent());
+    TinyAssertions.assertSelection(editor, [ ], 0, [ ], 1);
+    editor.selection.normalize();
+    TinyAssertions.assertSelection(editor, [ ], 0, [ ], 1);
   });
 });

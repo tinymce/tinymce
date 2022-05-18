@@ -445,16 +445,10 @@ const Quirks = (editor: Editor): Quirks => {
   const normalizeSelection = () => {
     // Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
     editor.on('keyup focusin mouseup', (e) => {
-
-      // The next three lines address TINY-4550: when there is only an image in the editor then normalization should not run
-      const selectedNode = selection.getNode();
-      const contentNode = editor.getBody().children.length === 1 ? editor.getBody().firstChild : null;
-      const selectionIsAllContent = selectedNode === contentNode;
-
       // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
       // better exclude any key combinations with the modifiers to avoid double normalization
       // (also addresses TINY-1130)
-      if (!VK.modifierPressed(e) && !selectionIsAllContent) {
+      if (!VK.modifierPressed(e)) {
         selection.normalize();
       }
     }, true);
