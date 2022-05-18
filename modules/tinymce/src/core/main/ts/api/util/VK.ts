@@ -5,6 +5,7 @@ interface KeyboardLikeEvent {
   ctrlKey: boolean;
   altKey: boolean;
   metaKey: boolean;
+  keyCode?: number;
 }
 
 interface VK {
@@ -25,8 +26,8 @@ interface VK {
   CTRL: number;
   META: number;
 
-  modifierPressed: (e: (KeyboardLikeEvent & { keyCode?: number })) => boolean;
-  metaKeyPressed: (e: (KeyboardLikeEvent & { keyCode?: number })) => boolean;
+  modifierPressed: (e: KeyboardLikeEvent ) => boolean;
+  metaKeyPressed: (e: KeyboardLikeEvent ) => boolean;
 }
 
 /**
