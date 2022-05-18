@@ -477,15 +477,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   };
 
   const normalize = (): Range => {
-    const body = editor.getBody();
     const rng = getRng();
     const sel = getSel();
-    const selectionIsAllContent = rng.startContainer === rng.endContainer && rng.startContainer === body && rng.startOffset === 0 && rng.endOffset === body.childNodes.length;
-
-    // This condition exists to address TINY-4550: When the selection is all the existing content then don't normalize
-    if (selectionIsAllContent) {
-      return rng;
-    }
 
     if (!MultiRange.hasMultipleRanges(sel) && hasAnyRanges(editor)) {
       const normRng = NormalizeRange.normalize(dom, rng);

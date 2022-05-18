@@ -80,7 +80,5 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinyContentActions.keydown(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
     TinyContentActions.keyup(editor, isMac ? 224 : 17, { });
     TinyAssertions.assertSelection(editor, [ ], 0, [ ], 1);
-    editor.selection.normalize();
-    TinyAssertions.assertSelection(editor, [ ], 0, [ ], 1);
   });
 });
