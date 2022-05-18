@@ -769,6 +769,11 @@ const register = (editor: Editor) => {
       default: DOM.getAttrib(editor.getElement(), 'placeholder')
     });
   });
+
+  registerOption('sidebar_show', {
+    processor: 'string',
+    default: ''
+  });
 };
 
 const getIframeAttrs = option('iframe_attrs');
@@ -869,6 +874,7 @@ const getAllowedImageFileTypes = (editor: Editor): string[] =>
   Tools.explode(editor.options.get('images_file_types'));
 
 const hasTableTabNavigation = option('table_tab_navigation');
+const getSidebarShow = option('sidebar_show');
 
 export {
   register,
@@ -961,5 +967,6 @@ export {
   getNonEditableClass,
   getNonEditableRegExps,
   getEditableClass,
-  hasTableTabNavigation
+  hasTableTabNavigation,
+  getSidebarShow
 };
