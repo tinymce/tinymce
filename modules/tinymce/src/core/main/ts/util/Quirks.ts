@@ -448,7 +448,7 @@ const Quirks = (editor: Editor): Quirks => {
       // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
       // better exclude any key combinations with the modifiers to avoid double normalization
       // (also addresses TINY-1130)
-      if (!VK.modifierPressed(e) && !(e.keyCode === (isMac ? VK.META : VK.CTRL))) {
+      if (!VK.modifierPressed(e) && e.keyCode !== (isMac ? VK.META : VK.CTRL)) {
         selection.normalize();
       }
     }, true);
