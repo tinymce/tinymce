@@ -5,6 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import { VK } from 'tinymce/core/api/PublicApi';
 
 describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -66,7 +67,7 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinyContentActions.keyup(editor, Keys.left(), { shift: true });
     assertNormalizeCounter(0);
     const isMac = Env.os.isMacOS() || Env.os.isiOS();
-    TinyContentActions.keyup(editor, isMac ? 224 : 17, { }); // single ctrl
+    TinyContentActions.keyup(editor, isMac ? VK.META : VK.CTRL, { }); // single ctrl
     assertNormalizeCounter(0);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
@@ -74,12 +75,12 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
   it('TINY-4550: Normalization should not run after selecting all with keyboard shortcut when there is only an image in the content', () => {
     const editor = hook.editor();
     resetNormalizeCounter();
-    editor.setContent('<p><img src="https://www.tiny.cloud/images/glyph-tinymce@2x.png" alt="" width="354" height="116"></p>');
+    editor.setContent('<p><img src="about:blank"></p>');
     TinySelections.setCursor(editor, [ 0 ], 1);
     editor.shortcuts.add('meta+a', null, 'SelectAll');
     const isMac = Env.os.isMacOS() || Env.os.isiOS();
     TinyContentActions.keydown(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
-    TinyContentActions.keyup(editor, isMac ? 224 : 17, { });
+    TinyContentActions.keyup(editor, isMac ? VK.META : VK.CTRL, { });
     TinyAssertions.assertSelection(editor, [ ], 0, [ ], 1);
   });
 });
