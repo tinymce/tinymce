@@ -1,6 +1,6 @@
 import { Obj } from '@ephox/katamari';
 
-import { isReadOnly, isReadOnlyAllowedEvent, processReadonlyEvents } from '../mode/Readonly';
+import { isReadOnly, processReadonlyEvents } from '../mode/Readonly';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { EditorEventMap } from './EventTypes';
@@ -54,10 +54,10 @@ const getEventTarget = (editor: Editor, eventName: string): Node => {
   return editor.getBody();
 };
 
-const isListening = (editor: Editor, e: Event) => !editor.hidden && (!isReadOnly(editor) || isReadOnlyAllowedEvent(e));
+const isListening = (editor: Editor) => !editor.hidden && !isReadOnly(editor);
 
 const fireEvent = (editor: Editor, eventName: string, e: Event) => {
-  if (isListening(editor, e)) {
+  if (isListening(editor)) {
     editor.dispatch(eventName, e);
   } else if (isReadOnly(editor)) {
     processReadonlyEvents(editor, e);

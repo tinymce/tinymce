@@ -147,6 +147,8 @@ const processReadonlyEvents = (editor: Editor, e: Event) => {
         window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
       }
     });
+  } else if (isReadOnlyAllowedEvent(e)) {
+    editor.dispatch(e.type, e);
   }
 };
 
@@ -166,7 +168,6 @@ const registerReadOnlySelectionBlockers = (editor: Editor) => {
 
 export {
   isReadOnly,
-  isReadOnlyAllowedEvent,
   getAnchorHrefOpt,
   toggleReadOnly,
   registerReadOnlyContentFilters,
