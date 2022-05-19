@@ -118,7 +118,7 @@ const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 
 const allowedEvents: ReadonlyArray<string> = [ 'copy' ];
 
-const isReadOnlyAllowedEvent = (e: Event) => allowedEvents.includes(e.type);
+const isReadOnlyAllowedEvent = (e: Event) => Arr.contains(allowedEvents, e.type);
 /*
 * This function is exported for unit testing purposes only
 */
