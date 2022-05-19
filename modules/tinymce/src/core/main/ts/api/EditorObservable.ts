@@ -59,8 +59,7 @@ const isListening = (editor: Editor, e: Event) => !editor.hidden && (!isReadOnly
 const fireEvent = (editor: Editor, eventName: string, e: Event) => {
   if (isListening(editor, e)) {
     editor.dispatch(eventName, e);
-  }
-  if (isReadOnly(editor)) {
+  } else if (isReadOnly(editor)) {
     processReadonlyEvents(editor, e);
   }
 };
