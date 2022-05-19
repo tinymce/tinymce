@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Getting the text content of the editor now returns newlines instead of an empty string if more than one empty paragraph exists #TINY-8578
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
+- Copy events were not dispatched in readonly mode #TINY-6800
 
 ### Fixed
 - Links would open when using alt+enter (option+enter on Mac) even when `preventDefault()` is called on the keydown event #TINY-8661
@@ -37,7 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Could not remove values when multiple cells were selected with the cell properties dialog #TINY-8625
 - Could not remove values when multiple rows were selected with the row properties dialog #TINY-8625
-- Copy events are not dispatched in readonly mode #TINY-6800
 
 ## 6.0.2 - 2022-04-27
 
