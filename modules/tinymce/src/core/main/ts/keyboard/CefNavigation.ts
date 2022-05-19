@@ -92,13 +92,14 @@ const moveToLineEndPoint = (editor: Editor, forward: boolean): boolean => {
   return NavigationUtils.moveToLineEndPoint(editor, forward, isCefPosition);
 };
 
-const selectToEndPoint = (editor: Editor, forward: boolean): boolean => {
+const getEdgeCefPosition = (editor: Editor, atStart: boolean): Optional<CaretPosition> => {
   const root = editor.getBody();
+  return atStart ? CaretFinder.firstPositionIn(root).filter(isBeforeContentEditableFalse) :
+    CaretFinder.lastPositionIn(root).filter(isAfterContentEditableFalse);
+};
 
-  const getEdgePosition = (forward: boolean): Optional<CaretPosition> =>
-    forward ? CaretFinder.lastPositionIn(root).filter(isAfterContentEditableFalse) : CaretFinder.firstPositionIn(root).filter(isBeforeContentEditableFalse);
-
-  return getEdgePosition(forward)
+const selectToEndPoint = (editor: Editor, forward: boolean): boolean =>
+  getEdgeCefPosition(editor, !forward)
     .map((pos) => {
       const rng = pos.toRange();
       const curRng = editor.selection.getRng();
@@ -112,9 +113,9 @@ const selectToEndPoint = (editor: Editor, forward: boolean): boolean => {
         return true;
       }
     );
-};
 
 export {
+  getEdgeCefPosition,
   moveH,
   moveV,
   moveToLineEndPoint,
