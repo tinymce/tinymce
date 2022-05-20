@@ -32,10 +32,6 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
     undoManager.add();
   });
 
-  editor.on('change AddUndo', (e) => {
-    undoManager.fireIfChanged({ ...e.level });
-  });
-
   // Get position before an execCommand is processed
   editor.on('BeforeExecCommand', (e) => {
     const cmd = e.command;

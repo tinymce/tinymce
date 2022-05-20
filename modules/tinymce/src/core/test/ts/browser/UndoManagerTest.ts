@@ -639,7 +639,19 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     editor.undoManager.fireIfChanged();
     editor.undoManager.fireIfChanged();
     editor.undoManager.fireIfChanged();
-    assert.equal(changeEventCounter, 1, 'firing again the function should not trigger chage again');
+    assert.equal(changeEventCounter, 4, 'it should countinue to call change till the editor and last level are different');
+
+    editor.undoManager.add();
+    assert.equal(changeEventCounter, 5, 'add should trigger a change as well');
+
+    Arr.last(editor.undoManager.data).each((lastLevel) => {
+      assert.equal(editor.getContent(), lastLevel.content, 'add should add a last layer with the editor content');
+    });
+
+    editor.undoManager.fireIfChanged();
+    editor.undoManager.fireIfChanged();
+    editor.undoManager.fireIfChanged();
+    assert.equal(changeEventCounter, 5, 'it should not continue to trigger change becuase now editor content and last layer are the same');
 
     editor.off('change', onChange);
   });
