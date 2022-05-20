@@ -12,7 +12,6 @@ import * as LineWalker from '../caret/LineWalker';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
-import { getEdgeCefPosition } from './CefNavigation';
 import * as InlineUtils from './InlineUtils';
 
 const moveToRange = (editor: Editor, rng: Range) => {
@@ -27,8 +26,8 @@ const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boole
 const isCefAtEdgeSelected = (editor: Editor): boolean => {
   const rng = editor.selection.getRng();
   return !rng.collapsed
-    && (getEdgeCefPosition(editor, true).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(rng)))
-    || getEdgeCefPosition(editor, false).exists((pos) => pos.isEqual(CaretPosition.fromRangeEnd(rng))));
+    && (CaretUtils.getEdgeCefPosition(editor, true).exists((pos) => pos.isEqual(CaretPosition.fromRangeStart(rng)))
+    || CaretUtils.getEdgeCefPosition(editor, false).exists((pos) => pos.isEqual(CaretPosition.fromRangeEnd(rng))));
 };
 
 const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,

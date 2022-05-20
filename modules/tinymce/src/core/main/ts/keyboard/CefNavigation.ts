@@ -3,7 +3,6 @@ import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterContentEditableFalse, isAfterTable, isBeforeContentEditableFalse, isBeforeTable } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
@@ -92,14 +91,8 @@ const moveToLineEndPoint = (editor: Editor, forward: boolean): boolean => {
   return NavigationUtils.moveToLineEndPoint(editor, forward, isCefPosition);
 };
 
-const getEdgeCefPosition = (editor: Editor, atStart: boolean): Optional<CaretPosition> => {
-  const root = editor.getBody();
-  return atStart ? CaretFinder.firstPositionIn(root).filter(isBeforeContentEditableFalse) :
-    CaretFinder.lastPositionIn(root).filter(isAfterContentEditableFalse);
-};
-
 const selectToEndPoint = (editor: Editor, forward: boolean): boolean =>
-  getEdgeCefPosition(editor, !forward)
+  CaretUtils.getEdgeCefPosition(editor, !forward)
     .map((pos) => {
       const rng = pos.toRange();
       const curRng = editor.selection.getRng();
@@ -115,7 +108,6 @@ const selectToEndPoint = (editor: Editor, forward: boolean): boolean =>
     );
 
 export {
-  getEdgeCefPosition,
   moveH,
   moveV,
   moveToLineEndPoint,
