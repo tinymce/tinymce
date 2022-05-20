@@ -1,4 +1,4 @@
-import { ApproxStructure, Mouse, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Mouse, UiFinder, Clipboard } from '@ephox/agar';
 import { Assert, describe, it } from '@ephox/bedrock-client';
 import { Optional, OptionalInstances } from '@ephox/katamari';
 import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
@@ -289,5 +289,17 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     Mouse.click(anchor);
     const newPos = Scroll.get(doc).top;
     assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
+  });
+
+  it('TINY-6800: even in readonly mode copy event should be dispatched', () => {
+    const editor = hook.editor();
+
+    let copyEventCount = 0;
+    const copyHandler = () => copyEventCount++;
+    editor.on('copy', copyHandler);
+
+    Clipboard.copy(TinyDom.body(editor));
+    assert.equal(copyEventCount, 1, 'copy event should be fired');
+    editor.off('copy', copyHandler);
   });
 });
