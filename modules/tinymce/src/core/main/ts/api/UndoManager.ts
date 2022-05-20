@@ -52,7 +52,7 @@ const UndoManager = (editor: Editor): UndoManager => {
     },
 
     /**
-     * Trigger change event if the content in last layer of the undoManager and the current editor content are different
+     * Dispatch a change event if the content in last layer of the undoManager and the current editor content are different
      *
      * @method fireIfChanged
      */
