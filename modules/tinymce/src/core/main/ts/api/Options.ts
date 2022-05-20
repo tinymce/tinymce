@@ -771,8 +771,7 @@ const register = (editor: Editor) => {
   });
 
   registerOption('sidebar_show', {
-    processor: 'string',
-    default: ''
+    processor: 'string'
   });
 };
 
