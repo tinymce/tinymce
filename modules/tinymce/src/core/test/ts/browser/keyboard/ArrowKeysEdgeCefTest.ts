@@ -26,7 +26,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ ], 0, [ 1, 0 ], 2);
     });
 
-    it('TINY-7795: Cmd+Shift+Down when cef block at the end', () => {
+    it('TINY-7795: Cmd+Shift+Down when a cef block is at the end', () => {
       const editor = hook.editor();
       editor.setContent('<p>abc</p><p contenteditable="false">CEF</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
@@ -34,7 +34,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ ], 2);
     });
 
-    it('TINY-7795: Cmd+Shift+Up/Down when cef block at the start and at the end', () => {
+    it('TINY-7795: Cmd+Shift+Up/Down when a cef block is at the start and at the end', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>');
 
@@ -49,7 +49,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ ], 0, [ 3 ], 0);
     });
 
-    it('TINY-7795: Cmd+Shift+Up when cef block at the start and content is wrapped in div', () => {
+    it('TINY-7795: Cmd+Shift+Up when a cef block is at the start and content is wrapped in div', () => {
       const editor = hook.editor();
       editor.setContent('<div><p contenteditable="false">CEF</p><p>abc</p></div>');
       // actual content: <div><p data-mce-caret="before"></p><p contenteditable="false">CEF</p><p>abc</p></div>
@@ -58,7 +58,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0, 1, 0 ], 2);
     });
 
-    it('TINY-7795: Cmd+Shift+Down when cef block at the end and content is wrapped in div', () => {
+    it('TINY-7795: Cmd+Shift+Down when a cef block is at the end and content is wrapped in div', () => {
       const editor = hook.editor();
       editor.setContent('<div><p>abc</p><p contenteditable="false">CEF</p></div>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
@@ -66,7 +66,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0 ], 2);
     });
 
-    it('TINY-7795: Cmd+Shift+Up/Down when cef block at the start and at the end and content is wrapped in div', () => {
+    it('TINY-7795: Cmd+Shift+Up/Down when a cef block is at the start and at the end and content is wrapped in div', () => {
       const editor = hook.editor();
       editor.setContent('<div><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p></div>');
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
@@ -108,7 +108,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
 
-    it('TINY-7795: cef block at the end', () => {
+    it('TINY-7795: a cef block is at the end', () => {
       const editor = hook.editor();
       editor.setContent('<p>abc</p><p contenteditable="false">CEF</p>');
 
@@ -128,7 +128,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertCursor(editor, [ 2 ], 0);
     });
 
-    it('TINY-7795: cef block at the start and at the end ', () => {
+    it('TINY-7795: a cef block is at the start and at the end ', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>');
 
@@ -155,7 +155,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
 
-    it('TINY-7795: cef block at the start and content is wrapped in div', () => {
+    it('TINY-7795: a cef block is at the start and content is wrapped in div', () => {
       const editor = hook.editor();
       editor.setContent('<div><p contenteditable="false">CEF</p><p>abc</p></div>');
 
@@ -181,7 +181,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     });
 
-    it('TINY-7795: cef block at the end and content is wrapped in div ', () => {
+    it('TINY-7795: a cef block is at the end and content is wrapped in div ', () => {
       const editor = hook.editor();
       editor.setContent('<div><p>abc</p><p contenteditable="false">CEF</p></div>');
 
@@ -201,7 +201,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertCursor(editor, [ 0, 2 ], 0);
     });
 
-    it('TINY-7795: cef block at the start and at the end and content is wrapped in div ', () => {
+    it('TINY-7795: a cef block is at the start and at the end and content is wrapped in div ', () => {
       const editor = hook.editor();
       editor.setContent('<div><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p></div>');
 
@@ -230,7 +230,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
   });
 
   context('Up/Down arrow key should collapse and move selection', () => {
-    it('TINY-7795: cef block at the start', () => {
+    it('TINY-7795: a cef block is at the start', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p>');
 
@@ -245,7 +245,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertCursor(editor, [ 1, 0 ], 3);
     });
 
-    it('TINY-7795: cef block at the end', () => {
+    it('TINY-7795: a cef block is at the end', () => {
       const editor = hook.editor();
       editor.setContent('<p>abc</p><p contenteditable="false">CEF</p>');
 
@@ -260,7 +260,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertCursor(editor, [ 2 ], 0);
     });
 
-    it('TINY-7795: cef block at the start and the end', () => {
+    it('TINY-7795: a cef block is at the start and the end', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>');
 
