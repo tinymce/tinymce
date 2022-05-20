@@ -5,7 +5,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import VK from 'tinymce/core/api/util/VK';
 
 describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -67,8 +66,8 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinyContentActions.keyup(editor, Keys.left(), { shift: true });
     assertNormalizeCounter(0);
     const isMac = Env.os.isMacOS() || Env.os.isiOS();
-    TinyContentActions.keyup(editor, isMac ? VK.META : VK.CTRL, { }); // single ctrl
-    assertNormalizeCounter(0);
+    TinyContentActions.keyup(editor, 17, { }); // single ctrl
+    assertNormalizeCounter(isMac ? 1 : 0);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
 
@@ -79,8 +78,7 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinySelections.setCursor(editor, [ 0 ], 1);
     editor.shortcuts.add('meta+a', null, 'SelectAll');
     const isMac = Env.os.isMacOS() || Env.os.isiOS();
-    TinyContentActions.keydown(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
-    TinyContentActions.keyup(editor, isMac ? VK.META : VK.CTRL, { });
+    TinyContentActions.keystroke(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
     TinyAssertions.assertSelection(editor, [ ], 0, [ ], 1);
   });
 });

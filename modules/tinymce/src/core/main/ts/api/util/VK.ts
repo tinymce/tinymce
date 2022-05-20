@@ -22,8 +22,6 @@ interface VK {
   PAGE_DOWN: number;
   END: number;
   HOME: number;
-  CTRL: number;
-  META: number;
 
   modifierPressed: (e: KeyboardLikeEvent) => boolean;
   metaKeyPressed: (e: KeyboardLikeEvent) => boolean;
@@ -48,8 +46,6 @@ const VK: VK = {
   PAGE_DOWN: 34,
   END: 35,
   HOME: 36,
-  CTRL: 17,
-  META: 224,
 
   modifierPressed: (e: KeyboardLikeEvent): boolean => {
     return e.shiftKey || e.ctrlKey || e.altKey || VK.metaKeyPressed(e);
