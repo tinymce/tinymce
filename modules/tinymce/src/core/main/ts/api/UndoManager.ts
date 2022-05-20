@@ -1,4 +1,4 @@
-import { Arr, Cell, Fun, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Singleton } from '@ephox/katamari';
 
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as Rtc from '../Rtc';
@@ -62,16 +62,13 @@ const UndoManager = (editor: Editor): UndoManager => {
 
       Arr.last(data).filter((lastLevel) => {
         return !Levels.isEq(lastLevel, currentLevel);
-      }).fold(
-        Fun.noop,
-        (lastLevel) => {
-          editor.setDirty(true);
-          editor.dispatch('change', {
-            level: currentLevel,
-            lastLevel
-          });
-        }
-      );
+      }).each((lastLevel) => {
+        editor.setDirty(true);
+        editor.dispatch('change', {
+          level: currentLevel,
+          lastLevel
+        });
+      });
 
     },
 
