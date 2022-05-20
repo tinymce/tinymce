@@ -11,10 +11,8 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   }, [], true);
 
-  const assertStartContainer = (editor: Editor, f: (node: Node) => boolean) => {
-    const startContainer = editor.selection.getRng().startContainer;
-    assert.isTrue(f(startContainer), 'Check selection is in caret container');
-  };
+  const assertRangeInCaretContainerBlock = (editor: Editor) =>
+    assert.isTrue(CaretContainer.isRangeInCaretContainerBlock(editor.selection.getRng()));
 
   context('Cmd+Shift+Up/Down should expand selection to the edge of the content', () => {
     it('TINY-7795: Cmd+Shift+Up when a cef block is at the start', () => {
@@ -86,7 +84,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p>');
 
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p>
       TinySelections.setCursor(editor, [ 2, 0 ], 2);
 
@@ -103,7 +101,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ ], 0, [ 1, 0 ], 2);
 
       TinyContentActions.keystroke(editor, Keys.left());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p>
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
@@ -123,7 +121,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ ], 2);
 
       TinyContentActions.keystroke(editor, Keys.right());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after"><br data-mce-bogus="1"></p>
       TinyAssertions.assertCursor(editor, [ 2 ], 0);
     });
@@ -132,7 +130,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>');
 
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
 
@@ -141,7 +139,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ ], 4);
 
       TinyContentActions.keystroke(editor, Keys.right());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after"><br data-mce-bogus="1"></p>
       TinyAssertions.assertCursor(editor, [ 3 ], 0);
 
@@ -150,7 +148,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ ], 0, [ 3 ], 0);
 
       TinyContentActions.keystroke(editor, Keys.left());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
@@ -159,7 +157,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       const editor = hook.editor();
       editor.setContent('<div><p contenteditable="false">CEF</p><p>abc</p></div>');
 
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <div><p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p></div>
       TinySelections.setCursor(editor, [ 0, 2, 0 ], 2);
 
@@ -176,7 +174,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0, 1, 0 ], 2);
 
       TinyContentActions.keystroke(editor, Keys.left());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <div><p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p></div>
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     });
@@ -196,7 +194,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0 ], 2);
 
       TinyContentActions.keystroke(editor, Keys.right());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <div><p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after"><br data-mce-bogus="1"></p></div>
       TinyAssertions.assertCursor(editor, [ 0, 2 ], 0);
     });
@@ -205,7 +203,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       const editor = hook.editor();
       editor.setContent('<div><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p></div>');
 
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <div><p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p></div>
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
 
@@ -214,7 +212,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0 ], 4);
 
       TinyContentActions.keystroke(editor, Keys.right());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <div><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after"><br data-mce-bogus="1"></p></div>
       TinyAssertions.assertCursor(editor, [ 0, 3 ], 0);
 
@@ -223,7 +221,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0, 3 ], 0);
 
       TinyContentActions.keystroke(editor, Keys.left());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <div><p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p></div>
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     });
@@ -236,7 +234,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
 
       editor.execCommand('SelectAll');
       TinyContentActions.keystroke(editor, Keys.up());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content:<p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p>
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
 
@@ -255,7 +253,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
 
       editor.execCommand('SelectAll');
       TinyContentActions.keystroke(editor, Keys.down());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content: <p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after""><br data-mce-bogus="1"></p>
       TinyAssertions.assertCursor(editor, [ 2 ], 0);
     });
@@ -266,13 +264,13 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
 
       editor.execCommand('SelectAll');
       TinyContentActions.keystroke(editor, Keys.up());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content:<p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
 
       editor.execCommand('SelectAll');
       TinyContentActions.keystroke(editor, Keys.down());
-      assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+      assertRangeInCaretContainerBlock(editor);
       // actual content:<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after"><br data-mce-bogus="1"></p>
       TinyAssertions.assertCursor(editor, [ 3 ], 0);
     });
