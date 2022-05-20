@@ -17,7 +17,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
   };
 
   context('Cmd+Shift+Up/Down should expand selection to the edge of the content', () => {
-    it('TINY-7795: Cmd+Shift+Up when cef block at the start', () => {
+    it('TINY-7795: Cmd+Shift+Up when a cef block is at the start', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p>');
       // actual content: <p data-mce-caret="before"></p><p contenteditable="false">CEF</p><p>abc</p>

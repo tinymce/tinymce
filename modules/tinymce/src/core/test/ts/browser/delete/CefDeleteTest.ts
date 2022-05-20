@@ -142,7 +142,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
   });
 
   context('cef is at the start/end of the content and covered with selection', () => {
-    it('TINY-7795: shoud delete selected content when cef block at the start', () => {
+    it('TINY-7795: should delete selected content when cef block at the start', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p>');
       // actual content: <p data-mce-caret="before"></p><p contenteditable="false">CEF</p><p>abc</p>
