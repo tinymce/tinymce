@@ -116,6 +116,10 @@ const registerReadOnlyContentFilters = (editor: Editor) => {
 
 const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 
+const allowedEvents: ReadonlyArray<string> = [ 'copy' ];
+
+const isReadOnlyAllowedEvent = (e: Event) => Arr.contains(allowedEvents, e.type);
+
 /*
 * This function is exported for unit testing purposes only
 */
@@ -144,6 +148,8 @@ const processReadonlyEvents = (editor: Editor, e: Event) => {
         window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
       }
     });
+  } else if (isReadOnlyAllowedEvent(e)) {
+    editor.dispatch(e.type, e);
   }
 };
 

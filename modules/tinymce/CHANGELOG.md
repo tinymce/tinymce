@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Switching between unordered and ordered lists would incorrectly alter any parent element that contained that list #TINY-8068
 - The URL detection used for `autolink` and smart paste didn't work if a path segment contained valid characters such as `!` and `:` #TINY-8069
 - Cutting content to the clipboard while selecting between the parent list and a nested list would not always set the list style to `none` on the parent list #TINY-8078
+- Copy events were not dispatched in readonly mode #TINY-6800
 
 ## 6.0.3 - TBD
 
