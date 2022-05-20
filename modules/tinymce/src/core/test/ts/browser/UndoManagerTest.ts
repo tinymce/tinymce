@@ -644,7 +644,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       lastLevel.content = manualModifiedLevel;
     });
 
-    assert.equal(editor.isDirty(), false, 'Editor should be not dirty before fireIfChanged');
+    assert.equal(editor.isDirty(), false, 'Editor should not be dirty before fireIfChanged');
     editor.undoManager.fireIfChanged();
     fireAndCheckEvent(currentChangeEvent, initialContent, manualModifiedLevel);
     assert.equal(changeEventCounter, 1, '1 event should be detected if the content is not coherent with the undoManager history');
@@ -658,7 +658,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     editor.undoManager.fireIfChanged();
     fireAndCheckEvent(currentChangeEvent, initialContent, manualModifiedLevel);
-    assert.equal(changeEventCounter, 4, 'it should countinue to call change till the editor and last level are different');
+    assert.equal(changeEventCounter, 4, 'it should continue to call change till the editor and last level are different');
 
     editor.undoManager.add();
     assert.equal(changeEventCounter, 5, 'add should trigger a change as well');
