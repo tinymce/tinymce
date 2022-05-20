@@ -613,20 +613,18 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
   });
 
   it('TINY-8641: fire change and set editor dirty if the current content and the undoManager history are incoherent', () => {
-    const itTheExpectedChangeEvent = (e, level, lastLevel): boolean => e && e.level === level && e.lastLevel === lastLevel;
-
     const editor = hook.editor();
 
     let changeEventCounter = 0;
-    let currentChangeEvent;
+    let currentChangeEvent: { level: string; lastLevel: string };
 
     const initialContent = '<p>some inital content</p>';
     const manualModifiedLevel = 'a modified last level';
 
-    const fireAndCheckEvent = (event, level, lastLevel) => assert.isTrue(
-      itTheExpectedChangeEvent(event, level, lastLevel),
-      'change event should have last level as the current content of the editor and lastLevel as the last level in undoManager'
-    );
+    const assertChangeEvent = (event) => {
+      assert.equal(event.level, initialContent, 'Level has not the expected content');
+      assert.equal(event.lastLevel, manualModifiedLevel, 'Last level has not the expected content');
+    };
 
     editor.resetContent(initialContent);
     const onChange = (e) => {
@@ -646,18 +644,18 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     assert.equal(editor.isDirty(), false, 'Editor should not be dirty before fireIfChanged');
     editor.undoManager.fireIfChanged();
-    fireAndCheckEvent(currentChangeEvent, initialContent, manualModifiedLevel);
+    assertChangeEvent(currentChangeEvent);
     assert.equal(changeEventCounter, 1, '1 event should be detected if the content is not coherent with the undoManager history');
     assert.equal(editor.isDirty(), true, 'Editor should be dirty after fireIfChanged');
 
     editor.undoManager.fireIfChanged();
-    fireAndCheckEvent(currentChangeEvent, initialContent, manualModifiedLevel);
+    assertChangeEvent(currentChangeEvent);
 
     editor.undoManager.fireIfChanged();
-    fireAndCheckEvent(currentChangeEvent, initialContent, manualModifiedLevel);
+    assertChangeEvent(currentChangeEvent);
 
     editor.undoManager.fireIfChanged();
-    fireAndCheckEvent(currentChangeEvent, initialContent, manualModifiedLevel);
+    assertChangeEvent(currentChangeEvent);
     assert.equal(changeEventCounter, 4, 'it should continue to call change till the editor and last level are different');
 
     editor.undoManager.add();
