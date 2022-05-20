@@ -9,6 +9,7 @@ import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import * as LineWalker from '../caret/LineWalker';
 import * as NodeType from '../dom/NodeType';
+import { getEdgeCefPosition } from './CefUtils';
 import * as NavigationUtils from './NavigationUtils';
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -92,7 +93,7 @@ const moveToLineEndPoint = (editor: Editor, forward: boolean): boolean => {
 };
 
 const selectToEndPoint = (editor: Editor, forward: boolean): boolean =>
-  CaretUtils.getEdgeCefPosition(editor, !forward)
+  getEdgeCefPosition(editor, !forward)
     .map((pos) => {
       const rng = pos.toRange();
       const curRng = editor.selection.getRng();

@@ -2,13 +2,10 @@ import { Fun, Optional } from '@ephox/katamari';
 import { PredicateFind, SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretContainer from './CaretContainer';
-import { firstPositionIn, lastPositionIn } from './CaretFinder';
 import { CaretPosition } from './CaretPosition';
-import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from './CaretPositionPredicates';
 import { HDirection } from './CaretWalker';
 import { isFakeCaretTarget } from './FakeCaret';
 
@@ -310,12 +307,6 @@ const isMoveInsideSameBlock = (from: CaretPosition, to: CaretPosition): boolean 
   return inSameBlock;
 };
 
-const getEdgeCefPosition = (editor: Editor, atStart: boolean): Optional<CaretPosition> => {
-  const root = editor.getBody();
-  return atStart ? firstPositionIn(root).filter(isBeforeContentEditableFalse) :
-    lastPositionIn(root).filter(isAfterContentEditableFalse);
-};
-
 export {
   isForwards,
   isBackwards,
@@ -332,6 +323,5 @@ export {
   getElementFromPosition,
   getElementFromPrevPosition,
   getVisualCaretPosition,
-  getChildNodeAtRelativeOffset,
-  getEdgeCefPosition
+  getChildNodeAtRelativeOffset
 };
