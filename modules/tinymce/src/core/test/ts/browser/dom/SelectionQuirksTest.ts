@@ -66,7 +66,7 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinyContentActions.keyup(editor, Keys.left(), { shift: true });
     assertNormalizeCounter(0);
     const isMac = Env.os.isMacOS() || Env.os.isiOS();
-    TinyContentActions.keyup(editor, 17, { }); // single ctrl
+    editor.dispatch('keyup', new KeyboardEvent('keyup', { key: 'Control' }));
     assertNormalizeCounter(isMac ? 1 : 0);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
