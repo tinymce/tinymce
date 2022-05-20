@@ -498,14 +498,14 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => Type.isUndefined(rule.paddInEmptyBlock)));
     });
 
-    it('TINY-8639: retain_empty_block_inline_children: false', () => {
-      const schema = Schema({ retain_empty_block_inline_children: false });
+    it('TINY-8639: padd_empty_block_inline_children: false', () => {
+      const schema = Schema({ padd_empty_block_inline_children: false });
       const rules = Obj.mapToArray(schema.getTextInlineElements(), (_value, name) => schema.getElementRule(name.toLowerCase()));
       assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => Type.isUndefined(rule.paddInEmptyBlock)));
     });
 
-    it('TINY-8639: retain_empty_block_inline_children: true', () => {
-      const schema = Schema({ retain_empty_block_inline_children: true });
+    it('TINY-8639: padd_empty_block_inline_children: true', () => {
+      const schema = Schema({ padd_empty_block_inline_children: true });
       const rules = Obj.mapToArray(schema.getTextInlineElements(), (_value, name) => schema.getElementRule(name.toLowerCase()));
       assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => rule.paddInEmptyBlock === true));
     });

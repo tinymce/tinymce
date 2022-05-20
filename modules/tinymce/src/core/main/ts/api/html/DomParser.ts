@@ -347,26 +347,16 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
       if (validate && elementRule) {
         const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
 
-        const removeOrPadd = () => {
-          if (elementRule.removeEmpty && isNodeEmpty) {
-            if (blockElements[node.name]) {
-              node.remove();
-            } else {
-              node.unwrap();
-            }
-          } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
-            paddEmptyNode(settings, args, blockElements, node);
-          }
-        };
-
-        if (elementRule.paddInEmptyBlock && isNodeEmpty) {
-          if (isTextRootBlockEmpty(node)) {
-            paddEmptyNode(settings, args, blockElements, node);
+        if (elementRule.paddInEmptyBlock && isNodeEmpty && isTextRootBlockEmpty(node)) {
+          paddEmptyNode(settings, args, blockElements, node);
+        } else if (elementRule.removeEmpty && isNodeEmpty) {
+          if (blockElements[node.name]) {
+            node.remove();
           } else {
-            removeOrPadd();
+            node.unwrap();
           }
-        } else {
-          removeOrPadd();
+        } else if (elementRule.paddEmpty && (isNodeEmpty || isPaddedWithNbsp(node))) {
+          paddEmptyNode(settings, args, blockElements, node);
         }
       }
     } else if (node.type === 3) {

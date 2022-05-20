@@ -98,7 +98,7 @@ const mkSchemaSettings = (editor: Editor): SchemaSettings => {
     valid_elements: getOption('valid_elements'),
     valid_styles: getOption('valid_styles'),
     verify_html: getOption('verify_html'),
-    retain_empty_block_inline_children: getOption('format_empty_lines')
+    padd_empty_block_inline_children: getOption('format_empty_lines')
   });
 };
 

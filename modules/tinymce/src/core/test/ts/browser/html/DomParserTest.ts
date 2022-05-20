@@ -1072,7 +1072,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     '<p><span style="color: red;"></span></p>' +
     '<p><span></span></p>';
 
-    let parser = DomParser({}, Schema({ retain_empty_block_inline_children: false }));
+    let parser = DomParser({}, Schema({ padd_empty_block_inline_children: false }));
     let serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,
@@ -1083,7 +1083,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       '<p>\u00a0</p>'
     );
 
-    parser = DomParser({}, Schema({ retain_empty_block_inline_children: true }));
+    parser = DomParser({}, Schema({ padd_empty_block_inline_children: true }));
     serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,
@@ -1102,7 +1102,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     '<p><span style="color: red;"> </span></p>' +
     '<p><span> </span></p>';
 
-    let parser = DomParser({}, Schema({ retain_empty_block_inline_children: false }));
+    let parser = DomParser({}, Schema({ padd_empty_block_inline_children: false }));
     let serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,
@@ -1114,7 +1114,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       '<p>\u00a0</p>'
     );
 
-    parser = DomParser({}, Schema({ retain_empty_block_inline_children: true }));
+    parser = DomParser({}, Schema({ padd_empty_block_inline_children: true }));
     serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,
@@ -1133,7 +1133,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     '<p><span style="color: red;">&nbsp;</span></p>' +
     '<p><span>&nbsp;</span></p>';
 
-    let parser = DomParser({}, Schema({ retain_empty_block_inline_children: false }));
+    let parser = DomParser({}, Schema({ padd_empty_block_inline_children: false }));
     let serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,
@@ -1144,7 +1144,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       '<p>\u00a0</p>'
     );
 
-    parser = DomParser({}, Schema({ retain_empty_block_inline_children: true }));
+    parser = DomParser({}, Schema({ padd_empty_block_inline_children: true }));
     serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,
@@ -1163,7 +1163,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     '<p>ab<span style="color: red;"></span>cd</p>' +
     '<p>ab<span></span>cd</p>';
 
-    let parser = DomParser({}, Schema({ retain_empty_block_inline_children: false }));
+    let parser = DomParser({}, Schema({ padd_empty_block_inline_children: false }));
     let serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,
@@ -1174,7 +1174,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       '<p>abcd</p>'
     );
 
-    parser = DomParser({}, Schema({ retain_empty_block_inline_children: true }));
+    parser = DomParser({}, Schema({ padd_empty_block_inline_children: true }));
     serializedHtml = serializer.serialize(parser.parse(html));
 
     assert.equal(serializedHtml,

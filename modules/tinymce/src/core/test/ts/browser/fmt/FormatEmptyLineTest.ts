@@ -73,7 +73,6 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
     }
     config.remove(editor);
     TinyAssertions.assertContentPresence(editor, expectedPresenceOnRemove);
-    // TinyAssertions.assertContent(editor, html);
   };
 
   const testInlineFormats = (editor: Editor, config: PartialTestConfig) => {

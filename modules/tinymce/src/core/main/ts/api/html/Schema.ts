@@ -15,7 +15,7 @@ export interface SchemaSettings {
   valid_elements?: string;
   valid_styles?: string | Record<string, string>;
   verify_html?: boolean;
-  retain_empty_block_inline_children?: boolean;
+  padd_empty_block_inline_children?: boolean;
 }
 
 export interface Attribute {
@@ -769,7 +769,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
     // - in all other cases, remove the text inline element if it is empty
     each(textInlineElementsMap, (_val, name) => {
       if (elements[name]) {
-        if (settings.retain_empty_block_inline_children) {
+        if (settings.padd_empty_block_inline_children) {
           elements[name].paddInEmptyBlock = true;
         }
         elements[name].removeEmpty = true;
