@@ -1,4 +1,5 @@
 import { Cell } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
 import VK from '../api/util/VK';
@@ -8,7 +9,9 @@ import * as MatchKeys from './MatchKeys';
 import * as MediaNavigation from './MediaNavigation';
 
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
-  MatchKeys.execute([
+  const os = PlatformDetection.detect().os;
+
+  const keyPatterns: MatchKeys.KeyPattern[] = [
     { keyCode: VK.END, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, true) },
     { keyCode: VK.HOME, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, false) },
     { keyCode: VK.END, action: MatchKeys.action(CefNavigation.selectToEndPoint, editor, true), ctrlKey: true, shiftKey: true },
@@ -17,7 +20,12 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     { keyCode: VK.HOME, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, false) },
     { keyCode: VK.END, action: MatchKeys.action(BoundarySelection.moveToLineEndPoint, editor, true, caret) },
     { keyCode: VK.HOME, action: MatchKeys.action(BoundarySelection.moveToLineEndPoint, editor, false, caret) }
-  ], evt).each((_) => {
+  ];
+  if (!os.isMacOS()) {
+    keyPatterns.push({ keyCode: VK.HOME, action: MatchKeys.action(CefNavigation.selectToEndPoint, editor, false), ctrlKey: true, shiftKey: true });
+    keyPatterns.push({ keyCode: VK.END, action: MatchKeys.action(CefNavigation.selectToEndPoint, editor, true), ctrlKey: true, shiftKey: true });
+  }
+  MatchKeys.execute(keyPatterns, evt).each((_) => {
     evt.preventDefault();
   });
 };
