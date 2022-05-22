@@ -352,7 +352,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
       });
     });
 
-    it('TINY-8369: should be able to insert and type in serialized empty inline format element', async () => {
+    it('TINY-8639: should be able to insert and type in serialized empty inline format element', async () => {
       const editor = hook.editor();
       editor.setContent('<p>a</p><p><br data-mce-bogus="1"></p>', { format: 'raw' });
       selectAll(editor);
@@ -372,7 +372,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
       TinyAssertions.assertRawContent(editor, '<p><strong>a</strong></p><p><strong>abc&nbsp;</strong></p>');
     });
 
-    it('TINY-8369: should be able to insert and remove serialized empty inline format element', async () => {
+    it('TINY-8639: should be able to insert and remove serialized empty inline format element', async () => {
       const editor = hook.editor();
       editor.setContent('<p><strong>a</strong></p><p><strong>&nbsp;</strong></p>');
       TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
@@ -381,7 +381,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
       TinyAssertions.assertRawContent(editor, '<p><strong>a</strong></p><p>&nbsp;</p>');
     });
 
-    it('TINY-8369: should serialize caret formatted empty line if the cursor has not moved', () => {
+    it('TINY-8639: should serialize caret formatted empty line if the cursor has not moved', () => {
       const editor = hook.editor();
       editor.setContent('<p>a</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
@@ -397,28 +397,28 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
   });
 
   context('Parsing empty inline formatting elements', () => {
-    it('TINY-8369: should be padded on an empty line', () => {
+    it('TINY-8639: should be padded on an empty line', () => {
       const editor = hook.editor();
       editor.setContent('<p><strong></strong></p>');
       TinyAssertions.assertRawContent(editor, '<p><strong>&nbsp;</strong></p>');
       TinyAssertions.assertContent(editor, '<p><strong>&nbsp;</strong></p>');
     });
 
-    it('TINY-8369: should be padded when in an empty block', () => {
+    it('TINY-8639: should be padded when in an empty block', () => {
       const editor = hook.editor();
       editor.setContent('<div>test<div><strong></strong></div></div>');
       TinyAssertions.assertRawContent(editor, '<div>test<div><strong>&nbsp;</strong></div></div>');
       TinyAssertions.assertContent(editor, '<div>test\n<div><strong>&nbsp;</strong></div>\n</div>');
     });
 
-    it('TINY-8369: should not be padded when in an non-empty line', () => {
+    it('TINY-8639: should not be padded when in an non-empty line', () => {
       const editor = hook.editor();
       editor.setContent('<p>te<strong></strong>s<s></s>t<span style="text-decoration: underline;"></span>ing</p>');
       TinyAssertions.assertRawContent(editor, '<p>testing</p>');
       TinyAssertions.assertContent(editor, '<p>testing</p>');
     });
 
-    it('TINY-8369: should not be padded when in an non-empty block', () => {
+    it('TINY-8639: should not be padded when in an non-empty block', () => {
       const editor = hook.editor();
       editor.setContent('<div><div>te<strong></strong>st</div></div>');
       TinyAssertions.assertRawContent(editor, '<div><div>test</div></div>');
