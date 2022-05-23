@@ -22,7 +22,7 @@ const getTDTHOverallStyle = (dom: DOMUtils, elm: Element, name: string): string 
   return checkChildren(firstChildStyle, cells);
 };
 
-const setAlign = (editor: Editor, elm: Element, name: string): void => {
+const setAlign = (editor: Editor, elm: Element, name: string | undefined): void => {
   if (name) {
     editor.formatter.apply('align' + name, {}, elm);
   } else {
@@ -32,7 +32,7 @@ const setAlign = (editor: Editor, elm: Element, name: string): void => {
   }
 };
 
-const setVAlign = (editor: Editor, elm: Element, name: string): void => {
+const setVAlign = (editor: Editor, elm: Element, name: string | undefined): void => {
   if (name) {
     editor.formatter.apply('valign' + name, {}, elm);
   } else {
