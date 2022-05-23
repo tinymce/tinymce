@@ -22,34 +22,28 @@ const getTDTHOverallStyle = (dom: DOMUtils, elm: Element, name: string): string 
   return checkChildren(firstChildStyle, cells);
 };
 
-const applyAlign = (editor: Editor, elm: Element, name: string | undefined): void => {
+const setAlign = (editor: Editor, elm: Element, name: string): void => {
   if (name) {
     editor.formatter.apply('align' + name, {}, elm);
+  } else {
+    Tools.each('left center right'.split(' '), (name) => {
+      editor.formatter.remove('align' + name, {}, elm);
+    });
   }
 };
 
-const applyVAlign = (editor: Editor, elm: Element, name: string | undefined): void => {
+const setVAlign = (editor: Editor, elm: Element, name: string): void => {
   if (name) {
     editor.formatter.apply('valign' + name, {}, elm);
+  } else {
+    Tools.each('top middle bottom'.split(' '), (name) => {
+      editor.formatter.remove('valign' + name, {}, elm);
+    });
   }
-};
-
-const unApplyAlign = (editor: Editor, elm: Element): void => {
-  Tools.each('left center right'.split(' '), (name) => {
-    editor.formatter.remove('align' + name, {}, elm);
-  });
-};
-
-const unApplyVAlign = (editor: Editor, elm: Element): void => {
-  Tools.each('top middle bottom'.split(' '), (name) => {
-    editor.formatter.remove('valign' + name, {}, elm);
-  });
 };
 
 export {
-  applyAlign,
-  applyVAlign,
-  unApplyAlign,
-  unApplyVAlign,
+  setAlign,
+  setVAlign,
   getTDTHOverallStyle
 };

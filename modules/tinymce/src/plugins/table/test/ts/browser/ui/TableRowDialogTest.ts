@@ -308,11 +308,11 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     const initialHtml =
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
         '<tbody>' +
-          '<tr style="height: 20px; border-color: blue;">' +
+          '<tr style="height: 20px; text-align: center; border-color: blue;">' +
             '<td data-mce-selected="1">a</td>' +
             '<td data-mce-selected="1">b</td>' +
           '</tr>' +
-          '<tr style="height: 20px; border-color: red;">' +
+          '<tr style="height: 20px; text-align: center; border-color: red;">' +
             '<td data-mce-selected="1">c</td>' +
             '<td data-mce-selected="1">d</td>' +
           '</tr>' +
@@ -320,7 +320,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
       '</table>';
 
     const initialData = {
-      align: '',
+      align: 'center',
       height: '20px',
       type: 'body',
       backgroundcolor: '',
@@ -329,7 +329,7 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     };
 
     const newData = {
-      align: 'center',
+      align: '',
       height: '',
       type: 'body',
     };
@@ -337,11 +337,11 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     const newHtml =
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
         '<tbody>' +
-          '<tr style="text-align: center; border-color: blue;">' +
+          '<tr style="border-color: blue;">' +
             '<td>a</td>' +
             '<td>b</td>' +
           '</tr>' +
-          '<tr style="text-align: center; border-color: red;">' +
+          '<tr style="border-color: red;">' +
             '<td>c</td>' +
             '<td>d</td>' +
           '</tr>' +

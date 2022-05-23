@@ -51,9 +51,8 @@ const applyStyleData = (editor: Editor, rows: HTMLTableRowElement[], data: RowDa
       updateAdvancedProps(modifier, data, shouldOverrideCurrentValue);
     }
 
-    if (data.align !== oldData.align) {
-      Styles.unApplyAlign(editor, rowElm);
-      Styles.applyAlign(editor, rowElm, data.align);
+    if (wasChanged('align')) {
+      Styles.setAlign(editor, rowElm, data.align);
     }
   });
 };

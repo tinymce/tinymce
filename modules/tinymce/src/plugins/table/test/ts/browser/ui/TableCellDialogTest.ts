@@ -260,14 +260,17 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       '</colgroup>' +
       '<tbody>' +
         '<tr>' +
-          '<td style="height: 20px;">&nbsp;</td>' +
-          '<td style="height: 20px;">&nbsp;</td>' +
+          '<td style="height: 20px; vertical-align: bottom; text-align: center; background-color: red;">&nbsp;</td>' +
+          '<td style="height: 20px; vertical-align: bottom; text-align: center; background-color: red;">&nbsp;</td>' +
         '</tr>' +
       '</tbody>' +
     '</table>';
 
     const newData = {
       height: '20',
+      halign: 'center',
+      valign: 'bottom',
+      backgroundcolor: 'red'
     };
 
     const initialDialogValues = {
@@ -297,17 +300,17 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
   it('TINY-8625: Table cell properties dialog update multiple cells allows resetting values', async () => {
     const initialHtml = '<table>' +
-        '<colgroup>' +
-          '<col style="width: 25.3548%;">' +
-          '<col style="width: 74.5433%;">' +
-        '</colgroup>' +
-        '<tbody>' +
-          '<tr>' +
-            '<td data-mce-selected="1" style="height: 200px;">&nbsp;</td>' +
-            '<td data-mce-selected="1" style="height: 200px;">&nbsp;</td>' +
-          '</tr>' +
-        '</tbody>' +
-      '</table>';
+      '<colgroup>' +
+        '<col style="width: 25.3548%;">' +
+        '<col style="width: 74.5433%;">' +
+      '</colgroup>' +
+      '<tbody>' +
+        '<tr>' +
+          '<td data-mce-selected="1" style="height: 200px; vertical-align: bottom; text-align: center; background-color: red;">&nbsp;</td>' +
+          '<td data-mce-selected="1" style="height: 200px; vertical-align: bottom; text-align: center; background-color: red;">&nbsp;</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>';
 
     const newHtml = '<table>' +
       '<colgroup>' +
@@ -324,16 +327,19 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
     const newData = {
       height: '',
+      halign: '',
+      valign: '',
+      backgroundcolor: ''
     };
 
     const initialDialogValues = {
       width: '',
       height: '200px',
       celltype: 'td',
-      halign: '',
-      valign: '',
+      halign: 'center',
+      valign: 'bottom',
       scope: '',
-      backgroundcolor: '',
+      backgroundcolor: 'red',
       bordercolor: '',
       borderstyle: '',
       border: ''

@@ -82,20 +82,14 @@ const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData, w
       updateAdvancedProps(modifier, data, shouldOverrideCurrentValue);
     }
 
-    // Remove alignment
-    if (isSingleCell) {
-      Styles.unApplyAlign(editor, cellElm);
-      Styles.unApplyVAlign(editor, cellElm);
-    }
-
     // Apply alignment
-    if (data.halign) {
-      Styles.applyAlign(editor, cellElm, data.halign);
+    if (wasChanged('halign')) {
+      Styles.setAlign(editor, cellElm, data.halign);
     }
 
     // Apply vertical alignment
-    if (data.valign) {
-      Styles.applyVAlign(editor, cellElm, data.valign);
+    if (wasChanged('valign')) {
+      Styles.setVAlign(editor, cellElm, data.valign);
     }
   });
 };
