@@ -1,7 +1,7 @@
 import { Cell } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
+import Env from '../api/Env';
 import VK from '../api/util/VK';
 import * as BoundarySelection from './BoundarySelection';
 import * as CefNavigation from './CefNavigation';
@@ -11,13 +11,17 @@ import * as MediaNavigation from './MediaNavigation';
 import * as TableNavigation from './TableNavigation';
 
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
-  const os = PlatformDetection.detect().os;
+  const isMac = Env.os.isMacOS() || Env.os.isiOS();
 
-  const keyPatterns: MatchKeys.KeyPattern[] = [
+  MatchKeys.execute([
     { keyCode: VK.RIGHT, action: MatchKeys.action(CefNavigation.moveH, editor, true) },
     { keyCode: VK.LEFT, action: MatchKeys.action(CefNavigation.moveH, editor, false) },
     { keyCode: VK.UP, action: MatchKeys.action(CefNavigation.moveV, editor, false) },
     { keyCode: VK.DOWN, action: MatchKeys.action(CefNavigation.moveV, editor, true) },
+    ...(isMac ? [
+      { keyCode: VK.UP, action: MatchKeys.action(CefNavigation.selectToEndPoint, editor, false), metaKey: true, shiftKey: true },
+      { keyCode: VK.DOWN, action: MatchKeys.action(CefNavigation.selectToEndPoint, editor, true), metaKey: true, shiftKey: true }
+    ] : []),
     { keyCode: VK.RIGHT, action: MatchKeys.action(TableNavigation.moveH, editor, true) },
     { keyCode: VK.LEFT, action: MatchKeys.action(TableNavigation.moveH, editor, false) },
     { keyCode: VK.UP, action: MatchKeys.action(TableNavigation.moveV, editor, false) },
@@ -28,17 +32,11 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     { keyCode: VK.DOWN, action: MatchKeys.action(MediaNavigation.moveV, editor, true) },
     { keyCode: VK.RIGHT, action: MatchKeys.action(BoundarySelection.move, editor, caret, true) },
     { keyCode: VK.LEFT, action: MatchKeys.action(BoundarySelection.move, editor, caret, false) },
-    { keyCode: VK.RIGHT, ctrlKey: !os.isMacOS(), altKey: os.isMacOS(), action: MatchKeys.action(BoundarySelection.moveNextWord, editor, caret) },
-    { keyCode: VK.LEFT, ctrlKey: !os.isMacOS(), altKey: os.isMacOS(), action: MatchKeys.action(BoundarySelection.movePrevWord, editor, caret) },
+    { keyCode: VK.RIGHT, ctrlKey: !isMac, altKey: isMac, action: MatchKeys.action(BoundarySelection.moveNextWord, editor, caret) },
+    { keyCode: VK.LEFT, ctrlKey: !isMac, altKey: isMac, action: MatchKeys.action(BoundarySelection.movePrevWord, editor, caret) },
     { keyCode: VK.UP, action: MatchKeys.action(ContentEndpointNavigation.moveV, editor, false) },
     { keyCode: VK.DOWN, action: MatchKeys.action(ContentEndpointNavigation.moveV, editor, true) }
-  ];
-  if (os.isMacOS()) {
-    keyPatterns.push({ keyCode: VK.UP, action: MatchKeys.action(CefNavigation.selectToEndPoint, editor, false), metaKey: true, shiftKey: true });
-    keyPatterns.push({ keyCode: VK.DOWN, action: MatchKeys.action(CefNavigation.selectToEndPoint, editor, true), metaKey: true, shiftKey: true });
-  }
-
-  MatchKeys.execute(keyPatterns, evt).each((_) => {
+  ], evt).each((_) => {
     evt.preventDefault();
   });
 };
