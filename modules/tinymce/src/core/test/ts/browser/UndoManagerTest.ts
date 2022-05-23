@@ -621,7 +621,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     const initialContent = '<p>some inital content</p>';
     const manualModifiedLevel = 'a modified last level';
 
-    const assertChangeEvent = (event) => {
+    const assertChangeEvent = (event: { level: string; lastLevel: string }) => {
       assert.equal(event.level, initialContent, 'Level has not the expected content');
       assert.equal(event.lastLevel, manualModifiedLevel, 'Last level has not the expected content');
     };
