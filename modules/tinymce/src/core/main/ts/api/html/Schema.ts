@@ -118,25 +118,15 @@ const split = (items: string, delim?: string): string[] => {
   return items ? items.split(delim || ' ') : [];
 };
 
-const getOrCreateMap = (option: string, defaultValue?: string, extendWith?: SchemaMap): SchemaMap => {
-  // get cached default map or make it if needed
-  let value: Record<string, any> = mapCache[option];
-
-  if (!value) {
-    value = makeMap(defaultValue, ' ', makeMap(defaultValue.toUpperCase(), ' '));
-    value = extend(value, extendWith);
-
-    mapCache[option] = value;
-  }
-
-  return value;
+const createMap = (defaultValue?: string, extendWith?: SchemaMap): SchemaMap => {
+  const value = makeMap(defaultValue, ' ', makeMap(defaultValue.toUpperCase(), ' '));
+  return extend(value, extendWith);
 };
 
 // A curated list using the textBlockElements map and parts of the blockElements map from the schema
 // TODO: TINY-8728 Investigate if the extras can be added directly to the default text block elements
 export const getTextRootBlockElements = (schema: Schema): SchemaMap =>
-  getOrCreateMap(
-    'text_root_block_elements',
+  createMap(
     'td th li dt dd figcaption caption details summary',
     schema.getTextBlockElements()
   );
@@ -439,7 +429,14 @@ const Schema = (settings?: SchemaSettings): Schema => {
     let value = settings[option];
 
     if (!value) {
-      value = getOrCreateMap(option, defaultValue, extendWith);
+      // Get cached default map or make it if needed
+      value = mapCache[option];
+
+      if (!value) {
+        value = createMap(defaultValue, extendWith);
+
+        mapCache[option] = value;
+      }
     } else {
       // Create custom map
       value = makeMap(value, /[, ]/, makeMap(value.toUpperCase(), /[, ]/));
