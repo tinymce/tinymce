@@ -7,6 +7,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { AddUndoEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
@@ -627,7 +628,10 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     };
 
     editor.resetContent(initialContent);
-    const onChange = (e) => {
+    const onChange = (e: EditorEvent<{
+      level: UndoLevel;
+      lastLevel: UndoLevel;
+    }>) => {
       changeEventCounter++;
       currentChangeEvent = { level: e.level.content, lastLevel: e.lastLevel.content };
     };
