@@ -238,12 +238,16 @@ const backspaceDeleteCaret = (editor: Editor, isForward: boolean): boolean => {
   return backspaceDeleteFromListToListCaret(editor, isForward) || backspaceDeleteIntoListCaret(editor, isForward);
 };
 
-const backspaceDeleteRange = (editor: Editor): boolean => {
+const hasListSelection = (editor: Editor) => {
   const selectionStartElm = editor.selection.getStart();
   const root = Selection.getClosestEditingHost(editor, selectionStartElm);
   const startListParent = editor.dom.getParent(selectionStartElm, 'LI,DT,DD', root);
 
-  if (startListParent || Selection.getSelectedListItems(editor).length > 0) {
+  return startListParent || Selection.getSelectedListItems(editor).length > 0;
+};
+
+const backspaceDeleteRange = (editor: Editor): boolean => {
+  if (hasListSelection(editor)) {
     editor.undoManager.transact(() => {
       editor.execCommand('Delete');
       NormalizeLists.normalizeLists(editor.dom, editor.getBody());
@@ -260,6 +264,13 @@ const backspaceDelete = (editor: Editor, isForward: boolean): boolean => {
 };
 
 const setup = (editor: Editor): void => {
+  editor.on('ExecCommand', (e) => {
+    const cmd = e.command.toLowerCase();
+    if ((cmd === 'delete' || cmd === 'forwarddelete') && hasListSelection(editor)) {
+      NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+    }
+  });
+
   editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE) {
       if (backspaceDelete(editor, false)) {

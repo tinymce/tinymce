@@ -12,7 +12,7 @@ import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import * as URI from '../util/URI';
 import AstNode from './Node';
-import Schema, { SchemaRegExpMap } from './Schema';
+import Schema, { getTextRootBlockElements, SchemaRegExpMap } from './Schema';
 
 /**
  * @summary
@@ -279,6 +279,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhitespaceElements();
   const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+  const textRootBlockElements = getTextRootBlockElements(schema);
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
   const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
@@ -290,6 +291,18 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
         return true;
       } else {
         node = node.parent;
+      }
+    }
+    return false;
+  };
+
+  const isTextRootBlockEmpty = (node: AstNode) => {
+    let tempNode = node;
+    while (Type.isNonNullable(tempNode)) {
+      if (tempNode.name in textRootBlockElements) {
+        return isEmpty(schema, nonEmptyElements, whitespaceElements, tempNode);
+      } else {
+        tempNode = tempNode.parent;
       }
     }
     return false;
@@ -332,7 +345,10 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
       const elementRule = schema.getElementRule(node.name);
       if (validate && elementRule) {
         const isNodeEmpty = isEmpty(schema, nonEmptyElements, whitespaceElements, node);
-        if (elementRule.removeEmpty && isNodeEmpty) {
+
+        if (elementRule.paddInEmptyBlock && isNodeEmpty && isTextRootBlockEmpty(node)) {
+          paddEmptyNode(settings, args, blockElements, node);
+        } else if (elementRule.removeEmpty && isNodeEmpty) {
           if (blockElements[node.name]) {
             node.remove();
           } else {
