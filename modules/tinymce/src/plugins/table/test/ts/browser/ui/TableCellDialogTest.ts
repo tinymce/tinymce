@@ -98,7 +98,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
     backgroundcolor: '',
     bordercolor: '',
     borderstyle: '',
-    border: ''
+    borderwidth: ''
   };
 
   afterEach(() => {
@@ -152,7 +152,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       borderstyle: 'dashed',
       bordercolor: 'red',
       backgroundcolor: 'blue',
-      border: '2px'
+      borderwidth: '2px'
     };
 
     const editor = hook.editor();
@@ -176,7 +176,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       backgroundcolor: 'blue',
       bordercolor: 'red',
       borderstyle: 'dashed',
-      border: ''
+      borderwidth: ''
     };
 
     const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
@@ -224,7 +224,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       borderstyle: 'dashed',
       bordercolor: '',
       backgroundcolor: 'red',
-      border: ''
+      borderwidth: ''
     };
 
     const editor = hook.editor();
@@ -241,37 +241,17 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
   it('TINY-8625: Table cell properties dialog update multiple cells, but does not override unchanged values', async () => {
     const initialHtml = '<table>' +
-        '<colgroup>' +
-          '<col style="width: 25.3548%;">' +
-          '<col style="width: 74.5433%;">' +
-        '</colgroup>' +
-        '<tbody>' +
-          '<tr>' +
-            '<td data-mce-selected="1" style="height: 200px;">&nbsp;</td>' +
-            '<td data-mce-selected="1" style="height: 200px;">&nbsp;</td>' +
-          '</tr>' +
-        '</tbody>' +
-      '</table>';
-
-    const newHtml = '<table>' +
       '<colgroup>' +
         '<col style="width: 25.3548%;">' +
         '<col style="width: 74.5433%;">' +
       '</colgroup>' +
       '<tbody>' +
         '<tr>' +
-          '<td style="height: 20px; vertical-align: bottom; text-align: center; background-color: red;">&nbsp;</td>' +
-          '<td style="height: 20px; vertical-align: bottom; text-align: center; background-color: red;">&nbsp;</td>' +
+          '<td data-mce-selected="1" style="height: 200px; border-color: blue;">&nbsp;</td>' +
+          '<td data-mce-selected="1" style="height: 200px; border-color: red;">&nbsp;</td>' +
         '</tr>' +
       '</tbody>' +
     '</table>';
-
-    const newData = {
-      height: '20',
-      halign: 'center',
-      valign: 'bottom',
-      backgroundcolor: 'red'
-    };
 
     const initialDialogValues = {
       width: '',
@@ -283,7 +263,26 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       backgroundcolor: '',
       bordercolor: '',
       borderstyle: '',
-      border: ''
+      borderwidth: ''
+    };
+
+    const newHtml = '<table>' +
+      '<colgroup>' +
+        '<col style="width: 25.3548%;">' +
+        '<col style="width: 74.5433%;">' +
+      '</colgroup>' +
+      '<tbody>' +
+        '<tr>' +
+          '<td style="height: 20px; text-align: center; border-color: blue; background-color: red;">&nbsp;</td>' +
+          '<td style="height: 20px; text-align: center; border-color: red; background-color: red;">&nbsp;</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>';
+
+    const newData = {
+      height: '20',
+      halign: 'center',
+      backgroundcolor: 'red'
     };
 
     const editor = hook.editor();
@@ -306,11 +305,24 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       '</colgroup>' +
       '<tbody>' +
         '<tr>' +
-          '<td data-mce-selected="1" style="height: 200px; vertical-align: bottom; text-align: center; background-color: red;">&nbsp;</td>' +
-          '<td data-mce-selected="1" style="height: 200px; vertical-align: bottom; text-align: center; background-color: red;">&nbsp;</td>' +
+          '<td data-mce-selected="1" style="height: 200px; vertical-align: bottom; text-align: center; border-color: blue; border-style: dotted; border-width: 2px; background-color: red;">&nbsp;</td>' +
+          '<td data-mce-selected="1" style="height: 200px; vertical-align: bottom; text-align: center; border-color: blue; border-style: dotted; border-width: 2px; background-color: red;">&nbsp;</td>' +
         '</tr>' +
       '</tbody>' +
     '</table>';
+
+    const initialDialogValues = {
+      width: '',
+      height: '200px',
+      celltype: 'td',
+      halign: 'center',
+      valign: 'bottom',
+      scope: '',
+      backgroundcolor: 'red',
+      bordercolor: 'blue',
+      borderstyle: 'dotted',
+      borderwidth: '2px'
+    };
 
     const newHtml = '<table>' +
       '<colgroup>' +
@@ -329,20 +341,10 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       height: '',
       halign: '',
       valign: '',
-      backgroundcolor: ''
-    };
-
-    const initialDialogValues = {
-      width: '',
-      height: '200px',
-      celltype: 'td',
-      halign: 'center',
-      valign: 'bottom',
-      scope: '',
-      backgroundcolor: 'red',
+      backgroundcolor: '',
       bordercolor: '',
       borderstyle: '',
-      border: ''
+      borderwidth: ''
     };
 
     const editor = hook.editor();
@@ -371,7 +373,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       backgroundcolor: 'blue',
       bordercolor: 'red',
       borderstyle: 'dashed',
-      border: ''
+      borderwidth: ''
     };
 
     const emptyTable = '<table><tbody><tr><th>X</th></tr></tbody></table>';
@@ -386,7 +388,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       backgroundcolor: '',
       bordercolor: '',
       borderstyle: '',
-      border: ''
+      borderwidth: ''
     };
 
     const editor = hook.editor();
@@ -416,7 +418,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       backgroundcolor: 'blue',
       bordercolor: 'red',
       borderstyle: 'dashed',
-      border: 'thick'
+      borderwidth: 'thick'
     };
 
     const editor = hook.editor();
@@ -439,7 +441,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       borderstyle: 'dashed',
       bordercolor: 'red',
       backgroundcolor: 'blue',
-      border: ''
+      borderwidth: ''
     };
 
     const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
