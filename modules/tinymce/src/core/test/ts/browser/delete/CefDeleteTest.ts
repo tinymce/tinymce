@@ -1,5 +1,5 @@
 import { ApproxStructure, Keys } from '@ephox/agar';
-import { describe, it, context } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -139,34 +139,5 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
         });
       })
     );
-  });
-
-  context('cef is at the start/end of the content and covered with selection', () => {
-    it('TINY-7795: should delete selected content when cef block at the start', () => {
-      const editor = hook.editor();
-      editor.setContent('<p contenteditable="false">CEF</p><p>abc</p>');
-      // actual content: <p data-mce-caret="before"></p><p contenteditable="false">CEF</p><p>abc</p>
-      TinySelections.setSelection(editor, [], 0, [ 2, 0 ], 2);
-      TinyContentActions.keystroke(editor, Keys.backspace());
-      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
-      TinyAssertions.assertContent(editor, '<p>c</p>');
-    });
-
-    it('TINY-7795: should delete selected content when cef block at the end', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>abc</p><p contenteditable="false">CEF</p>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 1, [], 2);
-      TinyContentActions.keystroke(editor, Keys.backspace());
-      TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
-      TinyAssertions.assertContent(editor, '<p>a</p>');
-    });
-
-    it('TINY-7795: should delete selected content when cef block at the start and at the end', () => {
-      const editor = hook.editor();
-      editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>');
-      editor.execCommand('SelectAll');
-      TinyContentActions.keystroke(editor, Keys.backspace());
-      TinyAssertions.assertContent(editor, '');
-    });
   });
 });
