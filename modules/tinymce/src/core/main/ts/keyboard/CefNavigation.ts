@@ -97,16 +97,17 @@ const selectToEndPoint = (editor: Editor, forward: boolean): boolean =>
     .map((pos) => {
       const rng = pos.toRange();
       const curRng = editor.selection.getRng();
-      forward ? rng.setStart(curRng.startContainer, curRng.startOffset) : rng.setEnd(curRng.endContainer, curRng.endOffset);
+      if (forward) {
+        rng.setStart(curRng.startContainer, curRng.startOffset);
+      } else {
+        rng.setEnd(curRng.endContainer, curRng.endOffset);
+      }
       return rng;
     })
-    .fold(
-      Fun.never,
-      (rng) => {
-        NavigationUtils.moveToRange(editor, rng);
-        return true;
-      }
-    );
+    .exists((rng) => {
+      NavigationUtils.moveToRange(editor, rng);
+      return true;
+    });
 
 export {
   moveH,

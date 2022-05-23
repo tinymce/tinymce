@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Switching between unordered and ordered lists would incorrectly alter any parent element that contained that list #TINY-8068
 - The URL detection used for `autolink` and smart paste didn't work if a path segment contained valid characters such as `!` and `:` #TINY-8069
 - Copy events were not dispatched in readonly mode #TINY-6800
-- Using Ctrl+Shift+Home/End (Cmd+Shift+Up/Down on Mac) could not expand the selection when `contenteditable="false"` element was at the edge of content #TINY-7795
+- Using Ctrl+Shift+Home/End (Cmd+Shift+Up/Down on Mac) would not expand the selection when a `contenteditable="false"` element was at the edge of content #TINY-7795
 
 ## 6.0.3 - TBD
 

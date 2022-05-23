@@ -35,8 +35,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
     const newRange = range.cloneRange();
     newRange.collapse(direction === HDirection.Backwards);
     return Optional.from(newRange);
-  }
-  if (!range.collapsed) {
+  } else if (!range.collapsed) {
     const node = RangeNodes.getSelectedNode(range);
     if (isElement(node)) {
       return FakeCaretUtils.showCaret(direction, editor, node, direction === HDirection.Backwards, false);

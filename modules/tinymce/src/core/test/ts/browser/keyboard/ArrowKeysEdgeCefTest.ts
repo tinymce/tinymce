@@ -294,6 +294,5 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
       TinyAssertions.assertCursor(editor, [ 3 ], 0);
     });
   });
-
 });
 
