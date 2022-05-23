@@ -57,11 +57,11 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
   const listHTML = `<ul>\n<li>b</li>\n<li>&nbsp;</li>\n</ul>`;
 
   const testFormat = (editor: Editor, config: TestConfig) => {
-    const { selector, selectorCount, html, expectedHtml, expectedRawHtml, rawHtml: contentFormatRaw } = config;
+    const { selector, selectorCount, html, rawHtml, expectedHtml, expectedRawHtml } = config;
     const expectedPresence = { [selector]: selectorCount };
     const expectedPresenceOnRemove = { [selector]: 0 };
 
-    editor.setContent(html, { format: Type.isNonNullable(contentFormatRaw) ? 'raw' : 'html' });
+    editor.setContent(html, { format: rawHtml === true ? 'raw' : 'html' });
     editor.focus();
     config.select(editor);
     config.apply(editor);
