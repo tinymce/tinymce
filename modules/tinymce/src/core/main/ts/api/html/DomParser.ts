@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj } from '@ephox/katamari';
+import { Obj, Type } from '@ephox/katamari';
 
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
@@ -14,7 +14,7 @@ import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import AstNode from './Node';
 import SaxParser, { ParserFormat } from './SaxParser';
-import Schema, { SchemaElement, SchemaMap } from './Schema';
+import Schema, { getTextRootBlockElements, SchemaElement, SchemaMap } from './Schema';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -365,7 +365,8 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     args = args || {};
     matchedNodes = {};
     matchedAttributes = {};
-    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+    const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+    const textRootBlockElements = getTextRootBlockElements(schema);
     const nonEmptyElements = schema.getNonEmptyElements();
     const children = schema.children;
     const validate = settings.validate;
@@ -491,6 +492,18 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
       return output;
     };
 
+    const isTextRootBlockEmpty = (node: AstNode) => {
+      let tempNode = node;
+      while (Type.isNonNullable(tempNode)) {
+        if (tempNode.name in textRootBlockElements) {
+          return isEmpty(schema, nonEmptyElements, whiteSpaceElements, tempNode);
+        } else {
+          tempNode = tempNode.parent;
+        }
+      }
+      return false;
+    };
+
     const parser = SaxParser({
       validate,
       document: settings.document,
@@ -591,7 +604,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
       },
 
       end: (name) => {
-        let textNode, text, sibling, tempNode;
+        let textNode, text, sibling;
 
         const elementRule: Partial<SchemaElement> = validate ? schema.getElementRule(name) : {};
         if (elementRule) {
@@ -674,24 +687,22 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
             isInWhiteSpacePreservedElement = false;
           }
 
-          if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
-            tempNode = node.parent;
+          const isNodeEmpty = isEmpty(schema, nonEmptyElements, whiteSpaceElements, node);
+          const parentNode = node.parent;
 
+          if (elementRule.paddInEmptyBlock && isNodeEmpty && isTextRootBlockEmpty(node)) {
+            paddEmptyNode(settings, args, blockElements, node);
+          } else if (elementRule.removeEmpty && isNodeEmpty) {
             if (blockElements[node.name]) {
               node.empty().remove();
             } else {
               node.unwrap();
             }
-
-            node = tempNode;
-            return;
-          }
-
-          if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
+          } else if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isNodeEmpty)) {
             paddEmptyNode(settings, args, blockElements, node);
           }
 
-          node = node.parent;
+          node = parentNode;
         }
       }
     }, schema);

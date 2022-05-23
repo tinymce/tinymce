@@ -20,7 +20,7 @@ import * as Events from '../api/Events';
 import Formatter from '../api/Formatter';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
-import Schema from '../api/html/Schema';
+import Schema, { SchemaSettings } from '../api/html/Schema';
 import * as Settings from '../api/Settings';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
@@ -65,6 +65,34 @@ const getRootName = (editor: Editor): string => editor.inline ? editor.getElemen
 
 const removeUndefined = <T>(obj: T): T => Obj.filter(obj as Record<string, unknown>, (v) => Type.isUndefined(v) === false) as T;
 
+const mkSchemaSettings = (editor: Editor): SchemaSettings => {
+  const settings = editor.settings;
+
+  return removeUndefined<SchemaSettings>({
+    block_elements: settings.block_elements,
+    boolean_attributes: settings.boolean_attributes,
+    custom_elements: settings.custom_elements,
+    extended_valid_elements: settings.extended_valid_elements,
+    invalid_elements: settings.invalid_elements,
+    invalid_styles: settings.invalid_styles,
+    move_caret_before_on_enter_elements: settings.move_caret_before_on_enter_elements,
+    non_empty_elements: settings.non_empty_elements,
+    schema: settings.schema,
+    self_closing_elements: settings.self_closing_elements,
+    short_ended_elements: settings.short_ended_elements,
+    special: settings.special,
+    text_block_elements: settings.text_block_elements,
+    text_inline_elements: settings.text_inline_elements,
+    valid_children: settings.valid_children,
+    valid_classes: settings.valid_classes,
+    valid_elements: settings.valid_elements,
+    valid_styles: settings.valid_styles,
+    verify_html: settings.verify_html,
+    whitespace_elements: settings.whitespace_elements,
+    padd_empty_block_inline_children: settings.format_empty_lines,
+  });
+};
+
 const mkParserSettings = (editor: Editor): DomParserSettings => {
   const settings = editor.settings;
   const blobCache = editor.editorUpload.blobCache;
@@ -100,6 +128,7 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
 
   return {
     ...mkParserSettings(editor),
+    ...mkSchemaSettings(editor),
     ...removeUndefined<DomSerializerSettings>({
       // SerializerSettings
       url_converter: settings.url_converter,
@@ -112,28 +141,6 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
       indent: settings.indent,
       indent_after: settings.indent_after,
       indent_before: settings.indent_before,
-
-      // Schema settings
-      block_elements: settings.block_elements,
-      boolean_attributes: settings.boolean_attributes,
-      custom_elements: settings.custom_elements,
-      extended_valid_elements: settings.extended_valid_elements,
-      invalid_elements: settings.invalid_elements,
-      invalid_styles: settings.invalid_styles,
-      move_caret_before_on_enter_elements: settings.move_caret_before_on_enter_elements,
-      non_empty_elements: settings.non_empty_elements,
-      schema: settings.schema,
-      self_closing_elements: settings.self_closing_elements,
-      short_ended_elements: settings.short_ended_elements,
-      special: settings.special,
-      text_block_elements: settings.text_block_elements,
-      text_inline_elements: settings.text_inline_elements,
-      valid_children: settings.valid_children,
-      valid_classes: settings.valid_classes,
-      valid_elements: settings.valid_elements,
-      valid_styles: settings.valid_styles,
-      verify_html: settings.verify_html,
-      whitespace_elements: settings.whitespace_elements
     })
   };
 };
@@ -425,7 +432,7 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
   (body as any).disabled = false;
 
   editor.editorUpload = EditorUpload(editor);
-  editor.schema = Schema(settings);
+  editor.schema = Schema(mkSchemaSettings(editor));
   editor.dom = DOMUtils(doc, {
     keep_values: true,
     // Note: Don't bind here, as the binding is handled via the `url_converter_scope`
