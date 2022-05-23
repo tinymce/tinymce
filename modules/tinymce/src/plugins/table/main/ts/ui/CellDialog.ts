@@ -115,7 +115,7 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
 
       // Update the cells styling using the dialog data
       if (styleModified || Obj.has(modifiedData, 'scope')) {
-        applyStyleData(editor, selectedCells, data, Fun.curry(Arr.contains, Obj.keys(modifiedData)));
+        applyStyleData(editor, selectedCells, data, Fun.curry(Obj.has, modifiedData));
       }
 
       // Update the cells structure using the dialog data

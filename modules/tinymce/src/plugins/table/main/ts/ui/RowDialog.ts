@@ -73,7 +73,7 @@ const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowD
 
     // Update the rows styling using the dialog data
     if (styleModified) {
-      applyStyleData(editor, rows, data, Fun.curry(Arr.contains, Obj.keys(modifiedData)));
+      applyStyleData(editor, rows, data, Fun.curry(Obj.has, modifiedData));
     }
 
     // Update the rows structure using the dialog data
