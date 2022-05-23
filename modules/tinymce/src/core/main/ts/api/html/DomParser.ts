@@ -12,7 +12,7 @@ import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import * as URI from '../util/URI';
 import AstNode from './Node';
-import Schema, { SchemaRegExpMap } from './Schema';
+import Schema, { getTextRootBlockElements, SchemaRegExpMap } from './Schema';
 
 /**
  * @summary
@@ -279,8 +279,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhitespaceElements();
   const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
-  // NOTE: This is duplicated in ApplyFormat.ts
-  const textRootBlockElements: Record<string, string> = extend(makeMap('td,th,li,dt,dd,figcaption,caption,details,summary'), schema.getTextBlockElements());
+  const textRootBlockElements = getTextRootBlockElements(schema);
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
   const endWhiteSpaceRegExp = /[ \t\r\n]+$/;

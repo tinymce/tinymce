@@ -118,6 +118,12 @@ const split = (items: string, delim?: string): string[] => {
   return items ? items.split(delim || ' ') : [];
 };
 
+// A curated list using the textBlockElements map and parts of the blockElements map from the schema
+export const getTextRootBlockElements = (schema: Schema): Record<string, {}> => {
+  const extras = 'td,th,li,dt,dd,figcaption,caption,details,summary';
+  return extend(makeMap(`${extras},${extras.toUpperCase()}`), schema.getTextBlockElements());
+};
+
 /**
  * Builds a schema lookup table
  *

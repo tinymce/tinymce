@@ -9,7 +9,7 @@ interface TestConfig {
   readonly selector: string;
   readonly selectorCount: number;
   readonly html: string;
-  readonly contentFormatRaw?: boolean;
+  readonly rawHtml?: boolean;
   readonly expectedHtml?: string;
   readonly expectedRawHtml?: string;
   readonly select: (editor: Editor) => void;
@@ -56,11 +56,11 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
   const listHTML = `<ul>\n<li>b</li>\n<li>&nbsp;</li>\n</ul>`;
 
   const testFormat = (editor: Editor, config: TestConfig) => {
-    const { selector, selectorCount, html, expectedHtml, expectedRawHtml, contentFormatRaw } = config;
+    const { selector, selectorCount, html, expectedHtml, expectedRawHtml, rawHtml } = config;
     const expectedPresence = { [selector]: selectorCount };
     const expectedPresenceOnRemove = { [selector]: 0 };
 
-    editor.setContent(html, { format: Type.isNonNullable(contentFormatRaw) ? 'raw' : 'html' });
+    editor.setContent(html, { format: rawHtml === true ? 'raw' : 'html' });
     editor.focus();
     config.select(editor);
     config.apply(editor);
@@ -253,7 +253,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
         selector: 'strong',
         selectorCount: 3,
         html: '<p>a</p><p><br data-mce-bogus="1"></p><p>b</p>',
-        contentFormatRaw: true,
+        rawHtml: true,
         expectedHtml:
           '<p><strong>a</strong></p>\n' +
           '<p><strong>&nbsp;</strong></p>\n' +
@@ -273,7 +273,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
         selector: 's',
         selectorCount: 3,
         html: '<p>a</p><p><br data-mce-bogus="1"></p><p>b</p>',
-        contentFormatRaw: true,
+        rawHtml: true,
         expectedHtml:
           '<p><s>a</s></p>\n' +
           '<p><s>&nbsp;</s></p>\n' +
@@ -293,7 +293,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
         selector: 'span[style="text-decoration: underline;"]',
         selectorCount: 3,
         html: '<p>a</p><p><br data-mce-bogus="1"></p><p>b</p>',
-        contentFormatRaw: true,
+        rawHtml: true,
         expectedHtml:
           '<p><span style="text-decoration: underline;">a</span></p>\n' +
           '<p><span style="text-decoration: underline;">&nbsp;</span></p>\n' +
@@ -313,7 +313,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
         selector: 'strong',
         selectorCount: 3,
         html: '<p>a</p><p><br data-mce-bogus="1"></p><p>b</p>',
-        contentFormatRaw: true,
+        rawHtml: true,
         expectedHtml:
           '<p><s><strong>a</strong></s></p>\n' +
           '<p><s><strong>&nbsp;</strong></s></p>\n' +
@@ -339,7 +339,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
         selector: 'strong',
         selectorCount: 2,
         html: '<p>a</p><ul><li><br data-mce-bogus="1"></li></ul>',
-        contentFormatRaw: true,
+        rawHtml: true,
         expectedHtml:
           '<p><strong>a</strong></p>\n' +
           '<ul>\n<li><strong>&nbsp;</strong></li>\n</ul>',
