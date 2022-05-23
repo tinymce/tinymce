@@ -39,7 +39,7 @@ const updateAdvancedProps = (modifier: DomModifier, data: RowData, shouldUpdate:
   }
 };
 
-const applyStyleData = (editor: Editor, rows: HTMLTableRowElement[], data: RowData, oldData: RowData, wasChanged: (key: string) => boolean): void => {
+const applyStyleData = (editor: Editor, rows: HTMLTableRowElement[], data: RowData, wasChanged: (key: string) => boolean): void => {
   const isSingleRow = rows.length === 1;
   const shouldOverrideCurrentValue = isSingleRow ? Fun.always : wasChanged;
   Arr.each(rows, (rowElm) => {
@@ -73,7 +73,7 @@ const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowD
 
     // Update the rows styling using the dialog data
     if (styleModified) {
-      applyStyleData(editor, rows, data, oldData, Fun.curry(Arr.contains, Obj.keys(modifiedData)));
+      applyStyleData(editor, rows, data, Fun.curry(Arr.contains, Obj.keys(modifiedData)));
     }
 
     // Update the rows structure using the dialog data
