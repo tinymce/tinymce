@@ -658,6 +658,10 @@ const Schema = (settings?: SchemaSettings): Schema => {
         children[name] = children[cloneName];
         customElementsMap[name] = cloneName;
 
+        // Treat all custom elements as being non-empty by default
+        nonEmptyElementsMap[name.toUpperCase()] = {};
+        nonEmptyElementsMap[name] = {};
+
         // If it's not marked as inline then add it to valid block elements
         if (!inline) {
           blockElementsMap[name.toUpperCase()] = {};
