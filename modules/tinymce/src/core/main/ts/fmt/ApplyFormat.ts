@@ -4,6 +4,7 @@ import { PredicateExists, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
+import { getTextRootBlockElements } from '../api/html/Schema';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
@@ -33,19 +34,7 @@ const isElementNode = (node: Node): node is Element => {
 const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, parentName: string) => {
   // TINY-6483: Can format 'br' if it is contained in a valid empty block and an inline format is being applied
   if (Options.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
-    // A curated list using the textBlockElements map and parts of the blockElements map from the schema
-    const validBRParentElements: Record<string, {}> = {
-      ...editor.schema.getTextBlockElements(),
-      td: {},
-      th: {},
-      li: {},
-      dt: {},
-      dd: {},
-      figcaption: {},
-      caption: {},
-      details: {},
-      summary: {}
-    };
+    const validBRParentElements = getTextRootBlockElements(editor.schema);
     // If a caret node is present, the format should apply to that, not the br (applicable to collapsed selections)
     const hasCaretNodeSibling = PredicateExists.sibling(SugarElement.fromDom(node), (sibling) => isCaretNode(sibling.dom));
     return Obj.hasNonNullableKey(validBRParentElements, parentName) && Empty.isEmpty(SugarElement.fromDom(node.parentNode), false) && !hasCaretNodeSibling;
