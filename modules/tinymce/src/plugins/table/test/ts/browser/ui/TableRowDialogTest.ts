@@ -277,16 +277,17 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
       align: 'center',
       height: '30px',
       type: 'body',
+      backgroundcolor: 'red'
     };
 
     const newHtml =
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
         '<tbody>' +
-          '<tr style="height: 30px; text-align: center; border-color: blue;">' +
+          '<tr style="height: 30px; text-align: center; border-color: blue; background-color: red;">' +
             '<td>a</td>' +
             '<td>b</td>' +
           '</tr>' +
-          '<tr style="height: 30px; text-align: center; border-color: red;">' +
+          '<tr style="height: 30px; text-align: center; border-color: red; background-color: red;">' +
             '<td>c</td>' +
             '<td>d</td>' +
           '</tr>' +
@@ -308,11 +309,11 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     const initialHtml =
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
         '<tbody>' +
-          '<tr style="height: 20px; border-color: blue;">' +
+          '<tr style="height: 20px; text-align: center; border-color: blue; border-style: dotted; background-color: red;">' +
             '<td data-mce-selected="1">a</td>' +
             '<td data-mce-selected="1">b</td>' +
           '</tr>' +
-          '<tr style="height: 20px; border-color: red;">' +
+          '<tr style="height: 20px; text-align: center; border-color: blue; border-style: dotted; background-color: red;">' +
             '<td data-mce-selected="1">c</td>' +
             '<td data-mce-selected="1">d</td>' +
           '</tr>' +
@@ -320,28 +321,31 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
       '</table>';
 
     const initialData = {
-      align: '',
+      align: 'center',
       height: '20px',
+      type: 'body',
+      backgroundcolor: 'red',
+      bordercolor: 'blue',
+      borderstyle: 'dotted'
+    };
+
+    const newData = {
+      align: '',
+      height: '',
       type: 'body',
       backgroundcolor: '',
       bordercolor: '',
       borderstyle: ''
     };
 
-    const newData = {
-      align: 'center',
-      height: '',
-      type: 'body',
-    };
-
     const newHtml =
       '<table style="border: 1px solid black; border-collapse: collapse;" border="1">' +
         '<tbody>' +
-          '<tr style="text-align: center; border-color: blue;">' +
+          '<tr>' +
             '<td>a</td>' +
             '<td>b</td>' +
           '</tr>' +
-          '<tr style="text-align: center; border-color: red;">' +
+          '<tr>' +
             '<td>c</td>' +
             '<td>d</td>' +
           '</tr>' +
