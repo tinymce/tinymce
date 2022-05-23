@@ -82,20 +82,14 @@ const applyStyleData = (editor: Editor, cells: SelectedCell[], data: CellData, w
       updateAdvancedProps(modifier, data, shouldOverrideCurrentValue);
     }
 
-    // Remove alignment
-    if (isSingleCell) {
-      Styles.unApplyAlign(editor, cellElm);
-      Styles.unApplyVAlign(editor, cellElm);
-    }
-
     // Apply alignment
-    if (data.halign) {
-      Styles.applyAlign(editor, cellElm, data.halign);
+    if (wasChanged('halign')) {
+      Styles.setAlign(editor, cellElm, data.halign);
     }
 
     // Apply vertical alignment
-    if (data.valign) {
-      Styles.applyVAlign(editor, cellElm, data.valign);
+    if (wasChanged('valign')) {
+      Styles.setVAlign(editor, cellElm, data.valign);
     }
   });
 };
@@ -121,7 +115,7 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
 
       // Update the cells styling using the dialog data
       if (styleModified || Obj.has(modifiedData, 'scope')) {
-        applyStyleData(editor, selectedCells, data, Fun.curry(Arr.contains, Obj.keys(modifiedData)));
+        applyStyleData(editor, selectedCells, data, Fun.curry(Obj.has, modifiedData));
       }
 
       // Update the cells structure using the dialog data
