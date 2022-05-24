@@ -49,6 +49,7 @@ const isVoid = lazyLookup(voids);
 const isTableSection = lazyLookup(tableSections);
 const isTableCell = lazyLookup<HTMLTableCellElement>(tableCells);
 const isWsPreserveElement = lazyLookup(wsElements);
+const isInList = (elementsList: string[], node: SugarElement<Node>) => lazyLookup(elementsList)(node);
 
 export {
   isBlock,
@@ -62,5 +63,6 @@ export {
   isTableSection,
   isTableCell,
   isBr,
-  isWsPreserveElement
+  isWsPreserveElement,
+  isInList
 };
