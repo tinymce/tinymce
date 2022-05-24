@@ -24,7 +24,7 @@ const getContentFromBody = (editor: Editor, args: GetContentArgs, body: HTMLElem
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
   } else if (args.format === 'text') {
     content = DomExtract.toText(SugarElement.fromDom(editor.getBody()));
-    content = Zwsp.trim(body.innerText);
+    content = Zwsp.trim(content);
     content = content === '\n' ? '' : content;
   } else if (args.format === 'tree') {
     content = editor.serializer.serialize(body, args);
