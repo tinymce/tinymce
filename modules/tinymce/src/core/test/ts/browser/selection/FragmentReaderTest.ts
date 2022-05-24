@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
@@ -18,8 +18,11 @@ describe('browser.tinymce.core.selection.FragmentReaderTest', () => {
   const viewBlock = ViewBlock.bddSetup();
 
   const setHtml = viewBlock.update;
+  let editor: Editor;
 
-  const editor = hook.editor();
+  beforeEach(() => {
+    editor = hook.editor();
+  });
 
   const readFragment = (startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
     const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
