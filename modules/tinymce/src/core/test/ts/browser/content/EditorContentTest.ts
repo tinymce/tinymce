@@ -91,15 +91,15 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
   // When the resize bar div is included in the DOM, editor.getBody().innerText includes two extra \n at the end
   it('TINY-6281: getContent text', () => testGetTextContent('<p>Text to be retrieved</p>', 'Text to be retrieved'));
 
-  it('TINY-8578: getContent text, empty line in div', () => testGetTextContent('<div><p></p></div>', '\n\n'));
+  it('TINY-8578: getContent text, empty line in div', () => testGetTextContent('<div><p></p></div>', ''));
 
   it('TINY-8578: getContent text, empty line', () => testGetTextContent('<p></p>', ''));
 
-  it('TINY-8578: getContent text, two empty lines in div', () => testGetTextContent('<div><p></p><p></p></div>', '\n\n\n'));
+  it('TINY-8578: getContent text, two empty lines in div', () => testGetTextContent('<div><p></p><p></p></div>', '\n\n\n\n'));
 
-  it('TINY-8578: getContent text, repeating two empty lines in divs', () => testGetTextContent('<div><p></p><p></p></div><div><p></p><p></p></div>', '\n\n\n\n\n\n\n'));
+  it('TINY-8578: getContent text, repeating two empty lines in divs', () => testGetTextContent('<div><p></p><p></p></div><div><p></p><p></p></div>', '\n\n\n\n\n\n\n\n\n\n'));
 
-  it('TINY-8578: getContent text, two empty lines', () => testGetTextContent('<p></p><p></p>', '\n'));
+  it('TINY-8578: getContent text, two empty lines', () => testGetTextContent('<p></p><p></p>', '\n\n\n\n'));
 
   it('TINY-6281: getContent text with empty editor', () => testGetTextContent('', ''));
 
