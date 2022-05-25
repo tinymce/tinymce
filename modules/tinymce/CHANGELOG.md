@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Indenting or outdenting list items inside a block element that was inside another list item would not work #TINY-7209
 - Switching between unordered and ordered lists would incorrectly alter any parent element that contained that list #TINY-8068
 - Custom elements on blank lines would be removed during serialization #TINY-4784
+- Pasting columns in tables could sometimes result in an invalid table #TINY-8040
 - The URL detection used for `autolink` and smart paste didn't work if a path segment contained valid characters such as `!` and `:` #TINY-8069
 - Cutting content to the clipboard while selecting between the parent list and a nested list would not always set the list style to `none` on the parent list #TINY-8078
 - Copy events were not dispatched in readonly mode #TINY-6800
