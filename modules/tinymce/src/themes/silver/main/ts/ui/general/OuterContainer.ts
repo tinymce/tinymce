@@ -49,7 +49,7 @@ interface ToolbarSketchSpec extends MoreDrawerData {
 interface OuterContainerApis {
   getHeader: (comp: AlloyComponent) => Optional<AlloyComponent>;
   getSocket: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig, defaultSidebar?: string) => void;
+  setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig, showSidebar?: string) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
   whichSidebar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.

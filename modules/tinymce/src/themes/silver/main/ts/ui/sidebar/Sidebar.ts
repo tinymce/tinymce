@@ -94,15 +94,16 @@ const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts
   ])
 }));
 
-const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, defaultSidebar?: string) => {
+const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar?: string) => {
   const optSlider = Composing.getCurrent(sidebar);
+
   optSlider.each((slider) => {
     Replacing.set(slider, [ makeSidebar(panelConfigs) ]);
 
     // Show the default sidebar
-    if (Type.isString(defaultSidebar)) {
+    if (Type.isString(showSidebar)) {
       Composing.getCurrent(slider).each((slotContainer) => {
-        SlotContainer.showSlot(slotContainer, defaultSidebar);
+        SlotContainer.showSlot(slotContainer, showSidebar);
       });
       Sliding.grow(slider);
     }
