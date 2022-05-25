@@ -14,6 +14,6 @@ describe('browser.tinymce.core.content.EditorGetContentTextFormatTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>' + Zwsp.ZWSP + 'a</p>');
     const html = editor.getContent({ format: 'text' });
-    assert.equal(html, 'a', 'Should be expected html');
+    assert.equal(html, '\n\na\n\n', 'Should be expected html');
   });
 });

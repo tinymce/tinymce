@@ -227,14 +227,14 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   });
 
   it('Initialize on textarea with initial content', (done) => {
-    initAndAssertContent('<textarea>Initial Content</textarea>', 'textarea', 'Initial Content', done);
+    initAndAssertContent('<textarea>Initial Content</textarea>', 'textarea', '\n\nInitial Content\n\n', done);
   });
 
   it('Initialize on input with initial content', (done) => {
-    initAndAssertContent('<input value="Initial Content">', 'input', 'Initial Content', done);
+    initAndAssertContent('<input value="Initial Content">', 'input', '\n\nInitial Content\n\n', done);
   });
 
   it('Initialize on list item with initial content', (done) => {
-    initAndAssertContent('<ul><li>Initial Content</li></ul>', 'li', 'Initial Content', done);
+    initAndAssertContent('<ul><li>Initial Content</li></ul>', 'li', '\n\nInitial Content\n\n', done);
   });
 });
