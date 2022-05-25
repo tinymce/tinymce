@@ -96,10 +96,11 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       outerContainer,
       identifyMenus(editor, rawUiConfig)
     );
+
     OuterContainer.setSidebar(
       outerContainer,
       rawUiConfig.sidebar,
-      editor.options.get('sidebar_show')
+      Options.getSidebarShow(editor)
     );
 
     setupEvents(editor, uiComponents);

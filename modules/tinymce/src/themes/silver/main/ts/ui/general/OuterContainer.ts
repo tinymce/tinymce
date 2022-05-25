@@ -301,8 +301,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     getSocket: (apis, comp) => {
       return apis.getSocket(comp);
     },
-    setSidebar: (apis, comp, panelConfigs, defaultSidebar) => {
-      apis.setSidebar(comp, panelConfigs, defaultSidebar);
+    setSidebar: (apis, comp, panelConfigs, showSidebar) => {
+      apis.setSidebar(comp, panelConfigs, showSidebar);
     },
     toggleSidebar: (apis, comp, name) => {
       apis.toggleSidebar(comp, name);
