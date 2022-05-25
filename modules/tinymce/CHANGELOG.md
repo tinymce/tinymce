@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.0.3 - 2022-05-25
+
 ### Fixed
 - Could not remove values when multiple cells were selected with the cell properties dialog #TINY-8625
 - Could not remove values when multiple rows were selected with the row properties dialog #TINY-8625
