@@ -11,7 +11,7 @@ interface EventLog {
   readonly index: number;
 }
 
-describe('browser.tinymce.core.options.sidebar_show', () => {
+describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
   const settingsFactory = (store: TestHelpers.TestStore) => {
     const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
       const index = Traverse.findIndex(SugarElement.fromDom(api.element())).getOr(-1);
