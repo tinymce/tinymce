@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cutting content to the clipboard while selecting between the parent list and a nested list would not always set the list style to `none` on the parent list #TINY-8078
 - Copy events were not dispatched in readonly mode #TINY-6800
 
-## 6.0.3 - TBD
+## 6.0.3 - 2022-05-25
 
 ### Fixed
 - Could not remove values when multiple cells were selected with the cell properties dialog #TINY-8625
