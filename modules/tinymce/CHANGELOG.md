@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.10.5 - 2022-05-25
+
 ### Fixed
 - Base64 data URIs were not extracted correctly during parsing when proceeded by `data:` text #TINY-8646
 - Empty lines that were formatted in a ranged selection using the `format_empty_lines` option were not kept in the serialized content #TINY-8639
