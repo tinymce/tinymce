@@ -10,19 +10,14 @@ const hook = TinyHooks.bddSetup<Editor>({
   statusbar: false
 }, []);
 
-interface Selection {
-  startPath: number[];
-  soffset: number;
-  finishPath: number[];
-  foffset: number;
-}
+type Selection = [ number[], number, number[], number ];
 
 const copyAndPast = async (api: TinyApis, ui: TinyUi, source: Selection, target: Selection): Promise<void> => {
-  api.setSelection(source.startPath, source.soffset, source.finishPath, source.foffset);
+  api.setSelection(...source);
   ui.clickOnMenu('button:contains("Edit")');
   await ui.pWaitForUi('*[role="menu"]');
   await RealMouse.pClickOn('div[title="Copy"]');
-  api.setSelection(target.startPath, target.soffset, target.finishPath, target.foffset);
+  api.setSelection(...target);
   await RealClipboard.pPaste('iframe => body => h1');
 };
 
@@ -40,18 +35,8 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
       );
       await copyAndPast(
         api, ui,
-        {
-          startPath: [ 0, 0 ],
-          soffset: 0,
-          finishPath: [ 0, 0 ],
-          foffset: 3
-        },
-        {
-          startPath: [ 1, 0 ],
-          soffset: 0,
-          finishPath: [ 1, 0 ],
-          foffset: 3
-        }
+        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
+        [[ 1, 0 ], 0, [ 1, 0 ], 3 ]
       );
       TinyAssertions.assertContent(editor,
         `<${tagName}>abc</${tagName}>\n` +
@@ -69,18 +54,8 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
       );
       await copyAndPast(
         api, ui,
-        {
-          startPath: [ 0, 0, 0 ],
-          soffset: 0,
-          finishPath: [ 0, 0, 0 ],
-          foffset: 3
-        },
-        {
-          startPath: [ 1, 0 ],
-          soffset: 0,
-          finishPath: [ 1, 0 ],
-          foffset: 3
-        }
+        [[ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3 ],
+        [[ 1, 0 ], 0, [ 1, 0 ], 3 ]
       );
       TinyAssertions.assertContent(editor,
         `<p><${tagName} class="someclass">abc</${tagName}></p>\n` +
