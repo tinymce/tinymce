@@ -104,8 +104,8 @@ const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSi
     if (Type.isString(showSidebar)) {
       Composing.getCurrent(slider).each((slotContainer) => {
         SlotContainer.showSlot(slotContainer, showSidebar);
+        Sliding.immediateGrow(slider);
       });
-      Sliding.grow(slider);
     }
   });
 };

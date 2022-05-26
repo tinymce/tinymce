@@ -153,6 +153,15 @@ const toggleGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slide
   f(component, slideConfig, slideState);
 };
 
+const immediateGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slideState: SlidingState): void => {
+  if (!slideState.isExpanded()) {
+    slideState.setExpanded();
+    setGrown(component, slideConfig);
+    slideConfig.onStartGrow(component);
+    slideConfig.onGrown(component);
+  }
+};
+
 export {
   refresh,
   grow,
@@ -164,5 +173,6 @@ export {
   isShrinking,
   isTransitioning,
   toggleGrow,
-  disableTransitions
+  disableTransitions,
+  immediateGrow
 };
