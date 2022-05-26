@@ -16,23 +16,77 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
     const ui = TinyUi(editor);
     const api = TinyApis(editor);
 
-    editor.setContent(
-      '<pre>abc</pre>' +
-      '<h1>something</h1>' +
-      '<p>abc def</p>'
-    );
-    api.setSelection([ 0, 0 ], 0, [ 0, 0 ], 3);
-    ui.clickOnMenu('button:contains("Edit")');
-    await ui.pWaitForUi('*[role="menu"]');
-    await RealMouse.pClickOn('div[title="Copy"]');
-    api.setSelection([ 1, 0 ], 0, [ 1, 0 ], 3);
-    await RealClipboard.pPaste('iframe => body => h1');
-    TinyAssertions.assertContent(editor,
-      '<pre>abc</pre>\n' +
-      '<pre>abc</pre>\n' +
-      '<h1>ething</h1>\n' +
-      '<p>abc def</p>'
-    );
+    const testBlockTags = async (tagName) => {
+      editor.setContent(
+        `<${tagName}>abc</${tagName}>` +
+        '<h1>something</h1>' +
+        '<p>abc def</p>'
+      );
+      api.setSelection([ 0, 0 ], 0, [ 0, 0 ], 3);
+      ui.clickOnMenu('button:contains("Edit")');
+      await ui.pWaitForUi('*[role="menu"]');
+      await RealMouse.pClickOn('div[title="Copy"]');
+      api.setSelection([ 1, 0 ], 0, [ 1, 0 ], 3);
+      await RealClipboard.pPaste('iframe => body => h1');
+      TinyAssertions.assertContent(editor,
+        `<${tagName}>abc</${tagName}>\n` +
+        `<${tagName}>abc</${tagName}>\n` +
+        '<h1>ething</h1>\n' +
+        '<p>abc def</p>'
+      );
+    };
 
+    const testInlineTags = async (tagName) => {
+      editor.setContent(
+        `<p><${tagName} class="someclass">abc</${tagName}></p>` +
+        '<h1>something</h1>' +
+        '<p>abc def</p>'
+      );
+      api.setSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3);
+      ui.clickOnMenu('button:contains("Edit")');
+      await ui.pWaitForUi('*[role="menu"]');
+      await RealMouse.pClickOn('div[title="Copy"]');
+      api.setSelection([ 1, 0 ], 0, [ 1, 0 ], 3);
+      await RealClipboard.pPaste('iframe => body => h1');
+      TinyAssertions.assertContent(editor,
+        `<p><${tagName} class="someclass">abc</${tagName}></p>\n` +
+        `<h1><${tagName} class="someclass">abc</${tagName}>ething</h1>\n` +
+        '<p>abc def</p>'
+      );
+    };
+
+    for (const tagName of [ 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]) {
+      await testBlockTags(tagName);
+    }
+
+    const inlineElements = [
+      'big',
+      'small',
+      'tt',
+      'abbr',
+      'acronym',
+      'cite',
+      'code',
+      'dfn',
+      'em',
+      'kbd',
+      'strong',
+      'samp',
+      'var',
+      'a',
+      'bdo',
+      'map',
+      'q',
+      'span',
+      'sub',
+      'sup',
+      'button',
+      'label'
+    ];
+
+    for (const tagName of inlineElements) {
+      await testInlineTags(tagName);
+    }
   });
+
 });
