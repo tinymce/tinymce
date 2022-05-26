@@ -84,18 +84,4 @@ describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
     store.assertEq('Asserting initial show of sidebars', []);
     McEditor.remove(editor);
   });
-
-  it('TINY-8710: Should not apply animation', async () => {
-    McEditor.pFromSettings({
-      ...settingsFactory(store),
-      sidebar_show: 'sidebartwo',
-    });
-    try {
-      // expect that no animation should be applied to the sidebar
-      await Waiter.pTryUntil('Watch any animation being applied to the sidebar', () => UiFinder.exists(SugarBody.body(), '.tox-sidebar--sliding-growing'));
-      assert.fail('growing animation is applied to the sidebar');
-    } catch (e) {
-      // pass
-    }
-  });
 });
