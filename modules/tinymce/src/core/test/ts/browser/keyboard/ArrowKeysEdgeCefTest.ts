@@ -246,52 +246,76 @@ describe('browser.tinymce.core.keyboard.ArrowKeysEdgeCefTest', () => {
     });
   });
 
-  context('Up/Down arrow key should collapse and move selection', () => {
+  context('Up/Down arrow key should collapse the selection and move the caret above/below', () => {
     it('TINY-7795: a cef block is at the start', () => {
       const editor = hook.editor();
-      editor.setContent('<p contenteditable="false">CEF</p><p>abc</p>');
+      editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p>def</p>');
+      // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p>def</p>
 
-      editor.execCommand('SelectAll');
+      TinySelections.setCursor(editor, [ 2, 0 ], 2);
+      selectToBeginning(editor);
+      // actual content: <p contenteditable="false">CEF</p><p>abc</p><p>def</p>
+      TinyAssertions.assertSelection(editor, [ ], 0, [ 1, 0 ], 2);
+
+      TinyContentActions.keystroke(editor, Keys.down());
+      // actual content: <p contenteditable="false">CEF</p><p>abc</p><p>def</p>
+      TinyAssertions.assertCursor(editor, [ 2, 0 ], 2);
+
+      selectToBeginning(editor);
+      // actual content: <p contenteditable="false">CEF</p><p>abc</p><p>def</p>
+      TinyAssertions.assertSelection(editor, [ ], 0, [ 2, 0 ], 2);
+
       TinyContentActions.keystroke(editor, Keys.up());
       assertRangeInCaretContainerBlock(editor);
-      // actual content:<p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p>
+      // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p>def</p>
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
-
-      editor.execCommand('SelectAll');
-      TinyContentActions.keystroke(editor, Keys.down());
-      TinyAssertions.assertCursor(editor, [ 1, 0 ], 3);
     });
 
     it('TINY-7795: a cef block is at the end', () => {
       const editor = hook.editor();
-      editor.setContent('<p>abc</p><p contenteditable="false">CEF</p>');
+      editor.setContent('<p>abc</p><p>def</p><p contenteditable="false">CEF</p>');
 
-      editor.execCommand('SelectAll');
+      TinySelections.setCursor(editor, [ 1, 0 ], 2);
+      selectToEnd(editor);
+      TinyAssertions.assertSelection(editor, [ 1, 0 ], 2, [ ], 3);
+
       TinyContentActions.keystroke(editor, Keys.up());
-      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 2);
 
-      editor.execCommand('SelectAll');
+      selectToEnd(editor);
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ ], 3);
+
       TinyContentActions.keystroke(editor, Keys.down());
       assertRangeInCaretContainerBlock(editor);
-      // actual content: <p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after""><br data-mce-bogus="1"></p>
-      TinyAssertions.assertCursor(editor, [ 2 ], 0);
+      // actual content: <p>abc</p><p>def</p><p contenteditable="false">CEF</p><p data-mce-caret="after"><br data-mce-bogus="1"></p>
+      TinyAssertions.assertCursor(editor, [ 3 ], 0);
     });
 
     it('TINY-7795: a cef block is at the start and the end', () => {
       const editor = hook.editor();
       editor.setContent('<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>');
 
-      editor.execCommand('SelectAll');
-      TinyContentActions.keystroke(editor, Keys.up());
       assertRangeInCaretContainerBlock(editor);
-      // actual content:<p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>
+      // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
 
-      editor.execCommand('SelectAll');
+      selectToEnd(editor);
+      // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>
+      TinyAssertions.assertSelection(editor, [ 0 ], 0, [ ], 4);
+
       TinyContentActions.keystroke(editor, Keys.down());
       assertRangeInCaretContainerBlock(editor);
-      // actual content:<p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after"><br data-mce-bogus="1"></p>
+      // actual content: <p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after"><br data-mce-bogus="1"></p>
       TinyAssertions.assertCursor(editor, [ 3 ], 0);
+
+      selectToBeginning(editor);
+      // actual content: <p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p><p data-mce-caret="after"><br data-mce-bogus="1"></p>
+      TinyAssertions.assertSelection(editor, [ ], 0, [ 3 ], 0);
+
+      TinyContentActions.keystroke(editor, Keys.up());
+      assertRangeInCaretContainerBlock(editor);
+      // actual content: <p data-mce-caret="before"><br data-mce-bogus="1"></p><p contenteditable="false">CEF</p><p>abc</p><p contenteditable="false">CEF</p>
+      TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
   });
 });
