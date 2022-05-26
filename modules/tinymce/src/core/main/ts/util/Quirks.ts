@@ -17,8 +17,8 @@ import * as Rtc from '../Rtc';
  */
 
 interface Quirks {
-  refreshContentEditable(): void;
-  isHidden(): boolean;
+  refreshContentEditable (): void;
+  isHidden (): boolean;
 }
 
 const Quirks = (editor: Editor): Quirks => {
@@ -526,7 +526,7 @@ const Quirks = (editor: Editor): Quirks => {
         if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode === 37 || e.keyCode === 39)) {
           e.preventDefault();
           // The modify component isn't part of the standard spec, so we need to add the type here
-          const selection = editor.selection.getSel() as Selection & {modify: Function};
+          const selection = editor.selection.getSel() as Selection & { modify: Function };
           selection.modify('move', e.keyCode === 37 ? 'backward' : 'forward', 'lineboundary');
         }
       });
