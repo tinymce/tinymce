@@ -119,11 +119,7 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | undefine
         editor.execCommand('mceTableToggleCaption');
       }
 
-      if (data.align === '') {
-        Styles.unApplyAlign(editor, tableElm);
-      } else {
-        Styles.applyAlign(editor, tableElm, data.align);
-      }
+      Styles.setAlign(editor, tableElm, data.align);
     }
 
     editor.focus();

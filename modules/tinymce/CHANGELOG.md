@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Getting the text content of the editor now returns newlines instead of an empty string if more than one empty paragraph exists #TINY-8578
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
+- Custom elements are now treated as non-empty elements via the schema #TINY-4784
 
 ### Fixed
 - Selecting all content with a single image in the content was inconsistent for the keyboard shortcut and menu item #TINY-4550
@@ -31,13 +32,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
 - Indenting or outdenting list items inside a block element that was inside another list item would not work #TINY-7209
 - Switching between unordered and ordered lists would incorrectly alter any parent element that contained that list #TINY-8068
+- Custom elements on blank lines would be removed during serialization #TINY-4784
 - The URL detection used for `autolink` and smart paste didn't work if a path segment contained valid characters such as `!` and `:` #TINY-8069
+- Cutting content to the clipboard while selecting between the parent list and a nested list would not always set the list style to `none` on the parent list #TINY-8078
+- Copy events were not dispatched in readonly mode #TINY-6800
 
-## 6.0.3 - TBD
+## 6.0.3 - 2022-05-25
 
 ### Fixed
 - Could not remove values when multiple cells were selected with the cell properties dialog #TINY-8625
 - Could not remove values when multiple rows were selected with the row properties dialog #TINY-8625
+- Empty lines that were formatted in a ranged selection using the `format_empty_lines` option were not kept in the serialized content #TINY-8639
+- The `s` element was missing from the default schema text inline elements #TINY-8639
+- Some text inline elements specified via the schema were not removed when empty by default #TINY-8639
 
 ## 6.0.2 - 2022-04-27
 
