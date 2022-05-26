@@ -1,28 +1,16 @@
 import { Assertions } from '@ephox/agar';
-import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Html, Insert, SugarElement } from '@ephox/sugar';
-import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
 import * as FragmentReader from 'tinymce/core/selection/FragmentReader';
 
 import * as ViewBlock from '../../module/test/ViewBlock';
 
 describe('browser.tinymce.core.selection.FragmentReaderTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, []);
-
   const viewBlock = ViewBlock.bddSetup();
 
   const setHtml = viewBlock.update;
-  let editor: Editor;
-
-  beforeEach(() => {
-    editor = hook.editor();
-  });
 
   const readFragment = (startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
     const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
@@ -32,7 +20,7 @@ describe('browser.tinymce.core.selection.FragmentReaderTest', () => {
     rng.setStart(sc.dom, startOffset);
     rng.setEnd(ec.dom, endOffset);
 
-    return FragmentReader.read(editor, SugarElement.fromDom(viewBlock.get()), [ rng ]);
+    return FragmentReader.read(SugarElement.fromDom(viewBlock.get()), [ rng ]);
   };
 
   const readFragmentCells = (paths: number[][]) => {
@@ -43,7 +31,7 @@ describe('browser.tinymce.core.selection.FragmentReaderTest', () => {
       return rng;
     });
 
-    return FragmentReader.read(editor, SugarElement.fromDom(viewBlock.get()), ranges);
+    return FragmentReader.read(SugarElement.fromDom(viewBlock.get()), ranges);
   };
 
   const getFragmentHtml = (fragment: SugarElement<Node>) => {

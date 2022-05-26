@@ -180,7 +180,6 @@ const get = (editor: Editor) => {
     subscript: { inline: 'sub' },
     superscript: { inline: 'sup' },
     code: { inline: 'code' },
-    preserve_on_copy: { selector: 'pre' },
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
