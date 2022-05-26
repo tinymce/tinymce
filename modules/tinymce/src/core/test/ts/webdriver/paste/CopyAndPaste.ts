@@ -22,7 +22,7 @@ const copyAndPast = async (api: TinyApis, ui: TinyUi, source: Selection, target:
 };
 
 describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
-  it('TINY-7719: Test wrapped elements are preserved in copy and paste', async () => {
+  it('TINY-7719: Wrapped elements are preserved in copy and paste (pre + headings)', async () => {
     const editor = hook.editor();
     const ui = TinyUi(editor);
     const api = TinyApis(editor);
@@ -46,6 +46,16 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
       );
     };
 
+    for (const tagName of [ 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]) {
+      await testBlockTags(tagName);
+    }
+  });
+
+  it('TINY-7719: Wrapped elements are preserved in copy and paste (inline elements)', async () => {
+    const editor = hook.editor();
+    const ui = TinyUi(editor);
+    const api = TinyApis(editor);
+
     const testInlineTags = async (tagName) => {
       editor.setContent(
         `<p><${tagName} class="someclass">abc</${tagName}></p>` +
@@ -63,10 +73,6 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
         '<p>abc def</p>'
       );
     };
-
-    for (const tagName of [ 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]) {
-      await testBlockTags(tagName);
-    }
 
     const inlineElements = [
       'big',
