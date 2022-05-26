@@ -17,8 +17,8 @@ import * as Rtc from '../Rtc';
  */
 
 interface Quirks {
-  refreshContentEditable (): void;
-  isHidden (): boolean;
+  refreshContentEditable(): void;
+  isHidden(): boolean;
 }
 
 const Quirks = (editor: Editor): Quirks => {
@@ -448,7 +448,12 @@ const Quirks = (editor: Editor): Quirks => {
       // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
       // better exclude any key combinations with the modifiers to avoid double normalization
       // (also addresses TINY-1130)
-      if (!VK.modifierPressed(e) && (isMac ? (e.key !== 'Meta') : (e.key !== 'Control'))) {
+
+      // The next three lines address TINY-4550
+      const body = editor.getBody();
+      const rng = editor.selection.getRng();
+      const selectionIsAllContent = rng.startContainer === rng.endContainer && rng.startContainer === body && rng.startOffset === 0 && rng.endOffset === body.childNodes.length;
+      if (!VK.modifierPressed(e) && !selectionIsAllContent) {
         selection.normalize();
       }
     }, true);
@@ -521,7 +526,7 @@ const Quirks = (editor: Editor): Quirks => {
         if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode === 37 || e.keyCode === 39)) {
           e.preventDefault();
           // The modify component isn't part of the standard spec, so we need to add the type here
-          const selection = editor.selection.getSel() as Selection & { modify: Function };
+          const selection = editor.selection.getSel() as Selection & {modify: Function};
           selection.modify('move', e.keyCode === 37 ? 'backward' : 'forward', 'lineboundary');
         }
       });

@@ -65,9 +65,8 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0 ], 0);
     TinyContentActions.keyup(editor, Keys.left(), { shift: true });
     assertNormalizeCounter(0);
-    const isMac = Env.os.isMacOS() || Env.os.isiOS();
-    editor.dispatch('keyup', new KeyboardEvent('keyup', { key: 'Control' }));
-    assertNormalizeCounter(isMac ? 1 : 0);
+    TinyContentActions.keydown(editor, 17, {}); // Single Ctrl
+    assertNormalizeCounter(1);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
 
@@ -78,7 +77,8 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinySelections.setCursor(editor, [ 0 ], 1);
     editor.shortcuts.add('meta+a', null, 'SelectAll');
     const isMac = Env.os.isMacOS() || Env.os.isiOS();
-    TinyContentActions.keystroke(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
-    TinyAssertions.assertSelection(editor, [ ], 0, [ ], 1);
+    TinyContentActions.keydown(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
+    editor.dispatch('keyup', new KeyboardEvent('keyup', { key: isMac ? 'Meta' : 'Control' }));
+    TinyAssertions.assertSelection(editor, [], 0, [], 1);
   });
 });
