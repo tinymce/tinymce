@@ -1,9 +1,11 @@
 
+import { UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Sidebar } from '@ephox/bridge';
-import { SugarElement, Traverse } from '@ephox/sugar';
+import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 interface EventLog {
   readonly name: string;
   readonly index: number;
@@ -81,5 +83,19 @@ describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
     });
     store.assertEq('Asserting initial show of sidebars', []);
     McEditor.remove(editor);
+  });
+
+  it('TINY-8710: Should not apply animation', async () => {
+    McEditor.pFromSettings({
+      ...settingsFactory(store),
+      sidebar_show: 'sidebartwo',
+    });
+    try {
+      // expect that no animation should be applied to the sidebar
+      await Waiter.pTryUntil('Watch any animation being applied to the sidebar', () => UiFinder.exists(SugarBody.body(), '.tox-sidebar--sliding-growing'));
+      assert.fail('growing animation is applied to the sidebar');
+    } catch (e) {
+      // pass
+    }
   });
 });
