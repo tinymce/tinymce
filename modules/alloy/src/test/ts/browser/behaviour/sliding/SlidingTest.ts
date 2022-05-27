@@ -253,6 +253,9 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
                 arr.not('test-sliding-closed'),
                 arr.has('test-sliding-open')
               ],
+              styles: {
+                width: str.is('300px')
+              }
             })),
             component.element
           ),
