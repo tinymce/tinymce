@@ -155,15 +155,12 @@ const toggleGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slide
 
 const immediateGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slideState: SlidingState): void => {
   if (!slideState.isExpanded()) {
+    setGrown(component, slideConfig);
     // Force current dimension to begin transition
     Css.set(component.element, getDimensionProperty(slideConfig), getDimension(slideConfig, component.element));
     Css.reflow(component.element);
 
     disableTransitions(component, slideConfig);
-
-    setGrown(component, slideConfig);
-    // Set the dimension after grow
-    Css.set(component.element, getDimensionProperty(slideConfig), getDimension(slideConfig, component.element));
     slideState.setExpanded();
     slideConfig.onStartGrow(component);
     slideConfig.onGrown(component);
