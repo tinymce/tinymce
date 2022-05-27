@@ -12,7 +12,10 @@ const hook = TinyHooks.bddSetup<Editor>({
 
 type Selection = [ number[], number, number[], number ];
 
-const copyAndPast = async (api: TinyApis, ui: TinyUi, source: Selection, target: Selection): Promise<void> => {
+const copyAndPast = async (editor: Editor, source: Selection, target: Selection): Promise<void> => {
+  const ui = TinyUi(editor);
+  const api = TinyApis(editor);
+
   api.setSelection(...source);
   ui.clickOnMenu('button:contains("Edit")');
   await ui.pWaitForUi('*[role="menu"]');
@@ -24,8 +27,6 @@ const copyAndPast = async (api: TinyApis, ui: TinyUi, source: Selection, target:
 describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
   it('TINY-7719: Wrapped elements are preserved in copy and paste (pre + headings)', async () => {
     const editor = hook.editor();
-    const ui = TinyUi(editor);
-    const api = TinyApis(editor);
 
     const testBlockTags = async (tagName) => {
       editor.setContent(
@@ -34,7 +35,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
         '<p>abc def</p>'
       );
       await copyAndPast(
-        api, ui,
+        editor,
         [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
         [[ 1, 0 ], 0, [ 1, 0 ], 3 ]
       );
@@ -53,8 +54,6 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
 
   it('TINY-7719: Wrapped elements are preserved in copy and paste (inline elements)', async () => {
     const editor = hook.editor();
-    const ui = TinyUi(editor);
-    const api = TinyApis(editor);
 
     const testInlineTags = async (tagName) => {
       editor.setContent(
@@ -63,7 +62,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
         '<p>abc def</p>'
       );
       await copyAndPast(
-        api, ui,
+        editor,
         [[ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3 ],
         [[ 1, 0 ], 0, [ 1, 0 ], 3 ]
       );
