@@ -60,15 +60,21 @@ const UndoManager = (editor: Editor): UndoManager => {
       const data = undoManager.data;
       const currentLevel = Levels.createFromEditor(editor);
 
-      Arr.last(data).filter((lastLevel) => {
-        return !Levels.isEq(lastLevel, currentLevel);
-      }).each((lastLevel) => {
+      const dispatchEvent = (lastLevel: UndoLevel) => {
         editor.setDirty(true);
         editor.dispatch('change', {
           level: currentLevel,
           lastLevel
         });
-      });
+      };
+
+      Arr.get(data, index.get()).fold(
+        () => dispatchEvent(currentLevel),
+        (lastLevel) => {
+          if (!Levels.isEq(lastLevel, currentLevel)) {
+            dispatchEvent(lastLevel);
+          }
+        });
     },
 
     /**
