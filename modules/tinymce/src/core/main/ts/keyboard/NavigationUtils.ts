@@ -86,8 +86,9 @@ const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range:
 
   if (isCefAtEdgeSelected(editor)) {
     const caretPosition = forwards ? CaretPosition.fromRangeEnd(range) : CaretPosition.fromRangeStart(range);
-    return (!forwards ? LineReader.getClosestPositionAbove(root, caretPosition) : LineReader.getClosestPositionBelow(root, caretPosition))
-      .or(Optional.from(caretPosition))
+    const getClosestFn = !forwards ? LineReader.getClosestPositionAbove : LineReader.getClosestPositionBelow;
+    return getClosestFn(root, caretPosition)
+      .orThunk(() => Optional.from(caretPosition))
       .map((pos) => pos.toRange());
   }
 
