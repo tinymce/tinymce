@@ -18,6 +18,7 @@ export default () => {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     toolbar: 'mysidebar mysidebarwow',
     sidebar_show: 'mysidebar',
+    /* eslint-disable no-console */
     setup: (ed) => {
       ed.ui.registry.addButton('demoButton', {
         text: 'Demo',
@@ -59,7 +60,7 @@ export default () => {
     selector: 'textarea.tinymce',
     toolbar1: 'demoButton bold italic',
     menubar: false,
-    init_instance_callback : function(editor) {
+    init_instance_callback: (editor) => {
       console.log('Editor: ' + editor.id + ' is now initialized.   ', editor.hasFocus());
     }
   });
