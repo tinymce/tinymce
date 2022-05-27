@@ -77,7 +77,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     getSocket: (comp) => {
       return Composite.parts.getPart(comp, detail, 'socket');
     },
-    setSidebar: (comp, panelConfigs, showSidebar?: string) => {
+    setSidebar: (comp, panelConfigs, showSidebar) => {
       Composite.parts.getPart(comp, detail, 'sidebar').each(
         (sidebar) => Sidebar.setSidebar(sidebar, panelConfigs, showSidebar)
       );
