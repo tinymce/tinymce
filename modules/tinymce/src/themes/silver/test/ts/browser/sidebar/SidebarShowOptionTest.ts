@@ -5,6 +5,8 @@ import { Sidebar } from '@ephox/bridge';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
+
 interface EventLog {
   readonly name: string;
   readonly index: number;
@@ -43,7 +45,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
   });
 
   it('TINY-8710: Show no sidebar on init if not set', async () => {
-    const editor = await McEditor.pFromSettings({
+    const editor = await McEditor.pFromSettings<Editor>({
       ...settingsFactory(store)
     });
     store.assertEq('Asserting initial show of sidebars', []);
@@ -51,7 +53,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
   });
 
   it('TINY-8710: Show a sidebar on init', async () => {
-    const editor = await McEditor.pFromSettings({
+    const editor = await McEditor.pFromSettings<Editor>({
       ...settingsFactory(store),
       sidebar_show: 'sidebarone'
     });
@@ -66,7 +68,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
   });
 
   it('TINY-8710: Show a different sidebar on init', async () => {
-    const editor = await McEditor.pFromSettings({
+    const editor = await McEditor.pFromSettings<Editor>({
       ...settingsFactory(store),
       sidebar_show: 'sidebartwo'
     });
@@ -81,7 +83,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
   });
 
   it('TINY-8710: Show no sidebar if the name does not exist', async () => {
-    const editor = await McEditor.pFromSettings({
+    const editor = await McEditor.pFromSettings<Editor>({
       ...settingsFactory(store)
     });
     store.assertEq('Asserting initial show of sidebars', []);
