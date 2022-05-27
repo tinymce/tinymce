@@ -24,7 +24,9 @@ export default () => {
         }
       });
     },
+
     selector: 'textarea.tinymce',
-    toolbar1: 'demoButton bold italic'
+    toolbar1: 'demoButton bold italic',
+    menubar: false
   });
 };
