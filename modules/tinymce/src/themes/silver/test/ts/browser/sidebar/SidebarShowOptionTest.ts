@@ -1,16 +1,16 @@
-
-import { UiFinder, Waiter } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Sidebar } from '@ephox/bridge';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
+
 interface EventLog {
   readonly name: string;
   readonly index: number;
 }
 
-describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
+describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
   const store = TestHelpers.TestStore();
   const settingsFactory = (store: TestHelpers.TestStore) => {
     const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
@@ -36,6 +36,8 @@ describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
     };
   };
 
+  const assertNoAnimating = () => UiFinder.notExists(SugarBody.body(), '.tox-sidebar--sliding-growing');
+
   beforeEach(() => {
     store.clear();
   });
@@ -53,6 +55,7 @@ describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
       ...settingsFactory(store),
       sidebar_show: 'sidebarone'
     });
+    assertNoAnimating();
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'sidebarone:show',
@@ -67,6 +70,7 @@ describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
       ...settingsFactory(store),
       sidebar_show: 'sidebartwo'
     });
+    assertNoAnimating();
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'sidebartwo:show',
@@ -82,23 +86,5 @@ describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
     });
     store.assertEq('Asserting initial show of sidebars', []);
     McEditor.remove(editor);
-  });
-
-  it('TINY-8710: Should not have animiation', async (done) => {
-    await McEditor.pFromSettings({
-      base_url: '/project/tinymce/js/tinymce',
-      sidebar_show: 'sidebarone',
-      setup: (ed) => {
-        ed.ui.registry.addSidebar('sidebarone', {
-          tooltip: 'side bar one',
-          icon: 'comment'
-        });
-        ed.on('PostRender', async () => {
-          // To fail this test, replace Sliding.immediateGrow with Sliding.grow in modules/tinymce/src/themes/silver/main/ts/ui/sidebar/Sidebar.ts
-          await Waiter.pTryUntil('Growing animation is detected', () => UiFinder.notExists(SugarBody.body(), '.tox-sidebar--sliding-growing'));
-          done();
-        });
-      }
-    });
   });
 });
