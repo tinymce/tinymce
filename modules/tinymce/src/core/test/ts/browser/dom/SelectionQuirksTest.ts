@@ -70,7 +70,7 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
 
-  it('TINY-4550: Normalization should not run after selecting all with keyboard shortcut when there is only an image in the content', () => {
+  it('TINY-4550: Normalization should not run after selecting all when there is only an image in the content', () => {
     const editor = hook.editor();
     resetNormalizeCounter();
     editor.setContent('<p><img src="about:blank"></p>');
