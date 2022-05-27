@@ -613,12 +613,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     assert.equal(changeEventCounter, 0, 'No events should be detected');
   });
 
-  it('TINY-8641: Dispatch change and set editor dirty if the current content and the undoManager history are inconsistent', () => {
-    const editor = hook.editor();
-
-    let changeEventCounter = 0;
-    let currentChangeEvent: { level: string; lastLevel: string };
-
+  context('dispatchIfChanged', () => {
     const initialContent = '<p>some inital content</p>';
     const manualModifiedLevel = 'a modified last level';
 
@@ -627,53 +622,66 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       assert.equal(event.lastLevel, manualModifiedLevel, 'Last level has not the expected content');
     };
 
-    editor.resetContent(initialContent);
-    const onChange = (e: EditorEvent<{
-      level: UndoLevel;
-      lastLevel: UndoLevel;
-    }>) => {
-      changeEventCounter++;
-      currentChangeEvent = { level: e.level.content, lastLevel: e.lastLevel.content };
-    };
+    let changeEventCounter: number;
+    let currentChangeEvent: { level: string; lastLevel: string };
 
-    editor.on('change', onChange);
-
-    assert.equal(changeEventCounter, 0, 'No events should be detected at start');
-    editor.undoManager.dispatchIfChanged();
-    assert.equal(changeEventCounter, 0, 'No events should be detected if content is consistent with the undoManager history');
-
-    Arr.last(editor.undoManager.data).each((lastLevel) => {
-      lastLevel.content = manualModifiedLevel;
+    beforeEach(() => {
+      changeEventCounter = 0;
+      currentChangeEvent = undefined;
     });
 
-    assert.isFalse(editor.isDirty(), 'Editor should not be dirty before dispatchIfChanged');
-    editor.undoManager.dispatchIfChanged();
-    assertChangeEvent(currentChangeEvent);
-    assert.equal(changeEventCounter, 1, '1 event should be detected if the content is not consistent with the undoManager history');
-    assert.isTrue(editor.isDirty(), 'Editor should be dirty after dispatchIfChanged');
+    it('TINY-8641: Dispatch change and set editor dirty if the current content and the undoManager history are inconsistent', () => {
+      const editor = hook.editor();
 
-    Arr.range(3, () => {
+      editor.resetContent(initialContent);
+      const onChange = (e: EditorEvent<{
+        level: UndoLevel;
+        lastLevel: UndoLevel;
+      }>) => {
+        changeEventCounter++;
+        currentChangeEvent = { level: e.level.content, lastLevel: e.lastLevel.content };
+      };
+
+      editor.on('change', onChange);
+
+      assert.equal(changeEventCounter, 0, 'No events should be detected at start');
+      editor.undoManager.dispatchIfChanged();
+      assert.equal(changeEventCounter, 0, 'No events should be detected if content is consistent with the undoManager history');
+
+      Arr.last(editor.undoManager.data).each((lastLevel) => {
+        lastLevel.content = manualModifiedLevel;
+      });
+
+      assert.isFalse(editor.isDirty(), 'Editor should not be dirty before dispatchIfChanged');
       editor.undoManager.dispatchIfChanged();
       assertChangeEvent(currentChangeEvent);
+      assert.equal(changeEventCounter, 1, '1 event should be detected if the content is not consistent with the undoManager history');
+      assert.isTrue(editor.isDirty(), 'Editor should be dirty after dispatchIfChanged');
+
+      Arr.range(3, () => {
+        editor.undoManager.dispatchIfChanged();
+        assertChangeEvent(currentChangeEvent);
+      });
+
+      assert.equal(changeEventCounter, 4, 'it should continue to call change till the editor and last level are different');
+
+      editor.undoManager.add();
+      assert.equal(changeEventCounter, 5, 'add should trigger a change as well');
+
+      Arr.last(editor.undoManager.data).fold(
+        () => assert.fail('add did not add a layer with the editor content'),
+        (lastLevel) => {
+          assert.equal(editor.getContent(), lastLevel.content, 'add should add a last layer with the editor content');
+        }
+      );
+
+      Arr.range(3, () => {
+        editor.undoManager.dispatchIfChanged();
+      });
+      assert.equal(changeEventCounter, 5, 'it should not continue to trigger change becuase now editor content and last layer are the same');
+
+      editor.off('change', onChange);
     });
-
-    assert.equal(changeEventCounter, 4, 'it should continue to call change till the editor and last level are different');
-
-    editor.undoManager.add();
-    assert.equal(changeEventCounter, 5, 'add should trigger a change as well');
-
-    Arr.last(editor.undoManager.data).fold(
-      () => assert.fail('add did not add a layer with the editor content'),
-      (lastLevel) => {
-        assert.equal(editor.getContent(), lastLevel.content, 'add should add a last layer with the editor content');
-      }
-    );
-
-    Arr.range(3, () => {
-      editor.undoManager.dispatchIfChanged();
-    });
-    assert.equal(changeEventCounter, 5, 'it should not continue to trigger change becuase now editor content and last layer are the same');
-
-    editor.off('change', onChange);
   });
+
 });
