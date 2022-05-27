@@ -625,6 +625,14 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     let changeEventCounter: number;
     let currentChangeEvent: { level: string; lastLevel: string };
 
+    const onChange = (e: EditorEvent<{
+      level: UndoLevel;
+      lastLevel: UndoLevel;
+    }>) => {
+      changeEventCounter++;
+      currentChangeEvent = { level: e.level.content, lastLevel: e.lastLevel.content };
+    };
+
     beforeEach(() => {
       changeEventCounter = 0;
       currentChangeEvent = undefined;
@@ -634,13 +642,6 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       const editor = hook.editor();
 
       editor.resetContent(initialContent);
-      const onChange = (e: EditorEvent<{
-        level: UndoLevel;
-        lastLevel: UndoLevel;
-      }>) => {
-        changeEventCounter++;
-        currentChangeEvent = { level: e.level.content, lastLevel: e.lastLevel.content };
-      };
 
       editor.on('change', onChange);
 
