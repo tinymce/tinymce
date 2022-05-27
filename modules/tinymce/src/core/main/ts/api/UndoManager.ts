@@ -69,7 +69,6 @@ const UndoManager = (editor: Editor): UndoManager => {
           lastLevel
         });
       });
-
     },
 
     /**
