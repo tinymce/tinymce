@@ -42,7 +42,7 @@ describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
 
   it('TINY-8710: Show no sidebar on init if not set', async () => {
     const editor = await McEditor.pFromSettings({
-      ...settingsFactory(store),
+      ...settingsFactory(store)
     });
     store.assertEq('Asserting initial show of sidebars', []);
     McEditor.remove(editor);
@@ -71,14 +71,14 @@ describe('browser.tinymce.core.options.SidebarShowOptionTest', () => {
       {
         name: 'sidebartwo:show',
         index: 1
-      },
+      }
     ]);
     McEditor.remove(editor);
   });
 
   it('TINY-8710: Show no sidebar if the name does not exist', async () => {
     const editor = await McEditor.pFromSettings({
-      ...settingsFactory(store),
+      ...settingsFactory(store)
     });
     store.assertEq('Asserting initial show of sidebars', []);
     McEditor.remove(editor);
