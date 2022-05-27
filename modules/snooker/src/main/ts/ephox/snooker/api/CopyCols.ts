@@ -33,7 +33,7 @@ const generateColGroup = (house: Warehouse, minColRange: number, maxColRange: nu
 
 const generateRows = (house: Warehouse, minColRange: number, maxColRange: number): SugarElement<HTMLTableRowElement>[] =>
   Arr.map(house.all, (row) => {
-    const cellsToCopy = Arr.filter(row.cells, (cell) => cell.column >= minColRange && cell.column < maxColRange);
+    const cellsToCopy = Arr.filter(row.cells, (cell) => (cell.column + cell.colspan > minColRange) && cell.column < maxColRange);
     const copiedCells = Arr.map(cellsToCopy, (cell) => {
       const clonedCell = Replication.deep(cell.element);
       constrainSpan(clonedCell, 'colspan', maxColRange - minColRange);
