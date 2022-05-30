@@ -17,7 +17,7 @@ describe('CopyColumnsTest', () => {
     Insert.append(SugarBody.body(), table);
 
     const rowsOpt = copyCols(table, {
-      selection: [Hierarchy.follow(table, [section, row, column, 0]).getOrDie(label + ': could not follow path')]
+      selection: [ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie(label + ': could not follow path') ]
     });
     const copiedHtml = rowsOpt.map((rows) => Arr.map(rows, Html.getOuter).join('')).getOr('');
 
@@ -156,7 +156,7 @@ describe('CopyColumnsTest', () => {
   it('TBA: Test copying column from colgroup table with locked column - selection not in locked column', () =>
     check(
       'Test copying column from colgroup table with locked column - selection not in locked column',
-      defaultTable(true, [1]),
+      defaultTable(true, [ 1 ]),
       (
         '<colgroup><col></colgroup>' +
         '<tr><td scope="col">H1</td></tr>' +
@@ -170,7 +170,7 @@ describe('CopyColumnsTest', () => {
   it('TBA: Test copying column from colgroup table with locked column - selection in locked column (0)', () =>
     check(
       'Test copying column from colgroup table with locked column - selection in locked column (0)',
-      defaultTable(true, [0]),
+      defaultTable(true, [ 0 ]),
       '',
       2, 0, 0
     ));
@@ -178,7 +178,7 @@ describe('CopyColumnsTest', () => {
   it('TBA: Test copying column from colgroup table with locked column - selection in locked column (1)', () =>
     check(
       'Test copying column from colgroup table with locked column - selection in locked column (1)',
-      defaultTable(true, [1]),
+      defaultTable(true, [ 1 ]),
       '',
       2, 0, 1
     ));
@@ -186,7 +186,7 @@ describe('CopyColumnsTest', () => {
   it('TBA: Test copying column from colgroup table with multiple locked columns', () =>
     check(
       'Test copying column from colgroup table with multiple locked columns',
-      defaultTable(true, [0, 1]),
+      defaultTable(true, [ 0, 1 ]),
       '',
       2, 1, 1
     ));
