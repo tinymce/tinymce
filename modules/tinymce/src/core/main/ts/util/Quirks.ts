@@ -438,9 +438,6 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
-  /**
-   * This is a helper function to test if the selection is all the content available
-   */
   const isAllContentSelected = (editor: Editor): boolean => {
     // The next three lines address TINY-4550
     const body = editor.getBody();
@@ -458,6 +455,7 @@ const Quirks = (editor: Editor): Quirks => {
       // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
       // better exclude any key combinations with the modifiers to avoid double normalization
       // (also addresses TINY-1130)
+      // The use of isAllContentSelected addresses TINY-4550
       if (!VK.modifierPressed(e) && !isAllContentSelected(editor)) {
         selection.normalize();
       }
