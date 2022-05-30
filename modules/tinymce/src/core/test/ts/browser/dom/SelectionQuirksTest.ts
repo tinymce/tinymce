@@ -79,6 +79,6 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     const isMac = Env.os.isMacOS() || Env.os.isiOS();
     TinyContentActions.keydown(editor, 65, { metaKey: isMac, ctrlKey: !isMac });
     editor.dispatch('keyup', new KeyboardEvent('keyup', { key: isMac ? 'Meta' : 'Control' }));
-    TinyAssertions.assertSelection(editor, [], 0, [], 1);
+    TinyAssertions.assertSelection(editor, [ ], 0, [ ], 1);
   });
 });
