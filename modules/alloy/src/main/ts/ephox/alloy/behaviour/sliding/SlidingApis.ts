@@ -157,9 +157,7 @@ const immediateGrow = (component: AlloyComponent, slideConfig: SlidingConfig, sl
   if (!slideState.isExpanded()) {
     setGrown(component, slideConfig);
     Css.set(component.element, getDimensionProperty(slideConfig), getDimension(slideConfig, component.element));
-    Css.reflow(component.element);
-
-    disableTransitions(component, slideConfig);
+    // TINY-8710: we don't think reflow is required (as has been done elsewhere) as the animation is not needed
     slideState.setExpanded();
     slideConfig.onStartGrow(component);
     slideConfig.onGrown(component);
