@@ -439,7 +439,6 @@ const Quirks = (editor: Editor): Quirks => {
   };
 
   const isAllContentSelected = (editor: Editor): boolean => {
-    // The next three lines address TINY-4550
     const body = editor.getBody();
     const rng = editor.selection.getRng();
     return rng.startContainer === rng.endContainer && rng.startContainer === body && rng.startOffset === 0 && rng.endOffset === body.childNodes.length;
