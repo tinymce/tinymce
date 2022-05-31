@@ -31,24 +31,61 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
     const testBlockTags = async (tagName) => {
       editor.setContent(
         `<${tagName}>abc</${tagName}>` +
-        '<h1>something</h1>' +
-        '<p>abc def</p>'
+        '<p>other kind of tag</p>' +
+        `<${tagName}>same tag</${tagName}>`
       );
       await copyAndPast(
         editor,
         [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
-        [[ 1, 0 ], 0, [ 1, 0 ], 3 ]
+        [[ 2, 0 ], 1, [ 2, 0 ], 3 ]
+      );
+      await copyAndPast(
+        editor,
+        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
+        [[ 1, 0 ], 1, [ 1, 0 ], 4 ]
       );
       TinyAssertions.assertContent(editor,
         `<${tagName}>abc</${tagName}>\n` +
+        '<p>o</p>\n' +
         `<${tagName}>abc</${tagName}>\n` +
-        '<h1>ething</h1>\n' +
-        '<p>abc def</p>'
+        '<p>r kind of tag</p>\n' +
+        `<${tagName}>s</${tagName}>\n` +
+        `<${tagName}>abc</${tagName}>\n` +
+        `<${tagName}>e tag</${tagName}>`
       );
     };
 
-    for (const tagName of [ 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]) {
+    for (const tagName of [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]) {
       await testBlockTags(tagName);
+    }
+
+    const testPreTag = async (tagName) => {
+      editor.setContent(
+        `<${tagName}>abc</${tagName}>` +
+        '<p>other kind of tag</p>' +
+        `<${tagName}>same tag</${tagName}>`
+      );
+      await copyAndPast(
+        editor,
+        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
+        [[ 2, 0 ], 1, [ 2, 0 ], 3 ]
+      );
+      await copyAndPast(
+        editor,
+        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
+        [[ 1, 0 ], 1, [ 1, 0 ], 4 ]
+      );
+      TinyAssertions.assertContent(editor,
+        `<${tagName}>abc</${tagName}>\n` +
+        '<p>o</p>\n' +
+        `<${tagName}>abc</${tagName}>\n` +
+        '<p>r kind of tag</p>\n' +
+        `<${tagName}>sabce tag</${tagName}>`
+      );
+    };
+
+    for (const tagName of [ 'pre' ]) {
+      await testPreTag(tagName);
     }
   });
 
@@ -64,11 +101,11 @@ describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
       await copyAndPast(
         editor,
         [[ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3 ],
-        [[ 1, 0 ], 0, [ 1, 0 ], 3 ]
+        [[ 1, 0 ], 1, [ 1, 0 ], 4 ]
       );
       TinyAssertions.assertContent(editor,
         `<p><${tagName} class="someclass">abc</${tagName}></p>\n` +
-        `<h1><${tagName} class="someclass">abc</${tagName}>ething</h1>\n` +
+        `<h1>s<${tagName} class="someclass">abc</${tagName}>thing</h1>\n` +
         '<p>abc def</p>'
       );
     };

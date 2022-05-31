@@ -22,6 +22,16 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
+const isFlattenable = (fragment: AstNode) => {
+  const currentNode = fragment.firstChild;
+
+  const wrappedElements = [ 'pre' ];
+  const isAFlattenableTag = Arr.contains(wrappedElements, currentNode.name);
+  const isPastingInTheSameTag = currentNode.name === currentNode.parent.name;
+
+  return isAFlattenableTag && isPastingInTheSameTag;
+};
+
 const isTableCell = NodeType.isTableCell;
 
 const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null): boolean => {
@@ -245,6 +255,10 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     rng = InsertList.insertAtCaret(serializer, dom, selection.getRng(), fragment);
     selection.setRng(rng);
     return value;
+  }
+
+  if (details.paste === true && isFlattenable(fragment)) {
+    fragment.firstChild.unwrap();
   }
 
   markFragmentElements(fragment);
