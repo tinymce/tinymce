@@ -34,7 +34,7 @@ const doImmediateShrink = (component: AlloyComponent, slideConfig: SlidingConfig
 
   // Force current dimension to begin transition
   Css.set(component.element, getDimensionProperty(slideConfig), getDimension(slideConfig, component.element));
-  Css.reflow(component.element);
+  // TINY-8710: we don't think reflow is required (as has been done elsewhere) as the animation is not needed
 
   disableTransitions(component, slideConfig);
 
