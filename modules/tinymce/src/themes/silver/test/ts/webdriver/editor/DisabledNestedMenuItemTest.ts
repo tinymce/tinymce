@@ -55,8 +55,8 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
 
   // two `Escape` to close submenus
   const closeCodeMenu = () => {
-    TinyUiActions.keydown(hook.editor(), Keys.escape());
-    TinyUiActions.keydown(hook.editor(), Keys.escape());
+    TinyUiActions.keyup(hook.editor(), Keys.escape());
+    TinyUiActions.keyup(hook.editor(), Keys.escape());
   };
 
   const assertPreferencesMenuIsNotOpen = () => {

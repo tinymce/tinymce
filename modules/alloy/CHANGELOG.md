@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added new `immediateGrow` API to the sliding behaviour #TINY-8710
+
+### Changed
+- Changed tabbing behavior escape key handling to run from `keydown` to `keyup` to prevent unwanted key event propagation #TINY-7005
+
 ## 10.0.0 - 2022-03-03
 
 ### Added

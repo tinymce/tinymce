@@ -262,6 +262,10 @@ const register = (editor: Editor): void => {
     // Editor resize doesn't work on touch devices at this stage
     default: !Env.deviceType.isTouch()
   });
+
+  registerOption('sidebar_show', {
+    processor: 'string'
+  });
 };
 
 const isReadOnly = option('readonly');
@@ -297,6 +301,7 @@ const useElementPath = option('elementpath');
 const useBranding = option('branding');
 const getResize = option('resize');
 const getPasteAsText = option('paste_as_text');
+const getSidebarShow = option('sidebar_show');
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
@@ -439,5 +444,6 @@ export {
   useElementPath,
   useBranding,
   getResize,
-  getPasteAsText
+  getPasteAsText,
+  getSidebarShow
 };

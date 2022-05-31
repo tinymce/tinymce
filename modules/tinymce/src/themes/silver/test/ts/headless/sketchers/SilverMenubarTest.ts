@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { afterEach, before, context, describe, it } from '@ephox/bedrock-client';
+import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Strings } from '@ephox/katamari';
 import { SelectorFind, Selectors, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -109,10 +109,6 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
     );
   };
 
-  afterEach(() => {
-    hook.store().clear();
-  });
-
   it('Check initial event state', () => {
     const store = hook.store();
     store.assertEq('setup should have been called', [ 'Menubar.setup' ]);
@@ -197,6 +193,10 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
       ]);
     });
 
+    beforeEach(() => {
+      hook.store().clear();
+    });
+
     it('Check keyboard actions open/close/activate menus', async () => {
       const doc = hook.root();
       const store = hook.store();
@@ -207,7 +207,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
       await pWaitForMenuToAppear();
       await pAssertFocusOnToggleItem('Remember me');
       assertActiveToggleItemHasOneCheckmark('Remember me');
-      Keyboard.activeKeydown(doc, Keys.escape());
+      Keyboard.activeKeyup(doc, Keys.escape());
       await pAssertFocusOnMenuButton('Changes');
       await pWaitForMenuToDisappear();
 
@@ -233,10 +233,10 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
       Keyboard.activeKeydown(doc, Keys.left());
       await pAssertFocusOnItem('Nested menu x 2');
 
-      Keyboard.activeKeydown(doc, Keys.escape());
+      Keyboard.activeKeyup(doc, Keys.escape());
       await pAssertFocusOnItem('Nested');
 
-      Keyboard.activeKeydown(doc, Keys.escape());
+      Keyboard.activeKeyup(doc, Keys.escape());
       await pAssertFocusOnMenuButton('Basic Menu Button');
       await pWaitForMenuToDisappear();
 
@@ -249,7 +249,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
       Keyboard.activeKeydown(doc, Keys.enter());
       await pAssertFocusOnItem('Nested menu x 2');
 
-      Keyboard.activeKeydown(doc, Keys.escape());
+      Keyboard.activeKeyup(doc, Keys.escape());
       await pAssertFocusOnItem('Nested');
       Keyboard.activeKeydown(doc, Keys.up());
       Keyboard.activeKeydown(doc, Keys.enter());
@@ -262,7 +262,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
       SilverMenubar.focus(getMenubar());
       await pAssertFocusOnMenuButton('Changes');
 
-      Keyboard.activeKeydown(doc, Keys.escape());
+      Keyboard.activeKeyup(doc, Keys.escape());
       store.assertEq('Pressing escape in menubar should fire event', [ 'Menubar.escape' ]);
     });
 

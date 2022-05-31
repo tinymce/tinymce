@@ -68,4 +68,13 @@ describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
     editor.execCommand('mceInsertTemplate', false, '<p>{$name}</p>');
     TinyAssertions.assertContent(editor, '<p>Tester</p>');
   });
+
+  it('TINY-7433: Replace template values with regex like keys', () => {
+    const editor = hook.editor();
+    addSettings({
+      template_replace_values: { 'first+name': 'Tester', 'email': 'test@test.com' },
+    });
+    editor.execCommand('mceInsertTemplate', false, '<p>{$first+name}</p>');
+    TinyAssertions.assertContent(editor, '<p>Tester</p>');
+  });
 });

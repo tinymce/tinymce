@@ -6,24 +6,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## Added
+- New `sidebar_show` option to show the specified sidebar on initialization #TINY-8710
+
 ### Changed
+- Toggling fullscreen mode with the `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701
+- Getting the text content of the editor now returns newlines instead of an empty string if more than one empty paragraph exists #TINY-8578
 - The `end_container_on_empty_block` option can now take a string of blocks to split when pressing Enter twice #TINY-6559
 - The default value for `end_container_on_empty_block` option has been changed to `'blockquote'` #TINY-6559
+- Custom elements are now treated as non-empty elements via the schema #TINY-4784
 
 ### Fixed
+- Selecting all content with a single image in the content was inconsistent for the keyboard shortcut and menu item #TINY-4550
+- Links would open when using alt+enter (option+enter on Mac) even when `preventDefault()` is called on the keydown event #TINY-8661
+- Spaces would not be added correctly on some browsers when before or after a contenteditable block element #TINY-8588
+- Images were not showing as selected when selecting images alongside other content #TINY-5947
+- Notifications would not properly reposition when toggling fullscreen mode #TINY-8701
 - Dialogs will not exceed the window height on smaller screens #TINY-8146
 - Some types on functions in the `tinymce.dom.TreeWalker` class missed that it could return undefined #TINY-8592
 - In some cases pressing the backspace key would incorrectly step into tables rather than remain outside #TINY-8592
 - Text alignment could not be applied to `pre` elements #TINY-7715
+- Nuget packages for .NET and .NET Core now copy TinyMCE into `/wwwroot/lib/` in the projects TinyMCE is installed in #TINY-8611
+- UI components, such as dialogs, would in some cases cause the `esc` keyup event to incorrectly trigger inside the editor #TINY-7005
+- Selection direction was not stored/restored when getting/setting selection bookmarks #TINY-8599
+- An exception could be thrown for the `editor.selection.isForward()` API due to an invalid selection on some versions of Safari #TINY-8686
 - The `InsertParagraph` or `mceInsertNewLine` commands did not delete the current selection like the native command used to #TINY-8606
+- When triple clicking the selection was incorrectly collapsed in the Chrome browser when clicking around nested noneditable content #TINY-8215
+- When pressing the right arrow key, the caret incorrectly moved before any selected inline boundary element #TINY-8601
+- Indenting or outdenting list items inside a block element that was inside another list item would not work #TINY-7209
+- Switching between unordered and ordered lists would incorrectly alter any parent element that contained that list #TINY-8068
+- Custom elements on blank lines would be removed during serialization #TINY-4784
+- Pasting columns in tables could sometimes result in an invalid table #TINY-8040
+- Copying columns in tables could sometimes result in an invalid copy #TINY-8040
+- The URL detection used for `autolink` and smart paste didn't work if a path segment contained valid characters such as `!` and `:` #TINY-8069
+- Cutting content to the clipboard while selecting between the parent list and a nested list would not always set the list style to `none` on the parent list #TINY-8078
+- Some option values for the `template` plugin weren't escaped properly when doing replacement lookups via a `RegExp` #TINY-7433
+- Copy events were not dispatched in readonly mode #TINY-6800
+- Using Ctrl+Shift+Home/End (Cmd+Shift+Up/Down on Mac) would not expand the selection when a `contenteditable="false"` element was at the edge of content #TINY-7795
 - Fixed incorrect word breaks in menu dropdowns with scrollbar #TINY-8572
 
-## 6.0.2 - TBD
+## 6.0.3 - 2022-05-25
 
 ### Fixed
+- Could not remove values when multiple cells were selected with the cell properties dialog #TINY-8625
+- Could not remove values when multiple rows were selected with the row properties dialog #TINY-8625
+- Empty lines that were formatted in a ranged selection using the `format_empty_lines` option were not kept in the serialized content #TINY-8639
+- The `s` element was missing from the default schema text inline elements #TINY-8639
+- Some text inline elements specified via the schema were not removed when empty by default #TINY-8639
+
+## 6.0.2 - 2022-04-27
+
+### Fixed
+- Some media elements wouldn't update when changing the source URL #TINY-8660
 - Inline toolbars flickered when switching between editors #TINY-8594
 - Multiple inline toolbars were shown if focused too quickly #TINY-8503
 - Added background and additional spacing for the text labeled buttons in the toolbar to improve visual clarity #TINY-8617
+- Toolbar split buttons with text used an incorrect width on touch devices #TINY-8647
 
 ## 6.0.1 - 2022-03-23
 

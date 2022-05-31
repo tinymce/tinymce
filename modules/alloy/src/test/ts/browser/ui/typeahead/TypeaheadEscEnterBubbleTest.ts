@@ -86,7 +86,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
       FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Down to activate menu'),
-      Keyboard.sKeydown(doc, Keys.escape(), {}),
+      Keyboard.sKeyup(doc, Keys.escape(), {}),
       steps.sWaitForNoMenu('Esc to close menu'),
       Keyboard.sKeydown(doc, Keys.escape(), {}),
 

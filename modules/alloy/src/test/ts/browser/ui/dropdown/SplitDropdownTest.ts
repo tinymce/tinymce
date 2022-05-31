@@ -194,7 +194,7 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
         })),
         component.element
       ),
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       UiFinder.sNotExists(gui.element, '[role="menu"]'),
 
       // Now, let's do some keyboard testing. Pressing space and enter should trigger execute

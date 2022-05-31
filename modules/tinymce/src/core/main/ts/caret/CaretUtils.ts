@@ -315,6 +315,7 @@ export {
   getParentBlock,
   isInSameBlock,
   isInSameEditingHost,
+  isBlockLike,
   isMoveInsideSameBlock,
   normalizeRange,
   getRelativeCefElm,

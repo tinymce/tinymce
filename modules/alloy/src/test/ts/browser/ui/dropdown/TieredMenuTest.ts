@@ -169,7 +169,7 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
         ]
       ),
 
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       sAssertMenu(
         'Post collapse of submenu with <escape> structure test',
         [
