@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom elements are now treated as non-empty elements via the schema #TINY-4784
 
 ### Fixed
+- Selecting all content with a single image in the content was inconsistent for the keyboard shortcut and menu item #TINY-4550
 - Links would open when using alt+enter (option+enter on Mac) even when `preventDefault()` is called on the keydown event #TINY-8661
 - Spaces would not be added correctly on some browsers when before or after a contenteditable block element #TINY-8588
 - Images were not showing as selected when selecting images alongside other content #TINY-5947
