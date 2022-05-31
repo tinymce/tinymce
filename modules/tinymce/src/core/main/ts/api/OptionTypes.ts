@@ -178,6 +178,7 @@ interface BaseEditorOptions {
   schema?: SchemaType;
   selector?: string;
   setup?: SetupCallback;
+  sidebar_show?: string;
   skin?: boolean | string;
   skin_url?: string;
   smart_paste?: boolean;

@@ -49,7 +49,7 @@ interface ToolbarSketchSpec extends MoreDrawerData {
 interface OuterContainerApis {
   getHeader: (comp: AlloyComponent) => Optional<AlloyComponent>;
   getSocket: (comp: AlloyComponent) => Optional<AlloyComponent>;
-  setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig) => void;
+  setSidebar: (comp: AlloyComponent, panelConfigs: Sidebar.SidebarConfig, showSidebar?: string) => void;
   toggleSidebar: (comp: AlloyComponent, name: string) => void;
   whichSidebar: (comp: AlloyComponent) => string | null;
   // Maybe just change to ToolbarAnchor.
@@ -77,9 +77,9 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     getSocket: (comp) => {
       return Composite.parts.getPart(comp, detail, 'socket');
     },
-    setSidebar: (comp, panelConfigs) => {
+    setSidebar: (comp, panelConfigs, showSidebar) => {
       Composite.parts.getPart(comp, detail, 'sidebar').each(
-        (sidebar) => Sidebar.setSidebar(sidebar, panelConfigs)
+        (sidebar) => Sidebar.setSidebar(sidebar, panelConfigs, showSidebar)
       );
     },
     toggleSidebar: (comp, name) => {
@@ -301,8 +301,8 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     getSocket: (apis, comp) => {
       return apis.getSocket(comp);
     },
-    setSidebar: (apis, comp, panelConfigs) => {
-      apis.setSidebar(comp, panelConfigs);
+    setSidebar: (apis, comp, panelConfigs, showSidebar) => {
+      apis.setSidebar(comp, panelConfigs, showSidebar);
     },
     toggleSidebar: (apis, comp, name) => {
       apis.toggleSidebar(comp, name);

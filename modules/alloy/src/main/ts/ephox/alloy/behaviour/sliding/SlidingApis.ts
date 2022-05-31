@@ -34,7 +34,7 @@ const doImmediateShrink = (component: AlloyComponent, slideConfig: SlidingConfig
 
   // Force current dimension to begin transition
   Css.set(component.element, getDimensionProperty(slideConfig), getDimension(slideConfig, component.element));
-  Css.reflow(component.element);
+  // TINY-8710: we don't think reflow is required (as has been done elsewhere) as the animation is not needed
 
   disableTransitions(component, slideConfig);
 
@@ -153,6 +153,19 @@ const toggleGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slide
   f(component, slideConfig, slideState);
 };
 
+const immediateGrow = (component: AlloyComponent, slideConfig: SlidingConfig, slideState: SlidingState): void => {
+  if (!slideState.isExpanded()) {
+    setGrown(component, slideConfig);
+    Css.set(component.element, getDimensionProperty(slideConfig), getDimension(slideConfig, component.element));
+    // TINY-8710: we don't think reflow is required (as has been done elsewhere) as the animation is not needed
+    // Keep disableTransition to handle the case where it's part way through transitioning
+    disableTransitions(component, slideConfig);
+    slideState.setExpanded();
+    slideConfig.onStartGrow(component);
+    slideConfig.onGrown(component);
+  }
+};
+
 export {
   refresh,
   grow,
@@ -164,5 +177,6 @@ export {
   isShrinking,
   isTransitioning,
   toggleGrow,
-  disableTransitions
+  disableTransitions,
+  immediateGrow
 };

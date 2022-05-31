@@ -236,6 +236,36 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
         4000
       ),
 
+      store.sClear,
+      Step.sync(() => {
+        Sliding.immediateGrow(component);
+      }),
+      Logger.t(
+        'Sliding.immediateGrow()',
+        GeneralSteps.sequence([
+          store.sAssertEq('Finished growing', [ 'onStartGrow', 'onGrown' ]),
+          Assertions.sAssertStructure(
+            'Checking structure',
+            ApproxStructure.build((s, str, arr) => s.element('div', {
+              classes: [
+                arr.not('test-sliding-width-shrinking'),
+                arr.not('test-sliding-width-growing'),
+                arr.not('test-sliding-closed'),
+                arr.has('test-sliding-open')
+              ],
+              styles: {
+                width: str.is('300px')
+              }
+            })),
+            component.element
+          ),
+          Step.sync(() => {
+            Assertions.assertEq('Checking hasGrown = true', true, Sliding.hasGrown(component));
+          }),
+          store.sClear
+        ])
+      ),
+
       GuiSetup.mRemoveStyles
     ];
   }, success, failure);
