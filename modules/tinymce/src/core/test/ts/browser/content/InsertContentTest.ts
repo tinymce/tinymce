@@ -13,7 +13,8 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     disable_nodechange: true,
     entities: 'raw',
     indent: false,
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    custom_elements: '~foo-bar'
   }, []);
 
   it('TBA: insertAtCaret - i inside text, converts to em', () => {
@@ -638,5 +639,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     editor.insertContent('<div>inserted content</div>');
     assert.equal(numNodesFiltered, 1, 'Node filters should have run');
     TinyAssertions.assertContent(editor, '<p>Con</p><div>inserted content</div><p>tent</p>');
+  });
+
+  it('TINY-4784: An empty custom element should not be removed when inserted', () => {
+    const editor = hook.editor();
+    editor.setContent('<p></p>');
+
+    editor.insertContent('<foo-bar contenteditable="false" data-name="foobar"></foo-bar>');
+    TinyAssertions.assertContent(editor, '<p><foo-bar contenteditable="false" data-name="foobar"></foo-bar></p>');
   });
 });

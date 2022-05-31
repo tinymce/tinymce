@@ -4,7 +4,6 @@ import { DomEvent, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
-import Delay from 'tinymce/core/api/util/Delay';
 
 import * as Events from '../api/Events';
 import { getUiContainer, isToolbarPersist } from '../api/Options';
@@ -107,21 +106,17 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     editor.nodeChanged();
   };
 
-  // In certain circumstances we need to delay the render function until the next
-  // event loop to ensure things like the current selection are correct.
-  const delayedRender = () => Delay.setEditorTimeout(editor, render, 0);
-
   editor.on('show', render);
   editor.on('hide', ui.hide);
 
   if (!toolbarPersist) {
-    editor.on('focus', delayedRender);
+    editor.on('focus', render);
     editor.on('blur', ui.hide);
   }
 
   editor.on('init', () => {
     if (editor.hasFocus() || toolbarPersist) {
-      delayedRender();
+      render();
     }
   });
 

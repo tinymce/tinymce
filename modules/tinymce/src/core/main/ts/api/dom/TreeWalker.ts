@@ -18,7 +18,7 @@ export interface DomTreeWalkerConstructor {
 
 class DomTreeWalker {
   private readonly rootNode: Node;
-  private node: Node;
+  private node: Node | undefined;
 
   public constructor(startNode: Node, rootNode: Node) {
     this.node = startNode;
@@ -36,9 +36,9 @@ class DomTreeWalker {
    * Returns the current node.
    *
    * @method current
-   * @return {Node} Current node where the walker is.
+   * @return {Node/undefined} Current node where the walker is, or undefined if the walker has reached the end.
    */
-  public current(): Node {
+  public current(): Node | undefined {
     return this.node;
   }
 
@@ -46,9 +46,9 @@ class DomTreeWalker {
    * Walks to the next node in tree.
    *
    * @method next
-   * @return {Node} Current node where the walker is after moving to the next node.
+   * @return {Node/undefined} Current node where the walker is after moving to the next node, or undefined if the walker has reached the end.
    */
-  public next(shallow?: boolean): Node {
+  public next(shallow?: boolean): Node | undefined {
     this.node = this.findSibling(this.node, 'firstChild', 'nextSibling', shallow);
     return this.node;
   }
@@ -57,19 +57,19 @@ class DomTreeWalker {
    * Walks to the previous node in tree.
    *
    * @method prev
-   * @return {Node} Current node where the walker is after moving to the previous node.
+   * @return {Node/undefined} Current node where the walker is after moving to the previous node, or undefined if the walker has reached the end.
    */
-  public prev(shallow?: boolean): Node {
+  public prev(shallow?: boolean): Node | undefined {
     this.node = this.findSibling(this.node, 'lastChild', 'previousSibling', shallow);
     return this.node;
   }
 
-  public prev2(shallow?: boolean): Node {
-    this.node = this.findPreviousNode(this.node, 'lastChild', 'previousSibling', shallow);
+  public prev2(shallow?: boolean): Node | undefined {
+    this.node = this.findPreviousNode(this.node, shallow);
     return this.node;
   }
 
-  private findSibling(node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow?: boolean) {
+  private findSibling(node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow?: boolean): Node | undefined {
     let sibling: Node, parent: Node;
 
     if (node) {
@@ -96,11 +96,11 @@ class DomTreeWalker {
     }
   }
 
-  private findPreviousNode(node: Node, startName: 'lastChild', siblingName: 'previousSibling', shallow?: boolean) {
+  private findPreviousNode(node: Node | undefined, shallow?: boolean): Node | undefined {
     let sibling: Node, parent: Node, child: Node;
 
     if (node) {
-      sibling = node[siblingName];
+      sibling = node.previousSibling;
       if (this.rootNode && sibling === this.rootNode) {
         return;
       }
@@ -108,8 +108,8 @@ class DomTreeWalker {
       if (sibling) {
         if (!shallow) {
           // Walk down to the most distant child
-          for (child = sibling[startName]; child; child = child[startName]) {
-            if (!child[startName]) {
+          for (child = sibling.lastChild; child; child = child.lastChild) {
+            if (!child.lastChild) {
               return child;
             }
           }

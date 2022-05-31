@@ -438,6 +438,12 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
+  const isAllContentSelected = (editor: Editor): boolean => {
+    const body = editor.getBody();
+    const rng = editor.selection.getRng();
+    return rng.startContainer === rng.endContainer && rng.startContainer === body && rng.startOffset === 0 && rng.endOffset === body.childNodes.length;
+  };
+
   /**
    * Fixes selection issues where the caret can be placed between two inline elements like <b>a</b>|<b>b</b>
    * this fix will lean the caret right into the closest inline element.
@@ -448,7 +454,8 @@ const Quirks = (editor: Editor): Quirks => {
       // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
       // better exclude any key combinations with the modifiers to avoid double normalization
       // (also addresses TINY-1130)
-      if (!VK.modifierPressed(e)) {
+      // The use of isAllContentSelected addresses TINY-4550
+      if (!VK.modifierPressed(e) && !isAllContentSelected(editor)) {
         selection.normalize();
       }
     }, true);

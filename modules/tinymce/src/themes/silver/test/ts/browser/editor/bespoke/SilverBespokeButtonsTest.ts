@@ -53,7 +53,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       await pBeforeStep();
       assertItemTicks(label, expectedTicks);
       await pAfterStep();
-      TinyUiActions.keydown(editor, Keys.escape());
+      TinyUiActions.keyup(editor, Keys.escape());
       UiFinder.notExists(SugarBody.body(), '[role="menu"]');
     };
 
@@ -68,7 +68,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     },
     // Afterwards, escape the submenu
     () => {
-      Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape());
+      Keyboard.activeKeyup(SugarDocument.getDocument(), Keys.escape());
       return Promise.resolve();
     },
     (text) => MenuUtils.pOpenMenu('', text)
@@ -235,8 +235,8 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     TinyUiActions.keydown(editor, Keys.right());
     await pAssertFocusOnItem('Paragraph');
     assertItemTicks('Checking blocks in menu', [ false, true ].concat(Arr.range(6, Fun.never)));
-    TinyUiActions.keydown(editor, Keys.escape());
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   });
 
   it('TBA: Checking style ticks and updating', async () => {
@@ -296,9 +296,9 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     TinyUiActions.keydown(editor, Keys.right());
     await pAssertFocusOnItem('Heading 1');
     assertItemTicks('Checking headings in menu', [ true ].concat(Arr.range(5, Fun.never)));
-    TinyUiActions.keydown(editor, Keys.escape());
-    TinyUiActions.keydown(editor, Keys.escape());
-    TinyUiActions.keydown(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   });
 
   it('TBA: Checking toolbar keyboard navigation', async () => {

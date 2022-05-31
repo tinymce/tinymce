@@ -1,35 +1,58 @@
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const path = require('path');
-const inFile = './src/demo/ts/Demo.ts';
-const outFile = './scratch/compiles/demo.js';
 
 module.exports = {
-  entry: inFile,
-  mode: 'development',
+  entry: './src/demo/ts/Demo.ts',
   devtool: 'source-map',
-  optimization: {
-    removeAvailableModules: false,
-    removeEmptyChunks: false,
-    splitChunks: false,
-  },
+  mode: 'development',
+  target: ['web'],
+
   resolve: {
-    symlinks: false,
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    plugins: [
+      new TsConfigPathsPlugin({
+        extensions: ['.ts', '.js']
+      }),
+    ]
   },
+
   module: {
     rules: [
       {
+        test: /\.js$/,
+        resolve: {
+          fullySpecified: false
+        }
+      },
+
+
+
+      {
+        test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre'
+      },
+
+      {
         test: /\.ts$/,
-        use: [
-          {
-            loader: 'ts-loader'
+        use: [{
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            projectReferences: true
           }
-        ]
+        }]
       }
     ]
   },
+
+  plugins: [
+    new ForkTsCheckerWebpackPlugin({ async: true })
+  ],
+
   output: {
-    filename: path.basename(outFile),
-    path: path.resolve(path.dirname(outFile)),
-    pathinfo: false
+    filename: 'demo.js',
+    path: path.resolve(__dirname, './scratch/compiled')
   }
 };

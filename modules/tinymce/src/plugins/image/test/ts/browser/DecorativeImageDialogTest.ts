@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
   }, [ Plugin ]);
 
   const pressTab = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
-  const pressEsc = (editor: Editor) => TinyUiActions.keydown(editor, Keys.escape());
+  const pressEsc = (editor: Editor) => TinyUiActions.keyup(editor, Keys.escape());
 
   const pAssertFocused = (name: string, selector: string) => FocusTools.pTryOnSelector(name, SugarDocument.getDocument(), selector);
 

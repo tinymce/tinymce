@@ -108,7 +108,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       Step.sync(() => {
         Focus.focus(typeahead.element);
       }),
-      Keyboard.sKeydown(doc, Keys.escape(), { }),
+      Keyboard.sKeyup(doc, Keys.escape(), { }),
       steps.sWaitForNoMenu('Escape should still dismiss regardless of setting'),
 
       Logger.t(

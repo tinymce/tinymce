@@ -1,5 +1,6 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { Waiter } from '@ephox/agar';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -19,9 +20,12 @@ describe('browser.tinymce.plugins.media.MediaPluginSanityTest', () => {
     }
   }, [ Plugin ], true);
 
+  beforeEach(() => {
+    hook.editor().setContent('');
+  });
+
   it('TBA: Embed content, open dialog, set size and assert constrained and unconstrained size recalculation', async () => {
     const editor = hook.editor();
-    editor.setContent('');
     await Utils.pTestEmbedContentFromUrl(editor,
       'www.youtube.com/watch?v=b3XFjWInBog',
       '<iframe src="https://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowFullscreen="1"></iframe>'
@@ -49,7 +53,6 @@ describe('browser.tinymce.plugins.media.MediaPluginSanityTest', () => {
 
   it(`TBA: Test changing source, width and height doesn't delete other values`, async () => {
     const editor = hook.editor();
-    editor.setContent('');
     await Utils.pOpenDialog(editor);
     await Utils.pSetHeightAndWidth(editor, '300', '300');
     await Utils.pAssertHeightAndWidth(editor, '300', '300');
@@ -78,5 +81,23 @@ describe('browser.tinymce.plugins.media.MediaPluginSanityTest', () => {
     TinySelections.setSelection(editor, [ 1 ], 0, [ 1 ], 1);
     await TinyUiActions.pWaitForUi(editor, '.tox-tbtn.tox-tbtn--enabled[title="Insert/edit media"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn.tox-tbtn--enabled[title="Insert/edit media"]');
+  });
+
+  it('TINY-8660: Iframe media can be updated after being inserted', async () => {
+    const editor = hook.editor();
+
+    await Utils.pOpenDialog(editor);
+    await Utils.pSetSourceInput(editor, 'https://www.youtube.com/embed/b3XFjWInBog');
+    TinyUiActions.submitDialog(editor);
+    await Waiter.pTryUntil('Wait for the media to be inserted', () =>
+      TinyAssertions.assertContent(editor, '<p><iframe src="https://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>')
+    );
+
+    await Utils.pOpenDialog(editor);
+    await Utils.pSetSourceInput(editor, 'https://www.youtube.com/watch?v=cOTbVN2qZBY');
+    TinyUiActions.submitDialog(editor);
+    await Waiter.pTryUntil('Wait for the media to be updated', () =>
+      TinyAssertions.assertContent(editor, '<p><iframe src="https://www.youtube.com/embed/cOTbVN2qZBY" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>')
+    );
   });
 });

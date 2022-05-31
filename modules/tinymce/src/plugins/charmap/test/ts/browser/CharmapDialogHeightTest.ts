@@ -55,7 +55,7 @@ describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
         await UiFinder.pWaitForState('Wait for search to finish', body, '[role="dialog"] .tox-collection__group', (e) => Traverse.childNodesCount(e) === 0);
         const newHeight = tabPanelHeight(tabPanel);
         assert.equal(parseInt(newHeight, 10), parseInt(oldHeight, 10), 'New height and old height differ');
-        TinyUiActions.keydown(editor, Keys.escape());
+        TinyUiActions.keyup(editor, Keys.escape());
       });
 
       it('TINY-6904: Focus should remain while typing', async () => {
@@ -70,7 +70,7 @@ describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
         await FocusTools.pTryOnSelector('Focus is still on input', root, 'input');
         type(root, 'b');
         await FocusTools.pTryOnSelector('Focus is still on input', root, 'input');
-        TinyUiActions.keydown(editor, Keys.escape());
+        TinyUiActions.keyup(editor, Keys.escape());
       });
     });
   });
