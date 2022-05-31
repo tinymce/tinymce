@@ -619,8 +619,8 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     const assertChangeEvent = (
       event: { level: string; lastLevel: string },
-      expectedLevel: string = initialContent,
-      expectedLastlevel: string = manualModifiedLevel
+      expectedLevel: string | undefined,
+      expectedLastlevel: string | undefined
     ) => {
       assert.equal(event.level, expectedLevel, 'Level has not the expected content');
       assert.equal(event.lastLevel, expectedLastlevel, 'Last level has not the expected content');
@@ -634,7 +634,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       lastLevel: UndoLevel;
     }>) => {
       changeEventCounter++;
-      currentChangeEvent = { level: e.level.content, lastLevel: e.lastLevel.content };
+      currentChangeEvent = { level: e.level?.content, lastLevel: e.lastLevel?.content };
     };
 
     beforeEach(() => {
@@ -659,13 +659,13 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
       assert.isFalse(editor.isDirty(), 'Editor should not be dirty before dispatchIfChanged');
       editor.undoManager.dispatchIfChanged();
-      assertChangeEvent(currentChangeEvent);
+      assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevel);
       assert.equal(changeEventCounter, 1, '1 event should be detected if the content is not consistent with the undoManager history');
       assert.isTrue(editor.isDirty(), 'Editor should be dirty after dispatchIfChanged');
 
       Arr.range(3, () => {
         editor.undoManager.dispatchIfChanged();
-        assertChangeEvent(currentChangeEvent);
+        assertChangeEvent(currentChangeEvent, initialContent, manualModifiedLevel);
       });
 
       assert.equal(changeEventCounter, 4, 'it should continue to call change till the editor and last level are different');
@@ -699,7 +699,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
       Arr.range(3, (n) => {
         editor.undoManager.dispatchIfChanged();
         assert.equal(changeEventCounter, n + 1, 'change should be called each time the dispatchIfChanged is called');
-        assertChangeEvent(currentChangeEvent, initialContent, initialContent);
+        assertChangeEvent(currentChangeEvent, initialContent, undefined);
       });
       editor.off('change', onChange);
     });

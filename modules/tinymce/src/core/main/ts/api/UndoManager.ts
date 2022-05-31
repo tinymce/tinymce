@@ -69,7 +69,7 @@ const UndoManager = (editor: Editor): UndoManager => {
       };
 
       Arr.get(data, index.get()).fold(
-        () => dispatchEvent(currentLevel),
+        () => dispatchEvent(undefined),
         (lastLevel) => {
           if (!Levels.isEq(lastLevel, currentLevel)) {
             dispatchEvent(lastLevel);
