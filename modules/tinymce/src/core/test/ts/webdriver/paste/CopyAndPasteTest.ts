@@ -1,6 +1,6 @@
 import { RealClipboard, RealMouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyApis, TinyAssertions, TinyHooks, TinyUi } from '@ephox/wrap-mcagar';
+import { TinyApis, TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -14,12 +14,11 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   type Selection = [ number[], number, number[], number ];
 
   const pCopyAndPaste = async (editor: Editor, source: Selection, target: Selection): Promise<void> => {
-    const ui = TinyUi(editor);
     const api = TinyApis(editor);
 
     api.setSelection(...source);
-    ui.clickOnMenu('button:contains("Edit")');
-    await ui.pWaitForUi('*[role="menu"]');
+    TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
+    await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
     await RealMouse.pClickOn('div[title="Copy"]');
     api.setSelection(...target);
     await RealClipboard.pPaste('iframe => body');
