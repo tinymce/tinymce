@@ -24,7 +24,7 @@ import * as InsertList from './InsertList';
 
 const wrappedElements = [ 'pre' ];
 
-const isFlattenable = (fragment: AstNode) => {
+const shouldFlatten = (fragment: AstNode) => {
   const currentNode = fragment.firstChild;
 
   const isAFlattenableTag = Arr.contains(wrappedElements, currentNode.name);
@@ -258,7 +258,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     return value;
   }
 
-  if (details.paste === true && isFlattenable(fragment)) {
+  if (details.paste === true && shouldFlatten(fragment)) {
     fragment.firstChild.unwrap();
   }
 
