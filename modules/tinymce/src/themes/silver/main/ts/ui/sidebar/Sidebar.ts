@@ -105,6 +105,8 @@ const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSi
       Composing.getCurrent(slider).each((slotContainer) => {
         SlotContainer.showSlot(slotContainer, showSidebar);
         Sliding.immediateGrow(slider);
+        // TINY-8710: Remove the wrong width from being set to the sidebar when the skin isn't loaded yet
+        Css.remove(slider.element, 'width');
       });
     }
   });
