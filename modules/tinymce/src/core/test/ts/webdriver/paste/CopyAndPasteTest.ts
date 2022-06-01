@@ -24,7 +24,7 @@ const copyAndPast = async (editor: Editor, source: Selection, target: Selection)
   await RealClipboard.pPaste('iframe => body => h1');
 };
 
-describe('webdriver.tinymce.core.paste.CopyAndPaste', () => {
+describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   it('TINY-7719: Wrapped elements are preserved in copy and paste (pre + headings)', async () => {
     const editor = hook.editor();
 
