@@ -24,11 +24,11 @@ import * as InsertList from './InsertList';
 
 const wrappedElements = [ 'pre' ];
 
-const shouldFlatten = (fragment: AstNode, parentNodeTagName: Uppercase<string>) => {
+const shouldFlatten = (fragment: AstNode, parentNode: Element) => {
   const currentNode = fragment.firstChild;
 
   const isAFlattenableTag = Arr.contains(wrappedElements, currentNode.name);
-  const isPastingInTheSameTag = currentNode.name.toUpperCase() === parentNodeTagName;
+  const isPastingInTheSameTag = currentNode.name === parentNode.tagName;
 
   return isAFlattenableTag && isPastingInTheSameTag;
 };
@@ -258,7 +258,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     return value;
   }
 
-  if (details.paste === true && shouldFlatten(fragment, parentNode.tagName)) {
+  if (details.paste === true && shouldFlatten(fragment, parentNode)) {
     fragment.firstChild.unwrap();
   }
 
