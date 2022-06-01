@@ -7,11 +7,13 @@ import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';
+import * as LineReader from '../caret/LineReader';
 import * as LineUtils from '../caret/LineUtils';
 import * as LineWalker from '../caret/LineWalker';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
+import { isCefAtEdgeSelected } from './CefUtils';
 import * as InlineUtils from './InlineUtils';
 
 const moveToRange = (editor: Editor, rng: Range) => {
@@ -34,6 +36,10 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
     const node = RangeNodes.getSelectedNode(range);
     if (isElement(node)) {
       return FakeCaretUtils.showCaret(direction, editor, node, direction === HDirection.Backwards, false);
+    } else if (isCefAtEdgeSelected(editor)) {
+      const newRange = range.cloneRange();
+      newRange.collapse(direction === HDirection.Backwards);
+      return Optional.from(newRange);
     }
   }
 
@@ -72,13 +78,22 @@ const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range:
   const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
   const caretClientRect = ArrUtils.last(caretPosition.getClientRects());
   const forwards = direction === LineWalker.VDirection.Down;
+  const root = editor.getBody();
 
   if (!caretClientRect) {
     return Optional.none();
   }
 
+  if (isCefAtEdgeSelected(editor)) {
+    const caretPosition = forwards ? CaretPosition.fromRangeEnd(range) : CaretPosition.fromRangeStart(range);
+    const getClosestFn = !forwards ? LineReader.getClosestPositionAbove : LineReader.getClosestPositionBelow;
+    return getClosestFn(root, caretPosition)
+      .orThunk(() => Optional.from(caretPosition))
+      .map((pos) => pos.toRange());
+  }
+
   const walkerFn = forwards ? LineWalker.downUntil : LineWalker.upUntil;
-  const linePositions = walkerFn(editor.getBody(), LineWalker.isAboveLine(1), caretPosition);
+  const linePositions = walkerFn(root, LineWalker.isAboveLine(1), caretPosition);
   const nextLinePositions = Arr.filter(linePositions, LineWalker.isLine(1));
 
   const clientX = caretClientRect.left;
@@ -100,7 +115,7 @@ const moveVertically = (editor: Editor, direction: LineWalker.VDirection, range:
   }
 
   if (currentNode) {
-    const caretPositions = LineWalker.positionsUntil(direction, editor.getBody(), LineWalker.isAboveLine(1), currentNode);
+    const caretPositions = LineWalker.positionsUntil(direction, root, LineWalker.isAboveLine(1), currentNode);
 
     let closestNextLineRect = LineUtils.findClosestClientRect(Arr.filter(caretPositions, LineWalker.isLine(1)), clientX);
     if (closestNextLineRect) {

@@ -1259,9 +1259,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     // #ifndef jquery
 
     /**
-     * Returns a list of the elements specified by the given CSS selector. For example "div#a1 p.test".
-     * This function is optimized for the most common patterns needed in TinyMCE but it also performs well enough
-     * on more complex patterns.
+     * Returns a list of the elements specified by the given CSS selector. For example: `div#a1 p.test`
      *
      * @method select
      * @param {String} selector Target CSS selector.
@@ -1561,8 +1559,8 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      *
      * @method toggleClass
      * @param {Element} elm Element to toggle class on.
-     * @param {[type]} cls Class to toggle on/off.
-     * @param {[type]} state Optional state to set.
+     * @param {String} cls Class to toggle on/off.
+     * @param {Boolean} state Optional state to set.
      */
     toggleClass,
 
@@ -1648,7 +1646,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     setOuterHTML,
 
     /**
-     * Entity decodes a string. This method decodes any HTML entities, such as &aring;.
+     * Entity decodes a string. This method decodes any HTML entities, such as `&amp;aring;`.
      *
      * @method decode
      * @param {String} s String to decode entities on.
@@ -1657,7 +1655,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     decode,
 
     /**
-     * Entity encodes a string. This method encodes the most common entities, such as <>"&.
+     * Entity encodes a string. This method encodes the most common entities, such as `<`, `>`, `"` and `&`.
      *
      * @method encode
      * @param {String} text String to encode with entities.
@@ -1763,7 +1761,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     /**
      * Splits an element into two new elements and places the specified split
      * element or elements between the new ones. For example splitting the paragraph at the bold element in
-     * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>.
+     * this example `<p>abc<b>abc</b>123</p>` would produce `<p>abc</p><b>abc</b><p>123</p>`.
      *
      * @method split
      * @param {Element} parentElm Parent element to split.

@@ -459,12 +459,19 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     }
 
     const anchorRange = dom.createRng();
-    anchorRange.setStart(anchorNode, sel.anchorOffset);
-    anchorRange.collapse(true);
-
     const focusRange = dom.createRng();
-    focusRange.setStart(focusNode, sel.focusOffset);
-    focusRange.collapse(true);
+
+    try {
+      anchorRange.setStart(anchorNode, sel.anchorOffset);
+      anchorRange.collapse(true);
+
+      focusRange.setStart(focusNode, sel.focusOffset);
+      focusRange.collapse(true);
+    } catch (e) {
+      // Safari can generate an invalid selection and error. Silently handle it and default to forward.
+      // See https://bugs.webkit.org/show_bug.cgi?id=230594.
+      return true;
+    }
 
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
   };

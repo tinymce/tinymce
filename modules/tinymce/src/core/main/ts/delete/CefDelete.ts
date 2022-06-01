@@ -77,6 +77,7 @@ const backspaceDeleteRange = (editor: Editor, forward: boolean): Optional<() => 
       () => Optional.some(Fun.noop)
     );
   }
+
   return Optional.none();
 };
 

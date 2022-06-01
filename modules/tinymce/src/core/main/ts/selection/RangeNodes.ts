@@ -6,7 +6,7 @@ const getSelectedNode = (range: Range): Node => {
   const startContainer = range.startContainer,
     startOffset = range.startOffset;
 
-  if (startContainer.hasChildNodes() && range.endOffset === startOffset + 1) {
+  if (startContainer === range.endContainer && startContainer.hasChildNodes() && range.endOffset === startOffset + 1) {
     return startContainer.childNodes[startOffset];
   }
 

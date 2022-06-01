@@ -18,6 +18,7 @@ export interface SlidingBehaviour extends Behaviour.AlloyBehaviour<SlidingConfig
   isTransitioning: (component: AlloyComponent) => boolean;
   toggleGrow: (component: AlloyComponent) => void;
   disableTransitions: (component: AlloyComponent) => void;
+  immediateGrow: (component: AlloyComponent) => void;
 }
 
 export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {

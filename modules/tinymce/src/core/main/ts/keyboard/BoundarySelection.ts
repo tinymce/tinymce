@@ -5,6 +5,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as CaretContainerRemove from '../caret/CaretContainerRemove';
+import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as WordSelection from '../selection/WordSelection';
 import * as BoundaryCaret from './BoundaryCaret';
@@ -35,9 +36,19 @@ const renderCaretLocation = (editor: Editor, caret: Cell<Text>, location: Bounda
     return location;
   });
 
+const getPositionFromRange = (range: Range, root: HTMLElement, forward: boolean): CaretPosition => {
+  const start = CaretPosition.fromRangeStart(range);
+  if (range.collapsed) {
+    return start;
+  } else {
+    const end = CaretPosition.fromRangeEnd(range);
+    return forward ? CaretFinder.prevPosition(root, end).getOr(end) : CaretFinder.nextPosition(root, start).getOr(start);
+  }
+};
+
 const findLocation = (editor: Editor, caret: Cell<Text>, forward: boolean) => {
   const rootNode = editor.getBody();
-  const from = CaretPosition.fromRangeStart(editor.selection.getRng());
+  const from = getPositionFromRange(editor.selection.getRng(), rootNode, forward);
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
   const location = BoundaryLocation.findLocation(forward, isInlineTarget, rootNode, from);
   return location.bind((location) => renderCaretLocation(editor, caret, location));

@@ -18,31 +18,41 @@ import * as RowDialogGeneralTab from './RowDialogGeneralTab';
 
 type RowData = Helpers.RowData;
 
-const updateSimpleProps = (modifier: DomModifier, data: RowData): void => {
-  modifier.setAttrib('class', data.class);
-  modifier.setStyle('height', Utils.addPxSuffix(data.height));
+const updateSimpleProps = (modifier: DomModifier, data: RowData, shouldUpdate: (key: string) => boolean): void => {
+  if (shouldUpdate('class')) {
+    modifier.setAttrib('class', data.class);
+  }
+  if (shouldUpdate('height')) {
+    modifier.setStyle('height', Utils.addPxSuffix(data.height));
+  }
 };
 
-const updateAdvancedProps = (modifier: DomModifier, data: RowData): void => {
-  modifier.setStyle('background-color', data.backgroundcolor);
-  modifier.setStyle('border-color', data.bordercolor);
-  modifier.setStyle('border-style', data.borderstyle);
+const updateAdvancedProps = (modifier: DomModifier, data: RowData, shouldUpdate: (key: string) => boolean): void => {
+  if (shouldUpdate('backgroundcolor')) {
+    modifier.setStyle('background-color', data.backgroundcolor);
+  }
+  if (shouldUpdate('bordercolor')) {
+    modifier.setStyle('border-color', data.bordercolor);
+  }
+  if (shouldUpdate('borderstyle')) {
+    modifier.setStyle('border-style', data.borderstyle);
+  }
 };
 
-const applyStyleData = (editor: Editor, rows: HTMLTableRowElement[], data: RowData, oldData: RowData): void => {
+const applyStyleData = (editor: Editor, rows: HTMLTableRowElement[], data: RowData, wasChanged: (key: string) => boolean): void => {
   const isSingleRow = rows.length === 1;
+  const shouldOverrideCurrentValue = isSingleRow ? Fun.always : wasChanged;
   Arr.each(rows, (rowElm) => {
-    const modifier = isSingleRow ? DomModifier.normal(editor, rowElm) : DomModifier.ifTruthy(editor, rowElm);
+    const modifier = DomModifier.normal(editor, rowElm);
 
-    updateSimpleProps(modifier, data);
+    updateSimpleProps(modifier, data, shouldOverrideCurrentValue);
 
     if (Options.hasAdvancedRowTab(editor)) {
-      updateAdvancedProps(modifier, data);
+      updateAdvancedProps(modifier, data, shouldOverrideCurrentValue);
     }
 
-    if (data.align !== oldData.align) {
-      Styles.unApplyAlign(editor, rowElm);
-      Styles.applyAlign(editor, rowElm, data.align);
+    if (wasChanged('align')) {
+      Styles.setAlign(editor, rowElm, data.align);
     }
   });
 };
@@ -63,7 +73,7 @@ const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowD
 
     // Update the rows styling using the dialog data
     if (styleModified) {
-      applyStyleData(editor, rows, data, oldData);
+      applyStyleData(editor, rows, data, Fun.curry(Obj.has, modifiedData));
     }
 
     // Update the rows structure using the dialog data

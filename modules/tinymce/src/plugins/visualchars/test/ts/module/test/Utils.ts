@@ -1,15 +1,19 @@
 import { ApproxStructure, StructAssert } from '@ephox/agar';
 import { Unicode } from '@ephox/katamari';
+import { TinyAssertions } from '@ephox/mcagar';
 
-const assertStruct = (paraStruct: StructAssert[]) => ApproxStructure.build((s, _str) => s.element('body', {
-  children: [
-    s.element('p', {
-      children: paraStruct
-    })
-  ]
-}));
+import Editor from 'tinymce/core/api/Editor';
 
-const assertSpanStruct = assertStruct(ApproxStructure.build((s, str) => [
+const assertStruct = (editor: Editor, paraStruct: StructAssert[]) =>
+  TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, _str) => s.element('body', {
+    children: [
+      s.element('p', {
+        children: paraStruct
+      })
+    ]
+  })));
+
+const assertSpanStruct = (editor: Editor) => assertStruct(editor, ApproxStructure.build((s, str) => [
   s.text(str.is('a')),
   s.element('span', {
     children: [
@@ -24,7 +28,7 @@ const assertSpanStruct = assertStruct(ApproxStructure.build((s, str) => [
   s.text(str.is('b'))
 ]));
 
-const assertNbspStruct = assertStruct(ApproxStructure.build((s, str) => [
+const assertNbspStruct = (editor: Editor) => assertStruct(editor, ApproxStructure.build((s, str) => [
   s.text(str.is('a')),
   s.text(str.is(Unicode.nbsp)),
   s.text(str.is(Unicode.nbsp)),

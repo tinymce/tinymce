@@ -93,6 +93,7 @@ describe('headless.tinymce.themes.silver.components.listbox.ListBoxTest', () => 
     const doc = hook.root();
     const gui = hook.gui();
     const sink = helpers.sink();
+    Representing.setValue(component, 'three');
 
     Mouse.clickOn(gui.element, '.tox-listbox');
     await UiFinder.pWaitFor('Waiting for menu to appear', sink, '.tox-menu .tox-collection__item');

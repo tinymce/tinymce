@@ -31,8 +31,8 @@ const wrappedSetInterval = (callback: Function, time?: number): number => {
 
 const Delay: Delay = {
   /**
-   * Sets an editor timeout it's similar to setTimeout except that it checks if the editor instance is
-   * still alive when the callback gets executed.
+   * Sets a timeout that's similar to the native browser <a href="https://developer.mozilla.org/en-US/docs/Web/API/setTimeout">setTimeout</a>
+   * API, except that it checks if the editor instance is still alive when the callback gets executed.
    *
    * @method setEditorTimeout
    * @param {tinymce.Editor} editor Editor instance to check the removed state on.
@@ -49,8 +49,8 @@ const Delay: Delay = {
   },
 
   /**
-   * Sets an interval timer it's similar to setInterval except that it checks if the editor instance is
-   * still alive when the callback gets executed.
+   * Sets an interval timer that's similar to native browser <a href="https://developer.mozilla.org/en-US/docs/Web/API/setInterval">setInterval</a>
+   * API, except that it checks if the editor instance is still alive when the callback gets executed.
    *
    * @method setEditorInterval
    * @param {Function} callback Callback to execute when interval time runs out.

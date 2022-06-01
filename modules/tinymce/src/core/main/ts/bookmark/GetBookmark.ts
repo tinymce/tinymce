@@ -30,7 +30,7 @@ const getNormalizedTextOffset = (trim: TrimFn, container: Text, offset: number):
 const getPoint = (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng: Range, start: boolean) => {
   let container = rng[start ? 'startContainer' : 'endContainer'];
   let offset = rng[start ? 'startOffset' : 'endOffset'];
-  const point = [];
+  const point: number[] = [];
   let childNodes, after = 0;
   const root = dom.getRoot();
 
@@ -55,19 +55,17 @@ const getPoint = (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng: Range, 
 };
 
 const getLocation = (trim: TrimFn, selection: EditorSelection, normalized: boolean, rng: Range): PathBookmark => {
-  const dom = selection.dom, bookmark: any = {};
-
-  bookmark.start = getPoint(dom, trim, normalized, rng, true);
+  const dom = selection.dom;
+  const start = getPoint(dom, trim, normalized, rng, true);
+  const forward = selection.isForward();
+  const fakeCaret = CaretContainer.isRangeInCaretContainerBlock(rng) ? { isFakeCaret: true } : {};
 
   if (!selection.isCollapsed()) {
-    bookmark.end = getPoint(dom, trim, normalized, rng, false);
+    const end = getPoint(dom, trim, normalized, rng, false);
+    return { start, end, forward, ...fakeCaret };
+  } else {
+    return { start, forward, ...fakeCaret };
   }
-
-  if (CaretContainer.isRangeInCaretContainerBlock(rng)) {
-    bookmark.isFakeCaret = true;
-  }
-
-  return bookmark;
 };
 
 const findIndex = (dom: DOMUtils, name: string, element: Element) => {
@@ -166,12 +164,13 @@ const getCaretBookmark = (selection: EditorSelection): StringPathBookmark => {
 
   return {
     start: CaretBookmark.create(selection.dom.getRoot(), CaretPosition.fromRangeStart(rng)),
-    end: CaretBookmark.create(selection.dom.getRoot(), CaretPosition.fromRangeEnd(rng))
+    end: CaretBookmark.create(selection.dom.getRoot(), CaretPosition.fromRangeEnd(rng)),
+    forward: selection.isForward()
   };
 };
 
 const getRangeBookmark = (selection: EditorSelection): RangeBookmark => {
-  return { rng: selection.getRng() };
+  return { rng: selection.getRng(), forward: selection.isForward() };
 };
 
 const createBookmarkSpan = (dom: DOMUtils, id: string, filled: boolean) => {
@@ -186,6 +185,7 @@ const getPersistentBookmark = (selection: EditorSelection, filled: boolean): IdB
   const collapsed = selection.isCollapsed();
   const element = selection.getNode();
   const name = element.nodeName;
+  const forward = selection.isForward();
 
   if (name === 'IMG') {
     return { name, index: findIndex(dom, name, element) };
@@ -206,9 +206,9 @@ const getPersistentBookmark = (selection: EditorSelection, filled: boolean): IdB
   const startBookmarkNode = createBookmarkSpan(dom, id + '_start', filled);
   rangeInsertNode(dom, rng, startBookmarkNode);
 
-  selection.moveToBookmark({ id, keep: true });
+  selection.moveToBookmark({ id, keep: true, forward });
 
-  return { id };
+  return { id, forward };
 };
 
 const getBookmark = (selection: EditorSelection, type: number, normalized: boolean): Bookmark => {

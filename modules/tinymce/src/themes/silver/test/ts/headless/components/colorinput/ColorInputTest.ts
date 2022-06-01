@@ -161,7 +161,7 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
     const doc = hook.root();
     await pOpenPicker();
     await FocusTools.pTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch');
-    Keyboard.activeKeydown(doc, Keys.escape());
+    Keyboard.activeKeyup(doc, Keys.escape());
     await FocusTools.pTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container > div:not(.mce-silver-sink) span');
     UiFinder.notExists(helpers.sink(), '.tox-swatches');
   });

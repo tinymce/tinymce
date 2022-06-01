@@ -52,9 +52,37 @@ export interface OptionSpec<T, U> extends BaseOptionSpec {
 }
 
 /**
- * TinyMCE Editor Options API.
+ * TinyMCE Editor Options API. The options API provides the ability to register, lookup and set editor options.
+ *
+ * @summary All options need to be registered before they can be used in the editor. This is done by using the `register()` API which requires a name
+ * and an option specification. The specification should contain a `processor` and an optional `default` value. The processor is used to parse
+ * and validate the option value either passed in the initial configuration or via the `set()` API.
+ * <br><br>
+ * The processor can either be a custom function that returns if the option value is valid, or one of the following built-in processors:
+ * <br><br>
+ * - `string`<br>
+ * - `number`<br>
+ * - `boolean`<br>
+ * - `array`<br>
+ * - `function`<br>
+ * - `object`<br>
+ * - `string[]`<br>
+ * - `object[]`<br>
+ * - `regexp`
  *
  * @class tinymce.EditorOptions
+ * @example
+ * // Register an option
+ * editor.options.register('custom_option', {
+ *   processor: 'string',
+ *   default: 'myoption'
+ * });
+ *
+ * // Lookup an option
+ * editor.options.get('custom_option');
+ *
+ * // Set an option
+ * editor.options.set('custom_option', 'value');
  */
 
 export interface Options {

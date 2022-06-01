@@ -8,29 +8,23 @@ export interface DomModifier {
 
 // The get node is required here because it can be transformed
 // when switching between tags (e.g. th and td)
-const modifiers = (testTruthy: boolean) => (editor: Editor, element: Element): DomModifier => {
+const normal = (editor: Editor, element: Element): DomModifier => {
   const dom = editor.dom;
 
   const setAttrib = (attr: string, value: string) => {
-    if (!testTruthy || value) {
-      dom.setAttrib(element, attr, value);
-    }
+    dom.setAttrib(element, attr, value);
   };
 
   const setStyle = (prop: string, value: string) => {
-    if (!testTruthy || value) {
-      dom.setStyle(element, prop, value);
-    }
+    dom.setStyle(element, prop, value);
   };
 
   const setFormat = (formatName: string, value: string) => {
-    if (!testTruthy || value) {
-      // Remove format if given an empty string
-      if (value === '') {
-        editor.formatter.remove(formatName, { value: null }, element, true);
-      } else {
-        editor.formatter.apply(formatName, { value }, element);
-      }
+    // Remove format if given an empty string
+    if (value === '') {
+      editor.formatter.remove(formatName, { value: null }, element, true);
+    } else {
+      editor.formatter.apply(formatName, { value }, element);
     }
   };
 
@@ -42,6 +36,5 @@ const modifiers = (testTruthy: boolean) => (editor: Editor, element: Element): D
 };
 
 export const DomModifier = {
-  normal: modifiers(false),
-  ifTruthy: modifiers(true)
+  normal
 };
