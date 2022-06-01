@@ -25,7 +25,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     await RealClipboard.pPaste('iframe => body');
   };
 
-  it('TINY-7719: Wrapped elements are preserved in copy and paste (pre + headings)', async () => {
+  it('TINY-7719: Wrapped elements are preserved in copy and paste (headings)', async () => {
     const editor = hook.editor();
 
     const pTestBlockTags = async (tagName: string) => {
@@ -58,6 +58,10 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     for (const tagName of [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]) {
       await pTestBlockTags(tagName);
     }
+  });
+
+  it('TINY-7719: Wrapped elements are preserved in copy and paste (pre)', async () => {
+    const editor = hook.editor();
 
     const pTestPreTag = async (tagName: string) => {
       editor.setContent(
