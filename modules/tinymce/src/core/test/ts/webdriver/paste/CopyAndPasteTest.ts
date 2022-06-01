@@ -139,5 +139,4 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
       await testInlineTags(tagName);
     }
   });
-
 });
