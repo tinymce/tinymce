@@ -22,10 +22,11 @@ import * as SelectionUtils from '../selection/SelectionUtils';
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
+const wrappedElements = [ 'pre' ];
+
 const isFlattenable = (fragment: AstNode) => {
   const currentNode = fragment.firstChild;
 
-  const wrappedElements = [ 'pre' ];
   const isAFlattenableTag = Arr.contains(wrappedElements, currentNode.name);
   const isPastingInTheSameTag = currentNode.name === currentNode.parent.name;
 
