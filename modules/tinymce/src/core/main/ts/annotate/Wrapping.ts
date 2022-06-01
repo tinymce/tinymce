@@ -1,4 +1,4 @@
-import { Arr, Id, Singleton, Unicode } from '@ephox/katamari';
+import { Arr, Id, Obj, Singleton, Unicode } from '@ephox/katamari';
 import { Attribute, Class, Classes, Html, Insert, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -16,7 +16,7 @@ export type Decorator = (
   uid: string,
   data: DecoratorData
 ) => {
-  attributes?: { };
+  attributes?: {};
   classes?: string[];
 };
 
@@ -27,21 +27,54 @@ const applyWordGrab = (editor: Editor, rng: Range): void => {
   editor.selection.setRng(rng);
 };
 
-const makeAnnotation = (eDoc: Document, { uid = Id.generate('mce-annotation'), ...data }, annotationName: string, decorate: Decorator): SugarElement => {
-  const master = SugarElement.fromTag('span', eDoc);
-  Class.add(master, Markings.annotation());
-  Attribute.set(master, `${Markings.dataAnnotationId()}`, uid);
-  Attribute.set(master, `${Markings.dataAnnotation()}`, annotationName);
+const applyAnnotation = (
+  elem: SugarElement<Element>,
+  { uid = Id.generate('mce-annotation'), ...data },
+  annotationName: string, decorate: Decorator,
+  directAnnotation: boolean
+): void => {
+  Class.add(elem, Markings.annotation());
+  Attribute.set(elem, `${Markings.dataAnnotationId()}`, uid);
+  Attribute.set(elem, `${Markings.dataAnnotation()}`, annotationName);
 
-  const { attributes = { }, classes = [ ] } = decorate(uid, data);
-  Attribute.setAll(master, attributes);
-  Classes.add(master, classes);
+  const { attributes = {}, classes = [] } = decorate(uid, data);
+  Attribute.setAll(elem, attributes);
+  Classes.add(elem, classes);
+
+  if (directAnnotation) {
+    if (classes.length > 0) {
+      Attribute.set(elem, `${Markings.dataAnnotationClasses()}`, classes.join(','));
+    }
+    const attributeNames = Obj.keys(attributes);
+    if (attributeNames.length > 0) {
+      Attribute.set(elem, `${Markings.dataAnnotationAttributes()}`, attributeNames.join(','));
+    }
+  }
+};
+
+const removeDirectAnnotation = (elem: SugarElement<Element>) => {
+  Class.remove(elem, Markings.annotation());
+  Attribute.remove(elem, `${Markings.dataAnnotationId()}`);
+  Attribute.remove(elem, `${Markings.dataAnnotation()}`);
+  Attribute.remove(elem, `${Markings.dataAnnotationActive()}`);
+
+  const customAttrNames = Attribute.getOpt(elem, `${Markings.dataAnnotationAttributes()}`).map((names) => names.split(',')).getOr([]);
+  const customClasses = Attribute.getOpt(elem, `${Markings.dataAnnotationClasses()}`).map((names) => names.split(',')).getOr([]);
+  Arr.each(customAttrNames, (name) => Attribute.remove(elem, name));
+  Classes.remove(elem, customClasses);
+  Attribute.remove(elem, `${Markings.dataAnnotationClasses()}`);
+  Attribute.remove(elem, `${Markings.dataAnnotationAttributes()}`);
+};
+
+const makeAnnotation = (eDoc: Document, data, annotationName: string, decorate: Decorator): SugarElement => {
+  const master = SugarElement.fromTag('span', eDoc);
+  applyAnnotation(master, data, annotationName, decorate, false);
   return master;
 };
 
 const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: Decorator, data): any[] => {
   // Setup all the wrappers that are going to be used.
-  const newWrappers = [ ];
+  const newWrappers = [];
 
   // Setup the spans for the comments
   const master = makeAnnotation(editor.getDoc(), data, annotationName, decorate);
@@ -80,6 +113,12 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
         break;
       }
 
+      case ChildContext.ValidBlock: {
+        finishWrapper();
+        applyAnnotation(elem, data, annotationName, decorate, true);
+        break;
+      }
+
       case ChildContext.Valid: {
         const w = getOrOpenWrapper();
         Insert.wrap(elem, w);
@@ -108,7 +147,7 @@ const annotate = (editor: Editor, rng: Range, annotationName: string, decorate: 
   return newWrappers;
 };
 
-const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorSettings, data: { }): void => {
+const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorSettings, data: {}): void => {
   editor.undoManager.transact(() => {
     const selection = editor.selection;
     const initialRng = selection.getRng();
@@ -140,5 +179,6 @@ const annotateWithBookmark = (editor: Editor, name: string, settings: AnnotatorS
 };
 
 export {
+  removeDirectAnnotation,
   annotateWithBookmark
 };

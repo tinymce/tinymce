@@ -9,6 +9,7 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): void => {
   const identifyParserNode = (span: AstNode): Optional<AnnotatorSettings> => Optional.from(span.attr(Markings.dataAnnotation())).bind(registry.lookup);
 
   editor.serializer.addTempAttr(Markings.dataAnnotationActive());
+  // TODO: May need something for blocks as well
   editor.serializer.addNodeFilter('span', (spans) => {
     Arr.each(spans, (span) => {
       identifyParserNode(span).each((settings) => {

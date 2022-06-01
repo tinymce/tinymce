@@ -4,11 +4,21 @@
 
 @document-comment-background-color: #fff0b7;
 @document-comment-active-background-color: #ffe168;
+@document-comment-outline-color: #ffe89d;
 
-.tox-comments-visible .tox-comment {
-  background-color: @document-comment-background-color;
-}
+.tox-comments-visible {
+  .tox-comment[contenteditable="false"]:not([data-mce-selected]),
+  span.tox-comment img:not([data-mce-selected]),
+  span.tox-comment span.mce-preview-object:not([data-mce-selected]) {
+    outline: 3px solid @document-comment-outline-color;
+  }
 
-.tox-comments-visible .tox-comment[data-mce-annotation-active="true"]:not([data-mce-selected="inline-boundary"]) {
-  background-color: @document-comment-active-background-color;
+  span.tox-comment {
+    background-color: @document-comment-background-color;
+    outline: none;
+  }
+
+  span.tox-comment[data-mce-annotation-active="true"]:not([data-mce-selected="inline-boundary"]) {
+    background-color: @document-comment-active-background-color;
+  }
 }
