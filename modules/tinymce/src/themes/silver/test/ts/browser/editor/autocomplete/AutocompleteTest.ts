@@ -555,6 +555,33 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
       TinyContentActions.keydown(editor, Keys.enter());
       await pWaitForAutocompleteToClose();
     });
+
+    it('TINY-8759: In a nested list', async () => {
+      const editor = hook.editor();
+      await pSetContentAndTrigger(editor, {
+        initialContent: '<ul><li>Text<ul><li>*</li></ul></li></ul>',
+        triggerChar: '*',
+        additionalContent: 'bc',
+        cursorPos: {
+          elementPath: [ 1, 0, 1, 0 ],
+          offset: 1
+        }
+      });
+      await TinyUiActions.pWaitForPopup(editor, '.tox-autocompleter div[role="menu"]');
+      await pAssertAutocompleterStructure({
+        type: 'grid',
+        groups: [
+          [
+            { title: 'asterisk-a', icon: '*' },
+            { title: 'asterisk-b', icon: '*' },
+            { title: 'asterisk-c', icon: '*' },
+            { title: 'asterisk-d', icon: '*' }
+          ]
+        ]
+      });
+      TinyContentActions.keydown(editor, Keys.enter());
+      await pWaitForAutocompleteToClose();
+    });
   });
 
   it('Checking autocomplete activation based on content', async () => {
