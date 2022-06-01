@@ -29,7 +29,7 @@ const listItems = [ 'li', 'dd', 'dt' ];
 const lists = [ 'ul', 'ol', 'dl' ];
 const wsElements = [ 'pre', 'script', 'textarea', 'style' ];
 
-const wrapElementsWithoutInLineElements = [ 'pre' ].concat(headings);
+const wrapBlockElements = [ 'pre' ].concat(headings);
 
 const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
   let lookup: Record<string, boolean> | undefined;
@@ -51,8 +51,8 @@ const isVoid = lazyLookup(voids);
 const isTableSection = lazyLookup(tableSections);
 const isTableCell = lazyLookup<HTMLTableCellElement>(tableCells);
 const isWsPreserveElement = lazyLookup(wsElements);
-const isWrapElementsWithoutInLineElements = lazyLookup(wrapElementsWithoutInLineElements);
-const isWrapElement = (node: SugarElement<Node>) => isWrapElementsWithoutInLineElements(node) || isInline(node);
+const isWrapBlockElement = lazyLookup(wrapBlockElements);
+const isWrapElement = (node: SugarElement<Node>) => isWrapBlockElement(node) || isInline(node);
 
 export {
   isBlock,
