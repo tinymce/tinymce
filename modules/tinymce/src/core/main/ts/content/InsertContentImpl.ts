@@ -28,7 +28,7 @@ const shouldFlatten = (fragment: AstNode, parentNode: Element) => {
   const currentNode = fragment.firstChild;
 
   const isAFlattenableTag = Arr.contains(wrappedElements, currentNode.name);
-  const isPastingInTheSameTag = currentNode.name === parentNode.tagName;
+  const isPastingInTheSameTag = currentNode.name.toUpperCase() === parentNode.tagName;
 
   return isAFlattenableTag && isPastingInTheSameTag;
 };
