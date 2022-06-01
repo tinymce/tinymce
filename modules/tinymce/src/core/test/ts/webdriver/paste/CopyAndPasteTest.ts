@@ -111,28 +111,9 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     };
 
     const inlineElements = [
-      'big',
-      'small',
-      'tt',
-      'abbr',
-      'acronym',
-      'cite',
-      'code',
-      'dfn',
-      'em',
-      'kbd',
-      'strong',
-      'samp',
-      'var',
-      'a',
-      'bdo',
-      'map',
-      'q',
-      'span',
-      'sub',
-      'sup',
-      'button',
-      'label'
+      'big', 'small', 'tt', 'abbr', 'acronym', 'cite', 'code',
+      'dfn', 'em', 'kbd', 'strong', 'samp', 'var', 'a', 'bdo',
+      'map', 'q', 'span', 'sub', 'sup', 'button', 'label'
     ];
 
     for (const tagName of inlineElements) {
