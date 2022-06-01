@@ -21,7 +21,7 @@ const copyAndPast = async (editor: Editor, source: Selection, target: Selection)
   await ui.pWaitForUi('*[role="menu"]');
   await RealMouse.pClickOn('div[title="Copy"]');
   api.setSelection(...target);
-  await RealClipboard.pPaste('iframe => body => h1');
+  await RealClipboard.pPaste('iframe => body');
 };
 
 describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
