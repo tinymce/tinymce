@@ -1,6 +1,6 @@
 import { RealClipboard, RealMouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyApis, TinyAssertions, TinyHooks, TinyUi } from '@ephox/mcagar';
+import { TinyApis, TinyAssertions, TinyHooks, TinyUi } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
