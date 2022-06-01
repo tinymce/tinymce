@@ -28,7 +28,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   it('TINY-7719: Wrapped elements are preserved in copy and paste (pre + headings)', async () => {
     const editor = hook.editor();
 
-    const testBlockTags = async (tagName) => {
+    const pTestBlockTags = async (tagName: string) => {
       editor.setContent(
         `<${tagName}>abc</${tagName}>` +
         '<p>other kind of tag</p>' +
@@ -56,10 +56,10 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     };
 
     for (const tagName of [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ]) {
-      await testBlockTags(tagName);
+      await pTestBlockTags(tagName);
     }
 
-    const testPreTag = async (tagName) => {
+    const pTestPreTag = async (tagName: string) => {
       editor.setContent(
         `<${tagName}>abc</${tagName}>` +
         '<p>other kind of tag</p>' +
@@ -85,14 +85,14 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     };
 
     for (const tagName of [ 'pre' ]) {
-      await testPreTag(tagName);
+      await pTestPreTag(tagName);
     }
   });
 
   it('TINY-7719: Wrapped elements are preserved in copy and paste (inline elements)', async () => {
     const editor = hook.editor();
 
-    const testInlineTags = async (tagName) => {
+    const pTestInlineTags = async (tagName: string) => {
       editor.setContent(
         `<p><${tagName} class="someclass">abc</${tagName}></p>` +
         '<h1>something</h1>' +
@@ -117,7 +117,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     ];
 
     for (const tagName of inlineElements) {
-      await testInlineTags(tagName);
+      await pTestInlineTags(tagName);
     }
   });
 });
