@@ -4,27 +4,27 @@ import { TinyApis, TinyAssertions, TinyHooks, TinyUi } from '@ephox/wrap-mcagar'
 
 import Editor from 'tinymce/core/api/Editor';
 
-const hook = TinyHooks.bddSetup<Editor>({
-  base_url: '/project/tinymce/js/tinymce',
-  toolbar: false,
-  statusbar: false
-}, []);
-
-type Selection = [ number[], number, number[], number ];
-
-const copyAndPast = async (editor: Editor, source: Selection, target: Selection): Promise<void> => {
-  const ui = TinyUi(editor);
-  const api = TinyApis(editor);
-
-  api.setSelection(...source);
-  ui.clickOnMenu('button:contains("Edit")');
-  await ui.pWaitForUi('*[role="menu"]');
-  await RealMouse.pClickOn('div[title="Copy"]');
-  api.setSelection(...target);
-  await RealClipboard.pPaste('iframe => body');
-};
-
 describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
+    base_url: '/project/tinymce/js/tinymce',
+    toolbar: false,
+    statusbar: false
+  }, []);
+
+  type Selection = [ number[], number, number[], number ];
+
+  const pCopyAndPaste = async (editor: Editor, source: Selection, target: Selection): Promise<void> => {
+    const ui = TinyUi(editor);
+    const api = TinyApis(editor);
+
+    api.setSelection(...source);
+    ui.clickOnMenu('button:contains("Edit")');
+    await ui.pWaitForUi('*[role="menu"]');
+    await RealMouse.pClickOn('div[title="Copy"]');
+    api.setSelection(...target);
+    await RealClipboard.pPaste('iframe => body');
+  };
+
   it('TINY-7719: Wrapped elements are preserved in copy and paste (pre + headings)', async () => {
     const editor = hook.editor();
 
@@ -34,12 +34,12 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
         '<p>other kind of tag</p>' +
         `<${tagName}>same tag</${tagName}>`
       );
-      await copyAndPast(
+      await pCopyAndPaste(
         editor,
         [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
         [[ 2, 0 ], 1, [ 2, 0 ], 3 ]
       );
-      await copyAndPast(
+      await pCopyAndPaste(
         editor,
         [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
         [[ 1, 0 ], 1, [ 1, 0 ], 4 ]
@@ -65,12 +65,12 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
         '<p>other kind of tag</p>' +
         `<${tagName}>same tag</${tagName}>`
       );
-      await copyAndPast(
+      await pCopyAndPaste(
         editor,
         [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
         [[ 2, 0 ], 1, [ 2, 0 ], 3 ]
       );
-      await copyAndPast(
+      await pCopyAndPaste(
         editor,
         [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
         [[ 1, 0 ], 1, [ 1, 0 ], 4 ]
@@ -98,7 +98,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
         '<h1>something</h1>' +
         '<p>abc def</p>'
       );
-      await copyAndPast(
+      await pCopyAndPaste(
         editor,
         [[ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3 ],
         [[ 1, 0 ], 1, [ 1, 0 ], 4 ]
