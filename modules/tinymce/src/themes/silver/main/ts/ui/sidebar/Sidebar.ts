@@ -101,14 +101,12 @@ const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSi
     Replacing.set(slider, [ makeSidebar(panelConfigs) ]);
 
     // Show the default sidebar
-    if (Type.isString(showSidebar)) {
+    if (Type.isString(showSidebar) && Obj.has(panelConfigs, showSidebar)) {
       Composing.getCurrent(slider).each((slotContainer) => {
-        if (!SlotContainer.getSlot(slotContainer, showSidebar).isNone()) {
-          SlotContainer.showSlot(slotContainer, showSidebar);
-          Sliding.immediateGrow(slider);
-          // TINY-8710: Remove the wrong width that is set to the sidebar when the skin isn't loaded yet
-          Css.remove(slider.element, 'width');
-        }
+        SlotContainer.showSlot(slotContainer, showSidebar);
+        Sliding.immediateGrow(slider);
+        // TINY-8710: Remove the width as since the skins/styles won't have loaded yet it's going to be incorrect
+        Css.remove(slider.element, 'width');
       });
     }
   });
