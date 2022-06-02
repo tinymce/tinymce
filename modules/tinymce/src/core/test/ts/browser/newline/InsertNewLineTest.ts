@@ -484,4 +484,214 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       });
     });
   });
+
+  context('keyboard_enter_behavior "block"', () => {
+    before(() => {
+      hook.editor().options.set('keyboard_enter_behavior', 'block');
+    });
+
+    after(() => {
+      hook.editor().options.unset('keyboard_enter_behavior');
+    });
+
+    it('Split block in the middle', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, '<p>a</p><p>b</p>');
+      TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
+    });
+
+    it('Split block in the middle with shift+enter', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      insertNewline(editor, { shiftKey: true });
+      TinyAssertions.assertContent(editor, '<p>a</p><p>b</p>');
+      TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
+    });
+
+    context('ignores br_newline_selector', () => {
+      before(() => {
+        hook.editor().options.set('br_newline_selector', 'p');
+      });
+
+      after(() => {
+        hook.editor().options.unset('br_newline_selector');
+      });
+
+      it('Insert newline where br is forced', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>ab</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        editor.nodeChanged();
+        TinyAssertions.assertContent(editor, '<p>a</p><p>b</p>');
+      });
+
+    });
+
+    context('does not ignore no_newline_selector', () => {
+      before(() => {
+        hook.editor().options.set('no_newline_selector', 'p');
+      });
+
+      after(() => {
+        hook.editor().options.unset('no_newline_selector');
+      });
+
+      it('Insert newline where newline is blocked', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>ab</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        editor.nodeChanged();
+        TinyAssertions.assertContent(editor, '<p>ab</p>');
+      });
+    });
+  });
+
+  context('keyboard_enter_behavior "linebreak"', () => {
+    before(() => {
+      hook.editor().options.set('keyboard_enter_behavior', 'linebreak');
+    });
+
+    after(() => {
+      hook.editor().options.unset('keyboard_enter_behavior');
+    });
+
+    it('Split block in the middle', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, '<p>a<br>b</p>');
+      TinyAssertions.assertSelection(editor, [ 0 ], 2, [ 0 ], 2);
+    });
+
+    it('Split block in the middle with shift+enter', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      insertNewline(editor, { shiftKey: true });
+      TinyAssertions.assertContent(editor, '<p>a<br>b</p>');
+      TinyAssertions.assertSelection(editor, [ 0 ], 2, [ 0 ], 2);
+    });
+
+    context('ignores br_newline_selector', () => {
+      before(() => {
+        hook.editor().options.set('br_newline_selector', 'p');
+      });
+
+      after(() => {
+        hook.editor().options.unset('br_newline_selector');
+      });
+
+      it('Insert newline where br is not forced', () => {
+        const editor = hook.editor();
+        editor.setContent('<div>ab</div>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        editor.nodeChanged();
+        TinyAssertions.assertContent(editor, '<div>a<br>b</div>');
+      });
+
+    });
+
+    context('does not ignore no_newline_selector', () => {
+      before(() => {
+        hook.editor().options.set('no_newline_selector', 'p');
+      });
+
+      after(() => {
+        hook.editor().options.unset('no_newline_selector');
+      });
+
+      it('Insert newline where newline is blocked', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>ab</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        editor.nodeChanged();
+        TinyAssertions.assertContent(editor, '<p>ab</p>');
+      });
+    });
+  });
+
+  context('keyboard_enter_behavior "invert"', () => {
+    before(() => {
+      hook.editor().options.set('keyboard_enter_behavior', 'invert');
+    });
+
+    after(() => {
+      hook.editor().options.unset('keyboard_enter_behavior');
+    });
+
+    it('Split block in the middle', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      insertNewline(editor, { });
+      TinyAssertions.assertContent(editor, '<p>a<br>b</p>');
+      TinyAssertions.assertSelection(editor, [ 0 ], 2, [ 0 ], 2);
+    });
+
+    it('Split block in the middle with shift+enter', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      insertNewline(editor, { shiftKey: true });
+      TinyAssertions.assertContent(editor, '<p>a</p><p>b</p>');
+      TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
+    });
+
+    context('inverts br_newline_selector', () => {
+      before(() => {
+        hook.editor().options.set('br_newline_selector', 'p');
+      });
+
+      after(() => {
+        hook.editor().options.unset('br_newline_selector');
+      });
+
+      it('Insert newline where br is forced', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>ab</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        editor.nodeChanged();
+        TinyAssertions.assertContent(editor, '<p>a</p><p>b</p>');
+      });
+
+      it('Insert newline where br is not forced', () => {
+        const editor = hook.editor();
+        editor.setContent('<div>ab</div>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        editor.nodeChanged();
+        TinyAssertions.assertContent(editor, '<div>a<br>b</div>');
+      });
+
+    });
+
+    context('does not ignore no_newline_selector', () => {
+      before(() => {
+        hook.editor().options.set('no_newline_selector', 'p');
+      });
+
+      after(() => {
+        hook.editor().options.unset('no_newline_selector');
+      });
+
+      it('Insert newline where newline is blocked', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>ab</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        insertNewline(editor, { });
+        editor.nodeChanged();
+        TinyAssertions.assertContent(editor, '<p>ab</p>');
+      });
+    });
+  });
 });

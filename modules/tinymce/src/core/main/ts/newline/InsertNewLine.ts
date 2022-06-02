@@ -45,28 +45,23 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
     }
   };
 
+  const logicalAction = NewLineAction.getAction(editor, evt);
+
   switch (getKeyboardEnterBehavior(editor)) {
     case 'linebreak':
-      lineBreak();
+      logicalAction.fold(lineBreak, lineBreak, Fun.noop);
       break;
     case 'block':
-      blockBreak();
+      logicalAction.fold(blockBreak, blockBreak, Fun.noop);
       break;
     case 'invert':
-      NewLineAction.getAction(editor, evt).fold(
-        blockBreak,
-        lineBreak,
-        Fun.noop
-      );
+      logicalAction.fold(blockBreak, lineBreak, Fun.noop);
       break;
     // implied by the options processor, unnecessary
     // case 'default':
     default:
-      NewLineAction.getAction(editor, evt).fold(
-        lineBreak,
-        blockBreak,
-        Fun.noop
-      );
+      logicalAction.fold(lineBreak, blockBreak, Fun.noop);
+      break;
   }
 };
 
