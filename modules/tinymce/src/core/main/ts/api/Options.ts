@@ -139,6 +139,14 @@ const register = (editor: Editor) => {
     default: {}
   });
 
+  registerOption('keyboard_enter_behavior', {
+    processor: (value) => {
+      const valid = Arr.contains([ 'block', 'linebreak', 'invert', 'default' ], value);
+      return valid ? { value, valid } : { valid: false, message: 'Must be one of: block, linebreak, invert or default.' };
+    },
+    default: 'default'
+  });
+
   registerOption('br_newline_selector', {
     processor: 'string',
     default: '.mce-toc h2,figcaption,caption'
@@ -780,6 +788,7 @@ const getContentSecurityPolicy = option('content_security_policy');
 const shouldPutBrInPre = option('br_in_pre');
 const getForcedRootBlock = option('forced_root_block');
 const getForcedRootBlockAttrs = option('forced_root_block_attrs');
+const getKeyboardEnterBehavior = option('keyboard_enter_behavior');
 const getBrNewLineSelector = option('br_newline_selector');
 const getNoNewLineSelector = option('no_newline_selector');
 const shouldKeepStyles = option('keep_styles');
@@ -882,6 +891,7 @@ export {
   shouldPutBrInPre,
   getForcedRootBlock,
   getForcedRootBlockAttrs,
+  getKeyboardEnterBehavior,
   getBrNewLineSelector,
   getNoNewLineSelector,
   shouldKeepStyles,
