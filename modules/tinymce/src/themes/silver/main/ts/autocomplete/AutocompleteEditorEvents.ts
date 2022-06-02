@@ -8,7 +8,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as AutocompleteTagReader from './AutocompleteTagReader';
 
 export interface AutocompleterUiApi {
-  readonly getView: () => Optional<AlloyComponent>;
+  readonly getMenu: () => Optional<AlloyComponent>;
   readonly isMenuOpen: () => boolean;
   readonly isActive: () => boolean;
   readonly isProcessingAction: () => boolean;
@@ -20,7 +20,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
     AlloyTriggers.emitWith(item, NativeEvents.keydown(), { raw: e });
   };
 
-  const getItem = (): Optional<AlloyComponent> => api.getView().bind(Highlighting.getHighlighted);
+  const getItem = (): Optional<AlloyComponent> => api.getMenu().bind(Highlighting.getHighlighted);
 
   editor.on('keydown', (e) => {
     const keyCode = e.which;
@@ -40,7 +40,7 @@ const setup = (api: AutocompleterUiApi, editor: Editor) => {
         getItem().fold(
           // No current item, so highlight the first one
           () => {
-            api.getView().each(Highlighting.highlightFirst);
+            api.getMenu().each(Highlighting.highlightFirst);
           },
 
           // There is a current item, so move down in the menu
