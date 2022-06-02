@@ -54,7 +54,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: UiFactoryBackstagePr
       dom: {
         tag: 'iframe',
         attributes,
-        classes: (isTransparent ? [ baseClass ] : [ baseClass, baseClass + '--opaque' ])
+        classes: (isTransparent ? [ baseClass ] : [ baseClass, `${baseClass}--opaque` ])
       },
       behaviours: Behaviour.derive([
         Tabstopping.config({ }),
