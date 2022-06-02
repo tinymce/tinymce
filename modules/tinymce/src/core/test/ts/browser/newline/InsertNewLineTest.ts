@@ -485,13 +485,13 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
-  context('keyboard_enter_behavior "block"', () => {
+  context('newline_behavior "block"', () => {
     before(() => {
-      hook.editor().options.set('keyboard_enter_behavior', 'block');
+      hook.editor().options.set('newline_behavior', 'block');
     });
 
     after(() => {
-      hook.editor().options.unset('keyboard_enter_behavior');
+      hook.editor().options.unset('newline_behavior');
     });
 
     it('Split block in the middle', () => {
@@ -552,13 +552,13 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
-  context('keyboard_enter_behavior "linebreak"', () => {
+  context('newline_behavior "linebreak"', () => {
     before(() => {
-      hook.editor().options.set('keyboard_enter_behavior', 'linebreak');
+      hook.editor().options.set('newline_behavior', 'linebreak');
     });
 
     after(() => {
-      hook.editor().options.unset('keyboard_enter_behavior');
+      hook.editor().options.unset('newline_behavior');
     });
 
     it('Split block in the middle', () => {
@@ -619,13 +619,13 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
-  context('keyboard_enter_behavior "invert"', () => {
+  context('newline_behavior "invert"', () => {
     before(() => {
-      hook.editor().options.set('keyboard_enter_behavior', 'invert');
+      hook.editor().options.set('newline_behavior', 'invert');
     });
 
     after(() => {
-      hook.editor().options.unset('keyboard_enter_behavior');
+      hook.editor().options.unset('newline_behavior');
     });
 
     it('Split block in the middle', () => {

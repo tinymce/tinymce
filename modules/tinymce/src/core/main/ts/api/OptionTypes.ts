@@ -136,7 +136,7 @@ interface BaseEditorOptions {
   invalid_elements?: string;
   invalid_styles?: string | Record<string, string>;
   keep_styles?: boolean;
-  keyboard_enter_behavior?: string;
+  newline_behavior?: string;
   language?: string;
   language_load?: boolean;
   language_url?: string;

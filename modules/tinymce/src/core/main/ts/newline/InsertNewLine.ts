@@ -1,7 +1,7 @@
 import { Fun, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
-import { getKeyboardEnterBehavior } from '../api/Options';
+import { getNewlineBehavior } from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import { execDeleteCommand } from '../delete/DeleteUtils';
 import { fireFakeBeforeInputEvent, fireFakeInputEvent } from '../keyboard/FakeInputEvents';
@@ -47,7 +47,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
 
   const logicalAction = NewLineAction.getAction(editor, evt);
 
-  switch (getKeyboardEnterBehavior(editor)) {
+  switch (getNewlineBehavior(editor)) {
     case 'linebreak':
       logicalAction.fold(lineBreak, lineBreak, Fun.noop);
       break;
