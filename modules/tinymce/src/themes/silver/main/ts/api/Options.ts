@@ -301,7 +301,7 @@ const useElementPath = option('elementpath');
 const useBranding = option('branding');
 const getResize = option('resize');
 const getPasteAsText = option('paste_as_text');
-const getSidebarShow = option('sidebar_show');
+const getSidebarShow = wrapOptional(option('sidebar_show'));
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;

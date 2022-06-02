@@ -71,13 +71,13 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarShowOptionTest', () => {
     McEditor.remove(editor);
   });
 
-  it('TINY-8710: Show a different sidebar on init', async () => {
+  it('TINY-8710: Sidebar name should be lowercased', async () => {
     const editor = await McEditor.pFromSettings<Editor>({
       ...settingsFactory(store),
-      sidebar_show: 'sidebartwo'
+      sidebar_show: 'SideBarTwo'
     });
     assertNotAnimating();
-    assertSidebarNotOpen();
+    assertSidebarOpen();
     store.assertEq('Asserting initial show of sidebars', [
       {
         name: 'sidebartwo:show',
