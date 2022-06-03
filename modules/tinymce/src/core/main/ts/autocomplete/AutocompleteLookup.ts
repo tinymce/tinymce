@@ -17,7 +17,8 @@ export interface AutocompleteLookupInfo {
 
 const isPreviousCharContent = (dom: DOMUtils, leaf: Spot.SpotPoint<Node>) => {
   // If at the start of the range, then we need to look backwards one more place. Otherwise we just need to look at the current text
-  return TextSearch.repeatLeft(dom, leaf.container, leaf.offset, (_element, offset) => offset === 0 ? -1 : offset, dom.getParent(leaf.container, dom.isBlock)).filter((spot) => {
+  const root = dom.getParent(leaf.container, dom.isBlock);
+  return TextSearch.repeatLeft(dom, leaf.container, leaf.offset, (_element, offset) => offset === 0 ? -1 : offset, root).filter((spot) => {
     const char = spot.container.data.charAt(spot.offset - 1);
     return !isWhitespace(char);
   }).isSome();
