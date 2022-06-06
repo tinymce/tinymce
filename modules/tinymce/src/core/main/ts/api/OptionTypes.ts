@@ -148,6 +148,7 @@ interface BaseEditorOptions {
   min_width?: number;
   model?: string;
   model_url?: string;
+  newline_behavior?: 'block' | 'linebreak' | 'invert' | 'default';
   no_newline_selector?: string;
   noneditable_class?: string;
   noneditable_regexp?: RegExp | RegExp[];
