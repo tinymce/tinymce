@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 - New `sidebar_show` option to show the specified sidebar on initialization #TINY-8710
-- New `newline_behavior` option to control whether blocks or linebreaks are inserted #TINY-8458
+- New `newline_behavior` option to control what happens when the enter key is pressed or using commands such as `mceInsertNewLine` #TINY-8458
 
 ### Changed
 - Toggling fullscreen mode with the `fullscreen` plugin now also fires the `ResizeEditor` event #TINY-8701

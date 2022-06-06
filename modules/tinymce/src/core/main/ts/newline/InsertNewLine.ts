@@ -10,40 +10,27 @@ import * as InsertBr from './InsertBr';
 import * as NewLineAction from './NewLineAction';
 
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
-  const lineBreak = () => {
+  const insertBreak = (breakType: (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => void, fakeEvent: string) => () => {
     if (!editor.selection.isCollapsed()) {
       execDeleteCommand(editor);
     }
     if (Type.isNonNullable(evt)) {
-      const event = fireFakeBeforeInputEvent(editor, 'insertLineBreak');
+      const event = fireFakeBeforeInputEvent(editor, fakeEvent);
       if (event.isDefaultPrevented()) {
         return;
       }
     }
 
-    InsertBr.insert(editor, evt);
+    breakType(editor, evt);
 
     if (Type.isNonNullable(evt)) {
-      fireFakeInputEvent(editor, 'insertLineBreak');
+      fireFakeInputEvent(editor, fakeEvent);
     }
   };
-  const blockBreak = () => {
-    if (!editor.selection.isCollapsed()) {
-      execDeleteCommand(editor);
-    }
-    if (Type.isNonNullable(evt)) {
-      const event = fireFakeBeforeInputEvent(editor, 'insertParagraph');
-      if (event.isDefaultPrevented()) {
-        return;
-      }
-    }
 
-    InsertBlock.insert(editor, evt);
+  const lineBreak = insertBreak(InsertBr.insert, 'insertLineBreak');
 
-    if (Type.isNonNullable(evt)) {
-      fireFakeInputEvent(editor, 'insertParagraph');
-    }
-  };
+  const blockBreak = insertBreak(InsertBlock.insert, 'insertParagraph');
 
   const logicalAction = NewLineAction.getAction(editor, evt);
 

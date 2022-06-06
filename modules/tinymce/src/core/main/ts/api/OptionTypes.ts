@@ -136,7 +136,6 @@ interface BaseEditorOptions {
   invalid_elements?: string;
   invalid_styles?: string | Record<string, string>;
   keep_styles?: boolean;
-  newline_behavior?: string;
   language?: string;
   language_load?: boolean;
   language_url?: string;
@@ -149,6 +148,7 @@ interface BaseEditorOptions {
   min_width?: number;
   model?: string;
   model_url?: string;
+  newline_behavior?: 'block' | 'linebreak' | 'invert' | 'default';
   no_newline_selector?: string;
   noneditable_class?: string;
   noneditable_regexp?: RegExp | RegExp[];

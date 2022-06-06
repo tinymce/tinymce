@@ -485,7 +485,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
-  context('newline_behavior "block"', () => {
+  context('TINY-8458: newline_behavior "block"', () => {
     before(() => {
       hook.editor().options.set('newline_behavior', 'block');
     });
@@ -529,7 +529,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         editor.nodeChanged();
         TinyAssertions.assertContent(editor, '<p>a</p><p>b</p>');
       });
-
     });
 
     context('does not ignore no_newline_selector', () => {
@@ -552,7 +551,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
-  context('newline_behavior "linebreak"', () => {
+  context('TINY-8458: newline_behavior "linebreak"', () => {
     before(() => {
       hook.editor().options.set('newline_behavior', 'linebreak');
     });
@@ -596,7 +595,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         editor.nodeChanged();
         TinyAssertions.assertContent(editor, '<div>a<br>b</div>');
       });
-
     });
 
     context('does not ignore no_newline_selector', () => {
@@ -619,7 +617,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
-  context('newline_behavior "invert"', () => {
+  context('TINY-8458: newline_behavior "invert"', () => {
     before(() => {
       hook.editor().options.set('newline_behavior', 'invert');
     });
@@ -672,7 +670,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         editor.nodeChanged();
         TinyAssertions.assertContent(editor, '<div>a<br>b</div>');
       });
-
     });
 
     context('does not ignore no_newline_selector', () => {
