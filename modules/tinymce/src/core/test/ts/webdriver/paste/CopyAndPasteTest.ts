@@ -11,17 +11,17 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     statusbar: false
   }, []);
 
-  type Selection = [ number[], number, number[], number ];
+  interface Selection { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }
 
   const pCopyAndPaste = async (editor: Editor, source: Selection, target: Selection): Promise<void> => {
-    TinySelections.setSelection(editor, ...source);
+    TinySelections.setSelection(editor, source.startPath, source.soffset, source.finishPath, source.foffset);
     // at the moment: RealClipboard.pCopy('iframe => body'), doesn't work in with all browser (see https://github.com/webdriverio/webdriverio/issues/622)
     // chrome, chrome-headless, firefox-headless -> it doesn't work
     // firefox -> it works
     TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
     await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
     await RealMouse.pClickOn('div[title="Copy"]');
-    TinySelections.setSelection(editor, ...target);
+    TinySelections.setSelection(editor, target.startPath, target.soffset, target.finishPath, target.foffset);
     await RealClipboard.pPaste('iframe => body');
   };
 
@@ -36,13 +36,13 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
       );
       await pCopyAndPaste(
         editor,
-        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
-        [[ 2, 0 ], 1, [ 2, 0 ], 3 ]
+        { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 3 },
+        { startPath: [ 2, 0 ], soffset: 1, finishPath: [ 2, 0 ], foffset: 3 }
       );
       await pCopyAndPaste(
         editor,
-        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
-        [[ 1, 0 ], 1, [ 1, 0 ], 4 ]
+        { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 3 },
+        { startPath: [ 1, 0 ], soffset: 1, finishPath: [ 1, 0 ], foffset: 4 }
       );
       TinyAssertions.assertContent(editor,
         `<${tagName}>abc</${tagName}>\n` +
@@ -71,13 +71,13 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
       );
       await pCopyAndPaste(
         editor,
-        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
-        [[ 2, 0 ], 1, [ 2, 0 ], 3 ]
+        { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 3 },
+        { startPath: [ 2, 0 ], soffset: 1, finishPath: [ 2, 0 ], foffset: 3 }
       );
       await pCopyAndPaste(
         editor,
-        [[ 0, 0 ], 0, [ 0, 0 ], 3 ],
-        [[ 1, 0 ], 1, [ 1, 0 ], 4 ]
+        { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 3 },
+        { startPath: [ 1, 0 ], soffset: 1, finishPath: [ 1, 0 ], foffset: 4 }
       );
       TinyAssertions.assertContent(editor,
         `<${tagName}>abc</${tagName}>\n` +
@@ -104,8 +104,8 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
       );
       await pCopyAndPaste(
         editor,
-        [[ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3 ],
-        [[ 1, 0 ], 1, [ 1, 0 ], 4 ]
+        { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0 ], foffset: 3 },
+        { startPath: [ 1, 0 ], soffset: 1, finishPath: [ 1, 0 ], foffset: 4 }
       );
       TinyAssertions.assertContent(editor,
         `<p><${tagName} class="someclass">abc</${tagName}></p>\n` +
