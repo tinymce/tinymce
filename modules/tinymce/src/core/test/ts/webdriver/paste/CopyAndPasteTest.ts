@@ -1,4 +1,4 @@
-import { RealClipboard, RealMouse } from '@ephox/agar';
+import { Cursors, RealClipboard, RealMouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -11,9 +11,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     statusbar: false
   }, []);
 
-  interface Selection { startPath: number[]; soffset: number; finishPath: number[]; foffset: number }
-
-  const pCopyAndPaste = async (editor: Editor, source: Selection, target: Selection): Promise<void> => {
+  const pCopyAndPaste = async (editor: Editor, source: Cursors.CursorPath, target: Cursors.CursorPath): Promise<void> => {
     TinySelections.setSelection(editor, source.startPath, source.soffset, source.finishPath, source.foffset);
     // at the moment: RealClipboard.pCopy('iframe => body'), doesn't work in with all browser (see https://github.com/webdriverio/webdriverio/issues/622)
     // chrome, chrome-headless, firefox-headless -> it doesn't work
